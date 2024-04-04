@@ -24,9 +24,6 @@ public class ConduitTags {
         public static final TagKey<Item> COVERED_DENSE_CABLE = ItemTags.create(new ResourceLocation("ae2:covered_dense_cable"));
         public static final TagKey<Item> COVERED_CABLE = ItemTags.create(new ResourceLocation("ae2:covered_cable"));
         public static final TagKey<Item> GLASS_CABLE = ItemTags.create(new ResourceLocation("ae2:glass_cable"));
-
-        // refinedstorage
-        public static final TagKey<Item> RS_CABLE = ItemTags.create(new ResourceLocation("refinedstorage:cable"));
     }
 
     public static class Blocks {

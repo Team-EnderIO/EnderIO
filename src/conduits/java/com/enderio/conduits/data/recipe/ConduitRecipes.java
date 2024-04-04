@@ -10,6 +10,7 @@ import com.enderio.conduits.common.integrations.mekanism.MekanismIntegration;
 import com.enderio.conduits.common.integrations.refinedstorage.RSIntegration;
 import com.enderio.conduits.common.tag.ConduitTags;
 import mekanism.api.MekanismAPI;
+import com.refinedmods.refinedstorage.RSItems;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -148,7 +149,6 @@ public class ConduitRecipes extends RecipeProvider {
             .build(pWriter, EnderIO.loc("ae_covered_dense_cable"));
 
         if (Integrations.MEKANISM_INTEGRATION.isPresent()) {
-
             ConditionalRecipe.builder()
                 .addCondition(new ModLoadedCondition(MekanismAPI.MEKANISM_MODID))
                 .addRecipe(ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MekanismIntegration.CHEMICAL_ITEM, 3)
@@ -230,7 +230,7 @@ public class ConduitRecipes extends RecipeProvider {
                     .pattern("III")
                     .pattern("BBB")
                     .define('B', EIOItems.CONDUIT_BINDER)
-                    .define('I', ConduitTags.Items.RS_CABLE)
+                    .define('I', RSItems.CABLE.get())
                     .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                     ::save)
                 .build(pWriter, EnderIO.loc("rs_cable"));
