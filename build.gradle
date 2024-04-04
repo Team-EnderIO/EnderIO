@@ -206,6 +206,7 @@ repositories { RepositoryHandler handler ->
     exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli', 'net.darkhax.bookshelf', 'net.darkhax.enchdesc', 'com.almostreliable.mods')
     exclusiveRepo(handler, 'https://dogforce-games.com/maven', 'dev.gigaherz.graph')
     exclusiveRepo(handler, 'https://api.modrinth.com/maven', 'maven.modrinth')
+    exclusiveRepo(handler, 'https://maven.creeperhost.net/', 'com.refinedmods')
 
     mavenLocal()
 }
@@ -245,6 +246,10 @@ dependencies {
     // AE2
     compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
     runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
+
+    compileOnly fg.deobf("com.refinedmods:refinedstorage:${rs_version}") {
+        transitive = false
+    }
 
     // Enchantment descriptions
     runtimeOnly fg.deobf("net.darkhax.bookshelf:Bookshelf-Forge-${minecraft_version}:${bookshelf_version}")

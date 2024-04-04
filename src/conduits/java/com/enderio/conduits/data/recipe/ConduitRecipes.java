@@ -5,6 +5,7 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.integrations.ae2.AE2Integration;
+import com.enderio.conduits.common.integrations.refinedstorage.RSIntegration;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.PackOutput;
@@ -134,5 +135,18 @@ public class ConduitRecipes extends RecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 ::save)
             .build(pWriter, EnderIO.loc("ae_covered_dense_cable"));
+
+        ConditionalRecipe.builder()
+            .addCondition(new ModLoadedCondition("refinedstorage"))
+            .addRecipe(ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, RSIntegration.NORMAL_ITEM, 3)
+                .pattern("BBB")
+                .pattern("III")
+                .pattern("BBB")
+                .define('B', EIOItems.CONDUIT_BINDER)
+                .define('I', ConduitTags.Items.RS_CABLE)
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+                ::save)
+            .build(pWriter, EnderIO.loc("rs_cable"));
+
     }
 }
