@@ -16,7 +16,7 @@
             "item": "enderio:conduit_binder"
           },
           "I": {
-            "tag": "refinedstorage:cable"
+            "item": "refinedstorage:cable"
           }
         },
         "pattern": [
