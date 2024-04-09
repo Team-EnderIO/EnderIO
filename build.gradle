@@ -18,7 +18,7 @@ plugins {
     id "com.modrinth.minotaur" version "2.+"
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
-    id "me.hypherionmc.modutils.modpublisher" version "1.+"
+    id "com.hypherionmc.modutils.modpublisher" version "2.+"
 }
 
 apply plugin: 'org.spongepowered.mixin'
@@ -215,9 +215,11 @@ jarJar.enable()
 dependencies {
     // Forge
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
     //implementation fg.deobf("blank:Xycraft+Core:0.5.2")
     //runtimeOnly fg.deobf("blank:Xycraft+Override:0.5.2")
     //runtimeOnly fg.deobf("blank:Xycraft+World:0.5.2")
+
     // Registrate
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
     jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
@@ -225,6 +227,8 @@ dependencies {
     // GraphLib
     implementation implementation(fg.deobf("dev.gigaherz.graph:GraphLib3:${graphlib_version}"))
     jarJar(group: 'dev.gigaherz.graph', name: 'GraphLib3', version: "${graphlib_version_range}")
+
+    // Mixin annotations
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI
