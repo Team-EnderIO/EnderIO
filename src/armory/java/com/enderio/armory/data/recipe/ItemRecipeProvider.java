@@ -17,8 +17,8 @@ import java.util.function.Consumer;
 
 public class ItemRecipeProvider extends RecipeProvider {
 
-    public ItemRecipeProvider(PackOutput output) {
-        super(output);
+    public ItemRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override

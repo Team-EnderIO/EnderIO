@@ -29,6 +29,7 @@ public class EIOConduits {
     public static void onConstruct(FMLConstructModEvent event) {
         System.out.println("================ Conduits construct ==================");
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        EnderIO.LOGGER.atDebug().log("================ Conduits construct ==================");
         ConduitTypes.register(bus);
         EnderConduitTypes.register();
         ConduitBlockEntities.register();

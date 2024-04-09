@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.registries.ForgeRegistry;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,9 +21,9 @@ public class ConduitTypeSorter {
 
     @SubscribeEvent
     public static void afterRegistryFreeze(FMLCommonSetupEvent event) {
-        ForgeRegistry<IConduitType<?>> registry = ConduitTypes.getRegistry();
+        var registry = ConduitTypes.getRegistry();
         List<ResourceLocation> tieredTypes = new ArrayList<>();
-        for (IConduitType<?> value : registry.getValues()) {
+        for (IConduitType<?> value : registry) {
             if (value instanceof TieredConduit<?> tiered && !tieredTypes.contains(tiered.getType())) {
                 tieredTypes.add(tiered.getType());
             }
@@ -32,7 +31,7 @@ public class ConduitTypeSorter {
         tieredTypes.sort(ResourceLocation::compareTo);
         for (ResourceLocation tieredType : tieredTypes) {
             List<IConduitType<?>> typesInType = new ArrayList<>();
-            for (IConduitType<?> type: registry.getValues()) {
+            for (IConduitType<?> type: registry) {
                 if (type instanceof TieredConduit<?> tiered && tiered.getType().equals(tieredType)) {
                     typesInType.add(type);
                 }
@@ -41,7 +40,7 @@ public class ConduitTypeSorter {
             SORTED_TYPES.addAll(typesInType);
         }
         List<IConduitType<?>> unadded = new ArrayList<>();
-        for (IConduitType<?> type: registry.getValues()) {
+        for (IConduitType<?> type: registry) {
             if (!(type instanceof TieredConduit)) {
                 unadded.add(type);
             }

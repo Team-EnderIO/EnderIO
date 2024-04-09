@@ -71,9 +71,9 @@ public record DynamicConnectionState(boolean isInsert, ColorControl insert, bool
         buf.writeEnum(extract);
         buf.writeEnum(control);
         buf.writeEnum(redstoneChannel);
-        buf.writeItemStack(filterInsert, false);
-        buf.writeItemStack(filterExtract, false);
-        buf.writeItemStack(upgradeExtract, false);
+        buf.writeItem(filterInsert);
+        buf.writeItem(filterExtract);
+        buf.writeItem(upgradeExtract);
     }
 
     public static DynamicConnectionState fromNetwork(FriendlyByteBuf buf) {

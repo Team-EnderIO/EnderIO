@@ -24,6 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -82,7 +83,14 @@ public class ConduitSavedData extends SavedData {
 
                     for (Tag tag2 : graphObjectsTag) {
                         CompoundTag nodeTag = (CompoundTag) tag2;
-                        BlockPos pos = BlockPos.of((nodeTag.getLong(ConduitNBTKeys.BLOCK_POS)));
+                        BlockPos pos;
+                        // 1.20.1, convert int packed to regular xyz
+                        if (nodeTag.contains(ConduitNBTKeys.BLOCK_POS, 99)) {
+                            pos = BlockPos.of((nodeTag.getLong(ConduitNBTKeys.BLOCK_POS)));
+                        } else {
+                            CompoundTag posTag = nodeTag.getCompound(ConduitNBTKeys.BLOCK_POS);
+                            pos = BlockEntity.getPosFromTag(posTag);
+                        }
                         NodeIdentifier<?> node = new NodeIdentifier<>(pos, value.createExtendedConduitData(level, pos));
                         node.getExtendedConduitData().deserializeNBT(nodeTag.getCompound(KEY_DATA));
                         graphObjects.add(node);
@@ -119,7 +127,10 @@ public class ConduitSavedData extends SavedData {
                   ┃   ┃       ┖ 1: [second object's index]
                   ┃   ┖ graphObjects (list)
                   ┃       ┖ [element]
-                  ┃         ┠ pos: long (representing BlockPos.asLong())
+                  ┃         ┠ pos:
+                  ┃         ┃   ┠ x:
+                  ┃         ┃   ┠ y:
+                  ┃         ┃   ┖ z:
                   ┃         ┖ data: Compound based on type
                   ┖ [next element]
                       ┖ ...
@@ -129,8 +140,9 @@ public class ConduitSavedData extends SavedData {
     @Override
     public CompoundTag save(CompoundTag nbt) {
         ListTag graphsTag = new ListTag();
-        for (IConduitType<?> type : networks.keySet()) {
-            List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
+        for (var entry : networks.entrySet()) {
+            IConduitType<?> type = entry.getKey();
+            List<Graph<Mergeable.Dummy>> graphs = entry.getValue();
             if (graphs.isEmpty()) {
                 continue;
             }
@@ -180,7 +192,11 @@ public class ConduitSavedData extends SavedData {
 
             if (graphObject instanceof NodeIdentifier<?> nodeIdentifier) {
                 CompoundTag dataTag = new CompoundTag();
-                dataTag.putLong(ConduitNBTKeys.BLOCK_POS, nodeIdentifier.getPos().asLong());
+                CompoundTag posTag = new CompoundTag();
+                dataTag.put(ConduitNBTKeys.BLOCK_POS, posTag);
+                posTag.putInt("x", nodeIdentifier.getPos().getX());
+                posTag.putInt("y", nodeIdentifier.getPos().getY());
+                posTag.putInt("z", nodeIdentifier.getPos().getZ());
                 dataTag.put(KEY_DATA, nodeIdentifier.getExtendedConduitData().serializeNBT());
                 graphObjectsTag.add(dataTag);
             } else {
@@ -223,6 +239,7 @@ public class ConduitSavedData extends SavedData {
     }
 
     @Nullable
+    @SuppressWarnings("unchecked")
     public <T extends IExtendedConduitData<T>> NodeIdentifier<T> takeUnloadedNodeIdentifier(IConduitType<T> type, BlockPos pos) {
         ChunkPos chunkPos = new ChunkPos(pos);
 
@@ -275,9 +292,8 @@ public class ConduitSavedData extends SavedData {
 
     private void tick(ServerLevel serverLevel) {
         setDirty();
-        for (IConduitType<?> type : networks.keySet()) {
-            List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
-            graphs.removeIf(graph -> graph.getObjects().isEmpty() || graph.getObjects().iterator().next().getGraph() != graph);
+        for (var entry: networks.entrySet()) {
+            entry.getValue().removeIf(graph -> graph.getObjects().isEmpty() || graph.getObjects().iterator().next().getGraph() != graph);
         }
         for (var entry : networks.entrySet()) {
             for (Graph<Mergeable.Dummy> graph : entry.getValue()) {

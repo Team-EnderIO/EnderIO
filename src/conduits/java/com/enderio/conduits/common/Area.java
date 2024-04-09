@@ -5,8 +5,8 @@ import net.minecraft.core.Vec3i;
 import java.util.Arrays;
 
 public class Area {
-    private final Vec3i min;
-    private final Vec3i max;
+    private Vec3i min;
+    private Vec3i max;
 
     public Area(Vec3i... targets) {
         this(new Vec3i(
@@ -28,12 +28,8 @@ public class Area {
     }
 
     public void makeContain(Vec3i vector) {
-        min.setX(Math.min(min.getX(), vector.getX()));
-        min.setY(Math.min(min.getY(), vector.getY()));
-        min.setZ(Math.min(min.getZ(), vector.getZ()));
-        max.setX(Math.max(max.getX(), vector.getX()));
-        max.setY(Math.max(max.getY(), vector.getY()));
-        max.setZ(Math.max(max.getZ(), vector.getZ()));
+        min = new Vec3i(Math.min(min.getX(), vector.getX()), Math.min(min.getY(), vector.getY()), Math.min(min.getZ(), vector.getZ()));
+        max = new Vec3i(Math.max(max.getX(), vector.getX()), Math.max(max.getY(), vector.getY()), Math.max(max.getZ(), vector.getZ()));
     }
 
     public Vec3i getMin() {

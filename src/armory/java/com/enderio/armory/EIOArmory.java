@@ -5,6 +5,7 @@ import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.init.ArmoryLootModifiers;
 import com.enderio.armory.common.init.ArmoryRecipes;
+import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.armory.data.loot.ArmoryLootModifiersProvider;
 import com.enderio.armory.data.recipe.ItemRecipeProvider;
@@ -37,6 +38,7 @@ public class EIOArmory {
         ArmoryRecipes.register();
         ArmoryLootModifiers.register();
         ArmoryTags.register();
+        ArmoryLang.register();
     }
 
     @SubscribeEvent
