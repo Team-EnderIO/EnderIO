@@ -54,6 +54,9 @@ public class RSNodeHost implements IExtendedConduitData<RSNodeHost>, INetworkNod
 
     @Override
     public void onRemoved(IConduitType<?> type, Level level, BlockPos pos) {
+        if (!level.isLoaded(pos))
+            return;
+
         selfCap.invalidate();
 
         INetworkNodeManager manager = RSAPI.getNetworkNodeManager((ServerLevel) level);
