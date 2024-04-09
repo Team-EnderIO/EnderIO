@@ -20,8 +20,8 @@ public class RSNodeHost implements IExtendedConduitData<RSNodeHost>, INetworkNod
     @RSAPIInject
     public static IRSAPI RSAPI;
 
-    private RSNetworkNode node;
-    private LazyOptional<RSNodeHost> selfCap = LazyOptional.of(() -> this);
+    private final RSNetworkNode node;
+    private final LazyOptional<RSNodeHost> selfCap = LazyOptional.of(() -> this);
     private final Level level;
     private final BlockPos pos;
 
@@ -49,14 +49,13 @@ public class RSNodeHost implements IExtendedConduitData<RSNodeHost>, INetworkNod
     }
 
     public LazyOptional<RSNodeHost> getSelfCap() {
-        if (!selfCap.isPresent()) {
-            selfCap = LazyOptional.of(() -> this);
-        }
         return selfCap;
     }
 
     @Override
     public void onRemoved(IConduitType<?> type, Level level, BlockPos pos) {
+        selfCap.invalidate();
+
         INetworkNodeManager manager = RSAPI.getNetworkNodeManager((ServerLevel) level);
 
         INetworkNode node = manager.getNode(pos);
@@ -65,10 +64,8 @@ public class RSNodeHost implements IExtendedConduitData<RSNodeHost>, INetworkNod
         manager.markForSaving();
 
         if (node != null && node.getNetwork() != null) {
-            node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, level, pos);
+            node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getLevel(), node.getNetwork().getPosition());
         }
-
-        selfCap.invalidate();
     }
 
     @Override
