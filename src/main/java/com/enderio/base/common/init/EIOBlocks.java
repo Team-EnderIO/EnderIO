@@ -411,6 +411,7 @@ public class EIOBlocks {
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
         .item((enderSkullBlock, properties) -> new EnderSkullBlockItem(enderSkullBlock, properties, Direction.DOWN))
         .tab(EIOCreativeTabs.MAIN)
+        .tag(EIOTags.Blocks.HEADS)
         .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), "item/template_skull"))
         .build()
         .register();

@@ -141,6 +141,7 @@ public class EIOTags {
         public static final TagKey<Block> BLOCKS_REDSTONE_ALLOY = BlockTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "storage_blocks/redstone_alloy"));
         public static final TagKey<Block> BLOCKS_SOULARIUM = BlockTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "storage_blocks/soularium"));
         public static final TagKey<Block> BLOCKS_VIBRANT_ALLOY = BlockTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "storage_blocks/vibrant_alloy"));
+        public static final TagKey<Item> HEADS = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "heads"));
 
     }
     
