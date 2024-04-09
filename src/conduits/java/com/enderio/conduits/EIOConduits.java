@@ -27,6 +27,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class EIOConduits {
     @SubscribeEvent
     public static void onConstruct(FMLConstructModEvent event) {
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         EnderIO.LOGGER.atDebug().log("================ Conduits construct ==================");
         ConduitTypes.register(bus);
         EnderConduitTypes.register();
