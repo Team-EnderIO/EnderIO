@@ -1,7 +1,5 @@
 package com.enderio.api.capacitor;
 
-import net.minecraftforge.common.util.NonNullSupplier;
-
 import java.util.function.Supplier;
 
 /**
@@ -10,6 +8,6 @@ import java.util.function.Supplier;
  * It also allows for the base value of a scalable to be powered by configs.
  */
 public interface ICapacitorScalable {
-    Supplier<Float> scaleF(NonNullSupplier<ICapacitorData> data);
-    Supplier<Integer> scaleI(NonNullSupplier<ICapacitorData> data);
+    Supplier<Float> scaleF(Supplier<ICapacitorData> data);
+    Supplier<Integer> scaleI(Supplier<ICapacitorData> data);
 }
