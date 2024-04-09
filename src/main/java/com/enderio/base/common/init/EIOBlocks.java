@@ -409,9 +409,10 @@ public class EIOBlocks {
         .block("enderman_head", EnderSkullBlock::new)
         .properties(properties -> properties.instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY))
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
+        .tag(EIOTags.Blocks.HEADS)
         .item((enderSkullBlock, properties) -> new EnderSkullBlockItem(enderSkullBlock, properties, Direction.DOWN))
         .tab(EIOCreativeTabs.MAIN)
-        .tag(EIOTags.Blocks.HEADS)
+        .tag(EIOTags.Items.HEADS)
         .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), "item/template_skull"))
         .build()
         .register();
