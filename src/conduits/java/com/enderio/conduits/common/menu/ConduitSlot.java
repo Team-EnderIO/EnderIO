@@ -1,10 +1,13 @@
 package com.enderio.conduits.common.menu;
 
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.SlotData;
 import com.enderio.conduits.common.blockentity.SlotType;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -32,9 +35,18 @@ public class ConduitSlot extends SlotItemHandler {
         this.bundle = bundle;
     }
 
+    @Override // TODO item bg
+    public Slot setBackground(ResourceLocation atlas, ResourceLocation sprite) {
+        return super.setBackground(atlas, sprite);
+    }
+
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return isVisible() && super.mayPlace(stack);
+        return isVisible() && super.mayPlace(stack) && (
+            stack.is(EIOItems.BASIC_ITEM_FILTER.asItem())
+            || stack.is(EIOItems.ADVANCED_ITEM_FILTER.asItem())
+            || stack.is(EIOItems.BIG_ITEM_FILTER.asItem())
+            || stack.is(EIOItems.BIG_ADVANCED_ITEM_FILTER.asItem()));
     }
 
     @Override

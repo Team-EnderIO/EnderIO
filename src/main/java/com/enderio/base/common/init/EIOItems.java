@@ -209,7 +209,13 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> BLACK_PAPER = materialItem("black_paper").register();
     public static final ItemEntry<MaterialItem> CLAYED_GLOWSTONE = materialItem("clayed_glowstone").register();
     public static final ItemEntry<MaterialItem> NETHERCOTTA = materialItem("nethercotta").register();
+
     public static final ItemEntry<MaterialItem> REDSTONE_FILTER_BASE = materialItem("redstone_filter_base").register();
+    public static final ItemEntry<MaterialItem> BASIC_ITEM_FILTER = materialItem("basic_item_filter").lang("Basic Item Filter").register();
+    public static final ItemEntry<MaterialItem> ADVANCED_ITEM_FILTER = materialItem("advanced_item_filter").register();
+    public static final ItemEntry<MaterialItem> BIG_ITEM_FILTER = materialItem("big_item_filter").register();
+    public static final ItemEntry<MaterialItem> BIG_ADVANCED_ITEM_FILTER = materialItem("big_advanced_item_filter").register();
+
 
     public static final ItemEntry<BrokenSpawnerItem> BROKEN_SPAWNER = REGISTRATE
         .item("broken_spawner", BrokenSpawnerItem::new)
