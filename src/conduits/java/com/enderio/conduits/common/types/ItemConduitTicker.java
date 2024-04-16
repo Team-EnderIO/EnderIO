@@ -4,6 +4,7 @@ import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.SlotData;
 import com.enderio.conduits.common.blockentity.SlotType;
@@ -11,12 +12,7 @@ import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -27,62 +23,6 @@ import org.apache.commons.lang3.function.TriFunction;
 import java.util.List;
 
 public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler> {
-
-    // TODO move this somewhere safe
-    public static class FilterUtils {
-        private static final String KEY_ITEM_FILTER = "ItemFilter";
-        private static final String KEY_IGNORE_MODE = "IgnoreMode"; // make selected items be ignored by the conduit
-        private static final String KEY_STRICT_MODE = "StrictMode"; // means that stack counts mater
-
-        /*
-         Itemfilter format
-         tag: {ItemFilter: [{Count: 1L, id: "ID"}, {Count: 1L, tag: "forge:ingots"}], IgnoreMode: false, StrictMode: false}
-         tag: {ItemFilter: [{Count: 1L, id: "ID", data: {whatever-nbt-you-have}}, {Count: 1L, tag: "forge:ingots"}], IgnoreMode: false, StrictMode: false}
-         */
-
-        public static boolean isAllowed(ItemStack filterItem, ItemStack item) {
-            return isAllowed(filterItem, item, false);
-        }
-
-        public static boolean isAllowed(ItemStack filterItem, ItemStack item, boolean strictNbt) {
-            if (filterItem.isEmpty()) return true;
-            if (item.isEmpty()) return false;
-
-            var itemTag = filterItem.getOrCreateTag();
-            if (!itemTag.contains(KEY_ITEM_FILTER)) {
-                itemTag.put(KEY_ITEM_FILTER, new ListTag());
-            }
-
-            var itemFilter = itemTag.getList(KEY_ITEM_FILTER, 10);
-            var isInverted = itemTag.getBoolean(KEY_IGNORE_MODE);
-            var isStrict = itemTag.getBoolean(KEY_STRICT_MODE);
-
-            for (int i = 0; i < itemFilter.size(); i++) {
-                var filterNbt = itemFilter.getCompound(i);
-
-                // first, check item based on ID if it exists
-                if (filterNbt.contains("id")
-                    && BuiltInRegistries.ITEM.get(new ResourceLocation(filterNbt.getString("id"))) != item.getItem()) continue;
-
-                // else check if tag is the same
-                if (filterNbt.contains("tag")) {
-                    var found = false;
-                    for (var tagItem : BuiltInRegistries.ITEM.getTagOrEmpty(TagKey.create(Registries.ITEM, new ResourceLocation(filterNbt.getString("tag"))))) {
-                        found = (tagItem.get() == item.getItem());
-                        if (found) break;
-                    }
-                    if (!found) continue;
-                }
-
-                // now check sizes
-                long count = filterNbt.getLong("Count");
-                if (isStrict && count != item.getCount()) continue;
-                return !isInverted; // success
-            }
-
-            return isInverted; // fail by default
-        }
-    }
 
     @Override
     public void tickGraph(IConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph,
@@ -124,8 +64,8 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
 
                 ItemExtendedData.ItemSidedData sidedExtractData = extract.data.castTo(ItemExtendedData.class).compute(extract.direction);
 
-                if (!FilterUtils.isAllowed(sidedExtractData.extractFilter, extractedItem))
-                    continue;
+                var insertFilterCap = sidedExtractData.extractFilter.getCapability(EIOCapabilities.ITEM_FILTER);
+                if (insertFilterCap.isPresent() && !insertFilterCap.resolve().get().testItem(extractedItem)) continue;
 
                 if (sidedExtractData.roundRobin) {
                     if (inserts.size() <= sidedExtractData.rotatingIndex) {
@@ -139,8 +79,9 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
                     int insertIndex = j % inserts.size();
                     CapabilityConnection insert = inserts.get(insertIndex);
                     var insertData = insert.data.castTo(ItemExtendedData.class).compute(insert.direction);
-                    if (!FilterUtils.isAllowed(insertData.insertFilter, extractedItem))
-                        continue;
+
+                    var extractFilterCap = insertData.insertFilter.getCapability(EIOCapabilities.ITEM_FILTER);
+                    if (extractFilterCap.isPresent() && !extractFilterCap.resolve().get().testItem(extractedItem)) continue;
 
                     if (!sidedExtractData.selfFeed
                         && extract.direction == insert.direction

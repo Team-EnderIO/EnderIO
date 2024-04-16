@@ -3,6 +3,7 @@ package com.enderio.conduits.common.types;
 import com.enderio.api.conduit.IExtendedConduitData;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -59,17 +60,22 @@ public class ItemExtendedData implements IExtendedConduitData<ItemExtendedData> 
         public int rotatingIndex = 0;
         public boolean selfFeed = false;
         public int priority = 0;
+        public ItemStack insertFilter = ItemStack.EMPTY;
+        public ItemStack extractFilter = ItemStack.EMPTY;
 
         // region Serialization
-
         private static final String KEY_ROTATING_INDEX = "RotatingIndex";
         private static final String KEY_ROUND_ROBIN = "RoundRobin";
         private static final String KEY_SELF_FEED = "SelfFeed";
         private static final String KEY_PRIORITY = "Priority";
+        private static final String KEY_INSERT_FILTER = "InsertFilter";
+        private static final String KEY_EXTRACT_FILTER = "ExtractFilter";
 
         private CompoundTag toNbt() {
             CompoundTag nbt = toGuiNbt();
             nbt.putInt(KEY_ROTATING_INDEX, rotatingIndex);
+            nbt.put(KEY_INSERT_FILTER, insertFilter.save(new CompoundTag()));
+            nbt.put(KEY_EXTRACT_FILTER, extractFilter.save(new CompoundTag()));
             return nbt;
         }
 
@@ -89,6 +95,8 @@ public class ItemExtendedData implements IExtendedConduitData<ItemExtendedData> 
             if (nbt.contains(KEY_ROTATING_INDEX)) {
                 sidedData.rotatingIndex= nbt.getInt(KEY_ROTATING_INDEX);
             }
+            sidedData.insertFilter = ItemStack.of(nbt.getCompound(KEY_INSERT_FILTER));
+            sidedData.extractFilter = ItemStack.of(nbt.getCompound(KEY_EXTRACT_FILTER));
 
             return sidedData;
         }

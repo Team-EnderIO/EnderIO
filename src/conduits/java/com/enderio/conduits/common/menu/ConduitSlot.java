@@ -4,6 +4,7 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.SlotData;
 import com.enderio.conduits.common.blockentity.SlotType;
+import com.enderio.conduits.common.init.ConduitItems;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -42,11 +43,14 @@ public class ConduitSlot extends SlotItemHandler {
 
     @Override
     public boolean mayPlace(ItemStack stack) {
+        if (slotType == SlotType.UPGRADE_EXTRACT) {
+            return false;
+        }
         return isVisible() && super.mayPlace(stack) && (
-            stack.is(EIOItems.BASIC_ITEM_FILTER.asItem())
-            || stack.is(EIOItems.ADVANCED_ITEM_FILTER.asItem())
-            || stack.is(EIOItems.BIG_ITEM_FILTER.asItem())
-            || stack.is(EIOItems.BIG_ADVANCED_ITEM_FILTER.asItem()));
+            stack.is(ConduitItems.BASIC_ITEM_FILTER.asItem())
+            || stack.is(ConduitItems.ADVANCED_ITEM_FILTER.asItem())
+            || stack.is(ConduitItems.BIG_ITEM_FILTER.asItem())
+            || stack.is(ConduitItems.BIG_ADVANCED_ITEM_FILTER.asItem()));
     }
 
     @Override
