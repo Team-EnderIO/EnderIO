@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.menu;
 
-import com.enderio.base.common.init.EIOItems;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.SlotData;
 import com.enderio.conduits.common.blockentity.SlotType;

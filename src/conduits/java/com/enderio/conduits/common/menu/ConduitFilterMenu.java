@@ -1,7 +1,6 @@
 package com.enderio.conduits.common.menu;
 
 import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.items.FilterItem;
 import com.enderio.conduits.common.items.FilterInventory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
