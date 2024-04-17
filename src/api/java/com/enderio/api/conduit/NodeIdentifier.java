@@ -1,15 +1,13 @@
 package com.enderio.api.conduit;
 
+import com.enderio.api.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +23,8 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
 
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
     private final T extendedConduitData;
+
+    @Nullable private DynamicConnectionState connectionState;
 
     /*public static final Codec<NodeIdentifier<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         BlockPos.CODEC.fieldOf("pos").forGetter(NodeIdentifier::getPos),
@@ -51,9 +51,10 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
     }
 
     @ApiStatus.Internal
-    public void pushState(Direction direction, @Nullable ColorControl insert, @Nullable ColorControl extract, RedstoneControl control,
-        ColorControl redstoneChannel) {
-        ioStates.put(direction, IOState.of(insert, extract, control, redstoneChannel));
+    public void pushState(Direction direction, DynamicConnectionState connectionState) {
+        this.connectionState = connectionState;
+        ioStates.put(direction, IOState.of(connectionState.isInsert() ? connectionState.insert() : null,
+            connectionState.isExtract() ? connectionState.extract() : null, connectionState.control(), connectionState.redstoneChannel()));
     }
 
     public Optional<IOState> getIOState(Direction direction) {
@@ -71,6 +72,11 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
 
     public BlockPos getPos() {
         return pos;
+    }
+
+    @Nullable
+    public DynamicConnectionState getConnectionState() {
+        return connectionState;
     }
 
     public record IOState(Optional<ColorControl> insert, Optional<ColorControl> extract, RedstoneControl control, ColorControl redstoneChannel) {

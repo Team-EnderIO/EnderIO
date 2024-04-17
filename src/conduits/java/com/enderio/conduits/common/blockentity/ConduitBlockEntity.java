@@ -1,16 +1,16 @@
 package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.conduit.SlotType;
 import com.enderio.conduits.ConduitNBTKeys;
 import com.enderio.conduits.common.ConduitShape;
-import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
-import com.enderio.conduits.common.blockentity.connection.IConnectionState;
-import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
+import com.enderio.api.conduit.connection.DynamicConnectionState;
+import com.enderio.api.conduit.connection.IConnectionState;
+import com.enderio.api.conduit.connection.StaticConnectionStates;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.network.ConduitSavedData;
@@ -37,7 +37,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
@@ -524,8 +523,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public static void pushIOState(Direction direction, NodeIdentifier<?> node, DynamicConnectionState connectionState) {
-        node.pushState(direction, connectionState.isInsert() ? connectionState.insert() : null,
-            connectionState.isExtract() ? connectionState.extract() : null, connectionState.control(), connectionState.redstoneChannel());
+        node.pushState(direction, connectionState);
     }
 
     private class ConduitItemHandler implements IItemHandlerModifiable {

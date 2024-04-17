@@ -1,6 +1,8 @@
 package com.enderio.core.common.attachment;
 
+import com.enderio.core.common.capability.ItemFilterCapability;
 import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
+import com.enderio.core.common.item.IEnderFilter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -56,6 +58,20 @@ public class AttachmentUtil {
             } else {
                 // TODO: Add block support for machines?
                 throw new IllegalStateException("Cannot attach fluid handler item to a non-item.");
+            }
+        }).build();
+    }
+
+    public static Supplier<AttachmentType<ItemFilterCapability>> itemFilterAttachment() {
+        return () -> AttachmentType.serializable(holder -> {
+            if (holder instanceof ItemStack itemStack) {
+                if (itemStack.getItem() instanceof IEnderFilter filer) {
+                    return new ItemFilterCapability(filer.size(), filer.isAdvanced(), filer.isInverted());
+                }
+                return new ItemFilterCapability(0, false, false);
+            } else {
+                // TODO: Add block support for machines?
+                throw new IllegalStateException("Cannot attach item filter handler item to a non-item.");
             }
         }).build();
     }

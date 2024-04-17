@@ -3,7 +3,7 @@ package com.enderio.conduits.common;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.OffsetHelper;
-import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
+import com.enderio.api.conduit.connection.DynamicConnectionState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -18,11 +18,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 public class ConduitShape {
     private final Map<IConduitType<?>, VoxelShape> conduitShapes = new HashMap<>();

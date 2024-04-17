@@ -3,6 +3,7 @@ package com.enderio.api.conduit.ticker;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.google.common.collect.ArrayListMultimap;
@@ -14,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import org.apache.commons.lang3.function.TriFunction;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -27,8 +29,8 @@ public interface IIOAwareConduitTicker extends ILoadedAwareConduitTicker {
                 for (Direction direction: Direction.values()) {
                     nodeIdentifier.getIOState(direction)
                         .ifPresent(ioState -> {
-                            ioState.extract().filter(extract -> isRedstoneMode(type, level, nodeIdentifier.getPos(), ioState, isRedstoneActive)).ifPresent(color -> extracts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData())));
-                            ioState.insert().ifPresent(color -> inserts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData())));
+                            ioState.extract().filter(extract -> isRedstoneMode(type, level, nodeIdentifier.getPos(), ioState, isRedstoneActive)).ifPresent(color -> extracts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData(), nodeIdentifier.getConnectionState())));
+                            ioState.insert().ifPresent(color -> inserts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData(), nodeIdentifier.getConnectionState())));
                     });
                 }
             }
@@ -68,7 +70,7 @@ public interface IIOAwareConduitTicker extends ILoadedAwareConduitTicker {
 
         return state.control().isActive(hasRedstone || isRedstoneActive.apply(level, pos, state.redstoneChannel()));
     }
-    record Connection(BlockPos pos, Direction dir, IExtendedConduitData<?> data) {
+    record Connection(BlockPos pos, Direction dir, IExtendedConduitData<?> data, @Nullable DynamicConnectionState connectionState) {
         public BlockPos move() {
             return pos.relative(dir);
         }

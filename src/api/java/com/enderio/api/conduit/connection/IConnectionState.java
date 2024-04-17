@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.blockentity.connection;
+package com.enderio.api.conduit.connection;
 
 public sealed interface IConnectionState permits StaticConnectionStates, DynamicConnectionState {
 

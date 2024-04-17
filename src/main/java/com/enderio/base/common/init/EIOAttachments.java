@@ -1,9 +1,10 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.attachment.CoordinateSelection;
+import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.base.common.capacitor.LootCapacitorData;
+import com.enderio.core.common.capability.ItemFilterCapability;
 import com.enderio.core.common.attachment.AttachmentUtil;
 import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.mojang.serialization.Codec;
@@ -11,7 +12,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
@@ -40,6 +40,9 @@ public class EIOAttachments {
 
     public static final Supplier<AttachmentType<EnergyStorage>> ITEM_ENERGY_STORAGE
         = ATTACHMENT_TYPES.register("item_energy_storage", AttachmentUtil.itemEnergyStorageAttachment());
+
+    public static final Supplier<AttachmentType<ItemFilterCapability>> ITEM_FILTER
+        = ATTACHMENT_TYPES.register("item_filter", AttachmentUtil.itemFilterAttachment());
 
     public static void register(IEventBus bus) {
         ATTACHMENT_TYPES.register(bus);
