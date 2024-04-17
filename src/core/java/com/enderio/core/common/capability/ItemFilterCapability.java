@@ -49,8 +49,8 @@ public class ItemFilterCapability implements INBTSerializable<CompoundTag>, Pred
     public boolean test(ItemStack stack) {
         for (ItemStack testStack : getItems()) {
             boolean test = isAdvanced() ? ItemStack.isSameItemSameTags(testStack, stack) : ItemStack.isSameItem(testStack, stack);
-            if (!isInvert() && test) {
-                return true;
+            if (test) {
+                return !isInvert();
             }
         }
         return isInvert();
