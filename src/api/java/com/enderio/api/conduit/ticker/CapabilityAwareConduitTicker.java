@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.apache.commons.lang3.function.TriFunction;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public abstract class CapabilityAwareConduitTicker<T> implements IOAwareConduitT
         for (Connection insert : inserts) {
             T capability = level.getCapability(getCapability(), insert.move(), insert.dir().getOpposite());
             if (capability != null) {
-                insertCaps.add(new CapabilityConnection(capability, insert.data(), insert.dir()));
+                insertCaps.add(new CapabilityConnection(capability, insert.data(), insert.dir(), insert.connectionState()));
             }
 
         }
@@ -34,7 +35,7 @@ public abstract class CapabilityAwareConduitTicker<T> implements IOAwareConduitT
             for (Connection extract : extracts) {
                 T capability = level.getCapability(getCapability(), extract.move(), extract.dir().getOpposite());
                 if (capability != null) {
-                    extractCaps.add(new CapabilityConnection(capability, extract.data(), extract.dir()));
+                    extractCaps.add(new CapabilityConnection(capability, extract.data(), extract.dir(), extract.connectionState()));
                 }
             }
             if (!extractCaps.isEmpty()) {
@@ -58,11 +59,14 @@ public abstract class CapabilityAwareConduitTicker<T> implements IOAwareConduitT
         public final T cap;
         public final ExtendedConduitData<?> data;
         public final Direction direction;
+        @Nullable
+        public final DynamicConnectionState connectionState;
 
-        private CapabilityConnection(T cap, ExtendedConduitData<?> data, Direction direction) {
+        private CapabilityConnection(T cap, ExtendedConduitData<?> data, Direction direction, @Nullable DynamicConnectionState connectionState) {
             this.cap = cap;
             this.data = data;
             this.direction = direction;
+            this.connectionState = connectionState;
         }
     }
 }

@@ -3,6 +3,8 @@ package com.enderio.conduits.common.types.item;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
+import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.core.common.capability.ItemFilterCapability;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
@@ -30,6 +32,14 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
                     continue;
                 }
 
+                if (extract.connectionState != null && !extract.connectionState.filterExtract().isEmpty()) {
+                    ItemStack stack = extract.connectionState.filterExtract();
+                    ItemFilterCapability capability = stack.getCapability(EIOCapabilities.Filter.ITEM);
+                    if (capability != null && !capability.test(extractedItem)) {
+                        return;
+                    }
+                }
+
                 ItemExtendedData.ItemSidedData sidedExtractData = extract.data.castTo(ItemExtendedData.class).compute(extract.direction);
                 if (sidedExtractData.roundRobin) {
                     if (inserts.size() <= sidedExtractData.rotatingIndex) {
@@ -49,7 +59,16 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
                         continue;
                     }
 
+                    if (insert.connectionState != null && !insert.connectionState.filterInsert().isEmpty()) {
+                        ItemStack stack = insert.connectionState.filterInsert();
+                        ItemFilterCapability capability = stack.getCapability(EIOCapabilities.Filter.ITEM);
+                        if (capability != null && !capability.test(extractedItem)) {
+                            break;
+                        }
+                    }
+
                     ItemStack notInserted = ItemHandlerHelper.insertItem(insert.cap, extractedItem, false);
+
                     if (notInserted.getCount() < extractedItem.getCount()) {
                         extractHandler.extractItem(i, extractedItem.getCount() - notInserted.getCount(), false);
                         if (sidedExtractData.roundRobin) {

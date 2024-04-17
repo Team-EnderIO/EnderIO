@@ -5,7 +5,7 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.client.ConduitClientSetup;
-import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
+import com.enderio.api.conduit.connection.DynamicConnectionState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;

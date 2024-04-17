@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.blockentity.connection;
+package com.enderio.api.conduit.connection;
 
 /**
  * This class is for all static ConnectionStates without being connected to a block. For this use {@link DynamicConnectionState} <br>
