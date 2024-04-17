@@ -1,6 +1,4 @@
-package com.enderio.conduits.common.blockentity;
-
-import com.enderio.api.conduit.ConduitMenuData;
+package com.enderio.api.conduit;
 
 public enum SlotType {
     FILTER_EXTRACT,

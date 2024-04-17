@@ -5,6 +5,7 @@ import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
+import com.enderio.base.common.item.filter.ItemFilter;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
 import com.enderio.base.common.item.misc.EnderiosItem;
@@ -401,6 +402,15 @@ public class EIOItems {
         .setTab(EIOCreativeTabs.GEAR,
             modifier -> EIOItems.COLD_FIRE_IGNITER.get().addAllVariants(modifier)) // TODO: Might PR this to ITEM_REGISTRY so its nicer, but I like the footprint.
         .addCapability(Capabilities.FluidHandler.ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER);
+
+    // endregion
+
+    // region filter
+
+    public static final RegiliteItem<ItemFilter> ITEM_FILTER = ITEM_REGISTRY
+        .registerItem("item_filter", properties -> new ItemFilter(properties, 5, false, false))
+        .setTab(EIOCreativeTabs.GEAR)
+        .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
 
     // endregion
 

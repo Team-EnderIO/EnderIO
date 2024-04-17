@@ -2,6 +2,7 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.conduit.SlotType;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;

@@ -1,5 +1,6 @@
 package com.enderio.api.conduit;
 
+import com.enderio.api.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import dev.gigaherz.graph3.Graph;
@@ -22,6 +23,8 @@ public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphOb
 
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
     private final T extendedConduitData;
+
+    @Nullable private DynamicConnectionState connectionState;
 
     /*public static final Codec<NodeIdentifier<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         BlockPos.CODEC.fieldOf("pos").forGetter(NodeIdentifier::getPos),
@@ -48,9 +51,10 @@ public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphOb
     }
 
     @ApiStatus.Internal
-    public void pushState(Direction direction, @Nullable ColorControl insert, @Nullable ColorControl extract, RedstoneControl control,
-        ColorControl redstoneChannel) {
-        ioStates.put(direction, IOState.of(insert, extract, control, redstoneChannel));
+    public void pushState(Direction direction, DynamicConnectionState connectionState) {
+        this.connectionState = connectionState;
+        ioStates.put(direction, IOState.of(connectionState.isInsert() ? connectionState.insert() : null,
+            connectionState.isExtract() ? connectionState.extract() : null, connectionState.control(), connectionState.redstoneChannel()));
     }
 
     public Optional<IOState> getIOState(Direction direction) {
@@ -68,6 +72,11 @@ public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphOb
 
     public BlockPos getPos() {
         return pos;
+    }
+
+    @Nullable
+    public DynamicConnectionState getConnectionState() {
+        return connectionState;
     }
 
     public record IOState(Optional<ColorControl> insert, Optional<ColorControl> extract, RedstoneControl control, ColorControl redstoneChannel) {

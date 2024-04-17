@@ -519,8 +519,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public static void pushIOState(Direction direction, NodeIdentifier<?> node, DynamicConnectionState connectionState) {
-        node.pushState(direction, connectionState.isInsert() ? connectionState.insert() : null,
-            connectionState.isExtract() ? connectionState.extract() : null, connectionState.control(), connectionState.redstoneChannel());
+        node.pushState(direction, connectionState);
     }
 
     private class ConduitItemHandler implements IItemHandlerModifiable {
