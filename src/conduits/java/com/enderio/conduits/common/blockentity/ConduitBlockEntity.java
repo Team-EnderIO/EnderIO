@@ -59,6 +59,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public static final ModelProperty<ConduitBundle> BUNDLE_MODEL_PROPERTY = new ModelProperty<>();
     public static final ModelProperty<BlockPos> POS = new ModelProperty<>();
+    public static final String CONDUIT_INV_KEY = "ConduitInv";
 
     private final ConduitShape shape = new ConduitShape();
 
@@ -69,6 +70,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     private final Map<ConduitType<?>,NodeIdentifier<?>> lazyNodes = new HashMap<>();
     private ListTag lazyNodeNBT = new ListTag();
+    private ConduitItemHandler conduitItemHandler = new ConduitItemHandler();
+
 
     public ConduitBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(ConduitBlockEntities.CONDUIT.get(), worldPosition, blockState);
@@ -203,6 +206,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             listTag.add(data.serializeNBT(lookupProvider));
         }
         tag.put(ConduitNBTKeys.CONDUIT_EXTRA_DATA, listTag);
+        tag.put(CONDUIT_INV_KEY, conduitItemHandler.serializeNBT());
     }
 
     @Override
@@ -210,6 +214,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         super.loadAdditional(tag, lookupProvider);
         bundle.deserializeNBT(lookupProvider, tag.getCompound(ConduitNBTKeys.CONDUIT_BUNDLE));
         lazyNodeNBT = tag.getList(ConduitNBTKeys.CONDUIT_EXTRA_DATA, Tag.TAG_COMPOUND);
+        conduitItemHandler.deserializeNBT(tag.getCompound(CONDUIT_INV_KEY));
     }
 
     @Override
@@ -515,14 +520,14 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
 
     public IItemHandler getConduitItemHandler() {
-        return new ConduitItemHandler();
+        return conduitItemHandler;
     }
 
     public static void pushIOState(Direction direction, NodeIdentifier<?> node, DynamicConnectionState connectionState) {
         node.pushState(direction, connectionState);
     }
 
-    private class ConduitItemHandler implements IItemHandlerModifiable {
+    private class ConduitItemHandler implements IItemHandlerModifiable, INBTSerializable<CompoundTag> {
 
         @Override
         public int getSlots() {
@@ -645,11 +650,37 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             }
 
             ConduitConnection connection = bundle.getConnection(data.direction());
-            ConduitMenuData conduitData = bundle.getTypes().get(data.conduitIndex()).getMenuData();
+            ConduitType<?> iConduitType = bundle.getTypes().get(data.conduitIndex());
+            ConduitMenuData conduitData = iConduitType.getMenuData();
 
             if ((data.slotType() == SlotType.FILTER_EXTRACT && conduitData.hasFilterExtract()) || (data.slotType() == SlotType.FILTER_INSERT
                 && conduitData.hasFilterInsert()) || (data.slotType() == SlotType.UPGRADE_EXTRACT && conduitData.hasUpgrade())) {
                 connection.setItem(data.slotType(), data.conduitIndex(), stack);
+                if (connection.getConnectionState(iConduitType) instanceof DynamicConnectionState dynamicConnectionState) {
+                    pushIOState(data.direction(), bundle.getNodeForTypeExact(iConduitType), dynamicConnectionState);
+                }
+            }
+        }
+
+        @Override
+        public CompoundTag serializeNBT() {
+            CompoundTag tag = new CompoundTag();
+            ListTag list = new ListTag();
+            for (int i = 0; i < getSlots(); i++) {
+                CompoundTag item = new CompoundTag();
+                ItemStack stack = getStackInSlot(i);
+                stack.save(item);
+                list.add(i, item);
+            }
+            tag.put(CONDUIT_INV_KEY, list);
+            return tag;
+        }
+
+        @Override
+        public void deserializeNBT(CompoundTag nbt) {
+            ListTag list = nbt.getList(CONDUIT_INV_KEY, Tag.TAG_COMPOUND);
+            for (int i = 0; i < list.size(); i++) {
+                setStackInSlot(i, ItemStack.of(list.getCompound(i)));
             }
         }
     }
