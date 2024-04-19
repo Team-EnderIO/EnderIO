@@ -6,11 +6,11 @@ import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.conduit.SlotType;
-import com.enderio.conduits.ConduitNBTKeys;
-import com.enderio.conduits.common.ConduitShape;
 import com.enderio.api.conduit.connection.DynamicConnectionState;
 import com.enderio.api.conduit.connection.IConnectionState;
 import com.enderio.api.conduit.connection.StaticConnectionStates;
+import com.enderio.conduits.ConduitNBTKeys;
+import com.enderio.conduits.common.ConduitShape;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.network.ConduitSavedData;
@@ -36,11 +36,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
-import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
@@ -60,6 +61,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public static final ModelProperty<ConduitBundle> BUNDLE_MODEL_PROPERTY = new ModelProperty<>();
     public static final ModelProperty<BlockPos> POS = new ModelProperty<>();
+    public static final String CONDUIT_INV_KEY = "ConduitInv";
 
     private final ConduitShape shape = new ConduitShape();
 
@@ -70,6 +72,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     private final Map<IConduitType<?>,NodeIdentifier<?>> lazyNodes = new HashMap<>();
     private ListTag lazyNodeNBT = new ListTag();
+    private ConduitItemHandler conduitItemHandler = new ConduitItemHandler();
+
 
     public ConduitBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(ConduitBlockEntities.CONDUIT.get(), worldPosition, blockState);
@@ -204,6 +208,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             listTag.add(data.serializeNBT());
         }
         tag.put(ConduitNBTKeys.CONDUIT_EXTRA_DATA, listTag);
+        tag.put(CONDUIT_INV_KEY, conduitItemHandler.serializeNBT());
     }
 
     @Override
@@ -211,6 +216,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         super.load(tag);
         bundle.deserializeNBT(tag.getCompound(ConduitNBTKeys.CONDUIT_BUNDLE));
         lazyNodeNBT = tag.getList(ConduitNBTKeys.CONDUIT_EXTRA_DATA, Tag.TAG_COMPOUND);
+        conduitItemHandler.deserializeNBT(tag.getCompound(CONDUIT_INV_KEY));
     }
 
     @Override
@@ -519,14 +525,14 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
 
     public IItemHandler getConduitItemHandler() {
-        return new ConduitItemHandler();
+        return conduitItemHandler;
     }
 
     public static void pushIOState(Direction direction, NodeIdentifier<?> node, DynamicConnectionState connectionState) {
         node.pushState(direction, connectionState);
     }
 
-    private class ConduitItemHandler implements IItemHandlerModifiable {
+    private class ConduitItemHandler implements IItemHandlerModifiable, INBTSerializable<CompoundTag> {
 
         @Override
         public int getSlots() {
@@ -649,11 +655,37 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             }
 
             ConduitConnection connection = bundle.getConnection(data.direction());
-            IConduitMenuData conduitData = bundle.getTypes().get(data.conduitIndex()).getMenuData();
+            IConduitType<?> iConduitType = bundle.getTypes().get(data.conduitIndex());
+            IConduitMenuData conduitData = iConduitType.getMenuData();
 
             if ((data.slotType() == SlotType.FILTER_EXTRACT && conduitData.hasFilterExtract()) || (data.slotType() == SlotType.FILTER_INSERT
                 && conduitData.hasFilterInsert()) || (data.slotType() == SlotType.UPGRADE_EXTRACT && conduitData.hasUpgrade())) {
                 connection.setItem(data.slotType(), data.conduitIndex(), stack);
+                if (connection.getConnectionState(iConduitType) instanceof DynamicConnectionState dynamicConnectionState) {
+                    pushIOState(data.direction(), bundle.getNodeForTypeExact(iConduitType), dynamicConnectionState);
+                }
+            }
+        }
+
+        @Override
+        public CompoundTag serializeNBT() {
+            CompoundTag tag = new CompoundTag();
+            ListTag list = new ListTag();
+            for (int i = 0; i < getSlots(); i++) {
+                CompoundTag item = new CompoundTag();
+                ItemStack stack = getStackInSlot(i);
+                stack.save(item);
+                list.add(i, item);
+            }
+            tag.put(CONDUIT_INV_KEY, list);
+            return tag;
+        }
+
+        @Override
+        public void deserializeNBT(CompoundTag nbt) {
+            ListTag list = nbt.getList(CONDUIT_INV_KEY, Tag.TAG_COMPOUND);
+            for (int i = 0; i < list.size(); i++) {
+                setStackInSlot(i, ItemStack.of(list.getCompound(i)));
             }
         }
     }
