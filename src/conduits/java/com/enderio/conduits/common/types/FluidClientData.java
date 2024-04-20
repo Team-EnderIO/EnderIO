@@ -82,8 +82,8 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
                 uv0[0] = (uv0[0] - quad.getSprite().getU0()) * sprite.contents().width() / quad.getSprite().contents().height() + sprite.getU0();
                 uv0[1] = (uv0[1] - quad.getSprite().getV0()) * sprite.contents().width() / quad.getSprite().contents().height() + sprite.getV0();
                 int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
-                quad.getVertices()[4 + i * STRIDE] = packedTextureData[0];
-                quad.getVertices()[5 + i * STRIDE] = packedTextureData[1];
+                quad.getVertices()[IQuadTransformer.UV0 + i * IQuadTransformer.STRIDE] = packedTextureData[0];
+                quad.getVertices()[IQuadTransformer.UV0 + 1 + i * IQuadTransformer.STRIDE] = packedTextureData[1];
                 RenderUtil.putColorARGB(quad.getVertices(), i, clientExtension.getTintColor());
             }
         }
