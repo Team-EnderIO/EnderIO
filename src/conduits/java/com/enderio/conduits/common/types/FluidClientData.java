@@ -86,6 +86,7 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
                 quad.getVertices()[IQuadTransformer.UV0 + 1 + i * IQuadTransformer.STRIDE] = packedTextureData[1];
                 RenderUtil.putColorARGB(quad.getVertices(), i, clientExtension.getTintColor());
             }
+            quad.sprite = sprite;
         }
     }
 

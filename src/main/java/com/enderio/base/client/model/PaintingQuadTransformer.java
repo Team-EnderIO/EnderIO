@@ -28,6 +28,7 @@ public record PaintingQuadTransformer(BlockState paint, RenderType type) impleme
             quad.getVertices()[IQuadTransformer.UV0 + i * IQuadTransformer.STRIDE] = packedTextureData[0];
             quad.getVertices()[IQuadTransformer.UV0 + 1 + i * IQuadTransformer.STRIDE] = packedTextureData[1];
         }
+        quad.sprite = sprite;
     }
 
     private TextureAtlasSprite getSpriteForDirection(Direction direction) {
