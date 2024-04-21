@@ -407,8 +407,13 @@ public class EIOItems {
 
     // region filter
 
-    public static final RegiliteItem<ItemFilter> ITEM_FILTER = ITEM_REGISTRY
-        .registerItem("item_filter", properties -> new ItemFilter(properties, 5))
+    public static final RegiliteItem<ItemFilter> BASIC_ITEM_FILTER = ITEM_REGISTRY
+        .registerItem("basic_filter", properties -> new ItemFilter(properties, 5))
+        .setTab(EIOCreativeTabs.GEAR)
+        .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
+
+    public static final RegiliteItem<ItemFilter> ADVANCED_ITEM_FILTER = ITEM_REGISTRY
+        .registerItem("advanced_filter", properties -> new ItemFilter(properties, 10))
         .setTab(EIOCreativeTabs.GEAR)
         .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
 
