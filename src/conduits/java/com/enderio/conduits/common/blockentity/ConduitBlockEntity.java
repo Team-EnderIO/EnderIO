@@ -400,12 +400,6 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
 
                 node = new NodeIdentifier<>(worldPosition, data);
-                for (Direction direction : Direction.values()) {
-                    if (bundle.getConnection(direction).getConnectionState(type) instanceof DynamicConnectionState connectionState) {
-                        pushIOState(direction, node, connectionState);
-                    }
-                }
-
                 Graph.integrate(node, List.of());
                 bundle.setNodeFor(type, node);
                 lazyNodes.put(type, node);
@@ -657,7 +651,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 && conduitData.hasFilterInsert()) || (data.slotType() == SlotType.UPGRADE_EXTRACT && conduitData.hasUpgrade())) {
                 connection.setItem(data.slotType(), data.conduitIndex(), stack);
                 if (connection.getConnectionState(iConduitType) instanceof DynamicConnectionState dynamicConnectionState) {
-                    pushIOState(data.direction(), bundle.getNodeForTypeExact(iConduitType), dynamicConnectionState);
+                    NodeIdentifier<?> node = bundle.getNodeForTypeExact(iConduitType);
+                    if (node != null) {
+                        pushIOState(data.direction(), node, dynamicConnectionState);
+                    }
                 }
             }
         }

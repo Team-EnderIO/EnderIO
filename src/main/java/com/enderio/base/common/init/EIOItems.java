@@ -408,7 +408,7 @@ public class EIOItems {
     // region filter
 
     public static final RegiliteItem<ItemFilter> ITEM_FILTER = ITEM_REGISTRY
-        .registerItem("item_filter", properties -> new ItemFilter(properties, 5, false, false))
+        .registerItem("item_filter", properties -> new ItemFilter(properties, 5))
         .setTab(EIOCreativeTabs.GEAR)
         .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
 

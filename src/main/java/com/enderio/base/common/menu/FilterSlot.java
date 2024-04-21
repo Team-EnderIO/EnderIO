@@ -1,15 +1,18 @@
 package com.enderio.base.common.menu;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class FilterSlot extends Slot {
 
+    private static Container emptyInventory = new SimpleContainer(0);
     private final NonNullList<ItemStack> items;
 
     public FilterSlot(NonNullList<ItemStack> items, int pSlot, int pX, int pY) {
-        super(null, pSlot, pX, pY);
+        super(emptyInventory, pSlot, pX, pY);
         this.items = items;
     }
 
