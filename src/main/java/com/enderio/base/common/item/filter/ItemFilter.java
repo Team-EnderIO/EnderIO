@@ -23,14 +23,10 @@ public class ItemFilter extends Item implements IEnderFilter {
         (stack, v) -> stack.getData(EIOAttachments.ITEM_FILTER);
 
     private final int size;
-    private final boolean advanced;
-    private final boolean invert;
 
-    public ItemFilter(Properties pProperties, int size, boolean advanced, boolean inverted) {
+    public ItemFilter(Properties pProperties, int size) {
         super(pProperties);
         this.size = size;
-        this.advanced = advanced;
-        this.invert = inverted;
     }
 
     @Override
@@ -39,25 +35,14 @@ public class ItemFilter extends Item implements IEnderFilter {
     }
 
     @Override
-    public boolean isAdvanced() {
-        return advanced;
-    }
-
-    @Override
-    public boolean isInverted() {
-        return invert;
-    }
-
-    @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        ItemStack stack = pPlayer.getItemInHand(pUsedHand);
         if (pPlayer instanceof ServerPlayer serverPlayer) {
-            openMenu(serverPlayer, stack);
+            openMenu(serverPlayer);
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }
 
-    private static void openMenu(ServerPlayer player, ItemStack stack) {
+    private static void openMenu(ServerPlayer player) {
         player.openMenu(new MenuProvider() {
             @Override
             public Component getDisplayName() {
@@ -66,7 +51,7 @@ public class ItemFilter extends Item implements IEnderFilter {
 
             @Override
             public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-                return new FilterMenu(pContainerId, stack);
+                return new FilterMenu(pContainerId, pInventory, player.getMainHandItem());
             }
         });
     }

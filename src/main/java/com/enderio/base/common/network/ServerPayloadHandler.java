@@ -49,4 +49,17 @@ public class ServerPayloadHandler {
             TravelHandler.blockTeleportTo(player.level(), player, target.get(), false);
         });
     }
+
+    public void handleFilterUpdate(FilterUpdatePacket packet, PlayPayloadContext context) {
+        context.workHandler()
+            .submitAsync(() -> {
+                context.player().ifPresent(player -> {
+                    ItemFilterCapability capability = player.getMainHandItem().getCapability(EIOCapabilities.Filter.ITEM);
+                    if (capability != null) {
+                        capability.setNbt(packet.nbt());
+                        capability.setInverted(packet.inverted());
+                    }
+                });
+            });
+    }
 }
