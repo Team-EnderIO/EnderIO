@@ -29,8 +29,8 @@ public interface IIOAwareConduitTicker extends ILoadedAwareConduitTicker {
                 for (Direction direction: Direction.values()) {
                     nodeIdentifier.getIOState(direction)
                         .ifPresent(ioState -> {
-                            ioState.extract().filter(extract -> isRedstoneMode(type, level, nodeIdentifier.getPos(), ioState, isRedstoneActive)).ifPresent(color -> extracts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData(), nodeIdentifier.getConnectionState())));
-                            ioState.insert().ifPresent(color -> inserts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData(), nodeIdentifier.getConnectionState())));
+                            ioState.extract().filter(extract -> isRedstoneMode(type, level, nodeIdentifier.getPos(), ioState, isRedstoneActive)).ifPresent(color -> extracts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData(), nodeIdentifier.getConnectionState(direction))));
+                            ioState.insert().ifPresent(color -> inserts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData(), nodeIdentifier.getConnectionState(direction))));
                     });
                 }
             }

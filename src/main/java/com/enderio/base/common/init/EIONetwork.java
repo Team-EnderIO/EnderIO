@@ -2,6 +2,7 @@ package com.enderio.base.common.init;
 
 import com.enderio.base.common.network.AddTravelTargetPacket;
 import com.enderio.base.common.network.ClientPayloadHandler;
+import com.enderio.base.common.network.FilterUpdatePacket;
 import com.enderio.base.common.network.RemoveTravelTargetPacket;
 import com.enderio.base.common.network.RequestTravelPacket;
 import com.enderio.base.common.network.ServerPayloadHandler;
@@ -40,6 +41,9 @@ public class EIONetwork {
 
         registrar.play(RequestTravelPacket.ID, RequestTravelPacket::new,
             handler -> handler.server(ServerPayloadHandler.getInstance()::handleTravelRequest));
+
+        registrar.play(FilterUpdatePacket.ID, FilterUpdatePacket::new,
+            handler -> handler.server(ServerPayloadHandler.getInstance()::handleFilterUpdate));
     }
     
 }

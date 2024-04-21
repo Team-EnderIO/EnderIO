@@ -2,7 +2,9 @@ package com.enderio.base.common.network;
 
 import com.enderio.api.travel.ITravelTarget;
 import com.enderio.base.common.handler.TravelHandler;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.travel.TravelSavedData;
+import com.enderio.core.common.capability.ItemFilterCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
@@ -56,6 +58,19 @@ public class ServerPayloadHandler {
                 }
 
                 TravelHandler.blockTeleportTo(player.level(), player, target.get(), false);
+            });
+    }
+
+    public void handleFilterUpdate(FilterUpdatePacket packet, PlayPayloadContext context) {
+        context.workHandler()
+            .submitAsync(() -> {
+                context.player().ifPresent(player -> {
+                    ItemFilterCapability capability = player.getMainHandItem().getCapability(EIOCapabilities.Filter.ITEM);
+                    if (capability != null) {
+                        capability.setNbt(packet.nbt());
+                        capability.setInverted(packet.inverted());
+                    }
+                });
             });
     }
 }

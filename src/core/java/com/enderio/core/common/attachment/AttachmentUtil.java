@@ -66,7 +66,7 @@ public class AttachmentUtil {
         return () -> AttachmentType.serializable(holder -> {
             if (holder instanceof ItemStack itemStack) {
                 if (itemStack.getItem() instanceof IEnderFilter filer) {
-                    return new ItemFilterCapability(filer.size(), filer.isAdvanced(), filer.isInverted());
+                    return new ItemFilterCapability(filer.size(), false, false);
                 }
                 return new ItemFilterCapability(0, false, false);
             } else {

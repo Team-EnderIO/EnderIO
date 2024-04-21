@@ -96,8 +96,8 @@ public class EnderIO {
         EIOBlockEntities.register(modEventBus);
         EIOFluids.register(modEventBus);
         EIOEnchantments.register(modEventBus);
+        EIOMenus.register(modEventBus);
         EIOTags.register();
-        EIOMenus.register();
         EIOLang.register();
         EIORecipes.register(modEventBus);
         EIOLootModifiers.register(modEventBus);

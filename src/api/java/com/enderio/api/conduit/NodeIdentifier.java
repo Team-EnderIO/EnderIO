@@ -23,8 +23,7 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
 
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
     private final T extendedConduitData;
-
-    @Nullable private DynamicConnectionState connectionState;
+    private final Map<Direction, DynamicConnectionState> connectionStates = new EnumMap<>(Direction.class);
 
     /*public static final Codec<NodeIdentifier<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         BlockPos.CODEC.fieldOf("pos").forGetter(NodeIdentifier::getPos),
@@ -52,7 +51,7 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
 
     @ApiStatus.Internal
     public void pushState(Direction direction, DynamicConnectionState connectionState) {
-        this.connectionState = connectionState;
+        this.connectionStates.put(direction, connectionState);
         ioStates.put(direction, IOState.of(connectionState.isInsert() ? connectionState.insert() : null,
             connectionState.isExtract() ? connectionState.extract() : null, connectionState.control(), connectionState.redstoneChannel()));
     }
@@ -75,8 +74,8 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
     }
 
     @Nullable
-    public DynamicConnectionState getConnectionState() {
-        return connectionState;
+    public DynamicConnectionState getConnectionState(Direction direction) {
+        return connectionStates.get(direction);
     }
 
     public record IOState(Optional<ColorControl> insert, Optional<ColorControl> extract, RedstoneControl control, ColorControl redstoneChannel) {
