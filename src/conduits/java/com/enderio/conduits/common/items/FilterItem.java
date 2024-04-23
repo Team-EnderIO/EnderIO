@@ -48,7 +48,10 @@ public class FilterItem extends Item implements IMultiCapabilityItem {
                         .append(filterCap.getIgnoreMode() ?
                             Component.translatable("options.on").withStyle(ChatFormatting.GREEN)
                             : Component.translatable("options.off").withStyle(ChatFormatting.RED)));
-                    filterCap.getItems().forEach(stack1 -> tooltip.add(stack1.getHoverName()));
+                    tooltip.add(Component.literal("Strict Mode: ")
+                        .append(filterCap.getStrictMode() ?
+                            Component.translatable("options.on").withStyle(ChatFormatting.GREEN)
+                            : Component.translatable("options.off").withStyle(ChatFormatting.RED)));
                 });
         }
     }

@@ -40,9 +40,7 @@ public class ConduitItemFilterPacket implements Packet {
         return context.getSender() != null
             && !theFilter.isEmpty()
             && (theFilter.is(ConduitItems.BASIC_ITEM_FILTER.asItem())
-                || theFilter.is(ConduitItems.ADVANCED_ITEM_FILTER.asItem())
-                || theFilter.is(ConduitItems.BIG_ITEM_FILTER.asItem())
-                || theFilter.is(ConduitItems.BIG_ADVANCED_ITEM_FILTER.asItem()))
+                || theFilter.is(ConduitItems.BIG_ITEM_FILTER.asItem()))
             && (context.getSender().containerMenu instanceof ConduitFilterMenu cfm)
             && ItemStack.isSameItem(theFilter, cfm.inventory.filter);
     }

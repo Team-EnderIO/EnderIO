@@ -25,9 +25,7 @@ public class ConduitItems {
     public static final ItemEntry<Item> ITEM = createConduitItem(EnderConduitTypes.ITEM, "item");
 
     public static final ItemEntry<FilterItem> BASIC_ITEM_FILTER = filterItemBasic("basic_item_filter").register();
-    public static final ItemEntry<FilterItem> ADVANCED_ITEM_FILTER = filterItemBasic("advanced_item_filter").register(); // "advanced" mechanics not implemented
     public static final ItemEntry<FilterItem> BIG_ITEM_FILTER = filterItemBig("big_item_filter").register();
-    public static final ItemEntry<FilterItem> BIG_ADVANCED_ITEM_FILTER = filterItemBig("big_advanced_item_filter").register(); // "advanced" mechanics not implemented
 
     private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName) {
         return REGISTRATE.item(itemName + "_conduit",
