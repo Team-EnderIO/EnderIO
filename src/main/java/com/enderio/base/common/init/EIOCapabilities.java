@@ -4,7 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.capability.IDarkSteelUpgradable;
 import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.capacitor.ICapacitorData;
-import com.enderio.core.common.capability.ItemFilterCapability;
+import com.enderio.core.common.capability.IFilterCapability;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
@@ -26,9 +26,9 @@ public class EIOCapabilities {
     }
 
     public static final class Filter {
-        public static final ItemCapability<ItemFilterCapability, Void> ITEM =
+        public static final ItemCapability<IFilterCapability, Void> ITEM =
             ItemCapability.createVoid(
-                EnderIO.loc("item_filter"),
-                ItemFilterCapability.class);
+                EnderIO.loc("filter"),
+                IFilterCapability.class);
     }
 }

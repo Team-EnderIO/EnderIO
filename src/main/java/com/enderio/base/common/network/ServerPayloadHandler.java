@@ -54,7 +54,7 @@ public class ServerPayloadHandler {
         context.workHandler()
             .submitAsync(() -> {
                 context.player().ifPresent(player -> {
-                    ItemFilterCapability capability = player.getMainHandItem().getCapability(EIOCapabilities.Filter.ITEM);
+                    IFilterCapability capability = player.getMainHandItem().getCapability(EIOCapabilities.Filter.ITEM);
                     if (capability != null) {
                         capability.setNbt(packet.nbt());
                         capability.setInverted(packet.inverted());

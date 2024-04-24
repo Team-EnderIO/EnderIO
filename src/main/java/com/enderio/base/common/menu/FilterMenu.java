@@ -3,10 +3,8 @@ package com.enderio.base.common.menu;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.network.FilterUpdatePacket;
-import com.enderio.base.common.network.RequestTravelPacket;
-import com.enderio.core.common.capability.ItemFilterCapability;
+import com.enderio.core.common.capability.IFilterCapability;
 import com.enderio.core.common.network.NetworkUtil;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -15,18 +13,20 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
+
 public class FilterMenu extends AbstractContainerMenu {
 
     private final ItemStack stack;
-    private final ItemFilterCapability capability;
+    private final IFilterCapability capability;
 
     public FilterMenu(MenuType<?> pMenuType, int pContainerId, Inventory inventory, ItemStack stack) {
         super(pMenuType, pContainerId);
         this.stack = stack;
         this.capability = stack.getCapability(EIOCapabilities.Filter.ITEM);
-        NonNullList<ItemStack> items = capability.getItems();
+        List<ItemStack> items = capability.getEntries();
         for (int i = 0; i < items.size(); i++) {
-            addSlot(new FilterSlot(items, i, 13 + ( i % 5) * 18, 43 + 10 * ( i / 5)));
+            addSlot(capability.getSlot(i, 14 + ( i % 5) * 18, 43 + 20 * ( i / 5)));
         }
         addInventorySlots(8,84, inventory);
     }
@@ -67,7 +67,7 @@ public class FilterMenu extends AbstractContainerMenu {
 
     }
 
-    public ItemFilterCapability getFilter() {
+    public IFilterCapability getFilter() {
         return capability;
     }
 
