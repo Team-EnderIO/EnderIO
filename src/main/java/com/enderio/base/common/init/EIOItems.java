@@ -5,6 +5,7 @@ import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
+import com.enderio.base.common.item.filter.FluidFilter;
 import com.enderio.base.common.item.filter.ItemFilter;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
@@ -416,6 +417,11 @@ public class EIOItems {
         .registerItem("advanced_filter", properties -> new ItemFilter(properties, 10))
         .setTab(EIOCreativeTabs.GEAR)
         .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
+
+    public static final RegiliteItem<FluidFilter> BASIC_FLUID_FILTER = ITEM_REGISTRY
+        .registerItem("fluid_filter", properties -> new FluidFilter(properties, 5))
+        .setTab(EIOCreativeTabs.GEAR)
+        .addCapability(EIOCapabilities.Filter.ITEM, FluidFilter.FILTER_PROVIDER);
 
     // endregion
 

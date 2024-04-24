@@ -1,15 +1,15 @@
 package com.enderio.core.common.capability;
 
+import com.enderio.core.common.menu.ItemFilterSlot;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Predicate;
+import java.util.List;
 
-public class ItemFilterCapability implements INBTSerializable<CompoundTag>, Predicate<ItemStack> {
+public class ItemFilterCapability implements IFilterCapability<ItemStack> {
 
     private final NonNullList<ItemStack> items;
     private boolean nbt;
@@ -21,8 +21,14 @@ public class ItemFilterCapability implements INBTSerializable<CompoundTag>, Pred
         this.invert = invert;
     }
 
-    public NonNullList<ItemStack> getItems() {
+    @Override
+    public List<ItemStack> getEntries() {
         return items;
+    }
+
+    @Override
+    public Slot getSlot(int pSlot, int pX, int pY) {
+        return new ItemFilterSlot(items, pSlot, pX, pY);
     }
 
     public void setNbt(Boolean nbt) {
@@ -51,7 +57,7 @@ public class ItemFilterCapability implements INBTSerializable<CompoundTag>, Pred
     }
 
     @Override
-    public void deserializeNBT(@NotNull CompoundTag nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         ContainerHelper.loadAllItems(nbt, items);
         this.nbt = nbt.getBoolean("nbt");
         this.invert = nbt.getBoolean("inverted");
@@ -59,7 +65,7 @@ public class ItemFilterCapability implements INBTSerializable<CompoundTag>, Pred
 
     @Override
     public boolean test(ItemStack stack) {
-        for (ItemStack testStack : getItems()) {
+        for (ItemStack testStack : getEntries()) {
             boolean test = isNbt() ? ItemStack.isSameItemSameTags(testStack, stack) : ItemStack.isSameItem(testStack, stack);
             if (test) {
                 return !isInvert();

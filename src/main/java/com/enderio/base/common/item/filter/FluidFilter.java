@@ -17,14 +17,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
-public class ItemFilter extends Item implements IEnderFilter {
+public class FluidFilter extends Item implements IEnderFilter {
 
     public static ICapabilityProvider<ItemStack, Void, IFilterCapability> FILTER_PROVIDER =
-        (stack, v) -> stack.getData(EIOAttachments.ITEM_FILTER);
+        (stack, v) -> stack.getData(EIOAttachments.FLUID_FILTER);
 
     private final int size;
 
-    public ItemFilter(Properties pProperties, int size) {
+    public FluidFilter(Properties pProperties, int size) {
         super(pProperties);
         this.size = size;
     }

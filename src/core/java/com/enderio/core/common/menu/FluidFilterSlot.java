@@ -1,29 +1,32 @@
-package com.enderio.base.common.menu;
+package com.enderio.core.common.menu;
 
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
-public class FilterSlot extends Slot {
+import java.util.List;
+
+public class FluidFilterSlot extends Slot {
 
     private static Container emptyInventory = new SimpleContainer(0);
-    private final NonNullList<ItemStack> items;
+    private final List<FluidStack> fluids;
 
-    public FilterSlot(NonNullList<ItemStack> items, int pSlot, int pX, int pY) {
+    public FluidFilterSlot(List<FluidStack> items, int pSlot, int pX, int pY) {
         super(emptyInventory, pSlot, pX, pY);
-        this.items = items;
+        this.fluids = items;
     }
 
     @Override
     public ItemStack getItem() {
-        return items.get(getSlotIndex());
+        return ItemStack.EMPTY;
     }
 
     @Override
     public void set(ItemStack pStack) {
-        items.set(getSlotIndex(), pStack);
         setChanged();
     }
 
@@ -46,10 +49,10 @@ public class FilterSlot extends Slot {
     @Override
     public ItemStack safeInsert(ItemStack stack, int amount) {
         // If this stack is valid, set the inventory slot value.
-        if (!stack.isEmpty() && mayPlace(stack)) {
-            ItemStack ghost = stack.copy();
-            ghost.setCount(Math.min(ghost.getCount(), this.getMaxStackSize()));
-            set(ghost);
+        IFluidHandlerItem capability = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (!stack.isEmpty() && mayPlace(stack) && capability != null) {
+            FluidStack ghost = capability.getFluidInTank(0).copy();
+            fluids.set(getSlotIndex(), ghost);
         }
 
         return stack;
