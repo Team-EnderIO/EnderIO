@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.attachment.CoordinateSelection;
 import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.base.common.capacitor.LootCapacitorData;
+import com.enderio.core.common.capability.FluidFilterCapability;
 import com.enderio.core.common.capability.ItemFilterCapability;
 import com.enderio.core.common.attachment.AttachmentUtil;
 import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
@@ -43,6 +44,9 @@ public class EIOAttachments {
 
     public static final Supplier<AttachmentType<ItemFilterCapability>> ITEM_FILTER
         = ATTACHMENT_TYPES.register("item_filter", AttachmentUtil.itemFilterAttachment());
+
+    public static final Supplier<AttachmentType<FluidFilterCapability>> FLUID_FILTER
+        = ATTACHMENT_TYPES.register("fluid_filter", AttachmentUtil.fluidFilterAttachment());
 
     public static void register(IEventBus bus) {
         ATTACHMENT_TYPES.register(bus);

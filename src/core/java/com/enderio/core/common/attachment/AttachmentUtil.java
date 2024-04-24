@@ -1,5 +1,6 @@
 package com.enderio.core.common.attachment;
 
+import com.enderio.core.common.capability.FluidFilterCapability;
 import com.enderio.core.common.capability.ItemFilterCapability;
 import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.enderio.core.common.item.IEnderFilter;
@@ -69,6 +70,20 @@ public class AttachmentUtil {
                     return new ItemFilterCapability(filer.size(), false, false);
                 }
                 return new ItemFilterCapability(0, false, false);
+            } else {
+                // TODO: Add block support for machines?
+                throw new IllegalStateException("Cannot attach item filter handler item to a non-item.");
+            }
+        }).build();
+    }
+
+    public static Supplier<AttachmentType<FluidFilterCapability>> fluidFilterAttachment() {
+        return () -> AttachmentType.serializable(holder -> {
+            if (holder instanceof ItemStack itemStack) {
+                if (itemStack.getItem() instanceof IEnderFilter filer) {
+                    return new FluidFilterCapability(filer.size(), false, false);
+                }
+                return new FluidFilterCapability(0, false, false);
             } else {
                 // TODO: Add block support for machines?
                 throw new IllegalStateException("Cannot attach item filter handler item to a non-item.");

@@ -4,7 +4,7 @@ import com.enderio.api.travel.ITravelTarget;
 import com.enderio.base.common.handler.TravelHandler;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.travel.TravelSavedData;
-import com.enderio.core.common.capability.ItemFilterCapability;
+import com.enderio.core.common.capability.IFilterCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
@@ -65,7 +65,7 @@ public class ServerPayloadHandler {
         context.workHandler()
             .submitAsync(() -> {
                 context.player().ifPresent(player -> {
-                    ItemFilterCapability capability = player.getMainHandItem().getCapability(EIOCapabilities.Filter.ITEM);
+                    IFilterCapability capability = player.getMainHandItem().getCapability(EIOCapabilities.Filter.ITEM);
                     if (capability != null) {
                         capability.setNbt(packet.nbt());
                         capability.setInverted(packet.inverted());

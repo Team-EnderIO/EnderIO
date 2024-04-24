@@ -4,6 +4,7 @@ import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.core.common.capability.IFilterCapability;
 import com.enderio.core.common.capability.ItemFilterCapability;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
@@ -34,8 +35,8 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
 
                 if (extract.connectionState != null && !extract.connectionState.filterExtract().isEmpty()) {
                     ItemStack stack = extract.connectionState.filterExtract();
-                    ItemFilterCapability capability = stack.getCapability(EIOCapabilities.Filter.ITEM);
-                    if (capability != null && !capability.test(extractedItem)) {
+                    IFilterCapability capability = stack.getCapability(EIOCapabilities.Filter.ITEM);
+                    if (capability instanceof ItemFilterCapability cap && !cap.test(extractedItem)) {
                         return;
                     }
                 }
@@ -61,8 +62,8 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
 
                     if (insert.connectionState != null && !insert.connectionState.filterInsert().isEmpty()) {
                         ItemStack stack = insert.connectionState.filterInsert();
-                        ItemFilterCapability capability = stack.getCapability(EIOCapabilities.Filter.ITEM);
-                        if (capability != null && !capability.test(extractedItem)) {
+                        IFilterCapability capability = stack.getCapability(EIOCapabilities.Filter.ITEM);
+                        if (capability instanceof ItemFilterCapability cap && !cap.test(extractedItem)) {
                             break;
                         }
                     }
