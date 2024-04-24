@@ -37,7 +37,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
                     ItemStack stack = extract.connectionState.filterExtract();
                     IFilterCapability capability = stack.getCapability(EIOCapabilities.Filter.ITEM);
                     if (capability instanceof ItemFilterCapability cap && !cap.test(extractedItem)) {
-                        return;
+                        continue;
                     }
                 }
 
@@ -64,7 +64,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
                         ItemStack stack = insert.connectionState.filterInsert();
                         IFilterCapability capability = stack.getCapability(EIOCapabilities.Filter.ITEM);
                         if (capability instanceof ItemFilterCapability cap && !cap.test(extractedItem)) {
-                            break;
+                            continue;
                         }
                     }
 
