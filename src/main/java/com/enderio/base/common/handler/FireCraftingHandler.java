@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -24,11 +25,12 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 @SuppressWarnings("unused")
-@Mod.EventBusSubscriber(modid = EnderIO.MODID)
+@EventBusSubscriber(modid = EnderIO.MODID)
 public class FireCraftingHandler {
     private static final Random RANDOM = new Random();
     private static final ConcurrentMap<FireIndex, Long> FIRE_TRACKER = new ConcurrentHashMap<>();
@@ -106,12 +108,12 @@ public class FireCraftingHandler {
         }
     }
 
-    public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, ResourceLocation lootTable, int maxItemDrops) {
+    public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, ResourceKey<LootTable> lootTable, int maxItemDrops) {
         LootParams lootparams = (new LootParams.Builder(level)).withParameter(LootContextParams.ORIGIN, pos.getCenter()).create(LootContextParamSets.COMMAND);
 
-        LootTable table = level.getServer().getLootData().getElement(LootDataType.TABLE, lootTable);
+        LootTable table = level.getServer().reloadableRegistries().getLootTable(lootTable);
 
-        if (table != null && table != LootTable.EMPTY) {
+        if (table != LootTable.EMPTY) {
             ObjectArrayList<ItemStack> randomItems = table.getRandomItems(lootparams);
             for (int i = 0; i < randomItems.size(); i++) {
                 if (i >= maxItemDrops) {
@@ -142,21 +144,23 @@ public class FireCraftingHandler {
 
     // Support worlds where firetick is disabled:
     @SubscribeEvent
-    public static void onWorldTick(TickEvent.LevelTickEvent event) {
-        if (!FIRE_TRACKER.isEmpty() && !event.level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
+    public static void onWorldTick(LevelTickEvent event) {
+        var level = event.getLevel();
+
+        if (!FIRE_TRACKER.isEmpty() && !level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
             // Create a list of positions that need to be turned to air. Fixes issues with the fire tracker being modified while we iterate
             List<BlockPos> blocksToClear = new ArrayList<>();
 
             // Search for any fires that are due to spawn drops.
-            long gameTime = event.level.getGameTime();
+            long gameTime = level.getGameTime();
             for (Map.Entry<FireIndex, Long> fire : FIRE_TRACKER.entrySet()) {
-                if (!fire.getKey().dimension().equals(event.level.dimension())) {
+                if (!fire.getKey().dimension().equals(level.dimension())) {
                     continue;
                 }
 
                 BlockPos pos = fire.getKey().pos();
                 if (gameTime > fire.getValue()) {
-                    if (event.level.getBlockState(pos).getBlock() instanceof FireBlock) {
+                    if (level.getBlockState(pos).getBlock() instanceof FireBlock) {
                         blocksToClear.add(pos);
                     } else {
                         FIRE_TRACKER.remove(fire.getKey());
@@ -166,7 +170,7 @@ public class FireCraftingHandler {
 
             // Turn them to air to trigger the usual event.
             for (BlockPos pos : blocksToClear) {
-                event.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             }
         }
     }

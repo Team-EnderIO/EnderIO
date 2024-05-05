@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -17,7 +18,7 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import java.util.HashMap;
 import java.util.List;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class GrindingBallManager {
     private static final HashMap<Item, IGrindingBallData> ITEM_TO_DATA = new HashMap<>();
     private static final HashMap<ResourceLocation, IGrindingBallData> ID_TO_DATA = new HashMap<>();
@@ -65,7 +66,6 @@ public class GrindingBallManager {
     }
 
     private static void rebuildCache(RecipeManager manager) {
-
         // Wipe the lookup table
         ITEM_TO_DATA.clear();
         ID_TO_DATA.clear();

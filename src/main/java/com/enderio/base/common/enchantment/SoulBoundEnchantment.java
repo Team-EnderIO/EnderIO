@@ -1,27 +1,22 @@
 package com.enderio.base.common.enchantment;
 
 import com.enderio.base.common.config.BaseConfig;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class SoulBoundEnchantment extends EIOBaseEnchantment {
 
+    // TODO: 20.6: all enchantments these need proper anvil costs.
     public SoulBoundEnchantment() {
-        super(Rarity.VERY_RARE, EnchantmentCategory.VANISHABLE, EquipmentSlot.values(), () -> true);
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return 1;
-    }
-
-    @Override
-    public int getMaxCost(int pLevel) {
-        return BaseConfig.COMMON.ENCHANTMENTS.SOUL_BOUND_MAX_COST.get();
-    }
-
-    @Override
-    public int getMinCost(int pLevel) {
-        return BaseConfig.COMMON.ENCHANTMENTS.SOUL_BOUND_MIN_COST.get();
+        super(
+            definition(
+                ItemTags.MINING_ENCHANTABLE,
+                2,
+                1,
+                constantCost(BaseConfig.COMMON.ENCHANTMENTS.SOUL_BOUND_MIN_COST.get()),
+                constantCost(BaseConfig.COMMON.ENCHANTMENTS.SOUL_BOUND_MAX_COST.get()),
+                1,
+                EquipmentSlot.values()
+            ), () -> true);
     }
 }

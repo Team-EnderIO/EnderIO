@@ -9,6 +9,7 @@ import com.enderio.base.common.network.SyncTravelDataPacket;
 import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -17,9 +18,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,7 +30,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
 public class TravelSavedData extends SavedData {
 
     private static final TravelSavedData CLIENT_INSTANCE = new TravelSavedData();
@@ -35,11 +38,10 @@ public class TravelSavedData extends SavedData {
     private final Map<BlockPos, ITravelTarget> travelTargets = new HashMap<>();
 
     public TravelSavedData() {
-
     }
 
-    public TravelSavedData(CompoundTag nbt) {
-        this.loadNBT(nbt);
+    public TravelSavedData(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
+        this.loadNBT(lookupProvider, nbt);
     }
 
     public static TravelSavedData getTravelData(Level level) {
@@ -50,7 +52,7 @@ public class TravelSavedData extends SavedData {
         }
     }
 
-    public void loadNBT(CompoundTag nbt){
+    public void loadNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt){
         this.travelTargets.clear();
         ListTag targets = nbt.getList(TARGETS, Tag.TAG_COMPOUND);
         targets.stream().map(anchorData -> (CompoundTag)anchorData)
@@ -74,9 +76,10 @@ public class TravelSavedData extends SavedData {
     }
 
     public void addTravelTarget(Level level, ITravelTarget target) {
-        if (!level.isClientSide) {
-            NetworkUtil.sendToDimension(new AddTravelTargetPacket(target), level.dimension());
+        if (level instanceof ServerLevel serverLevel) {
+            PacketDistributor.sendToPlayersInDimension(serverLevel, new AddTravelTargetPacket(target));
         }
+
         if (TravelRegistry.isRegistered(target)) {
             travelTargets.put(target.getPos(), target);
         } else {
@@ -85,14 +88,15 @@ public class TravelSavedData extends SavedData {
     }
 
     public void removeTravelTargetAt(Level level, BlockPos pos) {
-        if (!level.isClientSide) {
-            NetworkUtil.sendToDimension(new RemoveTravelTargetPacket(pos), level.dimension());
+        if (level instanceof ServerLevel serverLevel) {
+            PacketDistributor.sendToPlayersInDimension(serverLevel, new RemoveTravelTargetPacket(pos));
         }
+
         travelTargets.remove(pos);
     }
 
     @Override
-    public CompoundTag save(CompoundTag nbt) {
+    public CompoundTag save(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
         ListTag tag = new ListTag();
         tag.addAll(travelTargets.values().stream().map(TravelRegistry::serialize).toList());
         nbt.put(TARGETS, tag);
@@ -108,7 +112,9 @@ public class TravelSavedData extends SavedData {
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
         if (player instanceof ServerPlayer serverPlayer) {
-            NetworkUtil.sendTo(new SyncTravelDataPacket(TravelSavedData.getTravelData(serverPlayer.level()).save(new CompoundTag())), serverPlayer);
+            var savedData = TravelSavedData.getTravelData(serverPlayer.level());
+            var serializedData = savedData.save(new CompoundTag(), serverPlayer.level().registryAccess());
+            NetworkUtil.sendTo(new SyncTravelDataPacket(serializedData), serverPlayer);
         }
     }
 
@@ -116,7 +122,9 @@ public class TravelSavedData extends SavedData {
     public static void onDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
         Player player = event.getEntity();
         if (player instanceof ServerPlayer serverPlayer) {
-            NetworkUtil.sendTo(new SyncTravelDataPacket(TravelSavedData.getTravelData(serverPlayer.level()).save(new CompoundTag())), serverPlayer);
+            var savedData = TravelSavedData.getTravelData(serverPlayer.level());
+            var serializedData = savedData.save(new CompoundTag(), serverPlayer.level().registryAccess());
+            NetworkUtil.sendTo(new SyncTravelDataPacket(serializedData), serverPlayer);
         }
     }
 }

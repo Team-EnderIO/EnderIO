@@ -1,26 +1,26 @@
 package com.enderio.base.common.network;
 
 import com.enderio.EnderIO;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 public record RemoveTravelTargetPacket(BlockPos pos) implements CustomPacketPayload {
 
-    public static ResourceLocation ID = EnderIO.loc("remove_travel_target");
+    public static Type<RemoveTravelTargetPacket> TYPE = new Type<>(EnderIO.loc("remove_travel_target"));
+
+    public static StreamCodec<ByteBuf, RemoveTravelTargetPacket> STREAM_CODEC =
+        BlockPos.STREAM_CODEC.map(RemoveTravelTargetPacket::new, RemoveTravelTargetPacket::pos);
 
     public RemoveTravelTargetPacket(FriendlyByteBuf buf) {
         this(buf.readBlockPos());
     }
 
     @Override
-    public void write(FriendlyByteBuf writeInto) {
-        writeInto.writeBlockPos(pos);
-    }
-
-    @Override
-    public ResourceLocation id() {
-        return ID;
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

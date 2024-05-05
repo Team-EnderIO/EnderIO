@@ -17,12 +17,12 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod.EventBusSubscriber;
 
 import java.util.Map;
 
@@ -69,7 +69,7 @@ public class XPBoostHandler {
             BlockState state = event.getState();
             Level level = (Level) event.getLevel();
             BlockPos pos = event.getPos();
-            final int fortune = event.getPlayer().getMainHandItem().getEnchantmentLevel(Enchantments.BLOCK_FORTUNE);
+            final int fortune = event.getPlayer().getMainHandItem().getEnchantmentLevel(Enchantments.FORTUNE);
             final int xp = state.getBlock().getExpDrop(state, level, RandomSource.create(), pos, fortune, 0);
             if (xp > 0) {
                 level.addFreshEntity(new ExperienceOrb(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, getXPBoost(xp, boostLevel)));

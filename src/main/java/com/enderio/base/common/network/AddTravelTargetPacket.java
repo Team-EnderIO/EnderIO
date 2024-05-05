@@ -3,26 +3,27 @@ package com.enderio.base.common.network;
 import com.enderio.EnderIO;
 import com.enderio.api.travel.ITravelTarget;
 import com.enderio.api.travel.TravelRegistry;
-import net.minecraft.network.FriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 public record AddTravelTargetPacket(@Nullable ITravelTarget target) implements CustomPacketPayload {
 
-    public static ResourceLocation ID = EnderIO.loc("add_travel_target");
+    public static Type<AddTravelTargetPacket> TYPE = new Type<>(EnderIO.loc("add_travel_target"));
 
-    public AddTravelTargetPacket(FriendlyByteBuf buf) {
-        this(TravelRegistry.deserialize(buf.readNbt()).orElse(null));
-    }
+    // TODO: 20.6: this is really really not great.
+    public static StreamCodec<ByteBuf, AddTravelTargetPacket> STREAM_CODEC =
+        ByteBufCodecs.COMPOUND_TAG.map(
+            tag -> new AddTravelTargetPacket(TravelRegistry.deserialize(tag).orElseThrow()),
+            value -> value.target() != null
+                ? TravelRegistry.serialize(value.target())
+                : new CompoundTag());
 
     @Override
-    public void write(FriendlyByteBuf writeInto) {
-        writeInto.writeNbt(target.save());
-    }
-
-    @Override
-    public ResourceLocation id() {
-        return ID;
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

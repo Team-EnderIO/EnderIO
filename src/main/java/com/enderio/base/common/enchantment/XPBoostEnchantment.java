@@ -1,6 +1,7 @@
 package com.enderio.base.common.enchantment;
 
 import com.enderio.base.common.config.BaseConfig;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -8,22 +9,24 @@ import net.minecraft.world.item.enchantment.Enchantments;
 public class XPBoostEnchantment extends EIOBaseEnchantment {
 
     public XPBoostEnchantment() {
-        super(Rarity.COMMON, EIOEnchantmentCategories.XPBOOST, new EquipmentSlot[] { EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND }, () -> true);
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return 3;
-    }
-
-    @Override
-    public int getMaxCost(int pLevel) {
-        return BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_MAX_COST_BASE.get() + BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_MAX_COST_MULT.get() * pLevel;
-    }
-
-    @Override
-    public int getMinCost(int pLevel) {
-        return BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_MIN_COST_BASE.get() + BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_MIN_COST_MULT.get() * pLevel;
+        super(
+            definition(
+                // TODO: 20.6: Might not be right, old filter was damageable that was not armor or fishing rod.
+                ItemTags.WEAPON_ENCHANTABLE,
+                10,
+                3,
+                dynamicCost(
+                    BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_MIN_COST_BASE.get(),
+                    BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_MIN_COST_MULT.get()
+                ),
+                dynamicCost(
+                    BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_MAX_COST_BASE.get(),
+                    BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_MAX_COST_MULT.get()
+                ),
+                1,
+                EquipmentSlot.MAINHAND,
+                EquipmentSlot.OFFHAND
+            ), () -> true);
     }
 
     @Override

@@ -8,22 +8,22 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class TravelParticleHandler {
     private static int tick = 0;
 
     @SubscribeEvent
-    public static void clientTick(TickEvent.ClientTickEvent e) {
+    public static void clientTick(ClientTickEvent.Post e) {
         LocalPlayer player = Minecraft.getInstance().player;
-        if (e.phase == TickEvent.Phase.END && player != null) {
+        if (player != null) {
             tick++;
             if (tick % 3 == 0 && player.onGround() && player.isShiftKeyDown() && TravelHandler.canItemTeleport(player)) {
                 TravelHandler.teleportPosition(player.level(), player).ifPresent(TravelParticleHandler::addTravelParticle);

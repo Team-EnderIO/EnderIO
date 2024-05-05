@@ -4,12 +4,13 @@ import com.enderio.base.common.blockentity.IWrenchable;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class WrenchCompat {
     @SubscribeEvent
     public static void onRightClickBlock(RightClickBlock event) {

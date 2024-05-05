@@ -54,11 +54,12 @@ public class EnderIOSelfClientIntegration implements ClientIntegration {
 
     private static List<Pair<Holder<BannerPattern>, DyeColor>> createRandomPattern() {
         List<Pair<Holder<BannerPattern>, DyeColor>> patterns = new ArrayList<>();
-        Random random = new Random();
+        // TODO: 1.20.6: Banner patterns changed, but idk what this even does.
+        /*Random random = new Random();
         for (int i = random.nextInt(3); i < 6; i++) {
             patterns.add(new Pair<>(
                 BuiltInRegistries.BANNER_PATTERN.getRandom(new LegacyRandomSource(random.nextInt())).orElseThrow(), DyeColor.values()[random.nextInt(DyeColor.values().length)]));
-        }
+        }*/
         return patterns;
     }
 }

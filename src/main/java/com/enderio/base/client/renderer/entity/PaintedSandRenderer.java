@@ -54,7 +54,7 @@ public class PaintedSandRenderer extends FallingBlockRenderer {
                 NeoForge.EVENT_BUS.post(renderNameplateEvent);
                 if (renderNameplateEvent.getResult() != net.neoforged.bus.api.Event.Result.DENY && (
                     renderNameplateEvent.getResult() == net.neoforged.bus.api.Event.Result.ALLOW || this.shouldShowName(pEntity))) {
-                    this.renderNameTag(pEntity, renderNameplateEvent.getContent(), pMatrixStack, pBuffer, pPackedLight);
+                    this.renderNameTag(pEntity, renderNameplateEvent.getContent(), pMatrixStack, pBuffer, pPackedLight, pPartialTicks);
                 }
             }
         }

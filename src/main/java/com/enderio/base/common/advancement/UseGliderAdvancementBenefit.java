@@ -3,6 +3,7 @@ package com.enderio.base.common.advancement;
 import com.enderio.EnderIO;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -10,7 +11,7 @@ import net.neoforged.fml.common.Mod;
 import java.util.HashMap;
 import java.util.Map;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class UseGliderAdvancementBenefit {
 
     public static final ResourceLocation USE_GLIDER_ADVANCEMENT = EnderIO.loc("adventure/use_glider");

@@ -26,6 +26,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -35,13 +36,13 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public class FireCraftingRecipe implements EnderRecipe<Container> {
-    private final ResourceLocation lootTable;
+    private final ResourceKey<LootTable> lootTable;
     private final int maxItemDrops;
     private final List<Block> bases;
     private final List<TagKey<Block>> baseTags;
     private final List<ResourceLocation> dimensions;
 
-    public FireCraftingRecipe(ResourceLocation lootTable, int maxItemDrops, List<Block> bases, List<TagKey<Block>> baseTags, List<ResourceLocation> dimensions) {
+    public FireCraftingRecipe(ResourceKey<LootTable> lootTable, int maxItemDrops, List<Block> bases, List<TagKey<Block>> baseTags, List<ResourceLocation> dimensions) {
         this.lootTable = lootTable;
         this.maxItemDrops = maxItemDrops;
         this.bases = bases;
@@ -50,7 +51,7 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
     }
 
 
-    public ResourceLocation getLootTable() {
+    public ResourceKey<LootTable> getLootTable() {
         return lootTable;
     }
 

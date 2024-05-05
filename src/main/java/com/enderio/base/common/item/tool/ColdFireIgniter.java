@@ -108,7 +108,7 @@ public class ColdFireIgniter extends Item implements ITabVariants, IStrictItemFl
             }
             for (int i = 0; i < tankCap.getTanks(); i++) {
                 String prefix = isOneTank ? "" : i + ": ";
-                Component postFix = tankCap.getFluidInTank(i).isEmpty() ? Component.literal("") : tankCap.getFluidInTank(i).getDisplayName();
+                Component postFix = tankCap.getFluidInTank(i).isEmpty() ? Component.literal("") : tankCap.getFluidInTank(i).getHoverName();
                 components.add(Component.literal(prefix + tankCap.getFluidInTank(i).getAmount() + " / " + tankCap.getTankCapacity(i) + " ").append(postFix));
             }
         }
