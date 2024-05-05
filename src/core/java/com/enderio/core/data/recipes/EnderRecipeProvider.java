@@ -20,8 +20,8 @@ import java.util.concurrent.CompletableFuture;
  * A base recipe provider, does nothing but contain {@link EnderFinishedRecipe}.
  */
 public abstract class EnderRecipeProvider extends RecipeProvider {
-    public EnderRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public EnderRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries);
     }
 
     /**

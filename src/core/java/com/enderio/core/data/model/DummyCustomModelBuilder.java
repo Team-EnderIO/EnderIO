@@ -12,6 +12,6 @@ public class DummyCustomModelBuilder<T extends ModelBuilder<T>> extends CustomLo
     }
 
     protected DummyCustomModelBuilder(T parent, ExistingFileHelper existingFileHelper) {
-        super(EnderCore.loc("dummy"), parent, existingFileHelper);
+        super(EnderCore.loc("dummy"), parent, existingFileHelper, false);
     }
 }

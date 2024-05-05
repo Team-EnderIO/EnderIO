@@ -1,6 +1,5 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.base.common.capability.EnergyStorageItemStack;
 import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.EnergyBarDecorator;

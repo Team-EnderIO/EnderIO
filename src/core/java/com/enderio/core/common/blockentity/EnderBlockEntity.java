@@ -8,10 +8,12 @@ import com.enderio.core.common.network.slot.NetworkDataSlot;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -84,11 +86,11 @@ public class EnderBlockEntity extends BlockEntity {
      * This is the initial packet sent to a client loading the block (or when it is placed).
      */
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         ListTag dataList = new ListTag();
         for (int i = 0; i < dataSlots.size(); i++) {
             var slot = dataSlots.get(i);
-            var nbt = slot.serializeNBT(true);
+            var nbt = slot.serializeNBT(registries, true);
             if (nbt == null) {
                 continue;
             }
@@ -107,17 +109,17 @@ public class EnderBlockEntity extends BlockEntity {
 
     /**
      * This is the client handling the tag above.
-     * @param syncData The {@link CompoundTag} sent from {@link BlockEntity#getUpdateTag()}
+     * @param syncData The {@link CompoundTag} sent from {@link BlockEntity#getUpdateTag(HolderLookup.Provider)}
      */
     @Override
-    public void handleUpdateTag(CompoundTag syncData) {
+    public void handleUpdateTag(CompoundTag syncData, HolderLookup.Provider lookupProvider) {
         if (syncData.contains(DATA, Tag.TAG_LIST)) {
             ListTag dataList = syncData.getList(DATA, Tag.TAG_COMPOUND);
 
             for (Tag dataEntry : dataList) {
                 if (dataEntry instanceof CompoundTag slotData) {
                     int slotIdx = slotData.getInt(INDEX);
-                    dataSlots.get(slotIdx).fromNBT(slotData.get(DATA));
+                    dataSlots.get(slotIdx).fromNBT(lookupProvider, slotData.get(DATA));
                 }
             }
 
@@ -127,9 +129,8 @@ public class EnderBlockEntity extends BlockEntity {
         }
     }
 
-    @Nullable
-    private FriendlyByteBuf createBufferSlotUpdate() {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+    private byte @Nullable [] createBufferSlotUpdate() {
+        RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
         int amount = 0;
         for (int i = 0; i < dataSlots.size(); i++) {
             NetworkDataSlot<?> networkDataSlot = dataSlots.get(i);
@@ -139,13 +140,16 @@ public class EnderBlockEntity extends BlockEntity {
                 networkDataSlot.writeBuffer(buf);
             }
         }
+
         if (amount == 0) {
             return null;
         }
+
+        // Fine to use a normal byte buf here, we're not using codecs in here.
         FriendlyByteBuf result = new FriendlyByteBuf(Unpooled.buffer()); //Use 2 buffers to be able to write the amount of data
         result.writeInt(amount);
         result.writeBytes(buf.copy());
-        return result;
+        return result.array();
     }
 
     public <T extends NetworkDataSlot<?>> T addDataSlot(T slot) {
@@ -167,7 +171,7 @@ public class EnderBlockEntity extends BlockEntity {
         }
 
         if (dataSlots.contains(slot)) {
-            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
             buf.writeInt(dataSlots.indexOf(slot));
             slot.toBuffer(buf, value);
             NetworkUtil.sendToServer(new C2SDataSlotChange(getBlockPos(), buf.array()));
@@ -181,13 +185,13 @@ public class EnderBlockEntity extends BlockEntity {
     @UseOnly(LogicalSide.SERVER)
     public void sync() {
         var syncData = createBufferSlotUpdate();
-        if (syncData != null) {
-            NetworkUtil.sendToAllTracking(new S2CDataSlotUpdate(getBlockPos(), syncData.array()), level, getBlockPos());
+        if (syncData != null && level instanceof ServerLevel serverLevel) {
+            NetworkUtil.sendToAllTracking(new S2CDataSlotUpdate(getBlockPos(), syncData), serverLevel, getBlockPos());
         }
     }
 
     @UseOnly(LogicalSide.CLIENT)
-    public void clientHandleBufferSync(FriendlyByteBuf buf) {
+    public void clientHandleBufferSync(RegistryFriendlyByteBuf buf) {
         for (int amount = buf.readInt(); amount > 0; amount--) {
             int index = buf.readInt();
             dataSlots.get(index).fromBuffer(buf);
@@ -199,7 +203,7 @@ public class EnderBlockEntity extends BlockEntity {
     }
 
     @UseOnly(LogicalSide.SERVER)
-    public void serverHandleBufferChange(FriendlyByteBuf buf) {
+    public void serverHandleBufferChange(RegistryFriendlyByteBuf buf) {
         int index = -1;
         try {
             index = buf.readInt();

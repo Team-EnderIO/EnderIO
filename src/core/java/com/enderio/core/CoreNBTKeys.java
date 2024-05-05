@@ -13,7 +13,6 @@ public class CoreNBTKeys {
     public static final String FLUIDS = "Fluids";
     public static final String TANKS = "Tanks";
     public static final String ENERGY = "Energy";
-    public static final String BLOCK_ENTITY_TAG = BlockItem.BLOCK_ENTITY_TAG;
 
     // endregion
 

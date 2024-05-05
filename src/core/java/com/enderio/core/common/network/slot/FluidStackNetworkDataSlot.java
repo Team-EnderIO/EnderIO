@@ -1,8 +1,11 @@
 package com.enderio.core.common.network.slot;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.function.Consumer;
@@ -15,14 +18,14 @@ public class FluidStackNetworkDataSlot extends NetworkDataSlot<FluidStack> {
     }
 
     @Override
-    public Tag serializeValueNBT(FluidStack value) {
-        return value.writeToNBT(new CompoundTag());
+    public Tag serializeValueNBT(HolderLookup.Provider lookupProvider, FluidStack value) {
+        return value.save(lookupProvider);
     }
 
     @Override
-    protected FluidStack valueFromNBT(Tag nbt) {
+    protected FluidStack valueFromNBT(HolderLookup.Provider lookupProvider, Tag nbt) {
         if (nbt instanceof CompoundTag compoundTag) {
-            return FluidStack.loadFluidStackFromNBT(compoundTag);
+            return FluidStack.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nbt).result().get().getFirst();
         } else {
             throw new IllegalStateException("Invalid fluidstack/compound tag was passed over the network.");
         }
@@ -36,14 +39,14 @@ public class FluidStackNetworkDataSlot extends NetworkDataSlot<FluidStack> {
     }
 
     @Override
-    public void toBuffer(FriendlyByteBuf buf, FluidStack value) {
-        value.writeToPacket(buf);
+    public void toBuffer(RegistryFriendlyByteBuf buf, FluidStack value) {
+        FluidStack.STREAM_CODEC.encode(buf, value);
     }
 
     @Override
-    public FluidStack valueFromBuffer(FriendlyByteBuf buf) {
+    public FluidStack valueFromBuffer(RegistryFriendlyByteBuf buf) {
         try {
-            return FluidStack.readFromPacket(buf);
+            return FluidStack.STREAM_CODEC.decode(buf);
         } catch (Exception e) {
             throw new IllegalStateException("Invalid fluidstack buffer was passed over the network.");
         }

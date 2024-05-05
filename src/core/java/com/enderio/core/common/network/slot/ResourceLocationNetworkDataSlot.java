@@ -1,8 +1,10 @@
 package com.enderio.core.common.network.slot;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
@@ -14,12 +16,12 @@ public class ResourceLocationNetworkDataSlot extends NetworkDataSlot<ResourceLoc
     }
 
     @Override
-    public Tag serializeValueNBT(ResourceLocation value) {
+    public Tag serializeValueNBT(HolderLookup.Provider lookupProvider,ResourceLocation value) {
         return StringTag.valueOf(value.toString());
     }
 
     @Override
-    protected ResourceLocation valueFromNBT(Tag nbt) {
+    protected ResourceLocation valueFromNBT(HolderLookup.Provider lookupProvider,Tag nbt) {
         if (nbt instanceof StringTag stringTag) {
             return new ResourceLocation(stringTag.getAsString());
         } else {
@@ -28,12 +30,12 @@ public class ResourceLocationNetworkDataSlot extends NetworkDataSlot<ResourceLoc
     }
 
     @Override
-    public void toBuffer(FriendlyByteBuf buf, ResourceLocation value) {
+    public void toBuffer(RegistryFriendlyByteBuf buf, ResourceLocation value) {
         buf.writeResourceLocation(value);
     }
 
     @Override
-    public ResourceLocation valueFromBuffer(FriendlyByteBuf buf) {
+    public ResourceLocation valueFromBuffer(RegistryFriendlyByteBuf buf) {
         try {
             return buf.readResourceLocation();
         } catch (Exception e) {

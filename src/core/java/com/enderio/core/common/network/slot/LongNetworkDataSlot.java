@@ -1,8 +1,10 @@
 package com.enderio.core.common.network.slot;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.LongTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -13,12 +15,12 @@ public class LongNetworkDataSlot extends NetworkDataSlot<Long> {
     }
 
     @Override
-    public Tag serializeValueNBT(Long value) {
+    public Tag serializeValueNBT(HolderLookup.Provider lookupProvider, Long value) {
         return LongTag.valueOf(value);
     }
 
     @Override
-    protected Long valueFromNBT(Tag nbt) {
+    protected Long valueFromNBT(HolderLookup.Provider lookupProvider, Tag nbt) {
         if (nbt instanceof LongTag longTag) {
             return longTag.getAsLong();
         } else {
@@ -27,12 +29,12 @@ public class LongNetworkDataSlot extends NetworkDataSlot<Long> {
     }
 
     @Override
-    public void toBuffer(FriendlyByteBuf buf, Long value) {
+    public void toBuffer(RegistryFriendlyByteBuf buf, Long value) {
         buf.writeLong(value);
     }
 
     @Override
-    public Long valueFromBuffer(FriendlyByteBuf buf) {
+    public Long valueFromBuffer(RegistryFriendlyByteBuf buf) {
         try {
             return buf.readLong();
         } catch (Exception e) {

@@ -8,7 +8,7 @@ plugins {
     id("eclipse")
     id("maven-publish")
     id("com.modrinth.minotaur") version "2.+"
-    id("net.neoforged.gradle.userdev") version "7.0.80"
+    id("net.neoforged.gradle.userdev") version "7.0.109"
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
@@ -44,15 +44,15 @@ base {
 println("Building Ender IO version $version")
 println("Release type: ${getReleaseType()}")
 
-// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+// Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 
 // List of all subsets. This is used for dividing the mod into logical components.
 // TODO: 1.19: Tidy the divisions and what goes where.
-val subsets = listOf(
-        "conduits",
-        "machines",
-        "armory"
+val subsets = listOf<String>(
+        //"conduits",
+        //"machines",
+        //"armory"
 )
 
 sourceSets {
@@ -188,7 +188,7 @@ repositories {
     exclusiveRepo("https://dogforce-games.com/maven", "dev.gigaherz.graph")
     exclusiveRepo("https://api.modrinth.com/maven", "maven.modrinth")
     exclusiveRepo("https://maven.parchmentmc.org/", "org.parchmentmc.data")
-    exclusiveRepo("https://maven.rover656.dev/releases", "com.enderio")
+    //exclusiveRepo("https://maven.rover656.dev/releases", "com.enderio")
 
     mavenLocal()
 }
@@ -205,6 +205,7 @@ val bookshelf_version: String by project
 val ench_desc_version: String by project
 val jade_cf_id: String by project
 val mekanism_version: String by project
+val patchouli_version: String by project
 
 dependencies {
     // NeoForge
@@ -228,10 +229,10 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
 
     // JEI
-    compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-    compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
-    runtimeOnly("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
-    runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+    //compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    //compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
+    //runtimeOnly("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
+    //runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
     //RFTOOLS
     //runtimeOnly("maven.modrinth:rftools-power:f430rHkA")
@@ -240,15 +241,15 @@ dependencies {
     //runtimeOnly("maven.modrinth:spark:Yp6s4wsw")
 
     //Athena ctm
-    runtimeOnly("maven.modrinth:athena-ctm:${athena_version}")
+    //runtimeOnly("maven.modrinth:athena-ctm:${athena_version}")
 
     // AE2
-    compileOnly("appeng:appliedenergistics2-neoforge:${ae2_version}:api")
-    runtimeOnly("appeng:appliedenergistics2-neoforge:${ae2_version}")
+    //compileOnly("appeng:appliedenergistics2-neoforge:${ae2_version}:api")
+    //runtimeOnly("appeng:appliedenergistics2-neoforge:${ae2_version}")
 
     // Enchantment descriptions
-    runtimeOnly("net.darkhax.bookshelf:Bookshelf-NeoForge-${minecraft_version}:${bookshelf_version}")
-    runtimeOnly("net.darkhax.enchdesc:EnchantmentDescriptions-NeoForge-${minecraft_version}:${ench_desc_version}")
+    //runtimeOnly("net.darkhax.bookshelf:Bookshelf-NeoForge-${minecraft_version}:${bookshelf_version}")
+    //runtimeOnly("net.darkhax.enchdesc:EnchantmentDescriptions-NeoForge-${minecraft_version}:${ench_desc_version}")
 
     // The One Probe https://github.com/McJtyMods/TheOneProbe/issues/548
     //compileOnly("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
@@ -259,7 +260,7 @@ dependencies {
     //}
 
     // Jade
-    runtimeOnly("curse.maven:jade-324717:${jade_cf_id}")
+    //runtimeOnly("curse.maven:jade-324717:${jade_cf_id}")
 
     //fluxnetworks
     ////runtimeOnly("curse.maven:fluxnetworks-248020:4651164")
@@ -275,8 +276,8 @@ dependencies {
     //runtimeOnly("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // Mekanism
-    compileOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}:api")
-    runtimeOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
+    //compileOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}:api")
+    //runtimeOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
 
     // Jetbrains annotations
     compileOnly("org.jetbrains:annotations:23.0.0")

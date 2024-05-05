@@ -7,6 +7,9 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.Util;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +33,14 @@ public record CountedIngredient(Ingredient ingredient, int count) implements Pre
         Ingredient.CODEC.fieldOf("Ingredient").forGetter(CountedIngredient::ingredient),
         Codec.INT.fieldOf("Count").forGetter(CountedIngredient::count)
     ).apply(instance, CountedIngredient::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, CountedIngredient> STREAM_CODEC = StreamCodec.composite(
+        Ingredient.CONTENTS_STREAM_CODEC,
+        CountedIngredient::ingredient,
+        ByteBufCodecs.INT,
+        CountedIngredient::count,
+        CountedIngredient::new
+    );
 
     /**
      * An empty ingredient.
@@ -91,19 +102,5 @@ public record CountedIngredient(Ingredient ingredient, int count) implements Pre
     @Override
     public boolean test(@Nullable ItemStack itemStack) {
         return ingredient.test(itemStack) && itemStack.getCount() >= count;
-    }
-
-    public JsonElement toJson() {
-        return Util.getOrThrow(CODEC.encodeStart(JsonOps.INSTANCE, this), IllegalStateException::new);
-    }
-
-    public static CountedIngredient fromNetwork(FriendlyByteBuf buffer) {
-        Ingredient ingredient = Ingredient.fromNetwork(buffer);
-        return new CountedIngredient(ingredient, buffer.readShort());
-    }
-
-    public void toNetwork(FriendlyByteBuf buffer) {
-        ingredient.toNetwork(buffer);
-        buffer.writeShort(count());
     }
 }

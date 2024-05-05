@@ -1,5 +1,6 @@
 package com.enderio.api.capability;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -51,12 +52,12 @@ public interface IDarkSteelUpgrade extends INBTSerializable<Tag> {
     }
 
     @Override
-    default Tag serializeNBT() {
+    default Tag serializeNBT(HolderLookup.Provider provider) {
         return StringTag.valueOf(getName());
     }
 
     @Override
-    default void deserializeNBT(Tag nbt) {
+    default void deserializeNBT(HolderLookup.Provider provider, Tag nbt) {
     }
 
 }

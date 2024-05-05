@@ -46,7 +46,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
     private final MachineTaskHost taskHost;
 
-    private CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
+    private final CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
 
     public PoweredSpawnerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState);
@@ -58,10 +58,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
         actionRangeDataSlot = addDataSlot(new CodecNetworkDataSlot<>(this::getActionRange, this::internalSetActionRange, ActionRange.CODEC));
 
-        addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB), rl -> {
-            setEntityType(rl);
-            EnderIO.LOGGER.info("UPDATED ENTITY TYPE.");
-        }));
+        addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB), this::setEntityType));
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
             @Override

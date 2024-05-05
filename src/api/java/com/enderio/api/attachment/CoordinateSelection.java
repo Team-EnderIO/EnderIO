@@ -2,6 +2,7 @@ package com.enderio.api.attachment;
 
 import com.enderio.api.UseOnly;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -80,7 +81,7 @@ public class CoordinateSelection implements INBTSerializable<CompoundTag> {
 
     @NotNull
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
         tag.putString("level", level.toString());
         tag.put("pos", NbtUtils.writeBlockPos(pos));
@@ -88,8 +89,8 @@ public class CoordinateSelection implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         level = new ResourceLocation(nbt.getString("level"));
-        pos = NbtUtils.readBlockPos(nbt.getCompound("pos"));
+        pos = NbtUtils.readBlockPos(nbt, "pos").orElseThrow();
     }
 }

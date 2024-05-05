@@ -1,5 +1,6 @@
 package com.enderio.api.attachment;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +17,7 @@ public class StoredEntityData implements INBTSerializable<CompoundTag> {
     private float maxHealth = 0.0f;
 
     /**
-     * Should match key from {@link IEntityExtension#serializeNBT()}.
+     * Should match key from {@link IEntityExtension#serializeNBT(HolderLookup.Provider)}.
      */
     public static final String KEY_ID = "id";
 
@@ -29,7 +30,7 @@ public class StoredEntityData implements INBTSerializable<CompoundTag> {
 
     public static StoredEntityData of(LivingEntity entity) {
         StoredEntityData data = new StoredEntityData();
-        data.entityTag = entity.serializeNBT();
+        data.entityTag = entity.serializeNBT(entity.level().registryAccess());
         data.maxHealth = entity.getMaxHealth();
         return data;
     }
@@ -79,7 +80,7 @@ public class StoredEntityData implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         var compound = new CompoundTag();
         compound.put(KEY_ENTITY, entityTag);
         if (maxHealth > 0.0f) {
@@ -89,7 +90,7 @@ public class StoredEntityData implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag tag) {
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
         entityTag = tag.getCompound(KEY_ENTITY);
         if (tag.contains(KEY_MAX_HEALTH)) {
             maxHealth = tag.getFloat(KEY_MAX_HEALTH);

@@ -6,6 +6,7 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.recipe.MachineRecipe;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -199,7 +200,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
     private static final String KEY_OUTPUTS = "Outputs";
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
 
         // If the recipe is null, we aren't going to keep the task
@@ -217,7 +218,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         if (hasDeterminedOutputs) {
             ListTag outputsNbt = new ListTag();
             for (OutputStack stack : outputs) {
-                outputsNbt.add(stack.serializeNBT());
+                outputsNbt.add(stack.serializeNBT(lookupProvider));
             }
             tag.put(KEY_OUTPUTS, outputsNbt);
         }
@@ -226,7 +227,8 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+        // TODO: Exception handling
         recipe = loadRecipe(new ResourceLocation(nbt.getString(KEY_RECIPE_ID)));
         progressMade = nbt.getInt(KEY_PROGRESS_MADE);
         progressRequired = nbt.getInt(KEY_PROGRESS_REQUIRED);
@@ -238,7 +240,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
             ListTag outputsNbt = nbt.getList(KEY_OUTPUTS, Tag.TAG_COMPOUND);
             outputs = new ArrayList<>();
             for (Tag tag : outputsNbt) {
-                outputs.add(OutputStack.fromNBT((CompoundTag) tag));
+                outputs.add(OutputStack.fromNBT(lookupProvider, (CompoundTag) tag));
             }
         }
     }

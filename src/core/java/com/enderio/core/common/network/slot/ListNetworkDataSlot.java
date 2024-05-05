@@ -1,8 +1,10 @@
 package com.enderio.core.common.network.slot;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ public class ListNetworkDataSlot<T, V extends Tag> extends NetworkDataSlot<List<
     }
 
     @Override
-    public Tag serializeValueNBT(List<T> value) {
+    public Tag serializeValueNBT(HolderLookup.Provider lookupProvider, List<T> value) {
         ListTag listTag = new ListTag();
         for (T t : value) {
             listTag.add(serializer.apply(t));
@@ -38,7 +40,7 @@ public class ListNetworkDataSlot<T, V extends Tag> extends NetworkDataSlot<List<
     }
 
     @Override
-    protected List<T> valueFromNBT(Tag nbt) {
+    protected List<T> valueFromNBT(HolderLookup.Provider lookupProvider, Tag nbt) {
         if (nbt instanceof ListTag listTag) {
             List<T> list = new ArrayList<>();
             for (Tag tag : listTag) {
@@ -51,7 +53,7 @@ public class ListNetworkDataSlot<T, V extends Tag> extends NetworkDataSlot<List<
     }
 
     @Override
-    public void toBuffer(FriendlyByteBuf buf, List<T> value) {
+    public void toBuffer(RegistryFriendlyByteBuf buf, List<T> value) {
         buf.writeInt(value.size());
         for (T element: value) {
             toBuffer.accept(element, buf);
@@ -59,7 +61,7 @@ public class ListNetworkDataSlot<T, V extends Tag> extends NetworkDataSlot<List<
     }
 
     @Override
-    public List<T> valueFromBuffer(FriendlyByteBuf buf) {
+    public List<T> valueFromBuffer(RegistryFriendlyByteBuf buf) {
         List<T> list = new ArrayList<>();
         try {
             int size = buf.readInt();

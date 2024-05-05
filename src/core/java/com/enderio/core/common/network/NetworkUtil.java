@@ -2,25 +2,33 @@ package com.enderio.core.common.network;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ChunkPos;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class NetworkUtil {
+    /**
+     * @deprecated Use {@link PacketDistributor#sendToPlayer(ServerPlayer, CustomPacketPayload, CustomPacketPayload...)} instead
+     */
+    @Deprecated(forRemoval = true, since = "6.1")
     public static <T extends CustomPacketPayload> void sendTo(T packet, ServerPlayer player) {
-        PacketDistributor.PLAYER.with(player).send(packet);
+        PacketDistributor.sendToPlayer(player, packet);
     }
 
+    /**
+     * @deprecated Use {@link PacketDistributor#sendToServer(CustomPacketPayload, CustomPacketPayload...)} instead
+     */
+    @Deprecated(forRemoval = true, since = "6.1")
     public static <T extends CustomPacketPayload> void sendToServer(T packet) {
-        PacketDistributor.SERVER.noArg().send(packet);
+        PacketDistributor.sendToServer(packet);
     }
 
-    public static <T extends CustomPacketPayload> void sendToAllTracking(T packet, Level level, BlockPos pos) {
-        PacketDistributor.TRACKING_CHUNK.with(level.getChunkAt(pos)).send(packet);
-    }
-
-    public static <T extends CustomPacketPayload> void sendToDimension(T packet, ResourceKey<Level> dimensionKey) {
-        PacketDistributor.DIMENSION.with(dimensionKey).send(packet);
+    /**
+     * @deprecated Use {@link PacketDistributor#sendToPlayersTrackingChunk(ServerLevel, ChunkPos, CustomPacketPayload, CustomPacketPayload...)} instead
+     */
+    @Deprecated(forRemoval = true, since = "6.1")
+    public static <T extends CustomPacketPayload> void sendToAllTracking(T packet, ServerLevel level, BlockPos pos) {
+        PacketDistributor.sendToPlayersTrackingChunk(level, new ChunkPos(pos), packet);
     }
 }

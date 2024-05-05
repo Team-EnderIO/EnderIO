@@ -1,8 +1,10 @@
 package com.enderio.core.common.network.slot;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -13,12 +15,12 @@ public class StringNetworkDataSlot extends NetworkDataSlot<String> {
     }
 
     @Override
-    public Tag serializeValueNBT(String value) {
+    public Tag serializeValueNBT(HolderLookup.Provider lookupProvider,String value) {
         return StringTag.valueOf(value);
     }
 
     @Override
-    protected String valueFromNBT(Tag nbt) {
+    protected String valueFromNBT(HolderLookup.Provider lookupProvider,Tag nbt) {
         if (nbt instanceof StringTag stringTag) {
             return stringTag.getAsString();
         } else {
@@ -27,12 +29,12 @@ public class StringNetworkDataSlot extends NetworkDataSlot<String> {
     }
 
     @Override
-    public void toBuffer(FriendlyByteBuf buf, String value) {
+    public void toBuffer(RegistryFriendlyByteBuf buf, String value) {
         buf.writeUtf(value);
     }
 
     @Override
-    public String valueFromBuffer(FriendlyByteBuf buf) {
+    public String valueFromBuffer(RegistryFriendlyByteBuf buf) {
         try {
             return buf.readUtf();
         } catch (Exception e) {

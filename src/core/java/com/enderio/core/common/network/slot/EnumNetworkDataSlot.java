@@ -1,8 +1,10 @@
 package com.enderio.core.common.network.slot;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -17,12 +19,12 @@ public class EnumNetworkDataSlot<T extends Enum<T>> extends NetworkDataSlot<T> {
     }
 
     @Override
-    public Tag serializeValueNBT(T value) {
+    public Tag serializeValueNBT(HolderLookup.Provider lookupProvider, T value) {
         return IntTag.valueOf(value.ordinal());
     }
 
     @Override
-    protected T valueFromNBT(Tag nbt) {
+    protected T valueFromNBT(HolderLookup.Provider lookupProvider, Tag nbt) {
         if (nbt instanceof IntTag intTag) {
             return enumClass.getEnumConstants()[intTag.getAsInt()];
         } else {
@@ -31,12 +33,12 @@ public class EnumNetworkDataSlot<T extends Enum<T>> extends NetworkDataSlot<T> {
     }
 
     @Override
-    public void toBuffer(FriendlyByteBuf buf, T value) {
+    public void toBuffer(RegistryFriendlyByteBuf buf, T value) {
         buf.writeInt(value.ordinal());
     }
 
     @Override
-    public T valueFromBuffer(FriendlyByteBuf buf) {
+    public T valueFromBuffer(RegistryFriendlyByteBuf buf) {
         try {
             return enumClass.getEnumConstants()[buf.readInt()];
         } catch (Exception e) {

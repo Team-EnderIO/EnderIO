@@ -3,6 +3,7 @@ package com.enderio.api.conduit;
 import com.enderio.api.UseOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -24,12 +25,12 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
     class EmptyExtendedConduitData implements IExtendedConduitData<EmptyExtendedConduitData> {
 
         @Override
-        public CompoundTag serializeNBT() {
+        public CompoundTag serializeNBT(HolderLookup.Provider provider) {
             return new CompoundTag();
         }
 
         @Override
-        public void deserializeNBT(CompoundTag nbt) {
+        public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         }
     }
 

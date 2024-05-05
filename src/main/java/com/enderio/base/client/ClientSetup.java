@@ -1,5 +1,6 @@
 package com.enderio.base.client;
 
+import com.enderio.EnderIO;
 import com.enderio.base.client.model.PaintedBlockGeometry;
 import com.enderio.base.client.particle.RangeParticle;
 import com.enderio.base.client.renderer.block.EnderSkullRenderer;
@@ -19,6 +20,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
@@ -31,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
 
     private static final Map<Item, ResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
@@ -101,7 +103,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void modelInit(ModelEvent.RegisterGeometryLoaders event) {
-        event.register("painted_block", new PaintedBlockGeometry.Loader());
+        event.register(EnderIO.loc("painted_block"), new PaintedBlockGeometry.Loader());
     }
 
     @SubscribeEvent
