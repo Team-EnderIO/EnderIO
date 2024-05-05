@@ -140,7 +140,7 @@ public class FireCraftingHandler {
 
     // Support worlds where firetick is disabled:
     @SubscribeEvent
-    public static void onWorldTick(LevelTickEvent event) {
+    public static void onWorldTick(LevelTickEvent.Pre event) {
         var level = event.getLevel();
 
         if (!FIRE_TRACKER.isEmpty() && !level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {

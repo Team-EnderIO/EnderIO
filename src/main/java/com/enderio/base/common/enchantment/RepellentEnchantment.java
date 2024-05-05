@@ -13,16 +13,10 @@ public class RepellentEnchantment extends EIOBaseEnchantment {
         super(
             definition(
                 ItemTags.ARMOR_ENCHANTABLE,
-                BaseConfig.COMMON.ENCHANTMENTS.REPELLENT_MAX_LEVEL.get(),
+                4,
                 1,
-                dynamicCost(
-                    BaseConfig.COMMON.ENCHANTMENTS.REPELLENT_MIN_COST_BASE.get(),
-                    BaseConfig.COMMON.ENCHANTMENTS.REPELLENT_MIN_COST_MULT.get()
-                ),
-                dynamicCost(
-                    BaseConfig.COMMON.ENCHANTMENTS.REPELLENT_MAX_COST_BASE.get(),
-                    BaseConfig.COMMON.ENCHANTMENTS.REPELLENT_MAX_COST_MULT.get()
-                ),
+                dynamicCost(10, 5),
+                dynamicCost(10, 10),
                 1,
                 EquipmentSlot.CHEST,
                 EquipmentSlot.LEGS,

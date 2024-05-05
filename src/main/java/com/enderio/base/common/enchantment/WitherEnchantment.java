@@ -17,8 +17,8 @@ public class WitherEnchantment extends EIOBaseEnchantment {
                 ItemTags.WEAPON_ENCHANTABLE,
                 5,
                 1,
-                constantCost(BaseConfig.COMMON.ENCHANTMENTS.WITHERING_BLADE_MIN_COST.get()),
-                constantCost(BaseConfig.COMMON.ENCHANTMENTS.WITHERING_BLADE_MAX_COST.get()),
+                constantCost(1),
+                constantCost(100),
                 1,
                 EquipmentSlot.MAINHAND,
                 EquipmentSlot.OFFHAND

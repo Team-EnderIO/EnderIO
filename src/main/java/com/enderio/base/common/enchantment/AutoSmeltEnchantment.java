@@ -14,8 +14,8 @@ public class AutoSmeltEnchantment extends EIOBaseEnchantment {
                 ItemTags.MINING_ENCHANTABLE,
                 2,
                 1,
-                constantCost(BaseConfig.COMMON.ENCHANTMENTS.AUTO_SMELT_MIN_COST.get()),
-                constantCost(BaseConfig.COMMON.ENCHANTMENTS.AUTO_SMELT_MAX_COST.get()),
+                constantCost(15),
+                constantCost(60),
                 1,
                 EquipmentSlot.MAINHAND
             ), () -> true);

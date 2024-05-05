@@ -98,21 +98,24 @@ public class EIOItems {
     // region Capacitors
 
     public static final RegiliteItem<CapacitorItem> BASIC_CAPACITOR = ITEM_REGISTRY
-        .registerItem("basic_capacitor", CapacitorItem::new, new Item.Properties()
-            .stacksTo(1)
-            .component(EIODataComponents.CAPACITOR_DATA, LootCapacitorData.simple(1.0f)))
+        .registerItem("basic_capacitor",
+            props -> new CapacitorItem(
+                props.component(EIODataComponents.CAPACITOR_DATA, LootCapacitorData.simple(1.0f))),
+            new Item.Properties().stacksTo(1))
         .addCapability(EIOCapabilities.CapacitorData.ITEM, CapacitorItem.CAPACITOR_DATA_PROVIDER);
 
     public static final RegiliteItem<CapacitorItem> DOUBLE_LAYER_CAPACITOR = ITEM_REGISTRY
-        .registerItem("double_layer_capacitor", CapacitorItem::new, new Item.Properties()
-            .stacksTo(1)
-            .component(EIODataComponents.CAPACITOR_DATA, LootCapacitorData.simple(2.0f)))
+        .registerItem("double_layer_capacitor",
+            props -> new CapacitorItem(
+                props.component(EIODataComponents.CAPACITOR_DATA, LootCapacitorData.simple(2.0f))),
+            new Item.Properties().stacksTo(1))
         .addCapability(EIOCapabilities.CapacitorData.ITEM, CapacitorItem.CAPACITOR_DATA_PROVIDER);
 
     public static final RegiliteItem<CapacitorItem> OCTADIC_CAPACITOR = ITEM_REGISTRY
-        .registerItem("octadic_capacitor", CapacitorItem::new, new Item.Properties()
-            .stacksTo(1)
-            .component(EIODataComponents.CAPACITOR_DATA, LootCapacitorData.simple(3.0f)))
+        .registerItem("octadic_capacitor",
+            props -> new CapacitorItem(
+                props.component(EIODataComponents.CAPACITOR_DATA, LootCapacitorData.simple(3))),
+            new Item.Properties().stacksTo(1))
         .addCapability(EIOCapabilities.CapacitorData.ITEM, CapacitorItem.CAPACITOR_DATA_PROVIDER);
 
     public static final RegiliteItem<CapacitorItem> LOOT_CAPACITOR = ITEM_REGISTRY

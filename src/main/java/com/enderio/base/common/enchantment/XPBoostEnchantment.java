@@ -15,14 +15,8 @@ public class XPBoostEnchantment extends EIOBaseEnchantment {
                 ItemTags.WEAPON_ENCHANTABLE,
                 10,
                 3,
-                dynamicCost(
-                    BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_MIN_COST_BASE.get(),
-                    BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_MIN_COST_MULT.get()
-                ),
-                dynamicCost(
-                    BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_MAX_COST_BASE.get(),
-                    BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_MAX_COST_MULT.get()
-                ),
+                dynamicCost(1, 10),
+                dynamicCost(30, 10),
                 1,
                 EquipmentSlot.MAINHAND,
                 EquipmentSlot.OFFHAND

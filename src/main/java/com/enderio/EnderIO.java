@@ -99,7 +99,7 @@ public class EnderIO {
         EIOFluids.register(modEventBus);
         EIOEnchantments.register(modEventBus);
         EIOTags.register();
-        EIOMenus.register();
+        EIOMenus.register(modEventBus);
         EIOLang.register();
         EIORecipes.register(modEventBus);
         EIOLootModifiers.register(modEventBus);

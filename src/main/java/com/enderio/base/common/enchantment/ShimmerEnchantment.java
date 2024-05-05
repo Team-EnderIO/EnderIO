@@ -12,8 +12,8 @@ public class ShimmerEnchantment extends EIOBaseEnchantment {
                 ItemTags.VANISHING_ENCHANTABLE,
                 1,
                 1,
-                constantCost(BaseConfig.COMMON.ENCHANTMENTS.SHIMMER_MIN_COST.get()),
-                constantCost(BaseConfig.COMMON.ENCHANTMENTS.SHIMMER_MAX_COST.get()),
+                constantCost(1),
+                constantCost(100),
                 1,
                 EquipmentSlot.values()
             ), () -> true);

@@ -13,8 +13,8 @@ public class SoulBoundEnchantment extends EIOBaseEnchantment {
                 ItemTags.MINING_ENCHANTABLE,
                 2,
                 1,
-                constantCost(BaseConfig.COMMON.ENCHANTMENTS.SOUL_BOUND_MIN_COST.get()),
-                constantCost(BaseConfig.COMMON.ENCHANTMENTS.SOUL_BOUND_MAX_COST.get()),
+                constantCost(16),
+                constantCost(60),
                 1,
                 EquipmentSlot.values()
             ), () -> true);
