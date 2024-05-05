@@ -1,9 +1,12 @@
 package com.enderio.base.common.recipe;
 
+import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.recipes.WrappedShapedRecipe;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -29,11 +32,11 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer container, RegistryAccess registryAccess) {
-        ItemStack result = getWrapped().assemble(container, registryAccess);
+    public ItemStack assemble(CraftingContainer container, HolderLookup.Provider lookupProvider) {
+        ItemStack result = getWrapped().assemble(container, lookupProvider);
 
         getItemStoringEntity(container).ifPresent(itemStack ->
-            result.setData(EIOAttachments.STORED_ENTITY, itemStack.getData(EIOAttachments.STORED_ENTITY)));
+            result.set(EIODataComponents.ENTITY_DATA, itemStack.get(EIODataComponents.ENTITY_DATA)));
         return result;
     }
 
@@ -48,7 +51,7 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
             ItemStack stack = container.getItem(slot);
 
             if (stack.is(EIOTags.Items.ENTITY_STORAGE)) {
-                var data = stack.getData(EIOAttachments.STORED_ENTITY);
+                var data = stack.getOrDefault(EIODataComponents.ENTITY_DATA, StoredEntityData.EMPTY);
                 if (data.hasEntity()) {
                     return Optional.of(stack);
                 }

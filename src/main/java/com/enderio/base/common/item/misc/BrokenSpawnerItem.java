@@ -2,6 +2,7 @@ package com.enderio.base.common.item.misc;
 
 import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.EntityCaptureUtils;
@@ -42,12 +43,12 @@ public class BrokenSpawnerItem extends Item {
     // region Entity Storage
 
     public static Optional<ResourceLocation> getEntityType(ItemStack stack) {
-        return stack.is(EIOTags.Items.ENTITY_STORAGE)? stack.getData(EIOAttachments.STORED_ENTITY).getEntityType()
+        return stack.is(EIOTags.Items.ENTITY_STORAGE)? stack.get(EIODataComponents.ENTITY_DATA).entityType()
             : Optional.empty();
     }
 
     private static void setEntityType(ItemStack stack, ResourceLocation entityType) {
-        stack.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(entityType));
+        stack.set(EIODataComponents.ENTITY_DATA, StoredEntityData.of(entityType));
     }
 
     // endregion

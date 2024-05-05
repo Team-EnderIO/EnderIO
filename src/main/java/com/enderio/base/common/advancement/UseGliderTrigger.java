@@ -30,7 +30,7 @@ public class UseGliderTrigger extends SimpleCriterionTrigger<UseGliderTrigger.Tr
     public record TriggerInstance(Optional<ContextAwarePredicate> player)
         implements SimpleInstance {
         private static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player)
+            EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
         ).apply(instance, TriggerInstance::new));
     }
 }

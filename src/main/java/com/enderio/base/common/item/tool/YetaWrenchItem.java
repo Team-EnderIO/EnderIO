@@ -99,7 +99,7 @@ public class YetaWrenchItem extends Item {
             state = getNextBlockState(state, property);
             noValidStateIndex++;
         } while (noValidStateIndex != property.getPossibleValues().size()
-            && !state.getBlock().canSurvive(state, pContext.getLevel(), pContext.getClickedPos()));
+            && !state.canSurvive(pContext.getLevel(), pContext.getClickedPos()));
 
         return state;
     }

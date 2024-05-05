@@ -2,7 +2,9 @@ package com.enderio.base.common.block.painted;
 
 import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
+import com.enderio.base.common.component.BlockPaint;
 import com.enderio.base.common.init.EIOBlockEntities;
+import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -51,13 +53,13 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPainted
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         ItemStack stack = new ItemStack(this);
         if (level.getBlockEntity(pos) instanceof DoublePaintedBlockEntity paintedBlockEntity) {
-            CompoundTag tag = new CompoundTag();
+            Block paint;
             if (target.getLocation().y - pos.getY() > 0.5) {
-                tag.putString(EIONBTKeys.PAINT, BuiltInRegistries.BLOCK.getKey(paintedBlockEntity.getPaint2()).toString());
+                paint = paintedBlockEntity.getPaint2();
             } else {
-                tag.putString(EIONBTKeys.PAINT, BuiltInRegistries.BLOCK.getKey(paintedBlockEntity.getPaint()).toString());
+                paint = paintedBlockEntity.getPaint();
             }
-            stack.getOrCreateTag().put(BlockItem.BLOCK_ENTITY_TAG, tag);
+            stack.set(EIODataComponents.BLOCK_PAINT, BlockPaint.of(paint));
         }
         return stack;
     }

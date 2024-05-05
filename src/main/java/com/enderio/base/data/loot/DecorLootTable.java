@@ -1,5 +1,6 @@
 package com.enderio.base.data.loot;
 
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.regilite.data.RegiliteBlockLootProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.world.level.block.Block;
@@ -8,8 +9,10 @@ import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 
 public class DecorLootTable {
 
@@ -18,7 +21,8 @@ public class DecorLootTable {
             .lootTable()
             .withPool(new LootPool.Builder().add(
                 LootItem.lootTableItem(block)
-                    //.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy(EIONBTKeys.PAINT, EIONBTKeys.BLOCK_ENTITY_TAG + "." + EIONBTKeys.PAINT))
+                    //.apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+                    //    .include(EIODataComponents.BLOCK_PAINT.get()))
             )));
     }
 

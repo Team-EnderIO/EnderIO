@@ -25,6 +25,7 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 import java.util.Map;
+import java.util.Optional;
 
 @EventBusSubscriber
 public class XPBoostHandler {
@@ -104,17 +105,7 @@ public class XPBoostHandler {
                 return -1;
             }
 
-            int result = -1;
-
-            for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(weapon).entrySet()) {
-                if (entry.getKey() == Enchantments.SILK_TOUCH) {
-                    return -1;
-                }
-                if (entry.getKey() == EIOEnchantments.XP_BOOST.get()) {
-                    result = entry.getValue();
-                }
-            }
-            return result;
+            return weapon.getEnchantmentLevel(EIOEnchantments.XP_BOOST.get());
         }
         return -1;
     }

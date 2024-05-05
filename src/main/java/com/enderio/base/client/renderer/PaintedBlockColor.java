@@ -4,6 +4,7 @@ import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.painted.IPaintedBlock;
 import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
 import com.enderio.base.common.blockentity.IPaintableBlockEntity;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.util.PaintUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
@@ -78,16 +79,10 @@ public class PaintedBlockColor implements BlockColor, ItemColor {
 
     @Override
     public int getColor(ItemStack itemStack, int tintIndex) {
-        if (itemStack.getTag() != null && itemStack.getTag().contains(EIONBTKeys.BLOCK_ENTITY_TAG)) {
-            CompoundTag blockEntityTag = itemStack.getTag().getCompound(EIONBTKeys.BLOCK_ENTITY_TAG);
-            if (blockEntityTag.contains(EIONBTKeys.PAINT)) {
-                Block paint = PaintUtils.getBlockFromRL(blockEntityTag.getString(EIONBTKeys.PAINT));
-                if (paint == null) {
-                    return 0;
-                }
-
-                return Minecraft.getInstance().getItemColors().getColor(paint.asItem().getDefaultInstance(), tintIndex);
-            }
+        var paintData = itemStack.get(EIODataComponents.BLOCK_PAINT);
+        if (paintData != null) {
+            var block = paintData.paint();
+            return Minecraft.getInstance().getItemColors().getColor(block.asItem().getDefaultInstance(), tintIndex);
         }
 
         return 0;

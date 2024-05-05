@@ -7,7 +7,9 @@ import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.EmitParticlePacket;
 import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -29,7 +31,7 @@ public class ExperienceRodItem extends Item {
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Level level = context.getLevel();
-        if (level.isClientSide()) {
+        if (!(level instanceof ServerLevel serverLevel)) {
             return InteractionResult.SUCCESS;
         }
 
@@ -44,7 +46,8 @@ public class ExperienceRodItem extends Item {
         }
 
         if (wasSuccess) {
-            NetworkUtil.sendToAllTracking(new EmitParticlePacket(ParticleTypes.ENTITY_EFFECT, pos, 0.2, 0.8, 0.2), level, pos);
+            var particle = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0.27450980f, 0.88627451f, 0.29411765f);
+            NetworkUtil.sendToAllTracking(new EmitParticlePacket(particle, pos, 0.2, 0.8, 0.2), serverLevel, pos);
             level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.1f,
                 0.5F * ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.8F));
             return InteractionResult.SUCCESS;

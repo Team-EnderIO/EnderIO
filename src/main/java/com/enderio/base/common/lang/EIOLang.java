@@ -68,8 +68,8 @@ public class EIOLang {
 
     public static final MutableComponent CAPACITOR_TOOLTIP_BASE = addTranslation("tooltip", EnderIO.loc("capacitor.base"), "Base Modifier: %s");
 
-    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_CAPACITY = addTranslation("tooltip", CapacitorModifier.ENERGY_CAPACITY.id, "Energy Capacity Modifier: %s");
-    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_USE = addTranslation("tooltip", CapacitorModifier.ENERGY_USE.id, "Energy Use Modifier: %s");
+    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_CAPACITY = addTranslation("tooltip", CapacitorModifier.ENERGY_CAPACITY.modifierId, "Energy Capacity Modifier: %s");
+    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_USE = addTranslation("tooltip", CapacitorModifier.ENERGY_USE.modifierId, "Energy Use Modifier: %s");
 
     public static final Component GLIDER_DISABLED = addTranslation("message", EnderIO.loc("glider.disable"), "Gliding is disabled: ");
     public static final Component GLIDER_DISABLED_FALL_FLYING = addTranslation("message", EnderIO.loc("glider.disable.fall_flying"), "Elytra Flight");

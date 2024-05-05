@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public class PaintedStairBlock extends StairBlock implements EntityBlock, IPaintedBlock {
 
     public PaintedStairBlock(Properties properties) {
-        super(Blocks.OAK_PLANKS::defaultBlockState, properties);
+        super(Blocks.OAK_PLANKS.defaultBlockState(), properties);
     }
 
     @Nullable

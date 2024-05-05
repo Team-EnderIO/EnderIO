@@ -4,16 +4,19 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.recipe.GrindingBallRecipe;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
+import java.util.concurrent.CompletableFuture;
+
 public class GrindingBallRecipeProvider extends EnderRecipeProvider {
 
-    public GrindingBallRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public GrindingBallRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries);
     }
 
     @Override

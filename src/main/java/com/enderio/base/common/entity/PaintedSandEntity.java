@@ -1,11 +1,14 @@
 package com.enderio.base.common.entity;
 
 import com.enderio.base.EIONBTKeys;
+import com.enderio.base.common.component.BlockPaint;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOEntities;
 import com.enderio.base.common.util.PaintUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -52,13 +55,13 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityWith
     }
 
     @Override
-    public void writeSpawnData(FriendlyByteBuf buffer) {
+    public void writeSpawnData(RegistryFriendlyByteBuf buffer) {
         Block block = getPaint();
         buffer.writeResourceLocation(block != null ? Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block)) : new ResourceLocation(""));
     }
 
     @Override
-    public void readSpawnData(FriendlyByteBuf additionalData) {
+    public void readSpawnData(RegistryFriendlyByteBuf additionalData) {
         ResourceLocation rl = additionalData.readResourceLocation();
         Block block = BuiltInRegistries.BLOCK.get(rl);
         if (block != Blocks.AIR) {
@@ -69,12 +72,10 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityWith
     @Nullable
     @Override
     public ItemEntity spawnAtLocation(ItemStack stack, float offsetY) {
-        // Add block entity NBT to item stack
         if (!stack.isEmpty() && blockData != null) {
-            CompoundTag itemNbt = new CompoundTag();
-            itemNbt.put(EIONBTKeys.BLOCK_ENTITY_TAG, blockData);
-            stack.setTag(itemNbt);
+            stack.set(EIODataComponents.BLOCK_PAINT, BlockPaint.of(getPaint()));
         }
+
         return super.spawnAtLocation(stack, offsetY);
     }
 }

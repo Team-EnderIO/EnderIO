@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class EIOTags {
 
+    // TODO: 20.6 port: check all common paths line up and change to "c"
     public static final String COMMON = "forge";
 
     public static void register() {

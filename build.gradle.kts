@@ -109,9 +109,11 @@ runs {
         systemProperty("forge.logging.markers", "REGISTRIES")
         systemProperty("forge.logging.console.level", "debug")
 
-        modSource(sourceSets.getByName("api"))
-        modSource(sourceSets.getByName("core"))
         modSource(sourceSets.getByName("main"))
+        modSource(sourceSets.getByName("core"))
+        modSource(sourceSets.getByName("api"))
+
+        modSources
 
         for (set in subsets) {
             modSource(sourceSets.getByName(set))
@@ -155,7 +157,7 @@ val replaceProperties = mapOf(
 tasks.withType<ProcessResources>().configureEach {
     inputs.properties(replaceProperties)
 
-    filesMatching("META-INF/mods.toml") {
+    filesMatching("META-INF/neoforge.mods.toml") {
         expand(replaceProperties)
         expand(mutableMapOf("project" to project))
     }

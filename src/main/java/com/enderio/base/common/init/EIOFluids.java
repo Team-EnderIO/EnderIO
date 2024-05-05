@@ -63,7 +63,7 @@ public class EIOFluids {
     private static RegiliteFluid<FluidType> fluid(String name, String translation, FluidType.Properties properties) {
         return baseFluid(name, properties)
             .setTranslation(translation)
-            .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid, new Item.Properties().stacksTo(1)))
+            .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid.get(), new Item.Properties().stacksTo(1)))
             .setTab(EIOCreativeTabs.MAIN)
             .setTranslation(translation + " Bucket")
             .finishBucket();
@@ -72,7 +72,7 @@ public class EIOFluids {
     private static RegiliteFluid<FluidType> gasFluid(String name, String translation, FluidType.Properties properties) {
         return baseFluid(name, properties)
             .setTranslation(translation)
-            .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid, new Item.Properties().stacksTo(1)))
+            .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid.get(), new Item.Properties().stacksTo(1)))
             .setTab(EIOCreativeTabs.MAIN)
             .setTranslation(translation + " Bucket")
             .finishBucket();
@@ -83,7 +83,7 @@ public class EIOFluids {
             .registerFluid(name, properties)
             .setRenderType(() -> RenderType::translucent)
             .createFluid(FLUID_REGISTRY)
-            .withBlock(BLOCK_REGISTRY, fluid -> new LiquidBlock(fluid, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)))
+            .withBlock(BLOCK_REGISTRY, fluid -> new LiquidBlock(fluid.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)))
             .finishLiquidBlock();
     }
 

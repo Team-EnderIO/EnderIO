@@ -4,6 +4,7 @@ import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.util.PaintUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -37,6 +38,16 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
         super(EIOBlockEntities.DOUBLE_PAINTED.get(), pWorldPosition, pBlockState);
     }
 
+    // Only exposed for block placement logic.
+    // TODO: Make it safe to edit anyway?
+    public void setPaint(Block paint) {
+        this.paint = paint;
+    }
+
+    public void setPaint2(Block paint2) {
+        this.paint2 = paint2;
+    }
+
     @Override
     public ModelData getModelData() {
         return ModelData.builder().with(PAINT, getPaint()).with(PAINT2, paint2).build();
@@ -49,9 +60,9 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         Block oldPaint = getPaint2();
-        super.onDataPacket(net, pkt);
+        super.onDataPacket(net, pkt, lookupProvider);
         if (oldPaint != paint2) {
             requestModelDataUpdate();
             if (level != null) {

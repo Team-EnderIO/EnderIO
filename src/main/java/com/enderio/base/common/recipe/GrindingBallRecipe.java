@@ -4,11 +4,17 @@ import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.core.common.recipes.EnderRecipe;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.Container;
@@ -22,51 +28,27 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Container> {
-    private final Item item;
-    private final float doublingChance;
-    private final float bonusMultiplier;
-    private final float powerUse;
-    private final int durability;
+public record GrindingBallRecipe(
+    Item item,
+    float doublingChance,
+    float bonusMultiplier,
+    float powerUse,
+    int durability
+) implements IGrindingBallData, EnderRecipe<Container> {
 
-
-    @Nullable
-    private ResourceLocation grindingBallId;
-
-    public GrindingBallRecipe(Item item, float doublingChance, float bonusMultiplier, float powerUse, int durability) {
-        this.item = item;
-        this.doublingChance = doublingChance;
-        this.bonusMultiplier = bonusMultiplier;
-        this.powerUse = powerUse;
-        this.durability = durability;
-    }
-
-    public Item getItem() {
-        return item;
-    }
-    
     @Override
     public boolean matches(Container container, Level level) {
         return container.getItem(0).is(item);
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
-        return this.getResultItem(registryAccess);
+    public ItemStack assemble(Container container, HolderLookup.Provider lookupProvider) {
+        return this.getResultItem(lookupProvider);
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
         return ItemStack.EMPTY;
-    }
-
-    @Override
-    public ResourceLocation getGrindingBallId() {
-        return Objects.requireNonNull(grindingBallId);
-    }
-
-    public void setGrindingBallId(ResourceLocation grindingBallId) {
-        this.grindingBallId = grindingBallId;
     }
 
     @Override
@@ -101,7 +83,6 @@ public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Contai
         return powerUse;
     }
 
-
     @Override
     public int getDurability() {
         return durability;
@@ -109,39 +90,36 @@ public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Contai
 
     public static class Serializer implements RecipeSerializer<GrindingBallRecipe> {
 
-        public static final Codec<GrindingBallRecipe> CODEC = RecordCodecBuilder.create(inst -> inst
-            .group(BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(GrindingBallRecipe::getItem),
-                ExtraCodecs.POSITIVE_FLOAT.fieldOf("grinding").forGetter(obj -> obj.doublingChance),
-                ExtraCodecs.POSITIVE_FLOAT.fieldOf("chance").forGetter(GrindingBallRecipe::getBonusMultiplier),
-                ExtraCodecs.POSITIVE_FLOAT.fieldOf("power").forGetter(GrindingBallRecipe::getPowerUse),
-                ExtraCodecs.POSITIVE_INT.fieldOf("durability").forGetter(GrindingBallRecipe::getDurability))
+        public static final MapCodec<GrindingBallRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
+            .group(BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(GrindingBallRecipe::item),
+                ExtraCodecs.POSITIVE_FLOAT.fieldOf("grinding").forGetter(GrindingBallRecipe::doublingChance),
+                ExtraCodecs.POSITIVE_FLOAT.fieldOf("chance").forGetter(GrindingBallRecipe::bonusMultiplier),
+                ExtraCodecs.POSITIVE_FLOAT.fieldOf("power").forGetter(GrindingBallRecipe::powerUse),
+                ExtraCodecs.POSITIVE_INT.fieldOf("durability").forGetter(GrindingBallRecipe::durability))
             .apply(inst, GrindingBallRecipe::new));
 
+        public static final StreamCodec<RegistryFriendlyByteBuf, GrindingBallRecipe> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.registry(Registries.ITEM),
+            GrindingBallRecipe::item,
+            ByteBufCodecs.FLOAT,
+            GrindingBallRecipe::doublingChance,
+            ByteBufCodecs.FLOAT,
+            GrindingBallRecipe::bonusMultiplier,
+            ByteBufCodecs.FLOAT,
+            GrindingBallRecipe::powerUse,
+            ByteBufCodecs.INT,
+            GrindingBallRecipe::durability,
+            GrindingBallRecipe::new
+        );
+
         @Override
-        public Codec<GrindingBallRecipe> codec() {
+        public MapCodec<GrindingBallRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        @Nullable
-        public GrindingBallRecipe fromNetwork(FriendlyByteBuf buffer) {
-            ResourceLocation grindingBallId = buffer.readResourceLocation();
-            Item grindingBall = BuiltInRegistries.ITEM.get(grindingBallId);
-
-            float grinding = buffer.readFloat();
-            float chance = buffer.readFloat();
-            float power = buffer.readFloat();
-            int durability = buffer.readInt();
-            return new GrindingBallRecipe(grindingBall, grinding, chance, power, durability);
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf buffer, GrindingBallRecipe recipe) {
-            buffer.writeResourceLocation(Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(recipe.item)));
-            buffer.writeFloat(recipe.doublingChance);
-            buffer.writeFloat(recipe.bonusMultiplier);
-            buffer.writeFloat(recipe.powerUse);
-            buffer.writeInt(recipe.durability);
+        public StreamCodec<RegistryFriendlyByteBuf, GrindingBallRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

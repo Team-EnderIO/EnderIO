@@ -1,11 +1,14 @@
 package com.enderio.base.common.loot;
 
+import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.LootCapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOLootModifiers;
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -15,15 +18,17 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class SetLootCapacitorFunction extends LootItemConditionalFunction {
 
-    public static final Supplier<Codec<SetLootCapacitorFunction>> CODEC = Suppliers.memoize(() ->
-        RecordCodecBuilder.create(inst -> commonFields(inst)
+    public static final MapCodec<SetLootCapacitorFunction> CODEC =
+        RecordCodecBuilder.mapCodec(inst -> commonFields(inst)
             .and(NumberProviders.CODEC.fieldOf("range").forGetter(m -> m.range))
-            .apply(inst, SetLootCapacitorFunction::new)));
+            .apply(inst, SetLootCapacitorFunction::new));
 
     private final NumberProvider range;
 
@@ -39,24 +44,22 @@ public class SetLootCapacitorFunction extends LootItemConditionalFunction {
 
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
-        var capacitorCap = stack.getCapability(EIOCapabilities.CapacitorData.ITEM);
-        if (capacitorCap != null) {
-            if (capacitorCap instanceof LootCapacitorData lootCap) {
-                lootCap.setBase(range.getFloat(context));
-                lootCap.addNewModifier(CapacitorUtil.getRandomModifier(context.getRandom()), range.getFloat(context));
+        float base = range.getFloat(context);
+        Map<CapacitorModifier, Float> modifiers = new HashMap<>();
 
-                // 15% chance of a secondary modifier
-                if (context.getRandom().nextFloat() < 0.15f) {
-                    lootCap.addModifier(CapacitorUtil.getRandomModifier(context.getRandom()), range.getFloat(context));
-                }
+        modifiers.put(CapacitorUtil.getRandomModifier(context.getRandom()), range.getFloat(context));
 
-                // 2% change of a third
-                if (context.getRandom().nextFloat() < 0.02f) {
-                    lootCap.addModifier(CapacitorUtil.getRandomModifier(context.getRandom()), range.getFloat(context));
-                }
-            }
+        // 15% chance of a secondary modifier
+        if (context.getRandom().nextFloat() < 0.15f) {
+            modifiers.put(CapacitorUtil.getRandomModifier(context.getRandom()), range.getFloat(context));
         }
 
+        // 2% change of a third
+        if (context.getRandom().nextFloat() < 0.02f) {
+            modifiers.put(CapacitorUtil.getRandomModifier(context.getRandom()), range.getFloat(context));
+        }
+
+        stack.set(EIODataComponents.CAPACITOR_DATA, new LootCapacitorData(base, modifiers));
         return stack;
     }
 

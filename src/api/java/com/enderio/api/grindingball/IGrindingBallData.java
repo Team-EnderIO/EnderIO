@@ -8,12 +8,6 @@ import net.minecraft.resources.ResourceLocation;
 public interface IGrindingBallData {
 
     /**
-     * The grinding ball ID used to find it in the manager.
-     * This will be the recipe ID.
-     */
-    ResourceLocation getGrindingBallId();
-
-    /**
      * Get the chance of doubling all outputs.
      * 1.0 - no doubling, 2.0 - guaranteed doubling, 3.0 - tripling...
      */
@@ -41,12 +35,6 @@ public interface IGrindingBallData {
      * Grinding ball identity value. Used when no bonus grinding ball is installed.
      */
     IGrindingBallData IDENTITY = new IGrindingBallData() {
-        @Override
-        public ResourceLocation getGrindingBallId() {
-            // ID isn't actually mapped anywhere.
-            return new ResourceLocation("enderio", "grindingball/identity");
-        }
-
         @Override
         public float getOutputMultiplier() {
             return 1;

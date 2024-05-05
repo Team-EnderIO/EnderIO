@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -24,9 +25,11 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 
+import java.util.concurrent.CompletableFuture;
+
 public class MaterialRecipeProvider extends RecipeProvider {
-    public MaterialRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public MaterialRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries);
     }
 
     @Override
@@ -167,8 +170,8 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern("GCG")
             .pattern("SGS")
             .pattern("GCG")
-            .define('G', Tags.Items.GRAVEL)
-            .define('S', Tags.Items.SAND)
+            .define('G', Tags.Items.GRAVELS)
+            .define('S', Tags.Items.SANDS)
             .define('C', Items.CLAY_BALL)
             .unlockedBy("has_ingredient_gravel", InventoryChangeTrigger.TriggerInstance.hasItems(Items.GRAVEL))
             .unlockedBy("has_ingredient_sand", InventoryChangeTrigger.TriggerInstance.hasItems(Items.SAND))
@@ -277,15 +280,15 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern("I I")
             .pattern("NIN")
             .define('N', Tags.Items.RODS_WOODEN)
-            .define('I', Tags.Items.COBBLESTONE)
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.COBBLESTONE).build()))
+            .define('I', Tags.Items.COBBLESTONES)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.COBBLESTONES).build()))
             .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.GEAR_STONE.get())
             .pattern(" I ")
             .pattern("IGI")
             .pattern(" I ")
-            .define('I', Tags.Items.COBBLESTONE)
+            .define('I', Tags.Items.COBBLESTONES)
             .define('G', EIOTags.Items.GEARS_WOOD)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GEAR_WOOD.get()))
             .save(recipeOutput, new ResourceLocation(EnderIO.MODID, EIOItems.GEAR_STONE.getId().getPath() + "_upgrade"));

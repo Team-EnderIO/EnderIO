@@ -36,7 +36,7 @@ public class PaintingTrigger extends SimpleCriterionTrigger<PaintingTrigger.Trig
         implements SimpleInstance {
 
         private static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+            EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
             BuiltInRegistries.BLOCK.byNameCodec().fieldOf("paint").forGetter(TriggerInstance::paint)
             ).apply(instance, TriggerInstance::new));
 

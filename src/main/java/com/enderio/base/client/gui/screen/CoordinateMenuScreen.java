@@ -50,7 +50,7 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
 
         int midX = this.width / 2;
         int y = topPos + 48;
-        String txt = getMenu().getSelection().getPos().toShortString();
+        String txt = getMenu().getSelection().pos().toShortString();
         int x = midX - font.width(txt) / 2;
         guiGraphics.drawString(this.font, txt, x, y, 0xFFFFFF, true);
         txt = getMenu().getSelection().getLevelName();

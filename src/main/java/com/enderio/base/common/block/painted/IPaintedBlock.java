@@ -1,6 +1,8 @@
 package com.enderio.base.common.block.painted;
 
 import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
+import com.enderio.base.common.component.BlockPaint;
+import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.BlockItem;
@@ -57,10 +59,7 @@ public interface IPaintedBlock extends IBlockExtension {
 
     default ItemStack getPaintedStack(BlockGetter level, BlockPos pos, ItemLike itemLike) {
         ItemStack stack = new ItemStack(itemLike);
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be != null) {
-            stack.getOrCreateTag().put(BlockItem.BLOCK_ENTITY_TAG, be.saveWithoutMetadata());
-        }
+        stack.set(EIODataComponents.BLOCK_PAINT, BlockPaint.of(getPaint(level, pos)));
         return stack;
     }
 }

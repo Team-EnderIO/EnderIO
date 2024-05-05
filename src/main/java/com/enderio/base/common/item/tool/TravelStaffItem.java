@@ -1,12 +1,14 @@
 package com.enderio.base.common.item.tool;
 
+import com.enderio.base.common.capability.EnergyStorageItemStack;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.handler.TravelHandler;
 import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
-import com.enderio.core.common.attachment.IEnergyStorageConfig;
+import com.enderio.core.common.attachment.IItemEnergyConfig;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
@@ -26,10 +28,10 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public class TravelStaffItem extends Item implements IAdvancedTooltipProvider, ITabVariants, IEnergyStorageConfig {
+public class TravelStaffItem extends Item implements IAdvancedTooltipProvider, ITabVariants, IItemEnergyConfig {
 
     public static ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
-        (stack, v) -> stack.getData(EIOAttachments.ITEM_ENERGY_STORAGE);
+        (stack, v) -> new EnergyStorageItemStack(EIODataComponents.ENERGY, stack);
 
     public TravelStaffItem(Properties properties) {
         super(properties);

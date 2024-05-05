@@ -27,8 +27,7 @@ public class GrindingBallManager {
 
     public static boolean isGrindingBall(ItemStack stack) {
         checkCacheRebuild();
-        return !stack.isEmpty()
-            && ITEM_TO_DATA.containsKey(stack.getItem());
+        return !stack.isEmpty() && ITEM_TO_DATA.containsKey(stack.getItem());
     }
 
     public static IGrindingBallData getData(ItemStack stack) {
@@ -47,12 +46,12 @@ public class GrindingBallManager {
         return ID_TO_DATA.getOrDefault(dataId, IGrindingBallData.IDENTITY);
     }
 
-
     @SubscribeEvent
     public static void registerReloadListener(AddReloadListenerEvent event) {
         //Fired on datapack reload
         clearCache = true;
     }
+
     @SubscribeEvent
     public static void onRecipesUpdated(RecipesUpdatedEvent event) {
         rebuildCache(event.getRecipeManager());
@@ -71,12 +70,10 @@ public class GrindingBallManager {
         ID_TO_DATA.clear();
 
         // Discover all grindingballs again.
-        manager.getAllRecipesFor(EIORecipes.GRINDING_BALL.type().get())
-            .forEach(grindingBallRecipe -> {
-                GrindingBallRecipe value = grindingBallRecipe.value();
-                ITEM_TO_DATA.put(value.getItem(), value);
-                ID_TO_DATA.put(grindingBallRecipe.id(), value);
-                value.setGrindingBallId(grindingBallRecipe.id());
-            });
+        manager.getAllRecipesFor(EIORecipes.GRINDING_BALL.type().get()).forEach(grindingBallRecipe -> {
+            GrindingBallRecipe value = grindingBallRecipe.value();
+            ITEM_TO_DATA.put(value.item(), value);
+            ID_TO_DATA.put(grindingBallRecipe.id(), value);
+        });
     }
 }

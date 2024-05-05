@@ -1,7 +1,6 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.base.common.init.EIOAttachments;
-import com.enderio.core.common.attachment.IStrictItemFluidHandlerConfig;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOFluids;
@@ -25,22 +24,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.apache.logging.log4j.LogManager;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Predicate;
 
-public class ColdFireIgniter extends Item implements ITabVariants, IStrictItemFluidHandlerConfig {
+public class ColdFireIgniter extends Item implements ITabVariants {
 
     public static ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER =
-        (stack, v) -> stack.getData(EIOAttachments.ITEM_STRICT_FLUID);
+        (stack, v) -> new StrictFluidHandlerItemStack(EIODataComponents.SIMPLE_FLUID_CONTENT, stack, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL);
 
     public ColdFireIgniter(Properties properties) {
         super(properties);
@@ -95,10 +91,9 @@ public class ColdFireIgniter extends Item implements ITabVariants, IStrictItemFl
         return 0;
     }
 
-
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
-        super.appendHoverText(stack, level, components, flag);
+    public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, List<Component> components, TooltipFlag flag) {
+        super.appendHoverText(stack, tooltipContext, components, flag);
 
         var tankCap = stack.getCapability(Capabilities.FluidHandler.ITEM);
         if (tankCap != null) {
@@ -127,16 +122,5 @@ public class ColdFireIgniter extends Item implements ITabVariants, IStrictItemFl
                 modifier.accept(is);
             }
         }
-    }
-
-    @Override
-    public int getFluidCapacity() {
-        // TODO: Config
-        return 1000;
-    }
-
-    @Override
-    public Predicate<Fluid> getFluidFilter() {
-        return f -> f.is(EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL);
     }
 }

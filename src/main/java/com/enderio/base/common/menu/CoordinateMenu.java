@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.item.misc.LocationPrintoutItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,7 +32,7 @@ public class CoordinateMenu extends AbstractContainerMenu {
 
     protected CoordinateMenu(@Nullable MenuType<CoordinateMenu> pMenuType, int pContainerId, FriendlyByteBuf buf) {
         super(pMenuType, pContainerId);
-        selection = new CoordinateSelection(buf.readResourceLocation(), buf.readBlockPos());
+        selection = CoordinateSelection.STREAM_CODEC.decode(buf);
         isPrintout = buf.readBoolean();
         name = buf.readUtf(50);
     }
@@ -54,8 +55,7 @@ public class CoordinateMenu extends AbstractContainerMenu {
      * @param name is null when you used the coordinate selector, if it's the printout use the ItemStack name
      */
     public static FriendlyByteBuf writeAdditionalData(FriendlyByteBuf buf, CoordinateSelection selection, @Nullable String name) {
-        buf.writeResourceLocation(selection.getLevel());
-        buf.writeBlockPos(selection.getPos());
+        CoordinateSelection.STREAM_CODEC.encode(buf, selection);
         buf.writeBoolean(name == null);
         buf.writeUtf(name == null ? "" : name, 50);
         return buf;

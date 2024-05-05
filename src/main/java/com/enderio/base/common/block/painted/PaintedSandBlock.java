@@ -41,7 +41,7 @@ public class PaintedSandBlock extends ColoredFallingBlock implements EntityBlock
             this.falling(paintedSandEntity);
             BlockEntity be = pLevel.getBlockEntity(pPos);
             if (be != null) {
-                paintedSandEntity.blockData = be.saveWithoutMetadata();
+                paintedSandEntity.blockData = be.saveWithoutMetadata(pLevel.registryAccess());
             }
 
             pLevel.setBlock(pPos, pLevel.getBlockState(pPos).getFluidState().createLegacyBlock(), 3);

@@ -3,7 +3,7 @@ package com.enderio.base.client.tooltip;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.base.common.capacitor.CapacitorUtil;
-import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.GrindingBallManager;
@@ -22,7 +22,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.NumberFormat;
@@ -62,7 +61,7 @@ public class TooltipHandler {
                 NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
                 components.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, fmt.format(data.getBase())));
                 for (Map.Entry<CapacitorModifier, Float> modifier : data.getAllModifiers().entrySet()) {
-                    components.add(TooltipUtil.styledWithArgs(new ResourceLocation("tooltip", modifier.getKey().id.toLanguageKey()), fmt.format(modifier.getValue())));
+                    components.add(TooltipUtil.styledWithArgs(new ResourceLocation("tooltip", modifier.getKey().modifierId.toLanguageKey()), fmt.format(modifier.getValue())));
                 }
             });
         }
@@ -87,9 +86,10 @@ public class TooltipHandler {
 
     private static void addEntityDataTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
         if (itemStack.is(EIOTags.Items.ENTITY_STORAGE)) {
-            var storedEntityData = itemStack.getData(EIOAttachments.STORED_ENTITY);
-            if (storedEntityData.getEntityType().isPresent()) {
-                components.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(storedEntityData.getEntityType().get()))));
+            var storedEntityData = itemStack.get(EIODataComponents.ENTITY_DATA);
+
+            if (storedEntityData != null && storedEntityData.entityType().isPresent()) {
+                components.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(storedEntityData.entityType().get()))));
             } else {
                 components.add(TooltipUtil.style(EIOLang.TOOLTIP_NO_SOULBOUND));
             }

@@ -3,6 +3,7 @@ package com.enderio.base.common.item.tool;
 import com.enderio.EnderIO;
 import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
@@ -51,7 +52,7 @@ import java.util.function.Consumer;
 public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
 
     public static final ICapabilityProvider<ItemStack, Void, StoredEntityData> STORED_ENTITY_PROVIDER
-        = (stack, ctx) -> stack.getData(EIOAttachments.STORED_ENTITY);
+        = (stack, ctx) -> stack.get(EIODataComponents.ENTITY_DATA);
 
     public SoulVialItem(Properties pProperties) {
         super(pProperties);
@@ -61,13 +62,13 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return pStack.is(EIOTags.Items.ENTITY_STORAGE) && pStack.getData(EIOAttachments.STORED_ENTITY).hasEntity();
+        return pStack.is(EIOTags.Items.ENTITY_STORAGE) && pStack.get(EIODataComponents.ENTITY_DATA).hasEntity();
     }
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         if (itemStack.is(EIOTags.Items.ENTITY_STORAGE)) {
-            itemStack.getData(EIOAttachments.STORED_ENTITY)
+            itemStack.get(EIODataComponents.ENTITY_DATA)
                 .getHealthState()
                 .ifPresent(health ->
                     tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB())));
@@ -151,9 +152,9 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
 
     private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos, Consumer<ItemStack> emptyVialSetter) {
         if (filledVial.is(EIOTags.Items.ENTITY_STORAGE)) {
-            var storedEntity = filledVial.getData(EIOAttachments.STORED_ENTITY);
+            var storedEntity = filledVial.get(EIODataComponents.ENTITY_DATA);
 
-            if (storedEntity.hasEntity()) {
+            if (storedEntity != null && storedEntity.hasEntity()) {
                 // Get the spawn location for the mob.
                 double spawnX = pos.getX() + face.getStepX() + 0.5;
                 double spawnY = pos.getY() + face.getStepY();
@@ -197,15 +198,15 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
     // region Entity Storage
 
     public static void setEntityType(ItemStack stack, ResourceLocation entityType) {
-        stack.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(entityType));
+        stack.set(EIODataComponents.ENTITY_DATA, StoredEntityData.of(entityType));
     }
 
     private static void setEntityData(ItemStack stack, LivingEntity entity) {
-        stack.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(entity));
+        stack.set(EIODataComponents.ENTITY_DATA, StoredEntityData.of(entity));
     }
 
     public static Optional<StoredEntityData> getEntityData(ItemStack stack) {
-        return stack.is(EIOTags.Items.ENTITY_STORAGE) ? Optional.of(stack.getData(EIOAttachments.STORED_ENTITY)) : Optional.empty();
+        return stack.is(EIOTags.Items.ENTITY_STORAGE) ? Optional.ofNullable(stack.get(EIODataComponents.ENTITY_DATA)) : Optional.empty();
     }
 
     // endregion

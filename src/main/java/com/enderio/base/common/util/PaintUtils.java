@@ -1,10 +1,9 @@
 package com.enderio.base.common.util;
 
-import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.painted.IPaintedBlock;
+import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
@@ -26,15 +25,17 @@ public class PaintUtils {
         return BuiltInRegistries.BLOCK.get(new ResourceLocation(rl));
     }
 
+    /**
+     * @deprecated Use stack.get(EIODataComponents.BLOCK_PAINT) directly.
+     */
+    @Deprecated(forRemoval = true, since = "6.1")
     @Nullable
     public static Block getPaint(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        if (tag != null && tag.contains(BlockItem.BLOCK_ENTITY_TAG)) {
-            CompoundTag blockEntityTag = tag.getCompound(BlockItem.BLOCK_ENTITY_TAG);
-            if (blockEntityTag.contains(EIONBTKeys.PAINT)) {
-                return getBlockFromRL(blockEntityTag.getString(EIONBTKeys.PAINT));
-            }
+        var paintData = stack.get(EIODataComponents.BLOCK_PAINT);
+        if (paintData != null) {
+            return paintData.paint();
         }
+
         return null;
     }
 

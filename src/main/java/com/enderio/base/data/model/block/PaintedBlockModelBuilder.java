@@ -23,7 +23,7 @@ public class PaintedBlockModelBuilder<T extends ModelBuilder<T>> extends CustomL
     }
 
     protected PaintedBlockModelBuilder(T parent, ExistingFileHelper existingFileHelper) {
-        super(EnderIO.loc("painted_block"), parent, existingFileHelper);
+        super(EnderIO.loc("painted_block"), parent, existingFileHelper, false);
     }
 
     public PaintedBlockModelBuilder<T> reference(Block referenceBlock) {

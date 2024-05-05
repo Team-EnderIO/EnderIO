@@ -1,10 +1,8 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.api.capacitor.ICapacitorData;
-import com.enderio.base.common.capacitor.DefaultCapacitorData;
-import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
-import com.enderio.base.common.item.capacitors.LootCapacitorItem;
+import com.enderio.base.common.capacitor.LootCapacitorData;
+import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
 import com.enderio.base.common.item.misc.EnderiosItem;
@@ -99,25 +97,28 @@ public class EIOItems {
 
     // region Capacitors
 
-    public static final RegiliteItem<FixedCapacitorItem> BASIC_CAPACITOR =
-        fixedCapacitor("basic_capacitor", DefaultCapacitorData.BASIC);
+    public static final RegiliteItem<CapacitorItem> BASIC_CAPACITOR = ITEM_REGISTRY
+        .registerItem("basic_capacitor", CapacitorItem::new, new Item.Properties()
+            .stacksTo(1)
+            .component(EIODataComponents.CAPACITOR_DATA, LootCapacitorData.simple(1.0f)))
+        .addCapability(EIOCapabilities.CapacitorData.ITEM, CapacitorItem.CAPACITOR_DATA_PROVIDER);
 
-    public static final RegiliteItem<FixedCapacitorItem> DOUBLE_LAYER_CAPACITOR =
-        fixedCapacitor("double_layer_capacitor", DefaultCapacitorData.DOUBLE_LAYER);
+    public static final RegiliteItem<CapacitorItem> DOUBLE_LAYER_CAPACITOR = ITEM_REGISTRY
+        .registerItem("double_layer_capacitor", CapacitorItem::new, new Item.Properties()
+            .stacksTo(1)
+            .component(EIODataComponents.CAPACITOR_DATA, LootCapacitorData.simple(2.0f)))
+        .addCapability(EIOCapabilities.CapacitorData.ITEM, CapacitorItem.CAPACITOR_DATA_PROVIDER);
 
-    public static final RegiliteItem<FixedCapacitorItem> OCTADIC_CAPACITOR =
-        fixedCapacitor("octadic_capacitor", DefaultCapacitorData.OCTADIC);
+    public static final RegiliteItem<CapacitorItem> OCTADIC_CAPACITOR = ITEM_REGISTRY
+        .registerItem("octadic_capacitor", CapacitorItem::new, new Item.Properties()
+            .stacksTo(1)
+            .component(EIODataComponents.CAPACITOR_DATA, LootCapacitorData.simple(3.0f)))
+        .addCapability(EIOCapabilities.CapacitorData.ITEM, CapacitorItem.CAPACITOR_DATA_PROVIDER);
 
-    public static final RegiliteItem<LootCapacitorItem> LOOT_CAPACITOR = ITEM_REGISTRY
-        .registerItem("loot_capacitor", LootCapacitorItem::new, new Item.Properties().stacksTo(1))
-        .addCapability(EIOCapabilities.CapacitorData.ITEM, LootCapacitorItem.CAPACITOR_DATA_PROVIDER);
-
-    private static RegiliteItem<FixedCapacitorItem> fixedCapacitor(String name, ICapacitorData data) {
-        return ITEM_REGISTRY
-            .registerItem(name, props -> new FixedCapacitorItem(data, props))
-            .setTab(EIOCreativeTabs.MAIN)
-            .addCapability(EIOCapabilities.CapacitorData.ITEM, FixedCapacitorItem.CAPACITOR_DATA_PROVIDER);
-    }
+    public static final RegiliteItem<CapacitorItem> LOOT_CAPACITOR = ITEM_REGISTRY
+        .registerItem("loot_capacitor", CapacitorItem::new, new Item.Properties()
+            .stacksTo(1))
+        .addCapability(EIOCapabilities.CapacitorData.ITEM, CapacitorItem.CAPACITOR_DATA_PROVIDER);
 
     // endregion
 

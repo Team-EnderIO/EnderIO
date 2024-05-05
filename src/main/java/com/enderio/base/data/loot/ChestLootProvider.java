@@ -4,7 +4,10 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.event.EIOChestLootEvent;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.loot.SetLootCapacitorFunction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.LootTableSubProvider;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -25,12 +28,12 @@ public class ChestLootProvider implements LootTableSubProvider {
     public static final String ALLOY_LOOT_TABLE_NAME = "chests/alloy_loot";
 
     @Override
-    public void generate(BiConsumer<ResourceLocation, LootTable.Builder> writer) {
+    public void generate(HolderLookup.Provider lookupProvider, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> writer) {
         generateCommonLoot(writer);
         generateAlloyLoot(writer);
     }
 
-    private void generateCommonLoot(BiConsumer<ResourceLocation, LootTable.Builder> writer) {
+    private void generateCommonLoot(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> writer) {
         var lootPool = LootPool
             .lootPool()
             .name("Ender IO")
@@ -58,17 +61,17 @@ public class ChestLootProvider implements LootTableSubProvider {
         ;
 
         EIOChestLootEvent event = new EIOChestLootEvent(COMMON_LOOT_TABLE_NAME, lootPool);
-        ModLoader.get().postEvent(event);
+        ModLoader.postEvent(event);
 
         var lootTable = LootTable
             .lootTable()
             .withPool(lootPool)
             .setParamSet(LootContextParamSet.builder().build());
 
-        writer.accept(EnderIO.loc(COMMON_LOOT_TABLE_NAME), lootTable);
+        writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.loc(COMMON_LOOT_TABLE_NAME)), lootTable);
     }
 
-    private void generateAlloyLoot(BiConsumer<ResourceLocation, LootTable.Builder> writer) {
+    private void generateAlloyLoot(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> writer) {
         var lootPool = LootPool
             .lootPool()
             .name("Ender IO")
@@ -107,13 +110,13 @@ public class ChestLootProvider implements LootTableSubProvider {
             );
 
         EIOChestLootEvent event = new EIOChestLootEvent(ALLOY_LOOT_TABLE_NAME, lootPool);
-        ModLoader.get().postEvent(event);
+        ModLoader.postEvent(event);
 
         var lootTable = LootTable
             .lootTable()
             .withPool(lootPool)
             .setParamSet(LootContextParamSet.builder().build());
 
-        writer.accept(EnderIO.loc(ALLOY_LOOT_TABLE_NAME), lootTable);
+        writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.loc(ALLOY_LOOT_TABLE_NAME)), lootTable);
     }
 }
