@@ -12,12 +12,12 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:slimeballs"
+        "tag": "c:slimeballs"
       }
     }
   ],
   "result": {
-    "Count": 2,
+    "count": 2,
     "id": "enderio:organic_green_dye"
   }
 }

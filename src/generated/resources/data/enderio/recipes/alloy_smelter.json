@@ -9,10 +9,10 @@
       "item": "minecraft:furnace"
     },
     "G": {
-      "tag": "forge:gears/iron"
+      "tag": "c:gears/iron"
     },
     "I": {
-      "tag": "forge:ingots/dark_steel"
+      "tag": "c:ingots/dark_steel"
     },
     "V": {
       "item": "enderio:void_chassis"
@@ -24,6 +24,7 @@
     "GCG"
   ],
   "result": {
-    "item": "enderio:alloy_smelter"
+    "count": 1,
+    "id": "enderio:alloy_smelter"
   }
 }

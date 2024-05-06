@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:energetic_photovoltaic_module"
-            ]
+            "items": "enderio:energetic_photovoltaic_module"
           }
         ]
       },

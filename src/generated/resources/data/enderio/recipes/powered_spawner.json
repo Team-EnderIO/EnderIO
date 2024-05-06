@@ -9,10 +9,10 @@
       "item": "enderio:ensouled_chassis"
     },
     "I": {
-      "tag": "forge:ingots/soularium"
+      "tag": "c:ingots/soularium"
     },
     "V": {
-      "tag": "forge:gems/vibrant_crystal"
+      "tag": "c:gems/vibrant_crystal"
     },
     "Z": {
       "item": "enderio:z_logic_controller"
@@ -24,6 +24,7 @@
     "VZV"
   ],
   "result": {
-    "item": "enderio:powered_spawner"
+    "count": 1,
+    "id": "enderio:powered_spawner"
   }
 }

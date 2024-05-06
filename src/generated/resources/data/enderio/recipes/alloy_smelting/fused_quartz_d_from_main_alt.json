@@ -6,18 +6,18 @@
     {
       "Count": 4,
       "Ingredient": {
-        "tag": "forge:gems/quartz"
+        "tag": "c:gems/quartz"
       }
     },
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:storage_blocks/amethyst"
+        "tag": "c:storage_blocks/amethyst"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:fused_quartz_d"
   }
 }

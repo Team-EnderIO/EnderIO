@@ -9,10 +9,10 @@
       "item": "enderio:ensouled_chassis"
     },
     "G": {
-      "tag": "enderio:fused_quartz"
+      "tag": "c:glass_blocks/fused_quartz"
     },
     "I": {
-      "tag": "forge:ingots/soularium"
+      "tag": "c:ingots/soularium"
     },
     "Z": {
       "item": "enderio:zombie_electrode"
@@ -24,6 +24,7 @@
     "IZI"
   ],
   "result": {
-    "item": "enderio:soul_engine"
+    "count": 1,
+    "id": "enderio:soul_engine"
   }
 }

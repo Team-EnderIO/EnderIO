@@ -6,18 +6,18 @@
     {
       "Count": 4,
       "Ingredient": {
-        "tag": "forge:gems/quartz"
+        "tag": "c:gems/quartz"
       }
     },
     {
       "Count": 4,
       "Ingredient": {
-        "tag": "forge:dusts/glowstone"
+        "tag": "c:dusts/glowstone"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:fused_quartz_e"
   }
 }

@@ -6,18 +6,18 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:ingots/energetic_alloy"
+        "tag": "c:ingots/energetic_alloy"
       }
     },
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:ender_pearls"
+        "tag": "c:ender_pearls"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:vibrant_alloy_ingot"
   }
 }

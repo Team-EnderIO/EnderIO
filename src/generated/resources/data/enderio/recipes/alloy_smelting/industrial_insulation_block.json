@@ -6,7 +6,7 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:dusts/lapis"
+        "tag": "c:dusts/lapis"
       }
     },
     {
@@ -23,7 +23,7 @@
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:industrial_insulation_block"
   }
 }

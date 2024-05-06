@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "G": {
-      "tag": "forge:dusts/grains_of_infinity"
+      "tag": "c:dusts/grains_of_infinity"
     },
     "N": {
-      "tag": "forge:nuggets/dark_steel"
+      "tag": "c:nuggets/dark_steel"
     },
     "S": {
       "item": "minecraft:stick"
@@ -18,6 +18,7 @@
     "GN "
   ],
   "result": {
-    "item": "enderio:infinity_rod"
+    "count": 1,
+    "id": "enderio:infinity_rod"
   }
 }

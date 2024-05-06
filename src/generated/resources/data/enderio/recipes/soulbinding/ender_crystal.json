@@ -4,7 +4,7 @@
   "entity_type": "minecraft:enderman",
   "exp": 6,
   "input": {
-    "tag": "forge:gems/vibrant_crystal"
+    "tag": "c:gems/vibrant_crystal"
   },
   "output": "enderio:ender_crystal"
 }

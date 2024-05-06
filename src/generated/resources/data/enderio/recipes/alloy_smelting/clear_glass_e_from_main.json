@@ -6,18 +6,18 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:glass/colorless"
+        "tag": "c:glass_blocks/colorless"
       }
     },
     {
       "Count": 4,
       "Ingredient": {
-        "tag": "forge:dusts/glowstone"
+        "tag": "c:dusts/glowstone"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:clear_glass_e"
   }
 }

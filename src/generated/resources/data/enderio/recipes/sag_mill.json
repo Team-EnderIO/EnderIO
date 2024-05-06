@@ -6,10 +6,10 @@
       "item": "minecraft:flint"
     },
     "G": {
-      "tag": "forge:gears/iron"
+      "tag": "c:gears/iron"
     },
     "I": {
-      "tag": "forge:ingots/dark_steel"
+      "tag": "c:ingots/dark_steel"
     },
     "P": {
       "item": "minecraft:piston"
@@ -24,6 +24,7 @@
     "GPG"
   ],
   "result": {
-    "item": "enderio:sag_mill"
+    "count": 1,
+    "id": "enderio:sag_mill"
   }
 }

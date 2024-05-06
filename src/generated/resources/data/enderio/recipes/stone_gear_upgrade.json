@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "G": {
-      "tag": "forge:gears/wood"
+      "tag": "c:gears/wood"
     },
     "I": {
-      "tag": "forge:cobblestone"
+      "tag": "c:cobblestones"
     }
   },
   "pattern": [
@@ -15,6 +15,7 @@
     " I "
   ],
   "result": {
-    "item": "enderio:stone_gear"
+    "count": 1,
+    "id": "enderio:stone_gear"
   }
 }

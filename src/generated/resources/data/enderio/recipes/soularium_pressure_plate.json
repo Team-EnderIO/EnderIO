@@ -3,13 +3,14 @@
   "category": "building",
   "key": {
     "#": {
-      "tag": "forge:ingots/soularium"
+      "tag": "c:ingots/soularium"
     }
   },
   "pattern": [
     "##"
   ],
   "result": {
-    "item": "enderio:soularium_pressure_plate"
+    "count": 1,
+    "id": "enderio:soularium_pressure_plate"
   }
 }

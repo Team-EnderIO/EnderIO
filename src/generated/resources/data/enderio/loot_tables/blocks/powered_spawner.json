@@ -8,33 +8,10 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "minecraft:copy_nbt",
-              "ops": [
-                {
-                  "op": "replace",
-                  "source": "EntityStorage",
-                  "target": "BlockEntityTag.EntityStorage"
-                },
-                {
-                  "op": "replace",
-                  "source": "Energy",
-                  "target": "BlockEntityTag.Energy"
-                },
-                {
-                  "op": "replace",
-                  "source": "IoConfig",
-                  "target": "BlockEntityTag.IoConfig"
-                },
-                {
-                  "op": "replace",
-                  "source": "RedstoneControl",
-                  "target": "BlockEntityTag.RedstoneControl"
-                },
-                {
-                  "op": "replace",
-                  "source": "Items",
-                  "target": "BlockEntityTag.Items"
-                }
+              "function": "minecraft:copy_components",
+              "include": [
+                "enderio:entity_data",
+                "enderio:energy"
               ],
               "source": "block_entity"
             }

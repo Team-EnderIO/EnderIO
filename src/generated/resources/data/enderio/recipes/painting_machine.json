@@ -3,25 +3,25 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "forge:ingots/redstone_alloy"
+      "tag": "c:ingots/redstone_alloy"
     },
     "B": {
-      "tag": "forge:dyes/blue"
+      "tag": "c:dyes/blue"
     },
     "C": {
       "item": "enderio:void_chassis"
     },
     "G": {
-      "tag": "forge:dyes/green"
+      "tag": "c:dyes/green"
     },
     "I": {
-      "tag": "forge:ingots/copper_alloy"
+      "tag": "c:ingots/copper_alloy"
     },
     "M": {
-      "tag": "forge:gears/iron"
+      "tag": "c:gears/iron"
     },
     "R": {
-      "tag": "forge:dyes/red"
+      "tag": "c:dyes/red"
     }
   },
   "pattern": [
@@ -30,6 +30,7 @@
     "MAM"
   ],
   "result": {
-    "item": "enderio:painting_machine"
+    "count": 1,
+    "id": "enderio:painting_machine"
   }
 }

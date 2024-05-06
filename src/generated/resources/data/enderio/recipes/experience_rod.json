@@ -3,10 +3,10 @@
   "category": "equipment",
   "key": {
     "E": {
-      "tag": "forge:ingots/energetic_alloy"
+      "tag": "c:ingots/energetic_alloy"
     },
     "I": {
-      "tag": "forge:ingots/soularium"
+      "tag": "c:ingots/soularium"
     }
   },
   "pattern": [
@@ -15,6 +15,7 @@
     "I  "
   ],
   "result": {
-    "item": "enderio:experience_rod"
+    "count": 1,
+    "id": "enderio:experience_rod"
   }
 }

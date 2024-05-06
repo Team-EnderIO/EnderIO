@@ -6,19 +6,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "minecraft:copy_nbt",
-              "ops": [
-                {
-                  "op": "replace",
-                  "source": "Paint",
-                  "target": "BlockEntityTag.Paint"
-                }
-              ],
-              "source": "block_entity"
-            }
-          ],
           "name": "enderio:painted_travel_anchor"
         }
       ],

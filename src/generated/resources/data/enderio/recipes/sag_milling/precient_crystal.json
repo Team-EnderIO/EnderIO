@@ -3,7 +3,7 @@
   "bonus": "none",
   "energy": 2400,
   "input": {
-    "tag": "forge:gems/prescient_crystal"
+    "tag": "c:gems/prescient_crystal"
   },
   "outputs": [
     {

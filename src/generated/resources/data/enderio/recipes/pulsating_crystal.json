@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "D": {
-      "tag": "forge:gems/diamond"
+      "tag": "c:gems/diamond"
     },
     "P": {
-      "tag": "forge:nuggets/pulsating_alloy"
+      "tag": "c:nuggets/pulsating_alloy"
     }
   },
   "pattern": [
@@ -15,6 +15,7 @@
     "PPP"
   ],
   "result": {
-    "item": "enderio:pulsating_crystal"
+    "count": 1,
+    "id": "enderio:pulsating_crystal"
   }
 }

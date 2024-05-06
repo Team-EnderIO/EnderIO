@@ -6,24 +6,24 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:ingots/copper_alloy"
+        "tag": "c:ingots/copper_alloy"
       }
     },
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:ingots/iron"
+        "tag": "c:ingots/iron"
       }
     },
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:dusts/redstone"
+        "tag": "c:dusts/redstone"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:conductive_alloy_ingot"
   }
 }

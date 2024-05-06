@@ -5,7 +5,7 @@
   "input": {
     "Count": 1,
     "Ingredient": {
-      "tag": "forge:dusts/grains_of_infinity"
+      "tag": "c:dusts/grains_of_infinity"
     }
   }
 }

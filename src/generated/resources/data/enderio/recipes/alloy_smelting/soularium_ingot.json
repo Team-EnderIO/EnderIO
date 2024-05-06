@@ -17,12 +17,12 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:ingots/gold"
+        "tag": "c:ingots/gold"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:soularium_ingot"
   }
 }

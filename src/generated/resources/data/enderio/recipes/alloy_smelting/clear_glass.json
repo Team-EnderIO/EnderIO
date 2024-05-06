@@ -6,12 +6,12 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:glass/colorless"
+        "tag": "c:glass_blocks/colorless"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:clear_glass"
   }
 }

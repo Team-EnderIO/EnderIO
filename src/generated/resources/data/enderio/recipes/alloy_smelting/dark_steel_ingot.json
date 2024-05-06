@@ -6,24 +6,24 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:ingots/iron"
+        "tag": "c:ingots/iron"
       }
     },
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:dusts/coal"
+        "tag": "c:dusts/coal"
       }
     },
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:obsidian"
+        "tag": "c:obsidians"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:dark_steel_ingot"
   }
 }

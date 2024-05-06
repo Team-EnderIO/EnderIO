@@ -6,18 +6,18 @@
     {
       "Count": 2,
       "Ingredient": {
-        "tag": "forge:dusts/coal"
+        "tag": "c:dusts/coal"
       }
     },
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:slimeballs"
+        "tag": "c:slimeballs"
       }
     }
   ],
   "result": {
-    "Count": 2,
+    "count": 2,
     "id": "enderio:organic_black_dye"
   }
 }

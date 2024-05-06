@@ -3,7 +3,7 @@
   "bonus": "chance_only",
   "energy": 2400,
   "input": {
-    "tag": "forge:gems/quartz"
+    "tag": "c:gems/quartz"
   },
   "outputs": [
     {

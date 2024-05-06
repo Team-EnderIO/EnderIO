@@ -6,18 +6,18 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:ingots/copper"
+        "tag": "c:ingots/copper"
       }
     },
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:silicon"
+        "tag": "c:silicon"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:copper_alloy_ingot"
   }
 }

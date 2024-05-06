@@ -3,10 +3,10 @@
   "category": "equipment",
   "key": {
     "C": {
-      "tag": "forge:gems/ender_crystal"
+      "tag": "c:gems/ender_crystal"
     },
     "I": {
-      "tag": "forge:ingots/dark_steel"
+      "tag": "c:ingots/dark_steel"
     }
   },
   "pattern": [
@@ -15,6 +15,7 @@
     "I  "
   ],
   "result": {
-    "item": "enderio:staff_of_travelling"
+    "count": 1,
+    "id": "enderio:staff_of_travelling"
   }
 }

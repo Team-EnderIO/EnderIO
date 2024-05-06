@@ -1,8 +1,8 @@
 {
   "type": "enderio:tank",
   "fluid": {
-    "Amount": 250,
-    "FluidName": "enderio:fluid_xp_juice_still"
+    "amount": 250,
+    "id": "enderio:fluid_xp_juice_still"
   },
   "input": {
     "item": "minecraft:glass_bottle"

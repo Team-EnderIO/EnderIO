@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:experience_rod"
-            ]
+            "items": "enderio:experience_rod"
           }
         ]
       },

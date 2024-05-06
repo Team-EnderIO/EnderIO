@@ -6,18 +6,18 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:ingots/iron"
+        "tag": "c:ingots/iron"
       }
     },
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:ender_pearls"
+        "tag": "c:ender_pearls"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:pulsating_alloy_ingot"
   }
 }

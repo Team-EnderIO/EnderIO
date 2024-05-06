@@ -3,22 +3,22 @@
   "energy": 20000,
   "inputs": [
     {
-      "tag": "forge:ingots/energetic_alloy"
+      "tag": "c:ingots/energetic_alloy"
     },
     {
       "item": "minecraft:zombie_head"
     },
     {
-      "tag": "forge:ingots/energetic_alloy"
+      "tag": "c:ingots/energetic_alloy"
     },
     {
-      "tag": "forge:silicon"
+      "tag": "c:silicon"
     },
     {
       "item": "enderio:basic_capacitor"
     },
     {
-      "tag": "forge:silicon"
+      "tag": "c:silicon"
     }
   ],
   "output": "enderio:zombie_electrode"

@@ -12,12 +12,12 @@
     {
       "Count": 4,
       "Ingredient": {
-        "tag": "forge:gems/amethyst"
+        "tag": "c:gems/amethyst"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:fused_quartz_d"
   }
 }

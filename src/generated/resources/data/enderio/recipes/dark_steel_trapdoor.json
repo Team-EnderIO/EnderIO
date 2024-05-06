@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "I": {
-      "tag": "forge:ingots/dark_steel"
+      "tag": "c:ingots/dark_steel"
     }
   },
   "pattern": [
@@ -11,6 +11,7 @@
     "II"
   ],
   "result": {
-    "item": "enderio:dark_steel_trapdoor"
+    "count": 1,
+    "id": "enderio:dark_steel_trapdoor"
   }
 }

@@ -6,7 +6,7 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:storage_blocks/quartz"
+        "tag": "c:storage_blocks/quartz"
       }
     },
     {
@@ -17,7 +17,7 @@
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:fused_quartz_e"
   }
 }

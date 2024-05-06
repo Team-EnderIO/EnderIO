@@ -6,13 +6,13 @@
       "item": "enderio:double_layer_capacitor"
     },
     "D": {
-      "tag": "forge:dusts/coal"
+      "tag": "c:dusts/coal"
     },
     "F": {
-      "tag": "enderio:enlighted_fused_quartz"
+      "tag": "c:glass_blocks/enlighted_fused_quartz"
     },
     "I": {
-      "tag": "forge:ingots/pulsating_alloy"
+      "tag": "c:ingots/pulsating_alloy"
     },
     "P": {
       "item": "enderio:photovoltaic_plate"
@@ -27,6 +27,7 @@
     "CSC"
   ],
   "result": {
-    "item": "enderio:pulsating_photovoltaic_module"
+    "count": 1,
+    "id": "enderio:pulsating_photovoltaic_module"
   }
 }

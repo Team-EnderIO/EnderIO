@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "I": {
-      "tag": "forge:ingots/end_steel"
+      "tag": "c:ingots/end_steel"
     }
   },
   "pattern": [
@@ -12,6 +12,6 @@
   ],
   "result": {
     "count": 12,
-    "item": "enderio:end_steel_bars"
+    "id": "enderio:end_steel_bars"
   }
 }

@@ -3,22 +3,22 @@
   "energy": 20000,
   "inputs": [
     {
-      "tag": "forge:ingots/soularium"
+      "tag": "c:ingots/soularium"
     },
     {
       "item": "enderio:enderman_head"
     },
     {
-      "tag": "forge:ingots/soularium"
+      "tag": "c:ingots/soularium"
     },
     {
-      "tag": "forge:silicon"
+      "tag": "c:silicon"
     },
     {
       "item": "enderio:vibrant_alloy_ingot"
     },
     {
-      "tag": "forge:silicon"
+      "tag": "c:silicon"
     }
   ],
   "output": "enderio:ender_resonator"

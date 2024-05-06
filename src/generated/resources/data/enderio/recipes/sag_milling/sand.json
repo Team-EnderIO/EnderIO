@@ -2,12 +2,12 @@
   "type": "enderio:sag_milling",
   "energy": 2400,
   "input": {
-    "tag": "forge:sand"
+    "tag": "c:sands"
   },
   "outputs": [
     {
       "chance": 0.5,
-      "tag": "forge:silicon"
+      "tag": "c:silicon"
     }
   ]
 }

@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "C": {
-      "tag": "forge:ingots/copper_alloy"
+      "tag": "c:ingots/copper_alloy"
     },
     "V": {
       "item": "enderio:void_chassis"
@@ -15,6 +15,7 @@
     "CCC"
   ],
   "result": {
-    "item": "enderio:wired_charger"
+    "count": 1,
+    "id": "enderio:wired_charger"
   }
 }

@@ -6,10 +6,10 @@
       "item": "enderio:conduit_binder"
     },
     "C": {
-      "tag": "forge:gems/pulsating_crystal"
+      "tag": "c:gems/pulsating_crystal"
     },
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   },
   "pattern": [
@@ -18,6 +18,7 @@
     "IBI"
   ],
   "result": {
-    "item": "enderio:travel_anchor"
+    "count": 1,
+    "id": "enderio:travel_anchor"
   }
 }

@@ -6,12 +6,12 @@
     {
       "Count": 9,
       "Ingredient": {
-        "tag": "forge:dusts/ender_pearl"
+        "tag": "c:dusts/ender_pearl"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "minecraft:ender_pearl"
   }
 }

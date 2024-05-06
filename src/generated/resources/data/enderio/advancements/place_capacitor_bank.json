@@ -31,7 +31,8 @@
       "translate": "advancements.enderio.place_capacitor_bank.description"
     },
     "icon": {
-      "item": "enderio:basic_capacitor_bank"
+      "count": 1,
+      "id": "enderio:basic_capacitor_bank"
     },
     "title": {
       "translate": "advancements.enderio.place_capacitor_bank.title"

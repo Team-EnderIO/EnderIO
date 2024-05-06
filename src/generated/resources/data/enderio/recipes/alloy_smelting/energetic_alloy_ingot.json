@@ -6,24 +6,24 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:dusts/redstone"
+        "tag": "c:dusts/redstone"
       }
     },
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:ingots/gold"
+        "tag": "c:ingots/gold"
       }
     },
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:dusts/glowstone"
+        "tag": "c:dusts/glowstone"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:energetic_alloy_ingot"
   }
 }

@@ -3,7 +3,7 @@
   "bonus": "none",
   "energy": 2400,
   "input": {
-    "tag": "forge:gems/vibrant_crystal"
+    "tag": "c:gems/vibrant_crystal"
   },
   "outputs": [
     {

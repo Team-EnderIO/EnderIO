@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "I": {
-      "tag": "forge:ingots/dark_steel"
+      "tag": "c:ingots/dark_steel"
     }
   },
   "pattern": [
@@ -13,6 +13,6 @@
   ],
   "result": {
     "count": 24,
-    "item": "enderio:dark_steel_grinding_ball"
+    "id": "enderio:dark_steel_grinding_ball"
   }
 }

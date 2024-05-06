@@ -6,10 +6,10 @@
       "item": "minecraft:iron_bars"
     },
     "G": {
-      "tag": "forge:dusts/grains_of_infinity"
+      "tag": "c:dusts/grains_of_infinity"
     },
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   },
   "pattern": [
@@ -18,6 +18,7 @@
     "BIB"
   ],
   "result": {
-    "item": "enderio:void_chassis"
+    "count": 1,
+    "id": "enderio:void_chassis"
   }
 }

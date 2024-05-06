@@ -4,7 +4,7 @@
   "entity_type": "minecraft:shulker",
   "exp": 8,
   "input": {
-    "tag": "forge:gems/vibrant_crystal"
+    "tag": "c:gems/vibrant_crystal"
   },
   "output": "enderio:prescient_crystal"
 }

@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "P": [
       {
@@ -14,7 +14,7 @@
       }
     ],
     "R": {
-      "tag": "forge:ingots/redstone_alloy"
+      "tag": "c:ingots/redstone_alloy"
     }
   },
   "pattern": [
@@ -23,6 +23,7 @@
     "RPR"
   ],
   "result": {
-    "item": "enderio:redstone_filter_base"
+    "count": 1,
+    "id": "enderio:redstone_filter_base"
   }
 }

@@ -6,24 +6,24 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:end_stones"
+        "tag": "c:end_stones"
       }
     },
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:ingots/dark_steel"
+        "tag": "c:ingots/dark_steel"
       }
     },
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:obsidian"
+        "tag": "c:obsidians"
       }
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:end_steel_ingot"
   }
 }

@@ -6,7 +6,7 @@
     {
       "Count": 1,
       "Ingredient": {
-        "tag": "forge:ingots/nether_brick"
+        "tag": "c:bricks/nether"
       }
     },
     {
@@ -23,7 +23,7 @@
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:nethercotta"
   }
 }

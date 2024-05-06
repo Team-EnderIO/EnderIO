@@ -6,13 +6,13 @@
       "item": "enderio:octadic_capacitor"
     },
     "F": {
-      "tag": "enderio:dark_fused_quartz"
+      "tag": "c:glass_blocks/dark_fused_quartz"
     },
     "G": {
       "item": "minecraft:glowstone"
     },
     "I": {
-      "tag": "forge:ingots/vibrant_alloy"
+      "tag": "c:ingots/vibrant_alloy"
     },
     "P": {
       "item": "enderio:photovoltaic_plate"
@@ -27,6 +27,7 @@
     "CSC"
   ],
   "result": {
-    "item": "enderio:vibrant_photovoltaic_module"
+    "count": 1,
+    "id": "enderio:vibrant_photovoltaic_module"
   }
 }

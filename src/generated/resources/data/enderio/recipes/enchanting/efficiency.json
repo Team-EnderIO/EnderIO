@@ -5,7 +5,7 @@
   "input": {
     "Count": 12,
     "Ingredient": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:dusts/redstone"
     }
   }
 }

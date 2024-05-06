@@ -1,8 +1,8 @@
 {
   "type": "enderio:tank",
   "fluid": {
-    "Amount": 1000,
-    "FluidName": "minecraft:water"
+    "amount": 1000,
+    "id": "minecraft:water"
   },
   "input": {
     "item": "minecraft:wet_sponge"
