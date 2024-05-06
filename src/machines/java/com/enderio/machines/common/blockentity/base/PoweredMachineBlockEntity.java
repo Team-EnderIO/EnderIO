@@ -339,7 +339,6 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     // region Serialization
 
-    // TODO: Energy not loading correctly...
     @Override
     public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         super.saveAdditional(pTag, lookupProvider);
@@ -352,14 +351,14 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
+
+        cacheCapacitorData();
+
         var energyStorage = getEnergyStorage();
         if (energyStorage instanceof MachineEnergyStorage storage && pTag.contains(MachineNBTKeys.ENERGY)) {
             storage.deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.ENERGY));
         }
-
-        super.loadAdditional(pTag, lookupProvider);
-
-        cacheCapacitorData();
 
         updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
         updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);

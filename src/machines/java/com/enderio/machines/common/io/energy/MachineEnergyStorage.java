@@ -165,7 +165,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
 
     @Override
     public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-        setEnergyStored(nbt.getInt(MachineNBTKeys.ENERGY_STORED));
+        energyStored = nbt.getInt(MachineNBTKeys.ENERGY_STORED);
     }
 
     private static class Sided implements IEnergyStorage {
