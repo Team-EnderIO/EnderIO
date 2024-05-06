@@ -38,8 +38,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class AlloyRecipeProvider extends EnderRecipeProvider {
 
-    public AlloyRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public AlloyRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries);
     }
 
     @Override
@@ -55,9 +55,9 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
         build(new ItemStack(EIOItems.REDSTONE_ALLOY_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.DUSTS_REDSTONE), CountedIngredient.of(EIOTags.Items.SILICON)), 3200, 0.3f, recipeOutput);
         build(new ItemStack(EIOItems.CONDUCTIVE_ALLOY_INGOT.get()), List.of(CountedIngredient.of(EIOTags.Items.INGOTS_COPPER_ALLOY), CountedIngredient.of(Tags.Items.INGOTS_IRON), CountedIngredient.of(Tags.Items.DUSTS_REDSTONE)), 4800, 0.3f, recipeOutput);
         build(new ItemStack(EIOItems.PULSATING_ALLOY_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.INGOTS_IRON), CountedIngredient.of(Tags.Items.ENDER_PEARLS)), 4800, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.DARK_STEEL_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.INGOTS_IRON), CountedIngredient.of(EIOTags.Items.DUSTS_COAL), CountedIngredient.of(Tags.Items.OBSIDIAN)), 6400, 0.3f, recipeOutput);
+        build(new ItemStack(EIOItems.DARK_STEEL_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.INGOTS_IRON), CountedIngredient.of(EIOTags.Items.DUSTS_COAL), CountedIngredient.of(Tags.Items.OBSIDIANS)), 6400, 0.3f, recipeOutput);
         build(new ItemStack(EIOItems.SOULARIUM_INGOT.get()), List.of(CountedIngredient.of(Items.SOUL_SAND, Items.SOUL_SOIL), CountedIngredient.of(Tags.Items.INGOTS_GOLD)), 5600, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.END_STEEL_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.END_STONES), CountedIngredient.of(EIOTags.Items.INGOTS_DARK_STEEL), CountedIngredient.of(Tags.Items.OBSIDIAN)), 6400, 0.3f, recipeOutput);
+        build(new ItemStack(EIOItems.END_STEEL_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.END_STONES), CountedIngredient.of(EIOTags.Items.INGOTS_DARK_STEEL), CountedIngredient.of(Tags.Items.OBSIDIANS)), 6400, 0.3f, recipeOutput);
 
         // endregion
 
@@ -84,15 +84,15 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
             GlassIdentifier identifier = glassGroup.getKey();
             if (identifier.collisionPredicate() == GlassCollisionPredicate.NONE) {
                 FusedQuartzBlock clear = glassGroup.getValue().CLEAR.get();
-                var mainIngredient = identifier.explosion_resistance() ? CountedIngredient.of(4, Tags.Items.GEMS_QUARTZ) : CountedIngredient.of(Tags.Items.GLASS_COLORLESS);
+                var mainIngredient = identifier.explosion_resistance() ? CountedIngredient.of(4, Tags.Items.GEMS_QUARTZ) : CountedIngredient.of(Tags.Items.GLASS_BLOCKS_COLORLESS);
                 @Nullable
-                var altIngredient = identifier.explosion_resistance() ? CountedIngredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ) : null;
+                var altIngredient = identifier.explosion_resistance() ? CountedIngredient.of(EIOTags.Items.STORAGE_BLOCKS_QUARTZ) : null;
                 var energy = identifier.explosion_resistance() ? 6400 : 3200;
                 if (identifier.lighting() == GlassLighting.NONE) {
                     glass(clear, mainIngredient, altIngredient, energy, 0.3f, recipeOutput);
                 } else {
                     var composite = identifier.lighting() == GlassLighting.EMITTING ? CountedIngredient.of(4, Tags.Items.DUSTS_GLOWSTONE) : CountedIngredient.of(4, Tags.Items.GEMS_AMETHYST);
-                    var compositeB = identifier.lighting() == GlassLighting.EMITTING ? CountedIngredient.of(Blocks.GLOWSTONE) : CountedIngredient.of(Tags.Items.STORAGE_BLOCKS_AMETHYST);
+                    var compositeB = identifier.lighting() == GlassLighting.EMITTING ? CountedIngredient.of(Blocks.GLOWSTONE) : CountedIngredient.of(EIOTags.Items.STORAGE_BLOCKS_AMETHYST);
                     compositeGlass(clear, "from_main", mainIngredient, composite, compositeB, energy, 0.3f, recipeOutput);
                     if (altIngredient != null) {
                         compositeGlass(clear, "from_storage", altIngredient, composite, compositeB, energy, 0.3f, recipeOutput);
@@ -108,7 +108,7 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         // region Misc
 
-        build(new ItemStack(EIOItems.NETHERCOTTA.get()), List.of(CountedIngredient.of(Tags.Items.INGOTS_NETHER_BRICK), CountedIngredient.of(4, Items.NETHER_WART), CountedIngredient.of(6, Items.CLAY_BALL)), 7600, 0.3f, recipeOutput);
+        build(new ItemStack(EIOItems.NETHERCOTTA.get()), List.of(CountedIngredient.of(Tags.Items.BRICKS_NETHER), CountedIngredient.of(4, Items.NETHER_WART), CountedIngredient.of(6, Items.CLAY_BALL)), 7600, 0.3f, recipeOutput);
 
         build(new ItemStack(EIOItems.CAKE_BASE.get(), 2), List.of(CountedIngredient.of(3, EIOItems.FLOUR.get()), CountedIngredient.of(Items.EGG)), 2000, 0.3f, recipeOutput);
 

@@ -44,6 +44,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
+import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.List;
@@ -68,7 +69,7 @@ public class EIOMachines {
         MachineTags.register();
 
         IntegrationManager.addIntegration(EnderIOMachinesSelfIntegration.INSTANCE);
-        TravelRegistry.addTravelEntry(EnderIO.loc("travel_anchor"), AnchorTravelTarget::new, () -> TravelAnchorRenderer::new);
+        TravelRegistry.addTravelEntry(EnderIO.loc("travel_anchor"), AnchorTravelTarget::new, () -> Lazy.of(TravelAnchorRenderer::new));
     }
 
     @SubscribeEvent
@@ -87,14 +88,14 @@ public class EIOMachines {
 
         EIODataProvider provider = new EIODataProvider("machines");
 
-        provider.addSubProvider(event.includeServer(), new MachineRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new AlloyRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new EnchanterRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new MachineRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new AlloyRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new EnchanterRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
 

@@ -15,6 +15,7 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -62,7 +63,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot((slot, stack) -> CommonHooks.getBurnTime(stack, RecipeType.SMELTING) > 0 && stack.getCraftingRemainingItem().isEmpty())
+            .inputSlot((slot, stack) -> stack.getBurnTime(RecipeType.SMELTING) > 0 && stack.getCraftingRemainingItem().isEmpty())
             .slotAccess(FUEL)
             .capacitor()
             .build();
@@ -86,7 +87,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                 ItemStack fuel = FUEL.getItemStack(this);
                 if (!fuel.isEmpty()) {
                     // Get the burn time.
-                    int burningTime = CommonHooks.getBurnTime(fuel, RecipeType.SMELTING);
+                    int burningTime = fuel.getBurnTime(RecipeType.SMELTING);
 
                     if (burningTime > 0) {
                         burnTime = (int) Math.floor(burningTime * MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_BURN_SPEED.get());
@@ -152,8 +153,8 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());

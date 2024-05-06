@@ -3,6 +3,7 @@ package com.enderio.machines.common.io;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.function.Function;
@@ -41,12 +42,12 @@ public final class SidedFixedIOConfig implements IIOConfig {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         return new CompoundTag();
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         // Not enabled.
     }
 }

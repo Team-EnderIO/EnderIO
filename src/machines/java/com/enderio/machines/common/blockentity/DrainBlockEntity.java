@@ -23,6 +23,7 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.DrainMenu;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -231,6 +232,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
             positions.add(pos.immutable()); //Need to make it immutable
         }
     }
+
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
@@ -238,16 +240,16 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
         pTag.putInt(CONSUMED, consumed);
-        saveTank(pTag);
+        saveTank(lookupProvider, pTag);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
         consumed = pTag.getInt(CONSUMED);
-        loadTank(pTag);
+        loadTank(lookupProvider, pTag);
     }
 }

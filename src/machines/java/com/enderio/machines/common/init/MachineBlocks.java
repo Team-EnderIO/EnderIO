@@ -3,6 +3,7 @@ package com.enderio.machines.common.init;
 import com.enderio.EnderIO;
 import com.enderio.base.client.renderer.PaintedBlockColor;
 import com.enderio.base.common.init.EIOCreativeTabs;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
@@ -138,12 +139,11 @@ public class MachineBlocks {
     public static final RegiliteBlock<ProgressMachineBlock> POWERED_SPAWNER = BLOCK_REGISTRY
         .registerBlock("powered_spawner", properties -> new ProgressMachineBlock(MachineBlockEntities.POWERED_SPAWNER, properties),
             BlockBehaviour.Properties.of().strength(2.5f, 8))
-        .setLootTable((l,t) -> MachinesLootTable.copyStandardComponentsWith(l, t, MachineNBTKeys.ENTITY_STORAGE))
+        .setLootTable((l,t) -> MachinesLootTable.copyStandardComponentsWith(l, t, EIODataComponents.ENTITY_DATA.get()))
         .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .createBlockItem(ITEM_REGISTRY,
             item -> item.setTab(EIOCreativeTabs.MACHINES)
-                .addItemTags(EIOTags.Items.ENTITY_STORAGE)
         );
 
     public static final RegiliteBlock<MachineBlock> VACUUM_CHEST = BLOCK_REGISTRY
@@ -205,7 +205,6 @@ public class MachineBlocks {
         .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
         .createBlockItem(ITEM_REGISTRY,
             item -> item.setTab(EIOCreativeTabs.MACHINES)
-                .addItemTags(EIOTags.Items.ENTITY_STORAGE)
         );
 
     public static final RegiliteBlock<ProgressMachineBlock> DRAIN =

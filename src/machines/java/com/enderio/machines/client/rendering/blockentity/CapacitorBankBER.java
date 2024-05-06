@@ -81,8 +81,8 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
             poseStack.translate(0, -i, 0);
             VertexConsumer buffer = bufferSource.getBuffer(RenderType.cutout());
             PoseStack.Pose last = poseStack.last();
-            renderTopHalf(last.pose(), last.normal(), buffer, facing, i == 0);
-            renderBottomHalf(last.pose(), last.normal(), buffer, facing, i == length - 1);
+            renderTopHalf(last, buffer, facing, i == 0);
+            renderBottomHalf(last, buffer, facing, i == length - 1);
             poseStack.popPose();
         }
         if (blockEntity.getEnergyStorage().getMaxEnergyStored() > 0) {
@@ -98,7 +98,7 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
                 VertexConsumer buffer = bufferSource.getBuffer(RenderType.cutout());
                 PoseStack.Pose last = poseStack.last();
                 boolean isBottomEnd = i == length - 1;
-                renderEnergy(last.pose(), last.normal(), buffer, facing, filledPixels, isBottomEnd);
+                renderEnergy(last, buffer, facing, filledPixels, isBottomEnd);
                 filledPixels -= isBottomEnd ? 13 : 16;
                 poseStack.popPose();
             }
@@ -111,7 +111,7 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
         }
 
         Size size = findSize(capacitorBank, facing);
-        renderTexture(poseStack.last().pose(), poseStack.last().normal(), bufferSource.getBuffer(RenderType.cutout()), facing, size.getTexture(), light);
+        renderTexture(poseStack.last(), bufferSource.getBuffer(RenderType.cutout()), facing, size.getTexture(), light);
         if ((-size.x0 == size.x1 || -size.x0 +1 == size.x1)
             && (-size.y0 == size.y1 || -size.y0 +1 == size.y1)) {
             int height = size.y1 - size.y0 + 1;
@@ -179,6 +179,7 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
 
         return getDisplayModeRelative(blockEntity.getLevel(), horizontalFacing, blockEntity.getBlockPos(), relative, blockEntity.tier);
     }
+
     private static DisplayMode getDisplayModeRelative(Level level, Direction horizontalFacing, BlockPos pos, Vector2i relative, ICapacityTier tier) {
         pos = pos.below(relative.y());
         pos = pos.relative(horizontalFacing.getClockWise(), -relative.x);
@@ -187,25 +188,29 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
         }
         return DisplayMode.NONE;
     }
-    public static void renderBottomHalf(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, Direction facing, boolean isEnd) {
+
+    public static void renderBottomHalf(PoseStack.Pose pose, VertexConsumer consumer, Direction facing, boolean isEnd) {
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(isEnd ? END_BAR : FULL_BAR);
         float inset = -0.001F;
-        RenderUtil.renderFace(facing, pose, normal, consumer, texture, 0, 0, inset, 1, 0.5f, 0xFFFFFFFF);
+        RenderUtil.renderFace(facing, pose, consumer, texture, 0, 0, inset, 1, 0.5f, 0xFFFFFFFF);
     }
-    public static void renderTopHalf(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, Direction facing, boolean isEnd) {
+
+    public static void renderTopHalf(PoseStack.Pose pose, VertexConsumer consumer, Direction facing, boolean isEnd) {
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(isEnd ? END_BAR : FULL_BAR);
         float inset = -0.001F;
-        RenderUtil.renderFace(facing, pose, normal, consumer, texture, 0, 0.5f, inset, 1, 0.5f, 0xFFFFFFFF);
+        RenderUtil.renderFace(facing, pose, consumer, texture, 0, 0.5f, inset, 1, 0.5f, 0xFFFFFFFF);
     }
-    public static void renderEnergy(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, Direction facing, int pixels, boolean isBottomEnd) {
+
+    public static void renderEnergy(PoseStack.Pose pose, VertexConsumer consumer, Direction facing, int pixels, boolean isBottomEnd) {
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(ENERGY_BAR);
         float inset = -0.002F;
-        RenderUtil.renderFace(facing, pose, normal, consumer, texture, 0, isBottomEnd ? 3/16f : 0, inset, 1, Math.min(pixels, isBottomEnd ? 13 : 16)/16f, 0xFFFFFFFF);
+        RenderUtil.renderFace(facing, pose, consumer, texture, 0, isBottomEnd ? 3/16f : 0, inset, 1, Math.min(pixels, isBottomEnd ? 13 : 16)/16f, 0xFFFFFFFF);
     }
-    public static void renderTexture(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, Direction facing, ResourceLocation rl, int light) {
+
+    public static void renderTexture(PoseStack.Pose pose, VertexConsumer consumer, Direction facing, ResourceLocation rl, int light) {
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(rl);
         float inset = -0.001F;
-        RenderUtil.renderFace(facing, pose, normal, consumer, texture, 0, 0, inset, 1, 1, 0xFFFFFFFF, light);
+        RenderUtil.renderFace(facing, pose, consumer, texture, 0, 0, inset, 1, 1, 0xFFFFFFFF, light);
     }
 
     @Override

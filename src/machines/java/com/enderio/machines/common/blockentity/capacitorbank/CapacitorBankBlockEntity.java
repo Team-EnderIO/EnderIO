@@ -25,6 +25,7 @@ import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Inventory;
@@ -72,7 +73,7 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
         addDataSlot(new LongNetworkDataSlot(() -> addedEnergy, syncAddedEnergy -> addedEnergy = syncAddedEnergy));
         addDataSlot(new LongNetworkDataSlot(() -> removedEnergy, syncRemovedEnergy-> removedEnergy = syncRemovedEnergy));
         addDataSlot(new ConfigurablesDataSlot());
-        addDataSlot(new NBTSerializingNetworkDataSlot<>(() -> displayModes, modes -> saveDisplayModes(), (modes, nbt) -> loadDisplayModes(nbt), (modes, friendlyByteBuf) -> friendlyByteBuf.writeNbt(saveDisplayModes()), friendlyByteBuf -> {
+        addDataSlot(new NBTSerializingNetworkDataSlot<>(() -> displayModes, (modes, lookupProvider) -> saveDisplayModes(), (modes, lookupProvider, nbt) -> loadDisplayModes(nbt), (modes, friendlyByteBuf) -> friendlyByteBuf.writeNbt(saveDisplayModes()), friendlyByteBuf -> {
             CompoundTag tag = friendlyByteBuf.readNbt();
             loadDisplayModes(tag);
             return displayModes;
@@ -161,8 +162,8 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
         pTag.put(DISPLAY_MODES, saveDisplayModes());
     }
 
@@ -176,8 +177,8 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
         if (pTag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
             loadDisplayModes(pTag.getCompound(DISPLAY_MODES));
         }

@@ -27,6 +27,7 @@ import com.enderio.machines.common.menu.SoulBinderMenu;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SoulBindingRecipe;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -74,7 +75,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
             new SoulBindingRecipe.Container(getInventoryNN(), () -> TANK.getFluidAmount(this)), this::createTask);
 
         // Sync crafting container needed xp
-        addDataSlot(new IntegerNetworkDataSlot(() -> recipe == null ? 0 : recipe.value().getExpCost(), i -> clientExp = i));
+        addDataSlot(new IntegerNetworkDataSlot(() -> recipe == null ? 0 : recipe.value().experience(), i -> clientExp = i));
     }
 
     @Override
@@ -199,7 +200,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
                 INPUT_OTHER.getItemStack(getInventory()).shrink(1);
 
                 MachineFluidHandler handler = getFluidHandler();
-                int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(TANK.getFluidAmount(handler), 0, recipe.getExpCost()).experience();
+                int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(TANK.getFluidAmount(handler), 0, recipe.experience()).experience();
                 TANK.drain(handler, TANK.getFluidAmount(handler) - leftover * EXP_TO_FLUID, IFluidHandler.FluidAction.EXECUTE);
             }
 
@@ -211,17 +212,17 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        craftingTaskHost.save(pTag);
-        saveTank(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
+        craftingTaskHost.save(lookupProvider, pTag);
+        saveTank(lookupProvider, pTag);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        craftingTaskHost.load(pTag);
-        loadTank(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
+        craftingTaskHost.load(lookupProvider, pTag);
+        loadTank(lookupProvider, pTag);
     }
 
     // endregion

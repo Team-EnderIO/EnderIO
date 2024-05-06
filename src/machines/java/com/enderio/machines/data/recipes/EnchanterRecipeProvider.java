@@ -7,6 +7,7 @@ import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -16,20 +17,22 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
 
+import java.util.concurrent.CompletableFuture;
+
 public class EnchanterRecipeProvider extends EnderRecipeProvider {
 
-    public EnchanterRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public EnchanterRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries);
     }
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
         //vanilla
-        build(Enchantments.ALL_DAMAGE_PROTECTION, CountedIngredient.of(16, EIOTags.Items.INGOTS_DARK_STEEL), 1, recipeOutput);
+        build(Enchantments.PROTECTION, CountedIngredient.of(16, EIOTags.Items.INGOTS_DARK_STEEL), 1, recipeOutput);
         build(Enchantments.FIRE_PROTECTION, CountedIngredient.of(16, Items.MAGMA_CREAM), 1, recipeOutput); //TODO
-        build(Enchantments.FALL_PROTECTION, CountedIngredient.of(Tags.Items.FEATHERS), 1, recipeOutput);
+        build(Enchantments.FEATHER_FALLING, CountedIngredient.of(Tags.Items.FEATHERS), 1, recipeOutput);
         build(Enchantments.BLAST_PROTECTION, CountedIngredient.of(16, Items.GUNPOWDER), 1, recipeOutput);
-        build(Enchantments.PROJECTILE_PROTECTION, CountedIngredient.of(16, Tags.Items.LEATHER), 1, recipeOutput);//change arrow->leather?
+        build(Enchantments.PROJECTILE_PROTECTION, CountedIngredient.of(16, Tags.Items.LEATHERS), 1, recipeOutput);//change arrow->leather?
         build(Enchantments.RESPIRATION, CountedIngredient.of(Items.GLASS_BOTTLE), 1, recipeOutput);
         build(Enchantments.AQUA_AFFINITY, CountedIngredient.of(Items.LILY_PAD), 1, recipeOutput);
         build(Enchantments.DEPTH_STRIDER, CountedIngredient.of(Items.PRISMARINE_SHARD), 1, recipeOutput);
@@ -40,18 +43,18 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
         build(Enchantments.BANE_OF_ARTHROPODS, CountedIngredient.of(12, Items.SPIDER_EYE), 1, recipeOutput);
         build(Enchantments.KNOCKBACK, CountedIngredient.of(Items.PISTON), 1, recipeOutput);
         build(Enchantments.FIRE_ASPECT, CountedIngredient.of(8, Items.BLAZE_ROD), 1, recipeOutput);
-        build(Enchantments.MOB_LOOTING, CountedIngredient.of(Items.SKELETON_SKULL), 1, recipeOutput);
-        build(Enchantments.BLOCK_EFFICIENCY, CountedIngredient.of(12, Tags.Items.DUSTS_REDSTONE), 1, recipeOutput);
+        build(Enchantments.LOOTING, CountedIngredient.of(Items.SKELETON_SKULL), 1, recipeOutput);
+        build(Enchantments.EFFICIENCY, CountedIngredient.of(12, Tags.Items.DUSTS_REDSTONE), 1, recipeOutput);
         build(Enchantments.SILK_TOUCH, CountedIngredient.of(Tags.Items.SLIMEBALLS), 1, recipeOutput);
-        build(Enchantments.UNBREAKING, CountedIngredient.of(Tags.Items.OBSIDIAN), 1, recipeOutput);
+        build(Enchantments.UNBREAKING, CountedIngredient.of(Tags.Items.OBSIDIANS), 1, recipeOutput);
         build(Enchantments.MENDING, CountedIngredient.of(EIOItems.EXPERIENCE_ROD.get()), 1, recipeOutput);
-        build(Enchantments.BLOCK_FORTUNE, CountedIngredient.of(Tags.Items.GEMS_EMERALD), 1, recipeOutput);
-        build(Enchantments.POWER_ARROWS, CountedIngredient.of(12, Items.FLINT), 1, recipeOutput);
-        build(Enchantments.PUNCH_ARROWS, CountedIngredient.of(Tags.Items.STRING), 1, recipeOutput);
-        build(Enchantments.FLAMING_ARROWS, CountedIngredient.of(Tags.Items.NETHERRACK), 1, recipeOutput);
-        build(Enchantments.INFINITY_ARROWS, CountedIngredient.of(EIOTags.Items.DUSTS_GRAINS_OF_INFINITY), 1, recipeOutput);
-        build(Enchantments.FISHING_LUCK, CountedIngredient.of(Tags.Items.GEMS_LAPIS), 1, recipeOutput);
-        build(Enchantments.FISHING_SPEED, CountedIngredient.of(ItemTags.FISHES), 1, recipeOutput);
+        build(Enchantments.FORTUNE, CountedIngredient.of(Tags.Items.GEMS_EMERALD), 1, recipeOutput);
+        build(Enchantments.POWER, CountedIngredient.of(12, Items.FLINT), 1, recipeOutput);
+        build(Enchantments.PUNCH, CountedIngredient.of(Tags.Items.STRINGS), 1, recipeOutput);
+        build(Enchantments.FLAME, CountedIngredient.of(Tags.Items.NETHERRACKS), 1, recipeOutput);
+        build(Enchantments.INFINITY, CountedIngredient.of(EIOTags.Items.DUSTS_GRAINS_OF_INFINITY), 1, recipeOutput);
+        build(Enchantments.LUCK_OF_THE_SEA, CountedIngredient.of(Tags.Items.GEMS_LAPIS), 1, recipeOutput);
+        build(Enchantments.LURE, CountedIngredient.of(ItemTags.FISHES), 1, recipeOutput);
         build(Enchantments.SWEEPING_EDGE, CountedIngredient.of(8, Tags.Items.INGOTS_IRON), 1, recipeOutput);
         //new
         build(Enchantments.CHANNELING, CountedIngredient.of(Items.LIGHTNING_ROD), 1, recipeOutput);
@@ -75,7 +78,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
     protected void build(Enchantment enchantment, CountedIngredient input, int levelModifier, RecipeOutput recipeOutput) {
         recipeOutput.accept(
             EnderIO.loc("enchanting/" + BuiltInRegistries.ENCHANTMENT.getKey(enchantment).getPath()),
-            new EnchanterRecipe(input, enchantment, levelModifier),
+            new EnchanterRecipe(enchantment, levelModifier, input),
             null);
     }
 

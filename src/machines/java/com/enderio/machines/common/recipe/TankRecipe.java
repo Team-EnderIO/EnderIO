@@ -7,11 +7,18 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,35 +35,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
-
-    final Ingredient input;
-    final Item output;
-    final FluidStack fluid;
-    final boolean isEmptying;
-
-    public TankRecipe(Ingredient input, Item output, FluidStack fluid, boolean isEmptying) {
-        this.input = input;
-        this.output = output;
-        this.fluid = fluid;
-        this.isEmptying = isEmptying;
-    }
-
-    public Ingredient getInput() {
-        return input;
-    }
-
-    public Item getOutput() {
-        return output;
-    }
-
-    public FluidStack getFluid() {
-        return fluid;
-    }
-
-    public boolean isEmptying() {
-        return isEmptying;
-    }
+// TODO: I'd like to swap the isEmptying for an enum for readability.
+public record TankRecipe(
+    Ingredient input,
+    Item output,
+    FluidStack fluid,
+    boolean isEmptying
+) implements EnderRecipe<TankRecipe.Container> {
 
     @Override
     public boolean matches(Container pContainer, Level pLevel) {
@@ -76,12 +61,12 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+    public ItemStack assemble(Container container, HolderLookup.Provider lookupProvider) {
         return null;
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess p_267052_) {
+    public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
         return new ItemStack(output);
     }
 
@@ -111,51 +96,33 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
 
     public static class Serializer implements RecipeSerializer<TankRecipe> {
 
-        private static final Codec<TankRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(recipe -> recipe.input),
-            BuiltInRegistries.ITEM.byNameCodec().fieldOf("output").forGetter(recipe -> recipe.output),
-            FluidStack.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.fluid),
-            Codec.BOOL.fieldOf("is_emptying").forGetter(recipe -> recipe.isEmptying)
+        private static final MapCodec<TankRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(TankRecipe::input),
+            BuiltInRegistries.ITEM.byNameCodec().fieldOf("output").forGetter(TankRecipe::output),
+            FluidStack.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid),
+            Codec.BOOL.fieldOf("is_emptying").forGetter(TankRecipe::isEmptying)
         ).apply(instance, TankRecipe::new));
 
+        public static final StreamCodec<RegistryFriendlyByteBuf, TankRecipe> STREAM_CODEC = StreamCodec.composite(
+            Ingredient.CONTENTS_STREAM_CODEC,
+            TankRecipe::input,
+            ByteBufCodecs.registry(Registries.ITEM),
+            TankRecipe::output,
+            FluidStack.STREAM_CODEC,
+            TankRecipe::fluid,
+            ByteBufCodecs.BOOL,
+            TankRecipe::isEmptying,
+            TankRecipe::new
+        );
+
         @Override
-        public Codec<TankRecipe> codec() {
+        public MapCodec<TankRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public @Nullable TankRecipe fromNetwork(FriendlyByteBuf buffer) {
-            try {
-                Ingredient input = Ingredient.fromNetwork(buffer);
-
-                ResourceLocation outputId = buffer.readResourceLocation();
-                Item output = BuiltInRegistries.ITEM.get(outputId);
-                if (output == Items.AIR) {
-                    return null;
-                }
-
-                FluidStack fluid = FluidStack.readFromPacket(buffer);
-
-                boolean isEmptying = buffer.readBoolean();
-
-                return new TankRecipe(input, output, fluid, isEmptying);
-            } catch (Exception ex) {
-                EnderIO.LOGGER.error("Error reading tank recipe from packet.", ex);
-                return null;
-            }
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf buffer, TankRecipe recipe) {
-            try {
-                recipe.input.toNetwork(buffer);
-                buffer.writeResourceLocation(Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(recipe.output)));
-                recipe.fluid.writeToPacket(buffer);
-                buffer.writeBoolean(recipe.isEmptying);
-            } catch (Exception ex) {
-                EnderIO.LOGGER.error("Error writing tank recipe to packet.", ex);
-                throw ex;
-            }
+        public StreamCodec<RegistryFriendlyByteBuf, TankRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

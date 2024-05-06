@@ -62,17 +62,16 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return pStack.is(EIOTags.Items.ENTITY_STORAGE) && pStack.get(EIODataComponents.ENTITY_DATA).hasEntity();
+        return pStack.getOrDefault(EIODataComponents.ENTITY_DATA, StoredEntityData.EMPTY).hasEntity();
     }
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        if (itemStack.is(EIOTags.Items.ENTITY_STORAGE)) {
-            itemStack.get(EIODataComponents.ENTITY_DATA)
-                .getHealthState()
-                .ifPresent(health ->
-                    tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB())));
-        }
+        itemStack
+            .getOrDefault(EIODataComponents.ENTITY_DATA, StoredEntityData.EMPTY)
+            .getHealthState()
+            .ifPresent(health ->
+                tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB())));
     }
 
     // endregion
@@ -151,29 +150,27 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
     }
 
     private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos, Consumer<ItemStack> emptyVialSetter) {
-        if (filledVial.is(EIOTags.Items.ENTITY_STORAGE)) {
-            var storedEntity = filledVial.get(EIODataComponents.ENTITY_DATA);
+        var storedEntity = filledVial.get(EIODataComponents.ENTITY_DATA);
 
-            if (storedEntity != null && storedEntity.hasEntity()) {
-                // Get the spawn location for the mob.
-                double spawnX = pos.getX() + face.getStepX() + 0.5;
-                double spawnY = pos.getY() + face.getStepY();
-                double spawnZ = pos.getZ() + face.getStepZ() + 0.5;
+        if (storedEntity != null && storedEntity.hasEntity()) {
+            // Get the spawn location for the mob.
+            double spawnX = pos.getX() + face.getStepX() + 0.5;
+            double spawnY = pos.getY() + face.getStepY();
+            double spawnZ = pos.getZ() + face.getStepZ() + 0.5;
 
-                // Get a random rotation for the entity.
-                float rotation = Mth.wrapDegrees(level.getRandom().nextFloat() * 360.0f);
+            // Get a random rotation for the entity.
+            float rotation = Mth.wrapDegrees(level.getRandom().nextFloat() * 360.0f);
 
-                // Try to get the entity NBT from the item.
-                Optional<Entity> entity = EntityType.create(storedEntity.getEntityTag(), level);
+            // Try to get the entity NBT from the item.
+            Optional<Entity> entity = EntityType.create(storedEntity.getEntityTag(), level);
 
-                // Position the entity and add it.
-                entity.ifPresent(ent -> {
-                    ent.setPos(spawnX, spawnY, spawnZ);
-                    ent.setYRot(rotation);
-                    level.addFreshEntity(ent);
-                });
-                emptyVialSetter.accept(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance());
-            }
+            // Position the entity and add it.
+            entity.ifPresent(ent -> {
+                ent.setPos(spawnX, spawnY, spawnZ);
+                ent.setYRot(rotation);
+                level.addFreshEntity(ent);
+            });
+            emptyVialSetter.accept(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance());
         }
 
         return InteractionResult.SUCCESS;
@@ -206,7 +203,7 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
     }
 
     public static Optional<StoredEntityData> getEntityData(ItemStack stack) {
-        return stack.is(EIOTags.Items.ENTITY_STORAGE) ? Optional.ofNullable(stack.get(EIODataComponents.ENTITY_DATA)) : Optional.empty();
+        return Optional.ofNullable(stack.get(EIODataComponents.ENTITY_DATA));
     }
 
     // endregion

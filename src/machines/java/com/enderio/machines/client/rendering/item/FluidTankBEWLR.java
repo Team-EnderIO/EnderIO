@@ -60,7 +60,7 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
 
                 PoseStack.Pose pose = poseStack.last();
                 IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid.getFluid());
-                FluidTankBER.renderFluid(pose.pose(), pose.normal(), fluidBuffer, fluid.getFluid(), fluid.getAmount() / (float) capacity, props.getTintColor(), packedLight);
+                FluidTankBER.renderFluid(pose, fluidBuffer, fluid.getFluid(), fluid.getAmount() / (float) capacity, props.getTintColor(), packedLight);
             }
         }
 

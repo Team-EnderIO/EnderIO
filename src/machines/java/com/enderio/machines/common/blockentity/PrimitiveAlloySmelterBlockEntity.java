@@ -13,6 +13,7 @@ import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -65,7 +66,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot((s, i) -> CommonHooks.getBurnTime(i, RecipeType.SMELTING) > 0)
+            .inputSlot((s, i) -> i.getBurnTime(RecipeType.SMELTING) > 0)
             .slotAccess(FUEL)
             .inputSlot(3, this::acceptSlotInput)
             .slotAccess(INPUTS)
@@ -100,7 +101,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
             ItemStack fuel = FUEL.getItemStack(this);
             if (!fuel.isEmpty()) {
                 // Get the burn time.
-                int burningTime = CommonHooks.getBurnTime(fuel, RecipeType.SMELTING);
+                int burningTime = fuel.getBurnTime(RecipeType.SMELTING);
 
                 // If this item can burn, burn it.
                 if (burningTime > 0) {
@@ -178,16 +179,16 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         pTag.putInt(MachineNBTKeys.BURN_TIME, burnTime);
         pTag.putInt(MachineNBTKeys.BURN_DURATION, burnDuration);
-        super.saveAdditional(pTag);
+        super.saveAdditional(pTag, lookupProvider);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         burnTime = pTag.getInt(MachineNBTKeys.BURN_TIME);
         burnDuration = pTag.getInt(MachineNBTKeys.BURN_DURATION);
-        super.load(pTag);
+        super.loadAdditional(pTag, lookupProvider);
     }
 }

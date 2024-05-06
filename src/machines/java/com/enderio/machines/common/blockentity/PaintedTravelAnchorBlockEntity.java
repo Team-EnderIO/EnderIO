@@ -6,6 +6,7 @@ import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.base.common.util.PaintUtils;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -43,15 +44,12 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        super.onDataPacket(net, pkt, lookupProvider);
         Block oldPaint = paint;
         CompoundTag tag = pkt.getTag();
-        if (tag == null) {
-            return;
-        }
 
-        handleUpdateTag(tag);
+        handleUpdateTag(tag, lookupProvider);
         if (oldPaint != paint) {
             requestModelDataUpdate();
             if (level != null) {
@@ -61,20 +59,20 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
         readPaint(tag);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag syncData) {
-        super.handleUpdateTag(syncData);
+    public void handleUpdateTag(CompoundTag syncData, HolderLookup.Provider lookupProvider) {
+        super.handleUpdateTag(syncData, lookupProvider);
         readPaint(syncData);
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag nbt = super.getUpdateTag();
+    public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
+        CompoundTag nbt = super.getUpdateTag(lookupProvider);
         writePaint(nbt);
         return nbt;
     }
@@ -94,8 +92,8 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
         writePaint(tag);
     }
 

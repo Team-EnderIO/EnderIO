@@ -39,7 +39,7 @@ public class CapacitorBankBlock extends MachineBlock implements IAdvancedTooltip
         return tier;
     }
 
-    private final ICapacityTier tier;
+    public final ICapacityTier tier;
 
     public static final ResourceLocation PLACE_ADVANCEMENT_ID = EnderIO.loc("place_capacitor_bank");
 

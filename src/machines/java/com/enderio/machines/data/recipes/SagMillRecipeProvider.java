@@ -122,8 +122,8 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
     private static final int BASE_ENERGY_PER_OPERATION = 2400;
 
-    public SagMillRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public SagMillRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
         build1toN("iron", Tags.Items.INGOTS_IRON, POWDERED_IRON.get(), 1, BonusType.NONE, recipeOutput);
         build1toN("gold", Tags.Items.INGOTS_GOLD, POWDERED_GOLD.get(), 1, BonusType.NONE, recipeOutput);
-        build1toN("obsidian", Tags.Items.OBSIDIAN, POWDERED_OBSIDIAN.get(), 4, recipeOutput);
+        build1toN("obsidian", Tags.Items.OBSIDIANS, POWDERED_OBSIDIAN.get(), 4, recipeOutput);
 
         build1toN("precient_crystal", EIOTags.Items.GEMS_PRESCIENT_CRYSTAL, PRESCIENT_POWDER.get(), 1, BonusType.NONE, recipeOutput);
         build1toN("vibrant_crystal", EIOTags.Items.GEMS_VIBRANT_CRYSTAL, VIBRANT_POWDER.get(), 1, BonusType.NONE, recipeOutput);
@@ -140,7 +140,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
         build1toN("ender_pearl", Tags.Items.ENDER_PEARLS, POWDERED_ENDER_PEARL.get(), 9, BonusType.NONE, recipeOutput);
         build1toN("blaze_powder", Tags.Items.RODS_BLAZE, BLAZE_POWDER, 4, recipeOutput);
-        build1toN("glass", Tags.Items.GLASS, SAND, 1, BonusType.NONE, recipeOutput);
+        build1toN("glass", Tags.Items.GLASS_BLOCKS, SAND, 1, BonusType.NONE, recipeOutput);
         build1toN("bone_block", BONE_BLOCK, BONE_MEAL, 9, BonusType.NONE, recipeOutput);
         build1toN("soularium", EIOTags.Items.INGOTS_SOULARIUM, SOUL_POWDER.get(), 1, BonusType.NONE, recipeOutput);
 
@@ -148,7 +148,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         buildOre("gold_ore", Ingredient.of(Tags.Items.ORES_GOLD), POWDERED_GOLD.get(), recipeOutput);
         buildOre("copper_ore", Ingredient.of(Tags.Items.ORES_COPPER), POWDERED_COPPER.get(), recipeOutput);
 
-        build1toN("stone", Tags.Items.STONE, COBBLESTONE, 1, BonusType.NONE, recipeOutput);
+        build1toN("stone", Tags.Items.STONES, COBBLESTONE, 1, BonusType.NONE, recipeOutput);
 
         build("coal", Ingredient.of(ItemTags.COALS), List.of(
                 output(POWDERED_COAL.get()),
@@ -209,25 +209,25 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		output(Tags.Items.SEEDS_WHEAT, 1, 0.2f, true)),
         		BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("cobblestone", Ingredient.of(Tags.Items.COBBLESTONE), List.of(
+        build("cobblestone", Ingredient.of(Tags.Items.COBBLESTONES), List.of(
         		output(GRAVEL, 0.7f),
         		output(GRAVEL, 0.3f),
         		output(SAND, 0.1f),
         		output(FLINT, 0.05f)),
         		BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("gravel", Ingredient.of(Tags.Items.GRAVEL), List.of(
+        build("gravel", Ingredient.of(Tags.Items.GRAVELS), List.of(
         		output(SAND, 0.7f),
         		output(SAND, 0.3f),
         		output(FLINT, 0.1f)),
         		BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("sandstone", Ingredient.of(Tags.Items.SANDSTONE), List.of(
+        build("sandstone", Ingredient.of(Tags.Items.SANDSTONE_BLOCKS), List.of(
         		output(SAND, 2),
         		output(SAND, 2, 0.4f)),
         		BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
 
-        build("sand", Ingredient.of(Tags.Items.SAND), List.of(
+        build("sand", Ingredient.of(Tags.Items.SANDS), List.of(
         		output(EIOTags.Items.SILICON, 0.5f)
         		),BASE_ENERGY_PER_OPERATION, recipeOutput);
 
@@ -252,7 +252,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		output(STRING, 0.1f)),
         		BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
 
-        build("quartz_block", Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ), List.of(
+        build("quartz_block", Ingredient.of(EIOTags.Items.STORAGE_BLOCKS_QUARTZ), List.of(
         		output(QUARTZ, 2),
         		output(QUARTZ, 2, 0.25f)),
         		BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);

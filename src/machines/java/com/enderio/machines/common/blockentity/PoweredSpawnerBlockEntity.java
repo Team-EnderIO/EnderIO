@@ -23,6 +23,7 @@ import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.PoweredSpawnerMenu;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -42,7 +43,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
     public static final ResourceLocation NO_MOB = EnderIO.loc("no_mob");
-    private StoredEntityData entityData = StoredEntityData.empty();
+    private StoredEntityData entityData = StoredEntityData.EMPTY;
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
     private final MachineTaskHost taskHost;
 
@@ -67,9 +68,9 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             }
 
             @Override
-            protected @Nullable IMachineTask loadTask(CompoundTag nbt) {
+            protected @Nullable IMachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
                 SpawnerMachineTask task = createTask();
-                task.deserializeNBT(nbt);
+                task.deserializeNBT(lookupProvider, nbt);
                 return task;
             }
         };
@@ -163,7 +164,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     // endregion
 
     public Optional<ResourceLocation> getEntityType() {
-        return entityData.getEntityType();
+        return entityData.entityType();
     }
 
     public void setEntityType(ResourceLocation entityType) {
@@ -183,17 +184,17 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.serializeNBT());
-        taskHost.save(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
+        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(lookupProvider));
+        taskHost.save(lookupProvider, pTag);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        entityData.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
-        taskHost.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
+        entityData = StoredEntityData.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+        taskHost.load(lookupProvider, pTag);
     }
 
     // endregion

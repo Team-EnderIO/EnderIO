@@ -185,7 +185,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         if (fluid.getAmount() < drained) {
             drained = fluid.getAmount();
         }
-        FluidStack stack = new FluidStack(fluid, drained);
+        FluidStack stack = new FluidStack(fluid.getFluid(), drained);
         if (action.execute() && drained > 0) {
             fluid.shrink(drained);
             onContentsChanged(tank);

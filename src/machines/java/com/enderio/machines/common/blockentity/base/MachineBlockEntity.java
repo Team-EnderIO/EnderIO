@@ -26,6 +26,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -413,9 +414,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return getBlockState().getBlock().getName();
     }
 
+    // TODO: Rename to onBlockEntityItemUsed
     //called when a player uses the block entity, before menu is may open.
-    public InteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        return InteractionResult.PASS;
+    public ItemInteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     public boolean stillValid(Player pPlayer) {
@@ -432,9 +434,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     @UseOnly(LogicalSide.SERVER)
     @Override
-    public InteractionResult onWrenched(@Nullable Player player, @Nullable Direction side) {
+    public ItemInteractionResult onWrenched(@Nullable Player player, @Nullable Direction side) {
         if (player == null || level == null) {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.SUCCESS;
         }
 
         if (player.isSecondaryUseActive()) {//aka break block
@@ -463,7 +465,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
                 }
             }
         }
-        return InteractionResult.sidedSuccess(level.isClientSide());
+        return ItemInteractionResult.sidedSuccess(level.isClientSide());
     }
 
     public boolean canOpenMenu() {

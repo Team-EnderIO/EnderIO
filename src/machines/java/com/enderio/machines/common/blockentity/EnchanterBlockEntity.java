@@ -14,6 +14,7 @@ import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -132,15 +133,15 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
     // region Serialization
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        inventory.deserializeNBT(tag.getCompound(MachineNBTKeys.ITEMS));
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        inventory.deserializeNBT(lookupProvider, tag.getCompound(MachineNBTKeys.ITEMS));
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        tag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT(lookupProvider));
     }
 
     // endregion

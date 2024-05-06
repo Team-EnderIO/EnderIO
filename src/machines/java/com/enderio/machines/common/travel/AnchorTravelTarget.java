@@ -31,7 +31,7 @@ public class AnchorTravelTarget implements ITravelTarget {
     }
 
     public AnchorTravelTarget(CompoundTag tag) {
-        pos = NbtUtils.readBlockPos(tag.getCompound(CoreNBTKeys.BLOCK_POS));
+        pos = NbtUtils.readBlockPos(tag, CoreNBTKeys.BLOCK_POS).orElseThrow();
         name = tag.getString(CoreNBTKeys.ANCHOR_NAME);
         String iconName = tag.getString(CoreNBTKeys.ANCHOR_ICON);
         icon = iconName.equals("") ? Items.AIR : BuiltInRegistries.ITEM.get(new ResourceLocation(iconName));

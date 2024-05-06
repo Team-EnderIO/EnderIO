@@ -33,8 +33,8 @@ import java.util.function.Consumer;
 
 public class SoulBindingRecipeProvider extends EnderRecipeProvider {
 
-    public SoulBindingRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public SoulBindingRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries);
     }
 
     @Override

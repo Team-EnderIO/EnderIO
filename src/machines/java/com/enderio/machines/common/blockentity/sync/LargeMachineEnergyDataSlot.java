@@ -6,9 +6,11 @@ import com.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.LargeImmutableMachineEnergyStorage;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -23,7 +25,7 @@ public class LargeMachineEnergyDataSlot extends NetworkDataSlot<ILargeMachineEne
     }
 
     @Override
-    public Tag serializeValueNBT(ILargeMachineEnergyStorage value) {
+    public Tag serializeValueNBT(HolderLookup.Provider lookupProvider, ILargeMachineEnergyStorage value) {
         CompoundTag tag = new CompoundTag();
         tag.putLong(MachineNBTKeys.ENERGY_STORED, value.getLargeEnergyStored());
         tag.putLong(MachineNBTKeys.ENERGY_MAX_STORED, value.getLargeMaxEnergyStored());
@@ -31,7 +33,7 @@ public class LargeMachineEnergyDataSlot extends NetworkDataSlot<ILargeMachineEne
     }
 
     @Override
-    protected ILargeMachineEnergyStorage valueFromNBT(Tag nbt) {
+    protected ILargeMachineEnergyStorage valueFromNBT(HolderLookup.Provider lookupProvider, Tag nbt) {
         if (nbt instanceof CompoundTag compoundTag) {
             long energy = compoundTag.getLong(MachineNBTKeys.ENERGY_STORED);
             long maxStored = compoundTag.getLong(MachineNBTKeys.ENERGY_MAX_STORED);
@@ -42,13 +44,13 @@ public class LargeMachineEnergyDataSlot extends NetworkDataSlot<ILargeMachineEne
     }
 
     @Override
-    public void toBuffer(FriendlyByteBuf buf, ILargeMachineEnergyStorage value) {
+    public void toBuffer(RegistryFriendlyByteBuf buf, ILargeMachineEnergyStorage value) {
         buf.writeLong(value.getLargeEnergyStored());
         buf.writeLong(value.getLargeMaxEnergyStored());
     }
 
     @Override
-    public ILargeMachineEnergyStorage valueFromBuffer(FriendlyByteBuf buf) {
+    public ILargeMachineEnergyStorage valueFromBuffer(RegistryFriendlyByteBuf buf) {
         try {
             long energy = buf.readLong();
             long maxStored = buf.readLong();

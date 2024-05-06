@@ -49,12 +49,9 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
     private Optional<ItemStack> getItemStoringEntity(CraftingContainer container) {
         for (int slot = 0; slot < container.getContainerSize(); slot++) {
             ItemStack stack = container.getItem(slot);
-
-            if (stack.is(EIOTags.Items.ENTITY_STORAGE)) {
-                var data = stack.getOrDefault(EIODataComponents.ENTITY_DATA, StoredEntityData.EMPTY);
-                if (data.hasEntity()) {
-                    return Optional.of(stack);
-                }
+            var data = stack.getOrDefault(EIODataComponents.ENTITY_DATA, StoredEntityData.EMPTY);
+            if (data.hasEntity()) {
+                return Optional.of(stack);
             }
         }
 

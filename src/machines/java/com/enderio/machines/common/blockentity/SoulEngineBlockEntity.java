@@ -228,7 +228,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         super.saveAdditional(pTag, lookupProvider);
         pTag.putInt(BURNED_TICKS, burnedTicks);
         pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(lookupProvider));
-        saveTank(pTag);
+        saveTank(lookupProvider, pTag);
     }
 
     @Override
@@ -240,7 +240,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER,
             (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
-        loadTank(pTag);
+        loadTank(lookupProvider, pTag);
     }
 
     @Override

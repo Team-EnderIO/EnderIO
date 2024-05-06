@@ -178,7 +178,7 @@ public class SoulDataProvider implements DataProvider {
 
         public JsonObject serializeData() {
             DataResult<JsonElement> element = codec.encodeStart(JsonOps.INSTANCE, data);
-            return element.get().left().get().getAsJsonObject();
+            return element.getOrThrow().getAsJsonObject();
         }
 
         public ResourceLocation getId() {

@@ -89,9 +89,8 @@ public class SoulDataReloadListener<T extends ISoulData> extends SimpleJsonResou
 
         for (Map.Entry<ResourceLocation, JsonElement> element: pObject.entrySet()) {
             codec.decode(JsonOps.INSTANCE, element.getValue())
-                .get()
-                .ifLeft(result -> newMap.put(result.getFirst().getKey(), result.getFirst())) //store the key from the ISoulData interface. Makes the look faster.
-                .ifRight(partial -> EnderIO.LOGGER.error("Failed to parse data json for {} due to: {}", element.getKey(), partial.message()));
+                .ifSuccess(result -> newMap.put(result.getFirst().getKey(), result.getFirst())) //store the key from the ISoulData interface. Makes the look faster.
+                .ifError(partial -> EnderIO.LOGGER.error("Failed to parse data json for {} due to: {}", element.getKey(), partial.message()));
         }
 
         this.map = newMap;
@@ -115,11 +114,12 @@ public class SoulDataReloadListener<T extends ISoulData> extends SimpleJsonResou
         return event -> {
             ServerPlayer player = event.getPlayer();
             P packet = packetFactory.apply(this.map);
-            PacketDistributor.PacketTarget target = player == null
-                ? PacketDistributor.ALL.noArg()
-                : PacketDistributor.PLAYER.with(player);
 
-            target.send(packet);
+            if (player == null) {
+                PacketDistributor.sendToAllPlayers(packet);
+            } else {
+                PacketDistributor.sendToPlayer(player, packet);
+            }
         };
     }
 

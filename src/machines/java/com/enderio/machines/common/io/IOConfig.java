@@ -3,6 +3,7 @@ package com.enderio.machines.common.io;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 
@@ -71,7 +72,7 @@ public class IOConfig implements IIOConfig {
     // region Serialization
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag nbt = new CompoundTag();
         for (Map.Entry<Direction, IOMode> entry : config.entrySet()) {
             nbt.putByte(entry.getKey().get3DDataValue() + "", (byte)entry.getValue().ordinal());
@@ -80,7 +81,7 @@ public class IOConfig implements IIOConfig {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         for (String key: nbt.getAllKeys()) {
             if (nbt.contains(key, Tag.TAG_BYTE)) {
                 try {

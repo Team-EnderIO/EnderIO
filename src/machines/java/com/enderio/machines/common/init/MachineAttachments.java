@@ -19,7 +19,7 @@ public class MachineAttachments {
     public static final Supplier<AttachmentType<RedstoneControl>> REDSTONE_CONTROL
         = ATTACHMENT_TYPES.register("redstone_control", () -> AttachmentType
         .builder(() -> RedstoneControl.ALWAYS_ACTIVE)
-        .serialize(ExtraCodecs.stringResolverCodec(RedstoneControl::getSerializedName, s -> RedstoneControl.valueOf(s.toUpperCase(Locale.ROOT)))).build());
+        .serialize(RedstoneControl.CODEC).build());
 
     public static final Supplier<AttachmentType<ActionRange>> ACTION_RANGE
         = ATTACHMENT_TYPES.register("action_range", () -> AttachmentType.builder(() -> new ActionRange(3, false)).serialize(ActionRange.CODEC).build());

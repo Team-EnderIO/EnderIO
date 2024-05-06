@@ -40,17 +40,17 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
 
             // Render the fluid
             PoseStack.Pose last = poseStack.last();
-            renderFluid(last.pose(), last.normal(), buffer, blockEntity, fluidStack.getFluid(), tank.getFluidAmount() / (float) tank.getCapacity(), packedLight);
+            renderFluid(last, buffer, blockEntity, fluidStack.getFluid(), tank.getFluidAmount() / (float) tank.getCapacity(), packedLight);
         }
     }
 
-    private static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, BlockEntity entity, Fluid fluid, float fillAmount, int packedLight) {
+    private static void renderFluid(PoseStack.Pose pose, VertexConsumer consumer, BlockEntity entity, Fluid fluid, float fillAmount, int packedLight) {
         int color = IClientFluidTypeExtensions.of(fluid).getTintColor(fluid.defaultFluidState(), entity.getLevel(), entity.getBlockPos());
         //if (color == -1) color = 0xffffff;
-        renderFluid(pose, normal, consumer, fluid, fillAmount, color, packedLight);
+        renderFluid(pose, consumer, fluid, fillAmount, color, packedLight);
     }
 
-    public static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, Fluid fluid, float fillAmount, int color, int packedLight) {
+    public static void renderFluid(PoseStack.Pose pose, VertexConsumer consumer, Fluid fluid, float fillAmount, int color, int packedLight) {
         // Get fluid texture
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(props.getStillTexture());
@@ -62,12 +62,12 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
 
 
         // Top
-        RenderUtil.renderFace(Direction.UP, pose, normal, consumer, texture, inset, inset, inset + fluidHeight, faceSize, faceSize, color, packedLight);
+        RenderUtil.renderFace(Direction.UP, pose, consumer, texture, inset, inset, inset + fluidHeight, faceSize, faceSize, color, packedLight);
 
         // Sides
-        RenderUtil.renderFace(Direction.SOUTH, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color, packedLight);
-        RenderUtil.renderFace(Direction.NORTH, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color, packedLight);
-        RenderUtil.renderFace(Direction.EAST, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color, packedLight);
-        RenderUtil.renderFace(Direction.WEST, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color, packedLight);
+        RenderUtil.renderFace(Direction.SOUTH, pose, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color, packedLight);
+        RenderUtil.renderFace(Direction.NORTH, pose, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color, packedLight);
+        RenderUtil.renderFace(Direction.EAST, pose, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color, packedLight);
+        RenderUtil.renderFace(Direction.WEST, pose, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color, packedLight);
     }
 }

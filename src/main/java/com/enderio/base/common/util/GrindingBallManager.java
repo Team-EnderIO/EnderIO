@@ -22,6 +22,7 @@ import java.util.List;
 public class GrindingBallManager {
     private static final HashMap<Item, IGrindingBallData> ITEM_TO_DATA = new HashMap<>();
     private static final HashMap<ResourceLocation, IGrindingBallData> ID_TO_DATA = new HashMap<>();
+    private static final HashMap<IGrindingBallData, ResourceLocation> DATA_TO_ID = new HashMap<>();
 
     private static boolean clearCache = false;
 
@@ -39,6 +40,11 @@ public class GrindingBallManager {
     public static List<Item> getGrindingBalls() {
         checkCacheRebuild();
         return List.copyOf(ITEM_TO_DATA.keySet());
+    }
+
+    public static ResourceLocation getId(IGrindingBallData data) {
+        checkCacheRebuild();
+        return DATA_TO_ID.get(data);
     }
 
     public static IGrindingBallData getData(ResourceLocation dataId) {
@@ -68,12 +74,14 @@ public class GrindingBallManager {
         // Wipe the lookup table
         ITEM_TO_DATA.clear();
         ID_TO_DATA.clear();
+        DATA_TO_ID.clear();
 
         // Discover all grindingballs again.
         manager.getAllRecipesFor(EIORecipes.GRINDING_BALL.type().get()).forEach(grindingBallRecipe -> {
             GrindingBallRecipe value = grindingBallRecipe.value();
             ITEM_TO_DATA.put(value.item(), value);
             ID_TO_DATA.put(grindingBallRecipe.id(), value);
+            DATA_TO_ID.put(value, grindingBallRecipe.id());
         });
     }
 }

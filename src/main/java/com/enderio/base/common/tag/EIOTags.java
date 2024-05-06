@@ -33,84 +33,86 @@ public class EIOTags {
 
         private static void init() {}
     
-        public static final TagKey<Item> WRENCH = ItemTags.create(new ResourceLocation(COMMON, "tools/wrench"));
-        public static final TagKey<Item> GLIDER = ItemTags.create(EnderIO.loc("tools/glider"));
+        public static final TagKey<Item> WRENCH = commonTag("tools/wrench");
+        public static final TagKey<Item> GLIDER = tag("tools/glider");
 
-        public static final TagKey<Item> DUSTS_LAPIS = ItemTags.create(new ResourceLocation(COMMON, "dusts/lapis"));
-        public static final TagKey<Item> DUSTS_COAL = ItemTags.create(new ResourceLocation(COMMON, "dusts/coal"));
-        public static final TagKey<Item> DUSTS_IRON = ItemTags.create(new ResourceLocation(COMMON, "dusts/iron"));
-        public static final TagKey<Item> DUSTS_GOLD = ItemTags.create(new ResourceLocation(COMMON, "dusts/gold"));
-        public static final TagKey<Item> DUSTS_COPPER = ItemTags.create(new ResourceLocation(COMMON, "dusts/copper"));
-        public static final TagKey<Item> DUSTS_TIN = ItemTags.create(new ResourceLocation(COMMON, "dusts/tin"));
-        public static final TagKey<Item> DUSTS_ENDER = ItemTags.create(new ResourceLocation(COMMON, "dusts/ender_pearl"));
-        public static final TagKey<Item> DUSTS_OBSIDIAN = ItemTags.create(new ResourceLocation(COMMON, "dusts/obsidian"));
-        public static final TagKey<Item> DUSTS_COBALT = ItemTags.create(new ResourceLocation(COMMON, "dusts/cobalt"));
-        public static final TagKey<Item> DUSTS_QUARTZ = ItemTags.create(new ResourceLocation(COMMON, "dusts/quartz"));
-        public static final TagKey<Item> DUSTS_SULFUR = ItemTags.create(new ResourceLocation(COMMON, "dusts/sulfur"));
+        public static final TagKey<Item> DUSTS_LAPIS = commonTag("dusts/lapis");
+        public static final TagKey<Item> DUSTS_COAL = commonTag("dusts/coal");
+        public static final TagKey<Item> DUSTS_IRON = commonTag("dusts/iron");
+        public static final TagKey<Item> DUSTS_GOLD = commonTag("dusts/gold");
+        public static final TagKey<Item> DUSTS_COPPER = commonTag("dusts/copper");
+        public static final TagKey<Item> DUSTS_TIN = commonTag("dusts/tin");
+        public static final TagKey<Item> DUSTS_ENDER = commonTag("dusts/ender_pearl");
+        public static final TagKey<Item> DUSTS_OBSIDIAN = commonTag("dusts/obsidian");
+        public static final TagKey<Item> DUSTS_COBALT = commonTag("dusts/cobalt");
+        public static final TagKey<Item> DUSTS_QUARTZ = commonTag("dusts/quartz");
+        public static final TagKey<Item> DUSTS_SULFUR = commonTag("dusts/sulfur");
+        public static final TagKey<Item> DUSTS_PRISMARINE = commonTag("dusts/prismarine");
 
-        public static final TagKey<Item> DUSTS_GRAINS_OF_INFINITY = ItemTags.create(new ResourceLocation(COMMON, "dusts/grains_of_infinity"));
-        public static final TagKey<Item> DUSTS_GRAINS_OF_PRESCIENCE = ItemTags.create(new ResourceLocation(COMMON, "dusts/grains_of_prescience"));
-        public static final TagKey<Item> DUSTS_GRAINS_OF_VIBRANCY = ItemTags.create(new ResourceLocation(COMMON, "dusts/grains_of_vibrancy"));
-        public static final TagKey<Item> DUSTS_GRAINS_OF_PIZEALLITY = ItemTags.create(new ResourceLocation(COMMON, "dusts/grains_of_pizeallity"));
-        public static final TagKey<Item> DUSTS_GRAINS_OF_THE_END = ItemTags.create(new ResourceLocation(COMMON, "dusts/grains_of_the_end"));
+        public static final TagKey<Item> DUSTS_GRAINS_OF_INFINITY = commonTag("dusts/grains_of_infinity");
+        public static final TagKey<Item> DUSTS_GRAINS_OF_PRESCIENCE = commonTag("dusts/grains_of_prescience");
+        public static final TagKey<Item> DUSTS_GRAINS_OF_VIBRANCY = commonTag("dusts/grains_of_vibrancy");
+        public static final TagKey<Item> DUSTS_GRAINS_OF_PIZEALLITY = commonTag("dusts/grains_of_pizeallity");
+        public static final TagKey<Item> DUSTS_GRAINS_OF_THE_END = commonTag("dusts/grains_of_the_end");
 
-        public static final TagKey<Item> GEMS_PULSATING_CRYSTAL = ItemTags.create(new ResourceLocation(COMMON, "gems/pulsating_crystal"));
-        public static final TagKey<Item> GEMS_VIBRANT_CRYSTAL = ItemTags.create(new ResourceLocation(COMMON, "gems/vibrant_crystal"));
-        public static final TagKey<Item> GEMS_ENDER_CRYSTAL = ItemTags.create(new ResourceLocation(COMMON, "gems/ender_crystal"));
-        public static final TagKey<Item> GEMS_ENTICING_CRYSTAL = ItemTags.create(new ResourceLocation(COMMON, "gems/enticing_crystal"));
-        public static final TagKey<Item> GEMS_WEATHER_CRYSTAL = ItemTags.create(new ResourceLocation(COMMON, "gems/weather_crystal"));
-        public static final TagKey<Item> GEMS_PRESCIENT_CRYSTAL = ItemTags.create(new ResourceLocation(COMMON, "gems/prescient_crystal"));
+        public static final TagKey<Item> GEMS_PULSATING_CRYSTAL = commonTag("gems/pulsating_crystal");
+        public static final TagKey<Item> GEMS_VIBRANT_CRYSTAL = commonTag("gems/vibrant_crystal");
+        public static final TagKey<Item> GEMS_ENDER_CRYSTAL = commonTag("gems/ender_crystal");
+        public static final TagKey<Item> GEMS_ENTICING_CRYSTAL = commonTag("gems/enticing_crystal");
+        public static final TagKey<Item> GEMS_WEATHER_CRYSTAL = commonTag("gems/weather_crystal");
+        public static final TagKey<Item> GEMS_PRESCIENT_CRYSTAL = commonTag("gems/prescient_crystal");
 
-        public static final TagKey<Item> INGOTS_CONDUCTIVE_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "ingots/conductive_alloy"));
-        public static final TagKey<Item> INGOTS_COPPER_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "ingots/copper_alloy"));
-        public static final TagKey<Item> INGOTS_DARK_STEEL = ItemTags.create(new ResourceLocation(COMMON, "ingots/dark_steel"));
-        public static final TagKey<Item> INGOTS_END_STEEL = ItemTags.create(new ResourceLocation(COMMON, "ingots/end_steel"));
-        public static final TagKey<Item> INGOTS_ENERGETIC_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "ingots/energetic_alloy"));
-        public static final TagKey<Item> INGOTS_PULSATING_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "ingots/pulsating_alloy"));
-        public static final TagKey<Item> INGOTS_REDSTONE_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "ingots/redstone_alloy"));
-        public static final TagKey<Item> INGOTS_SOULARIUM = ItemTags.create(new ResourceLocation(COMMON, "ingots/soularium"));
-        public static final TagKey<Item> INGOTS_VIBRANT_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "ingots/vibrant_alloy"));
+        public static final TagKey<Item> INGOTS_CONDUCTIVE_ALLOY = commonTag("ingots/conductive_alloy");
+        public static final TagKey<Item> INGOTS_COPPER_ALLOY = commonTag("ingots/copper_alloy");
+        public static final TagKey<Item> INGOTS_DARK_STEEL = commonTag("ingots/dark_steel");
+        public static final TagKey<Item> INGOTS_END_STEEL = commonTag("ingots/end_steel");
+        public static final TagKey<Item> INGOTS_ENERGETIC_ALLOY = commonTag("ingots/energetic_alloy");
+        public static final TagKey<Item> INGOTS_PULSATING_ALLOY = commonTag("ingots/pulsating_alloy");
+        public static final TagKey<Item> INGOTS_REDSTONE_ALLOY = commonTag("ingots/redstone_alloy");
+        public static final TagKey<Item> INGOTS_SOULARIUM = commonTag("ingots/soularium");
+        public static final TagKey<Item> INGOTS_VIBRANT_ALLOY = commonTag("ingots/vibrant_alloy");
 
-        public static final TagKey<Item> NUGGETS_CONDUCTIVE_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "nuggets/conductive_alloy"));
-        public static final TagKey<Item> NUGGETS_COPPER_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "nuggets/copper_alloy"));
-        public static final TagKey<Item> NUGGETS_DARK_STEEL = ItemTags.create(new ResourceLocation(COMMON, "nuggets/dark_steel"));
-        public static final TagKey<Item> NUGGETS_END_STEEL = ItemTags.create(new ResourceLocation(COMMON, "nuggets/end_steel"));
-        public static final TagKey<Item> NUGGETS_ENERGETIC_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "nuggets/energetic_alloy"));
-        public static final TagKey<Item> NUGGETS_PULSATING_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "nuggets/pulsating_alloy"));
-        public static final TagKey<Item> NUGGETS_REDSTONE_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "nuggets/redstone_alloy"));
-        public static final TagKey<Item> NUGGETS_SOULARIUM = ItemTags.create(new ResourceLocation(COMMON, "nuggets/soularium"));
-        public static final TagKey<Item> NUGGETS_VIBRANT_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "nuggets/vibrant_alloy"));
+        public static final TagKey<Item> NUGGETS_CONDUCTIVE_ALLOY = commonTag("nuggets/conductive_alloy");
+        public static final TagKey<Item> NUGGETS_COPPER_ALLOY = commonTag("nuggets/copper_alloy");
+        public static final TagKey<Item> NUGGETS_DARK_STEEL = commonTag("nuggets/dark_steel");
+        public static final TagKey<Item> NUGGETS_END_STEEL = commonTag("nuggets/end_steel");
+        public static final TagKey<Item> NUGGETS_ENERGETIC_ALLOY = commonTag("nuggets/energetic_alloy");
+        public static final TagKey<Item> NUGGETS_PULSATING_ALLOY = commonTag("nuggets/pulsating_alloy");
+        public static final TagKey<Item> NUGGETS_REDSTONE_ALLOY = commonTag("nuggets/redstone_alloy");
+        public static final TagKey<Item> NUGGETS_SOULARIUM = commonTag("nuggets/soularium");
+        public static final TagKey<Item> NUGGETS_VIBRANT_ALLOY = commonTag("nuggets/vibrant_alloy");
 
-        public static final TagKey<Item> INSULATION_METAL = ItemTags.create(EnderIO.loc("insulation_metals"));
+        public static final TagKey<Item> INSULATION_METAL = tag("insulation_metals");
         
-        public static final TagKey<Item> SILICON = ItemTags.create(new ResourceLocation(COMMON, "silicon"));
-        public static final TagKey<Item> GEARS = ItemTags.create(new ResourceLocation(COMMON, "gears"));
-        public static final TagKey<Item> GEARS_WOOD = ItemTags.create(new ResourceLocation(COMMON, "gears/wood"));
-        public static final TagKey<Item> GEARS_STONE = ItemTags.create(new ResourceLocation(COMMON, "gears/stone"));
-        public static final TagKey<Item> GEARS_IRON = ItemTags.create(new ResourceLocation(COMMON, "gears/iron"));
-        public static final TagKey<Item> GEARS_ENERGIZED = ItemTags.create(new ResourceLocation(COMMON, "gears/energized"));
-        public static final TagKey<Item> GEARS_VIBRANT = ItemTags.create(new ResourceLocation(COMMON, "gears/vibrant"));
-        public static final TagKey<Item> GEARS_DARK_STEEL = ItemTags.create(new ResourceLocation(COMMON, "gears/dark_steel"));
+        public static final TagKey<Item> SILICON = commonTag("silicon");
+        public static final TagKey<Item> GEARS = commonTag("gears");
+        public static final TagKey<Item> GEARS_WOOD = commonTag("gears/wood");
+        public static final TagKey<Item> GEARS_STONE = commonTag("gears/stone");
+        public static final TagKey<Item> GEARS_IRON = commonTag("gears/iron");
+        public static final TagKey<Item> GEARS_ENERGIZED = commonTag("gears/energized");
+        public static final TagKey<Item> GEARS_VIBRANT = commonTag("gears/vibrant");
+        public static final TagKey<Item> GEARS_DARK_STEEL = commonTag("gears/dark_steel");
 
-        public static final TagKey<Item> FUSED_QUARTZ = ItemTags.create(EnderIO.loc("fused_quartz"));
-        public static final TagKey<Item> ENLIGHTENED_FUSED_QUARTZ = ItemTags.create(EnderIO.loc("enlighted_fused_quartz"));
-        public static final TagKey<Item> DARK_FUSED_QUARTZ = ItemTags.create(EnderIO.loc("dark_fused_quartz"));
-        public static final TagKey<Item> CLEAR_GLASS = ItemTags.create(EnderIO.loc("clear_glass"));
+        public static final TagKey<Item> FUSED_QUARTZ = commonTag("glass_blocks/fused_quartz");
+        public static final TagKey<Item> ENLIGHTENED_FUSED_QUARTZ = commonTag("glass_blocks/enlighted_fused_quartz");
+        public static final TagKey<Item> DARK_FUSED_QUARTZ = commonTag("glass_blocks/dark_fused_quartz");
+        public static final TagKey<Item> CLEAR_GLASS = commonTag("glass_blocks/clear");
 
-        public static final TagKey<Item> BROKEN_SPAWNER_BLACKLIST = ItemTags.create(EnderIO.loc("blacklists/broken_spawner"));
-        public static final TagKey<Item> ELECTROMAGNET_BLACKLIST = ItemTags.create(EnderIO.loc("blacklists/electromagnet"));
+        public static final TagKey<Item> BROKEN_SPAWNER_BLACKLIST = tag("blacklists/broken_spawner");
+        public static final TagKey<Item> ELECTROMAGNET_BLACKLIST = tag("blacklists/electromagnet");
 
-        public static final TagKey<Item> BLOCKS_CONDUCTIVE_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "storage_blocks/conductive_alloy"));
-        public static final TagKey<Item> BLOCKS_COPPER_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "storage_blocks/copper_alloy"));
-        public static final TagKey<Item> BLOCKS_DARK_STEEL = ItemTags.create(new ResourceLocation(COMMON, "storage_blocks/dark_steel"));
-        public static final TagKey<Item> BLOCKS_END_STEEL = ItemTags.create(new ResourceLocation(COMMON, "storage_blocks/end_steel"));
-        public static final TagKey<Item> BLOCKS_ENERGETIC_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "storage_blocks/energetic_alloy"));
-        public static final TagKey<Item> BLOCKS_PULSATING_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "storage_blocks/pulsating_alloy"));
-        public static final TagKey<Item> BLOCKS_REDSTONE_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "storage_blocks/redstone_alloy"));
-        public static final TagKey<Item> BLOCKS_SOULARIUM = ItemTags.create(new ResourceLocation(COMMON, "storage_blocks/soularium"));
-        public static final TagKey<Item> BLOCKS_VIBRANT_ALLOY = ItemTags.create(new ResourceLocation(COMMON, "storage_blocks/vibrant_alloy"));
+        public static final TagKey<Item> BLOCKS_CONDUCTIVE_ALLOY = commonTag("storage_blocks/conductive_alloy");
+        public static final TagKey<Item> BLOCKS_COPPER_ALLOY = commonTag("storage_blocks/copper_alloy");
+        public static final TagKey<Item> BLOCKS_DARK_STEEL = commonTag("storage_blocks/dark_steel");
+        public static final TagKey<Item> BLOCKS_END_STEEL = commonTag("storage_blocks/energetic_alloy");
+        public static final TagKey<Item> BLOCKS_ENERGETIC_ALLOY = commonTag("storage_blocks/energetic_alloy");
+        public static final TagKey<Item> BLOCKS_PULSATING_ALLOY = commonTag("storage_blocks/pulsating_alloy");
+        public static final TagKey<Item> BLOCKS_REDSTONE_ALLOY = commonTag("storage_blocks/redstone_alloy");
+        public static final TagKey<Item> BLOCKS_SOULARIUM = commonTag("storage_blocks/soularium");
+        public static final TagKey<Item> BLOCKS_VIBRANT_ALLOY = commonTag("storage_blocks/vibrant_alloy");
 
-        public static final TagKey<Item> ENTITY_STORAGE = ItemTags.create(EnderIO.loc("entity_storage"));
+        public static final TagKey<Item> STORAGE_BLOCKS_QUARTZ = commonTag("storage_blocks/quartz");
+        public static final TagKey<Item> STORAGE_BLOCKS_AMETHYST = commonTag("storage_blocks/amethyst");
 
         public static final Map<GlassIdentifier, TagKey<Item>> GLASS_TAGS = createGlassTags();
 
@@ -120,11 +122,19 @@ public class EIOTags {
                 for (GlassCollisionPredicate collisionPredicate: GlassCollisionPredicate.values()) {
                     for (Boolean isFused: new boolean[]{false, true}) {
                         GlassIdentifier identifier = new GlassIdentifier(lighting, collisionPredicate, isFused);
-                        map.put(identifier, ItemTags.create(EnderIO.loc(identifier.glassName())));
+                        map.put(identifier, tag(identifier.glassName()));
                     }
                 }
             }
             return map;
+        }
+        
+        private static TagKey<Item> commonTag(String name) {
+            return ItemTags.create(new ResourceLocation(COMMON, name));
+        }
+        
+        private static TagKey<Item> tag(String name) {
+            return ItemTags.create(EnderIO.loc(name));
         }
     }
 
@@ -132,34 +142,50 @@ public class EIOTags {
 
         private static void init() {}
 
-        public static final TagKey<Block> FUSED_QUARTZ = BlockTags.create(EnderIO.loc("fused_quartz"));
-        public static final TagKey<Block> CLEAR_GLASS = BlockTags.create(EnderIO.loc("clear_glass"));
-        public static final TagKey<Block> BLOCKS_CONDUCTIVE_ALLOY = BlockTags.create(new ResourceLocation(COMMON, "storage_blocks/conductive_alloy"));
-        public static final TagKey<Block> BLOCKS_COPPER_ALLOY = BlockTags.create(new ResourceLocation(COMMON, "storage_blocks/copper_alloy"));
-        public static final TagKey<Block> BLOCKS_DARK_STEEL = BlockTags.create(new ResourceLocation(COMMON, "storage_blocks/dark_steel"));
-        public static final TagKey<Block> BLOCKS_END_STEEL = BlockTags.create(new ResourceLocation(COMMON, "storage_blocks/end_steel"));
-        public static final TagKey<Block> BLOCKS_ENERGETIC_ALLOY = BlockTags.create(new ResourceLocation(COMMON, "storage_blocks/energetic_alloy"));
-        public static final TagKey<Block> BLOCKS_PULSATING_ALLOY = BlockTags.create(new ResourceLocation(COMMON, "storage_blocks/pulsating_alloy"));
-        public static final TagKey<Block> BLOCKS_REDSTONE_ALLOY = BlockTags.create(new ResourceLocation(COMMON, "storage_blocks/redstone_alloy"));
-        public static final TagKey<Block> BLOCKS_SOULARIUM = BlockTags.create(new ResourceLocation(COMMON, "storage_blocks/soularium"));
-        public static final TagKey<Block> BLOCKS_VIBRANT_ALLOY = BlockTags.create(new ResourceLocation(COMMON, "storage_blocks/vibrant_alloy"));
+        public static final TagKey<Block> FUSED_QUARTZ = commonTag("glass_blocks/fused_quartz");
+        public static final TagKey<Block> CLEAR_GLASS = tag("glass_blocks/clear_glass");
+        
+        public static final TagKey<Block> BLOCKS_CONDUCTIVE_ALLOY = commonTag("storage_blocks/conductive_alloy");
+        public static final TagKey<Block> BLOCKS_COPPER_ALLOY = commonTag("storage_blocks/copper_alloy");
+        public static final TagKey<Block> BLOCKS_DARK_STEEL = commonTag("storage_blocks/dark_steel");
+        public static final TagKey<Block> BLOCKS_END_STEEL = commonTag("storage_blocks/end_steel");
+        public static final TagKey<Block> BLOCKS_ENERGETIC_ALLOY = commonTag("storage_blocks/energetic_alloy");
+        public static final TagKey<Block> BLOCKS_PULSATING_ALLOY = commonTag("storage_blocks/pulsating_alloy");
+        public static final TagKey<Block> BLOCKS_REDSTONE_ALLOY = commonTag("storage_blocks/redstone_alloy");
+        public static final TagKey<Block> BLOCKS_SOULARIUM = commonTag("storage_blocks/soularium");
+        public static final TagKey<Block> BLOCKS_VIBRANT_ALLOY = commonTag("storage_blocks/vibrant_alloy");
 
+        private static TagKey<Block> commonTag(String name) {
+            return BlockTags.create(new ResourceLocation(COMMON, name));
+        }
+
+        private static TagKey<Block> tag(String name) {
+            return BlockTags.create(EnderIO.loc(name));
+        }
     }
     
     public static class Fluids {
         private static void init() {}
 
-        public static final TagKey<Fluid> COLD_FIRE_IGNITER_FUEL = FluidTags.create(EnderIO.loc("fluid_fuel/cold_fire_igniter"));
-        public static final TagKey<Fluid> STAFF_OF_LEVITY_FUEL = FluidTags.create(EnderIO.loc("fluid_fuel/staff_of_levity"));
-        public static final TagKey<Fluid> EXPERIENCE = FluidTags.create(new ResourceLocation(COMMON, "experience"));
+        public static final TagKey<Fluid> COLD_FIRE_IGNITER_FUEL = tag("fluid_fuel/cold_fire_igniter");
+        public static final TagKey<Fluid> STAFF_OF_LEVITY_FUEL = tag("fluid_fuel/staff_of_levity");
+        public static final TagKey<Fluid> EXPERIENCE = commonTag("experience");
+
+        private static TagKey<Fluid> commonTag(String name) {
+            return FluidTags.create(new ResourceLocation(COMMON, name));
+        }
+
+        private static TagKey<Fluid> tag(String name) {
+            return FluidTags.create(EnderIO.loc(name));
+        }
     }
 
     public static class EntityTypes {
         private static void init() {}
 
-        public static TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = create("soul_vial_blacklist");
+        public static TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = tag("soul_vial_blacklist");
 
-        private static TagKey<EntityType<?>> create(String pName) {
+        private static TagKey<EntityType<?>> tag(String pName) {
             return TagKey.create(Registries.ENTITY_TYPE, EnderIO.loc(pName));
         }
 

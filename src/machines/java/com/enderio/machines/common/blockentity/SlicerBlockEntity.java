@@ -18,6 +18,7 @@ import com.enderio.machines.common.menu.SlicerMenu;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SlicingRecipe;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
@@ -159,15 +160,15 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        craftingTaskHost.save(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
+        craftingTaskHost.save(lookupProvider, pTag);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        craftingTaskHost.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
+        craftingTaskHost.load(lookupProvider, pTag);
     }
 
     // endregion

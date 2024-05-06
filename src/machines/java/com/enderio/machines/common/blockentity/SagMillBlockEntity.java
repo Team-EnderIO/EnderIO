@@ -21,6 +21,7 @@ import com.enderio.machines.common.menu.SagMillMenu;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -54,7 +55,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.SAG_MILL.get(), worldPosition, blockState);
 
         addDataSlot(new IntegerNetworkDataSlot(() -> grindingBallDamage, i -> grindingBallDamage = i));
-        addDataSlot(new ResourceLocationNetworkDataSlot(() -> grindingBallData.getGrindingBallId(), gId -> grindingBallData = GrindingBallManager.getData(gId)));
+        addDataSlot(new ResourceLocationNetworkDataSlot(() -> GrindingBallManager.getId(grindingBallData), gId -> grindingBallData = GrindingBallManager.getData(gId)));
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SAG_MILLING.type().get(),
             new SagMillingRecipe.Container(getInventoryNN(), this::getGrindingBallData), this::createTask);
@@ -145,7 +146,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
                 INPUT.getItemStack(inv).shrink(1);
 
                 // Claim any available grinding balls.
-                if (recipe.getBonusType().useGrindingBall() && grindingBallData == IGrindingBallData.IDENTITY) {
+                if (recipe.bonusType().useGrindingBall() && grindingBallData == IGrindingBallData.IDENTITY) {
                     ItemStack ball = GRINDING_BALL.getItemStack(inv);
                     if (!ball.isEmpty()) {
                         IGrindingBallData data = GrindingBallManager.getData(ball);
@@ -161,7 +162,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
             protected int makeProgress(int remainingProgress) {
                 int energyConsumed = super.makeProgress(remainingProgress);
 
-                if (getRecipe().getBonusType().useGrindingBall()) {
+                if (getRecipe().bonusType().useGrindingBall()) {
                     // Damage the grinding ball by how much micro infinity was consumed.
                     grindingBallDamage += energyConsumed;
 
@@ -186,19 +187,19 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     private static final String KEY_GRINDING_BALL_DAMAGE = "GrindingBallDamage";
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        craftingTaskHost.save(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
+        craftingTaskHost.save(lookupProvider, pTag);
         if (grindingBallData != IGrindingBallData.IDENTITY) {
-            pTag.putString(KEY_GRINDING_BALL_ID, grindingBallData.getGrindingBallId().toString());
+            pTag.putString(KEY_GRINDING_BALL_ID, GrindingBallManager.getId(grindingBallData).toString());
             pTag.putInt(KEY_GRINDING_BALL_DAMAGE, grindingBallDamage);
         }
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        craftingTaskHost.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
+        craftingTaskHost.load(lookupProvider, pTag);
         if (pTag.contains(KEY_GRINDING_BALL_ID)) {
             pendingGrindingBallId = new ResourceLocation(pTag.getString(KEY_GRINDING_BALL_ID));
         }

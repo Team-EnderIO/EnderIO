@@ -5,6 +5,7 @@ import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.recipe.TankRecipe;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -14,10 +15,12 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 
+import java.util.concurrent.CompletableFuture;
+
 public class TankRecipeProvider extends EnderRecipeProvider {
 
-    public TankRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public TankRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries);
     }
 
     @Override

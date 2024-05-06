@@ -43,8 +43,7 @@ public class BrokenSpawnerItem extends Item {
     // region Entity Storage
 
     public static Optional<ResourceLocation> getEntityType(ItemStack stack) {
-        return stack.is(EIOTags.Items.ENTITY_STORAGE)? stack.get(EIODataComponents.ENTITY_DATA).entityType()
-            : Optional.empty();
+        return stack.getOrDefault(EIODataComponents.ENTITY_DATA, StoredEntityData.EMPTY).entityType();
     }
 
     private static void setEntityType(ItemStack stack, ResourceLocation entityType) {
