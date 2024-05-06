@@ -64,6 +64,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
 
         addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> TANK.getFluid(this), fluid -> TANK.setFluid(this, fluid)));
 
+        // TODO: rubbish way of having a default. use an interface instead?
         if (!hasData(MachineAttachments.ACTION_RANGE)) {
             setData(MachineAttachments.ACTION_RANGE, new ActionRange(5, false));
         }
