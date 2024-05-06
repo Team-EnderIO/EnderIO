@@ -11,7 +11,8 @@
               "function": "minecraft:copy_components",
               "include": [
                 "enderio:entity_data",
-                "enderio:energy"
+                "enderio:energy",
+                "minecraft:container"
               ],
               "source": "block_entity"
             }
