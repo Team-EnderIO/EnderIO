@@ -109,7 +109,7 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
         }
     }
 
-    // TODO: 20.6: Custom loot function for this. This would've worked but double blocks exist and we cannot derrive top or bottom from a BE.
+    // TODO: 20.6: Custom loot function for this. This would've worked but double blocks exist and we cannot derive top or bottom from a BE.
     @Override
     protected void applyImplicitComponents(DataComponentInput dataComponents) {
         super.applyImplicitComponents(dataComponents);

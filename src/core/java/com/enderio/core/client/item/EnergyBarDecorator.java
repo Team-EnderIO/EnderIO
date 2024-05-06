@@ -1,6 +1,6 @@
 package com.enderio.core.client.item;
 
-import com.enderio.core.common.util.EnergyUtil;
+import com.enderio.core.common.energy.ItemStackEnergy;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
@@ -15,12 +15,12 @@ public class EnergyBarDecorator implements IItemDecorator {
     @Override
     public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {
         // Hide bar if no energy to hold
-        int maxEnergyStored = EnergyUtil.getMaxEnergyStored(stack);
+        int maxEnergyStored = ItemStackEnergy.getMaxEnergyStored(stack);
         if (maxEnergyStored <= 0) {
             return false;
         }
 
-        int energyStored = EnergyUtil.getEnergyStored(stack);
+        int energyStored = ItemStackEnergy.getEnergyStored(stack);
 
         // Determine fill ratio
         float fillRatio = energyStored / (float)maxEnergyStored;

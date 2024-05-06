@@ -3,7 +3,7 @@ package com.enderio.machines.common.block;
 import com.enderio.EnderIO;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
-import com.enderio.core.common.util.EnergyUtil;
+import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.Nullable;
@@ -72,7 +71,7 @@ public class CapacitorBankBlock extends MachineBlock implements IAdvancedTooltip
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        String energy = String.format("%,d", EnergyUtil.getEnergyStored(itemStack)) + "/" +  String.format("%,d", EnergyUtil.getMaxEnergyStored(itemStack));
+        String energy = String.format("%,d", ItemStackEnergy.getEnergyStored(itemStack)) + "/" +  String.format("%,d", ItemStackEnergy.getMaxEnergyStored(itemStack));
         tooltips.add(TooltipUtil.styledWithArgs(EIOLang.ENERGY_AMOUNT, energy));
     }
 

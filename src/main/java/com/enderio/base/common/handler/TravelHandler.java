@@ -27,6 +27,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -116,7 +117,7 @@ public class TravelHandler {
                 serverPlayer.connection.resetPosition();
                 player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.75F, 1F);
             } else if (sendToServer) {
-                NetworkUtil.sendToServer(new RequestTravelPacket(target.getPos()));
+                PacketDistributor.sendToServer(new RequestTravelPacket(target.getPos()));
             }
 
             player.resetFallDistance();

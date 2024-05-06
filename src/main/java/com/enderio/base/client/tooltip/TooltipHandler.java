@@ -30,7 +30,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-// TODO: 1.19: Move to core. Need to work out what to do about the shift lang key. Will now need decoupled from the capacitor and grindingball logic.
 @EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 public class TooltipHandler {
 

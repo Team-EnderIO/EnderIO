@@ -1,38 +1,31 @@
 package com.enderio.base.common.recipe;
 
 import com.enderio.base.common.init.EIORecipes;
-import com.enderio.core.common.recipes.EnderRecipe;
-import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 public record FireCraftingRecipe(
@@ -40,9 +33,8 @@ public record FireCraftingRecipe(
     int maxItemDrops,
     List<Block> bases,
     List<TagKey<Block>> baseTags,
-    List<ResourceKey<Level>> dimensions)
-
-    implements EnderRecipe<Container> {
+    List<ResourceKey<Level>> dimensions
+) implements Recipe<Container> {
 
     // Get all base blocks
     public List<Block> getAllBaseBlocks() {
@@ -80,8 +72,18 @@ public record FireCraftingRecipe(
     }
 
     @Override
+    public boolean canCraftInDimensions(int pWidth, int pHeight) {
+        return true;
+    }
+
+    @Override
     public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
     }
 
     @Override

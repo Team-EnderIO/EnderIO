@@ -14,7 +14,7 @@ public class ServerPayloadHandler {
         return INSTANCE;
     }
 
-    public void handleDataSlotChange(C2SDataSlotChange change, IPayloadContext context) {
+    public void handleDataSlotChange(ClientboundDataSlotChange change, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
             BlockEntity be = level.getBlockEntity(change.pos());

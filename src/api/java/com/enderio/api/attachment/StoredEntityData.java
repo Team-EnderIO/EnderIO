@@ -66,7 +66,6 @@ public record StoredEntityData(CompoundTag entityTag, float maxHealth) {
         return new StoredEntityData(tag, 0.0f);
     }
 
-    // TODO: Make null = none (in the component layer)?
     public boolean hasEntity() {
         return entityType().isPresent();
     }

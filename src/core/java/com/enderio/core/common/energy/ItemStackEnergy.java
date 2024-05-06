@@ -1,9 +1,9 @@
-package com.enderio.core.common.util;
+package com.enderio.core.common.energy;
 
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 
-public class EnergyUtil {
+public class ItemStackEnergy {
 
     public static int getMaxEnergyStored(ItemStack stack) {
         var energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);

@@ -226,6 +226,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         return tag;
     }
 
+    // TODO: 20.6: Swap tasks to use Codecs.
     @Override
     public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         // TODO: Exception handling

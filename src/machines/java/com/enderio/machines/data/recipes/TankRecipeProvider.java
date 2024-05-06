@@ -3,12 +3,12 @@ package com.enderio.machines.data.recipes;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.recipe.TankRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -17,7 +17,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.concurrent.CompletableFuture;
 
-public class TankRecipeProvider extends EnderRecipeProvider {
+public class TankRecipeProvider extends RecipeProvider {
 
     public TankRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
         super(packOutput, registries);
@@ -55,14 +55,14 @@ public class TankRecipeProvider extends EnderRecipeProvider {
     protected void buildEmptying(Ingredient input, ItemLike output, FluidStack fluid, RecipeOutput recipeOutput) {
         recipeOutput.accept(
             EnderIO.loc("tank_empty/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
-            new TankRecipe(input, output.asItem(), fluid, true),
+            new TankRecipe(input, output.asItem(), fluid, TankRecipe.Mode.EMPTY),
             null);
     }
 
     protected void buildFilling(Ingredient input, ItemLike output, FluidStack fluid, RecipeOutput recipeOutput) {
         recipeOutput.accept(
             EnderIO.loc("tank_fill/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
-            new TankRecipe(input, output.asItem(), fluid, false),
+            new TankRecipe(input, output.asItem(), fluid, TankRecipe.Mode.FILL),
             null);
     }
 

@@ -1,29 +1,24 @@
 package com.enderio.machines.common.recipe;
 
-import com.enderio.EnderIO;
-import com.enderio.core.common.recipes.EnderRecipe;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.ResourceLocationException;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.RegistryFileCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ByIdMap;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -31,33 +26,58 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import java.util.function.IntFunction;
 
-// TODO: I'd like to swap the isEmptying for an enum for readability.
 public record TankRecipe(
     Ingredient input,
     Item output,
     FluidStack fluid,
-    boolean isEmptying
-) implements EnderRecipe<TankRecipe.Container> {
+    Mode mode
+) implements Recipe<TankRecipe.Container> {
+
+    public enum Mode implements StringRepresentable {
+        FILL(0, "fill"),
+        EMPTY(1, "empty");
+
+        public static final Codec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
+        public static final IntFunction<Mode> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final StreamCodec<ByteBuf, Mode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
+
+        private final int id;
+        private final String name;
+
+        Mode(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return name;
+        }
+    }
 
     @Override
     public boolean matches(Container pContainer, Level pLevel) {
-        if (isEmptying) {
+        switch (mode) {
+        case FILL -> {
+            if (pContainer.getFluidTank().drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
+                return false;
+            }
+
+            return input.test(FluidTankBlockEntity.FLUID_DRAIN_INPUT.getItemStack(pContainer));
+        }
+        case EMPTY -> {
             if (pContainer.getFluidTank().fill(fluid, IFluidHandler.FluidAction.SIMULATE) <= 0) {
                 return false;
             }
 
             return input.test(FluidTankBlockEntity.FLUID_FILL_INPUT.getItemStack(pContainer));
         }
-
-        if (pContainer.getFluidTank().drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
-            return false;
         }
 
-        return input.test(FluidTankBlockEntity.FLUID_DRAIN_INPUT.getItemStack(pContainer));
+        return false;
     }
 
     @Override
@@ -66,8 +86,18 @@ public record TankRecipe(
     }
 
     @Override
+    public boolean canCraftInDimensions(int pWidth, int pHeight) {
+        return true;
+    }
+
+    @Override
     public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
         return new ItemStack(output);
+    }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
     }
 
     @Override
@@ -100,7 +130,7 @@ public record TankRecipe(
             Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(TankRecipe::input),
             BuiltInRegistries.ITEM.byNameCodec().fieldOf("output").forGetter(TankRecipe::output),
             FluidStack.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid),
-            Codec.BOOL.fieldOf("is_emptying").forGetter(TankRecipe::isEmptying)
+            Mode.CODEC.fieldOf("mode").forGetter(TankRecipe::mode)
         ).apply(instance, TankRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, TankRecipe> STREAM_CODEC = StreamCodec.composite(
@@ -110,8 +140,8 @@ public record TankRecipe(
             TankRecipe::output,
             FluidStack.STREAM_CODEC,
             TankRecipe::fluid,
-            ByteBufCodecs.BOOL,
-            TankRecipe::isEmptying,
+            Mode.STREAM_CODEC,
+            TankRecipe::mode,
             TankRecipe::new
         );
 

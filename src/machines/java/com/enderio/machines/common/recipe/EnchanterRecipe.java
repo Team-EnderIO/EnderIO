@@ -1,19 +1,14 @@
 package com.enderio.machines.common.recipe;
 
-import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.CountedIngredient;
-import com.enderio.core.common.recipes.EnderRecipe;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -22,6 +17,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -30,8 +26,6 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 /**
  * A recipe for the enchanter.
  */
@@ -39,7 +33,7 @@ public record EnchanterRecipe(
     Enchantment enchantment,
     int costMultiplier,
     CountedIngredient input
-) implements EnderRecipe<Container> {
+) implements Recipe<Container> {
 
     // region Calculations
 
@@ -129,8 +123,18 @@ public record EnchanterRecipe(
     }
 
     @Override
+    public boolean canCraftInDimensions(int pWidth, int pHeight) {
+        return true;
+    }
+
+    @Override
     public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
     }
 
     @Override

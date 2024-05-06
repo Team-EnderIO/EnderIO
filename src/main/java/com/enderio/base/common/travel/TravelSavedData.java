@@ -114,7 +114,7 @@ public class TravelSavedData extends SavedData {
         if (player instanceof ServerPlayer serverPlayer) {
             var savedData = TravelSavedData.getTravelData(serverPlayer.level());
             var serializedData = savedData.save(new CompoundTag(), serverPlayer.level().registryAccess());
-            NetworkUtil.sendTo(new SyncTravelDataPacket(serializedData), serverPlayer);
+            PacketDistributor.sendToPlayer(serverPlayer, new SyncTravelDataPacket(serializedData));
         }
     }
 
@@ -124,7 +124,7 @@ public class TravelSavedData extends SavedData {
         if (player instanceof ServerPlayer serverPlayer) {
             var savedData = TravelSavedData.getTravelData(serverPlayer.level());
             var serializedData = savedData.save(new CompoundTag(), serverPlayer.level().registryAccess());
-            NetworkUtil.sendTo(new SyncTravelDataPacket(serializedData), serverPlayer);
+            PacketDistributor.sendToPlayer(serverPlayer, new SyncTravelDataPacket(serializedData));
         }
     }
 }

@@ -1,15 +1,15 @@
 package com.enderio.machines.common.recipe;
 
-import com.enderio.core.common.recipes.EnderRecipe;
 import com.enderio.core.common.recipes.OutputStack;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.List;
 
-public interface MachineRecipe<C extends Container> extends EnderRecipe<C> {
+public interface MachineRecipe<C extends Container> extends Recipe<C> {
     /**
      * Gets the basic energy cost, irrespective of machine configuration.
      */
@@ -44,6 +44,11 @@ public interface MachineRecipe<C extends Container> extends EnderRecipe<C> {
         return ItemStack.EMPTY;
     }
 
+    @Override
+    default boolean canCraftInDimensions(int pWidth, int pHeight) {
+        return true;
+    }
+
     /**
      * @deprecated Should use {@link #getResultStacks(RegistryAccess)} instead.
      */
@@ -51,5 +56,10 @@ public interface MachineRecipe<C extends Container> extends EnderRecipe<C> {
     @Override
     default ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    default boolean isSpecial() {
+        return true;
     }
 }

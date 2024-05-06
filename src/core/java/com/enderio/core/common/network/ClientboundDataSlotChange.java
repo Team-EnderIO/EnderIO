@@ -7,16 +7,16 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record S2CDataSlotUpdate(BlockPos pos, byte[] slotData) implements CustomPacketPayload {
+public record ClientboundDataSlotChange(BlockPos pos, byte[] updateData) implements CustomPacketPayload {
 
-    public static final Type<S2CDataSlotUpdate> TYPE =  new Type<>(EnderCore.loc("s2c_data_slot_update"));
+    public static final Type<ClientboundDataSlotChange> TYPE = new Type<>(EnderCore.loc("c2s_data_slot_update"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, S2CDataSlotUpdate> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundDataSlotChange> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,
-        S2CDataSlotUpdate::pos,
+        ClientboundDataSlotChange::pos,
         ByteBufCodecs.BYTE_ARRAY,
-        S2CDataSlotUpdate::slotData,
-        S2CDataSlotUpdate::new);
+        ClientboundDataSlotChange::updateData,
+        ClientboundDataSlotChange::new);
 
     @Override
     public Type<? extends CustomPacketPayload> type() {

@@ -12,6 +12,7 @@ import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
@@ -22,6 +23,7 @@ import com.enderio.machines.common.menu.DrainMenu;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -62,7 +64,6 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
 
         addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> TANK.getFluid(this), fluid -> TANK.setFluid(this, fluid)));
 
-        // TODO: rubbish way of having a default. use an interface instead?
         if (!hasData(MachineAttachments.ACTION_RANGE)) {
             setData(MachineAttachments.ACTION_RANGE, new ActionRange(5, false));
         }
@@ -151,6 +152,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
         if (!canAct()) {
             return false;
         }
+
         FluidState fluidState = level.getFluidState(worldPosition.below());
         if (fluidState.isEmpty() || !fluidState.isSource()) {
             updateMachineState(MachineState.NO_SOURCE, true);
@@ -214,7 +216,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
 
     @Override
     public void clientTick() {
-        if (level.isClientSide && level instanceof ClientLevel clientLevel) {
+        if (level instanceof ClientLevel clientLevel) {
             getActionRange().addClientParticle(clientLevel, getParticleLocation(), MachinesConfig.CLIENT.BLOCKS.DRAIN_RANGE_COLOR.get());
         }
 
@@ -254,5 +256,27 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
         super.loadAdditional(pTag, lookupProvider);
         consumed = pTag.getInt(CONSUMED);
         loadTank(lookupProvider, pTag);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+
+        var actionRange = components.get(MachineDataComponents.ACTION_RANGE);
+        if (actionRange != null) {
+            setData(MachineAttachments.ACTION_RANGE, actionRange);
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        components.set(MachineDataComponents.ACTION_RANGE, getData(MachineAttachments.ACTION_RANGE));
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        removeData(MachineAttachments.ACTION_RANGE);
     }
 }

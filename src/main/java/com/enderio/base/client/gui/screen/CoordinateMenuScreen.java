@@ -14,6 +14,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
 
@@ -71,6 +72,6 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
 
 
     private void onNameChanged(String name) {
-        NetworkUtil.sendToServer(new UpdateCoordinateSelectionNameMenuPacket(getMenu().containerId, name));
+        PacketDistributor.sendToServer(new UpdateCoordinateSelectionNameMenuPacket(getMenu().containerId, name));
     }
 }

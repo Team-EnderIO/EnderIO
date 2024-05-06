@@ -20,7 +20,9 @@ public class MachineAttachments {
         .serialize(RedstoneControl.CODEC).build());
 
     public static final Supplier<AttachmentType<ActionRange>> ACTION_RANGE
-        = ATTACHMENT_TYPES.register("action_range", () -> AttachmentType.builder(() -> new ActionRange(3, false)).serialize(ActionRange.CODEC).build());
+        = ATTACHMENT_TYPES.register("action_range", () -> AttachmentType
+        .builder(() -> new ActionRange(3, false))
+        .serialize(ActionRange.CODEC).build());
 
     public static final Supplier<AttachmentType<IOConfig>> IO_CONFIG
         = ATTACHMENT_TYPES.register("io_config", () -> AttachmentType.builder(IOConfig::empty).serialize(IOConfig.CODEC).build());

@@ -4,6 +4,7 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
@@ -61,10 +62,18 @@ public class CapacitorUtil {
         return t;
     }
 
+    /**
+     * @deprecated Use {@link ItemStack#get(DataComponentType)} using {@link EIODataComponents#CAPACITOR_DATA} instead.
+     */
+    @Deprecated(forRemoval = true, since = "6.1")
     public static Optional<CapacitorData> getCapacitorData(ItemStack itemStack) {
         return Optional.ofNullable(itemStack.get(EIODataComponents.CAPACITOR_DATA));
     }
 
+    /**
+     * @deprecated Use {@link ItemStack#has(DataComponentType)} to check for {@link EIODataComponents#CAPACITOR_DATA} instead.
+     */
+    @Deprecated(forRemoval = true, since = "6.1")
     public static boolean isCapacitor(ItemStack itemStack) {
         return itemStack.has(EIODataComponents.CAPACITOR_DATA);
     }

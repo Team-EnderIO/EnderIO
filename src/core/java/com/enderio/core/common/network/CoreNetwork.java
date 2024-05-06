@@ -22,10 +22,10 @@ public class CoreNetwork {
         registrar.playToClient(EmitParticlesPacket.TYPE, EmitParticlesPacket.STREAM_CODEC,
             ClientPayloadHandler.getInstance()::handleEmitParticles);
 
-        registrar.playToClient(S2CDataSlotUpdate.TYPE, S2CDataSlotUpdate.STREAM_CODEC,
+        registrar.playToClient(ServerboundCDataSlotUpdate.TYPE, ServerboundCDataSlotUpdate.STREAM_CODEC,
             ClientPayloadHandler.getInstance()::handleDataSlotUpdate);
 
-        registrar.playToServer(C2SDataSlotChange.TYPE, C2SDataSlotChange.STREAM_CODEC,
+        registrar.playToServer(ClientboundDataSlotChange.TYPE, ClientboundDataSlotChange.STREAM_CODEC,
             ServerPayloadHandler.getInstance()::handleDataSlotChange);
     }
 }

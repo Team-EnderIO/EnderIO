@@ -280,5 +280,6 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
             }
         }
     }
+
     // endregion
 }

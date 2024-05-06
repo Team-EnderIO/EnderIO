@@ -346,14 +346,12 @@ public class EIOItems {
 
     // region Items
 
-    // TODO: Will need sorted once we have added more.
-
     public static final RegiliteItem<SoulVialItem> EMPTY_SOUL_VIAL = groupedItem("empty_soul_vial", SoulVialItem::new, EIOCreativeTabs.SOULS);
 
     public static final RegiliteItem<SoulVialItem> FILLED_SOUL_VIAL = ITEM_REGISTRY
         .registerItem("filled_soul_vial", SoulVialItem::new, new Item.Properties().stacksTo(1))
         .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
-        //.removeTab(CreativeModeTabs.SEARCH)
+        //TODO .removeTab(CreativeModeTabs.SEARCH)
         ;
 
     public static final RegiliteItem<EnderiosItem> ENDERIOS = ITEM_REGISTRY

@@ -8,8 +8,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-// TODO: Rename to ItemEnergyStorage
-public class EnergyStorageItemStack implements IEnergyStorage {
+public class ItemEnergyStorage implements IEnergyStorage {
 
     private final Supplier<DataComponentType<Integer>> componentType;
     private final ItemStack stack;
@@ -23,7 +22,7 @@ public class EnergyStorageItemStack implements IEnergyStorage {
      * @param stack The item stack the energy storage is attached to.
      * @throws IllegalArgumentException when the ItemStack's Item does not implement {@link IItemEnergyConfig}.
      */
-    public EnergyStorageItemStack(Supplier<DataComponentType<Integer>> componentType, ItemStack stack) {
+    public ItemEnergyStorage(Supplier<DataComponentType<Integer>> componentType, ItemStack stack) {
         if (!(stack.getItem() instanceof IItemEnergyConfig config)) {
             throw new IllegalArgumentException("This constructor can only be used if the stack's Item implements IItemEnergyConfig.");
         }
@@ -35,15 +34,15 @@ public class EnergyStorageItemStack implements IEnergyStorage {
         this.maxExtract = config.getMaxExtract();
     }
 
-    public EnergyStorageItemStack(Supplier<DataComponentType<Integer>> componentType, ItemStack stack, int capacity) {
+    public ItemEnergyStorage(Supplier<DataComponentType<Integer>> componentType, ItemStack stack, int capacity) {
         this(componentType, stack, capacity, capacity, capacity, null);
     }
 
-    public EnergyStorageItemStack(Supplier<DataComponentType<Integer>> componentType, ItemStack stack, int capacity, int maxReceive, int maxExtract) {
+    public ItemEnergyStorage(Supplier<DataComponentType<Integer>> componentType, ItemStack stack, int capacity, int maxReceive, int maxExtract) {
         this(componentType, stack, capacity, capacity, capacity, null);
     }
 
-    public EnergyStorageItemStack(Supplier<DataComponentType<Integer>> componentType, ItemStack stack, int capacity, int maxReceive, int maxExtract, @Nullable Integer energy) {
+    public ItemEnergyStorage(Supplier<DataComponentType<Integer>> componentType, ItemStack stack, int capacity, int maxReceive, int maxExtract, @Nullable Integer energy) {
         this.componentType = componentType;
         this.stack = stack;
         this.capacity = capacity;

@@ -1,10 +1,10 @@
 package com.enderio.core.common.blockentity;
 
 import com.enderio.api.UseOnly;
-import com.enderio.core.common.network.C2SDataSlotChange;
+import com.enderio.core.common.network.ClientboundDataSlotChange;
 import com.enderio.core.common.network.NetworkUtil;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.core.common.network.S2CDataSlotUpdate;
+import com.enderio.core.common.network.ServerboundCDataSlotUpdate;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -173,7 +173,7 @@ public class EnderBlockEntity extends BlockEntity {
             RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
             buf.writeInt(dataSlots.indexOf(slot));
             slot.write(buf, value);
-            PacketDistributor.sendToServer(new C2SDataSlotChange(getBlockPos(), buf.array()));
+            PacketDistributor.sendToServer(new ClientboundDataSlotChange(getBlockPos(), buf.array()));
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_NEIGHBORS);
         }
     }
@@ -185,7 +185,7 @@ public class EnderBlockEntity extends BlockEntity {
     public void sync() {
         var syncData = createBufferSlotUpdate();
         if (syncData != null && level instanceof ServerLevel serverLevel) {
-            NetworkUtil.sendToAllTracking(new S2CDataSlotUpdate(getBlockPos(), syncData), serverLevel, getBlockPos());
+            NetworkUtil.sendToAllTracking(new ServerboundCDataSlotUpdate(getBlockPos(), syncData), serverLevel, getBlockPos());
         }
     }
 
@@ -210,8 +210,6 @@ public class EnderBlockEntity extends BlockEntity {
             throw new IllegalStateException("Invalid buffer was passed over the network to the server.");
         }
         dataSlots.get(index).read(buf);
-        // TODO: 20.6: Still used?
-        //dataSlots.get(index).updateServerCallback();
     }
 
     // endregion

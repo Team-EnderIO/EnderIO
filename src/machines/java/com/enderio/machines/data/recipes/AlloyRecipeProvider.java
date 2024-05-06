@@ -9,34 +9,27 @@ import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.common.recipes.CountedIngredient;
-import com.enderio.core.data.recipes.EnderRecipeProvider;
-import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-public class AlloyRecipeProvider extends EnderRecipeProvider {
+public class AlloyRecipeProvider extends RecipeProvider {
 
     public AlloyRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
         super(packOutput, registries);

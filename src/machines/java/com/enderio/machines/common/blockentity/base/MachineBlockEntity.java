@@ -62,6 +62,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         (be, side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
 
     // region IO Configuration
+
     private final IOConfig defaultIOConfig;
 
     public static final ModelProperty<IIOConfigurable> IO_CONFIG_PROPERTY = new ModelProperty<>();
@@ -124,7 +125,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
                     onIOConfigChanged();
                 }
 
-                level.invalidateCapabilities(getBlockPos()); //TODO: NEO-PORT:
+                level.invalidateCapabilities(getBlockPos());
             }));
         } else {
             ioConfigDataSlot = null;
@@ -242,7 +243,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return Direction.SOUTH;
     }
 
-    @NotNull
     @Override
     public ModelData getModelData() {
         return shouldRenderIOConfigOverlay() ? modelData : ModelData.EMPTY;
@@ -482,7 +482,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return getBlockState().getBlock().getName();
     }
 
-    // TODO: Rename to onBlockEntityItemUsed
+    // TODO: Rename to onBlockEntityItemUsed?
     //called when a player uses the block entity, before menu is may open.
     public ItemInteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

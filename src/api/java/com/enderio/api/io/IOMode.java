@@ -82,7 +82,7 @@ public enum IOMode implements StringRepresentable {
     }
 
     /**
-     * Whether or not this side can be connected to by external blocks.
+     * Whether this side can be connected to by external blocks.
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean canConnect() {

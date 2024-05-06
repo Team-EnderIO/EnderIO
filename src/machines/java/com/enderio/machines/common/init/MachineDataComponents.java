@@ -7,6 +7,7 @@ import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.component.BlockPaint;
+import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.io.IOConfig;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
@@ -26,6 +27,9 @@ public class MachineDataComponents {
 
     public static Supplier<DataComponentType<RedstoneControl>> REDSTONE_CONTROL = DATA_COMPONENT_TYPES.register("redstone_control",
         () -> DataComponentType.<RedstoneControl>builder().persistent(RedstoneControl.CODEC).networkSynchronized(RedstoneControl.STREAM_CODEC).build());
+
+    public static Supplier<DataComponentType<ActionRange>> ACTION_RANGE = DATA_COMPONENT_TYPES.register("action_range",
+        () -> DataComponentType.<ActionRange>builder().persistent(ActionRange.CODEC).networkSynchronized(ActionRange.STREAM_CODEC).build());
 
     public static void register(IEventBus bus) {
         DATA_COMPONENT_TYPES.register(bus);

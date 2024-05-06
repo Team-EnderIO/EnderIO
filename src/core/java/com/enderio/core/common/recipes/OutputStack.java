@@ -79,8 +79,6 @@ public record OutputStack(Either<ItemStack, FluidStack> stack) {
 
     // region Serialization
 
-    // TODO: 1.20.6: This is pretty grim.
-
     /**
      * Write to NBT.
      */

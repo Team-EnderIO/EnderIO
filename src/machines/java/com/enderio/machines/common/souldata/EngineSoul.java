@@ -15,6 +15,7 @@ import net.neoforged.fml.common.Mod;
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
 public class EngineSoul {
 
+    // TODO: 20.6: May be able to use FluidIngredient
     public record SoulData(ResourceLocation entitytype, String fluid, int powerpermb, int tickpermb) implements ISoulData {
         @Override
         public ResourceLocation getKey() {

@@ -37,7 +37,7 @@ public class ClientPayloadHandler {
             packet.zSpeed());
     }
 
-    public void handleDataSlotUpdate(S2CDataSlotUpdate update, IPayloadContext context) {
+    public void handleDataSlotUpdate(ServerboundCDataSlotUpdate update, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
             BlockEntity be = level.getBlockEntity(update.pos());

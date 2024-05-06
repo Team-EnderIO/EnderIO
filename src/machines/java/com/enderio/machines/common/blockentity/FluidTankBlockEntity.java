@@ -39,6 +39,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -121,10 +122,10 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
         // fill recipes
         if (level != null) {
-           List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
-           if (allRecipes.stream().anyMatch((recipe) -> recipe.value().isEmptying() && recipe.value().input().test(item))) {
-               return true;
-           }
+            List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
+            if (allRecipes.stream().anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.EMPTY && recipe.value().input().test(item))) {
+                return true;
+            }
         }
 
         return false;
@@ -149,7 +150,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         // drain recipes
         if (level != null) {
             List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
-            if (allRecipes.stream().anyMatch((recipe) -> !recipe.value().isEmptying() && recipe.value().input().test(item))) {
+            if (allRecipes.stream().anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.FILL && recipe.value().input().test(item))) {
                 return true;
             }
         }
@@ -280,8 +281,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     private void tryTankRecipe() {
         currentRecipe.ifPresent(recipe -> {
-
-            if (recipe.value().isEmptying()) {
+            switch (recipe.value().mode()) {
+            case FILL -> {
                 ItemStack outputStack = FLUID_FILL_OUTPUT.getItemStack(this);
 
                 if (outputStack.isEmpty() || (outputStack.is(recipe.value().output()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
@@ -295,7 +296,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                         FLUID_FILL_OUTPUT.getItemStack(this).grow(1);
                     }
                 }
-            } else {
+            }
+            case EMPTY -> {
                 ItemStack outputStack = FLUID_DRAIN_OUTPUT.getItemStack(this);
 
                 if (outputStack.isEmpty() || (outputStack.is(recipe.value().output()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
@@ -309,6 +311,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                         FLUID_DRAIN_OUTPUT.getItemStack(this).grow(1);
                     }
                 }
+            }
+            default -> throw new NotImplementedException();
             }
         });
     }
@@ -354,7 +358,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     public int getLightEmission() {
         return TANK.getFluid(this).getFluid().getFluidType().getLightLevel();
     }
-    
+
     // region Serialization
 
     @Override

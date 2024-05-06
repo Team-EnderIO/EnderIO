@@ -320,15 +320,9 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         capacitorCacheDirty = false;
 
-        // Don't do this on client side, client waits for the sync packet.
-        // TODO Do we want to sync with a packet cause right now we don't
-//        if (level.isClientSide()) {
-//            return;
-//        }
-
         MachineInventoryLayout layout = getInventoryLayout();
         if (requiresCapacitor() && layout != null) {
-            cachedCapacitorData = CapacitorUtil.getCapacitorData(getCapacitorItem()).orElse(CapacitorData.NONE);
+            cachedCapacitorData = getCapacitorItem().getOrDefault(EIODataComponents.CAPACITOR_DATA, CapacitorData.NONE);
         } else {
             cachedCapacitorData = CapacitorData.NONE;
         }

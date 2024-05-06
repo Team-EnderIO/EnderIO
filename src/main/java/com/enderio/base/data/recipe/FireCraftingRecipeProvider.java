@@ -2,11 +2,11 @@ package com.enderio.base.data.recipe;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
-import com.enderio.core.data.recipes.EnderRecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class FireCraftingRecipeProvider extends EnderRecipeProvider {
+public class FireCraftingRecipeProvider extends RecipeProvider {
     public FireCraftingRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
         super(packOutput, registries);
     }

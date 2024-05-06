@@ -184,15 +184,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
             String fluid = soulData.fluid();
             if (fluid.startsWith("#")) { //We have a fluid tag instead
                 TagKey<Fluid> tag = TagKey.create(Registries.FLUID, new ResourceLocation(fluid.substring(1)));
-
-                // TODO: NEO-PORT: https://github.com/neoforged/NeoForge/pull/585 may be applicable
-                var optionalTagContents = BuiltInRegistries.FLUID.getTag(tag);
-                if (optionalTagContents.isPresent()) {
-                    var optionalTag = optionalTagContents.get().stream().findFirst();
-                    if (optionalTag.isPresent()) {
-                        return fluidStack.getFluid().isSame(optionalTag.get().value());
-                    }
-                }
+                return fluidStack.is(tag);
             } else {
                 Optional<Holder.Reference<Fluid>> delegate = BuiltInRegistries.FLUID.getHolder(ResourceKey.create(Registries.FLUID, new ResourceLocation(fluid)));
                 if (delegate.isPresent()) {

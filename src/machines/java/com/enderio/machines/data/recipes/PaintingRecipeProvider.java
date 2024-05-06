@@ -2,13 +2,13 @@ package com.enderio.machines.data.recipes;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOBlocks;
-import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.recipe.PaintingRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.ItemLike;
 
 import java.util.concurrent.CompletableFuture;
 
-public class PaintingRecipeProvider extends EnderRecipeProvider {
+public class PaintingRecipeProvider extends RecipeProvider {
 
     public PaintingRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
         super(packOutput, registries);

@@ -1,6 +1,6 @@
 package com.enderio.machines.common.item;
 
-import com.enderio.base.common.capability.EnergyStorageItemStack;
+import com.enderio.base.common.capability.ItemEnergyStorage;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.machines.common.block.CapacitorBankBlock;
 import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
@@ -12,7 +12,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 public class CapacitorBankItem extends BlockItem {
 
     public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
-        (stack, v) -> new EnergyStorageItemStack(EIODataComponents.ENERGY, stack, ((CapacitorBankItem)stack.getItem()).tier.getStorageCapacity());
+        (stack, v) -> new ItemEnergyStorage(EIODataComponents.ENERGY, stack, ((CapacitorBankItem)stack.getItem()).tier.getStorageCapacity());
 
     private final ICapacityTier tier;
 

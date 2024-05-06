@@ -5,12 +5,12 @@ import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.recipes.CountedIngredient;
-import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -19,7 +19,7 @@ import net.neoforged.neoforge.common.Tags;
 
 import java.util.concurrent.CompletableFuture;
 
-public class EnchanterRecipeProvider extends EnderRecipeProvider {
+public class EnchanterRecipeProvider extends RecipeProvider {
 
     public EnchanterRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
         super(packOutput, registries);

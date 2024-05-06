@@ -1,24 +1,17 @@
 package com.enderio.base.common.item;
 
-import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
 import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.util.PaintUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import org.jetbrains.annotations.Nullable;
-
 
 public class PaintedSlabBlockItem extends PaintedBlockItem {
 

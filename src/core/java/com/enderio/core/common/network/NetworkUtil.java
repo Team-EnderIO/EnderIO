@@ -17,14 +17,6 @@ public class NetworkUtil {
     }
 
     /**
-     * @deprecated Use {@link PacketDistributor#sendToServer(CustomPacketPayload, CustomPacketPayload...)} instead
-     */
-    @Deprecated(forRemoval = true, since = "6.1")
-    public static <T extends CustomPacketPayload> void sendToServer(T packet) {
-        PacketDistributor.sendToServer(packet);
-    }
-
-    /**
      * @deprecated Use {@link PacketDistributor#sendToPlayersTrackingChunk(ServerLevel, ChunkPos, CustomPacketPayload, CustomPacketPayload...)} instead
      */
     @Deprecated(forRemoval = true, since = "6.1")
