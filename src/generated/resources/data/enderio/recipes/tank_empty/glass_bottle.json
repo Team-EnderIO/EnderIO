@@ -7,6 +7,6 @@
   "input": {
     "item": "minecraft:experience_bottle"
   },
-  "is_emptying": true,
+  "mode": "empty",
   "output": "minecraft:glass_bottle"
 }

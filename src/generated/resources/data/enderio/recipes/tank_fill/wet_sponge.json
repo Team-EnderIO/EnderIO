@@ -7,6 +7,6 @@
   "input": {
     "item": "minecraft:sponge"
   },
-  "is_emptying": false,
+  "mode": "fill",
   "output": "minecraft:wet_sponge"
 }

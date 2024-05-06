@@ -7,6 +7,6 @@
   "input": {
     "item": "minecraft:lime_concrete_powder"
   },
-  "is_emptying": false,
+  "mode": "fill",
   "output": "minecraft:lime_concrete"
 }

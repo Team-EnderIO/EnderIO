@@ -7,6 +7,6 @@
   "input": {
     "item": "minecraft:cyan_concrete_powder"
   },
-  "is_emptying": false,
+  "mode": "fill",
   "output": "minecraft:cyan_concrete"
 }

@@ -7,6 +7,6 @@
   "input": {
     "item": "minecraft:stick"
   },
-  "is_emptying": false,
+  "mode": "fill",
   "output": "enderio:nutritious_stick"
 }
