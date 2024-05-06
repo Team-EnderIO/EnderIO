@@ -1,6 +1,6 @@
-package com.enderio.core.common.attachment;
+package com.enderio.core.common.component;
 
-// TODO: Move to component package
+// TODO: Not a fan of this pattern, remove it.
 public interface IItemEnergyConfig {
     int getMaxEnergy();
 

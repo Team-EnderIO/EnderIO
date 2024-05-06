@@ -5,7 +5,7 @@ import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
-import com.enderio.core.common.attachment.IItemEnergyConfig;
+import com.enderio.core.common.component.IItemEnergyConfig;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;

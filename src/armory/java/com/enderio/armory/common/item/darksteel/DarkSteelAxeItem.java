@@ -24,7 +24,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.TierSortingRegistry;
 import net.neoforged.neoforge.common.ToolAction;
 import net.neoforged.neoforge.common.ToolActions;
 
@@ -37,7 +36,8 @@ import java.util.Set;
 public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVariants {
 
     public DarkSteelAxeItem(Properties pProperties) {
-        super(ArmoryItems.DARK_STEEL_TIER, 5, -3, pProperties);
+        super(ArmoryItems.DARK_STEEL_TIER, pProperties
+            .attributes(AxeItem.createAttributes(ArmoryItems.DARK_STEEL_TIER, 5, -3)));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVar
 
     @Override
     public float getDestroySpeed(ItemStack pStack, BlockState pState) {
-        final float baseSpeed = canHarvest(pStack, pState) ? speed : 1.0f;
+        final float baseSpeed = super.getDestroySpeed(pStack, pState);
         return getEmpoweredUpgrade(pStack).map(empoweredUpgrade -> empoweredUpgrade.adjustDestroySpeed(baseSpeed)).orElse(baseSpeed);
     }
 
@@ -94,7 +94,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVar
 
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return canHarvest(stack, state) && TierSortingRegistry.isCorrectTierForDrops(getTier(), state);
+        return canHarvest(stack, state)/* && TierSortingRegistry.isCorrectTierForDrops(getTier(), state)*/;
     }
 
     @Override
@@ -160,6 +160,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVar
         if(isDetailed && getEmpoweredUpgrade(itemStack).isPresent()) {
             tooltips.add(TooltipUtil.withArgs(ArmoryLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, ArmoryConfig.COMMON.EMPOWERED_EFFICIENCY_BOOST.get()));
         }
+
         IDarkSteelItem.super.addCurrentUpgradeTooltips(itemStack, tooltips, isDetailed);
     }
 

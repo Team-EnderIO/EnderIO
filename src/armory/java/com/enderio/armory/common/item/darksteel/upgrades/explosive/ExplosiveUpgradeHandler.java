@@ -36,6 +36,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RenderHighlightEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -47,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 public class ExplosiveUpgradeHandler {
 
     private static final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_BREAK_POWER_USE = ArmoryConfig.COMMON.EXPLOSIVE_ENERGY_PER_EXPLODED_BLOCK;
@@ -107,9 +108,11 @@ public class ExplosiveUpgradeHandler {
         if (blockState.is(ArmoryTags.Blocks.DARK_STEEL_EXPLODABLE_ALLOW_LIST)) {
             return true;
         }
+
         if (blockState.is(ArmoryTags.Blocks.DARK_STEEL_EXPLODABLE_DENY_LIST) || blockEntity != null) {
             return false;
         }
+
         return Items.STONE_PICKAXE.isCorrectToolForDrops(blockState) ||
             (DarkSteelUpgradeable.hasUpgrade(itemStack, SpoonUpgrade.NAME) && Items.STONE_SHOVEL.isCorrectToolForDrops(blockState));
     }
@@ -247,12 +250,12 @@ public class ExplosiveUpgradeHandler {
         pConsumer
             .vertex(pose.pose(), (float) (fromX + originX), (float) (fromY + originY), (float) (fromZ + originZ))
             .color(color.x(), color.y(), color.z(), color.w())
-            .normal(pose.normal(), normalX, normalY, normalZ)
+            .normal(pose, normalX, normalY, normalZ)
             .endVertex();
         pConsumer
             .vertex(pose.pose(), (float) (toX + originX), (float) (toY + originY), (float) (toZ + originZ))
             .color(color.x(), color.y(), color.z(), color.w())
-            .normal(pose.normal(), normalX, normalY, normalZ)
+            .normal(pose, normalX, normalY, normalZ)
             .endVertex();
     }
 

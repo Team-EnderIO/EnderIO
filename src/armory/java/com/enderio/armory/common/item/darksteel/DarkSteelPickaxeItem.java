@@ -26,7 +26,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.common.TierSortingRegistry;
 import net.neoforged.neoforge.common.ToolActions;
 
 import java.util.List;
@@ -40,7 +39,8 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     private final ModConfigSpec.ConfigValue<Integer> useObsidianBreakSpeedAtHardness = ArmoryConfig.COMMON.DARK_STEEL_PICKAXE_AS_OBSIDIAN_AT_HARDNESS;
 
     public DarkSteelPickaxeItem(Properties pProperties) {
-        super(ArmoryItems.DARK_STEEL_TIER, 1, -2.8F, pProperties);
+        super(ArmoryItems.DARK_STEEL_TIER, pProperties
+            .attributes(createAttributes(ArmoryItems.DARK_STEEL_TIER, 1, -2.8F)));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
 
     @Override
     public float getDestroySpeed(ItemStack pStack, BlockState pState) {
-        final float baseSpeed = canHarvest(pStack, pState) ? speed : 1.0f;
+        final float baseSpeed = super.getDestroySpeed(pStack, pState);
         float adjustedSpeed = getEmpoweredUpgrade(pStack).map(empoweredUpgrade -> empoweredUpgrade.adjustDestroySpeed(baseSpeed)).orElse(baseSpeed);
         adjustedSpeed = ExplosiveUpgradeHandler.adjustDestroySpeed(adjustedSpeed, pStack);
         if (useObsidianMining(pState, pStack)) {
@@ -71,7 +71,8 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
 
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return canHarvest(stack, state) && TierSortingRegistry.isCorrectTierForDrops(getTier(), state);
+        // TODO: 20.6: I think tools need reworking properly. Just making this compile for now.
+        return canHarvest(stack, state)/* && TierSortingRegistry.isCorrectTierForDrops(getTier(), state)*/;
     }
 
     @Override

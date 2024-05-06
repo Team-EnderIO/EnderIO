@@ -1,6 +1,6 @@
 package com.enderio.base.common.capability;
 
-import com.enderio.core.common.attachment.IItemEnergyConfig;
+import com.enderio.core.common.component.IItemEnergyConfig;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.energy.IEnergyStorage;
