@@ -2,9 +2,11 @@ package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.IMachineInstall;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.api.capacitor.CapacitorData;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.core.common.network.NetworkDataSlot;
@@ -12,6 +14,8 @@ import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.blockentity.sync.EnergySyncData;
+import com.enderio.machines.common.init.MachineAttachments;
+import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
@@ -368,12 +372,14 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
         energyStorage.setEnergyStored(components.getOrDefault(EIODataComponents.ENERGY, 0));
+        setData(MachineAttachments.REDSTONE_CONTROL, components.getOrDefault(MachineDataComponents.REDSTONE_CONTROL, RedstoneControl.ALWAYS_ACTIVE));
     }
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
         components.set(EIODataComponents.ENERGY, energyStorage.getEnergyStored());
+        components.set(MachineDataComponents.REDSTONE_CONTROL, getData(MachineAttachments.REDSTONE_CONTROL));
     }
 
     @SuppressWarnings("deprecation")
@@ -381,6 +387,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     public void removeComponentsFromTag(CompoundTag tag) {
         super.removeComponentsFromTag(tag);
         tag.remove(MachineNBTKeys.ENERGY);
+        removeData(MachineAttachments.REDSTONE_CONTROL);
     }
 
     // endregion

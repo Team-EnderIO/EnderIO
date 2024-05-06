@@ -1,6 +1,7 @@
 package com.enderio.machines.data.loot;
 
 import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.regilite.data.RegiliteBlockLootProvider;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -25,10 +26,9 @@ public class MachinesLootTable {
             .withPool(new LootPool.Builder().add(
                 LootItem.lootTableItem(block).apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
                     .include(componentType)
-                    // TODO: 20.6 - Need to add support for read/writing these in the BE's.
                     .include(EIODataComponents.ENERGY.get())
-                    //.include(MachineNBTKeys.IO_CONFIG, BlockItem.BLOCK_ENTITY_TAG + "." + MachineNBTKeys.IO_CONFIG)
-                    //.include(MachineNBTKeys.REDSTONE_CONTROL, BlockItem.BLOCK_ENTITY_TAG + "." + MachineNBTKeys.REDSTONE_CONTROL)
+                    .include(MachineDataComponents.IO_CONFIG.get())
+                    .include(MachineDataComponents.REDSTONE_CONTROL.get())
                     .include(DataComponents.CONTAINER)
                 ))));
     }

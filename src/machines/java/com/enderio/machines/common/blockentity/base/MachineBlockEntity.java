@@ -6,12 +6,14 @@ import com.enderio.api.io.IIOConfigurable;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.IWrenchable;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.init.MachineAttachments;
+import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.SidedIOConfig;
 import com.enderio.machines.common.io.TransferUtil;
@@ -137,7 +139,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return IOConfig.empty();
     }
 
-    public final IOConfig getIOConfig() {
+    private IOConfig getIOConfig() {
         if (isIOConfigMutable()) {
             return getData(MachineAttachments.IO_CONFIG);
         }
@@ -446,6 +448,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (this.inventory != null) {
             this.inventory.copyFromItem(components.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
         }
+
+        if (isIOConfigMutable()) {
+            setData(MachineAttachments.IO_CONFIG, components.getOrDefault(MachineDataComponents.IO_CONFIG, IOConfig.empty()));
+        }
     }
 
     @Override
@@ -455,6 +461,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (this.inventory != null) {
             components.set(DataComponents.CONTAINER, this.inventory.toItemContents());
         }
+
+        if (isIOConfigMutable()) {
+            components.set(MachineDataComponents.IO_CONFIG, getData(MachineAttachments.IO_CONFIG));
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -462,6 +472,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public void removeComponentsFromTag(CompoundTag tag) {
         super.removeComponentsFromTag(tag);
         tag.remove(MachineNBTKeys.ITEMS);
+        removeData(MachineAttachments.IO_CONFIG);
     }
 
     // endregion

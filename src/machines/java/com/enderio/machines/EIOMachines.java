@@ -9,6 +9,7 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.EnderIOMachinesSelfIntegration;
@@ -59,6 +60,7 @@ public class EIOMachines {
         ctx.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
         ctx.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
 
+        MachineDataComponents.register(EnderIO.modEventBus);
         MachineBlocks.register(EnderIO.modEventBus);
         MachineBlockEntities.register(EnderIO.modEventBus);
         MachineMenus.register(EnderIO.modEventBus);

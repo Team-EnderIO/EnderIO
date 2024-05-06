@@ -382,7 +382,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             var selectedFace = selection.get();
             BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
             if (entity instanceof MachineBlockEntity machine) {
-                var ioMode = machine.getIOConfig().getMode(selectedFace.side);
+                var ioMode = machine.getIOMode(selectedFace.side);
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();
                 guiGraphics.blitSprite(IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
