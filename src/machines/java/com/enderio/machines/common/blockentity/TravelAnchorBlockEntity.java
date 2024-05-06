@@ -2,9 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.travel.ITravelTarget;
 import com.enderio.base.common.travel.TravelSavedData;
-import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
-import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
-import com.enderio.core.common.network.slot.StringNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -13,6 +11,7 @@ import com.enderio.machines.common.menu.TravelAnchorMenu;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -28,22 +27,19 @@ import java.util.Optional;
 public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     public static final SingleSlotAccess GHOST = new SingleSlotAccess();
-    private final StringNetworkDataSlot nameDataSlot;
-    private final BooleanNetworkDataSlot visibilityDataSlot;
-    private final ResourceLocationNetworkDataSlot iconDataSlot;
+    private final NetworkDataSlot<String> nameDataSlot;
+    private final NetworkDataSlot<Boolean> visibilityDataSlot;
+    private final NetworkDataSlot<ResourceLocation> iconDataSlot;
     public TravelAnchorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         this(MachineBlockEntities.TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
     }
 
     public TravelAnchorBlockEntity(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState) {
         super(type, pWorldPosition, pBlockState);
-        nameDataSlot = new StringNetworkDataSlot(this::getName, name -> getOrCreateTravelTarget().setName(name));
-        visibilityDataSlot = new BooleanNetworkDataSlot(this::getVisibility, vis -> getOrCreateTravelTarget().setVisibility(vis));
-        iconDataSlot = new ResourceLocationNetworkDataSlot(() -> BuiltInRegistries.ITEM.getKey(getIcon()),
-            loc -> getOrCreateTravelTarget().setIcon(BuiltInRegistries.ITEM.get(loc)));
-        addDataSlot(nameDataSlot);
-        addDataSlot(visibilityDataSlot);
-        addDataSlot(iconDataSlot);
+        nameDataSlot = addDataSlot(NetworkDataSlot.STRING.create(this::getName, name -> getOrCreateTravelTarget().setName(name)));
+        visibilityDataSlot = addDataSlot(NetworkDataSlot.BOOL.create(this::getVisibility, vis -> getOrCreateTravelTarget().setVisibility(vis)));
+        iconDataSlot = addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> BuiltInRegistries.ITEM.getKey(getIcon()),
+            loc -> getOrCreateTravelTarget().setIcon(BuiltInRegistries.ITEM.get(loc))));
     }
 
     @Nullable
@@ -60,7 +56,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     @Override
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
-        ItemStack stack = GHOST.getItemStack(getInventory());
+        ItemStack stack = GHOST.getItemStack(getInventoryNN());
         setIcon(stack.getItem());
     }
 

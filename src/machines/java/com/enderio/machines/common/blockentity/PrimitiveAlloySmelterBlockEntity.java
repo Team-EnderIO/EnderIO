@@ -2,7 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -12,7 +12,6 @@ import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,8 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -45,7 +42,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
 
     public PrimitiveAlloySmelterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER.get(), pWorldPosition, pBlockState);
-        addDataSlot(new FloatNetworkDataSlot(this::getBurnProgress, p -> clientBurnProgress = p));
+        addDataSlot(NetworkDataSlot.FLOAT.create(this::getBurnProgress, p -> clientBurnProgress = p));
     }
 
     @Override
@@ -126,7 +123,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
 
     @Override
     protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
-        return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getBurnToFE, () -> 0) {
+        return new MachineEnergyStorage(this, energyIOMode, this::getBurnToFE, () -> 0) {
             @Override
             public int getEnergyStored() {
                 if (isBurning()) {

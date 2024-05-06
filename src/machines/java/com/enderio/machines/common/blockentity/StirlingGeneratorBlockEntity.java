@@ -6,7 +6,7 @@ import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.capacitor.LinearScalable;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -23,10 +23,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.CommonHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -49,7 +47,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
     public StirlingGeneratorBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, MachineBlockEntities.STIRLING_GENERATOR.get(), worldPosition, blockState);
-        addDataSlot(new FloatNetworkDataSlot(this::getBurnProgress, p -> clientBurnProgress = p));
+        addDataSlot(NetworkDataSlot.FLOAT.create(this::getBurnProgress, p -> clientBurnProgress = p));
     }
 
     private int getBurnPerTick() {
@@ -143,7 +141,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
-        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, usageRate) {
+        return new MachineEnergyStorage(this, energyIOMode, capacity, usageRate) {
             @Override
             protected void onContentsChanged() {
                 setChanged();

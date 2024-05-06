@@ -185,7 +185,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                     var selectedFace = selection.get();
                     BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
                     if (entity instanceof MachineBlockEntity machine) {
-                        machine.getIOConfig().cycleMode(selectedFace.side);
+                        machine.cycleIOMode(selectedFace.side);
                         this.playDownSound(Minecraft.getInstance().getSoundManager());
                         return true;
                     }

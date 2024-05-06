@@ -1,14 +1,19 @@
 package com.enderio.api.io;
 
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 
-import java.util.Locale;
+import java.util.function.IntFunction;
 
 public enum IOMode implements StringRepresentable {
     /**
      * No specific configuration, allows external input and output but doesn't pull or push itself.
      */
-    NONE(true, true, false, true),
+    NONE(0, "none", true, true, false, true),
 
     /**
      * Only pushes outputs allows both external pulling and the machine pushes itself.
@@ -17,7 +22,7 @@ public enum IOMode implements StringRepresentable {
      *
      * @apiNote Each machine determines what this means this for energy. Some may ignore it.
      */
-    PUSH(false, true, true, true),
+    PUSH(1, "push", false, true, true, true),
 
     /**
      * Only pulls inputs, allowing both external pushing and the machine pulling itself.
@@ -26,30 +31,36 @@ public enum IOMode implements StringRepresentable {
      *
      * @apiNote Each machine determines what this means this for energy. Some may ignore it.
      */
-    PULL(true, false, true, true),
+    PULL(2, "pull", true, false, true, true),
 
     /**
      * Allow both pulling and pushing by both the machine and external blocks.
      *
      * @apiNote Each machine determines what this means this for energy. Some may ignore it.
      */
-    BOTH(true, true, true, true),
+    BOTH(3, "both", true, true, true, true),
 
     /**
      * Disallow any side access for all resources (including energy).
      *
      * @apiNote All machines will disallow power access for this side.
      */
-    DISABLED(false, false, false, false);
+    DISABLED(4, "disable", false, false, false, false);
 
-    public static final EnumCodec<IOMode> CODEC = StringRepresentable.fromEnum(IOMode::values);
+    public static final Codec<IOMode> CODEC = StringRepresentable.fromEnum(IOMode::values);
+    public static final IntFunction<IOMode> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+    public static final StreamCodec<ByteBuf, IOMode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
 
+    private final int id;
+    private final String name;
     private final boolean input;
     private final boolean output;
     private final boolean force;
     private final boolean canConnect;
 
-    IOMode(boolean input, boolean output, boolean force, boolean canConnect) {
+    IOMode(int id, String name, boolean input, boolean output, boolean force, boolean canConnect) {
+        this.id = id;
+        this.name = name;
         this.input = input;
         this.output = output;
         this.force = force;
@@ -105,6 +116,6 @@ public enum IOMode implements StringRepresentable {
 
     @Override
     public String getSerializedName() {
-        return name().toLowerCase(Locale.ROOT);
+        return name;
     }
 }

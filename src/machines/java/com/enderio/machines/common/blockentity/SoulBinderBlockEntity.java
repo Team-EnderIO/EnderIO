@@ -8,7 +8,7 @@ import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
@@ -67,7 +67,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
         fluidHandler = createFluidHandler();
 
         // Sync fluid amount to client.
-        addDataSlot(new IntegerNetworkDataSlot(() -> TANK.getFluidAmount(this), i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))
+        addDataSlot(NetworkDataSlot.INT.create(() -> TANK.getFluidAmount(this), i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))
         ));
 
         // Create the crafting task host
@@ -75,7 +75,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
             new SoulBindingRecipe.Container(getInventoryNN(), () -> TANK.getFluidAmount(this)), this::createTask);
 
         // Sync crafting container needed xp
-        addDataSlot(new IntegerNetworkDataSlot(() -> recipe == null ? 0 : recipe.value().experience(), i -> clientExp = i));
+        addDataSlot(NetworkDataSlot.INT.create(() -> recipe == null ? 0 : recipe.value().experience(), i -> clientExp = i));
     }
 
     @Override
@@ -141,7 +141,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
 
     @Override
     public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(this, getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 craftingTaskHost.newTaskAvailable();

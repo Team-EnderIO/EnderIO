@@ -2,11 +2,9 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
-import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
-import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.attachment.IRangedActor;
@@ -14,7 +12,7 @@ import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.io.FixedIOConfig;
+import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
@@ -56,20 +54,20 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
     private int consumed = 0;
     private Fluid type = Fluids.EMPTY;
 
-    private CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
+    private final NetworkDataSlot<ActionRange> actionRangeDataSlot;
 
     public DrainBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.DRAIN.get(), worldPosition, blockState);
         fluidHandler = createFluidHandler();
 
-        addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), fluid -> TANK.setFluid(this, fluid)));
+        addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> TANK.getFluid(this), fluid -> TANK.setFluid(this, fluid)));
 
         // TODO: rubbish way of having a default. use an interface instead?
         if (!hasData(MachineAttachments.ACTION_RANGE)) {
             setData(MachineAttachments.ACTION_RANGE, new ActionRange(5, false));
         }
 
-        actionRangeDataSlot = addDataSlot(new CodecNetworkDataSlot<>(this::getActionRange, this::internalSetActionRange, ActionRange.CODEC));
+        actionRangeDataSlot = addDataSlot(ActionRange.DATA_SLOT_TYPE.create(this::getActionRange, this::internalSetActionRange));
     }
 
     @Override
@@ -120,7 +118,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
 
     @Override
     public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(this, getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
@@ -139,8 +137,13 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
     }
 
     @Override
-    protected IIOConfig createIOConfig() {
-        return new FixedIOConfig(IOMode.PUSH);
+    public IOConfig getDefaultIOConfig() {
+        return IOConfig.of(IOMode.PUSH);
+    }
+
+    @Override
+    public boolean isIOConfigMutable() {
+        return false;
     }
 
     @Override

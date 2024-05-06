@@ -2,6 +2,7 @@ package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorData;
+import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
@@ -267,17 +268,37 @@ public class EIOItems {
 
     // endregion
 
-    // region GrindingBalls
+    // region Grinding Balls
 
-    public static final RegiliteItem<MaterialItem> SOULARIUM_BALL = materialItem("soularium_grinding_ball");
-    public static final RegiliteItem<MaterialItem> CONDUCTIVE_ALLOY_BALL = materialItem("conductive_alloy_grinding_ball");
-    public static final RegiliteItem<MaterialItem> PULSATING_ALLOY_BALL = materialItem("pulsating_alloy_grinding_ball");
-    public static final RegiliteItem<MaterialItem> REDSTONE_ALLOY_BALL = materialItem("redstone_alloy_grinding_ball");
-    public static final RegiliteItem<MaterialItem> ENERGETIC_ALLOY_BALL = materialItem("energetic_alloy_grinding_ball");
-    public static final RegiliteItem<MaterialItem> VIBRANT_ALLOY_BALL = materialItem("vibrant_alloy_grinding_ball");
-    public static final RegiliteItem<MaterialItem> COPPER_ALLOY_BALL = materialItem("copper_alloy_grinding_ball");
-    public static final RegiliteItem<MaterialItem> DARK_STEEL_BALL = materialItem("dark_steel_grinding_ball");
-    public static final RegiliteItem<MaterialItem> END_STEEL_BALL = materialItem("end_steel_grinding_ball");
+    // TODO: 20.6: Config for grinding balls?
+
+    public static final RegiliteItem<MaterialItem> SOULARIUM_BALL = grindingBall("soularium_grinding_ball",
+        new GrindingBallData(1.2F, 2.15F, 0.9F, 80000));
+
+    public static final RegiliteItem<MaterialItem> CONDUCTIVE_ALLOY_BALL = grindingBall("conductive_alloy_grinding_ball",
+        new GrindingBallData(1.35F, 1.00F, 1.0F, 40000));
+
+    public static final RegiliteItem<MaterialItem> PULSATING_ALLOY_BALL = grindingBall("pulsating_alloy_grinding_ball",
+        new GrindingBallData(1.00F, 1.85F, 1.0F, 100000));
+
+    public static final RegiliteItem<MaterialItem> REDSTONE_ALLOY_BALL = grindingBall("redstone_alloy_grinding_ball",
+        new GrindingBallData(1.00F, 1.00F, 0.35F, 30000));
+
+    public static final RegiliteItem<MaterialItem> ENERGETIC_ALLOY_BALL = grindingBall("energetic_alloy_grinding_ball",
+        new GrindingBallData(1.6F, 1.1F, 1.1F, 80000));
+
+    public static final RegiliteItem<MaterialItem> VIBRANT_ALLOY_BALL = grindingBall("vibrant_alloy_grinding_ball",
+        new GrindingBallData(1.75F, 1.35F, 1.13F, 80000));
+
+    public static final RegiliteItem<MaterialItem> COPPER_ALLOY_BALL = grindingBall("copper_alloy_grinding_ball",
+        new GrindingBallData(1.2F, 1.65F, 0.8F, 40000));
+
+    public static final RegiliteItem<MaterialItem> DARK_STEEL_BALL = grindingBall("dark_steel_grinding_ball",
+        new GrindingBallData(1.35F, 2.00F, 0.7F, 125000));
+
+    public static final RegiliteItem<MaterialItem> END_STEEL_BALL = grindingBall("end_steel_grinding_ball",
+        new GrindingBallData(1.4F, 2.4F, 0.7F, 75000));
+
     //    public static final Map<DyeColor, RegiliteItem<HangGliderItem>> COLORED_HANG_GLIDERS = Util.make(() -> {
     //       Map<DyeColor, RegiliteItem<HangGliderItem>> tempMap = new EnumMap<>(DyeColor.class);
     //       for (DyeColor color: DyeColor.values()) {
@@ -288,6 +309,15 @@ public class EIOItems {
     //    });
 
     //    public static final RegiliteItem<HangGliderItem> GLIDER = gliderItem("glider");
+
+    private static RegiliteItem<MaterialItem> grindingBall(String name, GrindingBallData grindingBallData) {
+        return ITEM_REGISTRY
+            .registerItem(name, props -> new MaterialItem(
+                props
+                    .component(EIODataComponents.GRINDING_BALL, grindingBallData),
+                false))
+            .setTab(EIOCreativeTabs.MAIN);
+    }
 
     // endregion
 

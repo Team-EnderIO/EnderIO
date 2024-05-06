@@ -1,13 +1,10 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.api.io.IIOConfig;
-import com.enderio.api.io.IOMode;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.io.FixedIOConfig;
+import com.enderio.machines.common.io.DumbIOConfigurable;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
@@ -24,7 +21,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
@@ -88,7 +84,7 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
     private MachineInventory createInventory() {
         // Custom behaviour as this works more like a crafting table than a machine.
-        return new MachineInventory(FixedIOConfig.DISABLED, getInventoryLayout()) {
+        return new MachineInventory(DumbIOConfigurable.DISABLED, getInventoryLayout()) {
 
             protected void onContentsChanged(int slot) {
                 if (level == null) {

@@ -1,41 +1,39 @@
 package com.enderio.machines.common.io.item;
 
-import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.IIOConfigurable;
+import com.enderio.api.io.IOMode;
 import com.enderio.machines.common.blockentity.MachineState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Function;
 import java.util.function.IntConsumer;
 
 /**
  * A machine inventory.
- * Configured and controlled by a machine's {@link IIOConfig} and a {@link MachineInventoryLayout}.
+ * Configured and controlled by a machine's {@link IIOConfigurable} and a {@link MachineInventoryLayout}.
  */
 public class MachineInventory extends ItemStackHandler {
-    private final IIOConfig config;
+    private final IIOConfigurable ioConfigurable;
     private final MachineInventoryLayout layout;
     private IntConsumer changeListener = i -> {};
 
     /**
      * Create a new machine inventory.
      */
-    public MachineInventory(IIOConfig config, MachineInventoryLayout layout) {
+    public MachineInventory(IIOConfigurable ioConfigurable, MachineInventoryLayout layout) {
         super(layout.getSlotCount());
-        this.config = config;
+        this.ioConfigurable = ioConfigurable;
         this.layout = layout;
     }
+
+    // TODO: Why are we not calling changeListener in onContentsChanged?
     public void addSlotChangedCallback(IntConsumer callback) {
         changeListener = changeListener.andThen(callback);
-    }
-
-    /**
-     * Get the IO config for the machine.
-     */
-    public final IIOConfig getConfig() {
-        return config;
     }
 
     /**
@@ -61,7 +59,7 @@ public class MachineInventory extends ItemStackHandler {
             return new Wrapped(this, null);
         }
 
-        if (config.getMode(side).canConnect()) {
+        if (ioConfigurable.getIOMode(side).canConnect()) {
             return new Wrapped(this, side);
         }
 
@@ -98,6 +96,18 @@ public class MachineInventory extends ItemStackHandler {
         }
     }
 
+    public void copyFromItem(ItemContainerContents contents) {
+        contents.copyInto(this.stacks);
+        for (int i = 0; i < getSlots(); i++) {
+            onContentsChanged(i);
+            this.changeListener.accept(i);
+        }
+    }
+
+    public ItemContainerContents toItemContents() {
+        return ItemContainerContents.fromItems(this.stacks);
+    }
+
     public void updateMachineState(MachineState state, boolean add) {
 
     }
@@ -122,7 +132,7 @@ public class MachineInventory extends ItemStackHandler {
             }
 
             // Check we allow input to the block on this side
-            if (side != null && !master.getConfig().getMode(side).canInput()) {
+            if (side != null && !master.ioConfigurable.getIOMode(side).canInput()) {
                 return stack;
             }
 
@@ -137,7 +147,7 @@ public class MachineInventory extends ItemStackHandler {
             }
 
             // Check we allow output from the block on this side
-            if (side != null && !master.getConfig().getMode(side).canOutput()) {
+            if (side != null && !master.ioConfigurable.getIOMode(side).canOutput()) {
                 return ItemStack.EMPTY;
             }
 

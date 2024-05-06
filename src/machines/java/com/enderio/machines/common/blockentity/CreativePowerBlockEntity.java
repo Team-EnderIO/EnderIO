@@ -27,7 +27,7 @@ public class CreativePowerBlockEntity extends PoweredMachineBlockEntity {
     @Override
     protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacityKey,
         Supplier<Integer> useKey) {
-        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacityKey, useKey) {
+        return new MachineEnergyStorage(this, energyIOMode, capacityKey, useKey) {
             @Override
             public int getEnergyStored() {
                 return getMaxEnergyStored() / 2;

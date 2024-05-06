@@ -2,11 +2,10 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
-import com.enderio.api.grindingball.IGrindingBallData;
+import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.base.common.util.GrindingBallManager;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
-import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
+import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
@@ -30,7 +29,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,38 +42,41 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     public static final SingleSlotAccess GRINDING_BALL = new SingleSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
 
-    private IGrindingBallData grindingBallData = IGrindingBallData.IDENTITY;
+    private GrindingBallData grindingBallData = GrindingBallData.IDENTITY;
     @Nullable
     private ResourceLocation pendingGrindingBallId;
     private int grindingBallDamage;
 
     private final CraftingMachineTaskHost<SagMillingRecipe, SagMillingRecipe.Container> craftingTaskHost;
 
+    public static final NetworkDataSlot.CodecType<GrindingBallData> GRINDING_BALL_DATA_SLOT_TYPE
+        = new NetworkDataSlot.CodecType<>(GrindingBallData.CODEC, GrindingBallData.STREAM_CODEC.cast());
+
     public SagMillBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.SAG_MILL.get(), worldPosition, blockState);
 
-        addDataSlot(new IntegerNetworkDataSlot(() -> grindingBallDamage, i -> grindingBallDamage = i));
-        addDataSlot(new ResourceLocationNetworkDataSlot(() -> GrindingBallManager.getId(grindingBallData), gId -> grindingBallData = GrindingBallManager.getData(gId)));
+        addDataSlot(NetworkDataSlot.INT.create(() -> grindingBallDamage, i -> grindingBallDamage = i));
+        addDataSlot(GRINDING_BALL_DATA_SLOT_TYPE.create(() -> grindingBallData, v -> grindingBallData = v));
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SAG_MILLING.type().get(),
             new SagMillingRecipe.Container(getInventoryNN(), this::getGrindingBallData), this::createTask);
     }
 
-    public IGrindingBallData getGrindingBallData() {
+    public GrindingBallData getGrindingBallData() {
         return grindingBallData;
     }
 
-    public void setGrindingBallData(IGrindingBallData data) {
+    public void setGrindingBallData(GrindingBallData data) {
         grindingBallDamage = 0;
         grindingBallData = data;
     }
 
     public float getGrindingBallDamage() {
-        if (grindingBallData.getDurability() <= 0) {
+        if (grindingBallData.durability() <= 0) {
             return 0.0f;
         }
 
-        return 1.0f - (grindingBallDamage / (float) grindingBallData.getDurability());
+        return 1.0f - (grindingBallDamage / (float) grindingBallData.durability());
     }
 
     @Nullable
@@ -97,11 +98,6 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     public void onLoad() {
         super.onLoad();
         craftingTaskHost.onLevelReady();
-
-        // Load a pending grinding ball.
-        if (pendingGrindingBallId != null) {
-            grindingBallData = GrindingBallManager.getData(pendingGrindingBallId);
-        }
     }
 
     @Override
@@ -111,7 +107,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
             .slotAccess(INPUT)
             .outputSlot(4)
             .slotAccess(OUTPUT)
-            .inputSlot((slot, stack) -> GrindingBallManager.isGrindingBall(stack))
+            .inputSlot((slot, stack) -> stack.has(EIODataComponents.GRINDING_BALL))
             .slotAccess(GRINDING_BALL)
             .capacitor()
             .build();
@@ -146,12 +142,12 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
                 INPUT.getItemStack(inv).shrink(1);
 
                 // Claim any available grinding balls.
-                if (recipe.bonusType().useGrindingBall() && grindingBallData == IGrindingBallData.IDENTITY) {
+                if (recipe.bonusType().useGrindingBall() && grindingBallData.isIdentity()) {
                     ItemStack ball = GRINDING_BALL.getItemStack(inv);
                     if (!ball.isEmpty()) {
-                        IGrindingBallData data = GrindingBallManager.getData(ball);
+                        var data = ball.getOrDefault(EIODataComponents.GRINDING_BALL, GrindingBallData.IDENTITY);
                         setGrindingBallData(data);
-                        if (data != IGrindingBallData.IDENTITY) {
+                        if (!data.isIdentity()) {
                             ball.shrink(1);
                         }
                     }
@@ -167,8 +163,8 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
                     grindingBallDamage += energyConsumed;
 
                     // If its broken, go back to identity.
-                    if (grindingBallDamage >= grindingBallData.getDurability()) {
-                        setGrindingBallData(IGrindingBallData.IDENTITY);
+                    if (grindingBallDamage >= grindingBallData.durability()) {
+                        setGrindingBallData(GrindingBallData.IDENTITY);
                     }
                 }
 
@@ -183,15 +179,16 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
 
     // region Serialization
 
-    private static final String KEY_GRINDING_BALL_ID = "GrindingBallId";
+    private static final String KEY_GRINDING_BALL = "GrindingBal";
     private static final String KEY_GRINDING_BALL_DAMAGE = "GrindingBallDamage";
 
     @Override
     public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         super.saveAdditional(pTag, lookupProvider);
         craftingTaskHost.save(lookupProvider, pTag);
-        if (grindingBallData != IGrindingBallData.IDENTITY) {
-            pTag.putString(KEY_GRINDING_BALL_ID, GrindingBallManager.getId(grindingBallData).toString());
+
+        if (!grindingBallData.isIdentity()) {
+            pTag.put(KEY_GRINDING_BALL, grindingBallData.save(lookupProvider));
             pTag.putInt(KEY_GRINDING_BALL_DAMAGE, grindingBallDamage);
         }
     }
@@ -200,8 +197,9 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         super.loadAdditional(pTag, lookupProvider);
         craftingTaskHost.load(lookupProvider, pTag);
-        if (pTag.contains(KEY_GRINDING_BALL_ID)) {
-            pendingGrindingBallId = new ResourceLocation(pTag.getString(KEY_GRINDING_BALL_ID));
+
+        if (pTag.contains(KEY_GRINDING_BALL)) {
+            grindingBallData = GrindingBallData.parseOptional(lookupProvider, pTag.getCompound((KEY_GRINDING_BALL)));
         }
 
         if (pTag.contains(KEY_GRINDING_BALL_DAMAGE)) {

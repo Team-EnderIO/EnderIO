@@ -1,5 +1,7 @@
 package com.enderio.api.io.energy;
 
+import com.enderio.api.io.IIOConfigurable;
+
 /**
  * Energy IO Mode declares how Energy IO is determined using IO configs.
  */
@@ -20,7 +22,7 @@ public enum EnergyIOMode {
      * Intended for energy buffering.
      * Will allow both directions of travel.
      *
-     * @apiNote When in a sided context, utilises the {@link com.enderio.api.io.IIOConfig} to determine the direction of travel.
+     * @apiNote When in a sided context, utilises the {@link IIOConfigurable} to determine the direction of travel.
      */
     Both(true, true, true);
 

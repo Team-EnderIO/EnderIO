@@ -1,8 +1,6 @@
 package com.enderio.machines.common.recipe;
 
-import com.enderio.EnderIO;
-import com.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.api.grindingball.IGrindingBallData;
+import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.util.TagUtil;
 import com.enderio.machines.common.blockentity.SagMillBlockEntity;
@@ -16,12 +14,10 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
@@ -71,8 +67,8 @@ public record SagMillingRecipe(
         return getEnergyCost(container.getGrindingBall());
     }
 
-    public int getEnergyCost(IGrindingBallData grindingBallData) {
-        return (int) (energy * grindingBallData.getPowerUse());
+    public int getEnergyCost(GrindingBallData grindingBallData) {
+        return (int) (energy * grindingBallData.powerUse());
     }
 
     @Override
@@ -80,8 +76,8 @@ public record SagMillingRecipe(
         List<OutputStack> outputs = new ArrayList<>();
 
         // Iterate over the number of outputs
-        float outputCount = bonusType.canMultiply() ? container.getGrindingBall().getOutputMultiplier() : 1.0f;
-        float chanceMult = bonusType.doChance() ? container.getGrindingBall().getBonusMultiplier() : 1.0f;
+        float outputCount = bonusType.canMultiply() ? container.getGrindingBall().outputMultiplier() : 1.0f;
+        float chanceMult = bonusType.doChance() ? container.getGrindingBall().bonusMultiplier() : 1.0f;
 
         // Iterate over the number of outputs.
         // Without a grinding ball this only runs once.
@@ -281,14 +277,14 @@ public record SagMillingRecipe(
 
     public static class Container extends RecipeWrapper {
 
-        private final Supplier<IGrindingBallData> grindingBallData;
+        private final Supplier<GrindingBallData> grindingBallData;
 
-        public Container(IItemHandlerModifiable inv, Supplier<IGrindingBallData> data) {
+        public Container(IItemHandlerModifiable inv, Supplier<GrindingBallData> data) {
             super(inv);
             this.grindingBallData = data;
         }
 
-        public final IGrindingBallData getGrindingBall() {
+        public final GrindingBallData getGrindingBall() {
             return grindingBallData.get();
         }
     }

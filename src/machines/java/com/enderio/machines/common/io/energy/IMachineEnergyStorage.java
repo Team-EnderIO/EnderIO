@@ -1,6 +1,6 @@
 package com.enderio.machines.common.io.energy;
 
-import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.IIOConfigurable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
@@ -53,7 +53,7 @@ public interface IMachineEnergyStorage extends IEnergyStorage {
      * Get the IO config for the storage.
      * This is generally provided by the machine.
      */
-    IIOConfig getConfig();
+    IIOConfigurable getConfig();
 
     /**
      * Get the energy IO mode for the storage

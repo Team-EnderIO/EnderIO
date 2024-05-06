@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.init.EIOFluids;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -33,8 +33,9 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
         fluidHandler = createFluidHandler();
 
         // Sync fluid level.
-        addDataSlot(new IntegerNetworkDataSlot(() -> TANK.getFluidAmount(this), i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))
-        ));
+        addDataSlot(NetworkDataSlot.INT.create(
+            () -> TANK.getFluidAmount(this),
+            i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))));
     }
 
     @Override
@@ -67,7 +68,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
     @Override
     public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(this, getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);

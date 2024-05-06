@@ -2,7 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
-import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -20,7 +20,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -93,7 +92,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         fluidHandler = createFluidHandler();
 
         // Sync fluid for model
-        addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
+        addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
 
         // Wrap container for fluid recipes
         container = new TankRecipe.Container(getInventoryNN(), TANK.getTank(this));
@@ -193,7 +192,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     @Override
     public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(this, getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 onTankContentsChanged();

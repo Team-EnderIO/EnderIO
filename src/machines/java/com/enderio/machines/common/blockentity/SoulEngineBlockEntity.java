@@ -6,8 +6,7 @@ import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.capacitor.LinearScalable;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
-import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
@@ -27,7 +26,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -40,7 +38,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -76,8 +73,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, MachineBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState);
         fluidHandler = createFluidHandler();
 
-        addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
-        addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
+        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
+        addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
 
     }
 
@@ -144,7 +141,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(this, getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
@@ -214,7 +211,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
-        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, usageRate) {
+        return new MachineEnergyStorage(this, energyIOMode, capacity, usageRate) {
             @Override
             protected void onContentsChanged() {
                 setChanged();

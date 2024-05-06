@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.attachment.CoordinateSelection;
 import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorData;
+import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.base.common.component.BlockPaint;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
@@ -38,6 +39,9 @@ public class EIODataComponents {
 
     public static Supplier<DataComponentType<CoordinateSelection>> COORDINATE_SELECTION = DATA_COMPONENT_TYPES.register("coordinate_selection",
         () -> DataComponentType.<CoordinateSelection>builder().persistent(CoordinateSelection.CODEC).networkSynchronized(CoordinateSelection.STREAM_CODEC).build());
+
+    public static Supplier<DataComponentType<GrindingBallData>> GRINDING_BALL = DATA_COMPONENT_TYPES.register("grinding_ball",
+        () -> DataComponentType.<GrindingBallData>builder().persistent(GrindingBallData.CODEC).networkSynchronized(GrindingBallData.STREAM_CODEC).build());
 
     public static void register(IEventBus bus) {
         DATA_COMPONENT_TYPES.register(bus);

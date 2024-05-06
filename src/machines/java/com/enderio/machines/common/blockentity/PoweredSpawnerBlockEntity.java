@@ -5,9 +5,7 @@ import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
-import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
-import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.attachment.IRangedActor;
@@ -31,7 +29,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +44,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
     private final MachineTaskHost taskHost;
 
-    private final CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
+    private final NetworkDataSlot<ActionRange> actionRangeDataSlot;
 
     public PoweredSpawnerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState);
@@ -57,9 +54,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             setData(MachineAttachments.ACTION_RANGE, new ActionRange(4, false));
         }
 
-        actionRangeDataSlot = addDataSlot(new CodecNetworkDataSlot<>(this::getActionRange, this::internalSetActionRange, ActionRange.CODEC));
-
-        addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB), this::setEntityType));
+        actionRangeDataSlot = addDataSlot(ActionRange.DATA_SLOT_TYPE.create(this::getActionRange, this::internalSetActionRange));
+        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityType().orElse(NO_MOB), this::setEntityType));
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
             @Override

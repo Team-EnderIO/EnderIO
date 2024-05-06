@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blockentity.multienergy;
 
-import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.IIOConfigurable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
@@ -26,7 +26,7 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
 
     private long lastResetTime = 0;
 
-    public MultiEnergyStorageWrapper(IIOConfig config, EnergyIOMode ioMode, Supplier<ICapacityTier> tier) {
+    public MultiEnergyStorageWrapper(IIOConfigurable config, EnergyIOMode ioMode, Supplier<ICapacityTier> tier) {
         super(config, ioMode, () -> tier.get().getStorageCapacity(), () -> tier.get().getStorageCapacity());
         this.tier = tier;
     }

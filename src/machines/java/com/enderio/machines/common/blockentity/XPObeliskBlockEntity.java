@@ -3,7 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class XPObeliskBlockEntity extends MachineBlockEntity implements IFluidTankUser {
 
-    IntegerNetworkDataSlot xpTankDataSlot;
+    private final NetworkDataSlot<Integer> xpTankDataSlot;
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
 
@@ -34,7 +34,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements IFluidTa
         super(MachineBlockEntities.XP_OBELISK.get(), worldPosition, blockState);
         fluidHandler = createFluidHandler();
 
-        this.xpTankDataSlot = new IntegerNetworkDataSlot(() -> TANK.getFluidAmount(this),
+        this.xpTankDataSlot = NetworkDataSlot.INT.create(() -> TANK.getFluidAmount(this),
             amount -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), amount)));
         addDataSlot(xpTankDataSlot);
     }
@@ -52,7 +52,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements IFluidTa
 
     @Override
     public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(this, getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);

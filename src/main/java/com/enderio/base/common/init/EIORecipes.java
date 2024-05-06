@@ -2,7 +2,6 @@ package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
-import com.enderio.base.common.recipe.GrindingBallRecipe;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
 import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
 import com.enderio.core.common.recipes.WrappedShapedRecipe;
@@ -19,8 +18,6 @@ import java.util.function.Supplier;
 public class EIORecipes {
     private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, EnderIO.MODID);
     private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, EnderIO.MODID);
-
-    public static final RecipeTypeSerializerPair<GrindingBallRecipe, GrindingBallRecipe.Serializer> GRINDING_BALL = register("grinding_ball", GrindingBallRecipe.Serializer::new);
 
     public static final RecipeTypeSerializerPair<FireCraftingRecipe, FireCraftingRecipe.Serializer> FIRE_CRAFTING = register("fire_crafting", FireCraftingRecipe.Serializer::new);
 

@@ -3,8 +3,8 @@ package com.enderio.core.common.blockentity;
 import com.enderio.api.UseOnly;
 import com.enderio.core.common.network.C2SDataSlotChange;
 import com.enderio.core.common.network.NetworkUtil;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.core.common.network.S2CDataSlotUpdate;
-import com.enderio.core.common.network.slot.NetworkDataSlot;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Base block entity class for EnderIO.
@@ -90,10 +92,7 @@ public class EnderBlockEntity extends BlockEntity {
         ListTag dataList = new ListTag();
         for (int i = 0; i < dataSlots.size(); i++) {
             var slot = dataSlots.get(i);
-            var nbt = slot.serializeNBT(registries, true);
-            if (nbt == null) {
-                continue;
-            }
+            var nbt = slot.save(registries, true);
 
             CompoundTag slotTag = new CompoundTag();
             slotTag.putInt(INDEX, i);
@@ -119,7 +118,7 @@ public class EnderBlockEntity extends BlockEntity {
             for (Tag dataEntry : dataList) {
                 if (dataEntry instanceof CompoundTag slotData) {
                     int slotIdx = slotData.getInt(INDEX);
-                    dataSlots.get(slotIdx).fromNBT(lookupProvider, slotData.get(DATA));
+                    dataSlots.get(slotIdx).parse(lookupProvider, Objects.requireNonNull(slotData.get(DATA)));
                 }
             }
 
@@ -133,11 +132,11 @@ public class EnderBlockEntity extends BlockEntity {
         RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
         int amount = 0;
         for (int i = 0; i < dataSlots.size(); i++) {
-            NetworkDataSlot<?> networkDataSlot = dataSlots.get(i);
-            if (networkDataSlot.needsUpdate()) {
+            var networkDataSlot = dataSlots.get(i);
+            if (networkDataSlot.doesNeedUpdate()) {
                 amount ++;
                 buf.writeInt(i);
-                networkDataSlot.writeBuffer(buf);
+                networkDataSlot.write(buf);
             }
         }
 
@@ -173,8 +172,8 @@ public class EnderBlockEntity extends BlockEntity {
         if (dataSlots.contains(slot)) {
             RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
             buf.writeInt(dataSlots.indexOf(slot));
-            slot.toBuffer(buf, value);
-            NetworkUtil.sendToServer(new C2SDataSlotChange(getBlockPos(), buf.array()));
+            slot.write(buf, value);
+            PacketDistributor.sendToServer(new C2SDataSlotChange(getBlockPos(), buf.array()));
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_NEIGHBORS);
         }
     }
@@ -194,7 +193,7 @@ public class EnderBlockEntity extends BlockEntity {
     public void clientHandleBufferSync(RegistryFriendlyByteBuf buf) {
         for (int amount = buf.readInt(); amount > 0; amount--) {
             int index = buf.readInt();
-            dataSlots.get(index).fromBuffer(buf);
+            dataSlots.get(index).read(buf);
         }
 
         for (Runnable task : afterDataSync) {
@@ -210,8 +209,9 @@ public class EnderBlockEntity extends BlockEntity {
         } catch (Exception e) {
             throw new IllegalStateException("Invalid buffer was passed over the network to the server.");
         }
-        dataSlots.get(index).fromBuffer(buf);
-        dataSlots.get(index).updateServerCallback();
+        dataSlots.get(index).read(buf);
+        // TODO: 20.6: Still used?
+        //dataSlots.get(index).updateServerCallback();
     }
 
     // endregion

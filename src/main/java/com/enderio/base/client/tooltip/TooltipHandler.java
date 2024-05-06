@@ -2,12 +2,10 @@ package com.enderio.base.client.tooltip;
 
 import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.api.grindingball.IGrindingBallData;
+import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.common.util.GrindingBallManager;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EntityUtil;
 import com.enderio.core.common.util.TooltipUtil;
@@ -69,12 +67,12 @@ public class TooltipHandler {
     }
 
     private static void addGrindingBallTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
-        if (GrindingBallManager.isGrindingBall(itemStack)) {
+        if (itemStack.has(EIODataComponents.GRINDING_BALL)) {
             if (showAdvanced) {
-                IGrindingBallData data = GrindingBallManager.getData(itemStack);
-                components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.getOutputMultiplier() * 100)));
-                components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.getBonusMultiplier() * 100)));
-                components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.getPowerUse() * 100)));
+                GrindingBallData data = itemStack.get(EIODataComponents.GRINDING_BALL);
+                components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.outputMultiplier() * 100)));
+                components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.bonusMultiplier() * 100)));
+                components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100)));
             } else {
                 addShowDetailsTooltip(components);
             }

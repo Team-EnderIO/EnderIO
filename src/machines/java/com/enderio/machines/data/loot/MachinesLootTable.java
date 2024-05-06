@@ -3,6 +3,7 @@ package com.enderio.machines.data.loot;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.regilite.data.RegiliteBlockLootProvider;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -28,7 +29,7 @@ public class MachinesLootTable {
                     .include(EIODataComponents.ENERGY.get())
                     //.include(MachineNBTKeys.IO_CONFIG, BlockItem.BLOCK_ENTITY_TAG + "." + MachineNBTKeys.IO_CONFIG)
                     //.include(MachineNBTKeys.REDSTONE_CONTROL, BlockItem.BLOCK_ENTITY_TAG + "." + MachineNBTKeys.REDSTONE_CONTROL)
-                    //.include(MachineNBTKeys.ITEMS, BlockItem.BLOCK_ENTITY_TAG + "." + MachineNBTKeys.ITEMS)
+                    .include(DataComponents.CONTAINER)
                 ))));
     }
 }

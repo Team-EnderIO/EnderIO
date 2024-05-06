@@ -6,7 +6,7 @@ import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
@@ -65,7 +65,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     protected final AlloySmeltingMachineTaskHost craftingTaskHost;
 
     @Nullable
-    private final EnumNetworkDataSlot<AlloySmelterMode> modeDataSlot;
+    private final NetworkDataSlot<AlloySmelterMode> modeDataSlot;
 
     public static AlloySmelterBlockEntity factory(BlockPos pWorldPosition, BlockState pBlockState) {
         return new AlloySmelterBlockEntity(MachineBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState);
@@ -80,10 +80,11 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         // This can be changed by the gui for the normal and enhanced machines.
         if (!isPrimitiveSmelter()) {
-            modeDataSlot = new EnumNetworkDataSlot<>(AlloySmelterMode.class, this::getMode, m -> {
+            modeDataSlot = AlloySmelterMode.DATA_SLOT_TYPE.create(this::getMode, m -> {
                 mode = m;
                 craftingTaskHost.newTaskAvailable();
             });
+
             addDataSlot(modeDataSlot);
         } else {
             modeDataSlot = null;

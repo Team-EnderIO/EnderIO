@@ -1,13 +1,12 @@
 package com.enderio.machines.common.io.fluid;
 
-import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.IIOConfigurable;
 import com.enderio.core.CoreNBTKeys;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -25,7 +24,7 @@ import java.util.function.IntConsumer;
 public class MachineFluidHandler implements IFluidHandler, INBTSerializable<CompoundTag> {
 
     public static final String TANK_INDEX = "Index";
-    private final IIOConfig config;
+    private final IIOConfigurable config;
     private final MachineTankLayout layout;
     private Map<Integer, MachineFluidTank> tanks =  new HashMap<>();
     private List<FluidStack> stacks;
@@ -33,7 +32,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     // Not sure if we need this but might be useful to update recipe/task if tank is filled.
     private IntConsumer changeListener = i -> {};
 
-    public MachineFluidHandler(IIOConfig config, MachineTankLayout layout) {
+    public MachineFluidHandler(IIOConfigurable config, MachineTankLayout layout) {
         this.config = config;
         this.layout = layout;
         this.stacks = NonNullList.withSize(getTanks(), FluidStack.EMPTY);
@@ -43,7 +42,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         changeListener = changeListener.andThen(callback);
     }
 
-    public final IIOConfig getConfig() {
+    public final IIOConfigurable getConfig() {
         return config;
     }
 
@@ -90,7 +89,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
             return this;
         }
 
-        if (config.getMode(side).canConnect()) {
+        if (config.getIOMode(side).canConnect()) {
             return new Sided(this, side);
         }
 
@@ -285,7 +284,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
 
         @Override
         public int fill(FluidStack resource, FluidAction action) {
-            if (master.getConfig().getMode(direction).canInput()) {
+            if (master.getConfig().getIOMode(direction).canInput()) {
                 return master.fill(resource, action);
             }
 
@@ -294,7 +293,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
 
         @Override
         public FluidStack drain(FluidStack resource, FluidAction action) {
-            if (master.getConfig().getMode(direction).canOutput()) {
+            if (master.getConfig().getIOMode(direction).canOutput()) {
                 return master.drain(resource, action);
             }
 
@@ -303,7 +302,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
 
         @Override
         public FluidStack drain(int maxDrain, FluidAction action) {
-            if (master.getConfig().getMode(direction).canOutput()) {
+            if (master.getConfig().getNextIOMode(direction).canOutput()) {
                 return master.drain(maxDrain, action);
             }
 

@@ -2,35 +2,36 @@ package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.capability.ISideConfig;
-import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.IIOConfigurable;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.IWrenchable;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
-import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
-import com.enderio.core.common.network.slot.SetNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.io.IOConfig;
+import com.enderio.machines.common.io.SidedIOConfig;
 import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -51,19 +52,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider, IWrenchable {
+public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider, IWrenchable, IIOConfigurable {
 
-    public static final ICapabilityProvider<MachineBlockEntity, Direction, ISideConfig> SIDE_CONFIG_PROVIDER =
-        (be, side) -> new SidedIOConfig(be.ioConfig, side);
+    public static final ICapabilityProvider<MachineBlockEntity, Direction, ISideConfig> SIDE_CONFIG_PROVIDER = SidedIOConfig::new;
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER =
         (be, side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
 
     // region IO Configuration
+    private final IOConfig defaultIOConfig;
 
-    private final IIOConfig ioConfig;
-
-    public static final ModelProperty<IIOConfig> IO_CONFIG_PROPERTY = new ModelProperty<>();
+    public static final ModelProperty<IIOConfigurable> IO_CONFIG_PROPERTY = new ModelProperty<>();
 
     private ModelData modelData = ModelData.EMPTY;
 
@@ -78,8 +77,11 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // region Common Dataslots
 
-    private final EnumNetworkDataSlot<RedstoneControl> redstoneControlDataSlot;
-    private final NBTSerializableNetworkDataSlot<IIOConfig> ioConfigDataSlot;
+    public static final NetworkDataSlot.CodecType<RedstoneControl> REDSTONE_CONTROL_DATA_SLOT_TYPE
+        = new NetworkDataSlot.CodecType<>(RedstoneControl.CODEC, RedstoneControl.STREAM_CODEC.cast());
+
+    private final NetworkDataSlot<RedstoneControl> redstoneControlDataSlot;
+    private final @Nullable NetworkDataSlot<IOConfig> ioConfigDataSlot;
 
     // endregion
 
@@ -89,7 +91,11 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         super(type, worldPosition, blockState);
 
         // Create IO Config.
-        this.ioConfig = createIOConfig();
+        this.defaultIOConfig = getDefaultIOConfig();
+
+        if (!this.hasData(MachineAttachments.IO_CONFIG)) {
+            this.setData(MachineAttachments.IO_CONFIG, defaultIOConfig);
+        }
 
         // If the machine declares an inventory layout, use it to create a handler
         MachineInventoryLayout slotLayout = getInventoryLayout();
@@ -100,93 +106,144 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         if (supportsRedstoneControl()) {
-            redstoneControlDataSlot = addDataSlot(new EnumNetworkDataSlot<>(RedstoneControl.class,
-                this::getRedstoneControl, this::internalSetRedstoneControl));
+            redstoneControlDataSlot = addDataSlot(REDSTONE_CONTROL_DATA_SLOT_TYPE.create(
+                this::getRedstoneControl,
+                this::internalSetRedstoneControl));
         } else {
             redstoneControlDataSlot = null;
         }
 
         // Register sync slot for ioConfig and setup model data.
-        ioConfigDataSlot = addDataSlot(new NBTSerializableNetworkDataSlot<>(this::getIOConfig, () -> {
-            if (level != null && level.isClientSide()) {
-                onIOConfigChanged();
-            }
-            level.invalidateCapabilities(getBlockPos()); //TODO: NEO-PORT:
-        }));
+        if (isIOConfigMutable()) {
+            ioConfigDataSlot = addDataSlot(IOConfig.DATA_SLOT_TYPE.create(this::getIOConfig, v -> {
+                setIOConfig(v);
 
-        addDataSlot(new SetNetworkDataSlot<>(this::getMachineStates, l -> states = l, MachineState::toNBT , MachineState::fromNBT, MachineState::toBuffer, MachineState::fromBuffer ));
-    }
-
-    // region IO Config
-
-    /**
-     * Create the IO Config.
-     * Override and return FixedIOConfig to stop it from being configurable.
-     * Must never be null!
-     */
-    protected IIOConfig createIOConfig() {
-        return new IOConfig() {
-            @Override
-            protected void onChanged(Direction side, IOMode oldMode, IOMode newMode) {
-                if (level == null) {
-                    return;
+                if (level != null && level.isClientSide()) {
+                    onIOConfigChanged();
                 }
 
-                // Mark entity as changed.
-                setChanged();
-
-                // Invalidate capabilities
-                level.invalidateCapabilities(getBlockPos());
-
-                // Notify neighbors of update
-                level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
-
-                // Mark change
-                onIOConfigChanged(side, oldMode, newMode);
-            }
-
-            @Override
-            protected Direction getBlockFacing() {
-                BlockState state = getBlockState();
-                if (state.hasProperty(MachineBlock.FACING)) {
-                    return getBlockState().getValue(MachineBlock.FACING);
-                }
-
-                return super.getBlockFacing();
-            }
-
-            @Override
-            public boolean supportsMode(Direction side, IOMode mode) {
-                return supportsIOMode(side, mode);
-            }
-        };
-    }
-
-    protected void onIOConfigChanged(Direction side, IOMode oldMode, IOMode newMode) {
-        if (level != null && level.isClientSide()) {
-            clientUpdateSlot(ioConfigDataSlot, getIOConfig());
+                level.invalidateCapabilities(getBlockPos()); //TODO: NEO-PORT:
+            }));
+        } else {
+            ioConfigDataSlot = null;
         }
+
+        addDataSlot(MachineState.DATA_SLOT_TYPE.create(this::getMachineStates, l -> states = l));
+    }
+
+    // region New IO Config
+
+    public IOConfig getDefaultIOConfig() {
+        return IOConfig.empty();
+    }
+
+    public final IOConfig getIOConfig() {
+        if (isIOConfigMutable()) {
+            return getData(MachineAttachments.IO_CONFIG);
+        }
+
+        return defaultIOConfig;
     }
 
     /**
-     * Get the IO Config for this machine.
+     * Avoid state-based conditionals in here as this is called once in the constructor to determine whether to sync.
+     * @return Whether the player can edit the IO Config.
      */
-    public final IIOConfig getIOConfig() {
-        return this.ioConfig;
+    public boolean isIOConfigMutable() {
+        return true;
+    }
+
+    /**
+     * @return Whether the block model should show the IO config states.
+     */
+    public boolean shouldRenderIOConfigOverlay() {
+        return isIOConfigMutable();
+    }
+
+    public final IOMode getIOMode(Direction side) {
+        return getIOConfig().getMode(translateIOSide(side));
     }
 
     /**
      * Override to declare custom constraints on IOMode's for sides of blocks.
      */
     @SuppressWarnings("unused")
-    protected boolean supportsIOMode(Direction side, IOMode mode) {
+    public boolean supportsIOMode(Direction side, IOMode mode) {
         return true;
+    }
+
+    public final void setIOMode(Direction side, IOMode mode) {
+        if (!isIOConfigMutable()) {
+            throw new IllegalStateException("Cannot edit fixed IO mode.");
+        }
+
+        if (!supportsIOMode(side, mode)) {
+            throw new IllegalStateException("Cannot use this mode on this side.");
+        }
+
+        Direction localSide = translateIOSide(side);
+
+        var ioConfig = getIOConfig();
+        var oldMode = ioConfig.getMode(localSide);
+        var newIOConfig = ioConfig.withMode(localSide, mode);
+        setIOConfig(newIOConfig);
+
+        // Fire change event
+        onIOConfigChanged(side, oldMode, mode);
+    }
+
+    private void setIOConfig(IOConfig config) {
+        if (!isIOConfigMutable()) {
+            throw new IllegalStateException("Cannot set IO config when isIOConfigMutable is false.");
+        }
+
+        setData(MachineAttachments.IO_CONFIG, config);
+
+        if (level == null) {
+            return;
+        }
+
+        // Mark entity as changed.
+        setChanged();
+
+        // Invalidate capabilities
+        level.invalidateCapabilities(getBlockPos());
+
+        // Notify neighbors of update
+        level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+    }
+
+    protected void onIOConfigChanged(Direction side, IOMode oldMode, IOMode newMode) {
+        if (level != null && level.isClientSide() && isIOConfigMutable()) {
+            clientUpdateSlot(ioConfigDataSlot, getIOConfig());
+        }
+    }
+
+    private Direction translateIOSide(Direction side) {
+        // The block faces with its southern face. So the back of the machine.
+        Direction south = getBlockFacing();
+        return switch (side) {
+            case NORTH -> south.getOpposite();
+            case SOUTH -> south;
+            case WEST -> south.getCounterClockWise();
+            case EAST -> south.getClockWise();
+            default -> side;
+        };
+    }
+
+    protected Direction getBlockFacing() {
+        BlockState state = getBlockState();
+        if (state.hasProperty(MachineBlock.FACING)) {
+            return getBlockState().getValue(MachineBlock.FACING);
+        }
+
+        return Direction.SOUTH;
     }
 
     @NotNull
     @Override
     public ModelData getModelData() {
-        return getIOConfig().renderOverlay() ? modelData : ModelData.EMPTY;
+        return shouldRenderIOConfigOverlay() ? modelData : ModelData.EMPTY;
     }
 
     private void onIOConfigChanged() {
@@ -194,31 +251,12 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             return;
         }
 
-        if (ioConfig.renderOverlay()) {
-            modelData = modelData.derive().with(IO_CONFIG_PROPERTY, ioConfig).build();
+        if (shouldRenderIOConfigOverlay()) {
+            modelData = modelData.derive().with(IO_CONFIG_PROPERTY, this).build();
             requestModelDataUpdate();
         }
 
         this.level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
-    }
-
-    // TODO: Not a big fan of how this works now.
-    //       Might rework IIOConfig to serve ISideConfig through getSide(...) in future.
-    private record SidedIOConfig(IIOConfig config, Direction side) implements ISideConfig {
-        @Override
-        public IOMode getMode() {
-            return config.getMode(side);
-        }
-
-        @Override
-        public void setMode(IOMode mode) {
-            config.setMode(side, mode);
-        }
-
-        @Override
-        public void cycleMode() {
-            config.cycleMode(side);
-        }
     }
 
     // endregion
@@ -277,7 +315,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      * Called to create an item handler if a slot layout is provided.
      */
     protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
-        return new MachineInventory(getIOConfig(), layout) {
+        return new MachineInventory(this, layout) {
             @Override
             protected void onContentsChanged(int slot) {
                 onInventoryContentsChanged(slot);
@@ -340,7 +378,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      */
     private void forceResources() {
         for (Direction direction : Direction.values()) {
-            if (ioConfig.getMode(direction).canForce()) {
+            if (getIOMode(direction).canForce()) {
                 // TODO: Maybe some kind of resource distributor so that items are transmitted evenly around? rather than taking the order of Direction.values()
                 moveItems(direction);
                 moveFluids(direction);
@@ -358,7 +396,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             return;
         }
 
-        TransferUtil.distributeItems(ioConfig.getMode(side), selfHandler, otherHandler);
+        TransferUtil.distributeItems(getIOMode(side), selfHandler, otherHandler);
     }
 
     /**
@@ -382,9 +420,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         super.saveAdditional(pTag, lookupProvider);
 
-        // Save io config.
-        pTag.put(MachineNBTKeys.IO_CONFIG, getIOConfig().serializeNBT(lookupProvider));
-
         if (this.inventory != null) {
             pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT(lookupProvider));
         }
@@ -392,9 +427,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        // Load io config.
-        ioConfig.deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.IO_CONFIG));
-
         if (this.inventory != null) {
             inventory.deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.ITEMS));
         }
@@ -405,6 +437,31 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         super.loadAdditional(pTag, lookupProvider);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+
+        if (this.inventory != null) {
+            this.inventory.copyFromItem(components.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        if (this.inventory != null) {
+            components.set(DataComponents.CONTAINER, this.inventory.toItemContents());
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove(MachineNBTKeys.ITEMS);
     }
 
     // endregion
@@ -460,8 +517,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         } else {
             // Cycle side config
             if (level.isClientSide()) {
-                if (side != null) {
-                    ioConfig.cycleMode(side); // TODO: Maybe a check to see if we can cycle?
+                if (side != null && isIOConfigMutable()) {
+                    cycleIOMode(side);
                 }
             }
         }

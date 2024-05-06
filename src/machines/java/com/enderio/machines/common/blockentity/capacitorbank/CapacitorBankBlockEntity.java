@@ -3,20 +3,15 @@ package com.enderio.machines.common.blockentity.capacitorbank;
 import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.core.common.network.slot.ListNetworkDataSlot;
-import com.enderio.core.common.network.slot.LongNetworkDataSlot;
-import com.enderio.core.common.network.slot.NBTSerializingNetworkDataSlot;
-import com.enderio.core.common.network.slot.NetworkDataSlot;
-import com.enderio.machines.common.MachineNBTKeys;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyNode;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyStorageWrapper;
-import com.enderio.machines.common.blockentity.sync.LargeMachineEnergyDataSlot;
+import com.enderio.machines.common.blockentity.sync.LargeEnergyData;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
-import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.menu.CapacitorBankMenu;
 import dev.gigaherz.graph3.Graph;
@@ -33,10 +28,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -66,23 +58,28 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
        return map;
     });
 
+    public static final NetworkDataSlot.CodecType<Map<Direction, DisplayMode>> DISPLAY_MODE_MAP_DATA_SLOT_TYPE =
+        NetworkDataSlot.CodecType.createMap(Direction.CODEC, DisplayMode.CODEC, Direction.STREAM_CODEC.cast(), DisplayMode.STREAM_CODEC.cast());
+
+    public static final NetworkDataSlot.CodecType<List<BlockPos>> POSITION_LIST_DATA_SLOT_TYPE =
+        NetworkDataSlot.CodecType.createList(BlockPos.CODEC, BlockPos.STREAM_CODEC.cast());
+
     public CapacitorBankBlockEntity(BlockPos worldPosition, BlockState blockState, CapacitorTier tier) {
         super(EnergyIOMode.Both, new FixedScalable(tier::getStorageCapacity), new FixedScalable(tier::getStorageCapacity), MachineBlockEntities.CAPACITOR_BANKS.get(tier).get(), worldPosition, blockState);
         this.tier = tier;
         this.node = new MultiEnergyNode(() -> energyStorage, () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
-        addDataSlot(new LongNetworkDataSlot(() -> addedEnergy, syncAddedEnergy -> addedEnergy = syncAddedEnergy));
-        addDataSlot(new LongNetworkDataSlot(() -> removedEnergy, syncRemovedEnergy-> removedEnergy = syncRemovedEnergy));
-        addDataSlot(new ConfigurablesDataSlot());
-        addDataSlot(new NBTSerializingNetworkDataSlot<>(() -> displayModes, (modes, lookupProvider) -> saveDisplayModes(), (modes, lookupProvider, nbt) -> loadDisplayModes(nbt), (modes, friendlyByteBuf) -> friendlyByteBuf.writeNbt(saveDisplayModes()), friendlyByteBuf -> {
-            CompoundTag tag = friendlyByteBuf.readNbt();
-            loadDisplayModes(tag);
-            return displayModes;
-        } ));
+
+        addDataSlot(NetworkDataSlot.LONG.create(() -> addedEnergy, data -> addedEnergy = data));
+        addDataSlot(NetworkDataSlot.LONG.create(() -> removedEnergy, data -> removedEnergy = data));
+        addDataSlot(POSITION_LIST_DATA_SLOT_TYPE.create(this::getPositions, this::setPositions));
+        addDataSlot(DISPLAY_MODE_MAP_DATA_SLOT_TYPE.create(() -> displayModes, displayModes::putAll));
     }
 
     @Override
     public NetworkDataSlot<?> createEnergyDataSlot() {
-        return new LargeMachineEnergyDataSlot(() -> (ILargeMachineEnergyStorage) getExposedEnergyStorage(), storage -> clientEnergyStorage = (IMachineEnergyStorage) storage);
+        return LargeEnergyData.DATA_SLOT_TYPE.create(
+            () -> LargeEnergyData.from((ILargeMachineEnergyStorage) getExposedEnergyStorage()),
+            energyData -> clientEnergyStorage = energyData.toImmutableStorage());
     }
 
     @Nullable
@@ -93,7 +90,7 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
 
     @Override
     public @Nullable MachineEnergyStorage createExposedEnergyStorage() {
-        return new MultiEnergyStorageWrapper(getIOConfig(), EnergyIOMode.Both, () -> tier);
+        return new MultiEnergyStorageWrapper(this, EnergyIOMode.Both, () -> tier);
     }
 
     @Override
@@ -252,17 +249,6 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
             }
         }
         return positions;
-    }
-
-    private class ConfigurablesDataSlot extends ListNetworkDataSlot<BlockPos, CompoundTag> {
-        ConfigurablesDataSlot() {
-            super(CapacitorBankBlockEntity.this::getPositions, CapacitorBankBlockEntity.this::setPositions, blockPos -> {
-                CompoundTag tag = new CompoundTag();
-                tag.putLong(MachineNBTKeys.BLOCK_POS, blockPos.asLong());
-                return tag;
-            }, compoundTag -> BlockPos.of(compoundTag.getLong(MachineNBTKeys.BLOCK_POS)), (blockPos, friendlyByteBuf) -> friendlyByteBuf.writeLong(blockPos.asLong()),
-                friendlyByteBuf -> BlockPos.of(friendlyByteBuf.readLong()));
-        }
     }
 
     public boolean onShiftRightClick(Direction direction, Player player) {

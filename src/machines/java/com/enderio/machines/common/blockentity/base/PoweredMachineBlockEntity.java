@@ -5,12 +5,13 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.blockentity.IMachineInstall;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.api.capacitor.CapacitorData;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
-import com.enderio.core.common.network.slot.NetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.MachineState;
-import com.enderio.machines.common.blockentity.sync.MachineEnergyNetworkDataSlot;
+import com.enderio.machines.common.blockentity.sync.EnergySyncData;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
@@ -19,6 +20,7 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
@@ -79,7 +81,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     }
 
     public NetworkDataSlot<?> createEnergyDataSlot() {
-        return new MachineEnergyNetworkDataSlot(this::getExposedEnergyStorage, storage -> clientEnergyStorage = storage);
+        return EnergySyncData.DATA_SLOT_TYPE.create(() -> EnergySyncData.from(getExposedEnergyStorage()), v -> clientEnergyStorage = v.toImmutableStorage());
     }
 
     @Override
@@ -207,7 +209,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
      * Override this to customise the behaviour of the energy storage.
      */
     protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
-        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, usageRate) {
+        return new MachineEnergyStorage(this, energyIOMode, capacity, usageRate) {
             @Override
             protected void onContentsChanged() {
                 setChanged();
@@ -271,7 +273,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             cacheCapacitorData();
         }
 
-        return cachedCapacitorData.equals(CapacitorData.NONE);
+        return !cachedCapacitorData.equals(CapacitorData.NONE);
     }
 
     public ItemStack getCapacitorItem() {
@@ -337,14 +339,15 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     // region Serialization
 
+    // TODO: Energy not loading correctly...
     @Override
     public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
+
         var energyStorage = getEnergyStorage();
         if (energyStorage instanceof MachineEnergyStorage storage) {
             pTag.put(MachineNBTKeys.ENERGY, storage.serializeNBT(lookupProvider));
         }
-
-        super.saveAdditional(pTag, lookupProvider);
     }
 
     @Override
@@ -360,6 +363,25 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
         updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+        energyStorage.setEnergyStored(components.getOrDefault(EIODataComponents.ENERGY, 0));
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        components.set(EIODataComponents.ENERGY, energyStorage.getEnergyStored());
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove(MachineNBTKeys.ENERGY);
     }
 
     // endregion
