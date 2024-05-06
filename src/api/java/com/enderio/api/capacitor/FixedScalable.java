@@ -10,12 +10,12 @@ public record FixedScalable(Supplier<Integer> value) implements ICapacitorScalab
     public static final FixedScalable ZERO = new FixedScalable(() -> 0);
 
     @Override
-    public Supplier<Float> scaleF(Supplier<ICapacitorData> data) {
+    public Supplier<Float> scaleF(Supplier<CapacitorData> data) {
         return () -> (float) value.get();
     }
 
     @Override
-    public Supplier<Integer> scaleI(Supplier<ICapacitorData> data) {
+    public Supplier<Integer> scaleI(Supplier<CapacitorData> data) {
         return value;
     }
 }

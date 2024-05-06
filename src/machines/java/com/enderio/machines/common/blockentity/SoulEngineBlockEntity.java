@@ -23,9 +23,11 @@ import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -37,6 +39,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -50,7 +53,7 @@ import java.util.function.Supplier;
 
 import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements IFluidTankUser {
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
@@ -59,7 +62,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> 1);
 
     private static final String BURNED_TICKS = "BurnedTicks";
-    private StoredEntityData entityData = StoredEntityData.empty();
+    private StoredEntityData entityData = StoredEntityData.EMPTY;
     public static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
@@ -87,8 +90,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
     @Override
     public void serverTick() {
-        if (reloadCache != reload && entityData != StoredEntityData.empty() && entityData.getEntityType().isPresent()) {
-            Optional<EngineSoul.SoulData> op = EngineSoul.ENGINE.matches(entityData.getEntityType().get());
+        if (reloadCache != reload && entityData.hasEntity()) {
+            Optional<EngineSoul.SoulData> op = EngineSoul.ENGINE.matches(entityData.entityType().get());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
@@ -96,12 +99,12 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
             producePower();
         }
 
-        updateMachineState(MachineState.NOT_SOULBOUND, soulData == null || entityData.getEntityType().isEmpty());
+        updateMachineState(MachineState.NOT_SOULBOUND, soulData == null || entityData.entityType().isEmpty());
         super.serverTick();
     }
 
     public Optional<ResourceLocation> getEntityType() {
-        return entityData.getEntityType();
+        return entityData.entityType();
     }
 
     public void setEntityType(ResourceLocation entityType) {
@@ -220,20 +223,19 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
             }
         };
     }
-
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
         pTag.putInt(BURNED_TICKS, burnedTicks);
-        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.serializeNBT());
+        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(lookupProvider));
         saveTank(pTag);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
         burnedTicks = pTag.getInt(BURNED_TICKS);
-        entityData.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+        entityData = StoredEntityData.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER,

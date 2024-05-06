@@ -18,6 +18,7 @@ import com.enderio.machines.common.menu.SlicerMenu;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SlicingRecipe;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,9 +30,7 @@ import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.TierSortingRegistry;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
 
@@ -113,7 +112,9 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
     private boolean validAxe(int slot, ItemStack stack) {
         if (stack.getItem() instanceof AxeItem axeItem) {
-            return TierSortingRegistry.getSortedTiers().indexOf(axeItem.getTier()) > TierSortingRegistry.getSortedTiers().indexOf(Tiers.WOOD);
+            // TODO: 20.6: Need a better alternative.
+            //return TierSortingRegistry.getSortedTiers().indexOf(axeItem.getTier()) > TierSortingRegistry.getSortedTiers().indexOf(Tiers.WOOD);
+            return axeItem.getTier() != Tiers.WOOD;
         }
         return false;
     }
@@ -147,8 +148,8 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
                     access.getItemStack(inv).shrink(1);
                 }
 
-                AXE.getItemStack(inv).hurt(1, level.getRandom(), null);
-                SHEARS.getItemStack(inv).hurt(1, level.getRandom(), null);
+                AXE.getItemStack(inv).hurtAndBreak(1, level.getRandom(), null, () -> {});
+                SHEARS.getItemStack(inv).hurtAndBreak(1, level.getRandom(), null, () -> {});
             }
         };
     }

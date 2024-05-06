@@ -59,8 +59,8 @@ public class TooltipHandler {
         if (CapacitorUtil.isCapacitor(itemStack)) {
             CapacitorUtil.getCapacitorData(itemStack).ifPresent(data -> {
                 NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-                components.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, fmt.format(data.getBase())));
-                for (Map.Entry<CapacitorModifier, Float> modifier : data.getAllModifiers().entrySet()) {
+                components.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, fmt.format(data.base())));
+                for (Map.Entry<CapacitorModifier, Float> modifier : data.modifiers().entrySet()) {
                     components.add(TooltipUtil.styledWithArgs(new ResourceLocation("tooltip", modifier.getKey().modifierId.toLanguageKey()), fmt.format(modifier.getValue())));
                 }
             });

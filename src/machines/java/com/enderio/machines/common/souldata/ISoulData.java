@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 public interface ISoulData {
 
     /**
-     * Resource Location of the entitytype. This is used to speed up searching for the correct one.
+     * Resource Location of the entityType. This is used to speed up searching for the correct one.
      */
     ResourceLocation getKey();
 }

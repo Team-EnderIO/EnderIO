@@ -87,9 +87,9 @@ public record OutputStack(Either<ItemStack, FluidStack> stack) {
     public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
         if (isItem()) {
-            tag.put(CoreNBTKeys.ITEM, stack.left().get().save(lookupProvider));
+            tag.put(CoreNBTKeys.ITEM, stack.left().get().saveOptional(lookupProvider));
         } else if (isFluid()) {
-            tag.put(CoreNBTKeys.FLUID, stack.right().get().save(lookupProvider));
+            tag.put(CoreNBTKeys.FLUID, stack.right().get().saveOptional(lookupProvider));
         }
         return tag;
     }
@@ -99,15 +99,9 @@ public record OutputStack(Either<ItemStack, FluidStack> stack) {
      */
     public static OutputStack fromNBT(HolderLookup.Provider lookupProvider, CompoundTag tag) {
         if (tag.contains(CoreNBTKeys.ITEM)) {
-            var itemStack = ItemStack.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
-                .getOrThrow().getFirst();
-
-            return OutputStack.of(itemStack);
+            return OutputStack.of(ItemStack.parseOptional(lookupProvider, tag));
         } else if (tag.contains(CoreNBTKeys.FLUID)) {
-            var fluidStack = FluidStack.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
-                .getOrThrow().getFirst();
-
-            return OutputStack.of(fluidStack);
+            return OutputStack.of(FluidStack.parseOptional(lookupProvider, tag));
         }
         return OutputStack.EMPTY;
     }

@@ -19,13 +19,13 @@ public class FluidStackNetworkDataSlot extends NetworkDataSlot<FluidStack> {
 
     @Override
     public Tag serializeValueNBT(HolderLookup.Provider lookupProvider, FluidStack value) {
-        return value.save(lookupProvider);
+        return value.saveOptional(lookupProvider);
     }
 
     @Override
     protected FluidStack valueFromNBT(HolderLookup.Provider lookupProvider, Tag nbt) {
         if (nbt instanceof CompoundTag compoundTag) {
-            return FluidStack.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nbt).result().get().getFirst();
+            return FluidStack.parseOptional(lookupProvider, compoundTag);
         } else {
             throw new IllegalStateException("Invalid fluidstack/compound tag was passed over the network.");
         }

@@ -4,6 +4,7 @@ import com.enderio.api.UseOnly;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
 import com.enderio.machines.common.blockentity.task.IMachineTask;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.LogicalSide;
@@ -59,7 +60,7 @@ public abstract class MachineTaskHost {
      * Load the task from NBT.
      */
     @Nullable
-    protected abstract IMachineTask loadTask(CompoundTag nbt);
+    protected abstract IMachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt);
 
     // endregion
 
@@ -127,7 +128,7 @@ public abstract class MachineTaskHost {
 
         // Load any pending tasks.
         if (pendingTask != null) {
-            currentTask = loadTask(pendingTask);
+            currentTask = loadTask(getLevel().registryAccess(), pendingTask);
             pendingTask = null;
         }
 
@@ -143,13 +144,13 @@ public abstract class MachineTaskHost {
 
     private static final String KEY_TASK = "Task";
 
-    public void save(CompoundTag tag) {
+    public void save(HolderLookup.Provider lookupProvider, CompoundTag tag) {
         if (hasTask()) {
-            tag.put(KEY_TASK, getCurrentTask().serializeNBT());
+            tag.put(KEY_TASK, getCurrentTask().serializeNBT(lookupProvider));
         }
     }
 
-    public void load(CompoundTag tag) {
+    public void load(HolderLookup.Provider lookupProvider, CompoundTag tag) {
         hasLoaded = true;
 
         if (levelSupplier.get() == null) {
@@ -158,7 +159,7 @@ public abstract class MachineTaskHost {
             }
         } else {
             if (tag.contains(KEY_TASK)) {
-                currentTask = loadTask(tag.getCompound(KEY_TASK));
+                currentTask = loadTask(lookupProvider, tag.getCompound(KEY_TASK));
             } else {
                 currentTask = getNewTask();
             }

@@ -20,6 +20,7 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -377,24 +378,24 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
 
         // Save io config.
-        pTag.put(MachineNBTKeys.IO_CONFIG, getIOConfig().serializeNBT());
+        pTag.put(MachineNBTKeys.IO_CONFIG, getIOConfig().serializeNBT(lookupProvider));
 
         if (this.inventory != null) {
-            pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
+            pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT(lookupProvider));
         }
     }
 
     @Override
-    public void load(CompoundTag pTag) {
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         // Load io config.
-        ioConfig.deserializeNBT(pTag.getCompound(MachineNBTKeys.IO_CONFIG));
+        ioConfig.deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.IO_CONFIG));
 
         if (this.inventory != null) {
-            inventory.deserializeNBT(pTag.getCompound(MachineNBTKeys.ITEMS));
+            inventory.deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.ITEMS));
         }
 
         // For rendering io overlays after placed by an nbt filled block item
@@ -402,7 +403,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             onIOConfigChanged();
         }
 
-        super.load(pTag);
+        super.loadAdditional(pTag, lookupProvider);
     }
 
     // endregion
@@ -426,7 +427,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             return false;
         }
 
-        return pPlayer.canReach(this.worldPosition, 1.5);
+        return pPlayer.canInteractWithBlock(this.worldPosition, 1.5);
     }
 
     @UseOnly(LogicalSide.SERVER)

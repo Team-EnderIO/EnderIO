@@ -1,3 +1,4 @@
+/*
 package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIO;
@@ -72,3 +73,4 @@ public class TankCategory implements IRecipeCategory<TankRecipe> {
         }
     }
 }
+*/

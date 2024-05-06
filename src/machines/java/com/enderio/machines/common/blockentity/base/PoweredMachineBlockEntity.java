@@ -1,12 +1,11 @@
 package com.enderio.machines.common.blockentity.base;
 
-import com.enderio.api.capacitor.ICapacitorData;
 import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.blockentity.IMachineInstall;
 import com.enderio.base.common.capacitor.CapacitorUtil;
-import com.enderio.base.common.capacitor.DefaultCapacitorData;
-import com.enderio.base.common.item.capacitors.BaseCapacitorItem;
+import com.enderio.api.capacitor.CapacitorData;
+import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
@@ -19,6 +18,7 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +32,6 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -56,7 +55,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
      */
     protected IMachineEnergyStorage clientEnergyStorage = ImmutableMachineEnergyStorage.EMPTY;
 
-    private ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
+    private CapacitorData cachedCapacitorData = CapacitorData.NONE;
     private boolean capacitorCacheDirty;
     private boolean updateModel = false;
 
@@ -226,7 +225,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
      */
     @Override
     public InteractionResult tryItemInstall(ItemStack stack, UseOnContext context) {
-        if (stack.getItem() instanceof BaseCapacitorItem && requiresCapacitor() && !isCapacitorInstalled()) {
+        if (stack.getItem() instanceof CapacitorItem && requiresCapacitor() && !isCapacitorInstalled()) {
             MachineInventory inventory = getInventory();
             MachineInventoryLayout layout = getInventoryLayout();
             if (inventory != null && layout != null) {
@@ -272,7 +271,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             cacheCapacitorData();
         }
 
-        return cachedCapacitorData != DefaultCapacitorData.NONE;
+        return cachedCapacitorData.equals(CapacitorData.NONE);
     }
 
     public ItemStack getCapacitorItem() {
@@ -288,7 +287,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     /**
      * Get the capacitor data for the machine.
      */
-    public ICapacitorData getCapacitorData() {
+    public CapacitorData getCapacitorData() {
         if (capacitorCacheDirty) {
             cacheCapacitorData();
         }
@@ -323,9 +322,9 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         MachineInventoryLayout layout = getInventoryLayout();
         if (requiresCapacitor() && layout != null) {
-            cachedCapacitorData = CapacitorUtil.getCapacitorData(getCapacitorItem()).orElse(DefaultCapacitorData.NONE);
+            cachedCapacitorData = CapacitorUtil.getCapacitorData(getCapacitorItem()).orElse(CapacitorData.NONE);
         } else {
-            cachedCapacitorData = DefaultCapacitorData.NONE;
+            cachedCapacitorData = CapacitorData.NONE;
         }
     }
 
@@ -339,23 +338,23 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         var energyStorage = getEnergyStorage();
         if (energyStorage instanceof MachineEnergyStorage storage) {
-            pTag.put(MachineNBTKeys.ENERGY, storage.serializeNBT());
+            pTag.put(MachineNBTKeys.ENERGY, storage.serializeNBT(lookupProvider));
         }
 
-        super.saveAdditional(pTag);
+        super.saveAdditional(pTag, lookupProvider);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         var energyStorage = getEnergyStorage();
         if (energyStorage instanceof MachineEnergyStorage storage && pTag.contains(MachineNBTKeys.ENERGY)) {
-            storage.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENERGY));
+            storage.deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.ENERGY));
         }
 
-        super.load(pTag);
+        super.loadAdditional(pTag, lookupProvider);
 
         cacheCapacitorData();
 

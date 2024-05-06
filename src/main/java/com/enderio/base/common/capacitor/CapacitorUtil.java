@@ -1,9 +1,8 @@
 package com.enderio.base.common.capacitor;
 
-import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.api.capacitor.ICapacitorData;
-import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.api.capacitor.CapacitorData;
+import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -62,18 +61,12 @@ public class CapacitorUtil {
         return t;
     }
 
-    public static Optional<ICapacitorData> getCapacitorData(ItemStack itemStack) {
-        // Search for an ICapacitorData capability
-        var capacitorCapability = itemStack.getCapability(EIOCapabilities.CapacitorData.ITEM);
-        if (capacitorCapability != null) {
-            return Optional.of(capacitorCapability);
-        }
-
-        return Optional.empty();
+    public static Optional<CapacitorData> getCapacitorData(ItemStack itemStack) {
+        return Optional.ofNullable(itemStack.get(EIODataComponents.CAPACITOR_DATA));
     }
 
     public static boolean isCapacitor(ItemStack itemStack) {
-        return itemStack.getCapability(EIOCapabilities.CapacitorData.ITEM) != null;
+        return itemStack.has(EIODataComponents.CAPACITOR_DATA);
     }
 
     public static CapacitorModifier getRandomModifier(RandomSource randomSource) {

@@ -4,18 +4,18 @@ import com.enderio.api.travel.ITravelTarget;
 import com.enderio.base.common.handler.TravelHandler;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 
-public class TravelAnchorHud implements IGuiOverlay {
+public class TravelAnchorHud implements LayeredDraw.Layer {
     public static final TravelAnchorHud INSTANCE = new TravelAnchorHud();
 
     static final int CURSOR_GAP = 20;
@@ -23,19 +23,21 @@ public class TravelAnchorHud implements IGuiOverlay {
     static final int ITEM_SIZE = 16;
 
     @Override
-    public void render(ExtendedGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
-        Minecraft minecraft = gui.getMinecraft();
+    public void render(GuiGraphics guiGraphics, float partialTick) {
+        Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
+
+        Window window = minecraft.getWindow();
 
         if (player == null || !TravelHandler.canBlockTeleport(player)) {
             return;
         }
 
         TravelHandler.getElevatorAnchorTarget(player, Direction.UP)
-            .ifPresent(target -> showElevatorTarget(guiGraphics, minecraft.font, screenWidth, screenHeight, target, Direction.UP));
+            .ifPresent(target -> showElevatorTarget(guiGraphics, minecraft.font, window.getScreenWidth(), window.getScreenHeight(), target, Direction.UP));
 
         TravelHandler.getElevatorAnchorTarget(player, Direction.DOWN)
-            .ifPresent(target -> showElevatorTarget(guiGraphics, minecraft.font, screenWidth, screenHeight, target, Direction.DOWN));
+            .ifPresent(target -> showElevatorTarget(guiGraphics, minecraft.font, window.getScreenWidth(), window.getScreenHeight(), target, Direction.DOWN));
     }
 
     private static void showElevatorTarget(GuiGraphics guiGraphics, Font font, int screenWidth, int screenHeight, ITravelTarget target, Direction direction) {

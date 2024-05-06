@@ -25,6 +25,7 @@ import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -226,7 +227,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         protected void onDetermineOutputs(AlloySmeltingRecipe recipe) {
             // This handles the output multiplication for vanilla smelting recipes.
             if (recipe instanceof VanillaAlloySmeltingRecipe) {
-                CountedIngredient input = recipe.getInputs().get(0);
+                CountedIngredient input = recipe.inputs().get(0);
 
                 int inputCount = 0;
                 for (int i = inputs.size() - 1; i >= 0; i--) {
@@ -246,7 +247,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             MachineInventory inv = getInventory();
 
             if (recipe instanceof VanillaAlloySmeltingRecipe) {
-                CountedIngredient input = recipe.getInputs().get(0);
+                CountedIngredient input = recipe.inputs().get(0);
 
                 int consumed = 0;
                 for (int i = inputs.size() - 1; i >= 0; i--) {
@@ -259,7 +260,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 }
             } else {
                 // Track which ingredients have been consumed
-                List<CountedIngredient> inputs = recipe.getInputs();
+                List<CountedIngredient> inputs = recipe.inputs();
                 boolean[] consumed = new boolean[3];
 
                 // Iterate over the slots
@@ -346,19 +347,20 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        craftingTaskHost.save(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        craftingTaskHost.save(lookupProvider, pTag);
 
         if (!isPrimitiveSmelter()) {
             pTag.putInt(MachineNBTKeys.MACHINE_MODE, this.mode.ordinal());
         }
+
         pTag.putInt(MachineNBTKeys.PROCESSED_INPUTS, craftingTaskHost.getContainer().getInputsTaken());
-        super.saveAdditional(pTag);
+        super.saveAdditional(pTag, lookupProvider);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        craftingTaskHost.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        craftingTaskHost.load(lookupProvider, pTag);
 
         if (!isPrimitiveSmelter()) {
             try {
@@ -368,7 +370,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             }
         }
         craftingTaskHost.getContainer().setInputsTaken(pTag.getInt(MachineNBTKeys.PROCESSED_INPUTS));
-        super.load(pTag);
+        super.loadAdditional(pTag, lookupProvider);
     }
 
     public record ContainerSubWrapper(AlloySmeltingRecipe.ContainerWrapper wrapper, int index) implements Container {

@@ -3,7 +3,7 @@ package com.enderio.base.common.init;
 import com.enderio.EnderIO;
 import com.enderio.api.attachment.CoordinateSelection;
 import com.enderio.api.attachment.StoredEntityData;
-import com.enderio.base.common.capacitor.LootCapacitorData;
+import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.base.common.component.BlockPaint;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
@@ -30,8 +30,8 @@ public class EIODataComponents {
     public static Supplier<DataComponentType<StoredEntityData>> ENTITY_DATA = DATA_COMPONENT_TYPES.register("entity_data",
         () -> DataComponentType.<StoredEntityData>builder().persistent(StoredEntityData.CODEC).networkSynchronized(StoredEntityData.STREAM_CODEC).build());
 
-    public static Supplier<DataComponentType<LootCapacitorData>> CAPACITOR_DATA = DATA_COMPONENT_TYPES.register("capacitor_data",
-        () -> DataComponentType.<LootCapacitorData>builder().persistent(LootCapacitorData.CODEC).networkSynchronized(LootCapacitorData.STREAM_CODEC).build());
+    public static Supplier<DataComponentType<CapacitorData>> CAPACITOR_DATA = DATA_COMPONENT_TYPES.register("capacitor_data",
+        () -> DataComponentType.<CapacitorData>builder().persistent(CapacitorData.CODEC).networkSynchronized(CapacitorData.STREAM_CODEC).build());
 
     public static Supplier<DataComponentType<Boolean>> TOGGLED = DATA_COMPONENT_TYPES.register("toggled",
         () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build());

@@ -2,12 +2,9 @@ package com.enderio.base.common.loot;
 
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.base.common.capacitor.CapacitorUtil;
-import com.enderio.base.common.capacitor.LootCapacitorData;
-import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOLootModifiers;
-import com.google.common.base.Suppliers;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +18,6 @@ import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class SetLootCapacitorFunction extends LootItemConditionalFunction {
 
@@ -59,7 +55,7 @@ public class SetLootCapacitorFunction extends LootItemConditionalFunction {
             modifiers.put(CapacitorUtil.getRandomModifier(context.getRandom()), range.getFloat(context));
         }
 
-        stack.set(EIODataComponents.CAPACITOR_DATA, new LootCapacitorData(base, modifiers));
+        stack.set(EIODataComponents.CAPACITOR_DATA, new CapacitorData(base, modifiers));
         return stack;
     }
 

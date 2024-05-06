@@ -2,16 +2,27 @@ package com.enderio.machines.common.network;
 
 import com.enderio.EnderIO;
 import com.enderio.machines.common.souldata.EngineSoul;
+import com.enderio.machines.common.souldata.SpawnerSoul;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public record SoulEngineSoulPacket(Map<ResourceLocation, EngineSoul.SoulData> map)
     implements CustomPacketPayload {
 
-    public static final ResourceLocation ID = EnderIO.loc("soul_engine_soul");
+    public static final Type<SoulEngineSoulPacket> TYPE = new Type<>(EnderIO.loc("soul_engine_soul"));
+
+    public static StreamCodec<ByteBuf, SoulEngineSoulPacket> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, EngineSoul.STREAM_CODEC),
+        SoulEngineSoulPacket::map,
+        SoulEngineSoulPacket::new
+    );
 
     public SoulEngineSoulPacket(FriendlyByteBuf buf) {
         this(
@@ -22,18 +33,7 @@ public record SoulEngineSoulPacket(Map<ResourceLocation, EngineSoul.SoulData> ma
     }
 
     @Override
-    public void write(FriendlyByteBuf writeInto) {
-        writeInto.writeMap(map, FriendlyByteBuf::writeResourceLocation, (buf, soulData) -> {
-            buf.writeResourceLocation(soulData.entitytype());
-            buf.writeUtf(soulData.fluid());
-            buf.writeInt(soulData.powerpermb());
-            buf.writeInt(soulData.tickpermb());
-        });
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
-
-    @Override
-    public ResourceLocation id() {
-        return ID;
-    }
-
 }

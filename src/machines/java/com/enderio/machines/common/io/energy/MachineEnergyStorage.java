@@ -4,6 +4,7 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.MachineNBTKeys;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -156,14 +157,14 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
         tag.putInt(MachineNBTKeys.ENERGY_STORED, getEnergyStored());
         return tag;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         setEnergyStored(nbt.getInt(MachineNBTKeys.ENERGY_STORED));
     }
 

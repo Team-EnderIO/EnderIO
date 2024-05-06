@@ -3,9 +3,11 @@ package com.enderio.machines.common.io.fluid;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.core.CoreNBTKeys;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -109,20 +111,25 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
             if (fluid.isEmpty()) {
                 return Math.min(capacity, resource.getAmount());
             }
-            if (!fluid.isFluidEqual(resource)) {
+
+            if (!FluidStack.isSameFluidSameComponents(fluid, resource)) {
                 return 0;
             }
+
             return Math.min(capacity - fluid.getAmount(), resource.getAmount());
         }
+
         if (fluid.isEmpty()) {
-            fluid = new FluidStack(resource, Math.min(capacity, resource.getAmount()));
+            fluid = new FluidStack(resource.getFluid(), Math.min(capacity, resource.getAmount()));
             setFluidInTank(tank, fluid);
             onContentsChanged(tank);
             return fluid.getAmount();
         }
-        if (!fluid.isFluidEqual(resource)) {
+
+        if (!FluidStack.isSameFluidSameComponents(fluid, resource)) {
             return 0;
         }
+
         int filled = capacity - fluid.getAmount();
 
         if (resource.getAmount() < filled) {
@@ -131,8 +138,11 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         } else {
             fluid.setAmount(capacity);
         }
-        if (filled > 0)
+
+        if (filled > 0) {
             onContentsChanged(tank);
+        }
+
         return filled;
     }
 
@@ -227,12 +237,13 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     protected void onContentsChanged(int slot) {}
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         ListTag nbtTagList = new ListTag();
         for (int i = 0; i < getTanks(); i++) {
             CompoundTag tankTag = new CompoundTag();
             tankTag.putInt(TANK_INDEX, i);
-            stacks.get(i).writeToNBT(tankTag);
+            stacks.get(i).save(lookupProvider, tankTag);
+
             nbtTagList.add(tankTag);
         }
         CompoundTag nbt = new CompoundTag();
@@ -241,12 +252,12 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         ListTag tagList = nbt.getList(CoreNBTKeys.TANKS, Tag.TAG_COMPOUND);
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag tankTag = tagList.getCompound(i);
             int index = tankTag.getInt(TANK_INDEX);
-            stacks.set(index, FluidStack.loadFluidStackFromNBT(tankTag));
+            stacks.set(index, FluidStack.parseOptional(lookupProvider, tankTag));
         }
     }
 

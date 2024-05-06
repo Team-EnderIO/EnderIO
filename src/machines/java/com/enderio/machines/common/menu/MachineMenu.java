@@ -105,7 +105,7 @@ public abstract class MachineMenu<T extends EnderBlockEntity> extends SyncedMenu
                     if (!(slot instanceof MachineSlot machineSlot) || machineSlot.canQuickInsertStack()) {
 
                         ItemStack itemstack = slot.getItem();
-                        if (!itemstack.isEmpty() && ItemStack.isSameItemSameTags(stack, itemstack)) {
+                        if (!itemstack.isEmpty() && ItemStack.isSameItemSameComponents(stack, itemstack)) {
                             int j = itemstack.getCount() + stack.getCount();
                             int maxSize = Math.min(slot.getMaxStackSize(), stack.getMaxStackSize());
                             if (j <= maxSize) {
@@ -181,7 +181,7 @@ public abstract class MachineMenu<T extends EnderBlockEntity> extends SyncedMenu
             ItemStack slotItem = ghostSlot.getItem();
             ItemStack carriedItem = this.getCarried();
             if(!slotItem.isEmpty() && !carriedItem.isEmpty() && ghostSlot.mayPlace(carriedItem)){
-                if(!ItemStack.isSameItemSameTags(slotItem, carriedItem)){
+                if(!ItemStack.isSameItemSameComponents(slotItem, carriedItem)){
                     int count = Math.min(carriedItem.getCount(), ghostSlot.getMaxStackSize(carriedItem));
                     ghostSlot.setByPlayer(carriedItem.copyWithCount(count));
                     ghostSlot.setChanged();

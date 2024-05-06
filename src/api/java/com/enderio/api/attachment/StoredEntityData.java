@@ -1,10 +1,12 @@
 package com.enderio.api.attachment;
 
+import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -15,6 +17,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.extensions.IEntityExtension;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.fluids.FluidStack;
+import org.slf4j.Logger;
 
 import java.util.Optional;
 
@@ -88,5 +92,28 @@ public record StoredEntityData(CompoundTag entityTag, float maxHealth) {
         }
 
         return Optional.empty();
+    }
+
+    private static final Logger LOGGER = LogUtils.getLogger();
+
+    public Tag save(HolderLookup.Provider lookupProvider) {
+        if (this.hasEntity()) {
+            throw new IllegalStateException("Cannot encode empty StoredEntityData");
+        } else {
+            return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
+        }
+    }
+
+    public Tag saveOptional(HolderLookup.Provider lookupProvider) {
+        return this.hasEntity() ? save(lookupProvider) : new CompoundTag();
+    }
+
+    public static Optional<StoredEntityData> parse(HolderLookup.Provider lookupProvider, Tag tag) {
+        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
+            .resultOrPartial(error -> LOGGER.error("Tried to load invalid StoredEntityData: '{}'", error));
+    }
+
+    public static StoredEntityData parseOptional(HolderLookup.Provider lookupProvider, CompoundTag tag) {
+        return tag.isEmpty() ? EMPTY : parse(lookupProvider, tag).orElse(EMPTY);
     }
 }

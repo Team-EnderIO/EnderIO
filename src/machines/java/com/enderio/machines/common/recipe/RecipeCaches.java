@@ -5,6 +5,7 @@ import com.enderio.machines.common.utility.RecipeInputCache;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -12,7 +13,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class RecipeCaches {
     public static final RecipeInputCache<AlloySmeltingRecipe.ContainerWrapper, AlloySmeltingRecipe> ALLOY_SMELTING
         = new RecipeInputCache<>(MachineRecipes.ALLOY_SMELTING.type());

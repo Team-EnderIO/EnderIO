@@ -51,7 +51,7 @@ java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 // TODO: 1.19: Tidy the divisions and what goes where.
 val subsets = listOf<String>(
         //"conduits",
-        //"machines",
+        "machines",
         //"armory"
 )
 

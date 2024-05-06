@@ -3,6 +3,7 @@ package com.enderio.machines.common.blockentity.task.host;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.recipe.MachineRecipe;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -56,13 +57,13 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Conta
     }
 
     @Override
-    protected @Nullable CraftingMachineTask<R, C> loadTask(CompoundTag nbt) {
+    protected @Nullable CraftingMachineTask<R, C> loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         if (getLevel() == null) {
             return null;
         }
 
         CraftingMachineTask<R, C> task = taskFactory.createTask(getLevel(), container, null);
-        task.deserializeNBT(nbt);
+        task.deserializeNBT(lookupProvider, nbt);
         return task;
     }
 

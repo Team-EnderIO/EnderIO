@@ -1,26 +1,35 @@
 package com.enderio.machines.common.blockentity.task;
 
+import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.enderio.machines.common.tag.MachineTags;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ByIdMap;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
@@ -30,8 +39,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.IntFunction;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class SpawnerMachineTask implements IPoweredMachineTask {
     private boolean complete;
     private int energyCost;
@@ -169,7 +179,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
                 blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
                 return false;
             }
-            if (level.noCollision(optionalEntity.getAABB(x, y, z))) {
+            if (level.noCollision(optionalEntity.getSpawnAABB(x, y, z))) {
 
                 Entity entity = null;
                 switch (spawnType) {
@@ -195,12 +205,12 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
                 }
 
                 if (entity instanceof Mob mob) { // based on vanilla spawner
-                    MobSpawnEvent.FinalizeSpawn event = EventHooks.onFinalizeSpawnSpawner(mob, level, level.getCurrentDifficultyAt(pos), null,  blockEntity.getEntityData().getEntityTag(), null);
+                    MobSpawnEvent.FinalizeSpawn event = EventHooks.onFinalizeSpawnSpawner(mob, level, level.getCurrentDifficultyAt(pos), null, null);
                     if (event == null || event.isSpawnCancelled()) {
                         blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
                         continue;
                     } else {
-                        EventHooks.onFinalizeSpawn(mob, level, event.getDifficulty(), event.getSpawnType(), event.getSpawnData(), event.getSpawnTag());
+                        EventHooks.onFinalizeSpawn(mob, level, event.getDifficulty(), event.getSpawnType(), event.getSpawnData());
                     }
                 }
 
@@ -229,14 +239,14 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
     private static final String KEY_ENERGY_CONSUMED = "EnergyConsumed";
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt(KEY_ENERGY_CONSUMED, energyConsumed);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         energyConsumed = nbt.getInt(KEY_ENERGY_CONSUMED);
     }
 
@@ -248,13 +258,19 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
     }
 
     // TODO: Might want to move this to its own file in future.
-    public enum SpawnType {
-        ENTITY_TYPE("entity_type"),
-        COPY("copy");
+    public enum SpawnType implements StringRepresentable {
+        ENTITY_TYPE(0, "entity_type"),
+        COPY(1, "copy");
 
+        public static final Codec<SpawnType> CODEC = StringRepresentable.fromEnum(SpawnType::values);
+        public static final IntFunction<SpawnType> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final StreamCodec<ByteBuf, SpawnType> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
+
+        private final int id;
         private final String name;
 
-        SpawnType(String name) {
+        SpawnType(int id, String name) {
+            this.id = id;
             this.name = name;
         }
 
@@ -269,6 +285,11 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
                 }
             }
             return DataResult.error(()->"unkown type");
+        }
+
+        @Override
+        public String getSerializedName() {
+            return name;
         }
     }
 }

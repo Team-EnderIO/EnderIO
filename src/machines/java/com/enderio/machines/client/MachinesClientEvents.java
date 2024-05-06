@@ -7,12 +7,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class MachinesClientEvents {
     private static boolean LAST_JUMPING = false;
     private static boolean LAST_SNEAKING = false;
@@ -64,7 +65,8 @@ public class MachinesClientEvents {
             .isEmpty() && event.getItemStack().isEmpty()) {
             if (TravelHandler.blockTeleport(event.getLevel(), event.getEntity(), true)) {
                 player.swing(event.getHand(), true);
-                event.setCancellationResult(InteractionResult.SUCCESS);
+                // TODO: 20.6: Is this important?
+                //event.setCancellationResult(InteractionResult.SUCCESS);
             }
         }
     }

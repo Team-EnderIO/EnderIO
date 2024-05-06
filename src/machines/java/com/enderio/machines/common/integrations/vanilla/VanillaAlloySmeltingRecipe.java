@@ -24,9 +24,8 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     }
 
     // Override base behaviour to insert the vanilla recipe
-
     @Override
-    public List<CountedIngredient> getInputs() {
+    public List<CountedIngredient> inputs() {
         return List.of(CountedIngredient.of(vanillaRecipe.getIngredients().get(0)));
     }
 
@@ -41,7 +40,7 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     }
 
     @Override
-    public float getExperience() {
+    public float experience() {
         return vanillaRecipe.getExperience();
     }
 

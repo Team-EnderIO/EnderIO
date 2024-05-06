@@ -29,8 +29,8 @@ public enum CapacitorModifier implements StringRepresentable {
     public static final Codec<CapacitorModifier> CODEC = StringRepresentable.fromEnum(CapacitorModifier::values);
     public static final IntFunction<CapacitorModifier> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
     public static final StreamCodec<ByteBuf, CapacitorModifier> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
-    private final int id;
 
+    private final int id;
     public final ResourceLocation modifierId;
 
     public static final List<CapacitorModifier> SELECTABLE_MODIFIERS = List.of(

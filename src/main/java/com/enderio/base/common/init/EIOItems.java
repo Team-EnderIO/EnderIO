@@ -1,7 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.capacitor.LootCapacitorData;
+import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
@@ -100,28 +100,24 @@ public class EIOItems {
     public static final RegiliteItem<CapacitorItem> BASIC_CAPACITOR = ITEM_REGISTRY
         .registerItem("basic_capacitor",
             props -> new CapacitorItem(
-                props.component(EIODataComponents.CAPACITOR_DATA, LootCapacitorData.simple(1.0f))),
-            new Item.Properties().stacksTo(1))
-        .addCapability(EIOCapabilities.CapacitorData.ITEM, CapacitorItem.CAPACITOR_DATA_PROVIDER);
+                props.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(1.0f))),
+            new Item.Properties().stacksTo(1));
 
     public static final RegiliteItem<CapacitorItem> DOUBLE_LAYER_CAPACITOR = ITEM_REGISTRY
         .registerItem("double_layer_capacitor",
             props -> new CapacitorItem(
-                props.component(EIODataComponents.CAPACITOR_DATA, LootCapacitorData.simple(2.0f))),
-            new Item.Properties().stacksTo(1))
-        .addCapability(EIOCapabilities.CapacitorData.ITEM, CapacitorItem.CAPACITOR_DATA_PROVIDER);
+                props.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(2.0f))),
+            new Item.Properties().stacksTo(1));
 
     public static final RegiliteItem<CapacitorItem> OCTADIC_CAPACITOR = ITEM_REGISTRY
         .registerItem("octadic_capacitor",
             props -> new CapacitorItem(
-                props.component(EIODataComponents.CAPACITOR_DATA, LootCapacitorData.simple(3))),
-            new Item.Properties().stacksTo(1))
-        .addCapability(EIOCapabilities.CapacitorData.ITEM, CapacitorItem.CAPACITOR_DATA_PROVIDER);
+                props.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(3))),
+            new Item.Properties().stacksTo(1));
 
     public static final RegiliteItem<CapacitorItem> LOOT_CAPACITOR = ITEM_REGISTRY
         .registerItem("loot_capacitor", CapacitorItem::new, new Item.Properties()
-            .stacksTo(1))
-        .addCapability(EIOCapabilities.CapacitorData.ITEM, CapacitorItem.CAPACITOR_DATA_PROVIDER);
+            .stacksTo(1));
 
     // endregion
 
