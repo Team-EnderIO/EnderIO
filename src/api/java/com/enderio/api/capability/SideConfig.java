@@ -5,7 +5,7 @@ import com.enderio.api.io.IOMode;
 /**
  * Capability for getting the IO mode of the side of a block.
  */
-public interface ISideConfig {
+public interface SideConfig {
     /**
      * Get the IO mode of this side.
      */

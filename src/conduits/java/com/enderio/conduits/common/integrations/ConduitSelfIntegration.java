@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.integrations;
 
-import com.enderio.api.conduit.IFacadeItem;
+import com.enderio.api.conduit.FacadeItem;
 import com.enderio.api.integration.Integration;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -11,7 +11,7 @@ public class ConduitSelfIntegration implements Integration {
 
     @Override
     public Optional<BlockState> getFacadeOf(ItemStack stack) {
-        if (stack.getItem() instanceof IFacadeItem facadeItem) {
+        if (stack.getItem() instanceof FacadeItem facadeItem) {
             return Optional.of(facadeItem.getTexture(stack));
         }
         return Optional.empty();

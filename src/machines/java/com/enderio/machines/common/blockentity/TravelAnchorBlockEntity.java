@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.api.travel.ITravelTarget;
+import com.enderio.api.travel.TravelTarget;
 import com.enderio.base.common.travel.TravelSavedData;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
@@ -98,7 +98,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     }
 
     private AnchorTravelTarget getOrCreateTravelTarget() {
-        Optional<ITravelTarget> travelTarget = getTravelData().getTravelTarget(worldPosition);
+        Optional<TravelTarget> travelTarget = getTravelData().getTravelTarget(worldPosition);
         if (travelTarget.isPresent() && travelTarget.get() instanceof AnchorTravelTarget anchorTravelTarget) {
             return anchorTravelTarget;
         }

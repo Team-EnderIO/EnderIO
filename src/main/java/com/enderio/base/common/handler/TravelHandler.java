@@ -1,20 +1,17 @@
 package com.enderio.base.common.handler;
 
 import com.enderio.api.integration.IntegrationManager;
-import com.enderio.api.travel.ITravelTarget;
+import com.enderio.api.travel.TravelTarget;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.network.RequestTravelPacket;
 import com.enderio.base.common.travel.TravelSavedData;
-import com.enderio.core.common.network.CoreNetwork;
-import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -102,7 +99,7 @@ public class TravelHandler {
         return false;
     }
 
-    public static boolean blockTeleportTo(Level level, Player player, ITravelTarget target, boolean sendToServer) {
+    public static boolean blockTeleportTo(Level level, Player player, TravelTarget target, boolean sendToServer) {
         Optional<Double> height = isTeleportPositionClear(level, target.getPos());
         if (height.isEmpty()) {
             return false;
@@ -211,7 +208,7 @@ public class TravelHandler {
         return null;
     }
 
-    public static Optional<ITravelTarget> getAnchorTarget(Player player) {
+    public static Optional<TravelTarget> getAnchorTarget(Player player) {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
         return TravelSavedData
@@ -224,7 +221,7 @@ public class TravelHandler {
             .min(Comparator.comparingDouble(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot()))));
     }
 
-    public static Optional<ITravelTarget> getElevatorAnchorTarget(Player player, Direction direction) {
+    public static Optional<TravelTarget> getElevatorAnchorTarget(Player player, Direction direction) {
         int anchorRange = BaseConfig.COMMON.ITEMS.TRAVELLING_BLOCK_TO_BLOCK_RANGE.get();
         BlockPos anchorPos = player.blockPosition().below();
 

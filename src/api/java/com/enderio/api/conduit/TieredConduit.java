@@ -5,7 +5,7 @@ import com.enderio.api.misc.Vector2i;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.LogicalSide;
 
-public abstract class TieredConduit<T extends IExtendedConduitData<T>> implements IConduitType<T> {
+public abstract class TieredConduit<T extends ExtendedConduitData<T>> implements ConduitType<T> {
     private final ResourceLocation texture;
     private final ResourceLocation type;
     private final int tier;
@@ -37,7 +37,7 @@ public abstract class TieredConduit<T extends IExtendedConduitData<T>> implement
 
 
     @Override
-    public boolean canBeReplacedBy(IConduitType<?> other) {
+    public boolean canBeReplacedBy(ConduitType<?> other) {
         if (!(other instanceof TieredConduit<?> tieredOther)) {
             return false;
         }
@@ -49,7 +49,7 @@ public abstract class TieredConduit<T extends IExtendedConduitData<T>> implement
     }
 
     @Override
-    public boolean canBeInSameBlock(IConduitType<?> other) {
+    public boolean canBeInSameBlock(ConduitType<?> other) {
         if (!(other instanceof TieredConduit<?> tieredOther)) {
             return true;
         }

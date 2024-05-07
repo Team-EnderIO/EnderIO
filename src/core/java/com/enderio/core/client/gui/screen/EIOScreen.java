@@ -92,7 +92,7 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         for (GuiEventListener widget : children()) {
-            if (widget instanceof AbstractWidget abstractWidget && abstractWidget.isActive() && widget instanceof IFullScreenListener fullScreenListener) {
+            if (widget instanceof AbstractWidget abstractWidget && abstractWidget.isActive() && widget instanceof FullScreenListener fullScreenListener) {
                 fullScreenListener.onGlobalClick(pMouseX, pMouseY);
             }
         }

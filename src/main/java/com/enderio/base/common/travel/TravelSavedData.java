@@ -1,13 +1,11 @@
 package com.enderio.base.common.travel;
 
 import com.enderio.EnderIO;
-import com.enderio.api.travel.ITravelTarget;
+import com.enderio.api.travel.TravelTarget;
 import com.enderio.api.travel.TravelRegistry;
 import com.enderio.base.common.network.AddTravelTargetPacket;
 import com.enderio.base.common.network.RemoveTravelTargetPacket;
 import com.enderio.base.common.network.SyncTravelDataPacket;
-import com.enderio.core.common.network.CoreNetwork;
-import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -21,7 +19,6 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.Collection;
@@ -35,7 +32,7 @@ public class TravelSavedData extends SavedData {
 
     private static final TravelSavedData CLIENT_INSTANCE = new TravelSavedData();
     public static final String TARGETS = "targets";
-    private final Map<BlockPos, ITravelTarget> travelTargets = new HashMap<>();
+    private final Map<BlockPos, TravelTarget> travelTargets = new HashMap<>();
 
     public TravelSavedData() {
     }
@@ -61,21 +58,21 @@ public class TravelSavedData extends SavedData {
             .forEach(target -> travelTargets.put(target.getPos(), target));
     }
 
-    public Optional<ITravelTarget> getTravelTarget(BlockPos pos) {
+    public Optional<TravelTarget> getTravelTarget(BlockPos pos) {
         return Optional.ofNullable(travelTargets.get(pos));
     }
 
-    public Collection<ITravelTarget> getTravelTargets() {
+    public Collection<TravelTarget> getTravelTargets() {
         return travelTargets.values();
     }
 
-    public Stream<ITravelTarget> getTravelTargetsInItemRange(BlockPos center) {
+    public Stream<TravelTarget> getTravelTargetsInItemRange(BlockPos center) {
         return travelTargets.entrySet().stream().
                 filter(entry -> center.distSqr(entry.getKey()) < entry.getValue().getItem2BlockRange()*entry.getValue().getItem2BlockRange())
             .map(Map.Entry::getValue);
     }
 
-    public void addTravelTarget(Level level, ITravelTarget target) {
+    public void addTravelTarget(Level level, TravelTarget target) {
         if (level instanceof ServerLevel serverLevel) {
             PacketDistributor.sendToPlayersInDimension(serverLevel, new AddTravelTargetPacket(target));
         }

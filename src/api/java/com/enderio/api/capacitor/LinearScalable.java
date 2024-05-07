@@ -6,7 +6,7 @@ import java.util.function.Supplier;
  * A value that is scaled linearly.
  * (base, level) => base * level
  */
-public record LinearScalable(CapacitorModifier modifier, Supplier<Integer> base) implements ICapacitorScalable {
+public record LinearScalable(CapacitorModifier modifier, Supplier<Integer> base) implements CapacitorScalable {
 
     @Override
     public Supplier<Float> scaleF(Supplier<CapacitorData> data) {

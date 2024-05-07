@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
-public interface ITravelTarget {
+public interface TravelTarget {
     ResourceLocation getSerializationName();
 
     BlockPos getPos();

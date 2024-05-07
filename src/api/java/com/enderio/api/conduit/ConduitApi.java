@@ -11,5 +11,5 @@ public interface ConduitApi {
     /**
      * This will create a Conduit Item. If, during porting, EIOConduits isn't available, a dummy item will be returned.
      */
-    Item createConduitItem(Supplier<? extends IConduitType<?>> type, Item.Properties properties);
+    Item createConduitItem(Supplier<? extends ConduitType<?>> type, Item.Properties properties);
 }

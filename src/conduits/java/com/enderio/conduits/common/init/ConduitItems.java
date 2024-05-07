@@ -2,7 +2,7 @@ package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitApi;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
@@ -21,7 +21,7 @@ public class ConduitItems {
     public static final RegiliteItem<Item> REDSTONE = createConduitItem(EnderConduitTypes.REDSTONE, "redstone");
     public static final RegiliteItem<Item> ITEM = createConduitItem(EnderConduitTypes.ITEM, "item");
 
-    private static RegiliteItem<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName) {
+    private static RegiliteItem<Item> createConduitItem(Supplier<? extends ConduitType<?>> type, String itemName) {
         return ITEM_REGISTRY
             .registerItem(itemName + "_conduit",
                 p -> ConduitApi.INSTANCE.createConduitItem(type, p))

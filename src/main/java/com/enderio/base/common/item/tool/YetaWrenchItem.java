@@ -1,6 +1,6 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.api.capability.ISideConfig;
+import com.enderio.api.capability.SideConfig;
 import com.enderio.base.common.blockentity.Wrenchable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.mojang.datafixers.util.Either;
@@ -35,7 +35,7 @@ public class YetaWrenchItem extends Item {
         }
 
         // Check for side config capability
-        ISideConfig sideConfig = level.getCapability(EIOCapabilities.SideConfig.BLOCK, pos, pContext.getClickedFace());
+        SideConfig sideConfig = level.getCapability(EIOCapabilities.SideConfig.BLOCK, pos, pContext.getClickedFace());
         if (sideConfig != null) {
             sideConfig.cycleMode();
             return InteractionResult.sidedSuccess(level.isClientSide());

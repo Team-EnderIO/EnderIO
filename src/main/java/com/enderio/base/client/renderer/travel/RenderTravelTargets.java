@@ -1,6 +1,6 @@
 package com.enderio.base.client.renderer.travel;
 
-import com.enderio.api.travel.ITravelTarget;
+import com.enderio.api.travel.TravelTarget;
 import com.enderio.api.travel.TravelRegistry;
 import com.enderio.base.common.handler.TravelHandler;
 import com.enderio.base.common.travel.TravelSavedData;
@@ -14,7 +14,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(value = Dist.CLIENT)
@@ -35,8 +34,8 @@ public class RenderTravelTargets {
         boolean itemTeleport = TravelHandler.canItemTeleport(player);
         TravelSavedData data = TravelSavedData.getTravelData(Minecraft.getInstance().level);
         @Nullable
-        ITravelTarget activeTarget = TravelHandler.getAnchorTarget(player).orElse(null);
-        for (ITravelTarget target : data.getTravelTargets()) {
+        TravelTarget activeTarget = TravelHandler.getAnchorTarget(player).orElse(null);
+        for (TravelTarget target : data.getTravelTargets()) {
             double range = itemTeleport ? target.getItem2BlockRange() : target.getBlock2BlockRange();
             double distanceSquared = target.getPos().distToCenterSqr(player.position());
             if (range * range < distanceSquared

@@ -1,7 +1,7 @@
 package com.enderio.api.conduit.ticker;
 
-import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
@@ -19,7 +19,7 @@ import java.util.List;
 
 public interface IOAwareConduitTicker extends LoadedAwareConduitTicker {
     @Override
-    default void tickGraph(IConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    default void tickGraph(ConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         ListMultimap<ColorControl, Connection> extracts = ArrayListMultimap.create();
         ListMultimap<ColorControl, Connection> inserts = ArrayListMultimap.create();
         for (GraphObject<Mergeable.Dummy> object : loadedNodes) {
@@ -44,8 +44,8 @@ public interface IOAwareConduitTicker extends LoadedAwareConduitTicker {
         }
     }
 
-    void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive);
-    default boolean isRedstoneMode(IConduitType<?> type, ServerLevel level, BlockPos pos, NodeIdentifier.IOState state, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    void tickColoredGraph(ConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive);
+    default boolean isRedstoneMode(ConduitType<?> type, ServerLevel level, BlockPos pos, NodeIdentifier.IOState state, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         if (!type.getMenuData().showRedstoneExtract()) {
             return true;
         }
@@ -68,7 +68,7 @@ public interface IOAwareConduitTicker extends LoadedAwareConduitTicker {
 
         return state.control().isActive(hasRedstone || isRedstoneActive.apply(level, pos, state.redstoneChannel()));
     }
-    record Connection(BlockPos pos, Direction dir, IExtendedConduitData<?> data) {
+    record Connection(BlockPos pos, Direction dir, ExtendedConduitData<?> data) {
         public BlockPos move() {
             return pos.relative(dir);
         }

@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.types;
 
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
@@ -20,7 +20,7 @@ import java.util.List;
 public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler> {
 
     @Override
-    protected void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    protected void tickCapabilityGraph(ConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         toNextExtract:
         for (CapabilityConnection extract: extracts) {
             IItemHandler extractHandler = extract.cap;

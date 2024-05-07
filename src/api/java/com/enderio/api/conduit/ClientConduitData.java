@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public interface ClientConduitData<T extends IExtendedConduitData<T>> extends Icon {
+public interface ClientConduitData<T extends ExtendedConduitData<T>> extends Icon {
 
-    interface UpdateExtendedData<T extends IExtendedConduitData<T>> {
+    interface UpdateExtendedData<T extends ExtendedConduitData<T>> {
         void update(Function<T, T> mapper);
     }
 
@@ -68,7 +68,7 @@ public interface ClientConduitData<T extends IExtendedConduitData<T>> extends Ic
         return List.of();
     }
 
-    class Simple<T extends IExtendedConduitData<T>> implements ClientConduitData<T> {
+    class Simple<T extends ExtendedConduitData<T>> implements ClientConduitData<T> {
         private final ResourceLocation textureLocation;
         private final Vector2i texturePosition;
 

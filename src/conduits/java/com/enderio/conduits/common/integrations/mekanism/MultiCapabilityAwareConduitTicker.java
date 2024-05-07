@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.integrations.mekanism;
 
-import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
@@ -36,7 +36,7 @@ public abstract class MultiCapabilityAwareConduitTicker<T> implements IOAwareCon
     }
 
     @Override
-    public void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level,
+    public void tickColoredGraph(ConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level,
         Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
 
         List<CapabilityConnection> insertCaps = new ArrayList<>();
@@ -66,14 +66,14 @@ public abstract class MultiCapabilityAwareConduitTicker<T> implements IOAwareCon
         }
     }
 
-    protected abstract void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> insertCaps, List<CapabilityConnection> extractCaps, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive);
+    protected abstract void tickCapabilityGraph(ConduitType<?> type, List<CapabilityConnection> insertCaps, List<CapabilityConnection> extractCaps, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive);
 
     public class CapabilityConnection {
         public final T cap;
-        public final IExtendedConduitData<?> data;
+        public final ExtendedConduitData<?> data;
         public final Direction direction;
 
-        private CapabilityConnection(T cap, IExtendedConduitData<?> data, Direction direction) {
+        private CapabilityConnection(T cap, ExtendedConduitData<?> data, Direction direction) {
             this.cap = cap;
             this.data = data;
             this.direction = direction;

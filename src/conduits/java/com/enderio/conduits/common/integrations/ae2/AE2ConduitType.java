@@ -3,8 +3,7 @@ package com.enderio.conduits.common.integrations.ae2;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.IConduitMenuData;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.ConduitTicker;
@@ -41,8 +40,8 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     }
 
     @Override
-    public IConduitMenuData getMenuData() {
-        return ConduitMenuData.INSTANCE;
+    public com.enderio.api.conduit.ConduitMenuData getMenuData() {
+        return AE2ConduitType.ConduitMenuData.INSTANCE;
     }
 
     @Override
@@ -75,9 +74,9 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         return AE2Integration.IN_WORLD_GRID_NODE_HOST;
     }
 
-    private static final class ConduitMenuData implements IConduitMenuData {
+    private static final class ConduitMenuData implements com.enderio.api.conduit.ConduitMenuData {
 
-        private static final IConduitMenuData INSTANCE = new ConduitMenuData();
+        private static final com.enderio.api.conduit.ConduitMenuData INSTANCE = new ConduitMenuData();
 
         @Override
         public boolean hasFilterInsert() {
@@ -124,7 +123,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
         private static final Ticker INSTANCE = new Ticker();
         @Override
-        public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+        public void tickGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
             //ae2 graphs don't actually do anything, that's all done by ae2
         }
 
@@ -139,7 +138,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         }
 
         @Override
-        public boolean canConnectTo(IConduitType<?> thisType, IConduitType<?> other) {
+        public boolean canConnectTo(ConduitType<?> thisType, ConduitType<?> other) {
             return other instanceof AE2ConduitType;
         }
     }

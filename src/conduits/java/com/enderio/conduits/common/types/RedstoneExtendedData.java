@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.types;
 
-import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.misc.ColorControl;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -11,7 +11,7 @@ import net.minecraft.nbt.Tag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RedstoneExtendedData implements IExtendedConduitData<RedstoneExtendedData> {
+public class RedstoneExtendedData implements ExtendedConduitData<RedstoneExtendedData> {
 
     private boolean isActive = false;
     private final List<ColorControl> activeColors = new ArrayList<>();

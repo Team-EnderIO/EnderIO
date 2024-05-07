@@ -1,7 +1,7 @@
 package com.enderio.machines.common.travel;
 
 import com.enderio.EnderIO;
-import com.enderio.api.travel.ITravelTarget;
+import com.enderio.api.travel.TravelTarget;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.core.CoreNBTKeys;
 import net.minecraft.core.BlockPos;
@@ -14,7 +14,7 @@ import net.minecraft.world.item.Items;
 
 import java.util.Objects;
 
-public class AnchorTravelTarget implements ITravelTarget {
+public class AnchorTravelTarget implements TravelTarget {
 
     public static final ResourceLocation SERIALIZED_NAME = EnderIO.loc("travel_anchor");
 

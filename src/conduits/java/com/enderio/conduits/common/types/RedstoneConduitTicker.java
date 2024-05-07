@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.types;
 
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
@@ -30,7 +30,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker {
     }
 
     @Override
-    public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    public void tickGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         List<NodeIdentifier<?>> nodeIdentifiers = new ArrayList<>();
         for (GraphObject<Mergeable.Dummy> object : graph.getObjects()) {
             if (object instanceof NodeIdentifier<?> node) {
@@ -49,7 +49,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker {
     }
 
     @Override
-    public void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    public void tickColoredGraph(ConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         for (Connection extract : extracts) {
             if (level.hasSignal(extract.move(), extract.dir())) {
                 activeColors.add(color);

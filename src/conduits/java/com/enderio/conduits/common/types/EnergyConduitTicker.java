@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.types;
 
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
@@ -11,14 +11,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.IntConsumer;
 
 public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergyStorage> {
@@ -27,7 +25,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
     }
 
     @Override
-    public void tickGraph(IConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    public void tickGraph(ConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         super.tickGraph(type, loadedNodes, level, graph, isRedstoneActive);
         for (NodeIdentifier<?> node : loadedNodes) {
             EnergyExtendedData energyExtendedData = node.getExtendedConduitData().castTo(EnergyExtendedData.class);
@@ -64,8 +62,8 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
         }
     }
         @Override
-    public void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level,
-        Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    public void tickCapabilityGraph(ConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level,
+                                    Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
 
 
         for (CapabilityConnection extract : extracts) {

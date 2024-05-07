@@ -1,6 +1,6 @@
 package com.enderio.api.conduit.ticker;
 
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
@@ -12,7 +12,7 @@ import org.apache.commons.lang3.function.TriFunction;
 
 public interface ConduitTicker {
 
-    void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive);
+    void tickGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive);
 
     /**
      * @return how often the conduit should tick. 1 is every tick, 5 is every 5th tick, so 4 times a second
@@ -34,7 +34,7 @@ public interface ConduitTicker {
     /**
      * return true if both types are similar and share the same extended conduit data
      */
-    default boolean canConnectTo(IConduitType<?> thisType, IConduitType<?> other) {
+    default boolean canConnectTo(ConduitType<?> thisType, ConduitType<?> other) {
         return thisType == other;
     }
 }

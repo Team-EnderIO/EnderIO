@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.types;
 
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
@@ -33,7 +33,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
     }
 
     @Override
-    public void tickGraph(IConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    public void tickGraph(ConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         boolean shouldReset = false;
         for (NodeIdentifier<?> loadedNode : loadedNodes) {
             FluidExtendedData fluidExtendedData = loadedNode.getExtendedConduitData().castTo(FluidExtendedData.class);
@@ -51,7 +51,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
     }
 
     @Override
-    protected void tickCapabilityGraph(IConduitType<?> type, List<CapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> inserts,
+    protected void tickCapabilityGraph(ConduitType<?> type, List<CapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> inserts,
                                        List<CapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
 
         for (CapabilityConnection extract : extracts) {

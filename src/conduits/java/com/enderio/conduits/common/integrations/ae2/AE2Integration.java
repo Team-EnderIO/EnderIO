@@ -6,7 +6,7 @@ import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitApi;
 import com.enderio.api.conduit.ConduitTypes;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.integration.Integration;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
@@ -34,8 +34,8 @@ public class AE2Integration implements Integration {
     //TODO use cap when moved to api by ea2
     public static BlockCapability<IInWorldGridNodeHost, @Nullable Direction> IN_WORLD_GRID_NODE_HOST = BlockCapability
         .createSided(new ResourceLocation(AEConstants.MOD_ID, "inworld_gridnode_host"), IInWorldGridNodeHost.class);
-    private static final DeferredHolder<IConduitType<?>, AE2ConduitType> DENSE = ConduitTypes.CONDUIT_TYPES.register("dense_me", () -> new AE2ConduitType(true));
-    private static final DeferredHolder<IConduitType<?>, AE2ConduitType> NORMAL = ConduitTypes.CONDUIT_TYPES.register("me", () -> new AE2ConduitType(false));
+    private static final DeferredHolder<ConduitType<?>, AE2ConduitType> DENSE = ConduitTypes.CONDUIT_TYPES.register("dense_me", () -> new AE2ConduitType(true));
+    private static final DeferredHolder<ConduitType<?>, AE2ConduitType> NORMAL = ConduitTypes.CONDUIT_TYPES.register("me", () -> new AE2ConduitType(false));
     public static final RegiliteItem<Item> DENSE_ITEM = createConduitItem(DENSE, "dense_me", "Dense ME Conduit");
     public static final RegiliteItem<Item> NORMAL_ITEM = createConduitItem(NORMAL, "me", "ME Conduit");
 
@@ -60,7 +60,7 @@ public class AE2Integration implements Integration {
         return IN_WORLD_GRID_NODE_HOST;
     }
 
-    private static RegiliteItem<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName, String english) {
+    private static RegiliteItem<Item> createConduitItem(Supplier<? extends ConduitType<?>> type, String itemName, String english) {
         return ITEM_REGISTRY
             .registerItem(itemName + "_conduit",
                 properties -> ConduitApi.INSTANCE.createConduitItem(type, properties))

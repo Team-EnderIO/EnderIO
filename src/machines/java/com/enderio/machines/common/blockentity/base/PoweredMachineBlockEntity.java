@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blockentity.base;
 
-import com.enderio.api.capacitor.ICapacitorScalable;
+import com.enderio.api.capacitor.CapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.MachineInstallable;
@@ -63,7 +63,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     private boolean capacitorCacheDirty;
     private boolean updateModel = false;
 
-    public PoweredMachineBlockEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+    public PoweredMachineBlockEntity(EnergyIOMode energyIOMode, CapacitorScalable capacity, CapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
         // Create energy storage

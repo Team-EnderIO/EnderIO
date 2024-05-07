@@ -3,7 +3,7 @@ package com.enderio.core.client.gui.widgets;
 import com.enderio.api.misc.Icon;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.core.client.gui.screen.IEnderScreen;
-import com.enderio.core.client.gui.screen.IFullScreenListener;
+import com.enderio.core.client.gui.screen.FullScreenListener;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class EnumIconWidget<T extends Enum<T> & Icon, U extends Screen & IEnderScreen> extends AbstractWidget implements IFullScreenListener {
+public class EnumIconWidget<T extends Enum<T> & Icon, U extends Screen & IEnderScreen> extends AbstractWidget implements FullScreenListener {
 
     private final Supplier<T> getter;
     private final Consumer<T> setter;
@@ -189,7 +189,7 @@ public class EnumIconWidget<T extends Enum<T> & Icon, U extends Screen & IEnderS
         @Override
         public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
             for (GuiEventListener widget : children()) {
-                if (widget instanceof AbstractWidget abstractWidget && abstractWidget.isActive() && widget instanceof IFullScreenListener fullScreenListener) {
+                if (widget instanceof AbstractWidget abstractWidget && abstractWidget.isActive() && widget instanceof FullScreenListener fullScreenListener) {
                     fullScreenListener.onGlobalClick(pMouseX, pMouseY);
                 }
             }

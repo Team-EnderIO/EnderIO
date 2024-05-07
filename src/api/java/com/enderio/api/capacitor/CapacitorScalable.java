@@ -7,7 +7,7 @@ import java.util.function.Supplier;
  * This is designed so that things scaled by capacitors can be provided into non-specific domains.
  * It also allows for the base value of a scalable to be powered by configs.
  */
-public interface ICapacitorScalable {
+public interface CapacitorScalable {
     Supplier<Float> scaleF(Supplier<CapacitorData> data);
     Supplier<Integer> scaleI(Supplier<CapacitorData> data);
 }

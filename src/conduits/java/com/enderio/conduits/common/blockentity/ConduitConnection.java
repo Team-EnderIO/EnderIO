@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.blockentity;
 
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
@@ -48,7 +48,7 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         connectionStates[index] = StaticConnectionStates.DISCONNECTED;
     }
 
-    public void connectTo(Level level, BlockPos pos, NodeIdentifier<?> nodeIdentifier, Direction direction, IConduitType<?> type, int typeIndex, boolean end) {
+    public void connectTo(Level level, BlockPos pos, NodeIdentifier<?> nodeIdentifier, Direction direction, ConduitType<?> type, int typeIndex, boolean end) {
         if (end) {
             var state = DynamicConnectionState.defaultConnection(level, pos, direction, type);
             connectionStates[typeIndex] = state;
@@ -89,8 +89,8 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         return Arrays.stream(connectionStates).anyMatch(DynamicConnectionState.class::isInstance);
     }
 
-    public List<IConduitType<?>> getConnectedTypes() {
-        List<IConduitType<?>> connected = new ArrayList<>();
+    public List<ConduitType<?>> getConnectedTypes() {
+        List<ConduitType<?>> connected = new ArrayList<>();
         for (int i = 0; i < connectionStates.length; i++) {
             if (connectionStates[i].isConnection()) {
                 connected.add(on.getTypes().get(i));
@@ -174,10 +174,10 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
     public IConnectionState getConnectionState(int index) {
         return connectionStates[index];
     }
-    public IConnectionState getConnectionState(IConduitType<?> type) {
+    public IConnectionState getConnectionState(ConduitType<?> type) {
         return connectionStates[on.getTypeIndex(type)];
     }
-    public void setConnectionState(IConduitType<?> type, IConnectionState state) {
+    public void setConnectionState(ConduitType<?> type, IConnectionState state) {
         setConnectionState(on.getTypeIndex(type),state);
         on.incrementDataVersion();
     }

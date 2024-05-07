@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.blocks;
 
 import com.enderio.api.conduit.ConduitTypes;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.base.common.tag.EIOTags;
@@ -61,7 +61,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -231,7 +230,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     private Optional<ItemInteractionResult> handleYeta(ConduitBlockEntity conduit, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
         if (stack.is(EIOTags.Items.WRENCH)) {
-            @Nullable IConduitType<?> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
+            @Nullable ConduitType<?> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
             @Nullable Direction direction = conduit.getShape().getDirection(hit.getBlockPos(), hit);
             if (type == null) {
                 return Optional.empty();
@@ -285,7 +284,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             && event.getLevel().getBlockEntity(event.getPos()) instanceof ConduitBlockEntity conduit
             && event.getEntity().isCrouching()) {
 
-            @Nullable IConduitType<?> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
+            @Nullable ConduitType<?> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
             if (type != null) {
                 conduit.removeTypeAndDelete(type);
                 if (event.getLevel() instanceof ServerLevel serverLevel) {
@@ -333,7 +332,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     }
 
     private Optional<OpenInformation> getOpenInformation(ConduitBlockEntity conduit, BlockHitResult hit) {
-        @Nullable IConduitType<?> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
+        @Nullable ConduitType<?> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
         @Nullable Direction direction = conduit.getShape().getDirection(hit.getBlockPos(), hit);
 
         if (direction != null && type != null) {
@@ -359,7 +358,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         //fallback
         for (Direction potential : Direction.values()) {
             if (bundle.getConnection(potential).isEnd()) {
-                for (IConduitType<?> potentialType : bundle.getTypes()) {
+                for (ConduitType<?> potentialType : bundle.getTypes()) {
                     if (bundle.getConnection(potential).getConnectionState(potentialType) instanceof DynamicConnectionState) {
                         return Optional.of(new OpenInformation(potential, potentialType));
                     }
@@ -369,7 +368,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         }
         for (Direction potential : Direction.values()) {
             if (!(conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(potential)) instanceof ConduitBlockEntity)) {
-                for (IConduitType<?> potentialType : bundle.getTypes()) {
+                for (ConduitType<?> potentialType : bundle.getTypes()) {
                     if (canBeValidConnection(conduit, potentialType, potential)) {
                         return Optional.of(new OpenInformation(potential, potentialType));
                     }
@@ -382,12 +381,12 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     // endregion
 
-    public static boolean canBeOrIsValidConnection(ConduitBlockEntity conduit, IConduitType<?> type, Direction direction) {
+    public static boolean canBeOrIsValidConnection(ConduitBlockEntity conduit, ConduitType<?> type, Direction direction) {
         return conduit.getBundle().getConnection(direction).getConnectionState(type) instanceof DynamicConnectionState
             || canBeValidConnection(conduit, type, direction);
     }
 
-    public static boolean canBeValidConnection(ConduitBlockEntity conduit, IConduitType<?> type, Direction direction) {
+    public static boolean canBeValidConnection(ConduitBlockEntity conduit, ConduitType<?> type, Direction direction) {
         IConnectionState connectionState = conduit.getBundle().getConnection(direction).getConnectionState(type);
         return connectionState instanceof StaticConnectionStates state
             && state == StaticConnectionStates.DISABLED
@@ -410,7 +409,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         }
 
         if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
-            @Nullable IConduitType<?> type = conduit.getShape().getConduit(pos, target);
+            @Nullable ConduitType<?> type = conduit.getShape().getConduit(pos, target);
             if (type != null) {
                 return type.getConduitItem().getDefaultInstance();
             }
@@ -448,7 +447,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         HitResult hit = player.pick(player.blockInteractionRange() + 5, 1, false);
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ConduitBlockEntity conduit) {
-            @Nullable IConduitType<?> conduitType = conduit.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
+            @Nullable ConduitType<?> conduitType = conduit.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
             if (conduitType == null) {
                 if (!conduit.getBundle().getTypes().isEmpty()) {
                     level.playSound(player, pos, SoundEvents.GENERIC_SMALL_FALL, SoundSource.BLOCKS, 1F, 1F);
@@ -496,5 +495,5 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     // endregion
 
-    private record OpenInformation(Direction direction, IConduitType<?> type) {}
+    private record OpenInformation(Direction direction, ConduitType<?> type) {}
 }

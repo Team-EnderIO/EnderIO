@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.capability.ISideConfig;
+import com.enderio.api.capability.SideConfig;
 import com.enderio.api.io.IOConfigurable;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.misc.RedstoneControl;
@@ -14,7 +14,7 @@ import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.IOConfig;
-import com.enderio.machines.common.io.SidedIOConfig;
+import com.enderio.machines.common.io.SidedIOConfigurable;
 import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -54,7 +54,7 @@ import java.util.Set;
 
 public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider, Wrenchable, IOConfigurable {
 
-    public static final ICapabilityProvider<MachineBlockEntity, Direction, ISideConfig> SIDE_CONFIG_PROVIDER = SidedIOConfig::new;
+    public static final ICapabilityProvider<MachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = SidedIOConfigurable::new;
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER =
         (be, side) -> be.inventory != null ? be.inventory.getForSide(side) : null;

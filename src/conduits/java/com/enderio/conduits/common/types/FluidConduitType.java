@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.types;
 
-import com.enderio.api.conduit.IConduitMenuData;
+import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.Vector2i;
@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 
 public class FluidConduitType extends TieredConduit<FluidExtendedData> {
 
-    public static final IConduitMenuData MENU_DATA = new IConduitMenuData.Simple(false, false, false, false, false, true);
+    public static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
     private final boolean isMultiFluid;
     private final int transferRate;
 
@@ -27,7 +27,7 @@ public class FluidConduitType extends TieredConduit<FluidExtendedData> {
     }
 
     @Override
-    public IConduitMenuData getMenuData() {
+    public ConduitMenuData getMenuData() {
         return MENU_DATA;
     }
 

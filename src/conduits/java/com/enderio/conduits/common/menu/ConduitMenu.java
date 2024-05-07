@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.menu;
 
 import com.enderio.api.conduit.ConduitTypes;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.SlotType;
@@ -13,7 +13,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,10 +33,10 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
     private final List<ConduitSlot> conduitSlots = new ArrayList<>();
 
     private Direction direction;
-    private IConduitType<?> type;
+    private ConduitType<?> type;
 
 
-    public ConduitMenu(@Nullable ConduitBlockEntity blockEntity, Inventory inventory, int pContainerId, Direction direction, IConduitType type) {
+    public ConduitMenu(@Nullable ConduitBlockEntity blockEntity, Inventory inventory, int pContainerId, Direction direction, ConduitType type) {
         super(blockEntity, inventory, ConduitMenus.CONDUIT_MENU.get(), pContainerId);
         this.direction = direction;
         this.type = type;
@@ -99,7 +98,7 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
     public static ConduitMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         Direction direction = buf.readEnum(Direction.class);
-        IConduitType<?> type = ConduitTypes.getRegistry().byIdOrThrow(buf.readInt());
+        ConduitType<?> type = ConduitTypes.getRegistry().byIdOrThrow(buf.readInt());
         if (entity instanceof ConduitBlockEntity castBlockEntity) {
             return new ConduitMenu(castBlockEntity, inventory, pContainerId, direction, type);
         }
@@ -108,11 +107,11 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
         return new ConduitMenu(null, inventory, pContainerId, direction, type);
     }
 
-    public IConduitType<?> getConduitType() {
+    public ConduitType<?> getConduitType() {
         return type;
     }
 
-    public void setConduitType(IConduitType<?> type) {
+    public void setConduitType(ConduitType<?> type) {
         this.type = type;
     }
 

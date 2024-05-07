@@ -15,7 +15,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public interface IConduitType<T extends IExtendedConduitData<T>> {
+// TODO: I might argue that this should actually be an abstract class?
+public interface ConduitType<T extends ExtendedConduitData<T>> {
 
     ResourceLocation getTexture(T extendedData);
     ResourceLocation getItemTexture();
@@ -28,11 +29,11 @@ public interface IConduitType<T extends IExtendedConduitData<T>> {
         return BuiltInRegistries.ITEM.get(ConduitTypes.getRegistry().getKey(this));
     }
 
-    default boolean canBeInSameBlock(IConduitType<?> other) {
+    default boolean canBeInSameBlock(ConduitType<?> other) {
         return true;
     }
 
-    default boolean canBeReplacedBy(IConduitType<?> other) {
+    default boolean canBeReplacedBy(ConduitType<?> other) {
         return false;
     }
 
@@ -40,7 +41,7 @@ public interface IConduitType<T extends IExtendedConduitData<T>> {
 
     @UseOnly(LogicalSide.CLIENT)
     ClientConduitData<T> getClientData();
-    IConduitMenuData getMenuData();
+    ConduitMenuData getMenuData();
 
     T createExtendedConduitData(Level level, BlockPos pos);
 

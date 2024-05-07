@@ -1,22 +1,19 @@
 package com.enderio.conduits.common.blockentity.connection;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.blockentity.SlotType;
 import com.enderio.core.common.network.MassiveStreamCodec;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,8 +52,8 @@ public record DynamicConnectionState(
         DynamicConnectionState::new
     );
 
-    public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction, IConduitType<?> type) {
-        IConduitType.ConduitConnectionData defaultConnection = type.getDefaultConnection(level, pos, direction);
+    public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction, ConduitType<?> type) {
+        ConduitType.ConduitConnectionData defaultConnection = type.getDefaultConnection(level, pos, direction);
         return new DynamicConnectionState(defaultConnection.isInsert(), ColorControl.GREEN, defaultConnection.isExtract(), ColorControl.GREEN, defaultConnection.control(), ColorControl.RED, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
     }
 

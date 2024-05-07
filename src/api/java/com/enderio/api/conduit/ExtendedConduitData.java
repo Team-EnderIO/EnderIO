@@ -17,12 +17,12 @@ import java.util.function.Supplier;
 /**
  * used for special single use things like RoundRobin for ItemConduits or proxying Caps
  */
-public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends INBTSerializable<CompoundTag> {
+public interface ExtendedConduitData<T extends ExtendedConduitData<T>> extends INBTSerializable<CompoundTag> {
 
     /**
      * default impl for stuff that don't need an impl
      */
-    class EmptyExtendedConduitData implements IExtendedConduitData<EmptyExtendedConduitData> {
+    class EmptyExtendedConduitData implements ExtendedConduitData<EmptyExtendedConduitData> {
 
         @Override
         public CompoundTag serializeNBT(HolderLookup.Provider provider) {
@@ -34,9 +34,9 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
         }
     }
 
-    default void onCreated(IConduitType<?> type, Level level, BlockPos pos, @Nullable Player player) {}
+    default void onCreated(ConduitType<?> type, Level level, BlockPos pos, @Nullable Player player) {}
 
-    default void onRemoved(IConduitType<?> type, Level level, BlockPos pos) {}
+    default void onRemoved(ConduitType<?> type, Level level, BlockPos pos) {}
 
     default void updateConnection(Set<Direction> connectedSides) {}
 
@@ -85,11 +85,11 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
         return EmptyExtendedConduitData::new;
     }
 
-    default <Z extends IExtendedConduitData<Z>> Z cast() {
+    default <Z extends ExtendedConduitData<Z>> Z cast() {
         return (Z) this;
     }
 
-    default <Z extends IExtendedConduitData<Z>> Z castTo(Class<Z> clazz) {
+    default <Z extends ExtendedConduitData<Z>> Z castTo(Class<Z> clazz) {
         return cast();
     }
 }
