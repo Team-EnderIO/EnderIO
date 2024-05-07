@@ -23,7 +23,7 @@ import java.util.List;
 
 // TODO: A recipe interface that doesn't require power :)
 public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends Container>
-    implements IMachineTask {
+    implements MachineTask {
 
     protected final Level level;
     protected final MachineInventory inventory;

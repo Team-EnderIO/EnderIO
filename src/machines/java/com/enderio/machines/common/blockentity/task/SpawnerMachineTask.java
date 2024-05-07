@@ -1,6 +1,5 @@
 package com.enderio.machines.common.blockentity.task;
 
-import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
@@ -34,7 +33,6 @@ import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -42,7 +40,7 @@ import java.util.Optional;
 import java.util.function.IntFunction;
 
 @EventBusSubscriber
-public class SpawnerMachineTask implements IPoweredMachineTask {
+public class SpawnerMachineTask implements PoweredMachineTask {
     private boolean complete;
     private int energyCost;
     private int energyConsumed = 0;

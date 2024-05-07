@@ -1,7 +1,7 @@
 package com.enderio.base.common.item.tool;
 
 import com.enderio.api.capability.ISideConfig;
-import com.enderio.base.common.blockentity.IWrenchable;
+import com.enderio.base.common.blockentity.Wrenchable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,7 @@ public class YetaWrenchItem extends Item {
         Level level = pContext.getLevel();
         BlockPos pos = pContext.getClickedPos();
 
-        if(level.getBlockEntity(pos) instanceof IWrenchable wrenchable) {
+        if(level.getBlockEntity(pos) instanceof Wrenchable wrenchable) {
             return wrenchable.onWrenched(pContext.getPlayer(), pContext.getClickedFace()).result();
         }
 

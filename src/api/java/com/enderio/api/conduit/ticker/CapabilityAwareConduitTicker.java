@@ -15,7 +15,7 @@ import org.apache.commons.lang3.function.TriFunction;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduitTicker {
+public abstract class CapabilityAwareConduitTicker<T> implements IOAwareConduitTicker {
 
     @Override
     public final void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level,

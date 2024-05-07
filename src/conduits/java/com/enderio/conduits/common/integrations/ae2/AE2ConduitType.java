@@ -7,7 +7,7 @@ import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.conduit.TieredConduit;
-import com.enderio.api.conduit.ticker.IConduitTicker;
+import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.EnderConduitTypes;
@@ -36,7 +36,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     }
 
     @Override
-    public IConduitTicker getTicker() {
+    public ConduitTicker getTicker() {
         return Ticker.INSTANCE;
     }
 
@@ -120,7 +120,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         }
     }
 
-    private static final class Ticker implements IConduitTicker {
+    private static final class Ticker implements ConduitTicker {
 
         private static final Ticker INSTANCE = new Ticker();
         @Override

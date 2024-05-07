@@ -5,7 +5,7 @@ import net.minecraft.core.Direction;
 /**
  * IO Config defines how each side of a block interacts with other blocks.
  */
-public interface IIOConfigurable {
+public interface IOConfigurable {
     /**
      * Get the current IO mode for the given side.
      */

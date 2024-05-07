@@ -6,8 +6,8 @@ import com.enderio.api.io.IOMode;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.ActionRange;
-import com.enderio.machines.common.attachment.IFluidTankUser;
-import com.enderio.machines.common.attachment.IRangedActor;
+import com.enderio.machines.common.attachment.FluidTankUser;
+import com.enderio.machines.common.attachment.RangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineAttachments;
@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRangedActor, IFluidTankUser {
+public class DrainBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FluidTankUser {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.DRAIN_USAGE);

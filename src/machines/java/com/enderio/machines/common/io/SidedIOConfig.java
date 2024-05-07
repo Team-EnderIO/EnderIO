@@ -1,12 +1,12 @@
 package com.enderio.machines.common.io;
 
 import com.enderio.api.capability.ISideConfig;
-import com.enderio.api.io.IIOConfigurable;
+import com.enderio.api.io.IOConfigurable;
 import com.enderio.api.io.IOMode;
 import net.minecraft.core.Direction;
 
 public record SidedIOConfig(
-    IIOConfigurable ioConfigurable,
+    IOConfigurable ioConfigurable,
     Direction side
 ) implements ISideConfig {
 

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableBlockEntity {
+public class SinglePaintedBlockEntity extends BlockEntity implements PaintableBlockEntity {
 
     @Nullable
     protected Block paint;
@@ -32,7 +32,7 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
         return paint;
     }
 
-    public static final ModelProperty<Block> PAINT = IPaintableBlockEntity.createAndRegisterModelProperty();
+    public static final ModelProperty<Block> PAINT = PaintableBlockEntity.createAndRegisterModelProperty();
 
     public SinglePaintedBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(EIOBlockEntities.SINGLE_PAINTED.get(), pWorldPosition, pBlockState);

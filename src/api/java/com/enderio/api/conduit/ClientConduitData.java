@@ -1,6 +1,6 @@
 package com.enderio.api.conduit;
 
-import com.enderio.api.misc.IIcon;
+import com.enderio.api.misc.Icon;
 import com.enderio.api.misc.Vector2i;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public interface IClientConduitData<T extends IExtendedConduitData<T>> extends IIcon {
+public interface ClientConduitData<T extends IExtendedConduitData<T>> extends Icon {
 
     interface UpdateExtendedData<T extends IExtendedConduitData<T>> {
         void update(Function<T, T> mapper);
@@ -68,7 +68,7 @@ public interface IClientConduitData<T extends IExtendedConduitData<T>> extends I
         return List.of();
     }
 
-    class Simple<T extends IExtendedConduitData<T>> implements IClientConduitData<T> {
+    class Simple<T extends IExtendedConduitData<T>> implements ClientConduitData<T> {
         private final ResourceLocation textureLocation;
         private final Vector2i texturePosition;
 

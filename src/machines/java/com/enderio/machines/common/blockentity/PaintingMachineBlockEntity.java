@@ -3,8 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.base.EIONBTKeys;
-import com.enderio.base.common.block.painted.IPaintedBlock;
+import com.enderio.base.common.block.painted.PaintedBlock;
 import com.enderio.base.common.component.BlockPaint;
 import com.enderio.base.common.init.EIOCriterions;
 import com.enderio.base.common.init.EIODataComponents;
@@ -22,10 +21,7 @@ import com.enderio.machines.common.recipe.PaintingRecipe;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -108,7 +104,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     private boolean isValidPaint(int index, ItemStack stack) {
         if (stack.getItem() instanceof BlockItem blockItem) {
             Block block = blockItem.getBlock();
-            if (block instanceof IPaintedBlock) {
+            if (block instanceof PaintedBlock) {
                 return false;
             }
 

@@ -10,7 +10,7 @@ public abstract class TieredConduit<T extends IExtendedConduitData<T>> implement
     private final ResourceLocation type;
     private final int tier;
 
-    @UseOnly(LogicalSide.CLIENT) protected IClientConduitData<T> clientConduitData;
+    @UseOnly(LogicalSide.CLIENT) protected ClientConduitData<T> clientConduitData;
 
     /**
      * @param texture
@@ -22,7 +22,7 @@ public abstract class TieredConduit<T extends IExtendedConduitData<T>> implement
         this.texture = texture;
         this.type = type;
         this.tier = tier;
-        clientConduitData = new IClientConduitData.Simple<>(iconTexture, iconTexturePos);
+        clientConduitData = new ClientConduitData.Simple<>(iconTexture, iconTexturePos);
     }
 
     @Override
@@ -67,7 +67,7 @@ public abstract class TieredConduit<T extends IExtendedConduitData<T>> implement
     }
 
     @Override
-    public IClientConduitData<T> getClientData() {
+    public ClientConduitData<T> getClientData() {
         return clientConduitData;
     }
 }

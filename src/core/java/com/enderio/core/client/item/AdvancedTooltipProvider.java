@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface IAdvancedTooltipProvider {
+public interface AdvancedTooltipProvider {
 
     /**
      * Add tooltips that are always displayed

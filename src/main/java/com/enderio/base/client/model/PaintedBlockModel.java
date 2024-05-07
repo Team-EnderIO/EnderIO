@@ -2,7 +2,7 @@ package com.enderio.base.client.model;
 
 import com.enderio.base.client.renderer.PaintedBlockColor;
 import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
-import com.enderio.base.common.blockentity.IPaintableBlockEntity;
+import com.enderio.base.common.blockentity.PaintableBlockEntity;
 import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.base.common.util.PaintUtils;
 import com.enderio.core.client.RenderUtil;
@@ -169,7 +169,7 @@ public class PaintedBlockModel implements IDynamicBakedModel {
     @Override
     public ChunkRenderTypeSet getRenderTypes(BlockState paintedBlockState, RandomSource rand, ModelData data) {
         ChunkRenderTypeSet chunkRenderTypeSet = ChunkRenderTypeSet.union(
-            IPaintableBlockEntity.PAINT_DATA_PROPERTIES.stream()
+            PaintableBlockEntity.PAINT_DATA_PROPERTIES.stream()
                 .map(data::get)
                 //remove all unset paints
                 .filter(Objects::nonNull)

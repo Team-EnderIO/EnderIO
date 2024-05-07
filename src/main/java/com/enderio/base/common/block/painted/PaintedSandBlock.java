@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class PaintedSandBlock extends ColoredFallingBlock implements EntityBlock, IPaintedBlock {
+public class PaintedSandBlock extends ColoredFallingBlock implements EntityBlock, PaintedBlock {
 
     public PaintedSandBlock(Properties properties) {
         super(new ColorRGBA(0), properties);

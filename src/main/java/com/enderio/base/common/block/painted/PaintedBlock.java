@@ -5,7 +5,6 @@ import com.enderio.base.common.component.BlockPaint;
 import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
@@ -14,13 +13,12 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.common.extensions.IBlockExtension;
 import org.jetbrains.annotations.Nullable;
 
-public interface IPaintedBlock extends IBlockExtension {
+public interface PaintedBlock extends IBlockExtension {
 
     @Override
     default float getFriction(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
@@ -49,7 +47,7 @@ public interface IPaintedBlock extends IBlockExtension {
     default Block getPaint(BlockGetter level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof SinglePaintedBlockEntity paintedBlockEntity) {
             Block paint = paintedBlockEntity.getPaint();
-            if (paint != null && !(paint instanceof IPaintedBlock)) {
+            if (paint != null && !(paint instanceof PaintedBlock)) {
                 return paint;
             }
         }

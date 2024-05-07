@@ -1,6 +1,6 @@
 package com.enderio.core.client.gui.screen;
 
-import com.enderio.api.misc.IIcon;
+import com.enderio.api.misc.Icon;
 import com.enderio.api.misc.Vector2i;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -12,7 +12,7 @@ public interface IEnderScreen {
         return (Screen) this;
     }
 
-    static void renderIcon(GuiGraphics guiGraphics, Vector2i pos, IIcon icon) {
+    static void renderIcon(GuiGraphics guiGraphics, Vector2i pos, Icon icon) {
         if (!icon.shouldRender()) {
             return;
         }
@@ -30,7 +30,7 @@ public interface IEnderScreen {
         guiGraphics.fill(pos.x() + 1, pos.y() + 1, pos2.x() - 1, pos2.y() - 1, 0xFF8B8B8B);
     }
 
-    default void renderIconBackground(GuiGraphics guiGraphics, Vector2i pos, IIcon icon) {
+    default void renderIconBackground(GuiGraphics guiGraphics, Vector2i pos, Icon icon) {
         renderSimpleArea(guiGraphics, pos, pos.add(icon.getRenderSize()));
     }
 

@@ -1,16 +1,12 @@
 package com.enderio.base.common.block.painted;
 
-import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
 import com.enderio.base.common.component.BlockPaint;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
@@ -24,7 +20,7 @@ import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPaintedBlock {
+public class PaintedSlabBlock extends SlabBlock implements EntityBlock, PaintedBlock {
 
     public PaintedSlabBlock(Properties properties) {
         super(properties);
@@ -46,7 +42,7 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPainted
             }
         }
 
-        return IPaintedBlock.super.getPaint(level, pos);
+        return PaintedBlock.super.getPaint(level, pos);
     }
 
     @Override

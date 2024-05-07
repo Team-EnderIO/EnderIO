@@ -5,7 +5,7 @@ import com.enderio.api.conduit.IClientConduitData;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
-import com.enderio.api.conduit.ticker.IConduitTicker;
+import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.Vector2i;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -20,18 +20,18 @@ import java.util.function.Supplier;
 public class SimpleConduitType<T extends IExtendedConduitData<T>> implements IConduitType<T> {
 
     private final ResourceLocation texture;
-    private final IConduitTicker ticker;
+    private final ConduitTicker ticker;
     private final Supplier<T> extendedDataFactory;
 
     private final IClientConduitData<T> clientConduitData;
 
     private final IConduitMenuData menuData;
 
-    public SimpleConduitType(ResourceLocation texture, IConduitTicker ticker, Supplier<T> extendedDataFactory, ResourceLocation iconTexture, Vector2i iconTexturePos, IConduitMenuData menuData) {
+    public SimpleConduitType(ResourceLocation texture, ConduitTicker ticker, Supplier<T> extendedDataFactory, ResourceLocation iconTexture, Vector2i iconTexturePos, IConduitMenuData menuData) {
         this(texture, ticker, extendedDataFactory, new IClientConduitData.Simple<>(iconTexture, iconTexturePos), menuData);
     }
 
-    public SimpleConduitType(ResourceLocation texture, IConduitTicker ticker, Supplier<T> extendedDataFactory, IClientConduitData<T> clientConduitData, IConduitMenuData menuData) {
+    public SimpleConduitType(ResourceLocation texture, ConduitTicker ticker, Supplier<T> extendedDataFactory, IClientConduitData<T> clientConduitData, IConduitMenuData menuData) {
         this.texture = texture;
         this.ticker = ticker;
         this.extendedDataFactory = extendedDataFactory;
@@ -49,7 +49,7 @@ public class SimpleConduitType<T extends IExtendedConduitData<T>> implements ICo
     }
 
     @Override
-    public IConduitTicker getTicker() {
+    public ConduitTicker getTicker() {
         return ticker;
     }
 

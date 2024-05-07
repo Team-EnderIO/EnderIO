@@ -2,7 +2,7 @@ package com.enderio.conduits.common.integrations.mekanism;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
-import com.enderio.api.conduit.ticker.IIOAwareConduitTicker;
+import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
@@ -16,7 +16,7 @@ import org.apache.commons.lang3.function.TriFunction;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MultiCapabilityAwareConduitTicker<T> implements IIOAwareConduitTicker {
+public abstract class MultiCapabilityAwareConduitTicker<T> implements IOAwareConduitTicker {
 
     private final BlockCapability<? extends T, Direction>[] capabilities;
 

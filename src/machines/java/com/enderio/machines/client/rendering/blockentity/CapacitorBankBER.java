@@ -4,7 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.core.client.RenderUtil;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.DisplayMode;
-import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
+import com.enderio.machines.common.blockentity.multienergy.CapacityTier;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -25,8 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 import org.joml.Vector2i;
 
 public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockEntity> {
@@ -180,7 +178,7 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
         return getDisplayModeRelative(blockEntity.getLevel(), horizontalFacing, blockEntity.getBlockPos(), relative, blockEntity.tier);
     }
 
-    private static DisplayMode getDisplayModeRelative(Level level, Direction horizontalFacing, BlockPos pos, Vector2i relative, ICapacityTier tier) {
+    private static DisplayMode getDisplayModeRelative(Level level, Direction horizontalFacing, BlockPos pos, Vector2i relative, CapacityTier tier) {
         pos = pos.below(relative.y());
         pos = pos.relative(horizontalFacing.getClockWise(), -relative.x);
         if (level.getBlockEntity(pos) instanceof CapacitorBankBlockEntity capacitorBank && capacitorBank.tier == tier) {

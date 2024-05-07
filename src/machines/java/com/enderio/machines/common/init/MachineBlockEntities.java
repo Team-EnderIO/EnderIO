@@ -5,7 +5,7 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
 import com.enderio.machines.client.rendering.blockentity.XPObeliskBER;
-import com.enderio.machines.common.attachment.IFluidTankUser;
+import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.*;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
@@ -35,14 +35,14 @@ public class MachineBlockEntities {
         register("fluid_tank", FluidTankBlockEntity.Standard::new, MachineBlocks.FLUID_TANK)
             .setRenderer(() -> FluidTankBER::new)
             .apply(MachineBlockEntities::machineBlockEntityCapabilities)
-            .addCapability(Capabilities.FluidHandler.BLOCK, IFluidTankUser.FLUID_HANDLER_PROVIDER);
+            .addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
 
 
     public static final RegiliteBlockEntity<FluidTankBlockEntity.Enhanced> PRESSURIZED_FLUID_TANK =
         register("pressurized_fluid_tank", FluidTankBlockEntity.Enhanced::new, MachineBlocks.PRESSURIZED_FLUID_TANK)
             .setRenderer(() -> FluidTankBER::new)
             .apply(MachineBlockEntities::machineBlockEntityCapabilities)
-            .addCapability(Capabilities.FluidHandler.BLOCK, IFluidTankUser.FLUID_HANDLER_PROVIDER);
+            .addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
 
     public static final RegiliteBlockEntity<EnchanterBlockEntity> ENCHANTER =
         register("enchanter", EnchanterBlockEntity::new, MachineBlocks.ENCHANTER);
@@ -82,7 +82,7 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<XPVacuumBlockEntity> XP_VACUUM =
         register("xp_vacuum", XPVacuumBlockEntity::new, MachineBlocks.XP_VACUUM)
             .apply(MachineBlockEntities::machineBlockEntityCapabilities)
-            .addCapability(Capabilities.FluidHandler.BLOCK, IFluidTankUser.FLUID_HANDLER_PROVIDER);
+            .addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
 
     public static final RegiliteBlockEntity<TravelAnchorBlockEntity> TRAVEL_ANCHOR =
         register("travel_anchor", TravelAnchorBlockEntity::new, MachineBlocks.TRAVEL_ANCHOR)
@@ -99,12 +99,12 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<DrainBlockEntity> DRAIN =
         register("drain", DrainBlockEntity::new, MachineBlocks.DRAIN)
             .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
-            .addCapability(Capabilities.FluidHandler.BLOCK, IFluidTankUser.FLUID_HANDLER_PROVIDER);
+            .addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
 
     public static final RegiliteBlockEntity<SoulBinderBlockEntity> SOUL_BINDER =
         register("soul_binder", SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER)
             .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
-            .addCapability(Capabilities.FluidHandler.BLOCK, IFluidTankUser.FLUID_HANDLER_PROVIDER);
+            .addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
 
     public static final RegiliteBlockEntity<WiredChargerBlockEntity> WIRED_CHARGER =
         register("wired_charger", WiredChargerBlockEntity::new, MachineBlocks.WIRED_CHARGER)
@@ -149,13 +149,13 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<SoulEngineBlockEntity> SOUL_ENGINE =
         register("soul_engine", SoulEngineBlockEntity::new, MachineBlocks.SOUL_ENGINE)
             .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
-            .addCapability(Capabilities.FluidHandler.BLOCK, IFluidTankUser.FLUID_HANDLER_PROVIDER);
+            .addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
 
     public static final RegiliteBlockEntity<XPObeliskBlockEntity> XP_OBELISK =
         register("xp_obelisk", XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK)
             .setRenderer(() -> XPObeliskBER::new)
             .apply(MachineBlockEntities::machineBlockEntityCapabilities)
-            .addCapability(Capabilities.FluidHandler.BLOCK, IFluidTankUser.FLUID_HANDLER_PROVIDER);
+            .addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
 
     @SafeVarargs
     private static <B extends BlockEntity> RegiliteBlockEntity<B> register(String name, BlockEntityType.BlockEntitySupplier<B> beFactory,

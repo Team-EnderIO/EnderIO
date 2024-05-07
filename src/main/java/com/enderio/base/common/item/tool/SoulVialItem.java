@@ -2,14 +2,11 @@ package com.enderio.base.common.item.tool;
 
 import com.enderio.EnderIO;
 import com.enderio.api.attachment.StoredEntityData;
-import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.EntityCaptureUtils;
-import com.enderio.core.client.item.IAdvancedTooltipProvider;
-import com.enderio.core.common.util.EntityUtil;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +35,6 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +45,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 @EventBusSubscriber(modid = EnderIO.MODID)
-public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
+public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     public static final ICapabilityProvider<ItemStack, Void, StoredEntityData> STORED_ENTITY_PROVIDER
         = (stack, ctx) -> stack.get(EIODataComponents.ENTITY_DATA);

@@ -4,7 +4,7 @@ import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.machines.common.attachment.IFluidTankUser;
+import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
@@ -24,7 +24,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class XPObeliskBlockEntity extends MachineBlockEntity implements IFluidTankUser {
+public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTankUser {
 
     private final NetworkDataSlot<Integer> xpTankDataSlot;
     private final MachineFluidHandler fluidHandler;

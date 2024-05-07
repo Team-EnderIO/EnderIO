@@ -4,7 +4,6 @@ import com.enderio.base.common.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
@@ -14,7 +13,7 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class PaintedWoodenPressurePlateBlock extends PressurePlateBlock implements EntityBlock, IPaintedBlock {
+public class PaintedWoodenPressurePlateBlock extends PressurePlateBlock implements EntityBlock, PaintedBlock {
 
     public PaintedWoodenPressurePlateBlock(Properties properties) {
         super(BlockSetType.OAK, properties);

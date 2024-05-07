@@ -7,7 +7,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
@@ -17,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class PaintedStairBlock extends StairBlock implements EntityBlock, IPaintedBlock {
+public class PaintedStairBlock extends StairBlock implements EntityBlock, PaintedBlock {
 
     public PaintedStairBlock(Properties properties) {
         super(Blocks.OAK_PLANKS.defaultBlockState(), properties);

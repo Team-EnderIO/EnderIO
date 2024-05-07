@@ -1,7 +1,6 @@
 package com.enderio.machines.common.io.item;
 
-import com.enderio.api.io.IIOConfigurable;
-import com.enderio.api.io.IOMode;
+import com.enderio.api.io.IOConfigurable;
 import com.enderio.machines.common.blockentity.MachineState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -10,22 +9,21 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Function;
 import java.util.function.IntConsumer;
 
 /**
  * A machine inventory.
- * Configured and controlled by a machine's {@link IIOConfigurable} and a {@link MachineInventoryLayout}.
+ * Configured and controlled by a machine's {@link IOConfigurable} and a {@link MachineInventoryLayout}.
  */
 public class MachineInventory extends ItemStackHandler {
-    private final IIOConfigurable ioConfigurable;
+    private final IOConfigurable ioConfigurable;
     private final MachineInventoryLayout layout;
     private IntConsumer changeListener = i -> {};
 
     /**
      * Create a new machine inventory.
      */
-    public MachineInventory(IIOConfigurable ioConfigurable, MachineInventoryLayout layout) {
+    public MachineInventory(IOConfigurable ioConfigurable, MachineInventoryLayout layout) {
         super(layout.getSlotCount());
         this.ioConfigurable = ioConfigurable;
         this.layout = layout;

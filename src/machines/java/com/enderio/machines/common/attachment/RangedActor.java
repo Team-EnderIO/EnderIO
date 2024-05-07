@@ -1,6 +1,6 @@
 package com.enderio.machines.common.attachment;
 
-public interface IRangedActor {
+public interface RangedActor {
 
     int getMaxRange();
 

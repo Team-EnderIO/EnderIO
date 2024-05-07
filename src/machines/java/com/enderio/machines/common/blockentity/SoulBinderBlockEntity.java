@@ -9,7 +9,7 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.machines.common.attachment.IFluidTankUser;
+import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
@@ -46,7 +46,7 @@ import java.util.List;
 
 import static com.enderio.base.common.util.ExperienceUtil.EXP_TO_FLUID;
 
-public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements IFluidTankUser {
+public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_BINDER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.SOUL_BINDER_USAGE);

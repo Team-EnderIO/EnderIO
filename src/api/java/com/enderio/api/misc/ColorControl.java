@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.Locale;
 
-public enum ColorControl implements IIcon {
+public enum ColorControl implements Icon {
     GREEN(0xFF3B511A, 0xFF46611F),
     BROWN(0xFF51301A, 0xFF61391F),
     BLUE(0xFF253192, 0xFF2C3AAF),

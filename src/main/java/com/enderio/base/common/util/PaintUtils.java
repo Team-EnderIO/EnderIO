@@ -1,6 +1,6 @@
 package com.enderio.base.common.util;
 
-import com.enderio.base.common.block.painted.IPaintedBlock;
+import com.enderio.base.common.block.painted.PaintedBlock;
 import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -51,8 +51,8 @@ public class PaintUtils {
                 .findFirst()
                 .orElse(SoundType.WOOD.getPlaceSound()));
         }
-        if (state.getBlock() instanceof IPaintedBlock iPaintedBlock) {
-            return Optional.of(iPaintedBlock.getSoundType(state, level, pos, player).getPlaceSound());
+        if (state.getBlock() instanceof PaintedBlock paintedBlock) {
+            return Optional.of(paintedBlock.getSoundType(state, level, pos, player).getPlaceSound());
         } else {
             return Optional.empty();
         }

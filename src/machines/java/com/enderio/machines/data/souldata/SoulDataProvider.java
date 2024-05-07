@@ -4,7 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
 import com.enderio.machines.common.souldata.EngineSoul;
-import com.enderio.machines.common.souldata.ISoulData;
+import com.enderio.machines.common.souldata.SoulData;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
@@ -158,7 +158,7 @@ public class SoulDataProvider implements DataProvider {
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data, EngineSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
     }
 
-    static class FinshedSoulData<T extends ISoulData> {
+    static class FinshedSoulData<T extends SoulData> {
 
         private final Codec<T> codec;
         private final T data;

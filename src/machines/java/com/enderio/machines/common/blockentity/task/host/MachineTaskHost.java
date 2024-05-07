@@ -3,7 +3,7 @@ package com.enderio.machines.common.blockentity.task.host;
 import com.enderio.api.UseOnly;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.machines.common.blockentity.task.IMachineTask;
+import com.enderio.machines.common.blockentity.task.MachineTask;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 public abstract class MachineTaskHost {
     @Nullable
-    private IMachineTask currentTask;
+    private MachineTask currentTask;
 
     private boolean isNewTaskAvailable;
 
@@ -53,20 +53,20 @@ public abstract class MachineTaskHost {
      * Get the new task.
      */
     @Nullable
-    protected abstract IMachineTask getNewTask();
+    protected abstract MachineTask getNewTask();
 
     /**
      * Load the task from NBT.
      */
     @Nullable
-    protected abstract IMachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt);
+    protected abstract MachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt);
 
     // endregion
 
     // region Task Handling
 
     @Nullable
-    public IMachineTask getCurrentTask() {
+    public MachineTask getCurrentTask() {
         return currentTask;
     }
 

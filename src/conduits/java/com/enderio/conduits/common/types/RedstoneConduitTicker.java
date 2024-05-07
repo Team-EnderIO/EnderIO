@@ -2,7 +2,7 @@ package com.enderio.conduits.common.types;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
-import com.enderio.api.conduit.ticker.IIOAwareConduitTicker;
+import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.tag.ConduitTags;
@@ -19,7 +19,7 @@ import org.apache.commons.lang3.function.TriFunction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RedstoneConduitTicker implements IIOAwareConduitTicker {
+public class RedstoneConduitTicker implements IOAwareConduitTicker {
 
     private final List<ColorControl> activeColors = new ArrayList<>();
     @Override

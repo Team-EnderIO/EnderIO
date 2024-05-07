@@ -32,7 +32,7 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
         return new Block[] { getPaint(), getPaint2() };
     }
 
-    public static final ModelProperty<Block> PAINT2 = IPaintableBlockEntity.createAndRegisterModelProperty();
+    public static final ModelProperty<Block> PAINT2 = PaintableBlockEntity.createAndRegisterModelProperty();
 
     public DoublePaintedBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(EIOBlockEntities.DOUBLE_PAINTED.get(), pWorldPosition, pBlockState);

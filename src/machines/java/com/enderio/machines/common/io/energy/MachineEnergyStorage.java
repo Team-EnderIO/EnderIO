@@ -1,6 +1,6 @@
 package com.enderio.machines.common.io.energy;
 
-import com.enderio.api.io.IIOConfigurable;
+import com.enderio.api.io.IOConfigurable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.MachineNBTKeys;
 import net.minecraft.core.Direction;
@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  * Also provides sided access through capabilities.
  */
 public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializable<CompoundTag> {
-    private final IIOConfigurable config;
+    private final IOConfigurable config;
     private final EnergyIOMode ioMode;
 
     private int energyStored;
@@ -26,7 +26,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
     private final Supplier<Integer> capacity;
     private final Supplier<Integer> usageRate;
 
-    public MachineEnergyStorage(IIOConfigurable config, EnergyIOMode ioMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
+    public MachineEnergyStorage(IOConfigurable config, EnergyIOMode ioMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
         this.config = config;
         this.ioMode = ioMode;
         this.capacity = capacity;
@@ -34,7 +34,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
     }
 
     @Override
-    public final IIOConfigurable getConfig() {
+    public final IOConfigurable getConfig() {
         return config;
     }
 

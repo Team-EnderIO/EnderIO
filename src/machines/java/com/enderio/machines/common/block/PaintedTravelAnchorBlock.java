@@ -1,6 +1,6 @@
 package com.enderio.machines.common.block;
 
-import com.enderio.base.common.block.painted.IPaintedBlock;
+import com.enderio.base.common.block.painted.PaintedBlock;
 import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class PaintedTravelAnchorBlock extends TravelAnchorBlock implements IPaintedBlock {
+public class PaintedTravelAnchorBlock extends TravelAnchorBlock implements PaintedBlock {
 
     public PaintedTravelAnchorBlock(Properties props) {
         super(MachineBlockEntities.PAINTED_TRAVEL_ANCHOR, props);
@@ -47,7 +47,7 @@ public class PaintedTravelAnchorBlock extends TravelAnchorBlock implements IPain
     public Block getPaint(BlockGetter level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof PaintedTravelAnchorBlockEntity paintedBlockEntity) {
             Block paint = paintedBlockEntity.getPaint();
-            if (paint != null && !(paint instanceof IPaintedBlock)) {
+            if (paint != null && !(paint instanceof PaintedBlock)) {
                 return paint;
             }
         }

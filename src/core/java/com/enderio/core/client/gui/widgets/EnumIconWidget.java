@@ -1,6 +1,6 @@
 package com.enderio.core.client.gui.widgets;
 
-import com.enderio.api.misc.IIcon;
+import com.enderio.api.misc.Icon;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.enderio.core.client.gui.screen.IFullScreenListener;
@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnderScreen> extends AbstractWidget implements IFullScreenListener {
+public class EnumIconWidget<T extends Enum<T> & Icon, U extends Screen & IEnderScreen> extends AbstractWidget implements IFullScreenListener {
 
     private final Supplier<T> getter;
     private final Consumer<T> setter;

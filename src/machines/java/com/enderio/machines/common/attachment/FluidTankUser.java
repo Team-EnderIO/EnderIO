@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
-public interface IFluidTankUser {
+public interface FluidTankUser {
 
     MachineTankLayout getTankLayout();
     MachineFluidHandler getFluidHandler();
@@ -26,7 +26,7 @@ public interface IFluidTankUser {
 
     ICapabilityProvider<MachineBlockEntity, Direction, IFluidHandler> FLUID_HANDLER_PROVIDER =
         (be, side) ->{
-            if (be instanceof IFluidTankUser user) {
+            if (be instanceof FluidTankUser user) {
                 return user.getFluidHandler().getForSide(side);
             }
             return null;

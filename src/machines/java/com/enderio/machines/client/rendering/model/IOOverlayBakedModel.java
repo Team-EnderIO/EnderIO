@@ -1,7 +1,7 @@
 package com.enderio.machines.client.rendering.model;
 
 import com.enderio.EnderIO;
-import com.enderio.api.io.IIOConfigurable;
+import com.enderio.api.io.IOConfigurable;
 import com.enderio.api.io.IOMode;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.google.gson.JsonDeserializationContext;
@@ -72,7 +72,7 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, RenderType renderType) {
         if (extraData.has(MachineBlockEntity.IO_CONFIG_PROPERTY)) {
             // Get io config from the block entity.
-            IIOConfigurable config = extraData.get(MachineBlockEntity.IO_CONFIG_PROPERTY);
+            IOConfigurable config = extraData.get(MachineBlockEntity.IO_CONFIG_PROPERTY);
             if (config != null && config.shouldRenderIOConfigOverlay()) {
                 // Build a list of quads
                 List<BakedQuad> quads = new ArrayList<>();

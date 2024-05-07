@@ -4,7 +4,7 @@ import com.enderio.api.io.IOMode;
 import com.enderio.base.common.util.AttractionUtil;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.ActionRange;
-import com.enderio.machines.common.attachment.IRangedActor;
+import com.enderio.machines.common.attachment.RangedActor;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.io.IOConfig;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 // TODO: I want to review the vacuum stuff too.
-public abstract class VacuumMachineBlockEntity<T extends Entity> extends MachineBlockEntity implements IRangedActor {
+public abstract class VacuumMachineBlockEntity<T extends Entity> extends MachineBlockEntity implements RangedActor {
     private static final double COLLISION_DISTANCE_SQ = 1 * 1;
     protected static final double SPEED = 0.025;
     protected static final double SPEED_4 = SPEED * 4;

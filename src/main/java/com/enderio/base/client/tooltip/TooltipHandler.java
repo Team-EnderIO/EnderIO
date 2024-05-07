@@ -6,7 +6,7 @@ import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.item.IAdvancedTooltipProvider;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.EntityUtil;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.ChatFormatting;
@@ -98,19 +98,19 @@ public class TooltipHandler {
 
     // region Advanced Tooltips
 
-    private static Optional<IAdvancedTooltipProvider> getAdvancedProvider(Item item) {
-        if (item instanceof IAdvancedTooltipProvider provider) {
+    private static Optional<AdvancedTooltipProvider> getAdvancedProvider(Item item) {
+        if (item instanceof AdvancedTooltipProvider provider) {
             return Optional.of(provider);
         }
 
-        if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof IAdvancedTooltipProvider provider) {
+        if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof AdvancedTooltipProvider provider) {
             return Optional.of(provider);
         }
 
         return Optional.empty();
     }
 
-    private static void addAdvancedTooltips(IAdvancedTooltipProvider tooltipProvider, ItemStack itemstack, @Nullable Player player, List<Component> components, boolean showAdvanced) {
+    private static void addAdvancedTooltips(AdvancedTooltipProvider tooltipProvider, ItemStack itemstack, @Nullable Player player, List<Component> components, boolean showAdvanced) {
         tooltipProvider.addCommonTooltips(itemstack, player, components);
         if (showAdvanced) {
             tooltipProvider.addDetailedTooltips(itemstack, player, components);
@@ -130,7 +130,7 @@ public class TooltipHandler {
         }
     }
 
-    private static boolean hasDetailedTooltip(IAdvancedTooltipProvider tooltipProvider, ItemStack stack, @Nullable Player player) {
+    private static boolean hasDetailedTooltip(AdvancedTooltipProvider tooltipProvider, ItemStack stack, @Nullable Player player) {
         List<Component> tooltips = new ArrayList<>();
         tooltipProvider.addDetailedTooltips(stack, player, tooltips);
         return !tooltips.isEmpty();

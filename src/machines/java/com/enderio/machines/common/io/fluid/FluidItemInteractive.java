@@ -1,6 +1,6 @@
 package com.enderio.machines.common.io.fluid;
 
-import com.enderio.machines.common.attachment.IFluidTankUser;
+import com.enderio.machines.common.attachment.FluidTankUser;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -15,10 +15,10 @@ import java.util.Optional;
  * An interface that block entities may implement in order to interact with items support IFluidHandlerItem
  * Adapted from Mekanism's FluidUtils.
  */
-public interface IFluidItemInteractive {
+public interface FluidItemInteractive {
 
     // Requires direct tank access which is undesirable. MachineFluidHandler would be better to for multi-tank block.
-    default boolean handleFluidItemInteraction(Player player, InteractionHand hand, ItemStack itemStack, IFluidTankUser machine, TankAccess tankAccess) {
+    default boolean handleFluidItemInteraction(Player player, InteractionHand hand, ItemStack itemStack, FluidTankUser machine, TankAccess tankAccess) {
         ItemStack copyStack = itemStack.copyWithCount(1);
         Optional<IFluidHandlerItem> fluidHandlerItem = FluidUtil.getFluidHandler(copyStack);
         if (fluidHandlerItem.isPresent()) {

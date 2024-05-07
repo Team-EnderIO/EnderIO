@@ -6,7 +6,7 @@ import net.neoforged.neoforge.client.model.data.ModelProperty;
 import java.util.HashSet;
 import java.util.Set;
 
-public interface IPaintableBlockEntity {
+public interface PaintableBlockEntity {
 
     Set<ModelProperty<Block>> PAINT_DATA_PROPERTIES = new HashSet<>();
 

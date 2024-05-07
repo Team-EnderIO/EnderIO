@@ -2,7 +2,7 @@ package com.enderio.conduits.common.types;
 
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.TieredConduit;
-import com.enderio.api.conduit.ticker.IConduitTicker;
+import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.Vector2i;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +22,7 @@ public class FluidConduitType extends TieredConduit<FluidExtendedData> {
     }
 
     @Override
-    public IConduitTicker getTicker() {
+    public ConduitTicker getTicker() {
         return new FluidConduitTicker(!isMultiFluid, transferRate);
     }
 

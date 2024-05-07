@@ -6,7 +6,7 @@ import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
-import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
+import com.enderio.machines.common.blockentity.multienergy.CapacityTier;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyNode;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyStorageWrapper;
 import com.enderio.machines.common.blockentity.sync.LargeEnergyData;
@@ -38,7 +38,7 @@ import java.util.Map;
 
 public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implements MultiConfigurable {
 
-    public final ICapacityTier tier;
+    public final CapacityTier tier;
 
     private final MultiEnergyNode node;
 

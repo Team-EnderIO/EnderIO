@@ -310,7 +310,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     protected class AlloySmeltingMachineTaskHost extends CraftingMachineTaskHost<AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> {
         public AlloySmeltingMachineTaskHost(EnderBlockEntity blockEntity, Supplier<Boolean> canAcceptNewTask, RecipeType<AlloySmeltingRecipe> recipeType,
             AlloySmeltingRecipe.ContainerWrapper container,
-            ICraftingMachineTaskFactory<AlloySmeltingMachineTask, AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> taskFactory) {
+            CraftingMachineTaskFactory<AlloySmeltingMachineTask, AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> taskFactory) {
             super(blockEntity, canAcceptNewTask, recipeType, container, taskFactory);
         }
 

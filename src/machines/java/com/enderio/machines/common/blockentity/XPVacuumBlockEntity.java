@@ -2,7 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.machines.common.attachment.IFluidTankUser;
+import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -24,7 +24,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 import static com.enderio.base.common.util.ExperienceUtil.EXP_TO_FLUID;
 
-public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb> implements IFluidTankUser {
+public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb> implements FluidTankUser {
 
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();

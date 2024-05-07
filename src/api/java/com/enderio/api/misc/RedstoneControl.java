@@ -9,11 +9,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 
-import java.util.Locale;
 import java.util.function.IntFunction;
 import java.util.function.UnaryOperator;
 
-public enum RedstoneControl implements IIcon, StringRepresentable {
+public enum RedstoneControl implements Icon, StringRepresentable {
 
     ALWAYS_ACTIVE(0, "always_active", bool -> true, ApiLang.REDSTONE_ALWAYS_ACTIVE),
     ACTIVE_WITH_SIGNAL(1, "active_with_signal", bool -> bool, ApiLang.REDSTONE_ACTIVE_WITH_SIGNAL),

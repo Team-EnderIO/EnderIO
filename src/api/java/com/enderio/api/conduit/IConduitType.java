@@ -1,7 +1,7 @@
 package com.enderio.api.conduit;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.ticker.IConduitTicker;
+import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.RedstoneControl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,10 +36,10 @@ public interface IConduitType<T extends IExtendedConduitData<T>> {
         return false;
     }
 
-    IConduitTicker getTicker();
+    ConduitTicker getTicker();
 
     @UseOnly(LogicalSide.CLIENT)
-    IClientConduitData<T> getClientData();
+    ClientConduitData<T> getClientData();
     IConduitMenuData getMenuData();
 
     T createExtendedConduitData(Level level, BlockPos pos);

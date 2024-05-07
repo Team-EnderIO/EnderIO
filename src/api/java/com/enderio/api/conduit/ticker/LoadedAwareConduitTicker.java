@@ -14,7 +14,7 @@ import org.apache.commons.lang3.function.TriFunction;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface ILoadedAwareConduitTicker extends IConduitTicker {
+public interface LoadedAwareConduitTicker extends ConduitTicker {
 
     @Override
     default void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {

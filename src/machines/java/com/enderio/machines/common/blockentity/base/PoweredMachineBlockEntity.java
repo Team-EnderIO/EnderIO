@@ -3,10 +3,8 @@ package com.enderio.machines.common.blockentity.base;
 import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.api.misc.RedstoneControl;
-import com.enderio.base.common.blockentity.IMachineInstall;
-import com.enderio.base.common.capacitor.CapacitorUtil;
+import com.enderio.base.common.blockentity.MachineInstallable;
 import com.enderio.api.capacitor.CapacitorData;
-import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.core.common.network.NetworkDataSlot;
@@ -43,7 +41,7 @@ import java.util.function.Supplier;
 /**
  * A machine that stores energy.
  */
-public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements IMachineInstall {
+public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements MachineInstallable {
 
     public static final ICapabilityProvider<PoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
         (be, side) -> be.exposedEnergyStorage != null ? be.exposedEnergyStorage.getForSide(side) : null;

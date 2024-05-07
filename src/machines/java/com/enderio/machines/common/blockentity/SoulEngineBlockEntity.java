@@ -8,7 +8,7 @@ import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.attachment.IFluidTankUser;
+import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -51,7 +51,7 @@ import java.util.function.Supplier;
 import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
 
 @EventBusSubscriber
-public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements IFluidTankUser {
+public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser {
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
     public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED);

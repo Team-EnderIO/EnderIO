@@ -9,9 +9,9 @@ import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.attachment.ActionRange;
-import com.enderio.machines.common.attachment.IRangedActor;
+import com.enderio.machines.common.attachment.RangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
-import com.enderio.machines.common.blockentity.task.IMachineTask;
+import com.enderio.machines.common.blockentity.task.MachineTask;
 import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
 import com.enderio.machines.common.blockentity.task.host.MachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 // TODO: I want to revisit the powered spawner and task
 //       But there's not enough time before alpha, so just porting as-is.
-public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IRangedActor {
+public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements RangedActor {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
@@ -61,12 +61,12 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
             @Override
-            protected @Nullable IMachineTask getNewTask() {
+            protected @Nullable MachineTask getNewTask() {
                 return createTask();
             }
 
             @Override
-            protected @Nullable IMachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+            protected @Nullable MachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
                 SpawnerMachineTask task = createTask();
                 task.deserializeNBT(lookupProvider, nbt);
                 return task;

@@ -17,7 +17,7 @@ import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
 
-public interface IIOAwareConduitTicker extends ILoadedAwareConduitTicker {
+public interface IOAwareConduitTicker extends LoadedAwareConduitTicker {
     @Override
     default void tickGraph(IConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         ListMultimap<ColorControl, Connection> extracts = ArrayListMultimap.create();

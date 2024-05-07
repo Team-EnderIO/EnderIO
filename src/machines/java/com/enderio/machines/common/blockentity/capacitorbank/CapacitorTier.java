@@ -1,10 +1,10 @@
 package com.enderio.machines.common.blockentity.capacitorbank;
 
-import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
+import com.enderio.machines.common.blockentity.multienergy.CapacityTier;
 import com.enderio.machines.common.config.MachinesConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-public enum CapacitorTier implements ICapacityTier {
+public enum CapacitorTier implements CapacityTier {
 
     BASIC(MachinesConfig.COMMON.ENERGY.BASIC_CAPACITOR_BANK_CAPACITY),
     ADVANCED(MachinesConfig.COMMON.ENERGY.ADVANCED_CAPACITOR_BANK_CAPACITY),

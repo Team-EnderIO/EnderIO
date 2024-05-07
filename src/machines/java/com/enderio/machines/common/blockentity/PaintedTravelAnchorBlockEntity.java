@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.EIONBTKeys;
-import com.enderio.base.common.blockentity.IPaintableBlockEntity;
+import com.enderio.base.common.blockentity.PaintableBlockEntity;
 import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.base.common.util.PaintUtils;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity implements IPaintableBlockEntity {
+public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity implements PaintableBlockEntity {
 
     @Nullable
     private Block paint;

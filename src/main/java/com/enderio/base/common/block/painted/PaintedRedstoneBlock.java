@@ -7,7 +7,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.PoweredBlock;
@@ -16,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class PaintedRedstoneBlock extends PoweredBlock implements EntityBlock, IPaintedBlock {
+public class PaintedRedstoneBlock extends PoweredBlock implements EntityBlock, PaintedBlock {
 
     public PaintedRedstoneBlock(Properties properties) {
         super(properties);

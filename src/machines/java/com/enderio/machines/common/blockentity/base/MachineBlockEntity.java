@@ -2,11 +2,10 @@ package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.capability.ISideConfig;
-import com.enderio.api.io.IIOConfigurable;
+import com.enderio.api.io.IOConfigurable;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.misc.RedstoneControl;
-import com.enderio.base.common.blockentity.IWrenchable;
-import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.base.common.blockentity.Wrenchable;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
@@ -46,7 +45,6 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -54,7 +52,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider, IWrenchable, IIOConfigurable {
+public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider, Wrenchable, IOConfigurable {
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, ISideConfig> SIDE_CONFIG_PROVIDER = SidedIOConfig::new;
 
@@ -65,7 +63,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     private final IOConfig defaultIOConfig;
 
-    public static final ModelProperty<IIOConfigurable> IO_CONFIG_PROPERTY = new ModelProperty<>();
+    public static final ModelProperty<IOConfigurable> IO_CONFIG_PROPERTY = new ModelProperty<>();
 
     private ModelData modelData = ModelData.EMPTY;
 

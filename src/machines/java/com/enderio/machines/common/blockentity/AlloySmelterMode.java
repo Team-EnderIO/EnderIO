@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.EnderIO;
-import com.enderio.api.misc.IIcon;
+import com.enderio.api.misc.Icon;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.lang.MachineLang;
@@ -20,7 +20,7 @@ import java.util.function.IntFunction;
  * Alloy smelter mode.
  * Also provides icon behaviours for GUI.
  */
-public enum AlloySmelterMode implements IIcon, StringRepresentable {
+public enum AlloySmelterMode implements Icon, StringRepresentable {
     /**
      * Furnace mode, only performs smelting recipes.
      */

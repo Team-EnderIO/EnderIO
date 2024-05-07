@@ -1,6 +1,6 @@
 package com.enderio.machines.common.io.fluid;
 
-import com.enderio.api.io.IIOConfigurable;
+import com.enderio.api.io.IOConfigurable;
 import com.enderio.core.CoreNBTKeys;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -24,7 +24,7 @@ import java.util.function.IntConsumer;
 public class MachineFluidHandler implements IFluidHandler, INBTSerializable<CompoundTag> {
 
     public static final String TANK_INDEX = "Index";
-    private final IIOConfigurable config;
+    private final IOConfigurable config;
     private final MachineTankLayout layout;
     private Map<Integer, MachineFluidTank> tanks =  new HashMap<>();
     private List<FluidStack> stacks;
@@ -32,7 +32,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     // Not sure if we need this but might be useful to update recipe/task if tank is filled.
     private IntConsumer changeListener = i -> {};
 
-    public MachineFluidHandler(IIOConfigurable config, MachineTankLayout layout) {
+    public MachineFluidHandler(IOConfigurable config, MachineTankLayout layout) {
         this.config = config;
         this.layout = layout;
         this.stacks = NonNullList.withSize(getTanks(), FluidStack.EMPTY);
@@ -42,7 +42,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         changeListener = changeListener.andThen(callback);
     }
 
-    public final IIOConfigurable getConfig() {
+    public final IOConfigurable getConfig() {
         return config;
     }
 

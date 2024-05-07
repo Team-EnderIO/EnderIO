@@ -1,8 +1,8 @@
 package com.enderio.base.client.renderer;
 
-import com.enderio.base.common.block.painted.IPaintedBlock;
+import com.enderio.base.common.block.painted.PaintedBlock;
 import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
-import com.enderio.base.common.blockentity.IPaintableBlockEntity;
+import com.enderio.base.common.blockentity.PaintableBlockEntity;
 import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
@@ -24,7 +24,7 @@ public class PaintedBlockColor implements BlockColor, ItemColor {
     public int getColor(BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tintIndex) {
         if (level != null && pos != null) {
             BlockEntity entity = level.getBlockEntity(pos);
-            if (entity instanceof IPaintableBlockEntity paintedBlockEntity) {
+            if (entity instanceof PaintableBlockEntity paintedBlockEntity) {
                 Block[] paints = paintedBlockEntity.getPaints();
                 if (paintedBlockEntity instanceof DoublePaintedBlockEntity doublePaintedBlockEntity) {
                     if (tintIndex < 0) {
@@ -59,7 +59,7 @@ public class PaintedBlockColor implements BlockColor, ItemColor {
                     }
 
                     BlockState paintState = paint.defaultBlockState();
-                    if (paint instanceof IPaintedBlock) {
+                    if (paint instanceof PaintedBlock) {
                         continue;
                     }
 

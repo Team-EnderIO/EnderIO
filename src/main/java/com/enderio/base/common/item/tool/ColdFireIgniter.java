@@ -5,7 +5,7 @@ import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.core.common.item.ITabVariants;
+import com.enderio.core.common.item.CreativeTabVariants;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -33,7 +33,7 @@ import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
 
-public class ColdFireIgniter extends Item implements ITabVariants {
+public class ColdFireIgniter extends Item implements CreativeTabVariants {
 
     public static ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER =
         (stack, v) -> new StrictFluidHandlerItemStack(EIODataComponents.SIMPLE_FLUID_CONTENT, stack, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL);

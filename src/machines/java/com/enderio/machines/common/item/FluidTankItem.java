@@ -2,7 +2,7 @@ package com.enderio.machines.common.item;
 
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.item.IAdvancedTooltipProvider;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.rendering.item.FluidTankBEWLR;
 import com.enderio.machines.common.block.MachineBlock;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider {
+public class FluidTankItem extends BlockItem implements AdvancedTooltipProvider {
 
     public static final ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER =
         (stack, v) -> new FluidHandlerItemStack(EIODataComponents.SIMPLE_FLUID_CONTENT, stack, ((FluidTankItem)stack.getItem()).capacity);

@@ -16,19 +16,19 @@ import java.util.function.Supplier;
 
 public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Container> extends MachineTaskHost {
 
-    public interface ICraftingMachineTaskFactory<T extends CraftingMachineTask<R, C>, R extends MachineRecipe<C>, C extends Container> {
+    public interface CraftingMachineTaskFactory<T extends CraftingMachineTask<R, C>, R extends MachineRecipe<C>, C extends Container> {
         T createTask(Level level, C container, @Nullable RecipeHolder<R> recipe);
     }
 
     private final RecipeType<R> recipeType;
     private final C container;
-    private final ICraftingMachineTaskFactory<? extends CraftingMachineTask<R, C>, R, C> taskFactory;
+    private final CraftingMachineTaskFactory<? extends CraftingMachineTask<R, C>, R, C> taskFactory;
 
     /**
      * This should be constructed in the constructor of your block entity.
      */
     public CraftingMachineTaskHost(EnderBlockEntity blockEntity, Supplier<Boolean> canAcceptNewTask, RecipeType<R> recipeType,
-        C container, ICraftingMachineTaskFactory<? extends CraftingMachineTask<R, C>, R, C> taskFactory) {
+        C container, CraftingMachineTaskFactory<? extends CraftingMachineTask<R, C>, R, C> taskFactory) {
         super(blockEntity, canAcceptNewTask);
         this.recipeType = recipeType;
         this.container = container;

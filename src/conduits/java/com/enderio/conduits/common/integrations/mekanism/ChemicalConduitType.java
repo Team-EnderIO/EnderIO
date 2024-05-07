@@ -1,9 +1,8 @@
 package com.enderio.conduits.common.integrations.mekanism;
 
-import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.TieredConduit;
-import com.enderio.api.conduit.ticker.IConduitTicker;
+import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.EnderConduitTypes;
 import mekanism.api.MekanismAPI;
@@ -22,7 +21,7 @@ public class ChemicalConduitType extends TieredConduit<ChemicalExtendedData> {
     }
 
     @Override
-    public IConduitTicker getTicker() {
+    public ConduitTicker getTicker() {
         return new ChemicalTicker(getTier(), MekanismIntegration.GAS, MekanismIntegration.SLURRY, MekanismIntegration.INFUSION, MekanismIntegration.PIGMENT);
     }
 

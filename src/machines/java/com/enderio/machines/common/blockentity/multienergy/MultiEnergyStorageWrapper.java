@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blockentity.multienergy;
 
-import com.enderio.api.io.IIOConfigurable;
+import com.enderio.api.io.IOConfigurable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
@@ -19,14 +19,14 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
     @Nullable
     private Graph<Mergeable.Dummy> graph;
 
-    private final Supplier<ICapacityTier> tier;
+    private final Supplier<CapacityTier> tier;
 
     private long addedEnergy = 0;
     private long removedEnergy = 0;
 
     private long lastResetTime = 0;
 
-    public MultiEnergyStorageWrapper(IIOConfigurable config, EnergyIOMode ioMode, Supplier<ICapacityTier> tier) {
+    public MultiEnergyStorageWrapper(IOConfigurable config, EnergyIOMode ioMode, Supplier<CapacityTier> tier) {
         super(config, ioMode, () -> tier.get().getStorageCapacity(), () -> tier.get().getStorageCapacity());
         this.tier = tier;
     }
