@@ -29,7 +29,7 @@ public class ConduitBundleCompatibilityDataSlotType implements NetworkDataSlot.T
 
     @Override
     public Tag save(HolderLookup.Provider lookupProvider, ConduitBundle value) {
-        return value.serializeGuiNBT(lookupProvider);
+        return value.serializeNBT(lookupProvider);
     }
 
     @Override
