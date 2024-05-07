@@ -12,6 +12,8 @@
               "include": [
                 "enderio:entity_data",
                 "enderio:energy",
+                "enderio:io_config",
+                "enderio:redstone_control",
                 "minecraft:container"
               ],
               "source": "block_entity"

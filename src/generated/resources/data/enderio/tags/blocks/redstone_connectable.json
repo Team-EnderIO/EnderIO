@@ -1,0 +1,16 @@
+{
+  "values": [
+    "minecraft:piston",
+    "minecraft:sticky_piston",
+    "minecraft:redstone_lamp",
+    "minecraft:note_block",
+    "minecraft:dispenser",
+    "minecraft:dropper",
+    "minecraft:powered_rail",
+    "minecraft:activator_rail",
+    "minecraft:moving_piston",
+    "#minecraft:doors",
+    "#minecraft:trapdoors",
+    "#minecraft:redstone_ores"
+  ]
+}
