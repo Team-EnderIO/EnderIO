@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.types;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.IClientConduitData;
+import com.enderio.api.conduit.ClientConduitData;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.RenderUtil;
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData> {
+public class FluidClientData extends ClientConduitData.Simple<FluidExtendedData> {
 
     private static final ResourceLocation MODEL = EnderIO.loc("block/extra/fluids");
     private static final ResourceLocation WIDGET_TEXTURE = EnderIO.loc("textures/gui/fluidbackground.png");

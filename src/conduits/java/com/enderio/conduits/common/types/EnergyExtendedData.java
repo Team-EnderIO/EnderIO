@@ -5,6 +5,7 @@ import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.core.CoreNBTKeys;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
@@ -26,7 +27,7 @@ public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedDa
 
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
         for (Direction direction: Direction.values()) {
             @Nullable EnergySidedData sidedData = energySidedData.get(direction);
@@ -40,7 +41,7 @@ public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedDa
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         energySidedData.clear();
         for (Direction direction: Direction.values()) {
             if (nbt.contains(direction.name())) {

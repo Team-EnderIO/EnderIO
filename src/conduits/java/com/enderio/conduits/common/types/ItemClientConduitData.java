@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.types;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.IClientConduitData;
+import com.enderio.api.conduit.ClientConduitData;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.common.init.EnderConduitTypes;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ItemClientConduitData implements IClientConduitData<ItemExtendedData> {
+public class ItemClientConduitData implements ClientConduitData<ItemExtendedData> {
     @Override
     public List<AbstractWidget> createWidgets(Screen screen, ItemExtendedData extendedConduitData,
         UpdateExtendedData<ItemExtendedData> updateExtendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {

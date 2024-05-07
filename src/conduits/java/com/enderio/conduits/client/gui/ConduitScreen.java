@@ -24,9 +24,11 @@ import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.network.PacketDecoder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,7 +158,12 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     private void sendExtendedConduitUpdate(Function<IExtendedConduitData<?>, IExtendedConduitData<?>> map) {
         var currentData = getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast();
         var menu = getMenu();
-        NetworkUtil.sendToServer(new C2SSetConduitExtendedData(menu.getBlockEntity().getBlockPos(), menu.getConduitType(), map.apply(currentData).serializeGuiNBT()));
+        PacketDistributor.sendToServer(new C2SSetConduitExtendedData(
+            menu.getBlockEntity().getBlockPos(),
+            menu.getConduitType(),
+            // TODO: Convenience method for getting the GUI NBT.
+            map.apply(currentData)
+                .serializeGuiNBT(menu.getBlockEntity().getLevel().registryAccess())));
     }
 
     private void addTypedButton(AbstractWidget button) {
@@ -166,7 +173,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
 
     private void actOnDynamic(Function<DynamicConnectionState, DynamicConnectionState> map) {
         if (getConnectionState() instanceof DynamicConnectionState dyn) {
-            NetworkUtil.sendToServer(new C2SSetConduitConnectionState(
+            PacketDistributor.sendToServer(new C2SSetConduitConnectionState(
                 getMenu().getBlockEntity().getBlockPos(),
                 getMenu().getDirection(),
                 getMenu().getConduitType(),

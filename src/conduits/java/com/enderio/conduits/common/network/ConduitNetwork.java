@@ -2,27 +2,25 @@ package com.enderio.conduits.common.network;
 
 import com.enderio.core.EnderCore;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class ConduitNetwork {
     private static final String PROTOCOL_VERSION = "1.0";
 
     @SubscribeEvent
-    public static void register(final RegisterPayloadHandlerEvent event) {
-        final IPayloadRegistrar registrar = event
+    public static void register(final RegisterPayloadHandlersEvent event) {
+        final PayloadRegistrar registrar = event
             .registrar(EnderCore.MODID)
             .versioned(PROTOCOL_VERSION);
 
-        registrar.play(C2SSetConduitConnectionState.ID, C2SSetConduitConnectionState::new,
-            handler -> handler
-                .server(ConduitClientPayloadHandler.getInstance()::handleConduitConnectionState));
+        registrar.playToServer(C2SSetConduitConnectionState.TYPE, C2SSetConduitConnectionState.STREAM_CODEC,
+            ConduitClientPayloadHandler.getInstance()::handleConduitConnectionState);
 
-        registrar.play(C2SSetConduitExtendedData.ID, C2SSetConduitExtendedData::new,
-            handler -> handler
-                .server(ConduitClientPayloadHandler.getInstance()::handleConduitExtendedData));
+        registrar.playToServer(C2SSetConduitExtendedData.TYPE, C2SSetConduitExtendedData.STREAM_CODEC,
+            ConduitClientPayloadHandler.getInstance()::handleConduitExtendedData);
     }
 
 }

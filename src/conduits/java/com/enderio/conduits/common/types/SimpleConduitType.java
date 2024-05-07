@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.types;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.IClientConduitData;
+import com.enderio.api.conduit.ClientConduitData;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
@@ -23,15 +23,15 @@ public class SimpleConduitType<T extends IExtendedConduitData<T>> implements ICo
     private final ConduitTicker ticker;
     private final Supplier<T> extendedDataFactory;
 
-    private final IClientConduitData<T> clientConduitData;
+    private final ClientConduitData<T> clientConduitData;
 
     private final IConduitMenuData menuData;
 
     public SimpleConduitType(ResourceLocation texture, ConduitTicker ticker, Supplier<T> extendedDataFactory, ResourceLocation iconTexture, Vector2i iconTexturePos, IConduitMenuData menuData) {
-        this(texture, ticker, extendedDataFactory, new IClientConduitData.Simple<>(iconTexture, iconTexturePos), menuData);
+        this(texture, ticker, extendedDataFactory, new ClientConduitData.Simple<>(iconTexture, iconTexturePos), menuData);
     }
 
-    public SimpleConduitType(ResourceLocation texture, ConduitTicker ticker, Supplier<T> extendedDataFactory, IClientConduitData<T> clientConduitData, IConduitMenuData menuData) {
+    public SimpleConduitType(ResourceLocation texture, ConduitTicker ticker, Supplier<T> extendedDataFactory, ClientConduitData<T> clientConduitData, IConduitMenuData menuData) {
         this.texture = texture;
         this.ticker = ticker;
         this.extendedDataFactory = extendedDataFactory;
@@ -55,7 +55,7 @@ public class SimpleConduitType<T extends IExtendedConduitData<T>> implements ICo
 
     @Override
     @UseOnly(LogicalSide.CLIENT)
-    public IClientConduitData<T> getClientData() {
+    public ClientConduitData<T> getClientData() {
         return clientConduitData;
     }
 

@@ -8,6 +8,7 @@ import com.enderio.conduits.client.ConduitClientSetup;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
@@ -175,7 +176,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     private static final String KEY_DATA = "ExtendedDataBackup";
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
         ListTag listTag = new ListTag();
         for (IConduitType<?> type : types) {
@@ -184,19 +185,19 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         tag.put(KEY_TYPES, listTag);
         CompoundTag connectionsTag = new CompoundTag();
         for (Direction dir : Direction.values()) {
-            connectionsTag.put(dir.getName(), connections.get(dir).serializeNBT());
+            connectionsTag.put(dir.getName(), connections.get(dir).serializeNBT(lookupProvider));
         }
         tag.put(KEY_CONNECTIONS, connectionsTag);
         CompoundTag facades = new CompoundTag();
         for (Map.Entry<Direction, BlockState> entry : facadeTextures.entrySet()) {
-            Tag blockStateTag = BlockState.CODEC.encode(entry.getValue(), NbtOps.INSTANCE, new CompoundTag()).get().left().orElse(new CompoundTag());
+            Tag blockStateTag = BlockState.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), entry.getValue()).result().orElse(new CompoundTag());
             facades.put(entry.getKey().getName(), blockStateTag);
         }
         tag.put(KEY_FACADES, facades);
         if (EffectiveSide.get().isServer()) {
             ListTag nodeTag = new ListTag();
             for (var entry : nodes.entrySet()) {
-                var data = entry.getValue().getExtendedConduitData().serializeRenderNBT();
+                var data = entry.getValue().getExtendedConduitData().serializeRenderNBT(lookupProvider);
                 if (!data.isEmpty()) {
                     CompoundTag dataTag = new CompoundTag();
                     dataTag.putString(KEY_NODE_TYPE, ConduitTypes.getRegistry().getKey(entry.getKey()).toString());
@@ -211,10 +212,10 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         return tag;
     }
 
-    public CompoundTag serializeGuiNBT() {
+    public CompoundTag serializeGuiNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag nbt = new CompoundTag();
         for (IConduitType<?> type : getTypes()) {
-            CompoundTag compoundTag = nodes.get(type).getExtendedConduitData().serializeGuiNBT();
+            CompoundTag compoundTag = nodes.get(type).getExtendedConduitData().serializeGuiNBT(lookupProvider);
             if (!compoundTag.isEmpty()) {
                 nbt.put(ConduitTypes.getRegistry().getKey(type).toString(), compoundTag);
             }
@@ -222,16 +223,16 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         return nbt;
     }
 
-    public void deserializeGuiNBT(CompoundTag nbt) {
+    public void deserializeGuiNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         for (IConduitType<?> type : getTypes()) {
             if (nbt.contains(ConduitTypes.getRegistry().getKey(type).toString())) {
-                nodes.get(type).getExtendedConduitData().deserializeNBT(nbt.getCompound(ConduitTypes.getRegistry().getKey(type).toString()));
+                nodes.get(type).getExtendedConduitData().deserializeNBT(lookupProvider, nbt.getCompound(ConduitTypes.getRegistry().getKey(type).toString()));
             }
         }
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         types.clear();
         ListTag typesTag = nbt.getList(KEY_TYPES, Tag.TAG_STRING);
         //this is used to shift connections back if a ConduitType was removed from
@@ -247,7 +248,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         }
         CompoundTag connectionsTag = nbt.getCompound(KEY_CONNECTIONS);
         for (Direction dir : Direction.values()) {
-            connections.get(dir).deserializeNBT(connectionsTag.getCompound(dir.getName()));
+            connections.get(dir).deserializeNBT(lookupProvider, connectionsTag.getCompound(dir.getName()));
             for (Integer invalidType : invalidTypes) {
                 connections.get(dir).removeType(invalidType);
             }
@@ -260,11 +261,14 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         CompoundTag facades = nbt.getCompound(KEY_FACADES);
         for (Direction direction : Direction.values()) {
             if (facades.contains(direction.getName())) {
-                facadeTextures.put(direction, BlockState.CODEC.decode(NbtOps.INSTANCE, facades.getCompound(direction.getName())).get().left().get().getFirst());
+                facadeTextures.put(direction, BlockState.CODEC
+                    .decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), facades.getCompound(direction.getName()))
+                    .getPartialOrThrow()
+                    .getFirst());
             }
         }
         for (Map.Entry<Direction, BlockState> entry : facadeTextures.entrySet()) {
-            Tag blockStateTag = BlockState.CODEC.encode(entry.getValue(), NbtOps.INSTANCE, new CompoundTag()).get().left().orElse(new CompoundTag());
+            Tag blockStateTag = BlockState.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), entry.getValue()).result().orElse(new CompoundTag());
             facades.put(entry.getKey().getName(), blockStateTag);
         }
         nodes.entrySet().removeIf(entry -> !types.contains(entry.getKey()));
@@ -291,7 +295,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                     nodes
                         .get(ConduitTypes.getRegistry().get(new ResourceLocation(cmp.getString(KEY_NODE_TYPE))))
                         .getExtendedConduitData()
-                        .deserializeNBT(cmp.getCompound(KEY_NODE_DATA));
+                        .deserializeNBT(lookupProvider, cmp.getCompound(KEY_NODE_DATA));
                 }
             }
         }

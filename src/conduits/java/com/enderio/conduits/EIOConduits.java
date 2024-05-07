@@ -15,11 +15,12 @@ import com.enderio.conduits.data.recipe.ConduitRecipes;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
-@Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = EnderIO.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class EIOConduits {
     @SubscribeEvent
     public static void onConstruct(FMLConstructModEvent event) {
@@ -43,7 +44,7 @@ public class EIOConduits {
         EIODataProvider provider = new EIODataProvider("conduits");
 
         provider.addSubProvider(event.includeServer(), new ConduitTagProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, event.getLookupProvider()));
 
         event.getGenerator().addProvider(true, provider);
     }

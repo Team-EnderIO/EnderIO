@@ -3,6 +3,7 @@ package com.enderio.conduits.common.types;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.conduits.ConduitNBTKeys;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -44,7 +45,7 @@ public class FluidExtendedData implements IExtendedConduitData<FluidExtendedData
     private static final String SHOULD_RESET = "ShouldReset";
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag nbt = new CompoundTag();
         if (!isMultiFluid) {
             if (lockedFluid != null) {
@@ -55,20 +56,21 @@ public class FluidExtendedData implements IExtendedConduitData<FluidExtendedData
         }
         return nbt;
     }
+
     @Override
-    public CompoundTag serializeRenderNBT() {
-        return serializeNBT();
+    public CompoundTag serializeRenderNBT(HolderLookup.Provider lookupProvider) {
+        return serializeNBT(lookupProvider);
     }
 
     @Override
-    public CompoundTag serializeGuiNBT() {
-        CompoundTag nbt = serializeNBT();
+    public CompoundTag serializeGuiNBT(HolderLookup.Provider lookupProvider) {
+        CompoundTag nbt = serializeNBT(lookupProvider);
         nbt.putBoolean(SHOULD_RESET, shouldReset);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         if (nbt.contains(ConduitNBTKeys.FLUID) && !isMultiFluid) {
             String fluid = nbt.getString(ConduitNBTKeys.FLUID);
             if (fluid.equals("null") || BuiltInRegistries.FLUID.get(new ResourceLocation(fluid)) == Fluids.EMPTY) {

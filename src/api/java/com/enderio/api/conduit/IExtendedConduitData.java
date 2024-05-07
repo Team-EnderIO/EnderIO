@@ -65,14 +65,14 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
     /**
      * @return synced renderdata
      */
-    default CompoundTag serializeRenderNBT() {
+    default CompoundTag serializeRenderNBT(HolderLookup.Provider lookupProvider) {
         return new CompoundTag();
     }
 
     /**
      * @return synced guidata
      */
-    default CompoundTag serializeGuiNBT() {
+    default CompoundTag serializeGuiNBT(HolderLookup.Provider lookupProvider) {
         return new CompoundTag();
     }
 

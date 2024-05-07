@@ -6,6 +6,7 @@ import com.enderio.api.conduit.TieredConduit;
 import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 
@@ -16,7 +17,7 @@ import java.util.List;
 /**
  * This class is used to sort conduittypes for display. This is needed, so upgrading conduits doesn't require shifting of types, but just recalculating the current connection
  */
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class ConduitTypeSorter {
     private static final List<IConduitType<?>> SORTED_TYPES = new ArrayList<>();
 

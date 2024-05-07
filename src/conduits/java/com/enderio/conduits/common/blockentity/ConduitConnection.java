@@ -10,6 +10,7 @@ import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -110,7 +111,7 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
     private static final String KEY_REDSTONE_CHANNEL = "Channel";
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
         for (int i = 0; i < MAX_CONDUIT_TYPES; i++) {
             CompoundTag element = new CompoundTag();
@@ -132,7 +133,7 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(CompoundTag tag) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag tag) {
         for (int i = 0; i < MAX_CONDUIT_TYPES; i++) {
             CompoundTag nbt = tag.getCompound(String.valueOf(i));
             if (nbt.getBoolean(KEY_STATIC)) {

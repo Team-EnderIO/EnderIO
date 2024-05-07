@@ -48,7 +48,7 @@ public class ConduitBlockItem extends BlockItem {
         if (level.getBlockEntity(blockpos) instanceof ConduitBlockEntity conduit) {
             if (conduit.hasType(type.get())) {
                 // Pass through to block
-                return level.getBlockState(blockpos).use(level, player, context.getHand(), context.getHitResult());
+                return level.getBlockState(blockpos).useItemOn(context.getItemInHand(), level, player, context.getHand(), context.getHitResult()).result();
             }
 
             conduit.addType(type.get(), player);

@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.types;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.IClientConduitData;
+import com.enderio.api.conduit.ClientConduitData;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.misc.RedstoneControl;
@@ -11,7 +11,6 @@ import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -22,7 +21,7 @@ import java.util.Optional;
 public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
     public EnergyConduitType() {
         super(EnderIO.loc("block/conduit/energy"), new EnergyConduitTicker(), EnergyExtendedData::new,
-            new IClientConduitData.Simple<>(EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, 24)), IConduitMenuData.ENERGY);
+            new ClientConduitData.Simple<>(EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, 24)), IConduitMenuData.ENERGY);
     }
 
     @Override

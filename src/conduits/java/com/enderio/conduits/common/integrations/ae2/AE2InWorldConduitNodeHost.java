@@ -10,6 +10,7 @@ import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -69,7 +70,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag nbt = new CompoundTag();
         if (mainNode != null) {
             mainNode.saveToNBT(nbt);
@@ -78,7 +79,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         if (mainNode == null) {
             initMainNode();
         }

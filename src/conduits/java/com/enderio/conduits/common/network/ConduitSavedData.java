@@ -7,7 +7,6 @@ import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.ConduitNBTKeys;
-import com.enderio.conduits.EIOConduits;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.types.RedstoneExtendedData;
@@ -16,6 +15,7 @@ import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
@@ -26,9 +26,9 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class ConduitSavedData extends SavedData {
 
     private final Map<IConduitType<?>, List<Graph<Mergeable.Dummy>>> networks = new HashMap<>();
@@ -47,7 +47,10 @@ public class ConduitSavedData extends SavedData {
     private final Map<IConduitType<?>, Map<ChunkPos, Map<BlockPos, NodeIdentifier<?>>>> deserializedNodes = new HashMap<>();
 
     public static ConduitSavedData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(new Factory<>(ConduitSavedData::new, nbt -> new ConduitSavedData(level, nbt)), "enderio_conduit_network");
+        return level.getDataStorage().computeIfAbsent(new Factory<>(
+            ConduitSavedData::new,
+            (nbt, lookupProvider) -> new ConduitSavedData(level, nbt, lookupProvider)),
+            "enderio_conduit_network");
     }
 
     private ConduitSavedData() {
@@ -63,7 +66,7 @@ public class ConduitSavedData extends SavedData {
     private static final String KEY_DATA = "Data";
 
     // Deserialization
-    private ConduitSavedData(Level level, CompoundTag nbt) {
+    private ConduitSavedData(Level level, CompoundTag nbt, HolderLookup.Provider lookupProvider) {
         ListTag graphsTag = nbt.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
         for (Tag tag : graphsTag) {
             CompoundTag typedGraphTag = (CompoundTag) tag;
@@ -86,7 +89,7 @@ public class ConduitSavedData extends SavedData {
                         CompoundTag posTag = nodeTag.getCompound(ConduitNBTKeys.BLOCK_POS);
                         BlockPos pos = BlockEntity.getPosFromTag(posTag);
                         NodeIdentifier<?> node = new NodeIdentifier<>(pos, value.createExtendedConduitData(level, pos));
-                        node.getExtendedConduitData().deserializeNBT(nodeTag.getCompound(KEY_DATA));
+                        node.getExtendedConduitData().deserializeNBT(lookupProvider, nodeTag.getCompound(KEY_DATA));
                         graphObjects.add(node);
                         putUnloadedNodeIdentifier(value, pos, node);
                     }
@@ -132,7 +135,7 @@ public class ConduitSavedData extends SavedData {
 
     // Serialization
     @Override
-    public CompoundTag save(CompoundTag nbt) {
+    public CompoundTag save(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
         ListTag graphsTag = new ListTag();
         for (var entry : networks.entrySet()) {
             IConduitType<?> type = entry.getKey();
@@ -148,7 +151,7 @@ public class ConduitSavedData extends SavedData {
 
             for (Graph<Mergeable.Dummy> graph : graphs) {
                 if (!graph.getObjects().isEmpty()) {
-                    graphsForTypeTag.add(serializeGraph(graph));
+                    graphsForTypeTag.add(serializeGraph(lookupProvider, graph));
                 }
             }
 
@@ -167,7 +170,7 @@ public class ConduitSavedData extends SavedData {
         return true;
     }
 
-    private static CompoundTag serializeGraph(Graph<Mergeable.Dummy> graph) {
+    private static CompoundTag serializeGraph(HolderLookup.Provider lookupProvider, Graph<Mergeable.Dummy> graph) {
         List<GraphObject<Mergeable.Dummy>> graphObjects = new ArrayList<>(graph.getObjects());
         List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections = new ArrayList<>();
 
@@ -191,7 +194,7 @@ public class ConduitSavedData extends SavedData {
                 posTag.putInt("x", nodeIdentifier.getPos().getX());
                 posTag.putInt("y", nodeIdentifier.getPos().getY());
                 posTag.putInt("z", nodeIdentifier.getPos().getZ());
-                dataTag.put(KEY_DATA, nodeIdentifier.getExtendedConduitData().serializeNBT());
+                dataTag.put(KEY_DATA, nodeIdentifier.getExtendedConduitData().serializeNBT(lookupProvider));
                 graphObjectsTag.add(dataTag);
             } else {
                 throw new ClassCastException("graphObject was not of type nodeIdentifier");
@@ -274,12 +277,8 @@ public class ConduitSavedData extends SavedData {
     }
 
     @SubscribeEvent
-    public static void onLevelTick(TickEvent.LevelTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            return;
-        }
-
-        if (event.level instanceof ServerLevel serverLevel) {
+    public static void onLevelTick(LevelTickEvent.Post event) {
+        if (event.getLevel() instanceof ServerLevel serverLevel) {
             get(serverLevel).tick(serverLevel);
         }
     }
@@ -328,7 +327,7 @@ public class ConduitSavedData extends SavedData {
     }
 
     @Override
-    public void save(File file) {
+    public void save(File file, HolderLookup.Provider lookupProvider) {
         if (isDirty()) {
             //This is an exact copy of Mekanism MekanismSavedData's system which is loosely based on
             // Refined Storage's RSSavedData's system of saving first to a temp file
@@ -336,7 +335,7 @@ public class ConduitSavedData extends SavedData {
 
             //Thanks pupnewfster
             File tempFile = file.toPath().getParent().resolve(file.getName() + ".tmp").toFile();
-            super.save(tempFile);
+            super.save(tempFile, lookupProvider);
             if (file.exists() && !file.delete()) {
                 EnderIO.LOGGER.error("Failed to delete " + file.getName());
             }

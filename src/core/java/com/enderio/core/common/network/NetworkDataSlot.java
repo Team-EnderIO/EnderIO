@@ -65,7 +65,7 @@ public final class NetworkDataSlot<T> {
     }
 
     public void parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        setter.accept(type.parse(lookupProvider, tag));
+        setter.accept(type.parse(lookupProvider, tag, getter));
     }
 
     public void write(RegistryFriendlyByteBuf buf) {
@@ -79,7 +79,7 @@ public final class NetworkDataSlot<T> {
     }
 
     public void read(RegistryFriendlyByteBuf buf) {
-        setter.accept(type.read(buf));
+        setter.accept(type.read(buf, getter));
     }
 
     public boolean doesNeedUpdate() {
@@ -109,7 +109,7 @@ public final class NetworkDataSlot<T> {
          * @param tag The tag to parse.
          * @return The parsed value.
          */
-        T parse(HolderLookup.Provider lookupProvider, Tag tag);
+        T parse(HolderLookup.Provider lookupProvider, Tag tag, Supplier<T> currentValueSupplier);
 
         /***
          * @param buf The buffer to write to.
@@ -121,7 +121,7 @@ public final class NetworkDataSlot<T> {
          * @param buf The buffer to read from.
          * @return The value read from the buffer.
          */
-        T read(RegistryFriendlyByteBuf buf);
+        T read(RegistryFriendlyByteBuf buf, Supplier<T> currentValueSupplier);
     }
 
     /**
@@ -176,7 +176,7 @@ public final class NetworkDataSlot<T> {
                 .getOrThrow();
         }
 
-        public T parse(HolderLookup.Provider lookupProvider, Tag tag) {
+        public T parse(HolderLookup.Provider lookupProvider, Tag tag, Supplier<T> currentValueSupplier) {
             return codec.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
         }
 
@@ -184,7 +184,7 @@ public final class NetworkDataSlot<T> {
             streamCodec.encode(buf, value);
         }
 
-        public T read(RegistryFriendlyByteBuf buf) {
+        public T read(RegistryFriendlyByteBuf buf, Supplier<T> currentValueSupplier) {
             return streamCodec.decode(buf);
         }
     }

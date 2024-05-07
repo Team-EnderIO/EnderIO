@@ -50,7 +50,7 @@ java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 // List of all subsets. This is used for dividing the mod into logical components.
 // TODO: 1.19: Tidy the divisions and what goes where.
 val subsets = listOf<String>(
-        //"conduits",
+        "conduits",
         "machines",
         //"armory"
 )

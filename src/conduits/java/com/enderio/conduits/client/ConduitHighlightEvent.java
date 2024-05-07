@@ -11,11 +11,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderHighlightEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class ConduitHighlightEvent {
 
     @SubscribeEvent
@@ -45,12 +46,12 @@ public class ConduitHighlightEvent {
             consumer
                 .vertex(posestack$pose.pose(), (float) (p_234280_ + x), (float) (p_234281_ + y), (float) (p_234282_ + z))
                 .color(red, green, blue, alpha)
-                .normal(posestack$pose.normal(), f, f1, f2)
+                .normal(posestack$pose, f, f1, f2)
                 .endVertex();
             consumer
                 .vertex(posestack$pose.pose(), (float) (p_234283_ + x), (float) (p_234284_ + y), (float) (p_234285_ + z))
                 .color(red, green, blue, alpha)
-                .normal(posestack$pose.normal(), f, f1, f2)
+                .normal(posestack$pose, f, f1, f2)
                 .endVertex();
         });
     }

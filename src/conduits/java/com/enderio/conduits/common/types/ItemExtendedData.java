@@ -2,6 +2,7 @@ package com.enderio.conduits.common.types;
 
 import com.enderio.api.conduit.IExtendedConduitData;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +14,7 @@ public class ItemExtendedData implements IExtendedConduitData<ItemExtendedData> 
     private final Map<Direction, ItemSidedData> itemSidedData = new EnumMap<>(Direction.class);
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
         for (Direction direction: Direction.values()) {
             @Nullable
@@ -26,7 +27,7 @@ public class ItemExtendedData implements IExtendedConduitData<ItemExtendedData> 
     }
 
     @Override
-    public CompoundTag serializeGuiNBT() {
+    public CompoundTag serializeGuiNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
         for (Direction direction: Direction.values()) {
             @Nullable
@@ -39,7 +40,7 @@ public class ItemExtendedData implements IExtendedConduitData<ItemExtendedData> 
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         for (Direction direction: Direction.values()) {
             if (nbt.contains(direction.name())) {
                 itemSidedData.put(direction, ItemSidedData.fromNbt(nbt.getCompound(direction.name())));

@@ -5,17 +5,55 @@ import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.blockentity.SlotType;
+import com.enderio.core.common.network.MassiveStreamCodec;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public record DynamicConnectionState(boolean isInsert, ColorControl insert, boolean isExtract, ColorControl extract, RedstoneControl control, ColorControl redstoneChannel, @UseOnly(LogicalSide.SERVER) ItemStack filterInsert, @UseOnly(LogicalSide.SERVER) ItemStack filterExtract, @UseOnly(LogicalSide.SERVER) ItemStack upgradeExtract) implements IConnectionState {
+public record DynamicConnectionState(
+    boolean isInsert,
+    ColorControl insert,
+    boolean isExtract,
+    ColorControl extract,
+    RedstoneControl control,
+    ColorControl redstoneChannel,
+    @UseOnly(LogicalSide.SERVER) ItemStack filterInsert,
+    @UseOnly(LogicalSide.SERVER) ItemStack filterExtract,
+    @UseOnly(LogicalSide.SERVER) ItemStack upgradeExtract
+) implements IConnectionState {
+
+    public static StreamCodec<RegistryFriendlyByteBuf, DynamicConnectionState> STREAM_CODEC = MassiveStreamCodec.composite(
+        ByteBufCodecs.BOOL,
+        DynamicConnectionState::isInsert,
+        ColorControl.STREAM_CODEC,
+        DynamicConnectionState::insert,
+        ByteBufCodecs.BOOL,
+        DynamicConnectionState::isExtract,
+        ColorControl.STREAM_CODEC,
+        DynamicConnectionState::extract,
+        RedstoneControl.STREAM_CODEC,
+        DynamicConnectionState::control,
+        ColorControl.STREAM_CODEC,
+        DynamicConnectionState::redstoneChannel,
+        ItemStack.STREAM_CODEC,
+        DynamicConnectionState::filterInsert,
+        ItemStack.STREAM_CODEC,
+        DynamicConnectionState::filterExtract,
+        ItemStack.STREAM_CODEC,
+        DynamicConnectionState::upgradeExtract,
+        DynamicConnectionState::new
+    );
 
     public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction, IConduitType<?> type) {
         IConduitType.ConduitConnectionData defaultConnection = type.getDefaultConnection(level, pos, direction);
@@ -62,30 +100,5 @@ public record DynamicConnectionState(boolean isInsert, ColorControl insert, bool
 
     public boolean isEmpty() {
         return !isInsert && !isExtract;
-    }
-
-    public void toNetwork(FriendlyByteBuf buf) {
-        buf.writeBoolean(isInsert);
-        buf.writeEnum(insert);
-        buf.writeBoolean(isExtract);
-        buf.writeEnum(extract);
-        buf.writeEnum(control);
-        buf.writeEnum(redstoneChannel);
-        buf.writeItem(filterInsert);
-        buf.writeItem(filterExtract);
-        buf.writeItem(upgradeExtract);
-    }
-
-    public static DynamicConnectionState fromNetwork(FriendlyByteBuf buf) {
-        boolean isInsert = buf.readBoolean();
-        ColorControl insert = buf.readEnum(ColorControl.class);
-        boolean isExtract = buf.readBoolean();
-        ColorControl extract = buf.readEnum(ColorControl.class);
-        RedstoneControl control = buf.readEnum(RedstoneControl.class);
-        ColorControl redstoneChannel = buf.readEnum(ColorControl.class);
-        ItemStack filterInsert = buf.readItem();
-        ItemStack filterExtract = buf.readItem();
-        ItemStack upgradeInsert = buf.readItem();
-        return new DynamicConnectionState(isInsert, insert, isExtract, extract, control, redstoneChannel, filterInsert, filterExtract, upgradeInsert);
     }
 }

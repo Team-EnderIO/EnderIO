@@ -20,6 +20,7 @@ import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -77,7 +78,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         bundle = new ConduitBundle(this::scheduleTick, worldPosition);
         clientBundle = bundle.deepCopy();
 
-        addDataSlot(new ConduitBundleNetworkDataSlot(this::getBundle));
+        addDataSlot(ConduitBundleCompatibilityDataSlotType.DATA_SLOT_TYPE.create(this::getBundle));
         addAfterSyncRunnable(this::updateClient);
     }
 
@@ -110,7 +111,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     @UseOnly(LogicalSide.SERVER)
     public void handleExtendedDataUpdate(IConduitType<?> conduitType, CompoundTag compoundTag) {
-        getBundle().getNodeFor(conduitType).getExtendedConduitData().deserializeNBT(compoundTag);
+        getBundle().getNodeFor(conduitType).getExtendedConduitData().deserializeNBT(level.registryAccess(), compoundTag);
     }
 
     // endregion
@@ -145,7 +146,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             return false;
         }
 
-        return pPlayer.canReach(this.worldPosition, 1.5);
+        return pPlayer.canInteractWithBlock(this.worldPosition, 1.5);
     }
 
     @Override
@@ -196,21 +197,21 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.put(ConduitNBTKeys.CONDUIT_BUNDLE, bundle.serializeNBT());
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        tag.put(ConduitNBTKeys.CONDUIT_BUNDLE, bundle.serializeNBT(lookupProvider));
         ListTag listTag = new ListTag();
         for (IConduitType<?> type : bundle.getTypes()) {
             IExtendedConduitData<?> data = bundle.getNodeFor(type).getExtendedConduitData();
-            listTag.add(data.serializeNBT());
+            listTag.add(data.serializeNBT(lookupProvider));
         }
         tag.put(ConduitNBTKeys.CONDUIT_EXTRA_DATA, listTag);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        bundle.deserializeNBT(tag.getCompound(ConduitNBTKeys.CONDUIT_BUNDLE));
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        bundle.deserializeNBT(lookupProvider, tag.getCompound(ConduitNBTKeys.CONDUIT_BUNDLE));
         lazyNodeNBT = tag.getList(ConduitNBTKeys.CONDUIT_EXTRA_DATA, Tag.TAG_COMPOUND);
     }
 
@@ -393,7 +394,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 IExtendedConduitData<?> data = type.createExtendedConduitData(level, worldPosition);
 
                 if (typeIndex < lazyNodeNBT.size()) {
-                    data.deserializeNBT(lazyNodeNBT.getCompound(typeIndex));
+                    data.deserializeNBT(level.registryAccess(), lazyNodeNBT.getCompound(typeIndex));
                 }
 
                 node = new NodeIdentifier<>(worldPosition, data);

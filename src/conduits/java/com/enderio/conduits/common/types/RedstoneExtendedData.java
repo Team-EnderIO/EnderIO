@@ -2,6 +2,7 @@ package com.enderio.conduits.common.types;
 
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.misc.ColorControl;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
@@ -21,7 +22,7 @@ public class RedstoneExtendedData implements IExtendedConduitData<RedstoneExtend
     private static final String KEY_COLORED_ACTIVE = "ColoredActive";
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag nbt = new CompoundTag();
         nbt.putBoolean(KEY_ACTIVE, isActive);
 
@@ -34,7 +35,7 @@ public class RedstoneExtendedData implements IExtendedConduitData<RedstoneExtend
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         isActive = nbt.getBoolean(KEY_ACTIVE);
         activeColors.clear();
         if (nbt.contains(KEY_COLORED_ACTIVE, Tag.TAG_LIST)) {
