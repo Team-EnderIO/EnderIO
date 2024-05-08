@@ -1,8 +1,8 @@
 package com.enderio.base.common.init;
 
-import com.enderio.base.common.network.AddTravelTargetPacket;
+import com.enderio.base.common.network.TravelTargetUpdatedPacket;
 import com.enderio.base.common.network.ClientPayloadHandler;
-import com.enderio.base.common.network.RemoveTravelTargetPacket;
+import com.enderio.base.common.network.TravelTargetRemovedPacket;
 import com.enderio.base.common.network.RequestTravelPacket;
 import com.enderio.base.common.network.ServerPayloadHandler;
 import com.enderio.base.common.network.ServerToClientLightUpdate;
@@ -26,10 +26,10 @@ public class EIONetwork {
         registrar.playToClient(SyncTravelDataPacket.TYPE, SyncTravelDataPacket.STREAM_CODEC,
             ClientPayloadHandler.getInstance()::handleSyncTravelDataPacket);
 
-        registrar.playToClient(AddTravelTargetPacket.TYPE, AddTravelTargetPacket.STREAM_CODEC,
+        registrar.playToClient(TravelTargetUpdatedPacket.TYPE, TravelTargetUpdatedPacket.STREAM_CODEC,
             ClientPayloadHandler.getInstance()::handleAddTravelTarget);
 
-        registrar.playToClient(RemoveTravelTargetPacket.TYPE, RemoveTravelTargetPacket.STREAM_CODEC,
+        registrar.playToClient(TravelTargetRemovedPacket.TYPE, TravelTargetRemovedPacket.STREAM_CODEC,
             ClientPayloadHandler.getInstance()::handleRemoveTravelTarget);
 
         registrar.playToClient(ServerToClientLightUpdate.TYPE, ServerToClientLightUpdate.STREAM_CODEC,

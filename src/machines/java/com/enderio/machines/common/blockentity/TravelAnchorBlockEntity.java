@@ -10,8 +10,6 @@ import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.TravelAnchorMenu;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -27,19 +25,17 @@ import java.util.Optional;
 public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     public static final SingleSlotAccess GHOST = new SingleSlotAccess();
-    private final NetworkDataSlot<String> nameDataSlot;
-    private final NetworkDataSlot<Boolean> visibilityDataSlot;
-    private final NetworkDataSlot<ResourceLocation> iconDataSlot;
+
+    private final NetworkDataSlot<AnchorTravelTarget> travelTargetDataSlot;
+
     public TravelAnchorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         this(MachineBlockEntities.TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
     }
 
     public TravelAnchorBlockEntity(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState) {
         super(type, pWorldPosition, pBlockState);
-        nameDataSlot = addDataSlot(NetworkDataSlot.STRING.create(this::getName, name -> getOrCreateTravelTarget().setName(name)));
-        visibilityDataSlot = addDataSlot(NetworkDataSlot.BOOL.create(this::getVisibility, vis -> getOrCreateTravelTarget().setVisibility(vis)));
-        iconDataSlot = addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> BuiltInRegistries.ITEM.getKey(getIcon()),
-            loc -> getOrCreateTravelTarget().setIcon(BuiltInRegistries.ITEM.get(loc))));
+
+        travelTargetDataSlot = addDataSlot(AnchorTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
     }
 
     @Nullable
@@ -62,38 +58,41 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     @Nullable
     public String getName() {
-        return getOrCreateTravelTarget().getName();
+        return getOrCreateTravelTarget().name();
     }
 
     public void setName(String name) {
+        var newTravelTarget = getOrCreateTravelTarget().withName(name);
         if (level != null && level.isClientSide()) {
-            clientUpdateSlot(nameDataSlot, name);
+            clientUpdateSlot(travelTargetDataSlot, newTravelTarget);
         } else {
-            getOrCreateTravelTarget().setName(name);
+            setTravelTarget(newTravelTarget);
         }
     }
 
     public Item getIcon() {
-        return getOrCreateTravelTarget().getIcon();
+        return getOrCreateTravelTarget().icon();
     }
 
     public void setIcon(Item icon) {
+        var newTravelTarget = getOrCreateTravelTarget().withIcon(icon);
         if (level != null && level.isClientSide()) {
-            clientUpdateSlot(iconDataSlot, BuiltInRegistries.ITEM.getKey(icon));
+            clientUpdateSlot(travelTargetDataSlot, newTravelTarget);
         } else {
-            getOrCreateTravelTarget().setIcon(icon);
+            setTravelTarget(newTravelTarget);
         }
     }
 
-    public boolean getVisibility() {
-        return getOrCreateTravelTarget().getVisibility();
+    public boolean isVisible() {
+        return getOrCreateTravelTarget().isVisible();
     }
 
-    public void setVisibility(boolean visible) {
+    public void setIsVisible(boolean isVisible) {
+        var newTravelTarget = getOrCreateTravelTarget().withVisible(isVisible);
         if (level != null && level.isClientSide()) {
-            clientUpdateSlot(visibilityDataSlot, visible);
+            clientUpdateSlot(travelTargetDataSlot, newTravelTarget);
         } else {
-            getOrCreateTravelTarget().setVisibility(visible);
+            setTravelTarget(newTravelTarget);
         }
     }
 
@@ -102,9 +101,14 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
         if (travelTarget.isPresent() && travelTarget.get() instanceof AnchorTravelTarget anchorTravelTarget) {
             return anchorTravelTarget;
         }
+
         AnchorTravelTarget anchorTravelTarget = new AnchorTravelTarget(worldPosition, "", Items.AIR, true);
-        getTravelData().addTravelTarget(level, anchorTravelTarget);
+        setTravelTarget(anchorTravelTarget);
         return anchorTravelTarget;
+    }
+
+    private void setTravelTarget(AnchorTravelTarget target) {
+        getTravelData().setTravelTarget(level, target);
     }
 
     private TravelSavedData getTravelData() {

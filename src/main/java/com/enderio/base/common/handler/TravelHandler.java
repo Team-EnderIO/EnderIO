@@ -100,11 +100,11 @@ public class TravelHandler {
     }
 
     public static boolean blockTeleportTo(Level level, Player player, TravelTarget target, boolean sendToServer) {
-        Optional<Double> height = isTeleportPositionClear(level, target.getPos());
+        Optional<Double> height = isTeleportPositionClear(level, target.pos());
         if (height.isEmpty()) {
             return false;
         }
-        BlockPos blockPos = target.getPos();
+        BlockPos blockPos = target.pos();
         Vec3 teleportPosition = new Vec3(blockPos.getX() + 0.5f, blockPos.getY() + height.get() + 1, blockPos.getZ() + 0.5f);
         teleportPosition = teleportEvent(player, teleportPosition).orElse(null);
         if (teleportPosition != null) {
@@ -114,7 +114,7 @@ public class TravelHandler {
                 serverPlayer.connection.resetPosition();
                 player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.75F, 1F);
             } else if (sendToServer) {
-                PacketDistributor.sendToServer(new RequestTravelPacket(target.getPos()));
+                PacketDistributor.sendToServer(new RequestTravelPacket(target.pos()));
             }
 
             player.resetFallDistance();
@@ -215,10 +215,10 @@ public class TravelHandler {
             .getTravelData(player.level())
             .getTravelTargetsInItemRange(player.blockPosition())
             .filter(target -> target.canTravelTo())
-            .filter(target -> target.getPos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
-            .filter(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
-            .filter(target -> isTeleportPositionClear(player.level(), target.getPos()).isPresent())
-            .min(Comparator.comparingDouble(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot()))));
+            .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
+            .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
+            .filter(target -> isTeleportPositionClear(player.level(), target.pos()).isPresent())
+            .min(Comparator.comparingDouble(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(), player.getXRot()))));
     }
 
     public static Optional<TravelTarget> getElevatorAnchorTarget(Player player, Direction direction) {
@@ -244,11 +244,11 @@ public class TravelHandler {
             .getTravelData(player.level())
             .getTravelTargets()
             .stream()
-            .filter(target -> target.getPos().getX() == anchorX && target.getPos().getZ() == anchorZ)
-            .filter(target -> target.getPos().getY() > lowerY && target.getPos().getY() < upperY)
+            .filter(target -> target.pos().getX() == anchorX && target.pos().getZ() == anchorZ)
+            .filter(target -> target.pos().getY() > lowerY && target.pos().getY() < upperY)
             .filter(target -> target.canTravelTo())
-            .filter(target -> isTeleportPositionClear(player.level(), target.getPos()).isPresent())
-            .min(Comparator.comparingDouble(target -> Math.abs(target.getPos().getY() - anchorY)));
+            .filter(target -> isTeleportPositionClear(player.level(), target.pos()).isPresent())
+            .min(Comparator.comparingDouble(target -> Math.abs(target.pos().getY() - anchorY)));
     }
 
 

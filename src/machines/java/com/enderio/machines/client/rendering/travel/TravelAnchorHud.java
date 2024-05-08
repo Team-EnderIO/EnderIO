@@ -53,13 +53,13 @@ public class TravelAnchorHud implements LayeredDraw.Layer {
         int centerY = screenHeight / 2;
 
         if (target instanceof AnchorTravelTarget anchorTarget) {
-            String anchorName = anchorTarget.getName();
+            String anchorName = anchorTarget.name();
             if (!anchorName.isEmpty()) {
                 txt = anchorName + " " + txt;
             }
 
             // Draw icon as an item
-            Item icon = anchorTarget.getIcon();
+            Item icon = anchorTarget.icon();
             if (icon == Blocks.AIR.asItem()) {
                 icon = MachineBlocks.TRAVEL_ANCHOR.asItem();
             }

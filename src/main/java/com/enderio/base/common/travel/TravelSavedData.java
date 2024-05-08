@@ -1,16 +1,18 @@
 package com.enderio.base.common.travel;
 
-import com.enderio.EnderIO;
 import com.enderio.api.travel.TravelTarget;
-import com.enderio.api.travel.TravelRegistry;
-import com.enderio.base.common.network.AddTravelTargetPacket;
-import com.enderio.base.common.network.RemoveTravelTargetPacket;
+import com.enderio.api.travel.TravelTargetSerializer;
+import com.enderio.base.common.network.TravelTargetUpdatedPacket;
+import com.enderio.base.common.network.TravelTargetRemovedPacket;
 import com.enderio.base.common.network.SyncTravelDataPacket;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -25,12 +27,18 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
 public class TravelSavedData extends SavedData {
 
-    private static final TravelSavedData CLIENT_INSTANCE = new TravelSavedData();
+    // TODO: How will the API interact with this to add and remove targets?
+
+    // Even though the client doesn't need to know the data in the old dimensions,
+    //  I am more comfortable with each dimension having its own data on the client.
+    private static final Map<ResourceKey<Level>, TravelSavedData> CLIENT_DATA = new ConcurrentHashMap<>();
+
     public static final String TARGETS = "targets";
     private final Map<BlockPos, TravelTarget> travelTargets = new HashMap<>();
 
@@ -45,17 +53,8 @@ public class TravelSavedData extends SavedData {
         if (level instanceof ServerLevel serverLevel) {
             return serverLevel.getDataStorage().computeIfAbsent(new Factory<>(TravelSavedData::new, TravelSavedData::new), "enderio_traveldata");
         } else {
-            return CLIENT_INSTANCE;
+            return CLIENT_DATA.computeIfAbsent(level.dimension(), l -> new TravelSavedData());
         }
-    }
-
-    public void loadNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt){
-        this.travelTargets.clear();
-        ListTag targets = nbt.getList(TARGETS, Tag.TAG_COMPOUND);
-        targets.stream().map(anchorData -> (CompoundTag)anchorData)
-            .map(TravelRegistry::deserialize)
-            .flatMap(Optional::stream)
-            .forEach(target -> travelTargets.put(target.getPos(), target));
     }
 
     public Optional<TravelTarget> getTravelTarget(BlockPos pos) {
@@ -68,25 +67,22 @@ public class TravelSavedData extends SavedData {
 
     public Stream<TravelTarget> getTravelTargetsInItemRange(BlockPos center) {
         return travelTargets.entrySet().stream().
-                filter(entry -> center.distSqr(entry.getKey()) < entry.getValue().getItem2BlockRange()*entry.getValue().getItem2BlockRange())
+                filter(entry -> center.distSqr(entry.getKey()) < entry.getValue().item2BlockRange()*entry.getValue().item2BlockRange())
             .map(Map.Entry::getValue);
     }
 
-    public void addTravelTarget(Level level, TravelTarget target) {
+    // Adds or updates.
+    public void setTravelTarget(Level level, TravelTarget target) {
         if (level instanceof ServerLevel serverLevel) {
-            PacketDistributor.sendToPlayersInDimension(serverLevel, new AddTravelTargetPacket(target));
+            PacketDistributor.sendToPlayersInDimension(serverLevel, new TravelTargetUpdatedPacket(target));
         }
 
-        if (TravelRegistry.isRegistered(target)) {
-            travelTargets.put(target.getPos(), target);
-        } else {
-            EnderIO.LOGGER.warn("Tried to add a not registered TravelTarget to the TravelSavedData with name " + target);
-        }
+        travelTargets.put(target.pos(), target);
     }
 
     public void removeTravelTargetAt(Level level, BlockPos pos) {
         if (level instanceof ServerLevel serverLevel) {
-            PacketDistributor.sendToPlayersInDimension(serverLevel, new RemoveTravelTargetPacket(pos));
+            PacketDistributor.sendToPlayersInDimension(serverLevel, new TravelTargetRemovedPacket(pos));
         }
 
         travelTargets.remove(pos);
@@ -95,9 +91,25 @@ public class TravelSavedData extends SavedData {
     @Override
     public CompoundTag save(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
         ListTag tag = new ListTag();
-        tag.addAll(travelTargets.values().stream().map(TravelRegistry::serialize).toList());
+        tag.addAll(travelTargets.values().stream().map(target -> saveTarget(lookupProvider, target)).toList());
         nbt.put(TARGETS, tag);
         return nbt;
+    }
+
+    private <T extends TravelTarget> Tag saveTarget(HolderLookup.Provider lookupProvider, T target) {
+        return TravelTarget.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), target).getOrThrow();
+    }
+
+    public void loadNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+        this.travelTargets.clear();
+        ListTag targets = nbt.getList(TARGETS, Tag.TAG_COMPOUND);
+        targets.stream().map(anchorData -> (CompoundTag)anchorData)
+            .map(tag -> loadTarget(lookupProvider, tag))
+            .forEach(target -> travelTargets.put(target.pos(), target));
+    }
+
+    private TravelTarget loadTarget(HolderLookup.Provider lookupProvider, Tag tag) {
+        return TravelTarget.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow().getFirst();
     }
 
     @Override

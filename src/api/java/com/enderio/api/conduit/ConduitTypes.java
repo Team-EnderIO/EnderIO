@@ -16,6 +16,10 @@ public class ConduitTypes {
      */
     public static final Registry<ConduitType<?>> REGISTRY = CONDUIT_TYPES.makeRegistry(builder -> {});
 
+    /**
+     * @deprecated Use {@link ConduitTypes#REGISTRY} instead.
+     */
+    @Deprecated(forRemoval = true, since = "6.1")
     public static Registry<ConduitType<?>> getRegistry() {
         //should always be a forgeRegistry. Needed for IDs for networking/ordering
         return REGISTRY;

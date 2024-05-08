@@ -1,6 +1,7 @@
 package com.enderio;
 
 import com.enderio.api.integration.IntegrationManager;
+import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOBlockEntities;
@@ -51,6 +52,7 @@ import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -110,7 +112,13 @@ public class EnderIO {
         // Run datagen after registrate is finished.
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
         modEventBus.addListener(SoulVialItem::onCommonSetup);
+        modEventBus.addListener(this::registerRegistries);
         IntegrationManager.addIntegration(EnderIOSelfIntegration.INSTANCE);
+    }
+
+    private void registerRegistries(NewRegistryEvent event) {
+        event.register(EnderIORegistries.TRAVEL_TARGET_TYPES);
+        event.register(EnderIORegistries.TRAVEL_TARGET_SERIALIZERS);
     }
 
     public void onGatherData(GatherDataEvent event) {

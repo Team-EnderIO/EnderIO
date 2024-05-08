@@ -6,6 +6,7 @@ import com.enderio.base.client.particle.RangeParticle;
 import com.enderio.base.client.renderer.block.EnderSkullRenderer;
 import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
 import com.enderio.base.client.renderer.item.GlassIconDecorator;
+import com.enderio.base.client.renderer.travel.TravelTargetRendering;
 import com.enderio.base.common.block.EnderSkullBlock;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
@@ -21,6 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
@@ -38,6 +40,12 @@ public class ClientSetup {
 
     private static final Map<Item, ResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
     public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
+
+    @SubscribeEvent
+    public static void clientSetup(FMLClientSetupEvent event) {
+        TravelTargetRendering.init();
+    }
+
     @SubscribeEvent
     public static void additionalModels(ModelEvent.RegisterAdditional event) {
         Set<ResourceLocation> gliderModels = Minecraft
@@ -71,7 +79,6 @@ public class ClientSetup {
     public static void addLayers(EntityRenderersEvent.AddLayers event) {
         for (var skin : event.getSkins()) {
             if (event.getSkin(skin) instanceof PlayerRenderer playerRenderer) {
-
                 playerRenderer.addLayer(new ActiveGliderRenderLayer(playerRenderer));
             }
         }

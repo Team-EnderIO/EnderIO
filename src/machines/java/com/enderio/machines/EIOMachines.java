@@ -2,9 +2,7 @@ package com.enderio.machines;
 
 import com.enderio.EnderIO;
 import com.enderio.api.integration.IntegrationManager;
-import com.enderio.api.travel.TravelRegistry;
 import com.enderio.base.data.EIODataProvider;
-import com.enderio.machines.client.rendering.travel.TravelAnchorRenderer;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -12,6 +10,7 @@ import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.init.MachineTravelTargets;
 import com.enderio.machines.common.integrations.EnderIOMachinesSelfIntegration;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.EnchanterMenu;
@@ -19,7 +18,6 @@ import com.enderio.machines.common.menu.GhostMachineSlot;
 import com.enderio.machines.common.menu.MachineSlot;
 import com.enderio.machines.common.menu.PreviewMachineSlot;
 import com.enderio.machines.common.tag.MachineTags;
-import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
 import com.enderio.machines.data.recipes.AlloyRecipeProvider;
 import com.enderio.machines.data.recipes.EnchanterRecipeProvider;
@@ -40,12 +38,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
-import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.List;
@@ -61,6 +57,7 @@ public class EIOMachines {
         ctx.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
 
         MachineDataComponents.register(EnderIO.modEventBus);
+        MachineTravelTargets.register(EnderIO.modEventBus);
         MachineBlocks.register(EnderIO.modEventBus);
         MachineBlockEntities.register(EnderIO.modEventBus);
         MachineMenus.register(EnderIO.modEventBus);
@@ -71,7 +68,6 @@ public class EIOMachines {
         MachineTags.register();
 
         IntegrationManager.addIntegration(EnderIOMachinesSelfIntegration.INSTANCE);
-        TravelRegistry.addTravelEntry(EnderIO.loc("travel_anchor"), AnchorTravelTarget::new, () -> Lazy.of(TravelAnchorRenderer::new));
     }
 
     @SubscribeEvent

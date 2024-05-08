@@ -41,7 +41,7 @@ public class ServerPayloadHandler {
                 return;
             }
             // Eventually change the packet structure to include what teleport method was used so this range can be selected correctly
-            int range = Math.max(target.get().getBlock2BlockRange(), target.get().getItem2BlockRange());
+            int range = Math.max(target.get().block2BlockRange(), target.get().item2BlockRange());
             if (packet.pos().distSqr(player.getOnPos()) > range * range) {
                 player.displayClientMessage(Component.nullToEmpty("ERROR: Too far"), true);
                 return;
