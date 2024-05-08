@@ -6,7 +6,6 @@ import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.item.misc.LocationPrintoutItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;

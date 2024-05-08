@@ -1,8 +1,5 @@
 package com.enderio.core.common.integration;
 
-import com.enderio.api.integration.IntegrationManager;
-import com.enderio.api.integration.IntegrationWrapper;
-
 public class Integrations {
 
     // TODO: 1.20.2 once ported.

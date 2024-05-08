@@ -1,6 +1,5 @@
 package com.enderio.base.common.enchantment;
 
-import com.enderio.base.common.config.BaseConfig;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
 

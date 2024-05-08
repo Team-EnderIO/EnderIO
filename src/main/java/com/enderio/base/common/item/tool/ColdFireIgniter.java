@@ -1,10 +1,10 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.enderio.base.common.init.EIOBlocks;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.enderio.core.common.item.CreativeTabVariants;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;

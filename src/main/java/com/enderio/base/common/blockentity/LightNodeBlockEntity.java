@@ -3,7 +3,6 @@ package com.enderio.base.common.blockentity;
 import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.light.LightNode;
 import com.enderio.base.common.init.EIOBlockEntities;
-import com.enderio.base.common.init.EIONetwork;
 import com.enderio.base.common.network.ServerToClientLightUpdate;
 import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.core.BlockPos;
@@ -19,7 +18,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 public class LightNodeBlockEntity extends BlockEntity {
     public BlockPos masterpos;

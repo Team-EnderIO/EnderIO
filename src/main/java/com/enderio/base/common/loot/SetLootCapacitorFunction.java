@@ -1,8 +1,8 @@
 package com.enderio.base.common.loot;
 
+import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.base.common.capacitor.CapacitorUtil;
-import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOLootModifiers;
 import com.mojang.serialization.MapCodec;

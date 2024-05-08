@@ -2,10 +2,8 @@ package com.enderio.core.common.recipes;
 
 import com.enderio.core.CoreNBTKeys;
 import com.mojang.datafixers.util.Either;
-import com.mojang.serialization.DynamicOps;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 

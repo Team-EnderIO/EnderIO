@@ -2,7 +2,6 @@ package com.enderio.machines.common.network;
 
 import com.enderio.EnderIO;
 import com.enderio.machines.common.souldata.EngineSoul;
-import com.enderio.machines.common.souldata.SpawnerSoul;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;

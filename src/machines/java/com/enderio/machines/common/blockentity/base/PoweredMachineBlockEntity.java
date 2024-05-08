@@ -1,10 +1,10 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.api.capacitor.CapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.MachineInstallable;
-import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.core.common.network.NetworkDataSlot;

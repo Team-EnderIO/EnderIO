@@ -1,12 +1,12 @@
 package com.enderio.base.common.init;
 
-import com.enderio.base.common.network.TravelTargetUpdatedPacket;
 import com.enderio.base.common.network.ClientPayloadHandler;
-import com.enderio.base.common.network.TravelTargetRemovedPacket;
 import com.enderio.base.common.network.RequestTravelPacket;
 import com.enderio.base.common.network.ServerPayloadHandler;
 import com.enderio.base.common.network.ServerToClientLightUpdate;
 import com.enderio.base.common.network.SyncTravelDataPacket;
+import com.enderio.base.common.network.TravelTargetRemovedPacket;
+import com.enderio.base.common.network.TravelTargetUpdatedPacket;
 import com.enderio.base.common.network.UpdateCoordinateSelectionNameMenuPacket;
 import com.enderio.core.EnderCore;
 import net.neoforged.bus.api.SubscribeEvent;

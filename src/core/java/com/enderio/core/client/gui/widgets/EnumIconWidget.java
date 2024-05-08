@@ -2,8 +2,8 @@ package com.enderio.core.client.gui.widgets;
 
 import com.enderio.api.misc.Icon;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.enderio.core.client.gui.screen.FullScreenListener;
+import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;

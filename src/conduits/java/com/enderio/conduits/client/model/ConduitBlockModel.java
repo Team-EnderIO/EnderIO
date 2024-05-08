@@ -44,17 +44,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.enderio.conduits.client.ConduitClientSetup.BOX;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_CONNECTION;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_CONNECTION_BOX;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_CONNECTOR;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_CORE;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_FACADE;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_IO_IN;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_IO_IN_OUT;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_IO_OUT;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_IO_REDSTONE;
-import static com.enderio.conduits.client.ConduitClientSetup.modelOf;
+import static com.enderio.conduits.client.ConduitClientSetup.*;
 
 public class ConduitBlockModel implements IDynamicBakedModel {
 

@@ -3,12 +3,9 @@ package com.enderio.base.common.network;
 import com.enderio.EnderIO;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 
 public record SyncTravelDataPacket(CompoundTag data) implements CustomPacketPayload {
     public static Type<SyncTravelDataPacket> TYPE = new Type<>(EnderIO.loc("sync_travel_data"));

@@ -5,8 +5,6 @@ import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.menu.CoordinateMenu;
 import com.enderio.base.common.network.UpdateCoordinateSelectionNameMenuPacket;
 import com.enderio.core.client.gui.screen.EIOScreen;
-import com.enderio.core.common.network.CoreNetwork;
-import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

@@ -1,20 +1,12 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.api.attachment.CoordinateSelection;
-import com.enderio.api.attachment.StoredEntityData;
-import com.enderio.api.capacitor.CapacitorData;
-import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.api.misc.RedstoneControl;
-import com.enderio.base.common.component.BlockPaint;
 import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.io.IOConfig;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;

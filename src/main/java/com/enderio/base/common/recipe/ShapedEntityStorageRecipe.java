@@ -1,13 +1,10 @@
 package com.enderio.base.common.recipe;
 
 import com.enderio.api.attachment.StoredEntityData;
-import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIORecipes;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.recipes.WrappedShapedRecipe;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;

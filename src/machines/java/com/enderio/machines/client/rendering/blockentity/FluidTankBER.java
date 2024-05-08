@@ -17,8 +17,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 
 public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
     public FluidTankBER(BlockEntityRendererProvider.Context context) {

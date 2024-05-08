@@ -1,7 +1,7 @@
 package com.enderio.base.common.capacitor;
 
-import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.CapacitorData;
+import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;

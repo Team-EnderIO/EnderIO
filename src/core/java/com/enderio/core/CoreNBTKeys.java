@@ -1,7 +1,5 @@
 package com.enderio.core;
 
-import net.minecraft.world.item.BlockItem;
-
 public class CoreNBTKeys {
     // region Standard Keys
 

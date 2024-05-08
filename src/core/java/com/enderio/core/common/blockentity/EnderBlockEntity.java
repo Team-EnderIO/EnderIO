@@ -2,8 +2,8 @@ package com.enderio.core.common.blockentity;
 
 import com.enderio.api.UseOnly;
 import com.enderio.core.common.network.ClientboundDataSlotChange;
-import com.enderio.core.common.network.NetworkUtil;
 import com.enderio.core.common.network.NetworkDataSlot;
+import com.enderio.core.common.network.NetworkUtil;
 import com.enderio.core.common.network.ServerboundCDataSlotUpdate;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;

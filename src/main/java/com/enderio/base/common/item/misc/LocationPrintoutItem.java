@@ -1,7 +1,6 @@
 package com.enderio.base.common.item.misc;
 
 import com.enderio.api.attachment.CoordinateSelection;
-import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.menu.CoordinateMenu;
 import net.minecraft.ChatFormatting;
