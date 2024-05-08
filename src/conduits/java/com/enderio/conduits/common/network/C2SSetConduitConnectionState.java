@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.network;
 
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.core.EnderCore;
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ public record C2SSetConduitConnectionState(
         C2SSetConduitConnectionState::pos,
         Direction.STREAM_CODEC,
         C2SSetConduitConnectionState::direction,
-        ByteBufCodecs.registry(ConduitTypes.REGISTRY.key()),
+        ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_TYPES),
         C2SSetConduitConnectionState::conduitType,
         DynamicConnectionState.STREAM_CODEC,
         C2SSetConduitConnectionState::connectionState,

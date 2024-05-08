@@ -1,8 +1,8 @@
 package com.enderio.conduits.common.blockentity;
 
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.TieredConduit;
+import com.enderio.api.registry.EnderIORegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -21,9 +21,8 @@ public class ConduitTypeSorter {
 
     @SubscribeEvent
     public static void afterRegistryFreeze(FMLCommonSetupEvent event) {
-        var registry = ConduitTypes.getRegistry();
         List<ResourceLocation> tieredTypes = new ArrayList<>();
-        for (ConduitType<?> value : registry) {
+        for (ConduitType<?> value : EnderIORegistries.CONDUIT_TYPES) {
             if (value instanceof TieredConduit<?> tiered && !tieredTypes.contains(tiered.getType())) {
                 tieredTypes.add(tiered.getType());
             }
@@ -31,21 +30,21 @@ public class ConduitTypeSorter {
         tieredTypes.sort(ResourceLocation::compareTo);
         for (ResourceLocation tieredType : tieredTypes) {
             List<ConduitType<?>> typesInType = new ArrayList<>();
-            for (ConduitType<?> type: registry) {
+            for (ConduitType<?> type: EnderIORegistries.CONDUIT_TYPES) {
                 if (type instanceof TieredConduit<?> tiered && tiered.getType().equals(tieredType)) {
                     typesInType.add(type);
                 }
             }
-            typesInType.sort(Comparator.comparing(registry::getKey));
+            typesInType.sort(Comparator.comparing(EnderIORegistries.CONDUIT_TYPES::getKey));
             SORTED_TYPES.addAll(typesInType);
         }
         List<ConduitType<?>> unadded = new ArrayList<>();
-        for (ConduitType<?> type: registry) {
+        for (ConduitType<?> type: EnderIORegistries.CONDUIT_TYPES) {
             if (!(type instanceof TieredConduit)) {
                 unadded.add(type);
             }
         }
-        unadded.sort(Comparator.comparing(registry::getKey));
+        unadded.sort(Comparator.comparing(EnderIORegistries.CONDUIT_TYPES::getKey));
         SORTED_TYPES.addAll(unadded);
     }
 

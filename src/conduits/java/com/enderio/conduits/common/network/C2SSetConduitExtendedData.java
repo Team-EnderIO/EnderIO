@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.network;
 
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.core.EnderCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -21,7 +21,7 @@ public record C2SSetConduitExtendedData(
     public static StreamCodec<RegistryFriendlyByteBuf, C2SSetConduitExtendedData> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,
         C2SSetConduitExtendedData::pos,
-        ByteBufCodecs.registry(ConduitTypes.REGISTRY.key()),
+        ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_TYPES),
         C2SSetConduitExtendedData::conduitType,
         ByteBufCodecs.COMPOUND_TAG,
         C2SSetConduitExtendedData::extendedConduitData,

@@ -1,8 +1,8 @@
 package com.enderio.conduits.client;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.misc.ColorControl;
+import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.client.model.ConduitGeometry;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import net.minecraft.client.Minecraft;
@@ -18,7 +18,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -55,7 +54,8 @@ public class ConduitClientSetup {
         for (ResourceLocation model : MODEL_LOCATIONS) {
             event.register(model);
         }
-        ConduitTypes.getRegistry().stream().flatMap(type -> type.getClientData().modelsToLoad().stream()).forEach(event::register);
+
+        EnderIORegistries.CONDUIT_TYPES.stream().flatMap(type -> type.getClientData().modelsToLoad().stream()).forEach(event::register);
     }
 
     @SubscribeEvent

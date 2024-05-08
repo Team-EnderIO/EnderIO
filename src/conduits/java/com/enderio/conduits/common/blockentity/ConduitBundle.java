@@ -1,9 +1,9 @@
 package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.client.ConduitClientSetup;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import net.minecraft.core.BlockPos;
@@ -141,8 +141,8 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         if (index == -1) {
             if (!FMLLoader.isProduction()) {
                 throw new IllegalArgumentException(
-                    "Conduit: " + ConduitTypes.REGISTRY.getKey(type) + " is not present in conduit bundle " + Arrays.toString(
-                        types.stream().map(ConduitTypes.REGISTRY::getKey).toArray()));
+                    "Conduit: " + EnderIORegistries.CONDUIT_TYPES.getKey(type) + " is not present in conduit bundle " + Arrays.toString(
+                        types.stream().map(EnderIORegistries.CONDUIT_TYPES::getKey).toArray()));
             }
 
             return types.isEmpty();
@@ -177,7 +177,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         CompoundTag tag = new CompoundTag();
         ListTag listTag = new ListTag();
         for (ConduitType<?> type : types) {
-            listTag.add(StringTag.valueOf(ConduitTypes.getRegistry().getKey(type).toString()));
+            listTag.add(StringTag.valueOf(EnderIORegistries.CONDUIT_TYPES.getKey(type).toString()));
         }
         tag.put(KEY_TYPES, listTag);
         CompoundTag connectionsTag = new CompoundTag();
@@ -197,7 +197,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                 var data = entry.getValue().getExtendedConduitData().serializeRenderNBT(lookupProvider);
                 if (!data.isEmpty()) {
                     CompoundTag dataTag = new CompoundTag();
-                    dataTag.putString(KEY_NODE_TYPE, ConduitTypes.getRegistry().getKey(entry.getKey()).toString());
+                    dataTag.putString(KEY_NODE_TYPE, EnderIORegistries.CONDUIT_TYPES.getKey(entry.getKey()).toString());
                     dataTag.put(KEY_NODE_DATA, data);
                     nodeTag.add(dataTag);
                 }
@@ -214,7 +214,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         for (ConduitType<?> type : getTypes()) {
             CompoundTag compoundTag = nodes.get(type).getExtendedConduitData().serializeGuiNBT(lookupProvider);
             if (!compoundTag.isEmpty()) {
-                nbt.put(ConduitTypes.getRegistry().getKey(type).toString(), compoundTag);
+                nbt.put(EnderIORegistries.CONDUIT_TYPES.getKey(type).toString(), compoundTag);
             }
         }
         return nbt;
@@ -222,8 +222,8 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
     public void deserializeGuiNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         for (ConduitType<?> type : getTypes()) {
-            if (nbt.contains(ConduitTypes.getRegistry().getKey(type).toString())) {
-                nodes.get(type).getExtendedConduitData().deserializeNBT(lookupProvider, nbt.getCompound(ConduitTypes.getRegistry().getKey(type).toString()));
+            if (nbt.contains(EnderIORegistries.CONDUIT_TYPES.getKey(type).toString())) {
+                nodes.get(type).getExtendedConduitData().deserializeNBT(lookupProvider, nbt.getCompound(EnderIORegistries.CONDUIT_TYPES.getKey(type).toString()));
             }
         }
     }
@@ -236,7 +236,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         List<Integer> invalidTypes = new ArrayList<>();
         for (int i = 0; i < typesTag.size(); i++) {
             StringTag stringTag = (StringTag) typesTag.get(i);
-            ConduitType<?> type = ConduitTypes.getRegistry().get(ResourceLocation.tryParse(stringTag.getAsString()));
+            ConduitType<?> type = EnderIORegistries.CONDUIT_TYPES.get(ResourceLocation.tryParse(stringTag.getAsString()));
             if (type == null) {
                 invalidTypes.add(i);
                 continue;
@@ -290,7 +290,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                 for (Tag tag : nodesTag) {
                     CompoundTag cmp = (CompoundTag) tag;
                     nodes
-                        .get(ConduitTypes.getRegistry().get(new ResourceLocation(cmp.getString(KEY_NODE_TYPE))))
+                        .get(EnderIORegistries.CONDUIT_TYPES.get(new ResourceLocation(cmp.getString(KEY_NODE_TYPE))))
                         .getExtendedConduitData()
                         .deserializeNBT(lookupProvider, cmp.getCompound(KEY_NODE_DATA));
                 }

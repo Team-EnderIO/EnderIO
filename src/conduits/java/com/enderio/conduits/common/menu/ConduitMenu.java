@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.menu;
 
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.SlotType;
@@ -98,7 +98,7 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
     public static ConduitMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         Direction direction = buf.readEnum(Direction.class);
-        ConduitType<?> type = ConduitTypes.getRegistry().byIdOrThrow(buf.readInt());
+        ConduitType<?> type = EnderIORegistries.CONDUIT_TYPES.byIdOrThrow(buf.readInt());
         if (entity instanceof ConduitBlockEntity castBlockEntity) {
             return new ConduitMenu(castBlockEntity, inventory, pContainerId, direction, type);
         }

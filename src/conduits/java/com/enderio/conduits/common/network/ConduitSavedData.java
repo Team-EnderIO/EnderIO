@@ -1,14 +1,14 @@
 package com.enderio.conduits.common.network;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.misc.ColorControl;
+import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.ConduitNBTKeys;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
-import com.enderio.conduits.common.init.EnderConduitTypes;
+import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.types.RedstoneExtendedData;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
@@ -72,8 +72,8 @@ public class ConduitSavedData extends SavedData {
             CompoundTag typedGraphTag = (CompoundTag) tag;
             ResourceLocation type = new ResourceLocation(typedGraphTag.getString(KEY_TYPE));
 
-            if (ConduitTypes.getRegistry().containsKey(type)) {
-                ConduitType<?> value = Objects.requireNonNull(ConduitTypes.getRegistry().get(type));
+            if (EnderIORegistries.CONDUIT_TYPES.containsKey(type)) {
+                ConduitType<?> value = Objects.requireNonNull(EnderIORegistries.CONDUIT_TYPES.get(type));
                 ListTag graphsForTypeTag = typedGraphTag.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
                 for (Tag tag1 : graphsForTypeTag) {
                     CompoundTag graphTag = (CompoundTag) tag1;
@@ -145,7 +145,7 @@ public class ConduitSavedData extends SavedData {
             }
 
             CompoundTag typedGraphTag = new CompoundTag();
-            typedGraphTag.putString(KEY_TYPE, ConduitTypes.getRegistry().getKey(type).toString());
+            typedGraphTag.putString(KEY_TYPE, EnderIORegistries.CONDUIT_TYPES.getKey(type).toString());
 
             ListTag graphsForTypeTag = new ListTag();
 
@@ -290,7 +290,7 @@ public class ConduitSavedData extends SavedData {
         }
         for (var entry : networks.entrySet()) {
             for (Graph<Mergeable.Dummy> graph : entry.getValue()) {
-                if (serverLevel.getGameTime() % entry.getKey().getTicker().getTickRate() == ConduitTypes.getRegistry().getId(entry.getKey()) % entry
+                if (serverLevel.getGameTime() % entry.getKey().getTicker().getTickRate() == EnderIORegistries.CONDUIT_TYPES.getId(entry.getKey()) % entry
                     .getKey()
                     .getTicker()
                     .getTickRate()) {
@@ -309,11 +309,11 @@ public class ConduitSavedData extends SavedData {
             return false;
         }
 
-        if (!conduit.getBundle().getTypes().contains(EnderConduitTypes.REDSTONE.get())) {
+        if (!conduit.getBundle().getTypes().contains(ConduitTypes.REDSTONE.get())) {
             return false;
         }
 
-        RedstoneExtendedData data = conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()).getExtendedConduitData().cast();
+        RedstoneExtendedData data = conduit.getBundle().getNodeFor(ConduitTypes.REDSTONE.get()).getExtendedConduitData().cast();
         return data.isActive(color);
     }
     public static void addPotentialGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level) {

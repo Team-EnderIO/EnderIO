@@ -3,6 +3,7 @@ package com.enderio.api.conduit;
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.RedstoneControl;
+import com.enderio.api.registry.EnderIORegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -26,7 +27,8 @@ public interface ConduitType<T extends ExtendedConduitData<T>> {
      * @return the conduit item that holds this type
      */
     default Item getConduitItem() {
-        return BuiltInRegistries.ITEM.get(ConduitTypes.getRegistry().getKey(this));
+        // TODO: To be honest I'd rather this always be explicitly defined
+        return BuiltInRegistries.ITEM.get(EnderIORegistries.CONDUIT_TYPES.getKey(this));
     }
 
     default boolean canBeInSameBlock(ConduitType<?> other) {

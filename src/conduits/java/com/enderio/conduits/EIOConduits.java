@@ -1,14 +1,13 @@
 package com.enderio.conduits;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitMenus;
-import com.enderio.conduits.common.init.EnderConduitTypes;
+import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
@@ -16,7 +15,6 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
@@ -28,7 +26,6 @@ public class EIOConduits {
         IEventBus bus = EnderIO.modEventBus;
 
         ConduitTypes.register(bus);
-        EnderConduitTypes.register();
         ConduitBlockEntities.register(bus);
         ConduitMenus.register(bus);
         ConduitBlocks.register(bus);

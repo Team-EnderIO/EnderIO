@@ -6,7 +6,7 @@ import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.init.EnderConduitTypes;
+import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
     public EnergyConduitType() {
         super(EnderIO.loc("block/conduit/energy"), new EnergyConduitTicker(), EnergyExtendedData::new,
-            new ClientConduitData.Simple<>(EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, 24)), ConduitMenuData.ENERGY);
+            new ClientConduitData.Simple<>(ConduitTypes.ICON_TEXTURE, new Vector2i(0, 24)), ConduitMenuData.ENERGY);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.blockentity;
 
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.registry.EnderIORegistries;
 
 public sealed interface RightClickAction permits RightClickAction.Upgrade, RightClickAction.Blocked, RightClickAction.Insert{
      record Upgrade(ConduitType<?> notInConduit) implements RightClickAction {
@@ -11,7 +11,7 @@ public sealed interface RightClickAction permits RightClickAction.Upgrade, Right
 
          @Override
          public String toString() {
-             return "Upgrade[" + ConduitTypes.getRegistry().getKey(notInConduit) + "]";
+             return "Upgrade[" + EnderIORegistries.CONDUIT_TYPES.getKey(notInConduit) + "]";
          }
      }
 
