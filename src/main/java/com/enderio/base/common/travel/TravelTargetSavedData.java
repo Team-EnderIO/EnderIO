@@ -1,11 +1,10 @@
 package com.enderio.base.common.travel;
 
 import com.enderio.api.travel.TravelTarget;
-import com.enderio.api.travel.TravelTargetSerializer;
+import com.enderio.api.travel.TravelTargetAPI;
 import com.enderio.base.common.network.TravelTargetUpdatedPacket;
 import com.enderio.base.common.network.TravelTargetRemovedPacket;
 import com.enderio.base.common.network.SyncTravelDataPacket;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -31,37 +30,46 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
-public class TravelSavedData extends SavedData {
+public class TravelTargetSavedData extends SavedData {
 
-    // TODO: How will the API interact with this to add and remove targets?
+    // Allow the API to interact with the saved data.
+    public static void initAPI() {
+        TravelTargetAPI.init(
+            (l, p) -> getTravelData(l).getTravelTarget(p),
+            (l, t) -> getTravelData(l).setTravelTarget(l, t),
+            (l, t) -> getTravelData(l).removeTravelTargetAt(l, t),
+            (l) -> getTravelData(l).getTravelTargets(),
+            (l, p) -> getTravelData(l).getTravelTargetsInItemRange(p)
+        );
+    }
 
     // Even though the client doesn't need to know the data in the old dimensions,
     //  I am more comfortable with each dimension having its own data on the client.
-    private static final Map<ResourceKey<Level>, TravelSavedData> CLIENT_DATA = new ConcurrentHashMap<>();
+    private static final Map<ResourceKey<Level>, TravelTargetSavedData> CLIENT_DATA = new ConcurrentHashMap<>();
 
     public static final String TARGETS = "targets";
     private final Map<BlockPos, TravelTarget> travelTargets = new HashMap<>();
 
-    public TravelSavedData() {
+    public TravelTargetSavedData() {
     }
 
-    public TravelSavedData(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
+    public TravelTargetSavedData(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
         this.loadNBT(lookupProvider, nbt);
     }
 
-    public static TravelSavedData getTravelData(Level level) {
+    public static TravelTargetSavedData getTravelData(Level level) {
         if (level instanceof ServerLevel serverLevel) {
-            return serverLevel.getDataStorage().computeIfAbsent(new Factory<>(TravelSavedData::new, TravelSavedData::new), "enderio_traveldata");
+            return serverLevel.getDataStorage().computeIfAbsent(new Factory<>(TravelTargetSavedData::new, TravelTargetSavedData::new), "enderio_traveldata");
         } else {
-            return CLIENT_DATA.computeIfAbsent(level.dimension(), l -> new TravelSavedData());
+            return CLIENT_DATA.computeIfAbsent(level.dimension(), l -> new TravelTargetSavedData());
         }
     }
 
-    public Optional<TravelTarget> getTravelTarget(BlockPos pos) {
+    private Optional<TravelTarget> getTravelTarget(BlockPos pos) {
         return Optional.ofNullable(travelTargets.get(pos));
     }
 
-    public Collection<TravelTarget> getTravelTargets() {
+    private Collection<TravelTarget> getTravelTargets() {
         return travelTargets.values();
     }
 
@@ -72,7 +80,7 @@ public class TravelSavedData extends SavedData {
     }
 
     // Adds or updates.
-    public void setTravelTarget(Level level, TravelTarget target) {
+    private void setTravelTarget(Level level, TravelTarget target) {
         if (level instanceof ServerLevel serverLevel) {
             PacketDistributor.sendToPlayersInDimension(serverLevel, new TravelTargetUpdatedPacket(target));
         }
@@ -80,7 +88,7 @@ public class TravelSavedData extends SavedData {
         travelTargets.put(target.pos(), target);
     }
 
-    public void removeTravelTargetAt(Level level, BlockPos pos) {
+    private void removeTravelTargetAt(Level level, BlockPos pos) {
         if (level instanceof ServerLevel serverLevel) {
             PacketDistributor.sendToPlayersInDimension(serverLevel, new TravelTargetRemovedPacket(pos));
         }
@@ -121,7 +129,7 @@ public class TravelSavedData extends SavedData {
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
         if (player instanceof ServerPlayer serverPlayer) {
-            var savedData = TravelSavedData.getTravelData(serverPlayer.level());
+            var savedData = TravelTargetSavedData.getTravelData(serverPlayer.level());
             var serializedData = savedData.save(new CompoundTag(), serverPlayer.level().registryAccess());
             PacketDistributor.sendToPlayer(serverPlayer, new SyncTravelDataPacket(serializedData));
         }
@@ -131,7 +139,7 @@ public class TravelSavedData extends SavedData {
     public static void onDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
         Player player = event.getEntity();
         if (player instanceof ServerPlayer serverPlayer) {
-            var savedData = TravelSavedData.getTravelData(serverPlayer.level());
+            var savedData = TravelTargetSavedData.getTravelData(serverPlayer.level());
             var serializedData = savedData.save(new CompoundTag(), serverPlayer.level().registryAccess());
             PacketDistributor.sendToPlayer(serverPlayer, new SyncTravelDataPacket(serializedData));
         }

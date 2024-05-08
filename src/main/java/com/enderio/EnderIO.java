@@ -21,6 +21,7 @@ import com.enderio.base.common.integrations.EnderIOSelfIntegration;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.base.common.travel.TravelTargetSavedData;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
 import com.enderio.base.data.loot.ChestLootProvider;
@@ -108,6 +109,9 @@ public class EnderIO {
         EIOAttachments.register(modEventBus);
         EIOCriterions.register(modEventBus);
         regilite.register(modEventBus);
+
+        // Initialize API layers.
+        TravelTargetSavedData.initAPI();
 
         // Run datagen after registrate is finished.
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);

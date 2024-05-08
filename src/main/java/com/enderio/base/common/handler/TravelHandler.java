@@ -2,10 +2,11 @@ package com.enderio.base.common.handler;
 
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.travel.TravelTarget;
+import com.enderio.api.travel.TravelTargetAPI;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.network.RequestTravelPacket;
-import com.enderio.base.common.travel.TravelSavedData;
+import com.enderio.base.common.travel.TravelTargetSavedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -211,9 +212,8 @@ public class TravelHandler {
     public static Optional<TravelTarget> getAnchorTarget(Player player) {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
-        return TravelSavedData
-            .getTravelData(player.level())
-            .getTravelTargetsInItemRange(player.blockPosition())
+        return TravelTargetAPI
+            .getInItemRange(player.level(), player.blockPosition())
             .filter(target -> target.canTravelTo())
             .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
             .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
@@ -240,9 +240,8 @@ public class TravelHandler {
             lowerY = anchorY - anchorRange - 1;
         }
 
-        return TravelSavedData
-            .getTravelData(player.level())
-            .getTravelTargets()
+        return TravelTargetAPI
+            .getAll(player.level())
             .stream()
             .filter(target -> target.pos().getX() == anchorX && target.pos().getZ() == anchorZ)
             .filter(target -> target.pos().getY() > lowerY && target.pos().getY() < upperY)

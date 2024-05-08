@@ -1,8 +1,8 @@
 package com.enderio.base.common.network;
 
 import com.enderio.api.travel.TravelTarget;
+import com.enderio.api.travel.TravelTargetAPI;
 import com.enderio.base.common.handler.TravelHandler;
-import com.enderio.base.common.travel.TravelSavedData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -28,8 +28,7 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             var player = context.player();
 
-            TravelSavedData travelData = TravelSavedData.getTravelData(player.level());
-            Optional<TravelTarget> target = travelData.getTravelTarget(packet.pos());
+            Optional<TravelTarget> target = TravelTargetAPI.get(player.level(), packet.pos());
 
             // These errors should only ever be triggered if there's some form of desync
             if (!TravelHandler.canBlockTeleport(player)) {

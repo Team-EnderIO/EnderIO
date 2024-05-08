@@ -3,9 +3,9 @@ package com.enderio.base.client.renderer.travel;
 import com.enderio.api.travel.RegisterTravelRenderersEvent;
 import com.enderio.api.travel.TravelRenderer;
 import com.enderio.api.travel.TravelTarget;
+import com.enderio.api.travel.TravelTargetAPI;
 import com.enderio.api.travel.TravelTargetType;
 import com.enderio.base.common.handler.TravelHandler;
-import com.enderio.base.common.travel.TravelSavedData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -60,10 +60,10 @@ public class TravelTargetRendering {
         }
 
         boolean itemTeleport = TravelHandler.canItemTeleport(player);
-        TravelSavedData data = TravelSavedData.getTravelData(Minecraft.getInstance().level);
+
         @Nullable
         TravelTarget activeTarget = TravelHandler.getAnchorTarget(player).orElse(null);
-        for (TravelTarget target : data.getTravelTargets()) {
+        for (TravelTarget target : TravelTargetAPI.getAll(level)) {
             double range = itemTeleport ? target.item2BlockRange() : target.block2BlockRange();
             double distanceSquared = target.pos().distToCenterSqr(player.position());
             if (range * range < distanceSquared
