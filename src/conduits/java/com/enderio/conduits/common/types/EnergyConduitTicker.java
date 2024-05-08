@@ -44,8 +44,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
 //                       }
                        IEnergyStorage capability = level.getCapability(getCapability(), otherNode.getPos().relative(dir), dir.getOpposite());
                        if (capability != null) {
-                           IEnergyStorage insert = capability;
-                           extractEnergy(energy, List.of(insert), 0, i -> {});
+                           extractEnergy(energy, List.of(capability), 0, i -> {});
                        }
                    }
                }

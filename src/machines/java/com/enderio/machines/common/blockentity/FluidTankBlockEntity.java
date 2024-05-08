@@ -123,9 +123,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         // fill recipes
         if (level != null) {
             List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
-            if (allRecipes.stream().anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.EMPTY && recipe.value().input().test(item))) {
-                return true;
-            }
+            return allRecipes.stream().anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.EMPTY && recipe.value().input().test(item));
         }
 
         return false;
@@ -150,9 +148,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         // drain recipes
         if (level != null) {
             List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
-            if (allRecipes.stream().anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.FILL && recipe.value().input().test(item))) {
-                return true;
-            }
+            return allRecipes.stream().anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.FILL && recipe.value().input().test(item));
         }
 
         return false;

@@ -158,19 +158,19 @@ public class SoulDataProvider implements DataProvider {
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data, EngineSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
     }
 
-    static class FinshedSoulData<T extends SoulData> {
+    public static class FinshedSoulData<T extends SoulData> {
 
         private final Codec<T> codec;
         private final T data;
         private final ResourceLocation id;
 
-        FinshedSoulData(Codec<T> codec, T data, String id) {
+        private FinshedSoulData(Codec<T> codec, T data, String id) {
             this.codec = codec;
             this.data = data;
             this.id = EnderIO.loc(id);
         }
 
-        FinshedSoulData(Codec<T> codec, T data, ResourceLocation id) {
+        private FinshedSoulData(Codec<T> codec, T data, ResourceLocation id) {
             this.codec = codec;
             this.data = data;
             this.id = id;

@@ -47,13 +47,6 @@ public record SagMillingRecipe(
 ) implements MachineRecipe<SagMillingRecipe.Container> {
     private static final Random RANDOM = new Random();
 
-    public SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int energy, BonusType bonusType) {
-        this.input = input;
-        this.outputs = outputs;
-        this.energy = energy;
-        this.bonusType = bonusType;
-    }
-
     /**
      * JEI for sag mill will not use this, it'll use a capacitor data.
      */

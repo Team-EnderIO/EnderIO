@@ -36,6 +36,7 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -146,11 +147,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
      * For example a wrapper for combining photovoltaic cells or capacitor banks
      */
     public final IMachineEnergyStorage getExposedEnergyStorage() {
-        if (exposedEnergyStorage != null) {
-            return exposedEnergyStorage;
-        }
-
-        return getEnergyStorage();
+        return Objects.requireNonNullElseGet(exposedEnergyStorage, this::getEnergyStorage);
     }
 
     /**

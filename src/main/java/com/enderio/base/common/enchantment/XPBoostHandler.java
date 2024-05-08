@@ -88,6 +88,7 @@ public class XPBoostHandler {
                 int xp = killed.getExperienceReward();
                 return getXPBoost(xp, level);
             } catch (Exception e) {
+                // TODO: Properly bound this catch to the right exception (assuming Math related)
                 Throwables.throwIfUnchecked(e);
             }
         }

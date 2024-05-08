@@ -26,8 +26,8 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     public static final String TANK_INDEX = "Index";
     private final IOConfigurable config;
     private final MachineTankLayout layout;
-    private Map<Integer, MachineFluidTank> tanks =  new HashMap<>();
-    private List<FluidStack> stacks;
+    private final Map<Integer, MachineFluidTank> tanks =  new HashMap<>();
+    private final List<FluidStack> stacks;
 
     // Not sure if we need this but might be useful to update recipe/task if tank is filled.
     private IntConsumer changeListener = i -> {};

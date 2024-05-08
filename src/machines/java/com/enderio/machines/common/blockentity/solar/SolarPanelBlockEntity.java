@@ -110,8 +110,8 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
         }
 
         for (GraphObject<Mergeable.Dummy> neighbour : node.getGraph().getNeighbours(node)) {
-            if (neighbour instanceof MultiEnergyNode node) {
-                if (node.pos.equals(worldPosition.relative(direction))) {
+            if (neighbour instanceof MultiEnergyNode neighbourMultiEnergyNode) {
+                if (neighbourMultiEnergyNode.pos.equals(worldPosition.relative(direction))) {
                     return false;
                 }
             }

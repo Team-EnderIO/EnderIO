@@ -183,9 +183,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 .toList();
 
             if (currentStacks.stream().allMatch(i -> i.is(stack.getItem())) || currentStacks.size() == 1) {
-                if (RecipeCaches.SMELTING.hasRecipe(List.of(stack))) {
-                    return true;
-                }
+                return RecipeCaches.SMELTING.hasRecipe(List.of(stack));
             }
         }
 

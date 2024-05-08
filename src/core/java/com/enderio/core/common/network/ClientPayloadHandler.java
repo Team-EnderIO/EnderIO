@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ClientPayloadHandler {
-    private static ClientPayloadHandler INSTANCE = new ClientPayloadHandler();
+    private static final ClientPayloadHandler INSTANCE = new ClientPayloadHandler();
 
     public static ClientPayloadHandler getInstance() {
         return INSTANCE;

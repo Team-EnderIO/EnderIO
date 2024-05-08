@@ -27,6 +27,7 @@ public class SinglePaintedBlockEntity extends BlockEntity implements PaintableBl
     @Nullable
     protected Block paint;
 
+    // TODO: Technically shouldn't be nullable.
     @Nullable
     public Block getPaint() {
         return paint;

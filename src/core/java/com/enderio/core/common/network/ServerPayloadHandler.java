@@ -8,7 +8,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ServerPayloadHandler {
 
-    private static ServerPayloadHandler INSTANCE = new ServerPayloadHandler();
+    private static final ServerPayloadHandler INSTANCE = new ServerPayloadHandler();
 
     public static ServerPayloadHandler getInstance() {
         return INSTANCE;

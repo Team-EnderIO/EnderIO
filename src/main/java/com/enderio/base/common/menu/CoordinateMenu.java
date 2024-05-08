@@ -54,11 +54,10 @@ public class CoordinateMenu extends AbstractContainerMenu {
     /**
      * @param name is null when you used the coordinate selector, if it's the printout use the ItemStack name
      */
-    public static FriendlyByteBuf writeAdditionalData(FriendlyByteBuf buf, CoordinateSelection selection, @Nullable String name) {
+    public static void writeAdditionalData(FriendlyByteBuf buf, CoordinateSelection selection, @Nullable String name) {
         CoordinateSelection.STREAM_CODEC.encode(buf, selection);
         buf.writeBoolean(name == null);
         buf.writeUtf(name == null ? "" : name, 50);
-        return buf;
     }
 
     @Override

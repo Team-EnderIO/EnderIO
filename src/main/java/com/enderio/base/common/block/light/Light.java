@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Default might class. 
@@ -68,17 +69,12 @@ public class Light extends FaceAttachedHorizontalDirectionalBlock {
 			}
 			return FLOOR_AABB_Z;
 		case WALL:
-			switch(direction) {
-			case EAST:
-				return EAST_AABB;
-			case WEST:
-				return WEST_AABB;
-			case SOUTH:
-				return SOUTH_AABB;
-			case NORTH:
-			default:
-				return NORTH_AABB;
-			}
+            return switch (direction) {
+                case EAST -> EAST_AABB;
+                case WEST -> WEST_AABB;
+                case SOUTH -> SOUTH_AABB;
+                default -> NORTH_AABB;
+            };
 		case CEILING:
 		default:
 			if (direction.getAxis() == Direction.Axis.X) {
@@ -90,7 +86,7 @@ public class Light extends FaceAttachedHorizontalDirectionalBlock {
 	}
 	
 	@Override
-	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {
+	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction direction) {
 		return true;
 	}
 	

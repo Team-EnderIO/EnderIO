@@ -416,7 +416,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
 
         private GhostRenderLayer(RenderType original) {
-            super(String.format("%s_%s_ghost", original.toString(), EnderIO.MODID), original.format(), original.mode(), original.bufferSize(),
+            super(String.format("%s_%s_ghost", original, EnderIO.MODID), original.format(), original.mode(), original.bufferSize(),
                 original.affectsCrumbling(), true, () -> {
                     original.setupRenderState();
 

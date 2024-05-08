@@ -23,6 +23,7 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
     @Nullable
     private Block paint;
 
+    // TODO: Technically shouldn't be nullable.
     @Nullable
     public Block getPaint() {
         return paint;

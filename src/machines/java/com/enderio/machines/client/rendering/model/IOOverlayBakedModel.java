@@ -69,7 +69,7 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, RenderType renderType) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, @Nullable RenderType renderType) {
         if (extraData.has(MachineBlockEntity.IO_CONFIG_PROPERTY)) {
             // Get io config from the block entity.
             IOConfigurable config = extraData.get(MachineBlockEntity.IO_CONFIG_PROPERTY);

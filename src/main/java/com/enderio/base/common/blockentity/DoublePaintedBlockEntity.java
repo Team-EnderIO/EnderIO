@@ -53,12 +53,6 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
         return ModelData.builder().with(PAINT, getPaint()).with(PAINT2, paint2).build();
     }
 
-    @Nullable
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         Block oldPaint = getPaint2();

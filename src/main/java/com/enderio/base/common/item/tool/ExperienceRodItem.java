@@ -56,11 +56,6 @@ public class ExperienceRodItem extends Item {
         return InteractionResult.PASS;
     }
 
-    @Override
-    public boolean doesSneakBypassUse(ItemStack stack, LevelReader level, BlockPos pos, Player player) {
-        return false;
-    }
-
     private static boolean transferFromBlockToPlayer(Player player, Level level, BlockPos pos) {
         try {
             var fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);

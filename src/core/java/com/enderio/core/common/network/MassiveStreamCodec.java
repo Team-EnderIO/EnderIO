@@ -25,7 +25,7 @@ public class MassiveStreamCodec {
         final StreamCodec<? super B, T8> codec8,
         final Function<C, T8> getter8,
         final Function8<T1, T2, T3, T4, T5, T6, T7, T8, C> p_331335_) {
-        return new StreamCodec<B, C>() {
+        return new StreamCodec<>() {
             @Override
             public C decode(B p_330310_) {
                 T1 t1 = codec1.decode(p_330310_);
@@ -73,7 +73,7 @@ public class MassiveStreamCodec {
         final StreamCodec<? super B, T9> codec9,
         final Function<C, T9> getter9,
         final Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, C> p_331335_) {
-        return new StreamCodec<B, C>() {
+        return new StreamCodec<>() {
             @Override
             public C decode(B p_330310_) {
                 T1 t1 = codec1.decode(p_330310_);

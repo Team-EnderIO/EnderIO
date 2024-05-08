@@ -168,15 +168,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
         energyStored = nbt.getInt(MachineNBTKeys.ENERGY_STORED);
     }
 
-    private static class Sided implements IEnergyStorage {
-
-        private final MachineEnergyStorage wrapped;
-        private final Direction side;
-
-        Sided(MachineEnergyStorage wrapped, Direction side) {
-            this.wrapped = wrapped;
-            this.side = side;
-        }
+    private record Sided(MachineEnergyStorage wrapped, Direction side) implements IEnergyStorage {
 
         @Override
         public int getEnergyStored() {

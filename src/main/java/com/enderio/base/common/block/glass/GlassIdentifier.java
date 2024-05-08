@@ -19,7 +19,7 @@ public record GlassIdentifier(GlassLighting lighting, GlassCollisionPredicate co
         StringBuilder modifier = new StringBuilder();
         modifier.append(lighting().shortName());
         modifier.append(collisionPredicate().shortName());
-        if (modifier.length() != 0) {
+        if (!modifier.isEmpty()) {
             main.append("_");
             main.append(modifier);
         }
