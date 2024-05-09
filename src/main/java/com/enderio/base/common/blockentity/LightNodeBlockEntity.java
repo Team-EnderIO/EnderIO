@@ -4,7 +4,6 @@ import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.light.LightNode;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.network.ServerToClientLightUpdate;
-import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -13,11 +12,13 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class LightNodeBlockEntity extends BlockEntity {
     public BlockPos masterpos;
@@ -45,7 +46,8 @@ public class LightNodeBlockEntity extends BlockEntity {
         if (level instanceof ServerLevel serverLevel) {
             if (!(level.getBlockEntity(e.masterpos) instanceof PoweredLightBlockEntity)) {
                 level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS);
-                NetworkUtil.sendToAllTracking(new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState()), serverLevel, pos);
+                PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(pos),
+                    new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState()));
                 return;
             }
 
@@ -53,7 +55,8 @@ public class LightNodeBlockEntity extends BlockEntity {
                 PoweredLightBlockEntity master = (PoweredLightBlockEntity) level.getBlockEntity(e.masterpos);
                 if (!master.isActive()) {
                     level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS);
-                    NetworkUtil.sendToAllTracking(new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState()), serverLevel, pos);
+                    PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(pos),
+                        new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState()));
                     return;
                 }
 

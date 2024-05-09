@@ -145,7 +145,7 @@ public class SpawnerMachineTask implements PoweredMachineTask {
             this.entityType = optionalEntity.get().value();
             this.energyCost = 50000;
             if (entityType.create(this.blockEntity.getLevel()) instanceof LivingEntity entity) { //Are we 100% guaranteed this is a living entity?
-                this.energyCost += entity.getMaxHealth()*50; //TODO actually balance based on health
+                this.energyCost += (int)entity.getMaxHealth() * 50; //TODO actually balance based on health
             }
             return;
         }

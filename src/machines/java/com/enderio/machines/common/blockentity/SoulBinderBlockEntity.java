@@ -136,7 +136,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     // region Fluid Storage
     @Override
     public @Nullable MachineTankLayout getTankLayout() {
-        return MachineTankLayout.builder().tank(TANK, 10000, f -> f.getFluid().is(EIOTags.Fluids.EXPERIENCE)).build();
+        return MachineTankLayout.builder().tank(TANK, 10000, f -> f.is(EIOTags.Fluids.EXPERIENCE)).build();
     }
 
     @Override

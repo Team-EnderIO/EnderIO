@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
@@ -54,14 +55,15 @@ public class TooltipHandler {
     // region Configurable items (datapackable or otherwise)
 
     private static void addCapacitorTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
-        if (CapacitorUtil.isCapacitor(itemStack)) {
-            CapacitorUtil.getCapacitorData(itemStack).ifPresent(data -> {
-                NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-                components.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, fmt.format(data.base())));
-                for (Map.Entry<CapacitorModifier, Float> modifier : data.modifiers().entrySet()) {
-                    components.add(TooltipUtil.styledWithArgs(new ResourceLocation("tooltip", modifier.getKey().modifierId.toLanguageKey()), fmt.format(modifier.getValue())));
-                }
-            });
+        if (itemStack.has(EIODataComponents.CAPACITOR_DATA)) {
+            var capacitorData = Objects.requireNonNull(itemStack.get(EIODataComponents.CAPACITOR_DATA));
+
+            NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
+            components.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, fmt.format(capacitorData.base())));
+
+            for (Map.Entry<CapacitorModifier, Float> modifier : capacitorData.modifiers().entrySet()) {
+                components.add(TooltipUtil.styledWithArgs(new ResourceLocation("tooltip", modifier.getKey().modifierId.toLanguageKey()), fmt.format(modifier.getValue())));
+            }
         }
     }
 

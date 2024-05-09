@@ -55,7 +55,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
         if (filled == xpe.getValue() * EXP_TO_FLUID) {
             xpe.discard();
         } else {
-            xpe.value -= filled / ((float) EXP_TO_FLUID);
+            xpe.value -= Math.round(filled / ((float) EXP_TO_FLUID));
         }
     }
 

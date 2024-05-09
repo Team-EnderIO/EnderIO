@@ -200,8 +200,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         if (visible && isValidClickButton(pButton) && isMouseOver(pMouseX, pMouseY)) {
             double dx = pDragX / (double) screen.width;
             double dy = pDragY / (double) screen.height;
-            yaw += 4 * dx * 180;
-            pitch += 2 * dy * 180;
+            yaw += 4 * (float)dx * 180;
+            pitch += 2 * (float)dy * 180;
 
             pitch = Math.min(80, Math.max(-80, pitch)); //clamp
 

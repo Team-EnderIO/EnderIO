@@ -38,11 +38,11 @@ public class ExperienceWidget extends EIOWidget {
         var font = Minecraft.getInstance().font;
         String text = "" + expLevel.level();
         int xOffset = font.width(text) / 2 ;
-        guiGraphics.drawString(font, text, (this.x + this.width/2 + 1) - xOffset, (float)this.y - this.height - 3, 0, false);
-        guiGraphics.drawString(font, text, (this.x + this.width/2 - 1) - xOffset, (float)this.y - this.height - 3, 0, false);
-        guiGraphics.drawString(font, text, this.x + this.width/2 - xOffset, (float)(this.y - this.height - 3 + 1), 0, false);
-        guiGraphics.drawString(font, text, this.x + this.width/2 - xOffset, (float)(this.y - this.height - 3 - 1), 0, false);
-        guiGraphics.drawString(font, text, this.x + this.width/2 - xOffset, (float)this.y - this.height - 3, 8453920, false);
+        guiGraphics.drawString(font, text, (this.x + this.width/2f + 1) - xOffset, (float)this.y - this.height - 3, 0, false);
+        guiGraphics.drawString(font, text, (this.x + this.width/2f - 1) - xOffset, (float)this.y - this.height - 3, 0, false);
+        guiGraphics.drawString(font, text, this.x + this.width/2f - xOffset, (float)(this.y - this.height - 3 + 1), 0, false);
+        guiGraphics.drawString(font, text, this.x + this.width/2f - xOffset, (float)(this.y - this.height - 3 - 1), 0, false);
+        guiGraphics.drawString(font, text, this.x + this.width/2f - xOffset, (float)this.y - this.height - 3, 8453920, false);
 
     }
 

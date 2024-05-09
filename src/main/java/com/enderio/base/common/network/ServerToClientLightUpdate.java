@@ -25,13 +25,6 @@ public record ServerToClientLightUpdate(BlockPos pos, BlockState state) implemen
         ServerToClientLightUpdate::new
     );
 
-    public ServerToClientLightUpdate(FriendlyByteBuf buf) {
-        this(
-            buf.readBlockPos(),
-            Block.stateById(buf.readVarInt())
-        );
-    }
-
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;

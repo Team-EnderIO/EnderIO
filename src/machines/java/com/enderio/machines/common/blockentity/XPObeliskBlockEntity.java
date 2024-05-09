@@ -47,7 +47,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
 
     @Override
     public MachineTankLayout getTankLayout() {
-        return new MachineTankLayout.Builder().tank(TANK, Integer.MAX_VALUE, fluidStack -> fluidStack.getFluid().is(EIOTags.Fluids.EXPERIENCE)).build();
+        return new MachineTankLayout.Builder().tank(TANK, Integer.MAX_VALUE, fluidStack -> fluidStack.is(EIOTags.Fluids.EXPERIENCE)).build();
     }
 
     @Override

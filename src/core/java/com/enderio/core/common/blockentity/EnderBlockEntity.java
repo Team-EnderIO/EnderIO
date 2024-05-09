@@ -3,7 +3,6 @@ package com.enderio.core.common.blockentity;
 import com.enderio.api.UseOnly;
 import com.enderio.core.common.network.ClientboundDataSlotChange;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.core.common.network.NetworkUtil;
 import com.enderio.core.common.network.ServerboundCDataSlotUpdate;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
@@ -15,6 +14,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -185,7 +185,8 @@ public class EnderBlockEntity extends BlockEntity {
     public void sync() {
         var syncData = createBufferSlotUpdate();
         if (syncData != null && level instanceof ServerLevel serverLevel) {
-            NetworkUtil.sendToAllTracking(new ServerboundCDataSlotUpdate(getBlockPos(), syncData), serverLevel, getBlockPos());
+            PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(getBlockPos()),
+                new ServerboundCDataSlotUpdate(getBlockPos(), syncData));
         }
     }
 

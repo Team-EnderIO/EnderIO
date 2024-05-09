@@ -5,7 +5,6 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.EmitParticlePacket;
-import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -17,10 +16,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class ExperienceRodItem extends Item {
     public ExperienceRodItem(Properties pProperties) {
@@ -46,7 +47,10 @@ public class ExperienceRodItem extends Item {
 
         if (wasSuccess) {
             var particle = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0.27450980f, 0.88627451f, 0.29411765f);
-            NetworkUtil.sendToAllTracking(new EmitParticlePacket(particle, pos, 0.2, 0.8, 0.2), serverLevel, pos);
+
+            PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(pos),
+                new EmitParticlePacket(particle, pos, 0.2, 0.8, 0.2));
+
             level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.1f,
                 0.5F * ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.8F));
             return InteractionResult.SUCCESS;
@@ -60,7 +64,7 @@ public class ExperienceRodItem extends Item {
             var fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
             if (fluidHandler != null) {
                 FluidStack availableFluid = fluidHandler.getFluidInTank(0);
-                if (availableFluid.getFluid().is(EIOTags.Fluids.EXPERIENCE) && availableFluid.getAmount() > 0) {
+                if (availableFluid.is(EIOTags.Fluids.EXPERIENCE) && availableFluid.getAmount() > 0) {
                     int requiredXp = player.getXpNeededForNextLevel();
                     int fluidVolume = requiredXp * ExperienceUtil.EXP_TO_FLUID;
 

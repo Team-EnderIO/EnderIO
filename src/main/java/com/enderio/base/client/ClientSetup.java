@@ -98,7 +98,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
-        Minecraft.getInstance().particleEngine.register(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
+        event.registerSpriteSet(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
     }
 
     private static Optional<Item> findGliderForModelRL(ResourceLocation rl) {
