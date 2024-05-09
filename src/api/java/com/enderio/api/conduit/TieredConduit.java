@@ -35,7 +35,6 @@ public abstract class TieredConduit<T extends ExtendedConduitData<T>> implements
         return texture;
     }
 
-
     @Override
     public boolean canBeReplacedBy(ConduitType<?> other) {
         if (!(other instanceof TieredConduit<?> tieredOther)) {

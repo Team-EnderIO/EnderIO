@@ -47,7 +47,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
         return -1;
     }
 
-    public class EnchanterOutputMachineSlot extends MachineSlot {
+    public static class EnchanterOutputMachineSlot extends MachineSlot {
         @Nullable
         private final EnchanterBlockEntity blockEntity;
 

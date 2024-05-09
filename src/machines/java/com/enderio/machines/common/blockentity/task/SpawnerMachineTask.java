@@ -58,7 +58,7 @@ public class SpawnerMachineTask implements PoweredMachineTask {
      *
      * @param energyStorage The energy storage used to power the task.
      */
-    public SpawnerMachineTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage, Optional<ResourceLocation> rl) {
+    public SpawnerMachineTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage, @Nullable ResourceLocation rl) {
         this.blockEntity = blockEntity;
         this.energyStorage = energyStorage;
         loadSoulData(rl);
@@ -126,21 +126,24 @@ public class SpawnerMachineTask implements PoweredMachineTask {
         return true;
     }
     
-    private void loadSoulData(Optional<ResourceLocation> rl) {
-        if (rl.isEmpty()) {
+    private void loadSoulData(@Nullable ResourceLocation rl) {
+        if (rl == null) {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
             return;
         }
-        Optional<Holder.Reference<EntityType<?>>> optionalEntity = BuiltInRegistries.ENTITY_TYPE.getHolder(ResourceKey.create(Registries.ENTITY_TYPE, rl.get()));
-        if (optionalEntity.isEmpty() || ! BuiltInRegistries.ENTITY_TYPE.getKey(optionalEntity.get().value()).equals(rl.get())) {
+
+        Optional<Holder.Reference<EntityType<?>>> optionalEntity = BuiltInRegistries.ENTITY_TYPE.getHolder(ResourceKey.create(Registries.ENTITY_TYPE, rl));
+        if (optionalEntity.isEmpty() || ! BuiltInRegistries.ENTITY_TYPE.getKey(optionalEntity.get().value()).equals(rl)) {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
             return;
         }
+
         if (optionalEntity.get().value().is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.DISABLED);
             return;
         }
-        Optional<SpawnerSoul.SoulData> opData = SpawnerSoul.SPAWNER.matches(rl.get());
+
+        Optional<SpawnerSoul.SoulData> opData = SpawnerSoul.SPAWNER.matches(rl);
         if (opData.isEmpty()) { //Fallback
             this.entityType = optionalEntity.get().value();
             this.energyCost = 50000;
@@ -149,6 +152,7 @@ public class SpawnerMachineTask implements PoweredMachineTask {
             }
             return;
         }
+
         SpawnerSoul.SoulData data = opData.get();
         this.entityType = optionalEntity.get().value();
         this.energyCost = data.power();

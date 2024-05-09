@@ -6,7 +6,7 @@ import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
-import com.enderio.core.data.model.EIOModel;
+import com.enderio.core.data.model.ModelHelper;
 import com.enderio.machines.common.block.CapacitorBankBlock;
 import com.enderio.machines.common.block.EnchanterBlock;
 import com.enderio.machines.common.block.MachineBlock;
@@ -58,8 +58,8 @@ public class MachineBlocks {
         .setBlockStateProvider((prov, ctx) -> prov.horizontalBlock(ctx.get(), prov.models()
             .getBuilder(ctx.getName())
             .customLoader(CompositeModelBuilder::begin)
-                .child("tank", EIOModel.getExistingParent(prov.models(), EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
-                .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
+                .child("tank", ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
+                .child("overlay", ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
             .end()
             .texture("particle", EnderIO.loc("block/machine_side"))
         ))
@@ -79,8 +79,8 @@ public class MachineBlocks {
         .setBlockStateProvider((prov, ctx) -> prov.horizontalBlock(ctx.get(), prov.models()
                 .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
                 .customLoader(CompositeModelBuilder::begin)
-            .child("tank", EIOModel.getExistingParent(prov.models(), EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
-                    .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
+            .child("tank", ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
+                    .child("overlay", ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
                 .end()
                 .texture("particle", EnderIO.loc("block/machine_side"))
         ))

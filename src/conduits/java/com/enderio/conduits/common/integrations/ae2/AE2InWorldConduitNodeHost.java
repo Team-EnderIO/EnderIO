@@ -24,8 +24,6 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, Extended
     @Nullable
     private IManagedGridNode mainNode = null;
 
-    private AE2InWorldConduitNodeHost selfCap = this;
-
     public AE2InWorldConduitNodeHost(AE2ConduitType type) {
         this.type = type;
         initMainNode();
@@ -50,16 +48,8 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, Extended
         if (mainNode == null) {
             initMainNode();
         }
+
         return mainNode.getNode();
-    }
-
-    public AE2InWorldConduitNodeHost getSelfCap() {
-        // TODO: Fairly sure this is a logic error. Need to check with agnor.
-        if (selfCap != null) {
-            selfCap = this;
-        }
-
-        return selfCap;
     }
 
     @Override

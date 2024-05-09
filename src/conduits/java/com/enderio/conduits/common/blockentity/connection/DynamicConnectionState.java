@@ -43,11 +43,11 @@ public record DynamicConnectionState(
         DynamicConnectionState::control,
         ColorControl.STREAM_CODEC,
         DynamicConnectionState::redstoneChannel,
-        ItemStack.STREAM_CODEC,
+        ItemStack.OPTIONAL_STREAM_CODEC,
         DynamicConnectionState::filterInsert,
-        ItemStack.STREAM_CODEC,
+        ItemStack.OPTIONAL_STREAM_CODEC,
         DynamicConnectionState::filterExtract,
-        ItemStack.STREAM_CODEC,
+        ItemStack.OPTIONAL_STREAM_CODEC,
         DynamicConnectionState::upgradeExtract,
         DynamicConnectionState::new
     );

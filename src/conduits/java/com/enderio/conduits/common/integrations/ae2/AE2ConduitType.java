@@ -50,9 +50,9 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     }
 
     @Override
-    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, AE2InWorldConduitNodeHost extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, Optional<NodeIdentifier.IOState> state) {
+    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, AE2InWorldConduitNodeHost extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable NodeIdentifier.IOState state) {
         if (getCapability() == cap) {
-            return (Optional<K>) Optional.ofNullable(extendedConduitData.getSelfCap());
+            return (Optional<K>) Optional.of(extendedConduitData);
         }
         return Optional.empty();
     }

@@ -204,12 +204,13 @@ public class EnderBlockEntity extends BlockEntity {
 
     @UseOnly(LogicalSide.SERVER)
     public void serverHandleBufferChange(RegistryFriendlyByteBuf buf) {
-        int index = -1;
+        int index;
         try {
             index = buf.readInt();
         } catch (Exception e) {
             throw new IllegalStateException("Invalid buffer was passed over the network to the server.");
         }
+
         dataSlots.get(index).read(buf);
     }
 

@@ -24,6 +24,7 @@ import java.util.function.IntConsumer;
 public class MachineFluidHandler implements IFluidHandler, INBTSerializable<CompoundTag> {
 
     public static final String TANK_INDEX = "Index";
+    public static final String TANK_CONTENTS = "Contents";
     private final IOConfigurable config;
     private final MachineTankLayout layout;
     private final Map<Integer, MachineFluidTank> tanks =  new HashMap<>();
@@ -241,7 +242,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         for (int i = 0; i < getTanks(); i++) {
             CompoundTag tankTag = new CompoundTag();
             tankTag.putInt(TANK_INDEX, i);
-            stacks.get(i).save(lookupProvider, tankTag);
+            tankTag.put(TANK_CONTENTS, stacks.get(i).save(lookupProvider));
 
             nbtTagList.add(tankTag);
         }

@@ -6,7 +6,7 @@ import com.enderio.base.common.blockentity.PaintableBlockEntity;
 import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.base.common.util.PaintUtils;
 import com.enderio.core.client.RenderUtil;
-import com.enderio.core.data.model.EIOModel;
+import com.enderio.core.data.model.ModelHelper;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
@@ -153,12 +153,12 @@ public class PaintedBlockModel implements IDynamicBakedModel {
             }
         }
 
-        return EIOModel.getMissingTexture();
+        return ModelHelper.getMissingTexture();
     }
 
     @Override
     public TextureAtlasSprite getParticleIcon() {
-        return EIOModel.getMissingTexture();
+        return ModelHelper.getMissingTexture();
     }
 
     @Override
@@ -315,7 +315,7 @@ public class PaintedBlockModel implements IDynamicBakedModel {
     protected Pair<TextureAtlasSprite, Boolean> getSpriteFromModel(BakedQuad shape, BakedModel model, Block paint, Direction rotation) {
         BlockState state = paintWithRotation(paint, rotation);
         List<BakedQuad> quads = model.getQuads(state, shape.getDirection(), RandomSource.create());
-        return quads.isEmpty() ? Pair.of(EIOModel.getMissingTexture(), false) : Pair.of(quads.get(0).getSprite(), quads.get(0).isTinted());
+        return quads.isEmpty() ? Pair.of(ModelHelper.getMissingTexture(), false) : Pair.of(quads.get(0).getSprite(), quads.get(0).isTinted());
     }
 
     // TODO: @agnor99 Update this comment.

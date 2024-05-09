@@ -86,6 +86,7 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
         if (selfCap == null) {
             selfCap = new EnergyExtendedData.ConduitEnergyStorage(this);
         }
+
         return selfCap;
     }
 

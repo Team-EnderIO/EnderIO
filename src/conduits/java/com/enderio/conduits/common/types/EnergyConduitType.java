@@ -38,11 +38,11 @@ public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
     }
 
     @Override
-    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, EnergyExtendedData extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, Optional<NodeIdentifier.IOState> state) {
+    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, EnergyExtendedData extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable NodeIdentifier.IOState state) {
         if (Capabilities.EnergyStorage.BLOCK == cap
-            && state.map(NodeIdentifier.IOState::isExtract).orElse(true)
+            && (state == null || state.isExtract())
             && (direction == null || !level.getBlockState(pos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE))) {
-                return (Optional<K>) Optional.ofNullable(extendedConduitData.getSelfCap()); //TODO remove optional?
+                return (Optional<K>) Optional.of(extendedConduitData.getSelfCap());
 
         }
         return Optional.empty();

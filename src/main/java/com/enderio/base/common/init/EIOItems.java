@@ -21,7 +21,7 @@ import com.enderio.base.common.item.tool.TravelStaffItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.model.item.GliderItemModel;
-import com.enderio.core.data.model.EIOModel;
+import com.enderio.core.data.model.ModelHelper;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
 import net.minecraft.network.chat.Component;
@@ -84,12 +84,12 @@ public class EIOItems {
 
     public static final RegiliteItem<MaterialItem> FRANK_N_ZOMBIE = materialItemGlinted("frank_n_zombie")
         .setTranslation("Frank'N'Zombie")
-        .setModelProvider((prov, ctx) -> EIOModel.mimicItem(prov, ctx, EIOItems.Z_LOGIC_CONTROLLER));
+        .setModelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.Z_LOGIC_CONTROLLER));
 
     public static final RegiliteItem<MaterialItem> ENDER_RESONATOR = materialItem("ender_resonator");
 
     public static final RegiliteItem<MaterialItem> SENTIENT_ENDER = materialItemGlinted("sentient_ender")
-        .setModelProvider((prov, ctx) -> EIOModel.mimicItem(prov, ctx, EIOItems.ENDER_RESONATOR));
+        .setModelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.ENDER_RESONATOR));
 
     public static final RegiliteItem<MaterialItem> SKELETAL_CONTRACTOR = materialItem("skeletal_contractor");
     public static final RegiliteItem<MaterialItem> GUARDIAN_DIODE = materialItem("guardian_diode");
@@ -262,7 +262,7 @@ public class EIOItems {
 
     public static final RegiliteItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEM_REGISTRY
         .registerItem("broken_spawner", BrokenSpawnerItem::new)
-        .setModelProvider(EIOModel::fakeBlockModel)
+        .setModelProvider(ModelHelper::fakeBlockModel)
         .setTab(EIOCreativeTabs.MAIN)
         .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.gePossibleStacks()));
 

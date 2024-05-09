@@ -98,12 +98,13 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
     }
 
     public void addAllLevelToPlayer(boolean give, Player player) {
-        long awardXP = 0;
+        long awardXP;
         if (give) {
             awardXP = TANK.getFluidAmount(this) / ExperienceUtil.EXP_TO_FLUID;
         } else {
             awardXP = -ExperienceUtil.getPlayerTotalXp(player);
         }
+
         awardXP(awardXP, player);
     }
 

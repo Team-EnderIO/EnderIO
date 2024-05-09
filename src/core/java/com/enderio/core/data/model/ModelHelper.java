@@ -14,14 +14,11 @@ import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 
 import java.util.function.Supplier;
 
-public class EIOModel {
+public class ModelHelper {
 
-    public static BlockModelBuilder getExistingParent(BlockModelProvider prov, ResourceLocation model) {
-        return new BlockModelBuilder(null, prov.existingFileHelper)
-            .parent(prov.getExistingFile(model));
+    public static BlockModelBuilder getExistingAsBuilder(BlockModelProvider prov, ResourceLocation model) {
+        return new BlockModelBuilder(null, prov.existingFileHelper).parent(prov.getExistingFile(model));
     }
-
-    // region Item
 
     public static ItemModelBuilder fakeBlockModel(RegiliteItemModelProvider prov, DataGenContext<Item, ? extends Item> ctx) {
         return prov.withExistingParent(ctx.getName(), prov.mcLoc("block/cube_all")).texture("all", prov.itemTexture(ctx.get()));
@@ -31,13 +28,7 @@ public class EIOModel {
         return prov.basicItem(ctx.get(), prov.itemTexture(mimic.get()));
     }
 
-    // endregion
-
-    // region Textures
-
     public static TextureAtlasSprite getMissingTexture() {
         return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(MissingTextureAtlasSprite.getLocation());
     }
-
-    // endregion
 }

@@ -1,7 +1,7 @@
 package com.enderio.base.client.model;
 
 import com.enderio.core.client.RenderUtil;
-import com.enderio.core.data.model.EIOModel;
+import com.enderio.core.data.model.ModelHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -33,7 +33,7 @@ public record PaintingQuadTransformer(BlockState paint, RenderType type) impleme
 
     private TextureAtlasSprite getSpriteForDirection(Direction direction) {
         List<BakedQuad> quads = getModel(paint).getQuads(paint, direction, RandomSource.create(), ModelData.EMPTY, type);
-        return quads.isEmpty() ? EIOModel.getMissingTexture() :quads.get(0).getSprite();
+        return quads.isEmpty() ? ModelHelper.getMissingTexture() :quads.get(0).getSprite();
     }
 
     private BakedModel getModel(BlockState state) {

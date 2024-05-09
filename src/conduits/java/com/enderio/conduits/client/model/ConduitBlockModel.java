@@ -11,7 +11,7 @@ import com.enderio.conduits.common.blockentity.ConduitConnection;
 import com.enderio.conduits.common.blockentity.OffsetHelper;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
-import com.enderio.core.data.model.EIOModel;
+import com.enderio.core.data.model.ModelHelper;
 import com.mojang.math.Axis;
 import com.mojang.math.Transformation;
 import net.minecraft.client.Minecraft;
@@ -252,7 +252,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleIcon() {
-        return EIOModel.getMissingTexture();
+        return ModelHelper.getMissingTexture();
     }
 
     @Override

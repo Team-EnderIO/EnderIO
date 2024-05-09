@@ -41,7 +41,7 @@ public final class NetworkDataSlot<T> {
     public static CodecType<Long> LONG = new CodecType<>(Codec.LONG, ByteBufCodecs.VAR_LONG.cast());
     public static CodecType<Float> FLOAT = new CodecType<>(Codec.FLOAT, ByteBufCodecs.FLOAT.cast());
     public static CodecType<ResourceLocation> RESOURCE_LOCATION = new CodecType<>(ResourceLocation.CODEC, ResourceLocation.STREAM_CODEC.cast());
-    public static CodecType<FluidStack> FLUID_STACK = new CodecType<>(FluidStack.CODEC, FluidStack.STREAM_CODEC, stack -> stack.hashCode() * 31 + stack.getAmount());
+    public static CodecType<FluidStack> FLUID_STACK = new CodecType<>(FluidStack.OPTIONAL_CODEC, FluidStack.OPTIONAL_STREAM_CODEC, stack -> stack.hashCode() * 31 + stack.getAmount());
 
     public NetworkDataSlot(
         Type<T> type,

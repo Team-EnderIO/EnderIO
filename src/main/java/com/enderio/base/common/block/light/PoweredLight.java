@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 public class PoweredLight extends Light implements EntityBlock{
     public static final MapCodec<PoweredLight> CODEC = RecordCodecBuilder.mapCodec(
         inst -> inst.group(
-                Codec.BOOL.fieldOf("inverted").forGetter(i -> i.inverted),
+                Codec.BOOL.fieldOf("inverted").forGetter(i -> i.isInverted),
                 Codec.BOOL.fieldOf("wireless").forGetter(i -> i.wireless),
                 propertiesCodec()
             )

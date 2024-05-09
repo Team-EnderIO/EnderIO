@@ -9,7 +9,7 @@ version="${version}"
 displayName="Ender IO"
 authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rover656, HypherionSA, agnor99, Ferri_Arnus, mystchonky"
 description="Compact conduits, painted things and all sorts of stuff and bling."
-displayURL="http://enderio.com/"
+displayURL="https://enderio.com/"
 logoFile="logo.png"
 
 [[dependencies.enderio]]
