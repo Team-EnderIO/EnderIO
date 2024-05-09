@@ -28,7 +28,7 @@ public record DynamicConnectionState(
     @UseOnly(LogicalSide.SERVER) ItemStack filterInsert,
     @UseOnly(LogicalSide.SERVER) ItemStack filterExtract,
     @UseOnly(LogicalSide.SERVER) ItemStack upgradeExtract
-) implements IConnectionState {
+) implements ConnectionState {
 
     public static StreamCodec<RegistryFriendlyByteBuf, DynamicConnectionState> STREAM_CODEC = MassiveStreamCodec.composite(
         ByteBufCodecs.BOOL,

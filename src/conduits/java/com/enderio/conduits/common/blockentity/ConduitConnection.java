@@ -5,7 +5,7 @@ import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
-import com.enderio.conduits.common.blockentity.connection.IConnectionState;
+import com.enderio.conduits.common.blockentity.connection.ConnectionState;
 import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -25,8 +25,8 @@ import static com.enderio.conduits.common.blockentity.ConduitBundle.MAX_CONDUIT_
 
 public class ConduitConnection implements INBTSerializable<CompoundTag> {
 
-    private final IConnectionState[] connectionStates = Util.make(() -> {
-        var states = new IConnectionState[MAX_CONDUIT_TYPES];
+    private final ConnectionState[] connectionStates = Util.make(() -> {
+        var states = new ConnectionState[MAX_CONDUIT_TYPES];
         Arrays.fill(states, StaticConnectionStates.DISCONNECTED);
         return states;
     });
@@ -115,7 +115,7 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         CompoundTag tag = new CompoundTag();
         for (int i = 0; i < MAX_CONDUIT_TYPES; i++) {
             CompoundTag element = new CompoundTag();
-            IConnectionState state = connectionStates[i];
+            ConnectionState state = connectionStates[i];
             element.putBoolean(KEY_STATIC, state instanceof StaticConnectionStates);
             if (state instanceof StaticConnectionStates staticState) {
                 element.putInt(KEY_INDEX, staticState.ordinal());
@@ -145,7 +145,7 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
                 var insertIndex = nbt.getInt(KEY_INSERT);
                 var redControl = nbt.getInt(KEY_REDSTONE_CONTROL);
                 var redChannel = nbt.getInt(KEY_REDSTONE_CHANNEL);
-                IConnectionState prev = connectionStates[i];
+                ConnectionState prev = connectionStates[i];
                 Optional<DynamicConnectionState> dyn = Optional.ofNullable(prev instanceof DynamicConnectionState dynState ? dynState : null);
                 connectionStates[i] = new DynamicConnectionState(
                     isInsert,
@@ -171,17 +171,17 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         return connection;
     }
 
-    public IConnectionState getConnectionState(int index) {
+    public ConnectionState getConnectionState(int index) {
         return connectionStates[index];
     }
-    public IConnectionState getConnectionState(ConduitType<?> type) {
+    public ConnectionState getConnectionState(ConduitType<?> type) {
         return connectionStates[on.getTypeIndex(type)];
     }
-    public void setConnectionState(ConduitType<?> type, IConnectionState state) {
+    public void setConnectionState(ConduitType<?> type, ConnectionState state) {
         setConnectionState(on.getTypeIndex(type),state);
         on.incrementDataVersion();
     }
-    private void setConnectionState(int i, IConnectionState state) {
+    private void setConnectionState(int i, ConnectionState state) {
         connectionStates[i] = state;
         on.incrementDataVersion();
     }

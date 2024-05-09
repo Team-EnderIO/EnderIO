@@ -2,7 +2,7 @@ package com.enderio.conduits.client.gui;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.core.client.gui.screen.IEnderScreen;
+import com.enderio.core.client.gui.screen.EnderScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -45,7 +45,7 @@ public class ConduitSelectionButton extends AbstractButton {
         }
         RenderSystem.disableBlend();
         RenderSystem.disableDepthTest();
-        IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()).add(3, 6), type.getClientData());
+        EnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()).add(3, 6), type.getClientData());
     }
 
     @Override

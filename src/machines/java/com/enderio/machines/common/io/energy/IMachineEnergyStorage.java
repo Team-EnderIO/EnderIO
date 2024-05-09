@@ -7,6 +7,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 /**
  * Machine energy storage extensions.
  */
+// NOTE: Using 'I' prefix here for consistency with Neo EnergyStorage
 public interface IMachineEnergyStorage extends IEnergyStorage {
     /**
      * Set the amount of energy inside the storage

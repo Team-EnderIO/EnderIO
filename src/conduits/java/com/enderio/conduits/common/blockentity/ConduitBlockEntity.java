@@ -8,7 +8,7 @@ import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.conduits.ConduitNBTKeys;
 import com.enderio.conduits.common.ConduitShape;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
-import com.enderio.conduits.common.blockentity.connection.IConnectionState;
+import com.enderio.conduits.common.blockentity.connection.ConnectionState;
 import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.menu.ConduitMenu;
@@ -176,7 +176,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     if (shouldActivate && type.getTicker().hasConnectionDelay()) {
                         checkConnection = checkConnection.activate();
                     }
-                    IConnectionState connectionState = bundle.getConnection(direction).getConnectionState(type);
+                    ConnectionState connectionState = bundle.getConnection(direction).getConnectionState(type);
                     if (connectionState instanceof DynamicConnectionState dyn) {
                         if (!type.getTicker().canConnectTo(level, pos, direction)) {
                             getBundle().getNodeFor(type).clearState(direction);
@@ -541,7 +541,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 return ItemStack.EMPTY;
             }
 
-            IConnectionState connectionState = bundle.getConnection(data.direction()).getConnectionState(data.conduitIndex());
+            ConnectionState connectionState = bundle.getConnection(data.direction()).getConnectionState(data.conduitIndex());
             if (!(connectionState instanceof DynamicConnectionState dynamicConnectionState)) {
                 return ItemStack.EMPTY;
             }

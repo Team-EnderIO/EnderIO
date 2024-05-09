@@ -9,7 +9,7 @@ import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.RightClickAction;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
-import com.enderio.conduits.common.blockentity.connection.IConnectionState;
+import com.enderio.conduits.common.blockentity.connection.ConnectionState;
 import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitTypes;
@@ -241,7 +241,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             }
 
             if (direction != null) {
-                IConnectionState connectionState = conduit.getBundle().getConnection(direction).getConnectionState(type);
+                ConnectionState connectionState = conduit.getBundle().getConnection(direction).getConnectionState(type);
                 if (connectionState instanceof DynamicConnectionState dyn) {
                     conduit.getBundle().getNodeFor(type).clearState(direction);
                     conduit.dropConnection(dyn);
@@ -266,7 +266,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                     }
                 }
             } else {
-                IConnectionState connectionState = conduit.getBundle().getConnection(hit.getDirection()).getConnectionState(type);
+                ConnectionState connectionState = conduit.getBundle().getConnection(hit.getDirection()).getConnectionState(type);
                 if (connectionState == StaticConnectionStates.DISABLED) {
                     conduit.tryConnectTo(hit.getDirection(), type, true, true);
                 }
@@ -387,7 +387,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     }
 
     public static boolean canBeValidConnection(ConduitBlockEntity conduit, ConduitType<?> type, Direction direction) {
-        IConnectionState connectionState = conduit.getBundle().getConnection(direction).getConnectionState(type);
+        ConnectionState connectionState = conduit.getBundle().getConnection(direction).getConnectionState(type);
         return connectionState instanceof StaticConnectionStates state
             && state == StaticConnectionStates.DISABLED
             && !(conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(direction)) instanceof ConduitBlockEntity);

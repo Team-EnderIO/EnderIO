@@ -6,7 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 
-public interface IEnderScreen {
+public interface EnderScreen {
 
     default Screen getScreen() {
         return (Screen) this;

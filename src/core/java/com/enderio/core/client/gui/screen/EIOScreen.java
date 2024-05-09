@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IEnderScreen {
+public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements EnderScreen {
 
     private final boolean renderLabels;
     private final List<EditBox> editBoxList = new ArrayList<>();

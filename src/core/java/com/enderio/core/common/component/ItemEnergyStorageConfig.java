@@ -1,7 +1,7 @@
 package com.enderio.core.common.component;
 
 // TODO: Not a fan of this pattern, remove it.
-public interface IItemEnergyConfig {
+public interface ItemEnergyStorageConfig {
     int getMaxEnergy();
 
     default int getMaxExtract() {

@@ -1,6 +1,6 @@
 package com.enderio.base.common.capability;
 
-import com.enderio.core.common.component.IItemEnergyConfig;
+import com.enderio.core.common.component.ItemEnergyStorageConfig;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -20,10 +20,10 @@ public class ItemEnergyStorage implements IEnergyStorage {
      * Create an item energy storage, pulling configuration from the Item implementation.
      * @param componentType The name of the data component storing the total energy.
      * @param stack The item stack the energy storage is attached to.
-     * @throws IllegalArgumentException when the ItemStack's Item does not implement {@link IItemEnergyConfig}.
+     * @throws IllegalArgumentException when the ItemStack's Item does not implement {@link ItemEnergyStorageConfig}.
      */
     public ItemEnergyStorage(Supplier<DataComponentType<Integer>> componentType, ItemStack stack) {
-        if (!(stack.getItem() instanceof IItemEnergyConfig config)) {
+        if (!(stack.getItem() instanceof ItemEnergyStorageConfig config)) {
             throw new IllegalArgumentException("This constructor can only be used if the stack's Item implements IItemEnergyConfig.");
         }
 
