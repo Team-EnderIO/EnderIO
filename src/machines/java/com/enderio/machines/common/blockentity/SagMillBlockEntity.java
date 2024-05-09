@@ -11,6 +11,7 @@ import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -21,6 +22,7 @@ import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -205,6 +207,31 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         if (pTag.contains(KEY_GRINDING_BALL_DAMAGE)) {
             grindingBallDamage = pTag.getInt(KEY_GRINDING_BALL_DAMAGE);
         }
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+
+        grindingBallData = components.getOrDefault(MachineDataComponents.SAG_MILL_GRINDING_BALL, GrindingBallData.IDENTITY);
+        grindingBallDamage = components.getOrDefault(MachineDataComponents.SAG_MILL_GRINDING_BALL_DAMAGE, 0);
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        if (getGrindingBallDamage() > 0) {
+            components.set(MachineDataComponents.SAG_MILL_GRINDING_BALL, grindingBallData);
+            components.set(MachineDataComponents.SAG_MILL_GRINDING_BALL_DAMAGE, grindingBallDamage);
+        }
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove(KEY_GRINDING_BALL);
+        tag.remove(KEY_GRINDING_BALL_DAMAGE);
     }
 
     // endregion

@@ -14,6 +14,7 @@ import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
@@ -26,6 +27,7 @@ import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -370,6 +372,35 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
         craftingTaskHost.getContainer().setInputsTaken(pTag.getInt(MachineNBTKeys.PROCESSED_INPUTS));
         super.loadAdditional(pTag, lookupProvider);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+
+        if (!isPrimitiveSmelter()) {
+            mode = components.getOrDefault(MachineDataComponents.ALLOY_SMELTER_MODE, AlloySmelterMode.ALL);
+        }
+
+        craftingTaskHost.getContainer().setInputsTaken(components.getOrDefault(MachineDataComponents.ALLOY_SMELTER_PROCESSED_INPUTS, 1));
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        if (!isPrimitiveSmelter()) {
+            components.set(MachineDataComponents.ALLOY_SMELTER_MODE, mode);
+        }
+
+        components.set(MachineDataComponents.ALLOY_SMELTER_PROCESSED_INPUTS, craftingTaskHost.getContainer().getInputsTaken());
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove(MachineNBTKeys.MACHINE_MODE);
+        tag.remove(MachineNBTKeys.PROCESSED_INPUTS);
     }
 
     public record ContainerSubWrapper(AlloySmeltingRecipe.ContainerWrapper wrapper, int index) implements Container {
