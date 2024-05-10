@@ -5,7 +5,7 @@ import com.enderio.api.attachment.CoordinateSelection;
 import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.api.grindingball.GrindingBallData;
-import com.enderio.base.common.component.BlockPaint;
+import com.enderio.base.common.paint.BlockPaintData;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -19,16 +19,16 @@ import java.util.function.Supplier;
 public class EIODataComponents {
     private static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPES = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, EnderIO.MODID);
 
-    public static Supplier<DataComponentType<SimpleFluidContent>> SIMPLE_FLUID_CONTENT = DATA_COMPONENT_TYPES.register("simple_fluid_content",
+    public static Supplier<DataComponentType<SimpleFluidContent>> ITEM_FLUID_CONTENT = DATA_COMPONENT_TYPES.register("item_fluid_content",
         () -> DataComponentType.<SimpleFluidContent>builder().persistent(SimpleFluidContent.CODEC).networkSynchronized(SimpleFluidContent.STREAM_CODEC).build());
 
     public static Supplier<DataComponentType<Integer>> ENERGY = DATA_COMPONENT_TYPES.register("energy",
         () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT).build());
 
-    public static Supplier<DataComponentType<BlockPaint>> BLOCK_PAINT = DATA_COMPONENT_TYPES.register("block_paint",
-        () -> DataComponentType.<BlockPaint>builder().persistent(BlockPaint.CODEC).networkSynchronized(BlockPaint.STREAM_CODEC).build());
+    public static Supplier<DataComponentType<BlockPaintData>> BLOCK_PAINT = DATA_COMPONENT_TYPES.register("block_paint",
+        () -> DataComponentType.<BlockPaintData>builder().persistent(BlockPaintData.CODEC).networkSynchronized(BlockPaintData.STREAM_CODEC).build());
 
-    public static Supplier<DataComponentType<StoredEntityData>> ENTITY_DATA = DATA_COMPONENT_TYPES.register("entity_data",
+    public static Supplier<DataComponentType<StoredEntityData>> STORED_ENTITY = DATA_COMPONENT_TYPES.register("stored_entity",
         () -> DataComponentType.<StoredEntityData>builder().persistent(StoredEntityData.CODEC).networkSynchronized(StoredEntityData.STREAM_CODEC).build());
 
     public static Supplier<DataComponentType<CapacitorData>> CAPACITOR_DATA = DATA_COMPONENT_TYPES.register("capacitor_data",

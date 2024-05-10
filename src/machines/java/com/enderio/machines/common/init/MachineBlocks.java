@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.client.renderer.PaintedBlockColor;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.common.paint.item.PaintedBlockItem;
 import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
 import com.enderio.core.data.model.ModelHelper;
@@ -137,7 +138,7 @@ public class MachineBlocks {
     public static final RegiliteBlock<ProgressMachineBlock> POWERED_SPAWNER = BLOCK_REGISTRY
         .registerBlock("powered_spawner", properties -> new ProgressMachineBlock(MachineBlockEntities.POWERED_SPAWNER, properties),
             BlockBehaviour.Properties.of().strength(2.5f, 8))
-        .setLootTable((l,t) -> MachinesLootTable.copyStandardComponentsWith(l, t, EIODataComponents.ENTITY_DATA.get()))
+        .setLootTable((l,t) -> MachinesLootTable.copyStandardComponentsWith(l, t, EIODataComponents.STORED_ENTITY.get()))
         .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .createBlockItem(ITEM_REGISTRY,
@@ -174,7 +175,10 @@ public class MachineBlocks {
         .setColorSupplier(() -> PaintedBlockColor::new)
         .setLootTable(DecorLootTable::withPaint)
         .setBlockStateProvider((prov, ctx) -> EIOBlockState.paintedBlock("painted_travel_anchor", prov, ctx.get(), Blocks.DIRT, null)) //Any cube will do
-        .createBlockItem(ITEM_REGISTRY, item -> item.setColorSupplier(() -> PaintedBlockColor::new));
+        .createBlockItem(
+            ITEM_REGISTRY,
+            b -> new PaintedBlockItem(b, new Item.Properties()),
+            item -> item.setColorSupplier(() -> PaintedBlockColor::new));
 
     public static final Map<SolarPanelTier, RegiliteBlock<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
         Map<SolarPanelTier, RegiliteBlock<SolarPanelBlock>> panels = new HashMap<>();

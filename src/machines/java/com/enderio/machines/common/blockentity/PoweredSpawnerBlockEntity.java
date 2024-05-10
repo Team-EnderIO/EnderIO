@@ -198,7 +198,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
-        entityData = components.getOrDefault(EIODataComponents.ENTITY_DATA, StoredEntityData.EMPTY);
+        entityData = components.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
     }
 
     @Override
@@ -206,7 +206,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         super.collectImplicitComponents(components);
 
         if (entityData.hasEntity()) {
-            components.set(EIODataComponents.ENTITY_DATA, entityData);
+            components.set(EIODataComponents.STORED_ENTITY, entityData);
         }
     }
 

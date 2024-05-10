@@ -1,7 +1,8 @@
-package com.enderio.base.common.block.painted;
+package com.enderio.base.common.paint.block;
 
-import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
-import com.enderio.base.common.component.BlockPaint;
+import com.enderio.base.common.paint.blockentity.PaintedBlockEntity;
+import com.enderio.base.common.paint.blockentity.SinglePaintedBlockEntity;
+import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -18,7 +19,12 @@ import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.common.extensions.IBlockExtension;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 public interface PaintedBlock extends IBlockExtension {
+
+    //sane default (definitely not air)
+    Block DEFAULT_PAINT = Blocks.OAK_PLANKS;
 
     @Override
     default float getFriction(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
@@ -45,19 +51,20 @@ public interface PaintedBlock extends IBlockExtension {
     }
 
     default Block getPaint(BlockGetter level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof SinglePaintedBlockEntity paintedBlockEntity) {
-            Block paint = paintedBlockEntity.getPaint();
-            if (paint != null && !(paint instanceof PaintedBlock)) {
-                return paint;
+        if (level.getBlockEntity(pos) instanceof PaintedBlockEntity paintedBlockEntity) {
+            Optional<Block> block = paintedBlockEntity.getPrimaryPaint();
+
+            if (block.isPresent() && !(block.get() instanceof PaintedBlock)) {
+                return block.get();
             }
         }
-        //sane default (definitely not air)
-        return Blocks.OAK_PLANKS;
+
+        return DEFAULT_PAINT;
     }
 
     default ItemStack getPaintedStack(BlockGetter level, BlockPos pos, ItemLike itemLike) {
         ItemStack stack = new ItemStack(itemLike);
-        stack.set(EIODataComponents.BLOCK_PAINT, BlockPaint.of(getPaint(level, pos)));
+        stack.set(EIODataComponents.BLOCK_PAINT, BlockPaintData.of(getPaint(level, pos)));
         return stack;
     }
 }

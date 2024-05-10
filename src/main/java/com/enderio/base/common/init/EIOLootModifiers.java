@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.enchantment.AutoSmeltModifier;
 import com.enderio.base.common.loot.BrokenSpawnerLootModifier;
 import com.enderio.base.common.loot.SetLootCapacitorFunction;
+import com.enderio.base.common.paint.CopyPaintFunction;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
@@ -29,6 +30,9 @@ public class EIOLootModifiers {
 
     public static DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<SetLootCapacitorFunction>> SET_LOOT_CAPACITOR =
         FUNCTIONS.register("set_loot_capacitor", () -> new LootItemFunctionType<>(SetLootCapacitorFunction.CODEC));
+
+    public static DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<CopyPaintFunction>> COPY_PAINT =
+        FUNCTIONS.register("copy_paint", () -> new LootItemFunctionType<>(CopyPaintFunction.CODEC));
 
     public static void register(IEventBus bus) {
         SERIALIZERS.register(bus);

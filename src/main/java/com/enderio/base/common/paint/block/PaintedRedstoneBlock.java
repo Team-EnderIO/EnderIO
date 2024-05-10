@@ -1,17 +1,17 @@
-package com.enderio.machines.common.block;
+package com.enderio.base.common.paint.block;
 
-import com.enderio.base.common.paint.block.PaintedBlock;
-import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
-import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.base.common.paint.blockentity.PaintedBlockEntity;
+import com.enderio.base.common.paint.blockentity.SinglePaintedBlockEntity;
+import com.enderio.base.common.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.PoweredBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
@@ -19,16 +19,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class PaintedTravelAnchorBlock extends TravelAnchorBlock implements PaintedBlock {
+public class PaintedRedstoneBlock extends PoweredBlock implements EntityBlock, PaintedBlock {
 
-    public PaintedTravelAnchorBlock(Properties props) {
-        super(MachineBlockEntities.PAINTED_TRAVEL_ANCHOR, props);
+    public PaintedRedstoneBlock(Properties properties) {
+        super(properties);
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return MachineBlockEntities.PAINTED_TRAVEL_ANCHOR.create(pPos, pState);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return EIOBlockEntities.SINGLE_PAINTED.create(pos, state);
     }
 
     @Override
@@ -39,8 +39,7 @@ public class PaintedTravelAnchorBlock extends TravelAnchorBlock implements Paint
     @Override
     public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side, @Nullable BlockState queryState,
         @Nullable BlockPos queryPos) {
-
-        if (level.getBlockEntity(pos) instanceof PaintedTravelAnchorBlockEntity painted) {
+        if (level.getBlockEntity(pos) instanceof PaintedBlockEntity painted) {
             Optional<Block> paint = painted.getPrimaryPaint();
 
             if (paint.isPresent()) {
@@ -49,17 +48,5 @@ public class PaintedTravelAnchorBlock extends TravelAnchorBlock implements Paint
         }
 
         return super.getAppearance(state, level, pos, side, queryState, queryPos);
-    }
-
-    @Override
-    public Block getPaint(BlockGetter level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof PaintedTravelAnchorBlockEntity paintedBlockEntity) {
-            Optional<Block> paint = paintedBlockEntity.getPrimaryPaint();
-            if (paint.isPresent() && !(paint.get() instanceof PaintedBlock)) {
-                return paint.get();
-            }
-        }
-
-        return PaintedBlock.DEFAULT_PAINT;
     }
 }

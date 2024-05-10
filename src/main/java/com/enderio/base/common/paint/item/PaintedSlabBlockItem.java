@@ -1,7 +1,8 @@
-package com.enderio.base.common.item;
+package com.enderio.base.common.paint.item;
 
-import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
+import com.enderio.base.common.paint.blockentity.DoublePaintedBlockEntity;
 import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.common.paint.blockentity.PaintedBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -21,10 +22,7 @@ public class PaintedSlabBlockItem extends PaintedBlockItem {
 
     @Override
     protected boolean updateCustomBlockEntityTag(BlockPos pPos, Level pLevel, @Nullable Player pPlayer, ItemStack pStack, BlockState pState) {
-        boolean didCreate = super.updateCustomBlockEntityTag(pPos, pLevel, pPlayer, pStack, pState);
-        if (!didCreate) {
-            return false;
-        }
+        boolean result = super.updateCustomBlockEntityTag(pPos, pLevel, pPlayer, pStack, pState);
 
         var paintData = pStack.get(EIODataComponents.BLOCK_PAINT);
 
@@ -33,16 +31,15 @@ public class PaintedSlabBlockItem extends PaintedBlockItem {
             return true;
         }
 
-        // TODO: 20.6 port, check if this is right.
         BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-        if (blockentity instanceof DoublePaintedBlockEntity doublePaintedBlockEntity) {
+        if (blockentity instanceof PaintedBlockEntity paintedBlockEntity) {
             if (pState.getValue(SlabBlock.TYPE) != SlabType.BOTTOM) {
-                doublePaintedBlockEntity.setPaint2(paintData.paint());
+                paintedBlockEntity.setSecondaryPaint(paintData.paint());
             } else if (pState.getValue(SlabBlock.TYPE) != SlabType.TOP) {
-                doublePaintedBlockEntity.setPaint(paintData.paint());
+                paintedBlockEntity.setPrimaryPaint(paintData.paint());
             }
         }
 
-        return true;
+        return result;
     }
 }

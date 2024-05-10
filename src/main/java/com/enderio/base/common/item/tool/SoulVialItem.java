@@ -48,7 +48,7 @@ import java.util.function.Consumer;
 public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     public static final ICapabilityProvider<ItemStack, Void, StoredEntityData> STORED_ENTITY_PROVIDER
-        = (stack, ctx) -> stack.get(EIODataComponents.ENTITY_DATA);
+        = (stack, ctx) -> stack.get(EIODataComponents.STORED_ENTITY);
 
     public SoulVialItem(Properties pProperties) {
         super(pProperties);
@@ -58,13 +58,13 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return pStack.getOrDefault(EIODataComponents.ENTITY_DATA, StoredEntityData.EMPTY).hasEntity();
+        return pStack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY).hasEntity();
     }
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         itemStack
-            .getOrDefault(EIODataComponents.ENTITY_DATA, StoredEntityData.EMPTY)
+            .getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)
             .getHealthState()
             .ifPresent(health ->
                 tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB())));
@@ -146,7 +146,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     }
 
     private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos, Consumer<ItemStack> emptyVialSetter) {
-        var storedEntity = filledVial.get(EIODataComponents.ENTITY_DATA);
+        var storedEntity = filledVial.get(EIODataComponents.STORED_ENTITY);
 
         if (storedEntity != null && storedEntity.hasEntity()) {
             // Get the spawn location for the mob.
@@ -191,15 +191,15 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     // region Entity Storage
 
     public static void setEntityType(ItemStack stack, ResourceLocation entityType) {
-        stack.set(EIODataComponents.ENTITY_DATA, StoredEntityData.of(entityType));
+        stack.set(EIODataComponents.STORED_ENTITY, StoredEntityData.of(entityType));
     }
 
     private static void setEntityData(ItemStack stack, LivingEntity entity) {
-        stack.set(EIODataComponents.ENTITY_DATA, StoredEntityData.of(entity));
+        stack.set(EIODataComponents.STORED_ENTITY, StoredEntityData.of(entity));
     }
 
     public static Optional<StoredEntityData> getEntityData(ItemStack stack) {
-        return Optional.ofNullable(stack.get(EIODataComponents.ENTITY_DATA));
+        return Optional.ofNullable(stack.get(EIODataComponents.STORED_ENTITY));
     }
 
     // endregion

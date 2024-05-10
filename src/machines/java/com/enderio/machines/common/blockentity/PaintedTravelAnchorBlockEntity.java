@@ -1,9 +1,9 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.EIONBTKeys;
-import com.enderio.base.common.blockentity.PaintableBlockEntity;
-import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
-import com.enderio.base.common.util.PaintUtils;
+import com.enderio.base.common.paint.blockentity.PaintedBlockEntity;
+import com.enderio.base.common.paint.blockentity.SinglePaintedBlockEntity;
+import com.enderio.base.common.paint.PaintUtils;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -17,25 +17,34 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 
-public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity implements PaintableBlockEntity {
+public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity implements PaintedBlockEntity {
 
     @Nullable
     private Block paint;
-
-    // TODO: Technically shouldn't be nullable.
-    @Nullable
-    public Block getPaint() {
-        return paint;
-    }
 
     public PaintedTravelAnchorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(MachineBlockEntities.PAINTED_TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
     }
 
     @Override
+    public Optional<Block> getPrimaryPaint() {
+        return Optional.ofNullable(paint);
+    }
+
+    @Override
+    public void setPrimaryPaint(Block paint) {
+        this.paint = paint;
+        setChanged();
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Override
     public ModelData getModelData() {
-        return ModelData.builder().with(SinglePaintedBlockEntity.PAINT, paint).build();
+        return ModelData.builder()
+            .with(SinglePaintedBlockEntity.PAINT, paint)
+            .build();
     }
 
     @Nullable

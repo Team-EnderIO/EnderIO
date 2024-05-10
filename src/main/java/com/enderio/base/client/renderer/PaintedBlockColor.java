@@ -1,8 +1,9 @@
 package com.enderio.base.client.renderer;
 
-import com.enderio.base.common.block.painted.PaintedBlock;
-import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
-import com.enderio.base.common.blockentity.PaintableBlockEntity;
+import com.enderio.base.common.paint.block.PaintedBlock;
+import com.enderio.base.common.paint.block.PaintedSlabBlock;
+import com.enderio.base.common.paint.blockentity.DoublePaintedBlockEntity;
+import com.enderio.base.common.paint.blockentity.PaintedBlockEntity;
 import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
@@ -11,9 +12,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class PaintedBlockColor implements BlockColor, ItemColor {
 
@@ -24,52 +28,23 @@ public class PaintedBlockColor implements BlockColor, ItemColor {
     public int getColor(BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tintIndex) {
         if (level != null && pos != null) {
             BlockEntity entity = level.getBlockEntity(pos);
-            if (entity instanceof PaintableBlockEntity paintedBlockEntity) {
-                Block[] paints = paintedBlockEntity.getPaints();
-                if (paintedBlockEntity instanceof DoublePaintedBlockEntity doublePaintedBlockEntity) {
-                    if (tintIndex < 0) {
-                        tintIndex = unmoveTintIndex(tintIndex);
-                        if (paints[0] != null) {
-                            BlockState paintState = paints[0].defaultBlockState();
-                            int color = Minecraft.getInstance().getBlockColors().getColor(paintState, level, pos, tintIndex);
-                            if (color != -1) {
-                                return color;
-                            }
-                        }
+            if (entity instanceof PaintedBlockEntity paintedBlockEntity) {
 
-                        return 0;
-                    } else {
-                        tintIndex = unmoveTintIndex(tintIndex);
-                        if (paints[1] != null) {
-                            BlockState paintState = paints[1].defaultBlockState();
-                            int color = Minecraft.getInstance().getBlockColors().getColor(paintState, level, pos, tintIndex);
-                            if (color != -1) {
-                                return color;
-                            }
-                        }
-
-                        return 0;
-                    }
+                Optional<Block> paint = paintedBlockEntity.getPrimaryPaint();
+                if (state.getBlock() instanceof PaintedSlabBlock && tintIndex < 0) {
+                    paint = paintedBlockEntity.getSecondaryPaint();
                 }
 
-                for (int i = 0; i < paints.length; i++) {
-                    Block paint = paints[i];
-                    if (paint == null) {
-                        continue;
-                    }
+                tintIndex = unmoveTintIndex(tintIndex);
 
-                    BlockState paintState = paint.defaultBlockState();
-                    if (paint instanceof PaintedBlock) {
-                        continue;
-                    }
-
-                    int color = Minecraft.getInstance().getBlockColors().getColor(paintState, level, pos, i == 1 ? unmoveTintIndex(tintIndex) : tintIndex);
-                    if (color != -1) {
-                        return color;
-                    }
+                BlockState paintState = paint.orElse(PaintedBlock.DEFAULT_PAINT).defaultBlockState();
+                int color = Minecraft.getInstance().getBlockColors().getColor(paintState, level, pos, tintIndex);
+                if (color != -1) {
+                    return color;
                 }
             }
         }
+
         return 0xFFFFFF;
     }
 

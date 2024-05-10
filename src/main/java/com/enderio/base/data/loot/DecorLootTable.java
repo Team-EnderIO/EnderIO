@@ -1,5 +1,6 @@
 package com.enderio.base.data.loot;
 
+import com.enderio.base.common.paint.CopyPaintFunction;
 import com.enderio.regilite.data.RegiliteBlockLootProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.world.level.block.Block;
@@ -17,23 +18,23 @@ public class DecorLootTable {
         loot.add(block, LootTable
             .lootTable()
             .withPool(new LootPool.Builder().add(
-                LootItem.lootTableItem(block)
-                    //.apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
-                    //    .include(EIODataComponents.BLOCK_PAINT.get()))
+                LootItem.lootTableItem(block).apply(CopyPaintFunction.copyPrimary())
             )));
     }
 
     public static <T extends Block> void paintedSlab(RegiliteBlockLootProvider loot, T block) {
         loot.add(block, LootTable
             .lootTable()
-            .withPool(new LootPool.Builder().add(LootItem
-                .lootTableItem(block)
-                //.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy(EIONBTKeys.PAINT, EIONBTKeys.BLOCK_ENTITY_TAG + "." + EIONBTKeys.PAINT))
+            .withPool(new LootPool.Builder().add(
+                LootItem
+                    .lootTableItem(block)
+                    .apply(CopyPaintFunction.copyPrimary())
                 .when(InvertedLootItemCondition.invert(new LootItemBlockStatePropertyCondition.Builder(block).setProperties(
                     StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.TOP))))))
-            .withPool(new LootPool.Builder().add(LootItem
-                .lootTableItem(block)
-                //.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy(EIONBTKeys.PAINT_2, EIONBTKeys.BLOCK_ENTITY_TAG + "." + EIONBTKeys.PAINT_2))
+            .withPool(new LootPool.Builder().add(
+                LootItem
+                    .lootTableItem(block)
+                    .apply(CopyPaintFunction.copySecondary())
                 .when(InvertedLootItemCondition.invert(new LootItemBlockStatePropertyCondition.Builder(block).setProperties(
                     StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.BOTTOM)))))));
     }

@@ -3,7 +3,6 @@ package com.enderio.base.client.tooltip;
 import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.grindingball.GrindingBallData;
-import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
@@ -85,8 +84,8 @@ public class TooltipHandler {
     // region Entity Storage
 
     private static void addEntityDataTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
-        if (itemStack.has(EIODataComponents.ENTITY_DATA)) {
-            var storedEntityData = itemStack.getOrDefault(EIODataComponents.ENTITY_DATA, StoredEntityData.EMPTY);
+        if (itemStack.has(EIODataComponents.STORED_ENTITY)) {
+            var storedEntityData = itemStack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
 
             if (storedEntityData.entityType().isPresent()) {
                 components.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(storedEntityData.entityType().get()))));

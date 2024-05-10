@@ -1,6 +1,6 @@
 package com.enderio.machines.common.recipe;
 
-import com.enderio.base.common.component.BlockPaint;
+import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.PaintingMachineBlockEntity;
@@ -59,7 +59,7 @@ public record PaintingRecipe(
         }
 
         var paintBlock = blockItem.getBlock();
-        outputStack.set(EIODataComponents.BLOCK_PAINT, BlockPaint.of(paintBlock));
+        outputStack.set(EIODataComponents.BLOCK_PAINT, BlockPaintData.of(paintBlock));
 
         outputs.add(OutputStack.of(outputStack));
         return outputs;

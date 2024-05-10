@@ -71,8 +71,8 @@ public record SoulBindingRecipe(
         List<OutputStack> results = getResultStacks(registryAccess);
         ItemStack result = results.get(0).getItem();
 
-        var storedEntityData = vial.getOrDefault(EIODataComponents.ENTITY_DATA, StoredEntityData.EMPTY);
-        result.set(EIODataComponents.ENTITY_DATA, storedEntityData);
+        var storedEntityData = vial.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+        result.set(EIODataComponents.STORED_ENTITY, storedEntityData);
 
         return results;
     }
@@ -97,11 +97,11 @@ public record SoulBindingRecipe(
             return false;
         }
 
-        if (!container.getItem(0).has(EIODataComponents.ENTITY_DATA)) {
+        if (!container.getItem(0).has(EIODataComponents.STORED_ENTITY)) {
             return false;
         }
 
-        var storedEntityData = container.getItem(0).get(EIODataComponents.ENTITY_DATA);
+        var storedEntityData = container.getItem(0).get(EIODataComponents.STORED_ENTITY);
         if (storedEntityData.entityType().isEmpty()) {
             return false;
         }

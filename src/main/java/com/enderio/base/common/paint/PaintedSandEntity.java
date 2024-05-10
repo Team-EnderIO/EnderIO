@@ -1,10 +1,8 @@
-package com.enderio.base.common.entity;
+package com.enderio.base.common.paint;
 
 import com.enderio.base.EIONBTKeys;
-import com.enderio.base.common.component.BlockPaint;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOEntities;
-import com.enderio.base.common.util.PaintUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -72,7 +70,7 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityWith
     @Override
     public ItemEntity spawnAtLocation(ItemStack stack, float offsetY) {
         if (!stack.isEmpty() && blockData != null) {
-            stack.set(EIODataComponents.BLOCK_PAINT, BlockPaint.of(getPaint()));
+            stack.set(EIODataComponents.BLOCK_PAINT, BlockPaintData.of(getPaint()));
         }
 
         return super.spawnAtLocation(stack, offsetY);

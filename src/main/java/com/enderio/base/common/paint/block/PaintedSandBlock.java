@@ -1,7 +1,8 @@
-package com.enderio.base.common.block.painted;
+package com.enderio.base.common.paint.block;
 
-import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
-import com.enderio.base.common.entity.PaintedSandEntity;
+import com.enderio.base.common.paint.blockentity.PaintedBlockEntity;
+import com.enderio.base.common.paint.blockentity.SinglePaintedBlockEntity;
+import com.enderio.base.common.paint.PaintedSandEntity;
 import com.enderio.base.common.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,6 +21,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class PaintedSandBlock extends ColoredFallingBlock implements EntityBlock, PaintedBlock {
 
@@ -52,10 +55,10 @@ public class PaintedSandBlock extends ColoredFallingBlock implements EntityBlock
     @Override
     public int getDustColor(BlockState pState, BlockGetter pReader, BlockPos pPos) {
         BlockEntity blockEntity = pReader.getBlockEntity(pPos);
-        if (blockEntity instanceof SinglePaintedBlockEntity paintedBlockEntity) {
-            Block block = paintedBlockEntity.getPaint();
-            if (block != null) {
-                return block.defaultMapColor().col;
+        if (blockEntity instanceof PaintedBlockEntity paintedBlockEntity) {
+            Optional<Block> block = paintedBlockEntity.getPrimaryPaint();
+            if (block.isPresent()) {
+                return block.get().defaultMapColor().col;
             }
         }
         return 0;
@@ -69,8 +72,12 @@ public class PaintedSandBlock extends ColoredFallingBlock implements EntityBlock
     @Override
     public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side, @Nullable BlockState queryState,
         @Nullable BlockPos queryPos) {
-        if (level.getBlockEntity(pos) instanceof SinglePaintedBlockEntity painted && painted.getPaint() != null) {
-            return painted.getPaint().defaultBlockState();
+        if (level.getBlockEntity(pos) instanceof PaintedBlockEntity painted) {
+            Optional<Block> block = painted.getPrimaryPaint();
+
+            if (block.isPresent()) {
+                return block.get().defaultBlockState();
+            }
         }
         return super.getAppearance(state, level, pos, side, queryState, queryPos);
     }

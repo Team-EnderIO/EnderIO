@@ -1,6 +1,6 @@
 package com.enderio.base.client.renderer.entity;
 
-import com.enderio.base.common.entity.PaintedSandEntity;
+import com.enderio.base.common.paint.PaintedSandEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
@@ -20,9 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.event.RenderNameTagEvent;
 import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.common.NeoForge;
 
 public class PaintedSandRenderer extends EntityRenderer<FallingBlockEntity> {
     public PaintedSandRenderer(EntityRendererProvider.Context ctx) {

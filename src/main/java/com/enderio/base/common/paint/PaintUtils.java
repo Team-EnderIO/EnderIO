@@ -1,6 +1,6 @@
-package com.enderio.base.common.util;
+package com.enderio.base.common.paint;
 
-import com.enderio.base.common.block.painted.PaintedBlock;
+import com.enderio.base.common.paint.block.PaintedBlock;
 import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;

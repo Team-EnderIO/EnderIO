@@ -20,7 +20,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 public class LevitationStaffItem extends PoweredToggledItem {
 
     public static final ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER
-        = (stack, v) -> new StrictFluidHandlerItemStack(EIODataComponents.SIMPLE_FLUID_CONTENT, stack, 1000, EIOTags.Fluids.STAFF_OF_LEVITY_FUEL);
+        = (stack, v) -> new StrictFluidHandlerItemStack(EIODataComponents.ITEM_FLUID_CONTENT, stack, 1000, EIOTags.Fluids.STAFF_OF_LEVITY_FUEL);
 
     public LevitationStaffItem(Properties pProperties) {
         super(pProperties);

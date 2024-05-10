@@ -5,13 +5,13 @@ import com.enderio.base.client.renderer.PaintedBlockColor;
 import com.enderio.base.common.block.ColdFireBlock;
 import com.enderio.base.common.block.DarkSteelLadderBlock;
 import com.enderio.base.common.block.EIOPressurePlateBlock;
-import com.enderio.base.common.block.EnderSkullBlock;
+import com.enderio.base.common.block.skull.EnderSkullBlock;
 import com.enderio.base.common.block.IndustrialInsulationBlock;
 import com.enderio.base.common.block.ReinforcedObsidianBlock;
 import com.enderio.base.common.block.ResettingLeverBlock;
 import com.enderio.base.common.block.SilentPressurePlateBlock;
 import com.enderio.base.common.block.SilentWeightedPressurePlateBlock;
-import com.enderio.base.common.block.WallEnderSkullBlock;
+import com.enderio.base.common.block.skull.WallEnderSkullBlock;
 import com.enderio.base.common.block.glass.GlassBlocks;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassIdentifier;
@@ -19,18 +19,18 @@ import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.base.common.block.light.Light;
 import com.enderio.base.common.block.light.LightNode;
 import com.enderio.base.common.block.light.PoweredLight;
-import com.enderio.base.common.block.painted.PaintedCraftingTableBlock;
-import com.enderio.base.common.block.painted.PaintedFenceBlock;
-import com.enderio.base.common.block.painted.PaintedFenceGateBlock;
-import com.enderio.base.common.block.painted.PaintedRedstoneBlock;
-import com.enderio.base.common.block.painted.PaintedSandBlock;
-import com.enderio.base.common.block.painted.PaintedSlabBlock;
-import com.enderio.base.common.block.painted.PaintedStairBlock;
-import com.enderio.base.common.block.painted.PaintedTrapDoorBlock;
-import com.enderio.base.common.block.painted.PaintedWoodenPressurePlateBlock;
-import com.enderio.base.common.block.painted.SinglePaintedBlock;
-import com.enderio.base.common.item.PaintedBlockItem;
-import com.enderio.base.common.item.PaintedSlabBlockItem;
+import com.enderio.base.common.paint.block.PaintedCraftingTableBlock;
+import com.enderio.base.common.paint.block.PaintedFenceBlock;
+import com.enderio.base.common.paint.block.PaintedFenceGateBlock;
+import com.enderio.base.common.paint.block.PaintedRedstoneBlock;
+import com.enderio.base.common.paint.block.PaintedSandBlock;
+import com.enderio.base.common.paint.block.PaintedSlabBlock;
+import com.enderio.base.common.paint.block.PaintedStairBlock;
+import com.enderio.base.common.paint.block.PaintedTrapDoorBlock;
+import com.enderio.base.common.paint.block.PaintedWoodenPressurePlateBlock;
+import com.enderio.base.common.paint.block.SinglePaintedBlock;
+import com.enderio.base.common.paint.item.PaintedBlockItem;
+import com.enderio.base.common.paint.item.PaintedSlabBlockItem;
 import com.enderio.base.common.item.misc.EnderSkullBlockItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.loot.DecorLootTable;
@@ -571,8 +571,11 @@ public class EIOBlocks {
             .setColorSupplier(() -> PaintedBlockColor::new)
             .setLootTable(DecorLootTable::withPaint)
             .addBlockTags(tags)
-            .createBlockItem(ITEM_REGISTRY, item -> item
-                .setColorSupplier(() -> PaintedBlockColor::new));
+            .createBlockItem(
+                ITEM_REGISTRY,
+                b -> itemFactory.apply(b, new Item.Properties()),
+                item -> item
+                    .setColorSupplier(() -> PaintedBlockColor::new));
     }
 
     public static <T extends Block> RegiliteBlock<T> lightBlock(String name, Function<BlockBehaviour.Properties, T> blockFactory) {

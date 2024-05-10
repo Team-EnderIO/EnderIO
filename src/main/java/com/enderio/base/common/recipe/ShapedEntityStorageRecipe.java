@@ -33,7 +33,7 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
         ItemStack result = getWrapped().assemble(container, lookupProvider);
 
         getItemStoringEntity(container).ifPresent(itemStack ->
-            result.set(EIODataComponents.ENTITY_DATA, itemStack.get(EIODataComponents.ENTITY_DATA)));
+            result.set(EIODataComponents.STORED_ENTITY, itemStack.get(EIODataComponents.STORED_ENTITY)));
         return result;
     }
 
@@ -46,7 +46,7 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
     private Optional<ItemStack> getItemStoringEntity(CraftingContainer container) {
         for (int slot = 0; slot < container.getContainerSize(); slot++) {
             ItemStack stack = container.getItem(slot);
-            var data = stack.getOrDefault(EIODataComponents.ENTITY_DATA, StoredEntityData.EMPTY);
+            var data = stack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
             if (data.hasEntity()) {
                 return Optional.of(stack);
             }

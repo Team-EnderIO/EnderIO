@@ -1,6 +1,7 @@
 package com.enderio.machines.client.rendering.travel;
 
 import com.enderio.api.travel.TravelRenderer;
+import com.enderio.base.common.paint.block.PaintedBlock;
 import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -21,10 +22,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Math;
 import org.joml.Matrix4f;
+
+import java.util.Optional;
 
 public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> {
     public static final RenderType BOLD_LINES = OutlineRenderType.createLines("bold_lines", 3);
@@ -48,8 +52,13 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         // Render Model
         BlockState blockState = minecraft.level.getBlockState(travelData.pos());
         if (minecraft.level.getBlockEntity(travelData.pos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
-            blockState = paintedTravelAnchorBlock.getPaint().defaultBlockState();
+            Optional<Block> paint = paintedTravelAnchorBlock.getPrimaryPaint();
+
+            if (paint.isPresent()) {
+                blockState = paint.get().defaultBlockState();
+            }
         }
+
         BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
         VertexConsumer solid = buffer.getBuffer(RenderType.solid());
         minecraft

@@ -1,4 +1,4 @@
-package com.enderio.base.common.block;
+package com.enderio.base.common.block.skull;
 
 import com.enderio.base.common.blockentity.EnderSkullBlockEntity;
 import com.enderio.base.common.init.EIOBlockEntities;

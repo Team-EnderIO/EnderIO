@@ -36,7 +36,7 @@ import java.util.List;
 public class ColdFireIgniter extends Item implements CreativeTabVariants {
 
     public static ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER =
-        (stack, v) -> new StrictFluidHandlerItemStack(EIODataComponents.SIMPLE_FLUID_CONTENT, stack, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL);
+        (stack, v) -> new StrictFluidHandlerItemStack(EIODataComponents.ITEM_FLUID_CONTENT, stack, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL);
 
     public ColdFireIgniter(Properties properties) {
         super(properties);

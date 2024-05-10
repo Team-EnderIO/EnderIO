@@ -1,9 +1,10 @@
-package com.enderio.base.common.block.painted;
+package com.enderio.base.common.paint.block;
 
-import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
-import com.enderio.base.common.component.BlockPaint;
+import com.enderio.base.common.paint.blockentity.DoublePaintedBlockEntity;
+import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.common.paint.blockentity.PaintedBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -20,6 +21,8 @@ import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 public class PaintedSlabBlock extends SlabBlock implements EntityBlock, PaintedBlock {
 
     public PaintedSlabBlock(Properties properties) {
@@ -35,10 +38,10 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, PaintedB
     @Override
     public Block getPaint(BlockGetter level, BlockPos pos) {
         if (level.getBlockState(pos).getValue(SlabBlock.TYPE) != SlabType.BOTTOM
-            && level.getBlockEntity(pos) instanceof DoublePaintedBlockEntity paintedBlockEntity) {
-            Block paint = paintedBlockEntity.getPaint2();
-            if (paint != null) {
-                return paint;
+            && level.getBlockEntity(pos) instanceof PaintedBlockEntity paintedBlockEntity) {
+            Optional<Block> paint = paintedBlockEntity.getSecondaryPaint();
+            if (paint.isPresent() && !(paint.get() instanceof PaintedBlock)) {
+                return paint.get();
             }
         }
 
@@ -49,14 +52,18 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, PaintedB
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         ItemStack stack = new ItemStack(this);
         if (level.getBlockEntity(pos) instanceof DoublePaintedBlockEntity paintedBlockEntity) {
-            Block paint;
+            Optional<Block> paint;
             if (target.getLocation().y - pos.getY() > 0.5) {
-                paint = paintedBlockEntity.getPaint2();
+                paint = paintedBlockEntity.getSecondaryPaint();
             } else {
-                paint = paintedBlockEntity.getPaint();
+                paint = paintedBlockEntity.getPrimaryPaint();
             }
-            stack.set(EIODataComponents.BLOCK_PAINT, BlockPaint.of(paint));
+
+            if (paint.isPresent()) {
+                stack.set(EIODataComponents.BLOCK_PAINT, BlockPaintData.of(paint.get()));
+            }
         }
+
         return stack;
     }
 
@@ -64,22 +71,25 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, PaintedB
     public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side, @Nullable BlockState queryState,
         @Nullable BlockPos queryPos) {
         if (level.getBlockEntity(pos) instanceof DoublePaintedBlockEntity painted) {
-            var paint1 = painted.getPaint();
-            var paint2 = painted.getPaint2();
-            if (side == Direction.UP && paint2 != null) {
-                return paint2.defaultBlockState();
+            var paint1 = painted.getPrimaryPaint();
+            var paint2 = painted.getSecondaryPaint();
+
+            // TODO: Safety check for PaintedBlock.
+
+            if (side == Direction.UP && paint2.isPresent()) {
+                return paint2.get().defaultBlockState();
             }
 
-            if (side == Direction.DOWN && paint1 != null) {
-                return paint1.defaultBlockState();
+            if (side == Direction.DOWN && paint1.isPresent()) {
+                return paint1.get().defaultBlockState();
             }
 
-            if (paint1 != null) {
-                return paint1.defaultBlockState();
+            if (paint1.isPresent()) {
+                return paint1.get().defaultBlockState();
             }
 
-            if (paint2 != null) {
-                return paint2.defaultBlockState();
+            if (paint2.isPresent()) {
+                return paint2.get().defaultBlockState();
             }
         }
 

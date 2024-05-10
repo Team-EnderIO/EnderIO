@@ -1,10 +1,11 @@
-package com.enderio.base.common.blockentity;
+package com.enderio.base.common.paint.blockentity;
 
 import com.enderio.base.EIONBTKeys;
-import com.enderio.base.common.component.BlockPaint;
+import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.util.PaintUtils;
+import com.enderio.base.common.paint.PaintUtils;
+import com.enderio.base.common.paint.block.PaintedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -13,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,19 +23,14 @@ import net.neoforged.neoforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 
-public class SinglePaintedBlockEntity extends BlockEntity implements PaintableBlockEntity {
+public class SinglePaintedBlockEntity extends BlockEntity implements PaintedBlockEntity {
 
     @Nullable
     protected Block paint;
 
-    // TODO: Technically shouldn't be nullable.
-    @Nullable
-    public Block getPaint() {
-        return paint;
-    }
-
-    public static final ModelProperty<Block> PAINT = PaintableBlockEntity.createAndRegisterModelProperty();
+    public static final ModelProperty<Block> PAINT = PaintedBlockEntity.createAndRegisterModelProperty();
 
     public SinglePaintedBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(EIOBlockEntities.SINGLE_PAINTED.get(), pWorldPosition, pBlockState);
@@ -43,9 +40,22 @@ public class SinglePaintedBlockEntity extends BlockEntity implements PaintableBl
         super(blockEntityType, pWorldPosition, pBlockState);
     }
 
+    public void setPrimaryPaint(@Nullable Block paint) {
+        this.paint = paint;
+        setChanged();
+    }
+
+    @Override
+    public Optional<Block> getPrimaryPaint() {
+        return Optional.ofNullable(paint);
+    }
+
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public ModelData getModelData() {
-        return ModelData.builder().with(PAINT, paint).build();
+        return ModelData.builder()
+            .with(PAINT, paint)
+            .build();
     }
 
     @Nullable
@@ -58,9 +68,6 @@ public class SinglePaintedBlockEntity extends BlockEntity implements PaintableBl
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         Block oldPaint = paint;
         CompoundTag tag = pkt.getTag();
-        if (tag == null) {
-            return;
-        }
 
         handleUpdateTag(tag, lookupProvider);
         if (oldPaint != paint) {
@@ -108,29 +115,5 @@ public class SinglePaintedBlockEntity extends BlockEntity implements PaintableBl
         if (paint != null) {
             tag.putString(EIONBTKeys.PAINT, Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(paint)).toString());
         }
-    }
-
-    // TODO: 20.6: Custom loot function for this. This would've worked but double blocks exist and we cannot derive top or bottom from a BE.
-    @Override
-    protected void applyImplicitComponents(DataComponentInput dataComponents) {
-        super.applyImplicitComponents(dataComponents);
-
-        var paintData = dataComponents.get(EIODataComponents.BLOCK_PAINT);
-        if (paintData != null) {
-            paint = paintData.paint();
-        }
-    }
-
-    @Override
-    protected void collectImplicitComponents(DataComponentMap.Builder dataComponents) {
-        super.collectImplicitComponents(dataComponents);
-        dataComponents.set(EIODataComponents.BLOCK_PAINT, BlockPaint.of(paint));
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        super.removeComponentsFromTag(tag);
-        tag.remove(EIONBTKeys.PAINT);
     }
 }

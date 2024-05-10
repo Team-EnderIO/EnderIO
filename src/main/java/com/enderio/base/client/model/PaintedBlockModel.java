@@ -1,10 +1,10 @@
 package com.enderio.base.client.model;
 
 import com.enderio.base.client.renderer.PaintedBlockColor;
-import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
-import com.enderio.base.common.blockentity.PaintableBlockEntity;
-import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
-import com.enderio.base.common.util.PaintUtils;
+import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.common.paint.blockentity.DoublePaintedBlockEntity;
+import com.enderio.base.common.paint.blockentity.PaintedBlockEntity;
+import com.enderio.base.common.paint.blockentity.SinglePaintedBlockEntity;
 import com.enderio.core.client.RenderUtil;
 import com.enderio.core.data.model.ModelHelper;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -169,7 +169,7 @@ public class PaintedBlockModel implements IDynamicBakedModel {
     @Override
     public ChunkRenderTypeSet getRenderTypes(BlockState paintedBlockState, RandomSource rand, ModelData data) {
         ChunkRenderTypeSet chunkRenderTypeSet = ChunkRenderTypeSet.union(
-            PaintableBlockEntity.PAINT_DATA_PROPERTIES.stream()
+            PaintedBlockEntity.PAINT_DATA_PROPERTIES.stream()
                 .map(data::get)
                 //remove all unset paints
                 .filter(Objects::nonNull)
@@ -186,23 +186,24 @@ public class PaintedBlockModel implements IDynamicBakedModel {
 
     @Override
     public List<RenderType> getRenderTypes(ItemStack itemStack, boolean fabulous) {
-        @Nullable
-        Block paint = PaintUtils.getPaint(itemStack);
-        if (paint != null) {
-            return List.of(ItemBlockRenderTypes.getRenderType(paint.defaultBlockState(), fabulous));
+        if (!itemStack.has(EIODataComponents.BLOCK_PAINT)) {
+            return List.of(fabulous ? Sheets.translucentCullBlockSheet() : Sheets.translucentItemSheet());
         }
-        return List.of(fabulous ? Sheets.translucentCullBlockSheet() : Sheets.translucentItemSheet());
+
+        var paintData = itemStack.get(EIODataComponents.BLOCK_PAINT);
+        return List.of(ItemBlockRenderTypes.getRenderType(paintData.paint().defaultBlockState(), fabulous));
     }
 
     @Override
     public List<BakedModel> getRenderPasses(ItemStack itemStack, boolean fabulous) {
-        Block paint = PaintUtils.getPaint(itemStack);
-        if (paint != null) {
-            return itemRenderCache.computeIfAbsent(paint,
-                paintKey -> List.of(new ItemModel(paint))
-            );
+        if (!itemStack.has(EIODataComponents.BLOCK_PAINT)) {
+            return List.of();
         }
-        return List.of(this);
+
+        var paintData = itemStack.get(EIODataComponents.BLOCK_PAINT);
+        return itemRenderCache.computeIfAbsent(paintData.paint(),
+            paintKey -> List.of(new ItemModel(paintData.paint()))
+        );
     }
 
     @Override

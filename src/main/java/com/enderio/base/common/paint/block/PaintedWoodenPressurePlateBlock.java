@@ -1,4 +1,4 @@
-package com.enderio.base.common.block.painted;
+package com.enderio.base.common.paint.block;
 
 import com.enderio.base.common.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;

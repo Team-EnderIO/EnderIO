@@ -3,8 +3,8 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.base.common.block.painted.PaintedBlock;
-import com.enderio.base.common.component.BlockPaint;
+import com.enderio.base.common.paint.block.PaintedBlock;
+import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.base.common.init.EIOCriterions;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.core.common.recipes.OutputStack;
@@ -145,7 +145,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
                     return super.placeOutputs(outputs, simulate);
                 }
 
-                Optional<BlockPaint> s = outputs
+                Optional<BlockPaintData> s = outputs
                     .stream()
                     .findFirst()
                     .map(OutputStack::getItem)
