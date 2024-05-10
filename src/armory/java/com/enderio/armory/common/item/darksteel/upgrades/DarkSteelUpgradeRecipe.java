@@ -14,6 +14,8 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.codec.StreamDecoder;
+import net.minecraft.network.codec.StreamEncoder;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -100,7 +102,9 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
 
     public static class Serializer implements RecipeSerializer<DarkSteelUpgradeRecipe> {
         public static final MapCodec<DarkSteelUpgradeRecipe> CODEC = MapCodec.unit(new DarkSteelUpgradeRecipe());
-        public static final StreamCodec<RegistryFriendlyByteBuf, DarkSteelUpgradeRecipe> STREAM_CODEC = StreamCodec.unit(new DarkSteelUpgradeRecipe());
+        public static final StreamCodec<RegistryFriendlyByteBuf, DarkSteelUpgradeRecipe> STREAM_CODEC = StreamCodec.of(
+            (p_320158_, p_320396_) -> {},
+            p_320376_ -> new DarkSteelUpgradeRecipe());
 
         @Override
         public MapCodec<DarkSteelUpgradeRecipe> codec() {
