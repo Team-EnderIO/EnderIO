@@ -44,6 +44,7 @@ public abstract class TieredConduit<T extends ExtendedConduitData<T>> implements
         if (type.equals(tieredOther.getType())) {
             return tier < tieredOther.getTier();
         }
+
         return false;
     }
 

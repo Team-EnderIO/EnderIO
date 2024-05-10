@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types;
+package com.enderio.conduits.common.types.item;
 
 import com.enderio.api.conduit.ExtendedConduitData;
 import net.minecraft.core.Direction;

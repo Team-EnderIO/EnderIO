@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types;
+package com.enderio.conduits.common.types.energy;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ClientConduitData;
@@ -8,6 +8,7 @@ import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.tag.ConduitTags;
+import com.enderio.conduits.common.types.SimpleConduitType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;

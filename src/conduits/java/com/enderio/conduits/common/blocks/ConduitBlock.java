@@ -15,7 +15,7 @@ import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.items.ConduitBlockItem;
 import com.enderio.conduits.common.network.ConduitSavedData;
-import com.enderio.conduits.common.types.RedstoneExtendedData;
+import com.enderio.conduits.common.types.redstone.RedstoneExtendedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

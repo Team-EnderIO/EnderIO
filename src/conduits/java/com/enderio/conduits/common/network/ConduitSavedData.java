@@ -9,7 +9,7 @@ import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.ConduitNBTKeys;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.conduits.common.types.RedstoneExtendedData;
+import com.enderio.conduits.common.types.redstone.RedstoneExtendedData;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -54,7 +54,6 @@ public class ConduitSavedData extends SavedData {
     }
 
     private ConduitSavedData() {
-
     }
 
     // region Serialization

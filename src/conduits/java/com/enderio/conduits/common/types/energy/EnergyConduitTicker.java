@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types;
+package com.enderio.conduits.common.types.energy;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
@@ -38,10 +38,6 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
             for (NodeIdentifier<?> otherNode : loadedNodes) {
                for (Direction dir: Direction.values()) {
                    if (otherNode.getIOState(dir).map(NodeIdentifier.IOState::isInsert).orElse(false)) {
-//                       BlockEntity be = level.getBlockEntity(otherNode.getPos().relative(dir));
-//                       if (be == null) { TODO: NEO-PORT: NON BE CAPS
-//                           continue;
-//                       }
                        IEnergyStorage capability = level.getCapability(getCapability(), otherNode.getPos().relative(dir), dir.getOpposite());
                        if (capability != null) {
                            extractEnergy(energy, List.of(capability), 0, i -> {});
@@ -74,7 +70,6 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
     }
 
     private void extractEnergy(IEnergyStorage extractHandler, List<IEnergyStorage> inserts, int startingIndex, IntConsumer rotationIndexSetter) {
-
         int availableForExtraction = extractHandler.extractEnergy(Integer.MAX_VALUE, true);
         if (availableForExtraction <= 0) {
             return;

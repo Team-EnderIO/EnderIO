@@ -24,6 +24,7 @@ public interface LoadedAwareConduitTicker extends ConduitTicker {
                 nodeIdentifiers.add(node);
             }
         }
+
         tickGraph(type, nodeIdentifiers, level, graph, isRedstoneActive);
     }
 

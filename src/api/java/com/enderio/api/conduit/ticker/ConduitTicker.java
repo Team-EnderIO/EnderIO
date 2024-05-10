@@ -25,14 +25,14 @@ public interface ConduitTicker {
 
     /**
      *
-     * @return if this is not always able to determine connectivity to it's neighbours at time of placement, but the tick later
+     * @return if this is not always able to determine connectivity to its neighbours at time of placement, but the tick later
      */
     default boolean hasConnectionDelay() {
         return false;
     }
 
     /**
-     * return true if both types are similar and share the same extended conduit data
+     * @return true if both types are similar and share the same extended conduit data
      */
     default boolean canConnectTo(ConduitType<?> thisType, ConduitType<?> other) {
         return thisType == other;

@@ -13,7 +13,8 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * This class is used to sort conduittypes for display. This is needed, so upgrading conduits doesn't require shifting of types, but just recalculating the current connection
+ * This class is used to sort conduit types for display.
+ * This is needed, so upgrading conduits doesn't require shifting of types, but just recalculating the current connection
  */
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class ConduitTypeSorter {
@@ -27,6 +28,7 @@ public class ConduitTypeSorter {
                 tieredTypes.add(tiered.getType());
             }
         }
+
         tieredTypes.sort(ResourceLocation::compareTo);
         for (ResourceLocation tieredType : tieredTypes) {
             List<ConduitType<?>> typesInType = new ArrayList<>();
@@ -38,12 +40,14 @@ public class ConduitTypeSorter {
             typesInType.sort(Comparator.comparing(EnderIORegistries.CONDUIT_TYPES::getKey));
             SORTED_TYPES.addAll(typesInType);
         }
+
         List<ConduitType<?>> unadded = new ArrayList<>();
         for (ConduitType<?> type: EnderIORegistries.CONDUIT_TYPES) {
             if (!(type instanceof TieredConduit)) {
                 unadded.add(type);
             }
         }
+
         unadded.sort(Comparator.comparing(EnderIORegistries.CONDUIT_TYPES::getKey));
         SORTED_TYPES.addAll(unadded);
     }

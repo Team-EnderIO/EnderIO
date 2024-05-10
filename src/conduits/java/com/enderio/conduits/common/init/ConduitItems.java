@@ -26,7 +26,9 @@ public class ConduitItems {
             .registerItem(itemName + "_conduit",
                 p -> ConduitApi.INSTANCE.createConduitItem(type, p))
             .setTab(EIOCreativeTabs.CONDUITS)
-            .setModelProvider((prov, ctx) -> prov.withExistingParent(itemName+"_conduit", EnderIO.loc("item/conduit")).texture("0", type.get().getItemTexture()));
+            .setModelProvider((prov, ctx) -> prov
+                .withExistingParent(itemName+"_conduit", EnderIO.loc("item/conduit"))
+                .texture("0", type.get().getItemTexture()));
     }
 
     public static void register(IEventBus bus) {

@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types;
+package com.enderio.conduits.common.types.redstone;
 
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.misc.ColorControl;

@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types;
+package com.enderio.conduits.common.types.fluid;
 
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.TieredConduit;
