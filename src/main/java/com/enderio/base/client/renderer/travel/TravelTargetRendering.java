@@ -3,7 +3,7 @@ package com.enderio.base.client.renderer.travel;
 import com.enderio.api.travel.RegisterTravelRenderersEvent;
 import com.enderio.api.travel.TravelRenderer;
 import com.enderio.api.travel.TravelTarget;
-import com.enderio.api.travel.TravelTargetAPI;
+import com.enderio.api.travel.TravelTargetApi;
 import com.enderio.api.travel.TravelTargetType;
 import com.enderio.base.common.handler.TravelHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -63,7 +63,7 @@ public class TravelTargetRendering {
 
         @Nullable
         TravelTarget activeTarget = TravelHandler.getAnchorTarget(player).orElse(null);
-        for (TravelTarget target : TravelTargetAPI.getAll(level)) {
+        for (TravelTarget target : TravelTargetApi.INSTANCE.getAll(level)) {
             double range = itemTeleport ? target.item2BlockRange() : target.block2BlockRange();
             double distanceSquared = target.pos().distToCenterSqr(player.position());
             if (range * range < distanceSquared

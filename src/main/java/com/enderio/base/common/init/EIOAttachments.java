@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 public class EIOAttachments {
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, EnderIO.MODID);
-    
+
     public static void register(IEventBus bus) {
         ATTACHMENT_TYPES.register(bus);
     }

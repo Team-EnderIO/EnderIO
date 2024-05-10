@@ -110,9 +110,6 @@ public class EnderIO {
         EIOCriterions.register(modEventBus);
         regilite.register(modEventBus);
 
-        // Initialize API layers.
-        TravelTargetSavedData.initAPI();
-
         // Run datagen after registrate is finished.
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
         modEventBus.addListener(SoulVialItem::onCommonSetup);

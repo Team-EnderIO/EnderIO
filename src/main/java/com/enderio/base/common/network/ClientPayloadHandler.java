@@ -1,6 +1,6 @@
 package com.enderio.base.common.network;
 
-import com.enderio.api.travel.TravelTargetAPI;
+import com.enderio.api.travel.TravelTargetApi;
 import com.enderio.base.common.travel.TravelTargetSavedData;
 import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -28,14 +28,14 @@ public class ClientPayloadHandler {
     public void handleAddTravelTarget(TravelTargetUpdatedPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
-            TravelTargetAPI.set(level, packet.target());
+            TravelTargetApi.INSTANCE.set(level, packet.target());
         });
     }
 
     public void handleRemoveTravelTarget(TravelTargetRemovedPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
-            TravelTargetAPI.removeAt(level, packet.pos());
+            TravelTargetApi.INSTANCE.removeAt(level, packet.pos());
         });
     }
 }

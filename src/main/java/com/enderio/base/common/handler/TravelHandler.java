@@ -2,7 +2,7 @@ package com.enderio.base.common.handler;
 
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.travel.TravelTarget;
-import com.enderio.api.travel.TravelTargetAPI;
+import com.enderio.api.travel.TravelTargetApi;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.network.RequestTravelPacket;
@@ -211,7 +211,7 @@ public class TravelHandler {
     public static Optional<TravelTarget> getAnchorTarget(Player player) {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
-        return TravelTargetAPI
+        return TravelTargetApi.INSTANCE
             .getInItemRange(player.level(), player.blockPosition())
             .filter(target -> target.canTravelTo())
             .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
@@ -239,7 +239,7 @@ public class TravelHandler {
             lowerY = anchorY - anchorRange - 1;
         }
 
-        return TravelTargetAPI
+        return TravelTargetApi.INSTANCE
             .getAll(player.level())
             .stream()
             .filter(target -> target.pos().getX() == anchorX && target.pos().getZ() == anchorZ)

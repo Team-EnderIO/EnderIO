@@ -1,7 +1,7 @@
 package com.enderio.base.common.travel;
 
 import com.enderio.api.travel.TravelTarget;
-import com.enderio.api.travel.TravelTargetAPI;
+import com.enderio.api.travel.TravelTargetApi;
 import com.enderio.base.common.network.SyncTravelDataPacket;
 import com.enderio.base.common.network.TravelTargetRemovedPacket;
 import com.enderio.base.common.network.TravelTargetUpdatedPacket;
@@ -32,17 +32,6 @@ import java.util.stream.Stream;
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
 public class TravelTargetSavedData extends SavedData {
 
-    // Allow the API to interact with the saved data.
-    public static void initAPI() {
-        TravelTargetAPI.init(
-            (l, p) -> getTravelData(l).getTravelTarget(p),
-            (l, t) -> getTravelData(l).setTravelTarget(l, t),
-            (l, t) -> getTravelData(l).removeTravelTargetAt(l, t),
-            (l) -> getTravelData(l).getTravelTargets(),
-            (l, p) -> getTravelData(l).getTravelTargetsInItemRange(p)
-        );
-    }
-
     // Even though the client doesn't need to know the data in the old dimensions,
     //  I am more comfortable with each dimension having its own data on the client.
     private static final Map<ResourceKey<Level>, TravelTargetSavedData> CLIENT_DATA = new ConcurrentHashMap<>();
@@ -65,11 +54,11 @@ public class TravelTargetSavedData extends SavedData {
         }
     }
 
-    private Optional<TravelTarget> getTravelTarget(BlockPos pos) {
+    public Optional<TravelTarget> getTravelTarget(BlockPos pos) {
         return Optional.ofNullable(travelTargets.get(pos));
     }
 
-    private Collection<TravelTarget> getTravelTargets() {
+    public Collection<TravelTarget> getTravelTargets() {
         return travelTargets.values();
     }
 
@@ -80,7 +69,7 @@ public class TravelTargetSavedData extends SavedData {
     }
 
     // Adds or updates.
-    private void setTravelTarget(Level level, TravelTarget target) {
+    public void setTravelTarget(Level level, TravelTarget target) {
         if (level instanceof ServerLevel serverLevel) {
             PacketDistributor.sendToPlayersInDimension(serverLevel, new TravelTargetUpdatedPacket(target));
         }
@@ -88,7 +77,7 @@ public class TravelTargetSavedData extends SavedData {
         travelTargets.put(target.pos(), target);
     }
 
-    private void removeTravelTargetAt(Level level, BlockPos pos) {
+    public void removeTravelTargetAt(Level level, BlockPos pos) {
         if (level instanceof ServerLevel serverLevel) {
             PacketDistributor.sendToPlayersInDimension(serverLevel, new TravelTargetRemovedPacket(pos));
         }
