@@ -52,7 +52,7 @@ java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 val subsets = listOf<String>(
         "conduits",
         "machines",
-        //"armory"
+        "armory"
 )
 
 sourceSets {

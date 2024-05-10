@@ -55,8 +55,8 @@ public class EIOArmory {
 
         EIODataProvider provider = new EIODataProvider("armory");
 
-        provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new ArmoryLootModifiersProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new ArmoryLootModifiersProvider(packOutput, lookupProvider));
 
         var b = new ArmoryBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
         provider.addSubProvider(event.includeServer(), b);

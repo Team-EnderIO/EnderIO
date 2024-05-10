@@ -9,8 +9,8 @@ import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePene
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeHandler;
 import com.enderio.armory.common.lang.ArmoryLang;
-import com.enderio.core.common.item.ITabVariants;
-import com.enderio.core.common.util.EnergyUtil;
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -30,7 +30,7 @@ import net.neoforged.neoforge.common.ToolActions;
 
 import java.util.List;
 
-public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem, ITabVariants {
+public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem, CreativeTabVariants {
 
     private final ModConfigSpec.ConfigValue<Integer> obsidianBreakPowerUse = ArmoryConfig.COMMON.DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
 
@@ -63,7 +63,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
         if (useObsidianMining(pState, pStack)) {
-            EnergyUtil.extractEnergy(pStack, obsidianBreakPowerUse.get(), false);
+            ItemStackEnergy.extractEnergy(pStack, obsidianBreakPowerUse.get(), false);
         }
         ExplosiveUpgradeHandler.onMineBlock(pStack, pLevel, pPos, pEntityLiving);
         return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);
@@ -110,7 +110,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     }
 
     private boolean useObsidianMining(BlockState pState, ItemStack stack) {
-        return EnergyUtil.getEnergyStored(stack) >= obsidianBreakPowerUse.get() && treatBlockAsObsidian(pState);
+        return ItemStackEnergy.getEnergyStored(stack) >= obsidianBreakPowerUse.get() && treatBlockAsObsidian(pState);
     }
 
     private boolean treatBlockAsObsidian(BlockState pState) {

@@ -7,8 +7,13 @@ import com.enderio.armory.common.init.ArmoryRecipes;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -17,6 +22,7 @@ import net.minecraft.world.item.crafting.SmithingTransformRecipe;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Optional;
 
 // TODO: Change this into a anvil recipe.
@@ -62,7 +68,7 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
     }
 
     @Override
-    public ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
+    public ItemStack assemble(Container pContainer, HolderLookup.Provider lookupProvider) {
         Optional<IDarkSteelUpgrade> upgrade = getUpgradeFromItem(pContainer.getItem(0));
 
         ItemStack resultItem = pContainer.getItem(1).copy();
@@ -83,7 +89,7 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess p_267209_) {
+    public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
         return ItemStack.EMPTY;
     }
 
@@ -93,20 +99,17 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<DarkSteelUpgradeRecipe> {
-        public static final Codec<DarkSteelUpgradeRecipe> CODEC = Codec.unit(new DarkSteelUpgradeRecipe());
+        public static final MapCodec<DarkSteelUpgradeRecipe> CODEC = MapCodec.unit(new DarkSteelUpgradeRecipe());
+        public static final StreamCodec<RegistryFriendlyByteBuf, DarkSteelUpgradeRecipe> STREAM_CODEC = StreamCodec.unit(new DarkSteelUpgradeRecipe());
 
         @Override
-        public Codec<DarkSteelUpgradeRecipe> codec() {
+        public MapCodec<DarkSteelUpgradeRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public @Nullable DarkSteelUpgradeRecipe fromNetwork(FriendlyByteBuf pBuffer) {
-            return new DarkSteelUpgradeRecipe();
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf pBuffer, DarkSteelUpgradeRecipe pRecipe) {
+        public StreamCodec<RegistryFriendlyByteBuf, DarkSteelUpgradeRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }
