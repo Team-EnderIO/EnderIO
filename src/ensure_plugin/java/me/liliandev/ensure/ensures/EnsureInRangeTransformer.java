@@ -20,9 +20,10 @@ public class EnsureInRangeTransformer implements Transformer {
 
     @Override
     public void transform(VariableTree variableTree, MethodTree methodTree, AnnotationTree ensuresAnnotation, String className) {
-        if (!TransformerUtil.isPrimitive(variableTree))
-            throw new AnnotationFormatError("Ranges can only be added to primitives @" + className + "." + methodTree.getName() + " argument: " + variableTree.getName());
-
+        if (TransformerUtil.isObject(variableTree)) {
+            throw new AnnotationFormatError(
+                "Ranges can only be added to primitives @" + className + "." + methodTree.getName() + " argument: " + variableTree.getName());
+        }
         JCTree.JCExpression min = getAnnotationArgument(ensuresAnnotation.getArguments().get(0));
         JCTree.JCExpression max = getAnnotationArgument(ensuresAnnotation.getArguments().get(1));
         TransformerUtil.addCheck(methodTree, variableTree, createIfCondition(variableTree, min, max), createErrorMessage(variableTree, min, max));

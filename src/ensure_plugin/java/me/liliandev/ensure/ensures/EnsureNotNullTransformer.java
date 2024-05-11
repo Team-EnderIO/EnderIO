@@ -20,9 +20,10 @@ public class EnsureNotNullTransformer implements Transformer {
 
     @Override
     public void transform(VariableTree variableTree, MethodTree methodTree, AnnotationTree ensuresAnnotation, String className) {
-        if (TransformerUtil.isPrimitive(variableTree))
-            throw new AnnotationFormatError("Not null can only be added to non primitives @" + className + "." + methodTree.getName() + " argument: " + variableTree.getName());
-
+        if (TransformerUtil.isPrimitive(variableTree)) {
+            throw new AnnotationFormatError(
+                "Not null can only be added to non primitives @" + className + "." + methodTree.getName() + " argument: " + variableTree.getName());
+        }
         TransformerUtil.addCheck(methodTree, variableTree, createIfCondition(variableTree), createErrorMessage(variableTree));
     }
 

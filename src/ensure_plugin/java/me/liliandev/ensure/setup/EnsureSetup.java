@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 //Stolen from lombok tysm
 public class EnsureSetup {
 
-    private static final String[] expectedPackages = new String[] {
+    private static final String[] EXPECTED_PACKAGES = new String[] {
             "com.sun.tools.javac.api",
             "com.sun.tools.javac.util",
             "com.sun.tools.javac.tree",
@@ -27,7 +27,7 @@ public class EnsureSetup {
         Unsafe unsafe = getUnsafe();
         long firstFieldOffset = getFirstFieldOffset(unsafe);
         unsafe.putBooleanVolatile(m, firstFieldOffset, true);
-        for (String pckage : expectedPackages) {
+        for (String pckage : EXPECTED_PACKAGES) {
             m.invoke(compilerModule, pckage, module);
         }
     }

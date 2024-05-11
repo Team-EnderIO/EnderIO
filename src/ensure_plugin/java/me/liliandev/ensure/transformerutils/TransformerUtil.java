@@ -12,7 +12,6 @@ import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
@@ -23,7 +22,7 @@ import java.util.stream.Stream;
 public class TransformerUtil {
     private static final Set<String> PRIMITIVES = Stream.of(byte.class, short.class, char.class, int.class, long.class, float.class, double.class).map(Class::getName).collect(Collectors.toUnmodifiableSet());
 
-    private static final Map<String, Transformer> transformers = findTransformers();
+    private static final Map<String, Transformer> TRANSFORMERS = findTransformers();
 
     private static Context context = null;
 
@@ -127,7 +126,7 @@ public class TransformerUtil {
     }
 
     private static Tuple<AnnotationTree, Transformer> matchTransformer(AnnotationTree annotation) {
-        return new Tuple<>(annotation, transformers.get(getName(annotation)));
+        return new Tuple<>(annotation, TRANSFORMERS.get(getName(annotation)));
     }
 
 
@@ -142,8 +141,9 @@ public class TransformerUtil {
 
     private static  Optional<Class<? extends Annotation>> findMarker(Class<? extends Transformer> clazz) {
         Handler annotation = clazz.getAnnotation(Handler.class);
-        if (annotation == null)
+        if (annotation == null) {
             return Optional.empty();
+        }
         return Optional.of(annotation.annotation());
     }
 
