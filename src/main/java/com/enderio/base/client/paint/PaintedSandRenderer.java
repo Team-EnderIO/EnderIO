@@ -1,4 +1,4 @@
-package com.enderio.base.client.renderer.entity;
+package com.enderio.base.client.paint;
 
 import com.enderio.base.common.paint.PaintedSandEntity;
 import com.mojang.blaze3d.vertex.PoseStack;

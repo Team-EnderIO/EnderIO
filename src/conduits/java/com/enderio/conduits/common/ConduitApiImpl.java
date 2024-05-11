@@ -8,7 +8,6 @@ import net.minecraft.world.item.Item;
 
 import java.util.function.Supplier;
 
-// TODO: Maybe use service location for the TravelTargetAPI.
 public class ConduitApiImpl implements ConduitApi {
 
     @Override

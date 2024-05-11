@@ -3,7 +3,7 @@ package com.enderio.conduits.client.model;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.misc.RedstoneControl;
-import com.enderio.base.client.model.PaintingQuadTransformer;
+import com.enderio.base.client.paint.model.PaintingQuadTransformer;
 import com.enderio.conduits.common.Area;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;

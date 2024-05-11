@@ -15,6 +15,13 @@ import java.util.Locale;
 public class EIOLang {
     public static final Component BLOCK_BLAST_RESISTANT = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("block.blast_resistant"), "Blast resistant"));
 
+    // region GUI Interactions
+
+    public static final Component OK = addTranslation("gui", EnderIO.loc("ok"), "Ok");
+    public static final Component CANCEL = addTranslation("gui", EnderIO.loc("cancel"), "Cancel");
+
+    // endregion
+
     // region Fused Quartz
 
     public static final Component FUSED_QUARTZ_EMITS_LIGHT = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("fused_quartz.emits_light"), "Emits light"));
@@ -71,11 +78,36 @@ public class EIOLang {
     public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_CAPACITY = addTranslation("tooltip", CapacitorModifier.ENERGY_CAPACITY.modifierId, "Energy Capacity Modifier: %s");
     public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_USE = addTranslation("tooltip", CapacitorModifier.ENERGY_USE.modifierId, "Energy Use Modifier: %s");
 
-    public static final Component GLIDER_DISABLED = addTranslation("message", EnderIO.loc("glider.disable"), "Gliding is disabled: ");
-    public static final Component GLIDER_DISABLED_FALL_FLYING = addTranslation("message", EnderIO.loc("glider.disable.fall_flying"), "Elytra Flight");
+    // region Loot Capacitor
 
+    // Declares order. In this case: Modifier Quality, Modifier Type, Base Quality. Takes first modifier.
+    public static final MutableComponent LOOT_CAPACITOR_NAME = addTranslation("item", EnderIO.loc("loot_capacitor_template"), "%s %s %s");
+
+    public static final MutableComponent LOOT_CAPACITOR_BASE_DUD = addTranslation("item", EnderIO.loc("loot_capacitor_dud"), "Capacitor Dud");
+    public static final MutableComponent LOOT_CAPACITOR_BASE_NORMAL = addTranslation("item", EnderIO.loc("loot_capacitor_normal"), "Capacitor");
+    public static final MutableComponent LOOT_CAPACITOR_BASE_ENHANCED = addTranslation("item", EnderIO.loc("loot_capacitor_enhanced"), "Enhanced Capacitor");
+    public static final MutableComponent LOOT_CAPACITOR_BASE_WONDER = addTranslation("item", EnderIO.loc("loot_capacitor_wonder"), "Wonder Capacitor");
+    public static final MutableComponent LOOT_CAPACITOR_BASE_IMPOSSIBLE = addTranslation("item", EnderIO.loc("loot_capacitor_impossible"), "Impossible Capacitor");
+
+    public static final MutableComponent LOOT_CAPACITOR_TYPE_ENERGY_CAPACITY = addTranslation("item", EnderIO.loc("loot_capacitor_energy_capacity"), "Insatiable");
+    public static final MutableComponent LOOT_CAPACITOR_TYPE_ENERGY_USE = addTranslation("item", EnderIO.loc("loot_capacitor_energy_use"), "Hungry");
+    public static final MutableComponent LOOT_CAPACITOR_TYPE_UNKNOWN = addTranslation("item", EnderIO.loc("loot_capacitor_unknown"), "Mystery");
+
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_FAILED = addTranslation("item", EnderIO.loc("loot_capacitor_modifier_failed"), "Failed");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_SIMPLE = addTranslation("item", EnderIO.loc("loot_capacitor_modifier_simple"), "Simple");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_NICE = addTranslation("item", EnderIO.loc("loot_capacitor_modifier_nice"), "Nice");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_GOOD = addTranslation("item", EnderIO.loc("loot_capacitor_modifier_good"), "Good");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_ENHANCED = addTranslation("item", EnderIO.loc("loot_capacitor_modifier_enhanced"), "Enhanced");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_PREMIUM = addTranslation("item", EnderIO.loc("loot_capacitor_modifier_premium"), "Premium");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_INCREDIBLY = addTranslation("item", EnderIO.loc("loot_capacitor_modifier_incredibly"), "Incredibly");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_UNSTABLE = addTranslation("item", EnderIO.loc("loot_capacitor_modifier_unstable"), "Unstable");
 
     // endregion
+
+    // endregion
+
+    public static final Component GLIDER_DISABLED = addTranslation("message", EnderIO.loc("glider.disable"), "Gliding is disabled: ");
+    public static final Component GLIDER_DISABLED_FALL_FLYING = addTranslation("message", EnderIO.loc("glider.disable.fall_flying"), "Elytra Flight");
 
     // region Enchantments
 

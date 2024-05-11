@@ -1,7 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.client.renderer.PaintedBlockColor;
+import com.enderio.base.client.paint.PaintedBlockColor;
 import com.enderio.base.common.block.ColdFireBlock;
 import com.enderio.base.common.block.DarkSteelLadderBlock;
 import com.enderio.base.common.block.EIOPressurePlateBlock;

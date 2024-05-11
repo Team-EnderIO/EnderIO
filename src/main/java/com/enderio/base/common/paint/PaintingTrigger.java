@@ -1,4 +1,4 @@
-package com.enderio.base.common.advancement;
+package com.enderio.base.common.paint;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOCriterions;
@@ -34,9 +34,10 @@ public class PaintingTrigger extends SimpleCriterionTrigger<PaintingTrigger.Trig
     public record TriggerInstance(Optional<ContextAwarePredicate> player, Block paint)
         implements SimpleInstance {
 
-        private static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-            BuiltInRegistries.BLOCK.byNameCodec().fieldOf("paint").forGetter(TriggerInstance::paint)
+        private static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                BuiltInRegistries.BLOCK.byNameCodec().fieldOf("paint").forGetter(TriggerInstance::paint)
             ).apply(instance, TriggerInstance::new));
 
         public boolean matches(Block paint) {

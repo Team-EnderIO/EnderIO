@@ -1,4 +1,4 @@
-package com.enderio.base.client.renderer.travel;
+package com.enderio.base.client.travel;
 
 import com.enderio.base.common.handler.TravelHandler;
 import net.minecraft.client.Minecraft;
@@ -30,7 +30,6 @@ public class TravelParticleHandler {
             }
         }
     }
-
 
     private static void addTravelParticle(Vec3 pos) {
         int time = tick/3%20;

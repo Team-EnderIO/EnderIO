@@ -1,6 +1,6 @@
-package com.enderio.base.client.model;
+package com.enderio.base.client.paint.model;
 
-import com.enderio.base.client.renderer.PaintedBlockColor;
+import com.enderio.base.client.paint.PaintedBlockColor;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.paint.blockentity.DoublePaintedBlockEntity;
 import com.enderio.base.common.paint.blockentity.PaintedBlockEntity;

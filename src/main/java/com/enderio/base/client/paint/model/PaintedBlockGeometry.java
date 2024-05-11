@@ -1,4 +1,4 @@
-package com.enderio.base.client.model;
+package com.enderio.base.client.paint.model;
 
 import com.enderio.base.common.paint.PaintUtils;
 import com.google.gson.JsonDeserializationContext;

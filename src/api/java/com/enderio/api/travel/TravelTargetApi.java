@@ -9,7 +9,6 @@ import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
 public interface TravelTargetApi {
-
     TravelTargetApi INSTANCE = ServiceLoader.load(TravelTargetApi.class).findFirst().orElseThrow();
 
     Optional<TravelTarget> get(Level level, BlockPos pos);

@@ -1,4 +1,4 @@
-package com.enderio.base.client.renderer.item;
+package com.enderio.base.client.decorator;
 
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.block.glass.FusedQuartzBlock;

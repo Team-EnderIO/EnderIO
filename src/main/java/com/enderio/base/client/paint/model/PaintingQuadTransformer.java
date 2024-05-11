@@ -1,4 +1,4 @@
-package com.enderio.base.client.model;
+package com.enderio.base.client.paint.model;
 
 import com.enderio.core.client.RenderUtil;
 import com.enderio.core.data.model.ModelHelper;

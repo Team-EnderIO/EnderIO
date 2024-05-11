@@ -2,6 +2,7 @@ package com.enderio.base.client.gui.screen;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.CoordinateMenu;
 import com.enderio.base.common.network.UpdateCoordinateSelectionNameMenuPacket;
 import com.enderio.core.client.gui.screen.EIOScreen;
@@ -26,6 +27,7 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
     @Override
     protected void init() {
         super.init();
+
         EditBox name = new EditBox(this.font, leftPos + 43 + 4, topPos + 20 + 4, 92 - 12, 18, Component.literal("name"));
         name.setCanLoseFocus(false);
         name.setTextColor(0xFFFFFFFF);
@@ -34,11 +36,12 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
         name.setMaxLength(50);
         name.setResponder(this::onNameChanged);
         name.setValue(menu.getName());
+
         this.addRenderableWidget(name);
         this.setInitialFocus(name);
         name.setEditable(true);
-        // TODO: Translation string
-        this.addRenderableWidget(new Button.Builder(Component.literal("Ok"), mouseButton -> Minecraft.getInstance().player.closeContainer())
+
+        this.addRenderableWidget(new Button.Builder(EIOLang.OK, mouseButton -> Minecraft.getInstance().player.closeContainer())
             .bounds(getGuiLeft() + imageWidth - 30, getGuiTop() + imageHeight - 30, 20, 20)
             .build());
     }
@@ -67,7 +70,6 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
     protected Vector2i getBackgroundImageSize() {
         return BG_SIZE;
     }
-
 
     private void onNameChanged(String name) {
         PacketDistributor.sendToServer(new UpdateCoordinateSelectionNameMenuPacket(getMenu().containerId, name));

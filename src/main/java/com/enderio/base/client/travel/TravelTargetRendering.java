@@ -1,4 +1,4 @@
-package com.enderio.base.client.renderer.travel;
+package com.enderio.base.client.travel;
 
 import com.enderio.api.travel.RegisterTravelRenderersEvent;
 import com.enderio.api.travel.TravelRenderer;

@@ -1,8 +1,7 @@
-package com.enderio.base.client.renderer;
+package com.enderio.base.client.paint;
 
 import com.enderio.base.common.paint.block.PaintedBlock;
 import com.enderio.base.common.paint.block.PaintedSlabBlock;
-import com.enderio.base.common.paint.blockentity.DoublePaintedBlockEntity;
 import com.enderio.base.common.paint.blockentity.PaintedBlockEntity;
 import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.client.Minecraft;
@@ -12,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;

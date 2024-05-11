@@ -1,7 +1,7 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.client.renderer.PaintedBlockColor;
+import com.enderio.base.client.paint.PaintedBlockColor;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.paint.item.PaintedBlockItem;

@@ -1,12 +1,12 @@
 package com.enderio.base.client;
 
 import com.enderio.EnderIO;
-import com.enderio.base.client.model.PaintedBlockGeometry;
+import com.enderio.base.client.paint.model.PaintedBlockGeometry;
 import com.enderio.base.client.particle.RangeParticle;
 import com.enderio.base.client.renderer.block.EnderSkullRenderer;
 import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
-import com.enderio.base.client.renderer.item.GlassIconDecorator;
-import com.enderio.base.client.renderer.travel.TravelTargetRendering;
+import com.enderio.base.client.decorator.GlassIconDecorator;
+import com.enderio.base.client.travel.TravelTargetRendering;
 import com.enderio.base.common.block.skull.EnderSkullBlock;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;

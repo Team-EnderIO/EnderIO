@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
+import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
 import com.enderio.base.common.item.misc.EnderiosItem;
@@ -101,14 +102,14 @@ public class EIOItems {
     public static final RegiliteItem<CapacitorItem> BASIC_CAPACITOR = ITEM_REGISTRY
         .registerItem("basic_capacitor",
             props -> new CapacitorItem(
-                props.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(1.0f))),
+                props.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(1))),
             new Item.Properties().stacksTo(1))
         .setTab(EIOCreativeTabs.MAIN);
 
     public static final RegiliteItem<CapacitorItem> DOUBLE_LAYER_CAPACITOR = ITEM_REGISTRY
         .registerItem("double_layer_capacitor",
             props -> new CapacitorItem(
-                props.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(2.0f))),
+                props.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(2))),
             new Item.Properties().stacksTo(1))
         .setTab(EIOCreativeTabs.MAIN);
 
@@ -119,8 +120,8 @@ public class EIOItems {
             new Item.Properties().stacksTo(1))
         .setTab(EIOCreativeTabs.MAIN);
 
-    public static final RegiliteItem<CapacitorItem> LOOT_CAPACITOR = ITEM_REGISTRY
-        .registerItem("loot_capacitor", CapacitorItem::new, new Item.Properties()
+    public static final RegiliteItem<LootCapacitorItem> LOOT_CAPACITOR = ITEM_REGISTRY
+        .registerItem("loot_capacitor", LootCapacitorItem::new, new Item.Properties()
             .stacksTo(1));
 
     // endregion
