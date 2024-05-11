@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:clear_glass_ep"
-            ]
+            "items": "enderio:clear_glass_ep"
           }
         ]
       },

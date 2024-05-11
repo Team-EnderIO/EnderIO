@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:fused_quartz_em"
-            ]
+            "items": "enderio:fused_quartz_em"
           }
         ]
       },

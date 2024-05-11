@@ -4,14 +4,16 @@
     {
       "condition": "minecraft:match_tool",
       "predicate": {
-        "enchantments": [
-          {
-            "enchantment": "enderio:auto_smelt",
-            "levels": {
-              "min": 1
+        "predicates": {
+          "minecraft:enchantments": [
+            {
+              "enchantment": "enderio:auto_smelt",
+              "levels": {
+                "min": 1
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     }
   ]

@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:stone_pressure_plate"
-            ]
+            "items": "minecraft:stone_pressure_plate"
           }
         ]
       },

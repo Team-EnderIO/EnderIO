@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:soularium_block"
-            ]
+            "items": "enderio:soularium_block"
           }
         ]
       },

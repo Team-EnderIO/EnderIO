@@ -6,10 +6,10 @@
       "item": "minecraft:clay_ball"
     },
     "G": {
-      "tag": "forge:gravel"
+      "tag": "c:gravels"
     },
     "S": {
-      "tag": "forge:sand"
+      "tag": "c:sands"
     }
   },
   "pattern": [
@@ -19,6 +19,6 @@
   ],
   "result": {
     "count": 8,
-    "item": "enderio:conduit_binder_composite"
+    "id": "enderio:conduit_binder_composite"
   }
 }

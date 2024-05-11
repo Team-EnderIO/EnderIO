@@ -27,11 +27,11 @@
       "tag": "enderio:fused_quartz_enp"
     },
     {
-      "tag": "forge:dyes/red"
+      "tag": "c:dyes/red"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:fused_quartz_enp_red"
+    "id": "enderio:fused_quartz_enp_red"
   }
 }

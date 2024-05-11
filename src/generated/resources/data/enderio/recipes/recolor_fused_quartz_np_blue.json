@@ -27,11 +27,11 @@
       "tag": "enderio:fused_quartz_np"
     },
     {
-      "tag": "forge:dyes/blue"
+      "tag": "c:dyes/blue"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:fused_quartz_np_blue"
+    "id": "enderio:fused_quartz_np_blue"
   }
 }

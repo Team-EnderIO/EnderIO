@@ -13,7 +13,8 @@
       "translate": "advancements.enderio.richer.description"
     },
     "icon": {
-      "item": "minecraft:netherite_block"
+      "count": 1,
+      "id": "minecraft:netherite_block"
     },
     "title": {
       "translate": "advancements.enderio.richer.title"

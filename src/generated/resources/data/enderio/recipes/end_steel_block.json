@@ -12,6 +12,7 @@
     "III"
   ],
   "result": {
-    "item": "enderio:end_steel_block"
+    "count": 1,
+    "id": "enderio:end_steel_block"
   }
 }

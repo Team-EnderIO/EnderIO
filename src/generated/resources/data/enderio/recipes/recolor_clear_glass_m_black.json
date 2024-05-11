@@ -27,11 +27,11 @@
       "tag": "enderio:clear_glass_m"
     },
     {
-      "tag": "forge:dyes/black"
+      "tag": "c:dyes/black"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:clear_glass_m_black"
+    "id": "enderio:clear_glass_m_black"
   }
 }

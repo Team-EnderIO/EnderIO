@@ -27,11 +27,11 @@
       "tag": "enderio:clear_glass_dna"
     },
     {
-      "tag": "forge:dyes/gray"
+      "tag": "c:dyes/gray"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:clear_glass_dna_gray"
+    "id": "enderio:clear_glass_dna_gray"
   }
 }

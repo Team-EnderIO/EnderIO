@@ -27,11 +27,11 @@
       "tag": "enderio:clear_glass_em"
     },
     {
-      "tag": "forge:dyes/light_blue"
+      "tag": "c:dyes/light_blue"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:clear_glass_em_light_blue"
+    "id": "enderio:clear_glass_em_light_blue"
   }
 }

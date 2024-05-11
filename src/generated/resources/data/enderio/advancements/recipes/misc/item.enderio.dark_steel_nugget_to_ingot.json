@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:dark_steel_ingot"
-            ]
+            "items": "enderio:dark_steel_ingot"
           }
         ]
       },

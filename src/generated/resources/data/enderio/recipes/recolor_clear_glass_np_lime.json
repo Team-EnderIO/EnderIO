@@ -27,11 +27,11 @@
       "tag": "enderio:clear_glass_np"
     },
     {
-      "tag": "forge:dyes/lime"
+      "tag": "c:dyes/lime"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:clear_glass_np_lime"
+    "id": "enderio:clear_glass_np_lime"
   }
 }

@@ -13,7 +13,8 @@
       "translate": "advancements.enderio.rich.description"
     },
     "icon": {
-      "item": "minecraft:diamond_block"
+      "count": 1,
+      "id": "minecraft:diamond_block"
     },
     "title": {
       "translate": "advancements.enderio.rich.title"

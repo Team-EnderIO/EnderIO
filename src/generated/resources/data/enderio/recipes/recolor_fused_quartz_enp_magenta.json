@@ -27,11 +27,11 @@
       "tag": "enderio:fused_quartz_enp"
     },
     {
-      "tag": "forge:dyes/magenta"
+      "tag": "c:dyes/magenta"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:fused_quartz_enp_magenta"
+    "id": "enderio:fused_quartz_enp_magenta"
   }
 }
