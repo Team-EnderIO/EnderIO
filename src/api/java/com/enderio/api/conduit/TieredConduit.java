@@ -2,6 +2,7 @@ package com.enderio.api.conduit;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.misc.Vector2i;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.LogicalSide;
 
@@ -67,6 +68,7 @@ public abstract class TieredConduit<T extends ExtendedConduitData<T>> implements
     }
 
     @Override
+    @EnsureSide(EnsureSide.Side.CLIENT)
     public ClientConduitData<T> getClientData() {
         return clientConduitData;
     }

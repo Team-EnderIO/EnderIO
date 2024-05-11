@@ -1,16 +1,15 @@
 package com.enderio.conduits.common.types;
 
-import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ClientConduitData;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.Vector2i;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.neoforged.fml.LogicalSide;
 
 import java.util.function.Supplier;
 
@@ -54,7 +53,7 @@ public class SimpleConduitType<T extends ExtendedConduitData<T>> implements Cond
     }
 
     @Override
-    @UseOnly(LogicalSide.CLIENT)
+    @EnsureSide(EnsureSide.Side.CLIENT)
     public ClientConduitData<T> getClientData() {
         return clientConduitData;
     }

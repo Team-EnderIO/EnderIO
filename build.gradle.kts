@@ -56,13 +56,18 @@ val subsets = listOf<String>(
 )
 
 sourceSets {
-    create("api")
+    create("ensure_plugin")
+    create("api") {
+        compileClasspath += sourceSets.getByName("ensure_plugin").output
+    }
     create("core") {
         compileClasspath += sourceSets.getByName("api").output
+        compileClasspath += sourceSets.getByName("ensure_plugin").output
     }
     main {
         compileClasspath += sourceSets.getByName("api").output
         compileClasspath += sourceSets.getByName("core").output
+        compileClasspath += sourceSets.getByName("ensure_plugin").output
         //ext.refMap = "mixins.enderio.refmap.json"
         resources.srcDir("src/generated/resources")
     }
@@ -430,6 +435,19 @@ publishing {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8" // Use the UTF-8 charset for Java compilation
+    if (group != null) {
+        return@withType; // neoform recompile
+    }
+    if (name == "compileEnsure_pluginJava") {
+        //don't use the plugin to compile the plugin and open the required packages to compile it correctly, the packages are opened at compile time for other modules using EnsureSetup
+        options.compilerArgs.add("--add-exports=jdk.compiler/com.sun.tools.javac.api=ensureplugin")
+        options.compilerArgs.add("--add-exports=jdk.compiler/com.sun.tools.javac.code=ensureplugin")
+        options.compilerArgs.add("--add-exports=jdk.compiler/com.sun.tools.javac.tree=ensureplugin")
+        options.compilerArgs.add("--add-exports=jdk.compiler/com.sun.tools.javac.util=ensureplugin")
+    } else if (name != "compileJava") {
+        //all modules except an unnamed one (not sure what this one is tbh)
+        options.compilerArgs.add("-Xplugin:ContextEnsure")
+    }
 }
 
 // ============
@@ -549,6 +567,7 @@ fun setupSourceSet(name: String) {
     sourceSet.compileClasspath += sourceSets.getByName("api").output
     sourceSet.compileClasspath += sourceSets.main.get().output
     sourceSet.compileClasspath += sourceSets.getByName("core").output
+    sourceSet.compileClasspath += sourceSets.getByName("ensure_plugin").output
 
     // Extend configurations
     setupExtraSourceSets(sourceSet)

@@ -26,6 +26,7 @@ import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.SoulBinderMenu;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SoulBindingRecipe;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -128,7 +129,8 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
 
     // endregion
 
-    @UseOnly(LogicalSide.CLIENT)
+
+    @EnsureSide(EnsureSide.Side.CLIENT)
     public int getClientExp() {
         return clientExp;
     }

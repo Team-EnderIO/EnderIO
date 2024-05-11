@@ -2,6 +2,7 @@ package com.enderio.conduits.common.types.redstone;
 
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.misc.ColorControl;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
@@ -82,6 +83,8 @@ public class RedstoneExtendedData implements ExtendedConduitData<RedstoneExtende
         activeColors.add(color);
     }
 
+
+    @EnsureSide(EnsureSide.Side.CLIENT)
     public RedstoneExtendedData deepCopy() {
         RedstoneExtendedData redstoneExtendedData = new RedstoneExtendedData();
         redstoneExtendedData.isActive = isActive;
