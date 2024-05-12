@@ -7,6 +7,8 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
+// TODO: Move to API.
+
 /**
  * An interface that block entities may implement in order to implement special behaviours(other than to rotate the block) when right-clicked with the Yeta wrench.
  */

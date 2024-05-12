@@ -80,7 +80,7 @@ public class FusedQuartzBlock extends TransparentBlock {
 
     @Override
     public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        if (pContext instanceof EntityCollisionContext entityCollisionContext) {
+        if (pContext instanceof EntityCollisionContext entityCollisionContext && entityCollisionContext != CollisionContext.empty()) {
             if (collisionPredicate.canPass(entityCollisionContext)) {
                 return Shapes.empty();
             }
