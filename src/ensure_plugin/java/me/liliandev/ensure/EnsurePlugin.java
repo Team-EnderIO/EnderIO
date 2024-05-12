@@ -36,10 +36,10 @@ public class EnsurePlugin implements Plugin {
         });
     }
 
+    public static String className = "";
     private void afterASTBuild(TaskEvent e) {
         e.getCompilationUnit().accept(new TreeScanner<Void, Void>() {
 
-            private String className = "";
             @Override
             public Void visitClass(ClassTree node, Void aVoid) {
                 className = node.getSimpleName().toString();
@@ -48,8 +48,8 @@ public class EnsurePlugin implements Plugin {
 
             @Override
             public Void visitMethod(MethodTree methodTree, Void aVoid) {
-                TransformerUtil.handle(methodTree, className);
-                methodTree.getParameters()/*.reversed()*/.forEach(parameter -> TransformerUtil.handle(parameter, methodTree, className));
+                TransformerManager.handle(methodTree, className);
+                methodTree.getParameters()/*.reversed()*/.forEach(parameter -> TransformerManager.handle(parameter, methodTree, className));
                 return super.visitMethod(methodTree, aVoid);
             }
         }, null);

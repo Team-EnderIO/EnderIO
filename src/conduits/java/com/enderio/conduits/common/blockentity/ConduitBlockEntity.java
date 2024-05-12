@@ -17,6 +17,7 @@ import com.enderio.core.common.blockentity.EnderBlockEntity;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
+import me.liliandev.ensure.ensures.EnsureNotNull;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -110,7 +111,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @EnsureSide(EnsureSide.Side.SERVER)
     public void handleExtendedDataUpdate(ConduitType<?> conduitType, CompoundTag compoundTag) {
         getBundle().getNodeFor(conduitType).getExtendedConduitData().deserializeNBT(level.registryAccess(), compoundTag);
     }
