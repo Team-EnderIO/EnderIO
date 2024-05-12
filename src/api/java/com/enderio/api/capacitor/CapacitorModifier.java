@@ -16,14 +16,16 @@ import java.util.function.IntFunction;
  * Capacitor key types, for use in loot capacitors for targeting increases to general stats.
  */
 public enum CapacitorModifier implements StringRepresentable {
-    ENERGY_CAPACITY(0),
-    ENERGY_USE(1),
+    ENERGY_CAPACITY(1),
+    ENERGY_USE(2),
+    FUEL_EFFICIENCY(3),
+    BURNING_ENERGY_GENERATION(4),
 
     /**
      * This should always go last as the loot picker will exclude the final item in this enum
      * @apiNote Capacitors should never multiply the FIXED modifiers...
      */
-    FIXED(2);
+    FIXED(0);
 
     public static final Codec<CapacitorModifier> CODEC = StringRepresentable.fromEnum(CapacitorModifier::values);
     public static final IntFunction<CapacitorModifier> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
@@ -34,7 +36,9 @@ public enum CapacitorModifier implements StringRepresentable {
 
     public static final List<CapacitorModifier> SELECTABLE_MODIFIERS = List.of(
         ENERGY_CAPACITY,
-        ENERGY_USE
+        ENERGY_USE,
+        FUEL_EFFICIENCY,
+        BURNING_ENERGY_GENERATION
     );
 
     CapacitorModifier(int id) {

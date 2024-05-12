@@ -2,10 +2,8 @@ package com.enderio.base.common.item.capacitors;
 
 import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -59,6 +57,10 @@ public class LootCapacitorItem extends CapacitorItem {
             return EIOLang.LOOT_CAPACITOR_TYPE_ENERGY_CAPACITY;
         } else if (firstType.get() == CapacitorModifier.ENERGY_USE) {
             return EIOLang.LOOT_CAPACITOR_TYPE_ENERGY_USE;
+        } else if (firstType.get() == CapacitorModifier.FUEL_EFFICIENCY) {
+            return EIOLang.LOOT_CAPACITOR_TYPE_FUEL_EFFICIENCY;
+        } else if (firstType.get() == CapacitorModifier.BURNING_ENERGY_GENERATION) {
+            return EIOLang.LOOT_CAPACITOR_TYPE_BURNING_ENERGY_GENERATION;
         }
 
         return EIOLang.LOOT_CAPACITOR_TYPE_UNKNOWN;

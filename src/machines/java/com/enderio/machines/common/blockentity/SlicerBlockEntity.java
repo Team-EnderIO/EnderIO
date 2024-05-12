@@ -38,7 +38,6 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SLICER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.SLICER_USAGE);
 
-
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
     public static final MultiSlotAccess INPUTS = new MultiSlotAccess();
     public static final SingleSlotAccess AXE = new SingleSlotAccess();
