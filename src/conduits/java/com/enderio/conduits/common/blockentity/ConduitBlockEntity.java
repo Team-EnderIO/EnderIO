@@ -5,11 +5,12 @@ import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.conduit.SlotType;
+import com.enderio.api.conduit.connection.ConnectionState;
+import com.enderio.api.conduit.connection.DynamicConnectionState;
+import com.enderio.api.conduit.connection.StaticConnectionStates;
 import com.enderio.conduits.ConduitNBTKeys;
 import com.enderio.conduits.common.ConduitShape;
-import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
-import com.enderio.conduits.common.blockentity.connection.ConnectionState;
-import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.network.ConduitSavedData;
@@ -41,6 +42,7 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
@@ -206,7 +208,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             listTag.add(data.serializeNBT(lookupProvider));
         }
         tag.put(ConduitNBTKeys.CONDUIT_EXTRA_DATA, listTag);
-        tag.put(CONDUIT_INV_KEY, conduitItemHandler.serializeNBT());
+        tag.put(CONDUIT_INV_KEY, conduitItemHandler.serializeNBT(lookupProvider));
     }
 
     @Override
@@ -214,7 +216,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         super.loadAdditional(tag, lookupProvider);
         bundle.deserializeNBT(lookupProvider, tag.getCompound(ConduitNBTKeys.CONDUIT_BUNDLE));
         lazyNodeNBT = tag.getList(ConduitNBTKeys.CONDUIT_EXTRA_DATA, Tag.TAG_COMPOUND);
-        conduitItemHandler.deserializeNBT(tag.getCompound(CONDUIT_INV_KEY));
+        conduitItemHandler.deserializeNBT(lookupProvider, tag.getCompound(CONDUIT_INV_KEY));
     }
 
     @Override
@@ -660,24 +662,22 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         }
 
         @Override
-        public CompoundTag serializeNBT() {
+        public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
             CompoundTag tag = new CompoundTag();
             ListTag list = new ListTag();
             for (int i = 0; i < getSlots(); i++) {
-                CompoundTag item = new CompoundTag();
                 ItemStack stack = getStackInSlot(i);
-                stack.save(item);
-                list.add(i, item);
+                list.add(i, stack.saveOptional(lookupProvider));
             }
             tag.put(CONDUIT_INV_KEY, list);
             return tag;
         }
 
         @Override
-        public void deserializeNBT(CompoundTag nbt) {
+        public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
             ListTag list = nbt.getList(CONDUIT_INV_KEY, Tag.TAG_COMPOUND);
             for (int i = 0; i < list.size(); i++) {
-                setStackInSlot(i, ItemStack.of(list.getCompound(i)));
+                setStackInSlot(i, ItemStack.parseOptional(lookupProvider, list.getCompound(i)));
             }
         }
     }

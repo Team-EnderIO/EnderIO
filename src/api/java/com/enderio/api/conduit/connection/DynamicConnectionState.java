@@ -2,10 +2,10 @@ package com.enderio.api.conduit.connection;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.SlotType;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
-import com.enderio.conduits.common.blockentity.SlotType;
-import com.enderio.core.common.network.MassiveStreamCodec;
+import com.enderio.api.network.MassiveStreamCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;

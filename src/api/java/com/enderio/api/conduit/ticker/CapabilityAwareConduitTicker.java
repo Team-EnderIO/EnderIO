@@ -2,6 +2,7 @@ package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;

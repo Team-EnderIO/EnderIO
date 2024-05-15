@@ -1,6 +1,7 @@
 package com.enderio.core.common.capability;
 
 import com.enderio.core.common.menu.ItemFilterSlot;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
@@ -48,17 +49,17 @@ public class ItemFilterCapability implements IFilterCapability<ItemStack> {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
-        ContainerHelper.saveAllItems(tag, items);
+        ContainerHelper.saveAllItems(tag, items, lookupProvider);
         tag.putBoolean("nbt", nbt);
         tag.putBoolean("inverted", invert);
         return tag;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        ContainerHelper.loadAllItems(nbt, items);
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+        ContainerHelper.loadAllItems(nbt, items, lookupProvider);
         this.nbt = nbt.getBoolean("nbt");
         this.invert = nbt.getBoolean("inverted");
     }
@@ -66,7 +67,7 @@ public class ItemFilterCapability implements IFilterCapability<ItemStack> {
     @Override
     public boolean test(ItemStack stack) {
         for (ItemStack testStack : getEntries()) {
-            boolean test = isNbt() ? ItemStack.isSameItemSameTags(testStack, stack) : ItemStack.isSameItem(testStack, stack);
+            boolean test = isNbt() ? ItemStack.isSameItemSameComponents(testStack, stack) : ItemStack.isSameItem(testStack, stack);
             if (test) {
                 return !isInvert();
             }

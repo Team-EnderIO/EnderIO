@@ -1,4 +1,4 @@
-package com.enderio.core.common.network;
+package com.enderio.api.network;
 
 import com.mojang.datafixers.util.Function8;
 import com.mojang.datafixers.util.Function9;

@@ -2,8 +2,6 @@ package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.api.capability.IDarkSteelUpgradable;
-import com.enderio.api.capability.ISideConfig;
-import com.enderio.api.capacitor.ICapacitorData;
 import com.enderio.core.common.capability.IFilterCapability;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;

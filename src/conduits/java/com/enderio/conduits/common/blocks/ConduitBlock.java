@@ -2,15 +2,15 @@ package com.enderio.conduits.common.blocks;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.conduit.connection.ConnectionState;
+import com.enderio.api.conduit.connection.DynamicConnectionState;
+import com.enderio.api.conduit.connection.StaticConnectionStates;
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.RightClickAction;
-import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
-import com.enderio.conduits.common.blockentity.connection.ConnectionState;
-import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.items.ConduitBlockItem;

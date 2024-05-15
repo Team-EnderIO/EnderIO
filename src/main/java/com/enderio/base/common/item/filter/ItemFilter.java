@@ -19,8 +19,9 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
 public class ItemFilter extends Item implements IEnderFilter {
 
+    // TODO: DataComponents.
     public static ICapabilityProvider<ItemStack, Void, IFilterCapability> FILTER_PROVIDER =
-        (stack, v) -> stack.getData(EIOAttachments.ITEM_FILTER);
+        (stack, v) -> /*stack.getData(EIOAttachments.ITEM_FILTER)*/ null;
 
     private final int size;
 
