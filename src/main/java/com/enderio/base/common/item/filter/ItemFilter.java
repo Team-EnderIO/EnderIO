@@ -1,7 +1,7 @@
 package com.enderio.base.common.item.filter;
 
 import com.enderio.base.common.init.EIOAttachments;
-import com.enderio.base.common.menu.FilterMenu;
+import com.enderio.base.common.menu.ItemFilterMenu;
 import com.enderio.core.common.capability.IFilterCapability;
 import com.enderio.core.common.item.IEnderFilter;
 import net.minecraft.network.chat.Component;
@@ -51,7 +51,7 @@ public class ItemFilter extends Item implements IEnderFilter {
 
             @Override
             public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-                return new FilterMenu(pContainerId, pInventory, player.getMainHandItem());
+                return new ItemFilterMenu(pContainerId, pInventory, player.getMainHandItem());
             }
         });
     }
