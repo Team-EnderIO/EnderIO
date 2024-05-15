@@ -2,7 +2,7 @@ package com.enderio.base.client.gui.screen;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.base.common.menu.FilterMenu;
+import com.enderio.base.common.menu.ItemFilterMenu;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.CheckBox;
 import net.minecraft.client.gui.GuiGraphics;
@@ -10,12 +10,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ItemFilterScreen extends EIOScreen<FilterMenu> {
+public class ItemFilterScreen extends EIOScreen<ItemFilterMenu> {
 
     private static final Vector2i BG_SIZE = new Vector2i(183,201);
     private static ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/40/item_filter.png");
 
-    public ItemFilterScreen(FilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public ItemFilterScreen(ItemFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         switch (pMenu.getFilter().getEntries().size()) {
             case 5 -> BG_TEXTURE = EnderIO.loc("textures/gui/40/basic_item_filter.png");
