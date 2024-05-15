@@ -2,6 +2,8 @@ package com.enderio.conduits.client.model;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.conduit.connection.ConnectionState;
+import com.enderio.api.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.client.paint.model.PaintingQuadTransformer;
 import com.enderio.conduits.common.Area;
@@ -9,8 +11,6 @@ import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.ConduitConnection;
 import com.enderio.conduits.common.blockentity.OffsetHelper;
-import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
-import com.enderio.conduits.common.blockentity.connection.ConnectionState;
 import com.enderio.core.data.model.ModelHelper;
 import com.mojang.math.Axis;
 import com.mojang.math.Transformation;

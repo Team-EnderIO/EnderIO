@@ -1,6 +1,7 @@
 package com.enderio.core.common.capability;
 
 import com.enderio.core.common.menu.FluidFilterSlot;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -53,17 +54,17 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack> {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
-        saveAllItems(tag, fluids);
+        saveAllItems(lookupProvider, tag, fluids);
         tag.putBoolean("nbt", nbt);
         tag.putBoolean("inverted", invert);
         return tag;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        loadAllItems(nbt, fluids);
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+        loadAllItems(lookupProvider, nbt, fluids);
         this.nbt = nbt.getBoolean("nbt");
         this.invert = nbt.getBoolean("inverted");
     }
@@ -71,7 +72,7 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack> {
     @Override
     public boolean test(FluidStack stack) {
         for (FluidStack testStack : getEntries()) {
-            boolean test = isNbt() ? testStack.isFluidEqual(stack) : testStack.is(stack.getFluid());
+            boolean test = isNbt() ? FluidStack.isSameFluidSameComponents(testStack, stack) : testStack.is(stack.getFluid());
             if (test) {
                 return !isInvert();
             }
@@ -79,7 +80,7 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack> {
         return isInvert();
     }
 
-    public static CompoundTag saveAllItems(CompoundTag pTag, NonNullList<FluidStack> pList) {
+    public static CompoundTag saveAllItems(HolderLookup.Provider lookupProvider, CompoundTag pTag, NonNullList<FluidStack> pList) {
         ListTag listtag = new ListTag();
 
         for(int i = 0; i < pList.size(); ++i) {
@@ -87,7 +88,7 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack> {
             if (!stack.isEmpty()) {
                 CompoundTag compoundtag = new CompoundTag();
                 compoundtag.putByte("Slot", (byte)i);
-                stack.writeToNBT(compoundtag);
+                compoundtag.put("Item", stack.saveOptional(lookupProvider));
                 listtag.add(compoundtag);
             }
         }
@@ -98,14 +99,14 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack> {
         return pTag;
     }
 
-    public static void loadAllItems(CompoundTag pTag, NonNullList<FluidStack> pList) {
+    public static void loadAllItems(HolderLookup.Provider lookupProvider, CompoundTag pTag, NonNullList<FluidStack> pList) {
         ListTag listtag = pTag.getList("Fluids", 10);
 
         for(int i = 0; i < listtag.size(); ++i) {
             CompoundTag compoundtag = listtag.getCompound(i);
             int j = compoundtag.getByte("Slot") & 255;
             if (j >= 0 && j < pList.size()) {
-                pList.set(j, FluidStack.loadFluidStackFromNBT(compoundtag));
+                pList.set(j, FluidStack.parseOptional(lookupProvider, compoundtag));
             }
         }
     }

@@ -3,13 +3,13 @@ package com.enderio.base.common.menu;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.network.FilterUpdatePacket;
 import com.enderio.core.common.capability.IFilterCapability;
-import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 
@@ -62,12 +62,12 @@ public abstract class FilterMenu extends AbstractContainerMenu {
     }
 
     public void setNbt(Boolean nbt) {
-        NetworkUtil.sendToServer(new FilterUpdatePacket(nbt, capability.isInvert()));
+        PacketDistributor.sendToServer(new FilterUpdatePacket(nbt, capability.isInvert()));
         capability.setNbt(nbt);
     }
 
     public void setInverted(Boolean inverted) {
-        NetworkUtil.sendToServer(new FilterUpdatePacket(capability.isNbt(), inverted));
+        PacketDistributor.sendToServer(new FilterUpdatePacket(capability.isNbt(), inverted));
         capability.setInverted(inverted);
     }
 }
