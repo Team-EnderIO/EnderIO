@@ -1,9 +1,12 @@
 package com.enderio.conduits.common.types.item;
 
+import com.enderio.api.capability.IConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.conduits.common.components.ItemSpeedUpgrade;
+import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.enderio.core.common.capability.IFilterCapability;
 import com.enderio.core.common.capability.ItemFilterCapability;
 import dev.gigaherz.graph3.Graph;
@@ -28,7 +31,15 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
         for (CapabilityConnection extract: extracts) {
             IItemHandler extractHandler = extract.cap;
             for (int i = 0; i < extractHandler.getSlots(); i++) {
-                ItemStack extractedItem = extractHandler.extractItem(i, 4, true);
+                int speed = 4;
+                if (extract.connectionState != null) {
+                    ItemStack upgradeStack = extract.connectionState.upgradeExtract();
+                    IConduitUpgrade upgrade = upgradeStack.getCapability(ConduitCapabilities.ConduitUpgrade.ITEM);
+                    if (upgrade instanceof ItemSpeedUpgrade speedUpgrade) {
+                        speed *= speedUpgrade.getSpeed();
+                    }
+                }
+                ItemStack extractedItem = extractHandler.extractItem(i, speed, true);
                 if (extractedItem.isEmpty()) {
                     continue;
                 }

@@ -1,10 +1,14 @@
 package com.enderio.conduits.common.types.fluid;
 
+import com.enderio.api.capability.IConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.conduits.common.components.FluidSpeedUpgrade;
+import com.enderio.conduits.common.components.ItemSpeedUpgrade;
+import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.enderio.core.common.capability.FluidFilterCapability;
 import com.enderio.core.common.capability.IFilterCapability;
 import dev.gigaherz.graph3.Graph;
@@ -13,6 +17,7 @@ import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
@@ -61,10 +66,20 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
         for (CapabilityConnection extract : extracts) {
             IFluidHandler extractHandler = extract.cap;
             FluidExtendedData fluidExtendedData = extract.data.castTo(FluidExtendedData.class);
+            int temp = fluidRate;
+            if (extract.connectionState != null) {
+                ItemStack upgradeStack = extract.connectionState.upgradeExtract();
+                IConduitUpgrade upgrade = upgradeStack.getCapability(ConduitCapabilities.ConduitUpgrade.ITEM);
+                if (upgrade instanceof FluidSpeedUpgrade speedUpgrade) {
+                    temp *= speedUpgrade.getSpeed();
+                }
+            }
+            final int rate = temp;
+
             FluidStack extractedFluid = Optional
                 .ofNullable(fluidExtendedData.lockedFluid)
-                .map(fluid -> extractHandler.drain(new FluidStack(fluid, fluidRate), IFluidHandler.FluidAction.SIMULATE))
-                .orElseGet(() -> extractHandler.drain(fluidRate, IFluidHandler.FluidAction.SIMULATE));
+                .map(fluid -> extractHandler.drain(new FluidStack(fluid, rate), IFluidHandler.FluidAction.SIMULATE))
+                .orElseGet(() -> extractHandler.drain(rate, IFluidHandler.FluidAction.SIMULATE));
 
             if (extractedFluid.isEmpty()) {
                 continue;
@@ -92,7 +107,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
                 FluidStack transferredFluid = fluidExtendedData.lockedFluid != null ?
                     FluidUtil.tryFluidTransfer(insert.cap, extractHandler, new FluidStack(fluidExtendedData.lockedFluid, fluidRate - transferred),
                         true) :
-                    FluidUtil.tryFluidTransfer(insert.cap, extractHandler, fluidRate - transferred, true);
+                    FluidUtil.tryFluidTransfer(insert.cap, extractHandler, rate - transferred, true);
 
                 if (!transferredFluid.isEmpty()) {
                     transferred += transferredFluid.getAmount();
@@ -109,7 +124,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
                         }
                     }
 
-                    if (transferred > fluidRate) {
+                    if (transferred > rate) {
                         break;
                     }
                 }
