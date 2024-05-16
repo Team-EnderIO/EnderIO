@@ -10,7 +10,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-public class FluidFilterMenu extends FilterMenu{
+public class FluidFilterMenu extends FilterMenu {
 
     public FluidFilterMenu(MenuType<?> pMenuType, int pContainerId, Inventory inventory, ItemStack stack) {
         super(pMenuType, pContainerId, inventory, stack);
@@ -29,7 +29,7 @@ public class FluidFilterMenu extends FilterMenu{
         if (getFilter() instanceof FluidFilterCapability filterCapability) {
             if (pSlotId < filterCapability.getEntries().size()) {
                 if (!filterCapability.getEntries().get(pSlotId).isEmpty()) {
-                    filterCapability.getEntries().set(pSlotId, FluidStack.EMPTY);
+                    filterCapability.setEntry(pSlotId, FluidStack.EMPTY);
                 }
             }
             super.clicked(pSlotId, pButton, pClickType, pPlayer);

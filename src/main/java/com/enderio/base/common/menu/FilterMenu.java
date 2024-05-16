@@ -24,9 +24,9 @@ public abstract class FilterMenu extends AbstractContainerMenu {
         this.capability = stack.getCapability(EIOCapabilities.Filter.ITEM);
         List<?> items = capability.getEntries();
         for (int i = 0; i < items.size(); i++) {
-            addSlot(capability.getSlot(i, 14 + ( i % 5) * 18, 43 + 20 * ( i / 5)));
+            addSlot(capability.getSlot(i, 14 + ( i % 5) * 18, 35 + 20 * ( i / 5)));
         }
-        addInventorySlots(8,84, inventory);
+        addInventorySlots(14,119, inventory);
     }
 
     @Override

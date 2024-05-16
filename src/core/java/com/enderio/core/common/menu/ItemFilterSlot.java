@@ -5,26 +5,29 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class ItemFilterSlot extends Slot {
 
     private static Container emptyInventory = new SimpleContainer(0);
-    private final List<ItemStack> items;
+    private final Supplier<ItemStack> item;
+    private final Consumer<ItemStack> consumer;
 
-    public ItemFilterSlot(List<ItemStack> items, int pSlot, int pX, int pY) {
+    public ItemFilterSlot(Supplier<ItemStack> item, Consumer<ItemStack> consumer, int pSlot, int pX, int pY) {
         super(emptyInventory, pSlot, pX, pY);
-        this.items = items;
+        this.item = item;
+        this.consumer = consumer;
     }
 
     @Override
     public ItemStack getItem() {
-        return items.get(getSlotIndex());
+        return item.get();
     }
 
     @Override
     public void set(ItemStack pStack) {
-        items.set(getSlotIndex(), pStack);
+        consumer.accept(pStack);
         setChanged();
     }
 

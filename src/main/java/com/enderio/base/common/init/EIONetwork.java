@@ -1,6 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.base.common.network.ClientPayloadHandler;
+import com.enderio.base.common.network.FilterUpdatePacket;
 import com.enderio.base.common.network.RequestTravelPacket;
 import com.enderio.base.common.network.ServerPayloadHandler;
 import com.enderio.base.common.network.ServerToClientLightUpdate;
@@ -40,6 +41,9 @@ public class EIONetwork {
 
         registrar.playToServer(RequestTravelPacket.TYPE, RequestTravelPacket.STREAM_CODEC,
             ServerPayloadHandler.getInstance()::handleTravelRequest);
+
+        registrar.playToServer(FilterUpdatePacket.TYPE, FilterUpdatePacket.STREAM_CODEC,
+                ServerPayloadHandler.getInstance()::handleFilterUpdate);
     }
     
 }
