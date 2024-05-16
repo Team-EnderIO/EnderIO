@@ -23,6 +23,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -74,7 +75,6 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     private ListTag lazyNodeNBT = new ListTag();
     private ConduitItemHandler conduitItemHandler = new ConduitItemHandler();
 
-
     public ConduitBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(ConduitBlockEntities.CONDUIT.get(), worldPosition, blockState);
         bundle = new ConduitBundle(this::scheduleTick, worldPosition);
@@ -105,15 +105,18 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             connection.setConnectionState(conduitType, connectionState);
 
             pushIOState(direction, bundle.getNodeFor(conduitType), connectionState);
-            level.invalidateCapabilities(worldPosition); //TODO: NEO-PORT:
+            level.invalidateCapabilities(worldPosition);
         }
+
         updateClient();
         updateConnectionToData(conduitType);
     }
 
     @UseOnly(LogicalSide.SERVER)
-    public void handleExtendedDataUpdate(ConduitType<?> conduitType, CompoundTag compoundTag) {
-        getBundle().getNodeFor(conduitType).getExtendedConduitData().deserializeNBT(level.registryAccess(), compoundTag);
+    public <T extends ExtendedConduitData<T>> void handleExtendedDataUpdate(ConduitType<T> conduitType, Tag compoundTag) {
+        var data = ExtendedConduitData.<T>parse(level.registryAccess(), compoundTag);
+        var node = getBundle().getNodeFor(conduitType);
+        node.setExtendedConduitData(data);
     }
 
     // endregion
@@ -158,7 +161,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             ConduitSavedData savedData = ConduitSavedData.get(serverLevel);
             for (ConduitType<?> type : bundle.getTypes()) {
                 NodeIdentifier<?> node = bundle.getNodeFor(type);
-                node.getExtendedConduitData().onRemoved(type, level, getBlockPos());
+                node.getExtendedConduitData().onRemoved(type.cast(), level, getBlockPos());
                 savedData.putUnloadedNodeIdentifier(type, this.worldPosition, node);
             }
         }
@@ -202,11 +205,13 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
         super.saveAdditional(tag, lookupProvider);
         tag.put(ConduitNBTKeys.CONDUIT_BUNDLE, bundle.serializeNBT(lookupProvider));
+
         ListTag listTag = new ListTag();
         for (ConduitType<?> type : bundle.getTypes()) {
-            ExtendedConduitData<?> data = bundle.getNodeFor(type).getExtendedConduitData();
-            listTag.add(data.serializeNBT(lookupProvider));
+            var data = bundle.getNodeFor(type).getExtendedConduitData();
+            listTag.add(data.save(lookupProvider));
         }
+
         tag.put(ConduitNBTKeys.CONDUIT_EXTRA_DATA, listTag);
         tag.put(CONDUIT_INV_KEY, conduitItemHandler.serializeNBT(lookupProvider));
     }
@@ -265,7 +270,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public Optional<GraphObject<Mergeable.Dummy>> tryConnectTo(Direction dir, ConduitType<?> type, boolean forceMerge, boolean shouldMergeGraph) {
         if (level.getBlockEntity(getBlockPos().relative(dir)) instanceof ConduitBlockEntity conduit
-            && conduit.connectTo(dir.getOpposite(), type, bundle.getNodeFor(type).getExtendedConduitData(), forceMerge)) {
+            && conduit.connectTo(dir.getOpposite(), type.cast(), bundle.getNodeFor(type).getExtendedConduitData(), forceMerge)) {
             connect(dir, type);
             updateConnectionToData(type);
             conduit.updateConnectionToData(type);
@@ -395,10 +400,11 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             ConduitType<?> type = bundle.getTypes().get(typeIndex);
             NodeIdentifier<?> node = savedData.takeUnloadedNodeIdentifier(type, this.worldPosition);
             if (node == null && bundle.getNodeForTypeExact(type) == null) {
-                ExtendedConduitData<?> data = type.createExtendedConduitData(level, worldPosition);
-
+                ExtendedConduitData<?> data;
                 if (typeIndex < lazyNodeNBT.size()) {
-                    data.deserializeNBT(level.registryAccess(), lazyNodeNBT.getCompound(typeIndex));
+                    data = ExtendedConduitData.parse(level.registryAccess(), lazyNodeNBT.getCompound(typeIndex));
+                } else {
+                    data = type.createExtendedConduitData(level, worldPosition);
                 }
 
                 node = new NodeIdentifier<>(worldPosition, data);
@@ -420,12 +426,12 @@ public class ConduitBlockEntity extends EnderBlockEntity {
      * @param forceMerge if disabledstate should be ignored
      * @return true if a connection happens
      */
-    private boolean connectTo(Direction direction, ConduitType<?> type, ExtendedConduitData<?> data, boolean forceMerge) {
+    private <T extends ExtendedConduitData<T>> boolean connectTo(Direction direction, ConduitType<T> type, ExtendedConduitData<T> data, boolean forceMerge) {
         if (!doTypesMatch(type)) {
             return false;
         }
 
-        if (!data.canConnectTo(bundle.getNodeFor(type).getExtendedConduitData().cast())) {
+        if (!data.canConnectTo(bundle.getNodeFor(type).getExtendedConduitData())) {
             return false;
         }
 

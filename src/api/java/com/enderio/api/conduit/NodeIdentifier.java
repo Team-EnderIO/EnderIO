@@ -3,6 +3,8 @@ package com.enderio.api.conduit;
 import com.enderio.api.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
@@ -22,13 +24,13 @@ public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphOb
     @Nullable private Graph<Mergeable.Dummy> graph = null;
 
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
-    private final T extendedConduitData;
+    private T extendedConduitData;
     private final Map<Direction, DynamicConnectionState> connectionStates = new EnumMap<>(Direction.class);
 
-    /*public static final Codec<NodeIdentifier<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<NodeIdentifier<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         BlockPos.CODEC.fieldOf("pos").forGetter(NodeIdentifier::getPos),
-        ConduitTypes.REGISTRY.byNameCodec().fieldOf("id").forGetter(node -> node.get)
-    ).apply(instance, NodeIdentifier::new));*/
+        ExtendedConduitData.CODEC.fieldOf("data").forGetter(NodeIdentifier::getExtendedConduitData)
+    ).apply(instance, NodeIdentifier::new));
 
     @ApiStatus.Internal
     public NodeIdentifier(BlockPos pos, T extendedConduitData) {
@@ -62,6 +64,10 @@ public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphOb
 
     public T getExtendedConduitData() {
         return extendedConduitData;
+    }
+
+    public void setExtendedConduitData(T extendedConduitData) {
+        this.extendedConduitData = extendedConduitData;
     }
 
     @ApiStatus.Internal

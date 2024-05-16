@@ -2,6 +2,7 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.client.ConduitClientSetup;
@@ -62,7 +63,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
      * @param type
      * @return an action containing the type that is now not in this bundle
      */
-    public RightClickAction addType(Level level, ConduitType<?> type, Player player) {
+    public <T extends ExtendedConduitData<T>> RightClickAction addType(Level level, ConduitType<T> type, Player player) {
         if (types.size() == MAX_CONDUIT_TYPES) {
             return new RightClickAction.Blocked();
         }
@@ -73,12 +74,14 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
         //upgrade a conduit
         Optional<? extends ConduitType<?>> first = types.stream().filter(existingConduit -> existingConduit.canBeReplacedBy(type)).findFirst();
-        NodeIdentifier<?> node = new NodeIdentifier<>(pos, type.createExtendedConduitData(level, pos));
+        NodeIdentifier<T> node = new NodeIdentifier<>(pos, type.createExtendedConduitData(level, pos));
         if (first.isPresent()) {
             int index = types.indexOf(first.get());
             types.set(index, type);
-            var prevNode = nodes.remove(first.get());
+
+            var prevNode = (NodeIdentifier<T>) nodes.remove(first.get());
             nodes.put(type, node);
+
             if (prevNode != null) {
                 prevNode.getExtendedConduitData().onRemoved(type, level, pos);
                 if (!level.isClientSide() && prevNode.getGraph() != null) {
@@ -127,7 +130,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
     void onLoad(Level level, BlockPos pos) {
         for (ConduitType<?> type : types) {
-            getNodeFor(type).getExtendedConduitData().onCreated(type, level, pos, null);
+            getNodeFor(type).getExtendedConduitData().onCreated(type.cast(), level, pos, null);
         }
     }
 
@@ -194,38 +197,18 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         if (EffectiveSide.get().isServer()) {
             ListTag nodeTag = new ListTag();
             for (var entry : nodes.entrySet()) {
-                var data = entry.getValue().getExtendedConduitData().serializeRenderNBT(lookupProvider);
-                if (!data.isEmpty()) {
-                    CompoundTag dataTag = new CompoundTag();
-                    dataTag.putString(KEY_NODE_TYPE, EnderIORegistries.CONDUIT_TYPES.getKey(entry.getKey()).toString());
-                    dataTag.put(KEY_NODE_DATA, data);
-                    nodeTag.add(dataTag);
-                }
+                var data = entry.getValue().getExtendedConduitData().save(lookupProvider);
+
+                CompoundTag dataTag = new CompoundTag();
+                dataTag.putString(KEY_NODE_TYPE, EnderIORegistries.CONDUIT_TYPES.getKey(entry.getKey()).toString());
+                dataTag.put(KEY_NODE_DATA, data);
+                nodeTag.add(dataTag);
             }
             if (!nodeTag.isEmpty()) {
                 tag.put(KEY_NODES, nodeTag);
             }
         }
         return tag;
-    }
-
-    public CompoundTag serializeGuiNBT(HolderLookup.Provider lookupProvider) {
-        CompoundTag nbt = new CompoundTag();
-        for (ConduitType<?> type : getTypes()) {
-            CompoundTag compoundTag = nodes.get(type).getExtendedConduitData().serializeGuiNBT(lookupProvider);
-            if (!compoundTag.isEmpty()) {
-                nbt.put(EnderIORegistries.CONDUIT_TYPES.getKey(type).toString(), compoundTag);
-            }
-        }
-        return nbt;
-    }
-
-    public void deserializeGuiNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-        for (ConduitType<?> type : getTypes()) {
-            if (nbt.contains(EnderIORegistries.CONDUIT_TYPES.getKey(type).toString())) {
-                nodes.get(type).getExtendedConduitData().deserializeNBT(lookupProvider, nbt.getCompound(EnderIORegistries.CONDUIT_TYPES.getKey(type).toString()));
-            }
-        }
     }
 
     @Override
@@ -285,17 +268,27 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                     nodes.put(type, new NodeIdentifier<>(pos, type.createExtendedConduitData(ConduitClientSetup.getClientLevel(), pos)));
                 }
             });
+
             if (nbt.contains(KEY_NODES)) {
                 ListTag nodesTag = nbt.getList(KEY_NODES, Tag.TAG_COMPOUND);
                 for (Tag tag : nodesTag) {
                     CompoundTag cmp = (CompoundTag) tag;
-                    nodes
-                        .get(EnderIORegistries.CONDUIT_TYPES.get(new ResourceLocation(cmp.getString(KEY_NODE_TYPE))))
-                        .getExtendedConduitData()
-                        .deserializeNBT(lookupProvider, cmp.getCompound(KEY_NODE_DATA));
+
+                    var type = EnderIORegistries.CONDUIT_TYPES.get(new ResourceLocation(cmp.getString(KEY_NODE_TYPE)));
+                    loadExtendedData(lookupProvider, type, cmp.getCompound(KEY_NODE_DATA));
                 }
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends ExtendedConduitData<T>> void loadExtendedData(
+        HolderLookup.Provider lookupProvider, ConduitType<T> conduitType, CompoundTag compoundTag) {
+
+        var data = ExtendedConduitData.<T>parse(lookupProvider, compoundTag);
+        var node = (NodeIdentifier<T>) nodes.get(conduitType);
+
+        node.setExtendedConduitData(data);
     }
 
     // endregion
@@ -344,10 +337,11 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         return nodes.get(type);
     }
 
-    public NodeIdentifier<?> getNodeFor(ConduitType<?> type) {
+    public <T extends ExtendedConduitData<T>> NodeIdentifier<T> getNodeFor(ConduitType<T> type) {
         for (var entry : nodes.entrySet()) {
             if (entry.getKey().getTicker().canConnectTo(entry.getKey(), type)) {
-                return nodes.get(entry.getKey());
+                //noinspection unchecked
+                return (NodeIdentifier<T>) nodes.get(entry.getKey());
             }
         }
 
@@ -369,8 +363,8 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         dataVersion++;
     }
 
-    public void removeNodeFor(Level level, ConduitType<?> type) {
-        NodeIdentifier<?> node = nodes.get(type);
+    public <T extends ExtendedConduitData<T>> void removeNodeFor(Level level, ConduitType<T> type) {
+        var node = (NodeIdentifier<T>) nodes.get(type);
         node.getExtendedConduitData().onRemoved(type, level, pos);
         if (node.getGraph() != null) {
             node.getGraph().remove(node);

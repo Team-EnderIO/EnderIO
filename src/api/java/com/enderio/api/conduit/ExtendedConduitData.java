@@ -1,10 +1,17 @@
 package com.enderio.api.conduit;
 
 import com.enderio.api.UseOnly;
+import com.enderio.api.registry.EnderIORegistries;
+import com.enderio.api.travel.TravelTarget;
+import com.enderio.api.travel.TravelTargetSerializer;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.LogicalSide;
@@ -17,26 +24,39 @@ import java.util.function.Supplier;
 /**
  * used for special single use things like RoundRobin for ItemConduits or proxying Caps
  */
-public interface ExtendedConduitData<T extends ExtendedConduitData<T>> extends INBTSerializable<CompoundTag> {
+public interface ExtendedConduitData<T extends ExtendedConduitData<T>> {
+
+    Codec<ExtendedConduitData<?>> CODEC = EnderIORegistries.CONDUIT_DATA_SERIALIZERS.byNameCodec()
+        .dispatch(ExtendedConduitData::serializer, ConduitDataSerializer::codec);
 
     /**
      * default impl for stuff that don't need an impl
      */
     class EmptyExtendedConduitData implements ExtendedConduitData<EmptyExtendedConduitData> {
-
         @Override
-        public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-            return new CompoundTag();
+        public void applyGuiChanges(EmptyExtendedConduitData guiData) {
         }
 
         @Override
-        public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+        public ConduitDataSerializer<EmptyExtendedConduitData> serializer() {
+            return Serializer.INSTANCE;
+        }
+
+        public static class Serializer implements ConduitDataSerializer<EmptyExtendedConduitData> {
+            public static MapCodec<EmptyExtendedConduitData> CODEC = MapCodec.unit(EmptyExtendedConduitData::new);
+
+            public static Serializer INSTANCE = new Serializer();
+
+            @Override
+            public MapCodec<EmptyExtendedConduitData> codec() {
+                return CODEC;
+            }
         }
     }
 
-    default void onCreated(ConduitType<?> type, Level level, BlockPos pos, @Nullable Player player) {}
+    default void onCreated(ConduitType<T> type, Level level, BlockPos pos, @Nullable Player player) {}
 
-    default void onRemoved(ConduitType<?> type, Level level, BlockPos pos) {}
+    default void onRemoved(ConduitType<T> type, Level level, BlockPos pos) {}
 
     default void updateConnection(Set<Direction> connectedSides) {}
 
@@ -62,24 +82,30 @@ public interface ExtendedConduitData<T extends ExtendedConduitData<T>> extends I
         return false;
     }
 
-    /**
-     * @return synced renderdata
-     */
-    default CompoundTag serializeRenderNBT(HolderLookup.Provider lookupProvider) {
-        return new CompoundTag();
-    }
-
-    /**
-     * @return synced guidata
-     */
-    default CompoundTag serializeGuiNBT(HolderLookup.Provider lookupProvider) {
-        return new CompoundTag();
-    }
-
     @UseOnly(LogicalSide.CLIENT)
     default T deepCopy() {
         return cast();
     }
+
+    /**
+     * Allows ignoring some fields from the client (for example internal backing fields).
+     */
+    void applyGuiChanges(T guiData);
+
+    // region Serialization
+
+    ConduitDataSerializer<T> serializer();
+
+    default Tag save(HolderLookup.Provider lookupProvider) {
+        return ExtendedConduitData.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getPartialOrThrow();
+    }
+
+    @SuppressWarnings("unchecked")
+    static <T extends ExtendedConduitData<T>> T parse(HolderLookup.Provider lookupProvider, Tag tag) {
+        return (T) ExtendedConduitData.CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getPartialOrThrow();
+    }
+
+    // endregion
 
     static Supplier<EmptyExtendedConduitData> dummy() {
         return EmptyExtendedConduitData::new;

@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 
 public interface ClientConduitData<T extends ExtendedConduitData<T>> extends Icon {
 
+    @FunctionalInterface
     interface UpdateExtendedData<T extends ExtendedConduitData<T>> {
         void update(Function<T, T> mapper);
     }

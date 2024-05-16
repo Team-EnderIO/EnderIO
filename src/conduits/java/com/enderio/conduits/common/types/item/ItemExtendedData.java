@@ -1,99 +1,96 @@
 package com.enderio.conduits.common.types.item;
 
+import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.conduits.common.init.ConduitTypes;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ItemExtendedData implements ExtendedConduitData<ItemExtendedData> {
 
-    private final Map<Direction, ItemSidedData> itemSidedData = new EnumMap<>(Direction.class);
+    public Map<Direction, ItemSidedData> itemSidedData;
 
-    @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
-        CompoundTag tag = new CompoundTag();
-        for (Direction direction: Direction.values()) {
-            @Nullable
-            ItemSidedData sidedData = itemSidedData.get(direction);
-            if (sidedData != null) {
-                tag.put(direction.name(), sidedData.toNbt());
-            }
-        }
-        return tag;
+    public ItemExtendedData() {
+        itemSidedData = new EnumMap<>(Direction.class);
+    }
+
+    public ItemExtendedData(Map<Direction, ItemSidedData> itemSidedData) {
+        this.itemSidedData = new HashMap<>(itemSidedData);
     }
 
     @Override
-    public CompoundTag serializeGuiNBT(HolderLookup.Provider lookupProvider) {
-        CompoundTag tag = new CompoundTag();
-        for (Direction direction: Direction.values()) {
-            @Nullable
-            ItemSidedData sidedData = itemSidedData.get(direction);
-            if (sidedData != null) {
-                tag.put(direction.name(), sidedData.toGuiNbt());
-            }
+    public void applyGuiChanges(ItemExtendedData guiData) {
+        for (Direction direction : Direction.values()) {
+            compute(direction).applyGuiChanges(guiData.get(direction));
         }
-        return tag;
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-        for (Direction direction: Direction.values()) {
-            if (nbt.contains(direction.name())) {
-                itemSidedData.put(direction, ItemSidedData.fromNbt(nbt.getCompound(direction.name())));
-            }
-        }
+    public ConduitDataSerializer<ItemExtendedData> serializer() {
+        return ConduitTypes.ITEM_DATA_SERIALIZER.get();
     }
 
     public ItemSidedData get(Direction direction) {
-        return itemSidedData.getOrDefault(direction, new ItemSidedData());
+        return Objects.requireNonNull(itemSidedData.getOrDefault(direction, ItemSidedData.EMPTY));
     }
+
     public ItemSidedData compute(Direction direction) {
         return itemSidedData.computeIfAbsent(direction, dir -> new ItemSidedData());
     }
 
     public static class ItemSidedData {
-        public boolean roundRobin = false;
+
+        public static Codec<ItemSidedData> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                Codec.BOOL.fieldOf("is_round_robin").forGetter(i -> i.isRoundRobin),
+                Codec.INT.fieldOf("rotating_index").forGetter(i -> i.rotatingIndex),
+                Codec.BOOL.fieldOf("is_self_feed").forGetter(i -> i.isSelfFeed),
+                Codec.INT.fieldOf("priority").forGetter(i -> i.priority)
+            ).apply(instance, ItemSidedData::new)
+        );
+
+        public static ItemSidedData EMPTY = new ItemSidedData(false, 0, false, 0);
+
+        public boolean isRoundRobin = false;
         public int rotatingIndex = 0;
-        public boolean selfFeed = false;
+        public boolean isSelfFeed = false;
         public int priority = 0;
 
-        // region Serialization
-
-        private static final String KEY_ROTATING_INDEX = "RotatingIndex";
-        private static final String KEY_ROUND_ROBIN = "RoundRobin";
-        private static final String KEY_SELF_FEED = "SelfFeed";
-        private static final String KEY_PRIORITY = "Priority";
-
-        private CompoundTag toNbt() {
-            CompoundTag nbt = toGuiNbt();
-            nbt.putInt(KEY_ROTATING_INDEX, rotatingIndex);
-            return nbt;
+        public ItemSidedData() {
         }
 
-        private CompoundTag toGuiNbt() {
-            CompoundTag nbt = new CompoundTag();
-            nbt.putBoolean(KEY_ROUND_ROBIN, roundRobin);
-            nbt.putBoolean(KEY_SELF_FEED, selfFeed);
-            nbt.putInt(KEY_PRIORITY, priority);
-            return nbt;
+        public ItemSidedData(boolean isRoundRobin, int rotatingIndex, boolean isSelfFeed, int priority) {
+            this.isRoundRobin = isRoundRobin;
+            this.rotatingIndex = rotatingIndex;
+            this.isSelfFeed = isSelfFeed;
+            this.priority = priority;
         }
 
-        private static ItemSidedData fromNbt(CompoundTag nbt) {
-            ItemSidedData sidedData = new ItemSidedData();
-            sidedData.roundRobin = nbt.getBoolean(KEY_ROUND_ROBIN);
-            sidedData.selfFeed = nbt.getBoolean(KEY_SELF_FEED);
-            sidedData.priority= nbt.getInt(KEY_PRIORITY);
-            if (nbt.contains(KEY_ROTATING_INDEX)) {
-                sidedData.rotatingIndex= nbt.getInt(KEY_ROTATING_INDEX);
-            }
-
-            return sidedData;
+        private void applyGuiChanges(ItemSidedData guiChanges) {
+            this.isRoundRobin = guiChanges.isRoundRobin;
+            this.isSelfFeed = guiChanges.isSelfFeed;
+            this.priority = guiChanges.priority;
         }
+    }
 
-        // endregion
+    public static class Serializer implements ConduitDataSerializer<ItemExtendedData> {
+        public static MapCodec<ItemExtendedData> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(
+                Codec.unboundedMap(Direction.CODEC, ItemSidedData.CODEC)
+                    .fieldOf("item_sided_data").forGetter(i -> i.itemSidedData)
+            ).apply(instance, ItemExtendedData::new)
+        );
+
+        @Override
+        public MapCodec<ItemExtendedData> codec() {
+            return CODEC;
+        }
     }
 }

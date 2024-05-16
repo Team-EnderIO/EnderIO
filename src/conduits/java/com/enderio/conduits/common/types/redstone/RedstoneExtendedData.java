@@ -1,7 +1,12 @@
 package com.enderio.conduits.common.types.redstone;
 
+import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.misc.ColorControl;
+import com.enderio.conduits.common.init.ConduitTypes;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
@@ -16,45 +21,25 @@ public class RedstoneExtendedData implements ExtendedConduitData<RedstoneExtende
     private boolean isActive = false;
     private final List<ColorControl> activeColors = new ArrayList<>();
 
-    // region Serialization
+    public RedstoneExtendedData() {
+    }
 
-    private static final String KEY_ACTIVE = "Active";
-    private static final String KEY_COLORED_ACTIVE = "ColoredActive";
-
-    @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
-        CompoundTag nbt = new CompoundTag();
-        nbt.putBoolean(KEY_ACTIVE, isActive);
-
-        ListTag colors = new ListTag();
-        for (ColorControl activeColor : activeColors) {
-            colors.add(IntTag.valueOf(activeColor.ordinal()));
-        }
-        nbt.put(KEY_COLORED_ACTIVE, colors);
-        return nbt;
+    private RedstoneExtendedData(boolean isActive, List<ColorControl> activeColors) {
+        this.isActive = isActive;
+        this.activeColors.addAll(activeColors);
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-        isActive = nbt.getBoolean(KEY_ACTIVE);
-        activeColors.clear();
-        if (nbt.contains(KEY_COLORED_ACTIVE, Tag.TAG_LIST)) {
-            ListTag list = nbt.getList(KEY_COLORED_ACTIVE, Tag.TAG_INT);
-            for (Tag tag : list) {
-                if (tag instanceof IntTag intTag) {
-                    int intValue = intTag.getAsInt();
-                    if (intValue < 0 || intValue >= ColorControl.values().length) {
-                        continue;
-                    }
-
-                    activeColors.add(ColorControl.values()[intValue]);
-                }
-            }
-        }
+    public void applyGuiChanges(RedstoneExtendedData guiData) {
+        // TODO: Hmmmmmm
     }
 
-    // endregion
+    @Override
+    public ConduitDataSerializer<RedstoneExtendedData> serializer() {
+        return ConduitTypes.REDSTONE_DATA_SERIALIZER.get();
+    }
 
+    // TODO: Not accessed by anything - is it that redstone extended data hasn't worked??
     @Override
     public boolean syncDataToClient() {
         return true;
@@ -86,5 +71,19 @@ public class RedstoneExtendedData implements ExtendedConduitData<RedstoneExtende
         RedstoneExtendedData redstoneExtendedData = new RedstoneExtendedData();
         redstoneExtendedData.isActive = isActive;
         return redstoneExtendedData;
+    }
+
+    public static class Serializer implements ConduitDataSerializer<RedstoneExtendedData> {
+        public static MapCodec<RedstoneExtendedData> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(
+                Codec.BOOL.fieldOf("is_active").forGetter(i -> i.isActive),
+                ColorControl.CODEC.listOf().fieldOf("active_colors").forGetter(i -> i.activeColors)
+            ).apply(instance, RedstoneExtendedData::new)
+        );
+
+        @Override
+        public MapCodec<RedstoneExtendedData> codec() {
+            return CODEC;
+        }
     }
 }

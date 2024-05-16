@@ -154,14 +154,15 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     }
 
     private void sendExtendedConduitUpdate(Function<ExtendedConduitData<?>, ExtendedConduitData<?>> map) {
+        var registryAccess = menu.getBlockEntity().getLevel().registryAccess();
+
         var currentData = getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast();
         var menu = getMenu();
+
         PacketDistributor.sendToServer(new C2SSetConduitExtendedData(
             menu.getBlockEntity().getBlockPos(),
             menu.getConduitType(),
-            // TODO: Convenience method for getting the GUI NBT.
-            map.apply(currentData)
-                .serializeGuiNBT(menu.getBlockEntity().getLevel().registryAccess())));
+            map.apply(currentData).save(registryAccess)));
     }
 
     private void addTypedButton(AbstractWidget button) {
