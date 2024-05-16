@@ -8,7 +8,7 @@ import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitMenus;
-import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
@@ -26,7 +26,7 @@ public class EIOConduits {
         EnderIO.LOGGER.atDebug().log("================ Conduits construct ==================");
         IEventBus bus = EnderIO.modEventBus;
 
-        ConduitTypes.register(bus);
+        EIOConduitTypes.register(bus);
         ConduitBlockEntities.register(bus);
         ConduitMenus.register(bus);
         ConduitBlocks.register(bus);

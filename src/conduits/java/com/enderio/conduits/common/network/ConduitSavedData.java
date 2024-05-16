@@ -6,9 +6,8 @@ import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
-import com.enderio.conduits.ConduitNBTKeys;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
-import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.types.redstone.RedstoneExtendedData;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
@@ -25,7 +24,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -304,11 +302,11 @@ public class ConduitSavedData extends SavedData {
             return false;
         }
 
-        if (!conduit.getBundle().getTypes().contains(ConduitTypes.REDSTONE.get())) {
+        if (!conduit.getBundle().getTypes().contains(EIOConduitTypes.Types.REDSTONE.get())) {
             return false;
         }
 
-        RedstoneExtendedData data = conduit.getBundle().getNodeFor(ConduitTypes.REDSTONE.get()).getExtendedConduitData().cast();
+        RedstoneExtendedData data = conduit.getBundle().getNodeFor(EIOConduitTypes.Types.REDSTONE.get()).getExtendedConduitData().cast();
         return data.isActive(color);
     }
     public static void addPotentialGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level) {

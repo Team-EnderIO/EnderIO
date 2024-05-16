@@ -9,7 +9,7 @@ import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
     public AE2ConduitType(boolean dense) {
         super(EnderIO.loc("block/conduit/" + (dense ? "dense_me" : "me")), new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8,
-            ConduitTypes.ICON_TEXTURE, new Vector2i(0, dense ? 72 : 48));
+            EIOConduitTypes.ICON_TEXTURE, new Vector2i(0, dense ? 72 : 48));
         this.dense = dense;
     }
 

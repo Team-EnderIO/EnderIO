@@ -2,19 +2,13 @@ package com.enderio.conduits.common.types.fluid;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitDataSerializer;
-import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
-import com.enderio.conduits.ConduitNBTKeys;
-import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -46,7 +40,7 @@ public class FluidExtendedData implements ExtendedConduitData<FluidExtendedData>
 
     @Override
     public ConduitDataSerializer<FluidExtendedData> serializer() {
-        return ConduitTypes.FLUID_DATA_SERIALIZER.get();
+        return EIOConduitTypes.Serializers.FLUID.get();
     }
 
     @Override

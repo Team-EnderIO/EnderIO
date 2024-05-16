@@ -2,7 +2,7 @@ package com.enderio.conduits.common.types.item;
 
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ExtendedConduitData;
-import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -34,7 +34,7 @@ public class ItemExtendedData implements ExtendedConduitData<ItemExtendedData> {
 
     @Override
     public ConduitDataSerializer<ItemExtendedData> serializer() {
-        return ConduitTypes.ITEM_DATA_SERIALIZER.get();
+        return EIOConduitTypes.Serializers.ITEM.get();
     }
 
     public ItemSidedData get(Direction direction) {

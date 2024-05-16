@@ -3,15 +3,10 @@ package com.enderio.conduits.common.types.redstone;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.misc.ColorControl;
-import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +31,7 @@ public class RedstoneExtendedData implements ExtendedConduitData<RedstoneExtende
 
     @Override
     public ConduitDataSerializer<RedstoneExtendedData> serializer() {
-        return ConduitTypes.REDSTONE_DATA_SERIALIZER.get();
+        return EIOConduitTypes.Serializers.REDSTONE.get();
     }
 
     // TODO: Not accessed by anything - is it that redstone extended data hasn't worked??

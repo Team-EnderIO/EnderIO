@@ -12,7 +12,7 @@ import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.RightClickAction;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
-import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.items.ConduitBlockItem;
 import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.conduits.common.types.redstone.RedstoneExtendedData;
@@ -477,18 +477,18 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
         return direction != null
             && level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit
-            && conduit.getBundle().getTypes().contains(ConduitTypes.REDSTONE.get())
-            && conduit.getBundle().getConnection(direction.getOpposite()).getConnectionState(ConduitTypes.REDSTONE.get()) instanceof DynamicConnectionState;
+            && conduit.getBundle().getTypes().contains(EIOConduitTypes.Types.REDSTONE.get())
+            && conduit.getBundle().getConnection(direction.getOpposite()).getConnectionState(EIOConduitTypes.Types.REDSTONE.get()) instanceof DynamicConnectionState;
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public int getSignal(BlockState pBlockState, BlockGetter level, BlockPos pos, Direction direction) {
         return level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit
-            && conduit.getBundle().getTypes().contains(ConduitTypes.REDSTONE.get())
-            && conduit.getBundle().getConnection(direction.getOpposite()).getConnectionState(ConduitTypes.REDSTONE.get()) instanceof DynamicConnectionState dyn
+            && conduit.getBundle().getTypes().contains(EIOConduitTypes.Types.REDSTONE.get())
+            && conduit.getBundle().getConnection(direction.getOpposite()).getConnectionState(EIOConduitTypes.Types.REDSTONE.get()) instanceof DynamicConnectionState dyn
             && dyn.isInsert()
-            && conduit.getBundle().getNodeFor(ConduitTypes.REDSTONE.get()).getExtendedConduitData() instanceof RedstoneExtendedData redstoneExtendedData
+            && conduit.getBundle().getNodeFor(EIOConduitTypes.Types.REDSTONE.get()).getExtendedConduitData() instanceof RedstoneExtendedData redstoneExtendedData
             && redstoneExtendedData.isActive(dyn.insert()) ? 15 : 0;
     }
     //@formatter:on

@@ -3,19 +3,14 @@ package com.enderio.conduits.common.types.energy;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
-import com.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.core.CoreNBTKeys;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -45,7 +40,7 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
 
     @Override
     public ConduitDataSerializer<EnergyExtendedData> serializer() {
-        return ConduitTypes.ENERGY_DATA_SERIALIZER.get();
+        return EIOConduitTypes.Serializers.ENERGY.get();
     }
 
     public int getCapacity() {

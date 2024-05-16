@@ -4,7 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.conduit.ClientConduitData;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.core.client.gui.widgets.CheckBox;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
@@ -50,7 +50,7 @@ public class ItemClientConduitData implements ClientConduitData<ItemExtendedData
 
     @Override
     public ResourceLocation getTextureLocation() {
-        return ConduitTypes.ICON_TEXTURE;
+        return EIOConduitTypes.ICON_TEXTURE;
     }
 
     @Override
