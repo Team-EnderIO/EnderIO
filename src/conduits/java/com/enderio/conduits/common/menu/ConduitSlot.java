@@ -64,4 +64,9 @@ public class ConduitSlot extends SlotItemHandler {
             && bundle.getTypes().size() > visibleForType
             && slotType.isAvailableFor(bundle.getTypes().get(visibleForType).getMenuData());
     }
+
+    @Override
+    public int getMaxStackSize() {
+        return 1;
+    }
 }

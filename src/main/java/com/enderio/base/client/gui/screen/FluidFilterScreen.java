@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -37,8 +36,8 @@ public class FluidFilterScreen extends EIOScreen<FilterMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new CheckBox(new Vector2i(getGuiLeft() + 34,getGuiTop() + 34), getMenu().getFilter()::isNbt, getMenu()::setNbt));
-        addRenderableWidget(new CheckBox(new Vector2i(getGuiLeft() + 34 + 20,getGuiTop() + 34), getMenu().getFilter()::isInvert, getMenu()::setInverted));
+        addRenderableWidget(new CheckBox(new Vector2i(getGuiLeft() + 110,getGuiTop() + 34), getMenu().getFilter()::isNbt, getMenu()::setNbt));
+        addRenderableWidget(new CheckBox(new Vector2i(getGuiLeft() + 110 ,getGuiTop() + 34 + 20), getMenu().getFilter()::isInvert, getMenu()::setInverted));
 
     }
 
@@ -74,18 +73,6 @@ public class FluidFilterScreen extends EIOScreen<FilterMenu> {
                     RenderSystem.setShaderColor(1, 1, 1, 1);
                 }
             }
-        }
-    }
-
-    @Override
-    protected void slotClicked(Slot pSlot, int pSlotId, int pMouseButton, ClickType pType) {
-        if (getMenu().getFilter() instanceof FluidFilterCapability filterCapability) {
-            if (pSlot != null && pSlot.index < filterCapability.getEntries().size()) {
-                if (!filterCapability.getEntries().get(pSlot.index).isEmpty()) {
-                    filterCapability.getEntries().set(pSlotId, FluidStack.EMPTY);
-                }
-            }
-            super.slotClicked(pSlot, pSlotId, pMouseButton, pType);
         }
     }
 

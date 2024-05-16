@@ -8,16 +8,16 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class FluidFilterSlot extends Slot {
 
     private static Container emptyInventory = new SimpleContainer(0);
-    private final List<FluidStack> fluids;
+    private final Consumer<FluidStack> consumer;
 
-    public FluidFilterSlot(List<FluidStack> items, int pSlot, int pX, int pY) {
+    public FluidFilterSlot(Consumer<FluidStack> consumer, int pSlot, int pX, int pY) {
         super(emptyInventory, pSlot, pX, pY);
-        this.fluids = items;
+        this.consumer = consumer;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class FluidFilterSlot extends Slot {
         IFluidHandlerItem capability = stack.getCapability(Capabilities.FluidHandler.ITEM);
         if (!stack.isEmpty() && mayPlace(stack) && capability != null) {
             FluidStack ghost = capability.getFluidInTank(0).copy();
-            fluids.set(getSlotIndex(), ghost);
+            consumer.accept(ghost);
         }
 
         return stack;

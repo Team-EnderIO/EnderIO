@@ -1,4 +1,4 @@
-package com.enderio.core.common.component;
+package com.enderio.core.common.components;
 
 // TODO: Not a fan of this pattern, remove it.
 public interface ItemEnergyStorageConfig {

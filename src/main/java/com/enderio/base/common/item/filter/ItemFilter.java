@@ -1,9 +1,9 @@
 package com.enderio.base.common.item.filter;
 
-import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.menu.ItemFilterMenu;
 import com.enderio.core.common.capability.IFilterCapability;
-import com.enderio.core.common.item.IEnderFilter;
+import com.enderio.core.common.capability.ItemFilterCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -17,22 +17,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
-public class ItemFilter extends Item implements IEnderFilter {
+public class ItemFilter extends Item {
 
     // TODO: DataComponents.
     public static ICapabilityProvider<ItemStack, Void, IFilterCapability> FILTER_PROVIDER =
-        (stack, v) -> /*stack.getData(EIOAttachments.ITEM_FILTER)*/ null;
+        (stack, v) -> new ItemFilterCapability(EIODataComponents.ITEM_FILTER, stack);
 
-    private final int size;
-
-    public ItemFilter(Properties pProperties, int size) {
+    public ItemFilter(Properties pProperties) {
         super(pProperties);
-        this.size = size;
-    }
-
-    @Override
-    public int size() {
-        return size;
     }
 
     @Override

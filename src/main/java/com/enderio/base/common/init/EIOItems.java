@@ -24,6 +24,8 @@ import com.enderio.base.common.item.tool.TravelStaffItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.model.item.GliderItemModel;
+import com.enderio.core.common.capability.FluidFilterCapability;
+import com.enderio.core.common.capability.ItemFilterCapability;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
@@ -409,17 +411,17 @@ public class EIOItems {
     // region filter
 
     public static final RegiliteItem<ItemFilter> BASIC_ITEM_FILTER = ITEM_REGISTRY
-        .registerItem("basic_filter", properties -> new ItemFilter(properties, 5))
+        .registerItem("basic_filter", properties -> new ItemFilter(properties.component(EIODataComponents.ITEM_FILTER, new ItemFilterCapability.Component(5))))
         .setTab(EIOCreativeTabs.GEAR)
         .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
 
     public static final RegiliteItem<ItemFilter> ADVANCED_ITEM_FILTER = ITEM_REGISTRY
-        .registerItem("advanced_filter", properties -> new ItemFilter(properties, 10))
+        .registerItem("advanced_filter", properties -> new ItemFilter(properties.component(EIODataComponents.ITEM_FILTER, new ItemFilterCapability.Component(10))))
         .setTab(EIOCreativeTabs.GEAR)
         .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
 
     public static final RegiliteItem<FluidFilter> BASIC_FLUID_FILTER = ITEM_REGISTRY
-        .registerItem("fluid_filter", properties -> new FluidFilter(properties, 5))
+        .registerItem("fluid_filter", properties -> new FluidFilter(properties.component(EIODataComponents.FLUID_FILTER, new FluidFilterCapability.Component(5))))
         .setTab(EIOCreativeTabs.GEAR)
         .addCapability(EIOCapabilities.Filter.ITEM, FluidFilter.FILTER_PROVIDER);
 
