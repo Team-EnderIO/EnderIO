@@ -9,16 +9,21 @@ import appeng.api.util.AECableType;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
+import com.google.common.base.Suppliers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
+import java.util.function.Supplier;
 
 public abstract class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, ExtendedConduitData<AE2InWorldConduitNodeHost> {
 
@@ -45,9 +50,16 @@ public abstract class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost,
                 ).apply(instance, Normal::new)
             );
 
+            public static final Supplier<StreamCodec<ByteBuf, AE2InWorldConduitNodeHost>> STREAM_CODEC = Suppliers.memoize(() -> StreamCodec.unit(new Normal()));
+
             @Override
             public MapCodec<AE2InWorldConduitNodeHost> codec() {
                 return CODEC;
+            }
+
+            @Override
+            public StreamCodec<RegistryFriendlyByteBuf, AE2InWorldConduitNodeHost> streamCodec() {
+                return STREAM_CODEC.get().cast();
             }
         }
     }
@@ -75,9 +87,16 @@ public abstract class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost,
                 ).apply(instance, Dense::new)
             );
 
+            public static final Supplier<StreamCodec<ByteBuf, AE2InWorldConduitNodeHost>> STREAM_CODEC = Suppliers.memoize(() -> StreamCodec.unit(new Dense()));
+
             @Override
             public MapCodec<AE2InWorldConduitNodeHost> codec() {
                 return CODEC;
+            }
+
+            @Override
+            public StreamCodec<RegistryFriendlyByteBuf, AE2InWorldConduitNodeHost> streamCodec() {
+                return STREAM_CODEC.get().cast();
             }
         }
     }
@@ -179,5 +198,4 @@ public abstract class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost,
         }
         level.invalidateCapabilities(pos);
     }
-
 }

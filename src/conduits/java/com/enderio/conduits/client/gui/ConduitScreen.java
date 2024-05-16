@@ -187,8 +187,9 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     private ConnectionState getConnectionState() {
         return getConnectionState(menu.getConduitType());
     }
+
     private ConnectionState getConnectionState(ConduitType<?> type) {
-        return getBundle().getConnection(menu.getDirection()).getConnectionState(type);
+        return getBundle().getConnection(menu.getDirection()).getConnectionState(getBundle(), type);
     }
 
     private ConduitBundle getBundle() {

@@ -23,7 +23,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -66,7 +65,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     private final ConduitShape shape = new ConduitShape();
 
-    private final ConduitBundle bundle;
+    private ConduitBundle bundle;
     @UseOnly(LogicalSide.CLIENT) private ConduitBundle clientBundle;
 
     private UpdateState checkConnection = UpdateState.NONE;
@@ -80,7 +79,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         bundle = new ConduitBundle(this::scheduleTick, worldPosition);
         clientBundle = bundle.deepCopy();
 
-        addDataSlot(ConduitBundleCompatibilityDataSlotType.DATA_SLOT_TYPE.create(this::getBundle));
+        addDataSlot(ConduitBundle.DATA_SLOT_TYPE.create(this::getBundle, b -> bundle = b));
         addAfterSyncRunnable(this::updateClient);
     }
 
@@ -101,8 +100,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         var connection = bundle.getConnection(direction);
 
         // Sanity check, the client shouldn't do this, but just to make sure there's no confusion.
-        if (connection.getConnectionState(conduitType) instanceof DynamicConnectionState) {
-            connection.setConnectionState(conduitType, connectionState);
+        if (connection.getConnectionState(bundle, conduitType) instanceof DynamicConnectionState) {
+            connection.setConnectionState(bundle, conduitType, connectionState);
 
             pushIOState(direction, bundle.getNodeFor(conduitType), connectionState);
             level.invalidateCapabilities(worldPosition);
@@ -114,9 +113,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     @UseOnly(LogicalSide.SERVER)
     public <T extends ExtendedConduitData<T>> void handleExtendedDataUpdate(ConduitType<T> conduitType, Tag compoundTag) {
-        var data = ExtendedConduitData.<T>parse(level.registryAccess(), compoundTag);
+        var clientData = ExtendedConduitData.<T>parse(level.registryAccess(), compoundTag);
+
         var node = getBundle().getNodeFor(conduitType);
-        node.setExtendedConduitData(data);
+        node.getExtendedConduitData().applyGuiChanges(clientData);
     }
 
     // endregion
@@ -184,12 +184,14 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     if (shouldActivate && type.getTicker().hasConnectionDelay()) {
                         checkConnection = checkConnection.activate();
                     }
-                    ConnectionState connectionState = bundle.getConnection(direction).getConnectionState(type);
+
+                    ConduitConnection connection = bundle.getConnection(direction);
+                    ConnectionState connectionState = connection.getConnectionState(bundle, type);
                     if (connectionState instanceof DynamicConnectionState dyn) {
                         if (!type.getTicker().canConnectTo(level, pos, direction)) {
-                            getBundle().getNodeFor(type).clearState(direction);
+                            bundle.getNodeFor(type).clearState(direction);
                             dropConnection(dyn);
-                            getBundle().getConnection(direction).setConnectionState(type, StaticConnectionStates.DISCONNECTED);
+                            connection.setConnectionState(bundle, type, StaticConnectionStates.DISCONNECTED);
                             updateShape();
                             updateConnectionToData(type);
                         }
@@ -204,7 +206,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
         super.saveAdditional(tag, lookupProvider);
-        tag.put(ConduitNBTKeys.CONDUIT_BUNDLE, bundle.serializeNBT(lookupProvider));
+        tag.put(ConduitNBTKeys.CONDUIT_BUNDLE, bundle.save(lookupProvider));
 
         ListTag listTag = new ListTag();
         for (ConduitType<?> type : bundle.getTypes()) {
@@ -219,7 +221,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
         super.loadAdditional(tag, lookupProvider);
-        bundle.deserializeNBT(lookupProvider, tag.getCompound(ConduitNBTKeys.CONDUIT_BUNDLE));
+
+        bundle = ConduitBundle.parse(lookupProvider, tag.getCompound(ConduitNBTKeys.CONDUIT_BUNDLE));
+        bundle.setOnChangedRunnable(this::scheduleTick);
+
         lazyNodeNBT = tag.getList(ConduitNBTKeys.CONDUIT_EXTRA_DATA, Tag.TAG_COMPOUND);
         conduitItemHandler.deserializeNBT(lookupProvider, tag.getCompound(CONDUIT_INV_KEY));
     }
@@ -309,7 +314,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 .getExtendedConduitData()
                 .updateConnection(Arrays
                     .stream(Direction.values())
-                    .filter(streamDir -> getBundle().getConnection(streamDir).getConnectionState(type) != StaticConnectionStates.DISABLED)
+                    .filter(streamDir -> bundle.getConnection(streamDir).getConnectionState(bundle, type) != StaticConnectionStates.DISABLED)
                     .collect(Collectors.toSet()));
         }
     }
@@ -329,7 +334,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         if (shouldDrop && !level.isClientSide()) {
             dropItem(type.getConduitItem().getDefaultInstance());
             for (Direction dir : Direction.values()) {
-                if (getBundle().getConnection(dir).getConnectionState(type) instanceof DynamicConnectionState dyn) {
+                if (bundle.getConnection(dir).getConnectionState(bundle, type) instanceof DynamicConnectionState dyn) {
                     dropConnection(dyn);
                 }
             }
@@ -435,7 +440,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             return false;
         }
 
-        if (forceMerge || bundle.getConnection(direction).getConnectionState(type) != StaticConnectionStates.DISABLED) {
+        if (forceMerge || bundle.getConnection(direction).getConnectionState(bundle, type) != StaticConnectionStates.DISABLED) {
             connect(direction, type);
             return true;
         }
@@ -658,7 +663,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             if ((data.slotType() == SlotType.FILTER_EXTRACT && conduitData.hasFilterExtract()) || (data.slotType() == SlotType.FILTER_INSERT
                 && conduitData.hasFilterInsert()) || (data.slotType() == SlotType.UPGRADE_EXTRACT && conduitData.hasUpgrade())) {
                 connection.setItem(data.slotType(), data.conduitIndex(), stack);
-                if (connection.getConnectionState(iConduitType) instanceof DynamicConnectionState dynamicConnectionState) {
+                if (connection.getConnectionState(bundle, iConduitType) instanceof DynamicConnectionState dynamicConnectionState) {
                     NodeIdentifier<?> node = bundle.getNodeForTypeExact(iConduitType);
                     if (node != null) {
                         pushIOState(data.direction(), node, dynamicConnectionState);

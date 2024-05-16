@@ -7,6 +7,10 @@ import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.level.redstone.Redstone;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,18 +30,11 @@ public class RedstoneExtendedData implements ExtendedConduitData<RedstoneExtende
 
     @Override
     public void applyGuiChanges(RedstoneExtendedData guiData) {
-        // TODO: Hmmmmmm
     }
 
     @Override
     public ConduitDataSerializer<RedstoneExtendedData> serializer() {
         return EIOConduitTypes.Serializers.REDSTONE.get();
-    }
-
-    // TODO: Not accessed by anything - is it that redstone extended data hasn't worked??
-    @Override
-    public boolean syncDataToClient() {
-        return true;
     }
 
     public boolean isActive() {
@@ -76,9 +73,16 @@ public class RedstoneExtendedData implements ExtendedConduitData<RedstoneExtende
             ).apply(instance, RedstoneExtendedData::new)
         );
 
+        public static StreamCodec<ByteBuf, RedstoneExtendedData> STREAM_CODEC = StreamCodec.unit(new RedstoneExtendedData());
+
         @Override
         public MapCodec<RedstoneExtendedData> codec() {
             return CODEC;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, RedstoneExtendedData> streamCodec() {
+            return STREAM_CODEC.cast();
         }
     }
 }
