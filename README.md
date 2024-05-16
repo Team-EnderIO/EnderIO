@@ -70,6 +70,19 @@ Some features may be missing or work differently, however we are working to re-i
 
 The Ender IO Team are official Akliz partners! Akliz provides high-performance game hosting for games like Minecraft, Valheim, Satisfactory, ARK and more! Use our [coupon code](https://www.akliz.net/enderio) for 20% off your first month!
 
+### Supported Minecraft Versions
+
+| Minecraft Version | Ender IO Version(s) | Support Status |
+| ----------------- | ------------------- | -------------- |
+| < 1.20.1          | < 6.x               | ❌             |
+| 1.20.1            | 6.x                 | ✳️             |
+| 1.20.6            | 7.x                 | 🚧             |
+
+- ❌ - Not Supported; no bug fixes or new features.
+- 🚧 - Work in Progress; not ready for release.
+- ✳️ - Long Term Support; receives changes through backports only.
+- ✅ - In Support; the active version, receiving all bugfixes and features directly.
+
 <!-- GETTING STARTED -->
 ## Getting Started
 
