@@ -281,6 +281,7 @@ public class ConduitSavedData extends SavedData {
         for (var entry: networks.entrySet()) {
             entry.getValue().removeIf(graph -> graph.getObjects().isEmpty() || graph.getObjects().iterator().next().getGraph() != graph);
         }
+
         for (var entry : networks.entrySet()) {
             for (Graph<Mergeable.Dummy> graph : entry.getValue()) {
                 if (serverLevel.getGameTime() % entry.getKey().getTicker().getTickRate() == EnderIORegistries.CONDUIT_TYPES.getId(entry.getKey()) % entry
@@ -309,6 +310,7 @@ public class ConduitSavedData extends SavedData {
         RedstoneExtendedData data = conduit.getBundle().getNodeFor(EIOConduitTypes.Types.REDSTONE.get()).getExtendedConduitData().cast();
         return data.isActive(color);
     }
+
     public static void addPotentialGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level) {
         get(level).addPotentialGraph(type, graph);
     }

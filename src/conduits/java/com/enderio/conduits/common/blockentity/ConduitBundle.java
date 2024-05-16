@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.blockentity;
 
+import com.enderio.EnderIO;
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
@@ -7,6 +8,9 @@ import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.client.ConduitClientSetup;
 import com.enderio.api.conduit.connection.DynamicConnectionState;
+import com.enderio.core.common.network.NetworkDataSlot;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -15,6 +19,9 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -31,32 +38,112 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
-public final class ConduitBundle implements INBTSerializable<CompoundTag> {
+public final class ConduitBundle {
 
     //Do not change this value unless you fix the OffsetHelper
     public static final int MAX_CONDUIT_TYPES = 9;
 
-    private final Map<Direction, ConduitConnection> connections = new EnumMap<>(Direction.class);
+    public static Codec<ConduitBundle> CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            BlockPos.CODEC.fieldOf("pos").forGetter(i -> i.pos),
+            EnderIORegistries.CONDUIT_TYPES.byNameCodec().listOf()
+                .fieldOf("types").forGetter(i -> i.types),
+            Codec.unboundedMap(Direction.CODEC, ConduitConnection.CODEC)
+                .fieldOf("connections").forGetter(i -> i.connections),
+            Codec.unboundedMap(Direction.CODEC, BlockState.CODEC)
+                .fieldOf("facades").forGetter(i -> i.facadeTextures),
+            Codec.unboundedMap(EnderIORegistries.CONDUIT_TYPES.byNameCodec(), NodeIdentifier.CODEC)
+                .fieldOf("nodes").forGetter(i -> i.nodes)
+        ).apply(instance, ConduitBundle::new)
+    );
 
+//    public static Codec<ConduitBundle> CLIENT_CODEC = RecordCodecBuilder.create(
+//        instance -> instance.group(
+//            BlockPos.CODEC.fieldOf("pos").forGetter(i -> i.pos),
+//            EnderIORegistries.CONDUIT_TYPES.byNameCodec().listOf()
+//                .fieldOf("types").forGetter(i -> i.types),
+//            Codec.unboundedMap(Direction.CODEC, ConduitConnection.CODEC)
+//                .fieldOf("connections").forGetter(i -> i.connections),
+//            Codec.unboundedMap(Direction.CODEC, BlockState.CODEC)
+//                .fieldOf("facades").forGetter(i -> i.facadeTextures)
+//        ).apply(instance, ConduitBundle::new)
+//    );
+
+    // TODO: Facades.
+    public static StreamCodec<RegistryFriendlyByteBuf, ConduitBundle> STREAM_CODEC = StreamCodec.composite(
+        BlockPos.STREAM_CODEC,
+        i -> i.pos,
+        ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_TYPES)
+            .apply(ByteBufCodecs.list()),
+        i -> i.types,
+        ByteBufCodecs.map(HashMap::new, Direction.STREAM_CODEC, ConduitConnection.STREAM_CODEC),
+        i -> i.connections,
+        //ByteBufCodecs.map(HashMap::new, Direction.STREAM_CODEC, BlockState.STREAM_CODEC),
+        //i -> i.facadeTextures,
+        ByteBufCodecs.map(HashMap::new, ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_TYPES), NodeIdentifier.STREAM_CODEC),
+        i -> i.nodes,
+        ConduitBundle::new
+    );
+
+    public static NetworkDataSlot.CodecType<ConduitBundle> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(CODEC, STREAM_CODEC);
+
+    private final Map<Direction, ConduitConnection> connections = new EnumMap<>(Direction.class);
     private final List<ConduitType<?>> types = new ArrayList<>();
 
     //fill back after world save
     private final Map<ConduitType<?>, NodeIdentifier<?>> nodes = new HashMap<>();
-    private final Runnable scheduleSync;
     private final BlockPos pos;
 
     private final Map<Direction, BlockState> facadeTextures = new EnumMap<>(Direction.class);
 
-    private int dataVersion = Integer.MIN_VALUE;
+    @Nullable
+    private Runnable onChangedRunnable;
 
-    public ConduitBundle(Runnable scheduleSync, BlockPos pos) {
-        this.scheduleSync = scheduleSync;
+    public ConduitBundle(Runnable onChanged, BlockPos pos) {
+        this.onChangedRunnable = onChanged;
         for (Direction value : Direction.values()) {
-            connections.put(value, new ConduitConnection(this));
+            connections.put(value, new ConduitConnection());
         }
         this.pos = pos;
+    }
+
+    private ConduitBundle(BlockPos pos, List<ConduitType<?>> types, Map<Direction, ConduitConnection> connections) {
+        this(pos, types, connections, Map.of(), Map.of());
+    }
+
+//    private ConduitBundle(BlockPos pos, List<ConduitType<?>> types, Map<Direction, ConduitConnection> connections, Map<Direction, BlockState> facadeTextures) {
+//        this(pos, types, connections, facadeTextures, Map.of());
+//    }
+
+    private ConduitBundle(BlockPos pos, List<ConduitType<?>> types, Map<Direction, ConduitConnection> connections, Map<ConduitType<?>, NodeIdentifier<?>> nodes) {
+        this(pos, types, connections, Map.of(), nodes);
+    }
+
+    private ConduitBundle(
+        BlockPos pos,
+        List<ConduitType<?>> types,
+        Map<Direction, ConduitConnection> connections,
+        Map<Direction, BlockState> facadeTextures,
+        Map<ConduitType<?>, NodeIdentifier<?>> nodes) {
+
+        this.pos = pos;
+        this.types.addAll(types);
+        this.connections.putAll(connections);
+        this.facadeTextures.putAll(facadeTextures);
+        this.nodes.putAll(nodes);
+    }
+
+    public void setOnChangedRunnable(Runnable onChangedRunnable) {
+        this.onChangedRunnable = onChangedRunnable;
+    }
+
+    private void onChanged() {
+        if (onChangedRunnable != null) {
+            onChangedRunnable.run();
+        }
     }
 
     /**
@@ -91,8 +178,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
             node.getExtendedConduitData().onCreated(type, level, pos, player);
             connections.values().forEach(connection -> connection.disconnectType(index));
-            scheduleSync.run();
-            dataVersion++;
+            onChanged();
 
             return new RightClickAction.Upgrade(first.get());
         }
@@ -123,8 +209,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             }
         }
 
-        scheduleSync.run();
-        dataVersion++;
+        onChanged();
         return new RightClickAction.Insert();
     }
 
@@ -160,142 +245,23 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         }
 
         types.remove(index);
-        scheduleSync.run();
-        dataVersion++;
+        onChanged();
         return types.isEmpty();
-    }
-
-    // region Serialization
-
-    private static final String KEY_TYPES = "Types";
-    private static final String KEY_CONNECTIONS = "Connections";
-    private static final String KEY_FACADES = "Facades";
-    private static final String KEY_NODE_TYPE = "NodeType";
-    private static final String KEY_NODE_DATA = "NodeData";
-    private static final String KEY_NODES = "Nodes";
-    private static final String KEY_DATA = "ExtendedDataBackup";
-
-    @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
-        CompoundTag tag = new CompoundTag();
-        ListTag listTag = new ListTag();
-        for (ConduitType<?> type : types) {
-            listTag.add(StringTag.valueOf(EnderIORegistries.CONDUIT_TYPES.getKey(type).toString()));
-        }
-        tag.put(KEY_TYPES, listTag);
-        CompoundTag connectionsTag = new CompoundTag();
-        for (Direction dir : Direction.values()) {
-            connectionsTag.put(dir.getName(), connections.get(dir).serializeNBT(lookupProvider));
-        }
-        tag.put(KEY_CONNECTIONS, connectionsTag);
-        CompoundTag facades = new CompoundTag();
-        for (Map.Entry<Direction, BlockState> entry : facadeTextures.entrySet()) {
-            Tag blockStateTag = BlockState.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), entry.getValue()).result().orElse(new CompoundTag());
-            facades.put(entry.getKey().getName(), blockStateTag);
-        }
-        tag.put(KEY_FACADES, facades);
-        if (EffectiveSide.get().isServer()) {
-            ListTag nodeTag = new ListTag();
-            for (var entry : nodes.entrySet()) {
-                var data = entry.getValue().getExtendedConduitData().save(lookupProvider);
-
-                CompoundTag dataTag = new CompoundTag();
-                dataTag.putString(KEY_NODE_TYPE, EnderIORegistries.CONDUIT_TYPES.getKey(entry.getKey()).toString());
-                dataTag.put(KEY_NODE_DATA, data);
-                nodeTag.add(dataTag);
-            }
-            if (!nodeTag.isEmpty()) {
-                tag.put(KEY_NODES, nodeTag);
-            }
-        }
-        return tag;
-    }
-
-    @Override
-    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-        types.clear();
-        ListTag typesTag = nbt.getList(KEY_TYPES, Tag.TAG_STRING);
-        //this is used to shift connections back if a ConduitType was removed from
-        List<Integer> invalidTypes = new ArrayList<>();
-        for (int i = 0; i < typesTag.size(); i++) {
-            StringTag stringTag = (StringTag) typesTag.get(i);
-            ConduitType<?> type = EnderIORegistries.CONDUIT_TYPES.get(ResourceLocation.tryParse(stringTag.getAsString()));
-            if (type == null) {
-                invalidTypes.add(i);
-                continue;
-            }
-            types.add(type);
-        }
-        CompoundTag connectionsTag = nbt.getCompound(KEY_CONNECTIONS);
-        for (Direction dir : Direction.values()) {
-            connections.get(dir).deserializeNBT(lookupProvider, connectionsTag.getCompound(dir.getName()));
-            for (Integer invalidType : invalidTypes) {
-                connections.get(dir).removeType(invalidType);
-            }
-            //remove backwards to not shift list further
-            for (int i = invalidTypes.size() - 1; i >= 0; i--) {
-                connections.get(dir).removeType(invalidTypes.get(i));
-            }
-        }
-        facadeTextures.clear();
-        CompoundTag facades = nbt.getCompound(KEY_FACADES);
-        for (Direction direction : Direction.values()) {
-            if (facades.contains(direction.getName())) {
-                facadeTextures.put(direction, BlockState.CODEC
-                    .decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), facades.getCompound(direction.getName()))
-                    .getPartialOrThrow()
-                    .getFirst());
-            }
-        }
-        for (Map.Entry<Direction, BlockState> entry : facadeTextures.entrySet()) {
-            Tag blockStateTag = BlockState.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), entry.getValue()).result().orElse(new CompoundTag());
-            facades.put(entry.getKey().getName(), blockStateTag);
-        }
-        nodes.entrySet().removeIf(entry -> !types.contains(entry.getKey()));
-        if (EffectiveSide.get().isServer()) {
-            for (ConduitType<?> type : types) {
-                if (nodes.containsKey(type)) {
-                    for (Direction direction : Direction.values()) {
-                        if (getConnection(direction).getConnectionState(type) instanceof DynamicConnectionState dyn) {
-                            ConduitBlockEntity.pushIOState(direction, nodes.get(type), dyn);
-                        }
-                    }
-                }
-            }
-        } else {
-            types.forEach(type -> {
-                if (!nodes.containsKey(type)) {
-                    nodes.put(type, new NodeIdentifier<>(pos, type.createExtendedConduitData(ConduitClientSetup.getClientLevel(), pos)));
-                }
-            });
-
-            if (nbt.contains(KEY_NODES)) {
-                ListTag nodesTag = nbt.getList(KEY_NODES, Tag.TAG_COMPOUND);
-                for (Tag tag : nodesTag) {
-                    CompoundTag cmp = (CompoundTag) tag;
-
-                    var type = EnderIORegistries.CONDUIT_TYPES.get(new ResourceLocation(cmp.getString(KEY_NODE_TYPE)));
-                    loadExtendedData(lookupProvider, type, cmp.getCompound(KEY_NODE_DATA));
-                }
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends ExtendedConduitData<T>> void loadExtendedData(
-        HolderLookup.Provider lookupProvider, ConduitType<T> conduitType, CompoundTag compoundTag) {
-
-        var data = ExtendedConduitData.<T>parse(lookupProvider, compoundTag);
-        var node = (NodeIdentifier<T>) nodes.get(conduitType);
-
-        node.setExtendedConduitData(data);
     }
 
     // endregion
 
+    // region Connections
+
     public ConduitConnection getConnection(Direction direction) {
         return connections.get(direction);
     }
+
+    public void setConnection(Direction direction, ConduitConnection connection) {
+        connections.put(direction, connection);
+    }
+
+    // endregion
 
     public List<ConduitType<?>> getTypes() {
         return types;
@@ -311,21 +277,18 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
     public void setFacade(BlockState facade, Direction direction) {
         facadeTextures.put(direction, facade);
-        dataVersion++;
     }
 
     public void connectTo(Level level, BlockPos pos, Direction direction, ConduitType<?> type, boolean end) {
         getConnection(direction).connectTo(level, pos, getNodeFor(type), direction, type, getTypeIndex(type), end);
-        scheduleSync.run();
-        dataVersion++;
+        onChanged();
     }
 
     public boolean disconnectFrom(Direction direction, ConduitType<?> type) {
         for (int i = 0; i < types.size(); i++) {
             if (type.getTicker().canConnectTo(type, types.get(i))) {
                 getConnection(direction).tryDisconnect(i);
-                scheduleSync.run();
-                dataVersion++;
+                onChanged();
                 return true;
             }
         }
@@ -360,7 +323,6 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                 }
             }
         }
-        dataVersion++;
     }
 
     public <T extends ExtendedConduitData<T>> void removeNodeFor(Level level, ConduitType<T> type) {
@@ -370,7 +332,6 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             node.getGraph().remove(node);
         }
         nodes.remove(type);
-        dataVersion++;
     }
 
     public boolean hasType(ConduitType<?> type) {
@@ -391,19 +352,24 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         throw new IllegalStateException("no conduit matching type in bundle");
     }
 
-    public int getDataVersion() {
-        return dataVersion;
+    @Override
+    public int hashCode() {
+        return Objects.hash(connections, types, nodes, facadeTextures);
     }
 
-    public void incrementDataVersion() {
-        dataVersion++;
+    public Tag save(HolderLookup.Provider lookupProvider) {
+        return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
+    }
+
+    public static ConduitBundle parse(HolderLookup.Provider lookupProvider, Tag tag) {
+        return CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow().getFirst();
     }
 
     @UseOnly(LogicalSide.CLIENT)
     public ConduitBundle deepCopy() {
         var bundle = new ConduitBundle(() -> {}, pos);
         bundle.types.addAll(types);
-        connections.forEach((dir, connection) -> bundle.connections.put(dir, connection.deepCopy(bundle)));
+        connections.forEach((dir, connection) -> bundle.connections.put(dir, connection.deepCopy()));
         bundle.facadeTextures.putAll(facadeTextures);
         nodes.forEach((type, node) -> bundle.setNodeFor(type, new NodeIdentifier<>(node.getPos(), node.getExtendedConduitData().deepCopy())));
         return bundle;

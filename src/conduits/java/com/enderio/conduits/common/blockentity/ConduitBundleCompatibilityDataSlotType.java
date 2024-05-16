@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 // TODO: This is a temporary compatibility layer to fit the old serialization method into the new data slots.
@@ -14,9 +15,9 @@ public class ConduitBundleCompatibilityDataSlotType implements NetworkDataSlot.T
 
     public static ConduitBundleCompatibilityDataSlotType DATA_SLOT_TYPE = new ConduitBundleCompatibilityDataSlotType();
 
-    public NetworkDataSlot<ConduitBundle> create(Supplier<ConduitBundle> getter) {
+    public NetworkDataSlot<ConduitBundle> create(Supplier<ConduitBundle> getter, Consumer<ConduitBundle> setter) {
         // Setter is no-op as everything happens in-place.
-        return new NetworkDataSlot<>(this, getter, v -> {});
+        return new NetworkDataSlot<>(this, getter, setter);
     }
 
     private ConduitBundleCompatibilityDataSlotType() {
@@ -24,22 +25,17 @@ public class ConduitBundleCompatibilityDataSlotType implements NetworkDataSlot.T
 
     @Override
     public int hash(ConduitBundle value) {
-        return value.getDataVersion();
+        return value.hashCode();
     }
 
     @Override
     public Tag save(HolderLookup.Provider lookupProvider, ConduitBundle value) {
-        return value.serializeNBT(lookupProvider);
+        return value.save(lookupProvider);
     }
 
     @Override
     public ConduitBundle parse(HolderLookup.Provider lookupProvider, Tag tag, Supplier<ConduitBundle> currentValueSupplier) {
-        var value = currentValueSupplier.get();
-        if (tag instanceof CompoundTag compoundTag) {
-            value.deserializeNBT(lookupProvider, compoundTag);
-        }
-
-        return value;
+        return ConduitBundle.parse(lookupProvider, tag);
     }
 
     @Override

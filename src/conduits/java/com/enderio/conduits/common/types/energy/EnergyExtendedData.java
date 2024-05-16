@@ -7,12 +7,17 @@ import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedData> {
@@ -144,9 +149,16 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
             ).apply(instance, EnergyExtendedData::new)
         );
 
+        public static StreamCodec<RegistryFriendlyByteBuf, EnergyExtendedData> STREAM_CODEC = StreamCodec.unit(new EnergyExtendedData());
+
         @Override
         public MapCodec<EnergyExtendedData> codec() {
             return CODEC;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, EnergyExtendedData> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

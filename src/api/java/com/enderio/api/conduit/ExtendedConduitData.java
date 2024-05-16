@@ -6,12 +6,16 @@ import com.enderio.api.travel.TravelTarget;
 import com.enderio.api.travel.TravelTargetSerializer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.LogicalSide;
@@ -22,12 +26,17 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 /**
- * used for special single use things like RoundRobin for ItemConduits or proxying Caps
+ * used for special single use things like RoundRobin for ItemConduits or proxying Caps.
+ *
+ * @apiNote Must implement hashCode() correctly to properly sync over the network - provided there is any data you send to the client.
  */
 public interface ExtendedConduitData<T extends ExtendedConduitData<T>> {
 
     Codec<ExtendedConduitData<?>> CODEC = EnderIORegistries.CONDUIT_DATA_SERIALIZERS.byNameCodec()
         .dispatch(ExtendedConduitData::serializer, ConduitDataSerializer::codec);
+
+    StreamCodec<RegistryFriendlyByteBuf, ExtendedConduitData<?>> STREAM_CODEC = ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_DATA_SERIALIZERS)
+        .dispatch(ExtendedConduitData::serializer, ConduitDataSerializer::streamCodec);
 
     /**
      * default impl for stuff that don't need an impl
@@ -44,12 +53,18 @@ public interface ExtendedConduitData<T extends ExtendedConduitData<T>> {
 
         public static class Serializer implements ConduitDataSerializer<EmptyExtendedConduitData> {
             public static MapCodec<EmptyExtendedConduitData> CODEC = MapCodec.unit(EmptyExtendedConduitData::new);
+            public static StreamCodec<ByteBuf, EmptyExtendedConduitData> STREAM_CODEC = StreamCodec.unit(new EmptyExtendedConduitData());
 
             public static Serializer INSTANCE = new Serializer();
 
             @Override
             public MapCodec<EmptyExtendedConduitData> codec() {
                 return CODEC;
+            }
+
+            @Override
+            public StreamCodec<RegistryFriendlyByteBuf, EmptyExtendedConduitData> streamCodec() {
+                return STREAM_CODEC.cast();
             }
         }
     }

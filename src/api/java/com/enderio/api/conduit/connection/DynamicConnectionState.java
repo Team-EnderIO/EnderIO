@@ -6,6 +6,8 @@ import com.enderio.api.conduit.SlotType;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.network.MassiveStreamCodec;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -29,6 +31,20 @@ public record DynamicConnectionState(
     @UseOnly(LogicalSide.SERVER) ItemStack filterExtract,
     @UseOnly(LogicalSide.SERVER) ItemStack upgradeExtract
 ) implements ConnectionState {
+
+    public static Codec<DynamicConnectionState> CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            Codec.BOOL.fieldOf("is_insert").forGetter(DynamicConnectionState::isInsert),
+            ColorControl.CODEC.fieldOf("insert_channel").forGetter(DynamicConnectionState::insert),
+            Codec.BOOL.fieldOf("is_extract").forGetter(DynamicConnectionState::isExtract),
+            ColorControl.CODEC.fieldOf("extract_channel").forGetter(DynamicConnectionState::extract),
+            RedstoneControl.CODEC.fieldOf("redstone_control").forGetter(DynamicConnectionState::control ),
+            ColorControl.CODEC.fieldOf("redstone_channel").forGetter(DynamicConnectionState::redstoneChannel),
+            ItemStack.OPTIONAL_CODEC.fieldOf("filter_insert").forGetter(DynamicConnectionState::filterInsert),
+            ItemStack.OPTIONAL_CODEC.fieldOf("filter_extract").forGetter(DynamicConnectionState::filterExtract),
+            ItemStack.OPTIONAL_CODEC.fieldOf("upgrade_extract").forGetter(DynamicConnectionState::upgradeExtract)
+        ).apply(instance, DynamicConnectionState::new)
+    );
 
     public static StreamCodec<RegistryFriendlyByteBuf, DynamicConnectionState> STREAM_CODEC = MassiveStreamCodec.composite(
         ByteBufCodecs.BOOL,

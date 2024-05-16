@@ -10,14 +10,30 @@ import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphObject<Mergeable.Dummy> {
+
+    public static final Codec<NodeIdentifier<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        BlockPos.CODEC.fieldOf("pos").forGetter(NodeIdentifier::getPos),
+        ExtendedConduitData.CODEC.fieldOf("data").forGetter(NodeIdentifier::getExtendedConduitData)
+    ).apply(instance, NodeIdentifier::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, NodeIdentifier<?>> STREAM_CODEC = StreamCodec.composite(
+        BlockPos.STREAM_CODEC,
+        NodeIdentifier::getPos,
+        ExtendedConduitData.STREAM_CODEC,
+        NodeIdentifier::getExtendedConduitData,
+        NodeIdentifier::new
+    );
 
     private final BlockPos pos;
 
@@ -26,11 +42,6 @@ public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphOb
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
     private T extendedConduitData;
     private final Map<Direction, DynamicConnectionState> connectionStates = new EnumMap<>(Direction.class);
-
-    public static final Codec<NodeIdentifier<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        BlockPos.CODEC.fieldOf("pos").forGetter(NodeIdentifier::getPos),
-        ExtendedConduitData.CODEC.fieldOf("data").forGetter(NodeIdentifier::getExtendedConduitData)
-    ).apply(instance, NodeIdentifier::new));
 
     @ApiStatus.Internal
     public NodeIdentifier(BlockPos pos, T extendedConduitData) {
@@ -82,6 +93,11 @@ public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphOb
     @Nullable
     public DynamicConnectionState getConnectionState(Direction direction) {
         return connectionStates.get(direction);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pos, extendedConduitData);
     }
 
     public record IOState(Optional<ColorControl> insert, Optional<ColorControl> extract, RedstoneControl control, ColorControl redstoneChannel) {
