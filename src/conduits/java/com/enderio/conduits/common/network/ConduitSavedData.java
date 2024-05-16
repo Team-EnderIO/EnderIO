@@ -19,6 +19,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -62,7 +63,6 @@ public class ConduitSavedData extends SavedData {
     private static final String KEY_TYPE = "Type";
     private static final String KEY_GRAPH_OBJECTS = "GraphObjects";
     private static final String KEY_GRAPH_CONNECTIONS = "GraphConnections";
-    private static final String KEY_DATA = "Data";
 
     // Deserialization
     private ConduitSavedData(Level level, CompoundTag nbt, HolderLookup.Provider lookupProvider) {
@@ -85,12 +85,11 @@ public class ConduitSavedData extends SavedData {
 
                     for (Tag tag2 : graphObjectsTag) {
                         CompoundTag nodeTag = (CompoundTag) tag2;
-                        CompoundTag posTag = nodeTag.getCompound(ConduitNBTKeys.BLOCK_POS);
-                        BlockPos pos = BlockEntity.getPosFromTag(posTag);
-                        NodeIdentifier<?> node = new NodeIdentifier<>(pos, value.createExtendedConduitData(level, pos));
-                        node.getExtendedConduitData().deserializeNBT(lookupProvider, nodeTag.getCompound(KEY_DATA));
+                        var node = NodeIdentifier.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nodeTag)
+                            .getOrThrow().getFirst();
+
                         graphObjects.add(node);
-                        putUnloadedNodeIdentifier(value, pos, node);
+                        putUnloadedNodeIdentifier(value, node.getPos(), node);
                     }
 
                     for (Tag tag2 : graphConnectionsTag) {
@@ -187,14 +186,11 @@ public class ConduitSavedData extends SavedData {
             }
 
             if (graphObject instanceof NodeIdentifier<?> nodeIdentifier) {
-                CompoundTag dataTag = new CompoundTag();
-                CompoundTag posTag = new CompoundTag();
-                dataTag.put(ConduitNBTKeys.BLOCK_POS, posTag);
-                posTag.putInt("x", nodeIdentifier.getPos().getX());
-                posTag.putInt("y", nodeIdentifier.getPos().getY());
-                posTag.putInt("z", nodeIdentifier.getPos().getZ());
-                dataTag.put(KEY_DATA, nodeIdentifier.getExtendedConduitData().serializeNBT(lookupProvider));
-                graphObjectsTag.add(dataTag);
+                var tag = NodeIdentifier.CODEC
+                    .encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nodeIdentifier)
+                    .getOrThrow();
+
+                graphObjectsTag.add(tag);
             } else {
                 throw new ClassCastException("graphObject was not of type nodeIdentifier");
             }

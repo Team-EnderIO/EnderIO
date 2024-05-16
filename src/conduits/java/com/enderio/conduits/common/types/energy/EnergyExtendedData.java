@@ -1,8 +1,13 @@
 package com.enderio.conduits.common.types.energy;
 
+import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.core.CoreNBTKeys;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -17,45 +22,31 @@ import java.util.Map;
 
 public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedData> {
 
-    private final Map<Direction, EnergySidedData> energySidedData = new EnumMap<>(Direction.class);
-
+    private final Map<Direction, EnergySidedData> energySidedData;
 
     private int capacity = 500;
     private int stored = 0;
 
+    public EnergyExtendedData() {
+        this.energySidedData = new EnumMap<>(Direction.class);
+    }
+
+    private EnergyExtendedData(Map<Direction, EnergySidedData> energySidedData, int capacity, int stored) {
+        this.energySidedData = energySidedData;
+        this.capacity = capacity;
+        this.stored = stored;
+    }
+
     private IEnergyStorage selfCap = new EnergyExtendedData.ConduitEnergyStorage(this);
 
-
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
-        CompoundTag tag = new CompoundTag();
-        for (Direction direction: Direction.values()) {
-            @Nullable EnergySidedData sidedData = energySidedData.get(direction);
-            if (sidedData != null) {
-                tag.put(direction.name(), sidedData.toNbt());
-            }
-        }
-        tag.putInt(CoreNBTKeys.ENERGY_MAX_STORED, capacity);
-        tag.putInt(CoreNBTKeys.ENERGY_STORED, stored);
-        return tag;
+    public void applyGuiChanges(EnergyExtendedData guiData) {
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-        energySidedData.clear();
-        for (Direction direction: Direction.values()) {
-            if (nbt.contains(direction.name())) {
-                energySidedData.put(direction, EnergySidedData.fromNbt(nbt.getCompound(direction.name())));
-            }
-        }
-        if (nbt.contains(CoreNBTKeys.ENERGY_MAX_STORED)) {
-            capacity = Math.max(nbt.getInt(CoreNBTKeys.ENERGY_MAX_STORED), 500);
-        }
-        if (nbt.contains(CoreNBTKeys.ENERGY_STORED)) {
-            stored = nbt.getInt(CoreNBTKeys.ENERGY_STORED);
-        }
+    public ConduitDataSerializer<EnergyExtendedData> serializer() {
+        return ConduitTypes.ENERGY_DATA_SERIALIZER.get();
     }
-
 
     public int getCapacity() {
         return capacity;
@@ -74,12 +65,12 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
     }
 
     @Override
-    public void onRemoved(ConduitType<?> type, Level level, BlockPos pos) {
+    public void onRemoved(ConduitType<EnergyExtendedData> type, Level level, BlockPos pos) {
         level.invalidateCapabilities(pos);
     }
 
     public EnergySidedData compute(Direction direction) {
-        return energySidedData.computeIfAbsent(direction, dir -> new EnergySidedData());
+        return energySidedData.computeIfAbsent(direction, dir -> new EnergySidedData(0));
     }
 
     IEnergyStorage getSelfCap() {
@@ -91,28 +82,18 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
     }
 
     public static class EnergySidedData {
-        public int rotatingIndex = 0;
 
-        // region Serialization
+        public static Codec<EnergySidedData> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                Codec.INT.fieldOf("rotating_index").forGetter(i -> i.rotatingIndex)
+            ).apply(instance, EnergySidedData::new)
+        );
 
-        private static final String KEY_ROTATING_INDEX = "RotatingIndex";
+        public int rotatingIndex;
 
-        private CompoundTag toNbt() {
-            CompoundTag nbt = new CompoundTag();
-            nbt.putInt(KEY_ROTATING_INDEX, rotatingIndex);
-            return nbt;
+        public EnergySidedData(int rotatingIndex) {
+            this.rotatingIndex = rotatingIndex;
         }
-
-        private static EnergySidedData fromNbt(CompoundTag nbt) {
-            EnergySidedData sidedData = new EnergySidedData();
-            if (nbt.contains(KEY_ROTATING_INDEX, Tag.TAG_INT)) {
-                sidedData.rotatingIndex = nbt.getInt(KEY_ROTATING_INDEX);
-            }
-
-            return sidedData;
-        }
-
-        // endregion
     }
 
     private record ConduitEnergyStorage(EnergyExtendedData data) implements IEnergyStorage {
@@ -153,6 +134,24 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
         @Override
         public boolean canReceive() {
             return true;
+        }
+    }
+
+    public static class Serializer implements ConduitDataSerializer<EnergyExtendedData> {
+
+        public static MapCodec<EnergyExtendedData> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(
+                Codec.unboundedMap(Direction.CODEC, EnergySidedData.CODEC)
+                    .fieldOf("energy_sided_data")
+                    .forGetter(e -> e.energySidedData),
+                Codec.INT.fieldOf("capacity").forGetter(EnergyExtendedData::getCapacity),
+                Codec.INT.fieldOf("stored").forGetter(EnergyExtendedData::getStored)
+            ).apply(instance, EnergyExtendedData::new)
+        );
+
+        @Override
+        public MapCodec<EnergyExtendedData> codec() {
+            return CODEC;
         }
     }
 }

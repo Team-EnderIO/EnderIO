@@ -53,7 +53,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
                 }
 
                 ItemExtendedData.ItemSidedData sidedExtractData = extract.data.castTo(ItemExtendedData.class).compute(extract.direction);
-                if (sidedExtractData.roundRobin) {
+                if (sidedExtractData.isRoundRobin) {
                     if (inserts.size() <= sidedExtractData.rotatingIndex) {
                         sidedExtractData.rotatingIndex = 0;
                     }
@@ -65,7 +65,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
                     int insertIndex = j % inserts.size();
                     CapabilityConnection insert = inserts.get(insertIndex);
 
-                    if (!sidedExtractData.selfFeed
+                    if (!sidedExtractData.isSelfFeed
                         && extract.direction == insert.direction
                         && extract.data == insert.data) {
                         continue;
@@ -83,7 +83,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
 
                     if (notInserted.getCount() < extractedItem.getCount()) {
                         extractHandler.extractItem(i, extractedItem.getCount() - notInserted.getCount(), false);
-                        if (sidedExtractData.roundRobin) {
+                        if (sidedExtractData.isRoundRobin) {
                             sidedExtractData.rotatingIndex = insertIndex + 1;
                         }
                         continue toNextExtract;

@@ -4,9 +4,15 @@ import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.registry.EnderIORegistries;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
@@ -43,6 +49,7 @@ public interface ConduitType<T extends ExtendedConduitData<T>> {
 
     @UseOnly(LogicalSide.CLIENT)
     ClientConduitData<T> getClientData();
+
     ConduitMenuData getMenuData();
 
     T createExtendedConduitData(Level level, BlockPos pos);
@@ -68,4 +75,10 @@ public interface ConduitType<T extends ExtendedConduitData<T>> {
     }
 
     record ConduitConnectionData(boolean isInsert, boolean isExtract, RedstoneControl control) {}
+
+    // TODO: 20.6: Try and eliminate as many dirty casts as possible.
+    @SuppressWarnings("unchecked")
+    default <Z extends ConduitType<?>> Z cast(){
+        return (Z)this;
+    }
 }

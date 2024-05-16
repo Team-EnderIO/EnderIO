@@ -7,6 +7,7 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.Vector2i;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -21,17 +22,31 @@ public class SimpleConduitType<T extends ExtendedConduitData<T>> implements Cond
 
     private final ResourceLocation texture;
     private final ConduitTicker ticker;
-    private final Supplier<T> extendedDataFactory;
 
     private final ClientConduitData<T> clientConduitData;
 
     private final ConduitMenuData menuData;
 
-    public SimpleConduitType(ResourceLocation texture, ConduitTicker ticker, Supplier<T> extendedDataFactory, ResourceLocation iconTexture, Vector2i iconTexturePos, ConduitMenuData menuData) {
+    private final Supplier<T> extendedDataFactory;
+
+    public SimpleConduitType(
+        ResourceLocation texture,
+        ConduitTicker ticker,
+        Supplier<T> extendedDataFactory,
+        ResourceLocation iconTexture,
+        Vector2i iconTexturePos,
+        ConduitMenuData menuData) {
+
         this(texture, ticker, extendedDataFactory, new ClientConduitData.Simple<>(iconTexture, iconTexturePos), menuData);
     }
 
-    public SimpleConduitType(ResourceLocation texture, ConduitTicker ticker, Supplier<T> extendedDataFactory, ClientConduitData<T> clientConduitData, ConduitMenuData menuData) {
+    public SimpleConduitType(
+        ResourceLocation texture,
+        ConduitTicker ticker,
+        Supplier<T> extendedDataFactory,
+        ClientConduitData<T> clientConduitData,
+        ConduitMenuData menuData) {
+
         this.texture = texture;
         this.ticker = ticker;
         this.extendedDataFactory = extendedDataFactory;
