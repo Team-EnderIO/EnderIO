@@ -61,11 +61,14 @@ public class TransferUtil {
         // TODO: Do we want to imitate old behaviour where if we have no fluid, we pull by default?
 
         if (canPush) {
-            FluidUtil.tryFluidTransfer(selfItemHandler, otherItemHandler, maxDrain, true);
+            int filled = FluidUtil.tryFluidTransfer(otherItemHandler, selfItemHandler, maxDrain, true).getAmount();
+            if (filled > 0) {
+                return;
+            }
         }
 
         if (canPull) {
-            FluidUtil.tryFluidTransfer(otherItemHandler, selfItemHandler, maxDrain, true);
+            FluidUtil.tryFluidTransfer(selfItemHandler, otherItemHandler, maxDrain, true);
         }
     }
 
