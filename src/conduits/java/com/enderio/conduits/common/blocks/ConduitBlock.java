@@ -16,7 +16,6 @@ import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.items.ConduitBlockItem;
 import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.conduits.common.types.RedstoneExtendedData;
-import com.enderio.core.common.util.PlayerInteractionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -26,6 +25,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -282,7 +282,10 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             @Nullable IConduitType<?> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
             if (type != null) {
                 conduit.removeTypeAndDelete(type);
-                PlayerInteractionUtil.putItemInInventoryFromWorldInteraction(event.getEntity(), event.getPos(), new ItemStack(type.getConduitItem()));
+                if (event.getLevel() instanceof ServerLevel serverLevel) {
+                    Inventory inventory = event.getEntity().getInventory();
+                    inventory.placeItemBackInInventory(new ItemStack(type.getConduitItem()));
+                }
                 event.setCanceled(true);
             }
         }

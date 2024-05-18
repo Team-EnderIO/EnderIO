@@ -1,12 +1,10 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.IWrenchable;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
@@ -14,7 +12,6 @@ import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
 import com.enderio.core.common.network.slot.SetNetworkDataSlot;
-import com.enderio.core.common.util.PlayerInteractionUtil;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.blockentity.MachineState;
@@ -27,16 +24,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -735,27 +730,37 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     @UseOnly(LogicalSide.SERVER)
     @Override
     public InteractionResult onWrenched(@Nullable Player player, @Nullable Direction side) {
-        if (player != null && level != null && player.isSecondaryUseActive() && level instanceof ServerLevel serverLevel) {//aka break block
+        if (player == null || level == null) {
+            return InteractionResult.PASS;
+        }
+
+        if (player.isSecondaryUseActive()) {//aka break block
             BlockPos pos = getBlockPos();
             BlockState state = getBlockState();
-            List<ItemStack> drops = Block.getDrops(state, serverLevel, pos, level.getBlockEntity(pos));
-            level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
-            player.swing(InteractionHand.MAIN_HAND);
+            Block block = state.getBlock();
+
+            if (level instanceof ServerLevel serverLevel) {
+                List<ItemStack> drops = Block.getDrops(state, serverLevel, pos, serverLevel.getBlockEntity(pos));
+                Inventory inventory = player.getInventory();
+                for (ItemStack item : drops) {
+                    inventory.placeItemBackInInventory(item);
+                }
+            }
+
+            block.playerWillDestroy(level, pos, state, player);
+            level.removeBlock(pos, false);
+            block.destroy(level, pos, state);
+
             //TODO: custom sound when sound manager is up and running??
-            SoundType soundType = state.getBlock().getSoundType(state,level,pos,null);
-            level.playSound(null, pos,soundType.getBreakSound(), SoundSource.BLOCKS,soundType.volume, soundType.pitch);
-            PlayerInteractionUtil.putStacksInInventoryFromWorldInteraction(player,pos, drops);
-            return InteractionResult.CONSUME;
         } else {
-            // Check for side config capability
-            LazyOptional<ISideConfig> optSideConfig = getCapability(EIOCapabilities.SIDE_CONFIG, side);
-            if (optSideConfig.isPresent()) {
-                // Cycle state.
-                optSideConfig.ifPresent(ISideConfig::cycleMode);
-                return InteractionResult.CONSUME;
+            // Cycle side config
+            if (level.isClientSide()) {
+                if (side != null) {
+                    ioConfig.cycleMode(side); // TODO: Maybe a check to see if we can cycle?
+                }
             }
         }
-        return InteractionResult.PASS;
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
     public boolean canOpenMenu() {
