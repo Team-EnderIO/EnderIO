@@ -1,5 +1,6 @@
 package com.enderio.machines.common.io.fluid;
 
+import com.enderio.EnderIO;
 import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import net.minecraft.core.Direction;
@@ -216,6 +217,17 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
+        // Assume old NBT format.
+        if (!nbt.contains(TANK_LIST_SIZE) && !nbt.contains(TANKS) && !nbt.isEmpty()) {
+            if (tanks.size() > 1) {
+                int capacity = layout.getTankCapacity(0);
+                FluidStack fluidStack = FluidStack.loadFluidStackFromNBT(nbt);
+                tanks.set(0, new MachineFluidTank(fluidStack, capacity));
+            } else {
+                EnderIO.LOGGER.warn("Failed to load MachineFluidHandler tank contents.");
+            }
+        }
+
         int size = nbt.contains(TANK_LIST_SIZE, Tag.TAG_INT) ? nbt.getInt(TANK_LIST_SIZE) : tanks.size();
         tanks = NonNullList.withSize(size, MachineFluidTank.EMPTY);
         ListTag tagList = nbt.getList(TANKS, Tag.TAG_COMPOUND);
