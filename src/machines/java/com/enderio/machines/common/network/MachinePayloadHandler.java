@@ -22,9 +22,8 @@ public class MachinePayloadHandler {
             context.enqueueWork(() -> EngineSoul.ENGINE.map = packet.map());
         }
 
-        public void handleFarmingStationSoul(FarmStationSoulPacket packet, PlayPayloadContext context) {
-            context.workHandler()
-                .submitAsync(() -> FarmSoul.FARM.map = packet.map());
+        public void handleFarmingStationSoul(FarmStationSoulPacket packet, IPayloadContext context) {
+            context.enqueueWork(() -> FarmSoul.FARM.map = packet.map());
         }
     }
 

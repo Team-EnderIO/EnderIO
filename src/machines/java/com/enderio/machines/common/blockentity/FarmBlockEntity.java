@@ -7,12 +7,10 @@ import com.enderio.api.farm.FarmInteraction;
 import com.enderio.api.farm.FarmTaskManager;
 import com.enderio.api.farm.IFarmingStation;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
-import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
-import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.ActionRange;
-import com.enderio.machines.common.attachment.IFluidTankUser;
-import com.enderio.machines.common.attachment.IRangedActor;
+import com.enderio.machines.common.attachment.FluidTankUser;
+import com.enderio.machines.common.attachment.RangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.api.farm.FarmTask;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -30,6 +28,7 @@ import com.enderio.machines.common.souldata.FarmSoul;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -64,7 +63,7 @@ import java.util.UUID;
 
 import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
 
-public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRangedActor, IFarmingStation, IFluidTankUser {
+public class FarmBlockEntity extends PoweredMachineBlockEntity implements RangedActor, IFarmingStation, FluidTankUser {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.FARM_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.FARM_USAGE);
@@ -85,14 +84,14 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
     private int consumed = 0;
     @Nullable
     private FarmTask currentTask = null;
-    private final CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
+    private final NetworkDataSlot<ActionRange> actionRangeDataSlot;
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
     private static final int CAPACITY = 1000;
     @Nullable
     private AABBTicket ticket;
 
-    private StoredEntityData entityData = StoredEntityData.empty();
+    private StoredEntityData entityData = StoredEntityData.EMPTY;
     @Nullable
     private FarmSoul.SoulData soulData;
     private static boolean reload = false;
@@ -108,9 +107,9 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
             setData(MachineAttachments.ACTION_RANGE, new ActionRange(5, false));
         }
 
-        addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
-        addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
-        actionRangeDataSlot = addDataSlot(new CodecNetworkDataSlot<>(this::getActionRange, this::internalSetActionRange, ActionRange.CODEC));
+        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
+        addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
+        actionRangeDataSlot = addDataSlot(ActionRange.DATA_SLOT_TYPE.create(this::getActionRange, this::internalSetActionRange));
     }
 
     @Override
@@ -121,7 +120,7 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
             .slotAccess(AXE)
             .inputSlot((i,s) -> s.is(ItemTags.HOES))
             .slotAccess(HOE)
-            .inputSlot((i,s) -> s.is(Tags.Items.SHEARS))
+            .inputSlot((i,s) -> s.is(Tags.Items.TOOLS_SHEARS))
             .slotAccess(SHEAR)
             .inputSlot()
             .slotAccess(NE)
@@ -140,8 +139,8 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
 
     @Override
     public void serverTick() {
-        if (reloadCache != reload && entityData != StoredEntityData.empty() && entityData.getEntityType().isPresent()) {
-            Optional<FarmSoul.SoulData> op = FarmSoul.FARM.matches(entityData.getEntityType().get());
+        if (reloadCache != reload && entityData != StoredEntityData.EMPTY && entityData.entityType().isPresent()) {
+            Optional<FarmSoul.SoulData> op = FarmSoul.FARM.matches(entityData.entityType().get());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
@@ -276,7 +275,7 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
     public boolean handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemStack stack) {
         ItemStack dummy = stack.copy();
         if (soulData != null) {
-            dummy.enchant(Enchantments.BLOCK_FORTUNE, dummy.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE) + soulData.seeds());
+            dummy.enchant(Enchantments.FORTUNE, dummy.getEnchantmentLevel(Enchantments.FORTUNE) + soulData.seeds());
         }
         List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) this.level, pos, blockEntity, getPlayer(), dummy);
         return collectDrops(drops, soil);
@@ -349,14 +348,14 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
         pTag.putInt(CONSUMED, consumed);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
         consumed = pTag.getInt(CONSUMED);
     }
 
@@ -417,7 +416,7 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
 
     @Override
     public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(this, getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 onTankContentsChanged();
@@ -452,7 +451,7 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
     }
 
     public Optional<ResourceLocation> getEntityType() {
-        return entityData.getEntityType();
+        return entityData.entityType();
     }
 
     public void setEntityType(ResourceLocation entityType) {
