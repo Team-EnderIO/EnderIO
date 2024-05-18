@@ -75,10 +75,10 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
 
     @Override
     public int addEnergy(int energy, boolean simulate) {
-        int energyBefore = energyStored;
-        int newEnergyStored = Math.min(energyStored + energy, getMaxEnergyStored());
+        int energyBefore = getEnergyStored();
+        int newEnergyStored = Math.min(getEnergyStored() + energy, getMaxEnergyStored());
         if (!simulate) {
-            energyStored = newEnergyStored;
+            setEnergyStored(newEnergyStored);
             onContentsChanged();
         }
         return newEnergyStored - energyBefore;
@@ -86,10 +86,10 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
 
     @Override
     public int takeEnergy(int energy) {
-        int energyBefore = energyStored;
-        energyStored = Math.max(energyStored - energy, 0);
+        int energyBefore = getEnergyStored();
+        setEnergyStored(Math.max(getEnergyStored() - energy, 0));
         onContentsChanged();
-        return energyBefore - energyStored;
+        return energyBefore - getEnergyStored();
     }
 
     @Override
@@ -196,13 +196,13 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putInt(MachineNBTKeys.ENERGY_STORED, energyStored);
+        tag.putInt(MachineNBTKeys.ENERGY_STORED, getEnergyStored());
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        energyStored = nbt.getInt(MachineNBTKeys.ENERGY_STORED);
+        setEnergyStored(nbt.getInt(MachineNBTKeys.ENERGY_STORED));
     }
 
     private static class Sided implements IEnergyStorage {
