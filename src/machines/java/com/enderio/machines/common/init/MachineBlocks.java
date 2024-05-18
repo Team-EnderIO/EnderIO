@@ -224,12 +224,10 @@ public class MachineBlocks {
     public static final RegiliteBlock<ProgressMachineBlock> FARMING_STATION = BLOCK_REGISTRY
         .registerBlock("farming_station", properties -> new ProgressMachineBlock(MachineBlockEntities.FARMING_STATION, properties),
             BlockBehaviour.Properties.of().strength(2.5f, 8))
-        .setLootTable((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, MachineNBTKeys.ENTITY_STORAGE))
+        .setLootTable((l,t) -> MachinesLootTable.copyStandardComponentsWith(l, t, EIODataComponents.STORED_ENTITY.get()))
         .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES)
-            .addItemTags(EIOTags.Items.ENTITY_STORAGE)
-        );
+        .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
     //used when single methods needs to be overridden in the block class
     private static <T extends MachineBlock> RegiliteBlock<T> baseMachine(RegiliteBlock<T> machineBlock,
