@@ -4,16 +4,12 @@
   "experience": 0.3,
   "inputs": [
     {
-      "Count": 1,
-      "Ingredient": {
-        "item": "enderio:fused_quartz"
-      }
+      "count": 1,
+      "item": "enderio:fused_quartz"
     },
     {
-      "Count": 4,
-      "Ingredient": {
-        "tag": "c:dusts/glowstone"
-      }
+      "count": 4,
+      "tag": "c:dusts/glowstone"
     }
   ],
   "result": {

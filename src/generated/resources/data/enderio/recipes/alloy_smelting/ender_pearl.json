@@ -4,10 +4,8 @@
   "experience": 0.3,
   "inputs": [
     {
-      "Count": 9,
-      "Ingredient": {
-        "tag": "c:dusts/ender_pearl"
-      }
+      "count": 9,
+      "tag": "c:dusts/ender_pearl"
     }
   ],
   "result": {

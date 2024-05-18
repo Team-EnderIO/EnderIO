@@ -4,16 +4,12 @@
   "experience": 0.3,
   "inputs": [
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "c:ingots/copper"
-      }
+      "count": 1,
+      "tag": "c:ingots/copper"
     },
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "c:silicon"
-      }
+      "count": 1,
+      "tag": "c:silicon"
     }
   ],
   "result": {

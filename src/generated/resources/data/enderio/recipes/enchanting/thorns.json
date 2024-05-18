@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:thorns",
   "input": {
-    "Count": 4,
-    "Ingredient": {
-      "item": "minecraft:rose_bush"
-    }
+    "count": 4,
+    "item": "minecraft:rose_bush"
   }
 }

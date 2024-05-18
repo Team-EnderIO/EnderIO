@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:sweeping_edge",
   "input": {
-    "Count": 8,
-    "Ingredient": {
-      "tag": "c:ingots/iron"
-    }
+    "count": 8,
+    "tag": "c:ingots/iron"
   }
 }

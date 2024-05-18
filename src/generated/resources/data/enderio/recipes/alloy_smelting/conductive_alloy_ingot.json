@@ -4,22 +4,16 @@
   "experience": 0.3,
   "inputs": [
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "c:ingots/copper_alloy"
-      }
+      "count": 1,
+      "tag": "c:ingots/copper_alloy"
     },
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "c:ingots/iron"
-      }
+      "count": 1,
+      "tag": "c:ingots/iron"
     },
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "c:dusts/redstone"
-      }
+      "count": 1,
+      "tag": "c:dusts/redstone"
     }
   ],
   "result": {

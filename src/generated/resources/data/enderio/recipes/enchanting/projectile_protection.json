@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:projectile_protection",
   "input": {
-    "Count": 16,
-    "Ingredient": {
-      "tag": "c:leathers"
-    }
+    "count": 16,
+    "tag": "c:leathers"
   }
 }

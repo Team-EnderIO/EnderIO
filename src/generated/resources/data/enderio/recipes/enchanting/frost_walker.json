@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:frost_walker",
   "input": {
-    "Count": 16,
-    "Ingredient": {
-      "item": "minecraft:ice"
-    }
+    "count": 16,
+    "item": "minecraft:ice"
   }
 }

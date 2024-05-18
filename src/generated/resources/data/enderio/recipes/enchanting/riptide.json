@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:riptide",
   "input": {
-    "Count": 8,
-    "Ingredient": {
-      "item": "minecraft:firework_rocket"
-    }
+    "count": 8,
+    "item": "minecraft:firework_rocket"
   }
 }

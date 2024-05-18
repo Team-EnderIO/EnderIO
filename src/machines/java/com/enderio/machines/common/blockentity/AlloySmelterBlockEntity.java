@@ -7,7 +7,6 @@ import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
@@ -41,6 +40,7 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -228,7 +228,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         protected void onDetermineOutputs(AlloySmeltingRecipe recipe) {
             // This handles the output multiplication for vanilla smelting recipes.
             if (recipe instanceof VanillaAlloySmeltingRecipe) {
-                CountedIngredient input = recipe.inputs().get(0);
+                SizedIngredient input = recipe.inputs().get(0);
 
                 int inputCount = 0;
                 for (int i = inputs.size() - 1; i >= 0; i--) {
@@ -248,7 +248,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             MachineInventory inv = getInventory();
 
             if (recipe instanceof VanillaAlloySmeltingRecipe) {
-                CountedIngredient input = recipe.inputs().get(0);
+                SizedIngredient input = recipe.inputs().get(0);
 
                 int consumed = 0;
                 for (int i = inputs.size() - 1; i >= 0; i--) {
@@ -261,7 +261,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 }
             } else {
                 // Track which ingredients have been consumed
-                List<CountedIngredient> inputs = recipe.inputs();
+                List<SizedIngredient> inputs = recipe.inputs();
                 boolean[] consumed = new boolean[3];
 
                 // Iterate over the slots
@@ -278,7 +278,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
                         if (i < inputs.size()) {
                             // If we expect an input, test we have a match for it.
-                            CountedIngredient input = inputs.get(i);
+                            SizedIngredient input = inputs.get(i);
 
                             if (input.test(stack)) {
                                 consumed[i] = true;

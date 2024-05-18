@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:knockback",
   "input": {
-    "Count": 1,
-    "Ingredient": {
-      "item": "minecraft:piston"
-    }
+    "count": 1,
+    "item": "minecraft:piston"
   }
 }

@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:efficiency",
   "input": {
-    "Count": 12,
-    "Ingredient": {
-      "tag": "c:dusts/redstone"
-    }
+    "count": 12,
+    "tag": "c:dusts/redstone"
   }
 }

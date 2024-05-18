@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:fire_protection",
   "input": {
-    "Count": 16,
-    "Ingredient": {
-      "item": "minecraft:magma_cream"
-    }
+    "count": 16,
+    "item": "minecraft:magma_cream"
   }
 }

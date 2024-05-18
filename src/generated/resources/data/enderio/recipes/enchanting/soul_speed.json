@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:soul_speed",
   "input": {
-    "Count": 16,
-    "Ingredient": {
-      "item": "minecraft:soul_soil"
-    }
+    "count": 16,
+    "item": "minecraft:soul_soil"
   }
 }

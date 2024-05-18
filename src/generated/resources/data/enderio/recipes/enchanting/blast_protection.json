@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:blast_protection",
   "input": {
-    "Count": 16,
-    "Ingredient": {
-      "item": "minecraft:gunpowder"
-    }
+    "count": 16,
+    "item": "minecraft:gunpowder"
   }
 }
