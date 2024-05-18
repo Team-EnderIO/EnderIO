@@ -4,10 +4,8 @@
   "experience": 0.3,
   "inputs": [
     {
-      "Count": 3,
-      "Ingredient": {
-        "item": "enderio:photovoltaic_composite"
-      }
+      "count": 3,
+      "item": "enderio:photovoltaic_composite"
     }
   ],
   "result": {

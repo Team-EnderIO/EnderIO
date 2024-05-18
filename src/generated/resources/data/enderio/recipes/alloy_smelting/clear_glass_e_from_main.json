@@ -4,16 +4,12 @@
   "experience": 0.3,
   "inputs": [
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "c:glass_blocks/colorless"
-      }
+      "count": 1,
+      "tag": "c:glass_blocks/colorless"
     },
     {
-      "Count": 4,
-      "Ingredient": {
-        "tag": "c:dusts/glowstone"
-      }
+      "count": 4,
+      "tag": "c:dusts/glowstone"
     }
   ],
   "result": {

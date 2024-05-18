@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:silk_touch",
   "input": {
-    "Count": 1,
-    "Ingredient": {
-      "tag": "c:slimeballs"
-    }
+    "count": 1,
+    "tag": "c:slimeballs"
   }
 }

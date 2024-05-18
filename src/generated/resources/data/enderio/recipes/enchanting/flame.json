@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:flame",
   "input": {
-    "Count": 1,
-    "Ingredient": {
-      "tag": "c:netherracks"
-    }
+    "count": 1,
+    "tag": "c:netherracks"
   }
 }

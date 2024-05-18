@@ -1,8 +1,8 @@
 package com.enderio.base.data.recipe;
 
-import com.enderio.core.common.recipes.CountedIngredient;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
 import java.util.HashSet;
 import java.util.List;
@@ -17,9 +17,9 @@ public class RecipeDataUtil {
         return mods;
     }
 
-    public static Set<String> getCountedIngredientsModIds(List<CountedIngredient> ingredients) {
+    public static Set<String> getCountedIngredientsModIds(List<SizedIngredient> ingredients) {
         Set<String> mods = new HashSet<>();
-        for (CountedIngredient ingredient : ingredients) {
+        for (SizedIngredient ingredient : ingredients) {
             putIngredientModIds(mods, ingredient.ingredient());
         }
         return mods;
@@ -31,7 +31,7 @@ public class RecipeDataUtil {
         return mods;
     }
 
-    public static Set<String> getCountedIngredientModIds(CountedIngredient ingredient) {
+    public static Set<String> getCountedIngredientModIds(SizedIngredient ingredient) {
         Set<String> mods = new HashSet<>();
         putIngredientModIds(mods, ingredient.ingredient());
         return mods;

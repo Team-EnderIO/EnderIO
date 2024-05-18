@@ -1,6 +1,5 @@
 package com.enderio.machines.common.recipe;
 
-import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.blockentity.PrimitiveAlloySmelterBlockEntity;
@@ -19,25 +18,26 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
 import java.util.List;
 
 public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.ContainerWrapper> {
-    private final List<CountedIngredient> inputs;
+    private final List<SizedIngredient> inputs;
     private final ItemStack output;
     private final int energy;
     private final float experience;
 
-    public AlloySmeltingRecipe(List<CountedIngredient> inputs, ItemStack output, int energy, float experience) {
+    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience) {
         this.inputs = inputs;
         this.output = output;
         this.energy = energy;
         this.experience = experience;
     }
 
-    public List<CountedIngredient> inputs() {
+    public List<SizedIngredient> inputs() {
         return inputs;
     }
 
@@ -60,7 +60,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY, inputs.stream().map(CountedIngredient::ingredient).toArray(Ingredient[]::new));
+        return NonNullList.of(Ingredient.EMPTY, inputs.stream().map(SizedIngredient::ingredient).toArray(Ingredient[]::new));
     }
 
     @Override
@@ -151,13 +151,13 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
 
     public static class Serializer implements RecipeSerializer<AlloySmeltingRecipe> {
         public static final MapCodec<AlloySmeltingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-            .group(CountedIngredient.CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs),
+            .group(SizedIngredient.FLAT_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs),
                 ItemStack.CODEC.fieldOf("result").forGetter(AlloySmeltingRecipe::output), Codec.INT.fieldOf("energy").forGetter(AlloySmeltingRecipe::energy),
                 Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience))
             .apply(inst, AlloySmeltingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmeltingRecipe> STREAM_CODEC = StreamCodec.composite(
-            CountedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AlloySmeltingRecipe::inputs, ItemStack.STREAM_CODEC, AlloySmeltingRecipe::output,
+            SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AlloySmeltingRecipe::inputs, ItemStack.STREAM_CODEC, AlloySmeltingRecipe::output,
             ByteBufCodecs.INT, AlloySmeltingRecipe::energy, ByteBufCodecs.FLOAT, AlloySmeltingRecipe::experience, AlloySmeltingRecipe::new);
 
         @Override

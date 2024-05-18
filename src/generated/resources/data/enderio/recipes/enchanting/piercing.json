@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:piercing",
   "input": {
-    "Count": 8,
-    "Ingredient": {
-      "tag": "c:gems/prismarine"
-    }
+    "count": 8,
+    "tag": "c:gems/prismarine"
   }
 }

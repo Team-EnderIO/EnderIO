@@ -4,22 +4,16 @@
   "experience": 0.5,
   "inputs": [
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "c:dusts/lapis"
-      }
+      "count": 1,
+      "tag": "c:dusts/lapis"
     },
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "minecraft:wool"
-      }
+      "count": 1,
+      "tag": "minecraft:wool"
     },
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "enderio:insulation_metals"
-      }
+      "count": 1,
+      "tag": "enderio:insulation_metals"
     }
   ],
   "result": {

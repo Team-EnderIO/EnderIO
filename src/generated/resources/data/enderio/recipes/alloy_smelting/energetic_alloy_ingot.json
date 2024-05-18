@@ -4,22 +4,16 @@
   "experience": 0.3,
   "inputs": [
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "c:dusts/redstone"
-      }
+      "count": 1,
+      "tag": "c:dusts/redstone"
     },
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "c:ingots/gold"
-      }
+      "count": 1,
+      "tag": "c:ingots/gold"
     },
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "c:dusts/glowstone"
-      }
+      "count": 1,
+      "tag": "c:dusts/glowstone"
     }
   ],
   "result": {

@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:lure",
   "input": {
-    "Count": 1,
-    "Ingredient": {
-      "tag": "minecraft:fishes"
-    }
+    "count": 1,
+    "tag": "minecraft:fishes"
   }
 }

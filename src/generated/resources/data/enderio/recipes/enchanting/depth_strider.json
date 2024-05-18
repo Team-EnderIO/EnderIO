@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:depth_strider",
   "input": {
-    "Count": 1,
-    "Ingredient": {
-      "item": "minecraft:prismarine_shard"
-    }
+    "count": 1,
+    "item": "minecraft:prismarine_shard"
   }
 }

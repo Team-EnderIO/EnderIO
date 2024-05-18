@@ -1,6 +1,5 @@
 package com.enderio.machines.common.recipe;
 
-import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
@@ -24,6 +23,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 public record EnchanterRecipe(
     Enchantment enchantment,
     int costMultiplier,
-    CountedIngredient input
+    SizedIngredient input
 ) implements Recipe<Container> {
 
     // region Calculations
@@ -152,7 +152,7 @@ public record EnchanterRecipe(
             .group(
                 BuiltInRegistries.ENCHANTMENT.byNameCodec().fieldOf("enchantment").forGetter(EnchanterRecipe::enchantment),
                 ExtraCodecs.POSITIVE_INT.fieldOf("cost_multiplier").forGetter(EnchanterRecipe::costMultiplier),
-                CountedIngredient.CODEC.fieldOf("input").forGetter(EnchanterRecipe::input))
+                SizedIngredient.FLAT_CODEC.fieldOf("input").forGetter(EnchanterRecipe::input))
             .apply(inst, EnchanterRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, EnchanterRecipe> STREAM_CODEC = StreamCodec.composite(
@@ -160,7 +160,7 @@ public record EnchanterRecipe(
             EnchanterRecipe::enchantment,
             ByteBufCodecs.INT,
             EnchanterRecipe::costMultiplier,
-            CountedIngredient.STREAM_CODEC,
+            SizedIngredient.STREAM_CODEC,
             EnchanterRecipe::input,
             EnchanterRecipe::new
         );

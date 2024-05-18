@@ -4,16 +4,12 @@
   "experience": 0.3,
   "inputs": [
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "c:dusts/glowstone"
-      }
+      "count": 1,
+      "tag": "c:dusts/glowstone"
     },
     {
-      "Count": 1,
-      "Ingredient": {
-        "item": "minecraft:clay_ball"
-      }
+      "count": 1,
+      "item": "minecraft:clay_ball"
     }
   ],
   "result": {
