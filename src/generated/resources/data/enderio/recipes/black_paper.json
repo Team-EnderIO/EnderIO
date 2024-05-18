@@ -6,10 +6,11 @@
       "item": "minecraft:paper"
     },
     {
-      "tag": "forge:dyes/black"
+      "tag": "c:dyes/black"
     }
   ],
   "result": {
-    "item": "enderio:black_paper"
+    "count": 1,
+    "id": "enderio:black_paper"
   }
 }

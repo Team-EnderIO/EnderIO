@@ -6,10 +6,10 @@
       "item": "enderio:ensouled_chassis"
     },
     "G": {
-      "tag": "neoforge:gears/energized"
+      "tag": "c:gears/energized"
     },
     "I": {
-      "tag": "neoforge:ingots/soularium"
+      "tag": "c:ingots/soularium"
     },
     "V": {
       "item": "enderio:empty_soul_vial"
@@ -24,6 +24,7 @@
     "IZI"
   ],
   "result": {
-    "item": "enderio:soul_binder"
+    "count": 1,
+    "id": "enderio:soul_binder"
   }
 }

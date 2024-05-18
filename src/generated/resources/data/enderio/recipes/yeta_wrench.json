@@ -6,7 +6,7 @@
       "item": "enderio:stone_gear"
     },
     "I": {
-      "tag": "neoforge:ingots/copper_alloy"
+      "tag": "c:ingots/copper_alloy"
     }
   },
   "pattern": [
@@ -15,6 +15,7 @@
     " I "
   ],
   "result": {
-    "item": "enderio:yeta_wrench"
+    "count": 1,
+    "id": "enderio:yeta_wrench"
   }
 }

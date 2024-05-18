@@ -1,15 +1,13 @@
 package com.enderio.machines.common.blockentity.solar;
 
 import com.enderio.api.capacitor.FixedScalable;
-import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyNode;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyStorageWrapper;
 import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.io.SidedFixedIOConfig;
+import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -19,7 +17,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +44,7 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
 
     @Override
     public @Nullable MachineEnergyStorage createExposedEnergyStorage() {
-        return new MultiEnergyStorageWrapper(createIOConfig(), EnergyIOMode.Output, () -> tier);
+        return new MultiEnergyStorageWrapper(this, EnergyIOMode.Output, () -> tier);
     }
 
     @Override
@@ -113,8 +110,8 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
         }
 
         for (GraphObject<Mergeable.Dummy> neighbour : node.getGraph().getNeighbours(node)) {
-            if (neighbour instanceof MultiEnergyNode node) {
-                if (node.pos.equals(worldPosition.relative(direction))) {
+            if (neighbour instanceof MultiEnergyNode neighbourMultiEnergyNode) {
+                if (neighbourMultiEnergyNode.pos.equals(worldPosition.relative(direction))) {
                     return false;
                 }
             }
@@ -156,8 +153,13 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    protected IIOConfig createIOConfig() {
-        return new SidedFixedIOConfig(dir -> dir == Direction.UP ? IOMode.NONE : IOMode.PUSH);
+    public IOConfig getDefaultIOConfig() {
+        return IOConfig.of(dir -> dir == Direction.UP ? IOMode.NONE : IOMode.PUSH);
+    }
+
+    @Override
+    public boolean isIOConfigMutable() {
+        return false;
     }
 
     @Override

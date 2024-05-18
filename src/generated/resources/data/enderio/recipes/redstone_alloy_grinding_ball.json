@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "I": {
-      "tag": "neoforge:ingots/redstone_alloy"
+      "tag": "c:ingots/redstone_alloy"
     }
   },
   "pattern": [
@@ -13,6 +13,6 @@
   ],
   "result": {
     "count": 24,
-    "item": "enderio:redstone_alloy_grinding_ball"
+    "id": "enderio:redstone_alloy_grinding_ball"
   }
 }

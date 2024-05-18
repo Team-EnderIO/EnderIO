@@ -7,17 +7,16 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-@Mod.EventBusSubscriber(Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class DarkSteelLadderHandler {
 
     @SubscribeEvent
-    public static void onTick(TickEvent.PlayerTickEvent playerTickEvent) {
-        if (playerTickEvent.phase == TickEvent.Phase.START && playerTickEvent.side == LogicalSide.CLIENT && playerTickEvent.player == Minecraft.getInstance().player) {
+    public static void onTick(PlayerTickEvent.Pre playerTickEvent) {
+        if (playerTickEvent.getEntity() == Minecraft.getInstance().player) {
             LocalPlayer player = Minecraft.getInstance().player;
             if (player.onClimbable() && player.level().getBlockState(player.blockPosition()).is(EIOBlocks.DARK_STEEL_LADDER.get())) {
                 if (!Minecraft.getInstance().options.keyShift.isDown()) {

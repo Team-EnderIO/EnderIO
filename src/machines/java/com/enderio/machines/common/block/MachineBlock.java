@@ -13,8 +13,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -90,10 +92,33 @@ public class MachineBlock extends BaseEntityBlock {
         return createTickerHelper(pBlockEntityType, blockEntityType.get(), MachineBlockEntity::tick);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (level.isClientSide() || hand != InteractionHand.MAIN_HAND){
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+        InteractionHand interactionHand, BlockHitResult hit) {
+
+        BlockEntity entity = level.getBlockEntity(pos);
+        if (!(entity instanceof MachineBlockEntity machineBlockEntity)) { // This also covers nulls
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+
+        if (stack.is(EIOTags.Items.WRENCH)) {
+            var res = machineBlockEntity.onWrenched(player, hit.getDirection());
+            if (res != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
+                return res;
+            }
+        }
+
+        var result = machineBlockEntity.onBlockEntityUsed(state, level, pos, player, interactionHand, hit);
+        if (result != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
+            return result;
+        }
+
+        return super.useItemOn(stack, state, level, pos, player, interactionHand, hit);
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult blockHitResult) {
+        if (level.isClientSide()){
             return InteractionResult.SUCCESS;
         }
 
@@ -102,25 +127,15 @@ public class MachineBlock extends BaseEntityBlock {
             return InteractionResult.PASS;
         }
 
-        if (player.getItemInHand(hand).is(EIOTags.Items.WRENCH)) {
-            InteractionResult res = machineBlockEntity.onWrenched(player, hit.getDirection());
-            if (res != InteractionResult.PASS) {
-                return res;
-            }
+        if (!machineBlockEntity.canOpenMenu()) {
+            return InteractionResult.PASS;
         }
 
-        //pass on the use command to corresponding block entity.
-        InteractionResult result = machineBlockEntity.onBlockEntityUsed(state, level, pos, player, hand,hit);
-        if (result != InteractionResult.CONSUME) {
-            if (!machineBlockEntity.canOpenMenu()) {
-                return InteractionResult.PASS;
-            }
-
-            MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
-            if (menuprovider != null && player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.openMenu(menuprovider, buf -> buf.writeBlockPos(pos));
-            }
+        MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
+        if (menuprovider != null && player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.openMenu(menuprovider, buf -> buf.writeBlockPos(pos));
         }
+
         return InteractionResult.CONSUME;
     }
 

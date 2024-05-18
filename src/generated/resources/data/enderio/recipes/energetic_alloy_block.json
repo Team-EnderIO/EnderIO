@@ -12,6 +12,7 @@
     "III"
   ],
   "result": {
-    "item": "enderio:energetic_alloy_block"
+    "count": 1,
+    "id": "enderio:energetic_alloy_block"
   }
 }

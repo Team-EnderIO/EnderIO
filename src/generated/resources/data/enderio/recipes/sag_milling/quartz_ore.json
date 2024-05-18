@@ -2,7 +2,7 @@
   "type": "enderio:sag_milling",
   "energy": 2400,
   "input": {
-    "tag": "forge:ores/quartz"
+    "tag": "c:ores/quartz"
   },
   "outputs": [
     {

@@ -1,8 +1,8 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.init.EIOFluids;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
-import com.enderio.machines.common.attachment.IFluidTankUser;
+import com.enderio.core.common.network.NetworkDataSlot;
+import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -12,6 +12,7 @@ import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Inventory;
@@ -23,7 +24,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 import static com.enderio.base.common.util.ExperienceUtil.EXP_TO_FLUID;
 
-public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb> implements IFluidTankUser {
+public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb> implements FluidTankUser {
 
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
@@ -32,8 +33,9 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
         fluidHandler = createFluidHandler();
 
         // Sync fluid level.
-        addDataSlot(new IntegerNetworkDataSlot(() -> TANK.getFluidAmount(this), i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))
-        ));
+        addDataSlot(NetworkDataSlot.INT.create(
+            () -> TANK.getFluidAmount(this),
+            i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))));
     }
 
     @Override
@@ -53,7 +55,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
         if (filled == xpe.getValue() * EXP_TO_FLUID) {
             xpe.discard();
         } else {
-            xpe.value -= filled / ((float) EXP_TO_FLUID);
+            xpe.value -= Math.round(filled / ((float) EXP_TO_FLUID));
         }
     }
 
@@ -66,7 +68,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
     @Override
     public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(this, getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
@@ -89,15 +91,15 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        saveTank(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
+        saveTank(lookupProvider, pTag);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        loadTank(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
+        loadTank(lookupProvider, pTag);
     }
 
     // endregion

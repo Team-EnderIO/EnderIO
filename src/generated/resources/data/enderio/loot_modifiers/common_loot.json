@@ -1,5 +1,5 @@
 {
-  "type": "enderio:chest_loot",
+  "type": "neoforge:add_table",
   "conditions": [
     {
       "condition": "minecraft:any_of",
@@ -83,5 +83,5 @@
       ]
     }
   ],
-  "loot_table": "enderio:chests/common_loot"
+  "table": "enderio:chests/common_loot"
 }

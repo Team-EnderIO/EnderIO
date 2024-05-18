@@ -27,11 +27,11 @@
       "tag": "enderio:fused_quartz_a"
     },
     {
-      "tag": "forge:dyes/light_blue"
+      "tag": "c:dyes/light_blue"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:fused_quartz_a_light_blue"
+    "id": "enderio:fused_quartz_a_light_blue"
   }
 }

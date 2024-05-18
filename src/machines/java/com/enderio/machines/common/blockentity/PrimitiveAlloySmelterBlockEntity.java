@@ -2,17 +2,19 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,8 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -44,7 +44,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
 
     public PrimitiveAlloySmelterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER.get(), pWorldPosition, pBlockState);
-        addDataSlot(new FloatNetworkDataSlot(this::getBurnProgress, p -> clientBurnProgress = p));
+        addDataSlot(NetworkDataSlot.FLOAT.create(this::getBurnProgress, p -> clientBurnProgress = p));
     }
 
     @Override
@@ -65,7 +65,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot((s, i) -> CommonHooks.getBurnTime(i, RecipeType.SMELTING) > 0)
+            .inputSlot((s, i) -> i.getBurnTime(RecipeType.SMELTING) > 0)
             .slotAccess(FUEL)
             .inputSlot(3, this::acceptSlotInput)
             .slotAccess(INPUTS)
@@ -100,7 +100,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
             ItemStack fuel = FUEL.getItemStack(this);
             if (!fuel.isEmpty()) {
                 // Get the burn time.
-                int burningTime = CommonHooks.getBurnTime(fuel, RecipeType.SMELTING);
+                int burningTime = fuel.getBurnTime(RecipeType.SMELTING);
 
                 // If this item can burn, burn it.
                 if (burningTime > 0) {
@@ -125,7 +125,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
 
     @Override
     protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
-        return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getBurnToFE, () -> 0) {
+        return new MachineEnergyStorage(this, energyIOMode, this::getBurnToFE, () -> 0) {
             @Override
             public int getEnergyStored() {
                 if (isBurning()) {
@@ -178,16 +178,41 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         pTag.putInt(MachineNBTKeys.BURN_TIME, burnTime);
         pTag.putInt(MachineNBTKeys.BURN_DURATION, burnDuration);
-        super.saveAdditional(pTag);
+        super.saveAdditional(pTag, lookupProvider);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         burnTime = pTag.getInt(MachineNBTKeys.BURN_TIME);
         burnDuration = pTag.getInt(MachineNBTKeys.BURN_DURATION);
-        super.load(pTag);
+        super.loadAdditional(pTag, lookupProvider);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+
+        burnTime = components.getOrDefault(MachineDataComponents.PRIMITIVE_ALLOY_SMELTER_BURN_TIME, 0);
+        burnDuration = components.getOrDefault(MachineDataComponents.PRIMITIVE_ALLOY_SMELTER_BURN_DURATION, 0);
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        if (isBurning()) {
+            components.set(MachineDataComponents.PRIMITIVE_ALLOY_SMELTER_BURN_TIME, burnTime);
+            components.set(MachineDataComponents.PRIMITIVE_ALLOY_SMELTER_BURN_DURATION, burnDuration);
+        }
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove(MachineNBTKeys.BURN_TIME);
+        tag.remove(MachineNBTKeys.BURN_DURATION);
     }
 }

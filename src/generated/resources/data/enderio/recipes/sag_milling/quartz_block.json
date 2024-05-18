@@ -3,7 +3,7 @@
   "bonus": "chance_only",
   "energy": 2400,
   "input": {
-    "tag": "forge:storage_blocks/quartz"
+    "tag": "c:storage_blocks/quartz"
   },
   "outputs": [
     {

@@ -1,8 +1,8 @@
 package com.enderio.conduits.client.gui;
 
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.core.client.gui.screen.IEnderScreen;
+import com.enderio.core.client.gui.screen.EnderScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -13,10 +13,10 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ConduitSelectionButton extends AbstractButton {
-    private final IConduitType<?> type;
-    private final Supplier<IConduitType<?>> getter;
-    private final Consumer<IConduitType<?>> setter;
-    public ConduitSelectionButton(int pX, int pY, IConduitType<?> type, Supplier<IConduitType<?>> getter, Consumer<IConduitType<?>> setter) {
+    private final ConduitType<?> type;
+    private final Supplier<ConduitType<?>> getter;
+    private final Consumer<ConduitType<?>> setter;
+    public ConduitSelectionButton(int pX, int pY, ConduitType<?> type, Supplier<ConduitType<?>> getter, Consumer<ConduitType<?>> setter) {
         super(pX, pY, 21, 24, Component.empty());
         this.type = type;
         this.getter = getter;
@@ -45,14 +45,14 @@ public class ConduitSelectionButton extends AbstractButton {
         }
         RenderSystem.disableBlend();
         RenderSystem.disableDepthTest();
-        IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()).add(3, 6), type.getClientData());
+        EnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()).add(3, 6), type.getClientData());
     }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
     }
 
-    public IConduitType<?> getType() {
+    public ConduitType<?> getType() {
         return type;
     }
 }

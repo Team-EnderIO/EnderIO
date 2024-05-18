@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "I": {
-      "tag": "neoforge:ingots/dark_steel"
+      "tag": "c:ingots/dark_steel"
     }
   },
   "pattern": [
@@ -12,6 +12,6 @@
   ],
   "result": {
     "count": 16,
-    "item": "enderio:dark_steel_bars"
+    "id": "enderio:dark_steel_bars"
   }
 }

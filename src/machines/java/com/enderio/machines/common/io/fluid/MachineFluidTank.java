@@ -1,7 +1,5 @@
 package com.enderio.machines.common.io.fluid;
 
-import net.minecraft.nbt.CompoundTag;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.IFluidTank;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;

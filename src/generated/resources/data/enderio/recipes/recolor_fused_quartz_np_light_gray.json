@@ -27,11 +27,11 @@
       "tag": "enderio:fused_quartz_np"
     },
     {
-      "tag": "forge:dyes/light_gray"
+      "tag": "c:dyes/light_gray"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:fused_quartz_np_light_gray"
+    "id": "enderio:fused_quartz_np_light_gray"
   }
 }

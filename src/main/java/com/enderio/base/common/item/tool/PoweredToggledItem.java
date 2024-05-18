@@ -1,13 +1,13 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.base.common.capability.EnergyStorageItemStack;
-import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.base.common.capability.ItemEnergyStorage;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.client.item.EnergyBarDecorator;
-import com.enderio.core.client.item.IAdvancedTooltipProvider;
-import com.enderio.core.common.attachment.IEnergyStorageConfig;
-import com.enderio.core.common.item.ITabVariants;
-import com.enderio.core.common.util.EnergyUtil;
+import com.enderio.core.common.component.ItemEnergyStorageConfig;
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -24,13 +24,15 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public abstract class PoweredToggledItem extends Item implements IAdvancedTooltipProvider, ITabVariants, IEnergyStorageConfig {
+public abstract class PoweredToggledItem extends Item implements AdvancedTooltipProvider, CreativeTabVariants, ItemEnergyStorageConfig {
 
     public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
-        (stack, v) -> stack.getData(EIOAttachments.ITEM_ENERGY_STORAGE);
+        (stack, v) -> new ItemEnergyStorage(EIODataComponents.ENERGY, stack);
 
     public PoweredToggledItem(Properties pProperties) {
-        super(pProperties.stacksTo(1));
+        super(pProperties
+            .stacksTo(1)
+            .component(EIODataComponents.TOGGLED, false));
     }
 
     protected abstract void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId,
@@ -39,27 +41,27 @@ public abstract class PoweredToggledItem extends Item implements IAdvancedToolti
     protected abstract int getEnergyUse();
 
     protected boolean isEnabled(ItemStack stack) {
-        return stack.getData(EIOAttachments.TOGGLED);
+        return Boolean.TRUE.equals(stack.get(EIODataComponents.TOGGLED));
     }
 
     protected void enable(ItemStack stack) {
-        stack.setData(EIOAttachments.TOGGLED, true);
+        stack.set(EIODataComponents.TOGGLED, true);
     }
 
     protected void disable(ItemStack stack) {
-        stack.setData(EIOAttachments.TOGGLED, false);
+        stack.set(EIODataComponents.TOGGLED, false);
     }
 
     protected boolean hasCharge(ItemStack pStack) {
-        return EnergyUtil.extractEnergy(pStack, getEnergyUse(), true) > 0;
+        return ItemStackEnergy.extractEnergy(pStack, getEnergyUse(), true) > 0;
     }
 
     protected void consumeCharge(ItemStack pStack) {
-        EnergyUtil.extractEnergy(pStack, getEnergyUse(), false);
+        ItemStackEnergy.extractEnergy(pStack, getEnergyUse(), false);
     }
 
     protected void setFullCharge(ItemStack pStack) {
-        EnergyUtil.setFull(pStack);
+        ItemStackEnergy.setFull(pStack);
     }
 
     @Override
@@ -136,7 +138,7 @@ public abstract class PoweredToggledItem extends Item implements IAdvancedToolti
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @org.jetbrains.annotations.Nullable Player player, List<Component> tooltips) {
-        String energy = String.format("%,d",EnergyUtil.getEnergyStored(itemStack)) + "/" +  String.format("%,d",EnergyUtil.getMaxEnergyStored(itemStack));
+        String energy = String.format("%,d", ItemStackEnergy.getEnergyStored(itemStack)) + "/" +  String.format("%,d", ItemStackEnergy.getMaxEnergyStored(itemStack));
         tooltips.add(TooltipUtil.styledWithArgs(EIOLang.ENERGY_AMOUNT, energy));
     }
 }

@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:animal_token"
-            ]
+            "items": "enderio:animal_token"
           }
         ]
       },

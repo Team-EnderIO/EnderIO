@@ -1,11 +1,13 @@
 package com.enderio.base.client;
 
-import com.enderio.base.client.model.PaintedBlockGeometry;
+import com.enderio.EnderIO;
+import com.enderio.base.client.paint.model.PaintedBlockGeometry;
 import com.enderio.base.client.particle.RangeParticle;
 import com.enderio.base.client.renderer.block.EnderSkullRenderer;
 import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
-import com.enderio.base.client.renderer.item.GlassIconDecorator;
-import com.enderio.base.common.block.EnderSkullBlock;
+import com.enderio.base.client.decorator.GlassIconDecorator;
+import com.enderio.base.client.travel.TravelTargetRendering;
+import com.enderio.base.common.block.skull.EnderSkullBlock;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
@@ -19,23 +21,30 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
 
     private static final Map<Item, ResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
     public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
+
+    @SubscribeEvent
+    public static void clientSetup(FMLClientSetupEvent event) {
+        TravelTargetRendering.init();
+    }
+
     @SubscribeEvent
     public static void additionalModels(ModelEvent.RegisterAdditional event) {
         Set<ResourceLocation> gliderModels = Minecraft
@@ -69,7 +78,6 @@ public class ClientSetup {
     public static void addLayers(EntityRenderersEvent.AddLayers event) {
         for (var skin : event.getSkins()) {
             if (event.getSkin(skin) instanceof PlayerRenderer playerRenderer) {
-
                 playerRenderer.addLayer(new ActiveGliderRenderLayer(playerRenderer));
             }
         }
@@ -90,7 +98,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
-        Minecraft.getInstance().particleEngine.register(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
+        event.registerSpriteSet(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
     }
 
     private static Optional<Item> findGliderForModelRL(ResourceLocation rl) {
@@ -101,7 +109,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void modelInit(ModelEvent.RegisterGeometryLoaders event) {
-        event.register("painted_block", new PaintedBlockGeometry.Loader());
+        event.register(EnderIO.loc("painted_block"), new PaintedBlockGeometry.Loader());
     }
 
     @SubscribeEvent

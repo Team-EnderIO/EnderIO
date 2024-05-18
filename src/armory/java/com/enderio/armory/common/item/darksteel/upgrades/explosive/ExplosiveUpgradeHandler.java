@@ -4,10 +4,9 @@ import com.enderio.armory.common.capability.DarkSteelUpgradeable;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.item.darksteel.upgrades.SpoonUpgrade;
 import com.enderio.armory.common.tag.ArmoryTags;
+import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.network.EmitParticlesPacket;
-import com.enderio.core.common.network.NetworkUtil;
 import com.enderio.core.common.util.BlockUtil;
-import com.enderio.core.common.util.EnergyUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -18,6 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,8 +25,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -36,9 +38,11 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RenderHighlightEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 import org.joml.Vector4f;
@@ -47,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 public class ExplosiveUpgradeHandler {
 
     private static final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_BREAK_POWER_USE = ArmoryConfig.COMMON.EXPLOSIVE_ENERGY_PER_EXPLODED_BLOCK;
@@ -59,12 +63,18 @@ public class ExplosiveUpgradeHandler {
     }
 
     public static void onMineBlock(ItemStack pStack, Level pLevel, BlockPos pPos, LivingEntity pEntityLiving) {
-        if (pEntityLiving instanceof Player player && !player.isCrouching() && hasExplosiveUpgrades(pStack) && EnergyUtil.getEnergyStored(pStack) > 0) {
+        if (pEntityLiving instanceof Player player &&
+            !player.isCrouching() &&
+            hasExplosiveUpgrades(pStack) &&
+            ItemStackEnergy.getEnergyStored(pStack) > 0) {
+
             BlockHitResult hit = Item.getPlayerPOVHitResult(pLevel, player, ClipContext.Fluid.NONE);
             if (pPos.equals(hit.getBlockPos())) {
                 EmitParticlesPacket particles = new EmitParticlesPacket();
                 if (explodeArea(pStack, pLevel, player, hit, particles)) {
-                    NetworkUtil.sendToAllTracking(particles, pLevel, pPos);
+                    if (pLevel instanceof ServerLevel serverLevel) {
+                        PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(pPos), particles);
+                    }
                 }
             }
         }
@@ -84,7 +94,7 @@ public class ExplosiveUpgradeHandler {
     }
 
     private static boolean explodeBlock(ItemStack itemStack, Level level, BlockPos minePos, Player player, EmitParticlesPacket particles) {
-        if (!level.isInWorldBounds(minePos) || EnergyUtil.getEnergyStored(itemStack) <= 0) {
+        if (!level.isInWorldBounds(minePos) || ItemStackEnergy.getEnergyStored(itemStack) <= 0) {
             return false;
         }
         BlockState blockState = level.getBlockState(minePos);
@@ -92,7 +102,7 @@ public class ExplosiveUpgradeHandler {
             return false;
         }
         if (BlockUtil.removeBlock(level, player, itemStack, minePos)) {
-            EnergyUtil.extractEnergy(itemStack, EXPLOSIVE_BREAK_POWER_USE.get(),false);
+            ItemStackEnergy.extractEnergy(itemStack, EXPLOSIVE_BREAK_POWER_USE.get(),false);
             if (RAND.nextFloat() < .3f) {
                 particles.add(minePos, ParticleTypes.LARGE_SMOKE);
             } else if (RAND.nextFloat() < .7f) {
@@ -107,15 +117,19 @@ public class ExplosiveUpgradeHandler {
         if (blockState.is(ArmoryTags.Blocks.DARK_STEEL_EXPLODABLE_ALLOW_LIST)) {
             return true;
         }
+
         if (blockState.is(ArmoryTags.Blocks.DARK_STEEL_EXPLODABLE_DENY_LIST) || blockEntity != null) {
             return false;
         }
-        return Items.STONE_PICKAXE.isCorrectToolForDrops(blockState) ||
-            (DarkSteelUpgradeable.hasUpgrade(itemStack, SpoonUpgrade.NAME) && Items.STONE_SHOVEL.isCorrectToolForDrops(blockState));
+
+        // TODO: 20.6: tool rework
+        //return Items.STONE_PICKAXE.isCorrectToolForDrops(blockState) ||
+        //    (DarkSteelUpgradeable.hasUpgrade(itemStack, SpoonUpgrade.NAME) && Items.STONE_SHOVEL.isCorrectToolForDrops(blockState));
+        return false;
     }
 
     public static float adjustDestroySpeed(float inputSpeed, ItemStack pStack) {
-        if (hasExplosiveUpgrades(pStack) && EnergyUtil.getEnergyStored(pStack) > 0) {
+        if (hasExplosiveUpgrades(pStack) && ItemStackEnergy.getEnergyStored(pStack) > 0) {
             //ramp slowdown until half speed is reached with Explosive II and Penetration II
             float maxReductionRatio = 0.5f;
             float areaAtMaxReduction = 5 * 5 * 3;
@@ -247,12 +261,12 @@ public class ExplosiveUpgradeHandler {
         pConsumer
             .vertex(pose.pose(), (float) (fromX + originX), (float) (fromY + originY), (float) (fromZ + originZ))
             .color(color.x(), color.y(), color.z(), color.w())
-            .normal(pose.normal(), normalX, normalY, normalZ)
+            .normal(pose, normalX, normalY, normalZ)
             .endVertex();
         pConsumer
             .vertex(pose.pose(), (float) (toX + originX), (float) (toY + originY), (float) (toZ + originZ))
             .color(color.x(), color.y(), color.z(), color.w())
-            .normal(pose.normal(), normalX, normalY, normalZ)
+            .normal(pose, normalX, normalY, normalZ)
             .endVertex();
     }
 

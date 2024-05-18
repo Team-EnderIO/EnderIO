@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "I": {
-      "tag": "neoforge:ingots/pulsating_alloy"
+      "tag": "c:ingots/pulsating_alloy"
     }
   },
   "pattern": [
@@ -13,6 +13,6 @@
   ],
   "result": {
     "count": 24,
-    "item": "enderio:pulsating_alloy_grinding_ball"
+    "id": "enderio:pulsating_alloy_grinding_ball"
   }
 }

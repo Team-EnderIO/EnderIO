@@ -6,14 +6,14 @@ import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
-import com.enderio.core.common.recipes.CountedIngredient;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
@@ -25,6 +25,8 @@ import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -38,6 +40,7 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,7 +67,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     protected final AlloySmeltingMachineTaskHost craftingTaskHost;
 
     @Nullable
-    private final EnumNetworkDataSlot<AlloySmelterMode> modeDataSlot;
+    private final NetworkDataSlot<AlloySmelterMode> modeDataSlot;
 
     public static AlloySmelterBlockEntity factory(BlockPos pWorldPosition, BlockState pBlockState) {
         return new AlloySmelterBlockEntity(MachineBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState);
@@ -79,10 +82,11 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         // This can be changed by the gui for the normal and enhanced machines.
         if (!isPrimitiveSmelter()) {
-            modeDataSlot = new EnumNetworkDataSlot<>(AlloySmelterMode.class, this::getMode, m -> {
+            modeDataSlot = AlloySmelterMode.DATA_SLOT_TYPE.create(this::getMode, m -> {
                 mode = m;
                 craftingTaskHost.newTaskAvailable();
             });
+
             addDataSlot(modeDataSlot);
         } else {
             modeDataSlot = null;
@@ -181,9 +185,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 .toList();
 
             if (currentStacks.stream().allMatch(i -> i.is(stack.getItem())) || currentStacks.size() == 1) {
-                if (RecipeCaches.SMELTING.hasRecipe(List.of(stack))) {
-                    return true;
-                }
+                return RecipeCaches.SMELTING.hasRecipe(List.of(stack));
             }
         }
 
@@ -226,7 +228,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         protected void onDetermineOutputs(AlloySmeltingRecipe recipe) {
             // This handles the output multiplication for vanilla smelting recipes.
             if (recipe instanceof VanillaAlloySmeltingRecipe) {
-                CountedIngredient input = recipe.getInputs().get(0);
+                SizedIngredient input = recipe.inputs().get(0);
 
                 int inputCount = 0;
                 for (int i = inputs.size() - 1; i >= 0; i--) {
@@ -246,7 +248,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             MachineInventory inv = getInventory();
 
             if (recipe instanceof VanillaAlloySmeltingRecipe) {
-                CountedIngredient input = recipe.getInputs().get(0);
+                SizedIngredient input = recipe.inputs().get(0);
 
                 int consumed = 0;
                 for (int i = inputs.size() - 1; i >= 0; i--) {
@@ -259,7 +261,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 }
             } else {
                 // Track which ingredients have been consumed
-                List<CountedIngredient> inputs = recipe.getInputs();
+                List<SizedIngredient> inputs = recipe.inputs();
                 boolean[] consumed = new boolean[3];
 
                 // Iterate over the slots
@@ -276,7 +278,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
                         if (i < inputs.size()) {
                             // If we expect an input, test we have a match for it.
-                            CountedIngredient input = inputs.get(i);
+                            SizedIngredient input = inputs.get(i);
 
                             if (input.test(stack)) {
                                 consumed[i] = true;
@@ -308,7 +310,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     protected class AlloySmeltingMachineTaskHost extends CraftingMachineTaskHost<AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> {
         public AlloySmeltingMachineTaskHost(EnderBlockEntity blockEntity, Supplier<Boolean> canAcceptNewTask, RecipeType<AlloySmeltingRecipe> recipeType,
             AlloySmeltingRecipe.ContainerWrapper container,
-            ICraftingMachineTaskFactory<AlloySmeltingMachineTask, AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> taskFactory) {
+            CraftingMachineTaskFactory<AlloySmeltingMachineTask, AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> taskFactory) {
             super(blockEntity, canAcceptNewTask, recipeType, container, taskFactory);
         }
 
@@ -346,19 +348,20 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        craftingTaskHost.save(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        craftingTaskHost.save(lookupProvider, pTag);
 
         if (!isPrimitiveSmelter()) {
             pTag.putInt(MachineNBTKeys.MACHINE_MODE, this.mode.ordinal());
         }
+
         pTag.putInt(MachineNBTKeys.PROCESSED_INPUTS, craftingTaskHost.getContainer().getInputsTaken());
-        super.saveAdditional(pTag);
+        super.saveAdditional(pTag, lookupProvider);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        craftingTaskHost.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        craftingTaskHost.load(lookupProvider, pTag);
 
         if (!isPrimitiveSmelter()) {
             try {
@@ -368,7 +371,36 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             }
         }
         craftingTaskHost.getContainer().setInputsTaken(pTag.getInt(MachineNBTKeys.PROCESSED_INPUTS));
-        super.load(pTag);
+        super.loadAdditional(pTag, lookupProvider);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+
+        if (!isPrimitiveSmelter()) {
+            mode = components.getOrDefault(MachineDataComponents.ALLOY_SMELTER_MODE, AlloySmelterMode.ALL);
+        }
+
+        craftingTaskHost.getContainer().setInputsTaken(components.getOrDefault(MachineDataComponents.ALLOY_SMELTER_PROCESSED_INPUTS, 1));
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        if (!isPrimitiveSmelter()) {
+            components.set(MachineDataComponents.ALLOY_SMELTER_MODE, mode);
+        }
+
+        components.set(MachineDataComponents.ALLOY_SMELTER_PROCESSED_INPUTS, craftingTaskHost.getContainer().getInputsTaken());
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove(MachineNBTKeys.MACHINE_MODE);
+        tag.remove(MachineNBTKeys.PROCESSED_INPUTS);
     }
 
     public record ContainerSubWrapper(AlloySmeltingRecipe.ContainerWrapper wrapper, int index) implements Container {

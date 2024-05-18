@@ -6,10 +6,11 @@
       "item": "enderio:resetting_lever_sixty"
     },
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:dusts/redstone"
     }
   ],
   "result": {
-    "item": "enderio:resetting_lever_three_hundred"
+    "count": 1,
+    "id": "enderio:resetting_lever_three_hundred"
   }
 }

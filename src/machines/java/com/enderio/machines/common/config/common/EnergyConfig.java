@@ -22,6 +22,8 @@ public class EnergyConfig {
     public final ModConfigSpec.ConfigValue<Integer> SOUL_BINDER_USAGE;
     public final ModConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_CAPACITY;
     public final ModConfigSpec.ConfigValue<Double> STIRLING_GENERATOR_BURN_SPEED;
+    public final ModConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_FUEL_EFFICIENCY_BASE;
+    public final ModConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_FUEL_EFFICIENCY_STEP;
     public final ModConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_PRODUCTION;
     public final ModConfigSpec.ConfigValue<Integer> PAINTING_MACHINE_CAPACITY;
     public final ModConfigSpec.ConfigValue<Integer> PAINTING_MACHINE_USAGE;
@@ -93,6 +95,8 @@ public class EnergyConfig {
         builder.push("stirlingGenerator");
             STIRLING_GENERATOR_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
             STIRLING_GENERATOR_BURN_SPEED = builder.comment("The base number of 'burn ticks' performed per machine tick.").defineInRange("burnSpeed", 0.375d, 0.001d, Double.MAX_VALUE);
+            STIRLING_GENERATOR_FUEL_EFFICIENCY_BASE = builder.comment("The base percentage efficiency, used to determine burn times.").defineInRange("fuelEfficiencyBase", 80, 1, 200);
+            STIRLING_GENERATOR_FUEL_EFFICIENCY_STEP = builder.comment("The efficiency increase per capacitor level.").defineInRange("fuelEfficiencyStep", 20, 1, 200);
             STIRLING_GENERATOR_PRODUCTION = builder.comment("The base amount of energy produced in uI/t.").defineInRange("generation", 40, 1, Integer.MAX_VALUE);
         builder.pop();
 

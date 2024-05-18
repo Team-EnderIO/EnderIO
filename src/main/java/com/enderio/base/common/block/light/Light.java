@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Default might class. 
@@ -26,7 +27,7 @@ public class Light extends FaceAttachedHorizontalDirectionalBlock {
 
     public static final MapCodec<Light> CODEC = RecordCodecBuilder.mapCodec(
         inst -> inst.group(
-                Codec.BOOL.fieldOf("inverted").forGetter(i -> i.inverted),
+                Codec.BOOL.fieldOf("inverted").forGetter(i -> i.isInverted),
                 propertiesCodec()
             )
             .apply(inst, Light::new)
@@ -41,16 +42,16 @@ public class Light extends FaceAttachedHorizontalDirectionalBlock {
 	protected static final VoxelShape SOUTH_AABB = Block.box(5.0D, 6.0D, 0.0D, 11.0D, 10.0D, 2.0D);
 	protected static final VoxelShape WEST_AABB = Block.box(14.0D, 6.0D, 5.0D, 16.0D, 10.0D, 11.0D);
 	protected static final VoxelShape EAST_AABB = Block.box(0.0D, 6.0D, 5.0D, 2.0D, 10.0D, 11.0D);
-	protected final boolean inverted;
+	protected final boolean isInverted;
 	
-	public Light(boolean inverted, Properties properties) {
+	public Light(boolean isInverted, Properties properties) {
 		super(properties);
-		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ENABLED, !inverted).setValue(FACE, AttachFace.WALL));
-		this.inverted = inverted;
+		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ENABLED, !isInverted).setValue(FACE, AttachFace.WALL));
+		this.isInverted = isInverted;
 	}
 	
 	public boolean isInverted() {
-		return inverted;
+		return isInverted;
 	}
 
     @Override
@@ -68,17 +69,12 @@ public class Light extends FaceAttachedHorizontalDirectionalBlock {
 			}
 			return FLOOR_AABB_Z;
 		case WALL:
-			switch(direction) {
-			case EAST:
-				return EAST_AABB;
-			case WEST:
-				return WEST_AABB;
-			case SOUTH:
-				return SOUTH_AABB;
-			case NORTH:
-			default:
-				return NORTH_AABB;
-			}
+            return switch (direction) {
+                case EAST -> EAST_AABB;
+                case WEST -> WEST_AABB;
+                case SOUTH -> SOUTH_AABB;
+                default -> NORTH_AABB;
+            };
 		case CEILING:
 		default:
 			if (direction.getAxis() == Direction.Axis.X) {
@@ -90,7 +86,7 @@ public class Light extends FaceAttachedHorizontalDirectionalBlock {
 	}
 	
 	@Override
-	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {
+	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction direction) {
 		return true;
 	}
 	
@@ -107,9 +103,9 @@ public class Light extends FaceAttachedHorizontalDirectionalBlock {
 	}
 	
 	public void checkPoweredState(Level level, BlockPos pos, BlockState state) {
-		boolean powered = level.hasNeighborSignal(pos);
-		if (powered != this.inverted ? state.getValue(ENABLED) : !state.getValue(ENABLED)) {
-			level.setBlock(pos, state.setValue(ENABLED, this.inverted ? powered : !powered), 3);
+		boolean isPowered = level.hasNeighborSignal(pos);
+		if (isPowered != this.isInverted ? state.getValue(ENABLED) : !state.getValue(ENABLED)) {
+			level.setBlock(pos, state.setValue(ENABLED, this.isInverted ? isPowered : !isPowered), 3);
 		}
 		
 	}

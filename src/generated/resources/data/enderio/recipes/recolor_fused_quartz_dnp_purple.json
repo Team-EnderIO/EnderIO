@@ -27,11 +27,11 @@
       "tag": "enderio:fused_quartz_dnp"
     },
     {
-      "tag": "forge:dyes/purple"
+      "tag": "c:dyes/purple"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:fused_quartz_dnp_purple"
+    "id": "enderio:fused_quartz_dnp_purple"
   }
 }

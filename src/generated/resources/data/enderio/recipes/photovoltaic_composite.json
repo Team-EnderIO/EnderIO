@@ -3,16 +3,17 @@
   "category": "misc",
   "ingredients": [
     {
-      "tag": "neoforge:dusts/lapis"
+      "tag": "c:dusts/lapis"
     },
     {
-      "tag": "neoforge:dusts/coal"
+      "tag": "c:dusts/coal"
     },
     {
-      "tag": "neoforge:silicon"
+      "tag": "c:silicon"
     }
   ],
   "result": {
-    "item": "enderio:photovoltaic_composite"
+    "count": 1,
+    "id": "enderio:photovoltaic_composite"
   }
 }

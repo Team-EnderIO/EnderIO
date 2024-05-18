@@ -35,8 +35,8 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
         name.setEditable(true);
 
         addRenderableWidget(
-            new ToggleImageButton<>(this, leftPos + 150, topPos + 10, 16, 16, 0, 0, 16, 0, VISIBILITY_BTNS, 32, 16, () -> menu.getBlockEntity().getVisibility(),
-                menu.getBlockEntity()::setVisibility, () -> menu.getBlockEntity().getVisibility() ? EIOLang.VISIBLE : EIOLang.NOT_VISIBLE));
+            new ToggleImageButton<>(this, leftPos + 150, topPos + 10, 16, 16, 0, 0, 16, 0, VISIBILITY_BTNS, 32, 16, () -> menu.getBlockEntity().isVisible(),
+                menu.getBlockEntity()::setIsVisible, () -> menu.getBlockEntity().isVisible() ? EIOLang.VISIBLE : EIOLang.NOT_VISIBLE));
     }
 
     @Override

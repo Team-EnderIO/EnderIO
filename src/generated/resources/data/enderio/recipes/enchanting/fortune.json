@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:fortune",
   "input": {
-    "Count": 1,
-    "Ingredient": {
-      "tag": "forge:gems/emerald"
-    }
+    "count": 1,
+    "tag": "c:gems/emerald"
   }
 }

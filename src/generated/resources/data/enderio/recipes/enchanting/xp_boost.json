@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "enderio:xp_boost",
   "input": {
-    "Count": 16,
-    "Ingredient": {
-      "item": "minecraft:experience_bottle"
-    }
+    "count": 16,
+    "item": "minecraft:experience_bottle"
   }
 }

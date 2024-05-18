@@ -5,7 +5,7 @@ import com.enderio.base.common.init.EIOFluids;
 import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.FarmSoul;
-import com.enderio.machines.common.souldata.ISoulData;
+import com.enderio.machines.common.souldata.SoulData;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
@@ -169,19 +169,19 @@ public class SoulDataProvider implements DataProvider {
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(FarmSoul.CODEC, data, FarmSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
     }
 
-    static class FinshedSoulData<T extends ISoulData> {
+    public static class FinshedSoulData<T extends SoulData> {
 
         private final Codec<T> codec;
         private final T data;
         private final ResourceLocation id;
 
-        FinshedSoulData(Codec<T> codec, T data, String id) {
+        private FinshedSoulData(Codec<T> codec, T data, String id) {
             this.codec = codec;
             this.data = data;
             this.id = EnderIO.loc(id);
         }
 
-        FinshedSoulData(Codec<T> codec, T data, ResourceLocation id) {
+        private FinshedSoulData(Codec<T> codec, T data, ResourceLocation id) {
             this.codec = codec;
             this.data = data;
             this.id = id;
@@ -189,7 +189,7 @@ public class SoulDataProvider implements DataProvider {
 
         public JsonObject serializeData() {
             DataResult<JsonElement> element = codec.encodeStart(JsonOps.INSTANCE, data);
-            return element.get().left().get().getAsJsonObject();
+            return element.getOrThrow().getAsJsonObject();
         }
 
         public ResourceLocation getId() {

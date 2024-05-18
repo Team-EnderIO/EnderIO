@@ -27,11 +27,11 @@
       "tag": "enderio:clear_glass_ep"
     },
     {
-      "tag": "forge:dyes/light_gray"
+      "tag": "c:dyes/light_gray"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:clear_glass_ep_light_gray"
+    "id": "enderio:clear_glass_ep_light_gray"
   }
 }

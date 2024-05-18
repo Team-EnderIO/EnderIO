@@ -1,63 +1,74 @@
 package com.enderio.api.attachment;
 
+import com.mojang.logging.LogUtils;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.extensions.IEntityExtension;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.slf4j.Logger;
 
 import java.util.Optional;
 
-public class StoredEntityData implements INBTSerializable<CompoundTag> {
-    private CompoundTag entityTag = new CompoundTag();
-    private float maxHealth = 0.0f;
-
+public record StoredEntityData(CompoundTag entityTag, float maxHealth) {
     /**
-     * Should match key from {@link IEntityExtension#serializeNBT()}.
+     * Should match key from {@link IEntityExtension#serializeNBT(HolderLookup.Provider)}.
      */
     public static final String KEY_ID = "id";
 
     /**
-     * Should match key from {@link Entity#saveWithoutId(CompoundTag)}
+     * Should match key from {@link LivingEntity#addAdditionalSaveData(CompoundTag)}
      */
-    public static final String KEY_ENTITY = "Entity";
-    private static final String KEY_HEALTH = "Health";
-    private static final String KEY_MAX_HEALTH = "MaxHealth";
+    public static final String KEY_HEALTH = "Health";
+
+    public static Codec<StoredEntityData> CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            CompoundTag.CODEC.fieldOf("entityTag").forGetter(StoredEntityData::entityTag),
+            Codec.FLOAT.fieldOf("maxHealth").forGetter(StoredEntityData::maxHealth)
+        ).apply(instance, StoredEntityData::new));
+
+    public static StreamCodec<ByteBuf, StoredEntityData> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.COMPOUND_TAG,
+        StoredEntityData::getEntityTag,
+        ByteBufCodecs.FLOAT,
+        StoredEntityData::maxHealth,
+        StoredEntityData::new
+    );
+
+    public static final StoredEntityData EMPTY = new StoredEntityData(
+        new CompoundTag(),
+        0.0f
+    );
 
     public static StoredEntityData of(LivingEntity entity) {
-        StoredEntityData data = new StoredEntityData();
-        data.entityTag = entity.serializeNBT();
-        data.maxHealth = entity.getMaxHealth();
-        return data;
+        return new StoredEntityData(
+            entity.serializeNBT(entity.level().registryAccess()),
+            entity.getMaxHealth()
+        );
     }
 
     public static StoredEntityData of(ResourceLocation entityType) {
         CompoundTag tag = new CompoundTag();
         tag.putString(KEY_ID, entityType.toString());
 
-        StoredEntityData data = new StoredEntityData();
-        data.entityTag = tag;
-        data.maxHealth = 0.0f;
-        return data;
-    }
-
-    public static StoredEntityData empty() {
-        StoredEntityData data = new StoredEntityData();
-        data.maxHealth = 0.0f;
-        return data;
+        return new StoredEntityData(tag, 0.0f);
     }
 
     public boolean hasEntity() {
-        return getEntityType().isPresent();
+        return entityType().isPresent();
     }
 
-    public Optional<ResourceLocation> getEntityType() {
-        CompoundTag tag = entityTag;
-        if (tag.contains(KEY_ID)) {
-            return Optional.of(new ResourceLocation(tag.getString(KEY_ID)));
+    public Optional<ResourceLocation> entityType() {
+        if (entityTag.contains(KEY_ID)) {
+            return Optional.of(new ResourceLocation(entityTag.getString(KEY_ID)));
         }
 
         return Optional.empty();
@@ -78,21 +89,26 @@ public class StoredEntityData implements INBTSerializable<CompoundTag> {
         return Optional.empty();
     }
 
-    @Override
-    public CompoundTag serializeNBT() {
-        var compound = new CompoundTag();
-        compound.put(KEY_ENTITY, entityTag);
-        if (maxHealth > 0.0f) {
-            compound.putFloat(KEY_MAX_HEALTH, maxHealth);
+    private static final Logger LOGGER = LogUtils.getLogger();
+
+    public Tag save(HolderLookup.Provider lookupProvider) {
+        if (this.hasEntity()) {
+            throw new IllegalStateException("Cannot encode empty StoredEntityData");
+        } else {
+            return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
         }
-        return compound;
     }
 
-    @Override
-    public void deserializeNBT(CompoundTag tag) {
-        entityTag = tag.getCompound(KEY_ENTITY);
-        if (tag.contains(KEY_MAX_HEALTH)) {
-            maxHealth = tag.getFloat(KEY_MAX_HEALTH);
-        }
+    public Tag saveOptional(HolderLookup.Provider lookupProvider) {
+        return this.hasEntity() ? save(lookupProvider) : new CompoundTag();
+    }
+
+    public static Optional<StoredEntityData> parse(HolderLookup.Provider lookupProvider, Tag tag) {
+        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
+            .resultOrPartial(error -> LOGGER.error("Tried to load invalid StoredEntityData: '{}'", error));
+    }
+
+    public static StoredEntityData parseOptional(HolderLookup.Provider lookupProvider, CompoundTag tag) {
+        return tag.isEmpty() ? EMPTY : parse(lookupProvider, tag).orElse(EMPTY);
     }
 }

@@ -1,9 +1,10 @@
 package com.enderio.machines.common.io.energy;
 
-import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.IOConfigurable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.MachineNBTKeys;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -17,7 +18,7 @@ import java.util.function.Supplier;
  * Also provides sided access through capabilities.
  */
 public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializable<CompoundTag> {
-    private final IIOConfig config;
+    private final IOConfigurable config;
     private final EnergyIOMode ioMode;
 
     private int energyStored;
@@ -25,7 +26,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
     private final Supplier<Integer> capacity;
     private final Supplier<Integer> usageRate;
 
-    public MachineEnergyStorage(IIOConfig config, EnergyIOMode ioMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
+    public MachineEnergyStorage(IOConfigurable config, EnergyIOMode ioMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
         this.config = config;
         this.ioMode = ioMode;
         this.capacity = capacity;
@@ -33,7 +34,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
     }
 
     @Override
-    public final IIOConfig getConfig() {
+    public final IOConfigurable getConfig() {
         return config;
     }
 
@@ -148,7 +149,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
             return this;
         }
 
-        if (config.getMode(side).canConnect()) {
+        if (config.getIOMode(side).canConnect()) {
             return new Sided(this, side);
         }
 
@@ -156,26 +157,18 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
         tag.putInt(MachineNBTKeys.ENERGY_STORED, getEnergyStored());
         return tag;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        setEnergyStored(nbt.getInt(MachineNBTKeys.ENERGY_STORED));
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+        energyStored = nbt.getInt(MachineNBTKeys.ENERGY_STORED);
     }
 
-    private static class Sided implements IEnergyStorage {
-
-        private final MachineEnergyStorage wrapped;
-        private final Direction side;
-
-        Sided(MachineEnergyStorage wrapped, Direction side) {
-            this.wrapped = wrapped;
-            this.side = side;
-        }
+    private record Sided(MachineEnergyStorage wrapped, Direction side) implements IEnergyStorage {
 
         @Override
         public int getEnergyStored() {
@@ -207,7 +200,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
 
         @Override
         public boolean canExtract() {
-            if (wrapped.getIOMode().respectIOConfig() && !wrapped.getConfig().getMode(side).canOutput()) {
+            if (wrapped.getIOMode().respectIOConfig() && !wrapped.getConfig().getIOMode(side).canOutput()) {
                 return false;
             }
 
@@ -216,7 +209,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
 
         @Override
         public boolean canReceive() {
-            if (wrapped.getIOMode().respectIOConfig() && !wrapped.getConfig().getMode(side).canInput()) {
+            if (wrapped.getIOMode().respectIOConfig() && !wrapped.getConfig().getIOMode(side).canInput()) {
                 return false;
             }
 

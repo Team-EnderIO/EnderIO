@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.items;
 
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
@@ -20,14 +20,14 @@ import java.util.function.Supplier;
 
 public class ConduitBlockItem extends BlockItem {
 
-    private final Supplier<? extends IConduitType<?>> type;
+    private final Supplier<? extends ConduitType<?>> type;
 
-    public ConduitBlockItem(Supplier<? extends IConduitType<?>> type, Block block, Properties properties) {
+    public ConduitBlockItem(Supplier<? extends ConduitType<?>> type, Block block, Properties properties) {
         super(block, properties);
         this.type = type;
     }
 
-    public IConduitType<?> getType() {
+    public ConduitType<?> getType() {
         return type.get();
     }
 
@@ -48,7 +48,7 @@ public class ConduitBlockItem extends BlockItem {
         if (level.getBlockEntity(blockpos) instanceof ConduitBlockEntity conduit) {
             if (conduit.hasType(type.get())) {
                 // Pass through to block
-                return level.getBlockState(blockpos).use(level, player, context.getHand(), context.getHitResult());
+                return level.getBlockState(blockpos).useItemOn(context.getItemInHand(), level, player, context.getHand(), context.getHitResult()).result();
             }
 
             conduit.addType(type.get(), player);

@@ -6,10 +6,9 @@ import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.capacitor.LinearScalable;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
-import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.attachment.IFluidTankUser;
+import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -23,6 +22,7 @@ import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -37,7 +37,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -50,8 +50,8 @@ import java.util.function.Supplier;
 
 import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
 
-@Mod.EventBusSubscriber
-public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements IFluidTankUser {
+@EventBusSubscriber
+public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser {
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
     public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED);
@@ -59,7 +59,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> 1);
 
     private static final String BURNED_TICKS = "BurnedTicks";
-    private StoredEntityData entityData = StoredEntityData.empty();
+    private StoredEntityData entityData = StoredEntityData.EMPTY;
     public static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
@@ -73,8 +73,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, MachineBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState);
         fluidHandler = createFluidHandler();
 
-        addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
-        addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
+        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
+        addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
 
     }
 
@@ -87,8 +87,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
     @Override
     public void serverTick() {
-        if (reloadCache != reload && entityData != StoredEntityData.empty() && entityData.getEntityType().isPresent()) {
-            Optional<EngineSoul.SoulData> op = EngineSoul.ENGINE.matches(entityData.getEntityType().get());
+        if (reloadCache != reload && entityData.hasEntity()) {
+            Optional<EngineSoul.SoulData> op = EngineSoul.ENGINE.matches(entityData.entityType().get());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
@@ -96,12 +96,12 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
             producePower();
         }
 
-        updateMachineState(MachineState.NOT_SOULBOUND, soulData == null || entityData.getEntityType().isEmpty());
+        updateMachineState(MachineState.NOT_SOULBOUND, soulData == null || entityData.entityType().isEmpty());
         super.serverTick();
     }
 
     public Optional<ResourceLocation> getEntityType() {
-        return entityData.getEntityType();
+        return entityData.entityType();
     }
 
     public void setEntityType(ResourceLocation entityType) {
@@ -141,7 +141,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(this, getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
@@ -184,15 +184,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
             String fluid = soulData.fluid();
             if (fluid.startsWith("#")) { //We have a fluid tag instead
                 TagKey<Fluid> tag = TagKey.create(Registries.FLUID, new ResourceLocation(fluid.substring(1)));
-
-                // TODO: NEO-PORT: https://github.com/neoforged/NeoForge/pull/585 may be applicable
-                var optionalTagContents = BuiltInRegistries.FLUID.getTag(tag);
-                if (optionalTagContents.isPresent()) {
-                    var optionalTag = optionalTagContents.get().stream().findFirst();
-                    if (optionalTag.isPresent()) {
-                        return fluidStack.getFluid().isSame(optionalTag.get().value());
-                    }
-                }
+                return fluidStack.is(tag);
             } else {
                 Optional<Holder.Reference<Fluid>> delegate = BuiltInRegistries.FLUID.getHolder(ResourceKey.create(Registries.FLUID, new ResourceLocation(fluid)));
                 if (delegate.isPresent()) {
@@ -211,7 +203,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
-        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, usageRate) {
+        return new MachineEnergyStorage(this, energyIOMode, capacity, usageRate) {
             @Override
             protected void onContentsChanged() {
                 setChanged();
@@ -220,25 +212,24 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
             }
         };
     }
-
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
         pTag.putInt(BURNED_TICKS, burnedTicks);
-        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.serializeNBT());
-        saveTank(pTag);
+        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(lookupProvider));
+        saveTank(lookupProvider, pTag);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
         burnedTicks = pTag.getInt(BURNED_TICKS);
-        entityData.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+        entityData = StoredEntityData.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER,
             (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
-        loadTank(pTag);
+        loadTank(lookupProvider, pTag);
     }
 
     @Override

@@ -8,7 +8,7 @@ package com.enderio.conduits.common.blockentity.connection;
  * {@linkplain StaticConnectionStates#DISCONNECTED DISCONNECTED} is for no Connection
  * {@linkplain StaticConnectionStates#DISABLED DISABLED} is for no connection and activly disabled, so they don't connect, when a conduit is placed next to it (this state is set using the wrench or when IO is both disabled the state returns to this)
  */
-public enum StaticConnectionStates implements IConnectionState {
+public enum StaticConnectionStates implements ConnectionState {
     CONNECTED,
     CONNECTED_ACTIVE,
     DISCONNECTED,

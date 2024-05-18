@@ -7,6 +7,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistr
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgradeTier;
 import com.enderio.base.common.init.EIOCapabilities;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -179,22 +180,22 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable, INBTSerializa
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
         for (var entry : upgrades.entrySet()) {
-            tag.put(entry.getKey(), entry.getValue().serializeNBT());
+            tag.put(entry.getKey(), entry.getValue().serializeNBT(lookupProvider));
         }
         tag.putString(ON_ITEM_KEY, onItem.toString());
         return tag;
     }
 
     @Override
-    public void deserializeNBT(Tag tag) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, Tag tag) {
         upgrades.clear();
         if (tag instanceof CompoundTag nbt) {
             for (String key : nbt.getAllKeys()) {
                 DarkSteelUpgradeRegistry.instance().createUpgrade(key).ifPresent(upgrade -> {
-                    upgrade.deserializeNBT(Objects.requireNonNull(nbt.get(key)));
+                    upgrade.deserializeNBT(lookupProvider, Objects.requireNonNull(nbt.get(key)));
                     addUpgrade(upgrade);
                 });
             }

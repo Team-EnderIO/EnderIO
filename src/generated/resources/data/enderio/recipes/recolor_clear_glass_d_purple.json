@@ -27,11 +27,11 @@
       "tag": "enderio:clear_glass_d"
     },
     {
-      "tag": "forge:dyes/purple"
+      "tag": "c:dyes/purple"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:clear_glass_d_purple"
+    "id": "enderio:clear_glass_d_purple"
   }
 }

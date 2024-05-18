@@ -1,30 +1,28 @@
 package com.enderio.base.common.enchantment;
 
-import com.enderio.base.common.config.BaseConfig;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 public class AutoSmeltEnchantment extends EIOBaseEnchantment {
 
     public AutoSmeltEnchantment() {
-        super(Rarity.RARE, EnchantmentCategory.DIGGER, new EquipmentSlot[] { EquipmentSlot.MAINHAND }, () -> true);
+        super(
+            definition(
+                ItemTags.MINING_ENCHANTABLE,
+                2,
+                1,
+                constantCost(15),
+                constantCost(60),
+                1,
+                EquipmentSlot.MAINHAND
+            ), () -> true);
     }
 
     @Override
-    public int getMaxLevel() {
-        return 1;
-    }
-
-    @Override
-    public int getMaxCost(int pLevel) {
-        return BaseConfig.COMMON.ENCHANTMENTS.AUTO_SMELT_MAX_COST.get();
-    }
-
-    @Override
-    public int getMinCost(int pLevel) {
-        return BaseConfig.COMMON.ENCHANTMENTS.AUTO_SMELT_MIN_COST.get();
+    public boolean isTreasureOnly() {
+        return true;
     }
 
     @Override

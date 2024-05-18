@@ -6,10 +6,10 @@
       "item": "enderio:conduit_binder"
     },
     "G": {
-      "tag": "enderio:fused_quartz"
+      "tag": "c:glass_blocks/fused_quartz"
     },
     "I": {
-      "tag": "neoforge:ingots/vibrant_alloy"
+      "tag": "c:ingots/vibrant_alloy"
     }
   },
   "pattern": [
@@ -19,6 +19,6 @@
   ],
   "result": {
     "count": 8,
-    "item": "enderio:ender_fluid_conduit"
+    "id": "enderio:ender_fluid_conduit"
   }
 }

@@ -2,13 +2,13 @@ package com.enderio.machines.common.block;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.item.IAdvancedTooltipProvider;
-import com.enderio.core.common.util.EnergyUtil;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
+import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.DisplayMode;
-import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
+import com.enderio.machines.common.blockentity.multienergy.CapacityTier;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,25 +24,25 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber
-public class CapacitorBankBlock extends MachineBlock implements IAdvancedTooltipProvider {
+@EventBusSubscriber
+public class CapacitorBankBlock extends MachineBlock implements AdvancedTooltipProvider {
 
-    public ICapacityTier getTier() {
+    public CapacityTier getTier() {
         return tier;
     }
 
-    private final ICapacityTier tier;
+    public final CapacityTier tier;
 
     public static final ResourceLocation PLACE_ADVANCEMENT_ID = EnderIO.loc("place_capacitor_bank");
 
-    public CapacitorBankBlock(Properties properties, RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, ICapacityTier tier) {
+    public CapacitorBankBlock(Properties properties, RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, CapacityTier tier) {
         super(blockEntityType, properties);
         this.tier = tier;
     }
@@ -71,7 +71,7 @@ public class CapacitorBankBlock extends MachineBlock implements IAdvancedTooltip
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        String energy = String.format("%,d", EnergyUtil.getEnergyStored(itemStack)) + "/" +  String.format("%,d", EnergyUtil.getMaxEnergyStored(itemStack));
+        String energy = String.format("%,d", ItemStackEnergy.getEnergyStored(itemStack)) + "/" +  String.format("%,d", ItemStackEnergy.getMaxEnergyStored(itemStack));
         tooltips.add(TooltipUtil.styledWithArgs(EIOLang.ENERGY_AMOUNT, energy));
     }
 

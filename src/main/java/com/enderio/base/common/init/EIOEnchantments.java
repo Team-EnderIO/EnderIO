@@ -14,17 +14,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
@@ -66,12 +65,12 @@ public class EIOEnchantments {
         EnderIO.getRegilite().addTranslation("enchantment", new ResourceLocation(EnderIO.MODID, name), translation);
     }
     
-    private static void addTooltip(ItemTooltipEvent event, Map<Enchantment, Integer> enchantments, List<Component> toolTip, Enchantment enchantment, Component... components) {
-        if (enchantments.containsKey(enchantment)) {
-            toolTip.stream().forEach(c -> {
-                if(c.equals(enchantment.getFullname(enchantments.get(enchantment)))) {
+    private static void addTooltip(ItemTooltipEvent event, ItemEnchantments enchantments, List<Component> toolTip, Enchantment enchantment, Component... components) {
+        if (enchantments.getLevel(enchantment) > 0) {
+            toolTip.stream().forEach(component -> {
+                if(component.equals(enchantment.getFullname(enchantments.getLevel(enchantment)))) {
                     for (int i = 0; i < components.length; i++) {
-                        event.getToolTip().add(event.getToolTip().indexOf(c)+i+1, components[i]);
+                        event.getToolTip().add(event.getToolTip().indexOf(component)+i+1, components[i]);
                     }
                 }
             });
@@ -84,7 +83,7 @@ public class EIOEnchantments {
     @SubscribeEvent
     static void tooltip(ItemTooltipEvent event) {
         if (event.getItemStack().getItem() == Items.ENCHANTED_BOOK) {
-            Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(event.getItemStack());
+            ItemEnchantments enchantments = event.getItemStack().getAllEnchantments();
             List<Component> toolTip = new ArrayList<>(event.getToolTip());
             if (!enchantments.isEmpty()) {
                 addTooltip(event, enchantments, toolTip, WITHERING.get(), EIOLang.WITHERING_TYPES);

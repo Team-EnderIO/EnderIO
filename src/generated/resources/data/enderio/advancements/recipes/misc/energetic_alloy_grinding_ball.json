@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:energetic_alloy_ingot"
-            ]
+            "items": "enderio:energetic_alloy_ingot"
           }
         ]
       },

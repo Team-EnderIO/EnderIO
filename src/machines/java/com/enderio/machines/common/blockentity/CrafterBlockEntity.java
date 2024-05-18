@@ -11,6 +11,7 @@ import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.CrafterMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -116,8 +116,8 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
         if (level != null && !level.isClientSide()) {
             updateRecipe();
         }
@@ -181,7 +181,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     private boolean canMergeOutput(ItemStack item) {
         ItemStack output = OUTPUT.getItemStack(this);
-        return output.isEmpty() || (ItemStack.isSameItemSameTags(output, item) && (output.getCount() + item.getCount() <= 64));
+        return output.isEmpty() || (ItemStack.isSameItemSameComponents(output, item) && (output.getCount() + item.getCount() <= 64));
     }
 
     private void craftItem() {

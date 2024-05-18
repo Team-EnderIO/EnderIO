@@ -1,6 +1,5 @@
 package com.enderio.machines.common.integrations.vanilla;
 
-import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -11,6 +10,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
 import java.util.List;
 
@@ -24,10 +24,9 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     }
 
     // Override base behaviour to insert the vanilla recipe
-
     @Override
-    public List<CountedIngredient> getInputs() {
-        return List.of(CountedIngredient.of(vanillaRecipe.getIngredients().get(0)));
+    public List<SizedIngredient> inputs() {
+        return List.of(new SizedIngredient(vanillaRecipe.getIngredients().get(0), 1));
     }
 
     @Override
@@ -41,7 +40,7 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     }
 
     @Override
-    public float getExperience() {
+    public float experience() {
         return vanillaRecipe.getExperience();
     }
 

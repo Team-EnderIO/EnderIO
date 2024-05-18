@@ -4,14 +4,12 @@
   "experience": 0.3,
   "inputs": [
     {
-      "Count": 4,
-      "Ingredient": {
-        "tag": "forge:gems/quartz"
-      }
+      "count": 4,
+      "tag": "c:gems/quartz"
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:fused_quartz"
   }
 }

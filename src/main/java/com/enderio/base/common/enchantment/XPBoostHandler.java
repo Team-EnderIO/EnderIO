@@ -12,19 +12,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod.EventBusSubscriber;
-
-import java.util.Map;
 
 @EventBusSubscriber
 public class XPBoostHandler {
@@ -69,7 +65,7 @@ public class XPBoostHandler {
             BlockState state = event.getState();
             Level level = (Level) event.getLevel();
             BlockPos pos = event.getPos();
-            final int fortune = event.getPlayer().getMainHandItem().getEnchantmentLevel(Enchantments.BLOCK_FORTUNE);
+            final int fortune = event.getPlayer().getMainHandItem().getEnchantmentLevel(Enchantments.FORTUNE);
             final int xp = state.getBlock().getExpDrop(state, level, RandomSource.create(), pos, fortune, 0);
             if (xp > 0) {
                 level.addFreshEntity(new ExperienceOrb(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, getXPBoost(xp, boostLevel)));
@@ -87,6 +83,7 @@ public class XPBoostHandler {
                 int xp = killed.getExperienceReward();
                 return getXPBoost(xp, level);
             } catch (Exception e) {
+                // TODO: Properly bound this catch to the right exception (assuming Math related)
                 Throwables.throwIfUnchecked(e);
             }
         }
@@ -104,17 +101,7 @@ public class XPBoostHandler {
                 return -1;
             }
 
-            int result = -1;
-
-            for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(weapon).entrySet()) {
-                if (entry.getKey() == Enchantments.SILK_TOUCH) {
-                    return -1;
-                }
-                if (entry.getKey() == EIOEnchantments.XP_BOOST.get()) {
-                    result = entry.getValue();
-                }
-            }
-            return result;
+            return weapon.getEnchantmentLevel(EIOEnchantments.XP_BOOST.get());
         }
         return -1;
     }

@@ -27,11 +27,11 @@
       "tag": "enderio:clear_glass_ena"
     },
     {
-      "tag": "forge:dyes/pink"
+      "tag": "c:dyes/pink"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:clear_glass_ena_pink"
+    "id": "enderio:clear_glass_ena_pink"
   }
 }

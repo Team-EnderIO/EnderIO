@@ -3,22 +3,22 @@
   "energy": 20000,
   "inputs": [
     {
-      "tag": "neoforge:ingots/energetic_alloy"
+      "tag": "c:ingots/energetic_alloy"
     },
     {
-      "tag": "forge:dusts/prismarine"
+      "tag": "c:dusts/prismarine"
     },
     {
-      "tag": "neoforge:ingots/energetic_alloy"
+      "tag": "c:ingots/energetic_alloy"
     },
     {
-      "tag": "forge:gems/prismarine"
+      "tag": "c:gems/prismarine"
     },
     {
       "item": "enderio:basic_capacitor"
     },
     {
-      "tag": "forge:gems/prismarine"
+      "tag": "c:gems/prismarine"
     }
   ],
   "output": "enderio:guardian_diode"

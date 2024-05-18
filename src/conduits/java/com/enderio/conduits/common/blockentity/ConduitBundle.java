@@ -1,13 +1,14 @@
 package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.ConduitTypes;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.client.ConduitClientSetup;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
@@ -17,13 +18,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.util.thread.EffectiveSide;
-import net.neoforged.neoforgespi.language.IModInfo;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -41,10 +39,10 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
     private final Map<Direction, ConduitConnection> connections = new EnumMap<>(Direction.class);
 
-    private final List<IConduitType<?>> types = new ArrayList<>();
+    private final List<ConduitType<?>> types = new ArrayList<>();
 
     //fill back after world save
-    private final Map<IConduitType<?>, NodeIdentifier<?>> nodes = new HashMap<>();
+    private final Map<ConduitType<?>, NodeIdentifier<?>> nodes = new HashMap<>();
     private final Runnable scheduleSync;
     private final BlockPos pos;
 
@@ -64,7 +62,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
      * @param type
      * @return an action containing the type that is now not in this bundle
      */
-    public RightClickAction addType(Level level, IConduitType<?> type, Player player) {
+    public RightClickAction addType(Level level, ConduitType<?> type, Player player) {
         if (types.size() == MAX_CONDUIT_TYPES) {
             return new RightClickAction.Blocked();
         }
@@ -74,7 +72,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         }
 
         //upgrade a conduit
-        Optional<? extends IConduitType<?>> first = types.stream().filter(existingConduit -> existingConduit.canBeReplacedBy(type)).findFirst();
+        Optional<? extends ConduitType<?>> first = types.stream().filter(existingConduit -> existingConduit.canBeReplacedBy(type)).findFirst();
         NodeIdentifier<?> node = new NodeIdentifier<>(pos, type.createExtendedConduitData(level, pos));
         if (first.isPresent()) {
             int index = types.indexOf(first.get());
@@ -128,7 +126,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     }
 
     void onLoad(Level level, BlockPos pos) {
-        for (IConduitType<?> type : types) {
+        for (ConduitType<?> type : types) {
             getNodeFor(type).getExtendedConduitData().onCreated(type, level, pos, null);
         }
     }
@@ -138,13 +136,13 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
      * @return if this bundle is empty and the block has to be removed
      * @throws IllegalArgumentException if this type is not in the conduitbundle and we are in dev env
      */
-    public boolean removeType(Level level, IConduitType<?> type) {
+    public boolean removeType(Level level, ConduitType<?> type) {
         int index = types.indexOf(type);
         if (index == -1) {
             if (!FMLLoader.isProduction()) {
                 throw new IllegalArgumentException(
-                    "Conduit: " + ConduitTypes.REGISTRY.getKey(type) + " is not present in conduit bundle " + Arrays.toString(
-                        types.stream().map(ConduitTypes.REGISTRY::getKey).toArray()));
+                    "Conduit: " + EnderIORegistries.CONDUIT_TYPES.getKey(type) + " is not present in conduit bundle " + Arrays.toString(
+                        types.stream().map(EnderIORegistries.CONDUIT_TYPES::getKey).toArray()));
             }
 
             return types.isEmpty();
@@ -175,31 +173,31 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     private static final String KEY_DATA = "ExtendedDataBackup";
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
         ListTag listTag = new ListTag();
-        for (IConduitType<?> type : types) {
-            listTag.add(StringTag.valueOf(ConduitTypes.getRegistry().getKey(type).toString()));
+        for (ConduitType<?> type : types) {
+            listTag.add(StringTag.valueOf(EnderIORegistries.CONDUIT_TYPES.getKey(type).toString()));
         }
         tag.put(KEY_TYPES, listTag);
         CompoundTag connectionsTag = new CompoundTag();
         for (Direction dir : Direction.values()) {
-            connectionsTag.put(dir.getName(), connections.get(dir).serializeNBT());
+            connectionsTag.put(dir.getName(), connections.get(dir).serializeNBT(lookupProvider));
         }
         tag.put(KEY_CONNECTIONS, connectionsTag);
         CompoundTag facades = new CompoundTag();
         for (Map.Entry<Direction, BlockState> entry : facadeTextures.entrySet()) {
-            Tag blockStateTag = BlockState.CODEC.encode(entry.getValue(), NbtOps.INSTANCE, new CompoundTag()).get().left().orElse(new CompoundTag());
+            Tag blockStateTag = BlockState.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), entry.getValue()).result().orElse(new CompoundTag());
             facades.put(entry.getKey().getName(), blockStateTag);
         }
         tag.put(KEY_FACADES, facades);
         if (EffectiveSide.get().isServer()) {
             ListTag nodeTag = new ListTag();
             for (var entry : nodes.entrySet()) {
-                var data = entry.getValue().getExtendedConduitData().serializeRenderNBT();
+                var data = entry.getValue().getExtendedConduitData().serializeRenderNBT(lookupProvider);
                 if (!data.isEmpty()) {
                     CompoundTag dataTag = new CompoundTag();
-                    dataTag.putString(KEY_NODE_TYPE, ConduitTypes.getRegistry().getKey(entry.getKey()).toString());
+                    dataTag.putString(KEY_NODE_TYPE, EnderIORegistries.CONDUIT_TYPES.getKey(entry.getKey()).toString());
                     dataTag.put(KEY_NODE_DATA, data);
                     nodeTag.add(dataTag);
                 }
@@ -211,34 +209,34 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         return tag;
     }
 
-    public CompoundTag serializeGuiNBT() {
+    public CompoundTag serializeGuiNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag nbt = new CompoundTag();
-        for (IConduitType<?> type : getTypes()) {
-            CompoundTag compoundTag = nodes.get(type).getExtendedConduitData().serializeGuiNBT();
+        for (ConduitType<?> type : getTypes()) {
+            CompoundTag compoundTag = nodes.get(type).getExtendedConduitData().serializeGuiNBT(lookupProvider);
             if (!compoundTag.isEmpty()) {
-                nbt.put(ConduitTypes.getRegistry().getKey(type).toString(), compoundTag);
+                nbt.put(EnderIORegistries.CONDUIT_TYPES.getKey(type).toString(), compoundTag);
             }
         }
         return nbt;
     }
 
-    public void deserializeGuiNBT(CompoundTag nbt) {
-        for (IConduitType<?> type : getTypes()) {
-            if (nbt.contains(ConduitTypes.getRegistry().getKey(type).toString())) {
-                nodes.get(type).getExtendedConduitData().deserializeNBT(nbt.getCompound(ConduitTypes.getRegistry().getKey(type).toString()));
+    public void deserializeGuiNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+        for (ConduitType<?> type : getTypes()) {
+            if (nbt.contains(EnderIORegistries.CONDUIT_TYPES.getKey(type).toString())) {
+                nodes.get(type).getExtendedConduitData().deserializeNBT(lookupProvider, nbt.getCompound(EnderIORegistries.CONDUIT_TYPES.getKey(type).toString()));
             }
         }
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         types.clear();
         ListTag typesTag = nbt.getList(KEY_TYPES, Tag.TAG_STRING);
         //this is used to shift connections back if a ConduitType was removed from
         List<Integer> invalidTypes = new ArrayList<>();
         for (int i = 0; i < typesTag.size(); i++) {
             StringTag stringTag = (StringTag) typesTag.get(i);
-            IConduitType<?> type = ConduitTypes.getRegistry().get(ResourceLocation.tryParse(stringTag.getAsString()));
+            ConduitType<?> type = EnderIORegistries.CONDUIT_TYPES.get(ResourceLocation.tryParse(stringTag.getAsString()));
             if (type == null) {
                 invalidTypes.add(i);
                 continue;
@@ -247,7 +245,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         }
         CompoundTag connectionsTag = nbt.getCompound(KEY_CONNECTIONS);
         for (Direction dir : Direction.values()) {
-            connections.get(dir).deserializeNBT(connectionsTag.getCompound(dir.getName()));
+            connections.get(dir).deserializeNBT(lookupProvider, connectionsTag.getCompound(dir.getName()));
             for (Integer invalidType : invalidTypes) {
                 connections.get(dir).removeType(invalidType);
             }
@@ -260,16 +258,19 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         CompoundTag facades = nbt.getCompound(KEY_FACADES);
         for (Direction direction : Direction.values()) {
             if (facades.contains(direction.getName())) {
-                facadeTextures.put(direction, BlockState.CODEC.decode(NbtOps.INSTANCE, facades.getCompound(direction.getName())).get().left().get().getFirst());
+                facadeTextures.put(direction, BlockState.CODEC
+                    .decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), facades.getCompound(direction.getName()))
+                    .getPartialOrThrow()
+                    .getFirst());
             }
         }
         for (Map.Entry<Direction, BlockState> entry : facadeTextures.entrySet()) {
-            Tag blockStateTag = BlockState.CODEC.encode(entry.getValue(), NbtOps.INSTANCE, new CompoundTag()).get().left().orElse(new CompoundTag());
+            Tag blockStateTag = BlockState.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), entry.getValue()).result().orElse(new CompoundTag());
             facades.put(entry.getKey().getName(), blockStateTag);
         }
         nodes.entrySet().removeIf(entry -> !types.contains(entry.getKey()));
         if (EffectiveSide.get().isServer()) {
-            for (IConduitType<?> type : types) {
+            for (ConduitType<?> type : types) {
                 if (nodes.containsKey(type)) {
                     for (Direction direction : Direction.values()) {
                         if (getConnection(direction).getConnectionState(type) instanceof DynamicConnectionState dyn) {
@@ -289,9 +290,9 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                 for (Tag tag : nodesTag) {
                     CompoundTag cmp = (CompoundTag) tag;
                     nodes
-                        .get(ConduitTypes.getRegistry().get(new ResourceLocation(cmp.getString(KEY_NODE_TYPE))))
+                        .get(EnderIORegistries.CONDUIT_TYPES.get(new ResourceLocation(cmp.getString(KEY_NODE_TYPE))))
                         .getExtendedConduitData()
-                        .deserializeNBT(cmp.getCompound(KEY_NODE_DATA));
+                        .deserializeNBT(lookupProvider, cmp.getCompound(KEY_NODE_DATA));
                 }
             }
         }
@@ -303,7 +304,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         return connections.get(direction);
     }
 
-    public List<IConduitType<?>> getTypes() {
+    public List<ConduitType<?>> getTypes() {
         return types;
     }
 
@@ -320,13 +321,13 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         dataVersion++;
     }
 
-    public void connectTo(Level level, BlockPos pos, Direction direction, IConduitType<?> type, boolean end) {
+    public void connectTo(Level level, BlockPos pos, Direction direction, ConduitType<?> type, boolean end) {
         getConnection(direction).connectTo(level, pos, getNodeFor(type), direction, type, getTypeIndex(type), end);
         scheduleSync.run();
         dataVersion++;
     }
 
-    public boolean disconnectFrom(Direction direction, IConduitType<?> type) {
+    public boolean disconnectFrom(Direction direction, ConduitType<?> type) {
         for (int i = 0; i < types.size(); i++) {
             if (type.getTicker().canConnectTo(type, types.get(i))) {
                 getConnection(direction).tryDisconnect(i);
@@ -339,11 +340,11 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     }
 
     @Nullable
-    public NodeIdentifier<?> getNodeForTypeExact(IConduitType<?> type) {
+    public NodeIdentifier<?> getNodeForTypeExact(ConduitType<?> type) {
         return nodes.get(type);
     }
 
-    public NodeIdentifier<?> getNodeFor(IConduitType<?> type) {
+    public NodeIdentifier<?> getNodeFor(ConduitType<?> type) {
         for (var entry : nodes.entrySet()) {
             if (entry.getKey().getTicker().canConnectTo(entry.getKey(), type)) {
                 return nodes.get(entry.getKey());
@@ -353,7 +354,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         throw new IllegalStateException("no node matching original type");
     }
 
-    public void setNodeFor(IConduitType<?> type, NodeIdentifier<?> node) {
+    public void setNodeFor(ConduitType<?> type, NodeIdentifier<?> node) {
         nodes.put(type, node);
         for (var direction : Direction.values()) {
             ConduitConnection connection = connections.get(direction);
@@ -368,7 +369,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         dataVersion++;
     }
 
-    public void removeNodeFor(Level level, IConduitType<?> type) {
+    public void removeNodeFor(Level level, ConduitType<?> type) {
         NodeIdentifier<?> node = nodes.get(type);
         node.getExtendedConduitData().onRemoved(type, level, pos);
         if (node.getGraph() != null) {
@@ -378,16 +379,16 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         dataVersion++;
     }
 
-    public boolean hasType(IConduitType<?> type) {
-        for (IConduitType<?> iConduitType : types) {
-            if (iConduitType.getTicker().canConnectTo(iConduitType, type)) {
+    public boolean hasType(ConduitType<?> type) {
+        for (ConduitType<?> conduitType : types) {
+            if (conduitType.getTicker().canConnectTo(conduitType, type)) {
                 return true;
             }
         }
         return false;
     }
 
-    public int getTypeIndex(IConduitType<?> type) {
+    public int getTypeIndex(ConduitType<?> type) {
         for (int i = 0; i < types.size(); i++) {
             if (types.get(i).getTicker().canConnectTo(types.get(i), type)) {
                 return i;

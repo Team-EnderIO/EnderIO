@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:pulsating_photovoltaic_module"
-            ]
+            "items": "enderio:pulsating_photovoltaic_module"
           }
         ]
       },

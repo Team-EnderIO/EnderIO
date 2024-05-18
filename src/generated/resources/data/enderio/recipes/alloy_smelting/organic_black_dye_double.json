@@ -4,20 +4,16 @@
   "experience": 0.3,
   "inputs": [
     {
-      "Count": 2,
-      "Ingredient": {
-        "tag": "neoforge:dusts/coal"
-      }
+      "count": 2,
+      "tag": "c:dusts/coal"
     },
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "forge:slimeballs"
-      }
+      "count": 1,
+      "tag": "c:slimeballs"
     }
   ],
   "result": {
-    "Count": 2,
+    "count": 2,
     "id": "enderio:organic_black_dye"
   }
 }

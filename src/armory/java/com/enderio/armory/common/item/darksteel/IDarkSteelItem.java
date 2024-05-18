@@ -5,9 +5,9 @@ import com.enderio.armory.common.capability.DarkSteelUpgradeable;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.item.IAdvancedTooltipProvider;
-import com.enderio.core.common.item.ITabVariants;
-import com.enderio.core.common.util.EnergyUtil;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -21,7 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public interface IDarkSteelItem extends IAdvancedTooltipProvider, ITabVariants {
+public interface IDarkSteelItem extends AdvancedTooltipProvider, CreativeTabVariants {
 
     default Optional<EmpoweredUpgrade> getEmpoweredUpgrade(ItemStack stack) {
         return DarkSteelUpgradeable.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class);
@@ -39,7 +39,7 @@ public interface IDarkSteelItem extends IAdvancedTooltipProvider, ITabVariants {
             }
             DarkSteelUpgradeable.addUpgrade(is,maxTier);
         }
-        EnergyUtil.setFull(is);
+        ItemStackEnergy.setFull(is);
         return is;
     }
 
@@ -65,7 +65,8 @@ public interface IDarkSteelItem extends IAdvancedTooltipProvider, ITabVariants {
             tooltips.add(TooltipUtil.withArgs(ArmoryLang.DURABILITY_AMOUNT, durability).withStyle(ChatFormatting.GRAY));
         }
         if (DarkSteelUpgradeable.hasUpgrade(itemStack, EmpoweredUpgrade.NAME)) {
-            String energy = String.format("%,d", EnergyUtil.getEnergyStored(itemStack)) + "/" + String.format("%,d", EnergyUtil.getMaxEnergyStored(itemStack));
+            String energy = String.format("%,d", ItemStackEnergy.getEnergyStored(itemStack)) + "/" +
+                String.format("%,d", ItemStackEnergy.getMaxEnergyStored(itemStack));
             tooltips.add(TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, energy).withStyle(ChatFormatting.GRAY));
         }
     }
@@ -91,7 +92,7 @@ public interface IDarkSteelItem extends IAdvancedTooltipProvider, ITabVariants {
     }
 
     default boolean isDurabilityBarVisible(ItemStack stack) {
-        return stack.getDamageValue() > 0 || EnergyUtil.getMaxEnergyStored(stack) > 0;
+        return stack.getDamageValue() > 0 || ItemStackEnergy.getMaxEnergyStored(stack) > 0;
     }
 
 }

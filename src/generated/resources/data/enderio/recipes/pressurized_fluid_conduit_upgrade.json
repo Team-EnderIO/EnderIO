@@ -9,7 +9,7 @@
       "item": "enderio:fluid_conduit"
     },
     "G": {
-      "tag": "enderio:fused_quartz"
+      "tag": "c:glass_blocks/fused_quartz"
     }
   },
   "pattern": [
@@ -19,6 +19,6 @@
   ],
   "result": {
     "count": 8,
-    "item": "enderio:pressurized_fluid_conduit"
+    "id": "enderio:pressurized_fluid_conduit"
   }
 }

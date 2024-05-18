@@ -4,11 +4,15 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.enchantment.AutoSmeltModifier;
 import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.loot.BrokenSpawnerLootModifier;
-import com.enderio.base.common.loot.ChestLootModifier;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
+import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.ItemSubPredicates;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
@@ -16,13 +20,17 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.common.loot.AddTableLootModifier;
 import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
-    public EIOLootModifiersProvider(PackOutput output) {
-        super(output, EnderIO.MODID);
+
+    public EIOLootModifiersProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, EnderIO.MODID);
     }
 
     @Override
@@ -31,8 +39,10 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
 
         add("auto_smelt", new AutoSmeltModifier(
             new LootItemCondition[]{
-                MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(
-                    new EnchantmentPredicate(EIOEnchantments.AUTO_SMELT.get(), MinMaxBounds.Ints.atLeast(1)))
+                MatchTool.toolMatches(ItemPredicate.Builder.item().withSubPredicate(ItemSubPredicates.ENCHANTMENTS,
+                    ItemEnchantmentsPredicate.enchantments(
+                        List.of(new EnchantmentPredicate(EIOEnchantments.AUTO_SMELT.get(), MinMaxBounds.Ints.atLeast(1)))
+                    ))
                 ).build()
             }
         ));
@@ -83,11 +93,11 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
 
     private void modifyChestLoot(String modifierName, Stream<String> targets) {
         var mappedTargetConditions = targets.map(r -> LootTableIdCondition.builder(new ResourceLocation(r))).toArray(LootTableIdCondition.Builder[]::new);
-        add(modifierName, new ChestLootModifier(
+        add(modifierName, new AddTableLootModifier(
             new LootItemCondition[]{
                 AnyOfCondition.anyOf(mappedTargetConditions).build()
             },
-            EnderIO.loc("chests/" + modifierName)
+            ResourceKey.create(Registries.LOOT_TABLE, EnderIO.loc("chests/" + modifierName))
         ));
     }
 }

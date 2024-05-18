@@ -2,19 +2,18 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
-import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
-import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.ActionRange;
-import com.enderio.machines.common.attachment.IFluidTankUser;
-import com.enderio.machines.common.attachment.IRangedActor;
+import com.enderio.machines.common.attachment.FluidTankUser;
+import com.enderio.machines.common.attachment.RangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.io.FixedIOConfig;
+import com.enderio.machines.common.init.MachineDataComponents;
+import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
@@ -23,6 +22,8 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.DrainMenu;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRangedActor, IFluidTankUser {
+public class DrainBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FluidTankUser {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.DRAIN_USAGE);
@@ -55,20 +56,20 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
     private int consumed = 0;
     private Fluid type = Fluids.EMPTY;
 
-    private CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
+    private final NetworkDataSlot<ActionRange> actionRangeDataSlot;
 
     public DrainBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.DRAIN.get(), worldPosition, blockState);
         fluidHandler = createFluidHandler();
 
-        addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), fluid -> TANK.setFluid(this, fluid)));
+        addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> TANK.getFluid(this), fluid -> TANK.setFluid(this, fluid)));
 
         // TODO: rubbish way of having a default. use an interface instead?
         if (!hasData(MachineAttachments.ACTION_RANGE)) {
             setData(MachineAttachments.ACTION_RANGE, new ActionRange(5, false));
         }
 
-        actionRangeDataSlot = addDataSlot(new CodecNetworkDataSlot<>(this::getActionRange, this::internalSetActionRange, ActionRange.CODEC));
+        actionRangeDataSlot = addDataSlot(ActionRange.DATA_SLOT_TYPE.create(this::getActionRange, this::internalSetActionRange));
     }
 
     @Override
@@ -119,7 +120,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
 
     @Override
     public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(this, getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
@@ -138,8 +139,13 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
     }
 
     @Override
-    protected IIOConfig createIOConfig() {
-        return new FixedIOConfig(IOMode.PUSH);
+    public IOConfig getDefaultIOConfig() {
+        return IOConfig.of(IOMode.PUSH);
+    }
+
+    @Override
+    public boolean isIOConfigMutable() {
+        return false;
     }
 
     @Override
@@ -147,6 +153,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
         if (!canAct()) {
             return false;
         }
+
         FluidState fluidState = level.getFluidState(worldPosition.below());
         if (fluidState.isEmpty() || !fluidState.isSource()) {
             updateMachineState(MachineState.NO_SOURCE, true);
@@ -210,7 +217,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
 
     @Override
     public void clientTick() {
-        if (level.isClientSide && level instanceof ClientLevel clientLevel) {
+        if (level instanceof ClientLevel clientLevel) {
             getActionRange().addClientParticle(clientLevel, getParticleLocation(), MachinesConfig.CLIENT.BLOCKS.DRAIN_RANGE_COLOR.get());
         }
 
@@ -231,6 +238,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
             positions.add(pos.immutable()); //Need to make it immutable
         }
     }
+
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
@@ -238,16 +246,38 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
         pTag.putInt(CONSUMED, consumed);
-        saveTank(pTag);
+        saveTank(lookupProvider, pTag);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
         consumed = pTag.getInt(CONSUMED);
-        loadTank(pTag);
+        loadTank(lookupProvider, pTag);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+
+        var actionRange = components.get(MachineDataComponents.ACTION_RANGE);
+        if (actionRange != null) {
+            setData(MachineAttachments.ACTION_RANGE, actionRange);
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        components.set(MachineDataComponents.ACTION_RANGE, getData(MachineAttachments.ACTION_RANGE));
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        removeData(MachineAttachments.ACTION_RANGE);
     }
 }

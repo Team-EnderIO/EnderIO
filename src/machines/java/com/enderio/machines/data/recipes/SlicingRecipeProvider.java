@@ -4,22 +4,24 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.recipe.SlicingRecipe;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-public class SlicingRecipeProvider extends EnderRecipeProvider {
+public class SlicingRecipeProvider extends RecipeProvider {
 
-    public SlicingRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public SlicingRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries);
     }
 
     @Override
@@ -44,7 +46,7 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
         ), 20000, recipeOutput);
 
         build(EIOItems.GUARDIAN_DIODE.get(), List.of(
-            Ingredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY), Ingredient.of(Tags.Items.DUSTS_PRISMARINE), Ingredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY),
+            Ingredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY), Ingredient.of(EIOTags.Items.DUSTS_PRISMARINE), Ingredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY),
             Ingredient.of(Tags.Items.GEMS_PRISMARINE), Ingredient.of(EIOItems.BASIC_CAPACITOR.get()), Ingredient.of(Tags.Items.GEMS_PRISMARINE)
         ), 20000, recipeOutput);
 

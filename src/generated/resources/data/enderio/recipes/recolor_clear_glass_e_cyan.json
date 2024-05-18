@@ -27,11 +27,11 @@
       "tag": "enderio:clear_glass_e"
     },
     {
-      "tag": "forge:dyes/cyan"
+      "tag": "c:dyes/cyan"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:clear_glass_e_cyan"
+    "id": "enderio:clear_glass_e_cyan"
   }
 }

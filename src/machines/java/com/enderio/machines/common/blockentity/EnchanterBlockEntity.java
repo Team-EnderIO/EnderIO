@@ -1,19 +1,19 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.api.io.IIOConfig;
-import com.enderio.api.io.IOMode;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.io.FixedIOConfig;
+import com.enderio.machines.common.io.DumbIOConfigurable;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -22,8 +22,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
@@ -87,7 +87,7 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
     private MachineInventory createInventory() {
         // Custom behaviour as this works more like a crafting table than a machine.
-        return new MachineInventory(FixedIOConfig.DISABLED, getInventoryLayout()) {
+        return new MachineInventory(DumbIOConfigurable.DISABLED, getInventoryLayout()) {
 
             protected void onContentsChanged(int slot) {
                 if (level == null) {
@@ -132,15 +132,34 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
     // region Serialization
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        inventory.deserializeNBT(tag.getCompound(MachineNBTKeys.ITEMS));
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        inventory.deserializeNBT(lookupProvider, tag.getCompound(MachineNBTKeys.ITEMS));
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        tag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT(lookupProvider));
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+        inventory.copyFromItem(components.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        components.set(DataComponents.CONTAINER, inventory.toItemContents());
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove(MachineNBTKeys.ITEMS);
     }
 
     // endregion

@@ -3,13 +3,13 @@
   "category": "equipment",
   "key": {
     "C": {
-      "tag": "neoforge:ingots/conductive_alloy"
+      "tag": "c:ingots/conductive_alloy"
     },
     "E": {
-      "tag": "neoforge:ingots/copper_alloy"
+      "tag": "c:ingots/copper_alloy"
     },
     "V": {
-      "tag": "neoforge:gems/vibrant_crystal"
+      "tag": "c:gems/vibrant_crystal"
     }
   },
   "pattern": [
@@ -18,6 +18,7 @@
     "E E"
   ],
   "result": {
-    "item": "enderio:electromagnet"
+    "count": 1,
+    "id": "enderio:electromagnet"
   }
 }

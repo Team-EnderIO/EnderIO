@@ -3,6 +3,7 @@ package com.enderio.base.data.recipe;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -12,10 +13,12 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
 
+import java.util.concurrent.CompletableFuture;
+
 public class ItemRecipeProvider extends RecipeProvider {
 
-    public ItemRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public ItemRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries);
     }
 
     @Override
@@ -30,7 +33,7 @@ public class ItemRecipeProvider extends RecipeProvider {
             .pattern(" DL")
             .pattern("DLL")
             .define('D', EIOTags.Items.INGOTS_DARK_STEEL)
-            .define('L', Tags.Items.LEATHER)
+            .define('L', Tags.Items.LEATHERS)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
             .save(recipeOutput);
 

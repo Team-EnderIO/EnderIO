@@ -1,5 +1,6 @@
 package com.enderio.base.common.item.misc;
 
+import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionResult;
@@ -34,7 +35,7 @@ public class HangGliderItem extends Item {
     }
 
     @Nullable
-    public SoundEvent getEquipSound() {
+    public Holder<SoundEvent> getEquipSound() {
         return SoundEvents.ARMOR_EQUIP_LEATHER;
     }
 }

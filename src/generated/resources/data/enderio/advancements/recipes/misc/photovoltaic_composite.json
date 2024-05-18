@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:silicon"
-            ]
+            "items": "enderio:silicon"
           }
         ]
       },

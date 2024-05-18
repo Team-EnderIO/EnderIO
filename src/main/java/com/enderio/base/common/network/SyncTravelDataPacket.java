@@ -1,25 +1,20 @@
 package com.enderio.base.common.network;
 
 import com.enderio.EnderIO;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 
 public record SyncTravelDataPacket(CompoundTag data) implements CustomPacketPayload {
-    public static ResourceLocation ID = EnderIO.loc("sync_travel_data");
+    public static Type<SyncTravelDataPacket> TYPE = new Type<>(EnderIO.loc("sync_travel_data"));
 
-    public SyncTravelDataPacket(FriendlyByteBuf buf) {
-        this(buf.readNbt());
-    }
-
-    @Override
-    public void write(FriendlyByteBuf writeInto) {
-        writeInto.writeNbt(this.data);
-    }
+    public static StreamCodec<ByteBuf, SyncTravelDataPacket> STREAM_CODEC =
+        ByteBufCodecs.COMPOUND_TAG.map(SyncTravelDataPacket::new, SyncTravelDataPacket::data);
 
     @Override
-    public ResourceLocation id() {
-        return ID;
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

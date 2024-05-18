@@ -1,13 +1,12 @@
 package com.enderio.core.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import static net.neoforged.neoforge.client.model.IQuadTransformer.COLOR;
@@ -19,32 +18,33 @@ public class RenderUtil {
      * Note: Up and Down UVs may not be accurate, please PR with a fix (and test all uses of this method) to modify it.
      * todo; is this confusing?
      */
-    public static void renderFace(Direction face, Matrix4f pose, Matrix3f normal, VertexConsumer consumer, TextureAtlasSprite texture, float x, float y, float z, float w, float h, int color) {
-        renderFace(face, pose, normal, consumer, texture, x, y, z, w, h, color, LightTexture.FULL_BRIGHT);
+    public static void renderFace(Direction face, PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite texture, float x, float y, float z, float w, float h, int color) {
+        renderFace(face, pose, consumer, texture, x, y, z, w, h, color, LightTexture.FULL_BRIGHT);
     }
-    public static void renderFace(Direction face, Matrix4f pose, Matrix3f normal, VertexConsumer consumer, TextureAtlasSprite texture, float x, float y, float z, float w, float h, int color, int light) {
+
+    public static void renderFace(Direction face, PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite texture, float x, float y, float z, float w, float h, int color, int light) {
         // Normals are taken from Direction enum. They are necessary for proper lighting and block breaking textures
         switch (face) {
-            case DOWN -> renderFace(pose, normal, consumer, texture, color, light, x, x + w, 1.0f - z, 1.0f - z, y, y, y + h, y + h, x, x + w, y, y + h, 0, -1, 0);
-            case UP -> renderFace(pose, normal, consumer, texture, color, light, x, x + w, z, z, y + h, y + h, y, y, x, x + w, y, y + h, 0, 1, 0);
-            case NORTH -> renderFace(pose, normal, consumer, texture, color, light, x, x + w, y + h, y, z, z, z, z, x, x + w, y, y + h, 0, 0, -1);
-            case SOUTH -> renderFace(pose, normal, consumer, texture, color, light, x, x + w, y, y + h, 1.0f - z, 1.0f - z, 1.0f - z, 1.0f - z, x + w, x, y + h, y, 0, 0, 1);
-            case EAST -> renderFace(pose, normal, consumer, texture, color, light, 1.0f - z, 1.0f - z, y + h, y, x, x + w, x + w, x, x, x + w, y, y + h, 1, 0, 0);
-            case WEST -> renderFace(pose, normal, consumer, texture, color, light, z, z, y, y + h, x, x + w, x + w, x, x + w, x, y + h, y, -1, 0, 0);
+            case DOWN -> renderFace(pose, consumer, texture, color, light, x, x + w, 1.0f - z, 1.0f - z, y, y, y + h, y + h, x, x + w, y, y + h, 0, -1, 0);
+            case UP -> renderFace(pose, consumer, texture, color, light, x, x + w, z, z, y + h, y + h, y, y, x, x + w, y, y + h, 0, 1, 0);
+            case NORTH -> renderFace(pose, consumer, texture, color, light, x, x + w, y + h, y, z, z, z, z, x, x + w, y, y + h, 0, 0, -1);
+            case SOUTH -> renderFace(pose, consumer, texture, color, light, x, x + w, y, y + h, 1.0f - z, 1.0f - z, 1.0f - z, 1.0f - z, x + w, x, y + h, y, 0, 0, 1);
+            case EAST -> renderFace(pose, consumer, texture, color, light, 1.0f - z, 1.0f - z, y + h, y, x, x + w, x + w, x, x, x + w, y, y + h, 1, 0, 0);
+            case WEST -> renderFace(pose, consumer, texture, color, light, z, z, y, y + h, x, x + w, x + w, x, x + w, x, y + h, y, -1, 0, 0);
             default -> throw new IllegalStateException("Unexpected value: " + face);
         }
     }
 
-    private static void renderFace(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, TextureAtlasSprite texture, int color, int light, float x0, float x1, float y0, float y1, float z0, float z1, float z2, float z3, float u0, float u1, float v0, float v1, float normalX, float normalY, float normalZ) {
+    private static void renderFace(PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite texture, int color, int light, float x0, float x1, float y0, float y1, float z0, float z1, float z2, float z3, float u0, float u1, float v0, float v1, float normalX, float normalY, float normalZ) {
         float minU = u0 * texture.contents().width() / 16f;
         float maxU = u1 * texture.contents().width() / 16f;
         float minV = v0 * texture.contents().height() / 16f;
         float maxV = v1 * texture.contents().height() / 16f;
 
-        consumer.vertex(pose, x0, y0, z0).color(color).uv(texture.getU(minU), texture.getV(minV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, normalX, normalY, normalZ).endVertex();
-        consumer.vertex(pose, x1, y0, z1).color(color).uv(texture.getU(maxU), texture.getV(minV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, normalX, normalY, normalZ).endVertex();
-        consumer.vertex(pose, x1, y1, z2).color(color).uv(texture.getU(maxU), texture.getV(maxV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, normalX, normalY, normalZ).endVertex();
-        consumer.vertex(pose, x0, y1, z3).color(color).uv(texture.getU(minU), texture.getV(maxV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, normalX, normalY, normalZ).endVertex();
+        consumer.vertex(pose, x0, y0, z0).color(color).uv(texture.getU(minU), texture.getV(minV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(pose, normalX, normalY, normalZ).endVertex();
+        consumer.vertex(pose, x1, y0, z1).color(color).uv(texture.getU(maxU), texture.getV(minV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(pose, normalX, normalY, normalZ).endVertex();
+        consumer.vertex(pose, x1, y1, z2).color(color).uv(texture.getU(maxU), texture.getV(maxV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(pose, normalX, normalY, normalZ).endVertex();
+        consumer.vertex(pose, x0, y1, z3).color(color).uv(texture.getU(minU), texture.getV(maxV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(pose, normalX, normalY, normalZ).endVertex();
     }
 
     public static float[] unpackVertices(int[] vertices, int vertexIndex, int position, int count) {

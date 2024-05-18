@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:conductive_alloy_block"
-            ]
+            "items": "enderio:conductive_alloy_block"
           }
         ]
       },

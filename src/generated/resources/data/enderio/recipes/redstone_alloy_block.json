@@ -12,6 +12,7 @@
     "III"
   ],
   "result": {
-    "item": "enderio:redstone_alloy_block"
+    "count": 1,
+    "id": "enderio:redstone_alloy_block"
   }
 }

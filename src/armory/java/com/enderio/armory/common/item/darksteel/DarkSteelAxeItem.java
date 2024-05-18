@@ -6,9 +6,9 @@ import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.ForkUpgrade;
 import com.enderio.armory.common.capability.DarkSteelUpgradeable;
 import com.enderio.armory.common.lang.ArmoryLang;
-import com.enderio.core.common.item.ITabVariants;
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.BlockUtil;
-import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -24,7 +24,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.TierSortingRegistry;
 import net.neoforged.neoforge.common.ToolAction;
 import net.neoforged.neoforge.common.ToolActions;
 
@@ -34,10 +33,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVariants {
+public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, CreativeTabVariants {
 
     public DarkSteelAxeItem(Properties pProperties) {
-        super(ArmoryItems.DARK_STEEL_TIER, 5, -3, pProperties);
+        super(ArmoryItems.DARK_STEEL_TIER, pProperties
+            .attributes(createAttributes(ArmoryItems.DARK_STEEL_TIER, 5, -3)));
     }
 
     @Override
@@ -48,14 +48,14 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVar
 
     @Override
     public float getDestroySpeed(ItemStack pStack, BlockState pState) {
-        final float baseSpeed = canHarvest(pStack, pState) ? speed : 1.0f;
+        final float baseSpeed = super.getDestroySpeed(pStack, pState);
         return getEmpoweredUpgrade(pStack).map(empoweredUpgrade -> empoweredUpgrade.adjustDestroySpeed(baseSpeed)).orElse(baseSpeed);
     }
 
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
         if (pEntityLiving instanceof Player player) {
-            if (pEntityLiving.isCrouching() && pState.is(BlockTags.LOGS) && EnergyUtil.getEnergyStored(pStack) > 0) {
+            if (pEntityLiving.isCrouching() && pState.is(BlockTags.LOGS) && ItemStackEnergy.getEnergyStored(pStack) > 0) {
 
                 int maxSearchSize = 400; //put an upper limit on search size
                 Set<BlockPos> chopCandidates = new HashSet<>();
@@ -63,7 +63,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVar
                 chopCandidates.remove(pPos); // don't double harvest this guy
 
                 int energyPerBlock = ArmoryConfig.COMMON.DARK_STEEL_AXE_ENERGY_PER_FELLED_LOG.get();
-                int maxBlocks = EnergyUtil.getEnergyStored(pStack)/energyPerBlock;
+                int maxBlocks = ItemStackEnergy.getEnergyStored(pStack)/energyPerBlock;
 
                 Collection<BlockPos> toChop = chopCandidates;
                 if(maxBlocks < chopCandidates.size()) {
@@ -85,7 +85,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVar
                     }
                 }
                 if (energyUse  > 0) {
-                    EnergyUtil.extractEnergy(pStack, energyUse, false);
+                    ItemStackEnergy.extractEnergy(pStack, energyUse, false);
                 }
             }
         }
@@ -94,7 +94,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVar
 
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return canHarvest(stack, state) && TierSortingRegistry.isCorrectTierForDrops(getTier(), state);
+        return canHarvest(stack, state)/* && TierSortingRegistry.isCorrectTierForDrops(getTier(), state)*/;
     }
 
     @Override
@@ -160,6 +160,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVar
         if(isDetailed && getEmpoweredUpgrade(itemStack).isPresent()) {
             tooltips.add(TooltipUtil.withArgs(ArmoryLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, ArmoryConfig.COMMON.EMPOWERED_EFFICIENCY_BOOST.get()));
         }
+
         IDarkSteelItem.super.addCurrentUpgradeTooltips(itemStack, tooltips, isDetailed);
     }
 

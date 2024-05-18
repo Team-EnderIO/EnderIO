@@ -3,6 +3,7 @@ package com.enderio.machines.common.blockentity.task.host;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.recipe.MachineRecipe;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -15,19 +16,19 @@ import java.util.function.Supplier;
 
 public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Container> extends MachineTaskHost {
 
-    public interface ICraftingMachineTaskFactory<T extends CraftingMachineTask<R, C>, R extends MachineRecipe<C>, C extends Container> {
+    public interface CraftingMachineTaskFactory<T extends CraftingMachineTask<R, C>, R extends MachineRecipe<C>, C extends Container> {
         T createTask(Level level, C container, @Nullable RecipeHolder<R> recipe);
     }
 
     private final RecipeType<R> recipeType;
     private final C container;
-    private final ICraftingMachineTaskFactory<? extends CraftingMachineTask<R, C>, R, C> taskFactory;
+    private final CraftingMachineTaskFactory<? extends CraftingMachineTask<R, C>, R, C> taskFactory;
 
     /**
      * This should be constructed in the constructor of your block entity.
      */
     public CraftingMachineTaskHost(EnderBlockEntity blockEntity, Supplier<Boolean> canAcceptNewTask, RecipeType<R> recipeType,
-        C container, ICraftingMachineTaskFactory<? extends CraftingMachineTask<R, C>, R, C> taskFactory) {
+        C container, CraftingMachineTaskFactory<? extends CraftingMachineTask<R, C>, R, C> taskFactory) {
         super(blockEntity, canAcceptNewTask);
         this.recipeType = recipeType;
         this.container = container;
@@ -56,13 +57,13 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Conta
     }
 
     @Override
-    protected @Nullable CraftingMachineTask<R, C> loadTask(CompoundTag nbt) {
+    protected @Nullable CraftingMachineTask<R, C> loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         if (getLevel() == null) {
             return null;
         }
 
         CraftingMachineTask<R, C> task = taskFactory.createTask(getLevel(), container, null);
-        task.deserializeNBT(nbt);
+        task.deserializeNBT(lookupProvider, nbt);
         return task;
     }
 
@@ -74,7 +75,7 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Conta
 
         // If recipe has changed
         var currentRecipe = findRecipe();
-        return currentRecipe.map(r -> !r.equals(getCurrentTask().getRecipe())).orElse(true);
+        return currentRecipe.map(r -> !r.value().equals(getCurrentTask().getRecipe())).orElse(true);
     }
 
     // endregion

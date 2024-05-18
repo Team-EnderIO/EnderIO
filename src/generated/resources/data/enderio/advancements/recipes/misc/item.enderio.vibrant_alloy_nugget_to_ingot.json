@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:vibrant_alloy_ingot"
-            ]
+            "items": "enderio:vibrant_alloy_ingot"
           }
         ]
       },

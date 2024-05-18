@@ -15,7 +15,7 @@
     {
       "chance": 0.1,
       "optional": true,
-      "tag": "neoforge:dusts/sulfur"
+      "tag": "c:dusts/sulfur"
     }
   ]
 }

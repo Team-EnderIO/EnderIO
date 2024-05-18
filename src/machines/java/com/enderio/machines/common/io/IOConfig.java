@@ -1,107 +1,78 @@
 package com.enderio.machines.common.io;
 
-import com.enderio.api.io.IIOConfig;
+import com.enderio.EnderIO;
 import com.enderio.api.io.IOMode;
+import com.enderio.core.common.network.NetworkDataSlot;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
 
-/**
- * Represents the state of each side of the block
- */
-public class IOConfig implements IIOConfig {
+public record IOConfig(Map<Direction, IOMode> modes) {
 
-    private final EnumMap<Direction, IOMode> config = new EnumMap<>(Direction.class);
+    public static Codec<IOConfig> CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            Codec.unboundedMap(Direction.CODEC, IOMode.CODEC).fieldOf("Modes").forGetter(IOConfig::modes)
+        ).apply(instance, IOConfig::new)
+    );
 
-    public IOConfig() {
-        for (Direction value : Direction.values()) {
-            config.put(value, IOMode.NONE);
-        }
+    public static StreamCodec<ByteBuf, IOConfig> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.map(c -> new EnumMap<>(Direction.class), Direction.STREAM_CODEC, IOMode.STREAM_CODEC),
+        IOConfig::modes,
+        IOConfig::new
+    );
+
+    public static NetworkDataSlot.CodecType<IOConfig> DATA_SLOT_TYPE =
+        new NetworkDataSlot.CodecType<>(CODEC, STREAM_CODEC.cast());
+
+    public static IOConfig copyOf(IOConfig other) {
+        return new IOConfig(new EnumMap<>(other.modes()));
     }
 
-    @Override
+    public static IOConfig empty() {
+        return new IOConfig(new EnumMap<>(Direction.class));
+    }
+
+    public static IOConfig of(IOMode ioMode) {
+        var config = new EnumMap<Direction, IOMode>(Direction.class);
+        for (Direction d : Direction.values()) {
+            config.put(d, ioMode);
+        }
+
+        return new IOConfig(config);
+    }
+
+    public static IOConfig of(Function<Direction, IOMode> mode) {
+        var config = new EnumMap<Direction, IOMode>(Direction.class);
+        for (Direction d : Direction.values()) {
+            config.put(d, mode.apply(d));
+        }
+
+        return new IOConfig(config);
+    }
+
     public IOMode getMode(Direction side) {
-        return config.get(translateSide(side));
+        return modes.getOrDefault(side, IOMode.NONE);
     }
 
-    @Override
-    public void setMode(Direction side, IOMode mode) {
-        Direction relSide = translateSide(side);
-        IOMode oldMode = config.get(relSide);
-        config.put(relSide, mode);
-        onChanged(side, oldMode, mode);
+    public IOConfig withMode(Direction side, IOMode mode) {
+        Map<Direction, IOMode> newModes = new EnumMap<>(Direction.class);
+        newModes.putAll(modes);
+        newModes.put(side, mode);
+        return new IOConfig(newModes);
     }
-
-    @Override
-    public boolean supportsMode(Direction side, IOMode state) {
-        return true;
-    }
-
-    @Override
-    public boolean renderOverlay() {
-        return true;
-    }
-
-    // Translates world side -> rotated side.
-    private Direction translateSide(Direction side) {
-        // The block faces with its southern face. So the back of the machine.
-        Direction south = getBlockFacing();
-        return switch (side) {
-        case NORTH -> south.getOpposite();
-        case SOUTH -> south;
-        case WEST -> south.getCounterClockWise();
-        case EAST -> south.getClockWise();
-        default -> side;
-        };
-    }
-
-    // Override in a BE
-    protected void onChanged(Direction side, IOMode oldMode, IOMode newMode) {
-
-    }
-
-    // Override if the machine can be rotated.
-    protected Direction getBlockFacing() {
-        return Direction.SOUTH;
-    }
-
-    // region Serialization
-
-    @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
-        for (Map.Entry<Direction, IOMode> entry : config.entrySet()) {
-            nbt.putByte(entry.getKey().get3DDataValue() + "", (byte)entry.getValue().ordinal());
-        }
-        return nbt;
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        for (String key: nbt.getAllKeys()) {
-            if (nbt.contains(key, Tag.TAG_BYTE)) {
-                try {
-                    int i = Integer.parseInt(key);
-                    if (i >= 0 && i < Direction.values().length) {
-                        Direction direction = Direction.from3DDataValue(i);
-                        byte ioModeIndex = nbt.getByte(key);
-                        if (ioModeIndex >= 0 && ioModeIndex < IOMode.values().length) {
-                            config.put(direction, IOMode.values()[ioModeIndex]);
-                        }
-                    }
-                } catch (NumberFormatException ignored) {
-
-                }
-            }
-        }
-    }
-
-    // endregion
-
-    // region Hashing
 
     @Override
     public boolean equals(Object o) {
@@ -113,16 +84,25 @@ public class IOConfig implements IIOConfig {
             return false;
         }
 
-        IOConfig ioConfig = (IOConfig) o;
-
-        return config.equals(ioConfig.config);
+        IOConfig that = (IOConfig) o;
+        return Objects.equals(modes, that.modes);
     }
 
     @Override
     public int hashCode() {
-        return config.hashCode();
+        return Objects.hashCode(modes);
     }
 
-    // endregion
+    public Tag save(HolderLookup.Provider lookupProvider) {
+        return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
+    }
 
+    public static Optional<IOConfig> parse(HolderLookup.Provider lookupProvider, Tag tag) {
+        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
+            .resultOrPartial(error -> EnderIO.LOGGER.error("Tried to load invalid IOConfig: '{}'", error));
+    }
+
+    public static IOConfig parseOptional(HolderLookup.Provider lookupProvider, CompoundTag tag) {
+        return tag.isEmpty() ? empty() : parse(lookupProvider, tag).orElse(empty());
+    }
 }

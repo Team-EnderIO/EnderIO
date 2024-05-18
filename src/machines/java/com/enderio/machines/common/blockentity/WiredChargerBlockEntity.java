@@ -3,7 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -32,7 +32,7 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
 
     public WiredChargerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.WIRED_CHARGER.get(), worldPosition, blockState);
-        addDataSlot(new FloatNetworkDataSlot(this::getProgress, p -> progress = p));
+        addDataSlot(NetworkDataSlot.FLOAT.create(this::getProgress, p -> progress = p));
     }
 
     @Override

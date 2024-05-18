@@ -1,9 +1,9 @@
 package com.enderio.core.client.gui.widgets;
 
-import com.enderio.api.misc.IIcon;
+import com.enderio.api.misc.Icon;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.core.client.gui.screen.IEnderScreen;
-import com.enderio.core.client.gui.screen.IFullScreenListener;
+import com.enderio.core.client.gui.screen.FullScreenListener;
+import com.enderio.core.client.gui.screen.EnderScreen;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnderScreen> extends AbstractWidget implements IFullScreenListener {
+public class EnumIconWidget<T extends Enum<T> & Icon, U extends Screen & EnderScreen> extends AbstractWidget implements FullScreenListener {
 
     private final Supplier<T> getter;
     private final Consumer<T> setter;
@@ -129,7 +129,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         }
         T icon = getter.get();
         screen.renderIconBackground(guiGraphics, new Vector2i(getX(), getY()), icon);
-        IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()), icon);
+        EnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()), icon);
 
         if (isHovered() && tooltipDisplayCache != getter.get()) {
             // Cache the last value of the tooltip so we don't append strings over and over.
@@ -165,7 +165,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         return optionName;
     }
 
-    private class SelectionScreen extends Screen implements IEnderScreen {
+    private class SelectionScreen extends Screen implements EnderScreen {
 
         protected SelectionScreen() {
             super(Component.empty());
@@ -189,7 +189,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         @Override
         public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
             for (GuiEventListener widget : children()) {
-                if (widget instanceof AbstractWidget abstractWidget && abstractWidget.isActive() && widget instanceof IFullScreenListener fullScreenListener) {
+                if (widget instanceof AbstractWidget abstractWidget && abstractWidget.isActive() && widget instanceof FullScreenListener fullScreenListener) {
                     fullScreenListener.onGlobalClick(pMouseX, pMouseY);
                 }
             }
@@ -248,7 +248,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
                 guiGraphics.fill(getX(), getY(),getX() + width - 2,getY() + height - 2, 0xFF0020FF);
                 guiGraphics.fill(getX() +1, getY()+1, getX() + width - 3, getY() + height - 3, 0xFF8B8B8B);
             }
-            IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()), value);
+            EnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()), value);
 
             if (isMouseOver(pMouseX, pMouseY)) {
                 Component tooltip = value.getTooltip();

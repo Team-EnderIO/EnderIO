@@ -6,7 +6,7 @@
       "item": "enderio:conduit_binder"
     },
     "G": {
-      "tag": "enderio:clear_glass"
+      "tag": "c:glass_blocks/clear"
     }
   },
   "pattern": [
@@ -16,6 +16,6 @@
   ],
   "result": {
     "count": 8,
-    "item": "enderio:fluid_conduit"
+    "id": "enderio:fluid_conduit"
   }
 }

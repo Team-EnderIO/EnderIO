@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:loyalty",
   "input": {
-    "Count": 1,
-    "Ingredient": {
-      "item": "minecraft:lead"
-    }
+    "count": 1,
+    "item": "minecraft:lead"
   }
 }

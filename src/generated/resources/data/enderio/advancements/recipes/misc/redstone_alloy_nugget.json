@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:redstone_alloy_ingot"
-            ]
+            "items": "enderio:redstone_alloy_ingot"
           }
         ]
       },

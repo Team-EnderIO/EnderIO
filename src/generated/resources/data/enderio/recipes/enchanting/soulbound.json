@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "enderio:soulbound",
   "input": {
-    "Count": 1,
-    "Ingredient": {
-      "tag": "neoforge:gems/ender_crystal"
-    }
+    "count": 1,
+    "tag": "c:gems/ender_crystal"
   }
 }

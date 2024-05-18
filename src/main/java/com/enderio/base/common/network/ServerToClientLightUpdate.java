@@ -1,10 +1,12 @@
 package com.enderio.base.common.network;
 
 import com.enderio.EnderIO;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -13,23 +15,18 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public record ServerToClientLightUpdate(BlockPos pos, BlockState state) implements CustomPacketPayload {
 
-    public static ResourceLocation ID = EnderIO.loc("light_update");
+    public static Type<ServerToClientLightUpdate> TYPE = new Type<>(EnderIO.loc("light_update"));
 
-    public ServerToClientLightUpdate(FriendlyByteBuf buf) {
-        this(
-            buf.readBlockPos(),
-            Block.stateById(buf.readVarInt())
-        );
-    }
-
-    @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeBlockPos(pos);
-        buffer.writeVarInt(Block.getId(state));
-    }
+    public static StreamCodec<ByteBuf, ServerToClientLightUpdate> STREAM_CODEC = StreamCodec.composite(
+        BlockPos.STREAM_CODEC,
+        ServerToClientLightUpdate::pos,
+        ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY),
+        ServerToClientLightUpdate::state,
+        ServerToClientLightUpdate::new
+    );
 
     @Override
-    public ResourceLocation id() {
-        return ID;
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

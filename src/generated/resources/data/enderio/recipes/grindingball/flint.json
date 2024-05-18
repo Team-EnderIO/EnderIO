@@ -1,8 +1,0 @@
-{
-  "type": "enderio:grinding_ball",
-  "chance": 1.25,
-  "durability": 24000,
-  "grinding": 1.2,
-  "item": "minecraft:flint",
-  "power": 0.85
-}

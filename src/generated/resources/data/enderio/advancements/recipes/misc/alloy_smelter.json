@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:void_chassis"
-            ]
+            "items": "enderio:void_chassis"
           }
         ]
       },

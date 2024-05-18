@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:double_layer_capacitor"
-            ]
+            "items": "enderio:double_layer_capacitor"
           }
         ]
       },

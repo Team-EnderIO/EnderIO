@@ -1,118 +1,100 @@
 package com.enderio.machines.common.travel;
 
-import com.enderio.EnderIO;
-import com.enderio.api.travel.ITravelTarget;
+import com.enderio.api.travel.TravelTarget;
+import com.enderio.api.travel.TravelTargetSerializer;
+import com.enderio.api.travel.TravelTargetType;
 import com.enderio.base.common.config.BaseConfig;
-import com.enderio.core.CoreNBTKeys;
+import com.enderio.core.common.network.NetworkDataSlot;
+import com.enderio.machines.common.init.MachineTravelTargets;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 
-import java.util.Objects;
+public record AnchorTravelTarget(
+    BlockPos pos,
+    String name,
+    Item icon,
+    boolean isVisible
+) implements TravelTarget {
 
-public class AnchorTravelTarget implements ITravelTarget {
+    public static NetworkDataSlot.CodecType<AnchorTravelTarget> DATA_SLOT_TYPE =
+        new NetworkDataSlot.CodecType<>(Serializer.CODEC.codec(), Serializer.STREAM_CODEC);
 
-    public static final ResourceLocation SERIALIZED_NAME = EnderIO.loc("travel_anchor");
-
-    private final BlockPos pos;
-    private String name;
-    private Item icon;
-    private boolean visible;
-
-    public AnchorTravelTarget(BlockPos pos, String name, Item icon, boolean visible) {
-        this.pos = pos;
-        this.name = name;
-        this.icon = icon;
-        this.visible = visible;
+    public AnchorTravelTarget withName(String name) {
+        return new AnchorTravelTarget(pos, name, icon, isVisible);
     }
 
-    public AnchorTravelTarget(CompoundTag tag) {
-        pos = NbtUtils.readBlockPos(tag.getCompound(CoreNBTKeys.BLOCK_POS));
-        name = tag.getString(CoreNBTKeys.ANCHOR_NAME);
-        String iconName = tag.getString(CoreNBTKeys.ANCHOR_ICON);
-        icon = iconName.equals("") ? Items.AIR : BuiltInRegistries.ITEM.get(new ResourceLocation(iconName));
-        visible = tag.getBoolean(CoreNBTKeys.ANCHOR_VISIBILITY);
+    public AnchorTravelTarget withIcon(Item icon) {
+        return new AnchorTravelTarget(pos, name, icon, isVisible);
     }
 
-    @Override
-    public CompoundTag save() {
-        CompoundTag nbt = new CompoundTag();
-        nbt.put(CoreNBTKeys.BLOCK_POS, NbtUtils.writeBlockPos(pos));
-        nbt.putString(CoreNBTKeys.ANCHOR_NAME, name);
-        nbt.putString(CoreNBTKeys.ANCHOR_ICON, String.valueOf(BuiltInRegistries.ITEM.getKey(icon)));
-        nbt.putBoolean(CoreNBTKeys.ANCHOR_VISIBILITY, visible);
-        return nbt;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (!(o instanceof AnchorTravelTarget other)) {
-            return false;
-        }
-
-        return pos.equals(other.pos) && name.equals(other.name) && visible == (other.visible) && Objects.equals(icon, other.icon);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(pos, name, icon);
-    }
-
-    @Override
-    public BlockPos getPos() {
-        return pos;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Item getIcon() {
-        return icon;
-    }
-
-    public void setIcon(Item icon) {
-        this.icon = icon;
-    }
-
-    public boolean getVisibility() {
-        return visible;
-    }
-
-    public void setVisibility(boolean visible) {
-        this.visible = visible;
+    public AnchorTravelTarget withVisible(boolean isVisible) {
+        return new AnchorTravelTarget(pos, name, icon, isVisible);
     }
 
     @Override
     public boolean canTravelTo() {
-        return getVisibility();
+        return isVisible;
     }
 
     @Override
-    public int getItem2BlockRange() {
+    public int item2BlockRange() {
         return BaseConfig.COMMON.ITEMS.TRAVELLING_TO_BLOCK_RANGE.get();
     }
 
     @Override
-    public int getBlock2BlockRange() {
+    public int block2BlockRange() {
         return BaseConfig.COMMON.ITEMS.TRAVELLING_BLOCK_TO_BLOCK_RANGE.get();
     }
 
     @Override
-    public ResourceLocation getSerializationName() {
-        return SERIALIZED_NAME;
+    public TravelTargetType<?> type() {
+        return MachineTravelTargets.TRAVEL_ANCHOR_TYPE.get();
+    }
+
+    @Override
+    public TravelTargetSerializer<?> serializer() {
+        return MachineTravelTargets.TRAVEL_ANCHOR_SERIALIZER.get();
+    }
+
+    public static class Serializer implements TravelTargetSerializer<AnchorTravelTarget> {
+
+        public static MapCodec<AnchorTravelTarget> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(
+                BlockPos.CODEC.fieldOf("pos").forGetter(AnchorTravelTarget::pos),
+                Codec.STRING.fieldOf("name").forGetter(AnchorTravelTarget::name),
+                BuiltInRegistries.ITEM.byNameCodec().fieldOf("icon").forGetter(AnchorTravelTarget::icon),
+                Codec.BOOL.fieldOf("is_visible").forGetter(AnchorTravelTarget::isVisible)
+            ).apply(instance, AnchorTravelTarget::new)
+        );
+
+        public static StreamCodec<RegistryFriendlyByteBuf, AnchorTravelTarget> STREAM_CODEC = StreamCodec.composite(
+            BlockPos.STREAM_CODEC,
+            AnchorTravelTarget::pos,
+            ByteBufCodecs.STRING_UTF8,
+            AnchorTravelTarget::name,
+            ByteBufCodecs.registry(Registries.ITEM),
+            AnchorTravelTarget::icon,
+            ByteBufCodecs.BOOL,
+            AnchorTravelTarget::isVisible,
+            AnchorTravelTarget::new
+        );
+
+        @Override
+        public MapCodec<AnchorTravelTarget> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, AnchorTravelTarget> streamCodec() {
+            return STREAM_CODEC;
+        }
     }
 }

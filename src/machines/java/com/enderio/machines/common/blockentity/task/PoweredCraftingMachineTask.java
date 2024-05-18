@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class PoweredCraftingMachineTask<R extends MachineRecipe<C>, C extends Container>
-    extends CraftingMachineTask<R, C> implements IPoweredMachineTask {
+    extends CraftingMachineTask<R, C> implements PoweredMachineTask {
 
     private final IMachineEnergyStorage energyStorage;
 

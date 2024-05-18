@@ -9,10 +9,10 @@
       "item": "minecraft:redstone"
     },
     "E": {
-      "tag": "forge:ingots/gold"
+      "tag": "c:ingots/gold"
     },
     "F": {
-      "tag": "forge:glass"
+      "tag": "c:glass_blocks"
     },
     "P": {
       "item": "enderio:photovoltaic_plate"
@@ -24,6 +24,7 @@
     "CDC"
   ],
   "result": {
-    "item": "enderio:energetic_photovoltaic_module"
+    "count": 1,
+    "id": "enderio:energetic_photovoltaic_module"
   }
 }

@@ -3,9 +3,10 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.base.EIONBTKeys;
-import com.enderio.base.common.block.painted.IPaintedBlock;
+import com.enderio.base.common.paint.block.PaintedBlock;
+import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.base.common.init.EIOCriterions;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
@@ -19,10 +20,8 @@ import com.enderio.machines.common.menu.PaintingMachineMenu;
 import com.enderio.machines.common.recipe.PaintingRecipe;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -105,7 +104,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     private boolean isValidPaint(int index, ItemStack stack) {
         if (stack.getItem() instanceof BlockItem blockItem) {
             Block block = blockItem.getBlock();
-            if (block instanceof IPaintedBlock) {
+            if (block instanceof PaintedBlock) {
                 return false;
             }
 
@@ -146,23 +145,20 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
                     return super.placeOutputs(outputs, simulate);
                 }
 
-                Optional<String> s = outputs
+                Optional<BlockPaintData> s = outputs
                     .stream()
                     .findFirst()
                     .map(OutputStack::getItem)
-                    .flatMap(item -> Optional.ofNullable(item.getTag()))
-                    .filter(nbt -> nbt.contains(BlockItem.BLOCK_ENTITY_TAG, Tag.TAG_COMPOUND))
-                    .map(nbt -> nbt.getCompound(BlockItem.BLOCK_ENTITY_TAG))
-                    .filter(nbt -> nbt.contains(EIONBTKeys.PAINT, Tag.TAG_STRING))
-                    .map(nbt -> nbt.getString(EIONBTKeys.PAINT));
-                if (s.isPresent()) {
-                    Block paint = BuiltInRegistries.BLOCK.get(new ResourceLocation(s.get()));
+                    .flatMap(item -> Optional.ofNullable(item.get(EIODataComponents.BLOCK_PAINT)));
+
+                s.ifPresent(paintData -> {
                     for (Player player : getLevel().players()) {
                         if (player instanceof ServerPlayer serverPlayer && area.contains(player.getX(), player.getY(), player.getZ())) {
-                            EIOCriterions.PAINTING_TRIGGER.get().trigger(serverPlayer, paint);
+                            EIOCriterions.PAINTING_TRIGGER.get().trigger(serverPlayer, paintData.paint());
                         }
                     }
-                }
+                });
+
                 return super.placeOutputs(outputs, simulate);
             }
         };
@@ -173,15 +169,15 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        craftingTaskHost.save(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
+        craftingTaskHost.save(lookupProvider, pTag);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        craftingTaskHost.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
+        craftingTaskHost.load(lookupProvider, pTag);
     }
 
     // endregion

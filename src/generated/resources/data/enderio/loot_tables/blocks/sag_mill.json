@@ -8,14 +8,7 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "minecraft:copy_nbt",
-              "ops": [
-                {
-                  "op": "replace",
-                  "source": "",
-                  "target": "BlockEntityTag"
-                }
-              ],
+              "function": "minecraft:copy_components",
               "source": "block_entity"
             }
           ],

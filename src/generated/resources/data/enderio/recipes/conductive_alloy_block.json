@@ -12,6 +12,7 @@
     "III"
   ],
   "result": {
-    "item": "enderio:conductive_alloy_block"
+    "count": 1,
+    "id": "enderio:conductive_alloy_block"
   }
 }

@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IEnderScreen {
+public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements EnderScreen {
 
     private final boolean renderLabels;
     private final List<EditBox> editBoxList = new ArrayList<>();
@@ -67,7 +67,6 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
             return;
         }
 
-        renderBackground(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         this.renderTooltip(guiGraphics, pMouseX, pMouseY);
     }
@@ -93,7 +92,7 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         for (GuiEventListener widget : children()) {
-            if (widget instanceof AbstractWidget abstractWidget && abstractWidget.isActive() && widget instanceof IFullScreenListener fullScreenListener) {
+            if (widget instanceof AbstractWidget abstractWidget && abstractWidget.isActive() && widget instanceof FullScreenListener fullScreenListener) {
                 fullScreenListener.onGlobalClick(pMouseX, pMouseY);
             }
         }

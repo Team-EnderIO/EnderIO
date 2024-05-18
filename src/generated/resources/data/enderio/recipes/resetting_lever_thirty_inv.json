@@ -6,19 +6,20 @@
       "item": "minecraft:lever"
     },
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:dusts/redstone"
     },
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:dusts/redstone"
     },
     {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:dusts/redstone"
     },
     {
       "item": "minecraft:redstone_torch"
     }
   ],
   "result": {
-    "item": "enderio:resetting_lever_thirty_inv"
+    "count": 1,
+    "id": "enderio:resetting_lever_thirty_inv"
   }
 }

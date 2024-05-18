@@ -27,11 +27,11 @@
       "tag": "enderio:clear_glass_ep"
     },
     {
-      "tag": "forge:dyes/white"
+      "tag": "c:dyes/white"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:clear_glass_ep_white"
+    "id": "enderio:clear_glass_ep_white"
   }
 }

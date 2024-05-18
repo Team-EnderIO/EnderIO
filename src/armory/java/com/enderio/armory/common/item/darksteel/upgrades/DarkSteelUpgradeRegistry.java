@@ -5,6 +5,7 @@ import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -62,33 +63,36 @@ public final class DarkSteelUpgradeRegistry {
 
     // region Read / Write of Upgrades to ItemStacks
 
+    // TODO: NEO-PORT: Rewrite upgrades.
+
     public void writeUpgradeToItemStack(ItemStack stack, IDarkSteelUpgrade upgrade) {
         CompoundTag rootTag = new CompoundTag();
         rootTag.putString("name", upgrade.getName());
-        rootTag.put("data", upgrade.serializeNBT());
-        stack.getOrCreateTag().put(UPGRADE_IN_STACK_KEY, rootTag);
+        //rootTag.put("data", upgrade.serializeNBT(lookupProvider));
+        //stack.getOrCreateTag().put(UPGRADE_IN_STACK_KEY, rootTag);
     }
 
     public boolean hasUpgrade(ItemStack stack) {
-        if(stack.isEmpty() || !stack.hasTag()) {
-            return false;
-        }
-        return stack.getOrCreateTag().contains(UPGRADE_IN_STACK_KEY);
+//        if(stack.isEmpty() || !stack.hasTag()) {
+//            return false;
+//        }
+//        return stack.getOrCreateTag().contains(UPGRADE_IN_STACK_KEY);
+        return false;
     }
 
     public Optional<IDarkSteelUpgrade> readUpgradeFromStack(ItemStack stack) {
-        if(stack.isEmpty() || !stack.hasTag()) {
-            return Optional.empty();
-        }
-        Tag upTag = stack.getOrCreateTag().get(UPGRADE_IN_STACK_KEY);
-        if(upTag instanceof CompoundTag rootTag) {
-            String serName = rootTag.getString("name");
-            final Optional<IDarkSteelUpgrade> upgrade = createUpgrade(serName);
-            return upgrade.map(up -> {
-                up.deserializeNBT(Objects.requireNonNull(rootTag.get("data")));
-                return upgrade;
-            }).orElse(Optional.empty());
-        }
+//        if(stack.isEmpty() || !stack.hasTag()) {
+//            return Optional.empty();
+//        }
+//        Tag upTag = stack.getOrCreateTag().get(UPGRADE_IN_STACK_KEY);
+//        if(upTag instanceof CompoundTag rootTag) {
+//            String serName = rootTag.getString("name");
+//            final Optional<IDarkSteelUpgrade> upgrade = createUpgrade(serName);
+//            return upgrade.map(up -> {
+//                up.deserializeNBT(Objects.requireNonNull(rootTag.get("data")));
+//                return upgrade;
+//            }).orElse(Optional.empty());
+//        }
         return Optional.empty();
     }
 

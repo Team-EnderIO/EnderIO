@@ -27,11 +27,11 @@
       "tag": "enderio:fused_quartz_dp"
     },
     {
-      "tag": "forge:dyes/green"
+      "tag": "c:dyes/green"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:fused_quartz_dp_green"
+    "id": "enderio:fused_quartz_dp_green"
   }
 }

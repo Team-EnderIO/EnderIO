@@ -2,6 +2,7 @@ package com.enderio.api.misc;
 
 import java.util.Objects;
 
+// TODO: can we use org.joml instead?
 public record Vector2i(int x, int y) {
     public static final Vector2i MIN = new Vector2i(Integer.MIN_VALUE, Integer.MIN_VALUE);
     public static final Vector2i MAX = new Vector2i(Integer.MAX_VALUE, Integer.MAX_VALUE);
