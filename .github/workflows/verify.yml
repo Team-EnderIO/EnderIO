@@ -3,8 +3,7 @@ name: Verify Build and Generated Data
 on:
   pull_request:
     branches:
-      - dev/1.20.6
-      - dev/1.20.1
+      - dev/*
 
 jobs:
   test_build:
