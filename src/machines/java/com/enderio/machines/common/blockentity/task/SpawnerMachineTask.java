@@ -26,12 +26,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -207,12 +209,12 @@ public class SpawnerMachineTask implements PoweredMachineTask {
                 }
 
                 if (entity instanceof Mob mob) { // based on vanilla spawner
-                    MobSpawnEvent.FinalizeSpawn event = EventHooks.onFinalizeSpawnSpawner(mob, level, level.getCurrentDifficultyAt(pos), null, null);
-                    if (event == null || event.isSpawnCancelled()) {
+                    FinalizeSpawnEvent event = EventHooks.finalizeMobSpawnSpawner(mob, level, level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, null, false);
+                    if (event.isSpawnCancelled()) {
                         blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
                         continue;
                     } else {
-                        EventHooks.onFinalizeSpawn(mob, level, event.getDifficulty(), event.getSpawnType(), event.getSpawnData());
+                        EventHooks.finalizeMobSpawn(mob, level, event.getDifficulty(), event.getSpawnType(), event.getSpawnData());
                     }
                 }
 
