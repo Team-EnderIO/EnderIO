@@ -11,6 +11,8 @@ import java.util.Locale;
 public enum CapacitorModifier {
     ENERGY_CAPACITY,
     ENERGY_USE,
+    FUEL_EFFICIENCY,
+    BURNING_ENERGY_GENERATION,
 
     /**
      * This should always go last as the loot picker will exclude the final item in this enum
@@ -22,7 +24,9 @@ public enum CapacitorModifier {
 
     public static final List<CapacitorModifier> SELECTABLE_MODIFIERS = List.of(
         ENERGY_CAPACITY,
-        ENERGY_USE
+        ENERGY_USE,
+        FUEL_EFFICIENCY,
+        BURNING_ENERGY_GENERATION
     );
 
     CapacitorModifier() {

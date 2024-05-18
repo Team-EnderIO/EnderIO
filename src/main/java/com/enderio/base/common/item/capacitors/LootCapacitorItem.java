@@ -77,6 +77,10 @@ public class LootCapacitorItem extends BaseCapacitorItem implements IMultiCapabi
             return EIOLang.LOOT_CAPACITOR_TYPE_ENERGY_CAPACITY;
         } else if (firstType.get() == CapacitorModifier.ENERGY_USE) {
             return EIOLang.LOOT_CAPACITOR_TYPE_ENERGY_USE;
+        } else if (firstType.get() == CapacitorModifier.FUEL_EFFICIENCY) {
+            return EIOLang.LOOT_CAPACITOR_TYPE_FUEL_EFFICIENCY;
+        } else if (firstType.get() == CapacitorModifier.BURNING_ENERGY_GENERATION) {
+            return EIOLang.LOOT_CAPACITOR_TYPE_BURNING_ENERGY_GENERATION;
         }
 
         return EIOLang.LOOT_CAPACITOR_TYPE_UNKNOWN;

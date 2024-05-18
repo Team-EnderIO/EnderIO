@@ -5,6 +5,7 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.capacitor.LinearScalable;
 import com.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.api.capacitor.SteppedScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
@@ -33,9 +34,14 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_CAPACITY);
 
-    // TODO: Capacitor modifiers for efficiency and output rates.
-    public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> 1);
-    public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_PRODUCTION);
+    public static final SteppedScalable FUEL_EFFICIENCY = new SteppedScalable(
+        CapacitorModifier.FUEL_EFFICIENCY,
+        MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_FUEL_EFFICIENCY_BASE,
+        MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_FUEL_EFFICIENCY_STEP);
+
+    public static final LinearScalable GENERATION_SPEED = new LinearScalable(
+        CapacitorModifier.BURNING_ENERGY_GENERATION,
+        MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_PRODUCTION);
 
     public static final SingleSlotAccess FUEL = new SingleSlotAccess();
 
@@ -49,10 +55,6 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
         BlockState blockState) {
         super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, type, worldPosition, blockState);
         addDataSlot(new FloatNetworkDataSlot(this::getBurnProgress, p -> clientBurnProgress = p));
-    }
-
-    private int getBurnPerTick() {
-        return Math.max(1, BURN_SPEED.scaleI(this::getCapacitorData).get());
     }
 
     public int getGenerationRate() {
@@ -72,7 +74,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     public void serverTick() {
         // We ignore redstone control here.
         if (isGenerating()) {
-            burnTime -= getBurnPerTick();
+            burnTime--;
 
             if (!requiresCapacitor() || isCapacitorInstalled()) {
                 energyStorage.addEnergy(getGenerationRate());
@@ -89,7 +91,10 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                     int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
 
                     if (burningTime > 0) {
-                        burnTime = (int) Math.floor(burningTime * MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_BURN_SPEED.get());
+                        float burnSpeed = MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_BURN_SPEED.get().floatValue();
+                        float efficiency = FUEL_EFFICIENCY.scaleF(this::getCapacitorData).get() / 100.0f;
+
+                        burnTime = (int) Math.floor(burningTime * burnSpeed * efficiency);
                         burnDuration = burnTime;
 
                         // Remove the fuel
@@ -116,7 +121,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public float getBurnProgress() {
-        if (level.isClientSide) {
+        if (level != null && level.isClientSide) {
             return clientBurnProgress;
         }
 

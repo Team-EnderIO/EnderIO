@@ -80,6 +80,8 @@ public class EIOLang {
 
     public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_CAPACITY = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_CAPACITY.id, "Energy Capacity Modifier: %s");
     public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_USE = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_USE.id, "Energy Use Modifier: %s");
+    public static final MutableComponent CAPACITOR_TOOLTIP_FUEL_EFFICIENCY = REGISTRATE.addLang("tooltip", CapacitorModifier.FUEL_EFFICIENCY.id, "Fuel Efficiency Modifier: %s");
+    public static final MutableComponent CAPACITOR_TOOLTIP_BURNING_ENERGY_GENERATION = REGISTRATE.addLang("tooltip", CapacitorModifier.BURNING_ENERGY_GENERATION.id, "Burning Energy Generation Modifier: %s");
 
     // region Loot Capacitor
 
@@ -94,6 +96,8 @@ public class EIOLang {
 
     public static final MutableComponent LOOT_CAPACITOR_TYPE_ENERGY_CAPACITY = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_energy_capacity"), "Insatiable");
     public static final MutableComponent LOOT_CAPACITOR_TYPE_ENERGY_USE = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_energy_use"), "Hungry");
+    public static final MutableComponent LOOT_CAPACITOR_TYPE_FUEL_EFFICIENCY = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_fuel_efficiency"), "Efficient");
+    public static final MutableComponent LOOT_CAPACITOR_TYPE_BURNING_ENERGY_GENERATION = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_burning_energy_generation"), "Hot");
     public static final MutableComponent LOOT_CAPACITOR_TYPE_UNKNOWN = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_unknown"), "Mystery");
 
     public static final MutableComponent LOOT_CAPACITOR_MODIFIER_FAILED = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_modifier_failed"), "Failed");
