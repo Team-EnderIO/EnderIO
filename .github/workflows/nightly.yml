@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - 'dev/*'
+      - 'lts/*'
 
 # Cancel if a new push is sent
 # https://stackoverflow.com/a/70972844
