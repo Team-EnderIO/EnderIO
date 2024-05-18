@@ -1,6 +1,5 @@
 name: Nightly Build
 env:
-  CI: true
   BUILD_NUMBER: ${{ github.run_number }}
   NIGHTLY: true
 
@@ -22,6 +21,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Get Minecraft Version
         uses: madhead/read-java-properties@latest
