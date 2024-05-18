@@ -7,7 +7,7 @@ on:
       - lts/*
 
 jobs:
-  test_build:
+  verify:
     runs-on: ubuntu-latest
     concurrency:
       group: test_build-${{ github.head_ref || github.run_id }}
