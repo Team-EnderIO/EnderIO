@@ -2,6 +2,7 @@ package com.enderio.base.client.gui.screen;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.CoordinateMenu;
 import com.enderio.base.common.network.UpdateCoordinateSelectionNameMenuPacket;
 import com.enderio.core.client.gui.screen.EIOScreen;
@@ -37,8 +38,7 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
         this.addRenderableWidget(name);
         this.setInitialFocus(name);
         name.setEditable(true);
-        // TODO: Translation string
-        this.addRenderableWidget(new Button.Builder(Component.literal("Ok"), mouseButton -> Minecraft.getInstance().player.closeContainer())
+        this.addRenderableWidget(new Button.Builder(EIOLang.OK, mouseButton -> Minecraft.getInstance().player.closeContainer())
             .bounds(getGuiLeft() + imageWidth - 30, getGuiTop() + imageHeight - 30, 20, 20)
             .build());
     }
