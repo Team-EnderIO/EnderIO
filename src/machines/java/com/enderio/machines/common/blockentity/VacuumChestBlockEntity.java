@@ -1,5 +1,8 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.core.common.capability.IFilterCapability;
+import com.enderio.core.common.capability.ItemFilterCapability;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -30,8 +33,9 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return extractableGUISlot(MachineInventoryLayout.builder(), 27)
-            .slot(slot -> slot.guiInsert().guiExtract().filter((i, s) -> false))
-            .build(); //TODO add proper filter slot and predicate
+            .slot(slot -> slot.guiInsert().guiExtract().filter((i, s) -> s.getCapability(EIOCapabilities.Filter.ITEM) instanceof ItemFilterCapability))
+            .slotAccess(FILTER)
+            .build();
     }
 
     @Override
@@ -52,11 +56,12 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
         return MachinesConfig.CLIENT.BLOCKS.VACUUM_CHEST_RANGE_COLOR.get();
     }
 
-    //TODO filter
     @Override
     public Predicate<ItemEntity> getFilter() {
-        // get filter slot -> get filter item -> filter
-        // maybe cache on item insert
+        IFilterCapability<?> capability = FILTER.getItemStack(this).getCapability(EIOCapabilities.Filter.ITEM);
+        if (capability instanceof ItemFilterCapability filter) {
+            return itemEntity -> filter.test(itemEntity.getItem());
+        }
         return super.getFilter();
     }
 

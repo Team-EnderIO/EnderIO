@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.function.Supplier;
 
@@ -102,7 +103,7 @@ public class ItemFilterCapability implements IFilterCapability<ItemStack> {
             if (optionalint.isEmpty()) {
                 return List.of();
             }
-            List<ItemStack> items = NonNullList.withSize(optionalint.getAsInt(), ItemStack.EMPTY);
+            List<ItemStack> items = NonNullList.withSize(optionalint.getAsInt() + 1, ItemStack.EMPTY);
             for (ItemFilterCapability.Component.Slot slot : slots) {
                 items.set(slot.index, slot.item);
             }
@@ -124,11 +125,31 @@ public class ItemFilterCapability implements IFilterCapability<ItemStack> {
             return new ItemFilterCapability.Component(newItems, nbt, invert);
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+            Component component = (Component) o;
+            for (int i = 0; i < items.size(); i++) {
+                if (!ItemStack.matches(items.get(i), component.items.get(i))) {
+                    return false;
+                }
+            }
+            return nbt == component.nbt && invert == component.invert;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(items.hashCode(), nbt, invert);
+        }
+
         public record Slot(int index, ItemStack item) {
             public static final Codec<ItemFilterCapability.Component.Slot> CODEC = RecordCodecBuilder.create(
                     p_331695_ -> p_331695_.group(
                                     Codec.intRange(0, 255).fieldOf("slot").forGetter(ItemFilterCapability.Component.Slot::index),
-                                    ItemStack.CODEC.fieldOf("item").forGetter(ItemFilterCapability.Component.Slot::item)
+                                    ItemStack.OPTIONAL_CODEC.fieldOf("item").forGetter(ItemFilterCapability.Component.Slot::item)
                             )
                             .apply(p_331695_, ItemFilterCapability.Component.Slot::new)
             );
