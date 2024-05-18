@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.function.Supplier;
 
@@ -109,7 +110,7 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack> {
             if (optionalint.isEmpty()) {
                 return List.of();
             }
-            List<FluidStack> fluids = NonNullList.withSize(optionalint.getAsInt(), FluidStack.EMPTY);
+            List<FluidStack> fluids = NonNullList.withSize(optionalint.getAsInt() + 1, FluidStack.EMPTY);
             for (Slot slot : slots) {
                 fluids.set(slot.index, slot.fluid);
             }
@@ -131,11 +132,31 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack> {
             return new Component(newFluids, nbt, invert);
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+            FluidFilterCapability.Component component = (FluidFilterCapability.Component) o;
+            for (int i = 0; i < fluids.size(); i++) {
+                if (!FluidStack.matches(fluids.get(i), component.fluids.get(i))) {
+                    return false;
+                }
+            }
+            return nbt == component.nbt && invert == component.invert;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(fluids.hashCode(), nbt, invert);
+        }
+
         public record Slot(int index, FluidStack fluid) {
             public static final Codec<Slot> CODEC = RecordCodecBuilder.create(
                 p_331695_ -> p_331695_.group(
                         Codec.intRange(0, 255).fieldOf("slot").forGetter(Slot::index),
-                        FluidStack.CODEC.fieldOf("fluid").forGetter(Slot::fluid)
+                        FluidStack.OPTIONAL_CODEC.fieldOf("fluid").forGetter(Slot::fluid)
                     )
                     .apply(p_331695_, Slot::new)
             );

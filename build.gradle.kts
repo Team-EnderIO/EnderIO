@@ -247,7 +247,7 @@ dependencies {
 
     // AE2
     compileOnly("appeng:appliedenergistics2-neoforge:${ae2_version}:api")
-    runtimeOnly("appeng:appliedenergistics2-neoforge:${ae2_version}")
+    //runtimeOnly("appeng:appliedenergistics2-neoforge:${ae2_version}")
 
     // Enchantment descriptions
     //runtimeOnly("net.darkhax.bookshelf:Bookshelf-NeoForge-${minecraft_version}:${bookshelf_version}")
