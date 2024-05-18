@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types.redstone;
+package com.enderio.conduits.common.conduit.type.redstone;
 
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ExtendedConduitData;
@@ -10,7 +10,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.level.redstone.Redstone;
 
 import java.util.ArrayList;
 import java.util.List;

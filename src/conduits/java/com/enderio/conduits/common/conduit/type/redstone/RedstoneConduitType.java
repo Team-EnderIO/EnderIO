@@ -1,10 +1,10 @@
-package com.enderio.conduits.common.types.redstone;
+package com.enderio.conduits.common.conduit.type.redstone;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.EIOConduitTypes;
-import com.enderio.conduits.common.types.SimpleConduitType;
+import com.enderio.conduits.common.conduit.type.SimpleConduitType;
 import net.minecraft.resources.ResourceLocation;
 
 public class RedstoneConduitType extends SimpleConduitType<RedstoneExtendedData> {

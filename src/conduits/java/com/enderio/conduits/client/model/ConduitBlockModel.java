@@ -8,9 +8,8 @@ import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.client.paint.model.PaintingQuadTransformer;
 import com.enderio.conduits.common.Area;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
-import com.enderio.conduits.common.blockentity.ConduitBundle;
-import com.enderio.conduits.common.blockentity.ConduitConnection;
-import com.enderio.conduits.common.blockentity.OffsetHelper;
+import com.enderio.conduits.common.conduit.ConduitBundle;
+import com.enderio.conduits.common.conduit.OffsetHelper;
 import com.enderio.core.data.model.ModelHelper;
 import com.mojang.math.Axis;
 import com.mojang.math.Transformation;
@@ -61,14 +60,15 @@ public class ConduitBlockModel implements IDynamicBakedModel {
             Map<ConduitType<?>, List<Vec3i>> offsets = new HashMap<>();
 
             for (Direction direction : Direction.values()) {
+                boolean isEnd = conduitBundle.isConnectionEnd(direction);
                 Direction preRotation = rotateDirection(direction, side);
-                ConduitConnection connection = conduitBundle.getConnection(direction);
                 IQuadTransformer rotation = QuadTransformers.applying(rotateTransformation(direction));
-                if (connection.isEnd()) {
+
+                if (isEnd) {
                     quads.addAll(rotation.process(modelOf(CONDUIT_CONNECTOR).getQuads(state, preRotation, rand, extraData, renderType)));
                 }
 
-                var connectedTypes = connection.getConnectedTypes(conduitBundle);
+                var connectedTypes = conduitBundle.getConnectedTypes(direction);
                 for (int i = 0; i < connectedTypes.size(); i++) {
                     ConduitType<?> type = connectedTypes.get(i);
                     Vec3i offset = OffsetHelper.translationFor(direction.getAxis(), OffsetHelper.offsetConduit(i, connectedTypes.size()));
@@ -81,12 +81,12 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                         .getClientData()
                         .createConnectionQuads(conduitBundle.getNodeFor(type).getExtendedConduitData().cast(), side, direction, rand, renderType)));
 
-                    if (connection.isEnd()) {
+                    if (isEnd) {
                         quads.addAll(rotationTranslation.process(modelOf(CONDUIT_CONNECTION_BOX).getQuads(state, preRotation, rand, extraData, renderType)));
 
-                        ConnectionState connectionState = connection.getConnectionState(conduitBundle, type);
+                        ConnectionState connectionState = conduitBundle.getConnectionState(direction, type);
                         if (connectionState instanceof DynamicConnectionState dyn) {
-                            IQuadTransformer color = rotationTranslation.andThen(new ColorQuadTransformer(dyn.insert(), dyn.extract()));
+                            IQuadTransformer color = rotationTranslation.andThen(new ColorQuadTransformer(dyn.insertChannel(), dyn.extractChannel()));
                             BakedModel model = null;
                             if (dyn.isExtract() && dyn.isInsert()) {
                                 model = modelOf(CONDUIT_IO_IN_OUT);

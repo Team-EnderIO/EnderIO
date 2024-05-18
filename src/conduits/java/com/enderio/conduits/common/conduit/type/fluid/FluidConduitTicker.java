@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types.fluid;
+package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.api.capability.IConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
@@ -7,7 +7,6 @@ import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.components.FluidSpeedUpgrade;
-import com.enderio.conduits.common.components.ItemSpeedUpgrade;
 import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.enderio.core.common.capability.FluidFilterCapability;
 import com.enderio.core.common.capability.IFilterCapability;
@@ -17,7 +16,6 @@ import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;

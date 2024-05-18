@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.blockentity;
+package com.enderio.conduits.common.conduit;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
@@ -110,7 +110,7 @@ public class OffsetHelper {
     public static Direction.Axis findMainAxis(ConduitBundle bundle) {
         List<Direction> connectedDirs = new ArrayList<>();
         for (Direction dir: Direction.values()) {
-            if (!bundle.getConnection(dir).getConnectedTypes(bundle).isEmpty()) {
+            if (!bundle.getConnectedTypes(dir).isEmpty()) {
                 connectedDirs.add(dir);
             }
         }

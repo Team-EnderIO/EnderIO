@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types.item;
+package com.enderio.conduits.common.conduit.type.item;
 
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ExtendedConduitData;
@@ -22,7 +22,7 @@ public class ItemExtendedData implements ExtendedConduitData<ItemExtendedData> {
     public Map<Direction, ItemSidedData> itemSidedData;
 
     public ItemExtendedData() {
-        itemSidedData = new EnumMap<>(Direction.class);
+        itemSidedData = new HashMap<>(Direction.values().length);
     }
 
     public ItemExtendedData(Map<Direction, ItemSidedData> itemSidedData) {

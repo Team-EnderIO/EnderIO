@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @net.minecraft.MethodsReturnNonnullByDefault
 
-package com.enderio.conduits.common.types.redstone;
+package com.enderio.conduits.common.conduit.type.energy;

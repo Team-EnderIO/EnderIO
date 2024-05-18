@@ -3,7 +3,7 @@ package com.enderio.conduits.common.menu;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
-import com.enderio.conduits.common.blockentity.ConduitBundle;
+import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.conduits.common.blocks.ConduitBlock;
 import com.enderio.conduits.common.init.ConduitMenus;

@@ -11,7 +11,7 @@ import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.conduits.common.blockentity.ConduitBundle;
+import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.menu.ConduitSlot;
@@ -101,14 +101,14 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             if (data.showColorInsert()) {
                 addTypedButton(
                     new EnumIconWidget<>(this, pos.x(), pos.y() + 20,
-                        () -> getOnDynamic(dyn -> dyn.insert(), ColorControl.GREEN),
+                        () -> getOnDynamic(dyn -> dyn.insertChannel(), ColorControl.GREEN),
                         color -> actOnDynamic(dyn -> dyn.withColor(false, color)),
                     EIOLang.CONDUIT_CHANNEL));
             }
             if (data.showColorExtract()) {
                 addTypedButton(
                     new EnumIconWidget<>(this, pos.x() + 90, pos.y() + 20,
-                        () -> getOnDynamic(dyn -> dyn.extract(), ColorControl.GREEN),
+                        () -> getOnDynamic(dyn -> dyn.extractChannel(), ColorControl.GREEN),
                         color -> actOnDynamic(dyn -> dyn.withColor(true, color)),
                         EIOLang.CONDUIT_CHANNEL));
             }
@@ -131,12 +131,14 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
                     new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
                 .forEach(this::addTypedButton);
         }
+
         List<ConduitType<?>> validConnections = new ArrayList<>();
         for (ConduitType<?> type : getBundle().getTypes()) {
             if (getConnectionState(type) instanceof DynamicConnectionState) {
                 validConnections.add(type);
             }
         }
+
         if (forceUpdate || !typeSelectionButtons.stream().map(ConduitSelectionButton::getType).toList().equals(validConnections)) {
             typeSelectionButtons.forEach(this::removeWidget);
             typeSelectionButtons.clear();
@@ -154,15 +156,13 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     }
 
     private void sendExtendedConduitUpdate(Function<ExtendedConduitData<?>, ExtendedConduitData<?>> map) {
-        var registryAccess = menu.getBlockEntity().getLevel().registryAccess();
-
         var currentData = getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast();
         var menu = getMenu();
 
         PacketDistributor.sendToServer(new C2SSetConduitExtendedData(
             menu.getBlockEntity().getBlockPos(),
             menu.getConduitType(),
-            map.apply(currentData).save(registryAccess)));
+            map.apply(currentData)));
     }
 
     private void addTypedButton(AbstractWidget button) {
@@ -189,7 +189,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     }
 
     private ConnectionState getConnectionState(ConduitType<?> type) {
-        return getBundle().getConnection(menu.getDirection()).getConnectionState(getBundle(), type);
+        return getBundle().getConnectionState(menu.getDirection(), type);
     }
 
     private ConduitBundle getBundle() {

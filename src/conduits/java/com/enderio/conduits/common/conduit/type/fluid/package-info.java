@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @net.minecraft.MethodsReturnNonnullByDefault
 
-package com.enderio.conduits.common.types.fluid;
+package com.enderio.conduits.common.conduit.type.fluid;

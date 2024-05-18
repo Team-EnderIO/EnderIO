@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types.fluid;
+package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitDataSerializer;
@@ -7,7 +7,6 @@ import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;

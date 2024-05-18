@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types.fluid;
+package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ClientConduitData;

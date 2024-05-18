@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types.redstone;
+package com.enderio.conduits.common.conduit.type.redstone;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;

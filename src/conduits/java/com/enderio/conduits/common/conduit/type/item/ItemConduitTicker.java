@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types.item;
+package com.enderio.conduits.common.conduit.type.item;
 
 import com.enderio.api.capability.IConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;

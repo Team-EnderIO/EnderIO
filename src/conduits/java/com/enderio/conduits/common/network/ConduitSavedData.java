@@ -8,7 +8,7 @@ import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.init.EIOConduitTypes;
-import com.enderio.conduits.common.types.redstone.RedstoneExtendedData;
+import com.enderio.conduits.common.conduit.type.redstone.RedstoneExtendedData;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;

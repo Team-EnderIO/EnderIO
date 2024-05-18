@@ -65,8 +65,8 @@ public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphOb
     @ApiStatus.Internal
     public void pushState(Direction direction, DynamicConnectionState connectionState) {
         this.connectionStates.put(direction, connectionState);
-        ioStates.put(direction, IOState.of(connectionState.isInsert() ? connectionState.insert() : null,
-            connectionState.isExtract() ? connectionState.extract() : null, connectionState.control(), connectionState.redstoneChannel()));
+        ioStates.put(direction, IOState.of(connectionState.isInsert() ? connectionState.insertChannel() : null,
+            connectionState.isExtract() ? connectionState.extractChannel() : null, connectionState.control(), connectionState.redstoneChannel()));
     }
 
     public Optional<IOState> getIOState(Direction direction) {
@@ -97,7 +97,7 @@ public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphOb
 
     @Override
     public int hashCode() {
-        return Objects.hash(pos, extendedConduitData);
+        return Objects.hash(pos, extendedConduitData, ioStates, connectionStates);
     }
 
     public record IOState(Optional<ColorControl> insert, Optional<ColorControl> extract, RedstoneControl control, ColorControl redstoneChannel) {

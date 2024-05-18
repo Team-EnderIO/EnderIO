@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types.energy;
+package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
@@ -34,6 +34,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
                 energyExtendedData.setCapacity(500);
                 continue;
             }
+
             int previousStored = energy.getEnergyStored();
             for (NodeIdentifier<?> otherNode : loadedNodes) {
                for (Direction dir: Direction.values()) {
@@ -45,6 +46,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
                    }
                }
             }
+
             if (energy.getEnergyStored() == 0) {
                 if (previousStored == energy.getMaxEnergyStored()) {
                     energyExtendedData.setCapacity(Math.min(1_000_000_000, 2 * energyExtendedData.getCapacity()));
