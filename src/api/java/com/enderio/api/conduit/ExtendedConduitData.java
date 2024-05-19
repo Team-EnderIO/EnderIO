@@ -38,10 +38,15 @@ public interface ExtendedConduitData<T extends ExtendedConduitData<T>> {
     StreamCodec<RegistryFriendlyByteBuf, ExtendedConduitData<?>> STREAM_CODEC = ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_DATA_SERIALIZERS)
         .dispatch(ExtendedConduitData::serializer, ConduitDataSerializer::streamCodec);
 
+    EmptyExtendedConduitData EMPTY = new EmptyExtendedConduitData();
+
     /**
      * default impl for stuff that don't need an impl
      */
     class EmptyExtendedConduitData implements ExtendedConduitData<EmptyExtendedConduitData> {
+        private EmptyExtendedConduitData() {
+        }
+
         @Override
         public void applyGuiChanges(EmptyExtendedConduitData guiData) {
         }
@@ -53,7 +58,7 @@ public interface ExtendedConduitData<T extends ExtendedConduitData<T>> {
 
         public static class Serializer implements ConduitDataSerializer<EmptyExtendedConduitData> {
             public static MapCodec<EmptyExtendedConduitData> CODEC = MapCodec.unit(EmptyExtendedConduitData::new);
-            public static StreamCodec<ByteBuf, EmptyExtendedConduitData> STREAM_CODEC = StreamCodec.unit(new EmptyExtendedConduitData());
+            public static StreamCodec<ByteBuf, EmptyExtendedConduitData> STREAM_CODEC = StreamCodec.unit(EMPTY);
 
             public static Serializer INSTANCE = new Serializer();
 
@@ -121,10 +126,6 @@ public interface ExtendedConduitData<T extends ExtendedConduitData<T>> {
     }
 
     // endregion
-
-    static Supplier<EmptyExtendedConduitData> dummy() {
-        return EmptyExtendedConduitData::new;
-    }
 
     default <Z extends ExtendedConduitData<Z>> Z cast() {
         return (Z) this;

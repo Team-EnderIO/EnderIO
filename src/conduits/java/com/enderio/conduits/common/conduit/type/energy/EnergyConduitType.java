@@ -3,7 +3,7 @@ package com.enderio.conduits.common.conduit.type.energy;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ClientConduitData;
 import com.enderio.api.conduit.ConduitMenuData;
-import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.EIOConduitTypes;
@@ -20,9 +20,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
+    private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
+
     public EnergyConduitType() {
         super(EnderIO.loc("block/conduit/energy"), new EnergyConduitTicker(), EnergyExtendedData::new,
-            new ClientConduitData.Simple<>(EIOConduitTypes.ICON_TEXTURE, new Vector2i(0, 24)), ConduitMenuData.ENERGY);
+            new ClientConduitData.Simple<>(EIOConduitTypes.ICON_TEXTURE, new Vector2i(0, 24)), MENU_DATA);
     }
 
     @Override

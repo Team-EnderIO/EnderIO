@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit.block;
 
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.conduit.connection.ConnectionState;
 import com.enderio.api.conduit.connection.DynamicConnectionState;
 import com.enderio.api.conduit.connection.StaticConnectionStates;

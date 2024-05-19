@@ -4,15 +4,9 @@ import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.registry.EnderIORegistries;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
@@ -60,7 +54,7 @@ public interface ConduitType<T extends ExtendedConduitData<T>> {
         Level level,
         BlockPos pos,
         @Nullable Direction direction,
-        @Nullable NodeIdentifier.IOState state) {
+        @Nullable ConduitNode.IOState state) {
         return Optional.empty();
     }
 

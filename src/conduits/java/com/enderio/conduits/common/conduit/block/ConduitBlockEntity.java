@@ -4,7 +4,7 @@ import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
-import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.connection.ConnectionState;
 import com.enderio.api.conduit.connection.DynamicConnectionState;

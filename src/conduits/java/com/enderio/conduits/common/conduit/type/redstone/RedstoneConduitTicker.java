@@ -1,7 +1,8 @@
 package com.enderio.conduits.common.conduit.type.redstone;
 
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.conduit.ConduitNode;
+import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.init.ConduitBlocks;
@@ -31,7 +32,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker {
 
     @Override
     public void tickGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
-        List<NodeIdentifier<?>> nodeIdentifiers = new ArrayList<>();
+        List<ConduitNode<?>> nodeIdentifiers = new ArrayList<>();
         for (GraphObject<Mergeable.Dummy> object : graph.getObjects()) {
             if (object instanceof NodeIdentifier<?> node) {
                 nodeIdentifiers.add(node);
@@ -39,7 +40,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker {
         }
         activeColors.clear();
         tickGraph(type,nodeIdentifiers.stream().filter(node -> isLoaded(level, node.getPos())).toList(), level, graph, isRedstoneActive);
-        for (NodeIdentifier<?> nodeIdentifier : nodeIdentifiers) {
+        for (ConduitNode<?> nodeIdentifier : nodeIdentifiers) {
             RedstoneExtendedData data = nodeIdentifier.getExtendedConduitData().cast();
             data.clearActive();
             for (ColorControl activeColor : activeColors) {

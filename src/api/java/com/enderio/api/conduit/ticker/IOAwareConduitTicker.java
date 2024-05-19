@@ -2,14 +2,13 @@ package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
-import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,25 +20,31 @@ import java.util.List;
 
 public interface IOAwareConduitTicker extends LoadedAwareConduitTicker {
     @Override
-    default void tickGraph(ConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph,
+    default void tickGraph(ConduitType<?> type, List<ConduitNode<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph,
         TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         ListMultimap<ColorControl, Connection> extracts = ArrayListMultimap.create();
         ListMultimap<ColorControl, Connection> inserts = ArrayListMultimap.create();
-        for (GraphObject<Mergeable.Dummy> object : loadedNodes) {
-            if (object instanceof NodeIdentifier<?> nodeIdentifier) {
-                for (Direction direction : Direction.values()) {
-                    nodeIdentifier.getIOState(direction).ifPresent(ioState -> {
-                        ioState
-                            .extract()
-                            .filter(extract -> isRedstoneMode(type, level, nodeIdentifier.getPos(), ioState, isRedstoneActive))
-                            .ifPresent(
-                                color -> extracts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData(), nodeIdentifier.getConnectionState(direction))));
-                        ioState
-                            .insert()
-                            .ifPresent(
-                                color -> inserts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData(), nodeIdentifier.getConnectionState(direction))));
-                    });
-                }
+        for (ConduitNode<?> node : loadedNodes) {
+            for (Direction direction : Direction.values()) {
+                node.getIOState(direction).ifPresent(ioState -> {
+                    ioState
+                        .extract()
+                        .filter(extract -> isRedstoneMode(type, level, node.getPos(), ioState, isRedstoneActive))
+                        .ifPresent(
+                            color -> extracts.get(color).add(new Connection(
+                                node.getPos(),
+                                direction,
+                                node.getExtendedConduitData(),
+                                node.getConnectionState(direction))));
+                    ioState
+                        .insert()
+                        .ifPresent(
+                            color -> inserts.get(color).add(new Connection(
+                                node.getPos(),
+                                direction,
+                                node.getExtendedConduitData(),
+                                node.getConnectionState(direction))));
+                });
             }
         }
         for (ColorControl color : ColorControl.values()) {
@@ -56,7 +61,7 @@ public interface IOAwareConduitTicker extends LoadedAwareConduitTicker {
     void tickColoredGraph(ConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level,
         Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive);
 
-    default boolean isRedstoneMode(ConduitType<?> type, ServerLevel level, BlockPos pos, NodeIdentifier.IOState state,
+    default boolean isRedstoneMode(ConduitType<?> type, ServerLevel level, BlockPos pos, ConduitNode.IOState state,
         TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         if (!type.getMenuData().showRedstoneExtract()) {
             return true;

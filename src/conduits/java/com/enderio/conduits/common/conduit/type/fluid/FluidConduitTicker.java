@@ -2,7 +2,8 @@ package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.api.capability.IConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.conduit.ConduitNode;
+import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.base.common.init.EIOCapabilities;
@@ -40,9 +41,9 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
     }
 
     @Override
-    public void tickGraph(ConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    public void tickGraph(ConduitType<?> type, List<ConduitNode<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         boolean shouldReset = false;
-        for (NodeIdentifier<?> loadedNode : loadedNodes) {
+        for (ConduitNode<?> loadedNode : loadedNodes) {
             FluidExtendedData fluidExtendedData = loadedNode.getExtendedConduitData().castTo(FluidExtendedData.class);
             if (fluidExtendedData.shouldReset) {
                 shouldReset = true;
@@ -50,7 +51,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
             }
         }
         if (shouldReset) {
-            for (NodeIdentifier<?> loadedNode : loadedNodes) {
+            for (ConduitNode<?> loadedNode : loadedNodes) {
                 loadedNode.getExtendedConduitData().castTo(FluidExtendedData.class).lockedFluid = null;
             }
         }

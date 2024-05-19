@@ -3,7 +3,7 @@ package com.enderio.conduits.common.network;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
-import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;

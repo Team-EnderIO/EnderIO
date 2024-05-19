@@ -1,7 +1,8 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.conduit.ConduitNode;
+import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.tag.ConduitTags;
@@ -25,9 +26,9 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
     }
 
     @Override
-    public void tickGraph(ConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    public void tickGraph(ConduitType<?> type, List<ConduitNode<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         super.tickGraph(type, loadedNodes, level, graph, isRedstoneActive);
-        for (NodeIdentifier<?> node : loadedNodes) {
+        for (ConduitNode<?> node : loadedNodes) {
             EnergyExtendedData energyExtendedData = node.getExtendedConduitData().castTo(EnergyExtendedData.class);
             IEnergyStorage energy = energyExtendedData.getSelfCap();
             if (energy.getEnergyStored() == 0) {
@@ -36,7 +37,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
             }
 
             int previousStored = energy.getEnergyStored();
-            for (NodeIdentifier<?> otherNode : loadedNodes) {
+            for (ConduitNode<?> otherNode : loadedNodes) {
                for (Direction dir: Direction.values()) {
                    if (otherNode.getIOState(dir).map(NodeIdentifier.IOState::isInsert).orElse(false)) {
                        IEnergyStorage capability = level.getCapability(getCapability(), otherNode.getPos().relative(dir), dir.getOpposite());
