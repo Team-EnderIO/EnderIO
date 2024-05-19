@@ -441,7 +441,7 @@ public final class ConduitBundle {
             return states;
         });
 
-        public ConduitConnection() {
+        ConduitConnection() {
         }
 
         private ConduitConnection(List<ConnectionState> connectionStates) {
