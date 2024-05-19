@@ -126,7 +126,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
             menu.getConduitType()
                 .getClientData()
-                .createWidgets(this, getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast(),
+                .createWidgets(this, () -> getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast(),
                     (mapper) -> sendExtendedConduitUpdate((Function<ExtendedConduitData<?>, ExtendedConduitData<?>>) mapper), menu::getDirection,
                     new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
                 .forEach(this::addTypedButton);

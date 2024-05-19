@@ -41,7 +41,7 @@ public interface ClientConduitData<T extends ExtendedConduitData<T>> extends Ico
      * @param widgetsStart              the position on which widgets start
      * @return Widgets that manipulate the extended ConduitData, these changes are synced back to the server
      */
-    default List<AbstractWidget> createWidgets(Screen screen, T extendedConduitData, UpdateExtendedData<T> updateExtendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+    default List<AbstractWidget> createWidgets(Screen screen, Supplier<T> extendedConduitData, UpdateExtendedData<T> updateExtendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         return List.of();
     }
 

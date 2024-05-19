@@ -54,10 +54,10 @@ public class FluidClientData extends ClientConduitData.Simple<FluidExtendedData>
     }
 
     @Override
-    public List<AbstractWidget> createWidgets(Screen screen, FluidExtendedData extendedConduitData, UpdateExtendedData<FluidExtendedData> updateExtendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+    public List<AbstractWidget> createWidgets(Screen screen, Supplier<FluidExtendedData> extendedConduitData, UpdateExtendedData<FluidExtendedData> updateExtendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         return List.of(
             new FluidWidget(widgetsStart.add(0, 20),
-                () -> extendedConduitData.lockedFluid,
+                () -> extendedConduitData.get().lockedFluid,
                 () -> updateExtendedConduitData.update(data -> {
                     data.shouldReset = true;
                     return data;

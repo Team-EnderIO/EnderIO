@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 public class ItemClientConduitData implements ClientConduitData<ItemExtendedData> {
     @Override
-    public List<AbstractWidget> createWidgets(Screen screen, ItemExtendedData extendedConduitData,
+    public List<AbstractWidget> createWidgets(Screen screen, Supplier<ItemExtendedData> extendedConduitData,
         UpdateExtendedData<ItemExtendedData> updateExtendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         // TODO: Method of doing sync that does not require CoreNetwork in API.
         List<AbstractWidget> widgets = new ArrayList<>();
@@ -25,7 +25,7 @@ public class ItemClientConduitData implements ClientConduitData<ItemExtendedData
         widgets.add(new CheckBox(
             EnderIO.loc("textures/gui/round_robin.png"),
             widgetsStart.add(110, 20),
-            () -> extendedConduitData.get(direction.get()).isRoundRobin,
+            () -> extendedConduitData.get().get(direction.get()).isRoundRobin,
             bool -> {
                 updateExtendedConduitData.update(data -> {
                     var sideData = data.compute(direction.get());
@@ -37,7 +37,7 @@ public class ItemClientConduitData implements ClientConduitData<ItemExtendedData
         widgets.add(new CheckBox(
             EnderIO.loc("textures/gui/self_feed.png"),
             widgetsStart.add(130, 20),
-            () -> extendedConduitData.get(direction.get()).isSelfFeed,
+            () -> extendedConduitData.get().get(direction.get()).isSelfFeed,
             bool -> {
                 updateExtendedConduitData.update(data -> {
                     var sideData = data.compute(direction.get());
