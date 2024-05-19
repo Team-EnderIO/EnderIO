@@ -229,12 +229,12 @@ public class EIOFarmTasks {
                                 return FarmInteraction.BLOCKED;
                             }
                         }
-                        if (!farmBlockEntity.handleDrops(plant, pos, soil, blockEntity, plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY)) {
+                        if (!farmBlockEntity.handleDrops(plant, blockPos, soil, blockEntity, plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY)) {
                             return FarmInteraction.BLOCKED;
                         }
-                        farmBlockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                        farmBlockEntity.getLevel().setBlockAndUpdate(blockPos, Blocks.AIR.defaultBlockState());
                         if (plant.requiresCorrectToolForDrops()) {
-                            farmBlockEntity.getAxe().mineBlock(farmBlockEntity.getLevel(), plant, pos, farmBlockEntity.getPlayer());
+                            farmBlockEntity.getAxe().mineBlock(farmBlockEntity.getLevel(), plant, blockPos, farmBlockEntity.getPlayer());
                         }
                     }
                     farmBlockEntity.addConsumedPower(-40);
