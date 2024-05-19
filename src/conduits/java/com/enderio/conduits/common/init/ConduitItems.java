@@ -6,7 +6,7 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.common.components.FluidSpeedUpgrade;
 import com.enderio.conduits.common.components.ItemSpeedUpgrade;
-import com.enderio.conduits.common.items.SpeedUpgradeItem;
+import com.enderio.conduits.common.conduit.upgrade.SpeedUpgradeItem;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
 import net.minecraft.world.item.Item;

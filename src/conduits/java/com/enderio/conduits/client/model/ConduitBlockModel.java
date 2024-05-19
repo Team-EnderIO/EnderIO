@@ -7,7 +7,7 @@ import com.enderio.api.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.client.paint.model.PaintingQuadTransformer;
 import com.enderio.conduits.common.Area;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.OffsetHelper;
 import com.enderio.core.data.model.ModelHelper;

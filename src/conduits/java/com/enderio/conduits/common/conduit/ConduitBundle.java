@@ -9,8 +9,7 @@ import com.enderio.api.conduit.connection.ConnectionState;
 import com.enderio.api.conduit.connection.StaticConnectionStates;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.api.conduit.connection.DynamicConnectionState;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
-import com.enderio.conduits.common.blockentity.RightClickAction;
+import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -59,18 +58,6 @@ public final class ConduitBundle {
                 .fieldOf("nodes").forGetter(i -> i.nodes)
         ).apply(instance, ConduitBundle::new)
     );
-
-//    public static Codec<ConduitBundle> CLIENT_CODEC = RecordCodecBuilder.create(
-//        instance -> instance.group(
-//            BlockPos.CODEC.fieldOf("pos").forGetter(i -> i.pos),
-//            EnderIORegistries.CONDUIT_TYPES.byNameCodec().listOf()
-//                .fieldOf("types").forGetter(i -> i.types),
-//            Codec.unboundedMap(Direction.CODEC, ConduitConnection.CODEC)
-//                .fieldOf("connections").forGetter(i -> i.connections),
-//            Codec.unboundedMap(Direction.CODEC, BlockState.CODEC)
-//                .fieldOf("facades").forGetter(i -> i.facadeTextures)
-//        ).apply(instance, ConduitBundle::new)
-//    );
 
     // TODO: Facades.
     public static StreamCodec<RegistryFriendlyByteBuf, ConduitBundle> STREAM_CODEC = StreamCodec.composite(
@@ -257,10 +244,6 @@ public final class ConduitBundle {
     // endregion
 
     // region Connections
-
-    /*public ConduitConnection getConnection(Direction direction) {
-        return connections.get(direction);
-    }*/
 
     public List<ConduitType<?>> getConnectedTypes(Direction direction) {
         return connections.get(direction).getConnectedTypes(this);

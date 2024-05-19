@@ -6,7 +6,7 @@ import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneExtendedData;
 import com.mojang.datafixers.util.Pair;

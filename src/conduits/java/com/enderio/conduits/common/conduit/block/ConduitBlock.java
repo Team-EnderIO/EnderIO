@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.blocks;
+package com.enderio.conduits.common.conduit.block;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
@@ -8,12 +8,11 @@ import com.enderio.api.conduit.connection.StaticConnectionStates;
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.conduit.ConduitBundle;
-import com.enderio.conduits.common.blockentity.RightClickAction;
+import com.enderio.conduits.common.conduit.RightClickAction;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.EIOConduitTypes;
-import com.enderio.conduits.common.items.ConduitBlockItem;
+import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneExtendedData;
 import net.minecraft.core.BlockPos;

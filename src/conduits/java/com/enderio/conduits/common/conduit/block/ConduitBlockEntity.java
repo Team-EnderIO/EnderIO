@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.blockentity;
+package com.enderio.conduits.common.conduit.block;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitMenuData;
@@ -11,6 +11,8 @@ import com.enderio.api.conduit.connection.DynamicConnectionState;
 import com.enderio.api.conduit.connection.StaticConnectionStates;
 import com.enderio.conduits.ConduitNBTKeys;
 import com.enderio.conduits.common.ConduitShape;
+import com.enderio.conduits.common.conduit.RightClickAction;
+import com.enderio.conduits.common.conduit.SlotData;
 import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.menu.ConduitMenu;
