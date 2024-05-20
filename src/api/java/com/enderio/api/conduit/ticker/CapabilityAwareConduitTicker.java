@@ -1,8 +1,8 @@
 package com.enderio.api.conduit.ticker;
 
+import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
-import com.enderio.api.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class CapabilityAwareConduitTicker<T> implements IOAwareConduitTicker {
 
@@ -26,7 +27,7 @@ public abstract class CapabilityAwareConduitTicker<T> implements IOAwareConduitT
         for (Connection insert : inserts) {
             T capability = level.getCapability(getCapability(), insert.move(), insert.dir().getOpposite());
             if (capability != null) {
-                insertCaps.add(new CapabilityConnection(capability, insert.data(), insert.dir(), insert.connectionState()));
+                insertCaps.add(new CapabilityConnection(capability, insert.data(), insert.dir(), insert.upgrade(), insert.extractFilter(), insert.insertFilter()));
             }
 
         }
@@ -36,7 +37,7 @@ public abstract class CapabilityAwareConduitTicker<T> implements IOAwareConduitT
             for (Connection extract : extracts) {
                 T capability = level.getCapability(getCapability(), extract.move(), extract.dir().getOpposite());
                 if (capability != null) {
-                    extractCaps.add(new CapabilityConnection(capability, extract.data(), extract.dir(), extract.connectionState()));
+                    extractCaps.add(new CapabilityConnection(capability, extract.data(), extract.dir(), extract.upgrade(), extract.extractFilter(), extract.insertFilter()));
                 }
             }
             if (!extractCaps.isEmpty()) {
@@ -56,18 +57,31 @@ public abstract class CapabilityAwareConduitTicker<T> implements IOAwareConduitT
 
     protected abstract BlockCapability<T,Direction> getCapability();
 
-    public class CapabilityConnection {
+    // TODO: Record?
+    public final class CapabilityConnection {
         public final T cap;
         public final ExtendedConduitData<?> data;
         public final Direction direction;
         @Nullable
-        public final DynamicConnectionState connectionState;
+        public final ConduitUpgrade upgrade;
+        @Nullable
+        public final Predicate<?> extractFilter;
+        @Nullable
+        public final Predicate<?> insertFilter;
 
-        private CapabilityConnection(T cap, ExtendedConduitData<?> data, Direction direction, @Nullable DynamicConnectionState connectionState) {
+        private CapabilityConnection(
+            T cap,
+            ExtendedConduitData<?> data,
+            Direction direction,
+            @Nullable ConduitUpgrade upgrade,
+            @Nullable Predicate<?> extractFilter,
+            @Nullable Predicate<?> insertFilter) {
             this.cap = cap;
             this.data = data;
             this.direction = direction;
-            this.connectionState = connectionState;
+            this.upgrade = upgrade;
+            this.extractFilter = extractFilter;
+            this.insertFilter = insertFilter;
         }
     }
 }

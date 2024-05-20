@@ -1,8 +1,11 @@
 package com.enderio.conduits.common.conduit;
 
+import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.ConduitNode;
-import com.enderio.api.conduit.connection.DynamicConnectionState;
+import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
+import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.gigaherz.graph3.Graph;
@@ -18,6 +21,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphObject<Mergeable.Dummy>, ConduitNode<T> {
 
@@ -80,9 +84,19 @@ public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphOb
         return pos;
     }
 
-    @Nullable
-    public DynamicConnectionState getConnectionState(Direction direction) {
-        return connectionStates.get(direction);
+    @Override
+    public @Nullable ConduitUpgrade getUpgrade(Direction direction) {
+        return connectionStates.get(direction).upgradeExtract().getCapability(ConduitCapabilities.ConduitUpgrade.ITEM);
+    }
+
+    @Override
+    public @Nullable Predicate<?> getExtractFilter(Direction direction) {
+        return connectionStates.get(direction).filterExtract().getCapability(EIOCapabilities.Filter.ITEM_STACK);
+    }
+
+    @Override
+    public @Nullable Predicate<?> getInsertFilter(Direction direction) {
+        return connectionStates.get(direction).filterInsert().getCapability(EIOCapabilities.Filter.ITEM_STACK);
     }
 
     @Override

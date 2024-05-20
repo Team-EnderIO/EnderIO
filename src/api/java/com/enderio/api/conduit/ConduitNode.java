@@ -1,6 +1,6 @@
 package com.enderio.api.conduit;
 
-import com.enderio.api.conduit.connection.DynamicConnectionState;
+import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import net.minecraft.core.BlockPos;
@@ -8,12 +8,21 @@ import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public interface ConduitNode<T extends ExtendedConduitData<?>> {
     Optional<IOState> getIOState(Direction direction);
     BlockPos getPos();
     T getExtendedConduitData();
-    DynamicConnectionState getConnectionState(Direction direction);
+
+    @Nullable
+    ConduitUpgrade getUpgrade(Direction direction);
+
+    @Nullable
+    Predicate<?> getExtractFilter(Direction direction);
+
+    @Nullable
+    Predicate<?> getInsertFilter(Direction direction);
 
     record IOState(Optional<ColorControl> insert, Optional<ColorControl> extract, RedstoneControl control, ColorControl redstoneChannel) {
 

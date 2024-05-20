@@ -1,4 +1,4 @@
-package com.enderio.api.conduit.connection;
+package com.enderio.conduits.common.conduit.connection;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;

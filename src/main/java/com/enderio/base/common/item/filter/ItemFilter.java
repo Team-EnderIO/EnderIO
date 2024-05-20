@@ -1,5 +1,6 @@
 package com.enderio.base.common.item.filter;
 
+import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.menu.ItemFilterMenu;
 import com.enderio.core.common.capability.IFilterCapability;
@@ -17,10 +18,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
+import java.util.function.Predicate;
+
 public class ItemFilter extends Item {
 
     // TODO: DataComponents.
     public static ICapabilityProvider<ItemStack, Void, IFilterCapability> FILTER_PROVIDER =
+        (stack, v) -> new ItemFilterCapability(EIODataComponents.ITEM_FILTER, stack);
+
+    public static ICapabilityProvider<ItemStack, Void, Predicate> STACK_FILTER_PROVIDER =
         (stack, v) -> new ItemFilterCapability(EIODataComponents.ITEM_FILTER, stack);
 
     public ItemFilter(Properties pProperties) {

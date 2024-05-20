@@ -1,4 +1,4 @@
-package com.enderio.api.conduit.connection;
+package com.enderio.conduits.common.conduit.connection;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;

@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.components;
 
-import com.enderio.api.capability.IConduitUpgrade;
+import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -8,7 +8,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 
-public class FluidSpeedUpgrade implements IConduitUpgrade {
+public class FluidSpeedUpgrade implements ConduitUpgrade {
     public static final Codec<FluidSpeedUpgrade> CODEC = RecordCodecBuilder.create(
         inst -> inst.group(ExtraCodecs.POSITIVE_INT.fieldOf("speed").forGetter(FluidSpeedUpgrade::getSpeed)).apply(inst, FluidSpeedUpgrade::new));
 

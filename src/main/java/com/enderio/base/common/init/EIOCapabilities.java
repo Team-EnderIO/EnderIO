@@ -2,10 +2,13 @@ package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.api.capability.IDarkSteelUpgradable;
+import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.core.common.capability.IFilterCapability;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
+
+import java.util.function.Predicate;
 
 public class EIOCapabilities {
 
@@ -28,5 +31,10 @@ public class EIOCapabilities {
             ItemCapability.createVoid(
                 EnderIO.loc("filter"),
                 IFilterCapability.class);
+
+        public static final ItemCapability<Predicate, Void> ITEM_STACK =
+            ItemCapability.createVoid(
+                EnderIO.loc("item_filter"),
+                Predicate.class);
     }
 }

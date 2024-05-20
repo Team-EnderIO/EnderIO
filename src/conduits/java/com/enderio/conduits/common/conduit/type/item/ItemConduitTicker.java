@@ -1,14 +1,10 @@
 package com.enderio.conduits.common.conduit.type.item;
 
-import com.enderio.api.capability.IConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
+import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.api.misc.ColorControl;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.components.ItemSpeedUpgrade;
-import com.enderio.conduits.common.init.ConduitCapabilities;
-import com.enderio.core.common.capability.IFilterCapability;
-import com.enderio.core.common.capability.ItemFilterCapability;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
@@ -32,22 +28,17 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
             IItemHandler extractHandler = extract.cap;
             for (int i = 0; i < extractHandler.getSlots(); i++) {
                 int speed = 4;
-                if (extract.connectionState != null) {
-                    ItemStack upgradeStack = extract.connectionState.upgradeExtract();
-                    IConduitUpgrade upgrade = upgradeStack.getCapability(ConduitCapabilities.ConduitUpgrade.ITEM);
-                    if (upgrade instanceof ItemSpeedUpgrade speedUpgrade) {
-                        speed *= speedUpgrade.getSpeed();
-                    }
+                if (extract.upgrade instanceof ItemSpeedUpgrade speedUpgrade) {
+                    speed *= speedUpgrade.getSpeed();
                 }
+
                 ItemStack extractedItem = extractHandler.extractItem(i, speed, true);
                 if (extractedItem.isEmpty()) {
                     continue;
                 }
 
-                if (extract.connectionState != null && !extract.connectionState.filterExtract().isEmpty()) {
-                    ItemStack stack = extract.connectionState.filterExtract();
-                    IFilterCapability capability = stack.getCapability(EIOCapabilities.Filter.ITEM);
-                    if (capability instanceof ItemFilterCapability cap && !cap.test(extractedItem)) {
+                if (extract.extractFilter instanceof ItemStackFilter itemFilter) {
+                    if (!itemFilter.test(extractedItem)) {
                         continue;
                     }
                 }
@@ -71,10 +62,8 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
                         continue;
                     }
 
-                    if (insert.connectionState != null && !insert.connectionState.filterInsert().isEmpty()) {
-                        ItemStack stack = insert.connectionState.filterInsert();
-                        IFilterCapability capability = stack.getCapability(EIOCapabilities.Filter.ITEM);
-                        if (capability instanceof ItemFilterCapability cap && !cap.test(extractedItem)) {
+                    if (extract.insertFilter instanceof ItemStackFilter itemFilter) {
+                        if (!itemFilter.test(extractedItem)) {
                             continue;
                         }
                     }

@@ -1,5 +1,6 @@
 package com.enderio.core.common.capability;
 
+import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.core.common.menu.ItemFilterSlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -18,7 +19,7 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.function.Supplier;
 
-public class ItemFilterCapability implements IFilterCapability<ItemStack> {
+public class ItemFilterCapability implements IFilterCapability<ItemStack>, ItemStackFilter {
     public static final ItemFilterCapability.Component EMPTY = new ItemFilterCapability.Component(List.of(), false, false);
 
     protected final Supplier<DataComponentType<ItemFilterCapability.Component>> componentType;

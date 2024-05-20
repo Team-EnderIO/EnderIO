@@ -1,9 +1,9 @@
 package com.enderio.api.conduit.ticker;
 
+import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.ConduitNode;
-import com.enderio.api.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.google.common.collect.ArrayListMultimap;
@@ -17,6 +17,7 @@ import org.apache.commons.lang3.function.TriFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public interface IOAwareConduitTicker extends LoadedAwareConduitTicker {
     @Override
@@ -35,7 +36,9 @@ public interface IOAwareConduitTicker extends LoadedAwareConduitTicker {
                                 node.getPos(),
                                 direction,
                                 node.getExtendedConduitData(),
-                                node.getConnectionState(direction))));
+                                node.getUpgrade(direction),
+                                node.getExtractFilter(direction),
+                                node.getInsertFilter(direction))));
                     ioState
                         .insert()
                         .ifPresent(
@@ -43,7 +46,9 @@ public interface IOAwareConduitTicker extends LoadedAwareConduitTicker {
                                 node.getPos(),
                                 direction,
                                 node.getExtendedConduitData(),
-                                node.getConnectionState(direction))));
+                                node.getUpgrade(direction),
+                                node.getExtractFilter(direction),
+                                node.getInsertFilter(direction))));
                 });
             }
         }
@@ -86,7 +91,13 @@ public interface IOAwareConduitTicker extends LoadedAwareConduitTicker {
         return state.control().isActive(hasRedstone || isRedstoneActive.apply(level, pos, state.redstoneChannel()));
     }
 
-    record Connection(BlockPos pos, Direction dir, ExtendedConduitData<?> data, @Nullable DynamicConnectionState connectionState) {
+    record Connection(
+        BlockPos pos,
+        Direction dir,
+        ExtendedConduitData<?> data,
+        @Nullable ConduitUpgrade upgrade,
+        @Nullable Predicate<?> extractFilter,
+        @Nullable Predicate<?> insertFilter) {
         public BlockPos move() {
             return pos.relative(dir);
         }
