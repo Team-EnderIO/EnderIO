@@ -4,8 +4,6 @@ import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.conduits.common.init.EIOConduitTypes;
-import com.enderio.conduits.common.integrations.ae2.AE2InWorldConduitNodeHost;
-import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -17,9 +15,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedData> {
 
@@ -29,11 +26,11 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
     private int stored = 0;
 
     public EnergyExtendedData() {
-        this.energySidedData = new EnumMap<>(Direction.class);
+        this.energySidedData = new HashMap<>();
     }
 
     private EnergyExtendedData(Map<Direction, EnergySidedData> energySidedData, int capacity, int stored) {
-        this.energySidedData = energySidedData;
+        this.energySidedData = new HashMap<>(energySidedData);
         this.capacity = capacity;
         this.stored = stored;
     }
