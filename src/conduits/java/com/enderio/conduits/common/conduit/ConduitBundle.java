@@ -364,7 +364,7 @@ public final class ConduitBundle {
             }
         }
 
-        onChanged();
+        dataVersion++;
     }
 
     public <T extends ExtendedConduitData<T>> void removeNodeFor(Level level, ConduitType<T> type) {
@@ -375,7 +375,7 @@ public final class ConduitBundle {
         }
 
         nodes.remove(type);
-        onChanged();
+        dataVersion++;
     }
 
     public boolean hasType(ConduitType<?> type) {
