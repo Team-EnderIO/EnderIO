@@ -413,14 +413,12 @@ public class EIOItems {
     public static final RegiliteItem<ItemFilter> BASIC_ITEM_FILTER = ITEM_REGISTRY
         .registerItem("basic_filter", properties -> new ItemFilter(properties.component(EIODataComponents.ITEM_FILTER, new ItemFilterCapability.Component(5))))
         .setTab(EIOCreativeTabs.GEAR)
-        .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER)
-        .addCapability(EIOCapabilities.Filter.ITEM_STACK, ItemFilter.STACK_FILTER_PROVIDER);
+        .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
 
     public static final RegiliteItem<ItemFilter> ADVANCED_ITEM_FILTER = ITEM_REGISTRY
         .registerItem("advanced_filter", properties -> new ItemFilter(properties.component(EIODataComponents.ITEM_FILTER, new ItemFilterCapability.Component(10))))
         .setTab(EIOCreativeTabs.GEAR)
-        .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER)
-        .addCapability(EIOCapabilities.Filter.ITEM_STACK, ItemFilter.STACK_FILTER_PROVIDER);
+        .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
 
     public static final RegiliteItem<FluidFilter> BASIC_FLUID_FILTER = ITEM_REGISTRY
         .registerItem("fluid_filter", properties -> new FluidFilter(properties.component(EIODataComponents.FLUID_FILTER, new FluidFilterCapability.Component(5))))

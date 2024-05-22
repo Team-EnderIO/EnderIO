@@ -1,5 +1,6 @@
 package com.enderio.core.common.capability;
 
+import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.core.common.menu.FluidFilterSlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -19,7 +20,7 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.function.Supplier;
 
-public class FluidFilterCapability implements IFilterCapability<FluidStack> {
+public class FluidFilterCapability implements IFilterCapability<FluidStack>, FluidStackFilter {
 
     public static final Component EMPTY = new Component(List.of(), false, false);
 

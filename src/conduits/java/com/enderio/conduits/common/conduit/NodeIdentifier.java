@@ -3,6 +3,7 @@ package com.enderio.conduits.common.conduit;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.ConduitNode;
+import com.enderio.api.filter.ResourceFilter;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.init.ConduitCapabilities;
@@ -90,13 +91,13 @@ public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphOb
     }
 
     @Override
-    public @Nullable Predicate<?> getExtractFilter(Direction direction) {
-        return connectionStates.get(direction).filterExtract().getCapability(EIOCapabilities.Filter.ITEM_STACK);
+    public @Nullable ResourceFilter getExtractFilter(Direction direction) {
+        return connectionStates.get(direction).filterExtract().getCapability(EIOCapabilities.Filter.ITEM);
     }
 
     @Override
-    public @Nullable Predicate<?> getInsertFilter(Direction direction) {
-        return connectionStates.get(direction).filterInsert().getCapability(EIOCapabilities.Filter.ITEM_STACK);
+    public @Nullable ResourceFilter getInsertFilter(Direction direction) {
+        return connectionStates.get(direction).filterInsert().getCapability(EIOCapabilities.Filter.ITEM);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.core.common.capability.IFilterCapability;
 import com.enderio.core.common.capability.ItemFilterCapability;
@@ -58,9 +59,9 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
 
     @Override
     public Predicate<ItemEntity> getFilter() {
-        IFilterCapability<?> capability = FILTER.getItemStack(this).getCapability(EIOCapabilities.Filter.ITEM);
-        if (capability instanceof ItemFilterCapability filter) {
-            return itemEntity -> filter.test(itemEntity.getItem());
+        var filter = FILTER.getItemStack(this).getCapability(EIOCapabilities.Filter.ITEM);
+        if (filter instanceof ItemStackFilter itemStackFilter) {
+            return itemEntity -> itemStackFilter.test(itemEntity.getItem());
         }
         return super.getFilter();
     }

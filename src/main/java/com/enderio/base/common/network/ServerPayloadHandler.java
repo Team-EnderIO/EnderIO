@@ -54,8 +54,8 @@ public class ServerPayloadHandler {
 
     public void handleFilterUpdate(FilterUpdatePacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            IFilterCapability capability = context.player().getMainHandItem().getCapability(EIOCapabilities.Filter.ITEM);
-            if (capability != null) {
+            var resourceFilter = context.player().getMainHandItem().getCapability(EIOCapabilities.Filter.ITEM);
+            if (resourceFilter instanceof IFilterCapability<?> capability) {
                 capability.setNbt(packet.nbt());
                 capability.setInverted(packet.inverted());
             }

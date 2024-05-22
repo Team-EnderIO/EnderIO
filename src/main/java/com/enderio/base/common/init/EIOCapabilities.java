@@ -3,6 +3,7 @@ package com.enderio.base.common.init;
 import com.enderio.EnderIO;
 import com.enderio.api.capability.IDarkSteelUpgradable;
 import com.enderio.api.filter.ItemStackFilter;
+import com.enderio.api.filter.ResourceFilter;
 import com.enderio.core.common.capability.IFilterCapability;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -27,14 +28,9 @@ public class EIOCapabilities {
     }
 
     public static final class Filter {
-        public static final ItemCapability<IFilterCapability, Void> ITEM =
-            ItemCapability.createVoid(
-                EnderIO.loc("filter"),
-                IFilterCapability.class);
-
-        public static final ItemCapability<Predicate, Void> ITEM_STACK =
+        public static final ItemCapability<ResourceFilter, Void> ITEM =
             ItemCapability.createVoid(
                 EnderIO.loc("item_filter"),
-                Predicate.class);
+                ResourceFilter.class);
     }
 }

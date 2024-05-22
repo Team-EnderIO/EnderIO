@@ -1,6 +1,7 @@
 package com.enderio.api.conduit;
 
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
+import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import net.minecraft.core.BlockPos;
@@ -19,10 +20,10 @@ public interface ConduitNode<T extends ExtendedConduitData<?>> {
     ConduitUpgrade getUpgrade(Direction direction);
 
     @Nullable
-    Predicate<?> getExtractFilter(Direction direction);
+    ResourceFilter getExtractFilter(Direction direction);
 
     @Nullable
-    Predicate<?> getInsertFilter(Direction direction);
+    ResourceFilter getInsertFilter(Direction direction);
 
     record IOState(Optional<ColorControl> insert, Optional<ColorControl> extract, RedstoneControl control, ColorControl redstoneChannel) {
 

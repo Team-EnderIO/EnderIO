@@ -3,6 +3,7 @@ package com.enderio.api.conduit.ticker;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
@@ -65,17 +66,17 @@ public abstract class CapabilityAwareConduitTicker<T> implements IOAwareConduitT
         @Nullable
         public final ConduitUpgrade upgrade;
         @Nullable
-        public final Predicate<?> extractFilter;
+        public final ResourceFilter extractFilter;
         @Nullable
-        public final Predicate<?> insertFilter;
+        public final ResourceFilter insertFilter;
 
         private CapabilityConnection(
             T cap,
             ExtendedConduitData<?> data,
             Direction direction,
             @Nullable ConduitUpgrade upgrade,
-            @Nullable Predicate<?> extractFilter,
-            @Nullable Predicate<?> insertFilter) {
+            @Nullable ResourceFilter extractFilter,
+            @Nullable ResourceFilter insertFilter) {
             this.cap = cap;
             this.data = data;
             this.direction = direction;

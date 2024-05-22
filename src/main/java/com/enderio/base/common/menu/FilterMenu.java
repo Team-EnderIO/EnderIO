@@ -1,5 +1,6 @@
 package com.enderio.base.common.menu;
 
+import com.enderio.api.filter.ResourceFilter;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.network.FilterUpdatePacket;
 import com.enderio.core.common.capability.IFilterCapability;
@@ -21,7 +22,14 @@ public abstract class FilterMenu extends AbstractContainerMenu {
     public FilterMenu(MenuType<?> pMenuType, int pContainerId, Inventory inventory, ItemStack stack) {
         super(pMenuType, pContainerId);
         this.stack = stack;
-        this.capability = stack.getCapability(EIOCapabilities.Filter.ITEM);
+
+        var resourceFilter = stack.getCapability(EIOCapabilities.Filter.ITEM);
+        if (!(resourceFilter instanceof IFilterCapability<?> filterCapability)) {
+            throw new IllegalArgumentException();
+        }
+
+        capability = filterCapability;
+
         List<?> items = capability.getEntries();
         for (int i = 0; i < items.size(); i++) {
             addSlot(capability.getSlot(i, 14 + ( i % 5) * 18, 35 + 20 * ( i / 5)));
@@ -57,7 +65,7 @@ public abstract class FilterMenu extends AbstractContainerMenu {
 
     }
 
-    public IFilterCapability getFilter() {
+    public IFilterCapability<?> getFilter() {
         return capability;
     }
 

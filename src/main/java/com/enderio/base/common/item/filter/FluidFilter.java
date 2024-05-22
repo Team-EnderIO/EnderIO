@@ -1,5 +1,6 @@
 package com.enderio.base.common.item.filter;
 
+import com.enderio.api.filter.ResourceFilter;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.menu.FluidFilterMenu;
 import com.enderio.core.common.capability.FluidFilterCapability;
@@ -20,7 +21,7 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 public class FluidFilter extends Item {
 
     // TODO: DataComponents
-    public static ICapabilityProvider<ItemStack, Void, IFilterCapability> FILTER_PROVIDER =
+    public static ICapabilityProvider<ItemStack, Void, ResourceFilter> FILTER_PROVIDER =
         (stack, v) -> new FluidFilterCapability(EIODataComponents.FLUID_FILTER, stack);
 
     public FluidFilter(Properties pProperties) {

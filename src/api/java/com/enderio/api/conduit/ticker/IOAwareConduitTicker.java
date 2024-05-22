@@ -4,6 +4,7 @@ import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.ConduitNode;
+import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.google.common.collect.ArrayListMultimap;
@@ -96,8 +97,8 @@ public interface IOAwareConduitTicker extends LoadedAwareConduitTicker {
         Direction dir,
         ExtendedConduitData<?> data,
         @Nullable ConduitUpgrade upgrade,
-        @Nullable Predicate<?> extractFilter,
-        @Nullable Predicate<?> insertFilter) {
+        @Nullable ResourceFilter extractFilter,
+        @Nullable ResourceFilter insertFilter) {
         public BlockPos move() {
             return pos.relative(dir);
         }
