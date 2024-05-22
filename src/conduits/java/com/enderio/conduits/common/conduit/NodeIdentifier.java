@@ -100,8 +100,8 @@ public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphOb
         return connectionStates.get(direction).filterInsert().getCapability(EIOCapabilities.Filter.ITEM);
     }
 
-    @Override
+    /*@Override
     public int hashCode() {
         return Objects.hash(pos, extendedConduitData, ioStates, connectionStates);
-    }
+    }*/
 }
