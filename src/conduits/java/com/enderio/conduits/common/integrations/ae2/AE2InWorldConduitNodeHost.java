@@ -50,7 +50,18 @@ public abstract class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost,
                 ).apply(instance, Normal::new)
             );
 
-            public static final Supplier<StreamCodec<ByteBuf, AE2InWorldConduitNodeHost>> STREAM_CODEC = Suppliers.memoize(() -> StreamCodec.unit(new Normal()));
+            // TODO: Opt-out of client sync somehow.
+            public static final Supplier<StreamCodec<ByteBuf, AE2InWorldConduitNodeHost>> STREAM_CODEC = Suppliers.memoize(
+                () -> new StreamCodec<>() {
+                    @Override
+                    public AE2InWorldConduitNodeHost decode(ByteBuf p_320376_) {
+                        return new Normal();
+                    }
+
+                    @Override
+                    public void encode(ByteBuf p_320158_, AE2InWorldConduitNodeHost p_320396_) {
+                    }
+                });
 
             @Override
             public MapCodec<AE2InWorldConduitNodeHost> codec() {
@@ -87,7 +98,18 @@ public abstract class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost,
                 ).apply(instance, Dense::new)
             );
 
-            public static final Supplier<StreamCodec<ByteBuf, AE2InWorldConduitNodeHost>> STREAM_CODEC = Suppliers.memoize(() -> StreamCodec.unit(new Dense()));
+            // TODO: Opt-out of client sync somehow.
+            public static final Supplier<StreamCodec<ByteBuf, AE2InWorldConduitNodeHost>> STREAM_CODEC = Suppliers.memoize(
+                () -> new StreamCodec<>() {
+                    @Override
+                    public AE2InWorldConduitNodeHost decode(ByteBuf p_320376_) {
+                        return new Dense();
+                    }
+
+                    @Override
+                    public void encode(ByteBuf p_320158_, AE2InWorldConduitNodeHost p_320396_) {
+                    }
+                });
 
             @Override
             public MapCodec<AE2InWorldConduitNodeHost> codec() {

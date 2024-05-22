@@ -4,9 +4,12 @@ import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.integrations.ae2.AE2InWorldConduitNodeHost;
+import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -16,6 +19,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedData> {
 
@@ -146,7 +150,17 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
             ).apply(instance, EnergyExtendedData::new)
         );
 
-        public static StreamCodec<RegistryFriendlyByteBuf, EnergyExtendedData> STREAM_CODEC = StreamCodec.unit(new EnergyExtendedData());
+        // TODO: Opt-out of client sync somehow.
+        public static final StreamCodec<ByteBuf, EnergyExtendedData> STREAM_CODEC = new StreamCodec<>() {
+                @Override
+                public EnergyExtendedData decode(ByteBuf p_320376_) {
+                    return new EnergyExtendedData();
+                }
+
+                @Override
+                public void encode(ByteBuf p_320158_, EnergyExtendedData p_320396_) {
+                }
+            };
 
         @Override
         public MapCodec<EnergyExtendedData> codec() {
@@ -155,7 +169,7 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
 
         @Override
         public StreamCodec<RegistryFriendlyByteBuf, EnergyExtendedData> streamCodec() {
-            return STREAM_CODEC;
+            return STREAM_CODEC.cast();
         }
     }
 }
