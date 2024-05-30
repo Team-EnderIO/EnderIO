@@ -7,13 +7,14 @@ import com.enderio.machines.common.blockentity.MachineStateType;
 import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -57,7 +58,14 @@ public class ActivityWidget extends EIOWidget {
             if (list.isEmpty()){
                 list = List.of(MachineLang.TOOLTIP_IDLE);
             }
-            guiGraphics.renderTooltip(screen.getMinecraft().font, list, Optional.empty(), mouseX, mouseY);
+            MutableComponent component = Component.empty();
+            for (Component c: list) {
+                if (!component.getString().isEmpty()) {
+                    component.append("\n");
+                }
+                component.append(c);
+            }
+            setTooltip(Tooltip.create(component));
         }
     }
 
