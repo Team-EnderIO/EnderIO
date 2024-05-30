@@ -21,8 +21,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -213,12 +215,14 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
      * - Mule
      * - Llama
      * - Villagers
+     * - Wandering Trader
+     * - Wolves
      */
     @SubscribeEvent
     public static void onLivingInteract(PlayerInteractEvent.EntityInteractSpecific event) {
         ItemStack stack = event.getItemStack();
         if (stack.is(EIOItems.EMPTY_SOUL_VIAL.get())) {
-            if (event.getTarget() instanceof AbstractChestedHorse || event.getTarget() instanceof Villager) {
+            if (event.getTarget() instanceof AbstractChestedHorse || event.getTarget() instanceof Villager || event.getTarget() instanceof WanderingTrader || event.getTarget() instanceof Wolf) {
                 stack.interactLivingEntity(event.getEntity(), (LivingEntity) event.getTarget(), event.getHand());
             }
         }
