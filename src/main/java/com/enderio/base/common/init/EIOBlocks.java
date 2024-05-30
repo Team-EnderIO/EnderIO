@@ -239,7 +239,6 @@ public class EIOBlocks {
                 .strength(5.0F, 6.0F)
                 .sound(SoundType.CHAIN)
                 .noOcclusion()
-                .sound(SoundType.METAL)
                 .mapColor(MapColor.NONE))
         .addBlockTags(
             BlockTags.NEEDS_IRON_TOOL,
