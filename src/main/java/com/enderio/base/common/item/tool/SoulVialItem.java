@@ -132,6 +132,12 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
      */
     private static Optional<ItemStack> catchEntity(ItemStack soulVial, LivingEntity entity, Consumer<Component> displayCallback) {
 
+        //Soul Vial is filled, so it can't capture
+        Optional<StoredEntityData> entityData = getEntityData(soulVial);
+        if (entityData.isPresent() && entityData.get().hasEntity()) {
+            return Optional.empty();
+        }
+        
         if (entity instanceof Player) {
             displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_PLAYER);
             return Optional.empty();
