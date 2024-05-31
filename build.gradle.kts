@@ -8,7 +8,7 @@ plugins {
     id("eclipse")
     id("maven-publish")
     id("com.modrinth.minotaur") version "2.+"
-    id("net.neoforged.gradle.userdev") version "7.0.109"
+    id("net.neoforged.gradle.userdev") version "7.0.124"
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
