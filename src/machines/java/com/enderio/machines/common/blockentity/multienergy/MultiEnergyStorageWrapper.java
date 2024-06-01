@@ -73,7 +73,7 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        if (!canReceive()) {
+        if (!canReceive() || getMaxEnergyStored() == 0) {
             return 0;
         }
 
