@@ -6,6 +6,7 @@ import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.init.ConduitBlocks;
+import com.enderio.conduits.common.integrations.cctweaked.CCRedstoneUpgrade;
 import com.enderio.conduits.common.tag.ConduitTags;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -52,7 +53,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker {
     @Override
     public void tickColoredGraph(ConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         for (Connection extract : extracts) {
-            if (level.hasSignal(extract.move(), extract.dir())) {
+            if (level.hasSignal(extract.move(), extract.dir()) || extract.upgrade() instanceof CCRedstoneUpgrade) {
                 activeColors.add(color);
                 break;
             }

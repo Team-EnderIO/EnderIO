@@ -6,6 +6,7 @@ import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.common.integrations.ae2.AE2Integration;
+import com.enderio.conduits.common.integrations.cctweaked.CCIntegration;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
@@ -14,6 +15,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
 import java.util.concurrent.CompletableFuture;
@@ -189,5 +191,20 @@ public class ConduitRecipes extends RecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(mekRecipeOutput, EnderIO.loc("mek_advanced_thermodynamic_conductor"));
         }*/
+
+        if (Integrations.CC_INTEGRATION.isPresent()) {
+            var ccRecipeOutput = recipeOutput.withConditions(new ModLoadedCondition("cc-tweaked"));
+
+            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, CCIntegration.CC_REDSTONE_UPGRADE, 1)
+                .pattern("III")
+                .pattern("ERE")
+                .pattern("ETE")
+                .define('I', Items.IRON_INGOT)
+                .define('E', EIOItems.CONDUIT_BINDER)
+                .define('R', Items.REDSTONE)
+                .define('T', Items.REDSTONE_TORCH)
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.REDSTONE))
+                .save(ccRecipeOutput, EnderIO.loc("cc_redstone_upgrade"));
+        }
     }
 }
