@@ -49,7 +49,7 @@ public class EnsurePlugin implements Plugin {
             @Override
             public Void visitMethod(MethodTree methodTree, Void aVoid) {
                 TransformerManager.handle(methodTree, className);
-                methodTree.getParameters()/*.reversed()*/.forEach(parameter -> TransformerManager.handle(parameter, methodTree, className));
+                methodTree.getParameters().forEach(parameter -> TransformerManager.handle(parameter, methodTree, className));
                 return super.visitMethod(methodTree, aVoid);
             }
         }, null);

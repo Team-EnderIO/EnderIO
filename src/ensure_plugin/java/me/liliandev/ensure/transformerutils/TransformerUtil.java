@@ -9,7 +9,6 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
-import me.liliandev.ensure.EnsurePlugin;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,7 +16,6 @@ import java.util.stream.Stream;
 
 public class TransformerUtil {
     private static final Set<String> PRIMITIVES = Stream.of(byte.class, short.class, char.class, int.class, long.class, float.class, double.class).map(Class::getName).collect(Collectors.toUnmodifiableSet());
-
 
     private static Context context = null;
 
@@ -50,12 +48,10 @@ public class TransformerUtil {
         boolean shouldDelayCheck1Statement = false;
         if (!body.stats.isEmpty()) {
             JCTree.JCStatement firstStatement = body.stats.getFirst();
-            if (EnsurePlugin.className.contains("ConduitBlockEntity")) {
-                if (firstStatement instanceof JCTree.JCExpressionStatement potentialConstructor) {
-                    if (potentialConstructor.getExpression() instanceof JCTree.JCMethodInvocation methodInvocation) {
-                        if (methodInvocation.meth instanceof JCTree.JCIdent methodIdentifier && methodIdentifier.name.contentEquals("super")) {
-                            shouldDelayCheck1Statement = true;
-                        }
+            if (firstStatement instanceof JCTree.JCExpressionStatement potentialConstructor) {
+                if (potentialConstructor.getExpression() instanceof JCTree.JCMethodInvocation methodInvocation) {
+                    if (methodInvocation.meth instanceof JCTree.JCIdent methodIdentifier && methodIdentifier.name.contentEquals("super")) {
+                        shouldDelayCheck1Statement = true;
                     }
                 }
             }
@@ -109,13 +105,8 @@ public class TransformerUtil {
                 ));
     }
 
-
-
-
-
     public static Name getParameterId(Names symbolsTable, VariableTree parameter) {
         String parameterName = parameter.getName().toString();
         return symbolsTable.fromString(parameterName);
     }
-
 }

@@ -94,7 +94,6 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     /**
      * Handle a connection state update from the client.
      */
-
     @EnsureSide(EnsureSide.Side.SERVER)
     public void handleConnectionStateUpdate(Direction direction, ConduitType<?> conduitType, DynamicConnectionState connectionState) {
         var connection = bundle.getConnection(direction);
