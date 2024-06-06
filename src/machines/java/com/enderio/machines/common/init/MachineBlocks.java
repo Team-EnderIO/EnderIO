@@ -102,6 +102,14 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> WIRED_CHARGER = machine("wired_charger", () -> MachineBlockEntities.WIRED_CHARGER)
         .register();
 
+    public static final BlockEntry<MachineBlock> ITEM_BUFFER = machine("item_buffer", () -> MachineBlockEntities.ITEM_BUFFER)
+        .register();
+
+    public static final BlockEntry<MachineBlock> POWER_BUFFER = machine("power_buffer", () -> MachineBlockEntities.POWER_BUFFER)
+        .register();
+    public static final BlockEntry<MachineBlock> OMNI_BUFFER = machine("omni_buffer", () -> MachineBlockEntities.OMNI_BUFFER)
+        .register();
+
     public static final BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
         .block("creative_power", props -> new MachineBlock(props, MachineBlockEntities.CREATIVE_POWER))
         .item()

@@ -16,6 +16,7 @@ import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
@@ -218,6 +219,34 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CVC")
             .pattern("CCC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
+            .save(finishedRecipeConsumer);
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.ITEM_BUFFER.get())
+            .define('I', Tags.Items.INGOTS_IRON)
+            .define('C', Tags.Items.CHESTS)
+            .define('A', EIOItems.COPPER_ALLOY_INGOT.get())
+            .pattern("IAI")
+            .pattern("ACA")
+            .pattern("IAI")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.INGOTS_IRON).build()))
+            .save(finishedRecipeConsumer);
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.POWER_BUFFER.get())
+            .define('C', EIOBlocks.VOID_CHASSIS.get())
+            .define('A', EIOItems.COPPER_ALLOY_INGOT.get())
+            .pattern(" A ")
+            .pattern("ACA")
+            .pattern(" A ")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
+            .save(finishedRecipeConsumer);
+
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.OMNI_BUFFER.get())
+            .requires( MachineBlocks.POWER_BUFFER.get())
+            .requires( MachineBlocks.ITEM_BUFFER.get())
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.POWER_BUFFER.get()))
             .save(finishedRecipeConsumer);
 
         ShapedEntityStorageRecipeBuilder

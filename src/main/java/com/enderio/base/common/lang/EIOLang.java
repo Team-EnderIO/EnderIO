@@ -62,9 +62,13 @@ public class EIOLang {
     public static final Component FLUID_CONDUIT_CHANGE_FLUID1 = REGISTRATE.addLang("gui", EnderIO.loc("fluid_conduit.change_fluid1"), "Locked Fluid:");
     public static final Component FLUID_CONDUIT_CHANGE_FLUID2 = REGISTRATE.addLang("gui", EnderIO.loc("fluid_conduit.change_fluid2"), "Click to reset!");
     public static final MutableComponent FLUID_CONDUIT_CHANGE_FLUID3 = REGISTRATE.addLang("gui", EnderIO.loc("fluid_conduit.change_fluid3"), "Fluid: %s");
-
     public static final MutableComponent TANK_EMPTY_STRING = REGISTRATE.addLang("tooltip", EnderIO.loc("fluid_tank.tank_empty_tooltip"), "Empty tank");
     public static final MutableComponent FLUID_TANK_TOOLTIP = REGISTRATE.addLang("tooltip", EnderIO.loc("fluid_tank.tank_tooltip"), "%d/%d mb of %s");//[amount]/[capacity] mb of [FluidName]
+
+    public static final Component INPUT = REGISTRATE.addLang("gui", EnderIO.loc("input"), "Input");
+
+    public static final Component OUTPUT = REGISTRATE.addLang("gui", EnderIO.loc("output"), "Output");
+
     // endregion
 
     // region Capacitors

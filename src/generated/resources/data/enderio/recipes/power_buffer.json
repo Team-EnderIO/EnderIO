@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "enderio:copper_alloy_ingot"
+    },
+    "C": {
+      "item": "enderio:void_chassis"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ACA",
+    " A "
+  ],
+  "result": {
+    "item": "enderio:power_buffer"
+  },
+  "show_notification": true
+}
