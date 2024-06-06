@@ -162,7 +162,6 @@ public class EnderBlockEntity extends BlockEntity {
     /**
      * Fire this when you change the value of a {@link NetworkDataSlot} on the client side.
      */
-
     @EnsureSide(EnsureSide.Side.CLIENT)
     public <T> void clientUpdateSlot(@Nullable NetworkDataSlot<T> slot, T value) {
         if (slot == null) {
@@ -181,7 +180,6 @@ public class EnderBlockEntity extends BlockEntity {
     /**
      * Sync the BlockEntity to all tracking players. Don't call this if you don't know what you do
      */
-
     @EnsureSide(EnsureSide.Side.SERVER)
     public void sync() {
         var syncData = createBufferSlotUpdate();
@@ -190,7 +188,6 @@ public class EnderBlockEntity extends BlockEntity {
                 new ServerboundCDataSlotUpdate(getBlockPos(), syncData));
         }
     }
-
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     public void clientHandleBufferSync(RegistryFriendlyByteBuf buf) {
@@ -203,7 +200,6 @@ public class EnderBlockEntity extends BlockEntity {
             task.run();
         }
     }
-
 
     @EnsureSide(EnsureSide.Side.SERVER)
     public void serverHandleBufferChange(RegistryFriendlyByteBuf buf) {
