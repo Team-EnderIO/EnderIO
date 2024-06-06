@@ -25,13 +25,9 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = EnderIO.MODID)
 public class CCIntegration implements Integration {
 
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister.createDataComponents(EnderIO.MODID);
@@ -47,13 +43,14 @@ public class CCIntegration implements Integration {
         .addCapability(ConduitCapabilities.ConduitUpgrade.ITEM, CCRedstoneUpgradeItem.CC_REDSTONE_UPGRADE_PROVIDER);
 
     @Override
+    public void onModConstruct() {
+    }
+
+    @Override
     public void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {
         DATA_COMPONENT_TYPES.register(modEventBus);
         ITEM_REGISTRY.register(modEventBus);
-    }
 
-    @SubscribeEvent
-    static void setup(FMLCommonSetupEvent event) {
         ComputerCraftAPI.registerBundledRedstoneProvider(bundle);
     }
 

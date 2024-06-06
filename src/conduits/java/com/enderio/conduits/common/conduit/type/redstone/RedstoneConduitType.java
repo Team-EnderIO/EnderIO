@@ -12,7 +12,7 @@ public class RedstoneConduitType extends SimpleConduitType<RedstoneExtendedData>
     private static final ResourceLocation ACTIVE = EnderIO.loc("block/conduit/redstone_active");
     private static final ResourceLocation INACTIVE = EnderIO.loc("block/conduit/redstone");
 
-    private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(true, true, false, true, true, false);
+    private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(true, true, true, true, true, false);
 
     public RedstoneConduitType() {
         super(INACTIVE, new RedstoneConduitTicker(), RedstoneExtendedData::new, EIOConduitTypes.ICON_TEXTURE, Vector2i.ZERO, MENU_DATA);
