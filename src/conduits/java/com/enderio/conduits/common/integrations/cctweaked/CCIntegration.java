@@ -32,13 +32,13 @@ public class CCIntegration implements Integration {
 
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister.createDataComponents(EnderIO.MODID);
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> CC_REDSTONE = DATA_COMPONENT_TYPES
-        .registerComponentType("cc_redstone_upgrade", builder -> builder.persistent(Codec.unit(Unit.INSTANCE)).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CCRedstoneUpgrade>> CC_REDSTONE = DATA_COMPONENT_TYPES
+        .registerComponentType("cc_redstone_upgrade", builder -> builder.persistent(Codec.unit(CCRedstoneUpgrade.INSTANCE)).networkSynchronized(StreamCodec.unit(CCRedstoneUpgrade.INSTANCE)));
 
     private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
 
     public static final RegiliteItem<CCRedstoneUpgradeItem> CC_REDSTONE_UPGRADE = ITEM_REGISTRY.registerItem("cc_redstone_upgrade", properties ->
-        new CCRedstoneUpgradeItem(properties.component(CC_REDSTONE, Unit.INSTANCE)))
+        new CCRedstoneUpgradeItem(properties.component(CC_REDSTONE, CCRedstoneUpgrade.INSTANCE)))
         .setTab(EIOCreativeTabs.CONDUITS)
         .addCapability(ConduitCapabilities.ConduitUpgrade.ITEM, CCRedstoneUpgradeItem.CC_REDSTONE_UPGRADE_PROVIDER);
 

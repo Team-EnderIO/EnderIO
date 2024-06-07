@@ -9,7 +9,7 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 public class CCRedstoneUpgradeItem extends Item {
 
     public static final ICapabilityProvider<ItemStack, Void, ConduitUpgrade> CC_REDSTONE_UPGRADE_PROVIDER
-        = (stack, v) -> stack.get(ConduitComponents.FLUID_SPEED_UPGRADE);
+        = (stack, v) -> stack.get(CCIntegration.CC_REDSTONE);
 
     public CCRedstoneUpgradeItem(Properties pProperties) {
         super(pProperties);
