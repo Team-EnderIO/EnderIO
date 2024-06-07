@@ -1,10 +1,10 @@
 package com.enderio.conduits.common.conduit.type.redstone;
 
-import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
-import com.enderio.conduits.common.conduit.NodeIdentifier;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
+import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.integrations.cctweaked.CCRedstoneUpgrade;
 import com.enderio.conduits.common.tag.ConduitTags;
@@ -53,7 +53,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker {
     @Override
     public void tickColoredGraph(ConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         for (Connection extract : extracts) {
-            if (level.hasSignal(extract.move(), extract.dir()) || extract.upgrade() instanceof CCRedstoneUpgrade) {
+            if (level.hasSignal(extract.move(), extract.dir())) {
                 activeColors.add(color);
                 break;
             }
@@ -61,6 +61,15 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker {
         for (Connection insert : inserts) {
             level.neighborChanged(insert.move(), ConduitBlocks.CONDUIT.get(), insert.pos());
         }
+    }
+
+    @Override
+    public boolean shouldSkipColor(List<Connection> extractList, List<Connection> insertList) {
+        boolean filter = extractList.stream().anyMatch(c -> c.upgrade() instanceof CCRedstoneUpgrade);
+        if (filter) {
+            return false;
+        }
+        return IOAwareConduitTicker.super.shouldSkipColor(extractList, insertList);
     }
 
     @Override

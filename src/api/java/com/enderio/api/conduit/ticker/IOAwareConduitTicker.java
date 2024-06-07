@@ -1,9 +1,9 @@
 package com.enderio.api.conduit.ticker;
 
-import com.enderio.api.conduit.upgrade.ConduitUpgrade;
+import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
-import com.enderio.api.conduit.ConduitNode;
+import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
@@ -18,7 +18,6 @@ import org.apache.commons.lang3.function.TriFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 public interface IOAwareConduitTicker extends LoadedAwareConduitTicker {
     @Override
@@ -56,12 +55,16 @@ public interface IOAwareConduitTicker extends LoadedAwareConduitTicker {
         for (ColorControl color : ColorControl.values()) {
             List<Connection> extractList = extracts.get(color);
             List<Connection> insertList = inserts.get(color);
-            if (extractList.isEmpty() || insertList.isEmpty()) {
+            if (shouldSkipColor(extractList, insertList)) {
                 continue;
             }
 
             tickColoredGraph(type, insertList, extractList, color, level, graph, isRedstoneActive);
         }
+    }
+
+    default boolean shouldSkipColor(List<Connection> extractList, List<Connection> insertList) {
+        return extractList.isEmpty() || insertList.isEmpty();
     }
 
     void tickColoredGraph(ConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level,

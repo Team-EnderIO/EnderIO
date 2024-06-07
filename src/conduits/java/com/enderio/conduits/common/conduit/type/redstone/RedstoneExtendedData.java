@@ -9,6 +9,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 import java.util.ArrayList;
@@ -72,7 +73,13 @@ public class RedstoneExtendedData implements ExtendedConduitData<RedstoneExtende
             ).apply(instance, RedstoneExtendedData::new)
         );
 
-        public static StreamCodec<ByteBuf, RedstoneExtendedData> STREAM_CODEC = StreamCodec.unit(new RedstoneExtendedData());
+        public static StreamCodec<ByteBuf, RedstoneExtendedData> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.BOOL,
+            r -> r.isActive,
+            ColorControl.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            r -> r.activeColors,
+            RedstoneExtendedData::new
+        );
 
         @Override
         public MapCodec<RedstoneExtendedData> codec() {
