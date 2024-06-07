@@ -195,7 +195,7 @@ public class ConduitRecipes extends RecipeProvider {
         if (Integrations.CC_INTEGRATION.isPresent()) {
             var ccRecipeOutput = recipeOutput.withConditions(new ModLoadedCondition("computercraft"));
 
-            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, CCIntegration.CC_REDSTONE_UPGRADE, 1)
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, CCIntegration.CC_REDSTONE_UPGRADE, 1)
                 .pattern("III")
                 .pattern("ERE")
                 .pattern("ETE")

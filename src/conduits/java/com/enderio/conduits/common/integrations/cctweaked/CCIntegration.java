@@ -39,6 +39,7 @@ public class CCIntegration implements Integration {
 
     public static final RegiliteItem<CCRedstoneUpgradeItem> CC_REDSTONE_UPGRADE = ITEM_REGISTRY.registerItem("cc_redstone_upgrade", properties ->
         new CCRedstoneUpgradeItem(properties.component(CC_REDSTONE, CCRedstoneUpgrade.INSTANCE)))
+        .setTranslation("CC Redstone Upgrade")
         .setTab(EIOCreativeTabs.CONDUITS)
         .addCapability(ConduitCapabilities.ConduitUpgrade.ITEM, CCRedstoneUpgradeItem.CC_REDSTONE_UPGRADE_PROVIDER);
 
@@ -66,7 +67,7 @@ public class CCIntegration implements Integration {
                     if (extendedConduitData instanceof RedstoneExtendedData redstone) {
                         int out = 0;
                         for (ColorControl control : ColorControl.values()) {
-                            out |= (redstone.isActive(control) ? 1 : 0) << (DyeColor.values().length - getColor(control).ordinal());
+                            out |= (redstone.isActive(control) ? 1 : 0) << (getColor(control).getId());
                         }
                         return out;
                     }
