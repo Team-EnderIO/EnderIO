@@ -1,17 +1,11 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "computercraft"
-    }
-  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_ingredient": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:redstone"
+            "items": "enderio:redstone_and_filter"
           }
         ]
       },
@@ -19,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:cc_redstone_upgrade"
+        "recipe": "enderio:redstone_nand_filter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -32,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:cc_redstone_upgrade"
+      "enderio:redstone_nand_filter"
     ]
   }
 }

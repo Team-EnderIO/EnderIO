@@ -15,6 +15,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
@@ -101,6 +102,115 @@ public class ConduitRecipes extends RecipeProvider {
             .define('B', EIOItems.CONDUIT_BINDER)
             .define('I', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+            .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.NOT_FILTER, 1)
+            .pattern("T")
+            .pattern("B")
+            .pattern("A")
+            .define('T', Items.REDSTONE_TORCH)
+            .define('B', EIOItems.REDSTONE_FILTER_BASE)
+            .define('A', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_FILTER_BASE))
+            .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.OR_FILTER, 1)
+            .pattern("ABA")
+            .define('B', EIOItems.REDSTONE_FILTER_BASE)
+            .define('A', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_FILTER_BASE))
+            .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.AND_FILTER, 1)
+            .pattern("TBT")
+            .define('T', Items.REDSTONE_TORCH)
+            .define('B', EIOItems.REDSTONE_FILTER_BASE)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_FILTER_BASE))
+            .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.XOR_FILTER, 1)
+            .pattern(" T ")
+            .pattern("ABA")
+            .pattern(" A ")
+            .define('T', Items.REDSTONE_TORCH)
+            .define('B', EIOItems.REDSTONE_FILTER_BASE)
+            .define('A', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_FILTER_BASE))
+            .save(recipeOutput);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.NAND_FILTER, 1)
+            .requires(Items.REDSTONE_TORCH)
+            .requires(ConduitItems.AND_FILTER.get())
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ConduitItems.AND_FILTER.get()))
+            .save(recipeOutput);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.AND_FILTER, 1)
+            .requires(Items.REDSTONE_TORCH)
+            .requires(ConduitItems.NAND_FILTER.get())
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ConduitItems.NAND_FILTER.get()))
+            .save(recipeOutput, "nand_to_and_filter");
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.NOR_FILTER, 1)
+            .requires(Items.REDSTONE_TORCH)
+            .requires(ConduitItems.OR_FILTER.get())
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ConduitItems.NOR_FILTER.get()))
+            .save(recipeOutput);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.OR_FILTER, 1)
+            .requires(Items.REDSTONE_TORCH)
+            .requires(ConduitItems.NOR_FILTER.get())
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ConduitItems.OR_FILTER.get()))
+            .save(recipeOutput, "nor_to_or_filter");
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.XNOR_FILTER, 1)
+            .requires(Items.REDSTONE_TORCH)
+            .requires(ConduitItems.XOR_FILTER.get())
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ConduitItems.XOR_FILTER.get()))
+            .save(recipeOutput);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.XOR_FILTER, 1)
+            .requires(Items.REDSTONE_TORCH)
+            .requires(ConduitItems.XNOR_FILTER.get())
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ConduitItems.XNOR_FILTER.get()))
+            .save(recipeOutput, "xnor_to_xor_filter");
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.TLATCH_FILTER, 1)
+            .pattern("L")
+            .pattern("B")
+            .pattern("A")
+            .define('L', Items.LEVER)
+            .define('B', EIOItems.REDSTONE_FILTER_BASE)
+            .define('A', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_FILTER_BASE))
+            .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.SENSOR_FILTER, 1)
+            .pattern("C")
+            .pattern("B")
+            .pattern("A")
+            .define('C', Items.COMPARATOR)
+            .define('B', EIOItems.REDSTONE_FILTER_BASE)
+            .define('A', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_FILTER_BASE))
+            .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.TIMER_FILTER, 1)
+            .pattern("A")
+            .pattern("B")
+            .pattern("C")
+            .define('C', Items.CLOCK)
+            .define('B', EIOItems.REDSTONE_FILTER_BASE)
+            .define('A', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_FILTER_BASE))
+            .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.COUNT_FILTER, 1)
+            .pattern(" A ")
+            .pattern("ABA")
+            .pattern(" A ")
+            .define('B', EIOItems.REDSTONE_FILTER_BASE)
+            .define('A', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_FILTER_BASE))
             .save(recipeOutput);
 
         if (Integrations.AE2_INTEGRATION.isPresent()) {
@@ -191,20 +301,5 @@ public class ConduitRecipes extends RecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(mekRecipeOutput, EnderIO.loc("mek_advanced_thermodynamic_conductor"));
         }*/
-
-        if (Integrations.CC_INTEGRATION.isPresent()) {
-            var ccRecipeOutput = recipeOutput.withConditions(new ModLoadedCondition("computercraft"));
-
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, CCIntegration.CC_REDSTONE_UPGRADE, 1)
-                .pattern("III")
-                .pattern("ERE")
-                .pattern("ETE")
-                .define('I', Items.IRON_INGOT)
-                .define('E', EIOItems.CONDUIT_BINDER)
-                .define('R', Items.REDSTONE)
-                .define('T', Items.REDSTONE_TORCH)
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.REDSTONE))
-                .save(ccRecipeOutput, EnderIO.loc("cc_redstone_upgrade"));
-        }
     }
 }

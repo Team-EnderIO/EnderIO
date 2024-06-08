@@ -30,28 +30,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CCIntegration implements Integration {
 
-    private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister.createDataComponents(EnderIO.MODID);
-
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CCRedstoneUpgrade>> CC_REDSTONE = DATA_COMPONENT_TYPES
-        .registerComponentType("cc_redstone_upgrade", builder -> builder.persistent(Codec.unit(CCRedstoneUpgrade.INSTANCE)).networkSynchronized(StreamCodec.unit(CCRedstoneUpgrade.INSTANCE)));
-
-    private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
-
-    public static final RegiliteItem<CCRedstoneUpgradeItem> CC_REDSTONE_UPGRADE = ITEM_REGISTRY.registerItem("cc_redstone_upgrade", properties ->
-        new CCRedstoneUpgradeItem(properties.component(CC_REDSTONE, CCRedstoneUpgrade.INSTANCE)))
-        .setTranslation("CC Redstone Upgrade")
-        .setTab(EIOCreativeTabs.CONDUITS)
-        .addCapability(ConduitCapabilities.ConduitUpgrade.ITEM, CCRedstoneUpgradeItem.CC_REDSTONE_UPGRADE_PROVIDER);
-
-    @Override
-    public void onModConstruct() {
-    }
-
     @Override
     public void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {
-        DATA_COMPONENT_TYPES.register(modEventBus);
-        ITEM_REGISTRY.register(modEventBus);
-
         ComputerCraftAPI.registerBundledRedstoneProvider(bundle);
     }
 
