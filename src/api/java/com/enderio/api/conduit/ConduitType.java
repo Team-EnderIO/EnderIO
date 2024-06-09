@@ -31,6 +31,7 @@ public interface ConduitType<T extends ConduitData<T>> {
         return BuiltInRegistries.ITEM.get(EnderIORegistries.CONDUIT_TYPES.getKey(this));
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     default boolean canBeInSameBlock(ConduitType<?> other) {
         return true;
     }
@@ -69,10 +70,4 @@ public interface ConduitType<T extends ConduitData<T>> {
     }
 
     record ConduitConnectionData(boolean isInsert, boolean isExtract, RedstoneControl control) {}
-
-    // TODO: 20.6: Try and eliminate as many dirty casts as possible.
-    @SuppressWarnings("unchecked")
-    default <Z extends ConduitType<?>> Z cast(){
-        return (Z)this;
-    }
 }

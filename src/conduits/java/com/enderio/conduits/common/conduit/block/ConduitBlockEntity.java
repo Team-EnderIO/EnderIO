@@ -158,12 +158,14 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         super.onChunkUnloaded();
         if (level instanceof ServerLevel serverLevel) {
             ConduitSavedData savedData = ConduitSavedData.get(serverLevel);
-            for (ConduitType<?> type : bundle.getTypes()) {
-                NodeIdentifier<?> node = bundle.getNodeFor(type);
-                node.getExtendedConduitData().onRemoved(type.cast(), level, getBlockPos());
-                savedData.putUnloadedNodeIdentifier(type, this.worldPosition, node);
-            }
+            bundle.getTypes().forEach(type -> onChunkUnloaded(savedData, type));
         }
+    }
+
+    private <T extends ConduitData<T>> void onChunkUnloaded(ConduitSavedData savedData, ConduitType<T> conduitType) {
+        NodeIdentifier<T> node = bundle.getNodeFor(conduitType);
+        node.getExtendedConduitData().onRemoved(conduitType, level, getBlockPos());
+        savedData.putUnloadedNodeIdentifier(conduitType, this.worldPosition, node);
     }
 
     public void everyTick() {
@@ -271,9 +273,9 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return action;
     }
 
-    public Optional<GraphObject<Mergeable.Dummy>> tryConnectTo(Direction dir, ConduitType<?> type, boolean forceMerge, boolean shouldMergeGraph) {
+    public <T extends ConduitData<T>> Optional<GraphObject<Mergeable.Dummy>> tryConnectTo(Direction dir, ConduitType<T> type, boolean forceMerge, boolean shouldMergeGraph) {
         if (level.getBlockEntity(getBlockPos().relative(dir)) instanceof ConduitBlockEntity conduit
-            && conduit.connectTo(dir.getOpposite(), type.cast(), bundle.getNodeFor(type).getExtendedConduitData(), forceMerge)) {
+            && conduit.connectTo(dir.getOpposite(), type, bundle.getNodeFor(type).getExtendedConduitData(), forceMerge)) {
             connect(dir, type);
             updateConnectionToData(type);
             conduit.updateConnectionToData(type);

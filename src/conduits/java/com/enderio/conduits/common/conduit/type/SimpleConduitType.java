@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 public class SimpleConduitType<T extends ConduitData<T>> implements ConduitType<T> {
 
     private final ResourceLocation texture;
-    private final ConduitTicker ticker;
+    private final ConduitTicker<T> ticker;
 
     private final ClientConduitData<T> clientConduitData;
 
@@ -30,7 +30,7 @@ public class SimpleConduitType<T extends ConduitData<T>> implements ConduitType<
 
     public SimpleConduitType(
         ResourceLocation texture,
-        ConduitTicker ticker,
+        ConduitTicker<T> ticker,
         Supplier<T> extendedDataFactory,
         ResourceLocation iconTexture,
         Vector2i iconTexturePos,
@@ -41,7 +41,7 @@ public class SimpleConduitType<T extends ConduitData<T>> implements ConduitType<
 
     public SimpleConduitType(
         ResourceLocation texture,
-        ConduitTicker ticker,
+        ConduitTicker<T> ticker,
         Supplier<T> extendedDataFactory,
         ClientConduitData<T> clientConduitData,
         ConduitMenuData menuData) {
@@ -63,7 +63,7 @@ public class SimpleConduitType<T extends ConduitData<T>> implements ConduitType<
     }
 
     @Override
-    public ConduitTicker getTicker() {
+    public ConduitTicker<T> getTicker() {
         return ticker;
     }
 

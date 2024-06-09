@@ -205,9 +205,11 @@ public final class ConduitBundle {
     }
 
     public void onLoad(Level level, BlockPos pos) {
-        for (ConduitType<?> type : types) {
-            getNodeFor(type).getExtendedConduitData().onCreated(type.cast(), level, pos, null);
-        }
+        types.forEach(type -> onLoad(type, level, pos));
+    }
+
+    private <T extends ConduitData<T>> void onLoad(ConduitType<T> conduitType, Level level, BlockPos pos) {
+        getNodeFor(conduitType).getExtendedConduitData().onCreated(conduitType, level, pos, null);
     }
 
     /**
