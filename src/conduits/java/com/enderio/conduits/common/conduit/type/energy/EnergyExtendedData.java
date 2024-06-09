@@ -38,7 +38,7 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
     private IEnergyStorage selfCap = new EnergyExtendedData.ConduitEnergyStorage(this);
 
     @Override
-    public void applyGuiChanges(EnergyExtendedData guiData) {
+    public void applyClientChanges(EnergyExtendedData guiData) {
     }
 
     @Override

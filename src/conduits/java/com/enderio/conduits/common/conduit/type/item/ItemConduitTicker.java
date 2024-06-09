@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.conduit.type.item;
 
+import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.filter.ItemStackFilter;
@@ -19,16 +20,23 @@ import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
 
-public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler> {
+public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemExtendedData, IItemHandler> {
 
     @Override
-    protected void tickCapabilityGraph(ConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    protected void tickCapabilityGraph(
+        ConduitType<ItemExtendedData> type,
+        List<CapabilityConnection<ItemExtendedData, IItemHandler>> inserts,
+        List<CapabilityConnection<ItemExtendedData, IItemHandler>> extracts,
+        ServerLevel level,
+        Graph<Mergeable.Dummy> graph,
+        ColoredRedstoneProvider coloredRedstoneProvider) {
+
         toNextExtract:
-        for (CapabilityConnection extract: extracts) {
-            IItemHandler extractHandler = extract.cap;
+        for (CapabilityConnection<ItemExtendedData, IItemHandler> extract: extracts) {
+            IItemHandler extractHandler = extract.capability();
             for (int i = 0; i < extractHandler.getSlots(); i++) {
                 int speed = 4;
-                if (extract.upgrade instanceof ItemSpeedUpgrade speedUpgrade) {
+                if (extract.upgrade() instanceof ItemSpeedUpgrade speedUpgrade) {
                     speed *= speedUpgrade.getSpeed();
                 }
 
@@ -37,13 +45,13 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
                     continue;
                 }
 
-                if (extract.extractFilter instanceof ItemStackFilter itemFilter) {
+                if (extract.extractFilter() instanceof ItemStackFilter itemFilter) {
                     if (!itemFilter.test(extractedItem)) {
                         continue;
                     }
                 }
 
-                ItemExtendedData.ItemSidedData sidedExtractData = extract.data.castTo(ItemExtendedData.class).compute(extract.direction);
+                ItemExtendedData.ItemSidedData sidedExtractData = extract.data().compute(extract.direction());
                 if (sidedExtractData.isRoundRobin) {
                     if (inserts.size() <= sidedExtractData.rotatingIndex) {
                         sidedExtractData.rotatingIndex = 0;
@@ -54,21 +62,21 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
 
                 for (int j = sidedExtractData.rotatingIndex; j < sidedExtractData.rotatingIndex + inserts.size(); j++) {
                     int insertIndex = j % inserts.size();
-                    CapabilityConnection insert = inserts.get(insertIndex);
+                    CapabilityConnection<ItemExtendedData, IItemHandler> insert = inserts.get(insertIndex);
 
                     if (!sidedExtractData.isSelfFeed
-                        && extract.direction == insert.direction
-                        && extract.data == insert.data) {
+                        && extract.direction() == insert.direction()
+                        && extract.data() == insert.data()) {
                         continue;
                     }
 
-                    if (extract.insertFilter instanceof ItemStackFilter itemFilter) {
+                    if (extract.insertFilter() instanceof ItemStackFilter itemFilter) {
                         if (!itemFilter.test(extractedItem)) {
                             continue;
                         }
                     }
 
-                    ItemStack notInserted = ItemHandlerHelper.insertItem(insert.cap, extractedItem, false);
+                    ItemStack notInserted = ItemHandlerHelper.insertItem(insert.capability(), extractedItem, false);
 
                     if (notInserted.getCount() < extractedItem.getCount()) {
                         extractHandler.extractItem(i, extractedItem.getCount() - notInserted.getCount(), false);

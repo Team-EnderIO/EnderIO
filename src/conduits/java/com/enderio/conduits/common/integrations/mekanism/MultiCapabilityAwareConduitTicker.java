@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.integrations.mekanism;
 
+import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
@@ -11,23 +12,22 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MultiCapabilityAwareConduitTicker<T> implements IOAwareConduitTicker {
+public abstract class MultiCapabilityAwareConduitTicker<TType extends ExtendedConduitData<TType>, TCap> implements IOAwareConduitTicker<TType> {
 
-    private final BlockCapability<? extends T, Direction>[] capabilities;
+    private final BlockCapability<? extends TCap, Direction>[] capabilities;
 
-    public MultiCapabilityAwareConduitTicker(BlockCapability<? extends T, Direction>[] capabilities) {
+    public MultiCapabilityAwareConduitTicker(BlockCapability<? extends TCap, Direction>[] capabilities) {
         this.capabilities = capabilities;
     }
 
     @Override
     public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
-        for (BlockCapability<? extends T, Direction> cap : capabilities) {
-            T capability = level.getCapability(cap, conduitPos.relative(direction), direction.getOpposite());
+        for (BlockCapability<? extends TCap, Direction> cap : capabilities) {
+            TCap capability = level.getCapability(cap, conduitPos.relative(direction), direction.getOpposite());
             if (capability != null) {
                 return true;
             }
@@ -36,47 +36,53 @@ public abstract class MultiCapabilityAwareConduitTicker<T> implements IOAwareCon
     }
 
     @Override
-    public void tickColoredGraph(ConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level,
-        Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    public void tickColoredGraph(
+        ConduitType<TType> type,
+        List<Connection<TType>> inserts,
+        List<Connection<TType>> extracts,
+        ColorControl color,
+        ServerLevel level,
+        Graph<Mergeable.Dummy> graph,
+        ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        List<CapabilityConnection> insertCaps = new ArrayList<>();
-        for (Connection insert : inserts) {
-            for (BlockCapability<? extends T, Direction> cap : capabilities) {
-                T capability = level.getCapability(cap, insert.move(), insert.dir().getOpposite());
+        List<CapabilityConnection<TType, TCap>> insertCaps = new ArrayList<>();
+        for (Connection<TType> insert : inserts) {
+            for (BlockCapability<? extends TCap, Direction> cap : capabilities) {
+                TCap capability = level.getCapability(cap, insert.move(), insert.dir().getOpposite());
                 if (capability != null) {
-                    insertCaps.add(new CapabilityConnection(capability, insert.data(), insert.dir()));
+                    insertCaps.add(new CapabilityConnection<>(capability, insert.data(), insert.dir()));
                 }
             }
 
         }
         if (!insertCaps.isEmpty()) {
-            List<CapabilityConnection> extractCaps = new ArrayList<>();
+            List<CapabilityConnection<TType, TCap>> extractCaps = new ArrayList<>();
 
-            for (Connection extract : extracts) {
-                for (BlockCapability<? extends T, Direction> cap : capabilities) {
-                    T capability = level.getCapability(cap, extract.move(), extract.dir().getOpposite());
+            for (Connection<TType> extract : extracts) {
+                for (BlockCapability<? extends TCap, Direction> cap : capabilities) {
+                    TCap capability = level.getCapability(cap, extract.move(), extract.dir().getOpposite());
                     if (capability != null) {
-                        extractCaps.add(new CapabilityConnection(capability, extract.data(), extract.dir()));
+                        extractCaps.add(new CapabilityConnection<>(capability, extract.data(), extract.dir()));
                     }
                 }
             }
             if (!extractCaps.isEmpty()) {
-                tickCapabilityGraph(type, insertCaps, extractCaps, level, graph, isRedstoneActive);
+                tickCapabilityGraph(type, insertCaps, extractCaps, level, graph, coloredRedstoneProvider);
             }
         }
     }
 
-    protected abstract void tickCapabilityGraph(ConduitType<?> type, List<CapabilityConnection> insertCaps, List<CapabilityConnection> extractCaps, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive);
+    protected abstract void tickCapabilityGraph(
+        ConduitType<TType> type,
+        List<CapabilityConnection<TType, TCap>> insertCaps,
+        List<CapabilityConnection<TType, TCap>> extractCaps,
+        ServerLevel level,
+        Graph<Mergeable.Dummy> graph,
+        ColoredRedstoneProvider coloredRedstoneProvider);
 
-    public class CapabilityConnection {
-        public final T cap;
-        public final ExtendedConduitData<?> data;
-        public final Direction direction;
-
-        private CapabilityConnection(T cap, ExtendedConduitData<?> data, Direction direction) {
-            this.cap = cap;
-            this.data = data;
-            this.direction = direction;
-        }
+    public record CapabilityConnection<TType extends ExtendedConduitData<TType>, TCap>(
+        TCap capability,
+        TType data,
+        Direction direction) {
     }
 }

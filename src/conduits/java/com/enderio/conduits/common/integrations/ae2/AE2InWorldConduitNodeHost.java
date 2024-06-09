@@ -207,7 +207,7 @@ public abstract class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost,
     }
 
     @Override
-    public void applyGuiChanges(AE2InWorldConduitNodeHost guiData) {
+    public void applyClientChanges(AE2InWorldConduitNodeHost guiData) {
     }
 
     @Override

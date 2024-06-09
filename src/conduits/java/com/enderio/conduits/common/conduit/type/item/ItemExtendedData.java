@@ -30,7 +30,7 @@ public class ItemExtendedData implements ExtendedConduitData<ItemExtendedData> {
     }
 
     @Override
-    public void applyGuiChanges(ItemExtendedData guiData) {
+    public void applyClientChanges(ItemExtendedData guiData) {
         for (Direction direction : Direction.values()) {
             compute(direction).applyGuiChanges(guiData.get(direction));
         }

@@ -28,7 +28,7 @@ public class RedstoneExtendedData implements ExtendedConduitData<RedstoneExtende
     }
 
     @Override
-    public void applyGuiChanges(RedstoneExtendedData guiData) {
+    public void applyClientChanges(RedstoneExtendedData guiData) {
     }
 
     @Override
@@ -56,12 +56,6 @@ public class RedstoneExtendedData implements ExtendedConduitData<RedstoneExtende
 
         isActive = true;
         activeColors.add(color);
-    }
-
-    public RedstoneExtendedData deepCopy() {
-        RedstoneExtendedData redstoneExtendedData = new RedstoneExtendedData();
-        redstoneExtendedData.isActive = isActive;
-        return redstoneExtendedData;
     }
 
     public static class Serializer implements ConduitDataSerializer<RedstoneExtendedData> {

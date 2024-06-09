@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.conduit.type.redstone;
 
+import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.conduits.common.conduit.NodeIdentifier;
@@ -15,12 +16,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RedstoneConduitTicker implements IOAwareConduitTicker {
+public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneExtendedData> {
 
     private final List<ColorControl> activeColors = new ArrayList<>();
     @Override
@@ -31,15 +31,23 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker {
     }
 
     @Override
-    public void tickGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
-        List<ConduitNode<?>> nodeIdentifiers = new ArrayList<>();
+    public void tickGraph(
+        ConduitType<RedstoneExtendedData> type,
+        Graph<Mergeable.Dummy> graph,
+        ServerLevel level,
+        ColoredRedstoneProvider coloredRedstoneProvider) {
+
+        List<ConduitNode<RedstoneExtendedData>> nodeIdentifiers = new ArrayList<>();
         for (GraphObject<Mergeable.Dummy> object : graph.getObjects()) {
             if (object instanceof NodeIdentifier<?> node) {
-                nodeIdentifiers.add(node);
+                //noinspection unchecked
+                nodeIdentifiers.add((NodeIdentifier<RedstoneExtendedData>) node);
             }
         }
+
         activeColors.clear();
-        tickGraph(type,nodeIdentifiers.stream().filter(node -> isLoaded(level, node.getPos())).toList(), level, graph, isRedstoneActive);
+        tickGraph(type,nodeIdentifiers.stream().filter(node -> isLoaded(level, node.getPos())).toList(), level, graph, coloredRedstoneProvider);
+
         for (ConduitNode<?> nodeIdentifier : nodeIdentifiers) {
             RedstoneExtendedData data = nodeIdentifier.getExtendedConduitData().cast();
             data.clearActive();
@@ -50,14 +58,22 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker {
     }
 
     @Override
-    public void tickColoredGraph(ConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
-        for (Connection extract : extracts) {
+    public void tickColoredGraph(
+        ConduitType<RedstoneExtendedData> type,
+        List<Connection<RedstoneExtendedData>> inserts,
+        List<Connection<RedstoneExtendedData>> extracts,
+        ColorControl color,
+        ServerLevel level,
+        Graph<Mergeable.Dummy> graph,
+        ColoredRedstoneProvider coloredRedstoneProvider) {
+
+        for (Connection<RedstoneExtendedData> extract : extracts) {
             if (level.hasSignal(extract.move(), extract.dir())) {
                 activeColors.add(color);
                 break;
             }
         }
-        for (Connection insert : inserts) {
+        for (Connection<RedstoneExtendedData> insert : inserts) {
             level.neighborChanged(insert.move(), ConduitBlocks.CONDUIT.get(), insert.pos());
         }
     }

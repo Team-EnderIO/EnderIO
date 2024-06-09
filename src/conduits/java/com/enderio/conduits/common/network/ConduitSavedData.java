@@ -3,6 +3,7 @@ package com.enderio.conduits.common.network;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
@@ -284,13 +285,16 @@ public class ConduitSavedData extends SavedData {
 
         for (var entry : networks.entrySet()) {
             for (Graph<Mergeable.Dummy> graph : entry.getValue()) {
-                if (serverLevel.getGameTime() % entry.getKey().getTicker().getTickRate() == EnderIORegistries.CONDUIT_TYPES.getId(entry.getKey()) % entry
-                    .getKey()
-                    .getTicker()
-                    .getTickRate()) {
-                    entry.getKey().getTicker().tickGraph(entry.getKey(), graph, serverLevel, ConduitSavedData::isRedstoneActive);
-                }
+                tickConduitGraph(serverLevel, entry.getKey(), graph);
             }
+        }
+    }
+
+    private <T extends ExtendedConduitData<T>> void tickConduitGraph(ServerLevel serverLevel, ConduitType<T> type, Graph<Mergeable.Dummy> graph) {
+        ConduitTicker<T> conduitTicker = type.getTicker();
+
+        if (serverLevel.getGameTime() % conduitTicker.getTickRate() == EnderIORegistries.CONDUIT_TYPES.getId(type) % conduitTicker.getTickRate()) {
+            conduitTicker.tickGraph(type, graph, serverLevel, ConduitSavedData::isRedstoneActive);
         }
     }
 

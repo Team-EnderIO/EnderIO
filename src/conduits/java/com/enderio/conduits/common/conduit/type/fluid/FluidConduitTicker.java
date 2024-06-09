@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
+import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
@@ -22,10 +23,11 @@ import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.function.TriFunction;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
-public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandler> {
+public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidExtendedData, IFluidHandler> {
 
     private final boolean lockFluids;
     private final int fluidRate;
@@ -36,10 +38,16 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
     }
 
     @Override
-    public void tickGraph(ConduitType<?> type, List<ConduitNode<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    public void tickGraph(
+        ConduitType<FluidExtendedData> type,
+        List<ConduitNode<FluidExtendedData>> loadedNodes,
+        ServerLevel level,
+        Graph<Mergeable.Dummy> graph,
+        ColoredRedstoneProvider coloredRedstoneProvider) {
+
         boolean shouldReset = false;
-        for (ConduitNode<?> loadedNode : loadedNodes) {
-            FluidExtendedData fluidExtendedData = loadedNode.getExtendedConduitData().castTo(FluidExtendedData.class);
+        for (ConduitNode<FluidExtendedData> loadedNode : loadedNodes) {
+            FluidExtendedData fluidExtendedData = loadedNode.getExtendedConduitData();
             if (fluidExtendedData.shouldReset) {
                 shouldReset = true;
                 fluidExtendedData.shouldReset = false;
@@ -50,19 +58,24 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
                 loadedNode.getExtendedConduitData().castTo(FluidExtendedData.class).lockedFluid = null;
             }
         }
-        super.tickGraph(type, loadedNodes, level, graph, isRedstoneActive);
+        super.tickGraph(type, loadedNodes, level, graph, coloredRedstoneProvider);
     }
 
     @Override
-    protected void tickCapabilityGraph(ConduitType<?> type, List<CapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> inserts,
-                                       List<CapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    protected void tickCapabilityGraph(
+        ConduitType<FluidExtendedData> type,
+        List<CapabilityConnection<FluidExtendedData, IFluidHandler>> inserts,
+        List<CapabilityConnection<FluidExtendedData, IFluidHandler>> extracts,
+        ServerLevel level,
+        Graph<Mergeable.Dummy> graph,
+        ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        for (CapabilityConnection extract : extracts) {
-            IFluidHandler extractHandler = extract.cap;
-            FluidExtendedData fluidExtendedData = extract.data.castTo(FluidExtendedData.class);
+        for (CapabilityConnection<FluidExtendedData, IFluidHandler> extract : extracts) {
+            IFluidHandler extractHandler = extract.capability();
+            FluidExtendedData fluidExtendedData = extract.data();
 
             int temp = fluidRate;
-            if (extract.upgrade instanceof FluidSpeedUpgrade speedUpgrade) {
+            if (extract.upgrade() instanceof FluidSpeedUpgrade speedUpgrade) {
                 temp *= speedUpgrade.getSpeed();
             }
 
@@ -77,24 +90,24 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
                 continue;
             }
 
-            if (extract.extractFilter instanceof FluidStackFilter fluidStackFilter) {
+            if (extract.extractFilter() instanceof FluidStackFilter fluidStackFilter) {
                 if (!fluidStackFilter.test(extractedFluid)) {
                     continue;
                 }
             }
 
             int transferred = 0;
-            for (CapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection insert : inserts) {
-                if (extract.insertFilter instanceof FluidStackFilter fluidStackFilter) {
+            for (CapabilityConnection<FluidExtendedData, IFluidHandler> insert : inserts) {
+                if (extract.insertFilter() instanceof FluidStackFilter fluidStackFilter) {
                     if (!fluidStackFilter.test(extractedFluid)) {
                         continue;
                     }
                 }
 
                 FluidStack transferredFluid = fluidExtendedData.lockedFluid != null ?
-                    FluidUtil.tryFluidTransfer(insert.cap, extractHandler, new FluidStack(fluidExtendedData.lockedFluid, fluidRate - transferred),
+                    FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, new FluidStack(fluidExtendedData.lockedFluid, fluidRate - transferred),
                         true) :
-                    FluidUtil.tryFluidTransfer(insert.cap, extractHandler, rate - transferred, true);
+                    FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, rate - transferred, true);
 
                 if (!transferredFluid.isEmpty()) {
                     transferred += transferredFluid.getAmount();

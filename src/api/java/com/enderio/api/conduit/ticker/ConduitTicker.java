@@ -1,6 +1,8 @@
 package com.enderio.api.conduit.ticker;
 
+import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
@@ -10,9 +12,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.function.TriFunction;
 
-public interface ConduitTicker {
+public interface ConduitTicker<T extends ExtendedConduitData<T>> {
 
-    void tickGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive);
+    void tickGraph(ConduitType<T> type, Graph<Mergeable.Dummy> graph, ServerLevel level,
+        ColoredRedstoneProvider coloredRedstoneProvider);
 
     /**
      * @return how often the conduit should tick. 1 is every tick, 5 is every 5th tick, so 4 times a second

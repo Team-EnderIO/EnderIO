@@ -2,15 +2,12 @@ package com.enderio.api.conduit;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.registry.EnderIORegistries;
-import com.enderio.api.travel.TravelTarget;
-import com.enderio.api.travel.TravelTargetSerializer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,11 +16,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
-import java.util.function.Supplier;
 
 /**
  * used for special single use things like RoundRobin for ItemConduits or proxying Caps.
@@ -39,40 +34,6 @@ public interface ExtendedConduitData<T extends ExtendedConduitData<T>> {
         .dispatch(ExtendedConduitData::serializer, ConduitDataSerializer::streamCodec);
 
     EmptyExtendedConduitData EMPTY = new EmptyExtendedConduitData();
-
-    /**
-     * default impl for stuff that don't need an impl
-     */
-    class EmptyExtendedConduitData implements ExtendedConduitData<EmptyExtendedConduitData> {
-        private EmptyExtendedConduitData() {
-        }
-
-        @Override
-        public void applyGuiChanges(EmptyExtendedConduitData guiData) {
-        }
-
-        @Override
-        public ConduitDataSerializer<EmptyExtendedConduitData> serializer() {
-            return Serializer.INSTANCE;
-        }
-
-        public static class Serializer implements ConduitDataSerializer<EmptyExtendedConduitData> {
-            public static MapCodec<EmptyExtendedConduitData> CODEC = MapCodec.unit(EmptyExtendedConduitData::new);
-            public static StreamCodec<ByteBuf, EmptyExtendedConduitData> STREAM_CODEC = StreamCodec.unit(EMPTY);
-
-            public static Serializer INSTANCE = new Serializer();
-
-            @Override
-            public MapCodec<EmptyExtendedConduitData> codec() {
-                return CODEC;
-            }
-
-            @Override
-            public StreamCodec<RegistryFriendlyByteBuf, EmptyExtendedConduitData> streamCodec() {
-                return STREAM_CODEC.cast();
-            }
-        }
-    }
 
     default void onCreated(ConduitType<T> type, Level level, BlockPos pos, @Nullable Player player) {}
 
@@ -110,7 +71,7 @@ public interface ExtendedConduitData<T extends ExtendedConduitData<T>> {
     /**
      * Allows ignoring some fields from the client (for example internal backing fields).
      */
-    void applyGuiChanges(T guiData);
+    void applyClientChanges(T guiData);
 
     // region Serialization
 
@@ -133,5 +94,39 @@ public interface ExtendedConduitData<T extends ExtendedConduitData<T>> {
 
     default <Z extends ExtendedConduitData<Z>> Z castTo(Class<Z> clazz) {
         return cast();
+    }
+
+    /**
+     * default impl for stuff that don't need an impl
+     */
+    class EmptyExtendedConduitData implements ExtendedConduitData<EmptyExtendedConduitData> {
+        private EmptyExtendedConduitData() {
+        }
+
+        @Override
+        public void applyClientChanges(EmptyExtendedConduitData guiData) {
+        }
+
+        @Override
+        public ConduitDataSerializer<EmptyExtendedConduitData> serializer() {
+            return Serializer.INSTANCE;
+        }
+
+        public static class Serializer implements ConduitDataSerializer<EmptyExtendedConduitData> {
+            public static MapCodec<EmptyExtendedConduitData> CODEC = MapCodec.unit(EmptyExtendedConduitData::new);
+            public static StreamCodec<ByteBuf, EmptyExtendedConduitData> STREAM_CODEC = StreamCodec.unit(EMPTY);
+
+            public static Serializer INSTANCE = new Serializer();
+
+            @Override
+            public MapCodec<EmptyExtendedConduitData> codec() {
+                return CODEC;
+            }
+
+            @Override
+            public StreamCodec<RegistryFriendlyByteBuf, EmptyExtendedConduitData> streamCodec() {
+                return STREAM_CODEC.cast();
+            }
+        }
     }
 }

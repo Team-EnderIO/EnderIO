@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
+import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.conduits.common.conduit.NodeIdentifier;
@@ -20,16 +21,23 @@ import org.apache.commons.lang3.function.TriFunction;
 import java.util.List;
 import java.util.function.IntConsumer;
 
-public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergyStorage> {
+public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyExtendedData, IEnergyStorage> {
 
     public EnergyConduitTicker() {
     }
 
     @Override
-    public void tickGraph(ConduitType<?> type, List<ConduitNode<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
-        super.tickGraph(type, loadedNodes, level, graph, isRedstoneActive);
-        for (ConduitNode<?> node : loadedNodes) {
-            EnergyExtendedData energyExtendedData = node.getExtendedConduitData().castTo(EnergyExtendedData.class);
+    public void tickGraph(
+        ConduitType<EnergyExtendedData> type,
+        List<ConduitNode<EnergyExtendedData>> loadedNodes,
+        ServerLevel level,
+        Graph<Mergeable.Dummy> graph,
+        ColoredRedstoneProvider coloredRedstoneProvider) {
+
+        super.tickGraph(type, loadedNodes, level, graph, coloredRedstoneProvider);
+
+        for (ConduitNode<EnergyExtendedData> node : loadedNodes) {
+            EnergyExtendedData energyExtendedData = node.getExtendedConduitData();
             IEnergyStorage energy = energyExtendedData.getSelfCap();
             if (energy.getEnergyStored() == 0) {
                 energyExtendedData.setCapacity(500);
@@ -59,16 +67,23 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
             }
         }
     }
-        @Override
-    public void tickCapabilityGraph(ConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level,
-                                    Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
 
+    @Override
+    public void tickCapabilityGraph(
+        ConduitType<EnergyExtendedData> type,
+        List<CapabilityConnection<EnergyExtendedData, IEnergyStorage>> inserts,
+        List<CapabilityConnection<EnergyExtendedData, IEnergyStorage>> extracts,
+        ServerLevel level,
+        Graph<Mergeable.Dummy> graph,
+        ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        for (CapabilityConnection extract : extracts) {
-            IEnergyStorage extractHandler = extract.cap;
+        for (var extract : extracts) {
+            IEnergyStorage extractHandler = extract.capability();
 
-            EnergyExtendedData.EnergySidedData sidedExtractData = extract.data.castTo(EnergyExtendedData.class).compute(extract.direction);
-            extractEnergy(extractHandler, inserts.stream().map(con -> con.cap).toList(), sidedExtractData.rotatingIndex, i -> sidedExtractData.rotatingIndex = i);
+            EnergyExtendedData.EnergySidedData sidedExtractData = extract.data().compute(extract.direction());
+            extractEnergy(extractHandler, inserts.stream().map(
+                CapabilityConnection::capability).toList(),
+                sidedExtractData.rotatingIndex, i -> sidedExtractData.rotatingIndex = i);
         }
     }
 

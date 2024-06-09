@@ -115,7 +115,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     @UseOnly(LogicalSide.SERVER)
     public <T extends ExtendedConduitData<T>> void handleExtendedDataUpdate(ConduitType<T> conduitType, T data) {
         var node = getBundle().getNodeFor(conduitType);
-        node.getExtendedConduitData().applyGuiChanges(data);
+        node.getExtendedConduitData().applyClientChanges(data);
     }
 
     // endregion

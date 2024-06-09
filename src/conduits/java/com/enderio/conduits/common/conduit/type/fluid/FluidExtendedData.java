@@ -40,7 +40,7 @@ public class FluidExtendedData implements ExtendedConduitData<FluidExtendedData>
     }
 
     @Override
-    public void applyGuiChanges(FluidExtendedData guiData) {
+    public void applyClientChanges(FluidExtendedData guiData) {
         this.shouldReset = guiData.shouldReset;
     }
 

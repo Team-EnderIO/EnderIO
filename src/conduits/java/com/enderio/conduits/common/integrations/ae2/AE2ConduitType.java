@@ -3,6 +3,7 @@ package com.enderio.conduits.common.integrations.ae2;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.conduit.TieredConduit;
@@ -35,7 +36,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     }
 
     @Override
-    public ConduitTicker getTicker() {
+    public ConduitTicker<AE2InWorldConduitNodeHost> getTicker() {
         return Ticker.INSTANCE;
     }
 
@@ -123,11 +124,12 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         }
     }
 
-    private static final class Ticker implements ConduitTicker {
+    private static final class Ticker implements ConduitTicker<AE2InWorldConduitNodeHost> {
 
         private static final Ticker INSTANCE = new Ticker();
         @Override
-        public void tickGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+        public void tickGraph(ConduitType<AE2InWorldConduitNodeHost> type, Graph<Mergeable.Dummy> graph, ServerLevel level,
+            ColoredRedstoneProvider coloredRedstoneProvider) {
             //ae2 graphs don't actually do anything, that's all done by ae2
         }
 

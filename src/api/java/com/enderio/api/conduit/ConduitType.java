@@ -39,7 +39,7 @@ public interface ConduitType<T extends ExtendedConduitData<T>> {
         return false;
     }
 
-    ConduitTicker getTicker();
+    ConduitTicker<T> getTicker();
 
     @UseOnly(LogicalSide.CLIENT)
     ClientConduitData<T> getClientData();
