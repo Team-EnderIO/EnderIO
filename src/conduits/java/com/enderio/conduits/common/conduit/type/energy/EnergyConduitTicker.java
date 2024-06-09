@@ -69,17 +69,17 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
     public void tickCapabilityGraph(
         ServerLevel level,
         ConduitType<EnergyConduitData> type,
-        List<CapabilityConnection<EnergyConduitData, IEnergyStorage>> inserts,
-        List<CapabilityConnection<EnergyConduitData, IEnergyStorage>> extracts,
+        List<CapabilityConnection> inserts,
+        List<CapabilityConnection> extracts,
         GraphAccessor<EnergyConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (var extract : extracts) {
-            IEnergyStorage extractHandler = extract.capability();
+            IEnergyStorage extractHandler = extract.capability;
 
-            EnergyConduitData.EnergySidedData sidedExtractData = extract.data().compute(extract.direction());
+            EnergyConduitData.EnergySidedData sidedExtractData = extract.data.compute(extract.direction);
             extractEnergy(extractHandler, inserts.stream().map(
-                CapabilityConnection::capability).toList(),
+                connection -> connection.capability).toList(),
                 sidedExtractData.rotatingIndex, i -> sidedExtractData.rotatingIndex = i);
         }
     }

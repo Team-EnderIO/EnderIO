@@ -59,17 +59,17 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
     protected void tickCapabilityGraph(
         ServerLevel level,
         ConduitType<FluidConduitData> type,
-        List<CapabilityConnection<FluidConduitData, IFluidHandler>> inserts,
-        List<CapabilityConnection<FluidConduitData, IFluidHandler>> extracts,
+        List<CapabilityConnection> inserts,
+        List<CapabilityConnection> extracts,
         GraphAccessor<FluidConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        for (CapabilityConnection<FluidConduitData, IFluidHandler> extract : extracts) {
-            IFluidHandler extractHandler = extract.capability();
-            FluidConduitData fluidExtendedData = extract.data();
+        for (CapabilityConnection extract : extracts) {
+            IFluidHandler extractHandler = extract.capability;
+            FluidConduitData fluidExtendedData = extract.data;
 
             int temp = fluidRate;
-            if (extract.upgrade() instanceof FluidSpeedUpgrade speedUpgrade) {
+            if (extract.upgrade instanceof FluidSpeedUpgrade speedUpgrade) {
                 temp *= speedUpgrade.getSpeed();
             }
 
@@ -84,24 +84,24 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
                 continue;
             }
 
-            if (extract.extractFilter() instanceof FluidStackFilter fluidStackFilter) {
+            if (extract.extractFilter instanceof FluidStackFilter fluidStackFilter) {
                 if (!fluidStackFilter.test(extractedFluid)) {
                     continue;
                 }
             }
 
             int transferred = 0;
-            for (CapabilityConnection<FluidConduitData, IFluidHandler> insert : inserts) {
-                if (extract.insertFilter() instanceof FluidStackFilter fluidStackFilter) {
+            for (CapabilityConnection insert : inserts) {
+                if (extract.insertFilter instanceof FluidStackFilter fluidStackFilter) {
                     if (!fluidStackFilter.test(extractedFluid)) {
                         continue;
                     }
                 }
 
                 FluidStack transferredFluid = fluidExtendedData.lockedFluid != null ?
-                    FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, new FluidStack(fluidExtendedData.lockedFluid, fluidRate - transferred),
+                    FluidUtil.tryFluidTransfer(insert.capability, extractHandler, new FluidStack(fluidExtendedData.lockedFluid, fluidRate - transferred),
                         true) :
-                    FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, rate - transferred, true);
+                    FluidUtil.tryFluidTransfer(insert.capability, extractHandler, rate - transferred, true);
 
                 if (!transferredFluid.isEmpty()) {
                     transferred += transferredFluid.getAmount();

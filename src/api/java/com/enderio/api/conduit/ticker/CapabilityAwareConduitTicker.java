@@ -16,34 +16,31 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class CapabilityAwareConduitTicker<TData extends ConduitData<TData>, TCap> implements IOAwareConduitTicker<TData> {
 
     @Override
-    public final void tickColoredGraph(
-        ServerLevel level,
-        ConduitType<TData> type,
-        List<Connection<TData>> inserts,
-        List<Connection<TData>> extracts,
-        ColorControl color,
-        GraphAccessor<TData> graph,
-        ColoredRedstoneProvider coloredRedstoneProvider) {
+    public final void tickColoredGraph(ServerLevel level, ConduitType<TData> type, List<Connection<TData>> inserts, List<Connection<TData>> extracts,
+        ColorControl color, GraphAccessor<TData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        List<CapabilityConnection<TData, TCap>> insertCaps = new ArrayList<>();
+        List<CapabilityConnection> insertCaps = new ArrayList<>();
         for (Connection<TData> insert : inserts) {
             TCap capability = level.getCapability(getCapability(), insert.move(), insert.dir().getOpposite());
             if (capability != null) {
-                insertCaps.add(new CapabilityConnection<>(capability, insert.data(), insert.dir(), insert.upgrade(), insert.extractFilter(), insert.insertFilter()));
+                insertCaps.add(
+                    new CapabilityConnection(capability, insert.data(), insert.dir(), insert.upgrade(), insert.extractFilter(), insert.insertFilter()));
             }
         }
 
         if (!insertCaps.isEmpty()) {
-            List<CapabilityConnection<TData, TCap>> extractCaps = new ArrayList<>();
+            List<CapabilityConnection> extractCaps = new ArrayList<>();
 
             for (Connection<TData> extract : extracts) {
                 TCap capability = level.getCapability(getCapability(), extract.move(), extract.dir().getOpposite());
                 if (capability != null) {
-                    extractCaps.add(new CapabilityConnection<>(capability, extract.data(), extract.dir(), extract.upgrade(), extract.extractFilter(), extract.insertFilter()));
+                    extractCaps.add(new CapabilityConnection(capability, extract.data(), extract.dir(), extract.upgrade(), extract.extractFilter(),
+                        extract.insertFilter()));
                 }
             }
 
@@ -59,25 +56,27 @@ public abstract class CapabilityAwareConduitTicker<TData extends ConduitData<TDa
         return capability != null;
     }
 
-    protected abstract void tickCapabilityGraph(
-        ServerLevel level,
-        ConduitType<TData> type,
-        List<CapabilityConnection<TData, TCap>> inserts,
-        List<CapabilityConnection<TData, TCap>> extracts,
-        GraphAccessor<TData> graph,
-        ColoredRedstoneProvider coloredRedstoneProvider);
+    protected abstract void tickCapabilityGraph(ServerLevel level, ConduitType<TData> type, List<CapabilityConnection> inserts,
+        List<CapabilityConnection> extracts, GraphAccessor<TData> graph, ColoredRedstoneProvider coloredRedstoneProvider);
 
-    protected abstract BlockCapability<TCap,Direction> getCapability();
+    protected abstract BlockCapability<TCap, Direction> getCapability();
 
-    public record CapabilityConnection<TType extends ConduitData<TType>, TCap>(
-        TCap capability,
-        TType data,
-        Direction direction,
-        @Nullable
-        ConduitUpgrade upgrade,
-        @Nullable
-        ResourceFilter extractFilter,
-        @Nullable
-        ResourceFilter insertFilter) {
+    public final class CapabilityConnection {
+        public final TCap capability;
+        public final TData data;
+        public final Direction direction;
+        public final @Nullable ConduitUpgrade upgrade;
+        public final @Nullable ResourceFilter extractFilter;
+        public final @Nullable ResourceFilter insertFilter;
+
+        public CapabilityConnection(TCap capability, TData data, Direction direction, @Nullable ConduitUpgrade upgrade, @Nullable ResourceFilter extractFilter,
+            @Nullable ResourceFilter insertFilter) {
+            this.capability = capability;
+            this.data = data;
+            this.direction = direction;
+            this.upgrade = upgrade;
+            this.extractFilter = extractFilter;
+            this.insertFilter = insertFilter;
+        }
     }
 }

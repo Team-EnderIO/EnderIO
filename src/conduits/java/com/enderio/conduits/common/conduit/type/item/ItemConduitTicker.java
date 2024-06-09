@@ -22,17 +22,17 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
     protected void tickCapabilityGraph(
         ServerLevel level,
         ConduitType<ItemConduitData> type,
-        List<CapabilityConnection<ItemConduitData, IItemHandler>> inserts,
-        List<CapabilityConnection<ItemConduitData, IItemHandler>> extracts,
+        List<CapabilityConnection> inserts,
+        List<CapabilityConnection> extracts,
         GraphAccessor<ItemConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         toNextExtract:
-        for (CapabilityConnection<ItemConduitData, IItemHandler> extract: extracts) {
-            IItemHandler extractHandler = extract.capability();
+        for (CapabilityConnection extract: extracts) {
+            IItemHandler extractHandler = extract.capability;
             for (int i = 0; i < extractHandler.getSlots(); i++) {
                 int speed = 4;
-                if (extract.upgrade() instanceof ItemSpeedUpgrade speedUpgrade) {
+                if (extract.upgrade instanceof ItemSpeedUpgrade speedUpgrade) {
                     speed *= speedUpgrade.getSpeed();
                 }
 
@@ -41,13 +41,13 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
                     continue;
                 }
 
-                if (extract.extractFilter() instanceof ItemStackFilter itemFilter) {
+                if (extract.extractFilter instanceof ItemStackFilter itemFilter) {
                     if (!itemFilter.test(extractedItem)) {
                         continue;
                     }
                 }
 
-                ItemConduitData.ItemSidedData sidedExtractData = extract.data().compute(extract.direction());
+                ItemConduitData.ItemSidedData sidedExtractData = extract.data.compute(extract.direction);
                 if (sidedExtractData.isRoundRobin) {
                     if (inserts.size() <= sidedExtractData.rotatingIndex) {
                         sidedExtractData.rotatingIndex = 0;
@@ -58,21 +58,21 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
 
                 for (int j = sidedExtractData.rotatingIndex; j < sidedExtractData.rotatingIndex + inserts.size(); j++) {
                     int insertIndex = j % inserts.size();
-                    CapabilityConnection<ItemConduitData, IItemHandler> insert = inserts.get(insertIndex);
+                    CapabilityConnection insert = inserts.get(insertIndex);
 
                     if (!sidedExtractData.isSelfFeed
-                        && extract.direction() == insert.direction()
-                        && extract.data() == insert.data()) {
+                        && extract.direction == insert.direction
+                        && extract.data == insert.data) {
                         continue;
                     }
 
-                    if (extract.insertFilter() instanceof ItemStackFilter itemFilter) {
+                    if (extract.insertFilter instanceof ItemStackFilter itemFilter) {
                         if (!itemFilter.test(extractedItem)) {
                             continue;
                         }
                     }
 
-                    ItemStack notInserted = ItemHandlerHelper.insertItem(insert.capability(), extractedItem, false);
+                    ItemStack notInserted = ItemHandlerHelper.insertItem(insert.capability, extractedItem, false);
 
                     if (notInserted.getCount() < extractedItem.getCount()) {
                         extractHandler.extractItem(i, extractedItem.getCount() - notInserted.getCount(), false);
