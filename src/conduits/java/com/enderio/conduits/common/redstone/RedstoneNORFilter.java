@@ -43,10 +43,12 @@ public class RedstoneNORFilter implements RedstoneInsertFilter{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
         RedstoneNORFilter that = (RedstoneNORFilter) o;
         return channel1 == that.channel1 && channel2 == that.channel2;
     }
