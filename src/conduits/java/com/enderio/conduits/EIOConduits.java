@@ -8,10 +8,12 @@ import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitMenus;
+import com.enderio.conduits.common.init.ConduitTags;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
+import com.enderio.conduits.data.tags.ConduitTagsProvider;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -34,6 +36,7 @@ public class EIOConduits {
         ConduitComponents.register(bus);
         Integrations.register();
         ConduitLang.register();
+        ConduitTags.register();
     }
 
     @SubscribeEvent
@@ -44,6 +47,7 @@ public class EIOConduits {
 
         provider.addSubProvider(event.includeServer(), new ConduitTagProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
         provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, event.getLookupProvider()));
+        provider.addSubProvider(event.includeServer(), new ConduitTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
 
         event.getGenerator().addProvider(true, provider);
     }

@@ -1,6 +1,9 @@
 package com.enderio.conduits.common.components;
 
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
+import com.enderio.conduits.common.init.ConduitTags;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -37,6 +40,11 @@ public class FluidSpeedUpgrade implements ConduitUpgrade {
         FluidSpeedUpgrade that = (FluidSpeedUpgrade) o;
 
         return speed == that.speed;
+    }
+
+    @Override
+    public boolean canApplyTo(ConduitType<?> type) {
+        return type.is(ConduitTags.ConduitTypes.FLUID);
     }
 
     @Override

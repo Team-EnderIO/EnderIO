@@ -5,7 +5,7 @@ import com.enderio.api.misc.Vector2i;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.LogicalSide;
 
-public abstract class TieredConduit<T extends ConduitData<T>> implements ConduitType<T> {
+public abstract class TieredConduit<T extends ConduitData<T>> extends ConduitType<T> {
     private final ResourceLocation texture;
     private final ResourceLocation type;
     private final int tier;

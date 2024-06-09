@@ -36,7 +36,7 @@ public interface IOAwareConduitTicker<T extends ConduitData<T>> extends LoadedAw
                             color -> extracts.get(color).add(new Connection<T>(
                                 node.getPos(),
                                 direction,
-                                node.getExtendedConduitData(),
+                                node.getConduitData(),
                                 node.getUpgrade(direction),
                                 node.getExtractFilter(direction),
                                 node.getInsertFilter(direction))));
@@ -46,7 +46,7 @@ public interface IOAwareConduitTicker<T extends ConduitData<T>> extends LoadedAw
                             color -> inserts.get(color).add(new Connection<T>(
                                 node.getPos(),
                                 direction,
-                                node.getExtendedConduitData(),
+                                node.getConduitData(),
                                 node.getUpgrade(direction),
                                 node.getExtractFilter(direction),
                                 node.getInsertFilter(direction))));

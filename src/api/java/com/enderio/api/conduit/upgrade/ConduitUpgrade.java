@@ -1,5 +1,7 @@
 package com.enderio.api.conduit.upgrade;
 
+import com.enderio.api.conduit.ConduitType;
+
 public interface ConduitUpgrade {
-    // TODO: count(), maxCount(), doesApplyTo(ConduitType<?>).
+    boolean canApplyTo(ConduitType<?> type);
 }

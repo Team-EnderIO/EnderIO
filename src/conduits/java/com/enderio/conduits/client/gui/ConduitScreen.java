@@ -126,7 +126,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
             menu.getConduitType()
                 .getClientData()
-                .createWidgets(this, () -> getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast(),
+                .createWidgets(this, () -> getBundle().getNodeFor(menu.getConduitType()).getConduitData().cast(),
                     (mapper) -> sendExtendedConduitUpdate((Function<ConduitData<?>, ConduitData<?>>) mapper), menu::getDirection,
                     new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
                 .forEach(this::addTypedButton);
@@ -156,7 +156,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     }
 
     private void sendExtendedConduitUpdate(Function<ConduitData<?>, ConduitData<?>> map) {
-        var currentData = getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast();
+        var currentData = getBundle().getNodeFor(menu.getConduitType()).getConduitData().cast();
         var menu = getMenu();
 
         PacketDistributor.sendToServer(new C2SSetConduitExtendedData(

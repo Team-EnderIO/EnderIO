@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 /**
  * Only to be used for conduits in EnderIOs Namespace
  */
-public class SimpleConduitType<T extends ConduitData<T>> implements ConduitType<T> {
+public class SimpleConduitType<T extends ConduitData<T>> extends ConduitType<T> {
 
     private final ResourceLocation texture;
     private final ConduitTicker<T> ticker;

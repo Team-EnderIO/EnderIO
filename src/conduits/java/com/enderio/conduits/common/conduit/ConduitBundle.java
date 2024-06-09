@@ -161,13 +161,13 @@ public final class ConduitBundle {
             nodes.put(type, node);
 
             if (prevNode != null) {
-                prevNode.getExtendedConduitData().onRemoved(type, level, pos);
+                prevNode.getConduitData().onRemoved(type, level, pos);
                 if (!level.isClientSide() && prevNode.getGraph() != null) {
                     prevNode.getGraph().remove(prevNode);
                 }
             }
 
-            node.getExtendedConduitData().onCreated(type, level, pos, player);
+            node.getConduitData().onCreated(type, level, pos, player);
             connections.values().forEach(connection -> connection.disconnectType(index));
             onChanged();
 
@@ -186,7 +186,7 @@ public final class ConduitBundle {
             var value = types.indexOf(addBefore.get());
             types.add(value, type);
             nodes.put(type, node);
-            node.getExtendedConduitData().onCreated(type, level, pos, player);
+            node.getConduitData().onCreated(type, level, pos, player);
 
             for (Direction direction : Direction.values()) {
                 connections.get(direction).addType(value);
@@ -196,7 +196,7 @@ public final class ConduitBundle {
             nodes.put(type, node);
             if (types.size() != 1) {
                 //NeoForge contains a patch that calls onLoad after the conduit has been placed if it's the first one, so onCreated would be called twice. it's easier to detect here
-                node.getExtendedConduitData().onCreated(type, level, pos, player);
+                node.getConduitData().onCreated(type, level, pos, player);
             }
         }
 
@@ -209,7 +209,7 @@ public final class ConduitBundle {
     }
 
     private <T extends ConduitData<T>> void onLoad(ConduitType<T> conduitType, Level level, BlockPos pos) {
-        getNodeFor(conduitType).getExtendedConduitData().onCreated(conduitType, level, pos, null);
+        getNodeFor(conduitType).getConduitData().onCreated(conduitType, level, pos, null);
     }
 
     /**
@@ -371,7 +371,7 @@ public final class ConduitBundle {
 
     public <T extends ConduitData<T>> void removeNodeFor(Level level, ConduitType<T> type) {
         var node = (NodeIdentifier<T>) nodes.get(type);
-        node.getExtendedConduitData().onRemoved(type, level, pos);
+        node.getConduitData().onRemoved(type, level, pos);
         if (node.getGraph() != null) {
             node.getGraph().remove(node);
         }
@@ -421,7 +421,7 @@ public final class ConduitBundle {
         bundle.types.addAll(types);
         connections.forEach((dir, connection) -> bundle.connections.put(dir, connection.deepCopy()));
         bundle.facadeTextures.putAll(facadeTextures);
-        nodes.forEach((type, node) -> bundle.setNodeFor(type, new NodeIdentifier<>(node.getPos(), node.getExtendedConduitData().deepCopy())));
+        nodes.forEach((type, node) -> bundle.setNodeFor(type, new NodeIdentifier<>(node.getPos(), node.getConduitData().deepCopy())));
         return bundle;
     }
 
