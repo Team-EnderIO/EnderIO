@@ -43,7 +43,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     }
 
     @Override
-    public AE2InWorldConduitNodeHost createExtendedConduitData(Level level, BlockPos pos) {
+    public AE2InWorldConduitNodeHost createConduitData(Level level, BlockPos pos) {
         if (isDense()) {
             return new AE2InWorldConduitNodeHost.Dense();
         }

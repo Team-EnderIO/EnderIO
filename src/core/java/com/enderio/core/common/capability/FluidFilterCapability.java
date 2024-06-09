@@ -81,6 +81,7 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack>, Flu
                 return !isInvert();
             }
         }
+
         return isInvert();
     }
 
@@ -135,10 +136,14 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack>, Flu
 
         @Override
         public boolean equals(Object o) {
-            if (this == o)
+            if (this == o) {
                 return true;
-            if (o == null || getClass() != o.getClass())
+            }
+
+            if (o == null || getClass() != o.getClass()) {
                 return false;
+            }
+            
             FluidFilterCapability.Component component = (FluidFilterCapability.Component) o;
             for (int i = 0; i < fluids.size(); i++) {
                 if (!FluidStack.matches(fluids.get(i), component.fluids.get(i))) {

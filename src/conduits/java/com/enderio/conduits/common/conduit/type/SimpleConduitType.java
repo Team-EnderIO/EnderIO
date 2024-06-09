@@ -79,7 +79,7 @@ public class SimpleConduitType<T extends ConduitData<T>> extends ConduitType<T> 
     }
 
     @Override
-    public T createExtendedConduitData(Level level, BlockPos pos) {
+    public T createConduitData(Level level, BlockPos pos) {
         return extendedDataFactory.get();
     }
 }

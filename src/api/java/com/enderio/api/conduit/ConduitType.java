@@ -7,11 +7,9 @@ import com.enderio.api.registry.EnderIORegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.LogicalSide;
@@ -21,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-// TODO: I might argue that this should actually be an abstract class?
 public abstract class ConduitType<T extends ConduitData<T>> {
 
     public abstract ResourceLocation getTexture(T extendedData);
@@ -52,7 +49,7 @@ public abstract class ConduitType<T extends ConduitData<T>> {
 
     public abstract ConduitMenuData getMenuData();
 
-    public abstract T createExtendedConduitData(Level level, BlockPos pos);
+    public abstract T createConduitData(Level level, BlockPos pos);
 
     public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, T extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction,
         @Nullable ConduitNode.IOState state) {
@@ -71,15 +68,15 @@ public abstract class ConduitType<T extends ConduitData<T>> {
 
     public record ConduitConnectionData(boolean isInsert, boolean isExtract, RedstoneControl control) {}
 
-    public boolean is(TagKey<ConduitType<?>> tag) {
+    public final boolean is(TagKey<ConduitType<?>> tag) {
         return getAsHolder().is(tag);
     }
 
-    public Stream<TagKey<ConduitType<?>>> getTags() {
+    public final Stream<TagKey<ConduitType<?>>> getTags() {
         return getAsHolder().tags();
     }
 
-    public Holder<ConduitType<?>> getAsHolder() {
+    public final Holder<ConduitType<?>> getAsHolder() {
         return EnderIORegistries.CONDUIT_TYPES.wrapAsHolder(this);
     }
 }

@@ -128,16 +128,21 @@ public class ItemFilterCapability implements IFilterCapability<ItemStack>, ItemS
 
         @Override
         public boolean equals(Object o) {
-            if (this == o)
+            if (this == o) {
                 return true;
-            if (o == null || getClass() != o.getClass())
+            }
+
+            if (o == null || getClass() != o.getClass()) {
                 return false;
+            }
+
             Component component = (Component) o;
             for (int i = 0; i < items.size(); i++) {
                 if (!ItemStack.matches(items.get(i), component.items.get(i))) {
                     return false;
                 }
             }
+
             return nbt == component.nbt && invert == component.invert;
         }
 

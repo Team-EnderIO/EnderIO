@@ -147,7 +147,7 @@ public final class ConduitBundle {
 
         //upgrade a conduit
         Optional<? extends ConduitType<?>> first = types.stream().filter(existingConduit -> existingConduit.canBeReplacedBy(type)).findFirst();
-        ConduitGraphObject<T> node = new ConduitGraphObject<>(pos, type.createExtendedConduitData(level, pos));
+        ConduitGraphObject<T> node = new ConduitGraphObject<>(pos, type.createConduitData(level, pos));
         if (first.isPresent()) {
             int index = types.indexOf(first.get());
             types.set(index, type);

@@ -18,6 +18,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
+import org.apache.commons.lang3.NotImplementedException;
 
 public class FluidFilterScreen extends EIOScreen<FilterMenu> {
 
@@ -26,11 +27,12 @@ public class FluidFilterScreen extends EIOScreen<FilterMenu> {
 
     public FluidFilterScreen(FilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-        switch (pMenu.getFilter().getEntries().size()) {
-            case 5 -> BG_TEXTURE = EnderIO.loc("textures/gui/40/basic_item_filter.png");
-            case 2*5 -> BG_TEXTURE = EnderIO.loc("textures/gui/40/advanced_item_filter.png");
-            case 4*9 -> BG_TEXTURE = EnderIO.loc("textures/gui/40/big_item_filter.png");
-        }
+        BG_TEXTURE = switch (pMenu.getFilter().getEntries().size()) {
+            case 5 -> EnderIO.loc("textures/gui/40/basic_item_filter.png");
+            case 2 * 5 -> EnderIO.loc("textures/gui/40/advanced_item_filter.png");
+            case 4 * 9 -> EnderIO.loc("textures/gui/40/big_item_filter.png");
+            default -> throw new NotImplementedException();
+        };
     }
 
     @Override

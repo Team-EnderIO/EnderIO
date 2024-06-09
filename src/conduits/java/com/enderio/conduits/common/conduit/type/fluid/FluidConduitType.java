@@ -32,7 +32,7 @@ public class FluidConduitType extends TieredConduit<FluidConduitData> {
     }
 
     @Override
-    public FluidConduitData createExtendedConduitData(Level level, BlockPos pos) {
+    public FluidConduitData createConduitData(Level level, BlockPos pos) {
         return new FluidConduitData(isMultiFluid);
     }
 }
