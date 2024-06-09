@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit.block;
 
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.conduits.common.conduit.NodeIdentifier;
+import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
@@ -261,8 +261,8 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                         bundle.setConnectionState(oppositeDirection, type, StaticConnectionStates.DISABLED);
                         other.updateShape();
                         other.updateConnectionToData(type);
-                        NodeIdentifier<?> thisNode = bundle.getNodeFor(type);
-                        NodeIdentifier<?> otherNode = other.getBundle().getNodeFor(type);
+                        ConduitGraphObject<?> thisNode = bundle.getNodeFor(type);
+                        ConduitGraphObject<?> otherNode = other.getBundle().getNodeFor(type);
                         thisNode.getGraph().removeSingleEdge(thisNode, otherNode);
                         thisNode.getGraph().removeSingleEdge(otherNode, thisNode);
                         ConduitSavedData.addPotentialGraph(type, thisNode.getGraph(), (ServerLevel) conduit.getLevel());

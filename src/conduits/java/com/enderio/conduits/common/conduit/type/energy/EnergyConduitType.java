@@ -3,7 +3,7 @@ package com.enderio.conduits.common.conduit.type.energy;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ClientConduitData;
 import com.enderio.api.conduit.ConduitMenuData;
-import com.enderio.conduits.common.conduit.NodeIdentifier;
+import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.EIOConduitTypes;
@@ -38,7 +38,7 @@ public class EnergyConduitType extends SimpleConduitType<EnergyConduitData> {
     }
 
     @Override
-    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, EnergyConduitData extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable NodeIdentifier.IOState state) {
+    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, EnergyConduitData extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitGraphObject.IOState state) {
         if (Capabilities.EnergyStorage.BLOCK == cap
             && (state == null || state.isExtract())
             && (direction == null || !level.getBlockState(pos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE))) {

@@ -23,19 +23,19 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class NodeIdentifier<T extends ConduitData<?>> implements GraphObject<Mergeable.Dummy>, ConduitNode<T> {
+public class ConduitGraphObject<T extends ConduitData<?>> implements GraphObject<Mergeable.Dummy>, ConduitNode<T> {
 
-    public static final Codec<NodeIdentifier<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        BlockPos.CODEC.fieldOf("pos").forGetter(NodeIdentifier::getPos),
-        ConduitData.CODEC.fieldOf("data").forGetter(NodeIdentifier::getConduitData)
-    ).apply(instance, NodeIdentifier::new));
+    public static final Codec<ConduitGraphObject<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        BlockPos.CODEC.fieldOf("pos").forGetter(ConduitGraphObject::getPos),
+        ConduitData.CODEC.fieldOf("data").forGetter(ConduitGraphObject::getConduitData)
+    ).apply(instance, ConduitGraphObject::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, NodeIdentifier<?>> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, ConduitGraphObject<?>> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,
-        NodeIdentifier::getPos,
+        ConduitGraphObject::getPos,
         ConduitData.STREAM_CODEC,
-        NodeIdentifier::getConduitData,
-        NodeIdentifier::new
+        ConduitGraphObject::getConduitData,
+        ConduitGraphObject::new
     );
 
     private final BlockPos pos;
@@ -46,7 +46,7 @@ public class NodeIdentifier<T extends ConduitData<?>> implements GraphObject<Mer
     private final T conduitData;
     private final Map<Direction, DynamicConnectionState> connectionStates = new EnumMap<>(Direction.class);
 
-    public NodeIdentifier(BlockPos pos, T conduitData) {
+    public ConduitGraphObject(BlockPos pos, T conduitData) {
         this.pos = pos;
         this.conduitData = conduitData;
     }

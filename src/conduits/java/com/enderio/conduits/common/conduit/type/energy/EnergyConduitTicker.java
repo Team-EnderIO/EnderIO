@@ -4,7 +4,7 @@ import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.GraphAccessor;
-import com.enderio.conduits.common.conduit.NodeIdentifier;
+import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
@@ -44,7 +44,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
             int previousStored = energy.getEnergyStored();
             for (ConduitNode<?> otherNode : loadedNodes) {
                for (Direction dir: Direction.values()) {
-                   if (otherNode.getIOState(dir).map(NodeIdentifier.IOState::isInsert).orElse(false)) {
+                   if (otherNode.getIOState(dir).map(ConduitGraphObject.IOState::isInsert).orElse(false)) {
                        IEnergyStorage capability = level.getCapability(getCapability(), otherNode.getPos().relative(dir), dir.getOpposite());
                        if (capability != null) {
                            extractEnergy(energy, List.of(capability), 0, i -> {});
