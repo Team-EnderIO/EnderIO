@@ -314,7 +314,7 @@ public class ConduitSavedData extends SavedData {
             return false;
         }
 
-        RedstoneConduitData data = conduit.getBundle().getNodeFor(EIOConduitTypes.Types.REDSTONE.get()).getExtendedConduitData().cast();
+        RedstoneConduitData data = conduit.getBundle().getNodeFor(EIOConduitTypes.Types.REDSTONE.get()).getConduitData().cast();
         return data.isActive(color);
     }
 

@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface ConduitNode<T extends ConduitData<?>> {
     Optional<IOState> getIOState(Direction direction);
     BlockPos getPos();
-    T getExtendedConduitData();
+    T getConduitData();
 
     @Nullable
     ConduitUpgrade getUpgrade(Direction direction);

@@ -115,7 +115,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     @UseOnly(LogicalSide.SERVER)
     public <T extends ConduitData<T>> void handleExtendedDataUpdate(ConduitType<T> conduitType, T data) {
         var node = getBundle().getNodeFor(conduitType);
-        node.getExtendedConduitData().applyClientChanges(data);
+        node.getConduitData().applyClientChanges(data);
     }
 
     // endregion
@@ -137,7 +137,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
                 for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
                     if (object instanceof NodeIdentifier<?> otherNode) {
-                        node.getExtendedConduitData().onConnectTo(otherNode.getExtendedConduitData().cast());
+                        node.getConduitData().onConnectTo(otherNode.getConduitData().cast());
                     }
                 }
                 ConduitSavedData.addPotentialGraph(entry.getKey(), Objects.requireNonNull(node.getGraph()), serverLevel);
@@ -164,7 +164,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     private <T extends ConduitData<T>> void onChunkUnloaded(ConduitSavedData savedData, ConduitType<T> conduitType) {
         NodeIdentifier<T> node = bundle.getNodeFor(conduitType);
-        node.getExtendedConduitData().onRemoved(conduitType, level, getBlockPos());
+        node.getConduitData().onRemoved(conduitType, level, getBlockPos());
         savedData.putUnloadedNodeIdentifier(conduitType, this.worldPosition, node);
     }
 
@@ -210,7 +210,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
         ListTag listTag = new ListTag();
         for (ConduitType<?> type : bundle.getTypes()) {
-            var data = bundle.getNodeFor(type).getExtendedConduitData();
+            var data = bundle.getNodeFor(type).getConduitData();
             listTag.add(data.save(lookupProvider));
         }
 
@@ -260,7 +260,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 Graph.integrate(thisNode, nodes);
                 for (GraphObject<Mergeable.Dummy> object : thisNode.getGraph().getObjects()) {
                     if (object instanceof NodeIdentifier<?> node) {
-                        thisNode.getExtendedConduitData().onConnectTo(node.getExtendedConduitData().cast());
+                        thisNode.getConduitData().onConnectTo(node.getConduitData().cast());
                     }
                 }
                 ConduitSavedData.addPotentialGraph(type, Objects.requireNonNull(thisNode.getGraph()), serverLevel);
@@ -275,24 +275,24 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public <T extends ConduitData<T>> Optional<GraphObject<Mergeable.Dummy>> tryConnectTo(Direction dir, ConduitType<T> type, boolean forceMerge, boolean shouldMergeGraph) {
         if (level.getBlockEntity(getBlockPos().relative(dir)) instanceof ConduitBlockEntity conduit
-            && conduit.connectTo(dir.getOpposite(), type, bundle.getNodeFor(type).getExtendedConduitData(), forceMerge)) {
+            && conduit.connectTo(dir.getOpposite(), type, bundle.getNodeFor(type).getConduitData(), forceMerge)) {
             connect(dir, type);
             updateConnectionToData(type);
             conduit.updateConnectionToData(type);
             NodeIdentifier<?> firstNode = conduit.getBundle().getNodeFor(type);
             NodeIdentifier<?> secondNode = bundle.getNodeFor(type);
-            firstNode.getExtendedConduitData().onConnectTo(secondNode.getExtendedConduitData().cast());
+            firstNode.getConduitData().onConnectTo(secondNode.getConduitData().cast());
             if (firstNode.getGraph() != null) {
                 for (GraphObject<Mergeable.Dummy> object : firstNode.getGraph().getObjects()) {
                     if (object instanceof NodeIdentifier<?> node && node != firstNode) {
-                        firstNode.getExtendedConduitData().onConnectTo(node.getExtendedConduitData().cast());
+                        firstNode.getConduitData().onConnectTo(node.getConduitData().cast());
                     }
                 }
             }
             if (secondNode.getGraph() != null && firstNode.getGraph() != secondNode.getGraph()) {
                 for (GraphObject<Mergeable.Dummy> object : secondNode.getGraph().getObjects()) {
                     if (object instanceof NodeIdentifier<?> node && node != secondNode) {
-                        secondNode.getExtendedConduitData().onConnectTo(node.getExtendedConduitData().cast());
+                        secondNode.getConduitData().onConnectTo(node.getConduitData().cast());
                     }
                 }
             }
@@ -311,7 +311,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         if (!level.isClientSide) {
             getBundle()
                 .getNodeFor(type)
-                .getExtendedConduitData()
+                .getConduitData()
                 .updateConnection(Arrays
                     .stream(Direction.values())
                     .filter(streamDir -> bundle.getConnectionState(streamDir, type) != StaticConnectionStates.DISABLED)
@@ -435,7 +435,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             return false;
         }
 
-        if (!data.canConnectTo(bundle.getNodeFor(type).getExtendedConduitData())) {
+        if (!data.canConnectTo(bundle.getNodeFor(type).getConduitData())) {
             return false;
         }
 
@@ -514,7 +514,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 NodeIdentifier<?> node = be.bundle.getNodeFor(type);
                 NodeIdentifier.IOState state = node.getIOState(side).orElse(null);
 
-                var proxiedCap = type.proxyCapability(cap, node.getExtendedConduitData().cast(), be.level, be.getBlockPos(), side, state);
+                var proxiedCap = type.proxyCapability(cap, node.getConduitData().cast(), be.level, be.getBlockPos(), side, state);
 
                 if (proxiedCap.isPresent()) {
                     return proxiedCap.get();

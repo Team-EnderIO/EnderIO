@@ -41,7 +41,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
         tickGraph(level, type, nodeIdentifiers.stream().filter(node -> isLoaded(level, node.getPos())).toList(), graph, coloredRedstoneProvider);
 
         for (ConduitNode<?> nodeIdentifier : nodeIdentifiers) {
-            RedstoneConduitData data = nodeIdentifier.getExtendedConduitData().cast();
+            RedstoneConduitData data = nodeIdentifier.getConduitData().cast();
             data.clearActive();
             for (ColorControl activeColor : activeColors) {
                 data.setActiveColor(activeColor);

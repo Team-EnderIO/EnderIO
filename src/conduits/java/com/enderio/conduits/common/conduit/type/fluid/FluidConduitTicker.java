@@ -40,7 +40,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
 
         boolean shouldReset = false;
         for (var loadedNode : loadedNodes) {
-            FluidConduitData fluidExtendedData = loadedNode.getExtendedConduitData();
+            FluidConduitData fluidExtendedData = loadedNode.getConduitData();
             if (fluidExtendedData.shouldReset) {
                 shouldReset = true;
                 fluidExtendedData.shouldReset = false;
@@ -49,7 +49,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
 
         if (shouldReset) {
             for (var loadedNode : loadedNodes) {
-                loadedNode.getExtendedConduitData().lockedFluid = null;
+                loadedNode.getConduitData().lockedFluid = null;
             }
         }
         super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
@@ -112,7 +112,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
                                 fluid = flowing.getSource();
                             }
 
-                            node.getExtendedConduitData().lockedFluid = fluid;
+                            node.getConduitData().lockedFluid = fluid;
                         }
                     }
 

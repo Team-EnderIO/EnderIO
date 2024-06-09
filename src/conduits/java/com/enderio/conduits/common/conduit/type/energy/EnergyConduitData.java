@@ -3,6 +3,7 @@ package com.enderio.conduits.common.conduit.type.energy;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitData;
+import com.enderio.api.network.DumbStreamCodec;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -147,17 +148,7 @@ public class EnergyConduitData implements ConduitData<EnergyConduitData> {
             ).apply(instance, EnergyConduitData::new)
         );
 
-        // TODO: Opt-out of client sync somehow.
-        public static final StreamCodec<ByteBuf, EnergyConduitData> STREAM_CODEC = new StreamCodec<>() {
-                @Override
-                public EnergyConduitData decode(ByteBuf p_320376_) {
-                    return new EnergyConduitData();
-                }
-
-                @Override
-                public void encode(ByteBuf p_320158_, EnergyConduitData p_320396_) {
-                }
-            };
+        public static final StreamCodec<ByteBuf, EnergyConduitData> STREAM_CODEC = DumbStreamCodec.of(EnergyConduitData::new);
 
         @Override
         public MapCodec<EnergyConduitData> codec() {

@@ -26,14 +26,14 @@ public class NodeIdentifier<T extends ConduitData<?>> implements GraphObject<Mer
 
     public static final Codec<NodeIdentifier<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         BlockPos.CODEC.fieldOf("pos").forGetter(NodeIdentifier::getPos),
-        ConduitData.CODEC.fieldOf("data").forGetter(NodeIdentifier::getExtendedConduitData)
+        ConduitData.CODEC.fieldOf("data").forGetter(NodeIdentifier::getConduitData)
     ).apply(instance, NodeIdentifier::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, NodeIdentifier<?>> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,
         NodeIdentifier::getPos,
         ConduitData.STREAM_CODEC,
-        NodeIdentifier::getExtendedConduitData,
+        NodeIdentifier::getConduitData,
         NodeIdentifier::new
     );
 
@@ -42,12 +42,12 @@ public class NodeIdentifier<T extends ConduitData<?>> implements GraphObject<Mer
     @Nullable private Graph<Mergeable.Dummy> graph = null;
 
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
-    private T extendedConduitData;
+    private final T conduitData;
     private final Map<Direction, DynamicConnectionState> connectionStates = new EnumMap<>(Direction.class);
 
-    public NodeIdentifier(BlockPos pos, T extendedConduitData) {
+    public NodeIdentifier(BlockPos pos, T conduitData) {
         this.pos = pos;
-        this.extendedConduitData = extendedConduitData;
+        this.conduitData = conduitData;
     }
 
     @Nullable
@@ -71,8 +71,8 @@ public class NodeIdentifier<T extends ConduitData<?>> implements GraphObject<Mer
         return Optional.ofNullable(ioStates.get(direction));
     }
 
-    public T getExtendedConduitData() {
-        return extendedConduitData;
+    public T getConduitData() {
+        return conduitData;
     }
 
     public void clearState(Direction direction) {

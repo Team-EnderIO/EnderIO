@@ -3,12 +3,14 @@ package com.enderio.conduits.common.conduit.type.redstone;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.misc.ColorControl;
+import com.enderio.api.network.DumbStreamCodec;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 import java.util.ArrayList;
@@ -49,6 +51,10 @@ public class RedstoneConduitData implements ConduitData<RedstoneConduitData> {
         isActive = false;
     }
 
+    public List<ColorControl> activeColors() {
+        return activeColors;
+    }
+
     public void setActiveColor(ColorControl color) {
         if (activeColors.contains(color)) {
             return;
@@ -66,7 +72,13 @@ public class RedstoneConduitData implements ConduitData<RedstoneConduitData> {
             ).apply(instance, RedstoneConduitData::new)
         );
 
-        public static StreamCodec<ByteBuf, RedstoneConduitData> STREAM_CODEC = StreamCodec.unit(new RedstoneConduitData());
+        public static StreamCodec<ByteBuf, RedstoneConduitData> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.BOOL,
+            RedstoneConduitData::isActive,
+            ColorControl.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            RedstoneConduitData::activeColors,
+            RedstoneConduitData::new
+        );
 
         @Override
         public MapCodec<RedstoneConduitData> codec() {
