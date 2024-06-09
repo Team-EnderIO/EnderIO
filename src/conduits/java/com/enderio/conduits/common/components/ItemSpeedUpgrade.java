@@ -2,6 +2,7 @@ package com.enderio.conduits.common.components;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
+import com.enderio.conduits.common.init.ConduitTags;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -43,7 +44,7 @@ public class ItemSpeedUpgrade implements ConduitUpgrade {
 
     @Override
     public boolean canApplyTo(ConduitType<?> type) {
-        return type == EIOConduitTypes.Types.ITEM.get();
+        return type.is(ConduitTags.ConduitTypes.ITEM);
     }
 
     @Override
