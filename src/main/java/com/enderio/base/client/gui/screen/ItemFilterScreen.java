@@ -26,7 +26,7 @@ public class ItemFilterScreen extends EIOScreen<ItemFilterMenu> {
             case 5 -> EnderIO.loc("textures/gui/40/basic_item_filter.png");
             case 2*5 ->  EnderIO.loc("textures/gui/40/advanced_item_filter.png");
             case 4*9 ->  EnderIO.loc("textures/gui/40/big_item_filter.png");
-            case default -> throw new NotImplementedException();
+            default -> throw new NotImplementedException();
         };
     }
 
