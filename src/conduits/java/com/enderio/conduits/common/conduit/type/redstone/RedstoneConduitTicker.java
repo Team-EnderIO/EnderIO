@@ -3,14 +3,11 @@ package com.enderio.conduits.common.conduit.type.redstone;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
-import com.enderio.conduits.common.conduit.NodeIdentifier;
+import com.enderio.api.conduit.GraphAccessor;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.tag.ConduitTags;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.GraphObject;
-import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -18,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneExtendedData> {
@@ -32,21 +30,15 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneExten
 
     @Override
     public void tickGraph(
-        ConduitType<RedstoneExtendedData> type,
-        Graph<Mergeable.Dummy> graph,
         ServerLevel level,
+        ConduitType<RedstoneExtendedData> type,
+        GraphAccessor<RedstoneExtendedData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        List<ConduitNode<RedstoneExtendedData>> nodeIdentifiers = new ArrayList<>();
-        for (GraphObject<Mergeable.Dummy> object : graph.getObjects()) {
-            if (object instanceof NodeIdentifier<?> node) {
-                //noinspection unchecked
-                nodeIdentifiers.add((NodeIdentifier<RedstoneExtendedData>) node);
-            }
-        }
+        Collection<ConduitNode<RedstoneExtendedData>> nodeIdentifiers = graph.getNodes();
 
         activeColors.clear();
-        tickGraph(type,nodeIdentifiers.stream().filter(node -> isLoaded(level, node.getPos())).toList(), level, graph, coloredRedstoneProvider);
+        tickGraph(level, type, nodeIdentifiers.stream().filter(node -> isLoaded(level, node.getPos())).toList(), graph, coloredRedstoneProvider);
 
         for (ConduitNode<?> nodeIdentifier : nodeIdentifiers) {
             RedstoneExtendedData data = nodeIdentifier.getExtendedConduitData().cast();
@@ -59,12 +51,12 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneExten
 
     @Override
     public void tickColoredGraph(
+        ServerLevel level,
         ConduitType<RedstoneExtendedData> type,
         List<Connection<RedstoneExtendedData>> inserts,
         List<Connection<RedstoneExtendedData>> extracts,
         ColorControl color,
-        ServerLevel level,
-        Graph<Mergeable.Dummy> graph,
+        GraphAccessor<RedstoneExtendedData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (Connection<RedstoneExtendedData> extract : extracts) {

@@ -3,18 +3,15 @@ package com.enderio.api.conduit.ticker;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
-import com.enderio.api.misc.ColorControl;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.Mergeable;
+import com.enderio.api.conduit.GraphAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import org.apache.commons.lang3.function.TriFunction;
 
 public interface ConduitTicker<T extends ExtendedConduitData<T>> {
 
-    void tickGraph(ConduitType<T> type, Graph<Mergeable.Dummy> graph, ServerLevel level,
+    void tickGraph(ServerLevel level, ConduitType<T> type, GraphAccessor<T> graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
     /**

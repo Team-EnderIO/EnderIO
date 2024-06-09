@@ -4,35 +4,28 @@ import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ExtendedConduitData;
-import com.enderio.api.misc.ColorControl;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.GraphObject;
-import dev.gigaherz.graph3.Mergeable;
+import com.enderio.api.conduit.GraphAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import org.apache.commons.lang3.function.TriFunction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface LoadedAwareConduitTicker<T extends ExtendedConduitData<T>> extends ConduitTicker<T> {
 
     @Override
-    default void tickGraph(ConduitType<T> type, Graph<Mergeable.Dummy> graph, ServerLevel level,
+    default void tickGraph(ServerLevel level, ConduitType<T> type, GraphAccessor<T> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
-        List<ConduitNode<T>> nodeIdentifiers = new ArrayList<>();
-        for (GraphObject<Mergeable.Dummy> object : graph.getObjects()) {
-            if (object instanceof ConduitNode<?> node && isLoaded(level, node.getPos())) {
-                //noinspection unchecked
-                nodeIdentifiers.add((ConduitNode<T>) node);
-            }
-        }
 
-        tickGraph(type, nodeIdentifiers, level, graph, coloredRedstoneProvider);
+        List<ConduitNode<T>> nodeIdentifiers = graph.getNodes()
+            .stream().filter(node -> isLoaded(level, node.getPos()))
+            .toList();
+
+        tickGraph(level, type, nodeIdentifiers, graph, coloredRedstoneProvider);
     }
 
-    void tickGraph(ConduitType<T> type, List<ConduitNode<T>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph,
+    void tickGraph(ServerLevel level, ConduitType<T> type,
+        List<ConduitNode<T>> loadedNodes, GraphAccessor<T> graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
     default boolean isLoaded(Level level, BlockPos pos) {

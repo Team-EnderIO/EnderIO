@@ -1,6 +1,7 @@
 package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
+import com.enderio.api.conduit.GraphAccessor;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
@@ -10,24 +11,17 @@ import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import org.apache.commons.lang3.function.TriFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 public interface IOAwareConduitTicker<T extends ExtendedConduitData<T>> extends LoadedAwareConduitTicker<T> {
     @Override
-    default void tickGraph(
-        ConduitType<T> type,
-        List<ConduitNode<T>> loadedNodes,
-        ServerLevel level,
-        Graph<Mergeable.Dummy> graph,
+    default void tickGraph(ServerLevel level, ConduitType<T> type,
+        List<ConduitNode<T>> loadedNodes, GraphAccessor<T> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         ListMultimap<ColorControl, Connection<T>> extracts = ArrayListMultimap.create();
@@ -66,17 +60,17 @@ public interface IOAwareConduitTicker<T extends ExtendedConduitData<T>> extends 
                 continue;
             }
 
-            tickColoredGraph(type, insertList, extractList, color, level, graph, coloredRedstoneProvider);
+            tickColoredGraph(level, type, insertList, extractList, color, graph, coloredRedstoneProvider);
         }
     }
 
     void tickColoredGraph(
+        ServerLevel level,
         ConduitType<T> type,
         List<Connection<T>> inserts,
         List<Connection<T>> extracts,
         ColorControl color,
-        ServerLevel level,
-        Graph<Mergeable.Dummy> graph,
+        GraphAccessor<T> graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
     default boolean isRedstoneMode(ConduitType<?> type, ServerLevel level, BlockPos pos, ConduitNode.IOState state,

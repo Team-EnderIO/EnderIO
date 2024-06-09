@@ -1,8 +1,10 @@
 package com.enderio.conduits.common.network;
 
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.conduit.GraphAccessor;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.misc.ColorControl;
@@ -33,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -294,7 +297,7 @@ public class ConduitSavedData extends SavedData {
         ConduitTicker<T> conduitTicker = type.getTicker();
 
         if (serverLevel.getGameTime() % conduitTicker.getTickRate() == EnderIORegistries.CONDUIT_TYPES.getId(type) % conduitTicker.getTickRate()) {
-            conduitTicker.tickGraph(type, graph, serverLevel, ConduitSavedData::isRedstoneActive);
+            conduitTicker.tickGraph(serverLevel, type, new WrappingGraphAccessor<>(graph), ConduitSavedData::isRedstoneActive);
         }
     }
 
@@ -341,6 +344,18 @@ public class ConduitSavedData extends SavedData {
             if (!tempFile.renameTo(file)) {
                 EnderIO.LOGGER.error("Failed to rename " + tempFile.getName());
             }
+        }
+    }
+
+    private record WrappingGraphAccessor<T extends ExtendedConduitData<T>>(Graph<Mergeable.Dummy> graph)
+        implements GraphAccessor<T> {
+
+        @Override
+        public Collection<ConduitNode<T>> getNodes() {
+            //noinspection unchecked
+            return graph.getObjects().stream()
+                .map(object -> (ConduitNode<T>) object)
+                .toList();
         }
     }
 }

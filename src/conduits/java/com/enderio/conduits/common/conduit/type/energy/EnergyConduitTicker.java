@@ -3,12 +3,10 @@ package com.enderio.conduits.common.conduit.type.energy;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
+import com.enderio.api.conduit.GraphAccessor;
 import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
-import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.tag.ConduitTags;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -16,7 +14,6 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
 import java.util.function.IntConsumer;
@@ -28,13 +25,13 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyExte
 
     @Override
     public void tickGraph(
+        ServerLevel level,
         ConduitType<EnergyExtendedData> type,
         List<ConduitNode<EnergyExtendedData>> loadedNodes,
-        ServerLevel level,
-        Graph<Mergeable.Dummy> graph,
+        GraphAccessor<EnergyExtendedData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        super.tickGraph(type, loadedNodes, level, graph, coloredRedstoneProvider);
+        super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
 
         for (ConduitNode<EnergyExtendedData> node : loadedNodes) {
             EnergyExtendedData energyExtendedData = node.getExtendedConduitData();
@@ -70,11 +67,11 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyExte
 
     @Override
     public void tickCapabilityGraph(
+        ServerLevel level,
         ConduitType<EnergyExtendedData> type,
         List<CapabilityConnection<EnergyExtendedData, IEnergyStorage>> inserts,
         List<CapabilityConnection<EnergyExtendedData, IEnergyStorage>> extracts,
-        ServerLevel level,
-        Graph<Mergeable.Dummy> graph,
+        GraphAccessor<EnergyExtendedData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (var extract : extracts) {

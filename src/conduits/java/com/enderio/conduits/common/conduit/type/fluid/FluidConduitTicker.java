@@ -1,17 +1,12 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
+import com.enderio.api.conduit.GraphAccessor;
 import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
-import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
-import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.components.FluidSpeedUpgrade;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.GraphObject;
-import dev.gigaherz.graph3.Mergeable;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -21,9 +16,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import org.apache.commons.lang3.function.TriFunction;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,10 +32,10 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidExtend
 
     @Override
     public void tickGraph(
+        ServerLevel level,
         ConduitType<FluidExtendedData> type,
         List<ConduitNode<FluidExtendedData>> loadedNodes,
-        ServerLevel level,
-        Graph<Mergeable.Dummy> graph,
+        GraphAccessor<FluidExtendedData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         boolean shouldReset = false;
@@ -58,16 +51,16 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidExtend
                 loadedNode.getExtendedConduitData().castTo(FluidExtendedData.class).lockedFluid = null;
             }
         }
-        super.tickGraph(type, loadedNodes, level, graph, coloredRedstoneProvider);
+        super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
     }
 
     @Override
     protected void tickCapabilityGraph(
+        ServerLevel level,
         ConduitType<FluidExtendedData> type,
         List<CapabilityConnection<FluidExtendedData, IFluidHandler>> inserts,
         List<CapabilityConnection<FluidExtendedData, IFluidHandler>> extracts,
-        ServerLevel level,
-        Graph<Mergeable.Dummy> graph,
+        GraphAccessor<FluidExtendedData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (CapabilityConnection<FluidExtendedData, IFluidHandler> extract : extracts) {
@@ -112,15 +105,13 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidExtend
                 if (!transferredFluid.isEmpty()) {
                     transferred += transferredFluid.getAmount();
                     if (lockFluids) {
-                        for (GraphObject<Mergeable.Dummy> graphObject : graph.getObjects()) {
-                            if (graphObject instanceof NodeIdentifier<?> node) {
-                                Fluid fluid = transferredFluid.getFluid();
-                                if (fluid instanceof FlowingFluid flowing) {
-                                    fluid = flowing.getSource();
-                                }
-
-                                node.getExtendedConduitData().castTo(FluidExtendedData.class).lockedFluid = fluid;
+                        for (ConduitNode<FluidExtendedData> node : graph.getNodes()) {
+                            Fluid fluid = transferredFluid.getFluid();
+                            if (fluid instanceof FlowingFluid flowing) {
+                                fluid = flowing.getSource();
                             }
+
+                            node.getExtendedConduitData().lockedFluid = fluid;
                         }
                     }
 

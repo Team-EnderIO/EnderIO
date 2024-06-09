@@ -3,6 +3,7 @@ package com.enderio.conduits.common.integrations.mekanism;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.conduit.GraphAccessor;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
@@ -37,12 +38,12 @@ public abstract class MultiCapabilityAwareConduitTicker<TType extends ExtendedCo
 
     @Override
     public void tickColoredGraph(
+        ServerLevel level,
         ConduitType<TType> type,
         List<Connection<TType>> inserts,
         List<Connection<TType>> extracts,
         ColorControl color,
-        ServerLevel level,
-        Graph<Mergeable.Dummy> graph,
+        GraphAccessor<TType> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         List<CapabilityConnection<TType, TCap>> insertCaps = new ArrayList<>();
@@ -77,7 +78,7 @@ public abstract class MultiCapabilityAwareConduitTicker<TType extends ExtendedCo
         List<CapabilityConnection<TType, TCap>> insertCaps,
         List<CapabilityConnection<TType, TCap>> extractCaps,
         ServerLevel level,
-        Graph<Mergeable.Dummy> graph,
+        GraphAccessor<TType> graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
     public record CapabilityConnection<TType extends ExtendedConduitData<TType>, TCap>(

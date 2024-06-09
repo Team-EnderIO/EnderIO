@@ -2,13 +2,10 @@ package com.enderio.conduits.common.conduit.type.item;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.GraphAccessor;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.filter.ItemStackFilter;
-import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.components.ItemSpeedUpgrade;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.Mergeable;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +13,6 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
-import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
 
@@ -24,11 +20,11 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemExtended
 
     @Override
     protected void tickCapabilityGraph(
+        ServerLevel level,
         ConduitType<ItemExtendedData> type,
         List<CapabilityConnection<ItemExtendedData, IItemHandler>> inserts,
         List<CapabilityConnection<ItemExtendedData, IItemHandler>> extracts,
-        ServerLevel level,
-        Graph<Mergeable.Dummy> graph,
+        GraphAccessor<ItemExtendedData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         toNextExtract:
