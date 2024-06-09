@@ -1,9 +1,9 @@
 package com.enderio.conduits.common.conduit.block;
 
 import com.enderio.api.UseOnly;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
@@ -73,7 +73,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     private UpdateState checkConnection = UpdateState.NONE;
 
-    private final Map<ConduitType<?>,NodeIdentifier<?>> lazyNodes = new HashMap<>();
+    private final Map<ConduitType<?>, NodeIdentifier<?>> lazyNodes = new HashMap<>();
     private ListTag lazyNodeNBT = new ListTag();
     private ConduitItemHandler conduitItemHandler = new ConduitItemHandler();
 
@@ -113,7 +113,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     @UseOnly(LogicalSide.SERVER)
-    public <T extends ExtendedConduitData<T>> void handleExtendedDataUpdate(ConduitType<T> conduitType, T data) {
+    public <T extends ConduitData<T>> void handleExtendedDataUpdate(ConduitType<T> conduitType, T data) {
         var node = getBundle().getNodeFor(conduitType);
         node.getExtendedConduitData().applyClientChanges(data);
     }
@@ -402,9 +402,9 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             ConduitType<?> type = bundle.getTypes().get(typeIndex);
             NodeIdentifier<?> node = savedData.takeUnloadedNodeIdentifier(type, this.worldPosition);
             if (node == null && bundle.getNodeForTypeExact(type) == null) {
-                ExtendedConduitData<?> data;
+                ConduitData<?> data;
                 if (typeIndex < lazyNodeNBT.size()) {
-                    data = ExtendedConduitData.parse(level.registryAccess(), lazyNodeNBT.getCompound(typeIndex));
+                    data = ConduitData.parse(level.registryAccess(), lazyNodeNBT.getCompound(typeIndex));
                 } else {
                     data = type.createExtendedConduitData(level, worldPosition);
                 }
@@ -428,7 +428,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
      * @param forceMerge if disabledstate should be ignored
      * @return true if a connection happens
      */
-    private <T extends ExtendedConduitData<T>> boolean connectTo(Direction direction, ConduitType<T> type, ExtendedConduitData<T> data, boolean forceMerge) {
+    private <T extends ConduitData<T>> boolean connectTo(Direction direction, ConduitType<T> type, ConduitData<T> data, boolean forceMerge) {
         if (!doTypesMatch(type)) {
             return false;
         }

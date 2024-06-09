@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit.type.redstone;
 
 import com.enderio.api.conduit.ConduitDataSerializer;
-import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
@@ -14,25 +14,25 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RedstoneExtendedData implements ExtendedConduitData<RedstoneExtendedData> {
+public class RedstoneConduitData implements ConduitData<RedstoneConduitData> {
 
     private boolean isActive = false;
     private final List<ColorControl> activeColors = new ArrayList<>();
 
-    public RedstoneExtendedData() {
+    public RedstoneConduitData() {
     }
 
-    private RedstoneExtendedData(boolean isActive, List<ColorControl> activeColors) {
+    private RedstoneConduitData(boolean isActive, List<ColorControl> activeColors) {
         this.isActive = isActive;
         this.activeColors.addAll(activeColors);
     }
 
     @Override
-    public void applyClientChanges(RedstoneExtendedData guiData) {
+    public void applyClientChanges(RedstoneConduitData guiData) {
     }
 
     @Override
-    public ConduitDataSerializer<RedstoneExtendedData> serializer() {
+    public ConduitDataSerializer<RedstoneConduitData> serializer() {
         return EIOConduitTypes.Serializers.REDSTONE.get();
     }
 
@@ -58,23 +58,23 @@ public class RedstoneExtendedData implements ExtendedConduitData<RedstoneExtende
         activeColors.add(color);
     }
 
-    public static class Serializer implements ConduitDataSerializer<RedstoneExtendedData> {
-        public static MapCodec<RedstoneExtendedData> CODEC = RecordCodecBuilder.mapCodec(
+    public static class Serializer implements ConduitDataSerializer<RedstoneConduitData> {
+        public static MapCodec<RedstoneConduitData> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
                 Codec.BOOL.fieldOf("is_active").forGetter(i -> i.isActive),
                 ColorControl.CODEC.listOf().fieldOf("active_colors").forGetter(i -> i.activeColors)
-            ).apply(instance, RedstoneExtendedData::new)
+            ).apply(instance, RedstoneConduitData::new)
         );
 
-        public static StreamCodec<ByteBuf, RedstoneExtendedData> STREAM_CODEC = StreamCodec.unit(new RedstoneExtendedData());
+        public static StreamCodec<ByteBuf, RedstoneConduitData> STREAM_CODEC = StreamCodec.unit(new RedstoneConduitData());
 
         @Override
-        public MapCodec<RedstoneExtendedData> codec() {
+        public MapCodec<RedstoneConduitData> codec() {
             return CODEC;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, RedstoneExtendedData> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, RedstoneConduitData> streamCodec() {
             return STREAM_CODEC.cast();
         }
     }

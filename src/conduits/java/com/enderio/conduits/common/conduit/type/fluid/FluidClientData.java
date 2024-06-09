@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class FluidClientData extends ClientConduitData.Simple<FluidExtendedData> {
+public class FluidClientData extends ClientConduitData.Simple<FluidConduitData> {
 
     private static final ResourceLocation MODEL = EnderIO.loc("block/extra/fluids");
     private static final ResourceLocation WIDGET_TEXTURE = EnderIO.loc("textures/gui/fluidbackground.png");
@@ -44,8 +44,8 @@ public class FluidClientData extends ClientConduitData.Simple<FluidExtendedData>
     }
 
     @Override
-    public List<BakedQuad> createConnectionQuads(FluidExtendedData extendedConduitData, @Nullable Direction facing, Direction connectionDirection,
-        RandomSource rand, @Nullable RenderType type) {
+    public List<BakedQuad> createConnectionQuads(FluidConduitData extendedConduitData, @Nullable Direction facing, Direction connectionDirection,
+                                                 RandomSource rand, @Nullable RenderType type) {
         if (!extendedConduitData.isMultiFluid && extendedConduitData.lockedFluid != null) {
             return new FluidPaintQuadTransformer(extendedConduitData.lockedFluid).process(getModel(MODEL).getQuads(Blocks.COBBLESTONE.defaultBlockState(), facing, rand, ModelData.EMPTY, type));
         }
@@ -54,7 +54,7 @@ public class FluidClientData extends ClientConduitData.Simple<FluidExtendedData>
     }
 
     @Override
-    public List<AbstractWidget> createWidgets(Screen screen, Supplier<FluidExtendedData> extendedConduitData, UpdateExtendedData<FluidExtendedData> updateExtendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+    public List<AbstractWidget> createWidgets(Screen screen, Supplier<FluidConduitData> extendedConduitData, UpdateExtendedData<FluidConduitData> updateExtendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         return List.of(
             new FluidWidget(widgetsStart.add(0, 20),
                 () -> extendedConduitData.get().lockedFluid,

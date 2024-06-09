@@ -25,15 +25,15 @@ import java.util.Set;
  *
  * @apiNote Must implement hashCode() correctly to properly sync over the network - provided there is any data you send to the client.
  */
-public interface ExtendedConduitData<T extends ExtendedConduitData<T>> {
+public interface ConduitData<T extends ConduitData<T>> {
 
-    Codec<ExtendedConduitData<?>> CODEC = EnderIORegistries.CONDUIT_DATA_SERIALIZERS.byNameCodec()
-        .dispatch(ExtendedConduitData::serializer, ConduitDataSerializer::codec);
+    Codec<ConduitData<?>> CODEC = EnderIORegistries.CONDUIT_DATA_SERIALIZERS.byNameCodec()
+        .dispatch(ConduitData::serializer, ConduitDataSerializer::codec);
 
-    StreamCodec<RegistryFriendlyByteBuf, ExtendedConduitData<?>> STREAM_CODEC = ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_DATA_SERIALIZERS)
-        .dispatch(ExtendedConduitData::serializer, ConduitDataSerializer::streamCodec);
+    StreamCodec<RegistryFriendlyByteBuf, ConduitData<?>> STREAM_CODEC = ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_DATA_SERIALIZERS)
+        .dispatch(ConduitData::serializer, ConduitDataSerializer::streamCodec);
 
-    EmptyExtendedConduitData EMPTY = new EmptyExtendedConduitData();
+    EmptyConduitData EMPTY = new EmptyConduitData();
 
     default void onCreated(ConduitType<T> type, Level level, BlockPos pos, @Nullable Player player) {}
 
@@ -78,53 +78,49 @@ public interface ExtendedConduitData<T extends ExtendedConduitData<T>> {
     ConduitDataSerializer<T> serializer();
 
     default Tag save(HolderLookup.Provider lookupProvider) {
-        return ExtendedConduitData.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getPartialOrThrow();
+        return ConduitData.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getPartialOrThrow();
     }
 
     @SuppressWarnings("unchecked")
-    static <T extends ExtendedConduitData<T>> T parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        return (T) ExtendedConduitData.CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getPartialOrThrow();
+    static <T extends ConduitData<T>> T parse(HolderLookup.Provider lookupProvider, Tag tag) {
+        return (T) ConduitData.CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getPartialOrThrow();
     }
 
     // endregion
 
-    default <Z extends ExtendedConduitData<Z>> Z cast() {
+    default <Z extends ConduitData<Z>> Z cast() {
         return (Z) this;
-    }
-
-    default <Z extends ExtendedConduitData<Z>> Z castTo(Class<Z> clazz) {
-        return cast();
     }
 
     /**
      * default impl for stuff that don't need an impl
      */
-    class EmptyExtendedConduitData implements ExtendedConduitData<EmptyExtendedConduitData> {
-        private EmptyExtendedConduitData() {
+    class EmptyConduitData implements ConduitData<EmptyConduitData> {
+        private EmptyConduitData() {
         }
 
         @Override
-        public void applyClientChanges(EmptyExtendedConduitData guiData) {
+        public void applyClientChanges(EmptyConduitData guiData) {
         }
 
         @Override
-        public ConduitDataSerializer<EmptyExtendedConduitData> serializer() {
+        public ConduitDataSerializer<EmptyConduitData> serializer() {
             return Serializer.INSTANCE;
         }
 
-        public static class Serializer implements ConduitDataSerializer<EmptyExtendedConduitData> {
-            public static MapCodec<EmptyExtendedConduitData> CODEC = MapCodec.unit(EmptyExtendedConduitData::new);
-            public static StreamCodec<ByteBuf, EmptyExtendedConduitData> STREAM_CODEC = StreamCodec.unit(EMPTY);
+        public static class Serializer implements ConduitDataSerializer<EmptyConduitData> {
+            public static MapCodec<EmptyConduitData> CODEC = MapCodec.unit(EmptyConduitData::new);
+            public static StreamCodec<ByteBuf, EmptyConduitData> STREAM_CODEC = StreamCodec.unit(EMPTY);
 
             public static Serializer INSTANCE = new Serializer();
 
             @Override
-            public MapCodec<EmptyExtendedConduitData> codec() {
+            public MapCodec<EmptyConduitData> codec() {
                 return CODEC;
             }
 
             @Override
-            public StreamCodec<RegistryFriendlyByteBuf, EmptyExtendedConduitData> streamCodec() {
+            public StreamCodec<RegistryFriendlyByteBuf, EmptyConduitData> streamCodec() {
                 return STREAM_CODEC.cast();
             }
         }

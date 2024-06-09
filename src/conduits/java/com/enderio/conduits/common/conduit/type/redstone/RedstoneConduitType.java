@@ -7,7 +7,7 @@ import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.conduit.type.SimpleConduitType;
 import net.minecraft.resources.ResourceLocation;
 
-public class RedstoneConduitType extends SimpleConduitType<RedstoneExtendedData> {
+public class RedstoneConduitType extends SimpleConduitType<RedstoneConduitData> {
 
     private static final ResourceLocation ACTIVE = EnderIO.loc("block/conduit/redstone_active");
     private static final ResourceLocation INACTIVE = EnderIO.loc("block/conduit/redstone");
@@ -15,11 +15,11 @@ public class RedstoneConduitType extends SimpleConduitType<RedstoneExtendedData>
     private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(true, true, false, true, true, false);
 
     public RedstoneConduitType() {
-        super(INACTIVE, new RedstoneConduitTicker(), RedstoneExtendedData::new, EIOConduitTypes.ICON_TEXTURE, Vector2i.ZERO, MENU_DATA);
+        super(INACTIVE, new RedstoneConduitTicker(), RedstoneConduitData::new, EIOConduitTypes.ICON_TEXTURE, Vector2i.ZERO, MENU_DATA);
     }
 
     @Override
-    public ResourceLocation getTexture(RedstoneExtendedData extendedData) {
+    public ResourceLocation getTexture(RedstoneConduitData extendedData) {
         return extendedData.isActive() ? ACTIVE : INACTIVE;
     }
 }

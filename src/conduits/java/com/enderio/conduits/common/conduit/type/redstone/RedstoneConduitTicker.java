@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneExtendedData> {
+public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneConduitData> {
 
     private final List<ColorControl> activeColors = new ArrayList<>();
     @Override
@@ -31,17 +31,17 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneExten
     @Override
     public void tickGraph(
         ServerLevel level,
-        ConduitType<RedstoneExtendedData> type,
-        GraphAccessor<RedstoneExtendedData> graph,
+        ConduitType<RedstoneConduitData> type,
+        GraphAccessor<RedstoneConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        Collection<ConduitNode<RedstoneExtendedData>> nodeIdentifiers = graph.getNodes();
+        Collection<ConduitNode<RedstoneConduitData>> nodeIdentifiers = graph.getNodes();
 
         activeColors.clear();
         tickGraph(level, type, nodeIdentifiers.stream().filter(node -> isLoaded(level, node.getPos())).toList(), graph, coloredRedstoneProvider);
 
         for (ConduitNode<?> nodeIdentifier : nodeIdentifiers) {
-            RedstoneExtendedData data = nodeIdentifier.getExtendedConduitData().cast();
+            RedstoneConduitData data = nodeIdentifier.getExtendedConduitData().cast();
             data.clearActive();
             for (ColorControl activeColor : activeColors) {
                 data.setActiveColor(activeColor);
@@ -52,20 +52,20 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneExten
     @Override
     public void tickColoredGraph(
         ServerLevel level,
-        ConduitType<RedstoneExtendedData> type,
-        List<Connection<RedstoneExtendedData>> inserts,
-        List<Connection<RedstoneExtendedData>> extracts,
+        ConduitType<RedstoneConduitData> type,
+        List<Connection<RedstoneConduitData>> inserts,
+        List<Connection<RedstoneConduitData>> extracts,
         ColorControl color,
-        GraphAccessor<RedstoneExtendedData> graph,
+        GraphAccessor<RedstoneConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        for (Connection<RedstoneExtendedData> extract : extracts) {
+        for (Connection<RedstoneConduitData> extract : extracts) {
             if (level.hasSignal(extract.move(), extract.dir())) {
                 activeColors.add(color);
                 break;
             }
         }
-        for (Connection<RedstoneExtendedData> insert : inserts) {
+        for (Connection<RedstoneConduitData> insert : inserts) {
             level.neighborChanged(insert.move(), ConduitBlocks.CONDUIT.get(), insert.pos());
         }
     }

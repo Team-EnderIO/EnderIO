@@ -2,9 +2,9 @@ package com.enderio.conduits.common.conduit.type;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ClientConduitData;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.Vector2i;
 import net.minecraft.core.BlockPos;
@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 /**
  * Only to be used for conduits in EnderIOs Namespace
  */
-public class SimpleConduitType<T extends ExtendedConduitData<T>> implements ConduitType<T> {
+public class SimpleConduitType<T extends ConduitData<T>> implements ConduitType<T> {
 
     private final ResourceLocation texture;
     private final ConduitTicker ticker;

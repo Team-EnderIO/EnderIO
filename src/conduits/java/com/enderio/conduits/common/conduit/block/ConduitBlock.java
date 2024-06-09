@@ -10,11 +10,11 @@ import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.RightClickAction;
+import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.network.ConduitSavedData;
-import com.enderio.conduits.common.conduit.type.redstone.RedstoneExtendedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -496,7 +496,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             && conduit.getBundle().getTypes().contains(EIOConduitTypes.Types.REDSTONE.get())
             && conduit.getBundle().getConnectionState(direction.getOpposite(), EIOConduitTypes.Types.REDSTONE.get()) instanceof DynamicConnectionState dyn
             && dyn.isInsert()
-            && conduit.getBundle().getNodeFor(EIOConduitTypes.Types.REDSTONE.get()).getExtendedConduitData() instanceof RedstoneExtendedData redstoneExtendedData
+            && conduit.getBundle().getNodeFor(EIOConduitTypes.Types.REDSTONE.get()).getExtendedConduitData() instanceof RedstoneConduitData redstoneExtendedData
             && redstoneExtendedData.isActive(dyn.insertChannel()) ? 15 : 0;
     }
     //@formatter:on

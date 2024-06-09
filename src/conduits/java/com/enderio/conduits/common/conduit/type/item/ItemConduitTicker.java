@@ -16,19 +16,19 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.List;
 
-public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemExtendedData, IItemHandler> {
+public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitData, IItemHandler> {
 
     @Override
     protected void tickCapabilityGraph(
         ServerLevel level,
-        ConduitType<ItemExtendedData> type,
-        List<CapabilityConnection<ItemExtendedData, IItemHandler>> inserts,
-        List<CapabilityConnection<ItemExtendedData, IItemHandler>> extracts,
-        GraphAccessor<ItemExtendedData> graph,
+        ConduitType<ItemConduitData> type,
+        List<CapabilityConnection<ItemConduitData, IItemHandler>> inserts,
+        List<CapabilityConnection<ItemConduitData, IItemHandler>> extracts,
+        GraphAccessor<ItemConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         toNextExtract:
-        for (CapabilityConnection<ItemExtendedData, IItemHandler> extract: extracts) {
+        for (CapabilityConnection<ItemConduitData, IItemHandler> extract: extracts) {
             IItemHandler extractHandler = extract.capability();
             for (int i = 0; i < extractHandler.getSlots(); i++) {
                 int speed = 4;
@@ -47,7 +47,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemExtended
                     }
                 }
 
-                ItemExtendedData.ItemSidedData sidedExtractData = extract.data().compute(extract.direction());
+                ItemConduitData.ItemSidedData sidedExtractData = extract.data().compute(extract.direction());
                 if (sidedExtractData.isRoundRobin) {
                     if (inserts.size() <= sidedExtractData.rotatingIndex) {
                         sidedExtractData.rotatingIndex = 0;
@@ -58,7 +58,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemExtended
 
                 for (int j = sidedExtractData.rotatingIndex; j < sidedExtractData.rotatingIndex + inserts.size(); j++) {
                     int insertIndex = j % inserts.size();
-                    CapabilityConnection<ItemExtendedData, IItemHandler> insert = inserts.get(insertIndex);
+                    CapabilityConnection<ItemConduitData, IItemHandler> insert = inserts.get(insertIndex);
 
                     if (!sidedExtractData.isSelfFeed
                         && extract.direction() == insert.direction()

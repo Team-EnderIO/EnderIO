@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ItemClientConduitData implements ClientConduitData<ItemExtendedData> {
+public class ItemClientConduitData implements ClientConduitData<ItemConduitData> {
     @Override
-    public List<AbstractWidget> createWidgets(Screen screen, Supplier<ItemExtendedData> extendedConduitData,
-        UpdateExtendedData<ItemExtendedData> updateExtendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+    public List<AbstractWidget> createWidgets(Screen screen, Supplier<ItemConduitData> extendedConduitData,
+                                              UpdateExtendedData<ItemConduitData> updateExtendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         // TODO: Method of doing sync that does not require CoreNetwork in API.
         List<AbstractWidget> widgets = new ArrayList<>();
 

@@ -1,10 +1,10 @@
 package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.GraphAccessor;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.ColorControl;
 import net.minecraft.core.BlockPos;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CapabilityAwareConduitTicker<TData extends ExtendedConduitData<TData>, TCap> implements IOAwareConduitTicker<TData> {
+public abstract class CapabilityAwareConduitTicker<TData extends ConduitData<TData>, TCap> implements IOAwareConduitTicker<TData> {
 
     @Override
     public final void tickColoredGraph(
@@ -69,7 +69,7 @@ public abstract class CapabilityAwareConduitTicker<TData extends ExtendedConduit
 
     protected abstract BlockCapability<TCap,Direction> getCapability();
 
-    public record CapabilityConnection<TType extends ExtendedConduitData<TType>, TCap>(
+    public record CapabilityConnection<TType extends ConduitData<TType>, TCap>(
         TCap capability,
         TType data,
         Direction direction,

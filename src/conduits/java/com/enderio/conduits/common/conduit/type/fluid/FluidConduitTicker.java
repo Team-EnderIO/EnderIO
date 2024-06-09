@@ -20,7 +20,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import java.util.List;
 import java.util.Optional;
 
-public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidExtendedData, IFluidHandler> {
+public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduitData, IFluidHandler> {
 
     private final boolean lockFluids;
     private final int fluidRate;
@@ -33,22 +33,23 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidExtend
     @Override
     public void tickGraph(
         ServerLevel level,
-        ConduitType<FluidExtendedData> type,
-        List<ConduitNode<FluidExtendedData>> loadedNodes,
-        GraphAccessor<FluidExtendedData> graph,
+        ConduitType<FluidConduitData> type,
+        List<ConduitNode<FluidConduitData>> loadedNodes,
+        GraphAccessor<FluidConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         boolean shouldReset = false;
-        for (ConduitNode<FluidExtendedData> loadedNode : loadedNodes) {
-            FluidExtendedData fluidExtendedData = loadedNode.getExtendedConduitData();
+        for (var loadedNode : loadedNodes) {
+            FluidConduitData fluidExtendedData = loadedNode.getExtendedConduitData();
             if (fluidExtendedData.shouldReset) {
                 shouldReset = true;
                 fluidExtendedData.shouldReset = false;
             }
         }
+
         if (shouldReset) {
-            for (ConduitNode<?> loadedNode : loadedNodes) {
-                loadedNode.getExtendedConduitData().castTo(FluidExtendedData.class).lockedFluid = null;
+            for (var loadedNode : loadedNodes) {
+                loadedNode.getExtendedConduitData().lockedFluid = null;
             }
         }
         super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
@@ -57,15 +58,15 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidExtend
     @Override
     protected void tickCapabilityGraph(
         ServerLevel level,
-        ConduitType<FluidExtendedData> type,
-        List<CapabilityConnection<FluidExtendedData, IFluidHandler>> inserts,
-        List<CapabilityConnection<FluidExtendedData, IFluidHandler>> extracts,
-        GraphAccessor<FluidExtendedData> graph,
+        ConduitType<FluidConduitData> type,
+        List<CapabilityConnection<FluidConduitData, IFluidHandler>> inserts,
+        List<CapabilityConnection<FluidConduitData, IFluidHandler>> extracts,
+        GraphAccessor<FluidConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        for (CapabilityConnection<FluidExtendedData, IFluidHandler> extract : extracts) {
+        for (CapabilityConnection<FluidConduitData, IFluidHandler> extract : extracts) {
             IFluidHandler extractHandler = extract.capability();
-            FluidExtendedData fluidExtendedData = extract.data();
+            FluidConduitData fluidExtendedData = extract.data();
 
             int temp = fluidRate;
             if (extract.upgrade() instanceof FluidSpeedUpgrade speedUpgrade) {
@@ -90,7 +91,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidExtend
             }
 
             int transferred = 0;
-            for (CapabilityConnection<FluidExtendedData, IFluidHandler> insert : inserts) {
+            for (CapabilityConnection<FluidConduitData, IFluidHandler> insert : inserts) {
                 if (extract.insertFilter() instanceof FluidStackFilter fluidStackFilter) {
                     if (!fluidStackFilter.test(extractedFluid)) {
                         continue;
@@ -105,7 +106,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidExtend
                 if (!transferredFluid.isEmpty()) {
                     transferred += transferredFluid.getAmount();
                     if (lockFluids) {
-                        for (ConduitNode<FluidExtendedData> node : graph.getNodes()) {
+                        for (ConduitNode<FluidConduitData> node : graph.getNodes()) {
                             Fluid fluid = transferredFluid.getFluid();
                             if (fluid instanceof FlowingFluid flowing) {
                                 fluid = flowing.getSource();

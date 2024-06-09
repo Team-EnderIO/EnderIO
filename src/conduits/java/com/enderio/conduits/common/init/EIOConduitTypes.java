@@ -1,22 +1,22 @@
 package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.conduit.type.energy.EnergyConduitType;
-import com.enderio.conduits.common.conduit.type.energy.EnergyExtendedData;
+import com.enderio.conduits.common.conduit.type.energy.EnergyConduitData;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitType;
-import com.enderio.conduits.common.conduit.type.fluid.FluidExtendedData;
+import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
 import com.enderio.conduits.common.conduit.type.item.ItemClientConduitData;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
 import com.enderio.conduits.common.conduit.type.item.ItemConduitTicker;
-import com.enderio.conduits.common.conduit.type.item.ItemExtendedData;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitType;
 import com.enderio.conduits.common.conduit.type.SimpleConduitType;
-import com.enderio.conduits.common.conduit.type.redstone.RedstoneExtendedData;
+import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -46,12 +46,12 @@ public class EIOConduitTypes {
         public static final DeferredHolder<ConduitType<?>, FluidConduitType> FLUID3 =
             fluidConduit("ender_fluid_conduit", 200, true, new Vector2i(0, 168));
 
-        public static final DeferredHolder<ConduitType<?>, SimpleConduitType<ItemExtendedData>> ITEM =
+        public static final DeferredHolder<ConduitType<?>, SimpleConduitType<ItemConduitData>> ITEM =
             CONDUIT_TYPES.register("item_conduit",
                 () -> new SimpleConduitType<>(
                     EnderIO.loc("block/conduit/item"),
                     new ItemConduitTicker(),
-                    ItemExtendedData::new,
+                    ItemConduitData::new,
                     new ItemClientConduitData(),
                     ConduitMenuData.ITEM));
 
@@ -65,20 +65,20 @@ public class EIOConduitTypes {
         public static final DeferredRegister<ConduitDataSerializer<?>> CONDUIT_DATA_SERIALIZERS = DeferredRegister.create(EnderIORegistries.CONDUIT_DATA_SERIALIZERS, EnderIO.MODID);
 
         // Register the API data type.
-        public static DeferredHolder<ConduitDataSerializer<?>, ExtendedConduitData.EmptyExtendedConduitData.Serializer> EMPTY =
-            CONDUIT_DATA_SERIALIZERS.register("empty", () -> ExtendedConduitData.EmptyExtendedConduitData.Serializer.INSTANCE);
+        public static DeferredHolder<ConduitDataSerializer<?>, ConduitData.EmptyConduitData.Serializer> EMPTY =
+            CONDUIT_DATA_SERIALIZERS.register("empty", () -> ConduitData.EmptyConduitData.Serializer.INSTANCE);
 
-        public static final Supplier<ConduitDataSerializer<EnergyExtendedData>> ENERGY =
-            CONDUIT_DATA_SERIALIZERS.register("energy_conduit", EnergyExtendedData.Serializer::new);
+        public static final Supplier<ConduitDataSerializer<EnergyConduitData>> ENERGY =
+            CONDUIT_DATA_SERIALIZERS.register("energy_conduit", EnergyConduitData.Serializer::new);
 
-        public static final Supplier<ConduitDataSerializer<FluidExtendedData>> FLUID =
-            CONDUIT_DATA_SERIALIZERS.register("fluid_conduit", FluidExtendedData.Serializer::new);
+        public static final Supplier<ConduitDataSerializer<FluidConduitData>> FLUID =
+            CONDUIT_DATA_SERIALIZERS.register("fluid_conduit", FluidConduitData.Serializer::new);
 
-        public static final Supplier<ConduitDataSerializer<RedstoneExtendedData>> REDSTONE =
-            CONDUIT_DATA_SERIALIZERS.register("redstone_conduit", RedstoneExtendedData.Serializer::new);
+        public static final Supplier<ConduitDataSerializer<RedstoneConduitData>> REDSTONE =
+            CONDUIT_DATA_SERIALIZERS.register("redstone_conduit", RedstoneConduitData.Serializer::new);
 
-        public static final Supplier<ConduitDataSerializer<ItemExtendedData>> ITEM =
-            CONDUIT_DATA_SERIALIZERS.register("item_conduit", ItemExtendedData.Serializer::new);
+        public static final Supplier<ConduitDataSerializer<ItemConduitData>> ITEM =
+            CONDUIT_DATA_SERIALIZERS.register("item_conduit", ItemConduitData.Serializer::new);
     }
 
     public static void register(IEventBus bus) {

@@ -8,7 +8,7 @@ import appeng.api.networking.IManagedGridNode;
 import appeng.api.util.AECableType;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.conduit.ConduitData;
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public abstract class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, ExtendedConduitData<AE2InWorldConduitNodeHost> {
+public abstract class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, ConduitData<AE2InWorldConduitNodeHost> {
 
     public static class Normal extends AE2InWorldConduitNodeHost {
 

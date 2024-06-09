@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit;
 
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
-import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
@@ -20,21 +20,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Predicate;
 
-public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphObject<Mergeable.Dummy>, ConduitNode<T> {
+public class NodeIdentifier<T extends ConduitData<?>> implements GraphObject<Mergeable.Dummy>, ConduitNode<T> {
 
     public static final Codec<NodeIdentifier<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         BlockPos.CODEC.fieldOf("pos").forGetter(NodeIdentifier::getPos),
-        ExtendedConduitData.CODEC.fieldOf("data").forGetter(NodeIdentifier::getExtendedConduitData)
+        ConduitData.CODEC.fieldOf("data").forGetter(NodeIdentifier::getExtendedConduitData)
     ).apply(instance, NodeIdentifier::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, NodeIdentifier<?>> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,
         NodeIdentifier::getPos,
-        ExtendedConduitData.STREAM_CODEC,
+        ConduitData.STREAM_CODEC,
         NodeIdentifier::getExtendedConduitData,
         NodeIdentifier::new
     );

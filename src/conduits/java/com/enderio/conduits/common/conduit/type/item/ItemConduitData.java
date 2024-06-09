@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit.type.item;
 
 import com.enderio.api.conduit.ConduitDataSerializer;
-import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -12,32 +12,31 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class ItemExtendedData implements ExtendedConduitData<ItemExtendedData> {
+public class ItemConduitData implements ConduitData<ItemConduitData> {
 
     public Map<Direction, ItemSidedData> itemSidedData;
 
-    public ItemExtendedData() {
+    public ItemConduitData() {
         itemSidedData = new HashMap<>(Direction.values().length);
     }
 
-    public ItemExtendedData(Map<Direction, ItemSidedData> itemSidedData) {
+    public ItemConduitData(Map<Direction, ItemSidedData> itemSidedData) {
         this.itemSidedData = new HashMap<>(itemSidedData);
     }
 
     @Override
-    public void applyClientChanges(ItemExtendedData guiData) {
+    public void applyClientChanges(ItemConduitData guiData) {
         for (Direction direction : Direction.values()) {
             compute(direction).applyGuiChanges(guiData.get(direction));
         }
     }
 
     @Override
-    public ConduitDataSerializer<ItemExtendedData> serializer() {
+    public ConduitDataSerializer<ItemConduitData> serializer() {
         return EIOConduitTypes.Serializers.ITEM.get();
     }
 
@@ -110,26 +109,26 @@ public class ItemExtendedData implements ExtendedConduitData<ItemExtendedData> {
         }
     }
 
-    public static class Serializer implements ConduitDataSerializer<ItemExtendedData> {
-        public static MapCodec<ItemExtendedData> CODEC = RecordCodecBuilder.mapCodec(
+    public static class Serializer implements ConduitDataSerializer<ItemConduitData> {
+        public static MapCodec<ItemConduitData> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
                 Codec.unboundedMap(Direction.CODEC, ItemSidedData.CODEC)
                     .fieldOf("item_sided_data").forGetter(i -> i.itemSidedData)
-            ).apply(instance, ItemExtendedData::new)
+            ).apply(instance, ItemConduitData::new)
         );
 
-        public static StreamCodec<ByteBuf, ItemExtendedData> STREAM_CODEC =
+        public static StreamCodec<ByteBuf, ItemConduitData> STREAM_CODEC =
             ByteBufCodecs.map(i -> (Map<Direction, ItemSidedData>) new HashMap<Direction, ItemSidedData>(i),
                     Direction.STREAM_CODEC, ItemSidedData.STREAM_CODEC)
-                .map(ItemExtendedData::new, i -> i.itemSidedData);
+                .map(ItemConduitData::new, i -> i.itemSidedData);
 
         @Override
-        public MapCodec<ItemExtendedData> codec() {
+        public MapCodec<ItemConduitData> codec() {
             return CODEC;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ItemExtendedData> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, ItemConduitData> streamCodec() {
             return STREAM_CODEC.cast();
         }
     }

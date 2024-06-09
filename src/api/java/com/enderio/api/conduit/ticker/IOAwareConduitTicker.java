@@ -1,10 +1,10 @@
 package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.GraphAccessor;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.ColorControl;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface IOAwareConduitTicker<T extends ExtendedConduitData<T>> extends LoadedAwareConduitTicker<T> {
+public interface IOAwareConduitTicker<T extends ConduitData<T>> extends LoadedAwareConduitTicker<T> {
     @Override
     default void tickGraph(ServerLevel level, ConduitType<T> type,
         List<ConduitNode<T>> loadedNodes, GraphAccessor<T> graph,
@@ -98,7 +98,7 @@ public interface IOAwareConduitTicker<T extends ExtendedConduitData<T>> extends 
         return state.control().isActive(hasRedstone || coloredRedstoneProvider.isRedstoneActive(level, pos, state.redstoneChannel()));
     }
 
-    record Connection<T extends ExtendedConduitData<T>>(
+    record Connection<T extends ConduitData<T>>(
         BlockPos pos,
         Direction dir,
         T data,

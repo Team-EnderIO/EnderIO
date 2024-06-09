@@ -18,7 +18,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import java.util.List;
 import java.util.function.IntConsumer;
 
-public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyExtendedData, IEnergyStorage> {
+public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyConduitData, IEnergyStorage> {
 
     public EnergyConduitTicker() {
     }
@@ -26,15 +26,15 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyExte
     @Override
     public void tickGraph(
         ServerLevel level,
-        ConduitType<EnergyExtendedData> type,
-        List<ConduitNode<EnergyExtendedData>> loadedNodes,
-        GraphAccessor<EnergyExtendedData> graph,
+        ConduitType<EnergyConduitData> type,
+        List<ConduitNode<EnergyConduitData>> loadedNodes,
+        GraphAccessor<EnergyConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
 
-        for (ConduitNode<EnergyExtendedData> node : loadedNodes) {
-            EnergyExtendedData energyExtendedData = node.getExtendedConduitData();
+        for (ConduitNode<EnergyConduitData> node : loadedNodes) {
+            EnergyConduitData energyExtendedData = node.getExtendedConduitData();
             IEnergyStorage energy = energyExtendedData.getSelfCap();
             if (energy.getEnergyStored() == 0) {
                 energyExtendedData.setCapacity(500);
@@ -68,16 +68,16 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyExte
     @Override
     public void tickCapabilityGraph(
         ServerLevel level,
-        ConduitType<EnergyExtendedData> type,
-        List<CapabilityConnection<EnergyExtendedData, IEnergyStorage>> inserts,
-        List<CapabilityConnection<EnergyExtendedData, IEnergyStorage>> extracts,
-        GraphAccessor<EnergyExtendedData> graph,
+        ConduitType<EnergyConduitData> type,
+        List<CapabilityConnection<EnergyConduitData, IEnergyStorage>> inserts,
+        List<CapabilityConnection<EnergyConduitData, IEnergyStorage>> extracts,
+        GraphAccessor<EnergyConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (var extract : extracts) {
             IEnergyStorage extractHandler = extract.capability();
 
-            EnergyExtendedData.EnergySidedData sidedExtractData = extract.data().compute(extract.direction());
+            EnergyConduitData.EnergySidedData sidedExtractData = extract.data().compute(extract.direction());
             extractEnergy(extractHandler, inserts.stream().map(
                 CapabilityConnection::capability).toList(),
                 sidedExtractData.rotatingIndex, i -> sidedExtractData.rotatingIndex = i);

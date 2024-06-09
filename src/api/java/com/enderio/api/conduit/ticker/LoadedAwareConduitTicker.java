@@ -3,7 +3,7 @@ package com.enderio.api.conduit.ticker;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
-import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.GraphAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public interface LoadedAwareConduitTicker<T extends ExtendedConduitData<T>> extends ConduitTicker<T> {
+public interface LoadedAwareConduitTicker<T extends ConduitData<T>> extends ConduitTicker<T> {
 
     @Override
     default void tickGraph(ServerLevel level, ConduitType<T> type, GraphAccessor<T> graph,

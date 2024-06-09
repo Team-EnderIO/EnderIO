@@ -19,11 +19,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
+public class EnergyConduitType extends SimpleConduitType<EnergyConduitData> {
     private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
 
     public EnergyConduitType() {
-        super(EnderIO.loc("block/conduit/energy"), new EnergyConduitTicker(), EnergyExtendedData::new,
+        super(EnderIO.loc("block/conduit/energy"), new EnergyConduitTicker(), EnergyConduitData::new,
             new ClientConduitData.Simple<>(EIOConduitTypes.ICON_TEXTURE, new Vector2i(0, 24)), MENU_DATA);
     }
 
@@ -38,7 +38,7 @@ public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
     }
 
     @Override
-    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, EnergyExtendedData extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable NodeIdentifier.IOState state) {
+    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, EnergyConduitData extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable NodeIdentifier.IOState state) {
         if (Capabilities.EnergyStorage.BLOCK == cap
             && (state == null || state.isExtract())
             && (direction == null || !level.getBlockState(pos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE))) {

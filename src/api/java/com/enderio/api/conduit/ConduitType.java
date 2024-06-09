@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 // TODO: I might argue that this should actually be an abstract class?
-public interface ConduitType<T extends ExtendedConduitData<T>> {
+public interface ConduitType<T extends ConduitData<T>> {
 
     ResourceLocation getTexture(T extendedData);
     ResourceLocation getItemTexture();

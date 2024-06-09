@@ -2,7 +2,7 @@ package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitDataSerializer;
-import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 
-public class FluidExtendedData implements ExtendedConduitData<FluidExtendedData> {
+public class FluidConduitData implements ConduitData<FluidConduitData> {
 
     public final boolean isMultiFluid;
 
@@ -26,12 +26,12 @@ public class FluidExtendedData implements ExtendedConduitData<FluidExtendedData>
     Fluid lockedFluid = null;
     boolean shouldReset = false;
 
-    public FluidExtendedData(boolean isMultiFluid) {
+    public FluidConduitData(boolean isMultiFluid) {
         this.isMultiFluid = isMultiFluid;
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public FluidExtendedData(boolean isMultiFluid, boolean shouldReset, Optional<Fluid> fluid) {
+    public FluidConduitData(boolean isMultiFluid, boolean shouldReset, Optional<Fluid> fluid) {
         this.isMultiFluid = isMultiFluid;
         this.shouldReset = shouldReset;
         this.lockedFluid = isMultiFluid
@@ -40,17 +40,17 @@ public class FluidExtendedData implements ExtendedConduitData<FluidExtendedData>
     }
 
     @Override
-    public void applyClientChanges(FluidExtendedData guiData) {
+    public void applyClientChanges(FluidConduitData guiData) {
         this.shouldReset = guiData.shouldReset;
     }
 
     @Override
-    public ConduitDataSerializer<FluidExtendedData> serializer() {
+    public ConduitDataSerializer<FluidConduitData> serializer() {
         return EIOConduitTypes.Serializers.FLUID.get();
     }
 
     @Override
-    public void onConnectTo(FluidExtendedData otherData) {
+    public void onConnectTo(FluidConduitData otherData) {
         if (lockedFluid != null) {
             if (otherData.lockedFluid != null && lockedFluid != otherData.lockedFluid) {
                 EnderIO.LOGGER.warn("incompatible fluid conduits merged");
@@ -62,7 +62,7 @@ public class FluidExtendedData implements ExtendedConduitData<FluidExtendedData>
     }
 
     @Override
-    public boolean canConnectTo(FluidExtendedData otherData) {
+    public boolean canConnectTo(FluidConduitData otherData) {
         return lockedFluid == null || otherData.lockedFluid == null || lockedFluid == otherData.lockedFluid;
     }
 
@@ -75,34 +75,34 @@ public class FluidExtendedData implements ExtendedConduitData<FluidExtendedData>
         return Objects.hash(isMultiFluid, shouldReset, lockedFluid);
     }
 
-    public static class Serializer implements ConduitDataSerializer<FluidExtendedData> {
-        public static MapCodec<FluidExtendedData> CODEC = RecordCodecBuilder.mapCodec(
+    public static class Serializer implements ConduitDataSerializer<FluidConduitData> {
+        public static MapCodec<FluidConduitData> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
                 Codec.BOOL.fieldOf("is_multi_fluid").forGetter(i -> i.isMultiFluid),
                 Codec.BOOL.fieldOf("should_reset").forGetter(i -> i.shouldReset),
                 BuiltInRegistries.FLUID.byNameCodec()
                     .optionalFieldOf("locked_fluid")
                     .forGetter(i -> Optional.ofNullable(i.lockedFluid))
-            ).apply(instance, FluidExtendedData::new)
+            ).apply(instance, FluidConduitData::new)
         );
 
-        public static StreamCodec<RegistryFriendlyByteBuf, FluidExtendedData> STREAM_CODEC = StreamCodec.composite(
+        public static StreamCodec<RegistryFriendlyByteBuf, FluidConduitData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL,
             i -> i.isMultiFluid,
             ByteBufCodecs.BOOL,
             i -> i.shouldReset,
             ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.FLUID)),
             i -> Optional.ofNullable(i.lockedFluid),
-            FluidExtendedData::new
+            FluidConduitData::new
         );
 
         @Override
-        public MapCodec<FluidExtendedData> codec() {
+        public MapCodec<FluidConduitData> codec() {
             return CODEC;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, FluidExtendedData> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, FluidConduitData> streamCodec() {
             return STREAM_CODEC;
         }
     }

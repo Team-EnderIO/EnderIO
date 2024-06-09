@@ -1,7 +1,7 @@
 package com.enderio.conduits.client.model;
 
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.RedstoneControl;
@@ -280,7 +280,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
         return ChunkRenderTypeSet.of(RenderType.cutout());
     }
 
-    private static TextureAtlasSprite sprite(ConduitType<?> type, ExtendedConduitData<?> data) {
+    private static TextureAtlasSprite sprite(ConduitType<?> type, ConduitData<?> data) {
         return Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(type.getTexture(data.cast()));
     }
 

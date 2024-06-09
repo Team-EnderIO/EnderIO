@@ -2,7 +2,7 @@ package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -18,31 +18,31 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedData> {
+public class EnergyConduitData implements ConduitData<EnergyConduitData> {
 
     private final Map<Direction, EnergySidedData> energySidedData;
 
     private int capacity = 500;
     private int stored = 0;
 
-    public EnergyExtendedData() {
+    public EnergyConduitData() {
         this.energySidedData = new HashMap<>();
     }
 
-    private EnergyExtendedData(Map<Direction, EnergySidedData> energySidedData, int capacity, int stored) {
+    private EnergyConduitData(Map<Direction, EnergySidedData> energySidedData, int capacity, int stored) {
         this.energySidedData = new HashMap<>(energySidedData);
         this.capacity = capacity;
         this.stored = stored;
     }
 
-    private IEnergyStorage selfCap = new EnergyExtendedData.ConduitEnergyStorage(this);
+    private IEnergyStorage selfCap = new EnergyConduitData.ConduitEnergyStorage(this);
 
     @Override
-    public void applyClientChanges(EnergyExtendedData guiData) {
+    public void applyClientChanges(EnergyConduitData guiData) {
     }
 
     @Override
-    public ConduitDataSerializer<EnergyExtendedData> serializer() {
+    public ConduitDataSerializer<EnergyConduitData> serializer() {
         return EIOConduitTypes.Serializers.ENERGY.get();
     }
 
@@ -63,7 +63,7 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
     }
 
     @Override
-    public void onRemoved(ConduitType<EnergyExtendedData> type, Level level, BlockPos pos) {
+    public void onRemoved(ConduitType<EnergyConduitData> type, Level level, BlockPos pos) {
         level.invalidateCapabilities(pos);
     }
 
@@ -73,7 +73,7 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
 
     IEnergyStorage getSelfCap() {
         if (selfCap == null) {
-            selfCap = new EnergyExtendedData.ConduitEnergyStorage(this);
+            selfCap = new EnergyConduitData.ConduitEnergyStorage(this);
         }
 
         return selfCap;
@@ -94,7 +94,7 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
         }
     }
 
-    private record ConduitEnergyStorage(EnergyExtendedData data) implements IEnergyStorage {
+    private record ConduitEnergyStorage(EnergyConduitData data) implements IEnergyStorage {
 
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
@@ -135,37 +135,37 @@ public class EnergyExtendedData implements ExtendedConduitData<EnergyExtendedDat
         }
     }
 
-    public static class Serializer implements ConduitDataSerializer<EnergyExtendedData> {
+    public static class Serializer implements ConduitDataSerializer<EnergyConduitData> {
 
-        public static MapCodec<EnergyExtendedData> CODEC = RecordCodecBuilder.mapCodec(
+        public static MapCodec<EnergyConduitData> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
                 Codec.unboundedMap(Direction.CODEC, EnergySidedData.CODEC)
                     .fieldOf("energy_sided_data")
                     .forGetter(e -> e.energySidedData),
-                Codec.INT.fieldOf("capacity").forGetter(EnergyExtendedData::getCapacity),
-                Codec.INT.fieldOf("stored").forGetter(EnergyExtendedData::getStored)
-            ).apply(instance, EnergyExtendedData::new)
+                Codec.INT.fieldOf("capacity").forGetter(EnergyConduitData::getCapacity),
+                Codec.INT.fieldOf("stored").forGetter(EnergyConduitData::getStored)
+            ).apply(instance, EnergyConduitData::new)
         );
 
         // TODO: Opt-out of client sync somehow.
-        public static final StreamCodec<ByteBuf, EnergyExtendedData> STREAM_CODEC = new StreamCodec<>() {
+        public static final StreamCodec<ByteBuf, EnergyConduitData> STREAM_CODEC = new StreamCodec<>() {
                 @Override
-                public EnergyExtendedData decode(ByteBuf p_320376_) {
-                    return new EnergyExtendedData();
+                public EnergyConduitData decode(ByteBuf p_320376_) {
+                    return new EnergyConduitData();
                 }
 
                 @Override
-                public void encode(ByteBuf p_320158_, EnergyExtendedData p_320396_) {
+                public void encode(ByteBuf p_320158_, EnergyConduitData p_320396_) {
                 }
             };
 
         @Override
-        public MapCodec<EnergyExtendedData> codec() {
+        public MapCodec<EnergyConduitData> codec() {
             return CODEC;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, EnergyExtendedData> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, EnergyConduitData> streamCodec() {
             return STREAM_CODEC.cast();
         }
     }

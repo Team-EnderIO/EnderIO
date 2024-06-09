@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public interface ClientConduitData<T extends ExtendedConduitData<T>> extends Icon {
+public interface ClientConduitData<T extends ConduitData<T>> extends Icon {
 
     @FunctionalInterface
-    interface UpdateExtendedData<T extends ExtendedConduitData<T>> {
+    interface UpdateExtendedData<T extends ConduitData<T>> {
         void update(Function<T, T> mapper);
     }
 
@@ -69,7 +69,7 @@ public interface ClientConduitData<T extends ExtendedConduitData<T>> extends Ico
         return List.of();
     }
 
-    class Simple<T extends ExtendedConduitData<T>> implements ClientConduitData<T> {
+    class Simple<T extends ConduitData<T>> implements ClientConduitData<T> {
         private final ResourceLocation textureLocation;
         private final Vector2i texturePosition;
 

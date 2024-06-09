@@ -1,9 +1,9 @@
 package com.enderio.conduits.client.gui;
 
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
@@ -127,7 +127,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             menu.getConduitType()
                 .getClientData()
                 .createWidgets(this, () -> getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast(),
-                    (mapper) -> sendExtendedConduitUpdate((Function<ExtendedConduitData<?>, ExtendedConduitData<?>>) mapper), menu::getDirection,
+                    (mapper) -> sendExtendedConduitUpdate((Function<ConduitData<?>, ConduitData<?>>) mapper), menu::getDirection,
                     new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
                 .forEach(this::addTypedButton);
         }
@@ -155,7 +155,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
         }
     }
 
-    private void sendExtendedConduitUpdate(Function<ExtendedConduitData<?>, ExtendedConduitData<?>> map) {
+    private void sendExtendedConduitUpdate(Function<ConduitData<?>, ConduitData<?>> map) {
         var currentData = getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast();
         var menu = getMenu();
 

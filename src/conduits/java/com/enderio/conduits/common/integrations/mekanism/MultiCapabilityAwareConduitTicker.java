@@ -1,13 +1,11 @@
 package com.enderio.conduits.common.integrations.mekanism;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.GraphAccessor;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,7 +15,7 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MultiCapabilityAwareConduitTicker<TType extends ExtendedConduitData<TType>, TCap> implements IOAwareConduitTicker<TType> {
+public abstract class MultiCapabilityAwareConduitTicker<TType extends ConduitData<TType>, TCap> implements IOAwareConduitTicker<TType> {
 
     private final BlockCapability<? extends TCap, Direction>[] capabilities;
 
@@ -81,7 +79,7 @@ public abstract class MultiCapabilityAwareConduitTicker<TType extends ExtendedCo
         GraphAccessor<TType> graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
-    public record CapabilityConnection<TType extends ExtendedConduitData<TType>, TCap>(
+    public record CapabilityConnection<TType extends ConduitData<TType>, TCap>(
         TCap capability,
         TType data,
         Direction direction) {

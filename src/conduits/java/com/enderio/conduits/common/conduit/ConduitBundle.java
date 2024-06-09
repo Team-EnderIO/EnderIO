@@ -2,7 +2,7 @@ package com.enderio.conduits.common.conduit;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ExtendedConduitData;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
@@ -141,7 +141,7 @@ public final class ConduitBundle {
      * @param type
      * @return an action containing the type that is now not in this bundle
      */
-    public <T extends ExtendedConduitData<T>> RightClickAction addType(Level level, ConduitType<T> type, Player player) {
+    public <T extends ConduitData<T>> RightClickAction addType(Level level, ConduitType<T> type, Player player) {
         if (types.size() == MAX_CONDUIT_TYPES) {
             return new RightClickAction.Blocked();
         }
@@ -340,7 +340,7 @@ public final class ConduitBundle {
         return nodes.get(type);
     }
 
-    public <T extends ExtendedConduitData<T>> NodeIdentifier<T> getNodeFor(ConduitType<T> type) {
+    public <T extends ConduitData<T>> NodeIdentifier<T> getNodeFor(ConduitType<T> type) {
         for (var entry : nodes.entrySet()) {
             if (entry.getKey().getTicker().canConnectTo(entry.getKey(), type)) {
                 //noinspection unchecked
@@ -367,7 +367,7 @@ public final class ConduitBundle {
         dataVersion++;
     }
 
-    public <T extends ExtendedConduitData<T>> void removeNodeFor(Level level, ConduitType<T> type) {
+    public <T extends ConduitData<T>> void removeNodeFor(Level level, ConduitType<T> type) {
         var node = (NodeIdentifier<T>) nodes.get(type);
         node.getExtendedConduitData().onRemoved(type, level, pos);
         if (node.getGraph() != null) {

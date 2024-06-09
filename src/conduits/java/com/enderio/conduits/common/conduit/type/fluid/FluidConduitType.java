@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
-public class FluidConduitType extends TieredConduit<FluidExtendedData> {
+public class FluidConduitType extends TieredConduit<FluidConduitData> {
 
     public static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
     private final boolean isMultiFluid;
@@ -32,7 +32,7 @@ public class FluidConduitType extends TieredConduit<FluidExtendedData> {
     }
 
     @Override
-    public FluidExtendedData createExtendedConduitData(Level level, BlockPos pos) {
-        return new FluidExtendedData(isMultiFluid);
+    public FluidConduitData createExtendedConduitData(Level level, BlockPos pos) {
+        return new FluidConduitData(isMultiFluid);
     }
 }

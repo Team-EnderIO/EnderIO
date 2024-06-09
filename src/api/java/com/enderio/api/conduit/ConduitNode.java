@@ -9,9 +9,8 @@ import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.function.Predicate;
 
-public interface ConduitNode<T extends ExtendedConduitData<?>> {
+public interface ConduitNode<T extends ConduitData<?>> {
     Optional<IOState> getIOState(Direction direction);
     BlockPos getPos();
     T getExtendedConduitData();

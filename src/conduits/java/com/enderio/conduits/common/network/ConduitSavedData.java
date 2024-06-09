@@ -1,17 +1,17 @@
 package com.enderio.conduits.common.network;
 
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.conduit.GraphAccessor;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.conduits.common.conduit.NodeIdentifier;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import com.enderio.conduits.common.init.EIOConduitTypes;
-import com.enderio.conduits.common.conduit.type.redstone.RedstoneExtendedData;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -234,7 +234,7 @@ public class ConduitSavedData extends SavedData {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    public <T extends ExtendedConduitData<T>> NodeIdentifier<T> takeUnloadedNodeIdentifier(ConduitType<T> type, BlockPos pos) {
+    public <T extends ConduitData<T>> NodeIdentifier<T> takeUnloadedNodeIdentifier(ConduitType<T> type, BlockPos pos) {
         ChunkPos chunkPos = new ChunkPos(pos);
 
         Map<ChunkPos, Map<BlockPos, NodeIdentifier<?>>> typeMap = deserializedNodes.get(type);
@@ -293,7 +293,7 @@ public class ConduitSavedData extends SavedData {
         }
     }
 
-    private <T extends ExtendedConduitData<T>> void tickConduitGraph(ServerLevel serverLevel, ConduitType<T> type, Graph<Mergeable.Dummy> graph) {
+    private <T extends ConduitData<T>> void tickConduitGraph(ServerLevel serverLevel, ConduitType<T> type, Graph<Mergeable.Dummy> graph) {
         ConduitTicker<T> conduitTicker = type.getTicker();
 
         if (serverLevel.getGameTime() % conduitTicker.getTickRate() == EnderIORegistries.CONDUIT_TYPES.getId(type) % conduitTicker.getTickRate()) {
@@ -314,7 +314,7 @@ public class ConduitSavedData extends SavedData {
             return false;
         }
 
-        RedstoneExtendedData data = conduit.getBundle().getNodeFor(EIOConduitTypes.Types.REDSTONE.get()).getExtendedConduitData().cast();
+        RedstoneConduitData data = conduit.getBundle().getNodeFor(EIOConduitTypes.Types.REDSTONE.get()).getExtendedConduitData().cast();
         return data.isActive(color);
     }
 
@@ -347,7 +347,7 @@ public class ConduitSavedData extends SavedData {
         }
     }
 
-    private record WrappingGraphAccessor<T extends ExtendedConduitData<T>>(Graph<Mergeable.Dummy> graph)
+    private record WrappingGraphAccessor<T extends ConduitData<T>>(Graph<Mergeable.Dummy> graph)
         implements GraphAccessor<T> {
 
         @Override
