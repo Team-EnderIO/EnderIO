@@ -74,7 +74,7 @@ public final class ConduitBundle {
         ConduitBundle::new
     );
 
-    public static NetworkDataSlot.CodecType<ConduitBundle> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(CODEC, STREAM_CODEC, ConduitBundle::getDataVersion);
+    public static NetworkDataSlot.CodecType<ConduitBundle> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(CODEC, STREAM_CODEC);
 
     private final Map<Direction, ConduitConnection> connections = new EnumMap<>(Direction.class);
     private final List<ConduitType<?>> types = new ArrayList<>();
@@ -84,9 +84,6 @@ public final class ConduitBundle {
     private final BlockPos pos;
 
     private final Map<Direction, BlockState> facadeTextures = new EnumMap<>(Direction.class);
-
-    // TODO: I've put this back for now, but I'd really like this to not be a thing.
-    private int dataVersion = Integer.MIN_VALUE;
 
     @Nullable
     private Runnable onChangedRunnable;
@@ -130,8 +127,6 @@ public final class ConduitBundle {
     }
 
     public void onChanged() {
-        dataVersion++;
-
         if (onChangedRunnable != null) {
             onChangedRunnable.run();
         }
@@ -365,8 +360,6 @@ public final class ConduitBundle {
                 }
             }
         }
-
-        dataVersion++;
     }
 
     public <T extends ConduitData<T>> void removeNodeFor(Level level, ConduitType<T> type) {
@@ -377,7 +370,6 @@ public final class ConduitBundle {
         }
 
         nodes.remove(type);
-        dataVersion++;
     }
 
     public boolean hasType(ConduitType<?> type) {
@@ -396,10 +388,6 @@ public final class ConduitBundle {
             }
         }
         throw new IllegalStateException("no conduit matching type in bundle");
-    }
-
-    public int getDataVersion() {
-        return dataVersion;
     }
 
     @Override

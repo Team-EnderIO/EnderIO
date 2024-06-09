@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public class NodeIdentifier<T extends ConduitData<?>> implements GraphObject<Mergeable.Dummy>, ConduitNode<T> {
@@ -98,8 +99,8 @@ public class NodeIdentifier<T extends ConduitData<?>> implements GraphObject<Mer
         return connectionStates.get(direction).filterInsert().getCapability(EIOCapabilities.Filter.ITEM);
     }
 
-    /*@Override
+    @Override
     public int hashCode() {
-        return Objects.hash(pos, extendedConduitData, ioStates, connectionStates);
-    }*/
+        return Objects.hash(pos, conduitData, ioStates, connectionStates);
+    }
 }
