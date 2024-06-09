@@ -1,41 +1,30 @@
 package com.enderio.conduits.common.integrations.cctweaked;
 
-import com.enderio.EnderIO;
 import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.integration.Integration;
 import com.enderio.api.misc.ColorControl;
-import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneExtendedData;
-import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.enderio.conduits.common.init.EIOConduitTypes;
-import com.enderio.regilite.holder.RegiliteItem;
-import com.enderio.regilite.registry.ItemRegistry;
-import com.mojang.serialization.Codec;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.redstone.BundledRedstoneProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.util.Unit;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CCIntegration implements Integration {
 
     @Override
     public void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {
-        ComputerCraftAPI.registerBundledRedstoneProvider(bundle);
+        ComputerCraftAPI.registerBundledRedstoneProvider(BUNDLE);
     }
 
-    private static final BundledRedstoneProvider bundle = new BundledRedstoneProvider (){
+    private static final BundledRedstoneProvider BUNDLE = new BundledRedstoneProvider (){
 
         @Override
         public int getBundledRedstoneOutput(Level world, BlockPos pos, Direction side) {
