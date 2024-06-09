@@ -143,7 +143,7 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack>, Flu
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            
+
             FluidFilterCapability.Component component = (FluidFilterCapability.Component) o;
             for (int i = 0; i < fluids.size(); i++) {
                 if (!FluidStack.matches(fluids.get(i), component.fluids.get(i))) {

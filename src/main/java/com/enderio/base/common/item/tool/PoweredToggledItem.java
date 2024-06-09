@@ -1,11 +1,9 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.base.common.capability.ItemEnergyStorage;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.client.item.EnergyBarDecorator;
-import com.enderio.core.common.components.ItemEnergyStorageConfig;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
@@ -20,14 +18,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.energy.ComponentEnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public abstract class PoweredToggledItem extends Item implements AdvancedTooltipProvider, CreativeTabVariants, ItemEnergyStorageConfig {
+public abstract class PoweredToggledItem extends Item implements AdvancedTooltipProvider, CreativeTabVariants {
 
     public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
-        (stack, v) -> new ItemEnergyStorage(EIODataComponents.ENERGY, stack);
+        (stack, v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY.get(), ((PoweredToggledItem)stack.getItem()).getMaxEnergy());
 
     public PoweredToggledItem(Properties pProperties) {
         super(pProperties
@@ -37,6 +36,8 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
 
     protected abstract void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId,
         boolean pIsSelected);
+
+    protected abstract int getMaxEnergy();
 
     protected abstract int getEnergyUse();
 
