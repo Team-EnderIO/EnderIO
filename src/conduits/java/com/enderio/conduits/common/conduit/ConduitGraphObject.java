@@ -116,13 +116,13 @@ public class ConduitGraphObject<T extends ConduitData<T>> implements GraphObject
         return connectionStates.get(direction).filterInsert().getCapability(EIOCapabilities.Filter.ITEM);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(pos, conduitData, ioStates, connectionStates);
-    }
-
     @UseOnly(LogicalSide.CLIENT)
     public ConduitGraphObject<T> deepCopy() {
         return new ConduitGraphObject<>(pos, conduitData.deepCopy());
+    }
+
+    // Separate method to avoid breaking the graph
+    public int hashContents() {
+        return Objects.hash(pos, conduitData, ioStates, connectionStates);
     }
 }

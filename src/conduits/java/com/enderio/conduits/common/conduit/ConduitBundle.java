@@ -392,7 +392,15 @@ public final class ConduitBundle {
 
     @Override
     public int hashCode() {
-        return Objects.hash(connections, types, nodes, facadeTextures);
+        int hash = Objects.hash(connections, types, facadeTextures);
+
+        // Manually hash the map, using hashContents instead of hashCode to avoid breaking the graph.
+        for (var entry : nodes.entrySet()) {
+            hash = 31 * hash + entry.getKey().hashCode();
+            hash = 31 * hash + entry.getValue().hashContents();
+        }
+
+        return hash;
     }
 
     public Tag save(HolderLookup.Provider lookupProvider) {
