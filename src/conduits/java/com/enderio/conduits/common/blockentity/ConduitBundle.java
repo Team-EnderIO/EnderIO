@@ -6,6 +6,7 @@ import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.client.ConduitClientSetup;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -405,7 +406,8 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         dataVersion++;
     }
 
-    @UseOnly(LogicalSide.CLIENT)
+
+    @EnsureSide(EnsureSide.Side.CLIENT)
     public ConduitBundle deepCopy() {
         var bundle = new ConduitBundle(() -> {}, pos);
         bundle.types.addAll(types);

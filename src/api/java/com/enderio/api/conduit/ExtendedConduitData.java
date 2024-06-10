@@ -1,6 +1,7 @@
 package com.enderio.api.conduit;
 
 import com.enderio.api.UseOnly;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -76,7 +77,7 @@ public interface ExtendedConduitData<T extends ExtendedConduitData<T>> extends I
         return new CompoundTag();
     }
 
-    @UseOnly(LogicalSide.CLIENT)
+    @EnsureSide(EnsureSide.Side.CLIENT)
     default T deepCopy() {
         return cast();
     }

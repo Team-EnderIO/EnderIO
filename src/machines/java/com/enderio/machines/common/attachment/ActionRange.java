@@ -6,6 +6,7 @@ import com.enderio.core.common.network.NetworkDataSlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -45,7 +46,8 @@ public record ActionRange(int range, boolean isVisible) {
         return new ActionRange(range - 1, isVisible);
     }
 
-    @UseOnly(LogicalSide.CLIENT)
+
+    @EnsureSide(EnsureSide.Side.CLIENT)
     public void addClientParticle(ClientLevel level, BlockPos pos, String color) {
         if (!isVisible) {
             return;
