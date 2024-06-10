@@ -135,11 +135,13 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 for (Direction dir : Direction.values()) {
                     tryConnectTo(dir, entry.getKey(), false, false).ifPresent(otherNode -> Graph.connect(node, otherNode));
                 }
+
                 for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
                     if (object instanceof ConduitGraphObject<?> otherNode) {
                         node.getConduitData().onConnectTo(otherNode.getConduitData().cast());
                     }
                 }
+
                 ConduitSavedData.addPotentialGraph(entry.getKey(), Objects.requireNonNull(node.getGraph()), serverLevel);
             }
         }
@@ -258,11 +260,13 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             if (level instanceof ServerLevel serverLevel) {
                 ConduitGraphObject<?> thisNode = Objects.requireNonNull(bundle.getNodeForTypeExact(type), "no node found in conduit");
                 Graph.integrate(thisNode, nodes);
+
                 for (GraphObject<Mergeable.Dummy> object : thisNode.getGraph().getObjects()) {
                     if (object instanceof ConduitGraphObject<?> node) {
                         thisNode.getConduitData().onConnectTo(node.getConduitData().cast());
                     }
                 }
+
                 ConduitSavedData.addPotentialGraph(type, Objects.requireNonNull(thisNode.getGraph()), serverLevel);
             }
             if (action instanceof RightClickAction.Upgrade upgrade && !upgrade.getNotInConduit().getTicker().canConnectTo(upgrade.getNotInConduit(), type)) {
@@ -285,17 +289,18 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
             firstNode.getConduitData().onConnectTo(secondNode.getConduitData());
 
-            if (firstNode.getGraph() != null) {
-                for (GraphObject<Mergeable.Dummy> object : firstNode.getGraph().getObjects()) {
-                    if (object instanceof ConduitGraphObject<?> node && node != firstNode) {
-                        firstNode.getConduitData().onConnectTo(node.getConduitData().cast());
+            if (firstNode.getParentGraph() != null) {
+                for (var node : firstNode.getParentGraph().getNodes()) {
+                    if (node != firstNode) {
+                        firstNode.getConduitData().onConnectTo(node.getConduitData());
                     }
                 }
             }
-            if (secondNode.getGraph() != null && firstNode.getGraph() != secondNode.getGraph()) {
-                for (GraphObject<Mergeable.Dummy> object : secondNode.getGraph().getObjects()) {
-                    if (object instanceof ConduitGraphObject<?> node && node != secondNode) {
-                        secondNode.getConduitData().onConnectTo(node.getConduitData().cast());
+
+            if (secondNode.getParentGraph() != null && firstNode.getParentGraph() != secondNode.getParentGraph()) {
+                for (var node : secondNode.getParentGraph().getNodes()) {
+                    if (node != secondNode) {
+                        secondNode.getConduitData().onConnectTo(node.getConduitData());
                     }
                 }
             }
@@ -309,6 +314,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             connectEnd(dir, type);
             updateConnectionToData(type);
         }
+
         return Optional.empty();
     }
 
