@@ -2,7 +2,7 @@ package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.GraphAccessor;
+import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
@@ -21,7 +21,7 @@ import java.util.List;
 public interface IOAwareConduitTicker<T extends ConduitData<T>> extends LoadedAwareConduitTicker<T> {
     @Override
     default void tickGraph(ServerLevel level, ConduitType<T> type,
-        List<ConduitNode<T>> loadedNodes, GraphAccessor<T> graph,
+        List<ConduitNode<T>> loadedNodes, ConduitGraph<T> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         ListMultimap<ColorControl, Connection<T>> extracts = ArrayListMultimap.create();
@@ -70,7 +70,7 @@ public interface IOAwareConduitTicker<T extends ConduitData<T>> extends LoadedAw
         List<Connection<T>> inserts,
         List<Connection<T>> extracts,
         ColorControl color,
-        GraphAccessor<T> graph,
+        ConduitGraph<T> graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
     default boolean isRedstoneMode(ConduitType<?> type, ServerLevel level, BlockPos pos, ConduitNode.IOState state,

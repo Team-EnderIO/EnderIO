@@ -3,7 +3,7 @@ package com.enderio.conduits.common.conduit.type.redstone;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
-import com.enderio.api.conduit.GraphAccessor;
+import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.init.ConduitBlocks;
@@ -32,7 +32,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
     public void tickGraph(
         ServerLevel level,
         ConduitType<RedstoneConduitData> type,
-        GraphAccessor<RedstoneConduitData> graph,
+        ConduitGraph<RedstoneConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         Collection<ConduitNode<RedstoneConduitData>> nodeIdentifiers = graph.getNodes();
@@ -40,8 +40,8 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
         activeColors.clear();
         tickGraph(level, type, nodeIdentifiers.stream().filter(node -> isLoaded(level, node.getPos())).toList(), graph, coloredRedstoneProvider);
 
-        for (ConduitNode<?> nodeIdentifier : nodeIdentifiers) {
-            RedstoneConduitData data = nodeIdentifier.getConduitData().cast();
+        for (var nodeIdentifier : nodeIdentifiers) {
+            RedstoneConduitData data = nodeIdentifier.getConduitData();
             data.clearActive();
             for (ColorControl activeColor : activeColors) {
                 data.setActiveColor(activeColor);
@@ -56,7 +56,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
         List<Connection<RedstoneConduitData>> inserts,
         List<Connection<RedstoneConduitData>> extracts,
         ColorControl color,
-        GraphAccessor<RedstoneConduitData> graph,
+        ConduitGraph<RedstoneConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (Connection<RedstoneConduitData> extract : extracts) {

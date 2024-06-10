@@ -3,7 +3,7 @@ package com.enderio.conduits.common.conduit.type.energy;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
-import com.enderio.api.conduit.GraphAccessor;
+import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.conduits.common.tag.ConduitTags;
@@ -28,7 +28,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
         ServerLevel level,
         ConduitType<EnergyConduitData> type,
         List<ConduitNode<EnergyConduitData>> loadedNodes,
-        GraphAccessor<EnergyConduitData> graph,
+        ConduitGraph<EnergyConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
@@ -71,7 +71,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
         ConduitType<EnergyConduitData> type,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
-        GraphAccessor<EnergyConduitData> graph,
+        ConduitGraph<EnergyConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (var extract : extracts) {

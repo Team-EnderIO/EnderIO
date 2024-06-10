@@ -2,7 +2,7 @@ package com.enderio.conduits.common.conduit.type.item;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.GraphAccessor;
+import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.conduits.common.components.ItemSpeedUpgrade;
@@ -24,7 +24,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
         ConduitType<ItemConduitData> type,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
-        GraphAccessor<ItemConduitData> graph,
+        ConduitGraph<ItemConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         toNextExtract:

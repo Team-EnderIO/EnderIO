@@ -409,7 +409,7 @@ public final class ConduitBundle {
         bundle.types.addAll(types);
         connections.forEach((dir, connection) -> bundle.connections.put(dir, connection.deepCopy()));
         bundle.facadeTextures.putAll(facadeTextures);
-        nodes.forEach((type, node) -> bundle.setNodeFor(type, new ConduitGraphObject<>(node.getPos(), node.getConduitData().deepCopy())));
+        nodes.forEach((type, node) -> bundle.setNodeFor(type, node.deepCopy()));
         return bundle;
     }
 

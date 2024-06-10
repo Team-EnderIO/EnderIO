@@ -17,31 +17,30 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public interface ClientConduitData<T extends ConduitData<T>> extends Icon {
+public interface ClientConduitData<T extends ConduitData<T>> {
+
+    Vector2i ICON_TEXTURE_SIZE = new Vector2i(24, 24);
+    Vector2i ICON_RENDER_SIZE = new Vector2i(12, 12);
 
     @FunctionalInterface
     interface UpdateExtendedData<T extends ConduitData<T>> {
         void update(Function<T, T> mapper);
     }
 
-    @Override
-    default Vector2i getIconSize() {
-        return new Vector2i(24, 24);
-    }
-
-    @Override
-    default Vector2i getRenderSize() {
-        return new Vector2i(12, 12);
-    }
+    /**
+     * Get the icon to display on the conduit GUI.
+     */
+    Icon icon();
 
     /**
-     * @param extendedConduitData       the extendedconduitdata the widgets are fore, manipulate the state of it in the widgets
-     * @param updateExtendedConduitData call this to modify the extended conduit data.
+     * @param conduitDataSupplier       the conduit data the widgets are for, manipulate the state of it in the widgets
+     * @param updateConduitData         call this to modify the conduit data.
      * @param direction                 the supplier to get the current direction for this extendedconduitdata
      * @param widgetsStart              the position on which widgets start
      * @return Widgets that manipulate the extended ConduitData, these changes are synced back to the server
      */
-    default List<AbstractWidget> createWidgets(Screen screen, Supplier<T> extendedConduitData, UpdateExtendedData<T> updateExtendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+    default List<AbstractWidget> createWidgets(Screen screen, Supplier<T> conduitDataSupplier, UpdateExtendedData<T> updateConduitData,
+        Supplier<Direction> direction, Vector2i widgetsStart) {
         return List.of();
     }
 
@@ -70,28 +69,15 @@ public interface ClientConduitData<T extends ConduitData<T>> extends Icon {
     }
 
     class Simple<T extends ConduitData<T>> implements ClientConduitData<T> {
-        private final ResourceLocation textureLocation;
-        private final Vector2i texturePosition;
+        private final Icon icon;
 
         public Simple(ResourceLocation textureLocation, Vector2i texturePosition) {
-            this.textureLocation = textureLocation;
-            this.texturePosition = texturePosition;
+            this.icon = new Icon.Simple(textureLocation, texturePosition, ICON_TEXTURE_SIZE, ICON_RENDER_SIZE);
         }
 
         @Override
-        public ResourceLocation getTextureLocation() {
-            return textureLocation;
-        }
-
-        @Override
-        public Vector2i getTexturePosition() {
-            return texturePosition;
-        }
-
-        @Override
-        public List<BakedQuad> createConnectionQuads(T extendedConduitData, @Nullable Direction facing, Direction connectionDirection, RandomSource rand,
-            @Nullable RenderType type) {
-            return List.of();
+        public Icon icon() {
+            return icon;
         }
     }
 }

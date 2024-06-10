@@ -3,7 +3,7 @@ package com.enderio.conduits.common.integrations.mekanism;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.GraphAccessor;
+import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import net.minecraft.core.BlockPos;
@@ -41,7 +41,7 @@ public abstract class MultiCapabilityAwareConduitTicker<TType extends ConduitDat
         List<Connection<TType>> inserts,
         List<Connection<TType>> extracts,
         ColorControl color,
-        GraphAccessor<TType> graph,
+        ConduitGraph<TType> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         List<CapabilityConnection<TType, TCap>> insertCaps = new ArrayList<>();
@@ -76,7 +76,7 @@ public abstract class MultiCapabilityAwareConduitTicker<TType extends ConduitDat
         List<CapabilityConnection<TType, TCap>> insertCaps,
         List<CapabilityConnection<TType, TCap>> extractCaps,
         ServerLevel level,
-        GraphAccessor<TType> graph,
+        ConduitGraph<TType> graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
     public record CapabilityConnection<TType extends ConduitData<TType>, TCap>(

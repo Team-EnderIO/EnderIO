@@ -1,12 +1,11 @@
-package com.enderio.conduits.common.network;
+package com.enderio.conduits.common.conduit;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.GraphAccessor;
+import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ticker.ConduitTicker;
-import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
@@ -297,7 +296,7 @@ public class ConduitSavedData extends SavedData {
         ConduitTicker<T> conduitTicker = type.getTicker();
 
         if (serverLevel.getGameTime() % conduitTicker.getTickRate() == EnderIORegistries.CONDUIT_TYPES.getId(type) % conduitTicker.getTickRate()) {
-            conduitTicker.tickGraph(serverLevel, type, new WrappingGraphAccessor<>(graph), ConduitSavedData::isRedstoneActive);
+            conduitTicker.tickGraph(serverLevel, type, new WrappedConduitGraph<>(graph), ConduitSavedData::isRedstoneActive);
         }
     }
 
@@ -314,7 +313,7 @@ public class ConduitSavedData extends SavedData {
             return false;
         }
 
-        RedstoneConduitData data = conduit.getBundle().getNodeFor(EIOConduitTypes.Types.REDSTONE.get()).getConduitData().cast();
+        RedstoneConduitData data = conduit.getBundle().getNodeFor(EIOConduitTypes.Types.REDSTONE.get()).getConduitData();
         return data.isActive(color);
     }
 
@@ -344,18 +343,6 @@ public class ConduitSavedData extends SavedData {
             if (!tempFile.renameTo(file)) {
                 EnderIO.LOGGER.error("Failed to rename " + tempFile.getName());
             }
-        }
-    }
-
-    private record WrappingGraphAccessor<T extends ConduitData<T>>(Graph<Mergeable.Dummy> graph)
-        implements GraphAccessor<T> {
-
-        @Override
-        public Collection<ConduitNode<T>> getNodes() {
-            //noinspection unchecked
-            return graph.getObjects().stream()
-                .map(object -> (ConduitNode<T>) object)
-                .toList();
         }
     }
 }

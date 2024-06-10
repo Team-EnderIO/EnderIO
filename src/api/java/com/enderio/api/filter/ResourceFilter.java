@@ -1,3 +1,4 @@
 package com.enderio.api.filter;
 
-public interface ResourceFilter {}
+public interface ResourceFilter {
+}

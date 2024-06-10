@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
-import com.enderio.api.conduit.GraphAccessor;
+import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
@@ -35,7 +35,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
         ServerLevel level,
         ConduitType<FluidConduitData> type,
         List<ConduitNode<FluidConduitData>> loadedNodes,
-        GraphAccessor<FluidConduitData> graph,
+        ConduitGraph<FluidConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         boolean shouldReset = false;
@@ -61,7 +61,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
         ConduitType<FluidConduitData> type,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
-        GraphAccessor<FluidConduitData> graph,
+        ConduitGraph<FluidConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (CapabilityConnection extract : extracts) {

@@ -24,6 +24,15 @@ public abstract class ConduitType<T extends ConduitData<T>> {
     public abstract ResourceLocation getTexture(T extendedData);
     public abstract ResourceLocation getItemTexture();
 
+    public abstract ConduitTicker<T> getTicker();
+
+    @UseOnly(LogicalSide.CLIENT)
+    public abstract ClientConduitData<T> getClientData();
+
+    public abstract ConduitMenuData getMenuData();
+
+    public abstract T createConduitData(Level level, BlockPos pos);
+
     /**
      * Override this method if your conduit type and your conduit item registry name don't match
      * @return the conduit item that holds this type
@@ -41,15 +50,6 @@ public abstract class ConduitType<T extends ConduitData<T>> {
     public boolean canBeReplacedBy(ConduitType<?> other) {
         return false;
     }
-
-    public abstract ConduitTicker<T> getTicker();
-
-    @UseOnly(LogicalSide.CLIENT)
-    public abstract ClientConduitData<T> getClientData();
-
-    public abstract ConduitMenuData getMenuData();
-
-    public abstract T createConduitData(Level level, BlockPos pos);
 
     public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, T extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction,
         @Nullable ConduitNode.IOState state) {

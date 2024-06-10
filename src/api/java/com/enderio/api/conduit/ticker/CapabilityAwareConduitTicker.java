@@ -2,7 +2,7 @@ package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.GraphAccessor;
+import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.filter.ResourceFilter;
@@ -16,13 +16,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class CapabilityAwareConduitTicker<TData extends ConduitData<TData>, TCap> implements IOAwareConduitTicker<TData> {
 
     @Override
     public final void tickColoredGraph(ServerLevel level, ConduitType<TData> type, List<Connection<TData>> inserts, List<Connection<TData>> extracts,
-        ColorControl color, GraphAccessor<TData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
+        ColorControl color, ConduitGraph<TData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
         List<CapabilityConnection> insertCaps = new ArrayList<>();
         for (Connection<TData> insert : inserts) {
@@ -57,7 +56,7 @@ public abstract class CapabilityAwareConduitTicker<TData extends ConduitData<TDa
     }
 
     protected abstract void tickCapabilityGraph(ServerLevel level, ConduitType<TData> type, List<CapabilityConnection> inserts,
-        List<CapabilityConnection> extracts, GraphAccessor<TData> graph, ColoredRedstoneProvider coloredRedstoneProvider);
+        List<CapabilityConnection> extracts, ConduitGraph<TData> graph, ColoredRedstoneProvider coloredRedstoneProvider);
 
     protected abstract BlockCapability<TCap, Direction> getCapability();
 

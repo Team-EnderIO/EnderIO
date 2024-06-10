@@ -16,7 +16,7 @@ import com.enderio.conduits.common.conduit.SlotData;
 import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.menu.ConduitMenu;
-import com.enderio.conduits.common.network.ConduitSavedData;
+import com.enderio.conduits.common.conduit.ConduitSavedData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -279,9 +279,12 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             connect(dir, type);
             updateConnectionToData(type);
             conduit.updateConnectionToData(type);
-            ConduitGraphObject<?> firstNode = conduit.getBundle().getNodeFor(type);
-            ConduitGraphObject<?> secondNode = bundle.getNodeFor(type);
-            firstNode.getConduitData().onConnectTo(secondNode.getConduitData().cast());
+
+            ConduitGraphObject<T> firstNode = conduit.getBundle().getNodeFor(type);
+            ConduitGraphObject<T> secondNode = bundle.getNodeFor(type);
+
+            firstNode.getConduitData().onConnectTo(secondNode.getConduitData());
+
             if (firstNode.getGraph() != null) {
                 for (GraphObject<Mergeable.Dummy> object : firstNode.getGraph().getObjects()) {
                     if (object instanceof ConduitGraphObject<?> node && node != firstNode) {
@@ -296,9 +299,11 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     }
                 }
             }
+
             if (shouldMergeGraph) {
                 Graph.connect(bundle.getNodeFor(type), conduit.bundle.getNodeFor(type));
             }
+
             return Optional.of(conduit.bundle.getNodeFor(type));
         } else if (type.getTicker().canConnectTo(level, getBlockPos(), dir)) {
             connectEnd(dir, type);
@@ -339,6 +344,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
             }
         }
+
         boolean shouldRemove = bundle.removeType(level, type);
         removeNeighborConnections(type);
         updateShape();
@@ -394,6 +400,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         shape.updateConduit(bundle);
     }
 
+    @UseOnly(LogicalSide.SERVER)
     private void loadFromSavedData() {
         if (!(level instanceof ServerLevel serverLevel)) {
             return;
@@ -402,25 +409,34 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         ConduitSavedData savedData = ConduitSavedData.get(serverLevel);
         for (int typeIndex = 0; typeIndex < bundle.getTypes().size(); typeIndex++) {
             ConduitType<?> type = bundle.getTypes().get(typeIndex);
-            ConduitGraphObject<?> node = savedData.takeUnloadedNodeIdentifier(type, this.worldPosition);
-            if (node == null && bundle.getNodeForTypeExact(type) == null) {
-                ConduitData<?> data;
-                if (typeIndex < lazyNodeNBT.size()) {
-                    data = ConduitData.parse(level.registryAccess(), lazyNodeNBT.getCompound(typeIndex));
-                } else {
-                    data = type.createConduitData(level, worldPosition);
-                }
-
-                node = new ConduitGraphObject<>(worldPosition, data);
-                Graph.integrate(node, List.of());
-                bundle.setNodeFor(type, node);
-                lazyNodes.put(type, node);
-            } else if (node != null){
-                bundle.setNodeFor(type, node);
-            }
+            loadConduitFromSavedData(savedData, type, typeIndex);
         }
 
         lazyNodeNBT.clear();
+    }
+
+    @UseOnly(LogicalSide.SERVER)
+    private <T extends ConduitData<T>> void loadConduitFromSavedData(ConduitSavedData savedData, ConduitType<T> conduitType, int typeIndex) {
+        if (level == null) {
+            return;
+        }
+
+        ConduitGraphObject<T> node = savedData.takeUnloadedNodeIdentifier(conduitType, this.worldPosition);
+        if (node == null && bundle.getNodeForTypeExact(conduitType) == null) {
+            T data;
+            if (typeIndex < lazyNodeNBT.size()) {
+                data = ConduitData.parse(level.registryAccess(), lazyNodeNBT.getCompound(typeIndex));
+            } else {
+                data = conduitType.createConduitData(level, worldPosition);
+            }
+
+            node = new ConduitGraphObject<>(worldPosition, data);
+            Graph.integrate(node, List.of());
+            bundle.setNodeFor(conduitType, node);
+            lazyNodes.put(conduitType, node);
+        } else if (node != null){
+            bundle.setNodeFor(conduitType, node);
+        }
     }
 
     /**
@@ -507,23 +523,34 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         }
     }
 
-    //TODO: NEO-PORT: auto add caps?
     public static <T> ICapabilityProvider<ConduitBlockEntity, Direction, T> createConduitCap(BlockCapability<T, Direction> cap) {
          return (be, side) -> {
             for (ConduitType<?> type : be.bundle.getTypes()) {
-                ConduitGraphObject<?> node = be.bundle.getNodeFor(type);
-                ConduitGraphObject.IOState state = node.getIOState(side).orElse(null);
-
-                var proxiedCap = type.proxyCapability(cap, node.getConduitData().cast(), be.level, be.getBlockPos(), side, state);
-
-                if (proxiedCap.isPresent()) {
-                    return proxiedCap.get();
+                var proxiedCap = getProxiedCapability(cap, be, type, side);
+                if (proxiedCap != null) {
+                    return proxiedCap;
                 }
             }
+
             return null;
         };
     }
 
+    @Nullable
+    private static <TCap, TData extends ConduitData<TData>> TCap getProxiedCapability(BlockCapability<TCap, Direction> capability,
+        ConduitBlockEntity conduitBlockEntity, ConduitType<TData> type, Direction side) {
+
+        if (conduitBlockEntity.level == null) {
+            return null;
+        }
+
+        ConduitGraphObject<TData> node = conduitBlockEntity.bundle.getNodeFor(type);
+        ConduitGraphObject.IOState state = node.getIOState(side).orElse(null);
+
+        var proxiedCap = type.proxyCapability(capability, node.getConduitData(), conduitBlockEntity.level, conduitBlockEntity.getBlockPos(), side, state);
+
+        return proxiedCap.orElse(null);
+    }
 
     public IItemHandler getConduitItemHandler() {
         return conduitItemHandler;

@@ -1,6 +1,8 @@
 package com.enderio.conduits.common.conduit;
 
+import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitData;
+import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.filter.ResourceFilter;
@@ -16,6 +18,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -23,24 +26,31 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class ConduitGraphObject<T extends ConduitData<?>> implements GraphObject<Mergeable.Dummy>, ConduitNode<T> {
+public class ConduitGraphObject<T extends ConduitData<T>> implements GraphObject<Mergeable.Dummy>, ConduitNode<T> {
 
     public static final Codec<ConduitGraphObject<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         BlockPos.CODEC.fieldOf("pos").forGetter(ConduitGraphObject::getPos),
         ConduitData.CODEC.fieldOf("data").forGetter(ConduitGraphObject::getConduitData)
-    ).apply(instance, ConduitGraphObject::new));
+    ).apply(instance, ConduitGraphObject::of));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ConduitGraphObject<?>> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,
         ConduitGraphObject::getPos,
         ConduitData.STREAM_CODEC,
         ConduitGraphObject::getConduitData,
-        ConduitGraphObject::new
+        ConduitGraphObject::of
     );
+
+    // Performs a dirty cast during deserialization, but it's safe because the cast is only done on the same type.
+    private static <T extends ConduitData<T>, Z extends ConduitData<?>> ConduitGraphObject<T> of(BlockPos pos, Z cast) {
+        //noinspection unchecked
+        return new ConduitGraphObject<>(pos, (T) cast);
+    }
 
     private final BlockPos pos;
 
     @Nullable private Graph<Mergeable.Dummy> graph = null;
+    @Nullable private WrappedConduitGraph<T> wrappedGraph = null;
 
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
     private final T conduitData;
@@ -60,6 +70,13 @@ public class ConduitGraphObject<T extends ConduitData<?>> implements GraphObject
     @Override
     public void setGraph(Graph<Mergeable.Dummy> graph) {
         this.graph = graph;
+        this.wrappedGraph = new WrappedConduitGraph<>(graph);
+    }
+
+    @Nullable
+    @Override
+    public ConduitGraph<T> getParentGraph() {
+        return wrappedGraph;
     }
 
     public void pushState(Direction direction, DynamicConnectionState connectionState) {
@@ -102,5 +119,10 @@ public class ConduitGraphObject<T extends ConduitData<?>> implements GraphObject
     @Override
     public int hashCode() {
         return Objects.hash(pos, conduitData, ioStates, connectionStates);
+    }
+
+    @UseOnly(LogicalSide.CLIENT)
+    public ConduitGraphObject<T> deepCopy() {
+        return new ConduitGraphObject<>(pos, conduitData.deepCopy());
     }
 }

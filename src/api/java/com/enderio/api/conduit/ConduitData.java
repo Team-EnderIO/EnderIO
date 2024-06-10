@@ -35,6 +35,8 @@ public interface ConduitData<T extends ConduitData<T>> {
 
     EmptyConduitData EMPTY = new EmptyConduitData();
 
+    // region Events
+
     default void onCreated(ConduitType<T> type, Level level, BlockPos pos, @Nullable Player player) {}
 
     default void onRemoved(ConduitType<T> type, Level level, BlockPos pos) {}
@@ -56,6 +58,10 @@ public interface ConduitData<T extends ConduitData<T>> {
     default void onConnectTo(T otherData) {
     }
 
+    // endregion
+
+    // region Client Sync
+
     /**
      * @return true if this needs to be synced to the client. if this returns true, deepCopy has to be overriden, to create a copy
      */
@@ -72,6 +78,8 @@ public interface ConduitData<T extends ConduitData<T>> {
      * Allows ignoring some fields from the client (for example internal backing fields).
      */
     void applyClientChanges(T guiData);
+
+    // endregion
 
     // region Serialization
 

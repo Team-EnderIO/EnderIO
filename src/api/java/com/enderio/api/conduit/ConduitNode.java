@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public interface ConduitNode<T extends ConduitData<?>> {
+public interface ConduitNode<T extends ConduitData<T>> {
     Optional<IOState> getIOState(Direction direction);
     BlockPos getPos();
     T getConduitData();
@@ -23,6 +23,9 @@ public interface ConduitNode<T extends ConduitData<?>> {
 
     @Nullable
     ResourceFilter getInsertFilter(Direction direction);
+
+    @Nullable
+    ConduitGraph<T> getParentGraph();
 
     record IOState(Optional<ColorControl> insert, Optional<ColorControl> extract, RedstoneControl control, ColorControl redstoneChannel) {
 

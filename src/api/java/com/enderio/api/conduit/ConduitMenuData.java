@@ -11,7 +11,7 @@ public interface ConduitMenuData {
 
     boolean hasUpgrade();
 
-    default boolean showBarSeperator() {
+    default boolean showBarSeparator() {
         return true;
     }
 

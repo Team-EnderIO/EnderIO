@@ -45,7 +45,7 @@ public class ConduitSelectionButton extends AbstractButton {
         }
         RenderSystem.disableBlend();
         RenderSystem.disableDepthTest();
-        EnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()).add(3, 6), type.getClientData());
+        EnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()).add(3, 6), type.getClientData().icon());
     }
 
     @Override
