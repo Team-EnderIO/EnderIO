@@ -70,13 +70,18 @@ public interface Icon {
         }
 
         @Override
+        public Vector2i getTexturePosition() {
+            return texturePosition;
+        }
+
+        @Override
         public Vector2i getIconSize() {
             return iconSize;
         }
 
         @Override
-        public Vector2i getTexturePosition() {
-            return texturePosition;
+        public Vector2i getRenderSize() {
+            return renderSize;
         }
     }
 }
