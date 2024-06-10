@@ -2,11 +2,11 @@ package com.enderio.base.client.gui.screen;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.ItemFilterMenu;
 import com.enderio.core.client.gui.screen.EIOScreen;
-import com.enderio.core.client.gui.widgets.CheckBox;
+import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.enderio.core.common.capability.ItemFilterCapability;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -19,6 +19,8 @@ public class ItemFilterScreen extends EIOScreen<ItemFilterMenu> {
 
     private static final Vector2i BG_SIZE = new Vector2i(183,201);
     private static ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/40/item_filter.png");
+    private static final ResourceLocation BLACKLIST_TEXTURE = EnderIO.loc("textures/gui/icons/blacklist.png");
+    private static final ResourceLocation NBT_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
 
     public ItemFilterScreen(ItemFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -33,14 +35,9 @@ public class ItemFilterScreen extends EIOScreen<ItemFilterMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new CheckBox(new Vector2i(getGuiLeft() + 110,getGuiTop() + 34), getMenu().getFilter()::isNbt, getMenu()::setNbt));
-        addRenderableWidget(new CheckBox(new Vector2i(getGuiLeft() + 110,getGuiTop() + 34 + 20), getMenu().getFilter()::isInvert, getMenu()::setInverted));
+        addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36, 16, 16, 0, 0, 16, 0, NBT_TEXTURE, getMenu().getFilter()::isNbt, getMenu()::setNbt, () -> getMenu().getFilter().isNbt() ? EIOLang.NBT_FILTER : EIOLang.NO_NBT_FILTER));
+        addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36 + 20, 16, 16, 0, 0, 16, 0, BLACKLIST_TEXTURE, getMenu().getFilter()::isInvert, getMenu()::setInverted, () -> getMenu().getFilter().isInvert() ? EIOLang.BLACKLIST_FILTER : EIOLang.WHITELIST_FILTER));
 
-    }
-
-    @Override
-    protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        super.renderBg(guiGraphics, pPartialTick, pMouseX, pMouseY);
     }
 
     @Override

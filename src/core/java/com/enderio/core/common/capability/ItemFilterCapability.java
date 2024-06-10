@@ -1,7 +1,6 @@
 package com.enderio.core.common.capability;
 
 import com.enderio.api.filter.ItemStackFilter;
-import com.enderio.core.common.menu.ItemFilterSlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
@@ -9,7 +8,6 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,11 +36,6 @@ public class ItemFilterCapability implements IFilterCapability<ItemStack>, ItemS
     @NotNull
     private ItemFilterCapability.Component getComponent() {
         return container.getOrDefault(componentType, EMPTY);
-    }
-
-    @Override
-    public Slot getSlot(int pSlot, int pX, int pY) {
-        return new ItemFilterSlot(() -> getEntries().get(pSlot), stack -> setEntry(pSlot, stack), pSlot, pX, pY);
     }
 
     @Override

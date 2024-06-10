@@ -1,7 +1,6 @@
 package com.enderio.core.common.capability;
 
 import com.enderio.api.filter.FluidStackFilter;
-import com.enderio.core.common.menu.FluidFilterSlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
@@ -9,7 +8,6 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
@@ -66,11 +64,6 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack>, Flu
     @Override
     public void setEntry(int pSlotId, FluidStack entry) {
         container.set(componentType, this.getComponent().withFluid(pSlotId, entry));
-    }
-
-    @Override
-    public Slot getSlot(int pSlot, int pX, int pY) {
-        return new FluidFilterSlot(fluidStack -> setEntry(pSlot, fluidStack), pSlot, pX, pY);
     }
 
     @Override
