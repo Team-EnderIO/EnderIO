@@ -6,8 +6,8 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
+import com.enderio.machines.client.gui.widget.FermentationWidget;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;
-import com.enderio.machines.client.gui.widget.FluidTransformWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
@@ -43,7 +43,7 @@ public class VatScreen extends EIOScreen<VatMenu> {
         addRenderableOnly(new FluidStackWidget(this, getMenu().getBlockEntity()::getOutputTank, 132 + leftPos, 12 + topPos, 15, 47));
 
         addRenderableOnly(
-            new FluidTransformWidget(this::isCrafting, this::inputFluidStack, this::outputFluidStack, this::getProgress, 76 + leftPos, 34 + topPos, 26, 28));
+            new FermentationWidget(this::isCrafting, this::inputFluidStack, this::outputFluidStack, this::getProgress, 76 + leftPos, 34 + topPos, 26, 28));
 
         addRenderableOnly(new ProgressWidget.BottomUp(this, this::getProgress, 82 + leftPos, 64 + topPos, 14, 14, 176, 0));
 

@@ -166,8 +166,9 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         int totalFilled = 0;
 
         for (int index = 0; index < getTanks(); index++) {
-            if (!canInsert(index))
+            if (!canInsert(index)) {
                 continue;
+            }
 
             // Attempt to fill the tank
             int filled = fill(index, resourceLeft, action);

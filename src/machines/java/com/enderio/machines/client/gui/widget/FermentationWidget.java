@@ -15,17 +15,17 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.function.Supplier;
 
-public class FluidTransformWidget extends EIOWidget {
-    private final Supplier<Boolean> isVisible;
+public class FermentationWidget extends EIOWidget {
+    private final Supplier<Boolean> shouldShow;
     private final Supplier<FluidStack> first;
     private final Supplier<FluidStack> second;
     private final Supplier<Float> progress;
 
-    public FluidTransformWidget(Supplier<Boolean> isVisible, Supplier<FluidStack> first, Supplier<FluidStack> second, Supplier<Float> progress, int x, int y,
+    public FermentationWidget(Supplier<Boolean> shouldShow, Supplier<FluidStack> first, Supplier<FluidStack> second, Supplier<Float> progress, int x, int y,
         int width,
         int height) {
         super(x, y, width, height);
-        this.isVisible = isVisible;
+        this.shouldShow = shouldShow;
         this.first = first;
         this.second = second;
         this.progress = progress;
@@ -36,7 +36,7 @@ public class FluidTransformWidget extends EIOWidget {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
 
-        if (isVisible.get()) {
+        if (shouldShow.get()) {
             renderFluid(guiGraphics, first.get(), 1 - progress.get());
             renderFluid(guiGraphics, second.get(), progress.get());
         }
@@ -47,7 +47,7 @@ public class FluidTransformWidget extends EIOWidget {
     @Override
     protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
 
-    public void renderFluid(GuiGraphics guiGraphics, FluidStack fluid, float progress) {
+    public void renderFluid(GuiGraphics guiGraphics, FluidStack fluid, float opacity) {
         Minecraft minecraft = Minecraft.getInstance();
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid.getFluid());
         ResourceLocation loc = props.getStillTexture();
@@ -58,7 +58,7 @@ public class FluidTransformWidget extends EIOWidget {
 
             int color = props.getTintColor();
             RenderSystem.setShaderColor(FastColor.ARGB32.red(color) / 255.0F, FastColor.ARGB32.green(color) / 255.0F, FastColor.ARGB32.blue(color) / 255.0F,
-                FastColor.ARGB32.alpha(color) * progress / 255.0F);
+                FastColor.ARGB32.alpha(color) * opacity / 255.0F);
             RenderSystem.enableBlend();
 
             int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));

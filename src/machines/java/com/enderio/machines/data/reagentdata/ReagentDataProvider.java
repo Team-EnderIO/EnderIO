@@ -24,12 +24,17 @@ import java.util.concurrent.CompletableFuture;
 
 public class ReagentDataProvider implements DataProvider {
 
-    private final VatTagsProvider tagsProvider;
-    private final VatDatamapProvider datamapProvider;
+    private final TagsProvider tagsProvider;
+    private final DataProvider dataProvider;
 
     public ReagentDataProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
-        tagsProvider = new VatTagsProvider(packOutput, lookupProvider, existingFileHelper);
-        datamapProvider = new VatDatamapProvider(packOutput, lookupProvider);
+        tagsProvider = new TagsProvider(packOutput, lookupProvider, existingFileHelper);
+        dataProvider = new DataProvider(packOutput, lookupProvider);
+    }
+
+    protected void gather() {
+        addReagent(Items.WHEAT, Tags.Items.CROPS, 3D);
+        addReagent(Items.WHEAT, Tags.Items.SEEDS, 2D);
     }
 
     @Override
@@ -37,34 +42,29 @@ public class ReagentDataProvider implements DataProvider {
         gather();
         List<CompletableFuture<?>> list = new ArrayList<>();
         list.add(tagsProvider.run(pOutput));
-        list.add(datamapProvider.run(pOutput));
+        list.add(dataProvider.run(pOutput));
         return CompletableFuture.allOf(list.toArray(CompletableFuture[]::new));
     }
 
-    protected void gather() {
-        addReagentData(Items.WHEAT, Tags.Items.CROPS, 3D);
-    }
-
-    public void addReagentData(Item item, TagKey<Item> tag, double value) {
+    public void addReagent(Item item, TagKey<Item> tag, double value) {
         tagsProvider.addItemTag(tag, item);
-        datamapProvider.addData(tag, item, value);
+        dataProvider.addData(tag, item, value);
     }
 
     @Override
     public String getName() {
-        return "ReagentData";
+        return "Fermenting Reagent Datamaps";
     }
 
-    private static class VatTagsProvider extends IntrinsicHolderTagsProvider<Item> {
+    private static class TagsProvider extends IntrinsicHolderTagsProvider<Item> {
         private final Map<TagKey<Item>, List<Item>> tagsMap = new HashMap<>();
 
-        public VatTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+        protected TagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
             super(packOutput, Registries.ITEM, provider, item -> item.builtInRegistryHolder().key(), EnderIO.MODID, existingFileHelper);
         }
 
         public void addItemTag(TagKey<Item> tag, Item item) {
-            var list = tagsMap.computeIfAbsent(tag, it -> new ArrayList<>());
-            list.add(item);
+            tagsMap.computeIfAbsent(tag, it -> new ArrayList<>()).add(item);
         }
 
         @Override
@@ -76,25 +76,22 @@ public class ReagentDataProvider implements DataProvider {
         }
     }
 
-    private static class VatDatamapProvider extends DataMapProvider {
-        private final Map<TagKey<Item>, Map<Item, Double>> data = new HashMap<>();
+    private static class DataProvider extends DataMapProvider {
+        private final Map<Item, Map<TagKey<Item>, Double>> data = new HashMap<>();
 
-        protected VatDatamapProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        protected DataProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
             super(packOutput, lookupProvider);
         }
 
         public void addData(TagKey<Item> tag, Item item, double value) {
-            var map = data.computeIfAbsent(tag, it -> new HashMap<>());
-            map.put(item, value);
+            data.computeIfAbsent(item, it -> new HashMap<>()).put(tag, value);
         }
 
         @Override
         protected void gather() {
             var builder = builder(VatReagent.DATA_MAP);
-            data.forEach((tag, map) -> {
-                map.forEach(((item, value) -> {
-                    builder.add(item.builtInRegistryHolder(), Map.of(tag, value), false);
-                }));
+            data.forEach((item, map) -> {
+                builder.add(item.builtInRegistryHolder(), map, false);
             });
         }
     }

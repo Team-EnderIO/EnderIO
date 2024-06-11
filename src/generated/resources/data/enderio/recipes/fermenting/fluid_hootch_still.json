@@ -1,11 +1,11 @@
 {
   "type": "enderio:vat_fermenting",
-  "input_fluid": {
+  "input": {
     "amount": 1000,
     "tag": "minecraft:water"
   },
   "left_reagent": "c:seeds",
-  "output_fluid": {
+  "output": {
     "amount": 250,
     "id": "enderio:fluid_hootch_still"
   },

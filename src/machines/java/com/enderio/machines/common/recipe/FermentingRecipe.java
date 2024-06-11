@@ -38,16 +38,15 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
     @Override
     public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
 
-        double totalModifier = 1;
-        totalModifier *= getReagentModifier(container.getItem(0), leftReagent);
-        totalModifier *= getReagentModifier(container.getItem(1), rightReagent);
+        double modifier = getModifier(container.getItem(0), leftReagent);
+        modifier *= getModifier(container.getItem(1), rightReagent);
 
-        return List.of(OutputStack.of(new FluidStack(output.getFluid(), (int) (output.getAmount() * totalModifier))));
+        return List.of(OutputStack.of(new FluidStack(output.getFluid(), (int) (output.getAmount() * modifier))));
     }
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.EMPTY);
+        return List.of(OutputStack.of(output().copy()));
     }
 
     @Override
@@ -56,17 +55,11 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
         if (!input.test(inputTank) || inputTank.getAmount() < input.amount()) {
             return false;
         }
-        if (!container.getItem(0).is(leftReagent)) {
-            return false;
-        }
-        if (!container.getItem(1).is(rightReagent)) {
-            return false;
-        }
 
-        return true;
+        return container.getItem(0).is(leftReagent) && container.getItem(1).is(rightReagent);
     }
 
-    public double getReagentModifier(ItemStack stack, TagKey<Item> reagent) {
+    public double getModifier(ItemStack stack, TagKey<Item> reagent) {
         var map = stack.getItemHolder().getData(VatReagent.DATA_MAP);
         if (map != null) {
             return map.getOrDefault(reagent, 1D);
@@ -100,18 +93,18 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
     }
 
     public static class Serializer implements RecipeSerializer<FermentingRecipe> {
-        private static final StreamCodec<ByteBuf, TagKey<Item>> ItemTagStreamCodec = ResourceLocation.STREAM_CODEC.map(
+        private static final StreamCodec<ByteBuf, TagKey<Item>> ITEM_TAG_STREAM_CODEC = ResourceLocation.STREAM_CODEC.map(
             loc -> TagKey.create(Registries.ITEM, loc), TagKey::location);
 
-        MapCodec<FermentingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-            .group(SizedFluidIngredient.FLAT_CODEC.fieldOf("input_fluid").forGetter(FermentingRecipe::input),
+        public static final MapCodec<FermentingRecipe> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(SizedFluidIngredient.FLAT_CODEC.fieldOf("input").forGetter(FermentingRecipe::input),
                 TagKey.codec(Registries.ITEM).fieldOf("left_reagent").forGetter(FermentingRecipe::leftReagent),
                 TagKey.codec(Registries.ITEM).fieldOf("right_reagent").forGetter(FermentingRecipe::rightReagent),
-                FluidStack.CODEC.fieldOf("output_fluid").forGetter(FermentingRecipe::output), Codec.INT.fieldOf("ticks").forGetter(FermentingRecipe::ticks))
+                    FluidStack.CODEC.fieldOf("output").forGetter(FermentingRecipe::output), Codec.INT.fieldOf("ticks").forGetter(FermentingRecipe::ticks))
             .apply(instance, FermentingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, FermentingRecipe> STREAM_CODEC = StreamCodec.composite(SizedFluidIngredient.STREAM_CODEC,
-            FermentingRecipe::input, ItemTagStreamCodec, FermentingRecipe::leftReagent, ItemTagStreamCodec, FermentingRecipe::rightReagent,
+            FermentingRecipe::input, ITEM_TAG_STREAM_CODEC, FermentingRecipe::leftReagent, ITEM_TAG_STREAM_CODEC, FermentingRecipe::rightReagent,
             FluidStack.STREAM_CODEC, FermentingRecipe::output, ByteBufCodecs.INT, FermentingRecipe::ticks, FermentingRecipe::new);
 
         @Override

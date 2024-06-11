@@ -43,14 +43,16 @@ import java.util.List;
 
 public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser, FluidItemInteractive {
 
-    public static final int TANK_CAPACITY_COMMON = 8 * FluidType.BUCKET_VOLUME;
+    public static final int TANK_CAPACITY = 8 * FluidType.BUCKET_VOLUME;
     private static final TankAccess INPUT_TANK = new TankAccess();
     private static final TankAccess OUTPUT_TANK = new TankAccess();
     public static final MultiSlotAccess REAGENTS = new MultiSlotAccess();
+    private static final ResourceLocation EMPTY = EnderIO.loc("");
+
     private final MachineFluidHandler fluidHandler;
     private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Container> craftingTaskHost;
+
     private ResourceLocation recipeId;
-    private static final ResourceLocation EMPTY = EnderIO.loc("");
 
     public VatBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.VAT.get(), worldPosition, blockState);
@@ -119,8 +121,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     public MachineTankLayout getTankLayout() {
         return MachineTankLayout
             .builder()
-            .tank(INPUT_TANK, TANK_CAPACITY_COMMON, true, false, (stack) -> true)
-            .tank(OUTPUT_TANK, TANK_CAPACITY_COMMON, false, true, (stack) -> true)
+            .tank(INPUT_TANK, TANK_CAPACITY, true, false, (stack) -> true)
+            .tank(OUTPUT_TANK, TANK_CAPACITY, false, true, (stack) -> true)
             .build();
     }
 
@@ -154,7 +156,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     }
 
     public ResourceLocation getRecipeId() {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return recipeId;
         }
 
@@ -198,7 +200,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
         @Override
         protected int makeProgress(int remainingProgress) {
-            return 1;
+            return 1; // do nothing. VAT doesn't consume power
         }
 
         @Override
