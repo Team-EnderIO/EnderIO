@@ -19,7 +19,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,7 +43,7 @@ public class VatScreen extends EIOScreen<VatMenu> {
         addRenderableOnly(new FluidStackWidget(this, getMenu().getBlockEntity()::getOutputTank, 132 + leftPos, 12 + topPos, 15, 47));
 
         addRenderableOnly(
-            new FluidTransformWidget(this::isCrafting, this::getInputFluid, this::getOutputFluid, this::getProgress, 76 + leftPos, 34 + topPos, 26, 28));
+            new FluidTransformWidget(this::isCrafting, this::inputFluidStack, this::outputFluidStack, this::getProgress, 76 + leftPos, 34 + topPos, 26, 28));
 
         addRenderableOnly(new ProgressWidget.BottomUp(this, this::getProgress, 82 + leftPos, 64 + topPos, 14, 14, 176, 0));
 
@@ -87,12 +86,12 @@ public class VatScreen extends EIOScreen<VatMenu> {
         return getMenu().getBlockEntity().getCraftingHost().getProgress() > 0 && recipeCache != null;
     }
 
-    private Fluid getInputFluid() {
-        return getMenu().getBlockEntity().getInputTank().getFluid().getFluid();
+    private FluidStack inputFluidStack() {
+        return getMenu().getBlockEntity().getInputTank().getFluid();
     }
 
-    private Fluid getOutputFluid() {
-        return recipeCache.getOutputFluid();
+    private FluidStack outputFluidStack() {
+        return recipeCache.output();
     }
 
     private float getProgress() {
@@ -114,7 +113,7 @@ public class VatScreen extends EIOScreen<VatMenu> {
             public int getFluidAmount() {
                 int reduced = 0;
                 if (isCrafting()) {
-                    reduced = recipeCache.getInputFluidAmount();
+                    reduced = recipeCache.input().amount();
                 }
                 return tank.getFluidAmount() - reduced;
             }

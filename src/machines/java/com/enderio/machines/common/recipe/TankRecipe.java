@@ -1,22 +1,24 @@
 package com.enderio.machines.common.recipe;
 
-import com.enderio.EnderIO;
-import com.enderio.core.common.recipes.EnderRecipe;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.ResourceLocationException;
-import net.minecraft.core.RegistryAccess;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ByIdMap;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -24,65 +26,78 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import java.util.function.IntFunction;
 
-public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
+public record TankRecipe(
+    Ingredient input,
+    Item output,
+    FluidStack fluid,
+    Mode mode
+) implements Recipe<TankRecipe.Container> {
 
-    final Ingredient input;
-    final Item output;
-    final FluidStack fluid;
-    final boolean isEmptying;
+    public enum Mode implements StringRepresentable {
+        FILL(0, "fill"),
+        EMPTY(1, "empty");
 
-    public TankRecipe(Ingredient input, Item output, FluidStack fluid, boolean isEmptying) {
-        this.input = input;
-        this.output = output;
-        this.fluid = fluid;
-        this.isEmptying = isEmptying;
-    }
+        public static final Codec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
+        public static final IntFunction<Mode> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final StreamCodec<ByteBuf, Mode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
 
-    public Ingredient getInput() {
-        return input;
-    }
+        private final int id;
+        private final String name;
 
-    public Item getOutput() {
-        return output;
-    }
+        Mode(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
 
-    public FluidStack getFluid() {
-        return fluid;
-    }
-
-    public boolean isEmptying() {
-        return isEmptying;
+        @Override
+        public String getSerializedName() {
+            return name;
+        }
     }
 
     @Override
     public boolean matches(Container pContainer, Level pLevel) {
-        if (isEmptying) {
+        switch (mode) {
+        case FILL -> {
+            if (pContainer.getFluidTank().drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
+                return false;
+            }
+
+            return input.test(FluidTankBlockEntity.FLUID_DRAIN_INPUT.getItemStack(pContainer));
+        }
+        case EMPTY -> {
             if (pContainer.getFluidTank().fill(fluid, IFluidHandler.FluidAction.SIMULATE) <= 0) {
                 return false;
             }
 
             return input.test(FluidTankBlockEntity.FLUID_FILL_INPUT.getItemStack(pContainer));
         }
-
-        if (pContainer.getFluidTank().drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
-            return false;
         }
 
-        return input.test(FluidTankBlockEntity.FLUID_DRAIN_INPUT.getItemStack(pContainer));
+        return false;
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+    public ItemStack assemble(Container container, HolderLookup.Provider lookupProvider) {
         return null;
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess p_267052_) {
+    public boolean canCraftInDimensions(int pWidth, int pHeight) {
+        return true;
+    }
+
+    @Override
+    public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
         return new ItemStack(output);
+    }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
     }
 
     @Override
@@ -111,51 +126,33 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
 
     public static class Serializer implements RecipeSerializer<TankRecipe> {
 
-        private static final Codec<TankRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(recipe -> recipe.input),
-            BuiltInRegistries.ITEM.byNameCodec().fieldOf("output").forGetter(recipe -> recipe.output),
-            FluidStack.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.fluid),
-            Codec.BOOL.fieldOf("is_emptying").forGetter(recipe -> recipe.isEmptying)
+        private static final MapCodec<TankRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(TankRecipe::input),
+            BuiltInRegistries.ITEM.byNameCodec().fieldOf("output").forGetter(TankRecipe::output),
+            FluidStack.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid),
+            Mode.CODEC.fieldOf("mode").forGetter(TankRecipe::mode)
         ).apply(instance, TankRecipe::new));
 
+        public static final StreamCodec<RegistryFriendlyByteBuf, TankRecipe> STREAM_CODEC = StreamCodec.composite(
+            Ingredient.CONTENTS_STREAM_CODEC,
+            TankRecipe::input,
+            ByteBufCodecs.registry(Registries.ITEM),
+            TankRecipe::output,
+            FluidStack.STREAM_CODEC,
+            TankRecipe::fluid,
+            Mode.STREAM_CODEC,
+            TankRecipe::mode,
+            TankRecipe::new
+        );
+
         @Override
-        public Codec<TankRecipe> codec() {
+        public MapCodec<TankRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public @Nullable TankRecipe fromNetwork(FriendlyByteBuf buffer) {
-            try {
-                Ingredient input = Ingredient.fromNetwork(buffer);
-
-                ResourceLocation outputId = buffer.readResourceLocation();
-                Item output = BuiltInRegistries.ITEM.get(outputId);
-                if (output == Items.AIR) {
-                    return null;
-                }
-
-                FluidStack fluid = FluidStack.readFromPacket(buffer);
-
-                boolean isEmptying = buffer.readBoolean();
-
-                return new TankRecipe(input, output, fluid, isEmptying);
-            } catch (Exception ex) {
-                EnderIO.LOGGER.error("Error reading tank recipe from packet.", ex);
-                return null;
-            }
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf buffer, TankRecipe recipe) {
-            try {
-                recipe.input.toNetwork(buffer);
-                buffer.writeResourceLocation(Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(recipe.output)));
-                recipe.fluid.writeToPacket(buffer);
-                buffer.writeBoolean(recipe.isEmptying);
-            } catch (Exception ex) {
-                EnderIO.LOGGER.error("Error writing tank recipe to packet.", ex);
-                throw ex;
-            }
+        public StreamCodec<RegistryFriendlyByteBuf, TankRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

@@ -5,6 +5,7 @@ import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -44,8 +45,8 @@ public class FusedQuartzBlock extends TransparentBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> pTooltip, TooltipFlag pFlag) {
+        super.appendHoverText(pStack, pContext, pTooltip, pFlag);
 
         if (explosionResistant) {
             pTooltip.add(EIOLang.BLOCK_BLAST_RESISTANT);
@@ -79,7 +80,7 @@ public class FusedQuartzBlock extends TransparentBlock {
 
     @Override
     public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        if (pContext instanceof EntityCollisionContext entityCollisionContext) {
+        if (pContext instanceof EntityCollisionContext entityCollisionContext && entityCollisionContext != CollisionContext.empty()) {
             if (collisionPredicate.canPass(entityCollisionContext)) {
                 return Shapes.empty();
             }

@@ -5,6 +5,7 @@ import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -35,6 +36,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             .addTag(EIOTags.Items.DUSTS_ENDER)
             .addTag(EIOTags.Items.DUSTS_OBSIDIAN)
             .addTag(EIOTags.Items.DUSTS_COBALT)
+            .addTag(EIOTags.Items.DUSTS_PRISMARINE)
             .addTag(EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
             .addTag(EIOTags.Items.DUSTS_GRAINS_OF_PRESCIENCE)
             .addTag(EIOTags.Items.DUSTS_GRAINS_OF_VIBRANCY)
@@ -64,6 +66,8 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             .addTag(EIOTags.Items.NUGGETS_VIBRANT_ALLOY);
 
         tag(Tags.Items.STORAGE_BLOCKS)
+            .addTag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST)
+            .addTag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ)
             .addTag(EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY)
             .addTag(EIOTags.Items.BLOCKS_COPPER_ALLOY)
             .addTag(EIOTags.Items.BLOCKS_DARK_STEEL)
@@ -90,6 +94,18 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             .addTag(EIOTags.Items.GEARS_ENERGIZED)
             .addTag(EIOTags.Items.GEARS_DARK_STEEL);
 
-        tag(EIOTags.Items.INSULATION_METAL).addTag(EIOTags.Items.DUSTS_IRON).addTag(EIOTags.Items.DUSTS_TIN);
+        tag(EIOTags.Items.INSULATION_METAL)
+            .addTag(EIOTags.Items.DUSTS_IRON)
+            .addTag(EIOTags.Items.DUSTS_TIN);
+
+        // Common tags
+        tag(EIOTags.Items.DUSTS_PRISMARINE)
+            .add(Items.PRISMARINE_SHARD);
+
+        tag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ)
+            .add(Items.QUARTZ_BLOCK);
+
+        tag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST)
+            .add(Items.AMETHYST_BLOCK);
     }
 }

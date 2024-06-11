@@ -10,18 +10,19 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.function.Supplier;
 
 public class FluidTransformWidget extends EIOWidget {
     private final Supplier<Boolean> isVisible;
-    private final Supplier<Fluid> first;
-    private final Supplier<Fluid> second;
+    private final Supplier<FluidStack> first;
+    private final Supplier<FluidStack> second;
     private final Supplier<Float> progress;
 
-    public FluidTransformWidget(Supplier<Boolean> isVisible, Supplier<Fluid> first, Supplier<Fluid> second, Supplier<Float> progress, int x, int y, int width,
+    public FluidTransformWidget(Supplier<Boolean> isVisible, Supplier<FluidStack> first, Supplier<FluidStack> second, Supplier<Float> progress, int x, int y,
+        int width,
         int height) {
         super(x, y, width, height);
         this.isVisible = isVisible;
@@ -46,9 +47,9 @@ public class FluidTransformWidget extends EIOWidget {
     @Override
     protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
 
-    public void renderFluid(GuiGraphics guiGraphics, Fluid fluid, float progress) {
+    public void renderFluid(GuiGraphics guiGraphics, FluidStack fluid, float progress) {
         Minecraft minecraft = Minecraft.getInstance();
-        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
+        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid.getFluid());
         ResourceLocation loc = props.getStillTexture();
 
         AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);

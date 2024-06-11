@@ -7,6 +7,7 @@ import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -182,18 +183,18 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	        e.active = true;
 	    }
 	}
-	
-	@Override
-	protected void saveAdditional(CompoundTag tag) {
-		tag.putBoolean(EIONBTKeys.ACTIVE, active);
-		super.saveAdditional(tag);
-	}
-	
-	@Override
-	public void load(CompoundTag tag) {
-		super.load(tag);
-		this.active = tag.getBoolean(EIONBTKeys.ACTIVE);
-	}
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        tag.putBoolean(EIONBTKeys.ACTIVE, active);
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        this.active = tag.getBoolean(EIONBTKeys.ACTIVE);
+    }
 	
 	@Override
 	public Packet<ClientGamePacketListener> getUpdatePacket() {

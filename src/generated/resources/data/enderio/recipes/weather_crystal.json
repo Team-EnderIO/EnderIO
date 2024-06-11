@@ -3,13 +3,13 @@
   "category": "misc",
   "key": {
     "E": {
-      "tag": "neoforge:gems/ender_crystal"
+      "tag": "c:gems/ender_crystal"
     },
     "P": {
-      "tag": "neoforge:gems/pulsating_crystal"
+      "tag": "c:gems/pulsating_crystal"
     },
     "V": {
-      "tag": "neoforge:gems/vibrant_crystal"
+      "tag": "c:gems/vibrant_crystal"
     }
   },
   "pattern": [
@@ -18,6 +18,7 @@
     " P "
   ],
   "result": {
-    "item": "enderio:weather_crystal"
+    "count": 1,
+    "id": "enderio:weather_crystal"
   }
 }

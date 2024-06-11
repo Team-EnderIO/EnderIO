@@ -4,26 +4,20 @@
   "experience": 0.3,
   "inputs": [
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "forge:ingots/nether_brick"
-      }
+      "count": 1,
+      "tag": "c:bricks/nether"
     },
     {
-      "Count": 4,
-      "Ingredient": {
-        "item": "minecraft:nether_wart"
-      }
+      "count": 4,
+      "item": "minecraft:nether_wart"
     },
     {
-      "Count": 6,
-      "Ingredient": {
-        "item": "minecraft:clay_ball"
-      }
+      "count": 6,
+      "item": "minecraft:clay_ball"
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:nethercotta"
   }
 }

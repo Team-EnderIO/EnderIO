@@ -27,11 +27,11 @@
       "tag": "enderio:fused_quartz_m"
     },
     {
-      "tag": "forge:dyes/black"
+      "tag": "c:dyes/black"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:fused_quartz_m_black"
+    "id": "enderio:fused_quartz_m_black"
   }
 }

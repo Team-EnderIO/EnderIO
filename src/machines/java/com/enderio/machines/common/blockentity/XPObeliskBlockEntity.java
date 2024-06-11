@@ -3,8 +3,8 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
-import com.enderio.machines.common.attachment.IFluidTankUser;
+import com.enderio.core.common.network.NetworkDataSlot;
+import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
@@ -13,6 +13,7 @@ import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.menu.XPObeliskMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -23,9 +24,9 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class XPObeliskBlockEntity extends MachineBlockEntity implements IFluidTankUser {
+public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTankUser {
 
-    IntegerNetworkDataSlot xpTankDataSlot;
+    private final NetworkDataSlot<Integer> xpTankDataSlot;
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
 
@@ -33,7 +34,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements IFluidTa
         super(MachineBlockEntities.XP_OBELISK.get(), worldPosition, blockState);
         fluidHandler = createFluidHandler();
 
-        this.xpTankDataSlot = new IntegerNetworkDataSlot(() -> TANK.getFluidAmount(this),
+        this.xpTankDataSlot = NetworkDataSlot.INT.create(() -> TANK.getFluidAmount(this),
             amount -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), amount)));
         addDataSlot(xpTankDataSlot);
     }
@@ -46,12 +47,12 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements IFluidTa
 
     @Override
     public MachineTankLayout getTankLayout() {
-        return new MachineTankLayout.Builder().tank(TANK, Integer.MAX_VALUE, fluidStack -> fluidStack.getFluid().is(EIOTags.Fluids.EXPERIENCE)).build();
+        return new MachineTankLayout.Builder().tank(TANK, Integer.MAX_VALUE, fluidStack -> fluidStack.is(EIOTags.Fluids.EXPERIENCE)).build();
     }
 
     @Override
     public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(this, getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
@@ -97,12 +98,13 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements IFluidTa
     }
 
     public void addAllLevelToPlayer(boolean give, Player player) {
-        long awardXP = 0;
+        long awardXP;
         if (give) {
             awardXP = TANK.getFluidAmount(this) / ExperienceUtil.EXP_TO_FLUID;
         } else {
             awardXP = -ExperienceUtil.getPlayerTotalXp(player);
         }
+
         awardXP(awardXP, player);
     }
 
@@ -124,15 +126,15 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements IFluidTa
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        saveTank(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
+        saveTank(lookupProvider, pTag);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        loadTank(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
+        loadTank(lookupProvider, pTag);
     }
 
     // endregion

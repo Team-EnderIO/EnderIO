@@ -43,8 +43,9 @@ public class RecipeInputCache<C extends Container, T extends Recipe<C>> {
 
         // Build the new inventory state after the addition
         for (int i = 0; i < inputs.size(); i++) {
-            var invStack = inputs.get(i).getItemStack(inventory);
-            if (i == slot) {
+            var input = inputs.get(i);
+            var invStack = input.getItemStack(inventory);
+            if (input.getIndex() == slot) {
                 currentItems.add(toAdd);
             } else if (!invStack.isEmpty()) {
                 currentItems.add(invStack);

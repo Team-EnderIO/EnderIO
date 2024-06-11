@@ -27,11 +27,11 @@
       "tag": "enderio:fused_quartz_np"
     },
     {
-      "tag": "forge:dyes/brown"
+      "tag": "c:dyes/brown"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:fused_quartz_np_brown"
+    "id": "enderio:fused_quartz_np_brown"
   }
 }

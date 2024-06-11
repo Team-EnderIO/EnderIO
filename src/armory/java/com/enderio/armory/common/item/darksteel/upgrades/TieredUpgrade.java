@@ -1,6 +1,7 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
 import com.enderio.api.capability.IDarkSteelUpgrade;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -48,14 +49,14 @@ public abstract class TieredUpgrade<T extends IUpgradeTier> implements IDarkStee
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt(TIER_KEY, tier.getLevel());
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(Tag tag) {
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, Tag tag) {
         if (tag instanceof CompoundTag nbt) {
             int level = nbt.getInt(TIER_KEY);
             tier = getTier(level).orElse(getBaseTier());

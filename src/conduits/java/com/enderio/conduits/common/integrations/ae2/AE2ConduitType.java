@@ -3,14 +3,13 @@ package com.enderio.conduits.common.integrations.ae2;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.IConduitMenuData;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.conduit.TieredConduit;
-import com.enderio.api.conduit.ticker.IConduitTicker;
+import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.init.EnderConduitTypes;
+import com.enderio.conduits.common.init.ConduitTypes;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
@@ -31,18 +30,18 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
     public AE2ConduitType(boolean dense) {
         super(EnderIO.loc("block/conduit/" + (dense ? "dense_me" : "me")), new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8,
-            EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, dense ? 72 : 48));
+            ConduitTypes.ICON_TEXTURE, new Vector2i(0, dense ? 72 : 48));
         this.dense = dense;
     }
 
     @Override
-    public IConduitTicker getTicker() {
+    public ConduitTicker getTicker() {
         return Ticker.INSTANCE;
     }
 
     @Override
-    public IConduitMenuData getMenuData() {
-        return ConduitMenuData.INSTANCE;
+    public com.enderio.api.conduit.ConduitMenuData getMenuData() {
+        return AE2ConduitType.ConduitMenuData.INSTANCE;
     }
 
     @Override
@@ -51,9 +50,9 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     }
 
     @Override
-    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, AE2InWorldConduitNodeHost extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, Optional<NodeIdentifier.IOState> state) {
+    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, AE2InWorldConduitNodeHost extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable NodeIdentifier.IOState state) {
         if (getCapability() == cap) {
-            return (Optional<K>) Optional.ofNullable(extendedConduitData.getSelfCap());
+            return (Optional<K>) Optional.of(extendedConduitData);
         }
         return Optional.empty();
     }
@@ -75,9 +74,9 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         return AE2Integration.IN_WORLD_GRID_NODE_HOST;
     }
 
-    private static final class ConduitMenuData implements IConduitMenuData {
+    private static final class ConduitMenuData implements com.enderio.api.conduit.ConduitMenuData {
 
-        private static final IConduitMenuData INSTANCE = new ConduitMenuData();
+        private static final com.enderio.api.conduit.ConduitMenuData INSTANCE = new ConduitMenuData();
 
         @Override
         public boolean hasFilterInsert() {
@@ -120,11 +119,11 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         }
     }
 
-    private static final class Ticker implements IConduitTicker {
+    private static final class Ticker implements ConduitTicker {
 
         private static final Ticker INSTANCE = new Ticker();
         @Override
-        public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+        public void tickGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
             //ae2 graphs don't actually do anything, that's all done by ae2
         }
 
@@ -139,7 +138,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         }
 
         @Override
-        public boolean canConnectTo(IConduitType<?> thisType, IConduitType<?> other) {
+        public boolean canConnectTo(ConduitType<?> thisType, ConduitType<?> other) {
             return other instanceof AE2ConduitType;
         }
     }

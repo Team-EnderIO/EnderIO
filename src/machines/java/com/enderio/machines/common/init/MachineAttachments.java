@@ -3,14 +3,12 @@ package com.enderio.machines.common.init;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.machines.common.attachment.ActionRange;
-import com.mojang.serialization.Codec;
-import net.minecraft.util.ExtraCodecs;
+import com.enderio.machines.common.io.IOConfig;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-import java.util.Locale;
 import java.util.function.Supplier;
 
 public class MachineAttachments {
@@ -19,10 +17,15 @@ public class MachineAttachments {
     public static final Supplier<AttachmentType<RedstoneControl>> REDSTONE_CONTROL
         = ATTACHMENT_TYPES.register("redstone_control", () -> AttachmentType
         .builder(() -> RedstoneControl.ALWAYS_ACTIVE)
-        .serialize(ExtraCodecs.stringResolverCodec(RedstoneControl::getSerializedName, s -> RedstoneControl.valueOf(s.toUpperCase(Locale.ROOT)))).build());
+        .serialize(RedstoneControl.CODEC).build());
 
     public static final Supplier<AttachmentType<ActionRange>> ACTION_RANGE
-        = ATTACHMENT_TYPES.register("action_range", () -> AttachmentType.builder(() -> new ActionRange(3, false)).serialize(ActionRange.CODEC).build());
+        = ATTACHMENT_TYPES.register("action_range", () -> AttachmentType
+        .builder(() -> new ActionRange(3, false))
+        .serialize(ActionRange.CODEC).build());
+
+    public static final Supplier<AttachmentType<IOConfig>> IO_CONFIG
+        = ATTACHMENT_TYPES.register("io_config", () -> AttachmentType.builder(IOConfig::empty).serialize(IOConfig.CODEC).build());
 
     public static void register(IEventBus bus) {
         ATTACHMENT_TYPES.register(bus);

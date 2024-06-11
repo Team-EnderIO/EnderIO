@@ -9,14 +9,11 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
-import net.minecraft.world.level.levelgen.LegacyRandomSource;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class EnderIOSelfClientIntegration implements ClientIntegration {
 
@@ -54,11 +51,12 @@ public class EnderIOSelfClientIntegration implements ClientIntegration {
 
     private static List<Pair<Holder<BannerPattern>, DyeColor>> createRandomPattern() {
         List<Pair<Holder<BannerPattern>, DyeColor>> patterns = new ArrayList<>();
-        Random random = new Random();
+        // TODO: 1.20.6: Banner patterns changed, but idk what this even does.
+        /*Random random = new Random();
         for (int i = random.nextInt(3); i < 6; i++) {
             patterns.add(new Pair<>(
                 BuiltInRegistries.BANNER_PATTERN.getRandom(new LegacyRandomSource(random.nextInt())).orElseThrow(), DyeColor.values()[random.nextInt(DyeColor.values().length)]));
-        }
+        }*/
         return patterns;
     }
 }

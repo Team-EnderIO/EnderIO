@@ -3,7 +3,7 @@
   "bonus": "none",
   "energy": 2400,
   "input": {
-    "tag": "forge:ender_pearls"
+    "tag": "c:ender_pearls"
   },
   "outputs": [
     {

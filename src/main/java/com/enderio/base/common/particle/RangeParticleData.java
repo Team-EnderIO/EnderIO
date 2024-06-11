@@ -1,53 +1,35 @@
 package com.enderio.base.common.particle;
 
 import com.enderio.base.common.init.EIOParticles;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
-
-import java.util.Locale;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 public record RangeParticleData(int range, String color) implements ParticleOptions {
-    public static final Deserializer<RangeParticleData> DESERIALIZER = new Deserializer<>() {
 
-        @Override
-        public RangeParticleData fromCommand(ParticleType<RangeParticleData> type, StringReader reader) throws CommandSyntaxException {
-            reader.expect(' ');
-            int range = reader.readInt();
-            reader.expect(' ');
-            String color = reader.readString();
-            return new RangeParticleData(range, color);
-        }
+    public static final MapCodec<RangeParticleData> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+            Codec.INT.fieldOf("range").forGetter(RangeParticleData::range),
+            Codec.STRING.fieldOf("color").forGetter(RangeParticleData::color)
+        )
+        .apply(instance, RangeParticleData::new)
+    );
 
-        @Override
-        public RangeParticleData fromNetwork(ParticleType<RangeParticleData> particleType, FriendlyByteBuf buffer) {
-            return new RangeParticleData(buffer.readInt(), buffer.readUtf());
-        }
-    };
-
-    public static Codec<RangeParticleData> CODEC = RecordCodecBuilder.create(val -> val
-        .group(Codec.INT.fieldOf("range").forGetter(data -> data.range), Codec.STRING.fieldOf("color").forGetter(data -> data.color))
-        .apply(val, RangeParticleData::new));
+    public static final StreamCodec<RegistryFriendlyByteBuf, RangeParticleData> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.INT,
+        RangeParticleData::range,
+        ByteBufCodecs.STRING_UTF8,
+        RangeParticleData::color,
+        RangeParticleData::new
+    );
 
     @Override
     public ParticleType<?> getType() {
         return EIOParticles.RANGE_PARTICLE.get();
-    }
-
-    @Override
-    public void writeToNetwork(FriendlyByteBuf buffer) {
-        buffer.writeInt(range);
-        buffer.writeUtf(color);
-    }
-
-    @Override
-    public String writeToString() {
-        return String.format(Locale.ROOT, "%s %d %s ", BuiltInRegistries.PARTICLE_TYPE.getKey(getType()), range, color);
     }
 }

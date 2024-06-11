@@ -3,6 +3,7 @@ package com.enderio.armory.common.item.darksteel.upgrades;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.core.common.util.TooltipUtil;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -83,18 +84,18 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag nbt = super.serializeNBT();
-        nbt.put(STORAGE_KEY, getStorage().serializeNBT());
+    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
+        CompoundTag nbt = super.serializeNBT(lookupProvider);
+        nbt.put(STORAGE_KEY, getStorage().serializeNBT(lookupProvider));
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(Tag tag) {
-        super.deserializeNBT(tag);
+    public void deserializeNBT(HolderLookup.Provider lookupProvider, Tag tag) {
+        super.deserializeNBT(lookupProvider, tag);
         if (tag instanceof CompoundTag nbt) {
             storage = new EnergyStorage(tier.getMaxStorage());
-            storage.deserializeNBT(nbt.get(STORAGE_KEY));
+            storage.deserializeNBT(lookupProvider, nbt.get(STORAGE_KEY));
         }
     }
 }

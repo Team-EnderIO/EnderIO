@@ -27,11 +27,11 @@
       "tag": "enderio:clear_glass_dnm"
     },
     {
-      "tag": "forge:dyes/blue"
+      "tag": "c:dyes/blue"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:clear_glass_dnm_blue"
+    "id": "enderio:clear_glass_dnm_blue"
   }
 }

@@ -27,11 +27,11 @@
       "tag": "enderio:clear_glass_d"
     },
     {
-      "tag": "forge:dyes/green"
+      "tag": "c:dyes/green"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:clear_glass_d_green"
+    "id": "enderio:clear_glass_d_green"
   }
 }

@@ -1,20 +1,17 @@
 package com.enderio.base.common.handler;
 
 import com.enderio.api.integration.IntegrationManager;
-import com.enderio.api.travel.ITravelTarget;
+import com.enderio.api.travel.TravelTarget;
+import com.enderio.api.travel.TravelTargetApi;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.network.RequestTravelPacket;
-import com.enderio.base.common.travel.TravelSavedData;
-import com.enderio.core.common.network.CoreNetwork;
-import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -27,6 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -101,12 +99,12 @@ public class TravelHandler {
         return false;
     }
 
-    public static boolean blockTeleportTo(Level level, Player player, ITravelTarget target, boolean sendToServer) {
-        Optional<Double> height = isTeleportPositionClear(level, target.getPos());
+    public static boolean blockTeleportTo(Level level, Player player, TravelTarget target, boolean sendToServer) {
+        Optional<Double> height = isTeleportPositionClear(level, target.pos());
         if (height.isEmpty()) {
             return false;
         }
-        BlockPos blockPos = target.getPos();
+        BlockPos blockPos = target.pos();
         Vec3 teleportPosition = new Vec3(blockPos.getX() + 0.5f, blockPos.getY() + height.get() + 1, blockPos.getZ() + 0.5f);
         teleportPosition = teleportEvent(player, teleportPosition).orElse(null);
         if (teleportPosition != null) {
@@ -116,7 +114,7 @@ public class TravelHandler {
                 serverPlayer.connection.resetPosition();
                 player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.75F, 1F);
             } else if (sendToServer) {
-                NetworkUtil.sendToServer(new RequestTravelPacket(target.getPos()));
+                PacketDistributor.sendToServer(new RequestTravelPacket(target.pos()));
             }
 
             player.resetFallDistance();
@@ -210,20 +208,19 @@ public class TravelHandler {
         return null;
     }
 
-    public static Optional<ITravelTarget> getAnchorTarget(Player player) {
+    public static Optional<TravelTarget> getAnchorTarget(Player player) {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
-        return TravelSavedData
-            .getTravelData(player.level())
-            .getTravelTargetsInItemRange(player.blockPosition())
+        return TravelTargetApi.INSTANCE
+            .getInItemRange(player.level(), player.blockPosition())
             .filter(target -> target.canTravelTo())
-            .filter(target -> target.getPos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
-            .filter(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
-            .filter(target -> isTeleportPositionClear(player.level(), target.getPos()).isPresent())
-            .min(Comparator.comparingDouble(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot()))));
+            .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
+            .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
+            .filter(target -> isTeleportPositionClear(player.level(), target.pos()).isPresent())
+            .min(Comparator.comparingDouble(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(), player.getXRot()))));
     }
 
-    public static Optional<ITravelTarget> getElevatorAnchorTarget(Player player, Direction direction) {
+    public static Optional<TravelTarget> getElevatorAnchorTarget(Player player, Direction direction) {
         int anchorRange = BaseConfig.COMMON.ITEMS.TRAVELLING_BLOCK_TO_BLOCK_RANGE.get();
         BlockPos anchorPos = player.blockPosition().below();
 
@@ -242,15 +239,14 @@ public class TravelHandler {
             lowerY = anchorY - anchorRange - 1;
         }
 
-        return TravelSavedData
-            .getTravelData(player.level())
-            .getTravelTargets()
+        return TravelTargetApi.INSTANCE
+            .getAll(player.level())
             .stream()
-            .filter(target -> target.getPos().getX() == anchorX && target.getPos().getZ() == anchorZ)
-            .filter(target -> target.getPos().getY() > lowerY && target.getPos().getY() < upperY)
+            .filter(target -> target.pos().getX() == anchorX && target.pos().getZ() == anchorZ)
+            .filter(target -> target.pos().getY() > lowerY && target.pos().getY() < upperY)
             .filter(target -> target.canTravelTo())
-            .filter(target -> isTeleportPositionClear(player.level(), target.getPos()).isPresent())
-            .min(Comparator.comparingDouble(target -> Math.abs(target.getPos().getY() - anchorY)));
+            .filter(target -> isTeleportPositionClear(player.level(), target.pos()).isPresent())
+            .min(Comparator.comparingDouble(target -> Math.abs(target.pos().getY() - anchorY)));
     }
 
 

@@ -6,13 +6,13 @@
       "item": "minecraft:bucket"
     },
     "C": {
-      "tag": "enderio:clear_glass"
+      "tag": "c:glass_blocks/clear"
     },
     "G": {
-      "tag": "neoforge:gears/iron"
+      "tag": "c:gears/iron"
     },
     "I": {
-      "tag": "neoforge:ingots/copper_alloy"
+      "tag": "c:ingots/copper_alloy"
     },
     "V": {
       "item": "enderio:void_chassis"
@@ -24,6 +24,7 @@
     "GBG"
   ],
   "result": {
-    "item": "enderio:drain"
+    "count": 1,
+    "id": "enderio:drain"
   }
 }

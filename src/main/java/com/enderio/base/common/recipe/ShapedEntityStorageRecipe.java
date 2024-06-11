@@ -1,10 +1,10 @@
 package com.enderio.base.common.recipe;
 
-import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.api.attachment.StoredEntityData;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIORecipes;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.recipes.WrappedShapedRecipe;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -29,11 +29,11 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer container, RegistryAccess registryAccess) {
-        ItemStack result = getWrapped().assemble(container, registryAccess);
+    public ItemStack assemble(CraftingContainer container, HolderLookup.Provider lookupProvider) {
+        ItemStack result = getWrapped().assemble(container, lookupProvider);
 
         getItemStoringEntity(container).ifPresent(itemStack ->
-            result.setData(EIOAttachments.STORED_ENTITY, itemStack.getData(EIOAttachments.STORED_ENTITY)));
+            result.set(EIODataComponents.STORED_ENTITY, itemStack.get(EIODataComponents.STORED_ENTITY)));
         return result;
     }
 
@@ -46,12 +46,9 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
     private Optional<ItemStack> getItemStoringEntity(CraftingContainer container) {
         for (int slot = 0; slot < container.getContainerSize(); slot++) {
             ItemStack stack = container.getItem(slot);
-
-            if (stack.is(EIOTags.Items.ENTITY_STORAGE)) {
-                var data = stack.getData(EIOAttachments.STORED_ENTITY);
-                if (data.hasEntity()) {
-                    return Optional.of(stack);
-                }
+            var data = stack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+            if (data.hasEntity()) {
+                return Optional.of(stack);
             }
         }
 

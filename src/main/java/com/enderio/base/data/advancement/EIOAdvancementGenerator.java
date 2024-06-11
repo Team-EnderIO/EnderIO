@@ -1,23 +1,18 @@
 package com.enderio.base.data.advancement;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.advancement.PaintingTrigger;
-import com.enderio.base.common.advancement.UseGliderTrigger;
-import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.paint.PaintingTrigger;
 import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.registries.RegistriesDatapackGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
-import java.util.HashMap;
 import java.util.function.Consumer;
 
 public class EIOAdvancementGenerator implements AdvancementProvider.AdvancementGenerator {

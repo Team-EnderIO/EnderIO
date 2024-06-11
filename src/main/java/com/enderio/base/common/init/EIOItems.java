@@ -1,9 +1,9 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.api.capacitor.ICapacitorData;
-import com.enderio.base.common.capacitor.DefaultCapacitorData;
-import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
+import com.enderio.api.capacitor.CapacitorData;
+import com.enderio.api.grindingball.GrindingBallData;
+import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
@@ -22,7 +22,7 @@ import com.enderio.base.common.item.tool.TravelStaffItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.model.item.GliderItemModel;
-import com.enderio.core.data.model.EIOModel;
+import com.enderio.core.data.model.ModelHelper;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
 import net.minecraft.network.chat.Component;
@@ -85,12 +85,12 @@ public class EIOItems {
 
     public static final RegiliteItem<MaterialItem> FRANK_N_ZOMBIE = materialItemGlinted("frank_n_zombie")
         .setTranslation("Frank'N'Zombie")
-        .setModelProvider((prov, ctx) -> EIOModel.mimicItem(prov, ctx, EIOItems.Z_LOGIC_CONTROLLER));
+        .setModelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.Z_LOGIC_CONTROLLER));
 
     public static final RegiliteItem<MaterialItem> ENDER_RESONATOR = materialItem("ender_resonator");
 
     public static final RegiliteItem<MaterialItem> SENTIENT_ENDER = materialItemGlinted("sentient_ender")
-        .setModelProvider((prov, ctx) -> EIOModel.mimicItem(prov, ctx, EIOItems.ENDER_RESONATOR));
+        .setModelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.ENDER_RESONATOR));
 
     public static final RegiliteItem<MaterialItem> SKELETAL_CONTRACTOR = materialItem("skeletal_contractor");
     public static final RegiliteItem<MaterialItem> GUARDIAN_DIODE = materialItem("guardian_diode");
@@ -99,25 +99,30 @@ public class EIOItems {
 
     // region Capacitors
 
-    public static final RegiliteItem<FixedCapacitorItem> BASIC_CAPACITOR =
-        fixedCapacitor("basic_capacitor", DefaultCapacitorData.BASIC);
+    public static final RegiliteItem<CapacitorItem> BASIC_CAPACITOR = ITEM_REGISTRY
+        .registerItem("basic_capacitor",
+            props -> new CapacitorItem(
+                props.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(1))),
+            new Item.Properties().stacksTo(1))
+        .setTab(EIOCreativeTabs.MAIN);
 
-    public static final RegiliteItem<FixedCapacitorItem> DOUBLE_LAYER_CAPACITOR =
-        fixedCapacitor("double_layer_capacitor", DefaultCapacitorData.DOUBLE_LAYER);
+    public static final RegiliteItem<CapacitorItem> DOUBLE_LAYER_CAPACITOR = ITEM_REGISTRY
+        .registerItem("double_layer_capacitor",
+            props -> new CapacitorItem(
+                props.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(2))),
+            new Item.Properties().stacksTo(1))
+        .setTab(EIOCreativeTabs.MAIN);
 
-    public static final RegiliteItem<FixedCapacitorItem> OCTADIC_CAPACITOR =
-        fixedCapacitor("octadic_capacitor", DefaultCapacitorData.OCTADIC);
+    public static final RegiliteItem<CapacitorItem> OCTADIC_CAPACITOR = ITEM_REGISTRY
+        .registerItem("octadic_capacitor",
+            props -> new CapacitorItem(
+                props.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(3))),
+            new Item.Properties().stacksTo(1))
+        .setTab(EIOCreativeTabs.MAIN);
 
     public static final RegiliteItem<LootCapacitorItem> LOOT_CAPACITOR = ITEM_REGISTRY
-        .registerItem("loot_capacitor", LootCapacitorItem::new, new Item.Properties().stacksTo(1))
-        .addCapability(EIOCapabilities.CapacitorData.ITEM, LootCapacitorItem.CAPACITOR_DATA_PROVIDER);
-
-    private static RegiliteItem<FixedCapacitorItem> fixedCapacitor(String name, ICapacitorData data) {
-        return ITEM_REGISTRY
-            .registerItem(name, props -> new FixedCapacitorItem(data, props))
-            .setTab(EIOCreativeTabs.MAIN)
-            .addCapability(EIOCapabilities.CapacitorData.ITEM, FixedCapacitorItem.CAPACITOR_DATA_PROVIDER);
-    }
+        .registerItem("loot_capacitor", LootCapacitorItem::new, new Item.Properties()
+            .stacksTo(1));
 
     // endregion
 
@@ -258,23 +263,43 @@ public class EIOItems {
 
     public static final RegiliteItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEM_REGISTRY
         .registerItem("broken_spawner", BrokenSpawnerItem::new)
-        .setModelProvider(EIOModel::fakeBlockModel)
-        .addItemTags(EIOTags.Items.ENTITY_STORAGE)
+        .setModelProvider(ModelHelper::fakeBlockModel)
         .setTab(EIOCreativeTabs.MAIN)
         .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.gePossibleStacks()));
+
     // endregion
 
-    // region GrindingBalls
+    // region Grinding Balls
 
-    public static final RegiliteItem<MaterialItem> SOULARIUM_BALL = materialItem("soularium_grinding_ball");
-    public static final RegiliteItem<MaterialItem> CONDUCTIVE_ALLOY_BALL = materialItem("conductive_alloy_grinding_ball");
-    public static final RegiliteItem<MaterialItem> PULSATING_ALLOY_BALL = materialItem("pulsating_alloy_grinding_ball");
-    public static final RegiliteItem<MaterialItem> REDSTONE_ALLOY_BALL = materialItem("redstone_alloy_grinding_ball");
-    public static final RegiliteItem<MaterialItem> ENERGETIC_ALLOY_BALL = materialItem("energetic_alloy_grinding_ball");
-    public static final RegiliteItem<MaterialItem> VIBRANT_ALLOY_BALL = materialItem("vibrant_alloy_grinding_ball");
-    public static final RegiliteItem<MaterialItem> COPPER_ALLOY_BALL = materialItem("copper_alloy_grinding_ball");
-    public static final RegiliteItem<MaterialItem> DARK_STEEL_BALL = materialItem("dark_steel_grinding_ball");
-    public static final RegiliteItem<MaterialItem> END_STEEL_BALL = materialItem("end_steel_grinding_ball");
+    // TODO: 20.6: Config for grinding balls?
+
+    public static final RegiliteItem<MaterialItem> SOULARIUM_BALL = grindingBall("soularium_grinding_ball",
+        new GrindingBallData(1.2F, 2.15F, 0.9F, 80000));
+
+    public static final RegiliteItem<MaterialItem> CONDUCTIVE_ALLOY_BALL = grindingBall("conductive_alloy_grinding_ball",
+        new GrindingBallData(1.35F, 1.00F, 1.0F, 40000));
+
+    public static final RegiliteItem<MaterialItem> PULSATING_ALLOY_BALL = grindingBall("pulsating_alloy_grinding_ball",
+        new GrindingBallData(1.00F, 1.85F, 1.0F, 100000));
+
+    public static final RegiliteItem<MaterialItem> REDSTONE_ALLOY_BALL = grindingBall("redstone_alloy_grinding_ball",
+        new GrindingBallData(1.00F, 1.00F, 0.35F, 30000));
+
+    public static final RegiliteItem<MaterialItem> ENERGETIC_ALLOY_BALL = grindingBall("energetic_alloy_grinding_ball",
+        new GrindingBallData(1.6F, 1.1F, 1.1F, 80000));
+
+    public static final RegiliteItem<MaterialItem> VIBRANT_ALLOY_BALL = grindingBall("vibrant_alloy_grinding_ball",
+        new GrindingBallData(1.75F, 1.35F, 1.13F, 80000));
+
+    public static final RegiliteItem<MaterialItem> COPPER_ALLOY_BALL = grindingBall("copper_alloy_grinding_ball",
+        new GrindingBallData(1.2F, 1.65F, 0.8F, 40000));
+
+    public static final RegiliteItem<MaterialItem> DARK_STEEL_BALL = grindingBall("dark_steel_grinding_ball",
+        new GrindingBallData(1.35F, 2.00F, 0.7F, 125000));
+
+    public static final RegiliteItem<MaterialItem> END_STEEL_BALL = grindingBall("end_steel_grinding_ball",
+        new GrindingBallData(1.4F, 2.4F, 0.7F, 75000));
+
     //    public static final Map<DyeColor, RegiliteItem<HangGliderItem>> COLORED_HANG_GLIDERS = Util.make(() -> {
     //       Map<DyeColor, RegiliteItem<HangGliderItem>> tempMap = new EnumMap<>(DyeColor.class);
     //       for (DyeColor color: DyeColor.values()) {
@@ -285,6 +310,15 @@ public class EIOItems {
     //    });
 
     //    public static final RegiliteItem<HangGliderItem> GLIDER = gliderItem("glider");
+
+    private static RegiliteItem<MaterialItem> grindingBall(String name, GrindingBallData grindingBallData) {
+        return ITEM_REGISTRY
+            .registerItem(name, props -> new MaterialItem(
+                props
+                    .component(EIODataComponents.GRINDING_BALL, grindingBallData),
+                false))
+            .setTab(EIOCreativeTabs.MAIN);
+    }
 
     // endregion
 
@@ -313,15 +347,12 @@ public class EIOItems {
 
     // region Items
 
-    // TODO: Will need sorted once we have added more.
-
     public static final RegiliteItem<SoulVialItem> EMPTY_SOUL_VIAL = groupedItem("empty_soul_vial", SoulVialItem::new, EIOCreativeTabs.SOULS);
 
     public static final RegiliteItem<SoulVialItem> FILLED_SOUL_VIAL = ITEM_REGISTRY
         .registerItem("filled_soul_vial", SoulVialItem::new, new Item.Properties().stacksTo(1))
-        .addItemTags(EIOTags.Items.ENTITY_STORAGE)
         .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
-        //.removeTab(CreativeModeTabs.SEARCH)
+        //TODO .removeTab(CreativeModeTabs.SEARCH)
         ;
 
     public static final RegiliteItem<EnderiosItem> ENDERIOS = ITEM_REGISTRY

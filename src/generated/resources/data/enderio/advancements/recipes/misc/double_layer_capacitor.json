@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:basic_capacitor"
-            ]
+            "items": "enderio:basic_capacitor"
           }
         ]
       },

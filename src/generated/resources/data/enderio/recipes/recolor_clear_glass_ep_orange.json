@@ -27,11 +27,11 @@
       "tag": "enderio:clear_glass_ep"
     },
     {
-      "tag": "forge:dyes/orange"
+      "tag": "c:dyes/orange"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:clear_glass_ep_orange"
+    "id": "enderio:clear_glass_ep_orange"
   }
 }

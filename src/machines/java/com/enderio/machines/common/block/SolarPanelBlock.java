@@ -1,7 +1,7 @@
 package com.enderio.machines.common.block;
 
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.item.IAdvancedTooltipProvider;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.solar.ISolarPanelTier;
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SolarPanelBlock extends MachineBlock implements IAdvancedTooltipProvider {
+public class SolarPanelBlock extends MachineBlock implements AdvancedTooltipProvider {
 
     public static final BooleanProperty NORTH = BooleanProperty.create("north");
     public static final BooleanProperty NORTH_EAST = BooleanProperty.create("north_east");

@@ -1,9 +1,7 @@
 package com.enderio.base.common.enchantment;
 
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 import java.util.function.Supplier;
 
@@ -11,13 +9,9 @@ public class EIOBaseEnchantment extends Enchantment {
 
     protected final Supplier<Boolean> enableFlag;
 
-    public EIOBaseEnchantment(Rarity pRarity, EnchantmentCategory pCategory, EquipmentSlot[] pApplicableSlots, Supplier<Boolean> flag) {
-        super(pRarity, pCategory, pApplicableSlots);
+    public EIOBaseEnchantment(EnchantmentDefinition enchantmentDefinition, Supplier<Boolean> flag) {
+        super(enchantmentDefinition);
         this.enableFlag = flag;
-    }
-
-    public EnchantmentCategory getCategory() {
-        return this.category;
     }
 
     @Override

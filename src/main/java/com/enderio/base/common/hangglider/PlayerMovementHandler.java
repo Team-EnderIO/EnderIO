@@ -16,14 +16,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.WeakHashMap;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class PlayerMovementHandler {
 
     /**
@@ -36,54 +36,53 @@ public class PlayerMovementHandler {
     private static final Map<Player, Integer> TICKS_FALLING = new WeakHashMap<>();
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
-        Player player = playerTickEvent.player;
-        if (playerTickEvent.phase == TickEvent.Phase.START) {
-            int ticksFalling = TICKS_FALLING.getOrDefault(player, 0);
-            if (player.onGround() != player.getDeltaMovement().y() < 0) {
-                TICKS_FALLING.put(player, ticksFalling + 1);
-            } else {
-                TICKS_FALLING.put(player, 0);
-            }
+    public static void onPlayerTick(PlayerTickEvent.Pre playerTickEvent) {
+        Player player = playerTickEvent.getEntity();
 
-            if (player.isSpectator()) {
-                return;
-            }
-
-            Optional<GliderMovementInfo> gliderMovementInfoOpt = calculateGliderMovementInfo(player, true);
-            if (gliderMovementInfoOpt.isEmpty()) {
-                return;
-            }
-
-            GliderMovementInfo gliderMovementInfo = gliderMovementInfoOpt.get();
-            double verticalSpeed = gliderMovementInfo.fallSpeed();
-            if (player.isSprinting()) {
-                verticalSpeed *= 3;
-            }
-
-            double oldHorizontalSpeed = player.getDeltaMovement().horizontalDistance();
-            double x = Math.cos(Math.toRadians(player.yHeadRot + 90)) * (gliderMovementInfo.acceleration() + oldHorizontalSpeed * MOVEMENT_CHANGE_EFFECT);
-            double z = Math.sin(Math.toRadians(player.yHeadRot + 90)) * (gliderMovementInfo.acceleration() + oldHorizontalSpeed * MOVEMENT_CHANGE_EFFECT);
-
-
-            Vec3 newDeltaMovement = new Vec3(player.getDeltaMovement().x() * (1 - MOVEMENT_CHANGE_EFFECT) + x, verticalSpeed, player.getDeltaMovement().z() * (1 - MOVEMENT_CHANGE_EFFECT) + z);
-            double speed = newDeltaMovement.length();
-            if (speed > gliderMovementInfo.maxSpeed()) {
-                newDeltaMovement = newDeltaMovement.scale(gliderMovementInfo.maxSpeed() / newDeltaMovement.length());
-            }
-
-            newDeltaMovement = newDeltaMovement.scale(AIR_FRICTION_COEFFICIENT);
-            player.setDeltaMovement(newDeltaMovement);
-            player.fallDistance = 0f;
-            if (player instanceof ServerPlayer serverPlayer) {
-                EIOCriterions.USE_GLIDER.get().trigger(serverPlayer);
-                player.hurtMarked = true;
-            } else if (player.level().isClientSide()) {
-                ClientClassLoadingProtection.playSound(player);
-            }
-
-            gliderMovementInfo.cause().onHangGliderTick(player);
+        int ticksFalling = TICKS_FALLING.getOrDefault(player, 0);
+        if (player.onGround() != player.getDeltaMovement().y() < 0) {
+            TICKS_FALLING.put(player, ticksFalling + 1);
+        } else {
+            TICKS_FALLING.put(player, 0);
         }
+
+        if (player.isSpectator()) {
+            return;
+        }
+
+        Optional<GliderMovementInfo> gliderMovementInfoOpt = calculateGliderMovementInfo(player, true);
+        if (gliderMovementInfoOpt.isEmpty()) {
+            return;
+        }
+
+        GliderMovementInfo gliderMovementInfo = gliderMovementInfoOpt.get();
+        double verticalSpeed = gliderMovementInfo.fallSpeed();
+        if (player.isSprinting()) {
+            verticalSpeed *= 3;
+        }
+
+        double oldHorizontalSpeed = player.getDeltaMovement().horizontalDistance();
+        double x = Math.cos(Math.toRadians(player.yHeadRot + 90)) * (gliderMovementInfo.acceleration() + oldHorizontalSpeed * MOVEMENT_CHANGE_EFFECT);
+        double z = Math.sin(Math.toRadians(player.yHeadRot + 90)) * (gliderMovementInfo.acceleration() + oldHorizontalSpeed * MOVEMENT_CHANGE_EFFECT);
+
+
+        Vec3 newDeltaMovement = new Vec3(player.getDeltaMovement().x() * (1 - MOVEMENT_CHANGE_EFFECT) + x, verticalSpeed, player.getDeltaMovement().z() * (1 - MOVEMENT_CHANGE_EFFECT) + z);
+        double speed = newDeltaMovement.length();
+        if (speed > gliderMovementInfo.maxSpeed()) {
+            newDeltaMovement = newDeltaMovement.scale(gliderMovementInfo.maxSpeed() / newDeltaMovement.length());
+        }
+
+        newDeltaMovement = newDeltaMovement.scale(AIR_FRICTION_COEFFICIENT);
+        player.setDeltaMovement(newDeltaMovement);
+        player.fallDistance = 0f;
+        if (player instanceof ServerPlayer serverPlayer) {
+            EIOCriterions.USE_GLIDER.get().trigger(serverPlayer);
+            player.hurtMarked = true;
+        } else if (player.level().isClientSide()) {
+            ClientClassLoadingProtection.playSound(player);
+        }
+
+        gliderMovementInfo.cause().onHangGliderTick(player);
     }
     public static Optional<GliderMovementInfo> calculateGliderMovementInfo(Player player, boolean displayDisabledMessage) {
         if (!player.onGround()

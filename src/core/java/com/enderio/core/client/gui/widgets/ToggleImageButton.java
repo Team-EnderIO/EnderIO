@@ -1,7 +1,7 @@
 package com.enderio.core.client.gui.widgets;
 
 import com.enderio.api.misc.Vector2i;
-import com.enderio.core.client.gui.screen.IEnderScreen;
+import com.enderio.core.client.gui.screen.EnderScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class ToggleImageButton<U extends Screen & IEnderScreen> extends AbstractWidget {
+public class ToggleImageButton<U extends Screen & EnderScreen> extends AbstractWidget {
 
     private final U addedOn;
 

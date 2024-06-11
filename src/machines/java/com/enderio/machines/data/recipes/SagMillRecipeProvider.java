@@ -2,35 +2,22 @@ package com.enderio.machines.data.recipes;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.data.recipe.RecipeDataUtil;
-import com.enderio.core.data.recipes.EnderRecipeProvider;
-import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import com.enderio.machines.common.recipe.SagMillingRecipe.BonusType;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.conditions.NotCondition;
-import net.neoforged.neoforge.common.conditions.TagEmptyCondition;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
-import static com.enderio.base.common.init.EIOItems.ENDER_CRYSTAL;
 import static com.enderio.base.common.init.EIOItems.ENDER_CRYSTAL_POWDER;
 import static com.enderio.base.common.init.EIOItems.FLOUR;
 import static com.enderio.base.common.init.EIOItems.PLANT_MATTER_BROWN;
@@ -43,22 +30,16 @@ import static com.enderio.base.common.init.EIOItems.POWDERED_IRON;
 import static com.enderio.base.common.init.EIOItems.POWDERED_LAPIS_LAZULI;
 import static com.enderio.base.common.init.EIOItems.POWDERED_OBSIDIAN;
 import static com.enderio.base.common.init.EIOItems.POWDERED_QUARTZ;
-import static com.enderio.base.common.init.EIOItems.PRESCIENT_CRYSTAL;
 import static com.enderio.base.common.init.EIOItems.PRESCIENT_POWDER;
-import static com.enderio.base.common.init.EIOItems.PULSATING_CRYSTAL;
 import static com.enderio.base.common.init.EIOItems.PULSATING_POWDER;
 import static com.enderio.base.common.init.EIOItems.SILICON;
-import static com.enderio.base.common.init.EIOItems.SOULARIUM_INGOT;
 import static com.enderio.base.common.init.EIOItems.SOUL_POWDER;
-import static com.enderio.base.common.init.EIOItems.VIBRANT_CRYSTAL;
 import static com.enderio.base.common.init.EIOItems.VIBRANT_POWDER;
 import static com.enderio.base.common.init.EIOItems.WITHERING_POWDER;
 import static net.minecraft.world.item.Items.ALLIUM;
 import static net.minecraft.world.item.Items.AZURE_BLUET;
 import static net.minecraft.world.item.Items.BLAZE_POWDER;
-import static net.minecraft.world.item.Items.BLAZE_ROD;
 import static net.minecraft.world.item.Items.BLUE_ORCHID;
-import static net.minecraft.world.item.Items.BONE;
 import static net.minecraft.world.item.Items.BONE_BLOCK;
 import static net.minecraft.world.item.Items.BONE_MEAL;
 import static net.minecraft.world.item.Items.BRICK;
@@ -72,14 +53,11 @@ import static net.minecraft.world.item.Items.DANDELION;
 import static net.minecraft.world.item.Items.DEAD_BUSH;
 import static net.minecraft.world.item.Items.DIAMOND;
 import static net.minecraft.world.item.Items.EMERALD;
-import static net.minecraft.world.item.Items.ENDER_PEARL;
 import static net.minecraft.world.item.Items.FERN;
 import static net.minecraft.world.item.Items.FLINT;
 import static net.minecraft.world.item.Items.FLOWER_POT;
-import static net.minecraft.world.item.Items.GLASS;
 import static net.minecraft.world.item.Items.GLOWSTONE;
 import static net.minecraft.world.item.Items.GLOWSTONE_DUST;
-import static net.minecraft.world.item.Items.GRASS_BLOCK;
 import static net.minecraft.world.item.Items.GRAVEL;
 import static net.minecraft.world.item.Items.LAPIS_LAZULI;
 import static net.minecraft.world.item.Items.LARGE_FERN;
@@ -105,25 +83,23 @@ import static net.minecraft.world.item.Items.RED_DYE;
 import static net.minecraft.world.item.Items.RED_TULIP;
 import static net.minecraft.world.item.Items.ROSE_BUSH;
 import static net.minecraft.world.item.Items.SAND;
-import static net.minecraft.world.item.Items.STONE;
 import static net.minecraft.world.item.Items.STRING;
 import static net.minecraft.world.item.Items.SUGAR;
 import static net.minecraft.world.item.Items.SUGAR_CANE;
 import static net.minecraft.world.item.Items.TALL_GRASS;
 import static net.minecraft.world.item.Items.VINE;
-import static net.minecraft.world.item.Items.WHEAT;
 import static net.minecraft.world.item.Items.WHITE_DYE;
 import static net.minecraft.world.item.Items.WHITE_TULIP;
 import static net.minecraft.world.item.Items.WITHER_ROSE;
 import static net.minecraft.world.item.Items.WITHER_SKELETON_SKULL;
 import static net.minecraft.world.item.Items.YELLOW_DYE;
 
-public class SagMillRecipeProvider extends EnderRecipeProvider {
+public class SagMillRecipeProvider extends RecipeProvider {
 
     private static final int BASE_ENERGY_PER_OPERATION = 2400;
 
-    public SagMillRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public SagMillRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries);
     }
 
     @Override
@@ -131,7 +107,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
         build1toN("iron", Tags.Items.INGOTS_IRON, POWDERED_IRON.get(), 1, BonusType.NONE, recipeOutput);
         build1toN("gold", Tags.Items.INGOTS_GOLD, POWDERED_GOLD.get(), 1, BonusType.NONE, recipeOutput);
-        build1toN("obsidian", Tags.Items.OBSIDIAN, POWDERED_OBSIDIAN.get(), 4, recipeOutput);
+        build1toN("obsidian", Tags.Items.OBSIDIANS, POWDERED_OBSIDIAN.get(), 4, recipeOutput);
 
         build1toN("precient_crystal", EIOTags.Items.GEMS_PRESCIENT_CRYSTAL, PRESCIENT_POWDER.get(), 1, BonusType.NONE, recipeOutput);
         build1toN("vibrant_crystal", EIOTags.Items.GEMS_VIBRANT_CRYSTAL, VIBRANT_POWDER.get(), 1, BonusType.NONE, recipeOutput);
@@ -140,7 +116,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
         build1toN("ender_pearl", Tags.Items.ENDER_PEARLS, POWDERED_ENDER_PEARL.get(), 9, BonusType.NONE, recipeOutput);
         build1toN("blaze_powder", Tags.Items.RODS_BLAZE, BLAZE_POWDER, 4, recipeOutput);
-        build1toN("glass", Tags.Items.GLASS, SAND, 1, BonusType.NONE, recipeOutput);
+        build1toN("glass", Tags.Items.GLASS_BLOCKS, SAND, 1, BonusType.NONE, recipeOutput);
         build1toN("bone_block", BONE_BLOCK, BONE_MEAL, 9, BonusType.NONE, recipeOutput);
         build1toN("soularium", EIOTags.Items.INGOTS_SOULARIUM, SOUL_POWDER.get(), 1, BonusType.NONE, recipeOutput);
 
@@ -148,7 +124,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         buildOre("gold_ore", Ingredient.of(Tags.Items.ORES_GOLD), POWDERED_GOLD.get(), recipeOutput);
         buildOre("copper_ore", Ingredient.of(Tags.Items.ORES_COPPER), POWDERED_COPPER.get(), recipeOutput);
 
-        build1toN("stone", Tags.Items.STONE, COBBLESTONE, 1, BonusType.NONE, recipeOutput);
+        build1toN("stone", Tags.Items.STONES, COBBLESTONE, 1, BonusType.NONE, recipeOutput);
 
         build("coal", Ingredient.of(ItemTags.COALS), List.of(
                 output(POWDERED_COAL.get()),
@@ -209,25 +185,25 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		output(Tags.Items.SEEDS_WHEAT, 1, 0.2f, true)),
         		BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("cobblestone", Ingredient.of(Tags.Items.COBBLESTONE), List.of(
+        build("cobblestone", Ingredient.of(Tags.Items.COBBLESTONES), List.of(
         		output(GRAVEL, 0.7f),
         		output(GRAVEL, 0.3f),
         		output(SAND, 0.1f),
         		output(FLINT, 0.05f)),
         		BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("gravel", Ingredient.of(Tags.Items.GRAVEL), List.of(
+        build("gravel", Ingredient.of(Tags.Items.GRAVELS), List.of(
         		output(SAND, 0.7f),
         		output(SAND, 0.3f),
         		output(FLINT, 0.1f)),
         		BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("sandstone", Ingredient.of(Tags.Items.SANDSTONE), List.of(
+        build("sandstone", Ingredient.of(Tags.Items.SANDSTONE_BLOCKS), List.of(
         		output(SAND, 2),
         		output(SAND, 2, 0.4f)),
         		BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
 
-        build("sand", Ingredient.of(Tags.Items.SAND), List.of(
+        build("sand", Ingredient.of(Tags.Items.SANDS), List.of(
         		output(EIOTags.Items.SILICON, 0.5f)
         		),BASE_ENERGY_PER_OPERATION, recipeOutput);
 
@@ -252,7 +228,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		output(STRING, 0.1f)),
         		BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
 
-        build("quartz_block", Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ), List.of(
+        build("quartz_block", Ingredient.of(EIOTags.Items.STORAGE_BLOCKS_QUARTZ), List.of(
         		output(QUARTZ, 2),
         		output(QUARTZ, 2, 0.25f)),
         		BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);

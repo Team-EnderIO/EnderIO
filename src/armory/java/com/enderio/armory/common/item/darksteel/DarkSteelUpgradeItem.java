@@ -3,8 +3,8 @@ package com.enderio.armory.common.item.darksteel;
 import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.lang.ArmoryLang;
-import com.enderio.core.client.item.IAdvancedTooltipProvider;
-import com.enderio.core.common.item.ITabVariants;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
+import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvider, ITabVariants {
+public class DarkSteelUpgradeItem extends Item implements AdvancedTooltipProvider, CreativeTabVariants {
 
     private final ModConfigSpec.ConfigValue<Integer> levelsRequired;
 

@@ -45,11 +45,11 @@ public class ExperienceCraftingWidget extends EIOWidget {
 
         var font = Minecraft.getInstance().font;
         String s = "" + maxXP.get();
-        guiGraphics.drawString(font, s, (this.x + this.width/2 + 1), (float)this.y - this.height - 3, 0, false);
-        guiGraphics.drawString(font, s, (this.x + this.width/2 - 1), (float)this.y - this.height - 3, 0, false);
-        guiGraphics.drawString(font, s, this.x + this.width/2, (float)(this.y - this.height - 3 + 1), 0, false);
-        guiGraphics.drawString(font, s, this.x + this.width/2, (float)(this.y - this.height - 3 - 1), 0, false);
-        guiGraphics.drawString(font, s, this.x + this.width/2, (float)this.y - this.height - 3, 8453920, false);
+        guiGraphics.drawString(font, s, (this.x + this.width/2f + 1), (float)this.y - this.height - 3, 0, false);
+        guiGraphics.drawString(font, s, (this.x + this.width/2f - 1), (float)this.y - this.height - 3, 0, false);
+        guiGraphics.drawString(font, s, this.x + this.width/2f, (float)(this.y - this.height - 3 + 1), 0, false);
+        guiGraphics.drawString(font, s, this.x + this.width/2f, (float)(this.y - this.height - 3 - 1), 0, false);
+        guiGraphics.drawString(font, s, this.x + this.width/2f, (float)this.y - this.height - 3, 8453920, false);
 
         if (isHovered(pMouseX, pMouseY)) {
             guiGraphics.renderTooltip(screen.getMinecraft().font,

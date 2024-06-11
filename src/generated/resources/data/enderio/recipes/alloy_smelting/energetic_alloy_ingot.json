@@ -4,26 +4,20 @@
   "experience": 0.3,
   "inputs": [
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "forge:dusts/redstone"
-      }
+      "count": 1,
+      "tag": "c:dusts/redstone"
     },
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "forge:ingots/gold"
-      }
+      "count": 1,
+      "tag": "c:ingots/gold"
     },
     {
-      "Count": 1,
-      "Ingredient": {
-        "tag": "forge:dusts/glowstone"
-      }
+      "count": 1,
+      "tag": "c:dusts/glowstone"
     }
   ],
   "result": {
-    "Count": 1,
+    "count": 1,
     "id": "enderio:energetic_alloy_ingot"
   }
 }

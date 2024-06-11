@@ -1,7 +1,7 @@
 package com.enderio.api.conduit.ticker;
 
-import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ExtendedConduitData;
 import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
@@ -15,10 +15,10 @@ import org.apache.commons.lang3.function.TriFunction;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduitTicker {
+public abstract class CapabilityAwareConduitTicker<T> implements IOAwareConduitTicker {
 
     @Override
-    public final void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level,
+    public final void tickColoredGraph(ConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level,
         Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         List<CapabilityConnection> insertCaps = new ArrayList<>();
         for (Connection insert : inserts) {
@@ -49,17 +49,17 @@ public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduit
         return capability != null;
     }
 
-    protected abstract void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts,
+    protected abstract void tickCapabilityGraph(ConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts,
         ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive );
 
     protected abstract BlockCapability<T,Direction> getCapability();
 
     public class CapabilityConnection {
         public final T cap;
-        public final IExtendedConduitData<?> data;
+        public final ExtendedConduitData<?> data;
         public final Direction direction;
 
-        private CapabilityConnection(T cap, IExtendedConduitData<?> data, Direction direction) {
+        private CapabilityConnection(T cap, ExtendedConduitData<?> data, Direction direction) {
             this.cap = cap;
             this.data = data;
             this.direction = direction;

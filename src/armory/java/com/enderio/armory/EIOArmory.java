@@ -5,6 +5,7 @@ import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.init.ArmoryLootModifiers;
 import com.enderio.armory.common.init.ArmoryRecipes;
+import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.armory.data.loot.ArmoryLootModifiersProvider;
 import com.enderio.armory.data.recipe.ItemRecipeProvider;
@@ -16,6 +17,7 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
@@ -24,7 +26,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.concurrent.CompletableFuture;
 
-@Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = EnderIO.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class EIOArmory {
     @SubscribeEvent
     public static void onConstruct(FMLConstructModEvent event) {
@@ -41,6 +43,7 @@ public class EIOArmory {
         ArmoryRecipes.register(modEventBus);
         ArmoryLootModifiers.register(modEventBus);
         ArmoryTags.register();
+        ArmoryLang.register();
     }
 
     @SubscribeEvent
@@ -52,8 +55,8 @@ public class EIOArmory {
 
         EIODataProvider provider = new EIODataProvider("armory");
 
-        provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new ArmoryLootModifiersProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new ArmoryLootModifiersProvider(packOutput, lookupProvider));
 
         var b = new ArmoryBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
         provider.addSubProvider(event.includeServer(), b);

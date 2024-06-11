@@ -2,15 +2,15 @@ package com.enderio.machines;
 
 import com.enderio.EnderIO;
 import com.enderio.api.integration.IntegrationManager;
-import com.enderio.api.travel.TravelRegistry;
 import com.enderio.base.data.EIODataProvider;
-import com.enderio.machines.client.rendering.travel.TravelAnchorRenderer;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.init.MachineTravelTargets;
 import com.enderio.machines.common.integrations.EnderIOMachinesSelfIntegration;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.EnchanterMenu;
@@ -18,7 +18,6 @@ import com.enderio.machines.common.menu.GhostMachineSlot;
 import com.enderio.machines.common.menu.MachineSlot;
 import com.enderio.machines.common.menu.PreviewMachineSlot;
 import com.enderio.machines.common.tag.MachineTags;
-import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
 import com.enderio.machines.data.reagentdata.ReagentDataProvider;
 import com.enderio.machines.data.recipes.AlloyRecipeProvider;
@@ -40,7 +39,7 @@ import net.minecraft.data.registries.VanillaRegistries;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
@@ -50,7 +49,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = EnderIO.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class EIOMachines {
     @SubscribeEvent
     public static void onConstruct(FMLConstructModEvent event) {
@@ -59,6 +58,8 @@ public class EIOMachines {
         ctx.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
         ctx.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
 
+        MachineDataComponents.register(EnderIO.modEventBus);
+        MachineTravelTargets.register(EnderIO.modEventBus);
         MachineBlocks.register(EnderIO.modEventBus);
         MachineBlockEntities.register(EnderIO.modEventBus);
         MachineMenus.register(EnderIO.modEventBus);
@@ -69,7 +70,6 @@ public class EIOMachines {
         MachineTags.register();
 
         IntegrationManager.addIntegration(EnderIOMachinesSelfIntegration.INSTANCE);
-        TravelRegistry.addTravelEntry(EnderIO.loc("travel_anchor"), AnchorTravelTarget::new, () -> TravelAnchorRenderer::new);
     }
 
     @SubscribeEvent
@@ -88,15 +88,15 @@ public class EIOMachines {
 
         EIODataProvider provider = new EIODataProvider("machines");
 
-        provider.addSubProvider(event.includeServer(), new MachineRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new AlloyRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new EnchanterRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new FermentingRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new MachineRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new AlloyRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new EnchanterRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new FermentingRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
         provider.addSubProvider(event.includeServer(), new ReagentDataProvider(packOutput, lookupProvider, event.getExistingFileHelper()));

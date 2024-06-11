@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:quick_charge",
   "input": {
-    "Count": 16,
-    "Ingredient": {
-      "item": "minecraft:sugar"
-    }
+    "count": 16,
+    "item": "minecraft:sugar"
   }
 }

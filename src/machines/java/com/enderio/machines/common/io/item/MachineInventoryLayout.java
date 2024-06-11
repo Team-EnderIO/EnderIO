@@ -1,6 +1,7 @@
 package com.enderio.machines.common.io.item;
 
 import com.enderio.base.common.capacitor.CapacitorUtil;
+import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -335,7 +336,7 @@ public class MachineInventoryLayout {
                 throw new IllegalStateException("A machine inventory may not have more than one capacitor slot!");
             }
 
-            slot(slot -> slot.guiInsert().guiExtract().filter((i, s) -> CapacitorUtil.isCapacitor(s)).stackLimit(1));
+            slot(slot -> slot.guiInsert().guiExtract().filter((i, s) -> s.has(EIODataComponents.CAPACITOR_DATA)).stackLimit(1));
             capacitorSlot = slots.size() - 1;
             return this;
         }

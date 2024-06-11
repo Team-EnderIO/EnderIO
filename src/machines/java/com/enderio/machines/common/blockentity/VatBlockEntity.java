@@ -1,16 +1,15 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.EnderIO;
-import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
-import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.machines.common.attachment.IFluidTankUser;
+import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.io.fluid.IFluidItemInteractive;
+import com.enderio.machines.common.io.fluid.FluidItemInteractive;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
@@ -21,10 +20,11 @@ import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.menu.VatMenu;
 import com.enderio.machines.common.recipe.FermentingRecipe;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser, IFluidItemInteractive {
+public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser, FluidItemInteractive {
 
     public static final int TANK_CAPACITY_COMMON = 8 * FluidType.BUCKET_VOLUME;
     private static final TankAccess INPUT_TANK = new TankAccess();
@@ -56,10 +56,11 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
         super(MachineBlockEntities.VAT.get(), worldPosition, blockState);
         fluidHandler = createFluidHandler();
 
-        addDataSlot(new FluidStackNetworkDataSlot(() -> INPUT_TANK.getFluid(this), f -> INPUT_TANK.setFluid(this, f)));
-        addDataSlot(new FluidStackNetworkDataSlot(() -> OUTPUT_TANK.getFluid(this), f -> OUTPUT_TANK.setFluid(this, f)));
+        // Sync fluid_stacks and active recipe.
+        addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> INPUT_TANK.getFluid(this), stack -> INPUT_TANK.setFluid(this, stack)));
+        addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> OUTPUT_TANK.getFluid(this), stack -> OUTPUT_TANK.setFluid(this, stack)));
 
-        addDataSlot(new ResourceLocationNetworkDataSlot(() -> getRecipeId(), id -> recipeId = id));
+        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(this::getRecipeId, this::setRecipeId));
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, MachineRecipes.VAT_FERMENTING.type().get(),
             new FermentingRecipe.Container(getInventoryNN(), getInputTank()), this::createTask);
@@ -87,12 +88,12 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
     }
 
     @Override
-    public InteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public ItemInteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(hand);
         if (!stack.isEmpty()) {
             if (handleFluidItemInteraction(player, hand, stack, this, INPUT_TANK) || handleFluidItemInteraction(player, hand, stack, this, OUTPUT_TANK)) {
                 player.getInventory().setChanged();
-                return InteractionResult.CONSUME;
+                return ItemInteractionResult.CONSUME;
             }
         }
         return super.onBlockEntityUsed(state, level, pos, player, hand, hit);
@@ -130,7 +131,7 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
 
     @Override
     public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(this, getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
@@ -164,6 +165,10 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
         return EMPTY;
     }
 
+    public void setRecipeId(ResourceLocation recipeId) {
+        this.recipeId = recipeId;
+    }
+
     public CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Container> getCraftingHost() {
         return craftingTaskHost;
     }
@@ -180,13 +185,13 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
             REAGENTS.get(0).getItemStack(inventory).shrink(1);
             REAGENTS.get(1).getItemStack(inventory).shrink(1);
 
-            INPUT_TANK.getTank(fluidHandler).drain(recipe.getInputFluidAmount(), IFluidHandler.FluidAction.EXECUTE);
+            INPUT_TANK.getTank(fluidHandler).drain(recipe.input().amount(), IFluidHandler.FluidAction.EXECUTE);
         }
 
         @Override
         protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
             var action = simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE;
-            FluidStack output = outputs.get(0).getFluid();
+            FluidStack output = outputs.getFirst().getFluid();
             int filled = OUTPUT_TANK.getTank(fluidHandler).fill(output, action);
             return filled == output.getAmount();
         }
@@ -198,22 +203,22 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
 
         @Override
         protected int getProgressRequired(FermentingRecipe recipe) {
-            return recipe.getTicks();
+            return recipe.ticks();
         }
 
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        saveTank(pTag);
-        craftingTaskHost.save(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
+        saveTank(lookupProvider, pTag);
+        craftingTaskHost.save(lookupProvider, pTag);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        loadTank(pTag);
-        craftingTaskHost.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
+        loadTank(lookupProvider, pTag);
+        craftingTaskHost.load(lookupProvider, pTag);
     }
 }

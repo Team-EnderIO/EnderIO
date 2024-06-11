@@ -2,8 +2,10 @@ package com.enderio.base.data.loot;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.LootTableSubProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -19,7 +21,7 @@ public class FireCraftingLootProvider implements LootTableSubProvider {
     }
 
     @Override
-    public void generate(BiConsumer<ResourceLocation, LootTable.Builder> writer) {
+    public void generate(HolderLookup.Provider lookupProvider, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> writer) {
         LootTable.Builder infinity = LootTable
             .lootTable()
             .withPool(LootPool
@@ -29,6 +31,6 @@ public class FireCraftingLootProvider implements LootTableSubProvider {
                 .add(LootItem.lootTableItem(EIOItems.GRAINS_OF_INFINITY.get()).when(LootItemRandomChanceCondition.randomChance(0.5f))))
             .setParamSet(LootContextParamSet.builder().build());
 
-        writer.accept(EnderIO.loc("fire_crafting/infinity"), infinity);
+        writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.loc("fire_crafting/infinity")), infinity);
     }
 }

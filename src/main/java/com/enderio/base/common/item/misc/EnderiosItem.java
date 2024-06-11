@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 
 
 public class EnderiosItem extends BowlFoodItem {
-    private static final FoodProperties PROPERTIES = ((new FoodProperties.Builder()).nutrition(10).saturationMod(0.8f).build());
+    private static final FoodProperties PROPERTIES = ((new FoodProperties.Builder()).nutrition(10).saturationModifier(0.8f).build());
 
     public EnderiosItem(Properties pProperties) {
         super(pProperties.food(PROPERTIES));

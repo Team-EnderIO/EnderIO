@@ -185,7 +185,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                     var selectedFace = selection.get();
                     BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
                     if (entity instanceof MachineBlockEntity machine) {
-                        machine.getIOConfig().cycleMode(selectedFace.side);
+                        machine.cycleIOMode(selectedFace.side);
                         this.playDownSound(Minecraft.getInstance().getSoundManager());
                         return true;
                     }
@@ -200,8 +200,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         if (visible && isValidClickButton(pButton) && isMouseOver(pMouseX, pMouseY)) {
             double dx = pDragX / (double) screen.width;
             double dy = pDragY / (double) screen.height;
-            yaw += 4 * dx * 180;
-            pitch += 2 * dy * 180;
+            yaw += 4 * (float)dx * 180;
+            pitch += 2 * (float)dy * 180;
 
             pitch = Math.min(80, Math.max(-80, pitch)); //clamp
 
@@ -382,7 +382,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             var selectedFace = selection.get();
             BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
             if (entity instanceof MachineBlockEntity machine) {
-                var ioMode = machine.getIOConfig().getMode(selectedFace.side);
+                var ioMode = machine.getIOMode(selectedFace.side);
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();
                 guiGraphics.blitSprite(IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
@@ -416,7 +416,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
 
         private GhostRenderLayer(RenderType original) {
-            super(String.format("%s_%s_ghost", original.toString(), EnderIO.MODID), original.format(), original.mode(), original.bufferSize(),
+            super(String.format("%s_%s_ghost", original, EnderIO.MODID), original.format(), original.mode(), original.bufferSize(),
                 original.affectsCrumbling(), true, () -> {
                     original.setupRenderState();
 

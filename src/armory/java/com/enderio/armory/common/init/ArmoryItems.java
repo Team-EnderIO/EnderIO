@@ -4,26 +4,25 @@ import com.enderio.EnderIO;
 import com.enderio.armory.common.item.darksteel.DarkSteelSwordItem;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.base.common.init.EIOCreativeTabs;
-import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.SimpleTier;
-import net.neoforged.neoforge.common.TierSortingRegistry;
-
-import java.util.List;
 
 @SuppressWarnings("unused")
 public class ArmoryItems {
     private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
 
-    public static final Tier DARK_STEEL_TIER = TierSortingRegistry.registerTier(
+    /*public static final Tier DARK_STEEL_TIER = TierSortingRegistry.registerTier(
         new SimpleTier(3, 2000, 8.0F, 3, 25, ArmoryTags.Blocks.DARK_STEEL_TIER, () -> Ingredient.of(EIOItems.DARK_STEEL_INGOT.get())),
-        EnderIO.loc("dark_steel_tier"), List.of(Tiers.DIAMOND), List.of(Tiers.NETHERITE));
+        EnderIO.loc("dark_steel_tier"), List.of(Tiers.DIAMOND), List.of(Tiers.NETHERITE));*/
+
+    public static final Tier DARK_STEEL_TIER = new SimpleTier(ArmoryTags.Blocks.INCORRECT_FOR_DARK_STEEL_TOOL, 2000, 8.0f, 3.0f, 25, () -> Ingredient.of(
+        EIOTags.Items.INGOTS_DARK_STEEL));
 
     public static final RegiliteItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEM_REGISTRY
         .registerItem("dark_steel_sword", DarkSteelSwordItem::new, new Item.Properties().durability(2000))

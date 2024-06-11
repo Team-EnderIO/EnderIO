@@ -27,11 +27,11 @@
       "tag": "enderio:fused_quartz_enm"
     },
     {
-      "tag": "forge:dyes/gray"
+      "tag": "c:dyes/gray"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:fused_quartz_enm_gray"
+    "id": "enderio:fused_quartz_enm_gray"
   }
 }

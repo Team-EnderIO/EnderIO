@@ -8,15 +8,8 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "minecraft:copy_nbt",
-              "ops": [
-                {
-                  "op": "replace",
-                  "source": "Paint",
-                  "target": "BlockEntityTag.Paint"
-                }
-              ],
-              "source": "block_entity"
+              "function": "enderio:copy_paint",
+              "should_copy_primary": true
             }
           ],
           "name": "enderio:painted_redstone_block"

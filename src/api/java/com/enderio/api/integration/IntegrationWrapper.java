@@ -3,7 +3,6 @@ package com.enderio.api.integration;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.util.NonNullConsumer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -34,11 +33,11 @@ public class IntegrationWrapper<T extends Integration> {
     }
 
     /**
-     * If non-empty, invoke the specified {@link NonNullConsumer} with the object,
+     * If non-empty, invoke the specified {@link Consumer} with the object,
      * otherwise do nothing.
      *
-     * @param consumer The {@link NonNullConsumer} to run if this optional is non-empty.
-     * @throws NullPointerException if {@code consumer} is null and this {@link LazyOptional} is non-empty
+     * @param consumer The {@link Consumer} to run if this optional is non-empty.
+     * @throws NullPointerException if {@code consumer} is null and this {@link java.util.Optional} is non-empty
      */
     public void ifPresent(Consumer<? super T> consumer) {
         if (isPresent()) {

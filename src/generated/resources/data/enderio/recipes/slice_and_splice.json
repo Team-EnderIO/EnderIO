@@ -9,13 +9,13 @@
       "item": "enderio:ensouled_chassis"
     },
     "G": {
-      "tag": "neoforge:gears/energized"
+      "tag": "c:gears/energized"
     },
     "H": {
-      "tag": "forge:heads"
+      "tag": "minecraft:skulls"
     },
     "I": {
-      "tag": "neoforge:ingots/soularium"
+      "tag": "c:ingots/soularium"
     }
   },
   "pattern": [
@@ -24,6 +24,7 @@
     "GBG"
   ],
   "result": {
-    "item": "enderio:slice_and_splice"
+    "count": 1,
+    "id": "enderio:slice_and_splice"
   }
 }

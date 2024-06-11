@@ -9,7 +9,7 @@
       "item": "minecraft:furnace"
     },
     "G": {
-      "tag": "neoforge:dusts/grains_of_infinity"
+      "tag": "c:dusts/grains_of_infinity"
     }
   },
   "pattern": [
@@ -18,6 +18,7 @@
     "DDD"
   ],
   "result": {
-    "item": "enderio:primitive_alloy_smelter"
+    "count": 1,
+    "id": "enderio:primitive_alloy_smelter"
   }
 }

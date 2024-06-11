@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:powdered_iron"
-            ]
+            "items": "enderio:powdered_iron"
           }
         ]
       },

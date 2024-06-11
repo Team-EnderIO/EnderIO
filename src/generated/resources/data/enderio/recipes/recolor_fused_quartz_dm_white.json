@@ -27,11 +27,11 @@
       "tag": "enderio:fused_quartz_dm"
     },
     {
-      "tag": "forge:dyes/white"
+      "tag": "c:dyes/white"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:fused_quartz_dm_white"
+    "id": "enderio:fused_quartz_dm_white"
   }
 }

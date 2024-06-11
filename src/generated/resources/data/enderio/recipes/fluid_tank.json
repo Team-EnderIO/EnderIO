@@ -6,10 +6,10 @@
       "item": "minecraft:iron_bars"
     },
     "G": {
-      "tag": "forge:glass"
+      "tag": "c:glass_blocks"
     },
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     }
   },
   "pattern": [
@@ -18,6 +18,7 @@
     "IBI"
   ],
   "result": {
-    "item": "enderio:fluid_tank"
+    "count": 1,
+    "id": "enderio:fluid_tank"
   }
 }

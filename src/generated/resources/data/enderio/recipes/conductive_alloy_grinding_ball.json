@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "I": {
-      "tag": "neoforge:ingots/conductive_alloy"
+      "tag": "c:ingots/conductive_alloy"
     }
   },
   "pattern": [
@@ -13,6 +13,6 @@
   ],
   "result": {
     "count": 24,
-    "item": "enderio:conductive_alloy_grinding_ball"
+    "id": "enderio:conductive_alloy_grinding_ball"
   }
 }

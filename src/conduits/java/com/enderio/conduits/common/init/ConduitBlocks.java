@@ -15,10 +15,14 @@ public class ConduitBlocks {
 
     public static final RegiliteBlock<ConduitBlock> CONDUIT = BLOCK_REGISTRY
         .registerBlock("conduit", ConduitBlock::new,
-            BlockBehaviour.Properties.of().strength(1.5f, 10).noLootTable().noOcclusion().dynamicShape().mapColor(MapColor.STONE))
+            BlockBehaviour.Properties.of()
+                .strength(1.5f, 10)
+                .noLootTable()
+                .noOcclusion()
+                .dynamicShape()
+                .mapColor(MapColor.STONE))
         .setBlockStateProvider(ConduitBlockState::conduit)
         .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE);
-
 
     public static void register(IEventBus bus) {
         BLOCK_REGISTRY.register(bus);

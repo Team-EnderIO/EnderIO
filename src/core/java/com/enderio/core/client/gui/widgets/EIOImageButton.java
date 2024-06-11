@@ -5,8 +5,6 @@ import com.enderio.core.client.gui.screen.EIOScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 // Wrapper for ImageButton to draw background.
 // Can be removed after GUI redesign if no longer required.

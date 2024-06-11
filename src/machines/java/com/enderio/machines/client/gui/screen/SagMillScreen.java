@@ -1,7 +1,7 @@
 package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
-import com.enderio.api.grindingball.IGrindingBallData;
+import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
@@ -81,7 +81,7 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
         public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
         @Nullable
-        private IGrindingBallData tooltipDataCache;
+        private GrindingBallData tooltipDataCache;
         private float tooltipDuraCache;
 
         @Override
@@ -92,7 +92,7 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
             }
 
             float durability = be.getGrindingBallDamage();
-            IGrindingBallData data = be.getGrindingBallData();
+            var data = be.getGrindingBallData();
 
             int yOffset = (int) Math.ceil(this.height * (1.0f - durability));
             int height = (int) Math.ceil(this.height * durability);
@@ -107,9 +107,9 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
                 List<Component> tooltipComponents = List.of(
                     TooltipUtil.styledWithArgs(MachineLang.SAG_MILL_GRINDINGBALL_REMAINING, (int) (durability * 100)),
                     MachineLang.SAG_MILL_GRINDINGBALL_TITLE,
-                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.getOutputMultiplier() * 100)),
-                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.getBonusMultiplier() * 100)),
-                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.getPowerUse() * 100))
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.outputMultiplier() * 100)),
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.bonusMultiplier() * 100)),
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100))
                 );
 
                 // Build single component

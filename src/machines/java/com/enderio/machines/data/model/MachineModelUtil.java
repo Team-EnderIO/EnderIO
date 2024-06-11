@@ -1,7 +1,7 @@
 package com.enderio.machines.data.model;
 
 import com.enderio.EnderIO;
-import com.enderio.core.data.model.EIOModel;
+import com.enderio.core.data.model.ModelHelper;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.block.SolarPanelBlock;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
@@ -88,8 +88,8 @@ public class MachineModelUtil {
         return prov.models().withExistingParent(model.getPath() + "_combined", prov.mcLoc("block/block"))
             .texture("particle", ctx.getName().equals("enchanter")? EnderIO.loc("block/dark_steel_pressure_plate") : new ResourceLocation(model.getNamespace(),"block/" + ctx.getName() + "_front"))
             .customLoader(CompositeModelBuilder::begin)
-            .child("machine", EIOModel.getExistingParent(prov.models(), model))
-            .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
+            .child("machine", ModelHelper.getExistingAsBuilder(prov.models(), model))
+            .child("overlay", ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
             .end();
     }
 

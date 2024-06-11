@@ -3,9 +3,10 @@ package com.enderio.core.common.network;
 import com.enderio.core.EnderCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,31 +14,19 @@ import java.util.List;
 // TODO: Not a big fan of this..
 public record EmitParticlesPacket(List<EmitParticlePacket> particles) implements CustomPacketPayload {
 
-    public static final ResourceLocation ID = EnderCore.loc("emit_particles");
+    public static final Type<EmitParticlesPacket> TYPE = new Type<>(EnderCore.loc("emit_particles"));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, EmitParticlesPacket> STREAM_CODEC =
+        EmitParticlePacket.STREAM_CODEC.apply(ByteBufCodecs.list())
+            .map(EmitParticlesPacket::new, EmitParticlesPacket::particles);
 
     public EmitParticlesPacket() {
         this(new ArrayList<>());
     }
 
-    public EmitParticlesPacket(FriendlyByteBuf buf) {
-        this(new ArrayList<>());
-        int numParticles = buf.readInt();
-        for (int i = 0; i < numParticles; i++) {
-            particles.add(new EmitParticlePacket(buf));
-        }
-    }
-
     @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeInt(particles.size());
-        for (EmitParticlePacket particle : particles) {
-            particle.write(buf);
-        }
-    }
-
-    @Override
-    public ResourceLocation id() {
-        return ID;
+    public Type<EmitParticlesPacket> type() {
+        return TYPE;
     }
 
     public void add(EmitParticlePacket particlePacket) {

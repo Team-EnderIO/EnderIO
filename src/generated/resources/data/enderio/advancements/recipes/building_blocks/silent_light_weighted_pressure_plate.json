@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:light_weighted_pressure_plate"
-            ]
+            "items": "minecraft:light_weighted_pressure_plate"
           }
         ]
       },

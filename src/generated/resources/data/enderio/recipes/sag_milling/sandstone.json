@@ -3,7 +3,7 @@
   "bonus": "chance_only",
   "energy": 2400,
   "input": {
-    "tag": "forge:sandstone"
+    "tag": "c:sandstone/blocks"
   },
   "outputs": [
     {

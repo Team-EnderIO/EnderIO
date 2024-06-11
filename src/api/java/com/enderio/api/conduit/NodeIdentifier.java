@@ -2,14 +2,11 @@ package com.enderio.api.conduit;
 
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +14,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphObject<Mergeable.Dummy> {
+public class NodeIdentifier<T extends ExtendedConduitData<?>> implements GraphObject<Mergeable.Dummy> {
 
     private final BlockPos pos;
 

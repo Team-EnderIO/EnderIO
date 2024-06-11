@@ -3,8 +3,7 @@ package com.enderio.machines.common.network;
 import com.enderio.machines.common.menu.CrafterMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.SpawnerSoul;
-import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MachinePayloadHandler {
     public static class Client {
@@ -14,14 +13,12 @@ public class MachinePayloadHandler {
             return INSTANCE;
         }
 
-        public void handlePoweredSpawnerSoul(PoweredSpawnerSoulPacket packet, PlayPayloadContext context) {
-            context.workHandler()
-                .submitAsync(() -> SpawnerSoul.SPAWNER.map = packet.map());
+        public void handlePoweredSpawnerSoul(PoweredSpawnerSoulPacket packet, IPayloadContext context) {
+            context.enqueueWork(() -> SpawnerSoul.SPAWNER.map = packet.map());
         }
 
-        public void handleSoulEngineSoul(SoulEngineSoulPacket packet, PlayPayloadContext context) {
-            context.workHandler()
-                .submitAsync(() -> EngineSoul.ENGINE.map = packet.map());
+        public void handleSoulEngineSoul(SoulEngineSoulPacket packet, IPayloadContext context) {
+            context.enqueueWork(() -> EngineSoul.ENGINE.map = packet.map());
         }
     }
 
@@ -32,17 +29,14 @@ public class MachinePayloadHandler {
             return INSTANCE;
         }
 
-        public void updateCrafterTemplate(UpdateCrafterTemplatePacket packet, PlayPayloadContext context) {
-            context.workHandler()
-                .submitAsync(() -> {
-                    context.player().ifPresent(player -> {
-                        if (player.containerMenu instanceof CrafterMenu crafterMenu) {
-                            for (int i = 0; i < packet.recipeInputs().size(); i++) {
-                                crafterMenu.slots.get(CrafterMenu.INPUTS_INDEX + i).set(packet.recipeInputs().get(i));
-                            }
-                        }
-                    });
-                });
+        public void updateCrafterTemplate(UpdateCrafterTemplatePacket packet, IPayloadContext context) {
+            context.enqueueWork(() -> {
+                if (context.player().containerMenu instanceof CrafterMenu crafterMenu) {
+                    for (int i = 0; i < packet.recipeInputs().size(); i++) {
+                        crafterMenu.slots.get(CrafterMenu.INPUTS_INDEX + i).set(packet.recipeInputs().get(i));
+                    }
+                }
+            });
         }
     }
 }

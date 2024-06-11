@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:unbreaking",
   "input": {
-    "Count": 1,
-    "Ingredient": {
-      "tag": "forge:obsidian"
-    }
+    "count": 1,
+    "tag": "c:obsidians"
   }
 }

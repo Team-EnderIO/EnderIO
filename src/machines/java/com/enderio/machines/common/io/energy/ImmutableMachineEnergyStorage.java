@@ -1,6 +1,6 @@
 package com.enderio.machines.common.io.energy;
 
-import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.IOConfigurable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -45,7 +45,7 @@ public class ImmutableMachineEnergyStorage implements IMachineEnergyStorage {
 
     // This class is intended for internal use only, don't expose.
     @Override
-    public IIOConfig getConfig() {
+    public IOConfigurable getConfig() {
         throw new NotImplementedException();
     }
 

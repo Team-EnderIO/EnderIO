@@ -1,13 +1,12 @@
 package com.enderio.machines.common.blockentity.base;
 
-import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.base.common.util.AttractionUtil;
-import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.ActionRange;
-import com.enderio.machines.common.attachment.IRangedActor;
+import com.enderio.machines.common.attachment.RangedActor;
 import com.enderio.machines.common.init.MachineAttachments;
-import com.enderio.machines.common.io.FixedIOConfig;
+import com.enderio.machines.common.io.IOConfig;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -23,20 +22,20 @@ import java.util.List;
 import java.util.function.Predicate;
 
 // TODO: I want to review the vacuum stuff too.
-public abstract class VacuumMachineBlockEntity<T extends Entity> extends MachineBlockEntity implements IRangedActor {
+public abstract class VacuumMachineBlockEntity<T extends Entity> extends MachineBlockEntity implements RangedActor {
     private static final double COLLISION_DISTANCE_SQ = 1 * 1;
     protected static final double SPEED = 0.025;
     protected static final double SPEED_4 = SPEED * 4;
     private List<WeakReference<T>> entities = new ArrayList<>();
     private Class<T> targetClass;
 
-    private CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
+    private NetworkDataSlot<ActionRange> actionRangeDataSlot;
 
     public VacuumMachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> targetClass) {
         super(pType, pWorldPosition, pBlockState);
         this.targetClass = targetClass;
 
-        actionRangeDataSlot = addDataSlot(new CodecNetworkDataSlot<>(this::getActionRange, this::internalSetActionRange, ActionRange.CODEC));
+        actionRangeDataSlot = addDataSlot(ActionRange.DATA_SLOT_TYPE.create(this::getActionRange, this::internalSetActionRange));
     }
 
     public abstract String getColor();
@@ -64,8 +63,13 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     }
 
     @Override
-    protected IIOConfig createIOConfig() {
-        return new FixedIOConfig(IOMode.PUSH);
+    public IOConfig getDefaultIOConfig() {
+        return IOConfig.of(IOMode.PUSH);
+    }
+
+    @Override
+    public boolean isIOConfigMutable() {
+        return false;
     }
 
     public Predicate<T> getFilter() {

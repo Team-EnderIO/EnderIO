@@ -1,7 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.advancement.PaintingTrigger;
+import com.enderio.base.common.paint.PaintingTrigger;
 import com.enderio.base.common.advancement.UseGliderTrigger;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;

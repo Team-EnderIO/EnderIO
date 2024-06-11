@@ -1,8 +1,8 @@
 package com.enderio.conduits.client;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.misc.ColorControl;
+import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.client.model.ConduitGeometry;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import net.minecraft.client.Minecraft;
@@ -14,10 +14,10 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class ConduitClientSetup {
 
     private static final List<ResourceLocation> MODEL_LOCATIONS = new ArrayList<>();
@@ -46,7 +46,7 @@ public class ConduitClientSetup {
 
     @SubscribeEvent
     public static void modelLoader(ModelEvent.RegisterGeometryLoaders event) {
-        event.register("conduit", new ConduitGeometry.Loader());
+        event.register(EnderIO.loc("conduit"), new ConduitGeometry.Loader());
     }
 
     @SubscribeEvent
@@ -54,7 +54,8 @@ public class ConduitClientSetup {
         for (ResourceLocation model : MODEL_LOCATIONS) {
             event.register(model);
         }
-        ConduitTypes.getRegistry().stream().flatMap(type -> type.getClientData().modelsToLoad().stream()).forEach(event::register);
+
+        EnderIORegistries.CONDUIT_TYPES.stream().flatMap(type -> type.getClientData().modelsToLoad().stream()).forEach(event::register);
     }
 
     @SubscribeEvent

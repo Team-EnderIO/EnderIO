@@ -1,11 +1,11 @@
 package com.enderio.base.common.block.glass;
 
 import com.enderio.EnderIO;
-import com.enderio.api.misc.IIcon;
+import com.enderio.api.misc.Icon;
 import com.enderio.api.misc.Vector2i;
 import net.minecraft.resources.ResourceLocation;
 
-public enum GlassLighting implements IIcon {
+public enum GlassLighting implements Icon {
     NONE,
     BLOCKING,
     EMITTING;

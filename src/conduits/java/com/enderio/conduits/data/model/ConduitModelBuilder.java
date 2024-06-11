@@ -12,6 +12,6 @@ public class ConduitModelBuilder<T extends ModelBuilder<T>> extends CustomLoader
     }
 
     protected ConduitModelBuilder(T parent, ExistingFileHelper existingFileHelper) {
-        super(EnderIO.loc("conduit"), parent, existingFileHelper);
+        super(EnderIO.loc("conduit"), parent, existingFileHelper, false);
     }
 }

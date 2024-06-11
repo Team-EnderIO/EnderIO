@@ -1,10 +1,10 @@
 package com.enderio.core.common.recipes;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -37,7 +37,7 @@ public abstract class WrappedShapedRecipe implements CraftingRecipe, IShapedReci
     }
 
     @Override
-    public abstract ItemStack assemble(CraftingContainer inv, RegistryAccess registryAccess);
+    public abstract ItemStack assemble(CraftingContainer inv, HolderLookup.Provider lookupProvider);
 
     @Override
     public boolean matches(CraftingContainer inv, Level world) {
@@ -52,8 +52,8 @@ public abstract class WrappedShapedRecipe implements CraftingRecipe, IShapedReci
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
-        return wrapped.getResultItem(registryAccess);
+    public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
+        return wrapped.getResultItem(lookupProvider);
     }
 
     @Override
@@ -82,13 +82,13 @@ public abstract class WrappedShapedRecipe implements CraftingRecipe, IShapedReci
     }
 
     @Override
-    public int getRecipeWidth() {
-        return wrapped.getRecipeWidth();
+    public int getWidth() {
+        return wrapped.getWidth();
     }
 
     @Override
-    public int getRecipeHeight() {
-        return wrapped.getRecipeHeight();
+    public int getHeight() {
+        return wrapped.getHeight();
     }
 
     @Override
@@ -98,7 +98,8 @@ public abstract class WrappedShapedRecipe implements CraftingRecipe, IShapedReci
 
     public static class Serializer<T extends WrappedShapedRecipe> implements RecipeSerializer<T> {
         private final Function<ShapedRecipe, T> wrapper;
-        private Codec<T> codec;
+        private MapCodec<T> codec;
+        private StreamCodec<RegistryFriendlyByteBuf, T> streamCodec;
 
         public Serializer(Function<ShapedRecipe, T> wrapper) {
             this.wrapper = wrapper;
@@ -106,23 +107,21 @@ public abstract class WrappedShapedRecipe implements CraftingRecipe, IShapedReci
 
         @NotNull
         @Override
-        public Codec<T> codec() {
+        public MapCodec<T> codec() {
             if (codec == null) {
-                codec = ((MapCodec.MapCodecCodec<ShapedRecipe>) RecipeSerializer.SHAPED_RECIPE.codec()).codec()
-                    .xmap(wrapper, WrappedShapedRecipe::getWrapped).codec();
+                codec = RecipeSerializer.SHAPED_RECIPE.codec().xmap(wrapper, WrappedShapedRecipe::getWrapped);
             }
+
             return codec;
         }
 
-        @NotNull
         @Override
-        public T fromNetwork(@NotNull FriendlyByteBuf buffer) {
-            return wrapper.apply(RecipeSerializer.SHAPED_RECIPE.fromNetwork(buffer));
-        }
+        public StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
+            if (streamCodec == null) {
+                streamCodec = RecipeSerializer.SHAPED_RECIPE.streamCodec().map(wrapper, WrappedShapedRecipe::getWrapped);
+            }
 
-        @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull T recipe) {
-            RecipeSerializer.SHAPED_RECIPE.toNetwork(buffer, recipe.getWrapped());
+            return streamCodec;
         }
     }
 }

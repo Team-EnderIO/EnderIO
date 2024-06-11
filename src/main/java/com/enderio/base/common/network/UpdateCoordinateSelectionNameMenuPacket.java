@@ -2,38 +2,32 @@ package com.enderio.base.common.network;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.menu.CoordinateMenu;
-import com.enderio.core.common.network.ClientToServerMenuPacket;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import com.enderio.core.common.network.CustomMenuPacketPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public class UpdateCoordinateSelectionNameMenuPacket extends ClientToServerMenuPacket<CoordinateMenu> {
+public record UpdateCoordinateSelectionNameMenuPacket(int containerId, String name)
+    implements CustomMenuPacketPayload<CoordinateMenu> {
 
-    public static ResourceLocation ID = EnderIO.loc("update_coordinate_selection_name");
+    public static final Type<UpdateCoordinateSelectionNameMenuPacket> TYPE = new Type<>(EnderIO.loc("update_coordinate_selection_name"));
 
-    private final String name;
+    public static final StreamCodec<RegistryFriendlyByteBuf, UpdateCoordinateSelectionNameMenuPacket> STREAM_CODEC
+        = StreamCodec.composite(
+            ByteBufCodecs.INT,
+            UpdateCoordinateSelectionNameMenuPacket::containerId,
+            ByteBufCodecs.STRING_UTF8,
+            UpdateCoordinateSelectionNameMenuPacket::name,
+            UpdateCoordinateSelectionNameMenuPacket::new);
 
-    public UpdateCoordinateSelectionNameMenuPacket(int containerID, String name) {
-        super(CoordinateMenu.class, containerID);
-        this.name = name;
-    }
-
-    public UpdateCoordinateSelectionNameMenuPacket(FriendlyByteBuf buf) {
-        super(CoordinateMenu.class, buf);
-        name = buf.readUtf(50);
-    }
-
-    public String getName() {
-        return name;
+    @Override
+    public Class<CoordinateMenu> menuClass() {
+        return CoordinateMenu.class;
     }
 
     @Override
-    public void write(FriendlyByteBuf writeInto) {
-        super.write(writeInto);
-        writeInto.writeUtf(name, 50);
-    }
-
-    @Override
-    public ResourceLocation id() {
-        return ID;
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

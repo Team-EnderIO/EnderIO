@@ -15,9 +15,9 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.SlicerMenu;
-import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SlicingRecipe;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,19 +29,14 @@ import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.TierSortingRegistry;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SLICER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.SLICER_USAGE);
-
 
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
     public static final MultiSlotAccess INPUTS = new MultiSlotAccess();
@@ -113,7 +108,9 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
     private boolean validAxe(int slot, ItemStack stack) {
         if (stack.getItem() instanceof AxeItem axeItem) {
-            return TierSortingRegistry.getSortedTiers().indexOf(axeItem.getTier()) > TierSortingRegistry.getSortedTiers().indexOf(Tiers.WOOD);
+            // TODO: 20.6: Need a better alternative.
+            //return TierSortingRegistry.getSortedTiers().indexOf(axeItem.getTier()) > TierSortingRegistry.getSortedTiers().indexOf(Tiers.WOOD);
+            return axeItem.getTier() != Tiers.WOOD;
         }
         return false;
     }
@@ -147,8 +144,8 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
                     access.getItemStack(inv).shrink(1);
                 }
 
-                AXE.getItemStack(inv).hurt(1, level.getRandom(), null);
-                SHEARS.getItemStack(inv).hurt(1, level.getRandom(), null);
+                AXE.getItemStack(inv).hurtAndBreak(1, level.getRandom(), null, () -> {});
+                SHEARS.getItemStack(inv).hurtAndBreak(1, level.getRandom(), null, () -> {});
             }
         };
     }
@@ -158,15 +155,15 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        craftingTaskHost.save(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
+        craftingTaskHost.save(lookupProvider, pTag);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        craftingTaskHost.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
+        craftingTaskHost.load(lookupProvider, pTag);
     }
 
     // endregion

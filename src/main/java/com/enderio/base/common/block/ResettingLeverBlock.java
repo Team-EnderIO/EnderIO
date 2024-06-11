@@ -6,7 +6,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -28,16 +27,18 @@ public class ResettingLeverBlock extends LeverBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
         if (!pState.getValue(POWERED)) {
             pLevel.scheduleTick(pPos, this, delay);
         }
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+
+        return super.useWithoutItem(pState, pLevel, pPos, pPlayer, pHit);
     }
 
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource) {
         super.tick(state, level, pos, randomSource);
+
         if (state.getValue(POWERED) && !level.isClientSide) {
             BlockState blockstate = this.pull(state, level, pos);
             float f = blockstate.getValue(POWERED) ? 0.6F : 0.5F;

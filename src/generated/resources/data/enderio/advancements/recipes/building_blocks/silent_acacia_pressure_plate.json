@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:acacia_pressure_plate"
-            ]
+            "items": "minecraft:acacia_pressure_plate"
           }
         ]
       },

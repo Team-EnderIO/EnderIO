@@ -3,9 +3,7 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:sharpness",
   "input": {
-    "Count": 12,
-    "Ingredient": {
-      "tag": "forge:gems/quartz"
-    }
+    "count": 12,
+    "tag": "c:gems/quartz"
   }
 }

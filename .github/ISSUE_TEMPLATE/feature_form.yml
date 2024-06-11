@@ -1,0 +1,35 @@
+name: Feature Report
+description: Propose a new feature or idea.
+title: "Feature Request"
+labels: [Type-Feature, Status-Triage]
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing proposal for this?
+      description: Please search to see if an issue already exists for the idea you are proposing. This helps us to avoid duplicates.
+      options:
+        - label: I did not find any existing requests.
+          required: true
+  - type: textarea
+    attributes:
+      label: Explain your idea
+      description: Explain the proposed feature, include as much detail as necessary to convey it fully.
+  - type: textarea
+    attributes:
+      label: Why do you thing this feature belongs in Ender IO.
+      description: Explain what purpose this serves as part of this mod. Is it addressing an issue, a gap or something else?
+  - type: textarea
+    attributes:
+      label: Are there any alternatives?
+      description: Are there any alternative ways of implementing this idea? Especially if this addresses a problem.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Any Additional Information?
+      description: |
+        Links? References? Anything that will give us more context about the proposal.
+        
+        Tip: You can attach images by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false

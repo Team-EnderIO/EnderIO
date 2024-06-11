@@ -10,20 +10,24 @@ import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.init.MachineBlocks;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 
+import java.util.concurrent.CompletableFuture;
+
 public class MachineRecipeProvider extends RecipeProvider {
 
-    public MachineRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public MachineRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries);
     }
 
     @Override
@@ -88,7 +92,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .shaped(RecipeCategory.MISC, MachineBlocks.FLUID_TANK.get())
             .define('I', Tags.Items.INGOTS_IRON)
             .define('B', Blocks.IRON_BARS)
-            .define('G', Tags.Items.GLASS)
+            .define('G', Tags.Items.GLASS_BLOCKS)
             .pattern("IBI")
             .pattern("BGB")
             .pattern("IBI")
@@ -174,7 +178,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .define('G', EIOTags.Items.GEARS_ENERGIZED)
             .define('C', EIOBlocks.ENSOULED_CHASSIS.get())
             .define('B', Items.IRON_BARS)
-            .define('H', Tags.Items.HEADS)
+            .define('H', ItemTags.SKULLS)
             .pattern("IHI")
             .pattern("ICI")
             .pattern("GBG")
@@ -295,7 +299,7 @@ public class MachineRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC))
             .define('E', Tags.Items.INGOTS_GOLD)
-            .define('F', Tags.Items.GLASS)
+            .define('F', Tags.Items.GLASS_BLOCKS)
             .define('P', EIOItems.PHOTOVOLTAIC_PLATE)
             .define('C', EIOItems.BASIC_CAPACITOR)
             .define('D', Items.REDSTONE)
@@ -340,7 +344,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("MAM")
             .define('R', Tags.Items.DYES_RED)
             .define('G', Tags.Items.DYES_GREEN)
-            .define('B', Tags.Items.DYES_BLACK)
+            .define('B', Tags.Items.DYES_BLUE)
             .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
             .define('C', EIOBlocks.VOID_CHASSIS)
             .define('M', EIOTags.Items.GEARS_IRON)

@@ -2,13 +2,12 @@ package com.enderio.base.common.item.tool;
 
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.handler.TravelHandler;
-import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.client.item.EnergyBarDecorator;
-import com.enderio.core.client.item.IAdvancedTooltipProvider;
-import com.enderio.core.common.attachment.IEnergyStorageConfig;
-import com.enderio.core.common.item.ITabVariants;
-import com.enderio.core.common.util.EnergyUtil;
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -22,14 +21,15 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.energy.ComponentEnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public class TravelStaffItem extends Item implements IAdvancedTooltipProvider, ITabVariants, IEnergyStorageConfig {
+public class TravelStaffItem extends Item implements AdvancedTooltipProvider, CreativeTabVariants {
 
     public static ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
-        (stack, v) -> stack.getData(EIOAttachments.ITEM_ENERGY_STORAGE);
+        (stack, v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY.get(), TravelStaffItem.getMaxEnergy());
 
     public TravelStaffItem(Properties properties) {
         super(properties);
@@ -96,17 +96,16 @@ public class TravelStaffItem extends Item implements IAdvancedTooltipProvider, I
         return false;
     }
 
-    @Override
-    public int getMaxEnergy() {
+    public static int getMaxEnergy() {
         return BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_MAX_ENERGY.get();
     }
 
     public boolean hasResources(ItemStack stack) {
-        return EnergyUtil.hasEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get());
+        return ItemStackEnergy.hasEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get());
     }
 
     public void consumeResources(ItemStack stack) {
-        EnergyUtil.extractEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get(), false);
+        ItemStackEnergy.extractEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get(), false);
     }
 
     protected ActivationStatus getActivationStatus(ItemStack stack) {
@@ -117,7 +116,7 @@ public class TravelStaffItem extends Item implements IAdvancedTooltipProvider, I
     public void addAllVariants(CreativeModeTab.Output modifier) {
         modifier.accept(this);
         ItemStack is = new ItemStack(this);
-        EnergyUtil.setFull(is);
+        ItemStackEnergy.setFull(is);
         modifier.accept(is);
     }
 
@@ -143,7 +142,7 @@ public class TravelStaffItem extends Item implements IAdvancedTooltipProvider, I
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @org.jetbrains.annotations.Nullable Player player, List<Component> tooltips) {
-        String energy = String.format("%,d", EnergyUtil.getEnergyStored(itemStack)) + "/" + String.format("%,d", EnergyUtil.getMaxEnergyStored(itemStack));
+        String energy = String.format("%,d", ItemStackEnergy.getEnergyStored(itemStack)) + "/" + String.format("%,d", ItemStackEnergy.getMaxEnergyStored(itemStack));
         tooltips.add(TooltipUtil.styledWithArgs(EIOLang.ENERGY_AMOUNT, energy));
     }
 

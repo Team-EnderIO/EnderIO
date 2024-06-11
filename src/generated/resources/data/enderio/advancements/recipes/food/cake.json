@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "enderio:cake_base"
-            ]
+            "items": "enderio:cake_base"
           }
         ]
       },

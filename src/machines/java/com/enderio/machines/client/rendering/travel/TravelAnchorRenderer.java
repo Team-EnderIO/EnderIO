@@ -1,6 +1,8 @@
 package com.enderio.machines.client.rendering.travel;
 
 import com.enderio.api.travel.TravelRenderer;
+import com.enderio.base.common.paint.block.PaintedBlock;
+import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -20,10 +22,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Math;
 import org.joml.Matrix4f;
+
+import java.util.Optional;
 
 public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> {
     public static final RenderType BOLD_LINES = OutlineRenderType.createLines("bold_lines", 3);
@@ -31,12 +36,12 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
     @Override
     public void render(AnchorTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack, double distanceSquared, boolean active) {
-        if (!travelData.getVisibility()) {
+        if (!travelData.isVisible()) {
             return;
         }
 
         poseStack.pushPose();
-        poseStack.translate(travelData.getPos().getX(), travelData.getPos().getY(), travelData.getPos().getZ());
+        poseStack.translate(travelData.pos().getX(), travelData.pos().getY(), travelData.pos().getZ());
         Minecraft minecraft = Minecraft.getInstance();
         OutlineBuffer buffer = OutlineBuffer.INSTANCE;
         int color = 0xFFFFFF;
@@ -45,7 +50,15 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         }
 
         // Render Model
-        BlockState blockState = minecraft.level.getBlockState(travelData.getPos());
+        BlockState blockState = minecraft.level.getBlockState(travelData.pos());
+        if (minecraft.level.getBlockEntity(travelData.pos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
+            Optional<Block> paint = paintedTravelAnchorBlock.getPrimaryPaint();
+
+            if (paint.isPresent()) {
+                blockState = paint.get().defaultBlockState();
+            }
+        }
+
         BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
         VertexConsumer solid = buffer.getBuffer(RenderType.solid());
         minecraft
@@ -68,9 +81,9 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
         LocalPlayer player = Minecraft.getInstance().player;
         Vec3 position = player.position();
-        float f1 = (float) (Mth.atan2(position.z - travelData.getPos().getZ() - 0.5D, position.x - travelData.getPos().getX() - 0.5D) + Math.PI/2D);
+        float f1 = (float) (Mth.atan2(position.z - travelData.pos().getZ() - 0.5D, position.x - travelData.pos().getX() - 0.5D) + Math.PI/2D);
         // Render Text
-        if (!travelData.getName().trim().isEmpty()) {
+        if (!travelData.name().trim().isEmpty()) {
             // Scale for rendering
             double doubleScale = Math.sqrt(0.0035 * Math.sqrt(distanceSquared));
             if (doubleScale < 0.1f) {
@@ -88,7 +101,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             poseStack.scale(-scale, -scale, scale);
 
             Matrix4f matrix4f = poseStack.last().pose();
-            Component tc = Component.literal(travelData.getName().trim());
+            Component tc = Component.literal(travelData.name().trim());
 
             float textOpacitySetting = minecraft.options.getBackgroundOpacity(0.5f);
             int alpha = (int) (textOpacitySetting * 255) << 24;
@@ -100,7 +113,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         }
 
         //         Render Icon
-        if (travelData.getIcon() != Items.AIR) {
+        if (travelData.icon() != Items.AIR) {
             // Scale for rendering
             double doubleScale = Math.sqrt(Math.sqrt(distanceSquared));
             doubleScale = doubleScale * (Math.sin(Math.toRadians(Minecraft.getInstance().options.fov().get() / 4d)));
@@ -113,7 +126,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             poseStack.mulPose(Axis.YN.rotation(f1));
             poseStack.translate(0, 0, -1);
             poseStack.scale(-scale, scale, -scale);
-            ItemStack stack = new ItemStack(travelData.getIcon());
+            ItemStack stack = new ItemStack(travelData.icon());
             BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
             minecraft
                 .getItemRenderer()

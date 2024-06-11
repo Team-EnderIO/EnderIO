@@ -1,7 +1,7 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.api.capability.ISideConfig;
-import com.enderio.base.common.blockentity.IWrenchable;
+import com.enderio.api.capability.SideConfig;
+import com.enderio.base.common.blockentity.Wrenchable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
@@ -30,12 +30,12 @@ public class YetaWrenchItem extends Item {
         Level level = pContext.getLevel();
         BlockPos pos = pContext.getClickedPos();
 
-        if(level.getBlockEntity(pos) instanceof IWrenchable wrenchable) {
-            return wrenchable.onWrenched(pContext.getPlayer(), pContext.getClickedFace());
+        if(level.getBlockEntity(pos) instanceof Wrenchable wrenchable) {
+            return wrenchable.onWrenched(pContext.getPlayer(), pContext.getClickedFace()).result();
         }
 
         // Check for side config capability
-        ISideConfig sideConfig = level.getCapability(EIOCapabilities.SideConfig.BLOCK, pos, pContext.getClickedFace());
+        SideConfig sideConfig = level.getCapability(EIOCapabilities.SideConfig.BLOCK, pos, pContext.getClickedFace());
         if (sideConfig != null) {
             sideConfig.cycleMode();
             return InteractionResult.sidedSuccess(level.isClientSide());
@@ -99,7 +99,7 @@ public class YetaWrenchItem extends Item {
             state = getNextBlockState(state, property);
             noValidStateIndex++;
         } while (noValidStateIndex != property.getPossibleValues().size()
-            && !state.getBlock().canSurvive(state, pContext.getLevel(), pContext.getClickedPos()));
+            && !state.canSurvive(pContext.getLevel(), pContext.getClickedPos()));
 
         return state;
     }

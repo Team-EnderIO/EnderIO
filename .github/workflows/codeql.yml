@@ -64,7 +64,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'temurin'
 
     - name: Make gradlew executable

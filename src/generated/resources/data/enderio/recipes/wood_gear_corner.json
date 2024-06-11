@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "S": {
-      "tag": "forge:rods/wooden"
+      "tag": "c:rods/wooden"
     }
   },
   "pattern": [
@@ -12,6 +12,7 @@
     "S S"
   ],
   "result": {
-    "item": "enderio:wood_gear"
+    "count": 1,
+    "id": "enderio:wood_gear"
   }
 }

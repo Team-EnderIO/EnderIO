@@ -20,15 +20,8 @@
           ],
           "functions": [
             {
-              "function": "minecraft:copy_nbt",
-              "ops": [
-                {
-                  "op": "replace",
-                  "source": "Paint",
-                  "target": "BlockEntityTag.Paint"
-                }
-              ],
-              "source": "block_entity"
+              "function": "enderio:copy_paint",
+              "should_copy_primary": true
             }
           ],
           "name": "enderio:painted_slab"
@@ -55,15 +48,8 @@
           ],
           "functions": [
             {
-              "function": "minecraft:copy_nbt",
-              "ops": [
-                {
-                  "op": "replace",
-                  "source": "Paint2",
-                  "target": "BlockEntityTag.Paint2"
-                }
-              ],
-              "source": "block_entity"
+              "function": "enderio:copy_paint",
+              "should_copy_primary": false
             }
           ],
           "name": "enderio:painted_slab"

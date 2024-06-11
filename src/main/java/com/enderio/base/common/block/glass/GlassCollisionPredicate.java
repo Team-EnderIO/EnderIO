@@ -1,7 +1,7 @@
 package com.enderio.base.common.block.glass;
 
 import com.enderio.EnderIO;
-import com.enderio.api.misc.IIcon;
+import com.enderio.api.misc.Icon;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
@@ -21,7 +21,7 @@ import java.util.function.Predicate;
  * Glass collision predicate wrapper.
  * Contains the predicate, the description id for the tooltip and the icon for the itemstack.
  */
-public enum GlassCollisionPredicate implements IIcon {
+public enum GlassCollisionPredicate implements Icon {
 
     NONE(ctx -> false, null),
 

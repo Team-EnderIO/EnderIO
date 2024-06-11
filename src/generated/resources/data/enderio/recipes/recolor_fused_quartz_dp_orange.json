@@ -27,11 +27,11 @@
       "tag": "enderio:fused_quartz_dp"
     },
     {
-      "tag": "forge:dyes/orange"
+      "tag": "c:dyes/orange"
     }
   ],
   "result": {
     "count": 8,
-    "item": "enderio:fused_quartz_dp_orange"
+    "id": "enderio:fused_quartz_dp_orange"
   }
 }

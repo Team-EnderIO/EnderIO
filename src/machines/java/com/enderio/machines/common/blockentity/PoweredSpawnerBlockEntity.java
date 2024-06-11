@@ -5,14 +5,13 @@ import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
-import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
-import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
+import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.attachment.ActionRange;
-import com.enderio.machines.common.attachment.IRangedActor;
+import com.enderio.machines.common.attachment.RangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
-import com.enderio.machines.common.blockentity.task.IMachineTask;
+import com.enderio.machines.common.blockentity.task.MachineTask;
 import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
 import com.enderio.machines.common.blockentity.task.host.MachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -23,6 +22,8 @@ import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.PoweredSpawnerMenu;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -30,23 +31,22 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 // TODO: I want to revisit the powered spawner and task
 //       But there's not enough time before alpha, so just porting as-is.
-public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IRangedActor {
+public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements RangedActor {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
     public static final ResourceLocation NO_MOB = EnderIO.loc("no_mob");
-    private StoredEntityData entityData = StoredEntityData.empty();
+    private StoredEntityData entityData = StoredEntityData.EMPTY;
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
     private final MachineTaskHost taskHost;
 
-    private CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
+    private final NetworkDataSlot<ActionRange> actionRangeDataSlot;
 
     public PoweredSpawnerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState);
@@ -56,23 +56,19 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             setData(MachineAttachments.ACTION_RANGE, new ActionRange(4, false));
         }
 
-        actionRangeDataSlot = addDataSlot(new CodecNetworkDataSlot<>(this::getActionRange, this::internalSetActionRange, ActionRange.CODEC));
-
-        addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB), rl -> {
-            setEntityType(rl);
-            EnderIO.LOGGER.info("UPDATED ENTITY TYPE.");
-        }));
+        actionRangeDataSlot = addDataSlot(ActionRange.DATA_SLOT_TYPE.create(this::getActionRange, this::internalSetActionRange));
+        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityType().orElse(NO_MOB), this::setEntityType));
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
             @Override
-            protected @Nullable IMachineTask getNewTask() {
+            protected @Nullable MachineTask getNewTask() {
                 return createTask();
             }
 
             @Override
-            protected @Nullable IMachineTask loadTask(CompoundTag nbt) {
+            protected @Nullable MachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
                 SpawnerMachineTask task = createTask();
-                task.deserializeNBT(nbt);
+                task.deserializeNBT(lookupProvider, nbt);
                 return task;
             }
         };
@@ -160,13 +156,13 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     private SpawnerMachineTask createTask() {
-        return new SpawnerMachineTask(this, this.getEnergyStorage(), this.getEntityType());
+        return new SpawnerMachineTask(this, this.getEnergyStorage(), this.getEntityType().orElse(null));
     }
 
     // endregion
 
     public Optional<ResourceLocation> getEntityType() {
-        return entityData.getEntityType();
+        return entityData.entityType();
     }
 
     public void setEntityType(ResourceLocation entityType) {
@@ -186,17 +182,38 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.serializeNBT());
-        taskHost.save(pTag);
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(pTag, lookupProvider);
+        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(lookupProvider));
+        taskHost.save(lookupProvider, pTag);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        entityData.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
-        taskHost.load(pTag);
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(pTag, lookupProvider);
+        entityData = StoredEntityData.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+        taskHost.load(lookupProvider, pTag);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+        entityData = components.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        if (entityData.hasEntity()) {
+            components.set(EIODataComponents.STORED_ENTITY, entityData);
+        }
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove(MachineNBTKeys.ENTITY_STORAGE);
     }
 
     // endregion

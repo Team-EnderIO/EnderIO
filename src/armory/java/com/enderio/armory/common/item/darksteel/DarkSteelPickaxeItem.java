@@ -9,8 +9,8 @@ import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePene
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeHandler;
 import com.enderio.armory.common.lang.ArmoryLang;
-import com.enderio.core.common.item.ITabVariants;
-import com.enderio.core.common.util.EnergyUtil;
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -26,12 +26,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.common.TierSortingRegistry;
 import net.neoforged.neoforge.common.ToolActions;
 
 import java.util.List;
 
-public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem, ITabVariants {
+public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem, CreativeTabVariants {
 
     private final ModConfigSpec.ConfigValue<Integer> obsidianBreakPowerUse = ArmoryConfig.COMMON.DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
 
@@ -40,7 +39,8 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     private final ModConfigSpec.ConfigValue<Integer> useObsidianBreakSpeedAtHardness = ArmoryConfig.COMMON.DARK_STEEL_PICKAXE_AS_OBSIDIAN_AT_HARDNESS;
 
     public DarkSteelPickaxeItem(Properties pProperties) {
-        super(ArmoryItems.DARK_STEEL_TIER, 1, -2.8F, pProperties);
+        super(ArmoryItems.DARK_STEEL_TIER, pProperties
+            .attributes(createAttributes(ArmoryItems.DARK_STEEL_TIER, 1, -2.8F)));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
 
     @Override
     public float getDestroySpeed(ItemStack pStack, BlockState pState) {
-        final float baseSpeed = canHarvest(pStack, pState) ? speed : 1.0f;
+        final float baseSpeed = super.getDestroySpeed(pStack, pState);
         float adjustedSpeed = getEmpoweredUpgrade(pStack).map(empoweredUpgrade -> empoweredUpgrade.adjustDestroySpeed(baseSpeed)).orElse(baseSpeed);
         adjustedSpeed = ExplosiveUpgradeHandler.adjustDestroySpeed(adjustedSpeed, pStack);
         if (useObsidianMining(pState, pStack)) {
@@ -63,7 +63,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
         if (useObsidianMining(pState, pStack)) {
-            EnergyUtil.extractEnergy(pStack, obsidianBreakPowerUse.get(), false);
+            ItemStackEnergy.extractEnergy(pStack, obsidianBreakPowerUse.get(), false);
         }
         ExplosiveUpgradeHandler.onMineBlock(pStack, pLevel, pPos, pEntityLiving);
         return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);
@@ -71,7 +71,8 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
 
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return canHarvest(stack, state) && TierSortingRegistry.isCorrectTierForDrops(getTier(), state);
+        // TODO: 20.6: I think tools need reworking properly. Just making this compile for now.
+        return canHarvest(stack, state)/* && TierSortingRegistry.isCorrectTierForDrops(getTier(), state)*/;
     }
 
     @Override
@@ -109,7 +110,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     }
 
     private boolean useObsidianMining(BlockState pState, ItemStack stack) {
-        return EnergyUtil.getEnergyStored(stack) >= obsidianBreakPowerUse.get() && treatBlockAsObsidian(pState);
+        return ItemStackEnergy.getEnergyStored(stack) >= obsidianBreakPowerUse.get() && treatBlockAsObsidian(pState);
     }
 
     private boolean treatBlockAsObsidian(BlockState pState) {

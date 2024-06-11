@@ -21,7 +21,6 @@ SOFTWARE.
 package com.enderio.machines.common.souldata;
 
 import com.enderio.EnderIO;
-import com.enderio.core.common.network.CoreNetwork;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
@@ -49,12 +48,12 @@ import java.util.function.Function;
  * to the forge events necessary for syncing datapack data to clients.
  * @param <T> The type of the objects that the codec is parsing jsons as
  */
-public class SoulDataReloadListener<T extends ISoulData> extends SimpleJsonResourceReloadListener {
+public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new Gson();
     public Map<ResourceLocation,T> map = new HashMap<>();
     private final Codec<T> codec;
     private final String folderName;
-    private static final Map<String, SoulDataReloadListener<? extends ISoulData>> LOADED_SOUL_DATA = new HashMap<>();
+    private static final Map<String, SoulDataReloadListener<? extends SoulData>> LOADED_SOUL_DATA = new HashMap<>();
 
     /**
      * Creates a data manager with a custom gson parser
@@ -89,9 +88,8 @@ public class SoulDataReloadListener<T extends ISoulData> extends SimpleJsonResou
 
         for (Map.Entry<ResourceLocation, JsonElement> element: pObject.entrySet()) {
             codec.decode(JsonOps.INSTANCE, element.getValue())
-                .get()
-                .ifLeft(result -> newMap.put(result.getFirst().getKey(), result.getFirst())) //store the key from the ISoulData interface. Makes the look faster.
-                .ifRight(partial -> EnderIO.LOGGER.error("Failed to parse data json for {} due to: {}", element.getKey(), partial.message()));
+                .ifSuccess(result -> newMap.put(result.getFirst().getKey(), result.getFirst())) //store the key from the ISoulData interface. Makes the look faster.
+                .ifError(partial -> EnderIO.LOGGER.error("Failed to parse data json for {} due to: {}", element.getKey(), partial.message()));
         }
 
         this.map = newMap;
@@ -115,11 +113,12 @@ public class SoulDataReloadListener<T extends ISoulData> extends SimpleJsonResou
         return event -> {
             ServerPlayer player = event.getPlayer();
             P packet = packetFactory.apply(this.map);
-            PacketDistributor.PacketTarget target = player == null
-                ? PacketDistributor.ALL.noArg()
-                : PacketDistributor.PLAYER.with(player);
 
-            target.send(packet);
+            if (player == null) {
+                PacketDistributor.sendToAllPlayers(packet);
+            } else {
+                PacketDistributor.sendToPlayer(player, packet);
+            }
         };
     }
 
@@ -133,7 +132,7 @@ public class SoulDataReloadListener<T extends ISoulData> extends SimpleJsonResou
         return Optional.empty();
     }
 
-    public static SoulDataReloadListener<? extends ISoulData> fromString(String name) {
+    public static SoulDataReloadListener<? extends SoulData> fromString(String name) {
         return LOADED_SOUL_DATA.get(name);
     }
 }

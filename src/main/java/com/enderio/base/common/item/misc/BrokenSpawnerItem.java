@@ -1,19 +1,12 @@
 package com.enderio.base.common.item.misc;
 
 import com.enderio.api.attachment.StoredEntityData;
-import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.EntityCaptureUtils;
-import com.enderio.core.common.util.EntityUtil;
-import com.enderio.core.common.util.TooltipUtil;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +35,11 @@ public class BrokenSpawnerItem extends Item {
     // region Entity Storage
 
     public static Optional<ResourceLocation> getEntityType(ItemStack stack) {
-        return stack.is(EIOTags.Items.ENTITY_STORAGE)? stack.getData(EIOAttachments.STORED_ENTITY).getEntityType()
-            : Optional.empty();
+        return stack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY).entityType();
     }
 
     private static void setEntityType(ItemStack stack, ResourceLocation entityType) {
-        stack.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(entityType));
+        stack.set(EIODataComponents.STORED_ENTITY, StoredEntityData.of(entityType));
     }
 
     // endregion

@@ -3,7 +3,7 @@
   "bonus": "none",
   "energy": 2400,
   "input": {
-    "tag": "neoforge:gems/pulsating_crystal"
+    "tag": "c:gems/pulsating_crystal"
   },
   "outputs": [
     {

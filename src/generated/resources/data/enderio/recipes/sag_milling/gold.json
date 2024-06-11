@@ -3,7 +3,7 @@
   "bonus": "none",
   "energy": 2400,
   "input": {
-    "tag": "forge:ingots/gold"
+    "tag": "c:ingots/gold"
   },
   "outputs": [
     {

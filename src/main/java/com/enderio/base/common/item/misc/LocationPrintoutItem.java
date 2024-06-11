@@ -1,7 +1,7 @@
 package com.enderio.base.common.item.misc;
 
 import com.enderio.api.attachment.CoordinateSelection;
-import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.menu.CoordinateMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -79,22 +79,20 @@ public class LocationPrintoutItem extends Item {
     }
 
     public static Optional<CoordinateSelection> getSelection(ItemStack stack) {
-        return stack.hasData(EIOAttachments.COORDINATE_SELECTION)
-            ? Optional.of(stack.getData(EIOAttachments.COORDINATE_SELECTION))
-            : Optional.empty();
+        return Optional.ofNullable(stack.get(EIODataComponents.COORDINATE_SELECTION));
     }
 
     public static void setSelection(ItemStack stack, CoordinateSelection selection) {
-        stack.setData(EIOAttachments.COORDINATE_SELECTION, selection);
+        stack.set(EIODataComponents.COORDINATE_SELECTION, selection);
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> toolTip, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, toolTip, pIsAdvanced);
+    public void appendHoverText(ItemStack pStack, TooltipContext tooltipContext, List<Component> toolTip, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, tooltipContext, toolTip, pIsAdvanced);
         getSelection(pStack).ifPresent(selection -> {
-                toolTip.add(writeCoordinate('x', selection.getPos().getX())
-                    .append(writeCoordinate('y', selection.getPos().getY()))
-                    .append(writeCoordinate('z', selection.getPos().getZ())));
+                toolTip.add(writeCoordinate('x', selection.pos().getX())
+                    .append(writeCoordinate('y', selection.pos().getY()))
+                    .append(writeCoordinate('z', selection.pos().getZ())));
                 toolTip.add(Component.literal(selection.getLevelName()));
         });
     }

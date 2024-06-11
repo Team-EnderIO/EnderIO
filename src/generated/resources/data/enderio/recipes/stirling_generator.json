@@ -9,10 +9,10 @@
       "item": "minecraft:furnace"
     },
     "G": {
-      "tag": "neoforge:gears/iron"
+      "tag": "c:gears/iron"
     },
     "I": {
-      "tag": "neoforge:ingots/dark_steel"
+      "tag": "c:ingots/dark_steel"
     },
     "P": {
       "item": "minecraft:piston"
@@ -27,6 +27,7 @@
     "GPG"
   ],
   "result": {
-    "item": "enderio:stirling_generator"
+    "count": 1,
+    "id": "enderio:stirling_generator"
   }
 }
