@@ -2,11 +2,12 @@ package com.enderio.conduits.common.redstone;
 
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneExtendedData;
+import com.enderio.conduits.common.init.ConduitComponents;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Objects;
 
@@ -25,8 +26,8 @@ public class RedstoneANDFilter implements RedstoneInsertFilter {
         RedstoneANDFilter::new
     );
 
-    private final ColorControl channel1;
-    private final ColorControl channel2;
+    private ColorControl channel1;
+    private ColorControl channel2;
 
     public RedstoneANDFilter(ColorControl channel1, ColorControl channel2) {
         this.channel1 = channel1;
@@ -58,5 +59,23 @@ public class RedstoneANDFilter implements RedstoneInsertFilter {
     @Override
     public int hashCode() {
         return Objects.hash(channel1, channel2);
+    }
+
+    public ColorControl getFirstChannel() {
+        return this.channel1;
+    }
+
+    public ColorControl getSecondChannel() {
+        return this.channel2;
+    }
+
+    public void setFirstChannel(ColorControl colorControl, ItemStack stack) {
+        stack.set(ConduitComponents.REDSTONE_AND_FILTER, new RedstoneANDFilter(colorControl, channel2));
+        channel1 = colorControl;
+    }
+
+    public void setSecondChannel(ColorControl colorControl, ItemStack stack) {
+        stack.set(ConduitComponents.REDSTONE_AND_FILTER, new RedstoneANDFilter(channel1, colorControl));
+        channel2 = colorControl;
     }
 }
