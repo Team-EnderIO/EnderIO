@@ -236,7 +236,7 @@ public class SpawnerMachineTask implements PoweredMachineTask {
 
         if (spawned) {
             //Clear energy after spawn
-            energyConsumed -= energyCost; //TODO same amount used for 1 or MachinesConfig.COMMON.SPAWN_AMOUNT.get() spawns?
+            energyConsumed -= energyCost; //The same amount of energy is used for 1 or MachinesConfig.COMMON.SPAWN_AMOUNT.get() spawns, so make sure your spawner has enough valid spaces!
         }
         
         return spawned;
