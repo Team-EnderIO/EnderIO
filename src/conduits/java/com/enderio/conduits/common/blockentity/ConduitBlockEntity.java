@@ -76,7 +76,6 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     public ConduitBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(ConduitBlockEntities.CONDUIT.get(), worldPosition, blockState);
         bundle = new ConduitBundle(this::scheduleTick, worldPosition);
-        clientBundle = bundle.deepCopy();
 
         addDataSlot(ConduitBundleCompatibilityDataSlotType.DATA_SLOT_TYPE.create(this::getBundle));
         addAfterSyncRunnable(this::updateClient);
@@ -219,7 +218,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     @Override
     public void setLevel(Level pLevel) {
         super.setLevel(pLevel);
-        if (!level.isClientSide()) {
+
+        if (level.isClientSide()) {
+            clientBundle = bundle.deepCopy();
+        } else {
             //pull that data earlier, so extended conduit data is present for ae2 connections
             loadFromSavedData();
         }
