@@ -9,6 +9,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -62,6 +63,12 @@ public class RedstoneConduitData implements ConduitData<RedstoneConduitData> {
 
         isActive = true;
         activeColors.add(color);
+    }
+
+    @EnsureSide(EnsureSide.Side.CLIENT)
+    @Override
+    public RedstoneConduitData deepCopy() {
+        return new RedstoneConduitData(isActive, new ArrayList<>(activeColors));
     }
 
     public static class Serializer implements ConduitDataSerializer<RedstoneConduitData> {

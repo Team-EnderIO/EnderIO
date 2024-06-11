@@ -21,6 +21,8 @@ import com.enderio.core.common.blockentity.EnderBlockEntity;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
+import me.liliandev.ensure.ensures.EnsureNotNull;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -69,7 +71,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     private final ConduitShape shape = new ConduitShape();
 
     private ConduitBundle bundle;
-    @UseOnly(LogicalSide.CLIENT) private ConduitBundle clientBundle;
+    @UseOnly(LogicalSide.CLIENT)
+    private ConduitBundle clientBundle;
 
     private UpdateState checkConnection = UpdateState.NONE;
 
@@ -80,7 +83,6 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     public ConduitBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(ConduitBlockEntities.CONDUIT.get(), worldPosition, blockState);
         bundle = new ConduitBundle(this::scheduleTick, worldPosition);
-        clientBundle = bundle.deepCopy();
 
         addDataSlot(ConduitBundle.DATA_SLOT_TYPE.create(this::getBundle, b -> bundle = b));
         addAfterSyncRunnable(this::updateClient);
@@ -98,7 +100,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     /**
      * Handle a connection state update from the client.
      */
-    @UseOnly(LogicalSide.SERVER)
+    @EnsureSide(EnsureSide.Side.SERVER)
     public void handleConnectionStateUpdate(Direction direction, ConduitType<?> conduitType, DynamicConnectionState connectionState) {
         // Sanity check, the client shouldn't do this, but just to make sure there's no confusion.
         if (bundle.getConnectionState(direction, conduitType) instanceof DynamicConnectionState) {
@@ -112,7 +114,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         updateConnectionToData(conduitType);
     }
 
-    @UseOnly(LogicalSide.SERVER)
+    @EnsureSide(EnsureSide.Side.SERVER)
     public <T extends ConduitData<T>> void handleExtendedDataUpdate(ConduitType<T> conduitType, T data) {
         var node = getBundle().getNodeFor(conduitType);
         node.getConduitData().applyClientChanges(data);
@@ -234,7 +236,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     @Override
     public void setLevel(Level pLevel) {
         super.setLevel(pLevel);
-        if (!level.isClientSide()) {
+
+        if (level.isClientSide()) {
+            clientBundle = bundle.deepCopy();
+        } else {
             //pull that data earlier, so extended conduit data is present for ae2 connections
             loadFromSavedData();
         }

@@ -5,6 +5,7 @@ import com.enderio.api.registry.EnderIORegistries;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import io.netty.buffer.ByteBuf;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -69,7 +70,7 @@ public interface ConduitData<T extends ConduitData<T>> {
         return false;
     }
 
-    @UseOnly(LogicalSide.CLIENT)
+    @EnsureSide(EnsureSide.Side.CLIENT)
     default T deepCopy() {
         return cast();
     }

@@ -12,6 +12,7 @@ import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -411,7 +412,7 @@ public final class ConduitBundle {
         return CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow().getFirst();
     }
 
-    @UseOnly(LogicalSide.CLIENT)
+    @EnsureSide(EnsureSide.Side.CLIENT)
     public ConduitBundle deepCopy() {
         var bundle = new ConduitBundle(() -> {}, pos);
         bundle.types.addAll(types);
