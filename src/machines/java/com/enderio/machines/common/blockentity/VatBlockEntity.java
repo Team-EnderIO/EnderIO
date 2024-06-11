@@ -95,7 +95,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
         if (!stack.isEmpty()) {
             if (handleFluidItemInteraction(player, hand, stack, this, INPUT_TANK) || handleFluidItemInteraction(player, hand, stack, this, OUTPUT_TANK)) {
                 player.getInventory().setChanged();
-                return ItemInteractionResult.CONSUME;
+                return ItemInteractionResult.sidedSuccess(level.isClientSide());
             }
         }
         return super.onBlockEntityUsed(state, level, pos, player, hand, hit);

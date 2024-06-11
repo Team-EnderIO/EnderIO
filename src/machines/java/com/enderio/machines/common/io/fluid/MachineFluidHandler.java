@@ -253,8 +253,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         for (int i = 0; i < getTanks(); i++) {
             CompoundTag tankTag = new CompoundTag();
             tankTag.putInt(TANK_INDEX, i);
-            tankTag.put(TANK_CONTENTS, stacks.get(i).save(lookupProvider));
-
+            tankTag.put(TANK_CONTENTS, stacks.get(i).saveOptional(lookupProvider));
             nbtTagList.add(tankTag);
         }
         CompoundTag nbt = new CompoundTag();
@@ -268,7 +267,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag tankTag = tagList.getCompound(i);
             int index = tankTag.getInt(TANK_INDEX);
-            stacks.set(index, FluidStack.parseOptional(lookupProvider, tankTag));
+            stacks.set(index, FluidStack.parseOptional(lookupProvider, tankTag.getCompound(TANK_CONTENTS)));
         }
     }
 
