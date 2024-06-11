@@ -89,10 +89,12 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public void updateClient() {
-        clientBundle = bundle.deepCopy();
-        updateShape();
-        requestModelDataUpdate();
-        level.setBlocksDirty(getBlockPos(), Blocks.AIR.defaultBlockState(), getBlockState());
+        if (level != null && level.isClientSide) {
+            clientBundle = bundle.deepCopy();
+            updateShape();
+            requestModelDataUpdate();
+            level.setBlocksDirty(getBlockPos(), Blocks.AIR.defaultBlockState(), getBlockState());
+        }
     }
 
     // region Network Sync

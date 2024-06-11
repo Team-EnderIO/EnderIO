@@ -19,11 +19,16 @@ public abstract class TieredConduit<T extends ConduitData<T>> extends ConduitTyp
      * @param tier    The tier of the conduit. For Energy this should be it's transfer rate to easily add and compare conduit strength
      */
 
-    public TieredConduit(ResourceLocation texture, ResourceLocation type, int tier, ResourceLocation iconTexture, Vector2i iconTexturePos) {
+    public TieredConduit(ResourceLocation texture, ResourceLocation type, int tier) {
+        this(texture, type, tier, new ClientConduitData.Simple<>());
+    }
+
+
+    public TieredConduit(ResourceLocation texture, ResourceLocation type, int tier, ClientConduitData<T> clientConduitData) {
         this.texture = texture;
         this.type = type;
         this.tier = tier;
-        clientConduitData = new ClientConduitData.Simple<>(iconTexture, iconTexturePos);
+        this.clientConduitData = clientConduitData;
     }
 
     @Override

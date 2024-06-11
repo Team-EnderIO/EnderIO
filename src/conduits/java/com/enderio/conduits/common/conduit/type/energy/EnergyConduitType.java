@@ -24,7 +24,7 @@ public class EnergyConduitType extends SimpleConduitType<EnergyConduitData> {
 
     public EnergyConduitType() {
         super(EnderIO.loc("block/conduit/energy"), new EnergyConduitTicker(), EnergyConduitData::new,
-            new ClientConduitData.Simple<>(EIOConduitTypes.ICON_TEXTURE, new Vector2i(0, 24)), MENU_DATA);
+            new ClientConduitData.Simple<>(), MENU_DATA);
     }
 
     @Override

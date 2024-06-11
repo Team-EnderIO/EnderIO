@@ -2,9 +2,7 @@ package com.enderio.conduits.common.conduit;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
@@ -34,7 +32,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -3,7 +3,6 @@ package com.enderio.conduits.common.conduit.type.redstone;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.misc.ColorControl;
-import com.enderio.api.network.DumbStreamCodec;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;

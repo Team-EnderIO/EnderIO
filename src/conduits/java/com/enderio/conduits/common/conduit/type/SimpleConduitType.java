@@ -31,11 +31,9 @@ public class SimpleConduitType<T extends ConduitData<T>> extends ConduitType<T> 
         ResourceLocation texture,
         ConduitTicker<T> ticker,
         Supplier<T> extendedDataFactory,
-        ResourceLocation iconTexture,
-        Vector2i iconTexturePos,
         ConduitMenuData menuData) {
 
-        this(texture, ticker, extendedDataFactory, new ClientConduitData.Simple<>(iconTexture, iconTexturePos), menuData);
+        this(texture, ticker, extendedDataFactory, new ClientConduitData.Simple<>(), menuData);
     }
 
     public SimpleConduitType(

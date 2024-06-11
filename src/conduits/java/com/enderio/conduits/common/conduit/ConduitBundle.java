@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.conduit;
 
-import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.SlotType;
@@ -26,7 +25,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import org.jetbrains.annotations.Nullable;

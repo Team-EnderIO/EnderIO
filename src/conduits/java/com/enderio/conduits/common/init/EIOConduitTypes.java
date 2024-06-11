@@ -26,28 +26,26 @@ import java.util.function.Supplier;
 
 public class EIOConduitTypes {
 
-    public static final ResourceLocation ICON_TEXTURE = EnderIO.loc("textures/gui/conduit_icon.png");
-
     public static class Types {
         public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_TYPES, EnderIO.MODID);
 
         public static final DeferredHolder<ConduitType<?>, EnergyConduitType> ENERGY =
-            CONDUIT_TYPES.register("energy_conduit", EnergyConduitType::new);
+            CONDUIT_TYPES.register("energy", EnergyConduitType::new);
 
         public static final DeferredHolder<ConduitType<?>, RedstoneConduitType> REDSTONE =
-            CONDUIT_TYPES.register("redstone_conduit", RedstoneConduitType::new);
+            CONDUIT_TYPES.register("redstone", RedstoneConduitType::new);
 
         public static final DeferredHolder<ConduitType<?>, FluidConduitType> FLUID =
-            fluidConduit("fluid_conduit", 50, false, new Vector2i(0, 120));
+            fluidConduit("fluid", 50, false);
 
         public static final DeferredHolder<ConduitType<?>, FluidConduitType> FLUID2 =
-            fluidConduit("pressurized_fluid_conduit", 100, false, new Vector2i(0, 144));
+            fluidConduit("pressurized_fluid", 100, false);
 
         public static final DeferredHolder<ConduitType<?>, FluidConduitType> FLUID3 =
-            fluidConduit("ender_fluid_conduit", 200, true, new Vector2i(0, 168));
+            fluidConduit("ender_fluid", 200, true);
 
         public static final DeferredHolder<ConduitType<?>, SimpleConduitType<ItemConduitData>> ITEM =
-            CONDUIT_TYPES.register("item_conduit",
+            CONDUIT_TYPES.register("item",
                 () -> new SimpleConduitType<>(
                     EnderIO.loc("block/conduit/item"),
                     new ItemConduitTicker(),
@@ -55,9 +53,9 @@ public class EIOConduitTypes {
                     new ItemClientConduitData(),
                     ConduitMenuData.ITEM));
 
-        private static DeferredHolder<ConduitType<?>, FluidConduitType> fluidConduit(String name, int tier, boolean isMultiFluid, Vector2i iconPos) {
+        private static DeferredHolder<ConduitType<?>, FluidConduitType> fluidConduit(String name, int tier, boolean isMultiFluid) {
             return CONDUIT_TYPES.register(name,
-                () -> new FluidConduitType(EnderIO.loc("block/conduit/" + name), tier, isMultiFluid, ICON_TEXTURE, iconPos));
+                () -> new FluidConduitType(EnderIO.loc("block/conduit/" + name), tier, isMultiFluid));
         }
     }
 
@@ -69,16 +67,16 @@ public class EIOConduitTypes {
             CONDUIT_DATA_SERIALIZERS.register("empty", () -> ConduitData.EmptyConduitData.Serializer.INSTANCE);
 
         public static final Supplier<ConduitDataSerializer<EnergyConduitData>> ENERGY =
-            CONDUIT_DATA_SERIALIZERS.register("energy_conduit", EnergyConduitData.Serializer::new);
+            CONDUIT_DATA_SERIALIZERS.register("energy", EnergyConduitData.Serializer::new);
 
         public static final Supplier<ConduitDataSerializer<FluidConduitData>> FLUID =
-            CONDUIT_DATA_SERIALIZERS.register("fluid_conduit", FluidConduitData.Serializer::new);
+            CONDUIT_DATA_SERIALIZERS.register("fluid", FluidConduitData.Serializer::new);
 
         public static final Supplier<ConduitDataSerializer<RedstoneConduitData>> REDSTONE =
-            CONDUIT_DATA_SERIALIZERS.register("redstone_conduit", RedstoneConduitData.Serializer::new);
+            CONDUIT_DATA_SERIALIZERS.register("redstone", RedstoneConduitData.Serializer::new);
 
         public static final Supplier<ConduitDataSerializer<ItemConduitData>> ITEM =
-            CONDUIT_DATA_SERIALIZERS.register("item_conduit", ItemConduitData.Serializer::new);
+            CONDUIT_DATA_SERIALIZERS.register("item", ItemConduitData.Serializer::new);
     }
 
     public static void register(IEventBus bus) {

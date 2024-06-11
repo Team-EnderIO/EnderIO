@@ -3,6 +3,7 @@ package com.enderio.conduits.client;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
+import com.enderio.conduits.client.gui.ConduitIconTextureManager;
 import com.enderio.conduits.client.model.ConduitGeometry;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import net.minecraft.client.Minecraft;
@@ -17,6 +18,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,6 +45,11 @@ public class ConduitClientSetup {
     public static final ResourceLocation CONDUIT_IO_REDSTONE = loc("block/io/redstone");
 
     private ConduitClientSetup() {}
+
+    @SubscribeEvent
+    public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
+        event.registerReloadListener(new ConduitIconTextureManager(Minecraft.getInstance().getTextureManager()));
+    }
 
     @SubscribeEvent
     public static void modelLoader(ModelEvent.RegisterGeometryLoaders event) {

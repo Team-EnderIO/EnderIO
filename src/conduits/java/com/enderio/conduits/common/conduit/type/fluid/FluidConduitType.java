@@ -3,7 +3,6 @@ package com.enderio.conduits.common.conduit.type.fluid;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.ConduitTicker;
-import com.enderio.api.misc.Vector2i;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -14,11 +13,11 @@ public class FluidConduitType extends TieredConduit<FluidConduitData> {
     private final boolean isMultiFluid;
     private final int transferRate;
 
-    public FluidConduitType(ResourceLocation texture, int tier, boolean isMultiFluid, ResourceLocation iconTexture, Vector2i iconTexturePos) {
-        super(texture, new ResourceLocation("forge:fluid"), (isMultiFluid ? 100_000 : 0) + tier, iconTexture, iconTexturePos);
+    public FluidConduitType(ResourceLocation texture, int tier, boolean isMultiFluid) {
+        super(texture, new ResourceLocation("forge:fluid"), (isMultiFluid ? 100_000 : 0) + tier);
         this.isMultiFluid = isMultiFluid;
         this.transferRate = tier;
-        this.clientConduitData = new FluidClientData(iconTexture, iconTexturePos);
+        this.clientConduitData = new FluidClientData();
     }
 
     @Override

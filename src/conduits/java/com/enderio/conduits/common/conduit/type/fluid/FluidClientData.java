@@ -39,8 +39,8 @@ public class FluidClientData extends ClientConduitData.Simple<FluidConduitData> 
 
     private static final ResourceLocation MODEL = EnderIO.loc("block/extra/fluids");
     private static final ResourceLocation WIDGET_TEXTURE = EnderIO.loc("textures/gui/fluidbackground.png");
-    public FluidClientData(ResourceLocation getTextureLocation, Vector2i getTexturePosition) {
-        super(getTextureLocation, getTexturePosition);
+    public FluidClientData() {
+        super();
     }
 
     @Override

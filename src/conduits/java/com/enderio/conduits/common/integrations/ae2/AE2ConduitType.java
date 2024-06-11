@@ -27,8 +27,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     private final boolean dense;
 
     public AE2ConduitType(boolean dense) {
-        super(EnderIO.loc("block/conduit/" + (dense ? "dense_me" : "me")), new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8,
-            EIOConduitTypes.ICON_TEXTURE, new Vector2i(0, dense ? 72 : 48));
+        super(EnderIO.loc("block/conduit/" + (dense ? "dense_me" : "me")), new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8);
         this.dense = dense;
     }
 

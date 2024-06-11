@@ -443,7 +443,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         if (placer instanceof Player player) {
             if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
                 conduit.addType(item.getType(), player);
-                if (!level.isClientSide()) {
+                if (level.isClientSide()) {
                     conduit.updateClient();
                 }
             }

@@ -1,6 +1,5 @@
 package com.enderio.api.conduit;
 
-import com.enderio.api.misc.Icon;
 import com.enderio.api.misc.Vector2i;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -26,11 +25,6 @@ public interface ClientConduitData<T extends ConduitData<T>> {
     interface UpdateExtendedData<T extends ConduitData<T>> {
         void update(Function<T, T> mapper);
     }
-
-    /**
-     * Get the icon to display on the conduit GUI.
-     */
-    Icon icon();
 
     /**
      * @param conduitDataSupplier       the conduit data the widgets are for, manipulate the state of it in the widgets
@@ -69,15 +63,7 @@ public interface ClientConduitData<T extends ConduitData<T>> {
     }
 
     class Simple<T extends ConduitData<T>> implements ClientConduitData<T> {
-        private final Icon icon;
-
-        public Simple(ResourceLocation textureLocation, Vector2i texturePosition) {
-            this.icon = new Icon.Simple(textureLocation, texturePosition, ICON_TEXTURE_SIZE, ICON_RENDER_SIZE);
-        }
-
-        @Override
-        public Icon icon() {
-            return icon;
+        public Simple() {
         }
     }
 }
