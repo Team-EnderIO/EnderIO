@@ -25,16 +25,20 @@ public class RedstoneCountFilter implements RedstoneInsertFilter {
     public int getOutputSignal(RedstoneExtendedData data, ColorControl control) {
         ColorControl channel = getChannel();
         int maxCount = getMaxCount();
-        boolean lastActive = isLastActive();
+        boolean deactivated = isDeactivated();
         int count = getCount();
-        if (lastActive !=  data.isActive(channel)) {
-            lastActive = !lastActive;
-            setLastActive(lastActive);
-            if (data.isActive(channel)) {
-                count = (count + 1) % maxCount;
-                setCount(count);
-            }
+        if (data.isActive(channel) && deactivated) {
+            count++;
+            deactivated = false;
         }
+        if (!data.isActive(channel)) {
+            deactivated = true;
+        }
+        if (count > maxCount) {
+            count = 1;
+        }
+        setCount(count);
+        setDeactivated(deactivated);
         return count == maxCount ? 15 : 0;
     }
 
@@ -52,14 +56,14 @@ public class RedstoneCountFilter implements RedstoneInsertFilter {
 
     public void setCount(int count) {
         var component = stack.get(ConduitComponents.REDSTONE_COUNT_FILTER);
-        stack.set(ConduitComponents.REDSTONE_COUNT_FILTER, new Component(component.channel1, component.maxCount, count, component.active));
+        stack.set(ConduitComponents.REDSTONE_COUNT_FILTER, new Component(component.channel1, component.maxCount, count, component.deactivated));
     }
 
-    public boolean isLastActive() {
-        return stack.get(ConduitComponents.REDSTONE_COUNT_FILTER).active();
+    public boolean isDeactivated() {
+        return stack.get(ConduitComponents.REDSTONE_COUNT_FILTER).deactivated();
     }
 
-    public void setLastActive(boolean lastActive) {
+    public void setDeactivated(boolean lastActive) {
         var component = stack.get(ConduitComponents.REDSTONE_COUNT_FILTER);
         stack.set(ConduitComponents.REDSTONE_COUNT_FILTER, new Component(component.channel1, component.maxCount, component.count, lastActive));
     }
@@ -68,12 +72,18 @@ public class RedstoneCountFilter implements RedstoneInsertFilter {
         stack.set(ConduitComponents.REDSTONE_COUNT_FILTER, new Component(packet.channel1(), packet.maxCount(), packet.count(), packet.active()));
     }
 
-    public record Component(ColorControl channel1, int maxCount, int count, boolean active) {
+    public void setChannel(ColorControl channel) {
+        var component = stack.get(ConduitComponents.REDSTONE_COUNT_FILTER);
+        stack.set(ConduitComponents.REDSTONE_COUNT_FILTER, new Component(channel, component.maxCount, component.count, component.deactivated));
+
+    }
+
+    public record Component(ColorControl channel1, int maxCount, int count, boolean deactivated) {
         public static final Codec<Component> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(ColorControl.CODEC.fieldOf("channel1").forGetter(Component::channel1),
                     ExtraCodecs.POSITIVE_INT.fieldOf("maxCount").forGetter(Component::maxCount),
                     ExtraCodecs.POSITIVE_INT.fieldOf("ticks").forGetter(Component::count),
-                    Codec.BOOL.fieldOf("active").forGetter(Component::active))
+                    Codec.BOOL.fieldOf("deactivated").forGetter(Component::deactivated))
                 .apply(instance, Component::new)
         );
         public static final StreamCodec<ByteBuf, Component> STREAM_CODEC = StreamCodec.composite(
@@ -84,7 +94,7 @@ public class RedstoneCountFilter implements RedstoneInsertFilter {
             ByteBufCodecs.VAR_INT,
             Component::count,
             ByteBufCodecs.BOOL,
-            Component::active,
+            Component::deactivated,
             Component::new
         );
     }

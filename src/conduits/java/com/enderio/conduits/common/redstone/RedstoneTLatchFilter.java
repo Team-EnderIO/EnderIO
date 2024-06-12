@@ -46,7 +46,7 @@ public class RedstoneTLatchFilter implements RedstoneInsertFilter {
 
     public record Component(boolean active, boolean deactivated) {
         public static final Codec<Component> CODEC = RecordCodecBuilder.create(instance ->
-            instance.group(Codec.BOOL.fieldOf("active").forGetter(Component::active),
+            instance.group(Codec.BOOL.fieldOf("deactivated").forGetter(Component::active),
                     Codec.BOOL.fieldOf("deactivated").forGetter(Component::deactivated))
                 .apply(instance, Component::new)
         );

@@ -49,7 +49,7 @@ public class ConduitItems {
     public static final RegiliteItem<RedstoneFilterItem> AND_FILTER = createRedstoneFilter("redstone_and_filter", ConduitComponents.REDSTONE_AND_FILTER,
         DoubleRedstoneChannel.INSTANCE, RedstoneFilterItem.AND_FILTER_PROVIDER, ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get);
     public static final RegiliteItem<RedstoneFilterItem> COUNT_FILTER = createRedstoneFilter("redstone_counting_filter", ConduitComponents.REDSTONE_COUNT_FILTER,
-        RedstoneCountFilter.INSTANCE, RedstoneFilterItem.COUNT_FILTER_PROVIDER, ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get);
+        RedstoneCountFilter.INSTANCE, RedstoneFilterItem.COUNT_FILTER_PROVIDER, ConduitMenus.REDSTONE_COUNT_FILTER::get);
     public static final RegiliteItem<RedstoneFilterItem> NAND_FILTER = createRedstoneFilter("redstone_nand_filter", ConduitComponents.REDSTONE_NAND_FILTER,
         DoubleRedstoneChannel.INSTANCE, RedstoneFilterItem.NAND_FILTER_PROVIDER, ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get);
     public static final RegiliteItem<RedstoneFilterItem> NOR_FILTER = createRedstoneFilter("redstone_nor_filter", ConduitComponents.REDSTONE_NOR_FILTER,
