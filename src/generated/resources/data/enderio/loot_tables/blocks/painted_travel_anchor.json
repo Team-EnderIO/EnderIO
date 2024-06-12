@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_nbt",
+              "ops": [
+                {
+                  "op": "replace",
+                  "source": "Paint",
+                  "target": "BlockEntityTag.Paint"
+                }
+              ],
+              "source": "block_entity"
+            }
+          ],
+          "name": "enderio:painted_travel_anchor"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "enderio:blocks/painted_travel_anchor"
+}

@@ -22,10 +22,10 @@ public record ConduitTextureEmissiveQuadTransformer(TextureAtlasSprite newSprite
             uv0[0] = (uv0[0] - quad.getSprite().getU0()) * newSprite.contents().width() / quad.getSprite().contents().width() + newSprite.getU0();
             uv0[1] = (uv0[1] - quad.getSprite().getV0()) * newSprite.contents().height() / quad.getSprite().contents().height() + newSprite.getV0();
             int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
-            quad.getVertices()[4 + i * 8] = packedTextureData[0];
-            quad.getVertices()[5 + i * 8] = packedTextureData[1];
+            quad.getVertices()[IQuadTransformer.UV0 + i * IQuadTransformer.STRIDE] = packedTextureData[0];
+            quad.getVertices()[IQuadTransformer.UV0 + 1 + i * IQuadTransformer.STRIDE] = packedTextureData[1];
         }
-
+        quad.sprite = newSprite;
     }
 
     private static TextureAtlas blockAtlas() {

@@ -30,11 +30,8 @@ public class YetaWrenchItem extends Item {
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext pContext) {
         Level level = pContext.getLevel();
-        if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
-        }
-
         BlockPos pos = pContext.getClickedPos();
+
         if(level.getBlockEntity(pos) instanceof IWrenchable wrenchable) {
             return wrenchable.onWrenched(pContext.getPlayer(), pContext.getClickedFace());
         }
@@ -44,14 +41,14 @@ public class YetaWrenchItem extends Item {
         if (be != null) {
             LazyOptional<ISideConfig> optSideConfig = be.getCapability(EIOCapabilities.SIDE_CONFIG, pContext.getClickedFace());
             if (optSideConfig.isPresent()) {
-                if (level.isClientSide()) {
-                    return InteractionResult.sidedSuccess(true);
-                }
-
                 // Cycle state.
                 optSideConfig.ifPresent(ISideConfig::cycleMode);
-                return InteractionResult.SUCCESS;
+                return InteractionResult.sidedSuccess(level.isClientSide());
             }
+        }
+
+        if (level.isClientSide()) {
+            return InteractionResult.SUCCESS;
         }
 
         // Look for rotation property

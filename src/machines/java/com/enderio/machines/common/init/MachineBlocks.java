@@ -1,11 +1,15 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.base.client.renderer.PaintedBlockColor;
 import com.enderio.base.common.init.EIOCreativeTabs;
+import com.enderio.base.data.loot.DecorLootTable;
+import com.enderio.base.data.model.block.EIOBlockState;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.CapacitorBankBlock;
 import com.enderio.machines.common.block.MachineBlock;
+import com.enderio.machines.common.block.PaintedTravelAnchorBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.block.SolarPanelBlock;
 import com.enderio.machines.common.block.TravelAnchorBlock;
@@ -31,6 +35,7 @@ import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
 
 import java.util.HashMap;
@@ -169,6 +174,19 @@ public class MachineBlocks {
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
         .item()
+        .tab(EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
+    public static final BlockEntry<PaintedTravelAnchorBlock> PAINTED_TRAVEL_ANCHOR = REGISTRATE
+        .block("painted_travel_anchor", PaintedTravelAnchorBlock::new)
+        .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .color(() -> PaintedBlockColor::new)
+        .loot(DecorLootTable::withPaint)
+        .blockstate((ctx, prov) -> EIOBlockState.paintedBlock(ctx, prov, Blocks.DIRT, null)) //Any cube will do
+        .item()
+        .color(() -> PaintedBlockColor::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();

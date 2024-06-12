@@ -18,6 +18,13 @@ public class EIOLang {
 
     public static final Component BLOCK_BLAST_RESISTANT = TooltipUtil.style(REGISTRATE.addLang("tooltip", EnderIO.loc("block.blast_resistant"), "Blast resistant"));
 
+    // region GUI Interactions
+
+    public static final Component OK = REGISTRATE.addLang("gui", EnderIO.loc("ok"), "Ok");
+    public static final Component CANCEL = REGISTRATE.addLang("gui", EnderIO.loc("cancel"), "Cancel");
+
+    // endregion
+
     // region Fused Quartz
 
     public static final Component FUSED_QUARTZ_EMITS_LIGHT = TooltipUtil.style(REGISTRATE.addLang("tooltip", EnderIO.loc("fused_quartz.emits_light"), "Emits light"));
@@ -73,12 +80,41 @@ public class EIOLang {
 
     public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_CAPACITY = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_CAPACITY.id, "Energy Capacity Modifier: %s");
     public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_USE = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_USE.id, "Energy Use Modifier: %s");
+    public static final MutableComponent CAPACITOR_TOOLTIP_FUEL_EFFICIENCY = REGISTRATE.addLang("tooltip", CapacitorModifier.FUEL_EFFICIENCY.id, "Fuel Efficiency Modifier: %s");
+    public static final MutableComponent CAPACITOR_TOOLTIP_BURNING_ENERGY_GENERATION = REGISTRATE.addLang("tooltip", CapacitorModifier.BURNING_ENERGY_GENERATION.id, "Burning Energy Generation Modifier: %s");
+
+    // region Loot Capacitor
+
+    // Declares order. In this case: Modifier Quality, Modifier Type, Base Quality. Takes first modifier.
+    public static final MutableComponent LOOT_CAPACITOR_NAME = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_template"), "%s %s %s");
+
+    public static final MutableComponent LOOT_CAPACITOR_BASE_DUD = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_dud"), "Capacitor Dud");
+    public static final MutableComponent LOOT_CAPACITOR_BASE_NORMAL = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_normal"), "Capacitor");
+    public static final MutableComponent LOOT_CAPACITOR_BASE_ENHANCED = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_enhanced"), "Enhanced Capacitor");
+    public static final MutableComponent LOOT_CAPACITOR_BASE_WONDER = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_wonder"), "Wonder Capacitor");
+    public static final MutableComponent LOOT_CAPACITOR_BASE_IMPOSSIBLE = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_impossible"), "Impossible Capacitor");
+
+    public static final MutableComponent LOOT_CAPACITOR_TYPE_ENERGY_CAPACITY = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_energy_capacity"), "Insatiable");
+    public static final MutableComponent LOOT_CAPACITOR_TYPE_ENERGY_USE = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_energy_use"), "Hungry");
+    public static final MutableComponent LOOT_CAPACITOR_TYPE_FUEL_EFFICIENCY = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_fuel_efficiency"), "Efficient");
+    public static final MutableComponent LOOT_CAPACITOR_TYPE_BURNING_ENERGY_GENERATION = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_burning_energy_generation"), "Hot");
+    public static final MutableComponent LOOT_CAPACITOR_TYPE_UNKNOWN = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_unknown"), "Mystery");
+
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_FAILED = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_modifier_failed"), "Failed");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_SIMPLE = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_modifier_simple"), "Simple");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_NICE = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_modifier_nice"), "Nice");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_GOOD = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_modifier_good"), "Good");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_ENHANCED = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_modifier_enhanced"), "Enhanced");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_PREMIUM = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_modifier_premium"), "Premium");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_INCREDIBLY = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_modifier_incredibly"), "Incredibly");
+    public static final MutableComponent LOOT_CAPACITOR_MODIFIER_UNSTABLE = REGISTRATE.addLang("item", EnderIO.loc("loot_capacitor_modifier_unstable"), "Unstable");
+
+    // endregion
+
+    // endregion
 
     public static final Component GLIDER_DISABLED = REGISTRATE.addLang("message", EnderIO.loc("glider.disable"), "Gliding is disabled: ");
     public static final Component GLIDER_DISABLED_FALL_FLYING = REGISTRATE.addLang("message", EnderIO.loc("glider.disable.fall_flying"), "Elytra Flight");
-
-
-    // endregion
 
     // region Enchantments
 

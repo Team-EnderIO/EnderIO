@@ -1,12 +1,10 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.IWrenchable;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
@@ -14,12 +12,13 @@ import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
 import com.enderio.core.common.network.slot.SetNetworkDataSlot;
-import com.enderio.core.common.util.PlayerInteractionUtil;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.io.IOConfig;
+import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
+import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
@@ -27,16 +26,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,7 +46,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -101,9 +97,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     private final MachineInventory inventory;
 
     @Nullable
-    private final FluidTank fluidTank;
-
-    @Nullable
     private final MachineFluidHandler fluidHandler;
 
     // region Caches for external block interaction
@@ -140,9 +133,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         // Create fluid storage
-        fluidTank = createFluidTank();
-        if (fluidTank != null) {
-            fluidHandler = createFluidHandler(fluidTank);
+        MachineTankLayout tankLayout = getTankLayout();
+        if (tankLayout != null) {
+            fluidHandler = createFluidHandler(tankLayout);
             if (fluidHandler != null) {
                 addCapabilityProvider(fluidHandler);
             }
@@ -395,29 +388,38 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     // endregion
 
     // region Fluid Storage
-
     @Nullable
-    protected FluidTank createFluidTank() {
+    public MachineTankLayout getTankLayout() {
         return null;
     }
 
     @Nullable
-    public final FluidTank getFluidTank() {
-        return fluidTank;
+    public final MachineFluidHandler getFluidHandler() {
+        return fluidHandler;
     }
 
     /**
-     * Only call this if you're sure your machine has a fluid tank.
+     * Only call this if you're sure your machine has an tank.
      */
-    protected final FluidTank getFluidTankNN() {
-        return Objects.requireNonNull(fluidTank);
+    protected final MachineFluidHandler getFluidHandlerNN() {
+        return Objects.requireNonNull(fluidHandler);
     }
 
     @Nullable
-    protected MachineFluidHandler createFluidHandler(FluidTank fluidTank) {
-        // We can have a default here, as if createFluidTank returns null, this is never called.
-        return new MachineFluidHandler(getIOConfig(), fluidTank);
+    protected MachineFluidHandler createFluidHandler(MachineTankLayout layout) {
+        return new MachineFluidHandler(getIOConfig(), layout) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                onTankContentsChanged(slot);
+                setChanged();
+            }
+        };
     }
+
+    /**
+     * @apiNote Must call this on custom MachineFluid handlers!
+     */
+    protected void onTankContentsChanged(int slot) {}
 
     // endregion
 
@@ -491,41 +493,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         // Get our item handler.
         getCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring item handler.
-            Optional<IItemHandler> otherHandler = getNeighbouringCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve();
+            Optional<IItemHandler> otherHandlerOpt = getNeighbouringCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve();
 
-            if (otherHandler.isPresent()) {
-                // Get side config
-                IOMode mode = ioConfig.getMode(side);
-
-                // Output items to the other provider if enabled.
-                if (mode.canPush()) {
-                    moveItems(selfHandler, otherHandler.get());
-                }
-
-                // Insert items from the other provider if enabled.
-                if (mode.canPull()) {
-                    moveItems(otherHandler.get(), selfHandler);
-                }
-            }
+            otherHandlerOpt.ifPresent(otherHandler -> TransferUtil.distributeItems(ioConfig.getMode(side), selfHandler, otherHandler));
         });
-    }
-
-    /**
-     * Move items from one item handler to the other.
-     */
-    protected void moveItems(IItemHandler from, IItemHandler to) {
-        for (int i = 0; i < from.getSlots(); i++) {
-            ItemStack extracted = from.extractItem(i, 1, true);
-            if (!extracted.isEmpty()) {
-                for (int j = 0; j < to.getSlots(); j++) {
-                    ItemStack inserted = to.insertItem(j, extracted, false);
-                    if (inserted.isEmpty()) {
-                        from.extractItem(i, 1, false);
-                        return;
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -535,28 +506,16 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         // Get our fluid handler
         getCapability(ForgeCapabilities.FLUID_HANDLER, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring fluid handler.
-            Optional<IFluidHandler> otherHandler = getNeighbouringCapability(ForgeCapabilities.FLUID_HANDLER, side).resolve();
+            Optional<IFluidHandler> otherHandlerOpt = getNeighbouringCapability(ForgeCapabilities.FLUID_HANDLER, side).resolve();
 
-            if (otherHandler.isPresent()) {
-                // Get side config
-                IOMode mode = ioConfig.getMode(side);
-
-                // Test if we have fluid.
-                FluidStack stack = selfHandler.drain(100, FluidAction.SIMULATE);
-
-                // If we have no fluids, see if we can pull. Otherwise, push.
-                if (stack.isEmpty() && mode.canPull()) {
-                    moveFluids(otherHandler.get(), selfHandler, 100);
-                } else if (mode.canPush()) {
-                    moveFluids(selfHandler, otherHandler.get(), 100);
-                }
-            }
+            otherHandlerOpt.ifPresent(otherHandler -> TransferUtil.distributeFluids(ioConfig.getMode(side), selfHandler, otherHandler));
         });
     }
 
     /**
      * Move fluids from one handler to the other.
      */
+    @Deprecated(forRemoval = true)
     protected int moveFluids(IFluidHandler from, IFluidHandler to, int maxDrain) {
         FluidStack stack = FluidUtil.tryFluidTransfer(to, from, maxDrain, true);
         return stack.getAmount();
@@ -668,8 +627,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
         }
 
-        if (fluidTank != null) {
-            pTag.put(MachineNBTKeys.FLUID, fluidTank.writeToNBT(new CompoundTag()));
+        if (this.fluidHandler != null) {
+            pTag.put(MachineNBTKeys.FLUIDS, fluidHandler.serializeNBT());
         }
 
         if (getMaxRange() > 0) {
@@ -691,8 +650,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             inventory.deserializeNBT(pTag.getCompound(MachineNBTKeys.ITEMS));
         }
 
-        if (fluidTank != null) {
-            fluidTank.readFromNBT(pTag.getCompound(MachineNBTKeys.FLUID));
+        if (this.fluidHandler != null) {
+            fluidHandler.deserializeNBT(pTag.getCompound(MachineNBTKeys.FLUIDS));
         }
 
         // For rendering io overlays after placed by an nbt filled block item
@@ -742,27 +701,37 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     @UseOnly(LogicalSide.SERVER)
     @Override
     public InteractionResult onWrenched(@Nullable Player player, @Nullable Direction side) {
-        if (player != null && level != null && player.isSecondaryUseActive() && level instanceof ServerLevel serverLevel) {//aka break block
+        if (player == null || level == null) {
+            return InteractionResult.PASS;
+        }
+
+        if (player.isSecondaryUseActive()) {//aka break block
             BlockPos pos = getBlockPos();
             BlockState state = getBlockState();
-            List<ItemStack> drops = Block.getDrops(state, serverLevel, pos, level.getBlockEntity(pos));
-            level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
-            player.swing(InteractionHand.MAIN_HAND);
+            Block block = state.getBlock();
+
+            if (level instanceof ServerLevel serverLevel) {
+                List<ItemStack> drops = Block.getDrops(state, serverLevel, pos, serverLevel.getBlockEntity(pos));
+                Inventory inventory = player.getInventory();
+                for (ItemStack item : drops) {
+                    inventory.placeItemBackInInventory(item);
+                }
+            }
+
+            block.playerWillDestroy(level, pos, state, player);
+            level.removeBlock(pos, false);
+            block.destroy(level, pos, state);
+
             //TODO: custom sound when sound manager is up and running??
-            SoundType soundType = state.getBlock().getSoundType(state,level,pos,null);
-            level.playSound(null, pos,soundType.getBreakSound(), SoundSource.BLOCKS,soundType.volume, soundType.pitch);
-            PlayerInteractionUtil.putStacksInInventoryFromWorldInteraction(player,pos, drops);
-            return InteractionResult.CONSUME;
         } else {
-            // Check for side config capability
-            LazyOptional<ISideConfig> optSideConfig = getCapability(EIOCapabilities.SIDE_CONFIG, side);
-            if (optSideConfig.isPresent()) {
-                // Cycle state.
-                optSideConfig.ifPresent(ISideConfig::cycleMode);
-                return InteractionResult.CONSUME;
+            // Cycle side config
+            if (level.isClientSide()) {
+                if (side != null) {
+                    ioConfig.cycleMode(side); // TODO: Maybe a check to see if we can cycle?
+                }
             }
         }
-        return InteractionResult.PASS;
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
     public boolean canOpenMenu() {

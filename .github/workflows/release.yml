@@ -15,39 +15,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
+      - uses: gradle/actions/setup-gradle@v3
 
       - name: Clean
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: clean
+        run: ./gradlew clean
 
       - name: Build
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: build
+        run: ./gradlew build
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: release-build
           path: build/libs/*.jar
 
       - name: Publish to CurseForge and Modrinth
-        uses: gradle/gradle-build-action@v2
         env:
           CURSEFORGE_TOKEN: ${{ secrets.TOKEN_CURSEFORGE }}
           MODRINTH_TOKEN: ${{ secrets.TOKEN_MODRINTH }}
-        with:
-          arguments: publishMod
+        run: ./gradlew publishMod
 
       - name: Upload to GitHub Releases
         uses: softprops/action-gh-release@v1
@@ -62,15 +55,22 @@ jobs:
           stringToTruncate: ${{ github.event.release.body }}
           maxLength: 1000
 
+      - name: Get Minecraft Version
+        uses: madhead/read-java-properties@latest
+        id: mc_version
+        with:
+          file: gradle.properties
+          property: minecraft_version
+
       - name: Discord Notification Success
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.RELEASE_DISCORD_WEBHOOK }}
-          embed-title: Ender IO ${{ github.event.release.tag_name }} Released
+          embed-title: Ender IO ${{ github.event.release.tag_name }} Released for MC ${{ steps.mc_version.outputs.value }}
           embed-description: ${{ steps.truncatedChangelog.outputs.string }}
           avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/enderface.png
           username: Ender IO Releases
-          embed-footer-text: ${{ github.event.release.tag_name }}
+          embed-footer-text: ${{ github.event.release.tag_name }} for MC ${{ steps.mc_version.outputs.value }}
           embed-url: ${{ github.event.release.html_url }}
           embed-color: 5763719
 
@@ -79,11 +79,11 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.PRIVATE_DISCORD_WEBHOOK }}
-          embed-title: ${{ github.event.release.tag_name }} build failed
+          embed-title: ${{ github.event.release.tag_name }} for MC ${{ steps.mc_version.outputs.value }} build failed
           embed-description: The release build is failing at this commit. ```${{ github.event.head_commit.message }}```
           avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/gray-enderface.png
           username: Ender IO Release Failure
-          embed-footer-text: ${{ github.event.release.tag_name }}
+          embed-footer-text: ${{ github.event.release.tag_name }} for MC ${{ steps.mc_version.outputs.value }}
           embed-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           embed-color: 15548997
 

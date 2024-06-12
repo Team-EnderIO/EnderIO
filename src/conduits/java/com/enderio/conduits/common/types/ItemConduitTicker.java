@@ -52,7 +52,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
                     if (notInserted.getCount() < extractedItem.getCount()) {
                         extractHandler.extractItem(i, extractedItem.getCount() - notInserted.getCount(), false);
                         if (sidedExtractData.roundRobin) {
-                            sidedExtractData.rotatingIndex += insertIndex + 1;
+                            sidedExtractData.rotatingIndex = insertIndex + 1;
                         }
                         continue toNextExtract;
                     }

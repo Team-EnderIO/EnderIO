@@ -342,7 +342,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("MAM")
             .define('R', Tags.Items.DYES_RED)
             .define('G', Tags.Items.DYES_GREEN)
-            .define('B', Tags.Items.DYES_BLACK)
+            .define('B', Tags.Items.DYES_BLUE)
             .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
             .define('C', EIOBlocks.VOID_CHASSIS)
             .define('M', EIOTags.Items.GEARS_IRON)

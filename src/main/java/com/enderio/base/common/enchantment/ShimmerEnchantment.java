@@ -26,11 +26,6 @@ public class ShimmerEnchantment extends EIOBaseEnchantment {
     }
 
     @Override
-    public boolean isCurse() {
-        return true;
-    }
-
-    @Override
     public boolean isTreasureOnly() {
         return true;
     }

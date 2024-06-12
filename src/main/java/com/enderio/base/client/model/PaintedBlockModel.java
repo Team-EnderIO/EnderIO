@@ -341,8 +341,8 @@ public class PaintedBlockModel implements IDynamicBakedModel {
             uv0[0] = (uv0[0] - toCopy.getSprite().getU0()) * sprite.contents().width() / toCopy.getSprite().contents().width() + sprite.getU0();
             uv0[1] = (uv0[1] - toCopy.getSprite().getV0()) * sprite.contents().height() / toCopy.getSprite().contents().height() + sprite.getV0();
             int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
-            copied.getVertices()[4 + i * 8] = packedTextureData[0];
-            copied.getVertices()[5 + i * 8] = packedTextureData[1];
+            copied.getVertices()[IQuadTransformer.UV0 + i * IQuadTransformer.STRIDE] = packedTextureData[0];
+            copied.getVertices()[IQuadTransformer.UV0 + 1 + i * IQuadTransformer.STRIDE] = packedTextureData[1];
         }
         return copied;
     }
