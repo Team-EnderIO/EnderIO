@@ -3,79 +3,17 @@ package com.enderio.conduits.common.redstone;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneExtendedData;
 import com.enderio.conduits.common.init.ConduitComponents;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Objects;
+public class RedstoneANDFilter extends DoubleRedstoneChannel implements RedstoneInsertFilter {
 
-public class RedstoneANDFilter implements RedstoneInsertFilter {
-
-    public static final Codec<RedstoneANDFilter> CODEC = RecordCodecBuilder.create(instance ->
-        instance.group(ColorControl.CODEC.fieldOf("channel1").forGetter(r -> r.channel1),
-            ColorControl.CODEC.fieldOf("channel2").forGetter(r -> r.channel2))
-            .apply(instance, RedstoneANDFilter::new)
-    );
-    public static final StreamCodec<ByteBuf, RedstoneANDFilter> STREAM_CODEC = StreamCodec.composite(
-        ColorControl.STREAM_CODEC,
-        r -> r.channel1,
-        ColorControl.STREAM_CODEC,
-        r -> r.channel2,
-        RedstoneANDFilter::new
-    );
-
-    private ColorControl channel1;
-    private ColorControl channel2;
-
-    public RedstoneANDFilter(ColorControl channel1, ColorControl channel2) {
-        this.channel1 = channel1;
-        this.channel2 = channel2;
-    }
-
-    public RedstoneANDFilter() {
-        this(ColorControl.GREEN, ColorControl.BROWN);
+    public RedstoneANDFilter(ItemStack stack) {
+        super(stack, ConduitComponents.REDSTONE_AND_FILTER);
     }
 
     @Override
     public int getOutputSignal(RedstoneExtendedData data, ColorControl control) {
-        boolean b = data.isActive(channel1) && data.isActive(channel2);
+        boolean b = data.isActive(getFirstChannel()) && data.isActive(getSecondChannel());
         return b ? 15 : 0 ;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        RedstoneANDFilter that = (RedstoneANDFilter) o;
-        return channel1 == that.channel1 && channel2 == that.channel2;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(channel1, channel2);
-    }
-
-    public ColorControl getFirstChannel() {
-        return this.channel1;
-    }
-
-    public ColorControl getSecondChannel() {
-        return this.channel2;
-    }
-
-    public void setFirstChannel(ColorControl colorControl, ItemStack stack) {
-        stack.set(ConduitComponents.REDSTONE_AND_FILTER, new RedstoneANDFilter(colorControl, channel2));
-        channel1 = colorControl;
-    }
-
-    public void setSecondChannel(ColorControl colorControl, ItemStack stack) {
-        stack.set(ConduitComponents.REDSTONE_AND_FILTER, new RedstoneANDFilter(channel1, colorControl));
-        channel2 = colorControl;
     }
 }
