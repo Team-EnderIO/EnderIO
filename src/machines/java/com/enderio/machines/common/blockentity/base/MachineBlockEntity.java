@@ -1,6 +1,5 @@
 package com.enderio.machines.common.blockentity.base;
 
-import com.enderio.api.UseOnly;
 import com.enderio.api.capability.SideConfig;
 import com.enderio.api.io.IOConfigurable;
 import com.enderio.api.io.IOMode;
@@ -39,7 +38,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.client.model.data.ModelData;
@@ -410,7 +408,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             return;
         }
 
-        TransferUtil.distributeFluids(getIOConfig().getMode(side), selfHandler, otherHandler);
+        TransferUtil.distributeFluids(getIOMode(side), selfHandler, otherHandler);
     }
 
     // endregion
