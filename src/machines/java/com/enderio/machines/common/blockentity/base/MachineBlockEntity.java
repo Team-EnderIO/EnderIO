@@ -64,6 +64,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -611,12 +612,18 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
     }
 
+    private final WeakHashMap<LazyOptional<?>, Boolean> listenedCaps = new WeakHashMap<LazyOptional<?>, Boolean>();
+
     /**
      * Add invalidation handler to a capability to be notified if it is removed.
      */
     private <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
-        if (capability.isPresent()) {
-            capability.addListener(c -> markCapabilityCacheDirty());
+        if (capability.isPresent() && !listenedCaps.containsKey(capability)) {
+            capability.addListener(c -> {
+                markCapabilityCacheDirty();
+                listenedCaps.remove(capability);
+            });
+            listenedCaps.put(capability, true);
         }
 
         return capability;
