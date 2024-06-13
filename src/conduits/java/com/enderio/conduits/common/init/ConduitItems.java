@@ -24,11 +24,27 @@ public class ConduitItems {
     public static final RegiliteItem<Item> REDSTONE = createConduitItem(EIOConduitTypes.Types.REDSTONE, "redstone");
     public static final RegiliteItem<Item> ITEM = createConduitItem(EIOConduitTypes.Types.ITEM, "item");
 
-    public static final RegiliteItem<SpeedUpgradeItem> ITEM_SPEED_UPGRADE = ITEM_REGISTRY.registerItem("item_speed_upgrade", properties ->
+    public static final RegiliteItem<SpeedUpgradeItem> ITEM_SPEED_UPGRADE_1 = ITEM_REGISTRY.registerItem("item_speed_upgrade_1", properties ->
             new SpeedUpgradeItem(properties.component(ConduitComponents.ITEM_SPEED_UPGRADE, new ItemSpeedUpgrade(2))))
         .setTab(EIOCreativeTabs.CONDUITS)
         .addCapability(ConduitCapabilities.ConduitUpgrade.ITEM, SpeedUpgradeItem.ITEM_SPEED_UPGRADE_PROVIDER);
 
+    public static final RegiliteItem<SpeedUpgradeItem> ITEM_SPEED_UPGRADE_2 = ITEM_REGISTRY.registerItem("item_speed_upgrade_2", properties ->
+            new SpeedUpgradeItem(properties.component(ConduitComponents.ITEM_SPEED_UPGRADE, new ItemSpeedUpgrade(4))))
+        .setTab(EIOCreativeTabs.CONDUITS)
+        .addCapability(ConduitCapabilities.ConduitUpgrade.ITEM, SpeedUpgradeItem.ITEM_SPEED_UPGRADE_PROVIDER);
+
+    public static final RegiliteItem<SpeedUpgradeItem> ITEM_SPEED_UPGRADE_3 = ITEM_REGISTRY.registerItem("item_speed_upgrade_3", properties ->
+            new SpeedUpgradeItem(properties.component(ConduitComponents.ITEM_SPEED_UPGRADE, new ItemSpeedUpgrade(8))))
+        .setTab(EIOCreativeTabs.CONDUITS)
+        .addCapability(ConduitCapabilities.ConduitUpgrade.ITEM, SpeedUpgradeItem.ITEM_SPEED_UPGRADE_PROVIDER);
+
+    public static final RegiliteItem<SpeedUpgradeItem> ITEM_SPEED_UPGRADE_4 = ITEM_REGISTRY.registerItem("item_speed_upgrade_4", properties ->
+            new SpeedUpgradeItem(properties.component(ConduitComponents.ITEM_SPEED_UPGRADE, new ItemSpeedUpgrade(16))))
+        .setTab(EIOCreativeTabs.CONDUITS)
+        .addCapability(ConduitCapabilities.ConduitUpgrade.ITEM, SpeedUpgradeItem.ITEM_SPEED_UPGRADE_PROVIDER);
+
+    // TODO: I don't want fluid and item to be separate items. Need a way for the capability to provide multiple upgrades.
     public static final RegiliteItem<SpeedUpgradeItem> FLUID_SPEED_UPGRADE = ITEM_REGISTRY.registerItem("fluid_speed_upgrade", properties ->
             new SpeedUpgradeItem(properties.component(ConduitComponents.FLUID_SPEED_UPGRADE, new FluidSpeedUpgrade(2))))
         .setTab(EIOCreativeTabs.CONDUITS)
