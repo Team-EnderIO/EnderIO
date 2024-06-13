@@ -1,7 +1,5 @@
 package com.enderio.api.conduit;
 
-import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.screen.ConduitScreenExtension;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.registry.EnderIORegistries;
@@ -13,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.Nullable;
 
