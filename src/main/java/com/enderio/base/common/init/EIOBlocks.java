@@ -241,7 +241,6 @@ public class EIOBlocks {
             .strength(5.0F, 6.0F)
             .sound(SoundType.CHAIN)
             .noOcclusion()
-            .sound(SoundType.METAL)
             .mapColor(MapColor.NONE))
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)

@@ -134,7 +134,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
         //Soul Vial is filled, so it can't capture
         Optional<StoredEntityData> entityData = getEntityData(soulVial);
-        if (entityData.isPresent() && entityData.get().hasEntity()) {
+        if (entityData.isPresent() && entityData.get().getEntityType().isPresent()) {
             return Optional.empty();
         }
         
