@@ -41,15 +41,15 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
         boolean shouldReset = false;
         for (var loadedNode : loadedNodes) {
             FluidConduitData fluidExtendedData = loadedNode.getConduitData();
-            if (fluidExtendedData.shouldReset) {
+            if (fluidExtendedData.shouldReset()) {
                 shouldReset = true;
-                fluidExtendedData.shouldReset = false;
+                fluidExtendedData.setShouldReset(false);
             }
         }
 
         if (shouldReset) {
             for (var loadedNode : loadedNodes) {
-                loadedNode.getConduitData().lockedFluid = null;
+                loadedNode.getConduitData().setLockedFluid(null);
             }
         }
         super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
@@ -76,7 +76,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
             final int rate = temp;
 
             FluidStack extractedFluid = Optional
-                .ofNullable(fluidExtendedData.lockedFluid)
+                .ofNullable(fluidExtendedData.lockedFluid())
                 .map(fluid -> extractHandler.drain(new FluidStack(fluid, rate), IFluidHandler.FluidAction.SIMULATE))
                 .orElseGet(() -> extractHandler.drain(rate, IFluidHandler.FluidAction.SIMULATE));
 
@@ -98,8 +98,8 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
                     }
                 }
 
-                FluidStack transferredFluid = fluidExtendedData.lockedFluid != null ?
-                    FluidUtil.tryFluidTransfer(insert.capability, extractHandler, new FluidStack(fluidExtendedData.lockedFluid, fluidRate - transferred),
+                FluidStack transferredFluid = fluidExtendedData.lockedFluid() != null ?
+                    FluidUtil.tryFluidTransfer(insert.capability, extractHandler, new FluidStack(fluidExtendedData.lockedFluid(), fluidRate - transferred),
                         true) :
                     FluidUtil.tryFluidTransfer(insert.capability, extractHandler, rate - transferred, true);
 
@@ -112,7 +112,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
                                 fluid = flowing.getSource();
                             }
 
-                            node.getConduitData().lockedFluid = fluid;
+                            node.getConduitData().setLockedFluid(fluid);
                         }
                     }
 

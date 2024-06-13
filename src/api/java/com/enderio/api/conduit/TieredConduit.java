@@ -1,7 +1,7 @@
 package com.enderio.api.conduit;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.misc.Vector2i;
+import com.enderio.api.conduit.screen.ConduitScreenExtension;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.LogicalSide;
@@ -10,22 +10,13 @@ public abstract class TieredConduit<T extends ConduitData<T>> extends ConduitTyp
     private final ResourceLocation type;
     private final int tier;
 
-    @UseOnly(LogicalSide.CLIENT) protected ClientConduitData<T> clientConduitData;
-
     /**
      * @param type
      * @param tier    The tier of the conduit. For Energy this should be it's transfer rate to easily add and compare conduit strength
      */
-
     public TieredConduit(ResourceLocation type, int tier) {
-        this(type, tier, new ClientConduitData.Simple<>());
-    }
-
-
-    public TieredConduit(ResourceLocation type, int tier, ClientConduitData<T> clientConduitData) {
         this.type = type;
         this.tier = tier;
-        this.clientConduitData = clientConduitData;
     }
 
     @Override
@@ -57,11 +48,5 @@ public abstract class TieredConduit<T extends ConduitData<T>> extends ConduitTyp
 
     public int getTier() {
         return tier;
-    }
-
-    @Override
-    @EnsureSide(EnsureSide.Side.CLIENT)
-    public ClientConduitData<T> getClientData() {
-        return clientConduitData;
     }
 }

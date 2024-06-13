@@ -2,7 +2,6 @@ package com.enderio.conduits.client.model.conduit.modifier;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.model.ConduitCoreModelModifier;
-import com.enderio.conduits.common.conduit.type.fluid.FluidClientData;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
 import com.enderio.core.client.RenderUtil;
 import net.minecraft.client.Minecraft;

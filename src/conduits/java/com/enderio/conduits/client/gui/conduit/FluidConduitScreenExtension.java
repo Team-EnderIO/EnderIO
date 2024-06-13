@@ -1,10 +1,10 @@
-package com.enderio.conduits.common.conduit.type.fluid;
+package com.enderio.conduits.client.gui.conduit;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.ClientConduitData;
+import com.enderio.api.conduit.screen.ConduitScreenExtension;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.RenderUtil;
+import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
 import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -13,8 +13,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -23,33 +21,28 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.model.IQuadTransformer;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public class FluidClientData extends ClientConduitData.Simple<FluidConduitData> {
+public final class FluidConduitScreenExtension implements ConduitScreenExtension<FluidConduitData> {
 
-    private static final ResourceLocation MODEL = EnderIO.loc("block/extra/fluids");
+    public static final FluidConduitScreenExtension INSTANCE = new FluidConduitScreenExtension();
+
     private static final ResourceLocation WIDGET_TEXTURE = EnderIO.loc("textures/gui/fluidbackground.png");
-    public FluidClientData() {
-        super();
+
+    private FluidConduitScreenExtension() {
     }
 
     @Override
     public List<AbstractWidget> createWidgets(Screen screen, Supplier<FluidConduitData> conduitDataSupplier, UpdateExtendedData<FluidConduitData> updateConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         return List.of(
             new FluidWidget(widgetsStart.add(0, 20),
-                () -> conduitDataSupplier.get().lockedFluid,
+                () -> conduitDataSupplier.get().lockedFluid(),
                 () -> updateConduitData.update(data -> {
-                    data.shouldReset = true;
+                    data.setShouldReset(true);
                     return data;
                 })
             )
@@ -59,6 +52,7 @@ public class FluidClientData extends ClientConduitData.Simple<FluidConduitData> 
     private static class FluidWidget extends AbstractWidget {
         private final Runnable onPress;
         private final Supplier<Fluid> currentFluid;
+
         FluidWidget(Vector2i pos, Supplier<Fluid> fluid, Runnable onPress) {
             super(pos.x(), pos.y(), 14, 14, Component.empty());
             this.onPress = onPress;

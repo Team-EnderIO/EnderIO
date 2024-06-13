@@ -1,6 +1,7 @@
 package com.enderio.api.conduit;
 
 import com.enderio.api.UseOnly;
+import com.enderio.api.conduit.screen.ConduitScreenExtension;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.registry.EnderIORegistries;
@@ -23,9 +24,6 @@ public abstract class ConduitType<T extends ConduitData<T>> {
 
     public abstract ConduitTicker<T> getTicker();
 
-    @UseOnly(LogicalSide.CLIENT)
-    public abstract ClientConduitData<T> getClientData();
-
     public abstract ConduitMenuData getMenuData();
 
     public abstract T createConduitData(Level level, BlockPos pos);
@@ -35,7 +33,6 @@ public abstract class ConduitType<T extends ConduitData<T>> {
      * @return the conduit item that holds this type
      */
     public Item getConduitItem() {
-        // TODO: To be honest I'd rather this always be explicitly defined
         return BuiltInRegistries.ITEM.get(EnderIORegistries.CONDUIT_TYPES.getKey(this));
     }
 

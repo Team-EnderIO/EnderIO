@@ -23,8 +23,8 @@ public class FluidConduitData implements ConduitData<FluidConduitData> {
     public final boolean isMultiFluid;
 
     @Nullable
-    Fluid lockedFluid = null;
-    boolean shouldReset = false;
+    private Fluid lockedFluid = null;
+    private boolean shouldReset = false;
 
     public FluidConduitData(boolean isMultiFluid) {
         this.isMultiFluid = isMultiFluid;
@@ -44,8 +44,16 @@ public class FluidConduitData implements ConduitData<FluidConduitData> {
         return lockedFluid;
     }
 
+    public void setLockedFluid(@Nullable Fluid lockedFluid) {
+        this.lockedFluid = lockedFluid;
+    }
+
     public boolean shouldReset() {
         return shouldReset;
+    }
+
+    public void setShouldReset(boolean shouldReset) {
+        this.shouldReset = shouldReset;
     }
 
     @Override
@@ -73,10 +81,6 @@ public class FluidConduitData implements ConduitData<FluidConduitData> {
     @Override
     public boolean canConnectTo(FluidConduitData otherData) {
         return lockedFluid == null || otherData.lockedFluid == null || lockedFluid == otherData.lockedFluid;
-    }
-
-    private void setLockedFluid(@Nullable Fluid lockedFluid) {
-        this.lockedFluid = lockedFluid;
     }
 
     @Override

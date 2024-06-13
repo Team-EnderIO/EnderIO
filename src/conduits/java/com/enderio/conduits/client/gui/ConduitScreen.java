@@ -5,6 +5,8 @@ import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.SlotType;
+import com.enderio.api.conduit.screen.ConduitScreenExtension;
+import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.ColorControl;
@@ -129,12 +131,15 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
                         EIOLang.REDSTONE_CHANNEL));
             }
 
-            menu.getConduitType()
-                .getClientData()
-                .createWidgets(this, () -> getBundle().getNodeFor(menu.getConduitType()).getConduitData().cast(),
-                    this::sendExtendedConduitUpdate, menu::getDirection,
-                    new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
-                .forEach(this::addTypedButton);
+            ConduitScreenExtension<?> conduitScreenExtension = ConduitScreenExtensions.get(menu.getConduitType());
+
+            if (conduitScreenExtension != null) {
+                conduitScreenExtension
+                    .createWidgets(this, () -> getBundle().getNodeFor(menu.getConduitType()).getConduitData().cast(),
+                        this::sendExtendedConduitUpdate, menu::getDirection,
+                        new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
+                    .forEach(this::addTypedButton);
+            }
         }
 
         List<ConduitType<?>> validConnections = new ArrayList<>();

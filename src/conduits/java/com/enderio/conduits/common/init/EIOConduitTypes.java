@@ -5,19 +5,16 @@ import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.misc.Vector2i;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.conduit.type.energy.EnergyConduitType;
 import com.enderio.conduits.common.conduit.type.energy.EnergyConduitData;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitType;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
-import com.enderio.conduits.common.conduit.type.item.ItemClientConduitData;
 import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
 import com.enderio.conduits.common.conduit.type.item.ItemConduitTicker;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitType;
 import com.enderio.conduits.common.conduit.type.SimpleConduitType;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -49,7 +46,6 @@ public class EIOConduitTypes {
                 () -> new SimpleConduitType<>(
                     new ItemConduitTicker(),
                     ItemConduitData::new,
-                    new ItemClientConduitData(),
                     ConduitMenuData.ITEM));
 
         private static DeferredHolder<ConduitType<?>, FluidConduitType> fluidConduit(String name, int tier, boolean isMultiFluid) {

@@ -1,12 +1,9 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.EnderIO;
-import com.enderio.api.conduit.ClientConduitData;
+import com.enderio.api.conduit.screen.ConduitScreenExtension;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.misc.RedstoneControl;
-import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.tag.ConduitTags;
 import com.enderio.conduits.common.conduit.type.SimpleConduitType;
 import net.minecraft.core.BlockPos;
@@ -23,7 +20,7 @@ public class EnergyConduitType extends SimpleConduitType<EnergyConduitData> {
     private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
 
     public EnergyConduitType() {
-        super(new EnergyConduitTicker(), EnergyConduitData::new, new ClientConduitData.Simple<>(), MENU_DATA);
+        super(new EnergyConduitTicker(), EnergyConduitData::new, MENU_DATA);
     }
 
     @Override
