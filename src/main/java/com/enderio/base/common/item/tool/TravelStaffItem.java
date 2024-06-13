@@ -1,13 +1,11 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.base.common.capability.ItemEnergyStorage;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.handler.TravelHandler;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.client.item.EnergyBarDecorator;
-import com.enderio.core.common.component.ItemEnergyStorageConfig;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
@@ -23,14 +21,15 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.energy.ComponentEnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public class TravelStaffItem extends Item implements AdvancedTooltipProvider, CreativeTabVariants, ItemEnergyStorageConfig {
+public class TravelStaffItem extends Item implements AdvancedTooltipProvider, CreativeTabVariants {
 
     public static ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
-        (stack, v) -> new ItemEnergyStorage(EIODataComponents.ENERGY, stack);
+        (stack, v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY.get(), TravelStaffItem.getMaxEnergy());
 
     public TravelStaffItem(Properties properties) {
         super(properties);
@@ -97,8 +96,7 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, Cr
         return false;
     }
 
-    @Override
-    public int getMaxEnergy() {
+    public static int getMaxEnergy() {
         return BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_MAX_ENERGY.get();
     }
 

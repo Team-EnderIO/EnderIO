@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 
 @EventBusSubscriber
@@ -19,8 +20,8 @@ public class WrenchCompat {
             && !itemInHand.is(EIOItems.YETA_WRENCH.get())
             && event.getLevel().getBlockEntity(event.getPos()) instanceof Wrenchable) {
             // @formatter:on
-            event.setUseBlock(Event.Result.ALLOW);
-            event.setUseItem(Event.Result.DENY);
+            event.setUseBlock(TriState.TRUE);
+            event.setUseItem(TriState.FALSE);
         }
     }
 }
