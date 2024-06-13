@@ -39,6 +39,15 @@ public class FluidConduitData implements ConduitData<FluidConduitData> {
             : null;
     }
 
+    @Nullable
+    public Fluid lockedFluid() {
+        return lockedFluid;
+    }
+
+    public boolean shouldReset() {
+        return shouldReset;
+    }
+
     @Override
     public void applyClientChanges(FluidConduitData guiData) {
         this.shouldReset = guiData.shouldReset;

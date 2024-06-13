@@ -2,6 +2,10 @@ package com.enderio.conduits.client.model;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitData;
+import com.enderio.api.conduit.model.ConduitCoreModelModifier;
+import com.enderio.api.registry.EnderIORegistries;
+import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
+import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.RedstoneControl;
@@ -22,6 +26,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,6 +45,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -81,15 +87,20 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                 var connectedTypes = conduitBundle.getConnectedTypes(direction);
                 for (int i = 0; i < connectedTypes.size(); i++) {
                     ConduitType<?> type = connectedTypes.get(i);
+                    ConduitGraphObject<?> node = conduitBundle.getNodeFor(type);
+                    ConduitData<?> data = node.getConduitData();
+
                     Vec3i offset = OffsetHelper.translationFor(direction.getAxis(), OffsetHelper.offsetConduit(i, connectedTypes.size()));
                     offsets.computeIfAbsent(type, ignored -> new ArrayList<>()).add(offset);
                     IQuadTransformer rotationTranslation = rotation.andThen(QuadTransformers.applying(translateTransformation(offset)));
                     quads.addAll(new ConduitTextureEmissiveQuadTransformer(sprite(conduitBundle, type), 0)
                         .andThen(rotationTranslation)
                         .process(modelOf(CONDUIT_CONNECTION).getQuads(state, preRotation, rand, extraData, renderType)));
-                    quads.addAll(rotationTranslation.process(type
-                        .getClientData()
-                        .createConnectionQuads(conduitBundle.getNodeFor(type).getConduitData().cast(), side, direction, rand, renderType)));
+
+                    var conduitCoreModifier = ConduitCoreModelModifiers.getModifier(type);
+                    if (conduitCoreModifier != null) {
+                        quads.addAll(rotationTranslation.process(conduitCoreModifier.createConnectionQuads(data.cast(), side, direction, rand, renderType)));
+                    }
 
                     if (isEnd) {
                         quads.addAll(rotationTranslation.process(modelOf(CONDUIT_CONNECTION_BOX).getQuads(state, preRotation, rand, extraData, renderType)));
@@ -282,7 +293,21 @@ public class ConduitBlockModel implements IDynamicBakedModel {
 
     private static <T extends ConduitData<T>> TextureAtlasSprite sprite(ConduitBundle conduitBundle, ConduitType<T> type) {
         T data = conduitBundle.getNodeFor(type).getConduitData();
-        return Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(type.getTexture(data));
+
+        ResourceLocation textureLocation = null;
+
+        ConduitCoreModelModifier<T> conduitCoreModifier = ConduitCoreModelModifiers.getModifier(type);
+        if (conduitCoreModifier != null) {
+            textureLocation = conduitCoreModifier.getSpriteLocation(data);
+        }
+
+        // Default to a standard location
+        if (textureLocation == null) {
+            var conduitTypeKey = Objects.requireNonNull(EnderIORegistries.CONDUIT_TYPES.getKey(type));
+            textureLocation = new ResourceLocation(conduitTypeKey.getNamespace(), "block/conduit/" + conduitTypeKey.getPath());
+        }
+
+        return Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(textureLocation);
     }
 
     private static boolean isMissingModel(BakedModel model) {

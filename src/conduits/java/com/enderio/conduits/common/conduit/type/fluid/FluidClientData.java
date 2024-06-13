@@ -44,16 +44,6 @@ public class FluidClientData extends ClientConduitData.Simple<FluidConduitData> 
     }
 
     @Override
-    public List<BakedQuad> createConnectionQuads(FluidConduitData extendedConduitData, @Nullable Direction facing, Direction connectionDirection,
-                                                 RandomSource rand, @Nullable RenderType type) {
-        if (!extendedConduitData.isMultiFluid && extendedConduitData.lockedFluid != null) {
-            return new FluidPaintQuadTransformer(extendedConduitData.lockedFluid).process(getModel(MODEL).getQuads(Blocks.COBBLESTONE.defaultBlockState(), facing, rand, ModelData.EMPTY, type));
-        }
-
-        return List.of();
-    }
-
-    @Override
     public List<AbstractWidget> createWidgets(Screen screen, Supplier<FluidConduitData> conduitDataSupplier, UpdateExtendedData<FluidConduitData> updateConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         return List.of(
             new FluidWidget(widgetsStart.add(0, 20),
@@ -64,30 +54,6 @@ public class FluidClientData extends ClientConduitData.Simple<FluidConduitData> 
                 })
             )
         );
-    }
-
-    @Override
-    public List<ResourceLocation> modelsToLoad() {
-        return List.of(MODEL);
-    }
-
-    private record FluidPaintQuadTransformer(Fluid fluid) implements IQuadTransformer {
-        @Override
-        public void processInPlace(BakedQuad quad) {
-            IClientFluidTypeExtensions clientExtension = IClientFluidTypeExtensions.of(fluid);
-            TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-                .apply(clientExtension.getStillTexture());
-            for (int i = 0; i < 4; i++) {
-                float[] uv0 = RenderUtil.unpackVertices(quad.getVertices(), i, IQuadTransformer.UV0, 2);
-                uv0[0] = (uv0[0] - quad.getSprite().getU0()) * sprite.contents().width() / quad.getSprite().contents().height() + sprite.getU0();
-                uv0[1] = (uv0[1] - quad.getSprite().getV0()) * sprite.contents().width() / quad.getSprite().contents().height() + sprite.getV0();
-                int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
-                quad.getVertices()[IQuadTransformer.UV0 + i * IQuadTransformer.STRIDE] = packedTextureData[0];
-                quad.getVertices()[IQuadTransformer.UV0 + 1 + i * IQuadTransformer.STRIDE] = packedTextureData[1];
-                RenderUtil.putColorARGB(quad.getVertices(), i, clientExtension.getTintColor());
-            }
-            quad.sprite = sprite;
-        }
     }
 
     private static class FluidWidget extends AbstractWidget {

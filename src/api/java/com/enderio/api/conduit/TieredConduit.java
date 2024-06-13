@@ -32,11 +32,6 @@ public abstract class TieredConduit<T extends ConduitData<T>> extends ConduitTyp
     }
 
     @Override
-    public ResourceLocation getTexture(T data) {
-        return texture;
-    }
-
-    @Override
     public ResourceLocation getItemTexture() {
         return texture;
     }

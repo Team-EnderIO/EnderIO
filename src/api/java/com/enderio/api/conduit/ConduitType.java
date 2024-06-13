@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 
 public abstract class ConduitType<T extends ConduitData<T>> {
 
-    public abstract ResourceLocation getTexture(T extendedData);
+    // TODO: I don't like this.
     public abstract ResourceLocation getItemTexture();
 
     public abstract ConduitTicker<T> getTicker();

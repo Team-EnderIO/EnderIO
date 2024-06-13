@@ -49,10 +49,6 @@ public class SimpleConduitType<T extends ConduitData<T>> extends ConduitType<T> 
         this.clientConduitData = clientConduitData;
         this.menuData = menuData;
     }
-    @Override
-    public ResourceLocation getTexture(T data) {
-        return texture;
-    }
 
     @Override
     public ResourceLocation getItemTexture() {

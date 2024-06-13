@@ -18,9 +18,6 @@ import java.util.function.Supplier;
 
 public interface ClientConduitData<T extends ConduitData<T>> {
 
-    Vector2i ICON_TEXTURE_SIZE = new Vector2i(24, 24);
-    Vector2i ICON_RENDER_SIZE = new Vector2i(12, 12);
-
     @FunctionalInterface
     interface UpdateExtendedData<T extends ConduitData<T>> {
         void update(Function<T, T> mapper);

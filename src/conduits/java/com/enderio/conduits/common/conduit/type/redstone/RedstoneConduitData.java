@@ -15,6 +15,7 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RedstoneConduitData implements ConduitData<RedstoneConduitData> {
 
@@ -68,6 +69,11 @@ public class RedstoneConduitData implements ConduitData<RedstoneConduitData> {
     @Override
     public RedstoneConduitData deepCopy() {
         return new RedstoneConduitData(isActive, new ArrayList<>(activeColors));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isActive, activeColors);
     }
 
     public static class Serializer implements ConduitDataSerializer<RedstoneConduitData> {

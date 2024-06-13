@@ -1,11 +1,16 @@
 package com.enderio.conduits.client;
 
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.model.RegisterConduitCoreModelModifiersEvent;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.client.gui.ConduitIconTextureManager;
 import com.enderio.conduits.client.model.ConduitGeometry;
+import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
+import com.enderio.conduits.client.model.conduit.modifier.FluidConduitCoreModelModifier;
+import com.enderio.conduits.client.model.conduit.modifier.RedstoneConduitCoreModelModifier;
 import com.enderio.conduits.common.init.ConduitBlocks;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.resources.model.BakedModel;
@@ -47,6 +52,14 @@ public class ConduitClientSetup {
     private ConduitClientSetup() {}
 
     @SubscribeEvent
+    public static void registerConduitCoreModelModifiers(RegisterConduitCoreModelModifiersEvent event) {
+        event.register(EIOConduitTypes.Types.FLUID.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
+        event.register(EIOConduitTypes.Types.FLUID2.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
+        event.register(EIOConduitTypes.Types.FLUID3.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
+        event.register(EIOConduitTypes.Types.REDSTONE.get(), RedstoneConduitCoreModelModifier::new);
+    }
+
+    @SubscribeEvent
     public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
         event.registerReloadListener(new ConduitIconTextureManager(Minecraft.getInstance().getTextureManager()));
     }
@@ -62,7 +75,9 @@ public class ConduitClientSetup {
             event.register(model);
         }
 
-        EnderIORegistries.CONDUIT_TYPES.stream().flatMap(type -> type.getClientData().modelsToLoad().stream()).forEach(event::register);
+        // Ensure conduit model modifiers are ready, then load all model dependencies.
+        ConduitCoreModelModifiers.init();
+        ConduitCoreModelModifiers.getAllModelDependencies().forEach(event::register);
     }
 
     @SubscribeEvent

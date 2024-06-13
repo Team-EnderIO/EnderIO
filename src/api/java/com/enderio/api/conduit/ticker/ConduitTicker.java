@@ -21,12 +21,14 @@ public interface ConduitTicker<T extends ConduitData<T>> {
         return 5;
     }
 
+    // TODO: I'd argue this goes into ConduitType, and then you can use getTicker() if you need additional context from it.
     boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction);
 
     /**
      *
      * @return if this is not always able to determine connectivity to its neighbours at time of placement, but the tick later
      */
+    // TODO: Also belongs in ConduitType imo.
     default boolean hasConnectionDelay() {
         return false;
     }
@@ -34,6 +36,7 @@ public interface ConduitTicker<T extends ConduitData<T>> {
     /**
      * @return true if both types are similar and share the same extended conduit data
      */
+    // TODO: This should be in ConduitType too.
     default boolean canConnectTo(ConduitType<?> thisType, ConduitType<?> other) {
         return thisType == other;
     }
