@@ -39,9 +39,12 @@ public class ConduitItems {
             .registerItem(itemName + "_conduit",
                 p -> ConduitApi.INSTANCE.createConduitItem(type, p))
             .setTab(EIOCreativeTabs.CONDUITS)
-            .setModelProvider((prov, ctx) -> prov
-                .withExistingParent(itemName+"_conduit", EnderIO.loc("item/conduit"))
-                .texture("0", type.get().getItemTexture()));
+            .setModelProvider((prov, ctx) -> {
+                var conduitTypeKey = ConduitType.getKey(type.get());
+                prov
+                    .withExistingParent(conduitTypeKey.getPath() + "_conduit", EnderIO.loc("item/conduit"))
+                    .texture("0", EnderIO.loc("block/conduit/" + conduitTypeKey.getPath()));
+            });
     }
 
     public static void register(IEventBus bus) {

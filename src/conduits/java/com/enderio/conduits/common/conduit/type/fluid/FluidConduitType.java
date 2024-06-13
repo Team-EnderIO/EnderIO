@@ -13,8 +13,8 @@ public class FluidConduitType extends TieredConduit<FluidConduitData> {
     private final boolean isMultiFluid;
     private final int transferRate;
 
-    public FluidConduitType(ResourceLocation texture, int tier, boolean isMultiFluid) {
-        super(texture, new ResourceLocation("forge:fluid"), (isMultiFluid ? 100_000 : 0) + tier);
+    public FluidConduitType(int tier, boolean isMultiFluid) {
+        super(new ResourceLocation("forge:fluid"), (isMultiFluid ? 100_000 : 0) + tier);
         this.isMultiFluid = isMultiFluid;
         this.transferRate = tier;
         this.clientConduitData = new FluidClientData();

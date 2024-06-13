@@ -21,9 +21,6 @@ import java.util.stream.Stream;
 
 public abstract class ConduitType<T extends ConduitData<T>> {
 
-    // TODO: I don't like this.
-    public abstract ResourceLocation getItemTexture();
-
     public abstract ConduitTicker<T> getTicker();
 
     @UseOnly(LogicalSide.CLIENT)
@@ -78,5 +75,10 @@ public abstract class ConduitType<T extends ConduitData<T>> {
 
     public final Holder<ConduitType<?>> getAsHolder() {
         return EnderIORegistries.CONDUIT_TYPES.wrapAsHolder(this);
+    }
+
+    @Nullable
+    public static ResourceLocation getKey(ConduitType<?> conduitType) {
+        return EnderIORegistries.CONDUIT_TYPES.getKey(conduitType);
     }
 }

@@ -47,7 +47,6 @@ public class EIOConduitTypes {
         public static final DeferredHolder<ConduitType<?>, SimpleConduitType<ItemConduitData>> ITEM =
             CONDUIT_TYPES.register("item",
                 () -> new SimpleConduitType<>(
-                    EnderIO.loc("block/conduit/item"),
                     new ItemConduitTicker(),
                     ItemConduitData::new,
                     new ItemClientConduitData(),
@@ -55,7 +54,7 @@ public class EIOConduitTypes {
 
         private static DeferredHolder<ConduitType<?>, FluidConduitType> fluidConduit(String name, int tier, boolean isMultiFluid) {
             return CONDUIT_TYPES.register(name,
-                () -> new FluidConduitType(EnderIO.loc("block/conduit/" + name), tier, isMultiFluid));
+                () -> new FluidConduitType(tier, isMultiFluid));
         }
     }
 

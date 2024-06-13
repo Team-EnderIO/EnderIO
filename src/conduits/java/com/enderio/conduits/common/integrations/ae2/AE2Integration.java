@@ -80,7 +80,12 @@ public class AE2Integration implements Integration {
                 properties -> ConduitApi.INSTANCE.createConduitItem(type, properties))
             .setTab(EIOCreativeTabs.CONDUITS)
             .setTranslation(english)
-            .setModelProvider((prov, ctx) -> prov.withExistingParent(itemName+"_conduit", EnderIO.loc("item/conduit")).texture("0", type.get().getItemTexture()));
+            .setModelProvider((prov, ctx) -> {
+                var conduitTypeKey = ConduitType.getKey(type.get());
+                prov
+                    .withExistingParent(conduitTypeKey.getPath() + "_conduit", EnderIO.loc("item/conduit"))
+                    .texture("0", EnderIO.loc("block/conduit/" + conduitTypeKey.getPath()));
+            });
     }
 
     public void addCapability(RegisterCapabilitiesEvent event) {

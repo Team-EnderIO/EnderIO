@@ -7,33 +7,25 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.LogicalSide;
 
 public abstract class TieredConduit<T extends ConduitData<T>> extends ConduitType<T> {
-    private final ResourceLocation texture;
     private final ResourceLocation type;
     private final int tier;
 
     @UseOnly(LogicalSide.CLIENT) protected ClientConduitData<T> clientConduitData;
 
     /**
-     * @param texture
      * @param type
      * @param tier    The tier of the conduit. For Energy this should be it's transfer rate to easily add and compare conduit strength
      */
 
-    public TieredConduit(ResourceLocation texture, ResourceLocation type, int tier) {
-        this(texture, type, tier, new ClientConduitData.Simple<>());
+    public TieredConduit(ResourceLocation type, int tier) {
+        this(type, tier, new ClientConduitData.Simple<>());
     }
 
 
-    public TieredConduit(ResourceLocation texture, ResourceLocation type, int tier, ClientConduitData<T> clientConduitData) {
-        this.texture = texture;
+    public TieredConduit(ResourceLocation type, int tier, ClientConduitData<T> clientConduitData) {
         this.type = type;
         this.tier = tier;
         this.clientConduitData = clientConduitData;
-    }
-
-    @Override
-    public ResourceLocation getItemTexture() {
-        return texture;
     }
 
     @Override

@@ -18,7 +18,6 @@ import java.util.function.Supplier;
  */
 public class SimpleConduitType<T extends ConduitData<T>> extends ConduitType<T> {
 
-    private final ResourceLocation texture;
     private final ConduitTicker<T> ticker;
 
     private final ClientConduitData<T> clientConduitData;
@@ -28,31 +27,23 @@ public class SimpleConduitType<T extends ConduitData<T>> extends ConduitType<T> 
     private final Supplier<T> extendedDataFactory;
 
     public SimpleConduitType(
-        ResourceLocation texture,
         ConduitTicker<T> ticker,
         Supplier<T> extendedDataFactory,
         ConduitMenuData menuData) {
 
-        this(texture, ticker, extendedDataFactory, new ClientConduitData.Simple<>(), menuData);
+        this(ticker, extendedDataFactory, new ClientConduitData.Simple<>(), menuData);
     }
 
     public SimpleConduitType(
-        ResourceLocation texture,
         ConduitTicker<T> ticker,
         Supplier<T> extendedDataFactory,
         ClientConduitData<T> clientConduitData,
         ConduitMenuData menuData) {
 
-        this.texture = texture;
         this.ticker = ticker;
         this.extendedDataFactory = extendedDataFactory;
         this.clientConduitData = clientConduitData;
         this.menuData = menuData;
-    }
-
-    @Override
-    public ResourceLocation getItemTexture() {
-        return texture;
     }
 
     @Override

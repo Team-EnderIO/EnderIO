@@ -23,8 +23,7 @@ public class EnergyConduitType extends SimpleConduitType<EnergyConduitData> {
     private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
 
     public EnergyConduitType() {
-        super(EnderIO.loc("block/conduit/energy"), new EnergyConduitTicker(), EnergyConduitData::new,
-            new ClientConduitData.Simple<>(), MENU_DATA);
+        super(new EnergyConduitTicker(), EnergyConduitData::new, new ClientConduitData.Simple<>(), MENU_DATA);
     }
 
     @Override
