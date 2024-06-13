@@ -260,6 +260,7 @@
   "gui.enderio.conduit.extract": "Extract",
   "gui.enderio.conduit.insert": "Insert",
   "gui.enderio.conduit_channel": "Conduit-Channel",
+  "gui.enderio.confirm": "Confirm",
   "gui.enderio.empty_tank": "The tank is empty",
   "gui.enderio.energy_equivalence": "A unit of energy, equivalent to FE.",
   "gui.enderio.filter": "Filter",

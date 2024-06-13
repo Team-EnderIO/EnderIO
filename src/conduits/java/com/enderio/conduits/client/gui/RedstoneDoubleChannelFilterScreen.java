@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class RedstoneDoubleChannelFilterScreen extends EIOScreen<RedstoneDoubleChannelFilterMenu> {
 
     private static final Vector2i BG_SIZE = new Vector2i(183,201);
-    private static ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/40/item_filter.png");
+    private static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/40/item_filter.png");
 
     public RedstoneDoubleChannelFilterScreen(RedstoneDoubleChannelFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

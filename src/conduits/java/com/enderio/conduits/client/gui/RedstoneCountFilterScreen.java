@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class RedstoneCountFilterScreen extends EIOScreen<RedstoneCountFilterMenu> {
     private static final Vector2i BG_SIZE = new Vector2i(183,201);
-    private static ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/40/item_filter.png");
+    private static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/40/item_filter.png");
 
     public RedstoneCountFilterScreen(RedstoneCountFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -28,10 +28,17 @@ public class RedstoneCountFilterScreen extends EIOScreen<RedstoneCountFilterMenu
             getMenu()::setChannel,
             EIOLang.REDSTONE_CHANNEL));
 
-        EditBox pWidget = new EditBox(this.font, this.leftPos, this.topPos, Component.literal("" + getMenu().getFilter().getMaxCount()));
+        EditBox pWidget = new EditBox(this.font, this.leftPos + 60, this.topPos + 20, 60, 20, Component.literal("" + getMenu().getFilter().getMaxCount())) {
+            @Override
+            public boolean charTyped(char pCodePoint, int pModifiers) {
+                return Character.isDigit(pCodePoint) && super.charTyped(pCodePoint, pModifiers);
+            }
+        };
+        pWidget.setValue("" + getMenu().getFilter().getMaxCount());
         addRenderableWidget(pWidget);
-        addRenderableWidget(Button.builder(Component.empty(), pButton -> getMenu().setCount(pWidget.getValue()))
-            .pos(this.leftPos, this.topPos)
+        addRenderableWidget(Button.builder(EIOLang.CONFIRM, pButton -> getMenu().setCount(pWidget.getValue()))
+            .pos(this.leftPos + 60, this.topPos + 41)
+            .size(60, 20)
             .build());
 
     }
