@@ -5,7 +5,7 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.filter.ItemStackFilter;
-import com.enderio.conduits.common.components.ItemSpeedUpgrade;
+import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -34,8 +34,8 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
             IItemHandler extractHandler = extract.capability;
             for (int i = 0; i < extractHandler.getSlots(); i++) {
                 int speed = 4;
-                if (extract.upgrade instanceof ItemSpeedUpgrade speedUpgrade) {
-                    speed *= speedUpgrade.getSpeed();
+                if (extract.upgrade instanceof ExtractionSpeedUpgrade speedUpgrade) {
+                    speed *= (int) Math.pow(2, speedUpgrade.tier());
                 }
 
                 ItemStack extractedItem = extractHandler.extractItem(i, speed, true);

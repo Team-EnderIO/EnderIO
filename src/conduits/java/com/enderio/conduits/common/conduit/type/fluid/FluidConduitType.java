@@ -6,7 +6,7 @@ import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.filter.ResourceFilter;
-import com.enderio.conduits.common.components.FluidSpeedUpgrade;
+import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -44,7 +44,7 @@ public class FluidConduitType extends TieredConduit<FluidConduitData> {
 
     @Override
     public boolean canApplyUpgrade(ConduitUpgrade conduitUpgrade) {
-        return conduitUpgrade instanceof FluidSpeedUpgrade;
+        return conduitUpgrade instanceof ExtractionSpeedUpgrade;
     }
 
     @Override

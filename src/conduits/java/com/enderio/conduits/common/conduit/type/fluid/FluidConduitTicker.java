@@ -6,7 +6,7 @@ import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
-import com.enderio.conduits.common.components.FluidSpeedUpgrade;
+import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -69,8 +69,9 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
             FluidConduitData fluidExtendedData = extract.data;
 
             int temp = fluidRate;
-            if (extract.upgrade instanceof FluidSpeedUpgrade speedUpgrade) {
-                temp *= speedUpgrade.getSpeed();
+            if (extract.upgrade instanceof ExtractionSpeedUpgrade speedUpgrade) {
+                // TODO: Review scaling.
+                temp *= (int) Math.pow(2, speedUpgrade.tier());
             }
 
             final int rate = temp;
