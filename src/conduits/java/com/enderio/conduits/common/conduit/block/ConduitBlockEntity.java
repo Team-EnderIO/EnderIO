@@ -711,9 +711,9 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
 
                 return conduitType.canApplyUpgrade(conduitUpgrade);
+            default:
+                return false;
             }
-
-            return false;
         }
 
         @Override
