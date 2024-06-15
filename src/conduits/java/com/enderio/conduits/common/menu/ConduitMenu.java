@@ -35,7 +35,6 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
     private Direction direction;
     private ConduitType<?> type;
 
-
     public ConduitMenu(@Nullable ConduitBlockEntity blockEntity, Inventory inventory, int pContainerId, Direction direction, ConduitType type) {
         super(blockEntity, inventory, ConduitMenus.CONDUIT_MENU.get(), pContainerId);
         this.direction = direction;

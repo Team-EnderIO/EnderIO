@@ -18,6 +18,8 @@ import java.util.List;
 
 public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitData, IItemHandler> {
 
+    public static ItemConduitTicker INSTANCE = new ItemConduitTicker();
+
     @Override
     protected void tickCapabilityGraph(
         ServerLevel level,

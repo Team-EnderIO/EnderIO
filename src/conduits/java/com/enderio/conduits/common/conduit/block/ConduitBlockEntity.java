@@ -4,6 +4,9 @@ import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.upgrade.ConduitUpgrade;
+import com.enderio.api.filter.ResourceFilter;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
@@ -15,6 +18,7 @@ import com.enderio.conduits.common.conduit.RightClickAction;
 import com.enderio.conduits.common.conduit.SlotData;
 import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
+import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.conduit.ConduitSavedData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
@@ -680,8 +684,36 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            //TODO implement
-            return slot < getSlots();
+            if (slot >= getSlots()) {
+                return false;
+            }
+
+            SlotData slotData = SlotData.of(slot);
+            if (slotData.conduitIndex() >= bundle.getTypes().size()) {
+                return false;
+            }
+
+            ConduitType<?> conduitType = bundle.getTypes().get(slotData.conduitIndex());
+
+            switch (slotData.slotType()) {
+            case FILTER_EXTRACT:
+            case FILTER_INSERT:
+                ResourceFilter resourceFilter = stack.getCapability(EIOCapabilities.Filter.ITEM);
+                if (resourceFilter == null) {
+                    return false;
+                }
+
+                return conduitType.canApplyFilter(resourceFilter);
+            case UPGRADE_EXTRACT:
+                ConduitUpgrade conduitUpgrade = stack.getCapability(ConduitCapabilities.ConduitUpgrade.ITEM);
+                if (conduitUpgrade == null) {
+                    return false;
+                }
+
+                return conduitType.canApplyUpgrade(conduitUpgrade);
+            }
+
+            return false;
         }
 
         @Override

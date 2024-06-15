@@ -1,6 +1,8 @@
 package com.enderio.api.conduit;
 
 import com.enderio.api.conduit.ticker.ConduitTicker;
+import com.enderio.api.conduit.upgrade.ConduitUpgrade;
+import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.registry.EnderIORegistries;
 import net.minecraft.core.BlockPos;
@@ -39,6 +41,14 @@ public abstract class ConduitType<T extends ConduitData<T>> {
     }
 
     public boolean canBeReplacedBy(ConduitType<?> other) {
+        return false;
+    }
+
+    public boolean canApplyUpgrade(ConduitUpgrade conduitUpgrade) {
+        return false;
+    }
+
+    public boolean canApplyFilter(ResourceFilter resourceFilter) {
         return false;
     }
 

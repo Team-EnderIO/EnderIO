@@ -12,6 +12,7 @@ import com.enderio.conduits.common.conduit.type.fluid.FluidConduitType;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
 import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
 import com.enderio.conduits.common.conduit.type.item.ItemConduitTicker;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitType;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitType;
 import com.enderio.conduits.common.conduit.type.SimpleConduitType;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
@@ -41,12 +42,8 @@ public class EIOConduitTypes {
         public static final DeferredHolder<ConduitType<?>, FluidConduitType> FLUID3 =
             fluidConduit("ender_fluid", 200, true);
 
-        public static final DeferredHolder<ConduitType<?>, SimpleConduitType<ItemConduitData>> ITEM =
-            CONDUIT_TYPES.register("item",
-                () -> new SimpleConduitType<>(
-                    new ItemConduitTicker(),
-                    ItemConduitData::new,
-                    ConduitMenuData.ITEM));
+        public static final DeferredHolder<ConduitType<?>, ItemConduitType> ITEM =
+            CONDUIT_TYPES.register("item", ItemConduitType::new);
 
         private static DeferredHolder<ConduitType<?>, FluidConduitType> fluidConduit(String name, int tier, boolean isMultiFluid) {
             return CONDUIT_TYPES.register(name,

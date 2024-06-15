@@ -43,11 +43,6 @@ public class ItemSpeedUpgrade implements ConduitUpgrade {
     }
 
     @Override
-    public boolean canApplyTo(ConduitType<?> type) {
-        return type.is(ConduitTags.ConduitTypes.ITEM);
-    }
-
-    @Override
     public int hashCode() {
         return speed;
     }
