@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.client.gui.widgets.EIOImageButton;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.FermentationWidget;
@@ -15,9 +16,11 @@ import com.enderio.machines.common.menu.VatMenu;
 import com.enderio.machines.common.recipe.FermentingRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +31,9 @@ public class VatScreen extends EIOScreen<VatMenu> {
 
     private static final ResourceLocation VAT_BG = EnderIO.loc("textures/gui/vat.png");
     private static final ResourceLocation VAT_COVER = EnderIO.loc("vat_cover");
+    public static final ResourceLocation MOVE_FLUID = EnderIO.loc("buttons/move_fluid");
+    public static final ResourceLocation VOID_FLUID = EnderIO.loc("buttons/void_fluid");
+
     private FermentingRecipe recipeCache;
     private ResourceLocation recipeId;
 
@@ -52,6 +58,12 @@ public class VatScreen extends EIOScreen<VatMenu> {
 
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font));
         addRenderableWidget(new ActivityWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16 * 4));
+
+        addRenderableWidget(new EIOImageButton(this, leftPos + 29, topPos + 62, 16, 16, new WidgetSprites(MOVE_FLUID, MOVE_FLUID),
+            press -> menu.getBlockEntity().moveFluidToOutputTank()));
+
+        addRenderableWidget(new EIOImageButton(this, leftPos + 131, topPos + 62, 16, 16, new WidgetSprites(VOID_FLUID, VOID_FLUID),
+            press -> menu.getBlockEntity().dumpOutputTank()));
     }
 
     @Override
@@ -60,6 +72,7 @@ public class VatScreen extends EIOScreen<VatMenu> {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
 
         guiGraphics.blitSprite(VAT_COVER, 76 + leftPos, 34 + topPos, 26, 28);
+        drawModifierStrings(guiGraphics);
     }
 
     @Override
@@ -115,7 +128,7 @@ public class VatScreen extends EIOScreen<VatMenu> {
                 if (isCrafting()) {
                     reduced = recipeCache.input().amount();
                 }
-                return tank.getFluidAmount() - reduced;
+                return Math.max(tank.getFluidAmount() - reduced, 0);
             }
 
             @Override
@@ -123,5 +136,25 @@ public class VatScreen extends EIOScreen<VatMenu> {
                 return tank.getCapacity();
             }
         };
+    }
+
+    private void drawModifierStrings(GuiGraphics guiGraphics) {
+        if (!isCrafting()) {
+            return;
+        }
+        // left modifier
+        ItemStack item = getMenu().getSlot(0).getItem();
+        double modifier = FermentingRecipe.getModifier(item, recipeCache.leftReagent());
+        String text = "x" + modifier;
+        int x = getGuiLeft() + 63 - minecraft.font.width(text) / 2;
+        guiGraphics.drawString(minecraft.font, text, x, getGuiTop() + 32, 4210752, false);
+
+        // right modifier
+        item = getMenu().getSlot(1).getItem();
+        modifier = FermentingRecipe.getModifier(item, recipeCache.rightReagent());
+        text = "x" + modifier;
+        x = getGuiLeft() + 113 - minecraft.font.width(text) / 2;
+        guiGraphics.drawString(minecraft.font, text, x, getGuiTop() + 32, 4210752, false);
+
     }
 }

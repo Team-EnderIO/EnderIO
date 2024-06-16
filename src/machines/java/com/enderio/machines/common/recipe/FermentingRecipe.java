@@ -59,7 +59,7 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
         return container.getItem(0).is(leftReagent) && container.getItem(1).is(rightReagent);
     }
 
-    public double getModifier(ItemStack stack, TagKey<Item> reagent) {
+    public static double getModifier(ItemStack stack, TagKey<Item> reagent) {
         var map = stack.getItemHolder().getData(VatReagent.DATA_MAP);
         if (map != null) {
             return map.getOrDefault(reagent, 1D);

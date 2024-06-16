@@ -18,6 +18,8 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.menu.VatMenu;
+import com.enderio.machines.common.network.VatDumpTankPacket;
+import com.enderio.machines.common.network.VatMoveTankPacket;
 import com.enderio.machines.common.recipe.FermentingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -36,6 +38,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,6 +54,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
     private final MachineFluidHandler fluidHandler;
     private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Container> craftingTaskHost;
+    private final NetworkDataSlot<FluidStack> inputTankDataSlot;
+    private final NetworkDataSlot<FluidStack> outputTankDataSlot;
 
     private ResourceLocation recipeId;
 
@@ -59,8 +64,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
         fluidHandler = createFluidHandler();
 
         // Sync fluid_stacks and active recipe.
-        addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> INPUT_TANK.getFluid(this), stack -> INPUT_TANK.setFluid(this, stack)));
-        addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> OUTPUT_TANK.getFluid(this), stack -> OUTPUT_TANK.setFluid(this, stack)));
+        inputTankDataSlot = addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> INPUT_TANK.getFluid(this), stack -> INPUT_TANK.setFluid(this, stack)));
+        outputTankDataSlot = addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> OUTPUT_TANK.getFluid(this), stack -> OUTPUT_TANK.setFluid(this, stack)));
 
         addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(this::getRecipeId, this::setRecipeId));
 
@@ -178,6 +183,25 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
     public CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Container> getCraftingHost() {
         return craftingTaskHost;
+    }
+
+    public void moveFluidToOutputTank() {
+        if (level != null && level.isClientSide()) {
+            PacketDistributor.sendToServer(new VatMoveTankPacket(getBlockPos()));
+        } else {
+            if (OUTPUT_TANK.isEmpty(this) && !INPUT_TANK.isEmpty(this)) {
+                OUTPUT_TANK.setFluid(this, INPUT_TANK.getFluid(this));
+                INPUT_TANK.setFluid(this, FluidStack.EMPTY);
+            }
+        }
+    }
+
+    public void dumpOutputTank() {
+        if (level != null && level.isClientSide()) {
+            PacketDistributor.sendToServer(new VatDumpTankPacket(getBlockPos()));
+        } else {
+            OUTPUT_TANK.setFluid(this, FluidStack.EMPTY);
+        }
     }
 
     protected static class VatCraftingMachineTask extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Container> {
