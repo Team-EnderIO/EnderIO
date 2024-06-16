@@ -8,10 +8,10 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ConduitServerPayloadHandler {
-    private static final ConduitServerPayloadHandler instance = new ConduitServerPayloadHandler();
+    private static final ConduitServerPayloadHandler INSTANCE = new ConduitServerPayloadHandler();
 
     public static ConduitServerPayloadHandler getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     public void handleDoubleChannelFilter(DoubleChannelPacket packet, IPayloadContext context) {
