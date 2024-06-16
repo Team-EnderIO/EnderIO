@@ -8,7 +8,7 @@ plugins {
     id("eclipse")
     id("maven-publish")
     id("com.modrinth.minotaur") version "2.+"
-    id("net.neoforged.gradle.userdev") version "7.0.124"
+    id("net.neoforged.gradle.userdev") version "7.0.143"
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
@@ -24,6 +24,7 @@ val modrinth_projectId: String by project
 val modrinth_dep_jei: String by project
 val modrinth_dep_athena: String by project
 val modrinth_dep_ae2: String by project
+val cctVersion: String by project
 
 idea {
     module {
@@ -196,6 +197,7 @@ repositories {
     exclusiveRepo("https://api.modrinth.com/maven", "maven.modrinth")
     exclusiveRepo("https://maven.parchmentmc.org/", "org.parchmentmc.data")
     exclusiveRepo("https://maven.rover656.dev/releases", "com.enderio")
+    exclusiveRepo("https://squiddev.cc/maven/", "cc.tweaked")
 
     mavenLocal()
 }
@@ -236,10 +238,10 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
 
     // JEI
-    //compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-    //compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
-    //runtimeOnly("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
-    //runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+    compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
+    runtimeOnly("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
+    runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
     //RFTOOLS
     //runtimeOnly("maven.modrinth:rftools-power:f430rHkA")
@@ -285,6 +287,11 @@ dependencies {
     // Mekanism
     //compileOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}:api")
     //runtimeOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
+
+    //CC-Tweaked
+    compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cctVersion")
+    compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cctVersion")
+    runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cctVersion")
 
     // Jetbrains annotations
     compileOnly("org.jetbrains:annotations:23.0.0")

@@ -3,15 +3,14 @@ package com.enderio.conduits.common.integrations.ae2;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.conduit.ConduitGraph;
+import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.ConduitTicker;
-import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.init.ConduitTypes;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.Mergeable;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +18,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-import org.apache.commons.lang3.function.TriFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -29,13 +27,12 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     private final boolean dense;
 
     public AE2ConduitType(boolean dense) {
-        super(EnderIO.loc("block/conduit/" + (dense ? "dense_me" : "me")), new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8,
-            ConduitTypes.ICON_TEXTURE, new Vector2i(0, dense ? 72 : 48));
+        super(new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8);
         this.dense = dense;
     }
 
     @Override
-    public ConduitTicker getTicker() {
+    public ConduitTicker<AE2InWorldConduitNodeHost> getTicker() {
         return Ticker.INSTANCE;
     }
 
@@ -45,12 +42,16 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     }
 
     @Override
-    public AE2InWorldConduitNodeHost createExtendedConduitData(Level level, BlockPos pos) {
-        return new AE2InWorldConduitNodeHost(this);
+    public AE2InWorldConduitNodeHost createConduitData(Level level, BlockPos pos) {
+        if (isDense()) {
+            return new AE2InWorldConduitNodeHost.Dense();
+        }
+
+        return new AE2InWorldConduitNodeHost.Normal();
     }
 
     @Override
-    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, AE2InWorldConduitNodeHost extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable NodeIdentifier.IOState state) {
+    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, AE2InWorldConduitNodeHost extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitGraphObject.IOState state) {
         if (getCapability() == cap) {
             return (Optional<K>) Optional.of(extendedConduitData);
         }
@@ -94,7 +95,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         }
 
         @Override
-        public boolean showBarSeperator() {
+        public boolean showBarSeparator() {
             return false;
         }
 
@@ -119,11 +120,12 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         }
     }
 
-    private static final class Ticker implements ConduitTicker {
+    private static final class Ticker implements ConduitTicker<AE2InWorldConduitNodeHost> {
 
         private static final Ticker INSTANCE = new Ticker();
         @Override
-        public void tickGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+        public void tickGraph(ServerLevel level, ConduitType<AE2InWorldConduitNodeHost> type, ConduitGraph<AE2InWorldConduitNodeHost> graph,
+            ColoredRedstoneProvider coloredRedstoneProvider) {
             //ae2 graphs don't actually do anything, that's all done by ae2
         }
 

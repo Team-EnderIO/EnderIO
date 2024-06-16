@@ -97,10 +97,10 @@ public abstract class MachineMenu<T extends EnderBlockEntity> extends SyncedMenu
 
                 Slot slot = this.slots.get(i);
 
-                // Do not insert into ghost slots
+                // Do not insertChannel into ghost slots
                 if (!(slot instanceof GhostMachineSlot)) {
 
-                    // Do not insert into a slot that cannot be inserted into normally.
+                    // Do not insertChannel into a slot that cannot be inserted into normally.
                     if (!(slot instanceof MachineSlot machineSlot) || machineSlot.canQuickInsertStack()) {
 
                         ItemStack itemstack = slot.getItem();
