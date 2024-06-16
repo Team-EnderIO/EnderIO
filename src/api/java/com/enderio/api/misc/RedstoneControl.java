@@ -19,7 +19,7 @@ public enum RedstoneControl implements Icon, StringRepresentable {
     ACTIVE_WITHOUT_SIGNAL(2, "active_without_signal", bool -> !bool, ApiLang.REDSTONE_ACTIVE_WITHOUT_SIGNAL),
     NEVER_ACTIVE(3, "never_active", bool -> false, ApiLang.REDSTONE_NEVER_ACTIVE);
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation("enderio", "textures/gui/icons/redstone_control.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("enderio", "textures/gui/icons/redstone_control.png");
     private static final Vector2i SIZE = new Vector2i(16, 16);
 
     public static final Codec<RedstoneControl> CODEC = StringRepresentable.fromEnum(RedstoneControl::values);

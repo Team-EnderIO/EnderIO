@@ -34,7 +34,7 @@ public class EnderIORegistries {
         public static final ResourceKey<Registry<ConduitDataSerializer<?>>> CONDUIT_DATA_SERIALIZERS = createKey("conduit_data_serializers");
 
         private static <T> ResourceKey<Registry<T>> createKey(String name) {
-            return ResourceKey.createRegistryKey(new ResourceLocation("enderio", name));
+            return ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("enderio", name));
         }
     }
 }

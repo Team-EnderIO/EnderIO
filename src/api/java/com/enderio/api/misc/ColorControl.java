@@ -30,7 +30,7 @@ public enum ColorControl implements Icon, StringRepresentable {
     BLACK(14, "black", 0xFF1E1B1B, 0xFF242020),
     RED(15, "red", 0xFFB3312C, 0xFFD63A34);
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation("enderio", "textures/gui/icons/color_control.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("enderio", "textures/gui/icons/color_control.png");
     private static final Vector2i SIZE = new Vector2i(16, 16);
 
     public static final Codec<ColorControl> CODEC = StringRepresentable.fromEnum(ColorControl::values);
