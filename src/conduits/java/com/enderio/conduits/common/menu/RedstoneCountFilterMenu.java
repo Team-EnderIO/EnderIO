@@ -69,7 +69,6 @@ public class RedstoneCountFilterMenu extends AbstractContainerMenu {
         PacketDistributor.sendToServer(new CountFilterPacket(filter.getChannel(), filter.getMaxCount(), filter.getCount(), filter.isDeactivated()));
     }
 
-
     public void addInventorySlots(int xPos, int yPos, Inventory inventory) {
 
         // Hotbar

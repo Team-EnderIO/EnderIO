@@ -75,7 +75,6 @@ public class RedstoneCountFilter implements RedstoneInsertFilter {
     public void setChannel(ColorControl channel) {
         var component = stack.get(ConduitComponents.REDSTONE_COUNT_FILTER);
         stack.set(ConduitComponents.REDSTONE_COUNT_FILTER, new Component(channel, component.maxCount, component.count, component.deactivated));
-
     }
 
     public record Component(ColorControl channel1, int maxCount, int count, boolean deactivated) {

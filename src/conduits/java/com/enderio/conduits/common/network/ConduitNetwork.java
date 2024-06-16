@@ -17,10 +17,10 @@ public class ConduitNetwork {
             .versioned(PROTOCOL_VERSION);
 
         registrar.playToServer(C2SSetConduitConnectionState.TYPE, C2SSetConduitConnectionState.STREAM_CODEC,
-            ConduitClientPayloadHandler.getInstance()::handleConduitConnectionState);
+            ConduitServerPayloadHandler.getInstance()::handleConduitConnectionState);
 
         registrar.playToServer(C2SSetConduitExtendedData.TYPE, C2SSetConduitExtendedData.STREAM_CODEC,
-            ConduitClientPayloadHandler.getInstance()::handleConduitExtendedData);
+            ConduitServerPayloadHandler.getInstance()::handleConduitExtendedData);
 
         registrar.playToServer(DoubleChannelPacket.TYPE, DoubleChannelPacket.STREAM_CODEC,
             ConduitServerPayloadHandler.getInstance()::handleDoubleChannelFilter);

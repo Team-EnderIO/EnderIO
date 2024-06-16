@@ -1,10 +1,12 @@
 package com.enderio.conduits.common.network;
 
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ConduitServerPayloadHandler {
@@ -12,6 +14,26 @@ public class ConduitServerPayloadHandler {
 
     public static ConduitServerPayloadHandler getInstance() {
         return INSTANCE;
+    }
+
+    public void handleConduitConnectionState(final C2SSetConduitConnectionState packet, final IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var level = context.player().level();
+            BlockEntity be = level.getBlockEntity(packet.pos());
+            if (be instanceof ConduitBlockEntity conduitBlockEntity) {
+                conduitBlockEntity.handleConnectionStateUpdate(packet.direction(), packet.conduitType(), packet.connectionState());
+            }
+        });
+    }
+
+    public void handleConduitExtendedData(final C2SSetConduitExtendedData packet, final IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var level = context.player().level();
+            BlockEntity be = level.getBlockEntity(packet.pos());
+            if (be instanceof ConduitBlockEntity conduitBlockEntity) {
+                conduitBlockEntity.handleExtendedDataUpdate(packet.conduitType(), packet.extendedConduitData());
+            }
+        });
     }
 
     public void handleDoubleChannelFilter(DoubleChannelPacket packet, IPayloadContext context) {
