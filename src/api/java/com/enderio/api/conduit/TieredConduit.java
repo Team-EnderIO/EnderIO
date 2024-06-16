@@ -1,39 +1,22 @@
 package com.enderio.api.conduit;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.misc.Vector2i;
+import com.enderio.api.conduit.screen.ConduitScreenExtension;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.LogicalSide;
 
-public abstract class TieredConduit<T extends ExtendedConduitData<T>> implements ConduitType<T> {
-    private final ResourceLocation texture;
+public abstract class TieredConduit<T extends ConduitData<T>> extends ConduitType<T> {
     private final ResourceLocation type;
     private final int tier;
 
-    @UseOnly(LogicalSide.CLIENT) protected ClientConduitData<T> clientConduitData;
-
     /**
-     * @param texture
      * @param type
      * @param tier    The tier of the conduit. For Energy this should be it's transfer rate to easily add and compare conduit strength
      */
-
-    public TieredConduit(ResourceLocation texture, ResourceLocation type, int tier, ResourceLocation iconTexture, Vector2i iconTexturePos) {
-        this.texture = texture;
+    public TieredConduit(ResourceLocation type, int tier) {
         this.type = type;
         this.tier = tier;
-        clientConduitData = new ClientConduitData.Simple<>(iconTexture, iconTexturePos);
-    }
-
-    @Override
-    public ResourceLocation getTexture(T data) {
-        return texture;
-    }
-
-    @Override
-    public ResourceLocation getItemTexture() {
-        return texture;
     }
 
     @Override
@@ -65,11 +48,5 @@ public abstract class TieredConduit<T extends ExtendedConduitData<T>> implements
 
     public int getTier() {
         return tier;
-    }
-
-    @Override
-    @EnsureSide(EnsureSide.Side.CLIENT)
-    public ClientConduitData<T> getClientData() {
-        return clientConduitData;
     }
 }
