@@ -7,6 +7,7 @@ import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
+import com.enderio.machines.client.gui.widget.FluidStackStaticWidget;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.menu.FarmMenu;
 import net.minecraft.network.chat.Component;
@@ -35,6 +36,8 @@ public class FarmScreen extends MachineScreen<FarmMenu> {
         addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 14 + 4 + 2, topPos + 22 + 2 + 16, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
+
+        addRenderableWidget(new FluidStackStaticWidget(this, menu.getBlockEntity()::getFluidTank, leftPos + 20, topPos + 22, 16, 16));
 
         addRenderableWidget(new ActivityWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16 + 4 + 2, topPos + 16 * 4));
 

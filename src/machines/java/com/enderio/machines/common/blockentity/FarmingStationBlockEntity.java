@@ -5,7 +5,7 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.farm.FarmInteraction;
 import com.enderio.api.farm.FarmTaskManager;
-import com.enderio.api.farm.IFarmingStation;
+import com.enderio.api.farm.FarmingStation;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.ActionRange;
@@ -16,14 +16,15 @@ import com.enderio.api.farm.FarmTask;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.io.fluid.FluidItemInteractive;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.FarmMenu;
-import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.FarmSoul;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -39,12 +40,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.functions.LootingEnchantFunction;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
@@ -63,7 +62,7 @@ import java.util.UUID;
 
 import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
 
-public class FarmBlockEntity extends PoweredMachineBlockEntity implements RangedActor, IFarmingStation, FluidTankUser {
+public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingStation, FluidTankUser, FluidItemInteractive {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.FARM_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.FARM_USAGE);
@@ -98,7 +97,7 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements Ranged
     private boolean reloadCache = !reload;
 
 
-    public FarmBlockEntity(BlockPos worldPosition, BlockState blockState) {
+    public FarmingStationBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.FARMING_STATION.get(), worldPosition, blockState);
         fluidHandler = createFluidHandler();
 
@@ -425,6 +424,10 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements Ranged
                 updateMachineState(MachineState.EMPTY_TANK, TANK.getFluidAmount(this) <= 0);
             }
         };
+    }
+
+    public MachineFluidTank getFluidTank() {
+        return TANK.getTank(this);
     }
 
     private void onTankContentsChanged() {

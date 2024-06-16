@@ -26,7 +26,7 @@ public class EIOFarmTasks {
 
     public static FarmTask PLANT_CROP = (soil, farmBlockEntity) -> {
         ItemStack seeds = farmBlockEntity.getSeedsForPos(soil);
-        if (seeds.isEmpty()) {
+        if (seeds.isEmpty() || farmBlockEntity.getLevel().getBlockState(soil).isAir()) {
             return FarmInteraction.BLOCKED;
         }
         if (seeds.getItem() instanceof BlockItem blockItem && (blockItem.getBlock() instanceof CropBlock || blockItem.getBlock() instanceof StemBlock)) {
@@ -70,7 +70,7 @@ public class EIOFarmTasks {
 
     public static FarmTask PLANT_BLOCK = (soil, farmBlockEntity) -> {
         ItemStack seeds = farmBlockEntity.getSeedsForPos(soil);
-        if (seeds.isEmpty()) {
+        if (seeds.isEmpty() || farmBlockEntity.getLevel().getBlockState(soil).isAir()) {
             return FarmInteraction.BLOCKED;
         }
         if (seeds.getItem() instanceof BlockItem blockItem && (blockItem.getBlock() instanceof CactusBlock || blockItem.getBlock() instanceof SugarCaneBlock)) {
