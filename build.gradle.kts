@@ -196,7 +196,7 @@ repositories {
     exclusiveRepo("https://dogforce-games.com/maven", "dev.gigaherz.graph")
     exclusiveRepo("https://api.modrinth.com/maven", "maven.modrinth")
     exclusiveRepo("https://maven.parchmentmc.org/", "org.parchmentmc.data")
-    exclusiveRepo("https://maven.rover656.dev/releases", "com.enderio")
+    //exclusiveRepo("https://maven.rover656.dev/releases", "com.enderio")
     exclusiveRepo("https://squiddev.cc/maven/", "cc.tweaked")
 
     mavenLocal()
@@ -238,10 +238,10 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
 
     // JEI
-    compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-    compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
-    runtimeOnly("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
-    runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+    //compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    //compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
+    //runtimeOnly("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
+    //runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
     //RFTOOLS
     //runtimeOnly("maven.modrinth:rftools-power:f430rHkA")
@@ -253,8 +253,8 @@ dependencies {
     //runtimeOnly("maven.modrinth:athena-ctm:${athena_version}")
 
     // AE2
-    compileOnly("appeng:appliedenergistics2-neoforge:${ae2_version}:api")
-    runtimeOnly("appeng:appliedenergistics2-neoforge:${ae2_version}")
+    //compileOnly("appeng:appliedenergistics2-neoforge:${ae2_version}:api")
+    //runtimeOnly("appeng:appliedenergistics2-neoforge:${ae2_version}")
 
     // Enchantment descriptions
     //runtimeOnly("net.darkhax.bookshelf:Bookshelf-NeoForge-${minecraft_version}:${bookshelf_version}")
@@ -269,7 +269,7 @@ dependencies {
     //}
 
     // Jade
-    //runtimeOnly("curse.maven:jade-324717:${jade_cf_id}")
+    runtimeOnly("curse.maven:jade-324717:${jade_cf_id}")
 
     //fluxnetworks
     ////runtimeOnly("curse.maven:fluxnetworks-248020:4651164")
@@ -285,13 +285,13 @@ dependencies {
     //runtimeOnly("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // Mekanism
-    //compileOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}:api")
-    //runtimeOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
+    compileOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}:api")
+    runtimeOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
 
     //CC-Tweaked
-    compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cctVersion")
-    compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cctVersion")
-    runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cctVersion")
+    //compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cctVersion")
+    //compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cctVersion")
+    //runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cctVersion")
 
     // Jetbrains annotations
     compileOnly("org.jetbrains:annotations:23.0.0")
