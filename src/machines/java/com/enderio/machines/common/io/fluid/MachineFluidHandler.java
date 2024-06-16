@@ -214,13 +214,15 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
         for (int index = 0; index < getTanks(); index++) {
-            if (drain(index, resource, FluidAction.SIMULATE) != FluidStack.EMPTY) {
-                FluidStack drained = drain(index, resource, action);
-                if (!drained.isEmpty()) {
-                    onContentsChanged(index);
-                    changeListener.accept(index);
+            if (canExtract(index)) {
+                if (drain(index, resource, FluidAction.SIMULATE) != FluidStack.EMPTY) {
+                    FluidStack drained = drain(index, resource, action);
+                    if (!drained.isEmpty()) {
+                        onContentsChanged(index);
+                        changeListener.accept(index);
+                    }
+                    return drained;
                 }
-                return drained;
             }
         }
 

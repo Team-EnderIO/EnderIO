@@ -81,6 +81,11 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
         if (canAct()) {
             craftingTaskHost.tick();
         }
+        updateMachineState(MachineState.ACTIVE, isActive());
+    }
+
+    protected boolean isActive() {
+        return canAct() && craftingTaskHost.hasTask();
     }
 
     @Override
