@@ -2,14 +2,12 @@ package com.enderio.conduits.common.redstone;
 
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
-import net.minecraft.world.item.ItemStack;
 
 public class RedstoneNOTFilter implements RedstoneInsertFilter {
 
-    private final ItemStack stack;
+    public static final RedstoneNOTFilter INSTANCE = new RedstoneNOTFilter();
 
-    public RedstoneNOTFilter(ItemStack stack) {
-        this.stack = stack;
+    private RedstoneNOTFilter() {
     }
 
     @Override

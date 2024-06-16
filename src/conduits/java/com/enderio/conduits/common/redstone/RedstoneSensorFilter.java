@@ -8,10 +8,9 @@ import net.minecraft.world.level.block.entity.ComparatorBlockEntity;
 
 public class RedstoneSensorFilter implements RedstoneExtractFilter{
 
-    private final ItemStack stack;
+    public static final RedstoneSensorFilter INSTANCE = new RedstoneSensorFilter();
 
-    public RedstoneSensorFilter(ItemStack stack) {
-        this.stack = stack;
+    private RedstoneSensorFilter() {
     }
 
     @Override

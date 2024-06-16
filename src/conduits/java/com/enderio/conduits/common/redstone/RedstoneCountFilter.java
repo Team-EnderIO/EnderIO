@@ -86,6 +86,7 @@ public class RedstoneCountFilter implements RedstoneInsertFilter {
                     Codec.BOOL.fieldOf("deactivated").forGetter(Component::deactivated))
                 .apply(instance, Component::new)
         );
+
         public static final StreamCodec<ByteBuf, Component> STREAM_CODEC = StreamCodec.composite(
             ColorControl.STREAM_CODEC,
             Component::channel1,

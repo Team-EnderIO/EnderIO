@@ -703,14 +703,14 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     return false;
                 }
 
-                return conduitType.canApplyFilter(resourceFilter);
+                return conduitType.canApplyFilter(slotData.slotType(), resourceFilter);
             case UPGRADE_EXTRACT:
                 ConduitUpgrade conduitUpgrade = stack.getCapability(ConduitCapabilities.ConduitUpgrade.ITEM);
                 if (conduitUpgrade == null) {
                     return false;
                 }
 
-                return conduitType.canApplyUpgrade(conduitUpgrade);
+                return conduitType.canApplyUpgrade(slotData.slotType(), conduitUpgrade);
             default:
                 return false;
             }

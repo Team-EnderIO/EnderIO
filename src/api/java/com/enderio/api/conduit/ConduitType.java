@@ -44,11 +44,11 @@ public abstract class ConduitType<T extends ConduitData<T>> {
         return false;
     }
 
-    public boolean canApplyUpgrade(ConduitUpgrade conduitUpgrade) {
+    public boolean canApplyUpgrade(SlotType slotType, ConduitUpgrade conduitUpgrade) {
         return false;
     }
 
-    public boolean canApplyFilter(ResourceFilter resourceFilter) {
+    public boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
         return false;
     }
 

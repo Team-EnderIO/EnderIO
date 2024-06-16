@@ -29,11 +29,11 @@ public class RedstoneFilterItem extends Item {
     public static ICapabilityProvider<ItemStack, Void, ResourceFilter> NOR_FILTER_PROVIDER =
         (stack, v) -> new RedstoneNORFilter(stack);
     public static ICapabilityProvider<ItemStack, Void, ResourceFilter> NOT_FILTER_PROVIDER =
-        (stack, v) -> new RedstoneNOTFilter(stack);
+        (stack, v) -> RedstoneNOTFilter.INSTANCE;
     public static ICapabilityProvider<ItemStack, Void, ResourceFilter> OR_FILTER_PROVIDER =
         (stack, v) -> new RedstoneORFilter(stack);
     public static ICapabilityProvider<ItemStack, Void, ResourceFilter> SENSOR_FILTER_PROVIDER =
-        (stack, v) -> new RedstoneSensorFilter(stack);
+        (stack, v) -> RedstoneSensorFilter.INSTANCE;
     public static ICapabilityProvider<ItemStack, Void, ResourceFilter> TIMER_FILTER_PROVIDER =
         (stack, v) -> new RedstoneTimerFilter(stack);
     public static ICapabilityProvider<ItemStack, Void, ResourceFilter> TLATCH_FILTER_PROVIDER =

@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.api.conduit.ConduitMenuData;
+import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
@@ -43,12 +44,12 @@ public class FluidConduitType extends TieredConduit<FluidConduitData> {
     }
 
     @Override
-    public boolean canApplyUpgrade(ConduitUpgrade conduitUpgrade) {
+    public boolean canApplyUpgrade(SlotType slotType, ConduitUpgrade conduitUpgrade) {
         return conduitUpgrade instanceof ExtractionSpeedUpgrade;
     }
 
     @Override
-    public boolean canApplyFilter(ResourceFilter resourceFilter) {
+    public boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
         return resourceFilter instanceof FluidStackFilter;
     }
 }
