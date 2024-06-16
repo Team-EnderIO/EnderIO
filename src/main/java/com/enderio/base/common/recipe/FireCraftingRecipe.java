@@ -18,6 +18,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -34,7 +35,7 @@ public record FireCraftingRecipe(
     List<Block> bases,
     List<TagKey<Block>> baseTags,
     List<ResourceKey<Level>> dimensions
-) implements Recipe<Container> {
+) implements Recipe<RecipeInput> {
 
     // Get all base blocks
     public List<Block> getAllBaseBlocks() {
@@ -62,12 +63,12 @@ public record FireCraftingRecipe(
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(RecipeInput container, Level level) {
         return false;
     }
 
     @Override
-    public ItemStack assemble(Container container, HolderLookup.Provider lookupProvider) {
+    public ItemStack assemble(RecipeInput container, HolderLookup.Provider lookupProvider) {
         return ItemStack.EMPTY;
     }
 

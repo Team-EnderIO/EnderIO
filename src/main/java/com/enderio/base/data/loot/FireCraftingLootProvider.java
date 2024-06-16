@@ -16,12 +16,14 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import java.util.function.BiConsumer;
 
 public class FireCraftingLootProvider implements LootTableSubProvider {
+    private final HolderLookup.Provider registries;
 
-    public FireCraftingLootProvider() {
+    public FireCraftingLootProvider(HolderLookup.Provider registries) {
+        this.registries = registries;
     }
 
     @Override
-    public void generate(HolderLookup.Provider lookupProvider, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> writer) {
+    public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> writer) {
         LootTable.Builder infinity = LootTable
             .lootTable()
             .withPool(LootPool

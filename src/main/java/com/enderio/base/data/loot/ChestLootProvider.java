@@ -26,8 +26,14 @@ public class ChestLootProvider implements LootTableSubProvider {
     public static final String COMMON_LOOT_TABLE_NAME = "chests/common_loot";
     public static final String ALLOY_LOOT_TABLE_NAME = "chests/alloy_loot";
 
+    private final HolderLookup.Provider registries;
+
+    public ChestLootProvider(HolderLookup.Provider registries) {
+        this.registries = registries;
+    }
+
     @Override
-    public void generate(HolderLookup.Provider lookupProvider, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> writer) {
+    public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> writer) {
         generateCommonLoot(writer);
         generateAlloyLoot(writer);
     }
