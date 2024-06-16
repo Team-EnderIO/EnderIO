@@ -145,6 +145,7 @@ public class EIOLang {
     //region Filters
 
     public static final Component FILTER = addTranslation("gui", EnderIO.loc("filter"), "Filter");
+    public static final Component CONFIRM = addTranslation("gui", EnderIO.loc("confirm"), "Confirm");
 
     // endregion
 

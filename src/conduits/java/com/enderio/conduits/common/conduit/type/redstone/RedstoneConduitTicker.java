@@ -7,6 +7,7 @@ import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.init.ConduitBlocks;
+import com.enderio.conduits.common.redstone.RedstoneExtractFilter;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,11 +17,13 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneConduitData> {
 
-    private final List<ColorControl> activeColors = new ArrayList<>();
+    private final Map<ColorControl, Integer> activeColors = new EnumMap<>(ColorControl.class);
     @Override
     public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
         BlockPos neighbor = conduitPos.relative(direction);
@@ -43,8 +46,8 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
         for (var nodeIdentifier : nodeIdentifiers) {
             RedstoneConduitData data = nodeIdentifier.getConduitData();
             data.clearActive();
-            for (ColorControl activeColor : activeColors) {
-                data.setActiveColor(activeColor);
+            for (var entry : activeColors.entrySet()) {
+                data.setActiveColor(entry.getKey(), entry.getValue());
             }
         }
     }
@@ -60,14 +63,26 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (Connection<RedstoneConduitData> extract : extracts) {
-            if (level.hasSignal(extract.move(), extract.dir())) {
-                activeColors.add(color);
-                break;
+            int signal;
+            if (extract.extractFilter() instanceof RedstoneExtractFilter filter) {
+                signal = filter.getInputSignal(level, extract.move(), extract.dir());
+            } else {
+                signal = level.getSignal(extract.move(), extract.dir());
+            }
+            
+            if (signal > 0) {
+                activeColors.put(color, Math.max(activeColors.getOrDefault(color, 0), signal));
             }
         }
+
         for (Connection<RedstoneConduitData> insert : inserts) {
             level.neighborChanged(insert.move(), ConduitBlocks.CONDUIT.get(), insert.pos());
         }
+    }
+
+    @Override
+    public boolean shouldSkipColor(List<Connection<RedstoneConduitData>> extractList, List<Connection<RedstoneConduitData>> insertList) {
+        return extractList.isEmpty() && insertList.isEmpty(); //Only skip if no one uses the channel
     }
 
     @Override

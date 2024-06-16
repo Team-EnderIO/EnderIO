@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.conduit.block;
 
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
@@ -15,6 +16,7 @@ import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.ConduitSavedData;
+import com.enderio.conduits.common.redstone.RedstoneInsertFilter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -497,9 +499,16 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             && conduit.getBundle().getConnectionState(direction.getOpposite(), EIOConduitTypes.Types.REDSTONE.get()) instanceof DynamicConnectionState dyn
             && dyn.isInsert()
             && conduit.getBundle().getNodeFor(EIOConduitTypes.Types.REDSTONE.get()).getConduitData() instanceof RedstoneConduitData redstoneExtendedData
-            && redstoneExtendedData.isActive(dyn.insertChannel()) ? 15 : 0;
+            ? getSignalOutput(dyn, redstoneExtendedData) : 0;
     }
     //@formatter:on
+
+    private int getSignalOutput(DynamicConnectionState dyn, RedstoneConduitData data) {
+        if (dyn.filterInsert().getCapability(EIOCapabilities.Filter.ITEM) instanceof RedstoneInsertFilter filter) {
+            return filter.getOutputSignal(data, dyn.insertChannel());
+        }
+        return data.getSignal(dyn.insertChannel());
+    }
 
     // endregion
 

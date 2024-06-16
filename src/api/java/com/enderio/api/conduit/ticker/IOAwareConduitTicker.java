@@ -56,12 +56,16 @@ public interface IOAwareConduitTicker<T extends ConduitData<T>> extends LoadedAw
         for (ColorControl color : ColorControl.values()) {
             List<Connection<T>> extractList = extracts.get(color);
             List<Connection<T>> insertList = inserts.get(color);
-            if (extractList.isEmpty() || insertList.isEmpty()) {
+            if (shouldSkipColor(extractList, insertList)) {
                 continue;
             }
 
             tickColoredGraph(level, type, insertList, extractList, color, graph, coloredRedstoneProvider);
         }
+    }
+
+    default boolean shouldSkipColor(List<Connection<T>> extractList, List<Connection<T>> insertList) {
+        return extractList.isEmpty() || insertList.isEmpty();
     }
 
     void tickColoredGraph(
