@@ -21,7 +21,8 @@ public class FluidConduitType extends TieredConduit<FluidConduitData> {
     private final ConduitTicker<FluidConduitData> ticker;
 
     public FluidConduitType(int tier, boolean isMultiFluid) {
-        super(new ResourceLocation("forge:fluid"), (isMultiFluid ? 100_000 : 0) + tier);
+        // TODO 1.21: forge:fluid is completely wrong, no?
+        super(ResourceLocation.parse("forge:fluid"), (isMultiFluid ? 100_000 : 0) + tier);
         this.isMultiFluid = isMultiFluid;
         this.transferRate = tier;
 

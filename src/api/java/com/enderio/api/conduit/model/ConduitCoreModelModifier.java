@@ -3,6 +3,7 @@ package com.enderio.api.conduit.model;
 import com.enderio.api.conduit.ConduitData;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -27,7 +28,7 @@ public interface ConduitCoreModelModifier<T extends ConduitData<T>> {
         return List.of();
     }
 
-    default List<ResourceLocation> getModelDependencies() {
+    default List<ModelResourceLocation> getModelDependencies() {
         return List.of();
     }
 }

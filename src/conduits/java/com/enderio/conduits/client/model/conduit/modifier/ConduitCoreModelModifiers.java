@@ -5,6 +5,7 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.model.ConduitCoreModelModifier;
 import com.enderio.api.conduit.model.RegisterConduitCoreModelModifiersEvent;
 import me.liliandev.ensure.ensures.EnsureSide;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModLoader;
 
@@ -33,7 +34,7 @@ public class ConduitCoreModelModifiers {
     }
 
     @EnsureSide(EnsureSide.Side.CLIENT)
-    public static Set<ResourceLocation> getAllModelDependencies() {
+    public static Set<ModelResourceLocation> getAllModelDependencies() {
         return MODIFIERS.values().stream().flatMap(modifier -> modifier.getModelDependencies().stream()).collect(Collectors.toSet());
     }
 }

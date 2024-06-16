@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -25,7 +26,7 @@ public class FluidConduitCoreModelModifier implements ConduitCoreModelModifier<F
 
     public static final FluidConduitCoreModelModifier INSTANCE = new FluidConduitCoreModelModifier();
 
-    private static final ResourceLocation FLUID_MODEL = EnderIO.loc("block/extra/fluids");
+    private static final ModelResourceLocation FLUID_MODEL = ModelResourceLocation.standalone(EnderIO.loc("block/extra/fluids"));
 
     @Override
     public List<BakedQuad> createConnectionQuads(FluidConduitData data, @Nullable Direction facing, Direction connectionDirection, RandomSource rand,
@@ -40,7 +41,7 @@ public class FluidConduitCoreModelModifier implements ConduitCoreModelModifier<F
     }
 
     @Override
-    public List<ResourceLocation> getModelDependencies() {
+    public List<ModelResourceLocation> getModelDependencies() {
         return List.of(FLUID_MODEL);
     }
 
