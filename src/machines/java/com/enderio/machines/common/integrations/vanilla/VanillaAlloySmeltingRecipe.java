@@ -23,7 +23,7 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
         this.vanillaRecipe = vanillaRecipe;
     }
 
-    // Override base behaviour to insert the vanilla recipe
+    // Override base behaviour to insertChannel the vanilla recipe
     @Override
     public List<SizedIngredient> inputs() {
         return List.of(new SizedIngredient(vanillaRecipe.getIngredients().get(0), 1));

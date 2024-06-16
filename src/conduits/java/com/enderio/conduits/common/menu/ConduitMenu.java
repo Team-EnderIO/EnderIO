@@ -2,10 +2,10 @@ package com.enderio.conduits.common.menu;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.registry.EnderIORegistries;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
-import com.enderio.conduits.common.blockentity.ConduitBundle;
-import com.enderio.conduits.common.blockentity.SlotType;
-import com.enderio.conduits.common.blocks.ConduitBlock;
+import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.ConduitBundle;
+import com.enderio.api.conduit.SlotType;
+import com.enderio.conduits.common.conduit.block.ConduitBlock;
 import com.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.core.common.menu.SyncedMenu;
 import net.minecraft.core.Direction;
@@ -34,7 +34,6 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
 
     private Direction direction;
     private ConduitType<?> type;
-
 
     public ConduitMenu(@Nullable ConduitBlockEntity blockEntity, Inventory inventory, int pContainerId, Direction direction, ConduitType type) {
         super(blockEntity, inventory, ConduitMenus.CONDUIT_MENU.get(), pContainerId);

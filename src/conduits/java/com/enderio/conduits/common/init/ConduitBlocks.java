@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.conduits.common.blocks.ConduitBlock;
+import com.enderio.conduits.common.conduit.block.ConduitBlock;
 import com.enderio.conduits.data.model.ConduitBlockState;
 import com.enderio.regilite.holder.RegiliteBlock;
 import com.enderio.regilite.registry.BlockRegistry;

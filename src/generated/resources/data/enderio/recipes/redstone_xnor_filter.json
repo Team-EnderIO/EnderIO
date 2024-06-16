@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:redstone_torch"
+    },
+    {
+      "item": "enderio:redstone_xor_filter"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:redstone_xnor_filter"
+  }
+}
