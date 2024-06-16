@@ -92,7 +92,7 @@ public record StoredEntityData(CompoundTag entityTag, float maxHealth) {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public Tag save(HolderLookup.Provider lookupProvider) {
-        if (this.hasEntity()) {
+        if (!this.hasEntity()) {
             throw new IllegalStateException("Cannot encode empty StoredEntityData");
         } else {
             return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
