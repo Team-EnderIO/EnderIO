@@ -26,6 +26,6 @@ public class EnderCore {
     }
 
     public static ResourceLocation loc(String name) {
-        return new ResourceLocation(MODID, name);
+        return ResourceLocation.fromNamespaceAndPath(MODID, name);
     }
 }

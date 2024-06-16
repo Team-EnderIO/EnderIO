@@ -10,6 +10,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,7 +87,7 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
                 @Override
                 public boolean mayPickup(Player player) {
                     ItemStack itemstack = this.getItem();
-                    return super.mayPickup(player) && !EnchantmentHelper.hasBindingCurse(itemstack);
+                    return super.mayPickup(player) && !EnchantmentHelper.has(itemstack, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE);
                 }
             }.setBackground(InventoryMenu.BLOCK_ATLAS, ARMOR_SLOT_TEXTURES[slot.getIndex()]));
         }

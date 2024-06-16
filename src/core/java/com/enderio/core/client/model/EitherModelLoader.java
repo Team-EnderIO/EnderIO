@@ -36,8 +36,8 @@ public class EitherModelLoader implements IGeometryLoader<EitherModelLoader.Unba
     public record Unbaked(BlockModel model) implements IUnbakedGeometry<Unbaked> {
 
         @Override
-        public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides, ResourceLocation id) {
-            return model.bake(baker, model, spriteGetter, modelState, id, true);
+        public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides) {
+            return model.bake(baker, model, spriteGetter, modelState, true);
         }
 
         @Override
