@@ -25,21 +25,25 @@ public class ConduitItems {
 
     public static final RegiliteItem<SpeedUpgradeItem> EXTRACTION_SPEED_UPGRADE_1 = ITEM_REGISTRY.registerItem("extraction_speed_upgrade_1", properties ->
             new SpeedUpgradeItem(properties.component(ConduitComponents.EXTRACTION_SPEED_UPGRADE_TIER, 1)))
+        .setTranslation("Tier 1 Extraction Speed Upgrade")
         .setTab(EIOCreativeTabs.CONDUITS)
         .addCapability(ConduitCapabilities.ConduitUpgrade.ITEM, SpeedUpgradeItem.CAPABILITY_PROVIDER);
 
     public static final RegiliteItem<SpeedUpgradeItem> EXTRACTION_SPEED_UPGRADE_2 = ITEM_REGISTRY.registerItem("extraction_speed_upgrade_2", properties ->
             new SpeedUpgradeItem(properties.component(ConduitComponents.EXTRACTION_SPEED_UPGRADE_TIER, 2)))
+        .setTranslation("Tier 2 Extraction Speed Upgrade")
         .setTab(EIOCreativeTabs.CONDUITS)
         .addCapability(ConduitCapabilities.ConduitUpgrade.ITEM, SpeedUpgradeItem.CAPABILITY_PROVIDER);
 
     public static final RegiliteItem<SpeedUpgradeItem> EXTRACTION_SPEED_UPGRADE_3 = ITEM_REGISTRY.registerItem("extraction_speed_upgrade_3", properties ->
             new SpeedUpgradeItem(properties.component(ConduitComponents.EXTRACTION_SPEED_UPGRADE_TIER, 3)))
+        .setTranslation("Tier 3 Extraction Speed Upgrade")
         .setTab(EIOCreativeTabs.CONDUITS)
         .addCapability(ConduitCapabilities.ConduitUpgrade.ITEM, SpeedUpgradeItem.CAPABILITY_PROVIDER);
 
     public static final RegiliteItem<SpeedUpgradeItem> EXTRACTION_SPEED_UPGRADE_4 = ITEM_REGISTRY.registerItem("extraction_speed_upgrade_4", properties ->
             new SpeedUpgradeItem(properties.component(ConduitComponents.EXTRACTION_SPEED_UPGRADE_TIER, 4)))
+        .setTranslation("Tier 4 Extraction Speed Upgrade")
         .setTab(EIOCreativeTabs.CONDUITS)
         .addCapability(ConduitCapabilities.ConduitUpgrade.ITEM, SpeedUpgradeItem.CAPABILITY_PROVIDER);
 
