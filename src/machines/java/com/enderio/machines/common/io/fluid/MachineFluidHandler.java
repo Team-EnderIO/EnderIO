@@ -257,7 +257,8 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag tankTag = tagList.getCompound(i);
             int index = tankTag.getInt(TANK_INDEX);
-            stacks.set(index, FluidStack.parseOptional(lookupProvider, tankTag));
+            CompoundTag content = tankTag.getCompound(TANK_CONTENTS);
+            stacks.set(index, FluidStack.parseOptional(lookupProvider, content));
         }
     }
 

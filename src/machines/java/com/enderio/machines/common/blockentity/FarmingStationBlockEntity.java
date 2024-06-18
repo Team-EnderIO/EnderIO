@@ -7,6 +7,7 @@ import com.enderio.api.farm.FarmInteraction;
 import com.enderio.api.farm.FarmTaskManager;
 import com.enderio.api.farm.FarmingStation;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.attachment.FluidTankUser;
@@ -35,16 +36,20 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.common.FarmlandWaterManager;
@@ -129,7 +134,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             .slotAccess(SW)
             .inputSlot()
             .slotAccess(NW)
-            .inputSlot(2)
+            .inputSlot(2, (integer, stack) -> stack.is(EIOTags.Items.FERTILIZERS))
             .slotAccess(BONEMEAL)
             .outputSlot(6)
             .slotAccess(OUTPUT)
@@ -430,7 +435,20 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         return TANK.getTank(this);
     }
 
+    @Override
+    public ItemInteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (!stack.isEmpty() && handleFluidItemInteraction(player, hand, stack, this, TANK)) {
+            player.getInventory().setChanged();
+            return ItemInteractionResult.CONSUME;
+        }
+        return super.onBlockEntityUsed(state, level, pos, player, hand, hit);
+    }
+
     private void onTankContentsChanged() {
+        if (level.isClientSide) {
+            return;
+        }
         if (TANK.getTank(this).getFluidAmount() == TANK.getTank(this).getCapacity()) {
             if (ticket != null) {
                 ticket.invalidate();

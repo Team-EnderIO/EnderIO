@@ -191,7 +191,7 @@ public class EIOFarmTasks {
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
         BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
-        if (plant.is(Blocks.PUMPKIN) || plant.is(Blocks.PUMPKIN)) { //TODO I think this is now harder, used to be a block class...
+        if (plant.is(Blocks.PUMPKIN) || plant.is(Blocks.MELON)) { //TODO I think this is now harder, used to be a block class...
             if (farmBlockEntity.getConsumedPower() >= 40) {
                 if (plant.requiresCorrectToolForDrops()) {
                     if (farmBlockEntity.getAxe().isEmpty()) {

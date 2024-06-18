@@ -114,6 +114,8 @@ public class EIOTags {
         public static final TagKey<Item> STORAGE_BLOCKS_QUARTZ = commonTag("storage_blocks/quartz");
         public static final TagKey<Item> STORAGE_BLOCKS_AMETHYST = commonTag("storage_blocks/amethyst");
 
+        public static final TagKey<Item> FERTILIZERS = commonTag("fertilizers");
+
         public static final Map<GlassIdentifier, TagKey<Item>> GLASS_TAGS = createGlassTags();
 
         public static Map<GlassIdentifier, TagKey<Item>> createGlassTags() {
