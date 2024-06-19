@@ -238,10 +238,10 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
 
     // JEI
-    //compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-    //compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
-    //runtimeOnly("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
-    //runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+    compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
+    runtimeOnly("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
+    runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
     //RFTOOLS
     //runtimeOnly("maven.modrinth:rftools-power:f430rHkA")
@@ -250,11 +250,11 @@ dependencies {
     //runtimeOnly("maven.modrinth:spark:Yp6s4wsw")
 
     //Athena ctm
-    //runtimeOnly("maven.modrinth:athena-ctm:${athena_version}")
+    runtimeOnly("maven.modrinth:athena-ctm:${athena_version}")
 
     // AE2
-    //compileOnly("appeng:appliedenergistics2-neoforge:${ae2_version}:api")
-    //runtimeOnly("appeng:appliedenergistics2-neoforge:${ae2_version}")
+    compileOnly("appeng:appliedenergistics2-neoforge:${ae2_version}:api")
+    runtimeOnly("appeng:appliedenergistics2-neoforge:${ae2_version}")
 
     // Enchantment descriptions
     //runtimeOnly("net.darkhax.bookshelf:Bookshelf-NeoForge-${minecraft_version}:${bookshelf_version}")
