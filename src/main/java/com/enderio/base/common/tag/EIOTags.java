@@ -33,6 +33,8 @@ public class EIOTags {
 
         private static void init() {}
     
+        public static final TagKey<Item> ENTITY_STORAGE = commonTag("enderio/entity_storage");
+
         public static final TagKey<Item> WRENCH = commonTag("tools/wrench");
         public static final TagKey<Item> GLIDER = tag("tools/glider");
 
