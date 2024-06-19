@@ -196,10 +196,8 @@ repositories {
     exclusiveRepo("https://dogforce-games.com/maven", "dev.gigaherz.graph")
     exclusiveRepo("https://api.modrinth.com/maven", "maven.modrinth")
     exclusiveRepo("https://maven.parchmentmc.org/", "org.parchmentmc.data")
-    //exclusiveRepo("https://maven.rover656.dev/releases", "com.enderio")
+    exclusiveRepo("https://maven.rover656.dev/releases", "com.enderio")
     exclusiveRepo("https://squiddev.cc/maven/", "cc.tweaked")
-
-    mavenLocal()
 }
 
 jarJar.enable()
