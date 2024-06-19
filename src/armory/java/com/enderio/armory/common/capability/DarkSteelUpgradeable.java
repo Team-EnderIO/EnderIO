@@ -199,7 +199,7 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable, INBTSerializa
                     addUpgrade(upgrade);
                 });
             }
-            onItem = new ResourceLocation(nbt.getString(ON_ITEM_KEY));
+            onItem = ResourceLocation.parse(nbt.getString(ON_ITEM_KEY));
         }
     }
 

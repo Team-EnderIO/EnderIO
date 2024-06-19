@@ -31,9 +31,8 @@ public class EIOArmory {
     @SubscribeEvent
     public static void onConstruct(FMLConstructModEvent event) {
         // Register config files
-        var ctx = ModLoadingContext.get();
-        ctx.registerConfig(ModConfig.Type.COMMON, ArmoryConfig.COMMON_SPEC, "enderio/armory-common.toml");
-        ctx.registerConfig(ModConfig.Type.CLIENT, ArmoryConfig.CLIENT_SPEC, "enderio/armory-client.toml");
+        EnderIO.modContainer.registerConfig(ModConfig.Type.COMMON, ArmoryConfig.COMMON_SPEC, "enderio/armory-common.toml");
+        EnderIO.modContainer.registerConfig(ModConfig.Type.CLIENT, ArmoryConfig.CLIENT_SPEC, "enderio/armory-client.toml");
 
         // Get event bus
         IEventBus modEventBus = EnderIO.modEventBus;
