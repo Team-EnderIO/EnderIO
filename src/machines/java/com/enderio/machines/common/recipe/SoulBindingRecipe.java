@@ -4,6 +4,7 @@ import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.recipe.FluidRecipeInput;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
@@ -88,7 +89,7 @@ public record SoulBindingRecipe(
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY, input);
+        return NonNullList.of(Ingredient.EMPTY, Ingredient.of(EIOItems.FILLED_SOUL_VIAL), input);
     }
 
     @Override
@@ -158,8 +159,9 @@ public record SoulBindingRecipe(
         @Override
         public ItemStack getItem(int slotIndex) {
             return switch (slotIndex){
-                case 0 -> itemToBind;
-                case 1 -> boundSoulItem;
+                case 0 -> boundSoulItem;
+                case 1 -> itemToBind;
+                case 2 -> ItemStack.EMPTY;
                 default -> throw new IllegalArgumentException("No item for index " + slotIndex);
             };
         }
@@ -167,7 +169,7 @@ public record SoulBindingRecipe(
         @Override
         public FluidStack getFluid(int slotIndex) {
             if (slotIndex != 2) {
-                return FluidStack.EMPTY;
+                throw new IllegalArgumentException("No fluid for index " + slotIndex);
             }
 
             return experience;

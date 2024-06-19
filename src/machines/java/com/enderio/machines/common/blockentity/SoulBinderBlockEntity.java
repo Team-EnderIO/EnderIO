@@ -28,12 +28,14 @@ import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SoulBindingRecipe;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,7 +59,10 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
-    @UseOnly(LogicalSide.CLIENT) private int clientExp = 0;
+
+    @UseOnly(LogicalSide.CLIENT)
+    @Nullable
+    private RecipeHolder<SoulBindingRecipe> clientRecipe;
 
     private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Input> craftingTaskHost;
 
@@ -66,16 +71,13 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
         fluidHandler = createFluidHandler();
 
         // Sync fluid amount to client.
-        addDataSlot(NetworkDataSlot.INT.create(() -> TANK.getFluidAmount(this), i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))
-        ));
+        addDataSlot(NetworkDataSlot.INT.create(
+            () -> TANK.getFluidAmount(this),
+            i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))));
 
         // Create the crafting task host
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SOUL_BINDING.type().get(),
             this::createTask, this::createRecipeInput);
-
-        // Sync crafting container needed xp
-        // TODO: 1.21: Proper solution to this.
-        //addDataSlot(NetworkDataSlot.INT.create(() -> recipe == null ? 0 : recipe.value().experience(), i -> clientExp = i));
     }
 
     @Override
@@ -123,6 +125,10 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
         craftingTaskHost.newTaskAvailable();
+
+        if (level != null && level.isClientSide) {
+            clientRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level).orElse(null);
+        }
     }
 
     private SoulBindingRecipe.Input createRecipeInput() {
@@ -133,11 +139,31 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
         );
     }
 
+    @EnsureSide(EnsureSide.Side.CLIENT)
+    private SoulBindingRecipe.Input createFakeRecipeInput() {
+        return new SoulBindingRecipe.Input(
+            INPUT_SOUL.getItemStack(getInventoryNN()),
+            INPUT_OTHER.getItemStack(getInventoryNN()),
+            new FluidStack(EIOFluids.XP_JUICE.getSource(), Integer.MAX_VALUE)
+        );
+    }
+
     // endregion
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     public int getClientExp() {
-        return clientExp;
+        // This should always set a valid recipe.
+        if (level != null && clientRecipe == null && hasValidRecipe()) {
+            clientRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level).orElse(null);
+        }
+
+        return clientRecipe != null ? clientRecipe.value().experience() : 0;
+    }
+
+    private boolean hasValidRecipe() {
+        return RecipeCaches.SOUL_BINDING.hasRecipe(List.of(
+            INPUT_SOUL.getItemStack(getInventoryNN()),
+            INPUT_OTHER.getItemStack(getInventoryNN())));
     }
 
     // region Fluid Storage
