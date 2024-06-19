@@ -1,9 +1,0 @@
-{
-  "type": "enderio:enchanting",
-  "cost_multiplier": 1,
-  "enchantment": "minecraft:channeling",
-  "input": {
-    "count": 1,
-    "item": "minecraft:lightning_rod"
-  }
-}

@@ -1,9 +1,0 @@
-{
-  "type": "enderio:enchanting",
-  "cost_multiplier": 1,
-  "enchantment": "enderio:xp_boost",
-  "input": {
-    "count": 16,
-    "item": "minecraft:experience_bottle"
-  }
-}

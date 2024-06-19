@@ -1,9 +1,0 @@
-{
-  "type": "enderio:enchanting",
-  "cost_multiplier": 1,
-  "enchantment": "minecraft:riptide",
-  "input": {
-    "count": 8,
-    "item": "minecraft:firework_rocket"
-  }
-}
