@@ -7,11 +7,12 @@ import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class PoweredCraftingMachineTask<R extends MachineRecipe<C>, C extends Container>
+public abstract class PoweredCraftingMachineTask<R extends MachineRecipe<C>, C extends RecipeInput>
     extends CraftingMachineTask<R, C> implements PoweredMachineTask {
 
     private final IMachineEnergyStorage energyStorage;
@@ -37,6 +38,6 @@ public abstract class PoweredCraftingMachineTask<R extends MachineRecipe<C>, C e
 
     @Override
     protected int getProgressRequired(R recipe) {
-        return recipe.getEnergyCost(container);
+        return recipe.getEnergyCost(recipeInput);
     }
 }

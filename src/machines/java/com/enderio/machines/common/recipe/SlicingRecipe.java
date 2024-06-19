@@ -17,6 +17,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -27,7 +28,7 @@ public record SlicingRecipe(
     Item output,
     List<Ingredient> inputs,
     int energy
-) implements MachineRecipe<Container> {
+) implements MachineRecipe<SlicingRecipe.Input> {
 
     @Override
     public int getBaseEnergyCost() {
@@ -35,7 +36,7 @@ public record SlicingRecipe(
     }
 
     @Override
-    public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input recipeInput, RegistryAccess registryAccess) {
         return getResultStacks(registryAccess);
     }
 
@@ -50,9 +51,9 @@ public record SlicingRecipe(
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(Input recipeInput, Level level) {
         for (int i = 0; i < inputs.size(); i++) {
-            if (!inputs.get(i).test(container.getItem(i))) {
+            if (!inputs.get(i).test(recipeInput.getItem(i))) {
                 return false;
             }
         }
@@ -67,6 +68,23 @@ public record SlicingRecipe(
     @Override
     public RecipeType<?> getType() {
         return MachineRecipes.SLICING.type().get();
+    }
+
+    public record Input(List<ItemStack> inputs) implements RecipeInput {
+
+        @Override
+        public ItemStack getItem(int slotIndex) {
+            if (slotIndex >= inputs.size()) {
+                throw new IllegalArgumentException("No item for index " + slotIndex);
+            }
+
+            return inputs.get(slotIndex);
+        }
+
+        @Override
+        public int size() {
+            return inputs.size();
+        }
     }
 
     public static class Serializer implements RecipeSerializer<SlicingRecipe> {

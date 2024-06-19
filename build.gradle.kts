@@ -8,7 +8,7 @@ plugins {
     id("eclipse")
     id("maven-publish")
     id("com.modrinth.minotaur") version "2.+"
-    id("net.neoforged.gradle.userdev") version "7.0.143"
+    id("net.neoforged.gradle.userdev") version "7.0.145"
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
@@ -53,7 +53,7 @@ java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 val subsets = listOf<String>(
         "conduits",
         "machines",
-        "armory"
+        //"armory"
 )
 
 sourceSets {

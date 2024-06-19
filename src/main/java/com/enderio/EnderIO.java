@@ -74,9 +74,11 @@ public class EnderIO {
     }
 
     public static IEventBus modEventBus;
+    public static ModContainer modContainer;
 
     public EnderIO(IEventBus modEventBus, ModContainer modContainer) {
         EnderIO.modEventBus = modEventBus;
+        EnderIO.modContainer = modContainer;
 
         // Ensure the enderio config subdirectory is present.
         try {

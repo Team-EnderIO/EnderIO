@@ -4,6 +4,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.utility.RecipeInputCache;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -14,19 +15,19 @@ import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
 @EventBusSubscriber
 public class RecipeCaches {
-    public static final RecipeInputCache<AlloySmeltingRecipe.ContainerWrapper, AlloySmeltingRecipe> ALLOY_SMELTING
+    public static final RecipeInputCache<AlloySmeltingRecipe.Input, AlloySmeltingRecipe> ALLOY_SMELTING
         = new RecipeInputCache<>(MachineRecipes.ALLOY_SMELTING.type());
 
-    public static final RecipeInputCache<Container, SmeltingRecipe> SMELTING
+    public static final RecipeInputCache<SingleRecipeInput, SmeltingRecipe> SMELTING
         = new RecipeInputCache<>(() -> RecipeType.SMELTING);
 
-    public static final RecipeInputCache<RecipeWrapper, PaintingRecipe> PAINTING
+    public static final RecipeInputCache<PaintingRecipe.Input, PaintingRecipe> PAINTING
         = new RecipeInputCache<>(MachineRecipes.PAINTING.type());
 
-    public static final RecipeInputCache<SagMillingRecipe.Container, SagMillingRecipe> SAG_MILLING
+    public static final RecipeInputCache<SagMillingRecipe.Input, SagMillingRecipe> SAG_MILLING
         = new RecipeInputCache<>(MachineRecipes.SAG_MILLING.type());
 
-    public static final RecipeInputCache<SoulBindingRecipe.Container, SoulBindingRecipe> SOUL_BINDING
+    public static final RecipeInputCache<SoulBindingRecipe.Input, SoulBindingRecipe> SOUL_BINDING
         = new RecipeInputCache<>(MachineRecipes.SOUL_BINDING.type());
 
     @SubscribeEvent

@@ -49,7 +49,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     private ResourceLocation pendingGrindingBallId;
     private int grindingBallDamage;
 
-    private final CraftingMachineTaskHost<SagMillingRecipe, SagMillingRecipe.Container> craftingTaskHost;
+    private final CraftingMachineTaskHost<SagMillingRecipe, SagMillingRecipe.Input> craftingTaskHost;
 
     public static final NetworkDataSlot.CodecType<GrindingBallData> GRINDING_BALL_DATA_SLOT_TYPE
         = new NetworkDataSlot.CodecType<>(GrindingBallData.CODEC, GrindingBallData.STREAM_CODEC.cast());
@@ -61,7 +61,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         addDataSlot(GRINDING_BALL_DATA_SLOT_TYPE.create(() -> grindingBallData, v -> grindingBallData = v));
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SAG_MILLING.type().get(),
-            new SagMillingRecipe.Container(getInventoryNN(), this::getGrindingBallData), this::createTask);
+            this::createTask, this::createRecipeInput);
     }
 
     public GrindingBallData getGrindingBallData() {
@@ -125,6 +125,10 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         craftingTaskHost.newTaskAvailable();
     }
 
+    private SagMillingRecipe.Input createRecipeInput() {
+        return new SagMillingRecipe.Input(INPUT.getItemStack(getInventoryNN()), getGrindingBallData());
+    }
+
     // region Crafting Task
 
     public float getCraftingProgress() {
@@ -136,7 +140,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
-    protected PoweredCraftingMachineTask<SagMillingRecipe, SagMillingRecipe.Container> createTask(Level level, SagMillingRecipe.Container container, @Nullable RecipeHolder<SagMillingRecipe> recipe) {
+    protected PoweredCraftingMachineTask<SagMillingRecipe, SagMillingRecipe.Input> createTask(Level level, SagMillingRecipe.Input container, @Nullable RecipeHolder<SagMillingRecipe> recipe) {
         return new PoweredCraftingMachineTask<>(level, getInventoryNN(), getEnergyStorage(), container, OUTPUT, recipe) {
             @Override
             protected void consumeInputs(SagMillingRecipe recipe) {

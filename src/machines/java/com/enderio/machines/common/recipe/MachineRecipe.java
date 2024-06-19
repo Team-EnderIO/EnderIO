@@ -6,10 +6,11 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 
 import java.util.List;
 
-public interface MachineRecipe<C extends Container> extends Recipe<C> {
+public interface MachineRecipe<T extends RecipeInput> extends Recipe<T> {
     /**
      * Gets the basic energy cost, irrespective of machine configuration.
      */
@@ -19,7 +20,7 @@ public interface MachineRecipe<C extends Container> extends Recipe<C> {
      * Get the energy cost of a machine.
      * @param container Container/context. This is the state of the container *after* inputs are taken.
      */
-    default int getEnergyCost(C container) {
+    default int getEnergyCost(T container) {
         return getBaseEnergyCost();
     }
 
@@ -27,7 +28,7 @@ public interface MachineRecipe<C extends Container> extends Recipe<C> {
      * Craft outputs for this recipe.
      * @return An array of item and fluid outputs.
      */
-    List<OutputStack> craft(C container, RegistryAccess registryAccess);
+    List<OutputStack> craft(T container, RegistryAccess registryAccess);
 
     /**
      * Get the results of this machine, for display or verification purposes only.
@@ -40,7 +41,7 @@ public interface MachineRecipe<C extends Container> extends Recipe<C> {
      */
     @Deprecated
     @Override
-    default ItemStack assemble(C container, HolderLookup.Provider lookupProvider) {
+    default ItemStack assemble(T container, HolderLookup.Provider lookupProvider) {
         return ItemStack.EMPTY;
     }
 

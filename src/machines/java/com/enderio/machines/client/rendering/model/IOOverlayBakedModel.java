@@ -29,6 +29,7 @@ import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
 import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
 import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,11 +43,11 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEX_PUSH = EnderIO.loc("block/overlay/push");
     public static final ResourceLocation TEX_PUSH_PULL = EnderIO.loc("block/overlay/push_pull");
 
-    private static final EnumMap<Direction, Vec3[]> QUADS = new EnumMap<>(Direction.class);
+    private static final EnumMap<Direction, Vector3f[]> QUADS = new EnumMap<>(Direction.class);
 
     static {
         for (Direction dir : Direction.values()) {
-            QUADS.put(dir, ModelRenderUtil.createQuadVerts(dir, 0.0625f, 1 - 0.0625f, 1.0001));
+            QUADS.put(dir, ModelRenderUtil.createQuadVerts(dir, 0.0625f, 1 - 0.0625f, 1.0001f));
         }
     }
 
@@ -81,7 +82,7 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
                 for (Direction dir : Direction.values()) {
                     IOMode mode = config.getIOMode(dir);
                     if (mode != IOMode.NONE) {
-                        Vec3[] verts = QUADS.get(dir);
+                        Vector3f[] verts = QUADS.get(dir);
                         quads.add(ModelRenderUtil.createQuad(verts, getTexture(mode)));
                     }
                 }
@@ -131,7 +132,7 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
     public static class Geometry implements IUnbakedGeometry<Geometry> {
         @Override
         public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState,
-            ItemOverrides overrides, ResourceLocation modelLocation) {
+            ItemOverrides overrides) {
             return new IOOverlayBakedModel(modelState);
         }
     }

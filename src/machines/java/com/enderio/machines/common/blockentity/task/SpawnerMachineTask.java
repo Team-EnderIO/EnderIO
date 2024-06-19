@@ -194,7 +194,7 @@ public class SpawnerMachineTask implements PoweredMachineTask {
                         });
                     }
                     case ENTITY_TYPE -> {
-                        EntityType<?> id = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(blockEntity.getEntityData().getEntityTag().getString("id")));
+                        EntityType<?> id = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(blockEntity.getEntityData().getEntityTag().getString("id")));
                         if (id != null) {
                             entity = id.create(level);
                             entity.moveTo(x, y, z);

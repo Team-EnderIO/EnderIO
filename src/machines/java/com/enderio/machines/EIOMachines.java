@@ -52,9 +52,8 @@ public class EIOMachines {
     @SubscribeEvent
     public static void onConstruct(FMLConstructModEvent event) {
         // Register machine config
-        var ctx = ModLoadingContext.get();
-        ctx.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
-        ctx.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
+        EnderIO.modContainer.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
+        EnderIO.modContainer.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
 
         MachineDataComponents.register(EnderIO.modEventBus);
         MachineTravelTargets.register(EnderIO.modEventBus);

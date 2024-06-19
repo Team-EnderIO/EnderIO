@@ -31,7 +31,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvider {
 
-    private final RecipeWrapper container;
     @Nullable
     private RecipeHolder<EnchanterRecipe> currentRecipe;
     public static final SingleSlotAccess BOOK = new SingleSlotAccess();
@@ -45,11 +44,13 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
         super(MachineBlockEntities.ENCHANTER.get(), worldPosition, blockState);
 
         inventory = createInventory();
-        container = new RecipeWrapper(inventory);
     }
 
-    public RecipeWrapper getContainer() {
-        return container;
+    public EnchanterRecipe.Input createRecipeInput() {
+        return new EnchanterRecipe.Input(
+            BOOK.getItemStack(getInventory()),
+            CATALYST.getItemStack(getInventory()),
+            LAPIS.getItemStack(getInventory()));
     }
 
     // region MenuProvider
@@ -93,10 +94,13 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
                 if (level == null) {
                     return;
                 }
-                currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), container, level).orElse(null);
+
+                EnchanterRecipe.Input recipeInput = createRecipeInput();
+
+                currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), recipeInput, level).orElse(null);
                 if (!OUTPUT.isSlot(slot)) {
                     if (currentRecipe != null) {
-                        OUTPUT.setStackInSlot(this, currentRecipe.value().assemble(container, level.registryAccess()));
+                        OUTPUT.setStackInSlot(this, currentRecipe.value().assemble(recipeInput, level.registryAccess()));
                     } else {
                         OUTPUT.setStackInSlot(this, ItemStack.EMPTY);
                     }

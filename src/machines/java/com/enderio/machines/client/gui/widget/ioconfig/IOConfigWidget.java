@@ -9,6 +9,7 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -59,6 +60,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.SequencedMap;
 
 /**
  * Thanks XFactHD for help and providing a demo for a preview widget and raycast example
@@ -164,10 +166,10 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     }
 
     private static MultiBufferSource.BufferSource initBuffers(MultiBufferSource.BufferSource original) {
-        BufferBuilder fallback = original.builder;
-        Map<RenderType, BufferBuilder> layerBuffers = original.fixedBuffers;
-        Map<RenderType, BufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
-        for (Map.Entry<RenderType, BufferBuilder> e : layerBuffers.entrySet()) {
+        ByteBufferBuilder fallback = original.sharedBuffer;
+        SequencedMap<RenderType, ByteBufferBuilder> layerBuffers = original.fixedBuffers;
+        SequencedMap<RenderType, ByteBufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
+        for (Map.Entry<RenderType, ByteBufferBuilder> e : layerBuffers.entrySet()) {
             remapped.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
         }
         return new GhostBuffers(fallback, remapped);
@@ -355,24 +357,23 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         guiGraphics.pose().scale(SCALE, SCALE, -SCALE);
         guiGraphics.pose().mulPose(transform);
 
-        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+        BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 
         TextureAtlasSprite tex = MINECRAFT.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(SELECTED_ICON);
         RenderSystem.setShaderTexture(0, tex.atlasLocation());
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
         var selectedFace = selection.get();
         BlockPos blockPos = selectedFace.blockPos;
         guiGraphics.pose().translate(blockPos.getX() - worldOrigin.x(), blockPos.getY() - worldOrigin.y(), blockPos.getZ() - worldOrigin.z());
-        Vector3f[] vec = Arrays.stream(ModelRenderUtil.createQuadVerts(selectedFace.side, 0, 1, 1)).map(Vec3::toVector3f).toArray(Vector3f[]::new);
+        Vector3f[] vec = ModelRenderUtil.createQuadVerts(selectedFace.side, 0, 1, 1);
         Matrix4f matrix4f = guiGraphics.pose().last().pose();
-        bufferbuilder.vertex(matrix4f, vec[0].x(), vec[0].y(), vec[0].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV0()).endVertex();
-        bufferbuilder.vertex(matrix4f, vec[1].x(), vec[1].y(), vec[1].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV1()).endVertex();
-        bufferbuilder.vertex(matrix4f, vec[2].x(), vec[2].y(), vec[2].z()).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV1()).endVertex();
-        bufferbuilder.vertex(matrix4f, vec[3].x(), vec[3].y(), vec[3].z()).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV0()).endVertex();
-        BufferUploader.drawWithShader(bufferbuilder.end());
+        bufferbuilder.addVertex(matrix4f, vec[0].x(), vec[0].y(), vec[0].z()).setColor(1F, 1F, 1F, 1F).setUv(tex.getU0(), tex.getV0());
+        bufferbuilder.addVertex(matrix4f, vec[1].x(), vec[1].y(), vec[1].z()).setColor(1F, 1F, 1F, 1F).setUv(tex.getU0(), tex.getV1());
+        bufferbuilder.addVertex(matrix4f, vec[2].x(), vec[2].y(), vec[2].z()).setColor(1F, 1F, 1F, 1F).setUv(tex.getU1(), tex.getV1());
+        bufferbuilder.addVertex(matrix4f, vec[3].x(), vec[3].y(), vec[3].z()).setColor(1F, 1F, 1F, 1F).setUv(tex.getU1(), tex.getV0());
+        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 
         guiGraphics.pose().popPose();
     }
@@ -402,7 +403,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private record SelectedFace(BlockPos blockPos, Direction side) {}
 
     private static class GhostBuffers extends MultiBufferSource.BufferSource {
-        private GhostBuffers(BufferBuilder fallback, Map<RenderType, BufferBuilder> layerBuffers) {
+        private GhostBuffers(ByteBufferBuilder fallback, SequencedMap<RenderType, ByteBufferBuilder> layerBuffers) {
             super(fallback, layerBuffers);
         }
 
