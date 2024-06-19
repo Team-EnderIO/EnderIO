@@ -118,8 +118,7 @@ public record SoulBindingRecipe(
                 return false;
             }
 
-            //return ExperienceUtil.getLevelFromFluid(recipeInput.getFluid(2).getAmount()) >= experience;
-            return true;
+            return ExperienceUtil.getLevelFromFluid(recipeInput.getFluid(2).getAmount()) >= experience;
         }
 
         if (mobCategory.isPresent()) {
@@ -142,8 +141,7 @@ public record SoulBindingRecipe(
             }
         }
 
-        return true;
-        //return ExperienceUtil.getLevelFromFluid(recipeInput.getFluid(2).getAmount()) >= experience;
+        return ExperienceUtil.getLevelFromFluid(recipeInput.getFluid(2).getAmount()) >= experience;
     }
 
     @Override
