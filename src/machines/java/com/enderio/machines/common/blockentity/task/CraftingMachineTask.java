@@ -27,9 +27,8 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
 
     protected final Level level;
     protected final MachineInventory inventory;
-    // TODO: 1.21: Should this take the Supplier?
-    protected final T recipeInput;
     protected final MultiSlotAccess outputSlots;
+    protected final T recipeInput;
 
     @Nullable
     private RecipeHolder<R> recipe;
@@ -79,7 +78,8 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     /**
      * This is fired right before recipe outputs are determined for the task.
      */
-    protected void onDetermineOutputs(R recipe) {
+    protected T prepareToDetermineOutputs(R recipe, T recipeInput) {
+        return recipeInput;
     }
 
     // endregion
@@ -102,8 +102,8 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         // Get the outputs list.
         if (!hasDeterminedOutputs) {
             hasDeterminedOutputs = true;
-            onDetermineOutputs(recipe.value());
-            outputs = recipe.value().craft(recipeInput, level.registryAccess());
+            T processedRecipeInput = prepareToDetermineOutputs(recipe.value(), recipeInput);
+            outputs = recipe.value().craft(processedRecipeInput, level.registryAccess());
 
             // TODO: Compact any items that are the same into singular stacks?
 

@@ -145,6 +145,10 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         public int size() {
             return inputs.size();
         }
+
+        public Input withInputsConsumed(int inputsConsumed) {
+            return new Input(inputs, inputsConsumed);
+        }
     }
 
     public static class Serializer implements RecipeSerializer<AlloySmeltingRecipe> {

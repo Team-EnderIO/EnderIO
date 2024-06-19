@@ -67,7 +67,6 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     private AlloySmelterMode mode = AlloySmelterMode.ALL;
 
     protected final AlloySmeltingMachineTaskHost craftingTaskHost;
-    private int inputsConsumed;
 
     @Nullable
     private final NetworkDataSlot<AlloySmelterMode> modeDataSlot;
@@ -202,7 +201,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private AlloySmeltingRecipe.Input createRecipeInput() {
-        return new AlloySmeltingRecipe.Input(getInputsSlotAccess().getAccesses().stream().map(slot -> slot.getItemStack(getInventoryNN())).toList(), inputsConsumed);
+        return new AlloySmeltingRecipe.Input(getInputsSlotAccess().getItemStacks(getInventoryNN()), 1);
     }
 
     // endregion
@@ -224,6 +223,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     protected static class AlloySmeltingMachineTask extends PoweredCraftingMachineTask<AlloySmeltingRecipe, AlloySmeltingRecipe.Input> {
         private final MultiSlotAccess inputs;
+        private int inputsConsumed;
 
         public AlloySmeltingMachineTask(@NotNull Level level, MachineInventory inventory, IMachineEnergyStorage energyStorage,
             AlloySmeltingRecipe.Input recipeInput, MultiSlotAccess inputs, SingleSlotAccess outputSlot, @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
@@ -232,7 +232,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
-        protected void onDetermineOutputs(AlloySmeltingRecipe recipe) {
+        protected AlloySmeltingRecipe.Input prepareToDetermineOutputs(AlloySmeltingRecipe recipe, AlloySmeltingRecipe.Input recipeInput) {
             // This handles the output multiplication for vanilla smelting recipes.
             if (recipe instanceof VanillaAlloySmeltingRecipe) {
                 SizedIngredient input = recipe.inputs().getFirst();
@@ -245,10 +245,11 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                     }
                 }
 
-                // TODO: 1.21: How to get this data into the recipe?
-                //inputsConsumed = inputCount;
+                inputsConsumed = inputCount;
+                return recipeInput.withInputsConsumed(inputsConsumed);
             } else {
-                //inputsConsumed = 1;
+                inputsConsumed = 1;
+                return recipeInput;
             }
         }
 
@@ -259,14 +260,11 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             if (recipe instanceof VanillaAlloySmeltingRecipe) {
                 SizedIngredient input = recipe.inputs().get(0);
 
-                // TEMP
-                int inputsTaken = 1;
-
                 int consumed = 0;
                 for (int i = inputs.size() - 1; i >= 0; i--) {
                     ItemStack itemStack = inputs.get(i).getItemStack(getInventory());
                     if (input.test(itemStack)) {
-                        int consumedNow = Math.min(inputsTaken - consumed, itemStack.getCount());
+                        int consumedNow = Math.min(inputsConsumed - consumed, itemStack.getCount());
                         itemStack.shrink(consumedNow);
                         consumed += consumedNow;
                     }
@@ -317,6 +315,19 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 }
                 return null;
             }).orElse(null);
+        }
+
+        @Override
+        public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+            super.deserializeNBT(lookupProvider, nbt);
+            inputsConsumed = nbt.getInt(MachineNBTKeys.PROCESSED_INPUTS);
+        }
+
+        @Override
+        public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
+            var tag = super.serializeNBT(lookupProvider);
+            tag.putInt(MachineNBTKeys.PROCESSED_INPUTS, inputsConsumed);
+            return tag;
         }
     }
 
@@ -371,7 +382,6 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             pTag.putInt(MachineNBTKeys.MACHINE_MODE, this.mode.ordinal());
         }
 
-        //pTag.putInt(MachineNBTKeys.PROCESSED_INPUTS, craftingTaskHost.getRecipeInput().getInputsTaken());
         super.saveAdditional(pTag, lookupProvider);
     }
 
@@ -387,7 +397,6 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             }
         }
 
-        //craftingTaskHost.getRecipeInput().setInputsTaken(pTag.getInt(MachineNBTKeys.PROCESSED_INPUTS));
         super.loadAdditional(pTag, lookupProvider);
     }
 
@@ -395,11 +404,11 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
 
+        // TODO: 1.21: Write crafting host into the item components.
+
         if (!isPrimitiveSmelter()) {
             mode = components.getOrDefault(MachineDataComponents.ALLOY_SMELTER_MODE, AlloySmelterMode.ALL);
         }
-
-        //craftingTaskHost.getRecipeInput().setInputsTaken(components.getOrDefault(MachineDataComponents.ALLOY_SMELTER_PROCESSED_INPUTS, 1));
     }
 
     @Override
@@ -409,15 +418,12 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         if (!isPrimitiveSmelter()) {
             components.set(MachineDataComponents.ALLOY_SMELTER_MODE, mode);
         }
-
-        //components.set(MachineDataComponents.ALLOY_SMELTER_PROCESSED_INPUTS, craftingTaskHost.getRecipeInput().getInputsTaken());
     }
 
     @Override
     public void removeComponentsFromTag(CompoundTag tag) {
         super.removeComponentsFromTag(tag);
         tag.remove(MachineNBTKeys.MACHINE_MODE);
-        tag.remove(MachineNBTKeys.PROCESSED_INPUTS);
     }
 
     // endregion

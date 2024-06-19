@@ -32,7 +32,8 @@ public class EIOTags {
     public static class Items {
 
         private static void init() {}
-    
+
+        // TODO: use these for slot filtering again.
         public static final TagKey<Item> ENTITY_STORAGE = commonTag("enderio/entity_storage");
         public static final TagKey<Item> GRINDING_BALLS = commonTag("enderio/grinding_balls");
 
