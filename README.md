@@ -10,7 +10,7 @@
   <h3 align="center">EnderIO</h3>
 
   <p align="center">
-    The full-fat tech mod for Minecraft 1.20.1
+    The full-fat tech mod for Minecraft 1.21
     <br />
     <a href="https://github.com/SleepyTrousers/EnderIO-Rewrite/wiki"><strong>Browse the Wiki »</strong></a>
     <br />
