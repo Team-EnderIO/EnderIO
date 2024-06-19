@@ -95,9 +95,9 @@ public record OutputStack(Either<ItemStack, FluidStack> stack) {
      */
     public static OutputStack fromNBT(HolderLookup.Provider lookupProvider, CompoundTag tag) {
         if (tag.contains(CoreNBTKeys.ITEM)) {
-            return OutputStack.of(ItemStack.parseOptional(lookupProvider, tag));
+            return OutputStack.of(ItemStack.parseOptional(lookupProvider, tag.getCompound(CoreNBTKeys.ITEM)));
         } else if (tag.contains(CoreNBTKeys.FLUID)) {
-            return OutputStack.of(FluidStack.parseOptional(lookupProvider, tag));
+            return OutputStack.of(FluidStack.parseOptional(lookupProvider, tag.getCompound(CoreNBTKeys.FLUID)));
         }
         return OutputStack.EMPTY;
     }
