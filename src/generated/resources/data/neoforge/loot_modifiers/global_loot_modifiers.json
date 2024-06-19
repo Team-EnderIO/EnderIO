@@ -1,6 +1,8 @@
 {
   "entries": [
-    "enderio:direct_upgrade"
+    "enderio:alloy_loot",
+    "enderio:broken_spawner",
+    "enderio:common_loot"
   ],
   "replace": false
 }
