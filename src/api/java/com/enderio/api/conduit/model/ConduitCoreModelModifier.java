@@ -28,7 +28,7 @@ public interface ConduitCoreModelModifier<T extends ConduitData<T>> {
         return List.of();
     }
 
-    default List<ModelResourceLocation> getModelDependencies() {
+    default List<ResourceLocation> getModelDependencies() {
         return List.of();
     }
 }
