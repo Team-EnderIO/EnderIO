@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -24,7 +25,6 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
 public class VoidSeedItem extends Item {
@@ -40,12 +40,11 @@ public class VoidSeedItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
         IFluidHandlerItem capability = stack.getCapability(Capabilities.FluidHandler.ITEM);
-        if (capability != null && capability.getFluidInTank(0).getAmount() > ExperienceUtil.EXP_TO_FLUID) {
-            FluidStack result = capability.drain((capability.getFluidInTank(0).getAmount() / ExperienceUtil.EXP_TO_FLUID) * ExperienceUtil.EXP_TO_FLUID, IFluidHandler.FluidAction.EXECUTE);
-            pPlayer.giveExperiencePoints(result.getAmount() / ExperienceUtil.EXP_TO_FLUID);
-            return InteractionResultHolder.consume(stack);
+        if (capability != null && capability.getFluidInTank(0).getAmount() < ExperienceUtil.EXP_TO_FLUID) {
+            return InteractionResultHolder.fail(stack);
         }
-        return InteractionResultHolder.fail(stack);
+        pPlayer.startUsingItem(pUsedHand);
+        return InteractionResultHolder.consume(stack);
     }
 
     @Override
@@ -56,6 +55,11 @@ public class VoidSeedItem extends Item {
             player.giveExperiencePoints(result.getAmount() / ExperienceUtil.EXP_TO_FLUID);
         }
         return pStack;
+    }
+
+    @Override
+    public UseAnim getUseAnimation(ItemStack pStack) {
+        return UseAnim.DRINK;
     }
 
     @Override
@@ -79,6 +83,15 @@ public class VoidSeedItem extends Item {
     }
 
     @Override
+    public boolean isFoil(ItemStack pStack) {
+        var fluidHandler = pStack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandler != null) {
+            return fluidHandler.getFluidInTank(0).getAmount() == fluidHandler.getTankCapacity(0);
+        }
+        return super.isFoil(pStack);
+    }
+
+    @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flag) {
         super.appendHoverText(stack, context, components, flag);
 
@@ -90,8 +103,8 @@ public class VoidSeedItem extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack pStack) {
-        return (int) 1.6F * 20; //default food time
+    public int getUseDuration(ItemStack pStack, LivingEntity p_344979_) {
+        return (int) (1.6F * 20.0F); //default food time
     }
 
     @SubscribeEvent
@@ -101,9 +114,10 @@ public class VoidSeedItem extends Item {
         if (!(stack.getItem() instanceof VoidSeedItem)) {
             stack = player.getItemInHand(InteractionHand.MAIN_HAND);
         }
-        IFluidHandler cap = stack.getCapability(Capabilities.FluidHandler.ITEM);
-        if (stack.getItem() instanceof VoidSeedItem && cap != null && event.getOrb().getValue() > 0) {
-            if (cap.getFluidInTank(0).getAmount() < cap.getTankCapacity(0)) {
+
+        if (stack.getItem() instanceof VoidSeedItem) {
+            IFluidHandler cap = stack.getCapability(Capabilities.FluidHandler.ITEM);
+            if (cap != null && event.getOrb().getValue() > 0 && cap.getFluidInTank(0).getAmount() < cap.getTankCapacity(0)) {
                 int exp = event.getOrb().getValue() * ExperienceUtil.EXP_TO_FLUID;
                 int amount = cap.fill(new FluidStack(EIOFluids.XP_JUICE.getSource(), exp), IFluidHandler.FluidAction.EXECUTE);
                 event.getOrb().value = exp - amount;
