@@ -11,31 +11,19 @@ import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
-import java.util.function.Supplier;
 
 /**
  * used for special single use things like RoundRobin for ItemConduits or proxying Caps
  */
-public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends INBTSerializable<CompoundTag> {
+public interface ConduitData<T extends ConduitData<T>> extends INBTSerializable<CompoundTag> {
 
-    /**
-     * default impl for stuff that don't need an impl
-     */
-    class EmptyExtendedConduitData implements IExtendedConduitData<EmptyExtendedConduitData> {
+    EmptyConduitData EMPTY = new EmptyConduitData();
 
-        @Override
-        public CompoundTag serializeNBT() {
-            return new CompoundTag();
-        }
+    // region Events
 
-        @Override
-        public void deserializeNBT(CompoundTag nbt) {
-        }
-    }
+    default void onCreated(ConduitType<?> type, Level level, BlockPos pos, @Nullable Player player) {}
 
-    default void onCreated(IConduitType<?> type, Level level, BlockPos pos, @Nullable Player player) {}
-
-    default void onRemoved(IConduitType<?> type, Level level, BlockPos pos) {}
+    default void onRemoved(ConduitType<?> type, Level level, BlockPos pos) {}
 
     default void updateConnection(Set<Direction> connectedSides) {}
 
@@ -53,6 +41,10 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
      */
     default void onConnectTo(T otherData) {
     }
+
+    // endregion
+
+    // region Client Sync
 
     /**
      * @return true if this needs to be synced to the client. if this returns true, deepCopy has to be overriden, to create a copy
@@ -75,20 +67,33 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
         return new CompoundTag();
     }
 
+    // endregion
+
     @UseOnly(LogicalSide.CLIENT)
     default T deepCopy() {
         return cast();
     }
 
-    static Supplier<EmptyExtendedConduitData> dummy() {
-        return EmptyExtendedConduitData::new;
-    }
-
-    default <Z extends IExtendedConduitData<Z>> Z cast() {
+    default <Z extends ConduitData<Z>> Z cast() {
         return (Z) this;
     }
 
-    default <Z extends IExtendedConduitData<Z>> Z castTo(Class<Z> clazz) {
+    default <Z extends ConduitData<Z>> Z castTo(Class<Z> clazz) {
         return cast();
+    }
+
+    /**
+     * default impl for stuff that don't need an impl
+     */
+    class EmptyConduitData implements ConduitData<EmptyConduitData> {
+
+        @Override
+        public CompoundTag serializeNBT() {
+            return new CompoundTag();
+        }
+
+        @Override
+        public void deserializeNBT(CompoundTag nbt) {
+        }
     }
 }

@@ -1,9 +1,9 @@
 package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.IConduitMenuData;
-import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.conduit.ConduitMenuData;
+import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.conduits.ConduitNBTKeys;
 import com.enderio.conduits.common.ConduitShape;
@@ -67,7 +67,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     private UpdateState checkConnection = UpdateState.NONE;
 
-    private final Map<IConduitType<?>,NodeIdentifier<?>> lazyNodes = new HashMap<>();
+    private final Map<ConduitType<?>,NodeIdentifier<?>> lazyNodes = new HashMap<>();
     private ListTag lazyNodeNBT = new ListTag();
 
     public ConduitBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
@@ -92,7 +92,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
      * Handle a connection state update from the client.
      */
     @UseOnly(LogicalSide.SERVER)
-    public void handleConnectionStateUpdate(Direction direction, IConduitType<?> conduitType, DynamicConnectionState connectionState) {
+    public void handleConnectionStateUpdate(Direction direction, ConduitType<?> conduitType, DynamicConnectionState connectionState) {
         var connection = bundle.getConnection(direction);
 
         // Sanity check, the client shouldn't do this, but just to make sure there's no confusion.
@@ -106,7 +106,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     @UseOnly(LogicalSide.SERVER)
-    public void handleExtendedDataUpdate(IConduitType<?> conduitType, CompoundTag compoundTag) {
+    public void handleExtendedDataUpdate(ConduitType<?> conduitType, CompoundTag compoundTag) {
         getBundle().getNodeFor(conduitType).getExtendedConduitData().deserializeNBT(compoundTag);
     }
 
@@ -150,7 +150,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         super.onChunkUnloaded();
         if (level instanceof ServerLevel serverLevel) {
             ConduitSavedData savedData = ConduitSavedData.get(serverLevel);
-            for (IConduitType<?> type : bundle.getTypes()) {
+            for (ConduitType<?> type : bundle.getTypes()) {
                 NodeIdentifier<?> node = bundle.getNodeFor(type);
                 node.getExtendedConduitData().onRemoved(type, level, getBlockPos());
                 savedData.putUnloadedNodeIdentifier(type, this.worldPosition, node);
@@ -171,7 +171,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     public void updateConnections(Level level, BlockPos pos, @Nullable BlockPos fromPos, boolean shouldActivate) {
         for (Direction direction: Direction.values()) {
             if (fromPos == null || !(level.getBlockEntity(fromPos) instanceof ConduitBlockEntity)) {
-                for (IConduitType<?> type : bundle.getTypes()) {
+                for (ConduitType<?> type : bundle.getTypes()) {
                     if (shouldActivate && type.getTicker().hasConnectionDelay()) {
                         checkConnection = checkConnection.activate();
                     }
@@ -197,8 +197,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         super.saveAdditional(tag);
         tag.put(ConduitNBTKeys.CONDUIT_BUNDLE, bundle.serializeNBT());
         ListTag listTag = new ListTag();
-        for (IConduitType<?> type : bundle.getTypes()) {
-            IExtendedConduitData<?> data = bundle.getNodeFor(type).getExtendedConduitData();
+        for (ConduitType<?> type : bundle.getTypes()) {
+            ConduitData<?> data = bundle.getNodeFor(type).getExtendedConduitData();
             listTag.add(data.serializeNBT());
         }
         tag.put(ConduitNBTKeys.CONDUIT_EXTRA_DATA, listTag);
@@ -225,11 +225,11 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return ModelData.builder().with(BUNDLE_MODEL_PROPERTY, clientBundle).with(POS, worldPosition).build();
     }
 
-    public boolean hasType(IConduitType<?> type) {
+    public boolean hasType(ConduitType<?> type) {
         return bundle.hasType(type);
     }
 
-    public RightClickAction addType(IConduitType<?> type, Player player) {
+    public RightClickAction addType(ConduitType<?> type, Player player) {
         RightClickAction action = bundle.addType(level, type, player);
         //something has changed
         if (action.hasChanged()) {
@@ -255,7 +255,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return action;
     }
 
-    public Optional<GraphObject<Mergeable.Dummy>> tryConnectTo(Direction dir, IConduitType<?> type, boolean forceMerge, boolean shouldMergeGraph) {
+    public Optional<GraphObject<Mergeable.Dummy>> tryConnectTo(Direction dir, ConduitType<?> type, boolean forceMerge, boolean shouldMergeGraph) {
         if (level.getBlockEntity(getBlockPos().relative(dir)) instanceof ConduitBlockEntity conduit
             && conduit.connectTo(dir.getOpposite(), type, bundle.getNodeFor(type).getExtendedConduitData(), forceMerge)) {
             connect(dir, type);
@@ -289,7 +289,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return Optional.empty();
     }
 
-    public void updateConnectionToData(IConduitType<?> type) {
+    public void updateConnectionToData(ConduitType<?> type) {
         if (!level.isClientSide) {
             getBundle()
                 .getNodeFor(type)
@@ -305,14 +305,14 @@ public class ConduitBlockEntity extends EnderBlockEntity {
      * sets block to air if this is the last conduit
      */
 
-    public void removeTypeAndDelete(IConduitType<?> type) {
+    public void removeTypeAndDelete(ConduitType<?> type) {
         if (removeType(type, false)) {
             level.setBlock(getBlockPos(), getBlockState().getFluidState().createLegacyBlock(),
                 level.isClientSide ? Block.UPDATE_ALL_IMMEDIATE : Block.UPDATE_ALL);
         }
     }
 
-    public boolean removeType(IConduitType<?> type, boolean shouldDrop) {
+    public boolean removeType(ConduitType<?> type, boolean shouldDrop) {
         if (shouldDrop && !level.isClientSide()) {
             dropItem(type.getConduitItem().getDefaultInstance());
             for (Direction dir : Direction.values()) {
@@ -352,7 +352,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         level.addFreshEntity(new ItemEntity(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), stack));
     }
 
-    public void removeNeighborConnections(IConduitType<?> type) {
+    public void removeNeighborConnections(ConduitType<?> type) {
         for (Direction dir : Direction.values()) {
             if (level.getBlockEntity(getBlockPos().relative(dir)) instanceof ConduitBlockEntity conduit) {
                 conduit.disconnect(dir.getOpposite(), type);
@@ -384,10 +384,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
         ConduitSavedData savedData = ConduitSavedData.get(serverLevel);
         for (int typeIndex = 0; typeIndex < bundle.getTypes().size(); typeIndex++) {
-            IConduitType<?> type = bundle.getTypes().get(typeIndex);
+            ConduitType<?> type = bundle.getTypes().get(typeIndex);
             NodeIdentifier<?> node = savedData.takeUnloadedNodeIdentifier(type, this.worldPosition);
             if (node == null && bundle.getNodeForTypeExact(type) == null) {
-                IExtendedConduitData<?> data = type.createExtendedConduitData(level, worldPosition);
+                ConduitData<?> data = type.createConduitData(level, worldPosition);
 
                 if (typeIndex < lazyNodeNBT.size()) {
                     data.deserializeNBT(lazyNodeNBT.getCompound(typeIndex));
@@ -418,7 +418,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
      * @param forceMerge if disabledstate should be ignored
      * @return true if a connection happens
      */
-    private boolean connectTo(Direction direction, IConduitType<?> type, IExtendedConduitData<?> data, boolean forceMerge) {
+    private boolean connectTo(Direction direction, ConduitType<?> type, ConduitData<?> data, boolean forceMerge) {
         if (!doTypesMatch(type)) {
             return false;
         }
@@ -435,8 +435,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return false;
     }
 
-    private boolean doTypesMatch(IConduitType<?> type) {
-        for (IConduitType<?> bundleType : bundle.getTypes()) {
+    private boolean doTypesMatch(ConduitType<?> type) {
+        for (ConduitType<?> bundleType : bundle.getTypes()) {
             if (bundleType.getTicker().canConnectTo(bundleType, type)) {
                 return true;
             }
@@ -445,17 +445,17 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return false;
     }
 
-    private void connect(Direction direction, IConduitType<?> type) {
+    private void connect(Direction direction, ConduitType<?> type) {
         bundle.connectTo(level, worldPosition, direction, type, false);
         updateClient();
     }
 
-    private void connectEnd(Direction direction, IConduitType<?> type) {
+    private void connectEnd(Direction direction, ConduitType<?> type) {
         bundle.connectTo(level, worldPosition, direction, type, true);
         updateClient();
     }
 
-    private void disconnect(Direction direction, IConduitType<?> type) {
+    private void disconnect(Direction direction, ConduitType<?> type) {
         if (bundle.disconnectFrom(direction, type)) {
             updateClient();
         }
@@ -469,16 +469,16 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return shape;
     }
 
-    public MenuProvider menuProvider(Direction direction, IConduitType<?> type) {
+    public MenuProvider menuProvider(Direction direction, ConduitType<?> type) {
         return new ConduitMenuProvider(direction, type);
     }
 
     private class ConduitMenuProvider implements MenuProvider {
 
         private final Direction direction;
-        private final IConduitType<?> type;
+        private final ConduitType<?> type;
 
-        private ConduitMenuProvider(Direction direction, IConduitType<?> type) {
+        private ConduitMenuProvider(Direction direction, ConduitType<?> type) {
             this.direction = direction;
             this.type = type;
         }
@@ -497,14 +497,14 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-        for (IConduitType<?> type : bundle.getTypes()) {
+        for (ConduitType<?> type : bundle.getTypes()) {
             NodeIdentifier<?> node = bundle.getNodeFor(type);
             Optional<NodeIdentifier.IOState> state = Optional.empty();
             if (node != null && side != null) {
                 state = node.getIOState(side);
             }
             var proxiedCap = type.proxyCapability(cap,
-                node == null ? type.createExtendedConduitData(level, getBlockPos()).cast() : node.getExtendedConduitData().cast(), level, worldPosition, side, state);
+                node == null ? type.createConduitData(level, getBlockPos()).cast() : node.getExtendedConduitData().cast(), level, worldPosition, side, state);
 
             if (proxiedCap.isPresent()) {
                 return proxiedCap.get();
@@ -545,7 +545,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 return ItemStack.EMPTY;
             }
 
-            IConduitMenuData conduitData = bundle.getTypes().get(data.conduitIndex()).getMenuData();
+            ConduitMenuData conduitData = bundle.getTypes().get(data.conduitIndex()).getMenuData();
             if ((data.slotType() == SlotType.FILTER_EXTRACT && conduitData.hasFilterExtract()) || (data.slotType() == SlotType.FILTER_INSERT
                 && conduitData.hasFilterInsert()) || (data.slotType() == SlotType.UPGRADE_EXTRACT && conduitData.hasUpgrade())) {
                 return dynamicConnectionState.getItem(data.slotType());
@@ -645,7 +645,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             }
 
             ConduitConnection connection = bundle.getConnection(data.direction());
-            IConduitMenuData conduitData = bundle.getTypes().get(data.conduitIndex()).getMenuData();
+            ConduitMenuData conduitData = bundle.getTypes().get(data.conduitIndex()).getMenuData();
 
             if ((data.slotType() == SlotType.FILTER_EXTRACT && conduitData.hasFilterExtract()) || (data.slotType() == SlotType.FILTER_INSERT
                 && conduitData.hasFilterInsert()) || (data.slotType() == SlotType.UPGRADE_EXTRACT && conduitData.hasUpgrade())) {

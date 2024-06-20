@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.network;
 
 import com.enderio.api.conduit.ConduitTypes;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.core.common.network.Packet;
@@ -19,10 +19,10 @@ public class C2SSetConduitConnectionState implements Packet {
 
     private final BlockPos pos;
     private final Direction direction;
-    private final IConduitType<?> conduitType;
+    private final ConduitType<?> conduitType;
     private final DynamicConnectionState connectionState;
 
-    public C2SSetConduitConnectionState(BlockPos pos, Direction direction, IConduitType<?> conduitType, DynamicConnectionState connectionState) {
+    public C2SSetConduitConnectionState(BlockPos pos, Direction direction, ConduitType<?> conduitType, DynamicConnectionState connectionState) {
         this.pos = pos;
         this.direction = direction;
         this.conduitType = conduitType;

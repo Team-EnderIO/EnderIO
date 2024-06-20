@@ -2,7 +2,7 @@ package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitItemFactory;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -22,7 +22,7 @@ public class ConduitItems {
     public static final ItemEntry<Item> REDSTONE = createConduitItem(EnderConduitTypes.REDSTONE, "redstone");
     public static final ItemEntry<Item> ITEM = createConduitItem(EnderConduitTypes.ITEM, "item");
 
-    private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName) {
+    private static ItemEntry<Item> createConduitItem(Supplier<? extends ConduitType<?>> type, String itemName) {
         return REGISTRATE.item(itemName + "_conduit",
             properties -> ConduitItemFactory.build(type, properties))
             .tab(EIOCreativeTabs.CONDUITS)

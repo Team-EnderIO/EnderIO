@@ -3,11 +3,9 @@ package com.enderio.conduits.common.integrations.ae2;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.IConduitMenuData;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.conduit.TieredConduit;
-import com.enderio.api.conduit.ticker.IConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.EnderConduitTypes;
@@ -43,12 +41,12 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     }
 
     @Override
-    public IConduitMenuData getMenuData() {
-        return ConduitMenuData.INSTANCE;
+    public com.enderio.api.conduit.ConduitMenuData getMenuData() {
+        return AE2ConduitType.ConduitMenuData.INSTANCE;
     }
 
     @Override
-    public AE2InWorldConduitNodeHost createExtendedConduitData(Level level, BlockPos pos) {
+    public AE2InWorldConduitNodeHost createConduitData(Level level, BlockPos pos) {
         return new AE2InWorldConduitNodeHost(this);
     }
 
@@ -77,9 +75,9 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         return Integrations.AE2_INTEGRATION.expectPresent().getInWorldGridNodeHost();
     }
 
-    private static final class ConduitMenuData implements IConduitMenuData {
+    private static final class ConduitMenuData implements com.enderio.api.conduit.ConduitMenuData {
 
-        private static final IConduitMenuData INSTANCE = new ConduitMenuData();
+        private static final com.enderio.api.conduit.ConduitMenuData INSTANCE = new ConduitMenuData();
 
         @Override
         public boolean hasFilterInsert() {
@@ -126,7 +124,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
         private static final Ticker INSTANCE = new Ticker();
         @Override
-        public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+        public void tickGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
             //ae2 graphs don't actually do anything, that's all done by ae2
         }
 
@@ -141,7 +139,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         }
 
         @Override
-        public boolean canConnectTo(IConduitType<?> thisType, IConduitType<?> other) {
+        public boolean canConnectTo(ConduitType<?> thisType, ConduitType<?> other) {
             return other instanceof AE2ConduitType;
         }
     }

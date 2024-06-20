@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.types;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.conduits.ConduitNBTKeys;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -10,7 +10,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-public class FluidExtendedData implements IExtendedConduitData<FluidExtendedData> {
+public class FluidExtendedData implements ConduitData<FluidExtendedData> {
 
     public final boolean isMultiFluid;
 

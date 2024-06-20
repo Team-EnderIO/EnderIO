@@ -14,7 +14,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphObject<Mergeable.Dummy> {
+public class NodeIdentifier<T extends ConduitData<?>> implements GraphObject<Mergeable.Dummy> {
 
     private final BlockPos pos;
 

@@ -5,7 +5,7 @@ import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitItemFactory;
 import com.enderio.api.conduit.ConduitTypes;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.integration.Integration;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -44,7 +44,7 @@ public class AE2Integration implements Integration {
         return IN_WORLD_GRID_NODE_HOST;
     }
 
-    private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName, String english) {
+    private static ItemEntry<Item> createConduitItem(Supplier<? extends ConduitType<?>> type, String itemName, String english) {
         return EnderIO.registrate().item(itemName + "_conduit",
                 properties -> ConduitItemFactory.build(type, properties))
             .tab(EIOCreativeTabs.CONDUITS)

@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.conduit.ConduitTypes;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.TieredConduit;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,21 +18,21 @@ import java.util.List;
  */
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ConduitTypeSorter {
-    private static final List<IConduitType<?>> SORTED_TYPES = new ArrayList<>();
+    private static final List<ConduitType<?>> SORTED_TYPES = new ArrayList<>();
 
     @SubscribeEvent
     public static void afterRegistryFreeze(FMLCommonSetupEvent event) {
-        ForgeRegistry<IConduitType<?>> registry = ConduitTypes.getRegistry();
+        ForgeRegistry<ConduitType<?>> registry = ConduitTypes.getRegistry();
         List<ResourceLocation> tieredTypes = new ArrayList<>();
-        for (IConduitType<?> value : registry.getValues()) {
+        for (ConduitType<?> value : registry.getValues()) {
             if (value instanceof TieredConduit<?> tiered && !tieredTypes.contains(tiered.getType())) {
                 tieredTypes.add(tiered.getType());
             }
         }
         tieredTypes.sort(ResourceLocation::compareTo);
         for (ResourceLocation tieredType : tieredTypes) {
-            List<IConduitType<?>> typesInType = new ArrayList<>();
-            for (IConduitType<?> type: registry.getValues()) {
+            List<ConduitType<?>> typesInType = new ArrayList<>();
+            for (ConduitType<?> type: registry.getValues()) {
                 if (type instanceof TieredConduit<?> tiered && tiered.getType().equals(tieredType)) {
                     typesInType.add(type);
                 }
@@ -40,8 +40,8 @@ public class ConduitTypeSorter {
             typesInType.sort(Comparator.comparing(registry::getKey));
             SORTED_TYPES.addAll(typesInType);
         }
-        List<IConduitType<?>> unadded = new ArrayList<>();
-        for (IConduitType<?> type: registry.getValues()) {
+        List<ConduitType<?>> unadded = new ArrayList<>();
+        for (ConduitType<?> type: registry.getValues()) {
             if (!(type instanceof TieredConduit)) {
                 unadded.add(type);
             }
@@ -50,7 +50,7 @@ public class ConduitTypeSorter {
         SORTED_TYPES.addAll(unadded);
     }
 
-    public static int getSortIndex(IConduitType<?> type) {
+    public static int getSortIndex(ConduitType<?> type) {
         return SORTED_TYPES.indexOf(type);
     }
 }

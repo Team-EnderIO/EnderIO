@@ -1,7 +1,6 @@
 package com.enderio.conduits.common.types;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.IClientConduitData;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.RenderUtil;

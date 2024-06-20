@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.menu;
 
 import com.enderio.api.conduit.ConduitTypes;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.SlotType;
@@ -34,10 +34,10 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
     private final List<ConduitSlot> conduitSlots = new ArrayList<>();
 
     private Direction direction;
-    private IConduitType<?> type;
+    private ConduitType<?> type;
 
 
-    public ConduitMenu(@Nullable ConduitBlockEntity blockEntity, Inventory inventory, int pContainerId, Direction direction, IConduitType type) {
+    public ConduitMenu(@Nullable ConduitBlockEntity blockEntity, Inventory inventory, int pContainerId, Direction direction, ConduitType type) {
         super(blockEntity, inventory, ConduitMenus.CONDUIT_MENU.get(), pContainerId);
         this.direction = direction;
         this.type = type;
@@ -99,7 +99,7 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
     public static ConduitMenu factory(@Nullable MenuType<ConduitMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         Direction direction = buf.readEnum(Direction.class);
-        IConduitType<?> type = ConduitTypes.getRegistry().getValue(buf.readInt());
+        ConduitType<?> type = ConduitTypes.getRegistry().getValue(buf.readInt());
         if (entity instanceof ConduitBlockEntity castBlockEntity) {
             return new ConduitMenu(castBlockEntity, inventory, pContainerId, direction, type);
         }
@@ -108,11 +108,11 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
         return new ConduitMenu(null, inventory, pContainerId, direction, type);
     }
 
-    public IConduitType<?> getConduitType() {
+    public ConduitType<?> getConduitType() {
         return type;
     }
 
-    public void setConduitType(IConduitType<?> type) {
+    public void setConduitType(ConduitType<?> type) {
         this.type = type;
     }
 

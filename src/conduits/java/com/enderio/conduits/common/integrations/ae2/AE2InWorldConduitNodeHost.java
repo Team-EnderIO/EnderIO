@@ -6,8 +6,8 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.IInWorldGridNodeHost;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.util.AECableType;
-import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ConduitData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtendedConduitData<AE2InWorldConduitNodeHost> {
+public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, ConduitData<AE2InWorldConduitNodeHost> {
 
     private final AE2ConduitType type;
     @Nullable
@@ -88,7 +88,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
     }
 
     @Override
-    public void onCreated(IConduitType<?> type, Level level, BlockPos pos, @Nullable Player player) {
+    public void onCreated(ConduitType<?> type, Level level, BlockPos pos, @Nullable Player player) {
         if (mainNode == null) {
             // required because onCreated() can be called after onRemoved()
             initMainNode();
@@ -115,7 +115,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
     }
 
     @Override
-    public void onRemoved(IConduitType<?> type, Level level, BlockPos pos) {
+    public void onRemoved(ConduitType<?> type, Level level, BlockPos pos) {
         if (mainNode != null) {
             mainNode.destroy();
 

@@ -1,12 +1,11 @@
 package com.enderio.conduits.common.network;
 
 import com.enderio.api.conduit.ConduitTypes;
-import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.core.common.network.Packet;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -18,10 +17,10 @@ import java.util.Optional;
 
 public class C2SSetConduitExtendedData implements Packet {
     private final BlockPos pos;
-    private final IConduitType<?> conduitType;
+    private final ConduitType<?> conduitType;
     private final CompoundTag extendedConduitData;
 
-    public C2SSetConduitExtendedData(BlockPos pos, IConduitType<?> conduitType, IExtendedConduitData<?> extendedConduitData) {
+    public C2SSetConduitExtendedData(BlockPos pos, ConduitType<?> conduitType, ConduitData<?> extendedConduitData) {
         this.pos = pos;
         this.conduitType = conduitType;
         this.extendedConduitData = extendedConduitData.serializeGuiNBT();

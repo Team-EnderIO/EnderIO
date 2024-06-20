@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.blockentity;
 
-import com.enderio.api.conduit.IConduitMenuData;
+import com.enderio.api.conduit.ConduitMenuData;
 
 public enum SlotType {
     FILTER_EXTRACT,
@@ -20,7 +20,7 @@ public enum SlotType {
         return Y_POSITION;
     }
 
-    public boolean isAvailableFor(IConduitMenuData data) {
+    public boolean isAvailableFor(ConduitMenuData data) {
         return switch (this) {
             case FILTER_INSERT -> data.hasFilterInsert();
             case FILTER_EXTRACT -> data.hasFilterExtract();

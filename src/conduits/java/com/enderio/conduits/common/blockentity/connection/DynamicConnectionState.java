@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.blockentity.connection;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.blockentity.SlotType;
@@ -17,8 +17,8 @@ import java.util.Map;
 
 public record DynamicConnectionState(boolean isInsert, ColorControl insert, boolean isExtract, ColorControl extract, RedstoneControl control, ColorControl redstoneChannel, @UseOnly(LogicalSide.SERVER) ItemStack filterInsert, @UseOnly(LogicalSide.SERVER) ItemStack filterExtract, @UseOnly(LogicalSide.SERVER) ItemStack upgradeExtract) implements IConnectionState {
 
-    public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction, IConduitType<?> type) {
-        IConduitType.ConduitConnectionData defaultConnection = type.getDefaultConnection(level, pos, direction);
+    public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction, ConduitType<?> type) {
+        ConduitType.ConduitConnectionData defaultConnection = type.getDefaultConnection(level, pos, direction);
         return new DynamicConnectionState(defaultConnection.isInsert(), ColorControl.GREEN, defaultConnection.isExtract(), ColorControl.GREEN, defaultConnection.control(), ColorControl.RED, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
     }
 

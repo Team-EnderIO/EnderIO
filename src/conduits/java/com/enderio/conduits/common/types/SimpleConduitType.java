@@ -1,11 +1,9 @@
 package com.enderio.conduits.common.types;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.IClientConduitData;
-import com.enderio.api.conduit.IConduitMenuData;
-import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.IExtendedConduitData;
-import com.enderio.api.conduit.ticker.IConduitTicker;
+import com.enderio.api.conduit.ConduitMenuData;
+import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.misc.Vector2i;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +15,7 @@ import java.util.function.Supplier;
 /**
  * Only to be used for conduits in EnderIOs Namespace
  */
-public class SimpleConduitType<T extends IExtendedConduitData<T>> implements IConduitType<T> {
+public class SimpleConduitType<T extends ConduitData<T>> implements ConduitType<T> {
 
     private final ResourceLocation texture;
     private final IConduitTicker ticker;
@@ -25,13 +23,13 @@ public class SimpleConduitType<T extends IExtendedConduitData<T>> implements ICo
 
     private final IClientConduitData<T> clientConduitData;
 
-    private final IConduitMenuData menuData;
+    private final ConduitMenuData menuData;
 
-    public SimpleConduitType(ResourceLocation texture, IConduitTicker ticker, Supplier<T> extendedDataFactory, ResourceLocation iconTexture, Vector2i iconTexturePos, IConduitMenuData menuData) {
+    public SimpleConduitType(ResourceLocation texture, IConduitTicker ticker, Supplier<T> extendedDataFactory, ResourceLocation iconTexture, Vector2i iconTexturePos, ConduitMenuData menuData) {
         this(texture, ticker, extendedDataFactory, new IClientConduitData.Simple<>(iconTexture, iconTexturePos), menuData);
     }
 
-    public SimpleConduitType(ResourceLocation texture, IConduitTicker ticker, Supplier<T> extendedDataFactory, IClientConduitData<T> clientConduitData, IConduitMenuData menuData) {
+    public SimpleConduitType(ResourceLocation texture, IConduitTicker ticker, Supplier<T> extendedDataFactory, IClientConduitData<T> clientConduitData, ConduitMenuData menuData) {
         this.texture = texture;
         this.ticker = ticker;
         this.extendedDataFactory = extendedDataFactory;
@@ -60,12 +58,12 @@ public class SimpleConduitType<T extends IExtendedConduitData<T>> implements ICo
     }
 
     @Override
-    public IConduitMenuData getMenuData() {
+    public ConduitMenuData getMenuData() {
         return menuData;
     }
 
     @Override
-    public T createExtendedConduitData(Level level, BlockPos pos) {
+    public T createConduitData(Level level, BlockPos pos) {
         return extendedDataFactory.get();
     }
 }

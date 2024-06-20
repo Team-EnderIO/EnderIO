@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.types;
 
-import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.core.CoreNBTKeys;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedData> {
+public class EnergyExtendedData implements ConduitData<EnergyExtendedData> {
 
     private final Map<Direction, EnergySidedData> energySidedData = new EnumMap<>(Direction.class);
 
@@ -74,7 +74,7 @@ public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedDa
     }
 
     @Override
-    public void onRemoved(IConduitType<?> type, Level level, BlockPos pos) {
+    public void onRemoved(ConduitType<?> type, Level level, BlockPos pos) {
         selfCap.invalidate();
     }
 

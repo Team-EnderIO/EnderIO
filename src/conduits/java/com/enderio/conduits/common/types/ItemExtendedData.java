@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.types;
 
-import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.conduit.ConduitData;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.Nullable;
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class ItemExtendedData implements IExtendedConduitData<ItemExtendedData> {
+public class ItemExtendedData implements ConduitData<ItemExtendedData> {
 
     private final Map<Direction, ItemSidedData> itemSidedData = new EnumMap<>(Direction.class);
 
