@@ -232,13 +232,9 @@ public class SpawnerMachineTask implements PoweredMachineTask {
                 spawned = true;
                 blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE);
             }
-        }
-
-        if (spawned) {
             //Clear energy after spawn
-            energyConsumed -= energyCost; //The same amount of energy is used for 1 or MachinesConfig.COMMON.SPAWN_AMOUNT.get() spawns, so make sure your spawner has enough valid spaces!
+            energyConsumed -= energyCost;
         }
-        
         return spawned;
     }
 
