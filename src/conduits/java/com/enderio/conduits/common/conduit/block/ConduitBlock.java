@@ -197,25 +197,25 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             conduit.getLevel().setBlockAndUpdate(conduit.getBlockPos(), conduit.getBlockState());
         }
 
-        Optional<ItemInteractionResult> result;
+        ItemInteractionResult result;
 
         if (action instanceof RightClickAction.Upgrade upgradeAction) {
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
                 player.getInventory().placeItemBackInInventory(upgradeAction.getNotInConduit().getConduitItem().getDefaultInstance());
             }
-            result = Optional.of(ItemInteractionResult.sidedSuccess(isClientSide));
+            result = ItemInteractionResult.sidedSuccess(isClientSide);
         } else if (action instanceof RightClickAction.Insert) {
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
             }
 
-            result = Optional.of(ItemInteractionResult.sidedSuccess(isClientSide));
+            result = ItemInteractionResult.sidedSuccess(isClientSide);
         } else {
-            result = Optional.empty();
+            result = ItemInteractionResult.FAIL;
         }
 
-        if (result.isPresent()) {
+        if (result != ItemInteractionResult.FAIL) {
             Level level = conduit.getLevel();
             BlockPos blockpos = conduit.getBlockPos();
 
@@ -226,7 +226,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             level.gameEvent(GameEvent.BLOCK_PLACE, blockpos, GameEvent.Context.of(player, blockState));
         }
 
-        return result;
+        return Optional.of(result);
     }
 
     private Optional<ItemInteractionResult> handleYeta(ConduitBlockEntity conduit, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
