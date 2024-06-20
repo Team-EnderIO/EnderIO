@@ -284,7 +284,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     }
 
     private void renderWorld(GuiGraphics guiGraphics, int centerX, int centerY, Quaternionf transform, float partialTick) {
-        Lighting.setupForEntityInInventory();
+        Lighting.setupForFlatItems();
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(centerX, centerY, Z_OFFSET);
         guiGraphics.pose().scale(SCALE, SCALE, -SCALE);
