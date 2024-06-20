@@ -1,7 +1,10 @@
 package com.enderio.machines.common.io.item;
 
+import net.minecraft.world.item.ItemStack;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MultiSlotAccess {
     private List<SingleSlotAccess> accesses = null;
@@ -30,6 +33,12 @@ public class MultiSlotAccess {
 
     public boolean contains(int slotIndex) {
         return slotIndex >= accesses.get(0).getIndex() && slotIndex <= accesses.get(accesses.size() - 1).getIndex();
+    }
+
+    public List<ItemStack> getItemStacks(MachineInventory inventory) {
+        return accesses.stream()
+            .map(access -> access.getItemStack(inventory))
+            .collect(Collectors.toList());
     }
 
     public static MultiSlotAccess wrap(SingleSlotAccess access) {

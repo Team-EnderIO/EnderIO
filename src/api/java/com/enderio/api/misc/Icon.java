@@ -57,4 +57,31 @@ public interface Icon {
     default boolean shouldRender() {
         return true;
     }
+
+    record Simple(ResourceLocation textureLocation, Vector2i texturePosition, Vector2i iconSize, Vector2i renderSize) implements Icon {
+
+        public Simple(ResourceLocation textureLocation, Vector2i texturePosition, Vector2i iconSize) {
+            this(textureLocation, texturePosition, iconSize, iconSize);
+        }
+
+        @Override
+        public ResourceLocation getTextureLocation() {
+            return textureLocation;
+        }
+
+        @Override
+        public Vector2i getTexturePosition() {
+            return texturePosition;
+        }
+
+        @Override
+        public Vector2i getIconSize() {
+            return iconSize;
+        }
+
+        @Override
+        public Vector2i getRenderSize() {
+            return renderSize;
+        }
+    }
 }

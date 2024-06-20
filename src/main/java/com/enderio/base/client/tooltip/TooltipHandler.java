@@ -61,7 +61,7 @@ public class TooltipHandler {
             components.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, fmt.format(capacitorData.base())));
 
             for (Map.Entry<CapacitorModifier, Float> modifier : capacitorData.modifiers().entrySet()) {
-                components.add(TooltipUtil.styledWithArgs(new ResourceLocation("tooltip", modifier.getKey().modifierId.toLanguageKey()), fmt.format(modifier.getValue())));
+                components.add(TooltipUtil.styledWithArgs(ResourceLocation.fromNamespaceAndPath("tooltip", modifier.getKey().modifierId.toLanguageKey()), fmt.format(modifier.getValue())));
             }
         }
     }

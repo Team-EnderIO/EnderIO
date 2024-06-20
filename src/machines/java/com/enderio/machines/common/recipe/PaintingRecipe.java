@@ -20,6 +20,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -31,7 +32,7 @@ import java.util.List;
 public record PaintingRecipe(
     Ingredient input,
     Item output
-) implements MachineRecipe<RecipeWrapper> {
+) implements MachineRecipe<PaintingRecipe.Input> {
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
@@ -39,8 +40,8 @@ public record PaintingRecipe(
     }
 
     @Override
-    public boolean matches(RecipeWrapper container, Level pLevel) {
-        return input.test(PaintingMachineBlockEntity.INPUT.getItemStack(container)) && !PaintingMachineBlockEntity.PAINT.getItemStack(container).isEmpty();
+    public boolean matches(PaintingRecipe.Input recipeInput, Level pLevel) {
+        return input.test(recipeInput.getItem(0)) && !recipeInput.getItem(1).isEmpty();
     }
 
     @Override
@@ -49,11 +50,11 @@ public record PaintingRecipe(
     }
 
     @Override
-    public List<OutputStack> craft(RecipeWrapper container, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(PaintingRecipe.Input recipeInput, RegistryAccess registryAccess) {
         List<OutputStack> outputs = new ArrayList<>();
         ItemStack outputStack = new ItemStack(output);
 
-        var paintItem = PaintingMachineBlockEntity.PAINT.getItemStack(container);
+        var paintItem = recipeInput.getItem(1);
         if (!(paintItem.getItem() instanceof BlockItem blockItem)) {
             throw new IllegalStateException("The item must be a block item.");
         }
@@ -71,7 +72,7 @@ public record PaintingRecipe(
     }
 
     @Override
-    public ItemStack assemble(RecipeWrapper container, HolderLookup.Provider lookupProvider) {
+    public ItemStack assemble(PaintingRecipe.Input recipeInput, HolderLookup.Provider lookupProvider) {
         return null;
     }
 
@@ -90,6 +91,22 @@ public record PaintingRecipe(
         return MachineRecipes.PAINTING.type().get();
     }
 
+    public record Input(ItemStack template, ItemStack paint) implements RecipeInput {
+
+        @Override
+        public ItemStack getItem(int slotIndex) {
+            return switch (slotIndex) {
+                case 0 -> template;
+                case 1 -> paint;
+                default -> throw new IllegalArgumentException("No item for index " + slotIndex);
+            };
+        }
+
+        @Override
+        public int size() {
+            return 2;
+        }
+    }
 
     public static class Serializer implements RecipeSerializer<PaintingRecipe> {
 

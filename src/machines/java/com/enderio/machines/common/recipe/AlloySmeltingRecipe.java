@@ -15,6 +15,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -24,7 +25,7 @@ import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
 import java.util.List;
 
-public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.ContainerWrapper> {
+public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Input> {
     private final List<SizedIngredient> inputs;
     private final ItemStack output;
     private final int energy;
@@ -64,9 +65,8 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     }
 
     @Override
-    public boolean matches(ContainerWrapper container, Level level) {
+    public boolean matches(Input recipeInput, Level level) {
         boolean[] matched = new boolean[3];
-        var slotAccess = container.getSlotAccess();
 
         // Iterate over the slots
         for (int i = 0; i < 3; i++) {
@@ -77,7 +77,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
                     continue;
                 }
 
-                var slotItem = slotAccess.get(i).getItemStack(container);
+                var slotItem = recipeInput.getItem(i);
 
                 if (j < inputs.size()) {
                     // If we expect an input, test we have a match for it.
@@ -102,7 +102,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     }
 
     @Override
-    public List<OutputStack> craft(ContainerWrapper container, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input container, RegistryAccess registryAccess) {
         return List.of(OutputStack.of(output.copy()));
     }
 
@@ -121,31 +121,33 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
         return MachineRecipes.ALLOY_SMELTING.type().get();
     }
 
-    /**
-     * The recipe container.
-     * This acts as additional context.
-     */
-    public static class ContainerWrapper extends RecipeWrapper {
+    public record Input(List<ItemStack> inputs, int inputsConsumed) implements RecipeInput {
 
-        private final boolean isPrimitive;
-        private int inputsTaken;
+        @Override
+        public ItemStack getItem(int slotIndex) {
+            if (slotIndex >= inputs.size()) {
+                throw new IllegalArgumentException("No item for index " + slotIndex);
+            }
 
-        public ContainerWrapper(boolean isPrimitive, IItemHandlerModifiable inv) {
-            super(inv);
-            this.isPrimitive = isPrimitive;
+            return inputs.get(slotIndex);
         }
 
-        public MultiSlotAccess getSlotAccess() {
-            // Instead of a bool we could just pass the slot accesses, but a bool is probably cheaper to do.
-            return isPrimitive ? PrimitiveAlloySmelterBlockEntity.INPUTS : AlloySmelterBlockEntity.INPUTS;
+        public ItemStack getFirstPopulated() {
+            for (ItemStack stack : inputs) {
+                if (!stack.isEmpty()) {
+                    return stack;
+                }
+            }
+            return ItemStack.EMPTY;
         }
 
-        public int getInputsTaken() {
-            return inputsTaken;
+        @Override
+        public int size() {
+            return inputs.size();
         }
 
-        public void setInputsTaken(int inputsTaken) {
-            this.inputsTaken = inputsTaken;
+        public Input withInputsConsumed(int inputsConsumed) {
+            return new Input(inputs, inputsConsumed);
         }
     }
 

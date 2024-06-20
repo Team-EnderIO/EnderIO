@@ -1,38 +1,22 @@
 package com.enderio.api.conduit;
 
-import com.enderio.api.UseOnly;
-import com.enderio.api.misc.Vector2i;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.LogicalSide;
+import net.minecraft.world.item.Item;
 
-public abstract class TieredConduit<T extends ExtendedConduitData<T>> implements ConduitType<T> {
-    private final ResourceLocation texture;
+public abstract class TieredConduit<T extends ConduitData<T>> extends ConduitType<T> {
     private final ResourceLocation type;
     private final int tier;
-
-    @UseOnly(LogicalSide.CLIENT) protected ClientConduitData<T> clientConduitData;
+    protected final ResourceLocation tierName;
 
     /**
-     * @param texture
      * @param type
      * @param tier    The tier of the conduit. For Energy this should be it's transfer rate to easily add and compare conduit strength
      */
-
-    public TieredConduit(ResourceLocation texture, ResourceLocation type, int tier, ResourceLocation iconTexture, Vector2i iconTexturePos) {
-        this.texture = texture;
+    public TieredConduit(ResourceLocation type, ResourceLocation tierName, int tier) {
         this.type = type;
         this.tier = tier;
-        clientConduitData = new ClientConduitData.Simple<>(iconTexture, iconTexturePos);
-    }
-
-    @Override
-    public ResourceLocation getTexture(T data) {
-        return texture;
-    }
-
-    @Override
-    public ResourceLocation getItemTexture() {
-        return texture;
+        this.tierName = tierName;
     }
 
     @Override
@@ -58,16 +42,16 @@ public abstract class TieredConduit<T extends ExtendedConduitData<T>> implements
         return !type.equals(tieredOther.getType());
     }
 
+    @Override
+    public Item getConduitItem() {
+        return BuiltInRegistries.ITEM.get(tierName);
+    }
+
     public ResourceLocation getType() {
         return type;
     }
 
     public int getTier() {
         return tier;
-    }
-
-    @Override
-    public ClientConduitData<T> getClientData() {
-        return clientConduitData;
     }
 }

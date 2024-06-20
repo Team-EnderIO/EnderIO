@@ -1,8 +1,8 @@
 package com.enderio.conduits.common.menu;
 
-import com.enderio.conduits.common.blockentity.ConduitBundle;
-import com.enderio.conduits.common.blockentity.SlotData;
-import com.enderio.conduits.common.blockentity.SlotType;
+import com.enderio.conduits.common.conduit.ConduitBundle;
+import com.enderio.conduits.common.conduit.SlotData;
+import com.enderio.api.conduit.SlotType;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -63,5 +63,10 @@ public class ConduitSlot extends SlotItemHandler {
             && visibleType.get() == visibleForType
             && bundle.getTypes().size() > visibleForType
             && slotType.isAvailableFor(bundle.getTypes().get(visibleForType).getMenuData());
+    }
+
+    @Override
+    public int getMaxStackSize() {
+        return 1;
     }
 }

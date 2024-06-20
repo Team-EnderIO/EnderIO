@@ -9,7 +9,6 @@ import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIOCriterions;
 import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.init.EIOEntities;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
@@ -21,7 +20,6 @@ import com.enderio.base.common.integrations.EnderIOSelfIntegration;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.common.travel.TravelTargetSavedData;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
 import com.enderio.base.data.loot.ChestLootProvider;
@@ -72,13 +70,15 @@ public class EnderIO {
     public static Regilite regilite = new Regilite(MODID);
 
     public static ResourceLocation loc(String path) {
-        return new ResourceLocation(MODID, path);
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 
     public static IEventBus modEventBus;
+    public static ModContainer modContainer;
 
     public EnderIO(IEventBus modEventBus, ModContainer modContainer) {
         EnderIO.modEventBus = modEventBus;
+        EnderIO.modContainer = modContainer;
 
         // Ensure the enderio config subdirectory is present.
         try {
@@ -98,7 +98,7 @@ public class EnderIO {
         EIOBlocks.register(modEventBus);
         EIOBlockEntities.register(modEventBus);
         EIOFluids.register(modEventBus);
-        EIOEnchantments.register(modEventBus);
+        //EIOEnchantments.register(modEventBus);
         EIOTags.register();
         EIOMenus.register(modEventBus);
         EIOLang.register();
@@ -120,6 +120,7 @@ public class EnderIO {
     private void registerRegistries(NewRegistryEvent event) {
         // TODO: Do this in conduits?
         event.register(EnderIORegistries.CONDUIT_TYPES);
+        event.register(EnderIORegistries.CONDUIT_DATA_SERIALIZERS);
         event.register(EnderIORegistries.TRAVEL_TARGET_TYPES);
         event.register(EnderIORegistries.TRAVEL_TARGET_SERIALIZERS);
     }

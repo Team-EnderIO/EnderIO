@@ -1,9 +1,0 @@
-{
-  "type": "enderio:enchanting",
-  "cost_multiplier": 1,
-  "enchantment": "minecraft:multishot",
-  "input": {
-    "count": 16,
-    "tag": "minecraft:arrows"
-  }
-}

@@ -27,7 +27,7 @@ public class EIOAdvancementGenerator implements AdvancementProvider.AdvancementG
 //        builder.save(saver, UseGliderAdvancementBenefit.USE_GLIDER_ADVANCEMENT.toString());
 
         AdvancementHolder rich = Advancement.Builder.advancement()
-            .parent(new ResourceLocation("adventure/root"))
+            .parent(ResourceLocation.withDefaultNamespace("adventure/root"))
             .display(Items.DIAMOND_BLOCK, EIOLang.RICH_ADVANCEMENT_TITLE, EIOLang.RICH_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
                 true, false)
             .addCriterion("paint", PaintingTrigger.TriggerInstance.painted(Blocks.DIAMOND_BLOCK))

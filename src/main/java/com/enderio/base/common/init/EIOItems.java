@@ -5,6 +5,8 @@ import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
+import com.enderio.base.common.item.filter.FluidFilter;
+import com.enderio.base.common.item.filter.ItemFilter;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
 import com.enderio.base.common.item.misc.EnderiosItem;
@@ -22,6 +24,8 @@ import com.enderio.base.common.item.tool.TravelStaffItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.model.item.GliderItemModel;
+import com.enderio.core.common.capability.FluidFilterCapability;
+import com.enderio.core.common.capability.ItemFilterCapability;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
@@ -263,6 +267,7 @@ public class EIOItems {
 
     public static final RegiliteItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEM_REGISTRY
         .registerItem("broken_spawner", BrokenSpawnerItem::new)
+        .addItemTags(EIOTags.Items.ENTITY_STORAGE)
         .setModelProvider(ModelHelper::fakeBlockModel)
         .setTab(EIOCreativeTabs.MAIN)
         .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.gePossibleStacks()));
@@ -317,6 +322,7 @@ public class EIOItems {
                 props
                     .component(EIODataComponents.GRINDING_BALL, grindingBallData),
                 false))
+            .addItemTags(EIOTags.Items.GRINDING_BALLS)
             .setTab(EIOCreativeTabs.MAIN);
     }
 
@@ -351,6 +357,7 @@ public class EIOItems {
 
     public static final RegiliteItem<SoulVialItem> FILLED_SOUL_VIAL = ITEM_REGISTRY
         .registerItem("filled_soul_vial", SoulVialItem::new, new Item.Properties().stacksTo(1))
+        .addItemTags(EIOTags.Items.ENTITY_STORAGE)
         .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
         //TODO .removeTab(CreativeModeTabs.SEARCH)
         ;
@@ -401,6 +408,25 @@ public class EIOItems {
         .setTab(EIOCreativeTabs.GEAR,
             modifier -> EIOItems.COLD_FIRE_IGNITER.get().addAllVariants(modifier)) // TODO: Might PR this to ITEM_REGISTRY so its nicer, but I like the footprint.
         .addCapability(Capabilities.FluidHandler.ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER);
+
+    // endregion
+
+    // region filter
+
+    public static final RegiliteItem<ItemFilter> BASIC_ITEM_FILTER = ITEM_REGISTRY
+        .registerItem("basic_filter", properties -> new ItemFilter(properties.component(EIODataComponents.ITEM_FILTER, new ItemFilterCapability.Component(5))))
+        .setTab(EIOCreativeTabs.GEAR)
+        .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
+
+    public static final RegiliteItem<ItemFilter> ADVANCED_ITEM_FILTER = ITEM_REGISTRY
+        .registerItem("advanced_filter", properties -> new ItemFilter(properties.component(EIODataComponents.ITEM_FILTER, new ItemFilterCapability.Component(10))))
+        .setTab(EIOCreativeTabs.GEAR)
+        .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
+
+    public static final RegiliteItem<FluidFilter> BASIC_FLUID_FILTER = ITEM_REGISTRY
+        .registerItem("fluid_filter", properties -> new FluidFilter(properties.component(EIODataComponents.FLUID_FILTER, new FluidFilterCapability.Component(5))))
+        .setTab(EIOCreativeTabs.GEAR)
+        .addCapability(EIOCapabilities.Filter.ITEM, FluidFilter.FILTER_PROVIDER);
 
     // endregion
 

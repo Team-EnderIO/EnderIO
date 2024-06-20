@@ -2,12 +2,12 @@ package com.enderio.machines.common.utility;
 
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.fml.util.thread.EffectiveSide;
@@ -22,13 +22,13 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class RecipeInputCache<C extends Container, T extends Recipe<C>> {
-    private final Supplier<RecipeType<T>> recipeType;
-    private final HashMap<Item, HashSet<RecipeHolder<T>>> itemToRecipesCache;
-    private final HashMap<RecipeHolder<T>, List<Ingredient>> recipeToIngredientCache;
+public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
+    private final Supplier<RecipeType<R>> recipeType;
+    private final HashMap<Item, HashSet<RecipeHolder<R>>> itemToRecipesCache;
+    private final HashMap<RecipeHolder<R>, List<Ingredient>> recipeToIngredientCache;
     private boolean isDirty;
 
-    public RecipeInputCache(Supplier<RecipeType<T>> recipeType) {
+    public RecipeInputCache(Supplier<RecipeType<R>> recipeType) {
         this.recipeType = recipeType;
         this.itemToRecipesCache = new HashMap<>();
         this.recipeToIngredientCache = new HashMap<>();
@@ -59,7 +59,7 @@ public class RecipeInputCache<C extends Container, T extends Recipe<C>> {
     public boolean hasRecipe(List<ItemStack> inputs) {
         checkCacheRebuild();
 
-        Set<RecipeHolder<T>> possibleMatches = null;
+        Set<RecipeHolder<R>> possibleMatches = null;
 
         for (var input : inputs) {
             var matches = itemToRecipesCache.get(input.getItem());

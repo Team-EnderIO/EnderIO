@@ -5,8 +5,8 @@ import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -14,55 +14,51 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Container> extends MachineTaskHost {
+public class CraftingMachineTaskHost<R extends MachineRecipe<T>, T extends RecipeInput> extends MachineTaskHost {
 
-    public interface CraftingMachineTaskFactory<T extends CraftingMachineTask<R, C>, R extends MachineRecipe<C>, C extends Container> {
+    public interface CraftingMachineTaskFactory<T extends CraftingMachineTask<R, C>, R extends MachineRecipe<C>, C extends RecipeInput> {
         T createTask(Level level, C container, @Nullable RecipeHolder<R> recipe);
     }
 
     private final RecipeType<R> recipeType;
-    private final C container;
-    private final CraftingMachineTaskFactory<? extends CraftingMachineTask<R, C>, R, C> taskFactory;
+    private final CraftingMachineTaskFactory<? extends CraftingMachineTask<R, T>, R, T> taskFactory;
+    private final Supplier<T> recipeInputSupplier;
 
     /**
      * This should be constructed in the constructor of your block entity.
      */
     public CraftingMachineTaskHost(EnderBlockEntity blockEntity, Supplier<Boolean> canAcceptNewTask, RecipeType<R> recipeType,
-        C container, CraftingMachineTaskFactory<? extends CraftingMachineTask<R, C>, R, C> taskFactory) {
+        CraftingMachineTaskFactory<? extends CraftingMachineTask<R, T>, R, T> taskFactory, Supplier<T> recipeInputSupplier) {
         super(blockEntity, canAcceptNewTask);
         this.recipeType = recipeType;
-        this.container = container;
         this.taskFactory = taskFactory;
-    }
-
-    public final C getContainer() {
-        return container;
+        this.recipeInputSupplier = recipeInputSupplier;
     }
 
     @Nullable
-    public CraftingMachineTask<R, C> getCurrentTask() {
+    public CraftingMachineTask<R, T> getCurrentTask() {
         //noinspection unchecked
-        return (CraftingMachineTask<R, C>)super.getCurrentTask();
+        return (CraftingMachineTask<R, T>)super.getCurrentTask();
     }
 
     // region MachineTaskHost Implementation
 
     @Override
-    protected @Nullable CraftingMachineTask<R, C> getNewTask() {
+    protected @Nullable CraftingMachineTask<R, T> getNewTask() {
         if (getLevel() == null) {
             return null;
         }
 
-        return findRecipe().map(r -> taskFactory.createTask(getLevel(), container, r)).orElse(null);
+        return findRecipe().map(r -> taskFactory.createTask(getLevel(), recipeInputSupplier.get(), r)).orElse(null);
     }
 
     @Override
-    protected @Nullable CraftingMachineTask<R, C> loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+    protected @Nullable CraftingMachineTask<R, T> loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         if (getLevel() == null) {
             return null;
         }
 
-        CraftingMachineTask<R, C> task = taskFactory.createTask(getLevel(), container, null);
+        CraftingMachineTask<R, T> task = taskFactory.createTask(getLevel(), recipeInputSupplier.get(), null);
         task.deserializeNBT(lookupProvider, nbt);
         return task;
     }
@@ -80,11 +76,15 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Conta
 
     // endregion
 
+    protected T createRecipeInput() {
+        return recipeInputSupplier.get();
+    }
+
     protected Optional<RecipeHolder<R>> findRecipe() {
         Level level = getLevel();
         if (level == null) {
             return Optional.empty();
         }
-        return level.getRecipeManager().getRecipeFor(recipeType, container, level);
+        return level.getRecipeManager().getRecipeFor(recipeType, recipeInputSupplier.get(), level);
     }
 }

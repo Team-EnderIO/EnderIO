@@ -1,8 +1,6 @@
 package com.enderio.base.data.loot;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.enchantment.AutoSmeltModifier;
-import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.loot.BrokenSpawnerLootModifier;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
@@ -37,15 +35,15 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
     protected void start() {
         // TODO: NEO-PORT: neoforge:global_loot_modifiers file gets overwritten when armory is enabled.
 
-        add("auto_smelt", new AutoSmeltModifier(
-            new LootItemCondition[]{
-                MatchTool.toolMatches(ItemPredicate.Builder.item().withSubPredicate(ItemSubPredicates.ENCHANTMENTS,
-                    ItemEnchantmentsPredicate.enchantments(
-                        List.of(new EnchantmentPredicate(EIOEnchantments.AUTO_SMELT.get(), MinMaxBounds.Ints.atLeast(1)))
-                    ))
-                ).build()
-            }
-        ));
+//        add("auto_smelt", new AutoSmeltModifier(
+//            new LootItemCondition[]{
+//                MatchTool.toolMatches(ItemPredicate.Builder.item().withSubPredicate(ItemSubPredicates.ENCHANTMENTS,
+//                    ItemEnchantmentsPredicate.enchantments(
+//                        List.of(new EnchantmentPredicate(EIOEnchantments.AUTO_SMELT.get(), MinMaxBounds.Ints.atLeast(1)))
+//                    ))
+//                ).build()
+//            }
+//        ));
 
         add("broken_spawner", new BrokenSpawnerLootModifier(
             new LootItemCondition[]{
@@ -92,7 +90,7 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
     }
 
     private void modifyChestLoot(String modifierName, Stream<String> targets) {
-        var mappedTargetConditions = targets.map(r -> LootTableIdCondition.builder(new ResourceLocation(r))).toArray(LootTableIdCondition.Builder[]::new);
+        var mappedTargetConditions = targets.map(r -> LootTableIdCondition.builder(ResourceLocation.parse(r))).toArray(LootTableIdCondition.Builder[]::new);
         add(modifierName, new AddTableLootModifier(
             new LootItemCondition[]{
                 AnyOfCondition.anyOf(mappedTargetConditions).build()

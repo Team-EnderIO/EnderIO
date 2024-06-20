@@ -50,7 +50,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 
     private final AABB area;
 
-    private final CraftingMachineTaskHost<PaintingRecipe, RecipeWrapper> craftingTaskHost;
+    private final CraftingMachineTaskHost<PaintingRecipe, PaintingRecipe.Input> craftingTaskHost;
 
     public PaintingMachineBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.PAINTING_MACHINE.get(), worldPosition, blockState);
@@ -58,7 +58,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
         area = AABB.ofSize(worldPosition.getCenter(), 10, 10, 10);
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.PAINTING.type().get(),
-            new RecipeWrapper(getInventoryNN()), this::createTask);
+            this::createTask, this::createRecipeInput);
     }
 
     @Nullable
@@ -119,6 +119,12 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
         craftingTaskHost.newTaskAvailable();
     }
 
+    private PaintingRecipe.Input createRecipeInput() {
+        return new PaintingRecipe.Input(
+            INPUT.getItemStack(getInventoryNN()),
+            PAINT.getItemStack(getInventoryNN()));
+    }
+
     // endregion
 
     // region Crafting Task
@@ -132,8 +138,8 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
-    protected PoweredCraftingMachineTask<PaintingRecipe, RecipeWrapper> createTask(Level level, RecipeWrapper container, @Nullable RecipeHolder<PaintingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, getInventoryNN(), getEnergyStorage(), container, OUTPUT, recipe) {
+    protected PoweredCraftingMachineTask<PaintingRecipe, PaintingRecipe.Input> createTask(Level level, PaintingRecipe.Input recipeInput, @Nullable RecipeHolder<PaintingRecipe> recipe) {
+        return new PoweredCraftingMachineTask<>(level, getInventoryNN(), getEnergyStorage(), recipeInput, OUTPUT, recipe) {
             @Override
             protected void consumeInputs(PaintingRecipe recipe) {
                 INPUT.getItemStack(getInventory()).shrink(1);

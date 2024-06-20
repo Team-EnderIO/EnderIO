@@ -239,7 +239,6 @@ public class EIOBlocks {
                 .strength(5.0F, 6.0F)
                 .sound(SoundType.CHAIN)
                 .noOcclusion()
-                .sound(SoundType.METAL)
                 .mapColor(MapColor.NONE))
         .addBlockTags(
             BlockTags.NEEDS_IRON_TOOL,
@@ -467,7 +466,7 @@ public class EIOBlocks {
 
     private static RegiliteBlock<SilentPressurePlateBlock> silentPressurePlateBlock(final PressurePlateBlock block) {
         ResourceLocation upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
-        ResourceLocation downModelLoc = new ResourceLocation(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
+        ResourceLocation downModelLoc = ResourceLocation.fromNamespaceAndPath(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
 
         return BLOCK_REGISTRY
             .registerBlock("silent_" + upModelLoc.getPath(), props -> new SilentPressurePlateBlock(block),
@@ -486,7 +485,7 @@ public class EIOBlocks {
 
     private static RegiliteBlock<SilentWeightedPressurePlateBlock> silentWeightedPressurePlateBlock(WeightedPressurePlateBlock block) {
         ResourceLocation upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
-        ResourceLocation downModelLoc = new ResourceLocation(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
+        ResourceLocation downModelLoc = ResourceLocation.fromNamespaceAndPath(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
 
         return BLOCK_REGISTRY
             .registerBlock("silent_" + upModelLoc.getPath(), props -> new SilentWeightedPressurePlateBlock(block),

@@ -42,7 +42,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
     public int getCurrentCost() {
         EnchanterRecipe recipe = this.getBlockEntity().getCurrentRecipe();
         if (recipe != null) {
-            return recipe.getXPCost(new RecipeWrapper(this.getBlockEntity().getInventory()));
+            return recipe.getXPCost(this.getBlockEntity().createRecipeInput());
         }
         return -1;
     }
@@ -60,10 +60,12 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
         public void onTake(Player pPlayer, ItemStack pStack) {
             var inventory = blockEntity.getInventory();
             EnchanterRecipe recipe = blockEntity.getCurrentRecipe();
-            if (recipe != null && (pPlayer.experienceLevel >= recipe.getXPCost(blockEntity.getContainer()) || pPlayer.isCreative())) {
-                int amount = recipe.getInputAmountConsumed(blockEntity.getContainer());
+            EnchanterRecipe.Input recipeInput = blockEntity.createRecipeInput();
+
+            if (recipe != null && (pPlayer.experienceLevel >= recipe.getXPCost(recipeInput) || pPlayer.isCreative())) {
+                int amount = recipe.getInputAmountConsumed(recipeInput);
                 int lapizForLevel = recipe.getLapisForLevel(recipe.getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(inventory).getCount()));
-                pPlayer.giveExperienceLevels(-recipe.getXPCost(blockEntity.getContainer()));
+                pPlayer.giveExperienceLevels(-recipe.getXPCost(recipeInput));
                 EnchanterBlockEntity.BOOK.getItemStack(inventory).shrink(1);
                 EnchanterBlockEntity.CATALYST.getItemStack(inventory).shrink(amount);
                 EnchanterBlockEntity.LAPIS.getItemStack(inventory).shrink(lapizForLevel);
@@ -74,9 +76,12 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
         @Override
         public boolean mayPickup(Player playerIn) {
             EnchanterRecipe recipe = blockEntity.getCurrentRecipe();
-            if (recipe != null && (playerIn.experienceLevel >= recipe.getXPCost(blockEntity.getContainer()) || playerIn.isCreative())) {
+            EnchanterRecipe.Input recipeInput = blockEntity.createRecipeInput();
+
+            if (recipe != null && (playerIn.experienceLevel >= recipe.getXPCost(recipeInput) || playerIn.isCreative())) {
                 return super.mayPickup(playerIn);
             }
+
             return false;
         }
     }

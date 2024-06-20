@@ -1,5 +1,6 @@
 package com.enderio.machines.common.recipe;
 
+import com.enderio.base.common.recipe.FluidRecipeInput;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -34,7 +36,7 @@ public record TankRecipe(
     Item output,
     FluidStack fluid,
     Mode mode
-) implements Recipe<TankRecipe.Container> {
+) implements Recipe<TankRecipe.Input> {
 
     public enum Mode implements StringRepresentable {
         FILL(0, "fill"),
@@ -59,30 +61,30 @@ public record TankRecipe(
     }
 
     @Override
-    public boolean matches(Container pContainer, Level pLevel) {
+    public boolean matches(Input recipeInput, Level pLevel) {
         switch (mode) {
-        case FILL -> {
-            if (pContainer.getFluidTank().drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
-                return false;
-            }
+            case FILL -> {
+                if (recipeInput.fluidTank().drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
+                    return false;
+                }
 
-            return input.test(FluidTankBlockEntity.FLUID_DRAIN_INPUT.getItemStack(pContainer));
-        }
-        case EMPTY -> {
-            if (pContainer.getFluidTank().fill(fluid, IFluidHandler.FluidAction.SIMULATE) <= 0) {
-                return false;
+                return input.test(recipeInput.getItem(0));
             }
+            case EMPTY -> {
+                if (recipeInput.fluidTank().fill(fluid, IFluidHandler.FluidAction.SIMULATE) <= 0) {
+                    return false;
+                }
 
-            return input.test(FluidTankBlockEntity.FLUID_FILL_INPUT.getItemStack(pContainer));
-        }
+                return input.test(recipeInput.getItem(1));
+            }
         }
 
         return false;
     }
 
     @Override
-    public ItemStack assemble(Container container, HolderLookup.Provider lookupProvider) {
-        return null;
+    public ItemStack assemble(Input recipeInput, HolderLookup.Provider lookupProvider) {
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -110,17 +112,20 @@ public record TankRecipe(
         return MachineRecipes.TANK.type().get();
     }
 
-    public static class Container extends RecipeWrapper {
+    public record Input(ItemStack fillItem, ItemStack emptyItem, MachineFluidTank fluidTank) implements RecipeInput {
 
-        private final MachineFluidTank fluidTank;
-
-        public Container(IItemHandlerModifiable inv, MachineFluidTank fluidTank) {
-            super(inv);
-            this.fluidTank = fluidTank;
+        @Override
+        public ItemStack getItem(int slotIndex) {
+            return switch (slotIndex) {
+                case 0 -> fillItem;
+                case 1 -> emptyItem;
+                default -> throw new IllegalArgumentException("No item for index " + slotIndex);
+            };
         }
 
-        public MachineFluidTank getFluidTank() {
-            return fluidTank;
+        @Override
+        public int size() {
+            return 2;
         }
     }
 

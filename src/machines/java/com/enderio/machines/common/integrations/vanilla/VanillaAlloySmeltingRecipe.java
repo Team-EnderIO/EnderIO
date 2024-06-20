@@ -8,6 +8,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
@@ -23,7 +24,7 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
         this.vanillaRecipe = vanillaRecipe;
     }
 
-    // Override base behaviour to insert the vanilla recipe
+    // Override base behaviour to insertChannel the vanilla recipe
     @Override
     public List<SizedIngredient> inputs() {
         return List.of(new SizedIngredient(vanillaRecipe.getIngredients().get(0), 1));
@@ -35,8 +36,8 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     }
 
     @Override
-    public int getEnergyCost(ContainerWrapper container) {
-        return getBaseEnergyCost() * container.getInputsTaken();
+    public int getEnergyCost(Input container) {
+        return getBaseEnergyCost() * container.inputsConsumed();
     }
 
     @Override
@@ -45,20 +46,19 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     }
 
     @Override
-    public boolean matches(ContainerWrapper container, Level level) {
-        for (int i = 0; i < AlloySmelterBlockEntity.INPUTS.size(); i++) {
-            if (vanillaRecipe.matches(new AlloySmelterBlockEntity.ContainerSubWrapper(container, i), level)) {
-                return true;
-            }
+    public boolean matches(Input recipeInput, Level level) {
+        if (vanillaRecipe.matches(new SingleRecipeInput(recipeInput.getFirstPopulated()), level)) {
+            return true;
         }
 
         return false;
     }
 
     @Override
-    public List<OutputStack> craft(ContainerWrapper container, RegistryAccess registryAccess) {
-        ItemStack result = vanillaRecipe.assemble(container, registryAccess);
-        result.setCount(result.getCount() * container.getInputsTaken());
+    public List<OutputStack> craft(Input recipeInput, RegistryAccess registryAccess) {
+        SingleRecipeInput singleRecipeInput = new SingleRecipeInput(recipeInput.getFirstPopulated());
+        ItemStack result = vanillaRecipe.assemble(singleRecipeInput, registryAccess);
+        result.setCount(result.getCount() * recipeInput.inputsConsumed());
         return List.of(OutputStack.of(result));
     }
 

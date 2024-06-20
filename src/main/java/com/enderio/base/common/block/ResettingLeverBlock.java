@@ -40,9 +40,7 @@ public class ResettingLeverBlock extends LeverBlock {
         super.tick(state, level, pos, randomSource);
 
         if (state.getValue(POWERED) && !level.isClientSide) {
-            BlockState blockstate = this.pull(state, level, pos);
-            float f = blockstate.getValue(POWERED) ? 0.6F : 0.5F;
-            level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
+            this.pull(state, level, pos, null);
         }
     }
 

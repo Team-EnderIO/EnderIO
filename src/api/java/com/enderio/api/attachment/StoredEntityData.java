@@ -68,7 +68,7 @@ public record StoredEntityData(CompoundTag entityTag, float maxHealth) {
 
     public Optional<ResourceLocation> entityType() {
         if (entityTag.contains(KEY_ID)) {
-            return Optional.of(new ResourceLocation(entityTag.getString(KEY_ID)));
+            return Optional.of(ResourceLocation.parse(entityTag.getString(KEY_ID)));
         }
 
         return Optional.empty();
@@ -92,7 +92,7 @@ public record StoredEntityData(CompoundTag entityTag, float maxHealth) {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public Tag save(HolderLookup.Provider lookupProvider) {
-        if (this.hasEntity()) {
+        if (!this.hasEntity()) {
             throw new IllegalStateException("Cannot encode empty StoredEntityData");
         } else {
             return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();

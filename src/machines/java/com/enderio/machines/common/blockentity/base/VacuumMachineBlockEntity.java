@@ -7,6 +7,7 @@ import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.attachment.RangedActor;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.io.IOConfig;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -28,6 +29,7 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     protected static final double SPEED_4 = SPEED * 4;
     private List<WeakReference<T>> entities = new ArrayList<>();
     private Class<T> targetClass;
+    public static SingleSlotAccess FILTER = new SingleSlotAccess();
 
     private NetworkDataSlot<ActionRange> actionRangeDataSlot;
 

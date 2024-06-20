@@ -20,6 +20,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.item.crafting.SmithingTransformRecipe;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -54,15 +55,15 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
     }
 
     @Override
-    public boolean matches(Container pContainer, Level pLevel) {
+    public boolean matches(SmithingRecipeInput recipeInput, Level pLevel) {
         // Check temporary binder
-        if (!pContainer.getItem(2).is(EIOItems.CONDUIT_BINDER.get())) {
+        if (!recipeInput.getItem(2).is(EIOItems.CONDUIT_BINDER.get())) {
             return false;
         }
 
         // Check the upgrade can be applied to this item.
-        Optional<IDarkSteelUpgrade> upgrade = getUpgradeFromItem(pContainer.getItem(0));
-        IDarkSteelUpgradable target = getUpgradableFromItem(pContainer.getItem(1));
+        Optional<IDarkSteelUpgrade> upgrade = getUpgradeFromItem(recipeInput.getItem(0));
+        IDarkSteelUpgradable target = getUpgradableFromItem(recipeInput.getItem(1));
         if (target != null) {
             return upgrade.map(target::canApplyUpgrade).orElse(false);
         }
@@ -70,10 +71,10 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
     }
 
     @Override
-    public ItemStack assemble(Container pContainer, HolderLookup.Provider lookupProvider) {
-        Optional<IDarkSteelUpgrade> upgrade = getUpgradeFromItem(pContainer.getItem(0));
+    public ItemStack assemble(SmithingRecipeInput recipeInput, HolderLookup.Provider lookupProvider) {
+        Optional<IDarkSteelUpgrade> upgrade = getUpgradeFromItem(recipeInput.getItem(0));
 
-        ItemStack resultItem = pContainer.getItem(1).copy();
+        ItemStack resultItem = recipeInput.getItem(1).copy();
         IDarkSteelUpgradable target = getUpgradableFromItem(resultItem);
         if (target != null) {
             return upgrade.map(up -> DarkSteelUpgradeable.addUpgrade(resultItem, up)).orElse(ItemStack.EMPTY);

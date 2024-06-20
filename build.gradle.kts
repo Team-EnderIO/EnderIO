@@ -8,7 +8,7 @@ plugins {
     id("eclipse")
     id("maven-publish")
     id("com.modrinth.minotaur") version "2.+"
-    id("net.neoforged.gradle.userdev") version "7.0.124"
+    id("net.neoforged.gradle.userdev") version "7.0.145"
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
@@ -24,6 +24,7 @@ val modrinth_projectId: String by project
 val modrinth_dep_jei: String by project
 val modrinth_dep_athena: String by project
 val modrinth_dep_ae2: String by project
+val cctVersion: String by project
 
 idea {
     module {
@@ -56,13 +57,18 @@ val subsets = listOf<String>(
 )
 
 sourceSets {
-    create("api")
+    create("ensure_plugin")
+    create("api") {
+        compileClasspath += sourceSets.getByName("ensure_plugin").output
+    }
     create("core") {
         compileClasspath += sourceSets.getByName("api").output
+        compileClasspath += sourceSets.getByName("ensure_plugin").output
     }
     main {
         compileClasspath += sourceSets.getByName("api").output
         compileClasspath += sourceSets.getByName("core").output
+        compileClasspath += sourceSets.getByName("ensure_plugin").output
         //ext.refMap = "mixins.enderio.refmap.json"
         resources.srcDir("src/generated/resources")
     }
@@ -191,8 +197,7 @@ repositories {
     exclusiveRepo("https://api.modrinth.com/maven", "maven.modrinth")
     exclusiveRepo("https://maven.parchmentmc.org/", "org.parchmentmc.data")
     exclusiveRepo("https://maven.rover656.dev/releases", "com.enderio")
-
-    mavenLocal()
+    exclusiveRepo("https://squiddev.cc/maven/", "cc.tweaked")
 }
 
 jarJar.enable()
@@ -231,10 +236,10 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
 
     // JEI
-    //compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-    //compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
-    //runtimeOnly("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
-    //runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+    compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
+    runtimeOnly("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
+    runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
     //RFTOOLS
     //runtimeOnly("maven.modrinth:rftools-power:f430rHkA")
@@ -243,7 +248,7 @@ dependencies {
     //runtimeOnly("maven.modrinth:spark:Yp6s4wsw")
 
     //Athena ctm
-    //runtimeOnly("maven.modrinth:athena-ctm:${athena_version}")
+    runtimeOnly("maven.modrinth:athena-ctm:${athena_version}")
 
     // AE2
     compileOnly("appeng:appliedenergistics2-neoforge:${ae2_version}:api")
@@ -262,7 +267,7 @@ dependencies {
     //}
 
     // Jade
-    //runtimeOnly("curse.maven:jade-324717:${jade_cf_id}")
+    runtimeOnly("curse.maven:jade-324717:${jade_cf_id}")
 
     //fluxnetworks
     ////runtimeOnly("curse.maven:fluxnetworks-248020:4651164")
@@ -278,8 +283,13 @@ dependencies {
     //runtimeOnly("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // Mekanism
-    //compileOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}:api")
-    //runtimeOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
+    compileOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}:api")
+    runtimeOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
+
+    //CC-Tweaked
+    //compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cctVersion")
+    //compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cctVersion")
+    //runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cctVersion")
 
     // Jetbrains annotations
     compileOnly("org.jetbrains:annotations:23.0.0")
@@ -430,6 +440,19 @@ publishing {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8" // Use the UTF-8 charset for Java compilation
+    if (group != null) {
+        return@withType; // neoform recompile
+    }
+    if (name == "compileEnsure_pluginJava") {
+        //don't use the plugin to compile the plugin and open the required packages to compile it correctly, the packages are opened at compile time for other modules using EnsureSetup
+        options.compilerArgs.add("--add-exports=jdk.compiler/com.sun.tools.javac.api=ensureplugin")
+        options.compilerArgs.add("--add-exports=jdk.compiler/com.sun.tools.javac.code=ensureplugin")
+        options.compilerArgs.add("--add-exports=jdk.compiler/com.sun.tools.javac.tree=ensureplugin")
+        options.compilerArgs.add("--add-exports=jdk.compiler/com.sun.tools.javac.util=ensureplugin")
+    } else if (name != "compileJava") {
+        //all modules except an unnamed one (not sure what this one is tbh)
+        options.compilerArgs.add("-Xplugin:ContextEnsure")
+    }
 }
 
 // ============
@@ -549,6 +572,7 @@ fun setupSourceSet(name: String) {
     sourceSet.compileClasspath += sourceSets.getByName("api").output
     sourceSet.compileClasspath += sourceSets.main.get().output
     sourceSet.compileClasspath += sourceSets.getByName("core").output
+    sourceSet.compileClasspath += sourceSets.getByName("ensure_plugin").output
 
     // Extend configurations
     setupExtraSourceSets(sourceSet)

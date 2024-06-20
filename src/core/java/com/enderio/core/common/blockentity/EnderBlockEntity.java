@@ -1,10 +1,10 @@
 package com.enderio.core.common.blockentity;
 
-import com.enderio.api.UseOnly;
 import com.enderio.core.common.network.ClientboundDataSlotChange;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.core.common.network.ServerboundCDataSlotUpdate;
 import io.netty.buffer.Unpooled;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -163,7 +162,7 @@ public class EnderBlockEntity extends BlockEntity {
     /**
      * Fire this when you change the value of a {@link NetworkDataSlot} on the client side.
      */
-    @UseOnly(LogicalSide.CLIENT)
+    @EnsureSide(EnsureSide.Side.CLIENT)
     public <T> void clientUpdateSlot(@Nullable NetworkDataSlot<T> slot, T value) {
         if (slot == null) {
             return;
@@ -181,7 +180,7 @@ public class EnderBlockEntity extends BlockEntity {
     /**
      * Sync the BlockEntity to all tracking players. Don't call this if you don't know what you do
      */
-    @UseOnly(LogicalSide.SERVER)
+    @EnsureSide(EnsureSide.Side.SERVER)
     public void sync() {
         var syncData = createBufferSlotUpdate();
         if (syncData != null && level instanceof ServerLevel serverLevel) {
@@ -190,7 +189,7 @@ public class EnderBlockEntity extends BlockEntity {
         }
     }
 
-    @UseOnly(LogicalSide.CLIENT)
+    @EnsureSide(EnsureSide.Side.CLIENT)
     public void clientHandleBufferSync(RegistryFriendlyByteBuf buf) {
         for (int amount = buf.readInt(); amount > 0; amount--) {
             int index = buf.readInt();
@@ -202,7 +201,7 @@ public class EnderBlockEntity extends BlockEntity {
         }
     }
 
-    @UseOnly(LogicalSide.SERVER)
+    @EnsureSide(EnsureSide.Side.SERVER)
     public void serverHandleBufferChange(RegistryFriendlyByteBuf buf) {
         int index;
         try {

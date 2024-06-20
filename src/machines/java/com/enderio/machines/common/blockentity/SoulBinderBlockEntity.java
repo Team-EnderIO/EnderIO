@@ -26,13 +26,16 @@ import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.SoulBinderMenu;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SoulBindingRecipe;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -54,28 +57,27 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     public static final SingleSlotAccess INPUT_SOUL = new SingleSlotAccess();
     public static final SingleSlotAccess INPUT_OTHER = new SingleSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
-    private final SoulBindingRecipe.Container fakeContainer = new SoulBindingRecipe.Container(getInventoryNN(), () -> Integer.MAX_VALUE);
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
-    @Nullable private RecipeHolder<SoulBindingRecipe> recipe;
-    @UseOnly(LogicalSide.CLIENT) private int clientExp = 0;
 
-    private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Container> craftingTaskHost;
+    @UseOnly(LogicalSide.CLIENT)
+    @Nullable
+    private RecipeHolder<SoulBindingRecipe> clientRecipe;
+
+    private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Input> craftingTaskHost;
 
     public SoulBinderBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.SOUL_BINDER.get(), worldPosition, blockState);
         fluidHandler = createFluidHandler();
 
         // Sync fluid amount to client.
-        addDataSlot(NetworkDataSlot.INT.create(() -> TANK.getFluidAmount(this), i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))
-        ));
+        addDataSlot(NetworkDataSlot.INT.create(
+            () -> TANK.getFluidAmount(this),
+            i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))));
 
         // Create the crafting task host
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SOUL_BINDING.type().get(),
-            new SoulBindingRecipe.Container(getInventoryNN(), () -> TANK.getFluidAmount(this)), this::createTask);
-
-        // Sync crafting container needed xp
-        addDataSlot(NetworkDataSlot.INT.create(() -> recipe == null ? 0 : recipe.value().experience(), i -> clientExp = i));
+            this::createTask, this::createRecipeInput);
     }
 
     @Override
@@ -122,15 +124,46 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     @Override
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
-        recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), fakeContainer, level).orElse(null);
         craftingTaskHost.newTaskAvailable();
+
+        if (level != null && level.isClientSide) {
+            clientRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level).orElse(null);
+        }
+    }
+
+    private SoulBindingRecipe.Input createRecipeInput() {
+        return new SoulBindingRecipe.Input(
+            INPUT_SOUL.getItemStack(getInventoryNN()),
+            INPUT_OTHER.getItemStack(getInventoryNN()),
+            TANK.getFluid(getFluidHandler())
+        );
+    }
+
+    @EnsureSide(EnsureSide.Side.CLIENT)
+    private SoulBindingRecipe.Input createFakeRecipeInput() {
+        return new SoulBindingRecipe.Input(
+            INPUT_SOUL.getItemStack(getInventoryNN()),
+            INPUT_OTHER.getItemStack(getInventoryNN()),
+            new FluidStack(EIOFluids.XP_JUICE.getSource(), Integer.MAX_VALUE)
+        );
     }
 
     // endregion
 
-    @UseOnly(LogicalSide.CLIENT)
+    @EnsureSide(EnsureSide.Side.CLIENT)
     public int getClientExp() {
-        return clientExp;
+        // This should always set a valid recipe.
+        if (level != null && clientRecipe == null && hasValidRecipe()) {
+            clientRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level).orElse(null);
+        }
+
+        return clientRecipe != null ? clientRecipe.value().experience() : 0;
+    }
+
+    private boolean hasValidRecipe() {
+        return RecipeCaches.SOUL_BINDING.hasRecipe(List.of(
+            INPUT_SOUL.getItemStack(getInventoryNN()),
+            INPUT_OTHER.getItemStack(getInventoryNN())));
     }
 
     // region Fluid Storage
@@ -146,7 +179,6 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
             protected void onContentsChanged(int slot) {
                 craftingTaskHost.newTaskAvailable();
                 updateMachineState(MachineState.EMPTY_TANK, TANK.getFluidAmount(this) <= 0);
-                recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), fakeContainer, level).orElse(null);
                 setChanged();
             }
 
@@ -190,7 +222,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
-    protected PoweredCraftingMachineTask<SoulBindingRecipe, SoulBindingRecipe.Container> createTask(Level level, SoulBindingRecipe.Container container,
+    protected PoweredCraftingMachineTask<SoulBindingRecipe, SoulBindingRecipe.Input> createTask(Level level, SoulBindingRecipe.Input container,
         @Nullable RecipeHolder<SoulBindingRecipe> recipe) {
         return new PoweredCraftingMachineTask<>(level, getInventoryNN(), getEnergyStorage(), container, OUTPUT, recipe) {
 

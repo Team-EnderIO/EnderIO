@@ -1,9 +1,0 @@
-{
-  "type": "enderio:enchanting",
-  "cost_multiplier": 1,
-  "enchantment": "minecraft:loyalty",
-  "input": {
-    "count": 1,
-    "item": "minecraft:lead"
-  }
-}

@@ -17,6 +17,7 @@ public class SingleSlotAccess {
     public ItemStack getItemStack(Container container) {
         return container.getItem(index);
     }
+
     public ItemStack insertItem(MachineInventory inventory, ItemStack itemStack, boolean simulate) {
         return inventory.insertItem(index, itemStack, simulate);
     }

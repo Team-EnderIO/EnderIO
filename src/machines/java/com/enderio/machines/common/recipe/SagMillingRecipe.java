@@ -24,6 +24,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -44,7 +45,7 @@ public record SagMillingRecipe(
     List<OutputItem> outputs,
     int energy,
     BonusType bonusType
-) implements MachineRecipe<SagMillingRecipe.Container> {
+) implements MachineRecipe<SagMillingRecipe.Input> {
     private static final Random RANDOM = new Random();
 
     /**
@@ -56,8 +57,8 @@ public record SagMillingRecipe(
     }
 
     @Override
-    public int getEnergyCost(Container container) {
-        return getEnergyCost(container.getGrindingBall());
+    public int getEnergyCost(Input recipeInput) {
+        return getEnergyCost(recipeInput.grindingBallData());
     }
 
     public int getEnergyCost(GrindingBallData grindingBallData) {
@@ -65,12 +66,12 @@ public record SagMillingRecipe(
     }
 
     @Override
-    public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input recipeInput, RegistryAccess registryAccess) {
         List<OutputStack> outputs = new ArrayList<>();
 
         // Iterate over the number of outputs
-        float outputCount = bonusType.canMultiply() ? container.getGrindingBall().outputMultiplier() : 1.0f;
-        float chanceMult = bonusType.doChance() ? container.getGrindingBall().bonusMultiplier() : 1.0f;
+        float outputCount = bonusType.canMultiply() ? recipeInput.grindingBallData().outputMultiplier() : 1.0f;
+        float chanceMult = bonusType.doChance() ? recipeInput.grindingBallData().bonusMultiplier() : 1.0f;
 
         // Iterate over the number of outputs.
         // Without a grinding ball this only runs once.
@@ -128,10 +129,9 @@ public record SagMillingRecipe(
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
-        return input.test(SagMillBlockEntity.INPUT.getItemStack(container));
+    public boolean matches(Input recipeInput, Level level) {
+        return input.test(recipeInput.getItem(0));
     }
-
 
     @Override
     public RecipeSerializer<?> getSerializer() {
@@ -268,17 +268,20 @@ public record SagMillingRecipe(
         }
     }
 
-    public static class Container extends RecipeWrapper {
+    public record Input(ItemStack inputItemStack, GrindingBallData grindingBallData) implements RecipeInput {
 
-        private final Supplier<GrindingBallData> grindingBallData;
+        @Override
+        public ItemStack getItem(int slotIndex) {
+            if (slotIndex != 0) {
+                throw new IllegalArgumentException("No item for index " + slotIndex);
+            }
 
-        public Container(IItemHandlerModifiable inv, Supplier<GrindingBallData> data) {
-            super(inv);
-            this.grindingBallData = data;
+            return inputItemStack;
         }
 
-        public final GrindingBallData getGrindingBall() {
-            return grindingBallData.get();
+        @Override
+        public int size() {
+            return 1;
         }
     }
 

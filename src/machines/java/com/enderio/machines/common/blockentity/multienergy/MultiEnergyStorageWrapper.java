@@ -73,7 +73,7 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        if (!canReceive()) {
+        if (!canReceive() || getMaxEnergyStored() == 0) {
             return 0;
         }
 
@@ -94,7 +94,7 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
         int cumulativeEnergy = 0;
         List<GraphObject<Mergeable.Dummy>> nodes = new ArrayList<>(graph.getObjects());
         Collections.shuffle(nodes);
-        //shuffle to extract randomly to prevent some solar panels from being full and some being empty
+        //shuffle to extractChannel randomly to prevent some solar panels from being full and some being empty
         for (GraphObject<Mergeable.Dummy> object : nodes) {
             if (object instanceof MultiEnergyNode node) {
                 cumulativeEnergy += node.getInternal().get().extractEnergy(energy - cumulativeEnergy, false);
@@ -116,7 +116,7 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
         int cumulativeEnergy = 0;
         List<GraphObject<Mergeable.Dummy>> nodes = new ArrayList<>(graph.getObjects());
         Collections.shuffle(nodes);
-        //shuffle to extract randomly to prevent some solar panels from being full and some being empty
+        //shuffle to extractChannel randomly to prevent some solar panels from being full and some being empty
         for (GraphObject<Mergeable.Dummy> object : nodes) {
             if (object instanceof MultiEnergyNode node) {
                 cumulativeEnergy += node.getInternal().get().receiveEnergy(energy - cumulativeEnergy, false);

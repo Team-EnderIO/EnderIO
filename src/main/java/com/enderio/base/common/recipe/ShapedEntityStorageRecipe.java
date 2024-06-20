@@ -7,6 +7,7 @@ import com.enderio.core.common.recipes.WrappedShapedRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
@@ -29,7 +30,7 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer container, HolderLookup.Provider lookupProvider) {
+    public ItemStack assemble(CraftingInput container, HolderLookup.Provider lookupProvider) {
         ItemStack result = getWrapped().assemble(container, lookupProvider);
 
         getItemStoringEntity(container).ifPresent(itemStack ->
@@ -38,13 +39,13 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer pInv, Level pLevel) {
+    public boolean matches(CraftingInput pInv, Level pLevel) {
         // Only let this match if there is an entity storage to pull from
         return getItemStoringEntity(pInv).isPresent() && super.matches(pInv, pLevel);
     }
 
-    private Optional<ItemStack> getItemStoringEntity(CraftingContainer container) {
-        for (int slot = 0; slot < container.getContainerSize(); slot++) {
+    private Optional<ItemStack> getItemStoringEntity(CraftingInput container) {
+        for (int slot = 0; slot < container.size(); slot++) {
             ItemStack stack = container.getItem(slot);
             var data = stack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
             if (data.hasEntity()) {
