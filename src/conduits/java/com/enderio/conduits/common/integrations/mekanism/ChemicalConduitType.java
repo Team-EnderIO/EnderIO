@@ -13,8 +13,8 @@ public class ChemicalConduitType extends TieredConduit<ChemicalConduitData> {
     public static final ConduitMenuData MULTI_MENU_DATA = new ConduitMenuData.Simple(false, false, false, true, true, true);
     private final boolean multiFluid;
 
-    public ChemicalConduitType(int tier, boolean isMultiFluid) {
-        super(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "chemical"), tier);
+    public ChemicalConduitType(ResourceLocation tierName, int tier, boolean isMultiFluid) {
+        super(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "chemical"), tierName, tier);
         this.multiFluid = isMultiFluid;
     }
 

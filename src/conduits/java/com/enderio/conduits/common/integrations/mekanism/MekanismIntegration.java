@@ -65,7 +65,7 @@ public class MekanismIntegration implements Integration {
 
     private static DeferredHolder<ConduitType<?>, ChemicalConduitType> chemicalConduit(String name, int tier, boolean isMultiFluid) {
         return CONDUIT_TYPES.register(name,
-            () -> new ChemicalConduitType(tier, isMultiFluid));
+            () -> new ChemicalConduitType(EnderIO.loc(name + "_conduit"), tier, isMultiFluid));
     }
 
     private static DeferredHolder<ConduitType<?>, HeatConduitType> heatConduit(String name) {

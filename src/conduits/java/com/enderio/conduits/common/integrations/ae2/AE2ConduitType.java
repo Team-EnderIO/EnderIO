@@ -2,6 +2,7 @@ package com.enderio.conduits.common.integrations.ae2;
 
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IInWorldGridNodeHost;
+import com.enderio.EnderIO;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitGraph;
@@ -24,7 +25,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     private final boolean dense;
 
     public AE2ConduitType(boolean dense) {
-        super(ResourceLocation.fromNamespaceAndPath("ae2", "me_cable"), dense ? 32 : 8);
+        super(ResourceLocation.fromNamespaceAndPath("ae2", "me_cable"), dense ? EnderIO.loc("dense_me_conduit") : EnderIO.loc("me_conduit"), dense ? 32 : 8);
         this.dense = dense;
     }
 
