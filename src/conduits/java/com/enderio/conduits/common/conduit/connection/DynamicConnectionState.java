@@ -1,10 +1,10 @@
-package com.enderio.conduits.common.blockentity.connection;
+package com.enderio.conduits.common.conduit.connection;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
-import com.enderio.conduits.common.blockentity.SlotType;
+import com.enderio.api.conduit.SlotType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,7 +15,17 @@ import net.minecraftforge.fml.LogicalSide;
 import java.util.HashMap;
 import java.util.Map;
 
-public record DynamicConnectionState(boolean isInsert, ColorControl insert, boolean isExtract, ColorControl extract, RedstoneControl control, ColorControl redstoneChannel, @UseOnly(LogicalSide.SERVER) ItemStack filterInsert, @UseOnly(LogicalSide.SERVER) ItemStack filterExtract, @UseOnly(LogicalSide.SERVER) ItemStack upgradeExtract) implements IConnectionState {
+public record DynamicConnectionState(
+    boolean isInsert,
+    ColorControl insertChannel,
+    boolean isExtract,
+    ColorControl extractChannel,
+    RedstoneControl control,
+    ColorControl redstoneChannel,
+    @UseOnly(LogicalSide.SERVER) ItemStack filterInsert,
+    @UseOnly(LogicalSide.SERVER) ItemStack filterExtract,
+    @UseOnly(LogicalSide.SERVER) ItemStack upgradeExtract
+) implements ConnectionState {
 
     public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction, ConduitType<?> type) {
         ConduitType.ConduitConnectionData defaultConnection = type.getDefaultConnection(level, pos, direction);
@@ -44,20 +54,20 @@ public record DynamicConnectionState(boolean isInsert, ColorControl insert, bool
         for (SlotType type1: SlotType.values()) {
             items.put(type1, type1 == type ? stack: getItem(type1));
         }
-        return new DynamicConnectionState(isInsert, insert, isExtract, extract, control, redstoneChannel, items.get(SlotType.FILTER_INSERT), items.get(SlotType.FILTER_EXTRACT), items.get(SlotType.UPGRADE_EXTRACT));
+        return new DynamicConnectionState(isInsert, insertChannel, isExtract, extractChannel, control, redstoneChannel, items.get(SlotType.FILTER_INSERT), items.get(SlotType.FILTER_EXTRACT), items.get(SlotType.UPGRADE_EXTRACT));
     }
     public DynamicConnectionState withEnabled(boolean forExtract, boolean value) {
-        return new DynamicConnectionState(!forExtract ? value : isInsert, insert, forExtract ? value : isExtract, extract, control, redstoneChannel, filterInsert, filterExtract, upgradeExtract);
+        return new DynamicConnectionState(!forExtract ? value : isInsert, insertChannel, forExtract ? value : isExtract, extractChannel, control, redstoneChannel, filterInsert, filterExtract, upgradeExtract);
     }
 
     public DynamicConnectionState withColor(boolean forExtract, ColorControl value) {
-        return new DynamicConnectionState(isInsert, !forExtract ? value : insert, isExtract, forExtract ? value : extract, control, redstoneChannel, filterInsert, filterExtract, upgradeExtract);
+        return new DynamicConnectionState(isInsert, !forExtract ? value : insertChannel, isExtract, forExtract ? value : extractChannel, control, redstoneChannel, filterInsert, filterExtract, upgradeExtract);
     }
     public DynamicConnectionState withRedstoneMode(RedstoneControl value) {
-        return new DynamicConnectionState(isInsert, insert, isExtract, extract, value, redstoneChannel, filterInsert, filterExtract, upgradeExtract);
+        return new DynamicConnectionState(isInsert, insertChannel, isExtract, extractChannel, value, redstoneChannel, filterInsert, filterExtract, upgradeExtract);
     }
     public DynamicConnectionState withRedstoneChannel(ColorControl value) {
-        return new DynamicConnectionState(isInsert, insert, isExtract, extract, control, value, filterInsert, filterExtract, upgradeExtract);
+        return new DynamicConnectionState(isInsert, insertChannel, isExtract, extractChannel, control, value, filterInsert, filterExtract, upgradeExtract);
     }
 
     public boolean isEmpty() {
@@ -66,9 +76,9 @@ public record DynamicConnectionState(boolean isInsert, ColorControl insert, bool
 
     public void toNetwork(FriendlyByteBuf buf) {
         buf.writeBoolean(isInsert);
-        buf.writeEnum(insert);
+        buf.writeEnum(insertChannel);
         buf.writeBoolean(isExtract);
-        buf.writeEnum(extract);
+        buf.writeEnum(extractChannel);
         buf.writeEnum(control);
         buf.writeEnum(redstoneChannel);
         buf.writeItemStack(filterInsert, false);

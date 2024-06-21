@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types;
+package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitData;
@@ -15,15 +15,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class EnergyExtendedData implements ConduitData<EnergyExtendedData> {
+public class EnergyConduitData implements ConduitData<EnergyConduitData> {
 
     private final Map<Direction, EnergySidedData> energySidedData = new EnumMap<>(Direction.class);
-
 
     private int capacity = 500;
     private int stored = 0;
 
-    private LazyOptional<IEnergyStorage> selfCap = LazyOptional.of( () -> new EnergyExtendedData.ConduitEnergyStorage(this));
+    private LazyOptional<IEnergyStorage> selfCap = LazyOptional.of( () -> new EnergyConduitData.ConduitEnergyStorage(this));
 
 
     @Override
@@ -84,7 +83,7 @@ public class EnergyExtendedData implements ConduitData<EnergyExtendedData> {
 
     LazyOptional<IEnergyStorage> getSelfCap() {
         if (!selfCap.isPresent()) {
-            selfCap = LazyOptional.of(() -> new EnergyExtendedData.ConduitEnergyStorage(this));
+            selfCap = LazyOptional.of(() -> new EnergyConduitData.ConduitEnergyStorage(this));
         }
         return selfCap;
     }
@@ -114,7 +113,7 @@ public class EnergyExtendedData implements ConduitData<EnergyExtendedData> {
         // endregion
     }
 
-    private record ConduitEnergyStorage(EnergyExtendedData data) implements IEnergyStorage {
+    private record ConduitEnergyStorage(EnergyConduitData data) implements IEnergyStorage {
 
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {

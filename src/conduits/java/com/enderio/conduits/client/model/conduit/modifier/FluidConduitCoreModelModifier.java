@@ -2,7 +2,7 @@ package com.enderio.conduits.client.model.conduit.modifier;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.model.ConduitCoreModelModifier;
-import com.enderio.conduits.common.types.FluidExtendedData;
+import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
 import com.enderio.core.client.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -21,14 +21,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FluidConduitCoreModelModifier implements ConduitCoreModelModifier<FluidExtendedData> {
+public class FluidConduitCoreModelModifier implements ConduitCoreModelModifier<FluidConduitData> {
 
     public static final FluidConduitCoreModelModifier INSTANCE = new FluidConduitCoreModelModifier();
 
     private static final ResourceLocation FLUID_MODEL = EnderIO.loc("block/extra/fluids");
 
     @Override
-    public List<BakedQuad> createConnectionQuads(FluidExtendedData data, @Nullable Direction facing, Direction connectionDirection, RandomSource rand,
+    public List<BakedQuad> createConnectionQuads(FluidConduitData data, @Nullable Direction facing, Direction connectionDirection, RandomSource rand,
         @Nullable RenderType type) {
         if (!data.isMultiFluid && data.lockedFluid() != null) {
             return new FluidPaintQuadTransformer(data.lockedFluid())

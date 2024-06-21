@@ -4,7 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.conduit.screen.ConduitScreenExtension;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.conduits.common.types.ItemExtendedData;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
 import com.enderio.core.client.gui.widgets.CheckBox;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ItemConduitScreenExtension implements ConduitScreenExtension<ItemExtendedData> {
+public class ItemConduitScreenExtension implements ConduitScreenExtension<ItemConduitData> {
 
     private static final ResourceLocation ROUND_ROBIN_ICON = EnderIO.loc("textures/gui/round_robin.png");
     private static final ResourceLocation SELF_FEED_ICON = EnderIO.loc("textures/gui/self_feed.png");
 
     @Override
-    public List<AbstractWidget> createWidgets(Screen screen, Supplier<ItemExtendedData> conduitDataSupplier,
-        UpdateExtendedData<ItemExtendedData> updateConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+    public List<AbstractWidget> createWidgets(Screen screen, Supplier<ItemConduitData> conduitDataSupplier,
+        UpdateExtendedData<ItemConduitData> updateConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         List<AbstractWidget> widgets = new ArrayList<>();
 
         widgets.add(new CheckBox(

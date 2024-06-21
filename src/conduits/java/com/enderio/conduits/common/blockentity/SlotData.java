@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.blockentity;
 
+import com.enderio.api.conduit.SlotType;
 import net.minecraft.core.Direction;
 
 public record SlotData(Direction direction, int conduitIndex, SlotType slotType) {

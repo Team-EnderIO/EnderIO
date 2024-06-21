@@ -2,4 +2,4 @@
 @net.minecraft.MethodsReturnNonnullByDefault
 @com.tterrag.registrate.util.nullness.FieldsAreNonnullByDefault
 
-package com.enderio.conduits.common.blockentity.connection;
+package com.enderio.conduits.common.conduit.block;

@@ -9,8 +9,8 @@ import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.ConduitConnection;
 import com.enderio.conduits.common.blockentity.OffsetHelper;
-import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
-import com.enderio.conduits.common.blockentity.connection.IConnectionState;
+import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
+import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.core.data.model.EIOModel;
 import com.mojang.math.Axis;
 import com.mojang.math.Transformation;
@@ -89,7 +89,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                     if (connection.isEnd()) {
                         quads.addAll(rotationTranslation.process(modelOf(CONDUIT_CONNECTION_BOX).getQuads(state, preRotation, rand, extraData, renderType)));
 
-                        IConnectionState connectionState = connection.getConnectionState(type);
+                        ConnectionState connectionState = connection.getConnectionState(type);
                         if (connectionState instanceof DynamicConnectionState dyn) {
                             IQuadTransformer color = rotationTranslation.andThen(new ColorQuadTransformer(dyn.insert(), dyn.extract()));
                             BakedModel model = null;

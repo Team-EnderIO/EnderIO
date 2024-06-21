@@ -9,9 +9,9 @@ import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
-import com.enderio.conduits.common.blockentity.SlotType;
-import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
-import com.enderio.conduits.common.blockentity.connection.IConnectionState;
+import com.enderio.api.conduit.SlotType;
+import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
+import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.menu.ConduitSlot;
@@ -178,10 +178,10 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
         return getConnectionState() instanceof DynamicConnectionState dyn ? map.apply(dyn) : defaultValue;
     }
 
-    private IConnectionState getConnectionState() {
+    private ConnectionState getConnectionState() {
         return getConnectionState(menu.getConduitType());
     }
-    private IConnectionState getConnectionState(ConduitType<?> type) {
+    private ConnectionState getConnectionState(ConduitType<?> type) {
         return getBundle().getConnection(menu.getDirection()).getConnectionState(type);
     }
 

@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.types;
+package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitData;
@@ -10,7 +10,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-public class FluidExtendedData implements ConduitData<FluidExtendedData> {
+public class FluidConduitData implements ConduitData<FluidConduitData> {
 
     public final boolean isMultiFluid;
 
@@ -18,12 +18,12 @@ public class FluidExtendedData implements ConduitData<FluidExtendedData> {
     Fluid lockedFluid = null;
     boolean shouldReset = false;
 
-    public FluidExtendedData(boolean isMultiFluid) {
+    public FluidConduitData(boolean isMultiFluid) {
         this.isMultiFluid = isMultiFluid;
     }
 
     @Override
-    public void onConnectTo(FluidExtendedData otherData) {
+    public void onConnectTo(FluidConduitData otherData) {
         if (lockedFluid != null) {
             if (otherData.lockedFluid != null && lockedFluid != otherData.lockedFluid) {
                 EnderIO.LOGGER.warn("incompatible fluid conduits merged");
@@ -35,7 +35,7 @@ public class FluidExtendedData implements ConduitData<FluidExtendedData> {
     }
 
     @Override
-    public boolean canConnectTo(FluidExtendedData otherData) {
+    public boolean canConnectTo(FluidConduitData otherData) {
         return lockedFluid == null || otherData.lockedFluid == null || lockedFluid == otherData.lockedFluid;
     }
 

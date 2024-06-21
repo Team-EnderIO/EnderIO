@@ -11,7 +11,7 @@ import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
-import com.enderio.conduits.common.items.ConduitBlockItem;
+import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.network.ConduitNetwork;
 import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;

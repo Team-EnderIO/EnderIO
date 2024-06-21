@@ -1,11 +1,9 @@
-package com.enderio.conduits.common.types;
+package com.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitMenuData;
-import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.misc.RedstoneControl;
-import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.init.EnderConduitTypes;
+import com.enderio.conduits.common.conduit.type.SimpleConduitType;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,10 +17,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
+public class EnergyConduitType extends SimpleConduitType<EnergyConduitData> {
+    private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
+
     public EnergyConduitType() {
-        super(EnderIO.loc("block/conduit/energy"), new EnergyConduitTicker(), EnergyExtendedData::new,
-            new IClientConduitData.Simple<>(EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, 24)), ConduitMenuData.ENERGY);
+        super(new EnergyConduitTicker(), EnergyConduitData::new, MENU_DATA);
     }
 
     @Override
@@ -40,14 +39,15 @@ public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
     }
 
     @Override
-    public <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, EnergyExtendedData extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, Optional<NodeIdentifier.IOState> state) {
+    public <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, EnergyConduitData extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
         if (ForgeCapabilities.ENERGY == cap
-            && state.map(NodeIdentifier.IOState::isExtract).orElse(true)
+            && (state == null || state.isExtract())
             && (direction == null || !level.getBlockState(pos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE))) {
-                return Optional.of(extendedConduitData.getSelfCap().cast());
+            return Optional.of(extendedConduitData.getSelfCap().cast());
 
         }
         return Optional.empty();
     }
 
 }
+

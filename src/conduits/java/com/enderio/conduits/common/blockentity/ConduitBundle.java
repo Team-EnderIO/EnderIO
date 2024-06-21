@@ -3,9 +3,9 @@ package com.enderio.conduits.common.blockentity;
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.conduits.client.ConduitClientSetup;
-import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
+import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -44,7 +44,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     private final List<ConduitType<?>> types = new ArrayList<>();
 
     //fill back after world save
-    private final Map<ConduitType<?>, NodeIdentifier<?>> nodes = new HashMap<>();
+    private final Map<ConduitType<?>, ConduitGraphObject<?>> nodes = new HashMap<>();
     private final Runnable scheduleSync;
     private final BlockPos pos;
 
@@ -82,7 +82,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
         //upgrade a conduit
         Optional<? extends ConduitType<?>> first = types.stream().filter(existingConduit -> existingConduit.canBeReplacedBy(type)).findFirst();
-        NodeIdentifier<?> node = new NodeIdentifier<>(pos, type.createConduitData(level, pos));
+        ConduitGraphObject<?> node = new ConduitGraphObject<>(pos, type.createConduitData(level, pos));
         if (first.isPresent()) {
             int index = types.indexOf(first.get());
             types.set(index, type);
@@ -289,7 +289,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         } else {
             types.forEach(type -> {
                 if (!nodes.containsKey(type)) {
-                    nodes.put(type, new NodeIdentifier<>(pos, type.createConduitData(ConduitClientSetup.getClientLevel(), pos)));
+                    nodes.put(type, new ConduitGraphObject<>(pos, type.createConduitData(ConduitClientSetup.getClientLevel(), pos)));
                 }
             });
             if (nbt.contains(KEY_NODES)) {
@@ -347,11 +347,11 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     }
 
     @Nullable
-    public NodeIdentifier<?> getNodeForTypeExact(ConduitType<?> type) {
+    public ConduitGraphObject<?> getNodeForTypeExact(ConduitType<?> type) {
         return nodes.get(type);
     }
 
-    public NodeIdentifier<?> getNodeFor(ConduitType<?> type) {
+    public ConduitGraphObject<?> getNodeFor(ConduitType<?> type) {
         for (var entry : nodes.entrySet()) {
             if (entry.getKey().getTicker().canConnectTo(entry.getKey(), type)) {
                 return nodes.get(entry.getKey());
@@ -361,7 +361,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         throw new IllegalStateException("no node matching original type");
     }
 
-    public void setNodeFor(ConduitType<?> type, NodeIdentifier<?> node) {
+    public void setNodeFor(ConduitType<?> type, ConduitGraphObject<?> node) {
         nodes.put(type, node);
         for (var direction : Direction.values()) {
             ConduitConnection connection = connections.get(direction);
@@ -377,7 +377,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     }
 
     public void removeNodeFor(Level level, ConduitType<?> type) {
-        NodeIdentifier<?> node = nodes.get(type);
+        ConduitGraphObject<?> node = nodes.get(type);
         node.getExtendedConduitData().onRemoved(type, level, pos);
         if (node.getGraph() != null) {
             node.getGraph().remove(node);
@@ -418,7 +418,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         bundle.types.addAll(types);
         connections.forEach((dir, connection) -> bundle.connections.put(dir, connection.deepCopy(bundle)));
         bundle.facadeTextures.putAll(facadeTextures);
-        nodes.forEach((type, node) -> bundle.setNodeFor(type, new NodeIdentifier<>(node.getPos(), node.getExtendedConduitData().deepCopy())));
+        nodes.forEach((type, node) -> bundle.setNodeFor(type, new ConduitGraphObject<>(node.getPos(), node.getExtendedConduitData().deepCopy())));
         return bundle;
     }
 }

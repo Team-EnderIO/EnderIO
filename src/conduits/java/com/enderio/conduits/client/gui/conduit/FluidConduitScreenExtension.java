@@ -4,7 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.conduit.screen.ConduitScreenExtension;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.conduits.common.types.FluidExtendedData;
+import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
 import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -27,7 +27,7 @@ import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import java.util.List;
 import java.util.function.Supplier;
 
-public final class FluidConduitScreenExtension implements ConduitScreenExtension<FluidExtendedData> {
+public final class FluidConduitScreenExtension implements ConduitScreenExtension<FluidConduitData> {
 
     public static final FluidConduitScreenExtension INSTANCE = new FluidConduitScreenExtension();
 
@@ -37,7 +37,7 @@ public final class FluidConduitScreenExtension implements ConduitScreenExtension
     }
 
     @Override
-    public List<AbstractWidget> createWidgets(Screen screen, Supplier<FluidExtendedData> conduitDataSupplier, UpdateExtendedData<FluidExtendedData> updateConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+    public List<AbstractWidget> createWidgets(Screen screen, Supplier<FluidConduitData> conduitDataSupplier, UpdateExtendedData<FluidConduitData> updateConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         return List.of(
             new FluidWidget(widgetsStart.add(0, 20),
                 () -> conduitDataSupplier.get().lockedFluid(),

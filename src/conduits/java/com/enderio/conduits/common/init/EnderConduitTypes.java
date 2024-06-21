@@ -5,13 +5,12 @@ import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.types.EnergyConduitType;
-import com.enderio.conduits.common.types.FluidConduitType;
-import com.enderio.conduits.common.types.ItemClientConduitData;
-import com.enderio.conduits.common.types.ItemConduitTicker;
-import com.enderio.conduits.common.types.ItemExtendedData;
-import com.enderio.conduits.common.types.RedstoneConduitType;
-import com.enderio.conduits.common.types.SimpleConduitType;
+import com.enderio.conduits.common.conduit.type.energy.EnergyConduitType;
+import com.enderio.conduits.common.conduit.type.fluid.FluidConduitType;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitTicker;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
+import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitType;
+import com.enderio.conduits.common.conduit.type.SimpleConduitType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -30,7 +29,7 @@ public class EnderConduitTypes {
 
     public static final RegistryObject<? extends ConduitType<?>> REDSTONE = ConduitTypes.CONDUIT_TYPES.register("redstone_conduit", RedstoneConduitType::new);
     public static final RegistryObject<? extends ConduitType<?>> ITEM = ConduitTypes.CONDUIT_TYPES.register("item_conduit",
-        () -> new SimpleConduitType<>(EnderIO.loc("block/conduit/item"), new ItemConduitTicker(), ItemExtendedData::new, new ItemClientConduitData(),
+        () -> new SimpleConduitType<>(EnderIO.loc("block/conduit/item"), new ItemConduitTicker(), ItemConduitData::new, new ItemClientConduitData(),
             ConduitMenuData.ITEM));
 
     private static RegistryObject<FluidConduitType> fluidConduit(String name, int tier, boolean isMultiFluid, Vector2i iconPos) {

@@ -1,6 +1,8 @@
 package com.enderio.api.conduit;
 
 import com.enderio.api.conduit.ticker.ConduitTicker;
+import com.enderio.api.conduit.upgrade.ConduitUpgrade;
+import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.RedstoneControl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,8 +40,16 @@ public abstract class ConduitType<T extends ConduitData<T>> {
         return false;
     }
 
+    public boolean canApplyUpgrade(SlotType slotType, ConduitUpgrade conduitUpgrade) {
+        return false;
+    }
+
+    public boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
+        return false;
+    }
+
     public <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, T extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction,
-        Optional<NodeIdentifier.IOState> state) {
+        @Nullable ConduitNode.IOState state) {
         return Optional.empty();
     }
 
@@ -53,5 +63,5 @@ public abstract class ConduitType<T extends ConduitData<T>> {
         return new ConduitConnectionData(false, true, RedstoneControl.NEVER_ACTIVE);
     }
 
-    record ConduitConnectionData(boolean isInsert, boolean isExtract, RedstoneControl control) {}
+    public record ConduitConnectionData(boolean isInsert, boolean isExtract, RedstoneControl control) {}
 }

@@ -3,7 +3,7 @@ package com.enderio.conduits.common.network;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
-import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
+import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.core.common.network.Packet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
