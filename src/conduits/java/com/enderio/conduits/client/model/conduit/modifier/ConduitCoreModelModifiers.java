@@ -6,8 +6,10 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.model.ConduitCoreModelModifier;
 import com.enderio.api.conduit.model.RegisterConduitCoreModelModifiersEvent;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModLoader;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,13 +30,14 @@ public class ConduitCoreModelModifiers {
     }
 
     @UseOnly(LogicalSide.CLIENT)
+    @Nullable
     public static <T extends ConduitData<T>> ConduitCoreModelModifier<T> getModifier(ConduitType<T> type) {
         //noinspection unchecked
         return (ConduitCoreModelModifier<T>) MODIFIERS.get(type);
     }
 
     @UseOnly(LogicalSide.CLIENT)
-    public static Set<ModelResourceLocation> getAllModelDependencies() {
+    public static Set<ResourceLocation> getAllModelDependencies() {
         return MODIFIERS.values().stream().flatMap(modifier -> modifier.getModelDependencies().stream()).collect(Collectors.toSet());
     }
 }

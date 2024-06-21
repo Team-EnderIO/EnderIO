@@ -1,6 +1,6 @@
 package com.enderio.conduits.client;
 
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;

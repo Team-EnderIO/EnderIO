@@ -1,8 +1,8 @@
 package com.enderio.conduits.common;
 
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.conduits.common.blockentity.ConduitBundle;
-import com.enderio.conduits.common.blockentity.OffsetHelper;
+import com.enderio.conduits.common.conduit.ConduitBundle;
+import com.enderio.conduits.common.conduit.OffsetHelper;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -90,12 +90,12 @@ public class ConduitShape {
         Map<ConduitType<?>, List<Vec3i>> offsets = new HashMap<>();
         for (Direction direction : Direction.values()) {
             VoxelShape directionShape = directionShapes.getOrDefault(direction, Shapes.empty());
-            if (conduitBundle.getConnection(direction).getConnectionState(conduitType) instanceof DynamicConnectionState) {
+            if (conduitBundle.getConnectionState(direction, conduitType) instanceof DynamicConnectionState) {
                 VoxelShape connectorShape = rotateVoxelShape(CONNECTOR, direction);
                 directionShape = Shapes.joinUnoptimized(directionShape, connectorShape, BooleanOp.OR);
                 conduitShape = Shapes.joinUnoptimized(conduitShape, connectorShape, BooleanOp.OR);
             }
-            var connectedTypes = conduitBundle.getConnection(direction).getConnectedTypes();
+            var connectedTypes = conduitBundle.getConnectedTypes(direction);
             if (connectedTypes.contains(conduitType)) {
                 Vec3i offset = OffsetHelper.translationFor(direction.getAxis(),
                     OffsetHelper.offsetConduit(connectedTypes.indexOf(conduitType), connectedTypes.size()));

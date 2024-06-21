@@ -6,6 +6,7 @@ import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public class ConduitGraphObject<T extends ConduitData<T>> implements GraphObject<Mergeable.Dummy>, ConduitNode<T> {
@@ -82,16 +84,21 @@ public class ConduitGraphObject<T extends ConduitData<T>> implements GraphObject
 
     @Override
     public @Nullable ResourceFilter getExtractFilter(Direction direction) {
-        return connectionStates.get(direction).filterExtract().getCapability(EIOCapabilities.Filter.ITEM);
+        return connectionStates.get(direction).filterExtract().getCapability(EIOCapabilities.FILTER).orElse(null);
     }
 
     @Override
     public @Nullable ResourceFilter getInsertFilter(Direction direction) {
-        return connectionStates.get(direction).filterInsert().getCapability(EIOCapabilities.Filter.ITEM);
+        return connectionStates.get(direction).filterInsert().getCapability(EIOCapabilities.FILTER).orElse(null);
     }
 
     @UseOnly(LogicalSide.CLIENT)
     public ConduitGraphObject<T> deepCopy() {
         return new ConduitGraphObject<>(pos, conduitData.deepCopy());
+    }
+
+    // Separate method to avoid breaking the graph
+    public int hashContents() {
+        return Objects.hash(pos, conduitData, ioStates, connectionStates);
     }
 }

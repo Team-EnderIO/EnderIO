@@ -8,6 +8,7 @@ import com.enderio.api.capability.IOwner;
 import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.capability.IToggled;
 import com.enderio.api.capacitor.ICapacitorData;
+import com.enderio.api.filter.ResourceFilter;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -30,6 +31,8 @@ public class EIOCapabilities {
     public static final Capability<IDarkSteelUpgradable> DARK_STEEL_UPGRADABLE = CapabilityManager.get(new CapabilityToken<>() {});
 
     public static final Capability<ISideConfig> SIDE_CONFIG = CapabilityManager.get(new CapabilityToken<>() {});
+
+    public static final Capability<ResourceFilter> FILTER = CapabilityManager.get(new CapabilityToken<>() {});
 
     @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent event) {

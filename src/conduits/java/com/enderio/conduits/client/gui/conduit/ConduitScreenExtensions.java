@@ -7,6 +7,7 @@ import com.enderio.api.conduit.screen.ConduitScreenExtension;
 import com.enderio.api.conduit.screen.RegisterConduitScreenExtensionsEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModLoader;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class ConduitScreenExtensions {
     }
 
     @UseOnly(LogicalSide.CLIENT)
+    @Nullable
     public static <T extends ConduitData<T>> ConduitScreenExtension<T> get(ConduitType<T> type) {
         //noinspection unchecked
         return (ConduitScreenExtension<T>) EXTENSIONS.get(type);

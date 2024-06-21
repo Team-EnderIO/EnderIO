@@ -15,6 +15,8 @@ import java.util.List;
 
 public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitData, IItemHandler> {
 
+    public static ItemConduitTicker INSTANCE = new ItemConduitTicker();
+
     @Override
     protected void tickCapabilityGraph(
         ServerLevel level,
@@ -34,7 +36,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
                 }
 
                 ItemConduitData.ItemSidedData sidedExtractData = extract.data.castTo(ItemConduitData.class).compute(extract.direction);
-                if (sidedExtractData.roundRobin) {
+                if (sidedExtractData.isRoundRobin) {
                     if (inserts.size() <= sidedExtractData.rotatingIndex) {
                         sidedExtractData.rotatingIndex = 0;
                     }
@@ -46,7 +48,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
                     int insertIndex = j % inserts.size();
                     CapabilityConnection insert = inserts.get(insertIndex);
 
-                    if (!sidedExtractData.selfFeed
+                    if (!sidedExtractData.isSelfFeed
                         && extract.direction == insert.direction
                         && extract.data == insert.data) {
                         continue;
@@ -55,7 +57,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
                     ItemStack notInserted = ItemHandlerHelper.insertItem(insert.capability, extractedItem, false);
                     if (notInserted.getCount() < extractedItem.getCount()) {
                         extractHandler.extractItem(i, extractedItem.getCount() - notInserted.getCount(), false);
-                        if (sidedExtractData.roundRobin) {
+                        if (sidedExtractData.isRoundRobin) {
                             sidedExtractData.rotatingIndex = insertIndex + 1;
                         }
                         continue toNextExtract;

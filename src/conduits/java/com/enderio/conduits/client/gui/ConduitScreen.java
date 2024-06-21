@@ -4,11 +4,13 @@ import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitData;
+import com.enderio.api.conduit.screen.ConduitScreenExtension;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.conduits.common.blockentity.ConduitBundle;
+import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
+import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
@@ -101,14 +103,14 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             if (data.showColorInsert()) {
                 addTypedButton(
                     new EnumIconWidget<>(this, pos.x(), pos.y() + 20,
-                        () -> getOnDynamic(dyn -> dyn.insert(), ColorControl.GREEN),
+                        () -> getOnDynamic(dyn -> dyn.insertChannel(), ColorControl.GREEN),
                         color -> actOnDynamic(dyn -> dyn.withColor(false, color)),
                     EIOLang.CONDUIT_CHANNEL));
             }
             if (data.showColorExtract()) {
                 addTypedButton(
                     new EnumIconWidget<>(this, pos.x() + 90, pos.y() + 20,
-                        () -> getOnDynamic(dyn -> dyn.extract(), ColorControl.GREEN),
+                        () -> getOnDynamic(dyn -> dyn.extractChannel(), ColorControl.GREEN),
                         color -> actOnDynamic(dyn -> dyn.withColor(true, color)),
                         EIOLang.CONDUIT_CHANNEL));
             }
@@ -124,12 +126,16 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
                         color -> actOnDynamic(dyn -> dyn.withRedstoneChannel(color)),
                         EIOLang.REDSTONE_CHANNEL));
             }
-            menu.getConduitType()
-                .getClientData()
-                .createWidgets(this, getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast(),
-                    (mapper) -> sendExtendedConduitUpdate((Function<ConduitData<?>, ConduitData<?>>) mapper), menu::getDirection,
-                    new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
-                .forEach(this::addTypedButton);
+
+            ConduitScreenExtension<?> conduitScreenExtension = ConduitScreenExtensions.get(menu.getConduitType());
+
+            if (conduitScreenExtension != null) {
+                conduitScreenExtension
+                    .createWidgets(this, () -> getBundle().getNodeFor(menu.getConduitType()).getConduitData().cast(),
+                        this::sendExtendedConduitUpdate, menu::getDirection,
+                        new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
+                    .forEach(this::addTypedButton);
+            }
         }
         List<ConduitType<?>> validConnections = new ArrayList<>();
         for (ConduitType<?> type : getBundle().getTypes()) {
@@ -153,10 +159,15 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
         }
     }
 
-    private void sendExtendedConduitUpdate(Function<ConduitData<?>, ConduitData<?>> map) {
-        var currentData = getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast();
+    private <T extends ConduitData<T>> void sendExtendedConduitUpdate(Function<T, T> map) {
+        ConduitType<T> conduitType = (ConduitType<T>)menu.getConduitType();
+        T currentData = getBundle().getNodeFor(conduitType).getConduitData().cast();
         var menu = getMenu();
-        CoreNetwork.sendToServer(new C2SSetConduitExtendedData(menu.getBlockEntity().getBlockPos(), menu.getConduitType(), map.apply(currentData)));
+
+        CoreNetwork.sendToServer(new C2SSetConduitExtendedData(
+            menu.getBlockEntity().getBlockPos(),
+            menu.getConduitType(),
+            map.apply(currentData)));
     }
 
     private void addTypedButton(AbstractWidget button) {
@@ -182,7 +193,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
         return getConnectionState(menu.getConduitType());
     }
     private ConnectionState getConnectionState(ConduitType<?> type) {
-        return getBundle().getConnection(menu.getDirection()).getConnectionState(type);
+        return getBundle().getConnectionState(menu.getDirection(), type);
     }
 
     private ConduitBundle getBundle() {

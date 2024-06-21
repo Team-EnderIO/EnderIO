@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.blockentity;
+package com.enderio.conduits.common.conduit;
 
 import com.enderio.core.common.network.slot.NetworkDataSlot;
 import net.minecraft.nbt.CompoundTag;
@@ -33,7 +33,7 @@ public class ConduitBundleNetworkDataSlot extends NetworkDataSlot<ConduitBundle>
 
     @Override
     protected int hashCode(ConduitBundle value) {
-        return value.getDataVersion();
+        return value.hashCode();
     }
 
     @Override

@@ -55,9 +55,9 @@ public class ItemConduitData implements ConduitData<ItemConduitData> {
     }
 
     public static class ItemSidedData {
-        public boolean roundRobin = false;
+        public boolean isRoundRobin = false;
         public int rotatingIndex = 0;
-        public boolean selfFeed = false;
+        public boolean isSelfFeed = false;
         public int priority = 0;
 
         // region Serialization
@@ -75,19 +75,19 @@ public class ItemConduitData implements ConduitData<ItemConduitData> {
 
         private CompoundTag toGuiNbt() {
             CompoundTag nbt = new CompoundTag();
-            nbt.putBoolean(KEY_ROUND_ROBIN, roundRobin);
-            nbt.putBoolean(KEY_SELF_FEED, selfFeed);
+            nbt.putBoolean(KEY_ROUND_ROBIN, isRoundRobin);
+            nbt.putBoolean(KEY_SELF_FEED, isSelfFeed);
             nbt.putInt(KEY_PRIORITY, priority);
             return nbt;
         }
 
         private static ItemSidedData fromNbt(CompoundTag nbt) {
             ItemSidedData sidedData = new ItemSidedData();
-            sidedData.roundRobin = nbt.getBoolean(KEY_ROUND_ROBIN);
-            sidedData.selfFeed = nbt.getBoolean(KEY_SELF_FEED);
-            sidedData.priority= nbt.getInt(KEY_PRIORITY);
+            sidedData.isRoundRobin = nbt.getBoolean(KEY_ROUND_ROBIN);
+            sidedData.isSelfFeed = nbt.getBoolean(KEY_SELF_FEED);
+            sidedData.priority = nbt.getInt(KEY_PRIORITY);
             if (nbt.contains(KEY_ROTATING_INDEX)) {
-                sidedData.rotatingIndex= nbt.getInt(KEY_ROTATING_INDEX);
+                sidedData.rotatingIndex = nbt.getInt(KEY_ROTATING_INDEX);
             }
 
             return sidedData;

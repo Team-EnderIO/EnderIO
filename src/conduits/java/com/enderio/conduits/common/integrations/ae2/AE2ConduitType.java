@@ -3,12 +3,14 @@ package com.enderio.conduits.common.integrations.ae2;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.ColoredRedstoneProvider;
+import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
@@ -30,13 +32,12 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     private final boolean dense;
 
     public AE2ConduitType(boolean dense) {
-        super(EnderIO.loc("block/conduit/" + (dense ? "dense_me" : "me")), new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8,
-            EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, dense ? 72 : 48));
+        super(new ResourceLocation("ae2", "me_cable"), dense ? EnderIO.loc("dense_me_conduit") : EnderIO.loc("me_conduit"), dense ? 32 : 8);
         this.dense = dense;
     }
 
     @Override
-    public IConduitTicker getTicker() {
+    public ConduitTicker<AE2InWorldConduitNodeHost> getTicker() {
         return Ticker.INSTANCE;
     }
 
@@ -51,7 +52,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     }
 
     @Override
-    public <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, AE2InWorldConduitNodeHost extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, Optional<ConduitGraphObject.IOState> state) {
+    public <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, AE2InWorldConduitNodeHost extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, ConduitGraphObject.IOState state) {
         if (getCapability() == cap) {
             return Optional.of(extendedConduitData.getSelfCap().cast());
         }
@@ -120,11 +121,12 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         }
     }
 
-    private static final class Ticker implements IConduitTicker {
+    private static final class Ticker implements ConduitTicker<AE2InWorldConduitNodeHost> {
 
         private static final Ticker INSTANCE = new Ticker();
         @Override
-        public void tickGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+        public void tickGraph(ServerLevel level, ConduitType<AE2InWorldConduitNodeHost> type, ConduitGraph<AE2InWorldConduitNodeHost> graph,
+            ColoredRedstoneProvider coloredRedstoneProvider) {
             //ae2 graphs don't actually do anything, that's all done by ae2
         }
 

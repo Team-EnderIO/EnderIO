@@ -1,13 +1,14 @@
-package com.enderio.conduits.common.blockentity;
+package com.enderio.conduits.common.conduit;
 
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.TieredConduit;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,7 +23,7 @@ public class ConduitTypeSorter {
 
     @SubscribeEvent
     public static void afterRegistryFreeze(FMLCommonSetupEvent event) {
-        ForgeRegistry<ConduitType<?>> registry = ConduitTypes.getRegistry();
+        IForgeRegistry<ConduitType<?>> registry = EIOConduitTypes.REGISTRY.get();
         List<ResourceLocation> tieredTypes = new ArrayList<>();
         for (ConduitType<?> value : registry.getValues()) {
             if (value instanceof TieredConduit<?> tiered && !tieredTypes.contains(tiered.getType())) {

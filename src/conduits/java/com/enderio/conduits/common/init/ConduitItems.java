@@ -15,18 +15,23 @@ import java.util.function.Supplier;
 public class ConduitItems {
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
-    public static final ItemEntry<Item> ENERGY = createConduitItem(EnderConduitTypes.ENERGY, "energy");
-    public static final ItemEntry<Item> FLUID = createConduitItem(EnderConduitTypes.FLUID, "fluid");
-    public static final ItemEntry<Item> PRESSURIZED_FLUID = createConduitItem(EnderConduitTypes.FLUID2, "pressurized_fluid");
-    public static final ItemEntry<Item> ENDER_FLUID = createConduitItem(EnderConduitTypes.FLUID3, "ender_fluid");
-    public static final ItemEntry<Item> REDSTONE = createConduitItem(EnderConduitTypes.REDSTONE, "redstone");
-    public static final ItemEntry<Item> ITEM = createConduitItem(EnderConduitTypes.ITEM, "item");
+    public static final ItemEntry<Item> ENERGY = createConduitItem(EIOConduitTypes.ENERGY, "energy");
+    public static final ItemEntry<Item> FLUID = createConduitItem(EIOConduitTypes.FLUID, "fluid");
+    public static final ItemEntry<Item> PRESSURIZED_FLUID = createConduitItem(EIOConduitTypes.FLUID2, "pressurized_fluid");
+    public static final ItemEntry<Item> ENDER_FLUID = createConduitItem(EIOConduitTypes.FLUID3, "ender_fluid");
+    public static final ItemEntry<Item> REDSTONE = createConduitItem(EIOConduitTypes.REDSTONE, "redstone");
+    public static final ItemEntry<Item> ITEM = createConduitItem(EIOConduitTypes.ITEM, "item");
 
     private static ItemEntry<Item> createConduitItem(Supplier<? extends ConduitType<?>> type, String itemName) {
         return REGISTRATE.item(itemName + "_conduit",
             properties -> ConduitItemFactory.build(type, properties))
             .tab(EIOCreativeTabs.CONDUITS)
-            .model((ctx, prov) -> prov.withExistingParent(itemName+"_conduit", EnderIO.loc("item/conduit")).texture("0", type.get().getItemTexture()))
+            .model((ctx, prov) -> {
+                var conduitTypeKey = EIOConduitTypes.REGISTRY.get().getKey(type.get());
+                prov
+                    .withExistingParent(conduitTypeKey.getPath() + "_conduit", EnderIO.loc("item/conduit"))
+                    .texture("0", EnderIO.loc("block/conduit/" + conduitTypeKey.getPath()));
+            })
             .register();
     }
 

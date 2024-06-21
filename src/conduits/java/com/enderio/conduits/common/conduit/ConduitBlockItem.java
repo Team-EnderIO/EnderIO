@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit;
 
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;

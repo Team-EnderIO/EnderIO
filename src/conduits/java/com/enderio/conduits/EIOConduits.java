@@ -2,14 +2,13 @@ package com.enderio.conduits;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitItemFactory;
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitMenus;
-import com.enderio.conduits.common.init.EnderConduitTypes;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.network.ConduitNetwork;
@@ -29,8 +28,7 @@ public class EIOConduits {
     public static void onConstruct(FMLConstructModEvent event) {
         System.out.println("================ Conduits construct ==================");
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        ConduitTypes.register(bus);
-        EnderConduitTypes.register();
+        EIOConduitTypes.register(bus);
         ConduitBlockEntities.register();
         ConduitMenus.register();
         ConduitBlocks.register();

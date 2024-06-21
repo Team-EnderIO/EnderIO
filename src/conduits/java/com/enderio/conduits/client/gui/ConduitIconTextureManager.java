@@ -2,7 +2,7 @@ package com.enderio.conduits.client.gui;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ConduitTypes;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.TextureAtlasHolder;
@@ -21,6 +21,6 @@ public class ConduitIconTextureManager extends TextureAtlasHolder {
     }
 
     public TextureAtlasSprite get(ConduitType<?> conduitType) {
-        return this.getSprite(Objects.requireNonNull(ConduitTypes.REGISTRY.get().getKey(conduitType)));
+        return this.getSprite(Objects.requireNonNull(EIOConduitTypes.REGISTRY.get().getKey(conduitType)));
     }
 }

@@ -1,9 +1,9 @@
 package com.enderio.conduits.common.network;
 
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.core.common.network.Packet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -28,7 +28,7 @@ public class C2SSetConduitExtendedData implements Packet {
 
     public C2SSetConduitExtendedData(FriendlyByteBuf buf) {
         pos = buf.readBlockPos();
-        conduitType = ConduitTypes.getRegistry().getValue(buf.readResourceLocation());
+        conduitType = EIOConduitTypes.REGISTRY.get().getValue(buf.readResourceLocation());
         extendedConduitData = buf.readNbt();
     }
 
@@ -49,7 +49,7 @@ public class C2SSetConduitExtendedData implements Packet {
 
     protected void write(FriendlyByteBuf writeInto) {
         writeInto.writeBlockPos(pos);
-        writeInto.writeResourceLocation(ConduitTypes.getRegistry().getKey(conduitType));
+        writeInto.writeResourceLocation(EIOConduitTypes.REGISTRY.get().getKey(conduitType));
         writeInto.writeNbt(extendedConduitData);
     }
 

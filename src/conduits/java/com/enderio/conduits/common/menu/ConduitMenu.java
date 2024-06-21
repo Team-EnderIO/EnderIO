@@ -1,12 +1,12 @@
 package com.enderio.conduits.common.menu;
 
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
-import com.enderio.conduits.common.blockentity.ConduitBundle;
+import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.api.conduit.SlotType;
-import com.enderio.conduits.common.blocks.ConduitBlock;
+import com.enderio.conduits.common.conduit.block.ConduitBlock;
 import com.enderio.conduits.common.init.ConduitMenus;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.core.common.menu.SyncedMenu;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -99,7 +99,7 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
     public static ConduitMenu factory(@Nullable MenuType<ConduitMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         Direction direction = buf.readEnum(Direction.class);
-        ConduitType<?> type = ConduitTypes.getRegistry().getValue(buf.readInt());
+        ConduitType<?> type = EIOConduitTypes.getById(buf.readInt());
         if (entity instanceof ConduitBlockEntity castBlockEntity) {
             return new ConduitMenu(castBlockEntity, inventory, pContainerId, direction, type);
         }

@@ -4,8 +4,10 @@ import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.RedstoneControl;
+import com.enderio.api.registry.EnderIORegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
@@ -28,7 +30,7 @@ public abstract class ConduitType<T extends ConduitData<T>> {
      * @return the conduit item that holds this type
      */
     public Item getConduitItem() {
-        return ForgeRegistries.ITEMS.getValue(ConduitTypes.getRegistry().getKey(this));
+        return ForgeRegistries.ITEMS.getValue(ConduitApi.INSTANCE.getConduitTypeRegistry().getKey(this));
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -64,4 +66,9 @@ public abstract class ConduitType<T extends ConduitData<T>> {
     }
 
     public record ConduitConnectionData(boolean isInsert, boolean isExtract, RedstoneControl control) {}
+
+    @Nullable
+    public static ResourceLocation getKey(ConduitType<?> conduitType) {
+        return ConduitApi.INSTANCE.getConduitTypeRegistry().getKey(conduitType);
+    }
 }

@@ -1,15 +1,16 @@
 package com.enderio.conduits.common.network;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitData;
+import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.ConduitNBTKeys;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
-import com.enderio.conduits.common.init.EnderConduitTypes;
+import com.enderio.conduits.common.conduit.WrappedConduitGraph;
+import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -67,8 +68,8 @@ public class ConduitSavedData extends SavedData {
             CompoundTag typedGraphTag = (CompoundTag) tag;
             ResourceLocation type = new ResourceLocation(typedGraphTag.getString(KEY_TYPE));
 
-            if (ConduitTypes.getRegistry().containsKey(type)) {
-                ConduitType<?> value = Objects.requireNonNull(ConduitTypes.getRegistry().getValue(type));
+            if (EIOConduitTypes.REGISTRY.get().containsKey(type)) {
+                ConduitType<?> value = Objects.requireNonNull(EIOConduitTypes.REGISTRY.get().getValue(type));
                 ListTag graphsForTypeTag = typedGraphTag.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
                 for (Tag tag1 : graphsForTypeTag) {
                     CompoundTag graphTag = (CompoundTag) tag1;
@@ -83,7 +84,7 @@ public class ConduitSavedData extends SavedData {
                         CompoundTag nodeTag = (CompoundTag) tag2;
                         BlockPos pos = BlockPos.of((nodeTag.getLong(ConduitNBTKeys.BLOCK_POS)));
                         ConduitGraphObject<?> node = new ConduitGraphObject<>(pos, value.createConduitData(level, pos));
-                        node.getExtendedConduitData().deserializeNBT(nodeTag.getCompound(KEY_DATA));
+                        node.getConduitData().deserializeNBT(nodeTag.getCompound(KEY_DATA));
                         graphObjects.add(node);
                         putUnloadedNodeIdentifier(value, pos, node);
                     }
@@ -135,7 +136,7 @@ public class ConduitSavedData extends SavedData {
             }
 
             CompoundTag typedGraphTag = new CompoundTag();
-            typedGraphTag.putString(KEY_TYPE, ConduitTypes.getRegistry().getKey(type).toString());
+            typedGraphTag.putString(KEY_TYPE, EIOConduitTypes.REGISTRY.get().getKey(type).toString());
 
             ListTag graphsForTypeTag = new ListTag();
 
@@ -180,7 +181,7 @@ public class ConduitSavedData extends SavedData {
             if (graphObject instanceof ConduitGraphObject<?> conduitGraphObject) {
                 CompoundTag dataTag = new CompoundTag();
                 dataTag.putLong(ConduitNBTKeys.BLOCK_POS, conduitGraphObject.getPos().asLong());
-                dataTag.put(KEY_DATA, conduitGraphObject.getExtendedConduitData().serializeNBT());
+                dataTag.put(KEY_DATA, conduitGraphObject.getConduitData().serializeNBT());
                 graphObjectsTag.add(dataTag);
             } else {
                 throw new ClassCastException("graphObject was not of type nodeIdentifier");
@@ -278,15 +279,19 @@ public class ConduitSavedData extends SavedData {
             List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
             graphs.removeIf(graph -> graph.getObjects().isEmpty() || graph.getObjects().iterator().next().getGraph() != graph);
         }
+
         for (var entry : networks.entrySet()) {
             for (Graph<Mergeable.Dummy> graph : entry.getValue()) {
-                if (serverLevel.getGameTime() % entry.getKey().getTicker().getTickRate() == ConduitTypes.getRegistry().getID(entry.getKey()) % entry
-                    .getKey()
-                    .getTicker()
-                    .getTickRate()) {
-                    entry.getKey().getTicker().tickGraph(entry.getKey(), graph, serverLevel, ConduitSavedData::isRedstoneActive);
-                }
+                tickConduitGraph(serverLevel, entry.getKey(), graph);
             }
+        }
+    }
+
+    private <T extends ConduitData<T>> void tickConduitGraph(ServerLevel serverLevel, ConduitType<T> type, Graph<Mergeable.Dummy> graph) {
+        ConduitTicker<T> conduitTicker = type.getTicker();
+
+        if (serverLevel.getGameTime() % conduitTicker.getTickRate() == EIOConduitTypes.getConduitId(type) % conduitTicker.getTickRate()) {
+            conduitTicker.tickGraph(serverLevel, type, new WrappedConduitGraph<>(graph), ConduitSavedData::isRedstoneActive);
         }
     }
 
@@ -299,11 +304,11 @@ public class ConduitSavedData extends SavedData {
             return false;
         }
 
-        if (!conduit.getBundle().getTypes().contains(EnderConduitTypes.REDSTONE.get())) {
+        if (!conduit.getBundle().getTypes().contains(EIOConduitTypes.REDSTONE.get())) {
             return false;
         }
 
-        RedstoneConduitData data = conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()).getExtendedConduitData().cast();
+        RedstoneConduitData data = conduit.getBundle().getNodeFor(EIOConduitTypes.REDSTONE.get()).getConduitData().cast();
         return data.isActive(color);
     }
     public static void addPotentialGraph(ConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level) {
