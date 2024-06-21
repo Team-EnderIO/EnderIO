@@ -1,6 +1,7 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.base.client.paint.PaintedBlockColor;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIODataComponents;
@@ -33,6 +34,7 @@ import com.enderio.regilite.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -142,7 +144,7 @@ public class MachineBlocks {
         .setLootTable((l,t) -> MachinesLootTable.copyStandardComponentsWith(l, t, EIODataComponents.STORED_ENTITY.get()))
         .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .createBlockItem(ITEM_REGISTRY,
+        .createBlockItem(ITEM_REGISTRY, b -> new BlockItem(b, new Item.Properties().component(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)),
             item -> item
                 .setTab(EIOCreativeTabs.MACHINES)
                 .addItemTags(EIOTags.Items.ENTITY_STORAGE)
