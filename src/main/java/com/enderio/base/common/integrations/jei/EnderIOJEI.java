@@ -57,7 +57,6 @@ public class EnderIOJEI implements IModPlugin {
         registration.addIngredientInfo(new ItemStack(EIOItems.POWDERED_COAL.get()), VanillaTypes.ITEM_STACK, EIOLang.JEI_COAL_HAND_GRIND);
 
         List<ItemStack> spawners = BrokenSpawnerItem.getPossibleStacks();
-        spawners.removeFirst();
         registration.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, spawners);
 
         List<ItemStack> glasses = new ArrayList<>();
