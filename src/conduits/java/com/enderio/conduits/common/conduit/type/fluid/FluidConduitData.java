@@ -10,6 +10,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class FluidConduitData implements ConduitData<FluidConduitData> {
 
     public final boolean isMultiFluid;
@@ -56,6 +58,11 @@ public class FluidConduitData implements ConduitData<FluidConduitData> {
         return lockedFluid == null || otherData.lockedFluid == null || lockedFluid == otherData.lockedFluid;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(isMultiFluid, shouldReset, lockedFluid);
+    }
+
     // region Serialization
 
     private static final String SHOULD_RESET = "ShouldReset";
@@ -71,10 +78,6 @@ public class FluidConduitData implements ConduitData<FluidConduitData> {
             }
         }
         return nbt;
-    }
-    @Override
-    public CompoundTag serializeRenderNBT() {
-        return serializeNBT();
     }
 
     @Override

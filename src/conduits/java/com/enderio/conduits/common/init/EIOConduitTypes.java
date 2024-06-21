@@ -33,22 +33,22 @@ public class EIOConduitTypes {
     }
 
     public static final RegistryObject<EnergyConduitType> ENERGY =
-        CONDUIT_TYPES.register("energy", EnergyConduitType::new);
+        CONDUIT_TYPES.register("energy_conduit", EnergyConduitType::new);
 
     public static final RegistryObject<RedstoneConduitType> REDSTONE =
-        CONDUIT_TYPES.register("redstone", RedstoneConduitType::new);
+        CONDUIT_TYPES.register("redstone_conduit", RedstoneConduitType::new);
 
     public static final RegistryObject<FluidConduitType> FLUID =
-        fluidConduit("fluid", 50, false);
+        fluidConduit("fluid_conduit", 50, false);
 
     public static final RegistryObject<FluidConduitType> FLUID2 =
-        fluidConduit("pressurized_fluid", 100, false);
+        fluidConduit("pressurized_fluid_conduit", 100, false);
 
     public static final RegistryObject<FluidConduitType> FLUID3 =
-        fluidConduit("ender_fluid", 200, true);
+        fluidConduit("ender_fluid_conduit", 200, true);
 
     public static final RegistryObject<ItemConduitType> ITEM =
-        CONDUIT_TYPES.register("item", ItemConduitType::new);
+        CONDUIT_TYPES.register("item_conduit", ItemConduitType::new);
 
     private static RegistryObject<FluidConduitType> fluidConduit(String name, int tier, boolean isMultiFluid) {
         return CONDUIT_TYPES.register(name,

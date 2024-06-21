@@ -8,8 +8,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class RedstoneConduitCoreModelModifier implements ConduitCoreModelModifier<RedstoneConduitData> {
 
-    private static final ResourceLocation INACTIVE_TEXTURE = EnderIO.loc("block/conduit/redstone");
-    private static final ResourceLocation ACTIVE_TEXTURE = EnderIO.loc("block/conduit/redstone_active");
+    private static final ResourceLocation INACTIVE_TEXTURE = EnderIO.loc("block/conduit/redstone_conduit");
+    private static final ResourceLocation ACTIVE_TEXTURE = EnderIO.loc("block/conduit/redstone_conduit_active");
 
     @Nullable
     @Override

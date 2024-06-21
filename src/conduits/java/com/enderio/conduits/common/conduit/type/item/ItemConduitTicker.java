@@ -4,6 +4,8 @@ import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
+import com.enderio.api.filter.ItemStackFilter;
+import com.enderio.conduits.common.capability.ExtractionSpeedUpgrade;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -30,9 +32,20 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
         for (CapabilityConnection extract: extracts) {
             IItemHandler extractHandler = extract.capability;
             for (int i = 0; i < extractHandler.getSlots(); i++) {
-                ItemStack extractedItem = extractHandler.extractItem(i, 4, true);
+                int speed = 4;
+                if (extract.upgrade instanceof ExtractionSpeedUpgrade speedUpgrade) {
+                    speed *= (int) Math.pow(2, speedUpgrade.tier());
+                }
+
+                ItemStack extractedItem = extractHandler.extractItem(i, speed, true);
                 if (extractedItem.isEmpty()) {
                     continue;
+                }
+
+                if (extract.extractFilter instanceof ItemStackFilter itemFilter) {
+                    if (!itemFilter.test(extractedItem)) {
+                        continue;
+                    }
                 }
 
                 ItemConduitData.ItemSidedData sidedExtractData = extract.data.castTo(ItemConduitData.class).compute(extract.direction);
@@ -52,6 +65,12 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
                         && extract.direction == insert.direction
                         && extract.data == insert.data) {
                         continue;
+                    }
+
+                    if (extract.insertFilter instanceof ItemStackFilter itemFilter) {
+                        if (!itemFilter.test(extractedItem)) {
+                            continue;
+                        }
                     }
 
                     ItemStack notInserted = ItemHandlerHelper.insertItem(insert.capability, extractedItem, false);

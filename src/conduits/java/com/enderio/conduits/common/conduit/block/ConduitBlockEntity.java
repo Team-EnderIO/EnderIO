@@ -18,6 +18,7 @@ import com.enderio.conduits.common.ConduitShape;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
+import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
@@ -674,12 +675,11 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     .map(filter -> conduitType.canApplyFilter(slotData.slotType(), filter))
                     .orElse(false);
             case UPGRADE_EXTRACT:
-                ConduitUpgrade conduitUpgrade = stack.getCapability(ConduitCapabilities.ConduitUpgrade.ITEM);
-                if (conduitUpgrade == null) {
-                    return false;
-                }
+                LazyOptional<ConduitUpgrade> conduitUpgrade = stack.getCapability(ConduitCapabilities.CONDUIT_UPGRADE);
 
-                return conduitType.canApplyUpgrade(slotData.slotType(), conduitUpgrade);
+                return conduitUpgrade
+                    .map(upgrade -> conduitType.canApplyUpgrade(slotData.slotType(), upgrade))
+                    .orElse(false);
             default:
                 return false;
             }

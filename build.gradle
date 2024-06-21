@@ -278,9 +278,9 @@ dependencies {
     // While we don't have conduits etc.
 //    runtimeOnly fg.deobf("curse.maven:mekanism-268560:${mekanism_cf_id}")
 
-    compileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-core-api:${cctVersion}")
-    compileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-forge-api:${cctVersion}")
-    runtimeOnly("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cctVersion}")
+    compileOnly fg.deobf("cc.tweaked:cc-tweaked-${minecraft_version}-core-api:${cctVersion}")
+    compileOnly fg.deobf("cc.tweaked:cc-tweaked-${minecraft_version}-forge-api:${cctVersion}")
+    runtimeOnly fg.deobf("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cctVersion}")
 
     // Jetbrains annotations
     compileOnly 'org.jetbrains:annotations:23.0.0'

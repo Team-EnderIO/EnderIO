@@ -400,7 +400,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         if (EffectiveSide.get().isServer()) {
             ListTag nodeTag = new ListTag();
             for (var entry : nodes.entrySet()) {
-                var data = entry.getValue().getConduitData().serializeRenderNBT();
+                var data = entry.getValue().getConduitData().serializeNBT();
                 if (!data.isEmpty()) {
                     CompoundTag dataTag = new CompoundTag();
                     dataTag.putString(KEY_NODE_TYPE, EIOConduitTypes.REGISTRY.get().getKey(entry.getKey()).toString());
@@ -413,25 +413,6 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             }
         }
         return tag;
-    }
-
-    public CompoundTag serializeGuiNBT() {
-        CompoundTag nbt = new CompoundTag();
-        for (ConduitType<?> type : getTypes()) {
-            CompoundTag compoundTag = nodes.get(type).getConduitData().serializeGuiNBT();
-            if (!compoundTag.isEmpty()) {
-                nbt.put(EIOConduitTypes.REGISTRY.get().getKey(type).toString(), compoundTag);
-            }
-        }
-        return nbt;
-    }
-
-    public void deserializeGuiNBT(CompoundTag nbt) {
-        for (ConduitType<?> type : getTypes()) {
-            if (nbt.contains(EIOConduitTypes.REGISTRY.get().getKey(type).toString())) {
-                nodes.get(type).getConduitData().deserializeNBT(nbt.getCompound(EIOConduitTypes.REGISTRY.get().getKey(type).toString()));
-            }
-        }
     }
 
     @Override
@@ -484,9 +465,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             }
         } else {
             types.forEach(type -> {
-                if (!nodes.containsKey(type)) {
-                    nodes.put(type, new ConduitGraphObject<>(pos, type.createConduitData(ConduitClientSetup.getClientLevel(), pos)));
-                }
+                createClientConduitGraphObject(pos, type);
             });
             if (nbt.contains(KEY_NODES)) {
                 ListTag nodesTag = nbt.getList(KEY_NODES, Tag.TAG_COMPOUND);
@@ -498,6 +477,12 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                         .deserializeNBT(cmp.getCompound(KEY_NODE_DATA));
                 }
             }
+        }
+    }
+
+    private <T extends ConduitData<T>> void createClientConduitGraphObject(BlockPos pos, ConduitType<T> conduitType) {
+        if (!nodes.containsKey(conduitType)) {
+            nodes.put(conduitType, new ConduitGraphObject<>(pos, conduitType.createConduitData(ConduitClientSetup.getClientLevel(), pos)));
         }
     }
 

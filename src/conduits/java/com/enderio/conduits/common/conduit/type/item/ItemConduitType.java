@@ -7,6 +7,7 @@ import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.api.filter.ResourceFilter;
+import com.enderio.conduits.common.capability.ExtractionSpeedUpgrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 

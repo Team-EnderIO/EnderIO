@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class RedstoneConduitData implements ConduitData<RedstoneConduitData> {
 
@@ -103,5 +104,10 @@ public class RedstoneConduitData implements ConduitData<RedstoneConduitData> {
         RedstoneConduitData redstoneConduitData = new RedstoneConduitData();
         redstoneConduitData.isActive = isActive;
         return redstoneConduitData;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isActive, activeColors);
     }
 }

@@ -8,6 +8,7 @@ import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.Vector2i;
+import com.enderio.conduits.common.capability.ExtractionSpeedUpgrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;

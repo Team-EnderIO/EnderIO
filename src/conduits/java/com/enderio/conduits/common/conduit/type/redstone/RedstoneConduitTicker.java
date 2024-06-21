@@ -7,6 +7,7 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.init.ConduitBlocks;
+import com.enderio.conduits.common.redstone.RedstoneExtractFilter;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

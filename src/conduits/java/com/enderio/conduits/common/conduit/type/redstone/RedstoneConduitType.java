@@ -4,6 +4,8 @@ import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.conduits.common.conduit.type.SimpleConduitType;
+import com.enderio.conduits.common.redstone.RedstoneExtractFilter;
+import com.enderio.conduits.common.redstone.RedstoneInsertFilter;
 
 public class RedstoneConduitType extends SimpleConduitType<RedstoneConduitData> {
 

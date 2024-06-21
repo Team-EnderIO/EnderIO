@@ -47,20 +47,6 @@ public interface ConduitData<T extends ConduitData<T>> extends INBTSerializable<
     // region Client Sync
 
     /**
-     * @return true if this needs to be synced to the client. if this returns true, deepCopy has to be overriden, to create a copy
-     */
-    default boolean syncDataToClient() {
-        return false;
-    }
-
-    /**
-     * @return synced renderdata
-     */
-    default CompoundTag serializeRenderNBT() {
-        return new CompoundTag();
-    }
-
-    /**
      * @return synced guidata
      */
     default CompoundTag serializeGuiNBT() {

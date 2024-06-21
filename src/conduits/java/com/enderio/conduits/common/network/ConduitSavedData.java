@@ -83,7 +83,7 @@ public class ConduitSavedData extends SavedData {
                     for (Tag tag2 : graphObjectsTag) {
                         CompoundTag nodeTag = (CompoundTag) tag2;
                         BlockPos pos = BlockPos.of((nodeTag.getLong(ConduitNBTKeys.BLOCK_POS)));
-                        ConduitGraphObject<?> node = new ConduitGraphObject<>(pos, value.createConduitData(level, pos));
+                        var node = createConduitGraphObject(level, pos, value);
                         node.getConduitData().deserializeNBT(nodeTag.getCompound(KEY_DATA));
                         graphObjects.add(node);
                         putUnloadedNodeIdentifier(value, pos, node);
@@ -102,6 +102,10 @@ public class ConduitSavedData extends SavedData {
                 }
             }
         }
+    }
+
+    private <T extends ConduitData<T>> ConduitGraphObject<T> createConduitGraphObject(Level level, BlockPos pos, ConduitType<T> conduitType) {
+        return new ConduitGraphObject<>(pos, conduitType.createConduitData(level, pos));
     }
 
     // Serialization

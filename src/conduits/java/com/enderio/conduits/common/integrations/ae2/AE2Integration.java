@@ -52,7 +52,7 @@ public class AE2Integration implements Integration {
             .model((ctx, prov) -> {
                 var conduitTypeKey = ConduitType.getKey(type.get());
                 prov
-                    .withExistingParent(conduitTypeKey.getPath() + "_conduit", EnderIO.loc("item/conduit"))
+                    .withExistingParent(ctx.getName(), EnderIO.loc("item/conduit"))
                     .texture("0", EnderIO.loc("block/conduit/" + conduitTypeKey.getPath()));
             })
             .register();

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ItemConduitData implements ConduitData<ItemConduitData> {
 
@@ -54,11 +55,21 @@ public class ItemConduitData implements ConduitData<ItemConduitData> {
         return itemSidedData.computeIfAbsent(direction, dir -> new ItemSidedData());
     }
 
+    @Override
+    public int hashCode() {
+        return itemSidedData.hashCode();
+    }
+
     public static class ItemSidedData {
         public boolean isRoundRobin = false;
         public int rotatingIndex = 0;
         public boolean isSelfFeed = false;
         public int priority = 0;
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(isRoundRobin, isSelfFeed, priority);
+        }
 
         // region Serialization
 
