@@ -8,7 +8,6 @@ import com.enderio.base.common.integrations.jei.category.FireCraftingCategory;
 import com.enderio.base.common.integrations.jei.extension.ShapedEntityStorageCategoryExtension;
 import com.enderio.base.common.integrations.jei.subtype.EntityStorageSubtypeInterpreter;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
-import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
 import mezz.jei.api.IModPlugin;
@@ -61,17 +60,13 @@ public class EnderIOJEI implements IModPlugin {
         spawners.removeFirst();
         registration.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, spawners);
 
-        List<ItemStack> vials = SoulVialItem.getAllFilled();
-        vials.removeFirst();
-        registration.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, vials);
-
-        List<ItemStack> clearGlass = new ArrayList<>();
+        List<ItemStack> glasses = new ArrayList<>();
         for (GlassBlocks glass : EIOBlocks.GLASS_BLOCKS.values()) {
             for (var color : glass.COLORS.values()) {
-                clearGlass.add(new ItemStack(color.asItem()));
+                glasses.add(new ItemStack(color.asItem()));
             }
         }
-        registration.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, clearGlass);
+        registration.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, glasses);
     }
 
     @Override
