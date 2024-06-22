@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:extraction_speed_upgrade_2"
+    },
+    {
+      "tag": "forge:ingots/soularium"
+    },
+    {
+      "tag": "forge:ingots/soularium"
+    }
+  ],
+  "result": {
+    "item": "enderio:extraction_speed_upgrade_3"
+  }
+}
