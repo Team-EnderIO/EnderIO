@@ -10,7 +10,8 @@ public class CoreNBTKeys {
     public static final String ITEM = "Item";
     public static final String ITEMS = "Items";
     public static final String FLUID = "Fluid";
-    public static final String FLUIDS = "Fluids";
+    // NOTE: Called Fluid too for backward compat with <6.1
+    public static final String FLUIDS = "Fluid";
     public static final String ENERGY = "Energy";
     public static final String BLOCK_ENTITY_TAG = BlockItem.BLOCK_ENTITY_TAG;
 

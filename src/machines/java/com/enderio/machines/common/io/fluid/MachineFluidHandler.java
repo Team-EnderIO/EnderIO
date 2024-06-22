@@ -219,7 +219,7 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
     public void deserializeNBT(CompoundTag nbt) {
         // Assume old NBT format.
         if (!nbt.contains(TANK_LIST_SIZE) && !nbt.contains(TANKS) && !nbt.isEmpty()) {
-            if (tanks.size() > 1) {
+            if (!tanks.isEmpty()) {
                 int capacity = layout.getTankCapacity(0);
                 FluidStack fluidStack = FluidStack.loadFluidStackFromNBT(nbt);
                 tanks.set(0, new MachineFluidTank(fluidStack, capacity));
@@ -228,13 +228,15 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
             }
         }
 
-        int size = nbt.contains(TANK_LIST_SIZE, Tag.TAG_INT) ? nbt.getInt(TANK_LIST_SIZE) : tanks.size();
-        tanks = NonNullList.withSize(size, MachineFluidTank.EMPTY);
-        ListTag tagList = nbt.getList(TANKS, Tag.TAG_COMPOUND);
-        for (int i = 0; i < tagList.size(); i++) {
-            CompoundTag tankTag = tagList.getCompound(i);
-            int index = tankTag.getInt(TANK_INDEX);
-            tanks.set(index, MachineFluidTank.from(tankTag));
+        if (nbt.contains(TANK_LIST_SIZE)) {
+            int size = nbt.contains(TANK_LIST_SIZE, Tag.TAG_INT) ? nbt.getInt(TANK_LIST_SIZE) : tanks.size();
+            tanks = NonNullList.withSize(size, MachineFluidTank.EMPTY);
+            ListTag tagList = nbt.getList(TANKS, Tag.TAG_COMPOUND);
+            for (int i = 0; i < tagList.size(); i++) {
+                CompoundTag tankTag = tagList.getCompound(i);
+                int index = tankTag.getInt(TANK_INDEX);
+                tanks.set(index, MachineFluidTank.from(tankTag));
+            }
         }
     }
 
