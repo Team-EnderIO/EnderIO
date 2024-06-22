@@ -20,7 +20,9 @@ public class ChemicalConduitData implements ConduitData<ChemicalConduitData> {
         this.lockedChemical = lockedChemical.orElse(BoxedChemical.EMPTY);
     }
 
-    public ChemicalConduitData(boolean isMultiChemical) {this.isMultiChemical = isMultiChemical;}
+    public ChemicalConduitData(boolean isMultiChemical) {
+        this.isMultiChemical = isMultiChemical;
+    }
 
     @Override
     public void onConnectTo(ChemicalConduitData otherData) {

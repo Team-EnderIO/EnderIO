@@ -26,8 +26,10 @@ public class SpeedUpgradeItem extends Item {
         return new ICapabilityProvider() {
             @Override
             public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction direction) {
-                if (capability == ConduitCapabilities.CONDUIT_UPGRADE)
+                if (capability == ConduitCapabilities.CONDUIT_UPGRADE) {
                     return upgradeCapability.cast();
+                }
+
                 return LazyOptional.empty();
             }
         };

@@ -423,7 +423,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
         ConduitGraphObject<T> node = savedData.takeUnloadedNodeIdentifier(conduitType, this.worldPosition);
         if (node == null && bundle.getNodeForTypeExact(conduitType) == null) {
-            T data = conduitType.createConduitData(level, worldPosition);;
+            T data = conduitType.createConduitData(level, worldPosition);
             if (typeIndex < lazyNodeNBT.size()) {
                 data.deserializeNBT(lazyNodeNBT.getCompound(typeIndex));
             }
