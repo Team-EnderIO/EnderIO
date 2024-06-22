@@ -54,11 +54,16 @@ public class RedstoneCountFilter implements RedstoneInsertFilter {
             : 8;
     }
 
+    public void setMaxCount(int count) {
+        CompoundTag tag = this.stack.getOrCreateTag();
+        tag.putInt(MAX_COUNT_KEY, count);
+    }
+
     public int getCount() {
         CompoundTag tag = this.stack.getOrCreateTag();
         return tag.contains(TICKS_KEY, CompoundTag.TAG_INT)
             ? tag.getInt(TICKS_KEY)
-            : 8;
+            : 0;
     }
 
     public void setCount(int count) {
