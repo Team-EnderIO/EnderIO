@@ -4,6 +4,8 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
+import com.enderio.base.common.item.filter.FluidFilter;
+import com.enderio.base.common.item.filter.ItemFilter;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
 import com.enderio.base.common.item.misc.EnderiosItem;
@@ -20,6 +22,8 @@ import com.enderio.base.common.item.tool.TravelStaffItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.model.item.GliderItemModel;
+import com.enderio.core.common.capability.FluidFilterCapability;
+import com.enderio.core.common.capability.ItemFilterCapability;
 import com.enderio.core.data.model.EIOModel;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
@@ -336,6 +340,25 @@ public class EIOItems {
         .defaultModel()
         .tab(EIOCreativeTabs.GEAR,
             modifier -> EIOItems.COLD_FIRE_IGNITER.get().addAllVariants(modifier)) // TODO: Might PR this to Registrate so its nicer, but I like the footprint.
+        .register();
+
+    // endregion
+
+    // region filter
+
+    public static final ItemEntry<ItemFilter> BASIC_ITEM_FILTER = REGISTRATE
+        .item("basic_item_filter", props -> new ItemFilter(props, 5))
+        .tab(EIOCreativeTabs.GEAR)
+        .register();
+
+    public static final ItemEntry<ItemFilter> ADVANCED_ITEM_FILTER = REGISTRATE
+        .item("advanced_item_filter", props -> new ItemFilter(props, 10))
+        .tab(EIOCreativeTabs.GEAR)
+        .register();
+
+    public static final ItemEntry<FluidFilter> BASIC_FLUID_FILTER = REGISTRATE
+        .item("basic_fluid_filter", props -> new FluidFilter(props, 10))
+        .tab(EIOCreativeTabs.GEAR)
         .register();
 
     // endregion

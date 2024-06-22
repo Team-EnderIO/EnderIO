@@ -616,6 +616,9 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         private static final String KEY_INSERT = "Insert";
         private static final String KEY_REDSTONE_CONTROL = "RedstoneControl";
         private static final String KEY_REDSTONE_CHANNEL = "Channel";
+        private static final String KEY_INSERT_FILTER = "InsertFilter";
+        private static final String KEY_EXTRACT_UPGRADE = "ExtractUpgrade";
+        private static final String KEY_EXTRACT_FILTER = "ExtractFilter";
 
         @Override
         public CompoundTag serializeNBT() {
@@ -633,6 +636,9 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                     element.putInt(KEY_INSERT, dynamicState.insertChannel().ordinal());
                     element.putInt(KEY_REDSTONE_CONTROL, dynamicState.control().ordinal());
                     element.putInt(KEY_REDSTONE_CHANNEL, dynamicState.redstoneChannel().ordinal());
+                    element.put(KEY_INSERT_FILTER, dynamicState.filterInsert().serializeNBT());
+                    element.put(KEY_EXTRACT_FILTER, dynamicState.filterExtract().serializeNBT());
+                    element.put(KEY_EXTRACT_UPGRADE, dynamicState.upgradeExtract().serializeNBT());
                 }
                 tag.put(String.valueOf(i), element);
             }
@@ -652,6 +658,9 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                     var insertIndex = nbt.getInt(KEY_INSERT);
                     var redControl = nbt.getInt(KEY_REDSTONE_CONTROL);
                     var redChannel = nbt.getInt(KEY_REDSTONE_CHANNEL);
+                    ItemStack insertFilter = ItemStack.of(nbt.getCompound(KEY_INSERT_FILTER));
+                    ItemStack extractFilter = ItemStack.of(nbt.getCompound(KEY_EXTRACT_FILTER));
+                    ItemStack extractUpgrade = ItemStack.of(nbt.getCompound(KEY_EXTRACT_UPGRADE));
                     ConnectionState prev = connectionStates[i];
                     Optional<DynamicConnectionState> dyn = Optional.ofNullable(prev instanceof DynamicConnectionState dynState ? dynState : null);
                     connectionStates[i] = new DynamicConnectionState(
@@ -661,9 +670,9 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                         ColorControl.values()[extractIndex],
                         RedstoneControl.values()[redControl],
                         ColorControl.values()[redChannel],
-                        dyn.map(DynamicConnectionState::filterInsert).orElse(ItemStack.EMPTY),
-                        dyn.map(DynamicConnectionState::filterExtract).orElse(ItemStack.EMPTY),
-                        dyn.map(DynamicConnectionState::upgradeExtract).orElse(ItemStack.EMPTY)
+                        insertFilter,
+                        extractFilter,
+                        extractUpgrade
                     );
                 }
             }
