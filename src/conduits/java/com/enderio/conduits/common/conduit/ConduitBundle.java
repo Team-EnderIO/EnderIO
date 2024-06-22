@@ -566,7 +566,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             var types = bundle.getTypes();
             
             for (int i = 0; i < connectionStates.length; i++) {
-                if (connectionStates[i].isConnection() && types.size() < i) {
+                if (connectionStates[i].isConnection() && types.size() > i) {
                     connected.add(types.get(i));
                 }
             }
