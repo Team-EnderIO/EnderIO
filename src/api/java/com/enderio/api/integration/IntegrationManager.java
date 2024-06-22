@@ -13,7 +13,7 @@ public class IntegrationManager {
 
     private static final List<Integration> ALL_INTEGRATIONS = new ArrayList<>();
 
-    public static <T extends Integration> IntegrationWrapper<T> wrapper(String modid, Supplier<T> integration) {
+    public static <T extends Integration> IntegrationWrapper<T> wrapper(String modid, Supplier<Supplier<T>> integration) {
         return new IntegrationWrapper<>(modid, integration);
     }
 
