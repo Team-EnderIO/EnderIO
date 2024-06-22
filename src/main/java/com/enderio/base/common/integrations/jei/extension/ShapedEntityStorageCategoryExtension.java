@@ -40,30 +40,13 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
                     .toList())
             .toList();
         List<ItemStack> results = List.of(resultItem);
+        boolean noData = true;
 
         if (input.isPresent()) {
             StoredEntityData storedEntityData = input.get().getTypedValue().getIngredient().getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
-            resultItem.set(EIODataComponents.STORED_ENTITY, storedEntityData);
-            inputs = recipe.getIngredients().stream()
-                .map(ingredient ->
-                    Arrays.stream(ingredient.getItems()).<ItemStack>mapMulti((ingredientItem, consumer) -> {
-                        boolean hasStorage = ingredientItem.is(EIOTags.Items.ENTITY_STORAGE);
-                        if (hasStorage) {
-                            ItemStack item = ingredientItem.copy();
-                            if (item.is(EIOTags.Items.ENTITY_STORAGE)) {
-                                item.set(EIODataComponents.STORED_ENTITY, storedEntityData);
-                            }
-                            consumer.accept(item);
-                        } else {
-                            consumer.accept(ingredientItem);
-                        }
-                    }).toList()
-                ).toList();
-        } else if (output.isPresent()) {
-            ItemStack itemStack = output.get().getTypedValue().getIngredient();
-            if (itemStack.is(EIOTags.Items.ENTITY_STORAGE)) {
-                results = List.of(itemStack);
-                StoredEntityData storedEntityData = itemStack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+            if (storedEntityData != StoredEntityData.EMPTY) {
+                noData = false;
+                resultItem.set(EIODataComponents.STORED_ENTITY, storedEntityData);
                 inputs = recipe.getIngredients().stream()
                     .map(ingredient ->
                         Arrays.stream(ingredient.getItems()).<ItemStack>mapMulti((ingredientItem, consumer) -> {
@@ -80,7 +63,33 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
                         }).toList()
                     ).toList();
             }
-        } else {
+        } else if (output.isPresent()) {
+            ItemStack itemStack = output.get().getTypedValue().getIngredient();
+            if (itemStack.is(EIOTags.Items.ENTITY_STORAGE)) {
+                results = List.of(itemStack);
+                StoredEntityData storedEntityData = itemStack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+                if (storedEntityData != StoredEntityData.EMPTY) {
+                    noData = false;
+                    inputs = recipe.getIngredients().stream()
+                        .map(ingredient ->
+                            Arrays.stream(ingredient.getItems()).<ItemStack>mapMulti((ingredientItem, consumer) -> {
+                                boolean hasStorage = ingredientItem.is(EIOTags.Items.ENTITY_STORAGE);
+                                if (hasStorage) {
+                                    ItemStack item = ingredientItem.copy();
+                                    if (item.is(EIOTags.Items.ENTITY_STORAGE)) {
+                                        item.set(EIODataComponents.STORED_ENTITY, storedEntityData);
+                                    }
+                                    consumer.accept(item);
+                                } else {
+                                    consumer.accept(ingredientItem);
+                                }
+                            }).toList()
+                        ).toList();
+                }
+            }
+        }
+
+        if (noData){
             var allCapturableEntities = EntityCaptureUtils.getCapturableEntities();
 
             results = allCapturableEntities.stream().map(e -> {

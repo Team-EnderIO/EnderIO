@@ -210,7 +210,7 @@ public class MachineBlocks {
         .setLootTable(MachinesLootTable::copyComponents)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
-        .createBlockItem(ITEM_REGISTRY,
+        .createBlockItem(ITEM_REGISTRY, b -> new BlockItem(b, new Item.Properties().component(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)),
             item -> item
                 .setTab(EIOCreativeTabs.MACHINES)
                 .addItemTags(EIOTags.Items.ENTITY_STORAGE)
