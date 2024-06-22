@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "enderio:redstone_filter_base"
+    },
+    "C": {
+      "item": "minecraft:comparator"
+    },
+    "I": {
+      "tag": "forge:ingots/redstone_alloy"
+    }
+  },
+  "pattern": [
+    "CBI"
+  ],
+  "result": {
+    "item": "enderio:redstone_sensor_filter"
+  },
+  "show_notification": true
+}

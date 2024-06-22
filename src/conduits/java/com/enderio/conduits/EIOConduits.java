@@ -14,6 +14,7 @@ import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.network.ConduitNetwork;
 import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
+import com.enderio.conduits.data.recipe.RedstoneFilterRecipes;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -47,6 +48,7 @@ public class EIOConduits {
 
         provider.addSubProvider(event.includeServer(), new ConduitTagProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
         provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new RedstoneFilterRecipes(packOutput));
 
         event.getGenerator().addProvider(true, provider);
     }

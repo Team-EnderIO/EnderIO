@@ -27,6 +27,7 @@ import com.enderio.base.data.loot.ChestLootProvider;
 import com.enderio.base.data.loot.EIOLootModifiersProvider;
 import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.BlockRecipeProvider;
+import com.enderio.base.data.recipe.FilterRecipeProvider;
 import com.enderio.base.data.recipe.FireCraftingRecipeProvider;
 import com.enderio.base.data.recipe.GlassRecipeProvider;
 import com.enderio.base.data.recipe.GrindingBallRecipeProvider;
@@ -146,6 +147,7 @@ public class EnderIO {
         provider.addSubProvider(event.includeServer(), new GrindingBallRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new GlassRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new FireCraftingRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new FilterRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new EIOLootModifiersProvider(packOutput));
 
         var b = new EIOBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);

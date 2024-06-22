@@ -81,7 +81,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern("PIP")
             .pattern("RPR")
             .define('R', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
-            .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER))
+            .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: forge:paper?
             .define('I', Tags.Items.INGOTS_IRON)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_ALLOY_INGOT))
             .save(recipeConsumer);
