@@ -53,24 +53,24 @@ jobs:
         id: truncatedChangelog
         with:
           stringToTruncate: ${{ github.event.release.body }}
-          maxLength: 1000
+          maxLength: 4096
 
-      - name: Get Minecraft Version
-        uses: madhead/read-java-properties@latest
-        id: mc_version
-        with:
-          file: gradle.properties
-          property: minecraft_version
+#      - name: Get Minecraft Version
+#        uses: madhead/read-java-properties@latest
+#        id: mc_version
+#        with:
+#          file: gradle.properties
+#          property: minecraft_version
 
       - name: Discord Notification Success
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.RELEASE_DISCORD_WEBHOOK }}
-          embed-title: Ender IO ${{ github.event.release.tag_name }} Released for MC ${{ steps.mc_version.outputs.value }}
+          embed-title: Ender IO ${{ github.event.release.tag_name }} Released
           embed-description: ${{ steps.truncatedChangelog.outputs.string }}
           avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/enderface.png
           username: Ender IO Releases
-          embed-footer-text: ${{ github.event.release.tag_name }} for MC ${{ steps.mc_version.outputs.value }}
+          embed-footer-text: ${{ github.event.release.tag_name }}
           embed-url: ${{ github.event.release.html_url }}
           embed-color: 5763719
 
