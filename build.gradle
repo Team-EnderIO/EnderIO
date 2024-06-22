@@ -377,11 +377,11 @@ if (getReleaseType() != null) {
             artifact = tasks.jarJar
 
             curseDepends {
-                optional = ["jei", /*"patchouli",*/ "athena", "applied-energistics-2"]
+                optional = ["jei", /*"patchouli",*/ "athena", "applied-energistics-2", "mekanism", "cc-tweaked"]
             }
 
             modrinthDepends {
-                optional = [/*modrinth_dep_patchouli, */ modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2]
+                optional = [/*modrinth_dep_patchouli, */ modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2, modrinth_dep_mekanism, modrinth_dep_cct]
             }
         }
     } else {
