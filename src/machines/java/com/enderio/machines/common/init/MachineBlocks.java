@@ -187,7 +187,6 @@ public class MachineBlocks {
         .blockstate((ctx, prov) -> EIOBlockState.paintedBlock(ctx, prov, Blocks.DIRT, null)) //Any cube will do
         .item()
         .color(() -> PaintedBlockColor::new)
-        .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
