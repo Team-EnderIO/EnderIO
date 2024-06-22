@@ -68,7 +68,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             @Override
             protected @Nullable MachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
                 SpawnerMachineTask task = createTask();
-                task.deserializeNBT(lookupProvider, nbt);
+                task.load(nbt);
                 return task;
             }
         };

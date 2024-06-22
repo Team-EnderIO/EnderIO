@@ -1,12 +1,16 @@
 package com.enderio.machines.common.blockentity.task;
 
 import net.minecraft.nbt.CompoundTag;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.nbt.Tag;
 
-public interface MachineTask extends INBTSerializable<CompoundTag> {
+public interface MachineTask {
     void tick();
 
     float getProgress();
 
     boolean isCompleted();
+
+    Tag save();
+
+    void load(CompoundTag tag);
 }

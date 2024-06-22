@@ -9,7 +9,6 @@ import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
-import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -30,7 +29,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -318,14 +316,14 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
-        public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-            super.deserializeNBT(lookupProvider, nbt);
+        public void load(CompoundTag nbt) {
+            super.load(nbt);
             inputsConsumed = nbt.getInt(MachineNBTKeys.PROCESSED_INPUTS);
         }
 
         @Override
-        public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
-            var tag = super.serializeNBT(lookupProvider);
+        public CompoundTag save() {
+            var tag = super.save();
             tag.putInt(MachineNBTKeys.PROCESSED_INPUTS, inputsConsumed);
             return tag;
         }

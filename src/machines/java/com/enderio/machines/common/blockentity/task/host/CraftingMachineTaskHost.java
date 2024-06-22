@@ -59,7 +59,7 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<T>, T extends Recip
         }
 
         CraftingMachineTask<R, T> task = taskFactory.createTask(getLevel(), recipeInputSupplier.get(), null);
-        task.deserializeNBT(lookupProvider, nbt);
+        task.load(nbt);
         return task;
     }
 

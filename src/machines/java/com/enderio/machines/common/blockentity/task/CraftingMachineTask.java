@@ -6,9 +6,12 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.recipe.MachineRecipe;
-import net.minecraft.core.HolderLookup;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +21,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 // TODO: A recipe interface that doesn't require power :)
@@ -37,7 +39,6 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     private int progressRequired;
 
     private boolean hasConsumedInputs;
-    private boolean hasDeterminedOutputs;
 
     private List<OutputStack> outputs = List.of();
 
@@ -100,8 +101,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         }
 
         // Get the outputs list.
-        if (!hasDeterminedOutputs) {
-            hasDeterminedOutputs = true;
+        if (outputs.isEmpty()) {
             T processedRecipeInput = prepareToDetermineOutputs(recipe.value(), recipeInput);
             outputs = recipe.value().craft(processedRecipeInput, level.registryAccess());
 
@@ -201,51 +201,70 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     private static final String KEY_OUTPUTS = "Outputs";
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
-        CompoundTag tag = new CompoundTag();
-
-        // If the recipe is null, we aren't going to keep the task
-        if (recipe == null) {
-            return tag;
-        }
-
-        tag.putString(KEY_RECIPE_ID, recipe.id().toString());
-        tag.putInt(KEY_PROGRESS_MADE, progressMade);
-        tag.putInt(KEY_PROGRESS_REQUIRED, progressRequired);
-        tag.putBoolean(KEY_HAS_COLLECTED_INPUTS, hasConsumedInputs);
-        tag.putBoolean(KEY_IS_COMPLETE, isComplete);
-
-        tag.putBoolean(KEY_HAS_DETERMINED_OUTPUTS, hasDeterminedOutputs);
-        if (hasDeterminedOutputs) {
-            ListTag outputsNbt = new ListTag();
-            for (OutputStack stack : outputs) {
-                outputsNbt.add(stack.serializeNBT(lookupProvider));
-            }
-            tag.put(KEY_OUTPUTS, outputsNbt);
-        }
-
-        return tag;
+    public CompoundTag save() {
+        CraftingTaskData data = new CraftingTaskData(this.recipe.id().toString(), this.progressMade, this.progressRequired, this.hasConsumedInputs, this.isComplete, this.outputs);
+        DataResult<Tag> encode = CraftingTaskData.CODEC.encode(data, NbtOps.INSTANCE, new CompoundTag());
+        return (CompoundTag) encode.getOrThrow();
     }
 
-    // TODO: 20.6: Swap tasks to use Codecs.
     @Override
-    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-        // TODO: Exception handling
-        recipe = loadRecipe(ResourceLocation.parse(nbt.getString(KEY_RECIPE_ID)));
-        progressMade = nbt.getInt(KEY_PROGRESS_MADE);
-        progressRequired = nbt.getInt(KEY_PROGRESS_REQUIRED);
-        hasConsumedInputs = nbt.getBoolean(KEY_HAS_COLLECTED_INPUTS);
-        isComplete = nbt.getBoolean(KEY_IS_COMPLETE);
-
-        hasDeterminedOutputs = nbt.getBoolean(KEY_HAS_DETERMINED_OUTPUTS);
-        if (hasDeterminedOutputs) {
-            ListTag outputsNbt = nbt.getList(KEY_OUTPUTS, Tag.TAG_COMPOUND);
-            outputs = new ArrayList<>();
-            for (Tag tag : outputsNbt) {
-                outputs.add(OutputStack.fromNBT(lookupProvider, (CompoundTag) tag));
-            }
-        }
+    public void load(CompoundTag tag) {
+        DataResult<Pair<CraftingTaskData, Tag>> decode = CraftingTaskData.CODEC.decode(NbtOps.INSTANCE, tag);
+        CraftingTaskData craftingTaskData = decode.getOrThrow().getFirst();
+        recipe = loadRecipe(ResourceLocation.parse(craftingTaskData.recipeId));
+        progressMade = craftingTaskData.progressMade;
+        progressRequired = craftingTaskData.progressRequired;
+        hasConsumedInputs = craftingTaskData.hasConsumedInputs;
+        isComplete = craftingTaskData.isComplete;
+        outputs = craftingTaskData.outputs;
     }
+
+//    @Override
+//    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
+//        CompoundTag tag = new CompoundTag();
+//
+//        // If the recipe is null, we aren't going to keep the task
+//        if (recipe == null) {
+//            return tag;
+//        }
+//
+//        tag.putString(KEY_RECIPE_ID, recipe.id().toString());
+//        tag.putInt(KEY_PROGRESS_MADE, progressMade);
+//        tag.putInt(KEY_PROGRESS_REQUIRED, progressRequired);
+//        tag.putBoolean(KEY_HAS_COLLECTED_INPUTS, hasConsumedInputs);
+//        tag.putBoolean(KEY_IS_COMPLETE, isComplete);
+//
+//        tag.putBoolean(KEY_HAS_DETERMINED_OUTPUTS, hasDeterminedOutputs);
+//        if (hasDeterminedOutputs) {
+//            ListTag outputsNbt = new ListTag();
+//            for (OutputStack stack : outputs) {
+//                outputsNbt.add(stack.serializeNBT(lookupProvider));
+//            }
+//            tag.put(KEY_OUTPUTS, outputsNbt);
+//        }
+//
+//        return tag;
+//    }
+//
+//    // TODO: 20.6: Swap tasks to use Codecs.
+//    @Override
+//    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+//        // TODO: Exception handling
+//        recipe = loadRecipe(ResourceLocation.parse(nbt.getString(KEY_RECIPE_ID)));
+//        progressMade = nbt.getInt(KEY_PROGRESS_MADE);
+//        progressRequired = nbt.getInt(KEY_PROGRESS_REQUIRED);
+//        hasConsumedInputs = nbt.getBoolean(KEY_HAS_COLLECTED_INPUTS);
+//        isComplete = nbt.getBoolean(KEY_IS_COMPLETE);
+//
+//        hasDeterminedOutputs = nbt.getBoolean(KEY_HAS_DETERMINED_OUTPUTS);
+//        if (hasDeterminedOutputs) {
+//            ListTag outputsNbt = nbt.getList(KEY_OUTPUTS, Tag.TAG_COMPOUND);
+//            outputs = new ArrayList<>();
+//            for (Tag tag : outputsNbt) {
+//                outputs.add(OutputStack.fromNBT(lookupProvider, (CompoundTag) tag));
+//            }
+//        }
+//    }
 
     @Nullable
     protected RecipeHolder<R> loadRecipe(ResourceLocation id) {
@@ -253,5 +272,16 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         return (RecipeHolder<R>) level.getRecipeManager().byKey(id).orElse(null);
     }
 
+    public record CraftingTaskData(String recipeId, int progressMade, int progressRequired, boolean hasConsumedInputs, boolean isComplete, List<OutputStack> outputs) {
+
+        public static Codec<CraftingTaskData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.STRING.fieldOf("recipeid").forGetter(CraftingTaskData::recipeId),
+            Codec.INT.fieldOf("progressmade").forGetter(CraftingTaskData::progressMade),
+            Codec.INT.fieldOf("progressRequired").forGetter(CraftingTaskData::progressRequired),
+            Codec.BOOL.fieldOf("hasconsumedinputs").forGetter(CraftingTaskData::hasConsumedInputs),
+            Codec.BOOL.fieldOf("iscomplete").forGetter(CraftingTaskData::isComplete),
+            OutputStack.CODEC.listOf().optionalFieldOf("outputs", List.of()).forGetter(CraftingTaskData::outputs)
+        ).apply(instance, CraftingTaskData::new));
+    }
     // endregion
 }

@@ -145,7 +145,7 @@ public abstract class MachineTaskHost {
 
     public void save(HolderLookup.Provider lookupProvider, CompoundTag tag) {
         if (hasTask()) {
-            tag.put(KEY_TASK, getCurrentTask().serializeNBT(lookupProvider));
+            tag.put(KEY_TASK, getCurrentTask().save());
         }
     }
 

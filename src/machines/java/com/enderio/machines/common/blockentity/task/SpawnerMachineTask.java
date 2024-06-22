@@ -10,7 +10,6 @@ import com.mojang.serialization.DataResult;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -34,7 +33,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
-import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -247,14 +245,14 @@ public class SpawnerMachineTask implements PoweredMachineTask {
     private static final String KEY_ENERGY_CONSUMED = "EnergyConsumed";
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
+    public CompoundTag save() {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt(KEY_ENERGY_CONSUMED, energyConsumed);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+    public void load(CompoundTag nbt) {
         energyConsumed = nbt.getInt(KEY_ENERGY_CONSUMED);
     }
 
