@@ -201,7 +201,7 @@ void exclusiveRepo(RepositoryHandler handler, String url, Consumer<InclusiveRepo
 
 repositories { RepositoryHandler handler ->
     exclusiveRepo(handler, 'https://maven.tterrag.com/', 'com.tterrag.registrate', 'com.jozufozu.flywheel')
-    exclusiveRepo(handler, 'https://modmaven.dev/', 'mezz.jei', 'mcjty.theoneprobe', 'appeng')
+    exclusiveRepo(handler, "https://modmaven.dev/", "mezz.jei", "mcjty.theoneprobe", "appeng", "mekanism")
     exclusiveRepo(handler, 'https://cursemaven.com', 'curse.maven')
     exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli', 'net.darkhax.bookshelf', 'net.darkhax.enchdesc', 'com.almostreliable.mods')
     exclusiveRepo(handler, 'https://dogforce-games.com/maven', 'dev.gigaherz.graph')
@@ -275,8 +275,8 @@ dependencies {
 //    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
 //    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
-    // While we don't have conduits etc.
-//    runtimeOnly fg.deobf("curse.maven:mekanism-268560:${mekanism_cf_id}")
+    compileOnly fg.deobf("mekanism:Mekanism:${minecraft_version}-${mekanism_version}:api")
+    runtimeOnly fg.deobf("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
 
     compileOnly fg.deobf("cc.tweaked:cc-tweaked-${minecraft_version}-core-api:${cctVersion}")
     compileOnly fg.deobf("cc.tweaked:cc-tweaked-${minecraft_version}-forge-api:${cctVersion}")
