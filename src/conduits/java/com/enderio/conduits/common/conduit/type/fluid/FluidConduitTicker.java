@@ -4,6 +4,8 @@ import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.filter.FluidStackFilter;
+import com.enderio.conduits.common.capability.ExtractionSpeedUpgrade;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
@@ -71,17 +73,38 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
         for (CapabilityConnection extract : extracts) {
             IFluidHandler extractHandler = extract.capability;
             FluidConduitData fluidConduitData = extract.data.castTo(FluidConduitData.class);
+
+            int temp = fluidRate;
+            if (extract.upgrade instanceof ExtractionSpeedUpgrade speedUpgrade) {
+                // TODO: Review scaling.
+                temp *= (int) Math.pow(2, speedUpgrade.tier());
+            }
+
+            final int rate = temp;
+
             FluidStack extractedFluid = Optional
                 .ofNullable(fluidConduitData.lockedFluid())
-                .map(fluid -> extractHandler.drain(new FluidStack(fluid, fluidRate), IFluidHandler.FluidAction.SIMULATE))
+                .map(fluid -> extractHandler.drain(new FluidStack(fluid, rate), IFluidHandler.FluidAction.SIMULATE))
                 .orElseGet(() -> extractHandler.drain(fluidRate, IFluidHandler.FluidAction.SIMULATE));
 
             if (extractedFluid.isEmpty()) {
                 continue;
             }
 
+            if (extract.extractFilter instanceof FluidStackFilter fluidStackFilter) {
+                if (!fluidStackFilter.test(extractedFluid)) {
+                    continue;
+                }
+            }
+
             int transferred = 0;
             for (CapabilityConnection insert : inserts) {
+                if (extract.insertFilter instanceof FluidStackFilter fluidStackFilter) {
+                    if (!fluidStackFilter.test(extractedFluid)) {
+                        continue;
+                    }
+                }
+
                 FluidStack transferredFluid = fluidConduitData.lockedFluid() != null ?
                     FluidUtil.tryFluidTransfer(insert.capability, extractHandler, new FluidStack(fluidConduitData.lockedFluid(), fluidRate - transferred),
                         true) :
