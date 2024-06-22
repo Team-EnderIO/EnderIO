@@ -658,9 +658,19 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                     var insertIndex = nbt.getInt(KEY_INSERT);
                     var redControl = nbt.getInt(KEY_REDSTONE_CONTROL);
                     var redChannel = nbt.getInt(KEY_REDSTONE_CHANNEL);
-                    ItemStack insertFilter = ItemStack.of(nbt.getCompound(KEY_INSERT_FILTER));
-                    ItemStack extractFilter = ItemStack.of(nbt.getCompound(KEY_EXTRACT_FILTER));
-                    ItemStack extractUpgrade = ItemStack.of(nbt.getCompound(KEY_EXTRACT_UPGRADE));
+                    
+                    ItemStack insertFilter = nbt.contains(KEY_INSERT_FILTER, CompoundTag.TAG_COMPOUND)
+                        ? ItemStack.of(nbt.getCompound(KEY_INSERT_FILTER))
+                        : ItemStack.EMPTY;
+
+                    ItemStack extractFilter = nbt.contains(KEY_EXTRACT_FILTER, CompoundTag.TAG_COMPOUND)
+                        ? ItemStack.of(nbt.getCompound(KEY_EXTRACT_FILTER))
+                        : ItemStack.EMPTY;
+
+                    ItemStack extractUpgrade = nbt.contains(KEY_EXTRACT_UPGRADE, CompoundTag.TAG_COMPOUND)
+                        ? ItemStack.of(nbt.getCompound(KEY_EXTRACT_UPGRADE))
+                        : ItemStack.EMPTY;
+
                     ConnectionState prev = connectionStates[i];
                     Optional<DynamicConnectionState> dyn = Optional.ofNullable(prev instanceof DynamicConnectionState dynState ? dynState : null);
                     connectionStates[i] = new DynamicConnectionState(
