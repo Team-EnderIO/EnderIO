@@ -296,8 +296,6 @@ reobf.create('jarJar')
 
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
-    archiveClassifier = "partial"
-
     manifest {
         attributes([
                 "Specification-Title"     : "EnderIO",
@@ -345,8 +343,6 @@ build.dependsOn sourcesJar
 
 // Add other source sets to jarJar
 tasks.jarJar.configure {
-    archiveClassifier = ""
-
     from sourceSets.api.output
     from sourceSets.core.output
     for (String set : subsets) {
