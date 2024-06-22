@@ -24,6 +24,8 @@ val modrinth_projectId: String by project
 val modrinth_dep_jei: String by project
 val modrinth_dep_athena: String by project
 val modrinth_dep_ae2: String by project
+val modrinth_dep_mekanism: String by project
+val modrinth_dep_cct: String by project
 val cctVersion: String by project
 
 idea {
@@ -297,8 +299,6 @@ dependencies {
 
 // Example for how to get properties into the manifest for reading at runtime.
 tasks.withType<Jar> {
-    archiveClassifier.set("partial")
-
     manifest {
         attributes(mapOf(
                 "Specification-Title" to "EnderIO",
@@ -340,8 +340,6 @@ tasks.register<Jar>("sourcesJar") {
 
 // Add other source sets to jarJar
 tasks.jarJar.configure {
-    archiveClassifier.set("")
-
     from(sourceSets.getByName("api").output)
     from(sourceSets.getByName("core").output)
     for (set in subsets) {
@@ -380,11 +378,11 @@ if (getReleaseType() != null) {
             setJavaVersions("Java 17")
 
             curseDepends {
-                optional("jei", /*"patchouli",*/ "athena", "applied-energistics-2")
+                optional("jei", /*"patchouli",*/ "athena", "applied-energistics-2", "mekanism", "cc-tweaked")
             }
 
             modrinthDepends {
-                optional(/*modrinth_dep_patchouli, */ modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2)
+                optional(/*modrinth_dep_patchouli, */ modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2, modrinth_dep_mekanism, modrinth_dep_cct)
             }
         }
     } else {
