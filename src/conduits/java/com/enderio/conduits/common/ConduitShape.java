@@ -1,9 +1,9 @@
 package com.enderio.conduits.common;
 
-import com.enderio.api.conduit.IConduitType;
-import com.enderio.conduits.common.blockentity.ConduitBundle;
-import com.enderio.conduits.common.blockentity.OffsetHelper;
-import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
+import com.enderio.api.conduit.ConduitType;
+import com.enderio.conduits.common.conduit.ConduitBundle;
+import com.enderio.conduits.common.conduit.OffsetHelper;
+import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -18,14 +18,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 public class ConduitShape {
-    private final Map<IConduitType<?>, VoxelShape> conduitShapes = new HashMap<>();
+    private final Map<ConduitType<?>, VoxelShape> conduitShapes = new HashMap<>();
     private final Map<Direction, VoxelShape> directionShapes = new HashMap<>();
     private static final VoxelShape CONNECTOR = Block.box(2.5f, 2.5, 15f, 13.5f, 13.5f, 16f);
     private static final VoxelShape CONNECTION = Block.box(6.5f, 6.5f, 9.5, 9.5f, 9.5f, 16);
@@ -39,7 +37,7 @@ public class ConduitShape {
     public void updateConduit(ConduitBundle bundle) {
         this.conduitShapes.clear();
         this.directionShapes.clear();
-        for (IConduitType<?> type : bundle.getTypes()) {
+        for (ConduitType<?> type : bundle.getTypes()) {
             updateShapeForConduit(bundle, type);
         }
         updateTotalShape();
@@ -50,7 +48,7 @@ public class ConduitShape {
     }
 
     @Nullable
-    public IConduitType<?> getConduit(BlockPos pos, HitResult result) {
+    public ConduitType<?> getConduit(BlockPos pos, HitResult result) {
         return getLookUpValue(conduitShapes, pos, result);
     }
 
@@ -86,18 +84,18 @@ public class ConduitShape {
         return this.totalShape;
     }
 
-    private void updateShapeForConduit(ConduitBundle conduitBundle, IConduitType<?> conduitType) {
+    private void updateShapeForConduit(ConduitBundle conduitBundle, ConduitType<?> conduitType) {
         VoxelShape conduitShape = Shapes.empty();
         Direction.Axis axis = OffsetHelper.findMainAxis(conduitBundle);
-        Map<IConduitType<?>, List<Vec3i>> offsets = new HashMap<>();
+        Map<ConduitType<?>, List<Vec3i>> offsets = new HashMap<>();
         for (Direction direction : Direction.values()) {
             VoxelShape directionShape = directionShapes.getOrDefault(direction, Shapes.empty());
-            if (conduitBundle.getConnection(direction).getConnectionState(conduitType) instanceof DynamicConnectionState) {
+            if (conduitBundle.getConnectionState(direction, conduitType) instanceof DynamicConnectionState) {
                 VoxelShape connectorShape = rotateVoxelShape(CONNECTOR, direction);
                 directionShape = Shapes.joinUnoptimized(directionShape, connectorShape, BooleanOp.OR);
                 conduitShape = Shapes.joinUnoptimized(conduitShape, connectorShape, BooleanOp.OR);
             }
-            var connectedTypes = conduitBundle.getConnection(direction).getConnectedTypes();
+            var connectedTypes = conduitBundle.getConnectedTypes(direction);
             if (connectedTypes.contains(conduitType)) {
                 Vec3i offset = OffsetHelper.translationFor(direction.getAxis(),
                     OffsetHelper.offsetConduit(connectedTypes.indexOf(conduitType), connectedTypes.size()));
@@ -112,7 +110,7 @@ public class ConduitShape {
 
         var allTypes = conduitBundle.getTypes();
         @Nullable Area box = null;
-        @Nullable IConduitType<?> notRendered = null;
+        @Nullable ConduitType<?> notRendered = null;
         int i = allTypes.indexOf(conduitType);
         if (i == -1) {
             conduitShapes.put(conduitType, Shapes.block());

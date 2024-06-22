@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:extraction_speed_upgrade_3"
+    },
+    {
+      "tag": "forge:ingots/energetic_alloy"
+    },
+    {
+      "tag": "forge:ingots/energetic_alloy"
+    }
+  ],
+  "result": {
+    "item": "enderio:extraction_speed_upgrade_4"
+  }
+}

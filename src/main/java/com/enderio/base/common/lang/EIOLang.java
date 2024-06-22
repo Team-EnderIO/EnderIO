@@ -148,6 +148,7 @@ public class EIOLang {
     //region Filters
 
     public static final Component FILTER = REGISTRATE.addLang("gui", EnderIO.loc("filter"), "Filter");
+    public static final Component CONFIRM = REGISTRATE.addLang("gui", EnderIO.loc("confirm"), "Confirm");
 
     // endregion
 
@@ -171,6 +172,10 @@ public class EIOLang {
     public static final Component RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range"), "Range");
     public static final Component SHOW_RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range.show"), "Show Range");
     public static final Component HIDE_RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range.hide"), "Hide Range");
+    public static final Component WHITELIST_FILTER = REGISTRATE.addLang("gui", EnderIO.loc("filter.whitelist"), "Whitelist");
+    public static final Component BLACKLIST_FILTER = REGISTRATE.addLang("gui", EnderIO.loc("filter.blacklist"), "BlackList");
+    public static final Component NBT_FILTER = REGISTRATE.addLang("gui", EnderIO.loc("filter.nbt"), "Match NBT");
+    public static final Component NO_NBT_FILTER = REGISTRATE.addLang("gui", EnderIO.loc("filter.nonbt"), "Ignore NBT");
 
     public static final Component IOCONFIG = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig"), "IO Configuration");
     public static final Component TOGGLE_NEIGHBOUR = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.neighbour"), "Show/Hide Neighbours");

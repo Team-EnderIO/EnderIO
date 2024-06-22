@@ -1,44 +1,49 @@
 package com.enderio.api.conduit.ticker;
 
-import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.conduit.ColoredRedstoneProvider;
+import com.enderio.api.conduit.ConduitData;
+import com.enderio.api.conduit.ConduitGraph;
+import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.upgrade.ConduitUpgrade;
+import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.ColorControl;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
-import org.apache.commons.lang3.function.TriFunction;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduitTicker {
+public abstract class CapabilityAwareConduitTicker<TData extends ConduitData<TData>, TCap> implements IOAwareConduitTicker<TData> {
 
     @Override
-    public final void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level,
-        Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    public final void tickColoredGraph(ServerLevel level, ConduitType<TData> type, List<Connection<TData>> inserts, List<Connection<TData>> extracts,
+        ColorControl color, ConduitGraph<TData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
+
         List<CapabilityConnection> insertCaps = new ArrayList<>();
-        for (Connection insert : inserts) {
+        for (Connection<TData> insert : inserts) {
             Optional
                 .ofNullable(level.getBlockEntity(insert.move()))
                 .flatMap(b -> b.getCapability(getCapability(), insert.dir().getOpposite()).resolve())
-                .ifPresent(cap -> insertCaps.add(new CapabilityConnection(cap, insert.data(), insert.dir())));
+                .ifPresent(cap -> insertCaps.add(new CapabilityConnection(cap, insert.data(), insert.dir(), insert.upgrade(), insert.extractFilter(), insert.insertFilter())));
         }
+
         if (!insertCaps.isEmpty()) {
             List<CapabilityConnection> extractCaps = new ArrayList<>();
 
-            for (Connection extract : extracts) {
+            for (Connection<TData> extract : extracts) {
                 Optional
                     .ofNullable(level.getBlockEntity(extract.move()))
                     .flatMap(b -> b.getCapability(getCapability(), extract.dir().getOpposite()).resolve())
-                    .ifPresent(cap -> extractCaps.add(new CapabilityConnection(cap, extract.data(), extract.dir())));
+                    .ifPresent(cap -> extractCaps.add(new CapabilityConnection(cap, extract.data(), extract.dir(), extract.upgrade(), extract.extractFilter(), extract.insertFilter())));
             }
+
             if (!extractCaps.isEmpty()) {
-                tickCapabilityGraph(type, insertCaps, extractCaps, level, graph, isRedstoneActive);
+                tickCapabilityGraph(level, type, insertCaps, extractCaps, graph, coloredRedstoneProvider);
             }
         }
     }
@@ -51,20 +56,27 @@ public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduit
             .isPresent();
     }
 
-    protected abstract void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts,
-        ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive );
+    protected abstract void tickCapabilityGraph(ServerLevel level, ConduitType<TData> type, List<CapabilityConnection> inserts,
+        List<CapabilityConnection> extracts, ConduitGraph<TData> graph, ColoredRedstoneProvider coloredRedstoneProvider);
 
-    protected abstract Capability<T> getCapability();
+    protected abstract Capability<TCap> getCapability();
 
-    public class CapabilityConnection {
-        public final T cap;
-        public final IExtendedConduitData<?> data;
+    public final class CapabilityConnection {
+        public final TCap capability;
+        public final TData data;
         public final Direction direction;
+        public final @Nullable ConduitUpgrade upgrade;
+        public final @Nullable ResourceFilter extractFilter;
+        public final @Nullable ResourceFilter insertFilter;
 
-        private CapabilityConnection(T cap, IExtendedConduitData<?> data, Direction direction) {
-            this.cap = cap;
+        public CapabilityConnection(TCap capability, TData data, Direction direction, @Nullable ConduitUpgrade upgrade, @Nullable ResourceFilter extractFilter,
+            @Nullable ResourceFilter insertFilter) {
+            this.capability = capability;
             this.data = data;
             this.direction = direction;
+            this.upgrade = upgrade;
+            this.extractFilter = extractFilter;
+            this.insertFilter = insertFilter;
         }
     }
 }

@@ -1,10 +1,19 @@
 package com.enderio.conduits.client;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.ConduitTypes;
+import com.enderio.api.conduit.model.RegisterConduitCoreModelModifiersEvent;
+import com.enderio.api.conduit.screen.RegisterConduitScreenExtensionsEvent;
 import com.enderio.api.misc.ColorControl;
+import com.enderio.conduits.client.gui.ConduitIconTextureManager;
+import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
+import com.enderio.conduits.client.gui.conduit.FluidConduitScreenExtension;
+import com.enderio.conduits.client.gui.conduit.ItemConduitScreenExtension;
 import com.enderio.conduits.client.model.ConduitGeometry;
+import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
+import com.enderio.conduits.client.model.conduit.modifier.FluidConduitCoreModelModifier;
+import com.enderio.conduits.client.model.conduit.modifier.RedstoneConduitCoreModelModifier;
 import com.enderio.conduits.common.init.ConduitBlocks;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.resources.model.BakedModel;
@@ -15,9 +24,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -45,6 +56,32 @@ public class ConduitClientSetup {
     private ConduitClientSetup() {}
 
     @SubscribeEvent
+    public static void clientSetup(FMLClientSetupEvent event) {
+        ConduitScreenExtensions.init();
+    }
+
+    @SubscribeEvent
+    public static void registerConduitCoreModelModifiers(RegisterConduitCoreModelModifiersEvent event) {
+        event.register(EIOConduitTypes.FLUID.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
+        event.register(EIOConduitTypes.FLUID2.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
+        event.register(EIOConduitTypes.FLUID3.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
+        event.register(EIOConduitTypes.REDSTONE.get(), RedstoneConduitCoreModelModifier::new);
+    }
+
+    @SubscribeEvent
+    public static void registerConduitScreenExtensions(RegisterConduitScreenExtensionsEvent event) {
+        event.register(EIOConduitTypes.FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
+        event.register(EIOConduitTypes.FLUID2.get(), () -> FluidConduitScreenExtension.INSTANCE);
+        event.register(EIOConduitTypes.FLUID3.get(), () -> FluidConduitScreenExtension.INSTANCE);
+        event.register(EIOConduitTypes.ITEM.get(), ItemConduitScreenExtension::new);
+    }
+
+    @SubscribeEvent
+    public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
+        event.registerReloadListener(new ConduitIconTextureManager(Minecraft.getInstance().getTextureManager()));
+    }
+
+    @SubscribeEvent
     public static void modelLoader(ModelEvent.RegisterGeometryLoaders event) {
         event.register("conduit", new ConduitGeometry.Loader());
     }
@@ -54,7 +91,10 @@ public class ConduitClientSetup {
         for (ResourceLocation model : MODEL_LOCATIONS) {
             event.register(model);
         }
-        ConduitTypes.getRegistry().getValues().stream().flatMap(type -> type.getClientData().modelsToLoad().stream()).forEach(event::register);
+
+        // Ensure conduit model modifiers are ready, then load all model dependencies.
+        ConduitCoreModelModifiers.init();
+        ConduitCoreModelModifiers.getAllModelDependencies().forEach(event::register);
     }
 
     @SubscribeEvent

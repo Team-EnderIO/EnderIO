@@ -1,6 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.base.common.network.AddTravelTargetPacket;
+import com.enderio.base.common.network.FilterUpdatePacket;
 import com.enderio.base.common.network.RemoveTravelTargetPacket;
 import com.enderio.base.common.network.RequestTravelPacket;
 import com.enderio.base.common.network.SyncTravelDataPacket;
@@ -18,6 +19,7 @@ public class EIOPackets {
         CoreNetwork.registerPacket(new AddTravelTargetPacket.Handler(), AddTravelTargetPacket.class);
         CoreNetwork.registerPacket(new RemoveTravelTargetPacket.Handler(), RemoveTravelTargetPacket.class);
         CoreNetwork.registerPacket(new RequestTravelPacket.Handler(), RequestTravelPacket.class);
+        CoreNetwork.registerPacket(new FilterUpdatePacket.Handler(), FilterUpdatePacket.class);
 
     }
 }

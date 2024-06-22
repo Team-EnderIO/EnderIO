@@ -4,10 +4,10 @@ import appeng.api.implementations.items.IFacadeItem;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitItemFactory;
-import com.enderio.api.conduit.ConduitTypes;
-import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.integration.Integration;
 import com.enderio.base.common.init.EIOCreativeTabs;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -24,8 +24,8 @@ public class AE2Integration implements Integration {
 
     private final Capability<IInWorldGridNodeHost> IN_WORLD_GRID_NODE_HOST = CapabilityManager.get(new CapabilityToken<>() {});
 
-    private static final RegistryObject<AE2ConduitType> DENSE = ConduitTypes.CONDUIT_TYPES.register("dense_me", () -> new AE2ConduitType(true));
-    private static final RegistryObject<AE2ConduitType> NORMAL = ConduitTypes.CONDUIT_TYPES.register("me", () -> new AE2ConduitType(false));
+    private static final RegistryObject<AE2ConduitType> DENSE = EIOConduitTypes.CONDUIT_TYPES.register("dense_me", () -> new AE2ConduitType(true));
+    private static final RegistryObject<AE2ConduitType> NORMAL = EIOConduitTypes.CONDUIT_TYPES.register("me", () -> new AE2ConduitType(false));
     public static final ItemEntry<Item> DENSE_ITEM = createConduitItem(DENSE, "dense_me", "Dense ME Conduit");
     public static final ItemEntry<Item> NORMAL_ITEM = createConduitItem(NORMAL, "me", "ME Conduit");
 
@@ -44,12 +44,17 @@ public class AE2Integration implements Integration {
         return IN_WORLD_GRID_NODE_HOST;
     }
 
-    private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName, String english) {
+    private static ItemEntry<Item> createConduitItem(Supplier<? extends ConduitType<?>> type, String itemName, String english) {
         return EnderIO.registrate().item(itemName + "_conduit",
                 properties -> ConduitItemFactory.build(type, properties))
             .tab(EIOCreativeTabs.CONDUITS)
             .lang(english)
-            .model((ctx, prov) -> prov.withExistingParent(itemName+"_conduit", EnderIO.loc("item/conduit")).texture("0", type.get().getItemTexture()))
+            .model((ctx, prov) -> {
+                var conduitTypeKey = ConduitType.getKey(type.get());
+                prov
+                    .withExistingParent(ctx.getName(), EnderIO.loc("item/conduit"))
+                    .texture("0", EnderIO.loc("block/conduit/" + conduitTypeKey.getPath()));
+            })
             .register();
     }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "enderio:item/conduit",
   "textures": {
-    "0": "enderio:block/conduit/energy"
+    "0": "enderio:block/conduit/energy_conduit"
   }
 }

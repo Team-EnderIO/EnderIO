@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "forge:ingots/redstone_alloy"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "T": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "pattern": [
+    "III",
+    "APA",
+    "ATA"
+  ],
+  "result": {
+    "count": 2,
+    "item": "enderio:extraction_speed_upgrade_1"
+  },
+  "show_notification": true
+}

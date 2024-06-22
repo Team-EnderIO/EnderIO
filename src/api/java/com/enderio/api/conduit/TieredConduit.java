@@ -1,43 +1,29 @@
 package com.enderio.api.conduit;
 
-import com.enderio.api.UseOnly;
-import com.enderio.api.misc.Vector2i;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.LogicalSide;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.ForgeRegistries;
 
-public abstract class TieredConduit<T extends IExtendedConduitData<T>> implements IConduitType<T> {
-    private final ResourceLocation texture;
+import java.util.Objects;
+
+public abstract class TieredConduit<T extends ConduitData<T>> extends ConduitType<T> {
     private final ResourceLocation type;
     private final int tier;
-
-    @UseOnly(LogicalSide.CLIENT) protected IClientConduitData<T> clientConduitData;
+    protected final ResourceLocation tierName;
 
     /**
-     * @param texture
      * @param type
      * @param tier    The tier of the conduit. For Energy this should be it's transfer rate to easily add and compare conduit strength
      */
-
-    public TieredConduit(ResourceLocation texture, ResourceLocation type, int tier, ResourceLocation iconTexture, Vector2i iconTexturePos) {
-        this.texture = texture;
+    public TieredConduit(ResourceLocation type, ResourceLocation tierName, int tier) {
         this.type = type;
         this.tier = tier;
-        clientConduitData = new IClientConduitData.Simple<>(iconTexture, iconTexturePos);
+        this.tierName = tierName;
     }
 
     @Override
-    public ResourceLocation getTexture(T data) {
-        return texture;
-    }
-
-    @Override
-    public ResourceLocation getItemTexture() {
-        return texture;
-    }
-
-
-    @Override
-    public boolean canBeReplacedBy(IConduitType<?> other) {
+    public boolean canBeReplacedBy(ConduitType<?> other) {
         if (!(other instanceof TieredConduit<?> tieredOther)) {
             return false;
         }
@@ -45,11 +31,12 @@ public abstract class TieredConduit<T extends IExtendedConduitData<T>> implement
         if (type.equals(tieredOther.getType())) {
             return tier < tieredOther.getTier();
         }
+
         return false;
     }
 
     @Override
-    public boolean canBeInSameBlock(IConduitType<?> other) {
+    public boolean canBeInSameBlock(ConduitType<?> other) {
         if (!(other instanceof TieredConduit<?> tieredOther)) {
             return true;
         }
@@ -58,16 +45,16 @@ public abstract class TieredConduit<T extends IExtendedConduitData<T>> implement
         return !type.equals(tieredOther.getType());
     }
 
+    @Override
+    public Item getConduitItem() {
+        return Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(tierName));
+    }
+
     public ResourceLocation getType() {
         return type;
     }
 
     public int getTier() {
         return tier;
-    }
-
-    @Override
-    public IClientConduitData<T> getClientData() {
-        return clientConduitData;
     }
 }
