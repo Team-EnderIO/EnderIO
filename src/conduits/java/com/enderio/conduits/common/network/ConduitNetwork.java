@@ -7,6 +7,8 @@ public class ConduitNetwork {
         CoreNetwork.registerPacket(new C2SSetConduitConnectionState.Handler(), C2SSetConduitConnectionState.class);
         CoreNetwork.registerPacket(new C2SSetConduitExtendedData.Handler(), C2SSetConduitExtendedData.class);
         CoreNetwork.registerPacket(new CountFilterPacket.Handler(), CountFilterPacket.class);
+        CoreNetwork.registerPacket(new DoubleChannelPacket.Handler(), DoubleChannelPacket.class);
+        CoreNetwork.registerPacket(new TimerFilterPacket.Handler(), TimerFilterPacket.class);
     }
 
 }
