@@ -1,16 +1,10 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.EnderIO;
-import com.enderio.api.misc.Icon;
-import com.enderio.api.misc.Vector2i;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 
