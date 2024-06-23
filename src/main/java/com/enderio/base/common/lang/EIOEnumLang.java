@@ -3,20 +3,23 @@ package com.enderio.base.common.lang;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
+import com.enderio.core.common.lang.EnumTranslationMap;
+import com.enderio.regilite.Regilite;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.EnumMap;
+import net.minecraft.resources.ResourceLocation;
 
 public class EIOEnumLang {
-    public static EnumTranslationHolder<RedstoneControl> REDSTONE_CONTROL = new EnumTranslationHolder.Builder<>(RedstoneControl.class, "redstone")
+
+    private static final Regilite REGILITE = EnderIO.getRegilite();
+
+    public static final EnumTranslationMap<RedstoneControl> REDSTONE_CONTROL = builder(RedstoneControl.class, "redstone")
         .addTranslation(RedstoneControl.ALWAYS_ACTIVE, "Always Active")
         .addTranslation(RedstoneControl.ACTIVE_WITH_SIGNAL, "Active with Signal")
         .addTranslation(RedstoneControl.ACTIVE_WITHOUT_SIGNAL, "Active without Signal")
         .addTranslation(RedstoneControl.NEVER_ACTIVE, "Never Active")
         .build();
 
-    public static EnumTranslationHolder<GlassCollisionPredicate> GLASS_COLLISION = new EnumTranslationHolder.Builder<>(GlassCollisionPredicate.class, "collision")
+    public static final EnumTranslationMap<GlassCollisionPredicate> GLASS_COLLISION = builder(GlassCollisionPredicate.class, "collision")
         .addTranslation(GlassCollisionPredicate.PLAYERS_PASS, "Not solid to players")
         .addTranslation(GlassCollisionPredicate.PLAYERS_BLOCK, "Only solid to players")
         .addTranslation(GlassCollisionPredicate.MOBS_PASS, "Not solid to monsters")
@@ -25,45 +28,15 @@ public class EIOEnumLang {
         .addTranslation(GlassCollisionPredicate.ANIMALS_BLOCK, "Only solid to animals")
         .build();
 
-    public static void register() {
+    private static <T extends Enum<T>> EnumTranslationMap.Builder<T> builder(Class<T> enumClass, String prefix) {
+        return new EnumTranslationMap.Builder<>(EnderIO.MODID, EIOEnumLang::addTranslation, enumClass, prefix);
     }
 
-    public static class EnumTranslationHolder<T extends Enum<T>> {
-        private final EnumMap<T, Component> translations;
+    private static Component addTranslation(String prefix, ResourceLocation key, String english) {
+        // TODO: Regilite should support a plain string key
+        return REGILITE.addTranslation(prefix, key, english);
+    }
 
-        private EnumTranslationHolder(EnumMap<T, Component> translations) {
-            this.translations = translations;
-        }
-
-        @Nullable
-        public Component get(T value) {
-            return translations.get(value);
-        }
-
-        public static class Builder<T extends Enum<T>> {
-            private final String translationPrefix;
-
-            private final EnumMap<T, Component> translations;
-
-            public Builder(Class<T> enumClass, String translationPrefix) {
-                this.translationPrefix = translationPrefix;
-                translations = new EnumMap<>(enumClass);
-            }
-
-            public Builder<T> put(T value, Component translation) {
-                translations.put(value, translation);
-                return this;
-            }
-
-            public Builder<T> addTranslation(T value, String english) {
-                translations.put(value, EnderIO.getRegilite()
-                    .addTranslation("gui", EnderIO.loc(translationPrefix + "." + value.name().toLowerCase()), english));
-                return this;
-            }
-
-            public EnumTranslationHolder<T> build() {
-                return new EnumTranslationHolder<>(translations);
-            }
-        }
+    public static void register() {
     }
 }

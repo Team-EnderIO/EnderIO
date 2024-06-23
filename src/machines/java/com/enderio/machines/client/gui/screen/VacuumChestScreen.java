@@ -2,9 +2,9 @@ package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
+import com.enderio.base.client.gui.widget.RedstoneControlIconWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.widgets.EIOImageButton;
-import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.common.menu.VacuumChestMenu;
@@ -31,7 +31,7 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 16, topPos + 105 , () -> menu.getBlockEntity().getRedstoneControl(),
+        addRenderableWidget(new RedstoneControlIconWidget(leftPos + imageWidth - 8 - 16, topPos + 105 , () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
         addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 16 * 2 - 2, topPos + 105, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,

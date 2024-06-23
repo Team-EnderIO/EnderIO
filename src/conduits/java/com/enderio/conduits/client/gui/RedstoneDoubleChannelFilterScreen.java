@@ -6,7 +6,6 @@ import com.enderio.base.client.gui.widget.DyeColorIconWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.common.menu.RedstoneDoubleChannelFilterMenu;
 import com.enderio.core.client.gui.screen.EIOScreen;
-import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
