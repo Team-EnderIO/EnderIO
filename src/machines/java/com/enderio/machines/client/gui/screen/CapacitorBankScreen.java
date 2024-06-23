@@ -2,7 +2,7 @@ package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.base.client.gui.widget.RedstoneControlIconWidget;
+import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.machines.client.gui.widget.EnergyWidget;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
@@ -24,7 +24,7 @@ public class CapacitorBankScreen extends MachineScreen<CapacitorBankMenu> {
         super.init();
         addRenderableOnly(new EnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, 8 + leftPos, 9 + topPos, 9, 68));
 
-        addRenderableWidget(new RedstoneControlIconWidget(leftPos + imageWidth - 6 - 16, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font));

@@ -8,8 +8,8 @@ import com.enderio.api.conduit.ConduitDataType;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.screen.ConduitScreenExtension;
-import com.enderio.base.client.gui.widget.DyeColorIconWidget;
-import com.enderio.base.client.gui.widget.RedstoneControlIconWidget;
+import com.enderio.base.client.gui.widget.DyeColorPickerWidget;
+import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
@@ -28,7 +28,7 @@ import com.enderio.conduits.common.menu.ConduitSlot;
 import com.enderio.conduits.common.network.C2SSetConduitConnectionState;
 import com.enderio.conduits.common.network.C2SSetConduitExtendedData;
 import com.enderio.core.client.gui.screen.EIOScreen;
-import com.enderio.core.client.gui.widgets.CheckBox;
+import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -89,10 +89,10 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
 
         ConduitMenuData data = menu.getConduit().value().getMenuData();
 
-        guiGraphics.drawString(this.font, ConduitLang.CONDUIT_INSERT,  22 + 16,  7 + 4, 4210752, false);
+        guiGraphics.drawString(this.font, ConduitLang.CONDUIT_INSERT,  22 + 16 + 2,  7 + 4, 4210752, false);
 
         if (data.showBothEnable()) {
-            guiGraphics.drawString(this.font, ConduitLang.CONDUIT_EXTRACT, 112 + 16, 7 + 4, 4210752, false);
+            guiGraphics.drawString(this.font, ConduitLang.CONDUIT_EXTRACT, 112 + 16 + 2, 7 + 4, 4210752, false);
         }
     }
 
@@ -110,19 +110,19 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             Vector2i pos = new Vector2i(22, 7).add(getGuiLeft(), getGuiTop());
 
             addTypedButton(
-                new CheckBox(pos,
+                ToggleIconButton.createCheckbox(pos.x(), pos.y(),
                     () -> getOnDynamic(dyn -> dyn.isInsert(), false),
                     bool -> actOnDynamic(dyn -> dyn.withEnabled(false, bool))));
 
             if (data.showBothEnable()) {
                 addTypedButton(
-                    new CheckBox(pos.add(90, 0),
+                    ToggleIconButton.createCheckbox(pos.x() + 90, pos.y(),
                         () -> getOnDynamic(dyn -> dyn.isExtract(), false),
                         bool -> actOnDynamic(dyn -> dyn.withEnabled(true, bool))));
             }
             if (data.showColorInsert()) {
                 addTypedButton(
-                    new DyeColorIconWidget(pos.x(), pos.y() + 20,
+                    new DyeColorPickerWidget(pos.x(), pos.y() + 20,
                         () -> getOnDynamic(dyn -> dyn.insertChannel(), DyeColor.GREEN),
                         color -> actOnDynamic(dyn -> dyn.withColor(false, color)),
                     EIOLang.CONDUIT_CHANNEL));
@@ -130,27 +130,21 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
 
             if (data.showColorExtract()) {
                 addTypedButton(
-                    new DyeColorIconWidget(pos.x() + 90, pos.y() + 20,
+                    new DyeColorPickerWidget(pos.x() + 90, pos.y() + 20,
                         () -> getOnDynamic(dyn -> dyn.extractChannel(), DyeColor.GREEN),
                         color -> actOnDynamic(dyn -> dyn.withColor(true, color)),
                         EIOLang.CONDUIT_CHANNEL));
             }
 
             if (data.showRedstoneExtract()) {
-                /*addTypedButton(
-                    new EnumIconWidget<>(this, pos.x() + 90, pos.y() + 40,
-                        () -> getOnDynamic(dyn -> dyn.control(), RedstoneControl.ACTIVE_WITH_SIGNAL),
-                        mode -> actOnDynamic(dyn -> dyn.withRedstoneMode(mode)),
-                        EIOLang.REDSTONE_MODE));*/
-
                 addTypedButton(
-                    new RedstoneControlIconWidget(pos.x() + 90, pos.y() + 20,
+                    new RedstoneControlPickerWidget(pos.x() + 90, pos.y() + 40,
                         () -> getOnDynamic(dyn -> dyn.control(), RedstoneControl.ACTIVE_WITH_SIGNAL),
                         mode -> actOnDynamic(dyn -> dyn.withRedstoneMode(mode)),
                         EIOLang.CONDUIT_CHANNEL));
 
                 addTypedButton(
-                    new DyeColorIconWidget(pos.x() + 90 + 20, pos.y() + 40,
+                    new DyeColorPickerWidget(pos.x() + 90 + 20, pos.y() + 40,
                         () -> getOnDynamic(dyn -> dyn.redstoneChannel(), DyeColor.GREEN),
                         color -> actOnDynamic(dyn -> dyn.withRedstoneChannel(color)),
                         EIOLang.REDSTONE_CHANNEL));

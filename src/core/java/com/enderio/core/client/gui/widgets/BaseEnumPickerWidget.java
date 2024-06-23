@@ -6,13 +6,13 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidget {
+public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends AbstractButton {
 
     private final Class<T> clazz;
     private final Supplier<T> getter;
@@ -33,16 +33,15 @@ public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidg
     private final Vector2i expandBottomRight;
 
     private static final int ELEMENTS_IN_ROW = 5;
-    private static final int SPACE_BETWEEN_ELEMENTS = 4;
+    private static final int SPACE_BETWEEN_ELEMENTS = 6;
 
     private int mouseButton = 0;
 
     private final SelectionScreen selection;
 
-    // TODO: I don't like that this is separate, maybe we need an IOptionIcon for holding the option name?
     private final Component optionName;
 
-    public BaseEnumIconWidget(int pX, int pY, int width, int height, Class<T> clazz, Supplier<T> getter, Consumer<T> setter, Component optionName) {
+    public BaseEnumPickerWidget(int pX, int pY, int width, int height, Class<T> clazz, Supplier<T> getter, Consumer<T> setter, Component optionName) {
         super(pX, pY, width, height, Component.empty());
 
         this.clazz = clazz;
@@ -57,6 +56,12 @@ public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidg
             T value = values[i];
             Vector2i subWidgetPos = pos.add(getColumn(i) * elementDistance.x(), getRow(i) * elementDistance.y()).add(pX, pY);
             SelectionWidget widget = new SelectionWidget(subWidgetPos, width + 2, height + 2, value);
+
+            Component tooltip = getValueTooltip(value);
+            if (tooltip != null) {
+                widget.setTooltip(Tooltip.create(tooltip));
+            }
+
             icons.put(value, widget);
         }
 
@@ -72,6 +77,8 @@ public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidg
         expandTopLeft = topLeft.expand(-SPACE_BETWEEN_ELEMENTS);
         expandBottomRight = bottomRight.expand(SPACE_BETWEEN_ELEMENTS);
         this.selection = new SelectionScreen(this);
+
+        updateTooltip(getValue());
     }
 
     @Nullable
@@ -80,6 +87,15 @@ public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidg
 
     public T[] getValues() {
         return clazz.getEnumConstants();
+    }
+
+    private T getValue() {
+        return getter.get();
+    }
+
+    private void setValue(T value) {
+        setter.accept(value);
+        updateTooltip(value);
     }
 
     private Vector2i calculateFirstPosition(T icon, int amount) {
@@ -100,7 +116,7 @@ public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidg
     }
 
     @Override
-    public void onClick(double pMouseX, double pMouseY) {
+    public void onPress() {
         if (isExpanded()) {
             selectNext(mouseButton != InputConstants.MOUSE_BUTTON_RIGHT);
         } else {
@@ -109,9 +125,9 @@ public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidg
     }
 
     private void selectNext(boolean isForward) {
-        T[] values = getter.get().getDeclaringClass().getEnumConstants();
-        int index = getter.get().ordinal() + (isForward ? 1 : -1) + values.length;
-        setter.accept(values[index % values.length]);
+        T[] values = getValues();
+        int index = getValue().ordinal() + (isForward ? 1 : -1) + values.length;
+        setValue(values[index % values.length]);
     }
 
     private static int getColumn(int index) {
@@ -125,28 +141,23 @@ public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidg
     @Nullable private T tooltipDisplayCache;
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
-        T value = getter.get();
-
-        GuiRenderUtil.renderSlotArea(guiGraphics, getX(), getY(), getWidth(), getHeight());
+    public void renderString(GuiGraphics guiGraphics, Font font, int color) {
+        T value = getValue();
         guiGraphics.blitSprite(getValueIcon(value), getX(), getY(), getWidth(), getHeight());
+    }
 
-        if (isHovered() && tooltipDisplayCache != getter.get()) {
-            // Cache the last value of the tooltip so we don't append strings over and over.
-            tooltipDisplayCache = getter.get();
+    private void updateTooltip(T value) {
+        // Update tooltip
+        Component valueTooltip = getValueTooltip(value);
 
-            // Update tooltip
-            Component valueTooltip = getValueTooltip(value);
-
-            Component tooltip;
-            if (valueTooltip != null) {
-                tooltip = optionName.copy().append("\n").append(valueTooltip.copy().withStyle(ChatFormatting.GRAY));
-            } else {
-                tooltip = optionName;
-            }
-
-            setTooltip(Tooltip.create(tooltip));
+        Component tooltip;
+        if (valueTooltip != null) {
+            tooltip = optionName.copy().append("\n").append(valueTooltip.copy().withStyle(ChatFormatting.GRAY));
+        } else {
+            tooltip = optionName;
         }
+
+        setTooltip(Tooltip.create(tooltip));
     }
 
     @Override
@@ -158,9 +169,9 @@ public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidg
 
     private static class SelectionScreen extends Screen implements EnderScreen {
 
-        private final BaseEnumIconWidget<?> parentWidget;
+        private final BaseEnumPickerWidget<?> parentWidget;
 
-        protected SelectionScreen(BaseEnumIconWidget<?> parentWidget) {
+        protected SelectionScreen(BaseEnumPickerWidget<?> parentWidget) {
             super(Component.empty());
             this.parentWidget = parentWidget;
         }
@@ -211,45 +222,30 @@ public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidg
         }
     }
 
-    private class SelectionWidget extends AbstractWidget {
+    private class SelectionWidget extends AbstractButton {
 
         private final T value;
         private final int iconWidth;
         private final int iconHeight;
 
         SelectionWidget(Vector2i pos, int width, int height, T value) {
-            super(pos.x(), pos.y(), width + 2, height + 2, getValueTooltip(value));
+            super(pos.x(), pos.y(), width, height, Component.empty());
             this.value = value;
             this.iconWidth = width;
             this.iconHeight = height;
         }
 
         @Override
-        public void onClick(double pMouseX, double pMouseY) {
-            super.onClick(pMouseX, pMouseY);
-            setter.accept(value);
+        public void onPress() {
+            setValue(value);
         }
 
         @Override
         public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
 
         @Override
-        public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
-            if (getter.get() != value) {
-                GuiRenderUtil.renderSlotArea(guiGraphics, getX(), getY(), iconWidth, iconHeight);
-            } else {
-                guiGraphics.fill(getX(), getY(),getX() + width - 2,getY() + height - 2, 0xFF0020FF);
-                guiGraphics.fill(getX() +1, getY()+1, getX() + width - 3, getY() + height - 3, 0xFF8B8B8B);
-            }
-
+        public void renderString(GuiGraphics guiGraphics, Font font, int color) {
             guiGraphics.blitSprite(getValueIcon(value), getX(), getY(), iconWidth, iconHeight);
-
-            if (isMouseOver(pMouseX, pMouseY)) {
-                Component tooltip = getValueTooltip(value);
-                if (tooltip != null && !Component.empty().equals(tooltip)) {
-                    selection.setTooltipForNextRenderPass(tooltip);
-                }
-            }
         }
     }
 }

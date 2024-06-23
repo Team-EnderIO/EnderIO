@@ -2,13 +2,13 @@ package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.base.client.gui.widget.RedstoneControlIconWidget;
+import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.widgets.EIOImageButton;
 import com.enderio.machines.client.gui.widget.ExperienceWidget;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.XPObeliskMenu;
+import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
@@ -27,7 +27,7 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
     private static final ResourceLocation XP_REMOVE_MULTI = EnderIO.loc("buttons/xp_remove_multi");
     private static final ResourceLocation XP_REMOVE_ALL = EnderIO.loc("buttons/xp_remove_all");
 
-    private final List<EIOImageButton> xpButtons = new ArrayList<>();
+    private final List<ImageButton> xpButtons = new ArrayList<>();
 
     public XPObeliskScreen(XPObeliskMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -36,7 +36,7 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new RedstoneControlIconWidget(leftPos + imageWidth - 8 - 14, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 8 - 14, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
         addRenderableOnly(new ExperienceWidget(this, getMenu().getBlockEntity()::getFluidTank, leftPos + (imageWidth / 2) - 55, topPos + 55, 110, 5));
@@ -73,8 +73,8 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
         this.getMinecraft().gameMode.handleInventoryButtonClick(getMenu().containerId, id);
     }
 
-    private EIOImageButton makeButton(int x, int y, int size, int id, ResourceLocation SPRITE, Component tooltip) {
-        EIOImageButton button = new EIOImageButton(this, x, y, size, size, new WidgetSprites(SPRITE, SPRITE), (press) -> handlePress(id));
+    private ImageButton makeButton(int x, int y, int size, int id, ResourceLocation SPRITE, Component tooltip) {
+        ImageButton button = new ImageButton(x, y, size, size, new WidgetSprites(SPRITE, SPRITE), (press) -> handlePress(id));
         button.setTooltip(Tooltip.create(tooltip));
         xpButtons.add(button);
         return button;

@@ -10,6 +10,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -24,7 +25,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> extends AbstractWidget {
+public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> extends AbstractButton {
     private static final int RENDERER_HEIGHT = 80;
     public static final ResourceLocation IO_CONFIG = EnderIO.loc("buttons/io_config");
     public static final ResourceLocation NEIGHBOURS = EnderIO.loc("buttons/neighbour");
@@ -72,17 +73,12 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        Vector2i pos = new Vector2i(getX(), getY());
-        screen.renderSimpleArea(guiGraphics, pos, pos.add(new Vector2i(width, height)));
-
-        RenderSystem.enableDepthTest();
+    public void renderString(GuiGraphics guiGraphics, Font font, int color) {
         guiGraphics.blitSprite(IO_CONFIG, this.getX(), this.getY(), this.width, this.height);
-        RenderSystem.disableDepthTest();
     }
 
     @Override
-    public void onClick(double pMouseX, double pMouseY) {
+    public void onPress() {
         var state = !setPlayerInvVisible.apply(!playerInvVisible.get()); // toggle the variable and set state to opposite of it
         configRenderer.visible = state;
         neighbourButton.visible = state;

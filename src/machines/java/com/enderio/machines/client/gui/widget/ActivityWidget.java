@@ -1,7 +1,7 @@
 package com.enderio.machines.client.gui.widget;
 
-import com.enderio.EnderIO;
 import com.enderio.core.client.gui.widgets.EIOWidget;
+import com.enderio.machines.client.gui.icon.MachineEnumIcons;
 import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.blockentity.MachineStateType;
 import com.enderio.machines.common.lang.MachineLang;
@@ -10,16 +10,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
 public class ActivityWidget extends EIOWidget {
-    protected static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/icons/machine_states.png");
-
     private final Screen screen;
     private final Supplier<Set<MachineState>> state;
 
@@ -39,13 +37,19 @@ public class ActivityWidget extends EIOWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
+
         MachineState prio = null;
         for (MachineState machineState: state.get()) {
             if (prio == null || machineState.type().getPriority() > prio.type().getPriority()) {
                 prio = machineState;
             }
         }
-        guiGraphics.blit(WIDGETS, x, y, 0, prio == null ? 16 : prio.type().getPriority() * 16, 0, width, height, 64, 16);
+
+        if (prio == null) {
+            prio = MachineState.IDLE;
+        }
+
+        guiGraphics.blitSprite(Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), x, y, 16, 16);
 
         RenderSystem.disableDepthTest();
         renderToolTip(guiGraphics, mouseX, mouseY);

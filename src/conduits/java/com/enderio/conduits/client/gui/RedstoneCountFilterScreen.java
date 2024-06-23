@@ -2,7 +2,7 @@ package com.enderio.conduits.client.gui;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.base.client.gui.widget.DyeColorIconWidget;
+import com.enderio.base.client.gui.widget.DyeColorPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.common.menu.RedstoneCountFilterMenu;
 import com.enderio.core.client.gui.screen.EIOScreen;
@@ -23,7 +23,7 @@ public class RedstoneCountFilterScreen extends EIOScreen<RedstoneCountFilterMenu
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new DyeColorIconWidget(this.leftPos + 15, this.topPos + 30,
+        addRenderableWidget(new DyeColorPickerWidget(this.leftPos + 15, this.topPos + 30,
             getMenu().getFilter()::getChannel,
             getMenu()::setChannel,
             EIOLang.REDSTONE_CHANNEL));

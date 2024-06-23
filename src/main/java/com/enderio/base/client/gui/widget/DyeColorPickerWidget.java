@@ -1,7 +1,7 @@
 package com.enderio.base.client.gui.widget;
 
 import com.enderio.base.client.icon.EIOEnumIcons;
-import com.enderio.core.client.gui.widgets.BaseEnumIconWidget;
+import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class DyeColorIconWidget extends BaseEnumIconWidget<DyeColor> {
+public class DyeColorPickerWidget extends BaseEnumPickerWidget<DyeColor> {
 
     // Reproduces the old ColorControl order for player familiarity.
     private static final DyeColor[] ORDERED_VALUES = new DyeColor[] {
@@ -32,7 +32,7 @@ public class DyeColorIconWidget extends BaseEnumIconWidget<DyeColor> {
         DyeColor.RED,
     };
 
-    public DyeColorIconWidget(int pX, int pY, Supplier<DyeColor> getter, Consumer<DyeColor> setter, Component optionName) {
+    public DyeColorPickerWidget(int pX, int pY, Supplier<DyeColor> getter, Consumer<DyeColor> setter, Component optionName) {
         super(pX, pY, 16, 16, DyeColor.class, getter, setter, optionName);
     }
 
