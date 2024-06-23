@@ -5,6 +5,7 @@ import com.enderio.api.integration.IntegrationWrapper;
 import com.enderio.conduits.common.integrations.ae2.AE2Integration;
 import com.enderio.conduits.common.integrations.cctweaked.CCIntegration;
 import com.enderio.conduits.common.integrations.mekanism.MekanismIntegration;
+import com.enderio.conduits.common.integrations.refinedstorage.RSIntegration;
 
 public class Integrations {
 
