@@ -1,16 +1,15 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
-import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
-import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.Conduits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -38,7 +37,7 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
     }
 
     @Override
-    public void tickColoredGraph(ServerLevel level, EnergyConduit conduit, List<Connection> inserts, List<Connection> extracts, ColorControl color,
+    public void tickColoredGraph(ServerLevel level, EnergyConduit conduit, List<Connection> inserts, List<Connection> extracts, DyeColor color,
         ConduitNetwork graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
         EnergyConduitNetworkContext context = graph.getContext(Conduits.ContextSerializers.ENERGY.get());

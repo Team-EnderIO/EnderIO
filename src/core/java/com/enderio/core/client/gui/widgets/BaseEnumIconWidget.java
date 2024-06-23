@@ -12,6 +12,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -22,6 +23,7 @@ import java.util.function.Supplier;
 
 public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidget {
 
+    private final Class<T> clazz;
     private final Supplier<T> getter;
     private final Consumer<T> setter;
 
@@ -40,13 +42,15 @@ public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidg
     // TODO: I don't like that this is separate, maybe we need an IOptionIcon for holding the option name?
     private final Component optionName;
 
-    public BaseEnumIconWidget(int pX, int pY, int width, int height, Supplier<T> getter, Consumer<T> setter, Component optionName) {
+    public BaseEnumIconWidget(int pX, int pY, int width, int height, Class<T> clazz, Supplier<T> getter, Consumer<T> setter, Component optionName) {
         super(pX, pY, width, height, Component.empty());
+
+        this.clazz = clazz;
         this.getter = getter;
         this.setter = setter;
         this.optionName = optionName;
 
-        T[] values = getter.get().getDeclaringClass().getEnumConstants();
+        T[] values = getValues();
         Vector2i pos = calculateFirstPosition(values[0], values.length);
         Vector2i elementDistance = new Vector2i(width, height).expand(SPACE_BETWEEN_ELEMENTS);
         for (int i = 0; i < values.length; i++) {
@@ -70,8 +74,13 @@ public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidg
         this.selection = new SelectionScreen(this);
     }
 
+    @Nullable
     public abstract Component getValueTooltip(T value);
     public abstract ResourceLocation getValueIcon(T value);
+
+    public T[] getValues() {
+        return clazz.getEnumConstants();
+    }
 
     private Vector2i calculateFirstPosition(T icon, int amount) {
         int maxColumns = Math.min(amount, ELEMENTS_IN_ROW);
@@ -127,7 +136,16 @@ public abstract class BaseEnumIconWidget<T extends Enum<T>> extends AbstractWidg
             tooltipDisplayCache = getter.get();
 
             // Update tooltip
-            setTooltip(Tooltip.create(optionName.copy().append("\n").append(getValueTooltip(value).copy().withStyle(ChatFormatting.GRAY))));
+            Component valueTooltip = getValueTooltip(value);
+
+            Component tooltip;
+            if (valueTooltip != null) {
+                tooltip = optionName.copy().append("\n").append(valueTooltip.copy().withStyle(ChatFormatting.GRAY));
+            } else {
+                tooltip = optionName;
+            }
+
+            setTooltip(Tooltip.create(tooltip));
         }
     }
 

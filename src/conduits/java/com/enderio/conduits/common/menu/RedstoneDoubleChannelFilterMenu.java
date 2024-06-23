@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.menu;
 
-import com.enderio.api.misc.ColorControl;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.conduits.common.network.DoubleChannelPacket;
@@ -13,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
@@ -65,12 +65,12 @@ public class RedstoneDoubleChannelFilterMenu extends AbstractContainerMenu {
         return pPlayer.getItemInHand(InteractionHand.MAIN_HAND).equals(stack);
     }
 
-    public void setFirstChannel(ColorControl colorControl) {
+    public void setFirstChannel(DyeColor colorControl) {
         channels.setFirstChannel(colorControl);
         PacketDistributor.sendToServer(new DoubleChannelPacket(channels.getFirstChannel(), channels.getSecondChannel()));
     }
 
-    public void setSecondChannel(ColorControl colorControl) {
+    public void setSecondChannel(DyeColor colorControl) {
         channels.setSecondChannel(colorControl);
         PacketDistributor.sendToServer(new DoubleChannelPacket(channels.getFirstChannel(), channels.getSecondChannel()));
     }

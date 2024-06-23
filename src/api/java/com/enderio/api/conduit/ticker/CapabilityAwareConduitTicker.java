@@ -4,10 +4,10 @@ import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNode;
-import com.enderio.api.misc.ColorControl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 
@@ -18,7 +18,7 @@ public abstract class CapabilityAwareConduitTicker<TConduit extends Conduit<TCon
 
     @Override
     public final void tickColoredGraph(ServerLevel level, TConduit conduit, List<Connection> inserts, List<Connection> extracts,
-        ColorControl color, ConduitNetwork graph, ColoredRedstoneProvider coloredRedstoneProvider) {
+        DyeColor color, ConduitNetwork graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
         List<CapabilityConnection> insertCaps = new ArrayList<>();
         for (Connection insert : inserts) {

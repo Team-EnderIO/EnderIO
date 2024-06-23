@@ -2,6 +2,7 @@ package com.enderio.base.common.lang;
 
 import com.enderio.api.misc.RedstoneControl;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.DyeColor;
 import org.apache.commons.lang3.NotImplementedException;
 
 public class EIOEnumLang {

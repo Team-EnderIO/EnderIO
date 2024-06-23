@@ -8,11 +8,11 @@ import com.enderio.api.conduit.ConduitDataType;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.screen.ConduitScreenExtension;
+import com.enderio.base.client.gui.widget.DyeColorIconWidget;
 import com.enderio.base.client.gui.widget.RedstoneControlIconWidget;
 import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
-import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
@@ -29,8 +29,6 @@ import com.enderio.conduits.common.network.C2SSetConduitConnectionState;
 import com.enderio.conduits.common.network.C2SSetConduitExtendedData;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.CheckBox;
-import com.enderio.core.client.gui.widgets.EnumIconWidget;
-import com.enderio.core.client.gui.widgets.ToggleButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -39,6 +37,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.DyeColor;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
@@ -123,16 +122,16 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
             if (data.showColorInsert()) {
                 addTypedButton(
-                    new EnumIconWidget<>(this, pos.x(), pos.y() + 20,
-                        () -> getOnDynamic(dyn -> dyn.insertChannel(), ColorControl.GREEN),
+                    new DyeColorIconWidget(pos.x(), pos.y() + 20,
+                        () -> getOnDynamic(dyn -> dyn.insertChannel(), DyeColor.GREEN),
                         color -> actOnDynamic(dyn -> dyn.withColor(false, color)),
                     EIOLang.CONDUIT_CHANNEL));
             }
 
             if (data.showColorExtract()) {
                 addTypedButton(
-                    new EnumIconWidget<>(this, pos.x() + 90, pos.y() + 20,
-                        () -> getOnDynamic(dyn -> dyn.extractChannel(), ColorControl.GREEN),
+                    new DyeColorIconWidget(pos.x() + 90, pos.y() + 20,
+                        () -> getOnDynamic(dyn -> dyn.extractChannel(), DyeColor.GREEN),
                         color -> actOnDynamic(dyn -> dyn.withColor(true, color)),
                         EIOLang.CONDUIT_CHANNEL));
             }
@@ -151,8 +150,8 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
                         EIOLang.CONDUIT_CHANNEL));
 
                 addTypedButton(
-                    new EnumIconWidget<>(this, pos.x() + 90 + 20, pos.y() + 40,
-                        () -> getOnDynamic(dyn -> dyn.redstoneChannel(), ColorControl.GREEN),
+                    new DyeColorIconWidget(pos.x() + 90 + 20, pos.y() + 40,
+                        () -> getOnDynamic(dyn -> dyn.redstoneChannel(), DyeColor.GREEN),
                         color -> actOnDynamic(dyn -> dyn.withRedstoneChannel(color)),
                         EIOLang.REDSTONE_CHANNEL));
             }

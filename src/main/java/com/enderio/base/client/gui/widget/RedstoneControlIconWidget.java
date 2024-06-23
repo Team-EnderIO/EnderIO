@@ -6,6 +6,7 @@ import com.enderio.base.common.lang.EIOEnumLang;
 import com.enderio.core.client.gui.widgets.BaseEnumIconWidget;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -13,10 +14,11 @@ import java.util.function.Supplier;
 public class RedstoneControlIconWidget extends BaseEnumIconWidget<RedstoneControl> {
 
     public RedstoneControlIconWidget(int pX, int pY, Supplier<RedstoneControl> getter, Consumer<RedstoneControl> setter, Component optionName) {
-        super(pX, pY, 16, 16, getter, setter, optionName);
+        super(pX, pY, 16, 16, RedstoneControl.class, getter, setter, optionName);
     }
 
     @Override
+    @Nullable
     public Component getValueTooltip(RedstoneControl value) {
         return EIOEnumLang.getDescription(value);
     }

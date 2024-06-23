@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.redstone;
 
-import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
+import net.minecraft.world.item.DyeColor;
 
 public class RedstoneNOTFilter implements RedstoneInsertFilter {
 
@@ -11,7 +11,7 @@ public class RedstoneNOTFilter implements RedstoneInsertFilter {
     }
 
     @Override
-    public int getOutputSignal(RedstoneConduitData data, ColorControl control) {
+    public int getOutputSignal(RedstoneConduitData data, DyeColor control) {
         return data.isActive(control) ? 0 : 15;
     }
 }

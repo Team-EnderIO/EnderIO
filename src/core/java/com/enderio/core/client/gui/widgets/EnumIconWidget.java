@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@Deprecated(forRemoval = true, since = "7.0")
 public class EnumIconWidget<T extends Enum<T> & Icon, U extends Screen & EnderScreen> extends AbstractWidget implements FullScreenListener {
 
     private final Supplier<T> getter;
