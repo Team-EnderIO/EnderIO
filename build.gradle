@@ -248,7 +248,11 @@ dependencies {
     compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
     runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
 
+    //RS
     compileOnly fg.deobf("com.refinedmods:refinedstorage:${rs_version}") {
+        transitive = false
+    }
+    runtimeOnly fg.deobf("com.refinedmods:refinedstorage:${rs_version}"){
         transitive = false
     }
 

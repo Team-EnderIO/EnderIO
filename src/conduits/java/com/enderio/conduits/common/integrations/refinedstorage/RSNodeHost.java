@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.integrations.refinedstorage;
 
-import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.conduit.ConduitData;
+import com.enderio.api.conduit.ConduitType;
 import com.refinedmods.refinedstorage.api.IRSAPI;
 import com.refinedmods.refinedstorage.api.RSAPIInject;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 
-public class RSNodeHost implements IExtendedConduitData<RSNodeHost>, INetworkNodeProxy<RSNetworkNode> {
+public class RSNodeHost implements ConduitData<RSNodeHost>, INetworkNodeProxy<RSNetworkNode> {
 
     @RSAPIInject
     public static IRSAPI RSAPI;
@@ -53,7 +53,7 @@ public class RSNodeHost implements IExtendedConduitData<RSNodeHost>, INetworkNod
     }
 
     @Override
-    public void onRemoved(IConduitType<?> type, Level level, BlockPos pos) {
+    public void onRemoved(ConduitType<?> type, Level level, BlockPos pos) {
         if (!level.isLoaded(pos))
             return;
 

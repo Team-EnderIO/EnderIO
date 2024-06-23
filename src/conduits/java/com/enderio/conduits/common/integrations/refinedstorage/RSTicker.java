@@ -1,21 +1,19 @@
 package com.enderio.conduits.common.integrations.refinedstorage;
 
-import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.ticker.IConduitTicker;
-import com.enderio.api.misc.ColorControl;
+import com.enderio.api.conduit.ColoredRedstoneProvider;
+import com.enderio.api.conduit.ConduitGraph;
+import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.refinedmods.refinedstorage.api.IRSAPI;
 import com.refinedmods.refinedstorage.api.RSAPIInject;
 import com.refinedmods.refinedstorage.capability.NetworkNodeProxyCapability;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.apache.commons.lang3.function.TriFunction;
 
-public class RSTicker implements IConduitTicker {
+public class RSTicker implements ConduitTicker<RSNodeHost> {
 
     @RSAPIInject
     public static IRSAPI RSAPI;
@@ -23,8 +21,7 @@ public class RSTicker implements IConduitTicker {
     public static final RSTicker INSTANCE = new RSTicker();
 
     @Override
-    public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level,
-        TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+    public void tickGraph(ServerLevel level, ConduitType<RSNodeHost> type, ConduitGraph<RSNodeHost> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
         return; // Do nothing
     }
 
@@ -39,7 +36,7 @@ public class RSTicker implements IConduitTicker {
     }
 
     @Override
-    public boolean canConnectTo(IConduitType<?> thisType, IConduitType<?> other) {
+    public boolean canConnectTo(ConduitType<?> thisType, ConduitType<?> other) {
         return other instanceof RSConduitType;
     }
 }
