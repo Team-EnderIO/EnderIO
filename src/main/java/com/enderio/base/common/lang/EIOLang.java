@@ -2,7 +2,6 @@ package com.enderio.base.common.lang;
 
 import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.api.misc.ApiLang;
 import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.network.chat.Component;
@@ -296,12 +295,6 @@ public class EIOLang {
     }
 
     public static void register() {
-        // TODO: NEO-PORT: This is gross. We should probably just hand-write a lang json for core/api?
-        ApiLang.REDSTONE_ACTIVE_WITH_SIGNAL = REDSTONE_ACTIVE_WITH_SIGNAL;
-        ApiLang.REDSTONE_NEVER_ACTIVE = REDSTONE_NEVER_ACTIVE;
-        ApiLang.REDSTONE_ALWAYS_ACTIVE = REDSTONE_ALWAYS_ACTIVE;
-        ApiLang.REDSTONE_ACTIVE_WITHOUT_SIGNAL = REDSTONE_ACTIVE_WITHOUT_SIGNAL;
-
         registerGlassLang();
     }
 }

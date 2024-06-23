@@ -28,6 +28,7 @@ public class GlassIconDecorator implements IItemDecorator {
                 return true;
             }
         }
+
         return false;
     }
 }

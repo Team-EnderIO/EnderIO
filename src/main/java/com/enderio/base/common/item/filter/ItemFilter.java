@@ -23,7 +23,6 @@ import java.util.function.Predicate;
 
 public class ItemFilter extends Item {
 
-    // TODO: DataComponents.
     public static ICapabilityProvider<ItemStack, Void, ResourceFilter> FILTER_PROVIDER =
         (stack, v) -> new ItemFilterCapability(EIODataComponents.ITEM_FILTER, stack);
 

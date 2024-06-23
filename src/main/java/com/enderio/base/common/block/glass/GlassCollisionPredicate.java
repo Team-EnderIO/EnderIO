@@ -24,17 +24,11 @@ import java.util.function.Predicate;
 public enum GlassCollisionPredicate implements Icon {
 
     NONE(ctx -> false, null),
-
     PLAYERS_PASS(ctx -> ctx.getEntity() instanceof Player, EIOLang.GLASS_COLLISION_PLAYERS_PASS),
-
     PLAYERS_BLOCK(ctx -> !(ctx.getEntity() instanceof Player), EIOLang.GLASS_COLLISION_PLAYERS_BLOCK),
-
     MOBS_PASS(ctx -> ctx.getEntity() instanceof Mob, EIOLang.GLASS_COLLISION_MOBS_PASS),
-
     MOBS_BLOCK(ctx -> !(ctx.getEntity() instanceof Mob), EIOLang.GLASS_COLLISION_MOBS_BLOCK),
-
     ANIMALS_PASS(ctx -> ctx.getEntity() instanceof Animal, EIOLang.GLASS_COLLISION_ANIMALS_PASS),
-
     ANIMALS_BLOCK(ctx -> !(ctx.getEntity() instanceof Animal), EIOLang.GLASS_COLLISION_ANIMALS_BLOCK);
 
     private final Predicate<EntityCollisionContext> predicate;

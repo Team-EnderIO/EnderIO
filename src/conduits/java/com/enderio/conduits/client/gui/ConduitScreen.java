@@ -8,6 +8,10 @@ import com.enderio.api.conduit.ConduitDataType;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.screen.ConduitScreenExtension;
+import com.enderio.base.client.gui.widget.RedstoneControlIconWidget;
+import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
+import com.enderio.conduits.common.conduit.connection.ConnectionState;
+import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
@@ -26,6 +30,8 @@ import com.enderio.conduits.common.network.C2SSetConduitExtendedData;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.CheckBox;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
+import com.enderio.core.client.gui.widgets.ToggleButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -91,6 +97,11 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
         }
     }
 
+    @Override
+    public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
+        super.resize(pMinecraft, pWidth, pHeight);
+    }
+
     private void updateConnectionWidgets(boolean forceUpdate) {
         if (forceUpdate || recalculateTypedButtons) {
             recalculateTypedButtons = false;
@@ -127,11 +138,17 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
 
             if (data.showRedstoneExtract()) {
-                addTypedButton(
+                /*addTypedButton(
                     new EnumIconWidget<>(this, pos.x() + 90, pos.y() + 40,
                         () -> getOnDynamic(dyn -> dyn.control(), RedstoneControl.ACTIVE_WITH_SIGNAL),
                         mode -> actOnDynamic(dyn -> dyn.withRedstoneMode(mode)),
-                        EIOLang.REDSTONE_MODE));
+                        EIOLang.REDSTONE_MODE));*/
+
+                addTypedButton(
+                    new RedstoneControlIconWidget(pos.x() + 90, pos.y() + 20,
+                        () -> getOnDynamic(dyn -> dyn.control(), RedstoneControl.ACTIVE_WITH_SIGNAL),
+                        mode -> actOnDynamic(dyn -> dyn.withRedstoneMode(mode)),
+                        EIOLang.CONDUIT_CHANNEL));
 
                 addTypedButton(
                     new EnumIconWidget<>(this, pos.x() + 90 + 20, pos.y() + 40,

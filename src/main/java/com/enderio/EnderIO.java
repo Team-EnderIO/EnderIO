@@ -129,10 +129,6 @@ public class EnderIO {
     }
 
     private void registerRegistries(NewRegistryEvent event) {
-        // TODO: Do this in conduits?
-        event.register(EnderIORegistries.CONDUIT_TYPE);
-        event.register(EnderIORegistries.CONDUIT_DATA_TYPE);
-        event.register(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE);
         event.register(EnderIORegistries.TRAVEL_TARGET_TYPES);
         event.register(EnderIORegistries.TRAVEL_TARGET_SERIALIZERS);
     }

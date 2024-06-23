@@ -14,10 +14,10 @@ import java.util.function.UnaryOperator;
 
 public enum RedstoneControl implements Icon, StringRepresentable {
 
-    ALWAYS_ACTIVE(0, "always_active", bool -> true, ApiLang.REDSTONE_ALWAYS_ACTIVE),
-    ACTIVE_WITH_SIGNAL(1, "active_with_signal", bool -> bool, ApiLang.REDSTONE_ACTIVE_WITH_SIGNAL),
-    ACTIVE_WITHOUT_SIGNAL(2, "active_without_signal", bool -> !bool, ApiLang.REDSTONE_ACTIVE_WITHOUT_SIGNAL),
-    NEVER_ACTIVE(3, "never_active", bool -> false, ApiLang.REDSTONE_NEVER_ACTIVE);
+    ALWAYS_ACTIVE(0, "always_active", bool -> true),
+    ACTIVE_WITH_SIGNAL(1, "active_with_signal", bool -> bool),
+    ACTIVE_WITHOUT_SIGNAL(2, "active_without_signal", bool -> !bool),
+    NEVER_ACTIVE(3, "never_active", bool -> false);
 
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("enderio", "textures/gui/icons/redstone_control.png");
     private static final Vector2i SIZE = new Vector2i(16, 16);
@@ -31,14 +31,12 @@ public enum RedstoneControl implements Icon, StringRepresentable {
     private final UnaryOperator<Boolean> isActive;
 
     private final Vector2i pos;
-    private final Component tooltip;
 
-    RedstoneControl(int id, String name, UnaryOperator<Boolean> isActive, Component tooltip) {
+    RedstoneControl(int id, String name, UnaryOperator<Boolean> isActive) {
         this.id = id;
         this.name = name;
         this.isActive = isActive;
         pos = new Vector2i(16*ordinal(), 0);
-        this.tooltip = tooltip;
     }
 
     public boolean isActive(boolean hasRedstone) {
@@ -63,11 +61,6 @@ public enum RedstoneControl implements Icon, StringRepresentable {
     @Override
     public Vector2i getTextureSize() {
         return new Vector2i(64, 16);
-    }
-
-    @Override
-    public Component getTooltip() {
-        return tooltip;
     }
 
     @Override

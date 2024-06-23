@@ -2,7 +2,6 @@ package com.enderio.base.common.loot;
 
 import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOLootModifiers;
 import com.mojang.serialization.MapCodec;
@@ -34,7 +33,7 @@ public class SetLootCapacitorFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    public LootItemFunctionType getType() {
+    public LootItemFunctionType<SetLootCapacitorFunction> getType() {
         return EIOLootModifiers.SET_LOOT_CAPACITOR.get();
     }
 
@@ -43,16 +42,16 @@ public class SetLootCapacitorFunction extends LootItemConditionalFunction {
         float base = range.getFloat(context);
         Map<CapacitorModifier, Float> modifiers = new HashMap<>();
 
-        modifiers.put(CapacitorUtil.getRandomModifier(context.getRandom()), range.getFloat(context));
+        modifiers.put(CapacitorModifier.getRandomModifier(context.getRandom()), range.getFloat(context));
 
         // 15% chance of a secondary modifier
         if (context.getRandom().nextFloat() < 0.15f) {
-            modifiers.put(CapacitorUtil.getRandomModifier(context.getRandom()), range.getFloat(context));
+            modifiers.put(CapacitorModifier.getRandomModifier(context.getRandom()), range.getFloat(context));
         }
 
         // 2% change of a third
         if (context.getRandom().nextFloat() < 0.02f) {
-            modifiers.put(CapacitorUtil.getRandomModifier(context.getRandom()), range.getFloat(context));
+            modifiers.put(CapacitorModifier.getRandomModifier(context.getRandom()), range.getFloat(context));
         }
 
         stack.set(EIODataComponents.CAPACITOR_DATA, new CapacitorData(base, modifiers));

@@ -13,13 +13,7 @@ public class EIONBTKeys extends CoreNBTKeys {
 
     // region Capability Serialized Names
 
-    public static final String CAPACITOR_DATA = "CapacitorData";
-    public static final String OWNER = "Owner";
     public static final String ENTITY_STORAGE = "EntityStorage";
-    public static final String TOGGLE_STATE = "ToggleState";
-    public static final String COORDINATE_SELECTION = "CoordinateSelection";
-    public static final String DARK_STEEL_UPGRADEABLE = "DarkSteelUpgradable";
-
     public static final String PAINT = "Paint";
     public static final String PAINT_2 = "Paint2";
 

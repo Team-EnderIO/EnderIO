@@ -20,7 +20,6 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
 public class FluidFilter extends Item {
 
-    // TODO: DataComponents
     public static ICapabilityProvider<ItemStack, Void, ResourceFilter> FILTER_PROVIDER =
         (stack, v) -> new FluidFilterCapability(EIODataComponents.FLUID_FILTER, stack);
 

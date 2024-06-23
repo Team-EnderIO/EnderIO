@@ -6,6 +6,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ByIdMap;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.List;
@@ -40,6 +41,10 @@ public enum CapacitorModifier implements StringRepresentable {
         FUEL_EFFICIENCY,
         BURNING_ENERGY_GENERATION
     );
+
+    public static CapacitorModifier getRandomModifier(RandomSource randomSource) {
+        return CapacitorModifier.SELECTABLE_MODIFIERS.get(randomSource.nextInt(CapacitorModifier.SELECTABLE_MODIFIERS.size()));
+    }
 
     CapacitorModifier(int id) {
         this.id = id;
