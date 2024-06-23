@@ -1,12 +1,6 @@
 package com.enderio.base.common.block.glass;
 
-import com.enderio.EnderIO;
-import com.enderio.api.misc.Icon;
-import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.lang.EIOLang;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
@@ -14,76 +8,30 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
  * Glass collision predicate wrapper.
  * Contains the predicate, the description id for the tooltip and the icon for the itemstack.
  */
-public enum GlassCollisionPredicate implements Icon {
+public enum GlassCollisionPredicate {
 
-    NONE(ctx -> false, null),
-    PLAYERS_PASS(ctx -> ctx.getEntity() instanceof Player, EIOLang.GLASS_COLLISION_PLAYERS_PASS),
-    PLAYERS_BLOCK(ctx -> !(ctx.getEntity() instanceof Player), EIOLang.GLASS_COLLISION_PLAYERS_BLOCK),
-    MOBS_PASS(ctx -> ctx.getEntity() instanceof Mob, EIOLang.GLASS_COLLISION_MOBS_PASS),
-    MOBS_BLOCK(ctx -> !(ctx.getEntity() instanceof Mob), EIOLang.GLASS_COLLISION_MOBS_BLOCK),
-    ANIMALS_PASS(ctx -> ctx.getEntity() instanceof Animal, EIOLang.GLASS_COLLISION_ANIMALS_PASS),
-    ANIMALS_BLOCK(ctx -> !(ctx.getEntity() instanceof Animal), EIOLang.GLASS_COLLISION_ANIMALS_BLOCK);
+    NONE(ctx -> false),
+    PLAYERS_PASS(ctx -> ctx.getEntity() instanceof Player),
+    PLAYERS_BLOCK(ctx -> !(ctx.getEntity() instanceof Player)),
+    MOBS_PASS(ctx -> ctx.getEntity() instanceof Mob),
+    MOBS_BLOCK(ctx -> !(ctx.getEntity() instanceof Mob)),
+    ANIMALS_PASS(ctx -> ctx.getEntity() instanceof Animal),
+    ANIMALS_BLOCK(ctx -> !(ctx.getEntity() instanceof Animal));
 
     private final Predicate<EntityCollisionContext> predicate;
-    @Nullable
-    private final Component description;
 
-    public static final ResourceLocation TEXTURE = EnderIO.loc("textures/item/overlay/fused_quartz_hitbox_overlay.png");
-
-    GlassCollisionPredicate(Predicate<EntityCollisionContext> predicate, @Nullable Component description) {
+    GlassCollisionPredicate(Predicate<EntityCollisionContext> predicate) {
         this.predicate = predicate;
-        this.description = description;
     }
 
     public boolean canPass(EntityCollisionContext context) {
         return predicate.test(context);
-    }
-
-    public Optional<Component> getDescription() {
-        if (description != null) {
-            return Optional.of(description);
-        }
-
-        return Optional.empty();
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation() {
-        return TEXTURE;
-    }
-
-    @Override
-    public Vector2i getIconSize() {
-        return new Vector2i(32,32);
-    }
-
-    @Override
-    public Vector2i getRenderSize() {
-        return new Vector2i(16,16);
-    }
-
-    @Override
-    public Vector2i getTexturePosition() {
-        return switch (this) {
-            case NONE, PLAYERS_PASS -> new Vector2i(0,0);
-            case PLAYERS_BLOCK -> new Vector2i(0,32);
-            case MOBS_PASS -> new Vector2i(32,0);
-            case MOBS_BLOCK -> new Vector2i(32,32);
-            case ANIMALS_PASS -> new Vector2i(64,0);
-            case ANIMALS_BLOCK -> new Vector2i(64,32);
-        };
-    }
-
-    @Override
-    public boolean shouldRender() {
-        return this != GlassCollisionPredicate.NONE;
     }
 
     public String shortName() {

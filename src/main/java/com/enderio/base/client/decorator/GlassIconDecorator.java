@@ -1,10 +1,12 @@
 package com.enderio.base.client.decorator;
 
 import com.enderio.api.misc.Vector2i;
+import com.enderio.base.client.icon.EIOEnumIcons;
 import com.enderio.base.common.block.glass.FusedQuartzBlock;
 import com.enderio.core.client.gui.screen.EnderScreen;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.IItemDecorator;
@@ -21,8 +23,15 @@ public class GlassIconDecorator implements IItemDecorator {
                 guiGraphics.pose().pushPose();
                 guiGraphics.pose().translate(xOffset, yOffset, COUNT_BLIT_HEIGHT - 1);
 
-                EnderScreen.renderIcon(guiGraphics, new Vector2i(0,0), block.getCollisionPredicate());
-                EnderScreen.renderIcon(guiGraphics, new Vector2i(0,0), block.getGlassLighting());
+                ResourceLocation collisionSprite = EIOEnumIcons.GLASS_COLLISION_PREDICATE.get(block.getCollisionPredicate());
+                if (collisionSprite != null) {
+                    guiGraphics.blitSprite(collisionSprite, 0, 0, 16, 16);
+                }
+                
+                ResourceLocation lightingSprite = EIOEnumIcons.GLASS_LIGHTING.get(block.getGlassLighting());
+                if (lightingSprite != null) {
+                    guiGraphics.blitSprite(lightingSprite, 0, 0, 16, 16);
+                }
 
                 guiGraphics.pose().popPose();
                 return true;

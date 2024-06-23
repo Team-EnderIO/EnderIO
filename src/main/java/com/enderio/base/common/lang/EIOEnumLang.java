@@ -2,7 +2,9 @@ package com.enderio.base.common.lang;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.RedstoneControl;
+import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 
@@ -14,33 +16,36 @@ public class EIOEnumLang {
         .addTranslation(RedstoneControl.NEVER_ACTIVE, "Never Active")
         .build();
 
+    public static EnumTranslationHolder<GlassCollisionPredicate> GLASS_COLLISION = new EnumTranslationHolder.Builder<>(GlassCollisionPredicate.class, "collision")
+        .addTranslation(GlassCollisionPredicate.PLAYERS_PASS, "Not solid to players")
+        .addTranslation(GlassCollisionPredicate.PLAYERS_BLOCK, "Only solid to players")
+        .addTranslation(GlassCollisionPredicate.MOBS_PASS, "Not solid to monsters")
+        .addTranslation(GlassCollisionPredicate.MOBS_BLOCK, "Only solid to monsters")
+        .addTranslation(GlassCollisionPredicate.ANIMALS_PASS, "Not solid to animals")
+        .addTranslation(GlassCollisionPredicate.ANIMALS_BLOCK, "Only solid to animals")
+        .build();
+
     public static void register() {
     }
 
     public static class EnumTranslationHolder<T extends Enum<T>> {
         private final EnumMap<T, Component> translations;
 
-        public EnumTranslationHolder(Class<T> enumClass, EnumMap<T, Component> translations) {
+        private EnumTranslationHolder(EnumMap<T, Component> translations) {
             this.translations = translations;
         }
 
+        @Nullable
         public Component get(T value) {
-            Component component = translations.get(value);
-            if (component == null) {
-                throw new UnsupportedOperationException("No translation found for " + value);
-            }
-
-            return component;
+            return translations.get(value);
         }
 
         public static class Builder<T extends Enum<T>> {
-            private final Class<T> enumClass;
             private final String translationPrefix;
 
             private final EnumMap<T, Component> translations;
 
             public Builder(Class<T> enumClass, String translationPrefix) {
-                this.enumClass = enumClass;
                 this.translationPrefix = translationPrefix;
                 translations = new EnumMap<>(enumClass);
             }
@@ -57,7 +62,7 @@ public class EIOEnumLang {
             }
 
             public EnumTranslationHolder<T> build() {
-                return new EnumTranslationHolder<>(enumClass, translations);
+                return new EnumTranslationHolder<>(translations);
             }
         }
     }

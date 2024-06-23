@@ -26,13 +26,6 @@ public class EIOLang {
     public static final Component FUSED_QUARTZ_EMITS_LIGHT = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("fused_quartz.emits_light"), "Emits light"));
     public static final Component FUSED_QUARTZ_BLOCKS_LIGHT = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("fused_quartz.blocks_light"), "Blocks light"));
 
-    public static final Component GLASS_COLLISION_PLAYERS_PASS = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("collision.players_pass"), "Not solid to players"));
-    public static final Component GLASS_COLLISION_PLAYERS_BLOCK = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("collision.players_block"), "Only solid to players"));
-    public static final Component GLASS_COLLISION_MOBS_PASS = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("collision.mobs_pass"), "Not solid to monsters"));
-    public static final Component GLASS_COLLISION_MOBS_BLOCK = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("collision.mobs_block"), "Only solid to monsters"));
-    public static final Component GLASS_COLLISION_ANIMALS_PASS = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("collision.animals_pass"), "Not solid to animals"));
-    public static final Component GLASS_COLLISION_ANIMALS_BLOCK = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("collision.animals_block"), "Only solid to animals"));
-
     // endregion
 
     // region Items
