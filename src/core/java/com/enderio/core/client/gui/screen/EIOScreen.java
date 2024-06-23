@@ -69,11 +69,13 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
         if (pKeyCode == 256) { //ESC has priority
             Minecraft.getInstance().player.closeContainer();
         }
+
         for (EditBox editBox : editBoxList) {
             if (editBox.keyPressed(pKeyCode, pScanCode, pModifiers) || editBox.canConsumeInput()) {
                 return true;
             }
         }
+
         return super.keyPressed(pKeyCode, pScanCode, pModifiers);
     }
 

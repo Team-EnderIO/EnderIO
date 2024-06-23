@@ -1,4 +1,4 @@
-package com.enderio.base.client.icon;
+package com.enderio.base.client.gui.icon;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.RedstoneControl;

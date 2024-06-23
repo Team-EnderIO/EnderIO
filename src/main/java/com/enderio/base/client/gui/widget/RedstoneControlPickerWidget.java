@@ -1,7 +1,7 @@
 package com.enderio.base.client.gui.widget;
 
 import com.enderio.api.misc.RedstoneControl;
-import com.enderio.base.client.icon.EIOEnumIcons;
+import com.enderio.base.client.gui.icon.EIOEnumIcons;
 import com.enderio.base.common.lang.EIOEnumLang;
 import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import net.minecraft.network.chat.Component;
