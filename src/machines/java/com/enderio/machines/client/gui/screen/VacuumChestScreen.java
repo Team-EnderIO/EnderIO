@@ -2,6 +2,7 @@ package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
+import com.enderio.base.client.gui.widget.EIOCommonWidgets;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
@@ -21,7 +22,6 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
     private static final ResourceLocation MINUS = EnderIO.loc("buttons/minus_small");
     private static final WidgetSprites PLUS_SPRITES = new WidgetSprites(PLUS, PLUS);
     private static final WidgetSprites MINUS_SPRITES = new WidgetSprites(MINUS, MINUS);
-    private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
 
     public VacuumChestScreen(VacuumChestMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle, true);
@@ -34,9 +34,13 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 8 - 16, topPos + 105 , () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 16 * 2 - 2, topPos + 105, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
-            () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setRangeVisible(state),
-            () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
+        addRenderableWidget(EIOCommonWidgets.createRange(
+            leftPos + imageWidth - 8 - 16 * 2 - 2,
+            topPos + 105,
+            EIOLang.HIDE_RANGE,
+            EIOLang.SHOW_RANGE,
+            () -> menu.getBlockEntity().isRangeVisible(),
+            state -> menu.getBlockEntity().setRangeVisible(state)));
 
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 86, 8, 8, PLUS_SPRITES,
             (b) -> menu.getBlockEntity().increaseRange()));

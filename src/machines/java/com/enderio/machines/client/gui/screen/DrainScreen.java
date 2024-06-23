@@ -2,6 +2,7 @@ package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
+import com.enderio.base.client.gui.widget.EIOCommonWidgets;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
@@ -23,7 +24,7 @@ public class DrainScreen extends MachineScreen<DrainMenu> {
     private static final ResourceLocation MINUS = EnderIO.loc("buttons/minus_small");
     private static final WidgetSprites PLUS_SPRITES = new WidgetSprites(PLUS, PLUS);
     private static final WidgetSprites MINUS_SPRITES = new WidgetSprites(MINUS, MINUS);
-    private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
+
     public DrainScreen(DrainMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }
@@ -39,9 +40,13 @@ public class DrainScreen extends MachineScreen<DrainMenu> {
 
         addRenderableOnly(new FluidStackWidget(this, getMenu().getBlockEntity()::getFluidTank, 80 + leftPos, 21 + topPos, 16, 47));
 
-        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 2*16 + 2, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
-            () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setRangeVisible(state),
-            () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
+        addRenderableWidget(EIOCommonWidgets.createRange(
+            leftPos + imageWidth - 6 - 16,
+            topPos + 2 * 16 + 2,
+            EIOLang.HIDE_RANGE,
+            EIOLang.SHOW_RANGE,
+            () -> menu.getBlockEntity().isRangeVisible(),
+            state -> menu.getBlockEntity().setRangeVisible(state)));
 
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2, 8, 8, PLUS_SPRITES,
             (b) -> menu.getBlockEntity().increaseRange()));

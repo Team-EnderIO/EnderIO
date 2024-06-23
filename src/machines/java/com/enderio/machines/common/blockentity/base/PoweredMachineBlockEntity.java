@@ -99,10 +99,15 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             BlockState blockState = getBlockState();
             boolean isBlockStateOutdated = blockState.hasProperty(ProgressMachineBlock.POWERED) && blockState.getValue(ProgressMachineBlock.POWERED) != isActive();
             boolean isMachineStateOutdated = getMachineStates().contains(MachineState.ACTIVE) != isActive();
-            if (!isBlockStateOutdated || isMachineStateOutdated) {
+            if (isBlockStateOutdated || isMachineStateOutdated) {
                 if (updateModel) {
-                    level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
-                    updateMachineState(MachineState.ACTIVE, isActive());
+                    if (isBlockStateOutdated) {
+                        level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+                    }
+
+                    if (isMachineStateOutdated) {
+                        updateMachineState(MachineState.ACTIVE, isActive());
+                    }
                 }
                 updateModel = true;
             } else {
