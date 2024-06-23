@@ -44,7 +44,7 @@ public class DyeColorIconWidget extends BaseEnumIconWidget<DyeColor> {
 
     @Override
     public ResourceLocation getValueIcon(DyeColor value) {
-        return EIOEnumIcons.getIcon(value);
+        return EIOEnumIcons.DYE_COLOR.get(value);
     }
 
     @Override

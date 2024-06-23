@@ -54,10 +54,6 @@ public class EIOLang {
     public static final Component CONDUIT_CHANNEL = addTranslation("gui", EnderIO.loc("conduit_channel"), "Conduit-Channel");
     public static final Component REDSTONE_CHANNEL = addTranslation("gui", EnderIO.loc("redstone_channel"), "Redstone-Channel");
     public static final Component REDSTONE_MODE = addTranslation("gui", EnderIO.loc("redstone.mode"), "Redstone Mode");
-    public static final Component REDSTONE_ALWAYS_ACTIVE = addTranslation("gui", EnderIO.loc("redstone.always_active"), "Always active");
-    public static final Component REDSTONE_ACTIVE_WITH_SIGNAL = addTranslation("gui", EnderIO.loc("redstone.active_with_signal"), "Active with signal");
-    public static final Component REDSTONE_ACTIVE_WITHOUT_SIGNAL = addTranslation("gui", EnderIO.loc("redstone.active_without_signal"), "Active without signal");
-    public static final Component REDSTONE_NEVER_ACTIVE = addTranslation("gui", EnderIO.loc("redstone.never_active"), "Never active");
     public static final Component ROUND_ROBIN_ENABLED = addTranslation("gui", EnderIO.loc("round_robin.enabled"), "Round Robin Enabled");
     public static final Component ROUND_ROBIN_DISABLED = addTranslation("gui", EnderIO.loc("round_robin.disabled"), "Round Robin Disabled");
     public static final Component SELF_FEED_ENABLED = addTranslation("gui", EnderIO.loc("self_feed.enabled"), "Self Feed Enabled");

@@ -20,11 +20,11 @@ public class RedstoneControlIconWidget extends BaseEnumIconWidget<RedstoneContro
     @Override
     @Nullable
     public Component getValueTooltip(RedstoneControl value) {
-        return EIOEnumLang.getDescription(value);
+        return EIOEnumLang.REDSTONE_CONTROL.get(value);
     }
 
     @Override
     public ResourceLocation getValueIcon(RedstoneControl value) {
-        return EIOEnumIcons.getIcon(value);
+        return EIOEnumIcons.REDSTONE_CONTROL.get(value);
     }
 }

@@ -19,6 +19,7 @@ import com.enderio.base.common.init.EIOParticles;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.integrations.EnderIOSelfIntegration;
 import com.enderio.base.common.item.tool.SoulVialItem;
+import com.enderio.base.common.lang.EIOEnumLang;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
@@ -112,6 +113,7 @@ public class EnderIO {
         EIOTags.register();
         EIOMenus.register(modEventBus);
         EIOLang.register();
+        EIOEnumLang.register();
         EIORecipes.register(modEventBus);
         EIOLootModifiers.register(modEventBus);
         EIOParticles.register(modEventBus);

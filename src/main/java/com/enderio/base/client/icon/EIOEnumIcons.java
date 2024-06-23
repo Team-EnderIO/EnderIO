@@ -2,40 +2,33 @@ package com.enderio.base.client.icon;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.RedstoneControl;
+import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class EIOEnumIcons {
 
-    // region Dye Color
+    public static EnumIconHolder<DyeColor> DYE_COLOR = new EnumIconHolder<>(DyeColor.class, "dye_color");
+    public static EnumIconHolder<RedstoneControl> REDSTONE_CONTROL = new EnumIconHolder<>(RedstoneControl.class, "redstone_control");
+    public static EnumIconHolder<GlassCollisionPredicate> GLASS_COLLISION_PREDICATE = new EnumIconHolder<>(GlassCollisionPredicate.class, "glass_collision");
 
-    public static ResourceLocation getIcon(DyeColor value) {
-        return DYE_COLOR_ICONS.get(value);
-    }
+    public static class EnumIconHolder<T extends Enum<T>> {
+        private final EnumMap<T, ResourceLocation> icons;
 
-    private static final EnumMap<DyeColor, ResourceLocation> DYE_COLOR_ICONS = new EnumMap<>(DyeColor.class);
+        public EnumIconHolder(Class<T> enumClass, String iconFolder) {
+            //noinspection Convert2Diamond
+            icons = new EnumMap<T, ResourceLocation>(Arrays.stream(enumClass.getEnumConstants())
+                .collect(Collectors.toMap(e -> e,
+                    e -> EnderIO.loc("icons/" + iconFolder + "/" + e.name().toLowerCase(Locale.ROOT)))));
+        }
 
-    // endregion
-
-    // region Redstone Control
-
-    public static ResourceLocation getIcon(RedstoneControl redstoneControl) {
-        return REDSTONE_CONTROL_ICONS.get(redstoneControl);
-    }
-
-    private static final EnumMap<RedstoneControl, ResourceLocation> REDSTONE_CONTROL_ICONS = new EnumMap<>(RedstoneControl.class);
-
-    // endregion
-
-    static {
-        Arrays.stream(RedstoneControl.values())
-            .forEach(control -> REDSTONE_CONTROL_ICONS.put(control, EnderIO.loc("icons/redstone_control/" + control.name().toLowerCase(Locale.ROOT))));
-
-        Arrays.stream(DyeColor.values())
-            .forEach(control -> DYE_COLOR_ICONS.put(control, EnderIO.loc("icons/dye_color/" + control.name().toLowerCase(Locale.ROOT))));
+        public ResourceLocation get(T value) {
+            return icons.get(value);
+        }
     }
 }
