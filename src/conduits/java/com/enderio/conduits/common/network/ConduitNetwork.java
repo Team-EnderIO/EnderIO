@@ -9,6 +9,7 @@ public class ConduitNetwork {
         CoreNetwork.registerPacket(new CountFilterPacket.Handler(), CountFilterPacket.class);
         CoreNetwork.registerPacket(new DoubleChannelPacket.Handler(), DoubleChannelPacket.class);
         CoreNetwork.registerPacket(new TimerFilterPacket.Handler(), TimerFilterPacket.class);
+        CoreNetwork.registerPacket(new ConduitSelectionPacket.Handler(), ConduitSelectionPacket.class);
     }
 
 }

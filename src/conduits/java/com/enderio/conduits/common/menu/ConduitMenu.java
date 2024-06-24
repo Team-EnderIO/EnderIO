@@ -1,13 +1,15 @@
 package com.enderio.conduits.common.menu;
 
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
-import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.api.conduit.SlotType;
+import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.block.ConduitBlock;
+import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.network.ConduitSelectionPacket;
 import com.enderio.core.common.menu.SyncedMenu;
+import com.enderio.core.common.network.CoreNetwork;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -114,6 +116,7 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
 
     public void setConduitType(ConduitType<?> type) {
         this.type = type;
+        CoreNetwork.sendToServer(new ConduitSelectionPacket(EIOConduitTypes.getConduitId(type)));
     }
 
     public Direction getDirection() {
