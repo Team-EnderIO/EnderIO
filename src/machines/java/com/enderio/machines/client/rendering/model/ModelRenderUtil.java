@@ -70,7 +70,8 @@ public class ModelRenderUtil {
     }
 
     public static BakedQuad createQuad(Vector3f v1, Vector3f v2, Vector3f v3, Vector3f v4, TextureAtlasSprite sprite, int color, float alpha) {
-        Vector3f normal = v3.sub(v2).cross(v1.sub(v2)).normalize();
+        Vector3f normal = new Vector3f(v3).sub(v2).cross(new Vector3f(v1).sub(v2)).normalize();
+
         float nx = normal.x;
         float ny = normal.y;
         float nz = normal.z;
