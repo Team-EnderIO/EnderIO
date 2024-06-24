@@ -34,39 +34,25 @@ public class ConduitSlot extends SlotItemHandler {
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return isVisible() && super.mayPlace(stack);
+        return isActive() && super.mayPlace(stack);
     }
 
     @Override
     public boolean mayPickup(Player playerIn) {
-        return isVisible() && super.mayPickup(playerIn);
+        return isActive() && super.mayPickup(playerIn);
     }
 
     @Override
     @NotNull
     public ItemStack remove(int amount) {
-        return isVisible() ? super.remove(amount) : ItemStack.EMPTY;
+        return isActive() ? super.remove(amount) : ItemStack.EMPTY;
     }
 
-    public void updateVisibilityPosition() {
-        if (isVisible()) {
-            x = slotType.getX();
-            y = slotType.getY();
-        } else {
-            x = Integer.MIN_VALUE;
-            y = Integer.MIN_VALUE;
-        }
-    }
-
-    private boolean isVisible() {
+    @Override
+    public boolean isActive() {
         return visibleDirection.get() == visibleForDirection
             && visibleType.get() == visibleForType
             && bundle.getConduits().size() > visibleForType
             && slotType.isAvailableFor(bundle.getConduits().get(visibleForType).value().getMenuData());
-    }
-
-    @Override
-    public int getMaxStackSize() {
-        return 1;
     }
 }

@@ -498,7 +498,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    //@EnsureSide(EnsureSide.Side.SERVER)
     @Override
     public ItemInteractionResult onWrenched(@Nullable Player player, @Nullable Direction side) {
         if (player == null || level == null) {

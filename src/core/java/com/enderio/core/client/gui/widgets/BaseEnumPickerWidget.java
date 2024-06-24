@@ -1,6 +1,7 @@
 package com.enderio.core.client.gui.widgets;
 
 import com.enderio.api.misc.Vector2i;
+import com.enderio.core.client.gui.screen.BaseScreenOverlay;
 import com.enderio.core.client.gui.screen.EnderScreen;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -21,7 +22,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends AbstractButton {
+public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButton {
 
     private final Class<T> clazz;
     private final Supplier<T> getter;
@@ -141,7 +142,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends AbstractBu
     @Nullable private T tooltipDisplayCache;
 
     @Override
-    public void renderString(GuiGraphics guiGraphics, Font font, int color) {
+    public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         T value = getValue();
         guiGraphics.blitSprite(getValueIcon(value), getX(), getY(), getWidth(), getHeight());
     }
@@ -165,6 +166,42 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends AbstractBu
 
     public boolean isExpanded() {
         return Minecraft.getInstance().screen instanceof SelectionScreen;
+    }
+
+    private static class SelectionOverlay extends BaseScreenOverlay implements EnderScreen {
+
+        // TODO: Bin the dependence on the parent widget?
+        private final BaseEnumPickerWidget<?> parentWidget;
+
+        public SelectionOverlay(BaseEnumPickerWidget<?> parentWidget) {
+            super(
+                parentWidget.expandTopLeft.x(),
+                parentWidget.expandTopLeft.y(),
+                parentWidget.expandBottomRight.x() - parentWidget.expandTopLeft.x(),
+                parentWidget.expandBottomRight.y() - parentWidget.expandTopLeft.y());
+
+            this.parentWidget = parentWidget;
+        }
+
+        @Override
+        protected void init() {
+            parentWidget.icons.values().forEach(this::addRenderableWidget);
+        }
+
+        @Override
+        protected void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouse, float pPartialTick) {
+            renderSimpleArea(pGuiGraphics, new Vector2i(x, y), new Vector2i(x + width, y + height));
+        }
+
+        @Override
+        public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+            if (!isMouseOver(pMouseX, pMouseY) && !parentWidget.isMouseOver(pMouseX, pMouseY)) {
+                // TODO: Hide overlay
+                return true;
+            }
+
+            return super.mouseClicked(pMouseX, pMouseY, pButton);
+        }
     }
 
     private static class SelectionScreen extends Screen implements EnderScreen {
@@ -222,7 +259,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends AbstractBu
         }
     }
 
-    private class SelectionWidget extends AbstractButton {
+    private class SelectionWidget extends EnderButton {
 
         private final T value;
         private final int iconWidth;
@@ -244,7 +281,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends AbstractBu
         public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
 
         @Override
-        public void renderString(GuiGraphics guiGraphics, Font font, int color) {
+        public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
             guiGraphics.blitSprite(getValueIcon(value), getX(), getY(), iconWidth, iconHeight);
         }
     }

@@ -68,8 +68,8 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
                 this.addSlot(ref);
             }
         }
-
     }
+
     public void addArmorSlots(int xPos, int Ypos) {
         for (int i = 0; i < 4; i++) {
             EquipmentSlot slot = EQUIPMENT_SLOTS[i];

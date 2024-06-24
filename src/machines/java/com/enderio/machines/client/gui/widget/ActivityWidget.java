@@ -1,12 +1,12 @@
 package com.enderio.machines.client.gui.widget;
 
-import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.machines.client.gui.icon.MachineEnumIcons;
 import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.blockentity.MachineStateType;
 import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -17,12 +17,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class ActivityWidget extends EIOWidget {
+public class ActivityWidget extends AbstractWidget {
     private final Screen screen;
     private final Supplier<Set<MachineState>> state;
 
     public ActivityWidget(Screen screen, Supplier<Set<MachineState>> state, int x, int y) {
-        super(x, y, 16, 16);
+        super(x, y, 16, 16, Component.empty());
         this.screen = screen;
         this.state = state;
     }
@@ -49,14 +49,14 @@ public class ActivityWidget extends EIOWidget {
             prio = MachineState.IDLE;
         }
 
-        guiGraphics.blitSprite(Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), x, y, 16, 16);
+        guiGraphics.blitSprite(Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), getX(), getY(), 16, 16);
 
         RenderSystem.disableDepthTest();
         renderToolTip(guiGraphics, mouseX, mouseY);
     }
 
     private void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        if (isHovered(mouseX, mouseY)) {
+        if (isHovered()) {
             List<Component> list = state.get().stream().filter(s -> state.get().size() <= 1 || s.type() != MachineStateType.ACTIVE).map(s -> (Component) s.component()).toList();
             if (list.isEmpty()){
                 list = List.of(MachineLang.TOOLTIP_IDLE);

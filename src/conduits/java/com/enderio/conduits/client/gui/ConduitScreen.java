@@ -16,23 +16,15 @@ import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
 import com.enderio.conduits.common.conduit.ConduitBundle;
-import com.enderio.conduits.common.conduit.ConduitDataContainer;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
-import com.enderio.conduits.common.conduit.connection.ConnectionState;
-import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.menu.ConduitMenu;
-import com.enderio.conduits.common.menu.ConduitSlot;
 import com.enderio.conduits.common.network.C2SSetConduitConnectionState;
 import com.enderio.conduits.common.network.C2SSetConduitExtendedData;
-import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -45,41 +37,49 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class ConduitScreen extends EIOScreen<ConduitMenu> {
+public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
     public static final ResourceLocation TEXTURE = EnderIO.loc("textures/gui/conduit.png");
-    public ConduitScreen(ConduitMenu pMenu, Inventory pPlayerInventory, Component title) {
-        super(pMenu, pPlayerInventory, title);
-    }
-
-    private final List<ConduitSelectionButton> typeSelectionButtons = new ArrayList<>();
-    private final List<GuiEventListener> typedButtons = new ArrayList<>();
+    private static final int WIDTH = 206;
+    private static final int HEIGHT = 195;
 
     private final ClientConduitDataAccessor conduitDataAccessor = new ClientConduitDataAccessor();
 
-    private boolean recalculateTypedButtons = true;
+    public ConduitScreen(ConduitMenu pMenu, Inventory pPlayerInventory, Component title) {
+        super(pMenu, pPlayerInventory, title);
 
+        this.imageWidth = WIDTH;
+        this.imageHeight = HEIGHT;
+    }
+    
     @Override
-    protected void init() {
-        super.init();
-        updateConnectionWidgets(true);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        //close and don't render if someone removed the conduit we are looking at or similar
+        if (!menu.stillValid(minecraft.player)) {
+            minecraft.player.closeContainer();
+        } else {
+            super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        }
     }
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
-        super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
+        guiGraphics.blit(TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
 
-        ConduitMenuData data = menu.getConduit().value().getMenuData();
+        ConduitMenuData data = getMenuData();
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(getGuiLeft(), getGuiTop(), 0);
+
         if (data.showBarSeparator()) {
-            guiGraphics.blit(getBackgroundImage(), 102, 7, 255, 0, 1, 97);
+            guiGraphics.blit(TEXTURE, 102, 7, 255, 0, 1, 97);
         }
+
         for (SlotType type: SlotType.values()) {
             if (type.isAvailableFor(data)) {
-                guiGraphics.blit(getBackgroundImage(), type.getX()-1, type.getY()-1, 206, 0, 18, 18);
+                guiGraphics.blit(TEXTURE, type.getX()-1, type.getY()-1, 206, 0, 18, 18);
             }
         }
+
         guiGraphics.pose().popPose();
     }
 
@@ -87,7 +87,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
 
-        ConduitMenuData data = menu.getConduit().value().getMenuData();
+        ConduitMenuData data = getMenuData();
 
         guiGraphics.drawString(this.font, ConduitLang.CONDUIT_INSERT,  22 + 16 + 2,  7 + 4, 4210752, false);
 
@@ -97,70 +97,70 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     }
 
     @Override
-    public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
-        super.resize(pMinecraft, pWidth, pHeight);
-    }
+    protected void init() {
+        super.init();
+        ConduitMenuData data = getMenuData();
+        Vector2i pos = new Vector2i(22, 7).add(getGuiLeft(), getGuiTop());
 
-    private void updateConnectionWidgets(boolean forceUpdate) {
-        if (forceUpdate || recalculateTypedButtons) {
-            recalculateTypedButtons = false;
-            typedButtons.forEach(this::removeWidget);
-            typedButtons.clear();
-            ConduitMenuData data = menu.getConduit().value().getMenuData();
-            Vector2i pos = new Vector2i(22, 7).add(getGuiLeft(), getGuiTop());
+        addRenderableWidget(
+            ToggleIconButton.createCheckbox(pos.x(), pos.y(),
+                () -> getOnDynamic(dyn -> dyn.isInsert(), false),
+                bool -> actOnDynamic(dyn -> dyn.withEnabled(false, bool))));
 
-            addTypedButton(
-                ToggleIconButton.createCheckbox(pos.x(), pos.y(),
-                    () -> getOnDynamic(dyn -> dyn.isInsert(), false),
-                    bool -> actOnDynamic(dyn -> dyn.withEnabled(false, bool))));
-
-            if (data.showBothEnable()) {
-                addTypedButton(
-                    ToggleIconButton.createCheckbox(pos.x() + 90, pos.y(),
-                        () -> getOnDynamic(dyn -> dyn.isExtract(), false),
-                        bool -> actOnDynamic(dyn -> dyn.withEnabled(true, bool))));
-            }
-            if (data.showColorInsert()) {
-                addTypedButton(
-                    new DyeColorPickerWidget(pos.x(), pos.y() + 20,
-                        () -> getOnDynamic(dyn -> dyn.insertChannel(), DyeColor.GREEN),
-                        color -> actOnDynamic(dyn -> dyn.withColor(false, color)),
-                    EIOLang.CONDUIT_CHANNEL));
-            }
-
-            if (data.showColorExtract()) {
-                addTypedButton(
-                    new DyeColorPickerWidget(pos.x() + 90, pos.y() + 20,
-                        () -> getOnDynamic(dyn -> dyn.extractChannel(), DyeColor.GREEN),
-                        color -> actOnDynamic(dyn -> dyn.withColor(true, color)),
-                        EIOLang.CONDUIT_CHANNEL));
-            }
-
-            if (data.showRedstoneExtract()) {
-                addTypedButton(
-                    new RedstoneControlPickerWidget(pos.x() + 90, pos.y() + 40,
-                        () -> getOnDynamic(dyn -> dyn.control(), RedstoneControl.ACTIVE_WITH_SIGNAL),
-                        mode -> actOnDynamic(dyn -> dyn.withRedstoneMode(mode)),
-                        EIOLang.CONDUIT_CHANNEL));
-
-                addTypedButton(
-                    new DyeColorPickerWidget(pos.x() + 90 + 20, pos.y() + 40,
-                        () -> getOnDynamic(dyn -> dyn.redstoneChannel(), DyeColor.GREEN),
-                        color -> actOnDynamic(dyn -> dyn.withRedstoneChannel(color)),
-                        EIOLang.REDSTONE_CHANNEL));
-            }
-
-            ConduitScreenExtension conduitScreenExtension = ConduitScreenExtensions.get(menu.getConduit().value().type());
-
-            if (conduitScreenExtension != null) {
-                conduitScreenExtension
-                    .createWidgets(this, conduitDataAccessor,
-                        this::sendExtendedConduitUpdate, menu::getDirection,
-                        new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
-                    .forEach(this::addTypedButton);
-            }
+        if (data.showBothEnable()) {
+            addRenderableWidget(
+                ToggleIconButton.createCheckbox(pos.x() + 90, pos.y(),
+                    () -> getOnDynamic(dyn -> dyn.isExtract(), false),
+                    bool -> actOnDynamic(dyn -> dyn.withEnabled(true, bool))));
         }
 
+        if (data.showColorInsert()) {
+            addRenderableWidget(
+                new DyeColorPickerWidget(pos.x(), pos.y() + 20,
+                    () -> getOnDynamic(dyn -> dyn.insertChannel(), DyeColor.GREEN),
+                    color -> actOnDynamic(dyn -> dyn.withColor(false, color)),
+                EIOLang.CONDUIT_CHANNEL));
+        }
+
+        if (data.showColorExtract()) {
+            addRenderableWidget(
+                new DyeColorPickerWidget(pos.x() + 90, pos.y() + 20,
+                    () -> getOnDynamic(dyn -> dyn.extractChannel(), DyeColor.GREEN),
+                    color -> actOnDynamic(dyn -> dyn.withColor(true, color)),
+                    EIOLang.CONDUIT_CHANNEL));
+        }
+
+        if (data.showRedstoneExtract()) {
+            addRenderableWidget(
+                new RedstoneControlPickerWidget(pos.x() + 90, pos.y() + 40,
+                    () -> getOnDynamic(dyn -> dyn.control(), RedstoneControl.ACTIVE_WITH_SIGNAL),
+                    mode -> actOnDynamic(dyn -> dyn.withRedstoneMode(mode)),
+                    EIOLang.CONDUIT_CHANNEL));
+
+            addRenderableWidget(
+                new DyeColorPickerWidget(pos.x() + 90 + 20, pos.y() + 40,
+                    () -> getOnDynamic(dyn -> dyn.redstoneChannel(), DyeColor.GREEN),
+                    color -> actOnDynamic(dyn -> dyn.withRedstoneChannel(color)),
+                    EIOLang.REDSTONE_CHANNEL));
+        }
+
+        addConduitScreenExtensionWidgets();
+        addConduitSelectionButtons();
+    }
+
+    private void addConduitScreenExtensionWidgets() {
+        ConduitScreenExtension conduitScreenExtension = ConduitScreenExtensions.get(menu.getConduit().value().type());
+
+        if (conduitScreenExtension != null) {
+            conduitScreenExtension
+                .createWidgets(this, conduitDataAccessor,
+                    this::sendExtendedConduitUpdate, menu::getDirection,
+                    new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
+                .forEach(this::addRenderableWidget);
+        }
+    }
+
+    private void addConduitSelectionButtons() {
         List<Holder<Conduit<?>>> validConnections = new ArrayList<>();
         for (Holder<Conduit<?>> type : getBundle().getConduits()) {
             if (getConnectionState(type) instanceof DynamicConnectionState) {
@@ -168,19 +168,10 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
         }
 
-        if (forceUpdate || !typeSelectionButtons.stream().map(ConduitSelectionButton::getConduit).toList().equals(validConnections)) {
-            typeSelectionButtons.forEach(this::removeWidget);
-            typeSelectionButtons.clear();
-            for (int i = 0; i < validConnections.size(); i++) {
-                Holder<Conduit<?>> connection = validConnections.get(i);
-                ConduitSelectionButton button = new ConduitSelectionButton(getGuiLeft() + 206, getGuiTop() + 4 + 24*i, connection, menu::getConduit, conduit -> {
-                    menu.setConduit(conduit);
-                    recalculateTypedButtons = true;
-                });
-
-                typeSelectionButtons.add(button);
-                addRenderableWidget(button);
-            }
+        for (int i = 0; i < validConnections.size(); i++) {
+            Holder<Conduit<?>> connection = validConnections.get(i);
+            addRenderableWidget(new ConduitSelectionButton(getGuiLeft() + 206, getGuiTop() + 4 + 24*i, connection,
+                this::getConduit, this::setConduitType));
         }
     }
 
@@ -192,11 +183,6 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             menu.getBlockEntity().getBlockPos(),
             menu.getConduit(),
             node.conduitDataContainer()));
-    }
-
-    private void addTypedButton(AbstractWidget button) {
-        typedButtons.add(button);
-        addRenderableWidget(button);
     }
 
     private void actOnDynamic(Function<DynamicConnectionState, DynamicConnectionState> map) {
@@ -213,6 +199,19 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
         return getConnectionState() instanceof DynamicConnectionState dyn ? map.apply(dyn) : defaultValue;
     }
 
+    public Holder<Conduit<?>> getConduit() {
+        return menu.getConduit();
+    }
+
+    public ConduitMenuData getMenuData() {
+        return getConduit().value().getMenuData();
+    }
+
+    private void setConduitType(Holder<Conduit<?>> conduit) {
+        menu.setConduit(conduit);
+        rebuildWidgets();
+    }
+
     private ConnectionState getConnectionState() {
         return getConnectionState(menu.getConduit());
     }
@@ -223,28 +222,6 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
 
     private ConduitBundle getBundle() {
         return menu.getBlockEntity().getBundle();
-    }
-    
-    @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        //close and don't render if someone removed the conduit we are looking at or similar
-        if (!menu.stillValid(minecraft.player)) {
-            minecraft.player.closeContainer();
-        } else {
-            updateConnectionWidgets(false);
-            menu.getConduitSlots().forEach(ConduitSlot::updateVisibilityPosition);
-            super.render(guiGraphics, mouseX, mouseY, partialTicks);
-        }
-    }
-
-    @Override
-    public ResourceLocation getBackgroundImage() {
-        return TEXTURE;
-    }
-
-    @Override
-    protected Vector2i getBackgroundImageSize() {
-        return new Vector2i(206,195);
     }
 
     /**

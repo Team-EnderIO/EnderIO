@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class ToggleIconButton extends AbstractButton {
+public class ToggleIconButton extends EnderButton {
 
     private final Function<Boolean, ResourceLocation> spriteFunction;
     private final Supplier<Boolean> getter;
@@ -61,7 +61,7 @@ public class ToggleIconButton extends AbstractButton {
     }
 
     @Override
-    public void renderString(GuiGraphics guiGraphics, Font font, int color) {
+    public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         ResourceLocation sprite = spriteFunction.apply(getter.get());
         if (sprite != null) {
             guiGraphics.blitSprite(sprite, getX(), getY(), width, height);

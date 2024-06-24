@@ -37,16 +37,16 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
 
     @Override
     public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
-        Map<String, String> oldEditBoxValues = new HashMap<>();
+       /* Map<String, String> oldEditBoxValues = new HashMap<>();
         for (EditBox editBox : editBoxList) {
             oldEditBoxValues.put(editBox.getMessage().getString(), editBox.getValue());
-        }
+        }*/
         editBoxList.clear();
 
         super.resize(pMinecraft, pWidth, pHeight);
-        for (EditBox editBox : editBoxList) {
+        /*for (EditBox editBox : editBoxList) {
             editBox.setValue(oldEditBoxValues.getOrDefault(editBox.getMessage().getString(), ""));
-        }
+        }*/
     }
 
     @Override
