@@ -650,7 +650,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
         @Override
         public int getSlotLimit(int slot) {
-            return slot % 3 == 2 ? 64 : 1;
+            return 1;
         }
 
         @Override

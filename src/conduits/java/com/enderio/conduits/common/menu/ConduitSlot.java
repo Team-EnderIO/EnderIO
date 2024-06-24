@@ -58,6 +58,11 @@ public class ConduitSlot extends SlotItemHandler {
         }
     }
 
+    @Override
+    public int getMaxStackSize(@NotNull ItemStack stack) {
+        return getMaxStackSize();
+    }
+
     private boolean isVisible() {
         return visibleDirection.get() == visibleForDirection
             && visibleType.get() == visibleForType
