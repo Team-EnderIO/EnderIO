@@ -9,6 +9,7 @@ import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -36,6 +37,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -78,7 +80,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         // Crafting task host
         craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::canAcceptTask,
-            MachineRecipes.ALLOY_SMELTING.type().get(), new AlloySmeltingRecipe.ContainerWrapper(isPrimitiveSmelter(), getInventoryNN()), this::createTask);
+            MachineRecipes.ALLOY_SMELTING.type().get(), this::createTask, this::createRecipeInput);
 
         // This can be changed by the gui for the normal and enhanced machines.
         if (!isPrimitiveSmelter()) {
@@ -198,6 +200,10 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         craftingTaskHost.newTaskAvailable();
     }
 
+    private AlloySmeltingRecipe.Input createRecipeInput() {
+        return new AlloySmeltingRecipe.Input(getInputsSlotAccess().getItemStacks(getInventoryNN()), 1);
+    }
+
     // endregion
 
     // region Crafting Task
@@ -211,24 +217,25 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
-    protected AlloySmeltingMachineTask createTask(Level level, AlloySmeltingRecipe.ContainerWrapper container, @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
-        return new AlloySmeltingMachineTask(level, getInventoryNN(), getEnergyStorage(), container, getInputsSlotAccess(), getOutputSlotAccess(), recipe);
+    protected AlloySmeltingMachineTask createTask(Level level, AlloySmeltingRecipe.Input recipeInput, @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
+        return new AlloySmeltingMachineTask(level, getInventoryNN(), getEnergyStorage(), recipeInput, getInputsSlotAccess(), getOutputSlotAccess(), recipe);
     }
 
-    protected static class AlloySmeltingMachineTask extends PoweredCraftingMachineTask<AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> {
+    protected static class AlloySmeltingMachineTask extends PoweredCraftingMachineTask<AlloySmeltingRecipe, AlloySmeltingRecipe.Input> {
         private final MultiSlotAccess inputs;
+        private int inputsConsumed;
 
         public AlloySmeltingMachineTask(@NotNull Level level, MachineInventory inventory, IMachineEnergyStorage energyStorage,
-            AlloySmeltingRecipe.ContainerWrapper container, MultiSlotAccess inputs, SingleSlotAccess outputSlot, @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
-            super(level, inventory, energyStorage, container, outputSlot, recipe);
+            AlloySmeltingRecipe.Input recipeInput, MultiSlotAccess inputs, SingleSlotAccess outputSlot, @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
+            super(level, inventory, energyStorage, recipeInput, outputSlot, recipe);
             this.inputs = inputs;
         }
 
         @Override
-        protected void onDetermineOutputs(AlloySmeltingRecipe recipe) {
+        protected AlloySmeltingRecipe.Input prepareToDetermineOutputs(AlloySmeltingRecipe recipe, AlloySmeltingRecipe.Input recipeInput) {
             // This handles the output multiplication for vanilla smelting recipes.
             if (recipe instanceof VanillaAlloySmeltingRecipe) {
-                SizedIngredient input = recipe.inputs().get(0);
+                SizedIngredient input = recipe.inputs().getFirst();
 
                 int inputCount = 0;
                 for (int i = inputs.size() - 1; i >= 0; i--) {
@@ -237,9 +244,12 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                         inputCount += Math.min(3 - inputCount, itemStack.getCount());
                     }
                 }
-                container.setInputsTaken(inputCount);
+
+                inputsConsumed = inputCount;
+                return recipeInput.withInputsConsumed(inputsConsumed);
             } else {
-                container.setInputsTaken(1);
+                inputsConsumed = 1;
+                return recipeInput;
             }
         }
 
@@ -254,7 +264,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 for (int i = inputs.size() - 1; i >= 0; i--) {
                     ItemStack itemStack = inputs.get(i).getItemStack(getInventory());
                     if (input.test(itemStack)) {
-                        int consumedNow = Math.min(container.getInputsTaken() - consumed, itemStack.getCount());
+                        int consumedNow = Math.min(inputsConsumed - consumed, itemStack.getCount());
                         itemStack.shrink(consumedNow);
                         consumed += consumedNow;
                     }
@@ -298,6 +308,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         protected RecipeHolder<AlloySmeltingRecipe> loadRecipe(ResourceLocation id) {
             return level.getRecipeManager().byKey(id).map(recipe -> {
                 if (recipe.value().getType() == MachineRecipes.ALLOY_SMELTING.type().get()) {
+                    //noinspection unchecked
                     return (RecipeHolder<AlloySmeltingRecipe>) recipe;
                 } else if (recipe.value().getType() == RecipeType.SMELTING) {
                     return new RecipeHolder<AlloySmeltingRecipe>(id, new VanillaAlloySmeltingRecipe((SmeltingRecipe) recipe.value()));
@@ -305,13 +316,26 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 return null;
             }).orElse(null);
         }
+
+        @Override
+        public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+            super.deserializeNBT(lookupProvider, nbt);
+            inputsConsumed = nbt.getInt(MachineNBTKeys.PROCESSED_INPUTS);
+        }
+
+        @Override
+        public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
+            var tag = super.serializeNBT(lookupProvider);
+            tag.putInt(MachineNBTKeys.PROCESSED_INPUTS, inputsConsumed);
+            return tag;
+        }
     }
 
-    protected class AlloySmeltingMachineTaskHost extends CraftingMachineTaskHost<AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> {
+    protected class AlloySmeltingMachineTaskHost extends CraftingMachineTaskHost<AlloySmeltingRecipe, AlloySmeltingRecipe.Input> {
         public AlloySmeltingMachineTaskHost(EnderBlockEntity blockEntity, Supplier<Boolean> canAcceptNewTask, RecipeType<AlloySmeltingRecipe> recipeType,
-            AlloySmeltingRecipe.ContainerWrapper container,
-            CraftingMachineTaskFactory<AlloySmeltingMachineTask, AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> taskFactory) {
-            super(blockEntity, canAcceptNewTask, recipeType, container, taskFactory);
+            CraftingMachineTaskFactory<AlloySmeltingMachineTask, AlloySmeltingRecipe, AlloySmeltingRecipe.Input> taskFactory,
+            Supplier<AlloySmeltingRecipe.Input> recipeInputSupplier) {
+            super(blockEntity, canAcceptNewTask, recipeType, taskFactory, recipeInputSupplier);
         }
 
         @Override
@@ -331,9 +355,12 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
             // Get vanilla smelting recipe.
             if (getMode().canSmelt()) {
-                for (int i = 0; i < AlloySmelterBlockEntity.INPUTS.size(); i++) {
+                AlloySmeltingRecipe.Input recipeInput = createRecipeInput();
+
+                for (int i = 0; i < recipeInput.size(); i++) {
                     var recipe = level.getRecipeManager()
-                        .getRecipeFor(RecipeType.SMELTING, new ContainerSubWrapper(getContainer(), i), level);
+                        .getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(recipeInput.getItem(i)), level);
+
                     if (recipe.isPresent() && IntegrationManager.allMatch(integration -> integration.acceptSmeltingRecipe(recipe.get().value()))) {
                         return Optional.of(new RecipeHolder<>(recipe.get().id(), new VanillaAlloySmeltingRecipe(recipe.get().value())));
                     }
@@ -355,7 +382,6 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             pTag.putInt(MachineNBTKeys.MACHINE_MODE, this.mode.ordinal());
         }
 
-        pTag.putInt(MachineNBTKeys.PROCESSED_INPUTS, craftingTaskHost.getContainer().getInputsTaken());
         super.saveAdditional(pTag, lookupProvider);
     }
 
@@ -370,7 +396,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 EnderIO.LOGGER.error("Invalid alloy smelter mode loaded from NBT. Ignoring.");
             }
         }
-        craftingTaskHost.getContainer().setInputsTaken(pTag.getInt(MachineNBTKeys.PROCESSED_INPUTS));
+
         super.loadAdditional(pTag, lookupProvider);
     }
 
@@ -378,11 +404,11 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
 
+        // TODO: 1.21: Write crafting host into the item components.
+
         if (!isPrimitiveSmelter()) {
             mode = components.getOrDefault(MachineDataComponents.ALLOY_SMELTER_MODE, AlloySmelterMode.ALL);
         }
-
-        craftingTaskHost.getContainer().setInputsTaken(components.getOrDefault(MachineDataComponents.ALLOY_SMELTER_PROCESSED_INPUTS, 1));
     }
 
     @Override
@@ -392,64 +418,13 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         if (!isPrimitiveSmelter()) {
             components.set(MachineDataComponents.ALLOY_SMELTER_MODE, mode);
         }
-
-        components.set(MachineDataComponents.ALLOY_SMELTER_PROCESSED_INPUTS, craftingTaskHost.getContainer().getInputsTaken());
     }
 
     @Override
     public void removeComponentsFromTag(CompoundTag tag) {
         super.removeComponentsFromTag(tag);
         tag.remove(MachineNBTKeys.MACHINE_MODE);
-        tag.remove(MachineNBTKeys.PROCESSED_INPUTS);
     }
 
-    public record ContainerSubWrapper(AlloySmeltingRecipe.ContainerWrapper wrapper, int index) implements Container {
-
-        @Override
-        public int getContainerSize() {
-            return 1;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return AlloySmelterBlockEntity.INPUTS.get(index).getItemStack(wrapper).isEmpty();
-        }
-
-        @Override
-        public ItemStack getItem(int slot) {
-            if (slot != 0) {
-                return ItemStack.EMPTY;
-            }
-
-            return AlloySmelterBlockEntity.INPUTS.get(index).getItemStack(wrapper);
-        }
-
-        @Override
-        public ItemStack removeItem(int slot, int amount) {
-            return ItemStack.EMPTY;
-        }
-
-        @Override
-        public ItemStack removeItemNoUpdate(int slot) {
-            return ItemStack.EMPTY;
-        }
-
-        @Override
-        public void setItem(int slot, ItemStack stack) {
-        }
-
-        @Override
-        public void setChanged() {
-        }
-
-        @Override
-        public boolean stillValid(Player player) {
-            return false;
-        }
-
-        @Override
-        public void clearContent() {
-        }
-    }
     // endregion
 }

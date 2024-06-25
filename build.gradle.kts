@@ -8,7 +8,7 @@ plugins {
     id("eclipse")
     id("maven-publish")
     id("com.modrinth.minotaur") version "2.+"
-    id("net.neoforged.gradle.userdev") version "7.0.143"
+    id("net.neoforged.gradle.userdev") version "7.0.145"
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
@@ -24,6 +24,8 @@ val modrinth_projectId: String by project
 val modrinth_dep_jei: String by project
 val modrinth_dep_athena: String by project
 val modrinth_dep_ae2: String by project
+val modrinth_dep_mekanism: String by project
+val modrinth_dep_cct: String by project
 val cctVersion: String by project
 
 idea {
@@ -198,8 +200,6 @@ repositories {
     exclusiveRepo("https://maven.parchmentmc.org/", "org.parchmentmc.data")
     exclusiveRepo("https://maven.rover656.dev/releases", "com.enderio")
     exclusiveRepo("https://squiddev.cc/maven/", "cc.tweaked")
-
-    mavenLocal()
 }
 
 jarJar.enable()
@@ -250,7 +250,7 @@ dependencies {
     //runtimeOnly("maven.modrinth:spark:Yp6s4wsw")
 
     //Athena ctm
-    //runtimeOnly("maven.modrinth:athena-ctm:${athena_version}")
+    runtimeOnly("maven.modrinth:athena-ctm:${athena_version}")
 
     // AE2
     compileOnly("appeng:appliedenergistics2-neoforge:${ae2_version}:api")
@@ -269,7 +269,7 @@ dependencies {
     //}
 
     // Jade
-    //runtimeOnly("curse.maven:jade-324717:${jade_cf_id}")
+    runtimeOnly("curse.maven:jade-324717:${jade_cf_id}")
 
     //fluxnetworks
     ////runtimeOnly("curse.maven:fluxnetworks-248020:4651164")
@@ -285,13 +285,13 @@ dependencies {
     //runtimeOnly("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // Mekanism
-    //compileOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}:api")
-    //runtimeOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
+    compileOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}:api")
+    runtimeOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
 
     //CC-Tweaked
-    compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cctVersion")
-    compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cctVersion")
-    runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cctVersion")
+    //compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cctVersion")
+    //compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cctVersion")
+    //runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cctVersion")
 
     // Jetbrains annotations
     compileOnly("org.jetbrains:annotations:23.0.0")
@@ -299,8 +299,6 @@ dependencies {
 
 // Example for how to get properties into the manifest for reading at runtime.
 tasks.withType<Jar> {
-    archiveClassifier.set("partial")
-
     manifest {
         attributes(mapOf(
                 "Specification-Title" to "EnderIO",
@@ -342,8 +340,6 @@ tasks.register<Jar>("sourcesJar") {
 
 // Add other source sets to jarJar
 tasks.jarJar.configure {
-    archiveClassifier.set("")
-
     from(sourceSets.getByName("api").output)
     from(sourceSets.getByName("core").output)
     for (set in subsets) {
@@ -382,11 +378,11 @@ if (getReleaseType() != null) {
             setJavaVersions("Java 17")
 
             curseDepends {
-                optional("jei", /*"patchouli",*/ "athena", "applied-energistics-2")
+                optional("jei", /*"patchouli",*/ "athena", "applied-energistics-2", "mekanism", "cc-tweaked")
             }
 
             modrinthDepends {
-                optional(/*modrinth_dep_patchouli, */ modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2)
+                optional(/*modrinth_dep_patchouli, */ modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2, modrinth_dep_mekanism, modrinth_dep_cct)
             }
         }
     } else {

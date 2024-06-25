@@ -267,6 +267,7 @@ public class EIOItems {
 
     public static final RegiliteItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEM_REGISTRY
         .registerItem("broken_spawner", BrokenSpawnerItem::new)
+        .addItemTags(EIOTags.Items.ENTITY_STORAGE)
         .setModelProvider(ModelHelper::fakeBlockModel)
         .setTab(EIOCreativeTabs.MAIN)
         .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.gePossibleStacks()));
@@ -321,6 +322,7 @@ public class EIOItems {
                 props
                     .component(EIODataComponents.GRINDING_BALL, grindingBallData),
                 false))
+            .addItemTags(EIOTags.Items.GRINDING_BALLS)
             .setTab(EIOCreativeTabs.MAIN);
     }
 
@@ -355,6 +357,7 @@ public class EIOItems {
 
     public static final RegiliteItem<SoulVialItem> FILLED_SOUL_VIAL = ITEM_REGISTRY
         .registerItem("filled_soul_vial", SoulVialItem::new, new Item.Properties().stacksTo(1))
+        .addItemTags(EIOTags.Items.ENTITY_STORAGE)
         .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
         //TODO .removeTab(CreativeModeTabs.SEARCH)
         ;

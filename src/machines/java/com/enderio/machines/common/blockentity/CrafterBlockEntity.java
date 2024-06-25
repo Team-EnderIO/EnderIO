@@ -73,7 +73,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         }
         recipe = getLevel()
             .getRecipeManager()
-            .getRecipeFor(RecipeType.CRAFTING, DUMMY_CRAFTING_CONTAINER, getLevel()).orElse(null);
+            .getRecipeFor(RecipeType.CRAFTING, DUMMY_CRAFTING_CONTAINER.asCraftInput(), getLevel()).orElse(null);
         PREVIEW.setStackInSlot(this, ItemStack.EMPTY);
 
         if (recipe != null) {
@@ -174,7 +174,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     private Optional<ItemStack> getRecipeResult() {
         if (recipe != null) {
-            return Optional.of(recipe.value().assemble(DUMMY_CRAFTING_CONTAINER, getLevel().registryAccess()));
+            return Optional.of(recipe.value().assemble(DUMMY_CRAFTING_CONTAINER.asCraftInput(), getLevel().registryAccess()));
         }
         return Optional.empty();
     }
@@ -196,8 +196,8 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         }
         //craft
         clearInput();
-        outputBuffer.add(recipe.value().assemble(DUMMY_CRAFTING_CONTAINER, getLevel().registryAccess()));
-        outputBuffer.addAll(recipe.value().getRemainingItems(DUMMY_CRAFTING_CONTAINER));
+        outputBuffer.add(recipe.value().assemble(DUMMY_CRAFTING_CONTAINER.asCraftInput(), getLevel().registryAccess()));
+        outputBuffer.addAll(recipe.value().getRemainingItems(DUMMY_CRAFTING_CONTAINER.asCraftInput()));
         // clean buffer
         outputBuffer.removeIf(ItemStack::isEmpty);
         // consume power

@@ -68,7 +68,7 @@ public record StoredEntityData(CompoundTag entityTag, float maxHealth) {
 
     public Optional<ResourceLocation> entityType() {
         if (entityTag.contains(KEY_ID)) {
-            return Optional.of(new ResourceLocation(entityTag.getString(KEY_ID)));
+            return Optional.of(ResourceLocation.parse(entityTag.getString(KEY_ID)));
         }
 
         return Optional.empty();

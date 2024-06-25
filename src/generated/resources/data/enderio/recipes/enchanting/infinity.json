@@ -1,9 +1,0 @@
-{
-  "type": "enderio:enchanting",
-  "cost_multiplier": 1,
-  "enchantment": "minecraft:infinity",
-  "input": {
-    "count": 1,
-    "tag": "c:dusts/grains_of_infinity"
-  }
-}

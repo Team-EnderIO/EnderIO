@@ -259,15 +259,13 @@ public class ExplosiveUpgradeHandler {
         normalZ = normalZ / length;
 
         pConsumer
-            .vertex(pose.pose(), (float) (fromX + originX), (float) (fromY + originY), (float) (fromZ + originZ))
-            .color(color.x(), color.y(), color.z(), color.w())
-            .normal(pose, normalX, normalY, normalZ)
-            .endVertex();
+            .addVertex(pose.pose(), (float) (fromX + originX), (float) (fromY + originY), (float) (fromZ + originZ))
+            .setColor(color.x(), color.y(), color.z(), color.w())
+            .setNormal(pose, normalX, normalY, normalZ);
         pConsumer
-            .vertex(pose.pose(), (float) (toX + originX), (float) (toY + originY), (float) (toZ + originZ))
-            .color(color.x(), color.y(), color.z(), color.w())
-            .normal(pose, normalX, normalY, normalZ)
-            .endVertex();
+            .addVertex(pose.pose(), (float) (toX + originX), (float) (toY + originY), (float) (toZ + originZ))
+            .setColor(color.x(), color.y(), color.z(), color.w())
+            .setNormal(pose, normalX, normalY, normalZ);
     }
 
     // endregion

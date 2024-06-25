@@ -1,6 +1,5 @@
 package com.enderio.api.conduit;
 
-import com.enderio.api.UseOnly;
 import com.enderio.api.registry.EnderIORegistries;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -16,7 +15,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -118,7 +116,7 @@ public interface ConduitData<T extends ConduitData<T>> {
         }
 
         public static class Serializer implements ConduitDataSerializer<EmptyConduitData> {
-            public static MapCodec<EmptyConduitData> CODEC = MapCodec.unit(EmptyConduitData::new);
+            public static MapCodec<EmptyConduitData> CODEC = MapCodec.unit(EMPTY);
             public static StreamCodec<ByteBuf, EmptyConduitData> STREAM_CODEC = StreamCodec.unit(EMPTY);
 
             public static Serializer INSTANCE = new Serializer();

@@ -50,6 +50,11 @@ public class RedstoneCountFilter implements RedstoneInsertFilter {
         return stack.get(ConduitComponents.REDSTONE_COUNT_FILTER).maxCount();
     }
 
+    public void setMaxCount(int maxCount) {
+        var component = stack.get(ConduitComponents.REDSTONE_COUNT_FILTER);
+        stack.set(ConduitComponents.REDSTONE_COUNT_FILTER, new Component(component.channel1, maxCount, component.count, component.deactivated));
+    }
+
     public int getCount() {
         return stack.get(ConduitComponents.REDSTONE_COUNT_FILTER).count();
     }

@@ -53,7 +53,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     private static final ResourceLocation EMPTY = EnderIO.loc("");
 
     private final MachineFluidHandler fluidHandler;
-    private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Container> craftingTaskHost;
+    private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Input> craftingTaskHost;
     private final NetworkDataSlot<FluidStack> inputTankDataSlot;
     private final NetworkDataSlot<FluidStack> outputTankDataSlot;
 
@@ -69,8 +69,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
         addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(this::getRecipeId, this::setRecipeId));
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, MachineRecipes.VAT_FERMENTING.type().get(),
-            new FermentingRecipe.Container(getInventoryNN(), getInputTank()), this::createTask);
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, MachineRecipes.VAT_FERMENTING.type().get(), this::createTask,
+            this::createRecipeInput);
     }
 
     @Nullable
@@ -111,9 +111,9 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
         return super.onBlockEntityUsed(state, level, pos, player, hand, hit);
     }
 
-    protected VatBlockEntity.VatCraftingMachineTask createTask(Level level, FermentingRecipe.Container container,
+    protected VatBlockEntity.VatCraftingMachineTask createTask(Level level, FermentingRecipe.Input input,
         @Nullable RecipeHolder<FermentingRecipe> recipe) {
-        return new VatBlockEntity.VatCraftingMachineTask(level, getInventoryNN(), getFluidHandler(), container, recipe);
+        return new VatBlockEntity.VatCraftingMachineTask(level, getInventoryNN(), getFluidHandler(), input, recipe);
     }
 
     @Override
@@ -125,6 +125,11 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
         craftingTaskHost.newTaskAvailable();
+    }
+
+    private FermentingRecipe.Input createRecipeInput() {
+        List<ItemStack> reagents = REAGENTS.getItemStacks(getInventoryNN());
+        return new FermentingRecipe.Input(reagents.get(0), reagents.get(1), getInputTank());
     }
 
     @Override
@@ -181,7 +186,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
         this.recipeId = recipeId;
     }
 
-    public CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Container> getCraftingHost() {
+    public CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Input> getCraftingHost() {
         return craftingTaskHost;
     }
 
@@ -204,11 +209,11 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
         }
     }
 
-    protected static class VatCraftingMachineTask extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Container> {
+    protected static class VatCraftingMachineTask extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Input> {
 
-        public VatCraftingMachineTask(@NotNull Level level, MachineInventory inventory, MachineFluidHandler fluidHandler, FermentingRecipe.Container container,
+        public VatCraftingMachineTask(@NotNull Level level, MachineInventory inventory, MachineFluidHandler fluidHandler, FermentingRecipe.Input input,
             @Nullable RecipeHolder<FermentingRecipe> recipe) {
-            super(level, inventory, fluidHandler, container, recipe);
+            super(level, inventory, fluidHandler, input, recipe);
         }
 
         @Override

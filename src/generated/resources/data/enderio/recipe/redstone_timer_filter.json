@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "enderio:redstone_filter_base"
+    },
+    "C": {
+      "item": "minecraft:clock"
+    },
+    "I": {
+      "tag": "c:ingots/redstone_alloy"
+    }
+  },
+  "pattern": [
+    "IBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:redstone_timer_filter"
+  }
+}

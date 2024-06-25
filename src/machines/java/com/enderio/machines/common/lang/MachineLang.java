@@ -72,7 +72,7 @@ public class MachineLang {
     }
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation path, String name, String translation) {
-        return EnderIO.getRegilite().addTranslation(prefix, new ResourceLocation(path.getNamespace(), path.getPath() + "/" + name), translation);
+        return EnderIO.getRegilite().addTranslation(prefix, ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "/" + name), translation);
     }
     
     public static void register() {}

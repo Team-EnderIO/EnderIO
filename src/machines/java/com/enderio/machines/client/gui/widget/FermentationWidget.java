@@ -36,7 +36,7 @@ public class FermentationWidget extends EIOWidget {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
 
-        if (shouldShow.get()) {
+        if (shouldShow.get() && !first.get().isEmpty()) {
             renderFluid(guiGraphics, first.get(), 1 - progress.get());
             renderFluid(guiGraphics, second.get(), progress.get());
         }
@@ -48,6 +48,9 @@ public class FermentationWidget extends EIOWidget {
     protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
 
     public void renderFluid(GuiGraphics guiGraphics, FluidStack fluid, float opacity) {
+        if (fluid.isEmpty()) {
+            return;
+        }
         Minecraft minecraft = Minecraft.getInstance();
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid.getFluid());
         ResourceLocation loc = props.getStillTexture();

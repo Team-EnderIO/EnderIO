@@ -38,7 +38,7 @@ public class AE2Integration implements Integration {
 
     //TODO use capability when moved to api by ea2
     public static BlockCapability<IInWorldGridNodeHost, @Nullable Direction> IN_WORLD_GRID_NODE_HOST = BlockCapability
-        .createSided(new ResourceLocation(AEConstants.MOD_ID, "inworld_gridnode_host"), IInWorldGridNodeHost.class);
+        .createSided(ResourceLocation.fromNamespaceAndPath(AEConstants.MOD_ID, "inworld_gridnode_host"), IInWorldGridNodeHost.class);
     public static final DeferredHolder<ConduitType<?>, AE2ConduitType> DENSE = CONDUIT_TYPES.register("dense_me", () -> new AE2ConduitType(true));
     public static final DeferredHolder<ConduitType<?>, AE2ConduitType> NORMAL = CONDUIT_TYPES.register("me", () -> new AE2ConduitType(false));
 

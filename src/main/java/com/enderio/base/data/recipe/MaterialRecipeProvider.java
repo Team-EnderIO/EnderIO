@@ -273,7 +273,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern("S S")
             .define('S', Tags.Items.RODS_WOODEN)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.RODS_WOODEN).build()))
-            .save(recipeOutput, new ResourceLocation(EnderIO.MODID, EIOItems.GEAR_WOOD.getId().getPath() + "_corner"));
+            .save(recipeOutput, EnderIO.loc(EIOItems.GEAR_WOOD.getId().getPath() + "_corner"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.GEAR_STONE.get())
             .pattern("NIN")
@@ -291,7 +291,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .define('I', Tags.Items.COBBLESTONES)
             .define('G', EIOTags.Items.GEARS_WOOD)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GEAR_WOOD.get()))
-            .save(recipeOutput, new ResourceLocation(EnderIO.MODID, EIOItems.GEAR_STONE.getId().getPath() + "_upgrade"));
+            .save(recipeOutput, EnderIO.loc(EIOItems.GEAR_STONE.getId().getPath() + "_upgrade"));
 
         upgradeGear(recipeOutput, EIOItems.GEAR_IRON.get(), EIOItems.GRAINS_OF_INFINITY.get(), Tags.Items.INGOTS_IRON, Tags.Items.NUGGETS_IRON);
         upgradeGear(recipeOutput, EIOItems.GEAR_ENERGIZED.get(), EIOItems.GEAR_IRON.get(), EIOItems.ENERGETIC_ALLOY_INGOT.get(),

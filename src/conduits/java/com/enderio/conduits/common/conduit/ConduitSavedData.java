@@ -67,7 +67,7 @@ public class ConduitSavedData extends SavedData {
         ListTag graphsTag = nbt.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
         for (Tag tag : graphsTag) {
             CompoundTag typedGraphTag = (CompoundTag) tag;
-            ResourceLocation type = new ResourceLocation(typedGraphTag.getString(KEY_TYPE));
+            ResourceLocation type = ResourceLocation.parse(typedGraphTag.getString(KEY_TYPE));
 
             if (EnderIORegistries.CONDUIT_TYPES.containsKey(type)) {
                 ConduitType<?> value = Objects.requireNonNull(EnderIORegistries.CONDUIT_TYPES.get(type));

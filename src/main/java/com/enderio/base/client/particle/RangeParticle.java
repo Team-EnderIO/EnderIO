@@ -105,7 +105,7 @@ public class RangeParticle extends TextureSheetParticle {
     }
 
     private void addVertex(VertexConsumer consumer, Vector3f pos, float u, float v) {
-        consumer.vertex(pos.x(), pos.y(), pos.z()).uv(u, v).color(rCol, gCol, bCol, alpha).uv2(240, 240).endVertex();
+        consumer.addVertex(pos.x(), pos.y(), pos.z()).setUv(u, v).setColor(rCol, gCol, bCol, alpha).setUv2(240, 240);
     }
 
     public static class Provider implements ParticleProvider<RangeParticleData> {

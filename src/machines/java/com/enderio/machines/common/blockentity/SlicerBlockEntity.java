@@ -19,6 +19,8 @@ import com.enderio.machines.common.recipe.SlicingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -43,15 +45,15 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     public static final SingleSlotAccess AXE = new SingleSlotAccess();
     public static final SingleSlotAccess SHEARS = new SingleSlotAccess();
 
-    private final CraftingMachineTaskHost<SlicingRecipe, Container> craftingTaskHost;
+    private final CraftingMachineTaskHost<SlicingRecipe, SlicingRecipe.Input> craftingTaskHost;
 
     public SlicerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.SLICE_AND_SPLICE.get(), worldPosition, blockState);
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SLICING.type().get(),
-            new RecipeWrapper(getInventoryNN()), this::createTask) {
+            this::createTask, this::createRecipeInput) {
             @Override
-            protected @Nullable CraftingMachineTask<SlicingRecipe, Container> getNewTask() {
+            protected @Nullable CraftingMachineTask<SlicingRecipe, SlicingRecipe.Input> getNewTask() {
                 MachineInventory inv = getInventoryNN();
                 if (AXE.getItemStack(inv).isEmpty() || SHEARS.getItemStack(inv).isEmpty()) {
                     return null;
@@ -121,6 +123,10 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
         craftingTaskHost.newTaskAvailable();
     }
 
+    private SlicingRecipe.Input createRecipeInput() {
+        return new SlicingRecipe.Input(INPUTS.getItemStacks(getInventoryNN()));
+    }
+
     // endregion
 
     // region Crafting Task
@@ -134,8 +140,8 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
-    protected PoweredCraftingMachineTask<SlicingRecipe, Container> createTask(Level level, Container container, @Nullable RecipeHolder<SlicingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, getInventoryNN(), getEnergyStorage(), container, OUTPUT, recipe) {
+    protected PoweredCraftingMachineTask<SlicingRecipe, SlicingRecipe.Input> createTask(Level level, SlicingRecipe.Input recipeInput, @Nullable RecipeHolder<SlicingRecipe> recipe) {
+        return new PoweredCraftingMachineTask<>(level, getInventoryNN(), getEnergyStorage(), recipeInput, OUTPUT, recipe) {
             @Override
             protected void consumeInputs(SlicingRecipe recipe) {
                 // Deduct ingredients
@@ -144,8 +150,10 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
                     access.getItemStack(inv).shrink(1);
                 }
 
-                AXE.getItemStack(inv).hurtAndBreak(1, level.getRandom(), null, () -> {});
-                SHEARS.getItemStack(inv).hurtAndBreak(1, level.getRandom(), null, () -> {});
+                if (level instanceof ServerLevel serverLevel) {
+                    AXE.getItemStack(inv).hurtAndBreak(1, serverLevel, null, item -> {});
+                    SHEARS.getItemStack(inv).hurtAndBreak(1, serverLevel, null, item -> {});
+                }
             }
         };
     }

@@ -9,7 +9,6 @@ import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIOCriterions;
 import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.init.EIOEntities;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
@@ -21,13 +20,13 @@ import com.enderio.base.common.integrations.EnderIOSelfIntegration;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.common.travel.TravelTargetSavedData;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
 import com.enderio.base.data.loot.ChestLootProvider;
 import com.enderio.base.data.loot.EIOLootModifiersProvider;
 import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.BlockRecipeProvider;
+import com.enderio.base.data.recipe.FilterRecipeProvider;
 import com.enderio.base.data.recipe.FireCraftingRecipeProvider;
 import com.enderio.base.data.recipe.GlassRecipeProvider;
 import com.enderio.base.data.recipe.ItemRecipeProvider;
@@ -72,13 +71,15 @@ public class EnderIO {
     public static Regilite regilite = new Regilite(MODID);
 
     public static ResourceLocation loc(String path) {
-        return new ResourceLocation(MODID, path);
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 
     public static IEventBus modEventBus;
+    public static ModContainer modContainer;
 
     public EnderIO(IEventBus modEventBus, ModContainer modContainer) {
         EnderIO.modEventBus = modEventBus;
+        EnderIO.modContainer = modContainer;
 
         // Ensure the enderio config subdirectory is present.
         try {
@@ -98,7 +99,7 @@ public class EnderIO {
         EIOBlocks.register(modEventBus);
         EIOBlockEntities.register(modEventBus);
         EIOFluids.register(modEventBus);
-        EIOEnchantments.register(modEventBus);
+        //EIOEnchantments.register(modEventBus);
         EIOTags.register();
         EIOMenus.register(modEventBus);
         EIOLang.register();
@@ -138,6 +139,7 @@ public class EnderIO {
         provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new GlassRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new FireCraftingRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new FilterRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new EIOLootModifiersProvider(packOutput, lookupProvider));
 
         var b = new EIOBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);

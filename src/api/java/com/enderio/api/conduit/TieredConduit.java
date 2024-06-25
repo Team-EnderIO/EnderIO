@@ -1,22 +1,22 @@
 package com.enderio.api.conduit;
 
-import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.screen.ConduitScreenExtension;
-import me.liliandev.ensure.ensures.EnsureSide;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.LogicalSide;
+import net.minecraft.world.item.Item;
 
 public abstract class TieredConduit<T extends ConduitData<T>> extends ConduitType<T> {
     private final ResourceLocation type;
     private final int tier;
+    protected final ResourceLocation tierName;
 
     /**
      * @param type
      * @param tier    The tier of the conduit. For Energy this should be it's transfer rate to easily add and compare conduit strength
      */
-    public TieredConduit(ResourceLocation type, int tier) {
+    public TieredConduit(ResourceLocation type, ResourceLocation tierName, int tier) {
         this.type = type;
         this.tier = tier;
+        this.tierName = tierName;
     }
 
     @Override
@@ -40,6 +40,11 @@ public abstract class TieredConduit<T extends ConduitData<T>> extends ConduitTyp
 
         // if they have the same type they can't be in the same block, their tier doesn't matter as canBeReplacedBy is checked first
         return !type.equals(tieredOther.getType());
+    }
+
+    @Override
+    public Item getConduitItem() {
+        return BuiltInRegistries.ITEM.get(tierName);
     }
 
     public ResourceLocation getType() {

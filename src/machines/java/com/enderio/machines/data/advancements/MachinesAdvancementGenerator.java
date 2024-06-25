@@ -31,7 +31,7 @@ public class MachinesAdvancementGenerator implements AdvancementProvider.Advance
 
         Advancement.Builder builder = Advancement.Builder
             .advancement()
-            .parent(new ResourceLocation("adventure/root"))
+            .parent(ResourceLocation.withDefaultNamespace("adventure/root"))
             .display(MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC), MachineLang.PLACE_CAPACITOR_BANK_ADVANCEMENT_TITLE, MachineLang.PLACE_CAPACITOR_BANK_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
                 true, false)
             .addCriterion("place_capacitor_bank", placedBlock(MachineBlocks.CAPACITOR_BANKS.values().stream().map(DeferredHolder::get)

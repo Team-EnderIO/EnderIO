@@ -87,7 +87,7 @@ public abstract class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost,
 
         @Override
         public ConduitDataSerializer<AE2InWorldConduitNodeHost> serializer() {
-            return AE2Integration.NORMAL_DATA_SERIALIZER.get();
+            return AE2Integration.DENSE_DATA_SERIALIZER.get();
         }
 
         public static class Serializer implements ConduitDataSerializer<AE2InWorldConduitNodeHost> {

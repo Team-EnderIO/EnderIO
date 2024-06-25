@@ -9,8 +9,6 @@ import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.ConduitTicker;
-import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.init.EIOConduitTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -27,7 +25,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     private final boolean dense;
 
     public AE2ConduitType(boolean dense) {
-        super(new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8);
+        super(ResourceLocation.fromNamespaceAndPath("ae2", "me_cable"), dense ? EnderIO.loc("dense_me_conduit") : EnderIO.loc("me_conduit"), dense ? 32 : 8);
         this.dense = dense;
     }
 

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "enderio:redstone_filter_base"
+    },
+    "I": {
+      "tag": "c:ingots/redstone_alloy"
+    },
+    "L": {
+      "item": "minecraft:lever"
+    }
+  },
+  "pattern": [
+    "LBI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:redstone_toggle_filter"
+  }
+}

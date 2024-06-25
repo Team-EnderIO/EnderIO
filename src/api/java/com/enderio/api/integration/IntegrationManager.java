@@ -15,7 +15,7 @@ public class IntegrationManager {
 
     private static final List<Integration> ALL_INTEGRATIONS = new ArrayList<>();
 
-    public static <T extends Integration> IntegrationWrapper<T> wrapper(String modid, Supplier<T> integration, IEventBus modEventBus) {
+    public static <T extends Integration> IntegrationWrapper<T> wrapper(String modid, Supplier<Supplier<T>> integration, IEventBus modEventBus) {
         return new IntegrationWrapper<>(modid, integration, modEventBus);
     }
 

@@ -26,15 +26,15 @@ public class MachineModelUtil {
         // Create unpowered and powered bodies.
         String ns = ctx.getId().getNamespace();
         String path = ctx.getId().getPath();
-        machineBlock(prov, ctx, wrapMachineModel(prov, ctx, new ResourceLocation(ns, "block/" + path)));
+        machineBlock(prov, ctx, wrapMachineModel(prov, ctx, ResourceLocation.fromNamespaceAndPath(ns, "block/" + path)));
     }
 
     public static void progressMachineBlock(BlockStateProvider prov, DataGenContext<Block, ? extends Block> ctx) {
         // Create unpowered and powered bodies.
         String ns = ctx.getId().getNamespace();
         String path = ctx.getId().getPath();
-        var unpowered = new ResourceLocation(ns, "block/" + path);
-        var powered = new ResourceLocation(ns, "block/" + path + "_active");
+        var unpowered = ResourceLocation.fromNamespaceAndPath(ns, "block/" + path);
+        var powered = ResourceLocation.fromNamespaceAndPath(ns, "block/" + path + "_active");
 
         var unpoweredModel = wrapMachineModel(prov, ctx, unpowered);
         var poweredModel = wrapMachineModel(prov, ctx, powered);
@@ -86,7 +86,7 @@ public class MachineModelUtil {
 
     private static ModelFile wrapMachineModel(BlockStateProvider prov, DataGenContext<Block, ? extends Block> ctx, ResourceLocation model) {
         return prov.models().withExistingParent(model.getPath() + "_combined", prov.mcLoc("block/block"))
-            .texture("particle", ctx.getName().equals("enchanter")? EnderIO.loc("block/dark_steel_pressure_plate") : new ResourceLocation(model.getNamespace(),"block/" + ctx.getName() + "_front"))
+            .texture("particle", ctx.getName().equals("enchanter")? EnderIO.loc("block/dark_steel_pressure_plate") : ResourceLocation.fromNamespaceAndPath(model.getNamespace(),"block/" + ctx.getName() + "_front"))
             .customLoader(CompositeModelBuilder::begin)
             .child("machine", ModelHelper.getExistingAsBuilder(prov.models(), model))
             .child("overlay", ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))

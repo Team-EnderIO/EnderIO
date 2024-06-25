@@ -5,8 +5,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
 public final class BlockUtil {
@@ -21,18 +24,13 @@ public final class BlockUtil {
      */
     public static boolean removeBlock(Level level, Player player, ItemStack tool, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, state, player);
-        NeoForge.EVENT_BUS.post(event);
-        if (event.isCanceled()) {
-            return false;
-        }
         boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
         if (removed) {
             state.getBlock().destroy(level, pos, state);
             state.getBlock().playerDestroy(level, player, pos, state, null, tool);
-            if (level instanceof ServerLevel serverLevel) {
+            /*if (level instanceof ServerLevel serverLevel) {
                 state.getBlock().popExperience(serverLevel, pos, event.getExpToDrop());
-            }
+            }*/
         }
         return removed;
     }

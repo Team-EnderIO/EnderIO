@@ -12,9 +12,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,15 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO: A recipe interface that doesn't require power :)
-public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends Container>
+public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends RecipeInput>
     implements MachineTask {
 
     protected final Level level;
     protected final MachineInventory inventory;
     @Nullable protected final MachineFluidHandler fluidHandler;
-    protected final C container;
     @Nullable
     protected final MultiSlotAccess outputSlots;
+    protected final T recipeInput;
 
     @Nullable
     private RecipeHolder<R> recipe;
@@ -46,22 +46,22 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
     private boolean isComplete;
 
-    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, C container, @Nullable MultiSlotAccess outputSlots,
+    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, T recipeInput, @Nullable MultiSlotAccess outputSlots,
         @Nullable RecipeHolder<R> recipe) {
-        this(level, inventory, null, container, outputSlots, recipe);
+        this(level, inventory, null, recipeInput, outputSlots, recipe);
     }
 
-    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, @Nullable MachineFluidHandler fluidHandler, C container,
+    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, @Nullable MachineFluidHandler fluidHandler, T recipeInput,
         @Nullable RecipeHolder<R> recipe) {
-        this(level, inventory, fluidHandler, container, null, recipe);
+        this(level, inventory, fluidHandler, recipeInput, null, recipe);
     }
 
-    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, @Nullable MachineFluidHandler fluidHandler, C container,
+    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, @Nullable MachineFluidHandler fluidHandler, T recipeInput,
         @Nullable MultiSlotAccess outputSlots, @Nullable RecipeHolder<R> recipe) {
         this.level = level;
         this.inventory = inventory;
         this.fluidHandler = fluidHandler;
-        this.container = container;
+        this.recipeInput = recipeInput;
         this.outputSlots = outputSlots;
         this.recipe = recipe;
         inventory.updateMachineState(MachineState.FULL_OUTPUT, false);
@@ -98,7 +98,8 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
     /**
      * This is fired right before recipe outputs are determined for the task.
      */
-    protected void onDetermineOutputs(R recipe) {
+    protected T prepareToDetermineOutputs(R recipe, T recipeInput) {
+        return recipeInput;
     }
 
     // endregion
@@ -121,8 +122,8 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         // Get the outputs list.
         if (!hasDeterminedOutputs) {
             hasDeterminedOutputs = true;
-            onDetermineOutputs(recipe.value());
-            outputs = recipe.value().craft(container, level.registryAccess());
+            T processedRecipeInput = prepareToDetermineOutputs(recipe.value(), recipeInput);
+            outputs = recipe.value().craft(processedRecipeInput, level.registryAccess());
 
             // TODO: Compact any items that are the same into singular stacks?
 
@@ -131,7 +132,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         }
 
         // If we don't have a recipe match, complete the task and wait for a new one.
-        if (!recipe.value().matches(container, level)) {
+        if (!recipe.value().matches(recipeInput, level)) {
             inventory.updateMachineState(MachineState.EMPTY_INPUT, true);
             isComplete = true;
             return;
@@ -255,7 +256,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
     @Override
     public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         // TODO: Exception handling
-        recipe = loadRecipe(new ResourceLocation(nbt.getString(KEY_RECIPE_ID)));
+        recipe = loadRecipe(ResourceLocation.parse(nbt.getString(KEY_RECIPE_ID)));
         progressMade = nbt.getInt(KEY_PROGRESS_MADE);
         progressRequired = nbt.getInt(KEY_PROGRESS_REQUIRED);
         hasConsumedInputs = nbt.getBoolean(KEY_HAS_COLLECTED_INPUTS);

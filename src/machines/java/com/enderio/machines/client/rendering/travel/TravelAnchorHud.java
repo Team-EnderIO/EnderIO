@@ -5,6 +5,7 @@ import com.enderio.base.common.handler.TravelHandler;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.mojang.blaze3d.platform.Window;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -23,7 +24,7 @@ public class TravelAnchorHud implements LayeredDraw.Layer {
     static final int ITEM_SIZE = 16;
 
     @Override
-    public void render(GuiGraphics guiGraphics, float partialTick) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
         Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
 

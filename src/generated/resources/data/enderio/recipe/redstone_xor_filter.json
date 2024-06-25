@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "enderio:redstone_filter_base"
+    },
+    "I": {
+      "tag": "c:ingots/redstone_alloy"
+    },
+    "T": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "pattern": [
+    " T ",
+    "IBI",
+    " T "
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:redstone_xor_filter"
+  }
+}

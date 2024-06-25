@@ -28,16 +28,6 @@ public class EntityUtil {
     }
 
     /**
-     * @param entity The entity being checked.
-     * @return Whether the entity is a boss.
-     */
-    // This is added to make it clearer; because canChangeDimensions will look odd in the code
-    public static boolean isBoss(Entity entity) {
-        // The only mobs that cannot change dimensions are infact the bosses, so this works :)
-        return entity.canChangeDimensions();
-    }
-
-    /**
      * Lookup an entity's type in the entity registry and get its resource location.
      *
      * @param entity The entity to lookup.

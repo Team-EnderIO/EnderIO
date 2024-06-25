@@ -304,7 +304,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
         // Default to a standard location
         if (textureLocation == null) {
             var conduitTypeKey = Objects.requireNonNull(EnderIORegistries.CONDUIT_TYPES.getKey(type));
-            textureLocation = new ResourceLocation(conduitTypeKey.getNamespace(), "block/conduit/" + conduitTypeKey.getPath());
+            textureLocation = ResourceLocation.fromNamespaceAndPath(conduitTypeKey.getNamespace(), "block/conduit/" + conduitTypeKey.getPath());
         }
 
         return Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(textureLocation);

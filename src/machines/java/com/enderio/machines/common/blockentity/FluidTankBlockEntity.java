@@ -18,6 +18,7 @@ import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.recipe.TankRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -76,7 +77,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     }
 
-    private final TankRecipe.Container container;
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
 
@@ -94,9 +94,13 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
         // Sync fluid for model
         addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
+    }
 
-        // Wrap container for fluid recipes
-        container = new TankRecipe.Container(getInventoryNN(), TANK.getTank(this));
+    private TankRecipe.Input createRecipeInput() {
+        return new TankRecipe.Input(
+            FLUID_FILL_INPUT.getItemStack(getInventoryNN()),
+            FLUID_DRAIN_INPUT.getItemStack(getInventoryNN()),
+            TANK.getTank(this));
     }
 
     @Override
@@ -140,7 +144,10 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         FluidStack fluid = TANK.getFluid(this);
 
         if (item.isDamageableItem() && !fluid.isEmpty() && fluid.is(EIOTags.Fluids.EXPERIENCE)) {
-            if (item.getEnchantmentLevel(Enchantments.MENDING) > 0) {
+            var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+            var mendingEnchantment = enchantmentsRecipe.getOrThrow(Enchantments.MENDING);
+
+            if (item.getEnchantmentLevel(mendingEnchantment) > 0) {
                 return true;
             }
         }
@@ -175,7 +182,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
         if (level != null) {
             if (!level.isClientSide()) {
-                currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.TANK.type().get(), container, level);
+                currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.TANK.type().get(), createRecipeInput(), level);
             }
         }
     }
@@ -318,7 +325,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
         if (!fluid.isEmpty() && fluid.is(EIOTags.Fluids.EXPERIENCE)) {
             ItemStack tool = FLUID_DRAIN_INPUT.getItemStack(this);
-            if (tool.isDamageableItem() && tool.getEnchantmentLevel(Enchantments.MENDING) > 0) {
+
+            var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+            var mendingEnchantment = enchantmentsRecipe.getOrThrow(Enchantments.MENDING);
+
+            if (tool.isDamageableItem() && tool.getEnchantmentLevel(mendingEnchantment) > 0) {
 
                 ItemStack repairedTool = tool.copy();
 
@@ -339,8 +350,9 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     private void onTankContentsChanged() {
         if (level != null) {
             if (!level.isClientSide()) {
-                currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.TANK.type().get(), container, level);
+                currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.TANK.type().get(), createRecipeInput(), level);
             }
+
             level.getLightEngine().checkBlock(worldPosition);
         }
     }

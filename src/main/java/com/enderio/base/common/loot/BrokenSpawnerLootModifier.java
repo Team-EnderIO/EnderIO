@@ -41,7 +41,7 @@ public class BrokenSpawnerLootModifier extends LootModifier {
                     CompoundTag entityTag = spawner.nextSpawnData.getEntityToSpawn();
 
                     if (entityTag.contains(StoredEntityData.KEY_ID)) {
-                        ResourceLocation type = new ResourceLocation(entityTag.getString(StoredEntityData.KEY_ID));
+                        ResourceLocation type = ResourceLocation.parse(entityTag.getString(StoredEntityData.KEY_ID));
                         ItemStack brokenSpawner = BrokenSpawnerItem.forType(type);
                         generatedLoot.add(brokenSpawner);
                     }

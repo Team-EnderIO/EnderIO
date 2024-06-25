@@ -17,18 +17,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
 import java.util.List;
 
 public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReagent, TagKey<Item> rightReagent, FluidStack output, int ticks)
-    implements MachineRecipe<FermentingRecipe.Container> {
+    implements MachineRecipe<FermentingRecipe.Input> {
 
     @Override
     public int getBaseEnergyCost() {
@@ -36,10 +35,10 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
     }
 
     @Override
-    public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input input, RegistryAccess registryAccess) {
 
-        double modifier = getModifier(container.getItem(0), leftReagent);
-        modifier *= getModifier(container.getItem(1), rightReagent);
+        double modifier = getModifier(input.getItem(0), leftReagent);
+        modifier *= getModifier(input.getItem(1), rightReagent);
 
         return List.of(OutputStack.of(new FluidStack(output.getFluid(), (int) (output.getAmount() * modifier))));
     }
@@ -50,13 +49,13 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
-        FluidStack inputTank = container.getInputTank().getFluid();
-        if (!input.test(inputTank) || inputTank.getAmount() < input.amount()) {
+    public boolean matches(Input input, Level level) {
+        FluidStack inputTank = input.getInputTank().getFluid();
+        if (!this.input.test(inputTank) || inputTank.getAmount() < this.input.amount()) {
             return false;
         }
 
-        return container.getItem(0).is(leftReagent) && container.getItem(1).is(rightReagent);
+        return input.getItem(0).is(leftReagent) && input.getItem(1).is(rightReagent);
     }
 
     public static double getModifier(ItemStack stack, TagKey<Item> reagent) {
@@ -77,13 +76,20 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
         return MachineRecipes.VAT_FERMENTING.type().get();
     }
 
-    public static class Container extends RecipeWrapper {
+    public record Input(ItemStack leftReagent, ItemStack rightStack, MachineFluidTank inputTank) implements RecipeInput {
 
-        private final MachineFluidTank inputTank;
+        @Override
+        public ItemStack getItem(int slotIndex) {
+            return switch (slotIndex) {
+                case 0 -> leftReagent;
+                case 1 -> rightStack;
+                default -> throw new IllegalArgumentException("No item for index " + slotIndex);
+            };
+        }
 
-        public Container(IItemHandlerModifiable inv, MachineFluidTank inputTank) {
-            super(inv);
-            this.inputTank = inputTank;
+        @Override
+        public int size() {
+            return 2;
         }
 
         public MachineFluidTank getInputTank() {

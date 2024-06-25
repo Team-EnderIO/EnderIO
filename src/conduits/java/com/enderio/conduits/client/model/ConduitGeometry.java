@@ -23,7 +23,7 @@ public class ConduitGeometry implements IUnbakedGeometry<ConduitGeometry> {
 
     @Override
     public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState,
-        ItemOverrides overrides, ResourceLocation modelLocation) {
+        ItemOverrides overrides) {
         return new ConduitBlockModel();
     }
 

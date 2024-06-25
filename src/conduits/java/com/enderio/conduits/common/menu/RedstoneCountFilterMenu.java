@@ -57,7 +57,7 @@ public class RedstoneCountFilterMenu extends AbstractContainerMenu {
 
     public void setCount(String maxCount) {
         try {
-            filter.setCount(Integer.parseInt(maxCount));
+            filter.setMaxCount(Integer.parseInt(maxCount));
             PacketDistributor.sendToServer(new CountFilterPacket(filter.getChannel(), filter.getMaxCount(), filter.getCount(), filter.isDeactivated()));
         } catch (Exception e) {
 

@@ -3,6 +3,8 @@ package com.enderio.machines.common.recipe;
 import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.recipe.FluidRecipeInput;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
@@ -19,13 +21,16 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
@@ -42,7 +47,7 @@ public record SoulBindingRecipe(
     Optional<ResourceLocation> entityType,
     Optional<MobCategory> mobCategory,
     Optional<String> soulData
-) implements MachineRecipe<SoulBindingRecipe.Container> {
+) implements MachineRecipe<SoulBindingRecipe.Input> {
 
     public SoulBindingRecipe(Item output, Ingredient input, int energy, int exp, ResourceLocation entityType) {
         this(output, input, energy, exp, Optional.of(entityType), Optional.empty(), Optional.empty());
@@ -66,10 +71,10 @@ public record SoulBindingRecipe(
     }
 
     @Override
-    public List<OutputStack> craft(SoulBindingRecipe.Container container, RegistryAccess registryAccess) {
-        ItemStack vial = SoulBinderBlockEntity.INPUT_SOUL.getItemStack(container);
+    public List<OutputStack> craft(SoulBindingRecipe.Input input, RegistryAccess registryAccess) {
+        ItemStack vial = input.getItem(0);
         List<OutputStack> results = getResultStacks(registryAccess);
-        ItemStack result = results.get(0).getItem();
+        ItemStack result = results.getFirst().getItem();
 
         var storedEntityData = vial.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
         result.set(EIODataComponents.STORED_ENTITY, storedEntityData);
@@ -84,24 +89,24 @@ public record SoulBindingRecipe(
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY, input);
+        return NonNullList.of(Ingredient.EMPTY, Ingredient.of(EIOItems.FILLED_SOUL_VIAL), input);
     }
 
     @Override
-    public boolean matches(SoulBindingRecipe.Container container, Level pLevel) {
-        if (!container.getItem(0).is(EIOItems.FILLED_SOUL_VIAL.get())) {
+    public boolean matches(SoulBindingRecipe.Input recipeInput, Level pLevel) {
+        if (!recipeInput.getItem(0).is(EIOItems.FILLED_SOUL_VIAL.get())) {
             return false;
         }
 
-        if (!input.test(SoulBinderBlockEntity.INPUT_OTHER.getItemStack(container))) {
+        if (!input.test(recipeInput.getItem(1))) {
             return false;
         }
 
-        if (!container.getItem(0).has(EIODataComponents.STORED_ENTITY)) {
+        if (!recipeInput.getItem(0).has(EIODataComponents.STORED_ENTITY)) {
             return false;
         }
 
-        var storedEntityData = container.getItem(0).get(EIODataComponents.STORED_ENTITY);
+        var storedEntityData = recipeInput.getItem(0).get(EIODataComponents.STORED_ENTITY);
         if (storedEntityData.entityType().isEmpty()) {
             return false;
         }
@@ -114,7 +119,7 @@ public record SoulBindingRecipe(
                 return false;
             }
 
-            return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= experience;
+            return ExperienceUtil.getLevelFromFluid(recipeInput.getFluid(2).getAmount()) >= experience;
         }
 
         if (mobCategory.isPresent()) {
@@ -137,7 +142,7 @@ public record SoulBindingRecipe(
             }
         }
 
-        return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= experience;
+        return ExperienceUtil.getLevelFromFluid(recipeInput.getFluid(2).getAmount()) >= experience;
     }
 
     @Override
@@ -150,13 +155,29 @@ public record SoulBindingRecipe(
         return MachineRecipes.SOUL_BINDING.type().get();
     }
 
-    public static class Container extends RecipeWrapper {
+    public record Input(ItemStack boundSoulItem, ItemStack itemToBind, FluidStack experience) implements FluidRecipeInput {
+        @Override
+        public ItemStack getItem(int slotIndex) {
+            return switch (slotIndex){
+                case 0 -> boundSoulItem;
+                case 1 -> itemToBind;
+                case 2 -> ItemStack.EMPTY;
+                default -> throw new IllegalArgumentException("No item for index " + slotIndex);
+            };
+        }
 
-        private final Supplier<Integer> fluid;
+        @Override
+        public FluidStack getFluid(int slotIndex) {
+            if (slotIndex != 2) {
+                throw new IllegalArgumentException("No fluid for index " + slotIndex);
+            }
 
-        public Container(IItemHandlerModifiable inv, Supplier<Integer> fluid) {
-            super(inv);
-            this.fluid = fluid;
+            return experience;
+        }
+
+        @Override
+        public int size() {
+            return 3;
         }
     }
 
@@ -183,9 +204,9 @@ public record SoulBindingRecipe(
             SoulBindingRecipe::experience,
             ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional),
             SoulBindingRecipe::entityType,
-            // TODO: This is a bit gross, could do better.
+            // TODO: 1.21: This is a very gross, could do better.
             ByteBufCodecs.STRING_UTF8
-                .map(MobCategory::byName, MobCategory::getName)
+                .map(name -> ((StringRepresentable.EnumCodec<MobCategory>)MobCategory.CODEC).byName(name), MobCategory::getName)
                 .apply(ByteBufCodecs::optional),
             SoulBindingRecipe::mobCategory,
             ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs::optional),

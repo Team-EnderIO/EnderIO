@@ -1,9 +1,0 @@
-{
-  "type": "enderio:enchanting",
-  "cost_multiplier": 1,
-  "enchantment": "minecraft:respiration",
-  "input": {
-    "count": 1,
-    "item": "minecraft:glass_bottle"
-  }
-}

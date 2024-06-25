@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class EntityCaptureUtils {
     // The id of the ender dragon for manual filtering.
-    private static final ResourceLocation DRAGON = new ResourceLocation("minecraft", "ender_dragon");
+    private static final ResourceLocation DRAGON = ResourceLocation.withDefaultNamespace("ender_dragon");
 
     @Nullable
     private static List<ResourceLocation> capturableEntities = null;

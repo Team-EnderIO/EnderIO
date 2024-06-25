@@ -17,12 +17,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
@@ -37,7 +39,7 @@ import java.util.Set;
 @EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
 
-    private static final Map<Item, ResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
+    private static final Map<Item, ModelResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
     public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
 
     @SubscribeEvent
@@ -52,13 +54,16 @@ public class ClientSetup {
             .getResourceManager()
             .listResources("models/enderio_glider", rl -> rl.getPath().endsWith(".json"))
             .keySet();
+
         for (ResourceLocation gliderModelPath : gliderModels) {
             Optional<Item> gliderItem = findGliderForModelRL(gliderModelPath);
             if (gliderItem.isPresent()) {
-                ResourceLocation modelLookupLocation = new ResourceLocation(gliderModelPath.getNamespace(),
+                ResourceLocation modelLookupLocation = ResourceLocation.fromNamespaceAndPath(gliderModelPath.getNamespace(),
                     gliderModelPath.getPath().substring("models/".length(), gliderModelPath.getPath().length() - 5));
-                event.register(modelLookupLocation);
-                HANG_GLIDER_MODEL_LOCATION.put(gliderItem.get(), modelLookupLocation);
+
+                ModelResourceLocation modelLocation = ModelResourceLocation.standalone(modelLookupLocation);
+                event.register(modelLocation);
+                HANG_GLIDER_MODEL_LOCATION.put(gliderItem.get(), modelLocation);
             }
         }
     }
@@ -104,7 +109,7 @@ public class ClientSetup {
     private static Optional<Item> findGliderForModelRL(ResourceLocation rl) {
         String namespace = rl.getNamespace();
         String path = rl.getPath().substring("models/enderio_glider/".length(), rl.getPath().length() - 5);
-        return Optional.of(BuiltInRegistries.ITEM.get(new ResourceLocation(namespace, path)));
+        return Optional.of(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(namespace, path)));
     }
 
     @SubscribeEvent
@@ -125,6 +130,6 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerEnderSkulls(EntityRenderersEvent.CreateSkullModels event) {
         event.registerSkullModel(EnderSkullBlock.EIOSkulls.ENDERMAN, new EnderSkullRenderer.EnderSkullModel(event.getEntityModelSet().bakeLayer(EnderSkullRenderer.ENDER_SKULL)));
-        SkullBlockRenderer.SKIN_BY_TYPE.put(EnderSkullBlock.EIOSkulls.ENDERMAN, new ResourceLocation("textures/entity/enderman/enderman.png"));
+        SkullBlockRenderer.SKIN_BY_TYPE.put(EnderSkullBlock.EIOSkulls.ENDERMAN, ResourceLocation.withDefaultNamespace("textures/entity/enderman/enderman.png"));
     }
 }

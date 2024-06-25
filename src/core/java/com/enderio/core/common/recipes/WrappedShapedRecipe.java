@@ -5,9 +5,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 // Based on https://github.com/mekanism/Mekanism/blob/1.20.4/src/main/java/mekanism/common/recipe/WrappedShapedRecipe.java.
 // Thanks to Mekanism
-public abstract class WrappedShapedRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
+public abstract class WrappedShapedRecipe implements CraftingRecipe, IShapedRecipe<CraftingInput> {
     private final ShapedRecipe wrapped;
 
     protected WrappedShapedRecipe(ShapedRecipe wrapped) {
@@ -37,10 +37,10 @@ public abstract class WrappedShapedRecipe implements CraftingRecipe, IShapedReci
     }
 
     @Override
-    public abstract ItemStack assemble(CraftingContainer inv, HolderLookup.Provider lookupProvider);
+    public abstract ItemStack assemble(CraftingInput inv, HolderLookup.Provider lookupProvider);
 
     @Override
-    public boolean matches(CraftingContainer inv, Level world) {
+    public boolean matches(CraftingInput inv, Level world) {
         //Note: We do not override the matches method if it matches ignoring NBT,
         // to ensure that we return the proper value for if there is a match that gives a proper output
         return wrapped.matches(inv, world) && !assemble(inv, world.registryAccess()).isEmpty();
@@ -57,7 +57,7 @@ public abstract class WrappedShapedRecipe implements CraftingRecipe, IShapedReci
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput inv) {
         return wrapped.getRemainingItems(inv);
     }
 
