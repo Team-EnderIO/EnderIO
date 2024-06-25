@@ -4,15 +4,9 @@ import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.conduits.common.capability.ExtractionSpeedUpgrade;
-import com.enderio.conduits.common.conduit.ConduitGraphObject;
-import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
-import com.enderio.api.misc.ColorControl;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.GraphObject;
-import dev.gigaherz.graph3.Mergeable;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
@@ -21,7 +15,6 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
 import java.util.Optional;
@@ -99,7 +92,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
 
             int transferred = 0;
             for (CapabilityConnection insert : inserts) {
-                if (extract.insertFilter instanceof FluidStackFilter fluidStackFilter) {
+                if (insert.insertFilter instanceof FluidStackFilter fluidStackFilter) {
                     if (!fluidStackFilter.test(extractedFluid)) {
                         continue;
                     }

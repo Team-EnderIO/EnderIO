@@ -67,7 +67,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
                         continue;
                     }
 
-                    if (extract.insertFilter instanceof ItemStackFilter itemFilter) {
+                    if (insert.insertFilter instanceof ItemStackFilter itemFilter) {
                         if (!itemFilter.test(extractedItem)) {
                             continue;
                         }
