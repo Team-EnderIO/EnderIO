@@ -10,6 +10,7 @@ plugins {
     id("com.modrinth.minotaur") version "2.+"
     id("net.neoforged.gradle.userdev") version "7.0.145"
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
+    id("checkstyle")
 }
 
 val mod_id: String by project
@@ -33,6 +34,10 @@ idea {
         isDownloadJavadoc = true
         isDownloadSources = true
     }
+}
+
+checkstyle {
+    isIgnoreFailures = false
 }
 
 val mod_version = getVersionString()
@@ -327,6 +332,8 @@ tasks.register<Jar>("apiJar") {
 
 tasks.register<Jar>("sourcesJar") {
     dependsOn(tasks.classes)
+    // TODO: See EnderIO#716
+    //dependsOn(tasks.getByName("checkstyleMain"))
     archiveClassifier.set("sources")
 
     from(sourceSets.getByName("api").allJava)
