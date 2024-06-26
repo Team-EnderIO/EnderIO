@@ -111,7 +111,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     @Override
     public @Nullable MachineTankLayout getTankLayout() {
-        return MachineTankLayout.builder().tank(TANK, 10000, f -> f.getFluid().is(EIOTags.Fluids.EXPERIENCE)).build();
+        return MachineTankLayout.builder().tank(TANK, 10000, true, false, f -> f.getFluid().is(EIOTags.Fluids.EXPERIENCE)).build();
     }
 
     private boolean isValidInput(int index, ItemStack stack) {
