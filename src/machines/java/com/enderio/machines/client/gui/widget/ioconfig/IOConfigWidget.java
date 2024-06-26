@@ -1,7 +1,8 @@
 package com.enderio.machines.client.gui.widget.ioconfig;
 
 import com.enderio.EnderIO;
-import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.client.gui.screen.BaseOverlay;
+import com.enderio.core.client.gui.screen.StateRestoringWidget;
 import com.enderio.machines.client.rendering.model.ModelRenderUtil;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -17,11 +18,8 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -54,7 +52,6 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -69,7 +66,7 @@ import java.util.SequencedMap;
  * <p>
  * Definition  of {@link GhostBuffers}, {@link GhostRenderLayer} and initBuffers method are taken from Patchouli (License information: <a href="https://github.com/VazkiiMods/Patchouli">here</a>)
  */
-public class IOConfigWidget<U extends AbstractContainerScreen<?>> extends AbstractWidget {
+public class IOConfigWidget extends BaseOverlay {
 
     private static final Quaternionf ROT_180_Z = Axis.ZP.rotation((float) Math.PI);
     private static final Vec3 RAY_ORIGIN = new Vec3(1.5, 1.5, 1.5);
@@ -81,27 +78,23 @@ public class IOConfigWidget<U extends AbstractContainerScreen<?>> extends Abstra
     private static final ResourceLocation SELECTED_ICON = EnderIO.loc("block/overlay/selected_face");
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
     private static MultiBufferSource.BufferSource ghostBuffers;
-    private final U screen;
     private final Vector3f worldOrigin;
     private final Vector3f multiblockSize;
     private final List<BlockPos> configurable = new ArrayList<>();
     private final List<BlockPos> neighbours = new ArrayList<>();
-    private final Font screenFont;
     private float SCALE = 20;
     private float pitch;
     private float yaw;
     private boolean neighbourVisible = true;
     private Optional<SelectedFace> selection = Optional.empty();
 
-    public IOConfigWidget(U screen, int x, int y, int width, int height, BlockPos configurable, Font font) {
-        this(screen, x, y, width, height, List.of(configurable), font);
+    public IOConfigWidget(int x, int y, int width, int height, BlockPos configurable) {
+        this(x, y, width, height, List.of(configurable));
     }
 
-    public IOConfigWidget(U screen, int x, int y, int width, int height, List<BlockPos> _configurable, Font font) {
+    public IOConfigWidget(int x, int y, int width, int height, List<BlockPos> _configurable) {
         super(x, y, width, height, Component.empty());
-        this.screen = screen;
         this.configurable.addAll(_configurable);
-        this.screenFont = font;
 
         if (configurable.size() == 1) {
             BlockPos bc = configurable.get(0);
@@ -201,8 +194,9 @@ public class IOConfigWidget<U extends AbstractContainerScreen<?>> extends Abstra
     @Override
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
         if (visible && isValidClickButton(pButton) && isMouseOver(pMouseX, pMouseY)) {
-            double dx = pDragX / (double) screen.width;
-            double dy = pDragY / (double) screen.height;
+            Minecraft minecraft = Minecraft.getInstance();
+            double dx = pDragX / (double) minecraft.getWindow().getGuiScaledWidth();
+            double dy = pDragY / (double) minecraft.getWindow().getGuiScaledHeight();
             yaw += 4 * (float)dx * 180;
             pitch += 2 * (float)dy * 180;
 
@@ -225,10 +219,6 @@ public class IOConfigWidget<U extends AbstractContainerScreen<?>> extends Abstra
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (visible) {
-            // render black bg
-            if (isMouseOver(mouseX, mouseY)) {
-                screen.setFocused(this);
-            }
             guiGraphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
             guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
 
@@ -313,6 +303,7 @@ public class IOConfigWidget<U extends AbstractContainerScreen<?>> extends Abstra
         normalBuffers.endBatch();
 
         guiGraphics.pose().popPose();
+        Lighting.setupFor3DItems();
     }
 
     private void renderBlock(GuiGraphics guiGraphics, BlockPos blockPos, Vector3f renderPos, MultiBufferSource.BufferSource buffers, float partialTick) {
@@ -381,6 +372,8 @@ public class IOConfigWidget<U extends AbstractContainerScreen<?>> extends Abstra
 
     private void renderOverlay(GuiGraphics guiGraphics) {
         if (selection.isPresent()) {
+            Minecraft minecraft = Minecraft.getInstance();
+
             var selectedFace = selection.get();
             BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
             if (entity instanceof MachineBlockEntity machine) {
@@ -388,10 +381,10 @@ public class IOConfigWidget<U extends AbstractContainerScreen<?>> extends Abstra
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();
                 guiGraphics.blitSprite(IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
-                    getY() + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(), iconBounds.getHeight());
+                    getY() + height - 4 - minecraft.font.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(), iconBounds.getHeight());
                 guiGraphics.pose().pushPose();
                 guiGraphics.pose().translate(0, 0, 1000); // to ensure that string is drawn on top
-                guiGraphics.drawString(screenFont, map.getComponent(), getX() + 4, getY() + height - 2 - screenFont.lineHeight, 0xFFFFFFFF);
+                guiGraphics.drawString(minecraft.font, map.getComponent(), getX() + 4, getY() + height - 2 - minecraft.font.lineHeight, 0xFFFFFFFF);
                 guiGraphics.pose().popPose();
             }
         }

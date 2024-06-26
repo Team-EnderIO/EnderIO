@@ -6,9 +6,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.AlloySmelterModeWidget;
-import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.NewCapacitorEnergyWidget;
-import com.enderio.machines.client.gui.widget.NewEnergyWidget;
 import com.enderio.machines.client.gui.widget.NewProgressWidget;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
@@ -53,8 +51,8 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
 
         addRenderableWidget(new AlloySmelterModeWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 73, menu::getMode, menu::setMode, MachineLang.ALLOY_SMELTER_MODE));
 
-        // TODO: Needs to be redesigned before being re-enabled.
-        //addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font));
+        var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 104, 162, 86);
+        addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 6 + 73 - (16 + 2) * 2, overlay);
     }
 
     @Override
