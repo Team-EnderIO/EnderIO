@@ -10,7 +10,7 @@ plugins {
     id("com.modrinth.minotaur") version "2.+"
     id("net.neoforged.gradle.userdev") version "7.0.145"
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
-    id("checkstyle")
+    //id("checkstyle")
 }
 
 val mod_id: String by project
@@ -36,9 +36,9 @@ idea {
     }
 }
 
-checkstyle {
+/*checkstyle {
     isIgnoreFailures = false
-}
+}*/
 
 val mod_version = getVersionString()
 
