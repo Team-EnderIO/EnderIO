@@ -6,6 +6,7 @@ import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.menu.base.PoweredMachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +21,8 @@ public class AlloySmelterMenu extends PoweredMachineMenu<AlloySmelterBlockEntity
 
         if (blockEntity != null) {
             // Capacitor slot
-            addSlot(new MachineSlot(getMachineInventory(), getCapacitorSlotIndex(), 7, 79));
+            addSlot(new MachineSlot(getMachineInventory(), getCapacitorSlotIndex(), 7, 79))
+                .setBackground(InventoryMenu.BLOCK_ATLAS, EMPTY_CAPACITOR_SLOT);
 
             addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(0), 55, 28));
             addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(1), 80, 18));
