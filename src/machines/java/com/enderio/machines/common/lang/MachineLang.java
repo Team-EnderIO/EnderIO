@@ -65,6 +65,8 @@ public class MachineLang {
     public static final Component STORE_1 = addTranslation("gui", EnderIO.loc("button.store_1_level"), "Store 1 level of XP");
     public static final Component STORE_10 = addTranslation("gui", EnderIO.loc("button.store_10_level"), "Store 10 levels of XP");
     public static final Component STORE_ALL = addTranslation("gui", EnderIO.loc("button.store_all_level"), "Store all levels of XP");
+    public static final Component TRANSFER_TANK = addTranslation("gui", EnderIO.loc("button.transfer_tank"), "Transfer tank contents");
+    public static final Component DUMP_TANK = addTranslation("gui", EnderIO.loc("button.dump_tank"), "Void tank contents");
 
     // TODO: NEO-PORT: Common lang base class?
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {

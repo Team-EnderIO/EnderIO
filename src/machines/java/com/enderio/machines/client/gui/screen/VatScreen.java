@@ -12,6 +12,7 @@ import com.enderio.machines.client.gui.widget.FluidStackWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
+import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.VatMenu;
 import com.enderio.machines.common.recipe.FermentingRecipe;
 import net.minecraft.client.Minecraft;
@@ -60,10 +61,10 @@ public class VatScreen extends EIOScreen<VatMenu> {
         addRenderableWidget(new ActivityWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16 * 4));
 
         addRenderableWidget(new EIOImageButton(this, leftPos + 29, topPos + 62, 16, 16, new WidgetSprites(MOVE_FLUID, MOVE_FLUID),
-            press -> menu.getBlockEntity().moveFluidToOutputTank()));
+            press -> menu.getBlockEntity().moveFluidToOutputTank(), MachineLang.TRANSFER_TANK));
 
         addRenderableWidget(new EIOImageButton(this, leftPos + 131, topPos + 62, 16, 16, new WidgetSprites(VOID_FLUID, VOID_FLUID),
-            press -> menu.getBlockEntity().dumpOutputTank()));
+            press -> menu.getBlockEntity().dumpOutputTank(), MachineLang.DUMP_TANK));
     }
 
     @Override
@@ -96,7 +97,7 @@ public class VatScreen extends EIOScreen<VatMenu> {
     }
 
     private boolean isCrafting() {
-        return getMenu().getBlockEntity().getCraftingHost().getProgress() > 0 && recipeCache != null;
+        return recipeCache != null && getMenu().getBlockEntity().getCraftingHost().getProgress() > 0;
     }
 
     private FluidStack inputFluidStack() {
