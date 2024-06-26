@@ -36,6 +36,8 @@ import com.enderio.base.data.tags.EIOEntityTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
 import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.enderio.core.EnderCore;
+import com.enderio.core.common.menu.FluidFilterSlot;
+import com.enderio.core.common.menu.ItemFilterSlot;
 import com.enderio.regilite.Regilite;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -45,9 +47,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -62,6 +68,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+@EventBusSubscriber(modid = EnderIO.MODID, bus = EventBusSubscriber.Bus.MOD)
 @Mod(EnderIO.MODID)
 public class EnderIO {
     // The Mod ID. This is stored in EnderCore as it's the furthest source away but it ensures that it is constant across all source sets.
@@ -157,5 +164,11 @@ public class EnderIO {
 
     public static Regilite getRegilite() {
         return regilite;
+    }
+
+    @SubscribeEvent
+    public static void sendIMC(InterModEnqueueEvent event) {
+        InterModComms.sendTo("inventorysorter", "slotblacklist", ItemFilterSlot.class::getName);
+        InterModComms.sendTo("inventorysorter", "slotblacklist", FluidFilterSlot.class::getName);
     }
 }
