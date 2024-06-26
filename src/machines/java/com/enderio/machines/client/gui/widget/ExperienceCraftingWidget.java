@@ -7,7 +7,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -16,13 +15,11 @@ import java.util.function.Supplier;
 public class ExperienceCraftingWidget extends EIOWidget {
     protected static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_background");
     protected static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_progress");
-    private final Screen screen;
     private final Supplier<MachineFluidTank> getFluid;
     private final Supplier<Integer> maxXP;
 
-    public ExperienceCraftingWidget(Screen screen, Supplier<MachineFluidTank> getFluid, Supplier<Integer> maxXP, int pX, int pY, int pWidth, int pHeight) {
+    public ExperienceCraftingWidget(int pX, int pY, int pWidth, int pHeight, Supplier<MachineFluidTank> getFluid, Supplier<Integer> maxXP) {
         super(pX, pY, pWidth, pHeight);
-        this.screen = screen;
         this.getFluid = getFluid;
         this.maxXP = maxXP;
     }
@@ -52,7 +49,8 @@ public class ExperienceCraftingWidget extends EIOWidget {
         guiGraphics.drawString(font, s, this.x + this.width/2f, (float)this.y - this.height - 3, 8453920, false);
 
         if (isHovered(pMouseX, pMouseY)) {
-            guiGraphics.renderTooltip(screen.getMinecraft().font,
+            Minecraft minecraft = Minecraft.getInstance();
+            guiGraphics.renderTooltip(minecraft.font,
                 Component.literal(getFluid.get().getFluidAmount() + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb"), pMouseX, pMouseY);
         }
     }

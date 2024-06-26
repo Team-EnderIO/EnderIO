@@ -41,7 +41,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new TravelAnchorMenu(this, inventory, containerId);
+        return new TravelAnchorMenu(containerId, this, inventory);
     }
 
     @Override

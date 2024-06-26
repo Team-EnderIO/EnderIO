@@ -4,6 +4,7 @@ import com.enderio.api.misc.Vector2i;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 
+@Deprecated(forRemoval = true, since = "7.0")
 public interface EnderScreen {
 
     default Screen getScreen() {

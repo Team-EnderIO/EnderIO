@@ -122,7 +122,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new AlloySmelterMenu(this, inventory, containerId);
+        return new AlloySmelterMenu(containerId, this, inventory);
     }
 
     @Override

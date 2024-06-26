@@ -82,7 +82,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new PrimitiveAlloySmelterMenu(this, inventory, containerId);
+        return new PrimitiveAlloySmelterMenu(inventory, containerId, this);
     }
 
     @Override

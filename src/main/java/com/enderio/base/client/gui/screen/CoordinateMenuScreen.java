@@ -41,8 +41,9 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
         nameInput.setResponder(this::onNameChanged);
         nameInput.setValue(menu.getName());
 
-        this.addRenderableWidget(nameInput);
-        this.setInitialFocus(nameInput);
+        addRenderableWidget(nameInput);
+        addRestorableState("name", nameInput);
+        setInitialFocus(nameInput);
         nameInput.setEditable(true);
 
         this.addRenderableWidget(new Button.Builder(EIOLang.OK, mouseButton -> Minecraft.getInstance().player.closeContainer())
@@ -70,25 +71,14 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
     }
 
     @Override
-    public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
-        String name = nameInput.getValue();
-        super.resize(pMinecraft, pWidth, pHeight);
-        nameInput.setValue(name);
-    }
-
-    @Override
-    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-        if (preKeyPressed(pKeyCode, pScanCode, pModifiers)) {
-            return true;
-        }
-
+    public boolean onKeyPressed(int keyCode, int scanCode, int modifiers) {
         if (nameInput.isFocused()) {
-            if (nameInput.keyPressed(pKeyCode, pScanCode, pModifiers) || nameInput.canConsumeInput()) {
+            if (nameInput.keyPressed(keyCode, scanCode, modifiers) || nameInput.canConsumeInput()) {
                 return true;
             }
         }
 
-        return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+        return super.onKeyPressed(keyCode, scanCode, modifiers);
     }
 
     private void onNameChanged(String name) {

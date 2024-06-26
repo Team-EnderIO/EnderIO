@@ -6,7 +6,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -21,12 +20,10 @@ import java.util.function.Supplier;
 
 public class FluidStackStaticWidget extends EIOWidget {
 
-    private final Screen screen;
     private final Supplier<MachineFluidTank> getFluid;
 
-    public FluidStackStaticWidget(Screen screen, Supplier<MachineFluidTank> getFluid, int pX, int pY, int pWidth, int pHeight) {
+    public FluidStackStaticWidget(int pX, int pY, int pWidth, int pHeight, Supplier<MachineFluidTank> getFluid) {
         super(pX, pY, pWidth, pHeight);
-        this.screen = screen;
         this.getFluid = getFluid;
     }
 
@@ -71,7 +68,8 @@ public class FluidStackStaticWidget extends EIOWidget {
 
     public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
-            guiGraphics.renderTooltip(screen.getMinecraft().font, Arrays.asList(getFluid.get().getFluid().getDisplayName().getVisualOrderText(),
+            Minecraft minecraft = Minecraft.getInstance();
+            guiGraphics.renderTooltip(minecraft.font, Arrays.asList(getFluid.get().getFluid().getDisplayName().getVisualOrderText(),
                 Component.literal(getFluid.get().getFluidAmount() + "mB").getVisualOrderText()), mouseX, mouseY);
         }
     }

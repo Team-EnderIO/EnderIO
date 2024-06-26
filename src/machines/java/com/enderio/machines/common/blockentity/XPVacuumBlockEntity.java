@@ -45,7 +45,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new XPVacuumMenu(this, inventory, containerId);
+        return new XPVacuumMenu(containerId, this, inventory);
     }
 
 

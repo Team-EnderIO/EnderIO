@@ -1,7 +1,6 @@
 package com.enderio.core.client.gui.screen;
 
 import com.enderio.api.misc.Vector2i;
-import com.enderio.core.common.menu.SyncedMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -19,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated(forRemoval = true, since = "7.0")
 public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements EnderScreen {
 
     private final boolean renderLabels;
@@ -37,23 +37,23 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
 
     @Override
     public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
-       /* Map<String, String> oldEditBoxValues = new HashMap<>();
+        Map<String, String> oldEditBoxValues = new HashMap<>();
         for (EditBox editBox : editBoxList) {
             oldEditBoxValues.put(editBox.getMessage().getString(), editBox.getValue());
-        }*/
+        }
         editBoxList.clear();
 
         super.resize(pMinecraft, pWidth, pHeight);
-        /*for (EditBox editBox : editBoxList) {
+        for (EditBox editBox : editBoxList) {
             editBox.setValue(oldEditBoxValues.getOrDefault(editBox.getMessage().getString(), ""));
-        }*/
+        }
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
-        if (menu instanceof SyncedMenu<?> syncedMenu && syncedMenu.getBlockEntity() == null) {
+        /*if (menu instanceof SyncedMenu<?> syncedMenu && syncedMenu.getBlockEntity() == null) {
             return;
-        }
+        }*/
 
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         this.renderTooltip(guiGraphics, pMouseX, pMouseY);
@@ -113,13 +113,5 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
         if (guiEventListener instanceof EditBox editBox) {
             editBoxList.remove(editBox);
         }
-    }
-
-    /**
-     * makes this public instead of protected
-     */
-    @Override
-    public void setTooltipForNextRenderPass(Component pTooltip) {
-        super.setTooltipForNextRenderPass(pTooltip);
     }
 }

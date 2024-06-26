@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -16,12 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class CapacitorEnergyWidget extends EnergyWidget{
+public class CapacitorEnergyWidget extends EnergyWidget {
     public static final ItemStack CAPACITOR = new ItemStack(EIOItems.BASIC_CAPACITOR.get());
     private final Supplier<Boolean> cap;
 
-    public CapacitorEnergyWidget(Screen screen, Supplier<IMachineEnergyStorage> storageSupplier, Supplier<Boolean> cap, int x, int y, int width, int height) {
-        super(screen, storageSupplier, x, y, width, height);
+    public CapacitorEnergyWidget(int x, int y, int width, int height, Supplier<IMachineEnergyStorage> storageSupplier, Supplier<Boolean> cap) {
+        super(x, y, width, height, storageSupplier);
         this.cap = cap;
     }
 
@@ -39,16 +38,18 @@ public class CapacitorEnergyWidget extends EnergyWidget{
     }
 
     public void renderCapacitorTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        Minecraft minecraft = Minecraft.getInstance();
         List<Component> list = new ArrayList<>();
         list.add(EIOLang.NOCAP_TITLE.withStyle(ChatFormatting.DARK_AQUA));
         String[] split = EIOLang.NOCAP_DESC.getString().split("\n");
         for (String s :split) {
             list.add(Component.literal(s.stripLeading().stripTrailing()));
         }
+
         PoseStack pose = guiGraphics.pose();
         pose.pushPose();
         pose.translate(0,0,1);
-        guiGraphics.renderComponentTooltip(screen.getMinecraft().font, list, mouseX, mouseY);
+        guiGraphics.renderComponentTooltip(minecraft.font, list, mouseX, mouseY);
         pose.popPose();
     }
 

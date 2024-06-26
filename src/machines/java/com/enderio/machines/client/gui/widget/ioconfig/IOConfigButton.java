@@ -1,12 +1,10 @@
 package com.enderio.machines.client.gui.widget.ioconfig;
 
 import com.enderio.EnderIO;
-import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
-import com.enderio.machines.common.menu.MachineMenu;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.enderio.machines.common.menu.base.MachineMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -25,6 +23,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+// TODO: Redesign this
 public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> extends AbstractButton {
     private static final int RENDERER_HEIGHT = 80;
     public static final ResourceLocation IO_CONFIG = EnderIO.loc("buttons/io_config");
@@ -50,8 +49,8 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
         Inset inset, @Nullable Consumer<Boolean> callback) {
         super(x, y, width, height, EIOLang.IOCONFIG);
         this.screen = screen;
-        this.playerInvVisible = menu::getPlayerInvVisible;
-        this.setPlayerInvVisible = menu::setPlayerInvVisible;
+        this.playerInvVisible = () -> false; //menu::getPlayerInvVisible;
+        this.setPlayerInvVisible = b -> false; //menu::setPlayerInvVisible;
         this.callback = callback;
         setTooltip(Tooltip.create(EIOLang.IOCONFIG.copy().withStyle(ChatFormatting.WHITE)));
 

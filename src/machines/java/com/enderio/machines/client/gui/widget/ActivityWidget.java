@@ -5,10 +5,10 @@ import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.blockentity.MachineStateType;
 import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -18,19 +18,11 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public class ActivityWidget extends AbstractWidget {
-    private final Screen screen;
     private final Supplier<Set<MachineState>> state;
 
-    public ActivityWidget(Screen screen, Supplier<Set<MachineState>> state, int x, int y) {
+    public ActivityWidget(int x, int y, Supplier<Set<MachineState>> state) {
         super(x, y, 16, 16, Component.empty());
-        this.screen = screen;
         this.state = state;
-    }
-
-    //stop the click sound
-    @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        return false;
     }
 
     @Override
@@ -57,11 +49,14 @@ public class ActivityWidget extends AbstractWidget {
 
     private void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered()) {
+            Minecraft minecraft = Minecraft.getInstance();
+
             List<Component> list = state.get().stream().filter(s -> state.get().size() <= 1 || s.type() != MachineStateType.ACTIVE).map(s -> (Component) s.component()).toList();
             if (list.isEmpty()){
                 list = List.of(MachineLang.TOOLTIP_IDLE);
             }
-            guiGraphics.renderTooltip(screen.getMinecraft().font, list, Optional.empty(), mouseX, mouseY);
+
+            guiGraphics.renderTooltip(minecraft.font, list, Optional.empty(), mouseX, mouseY);
         }
     }
 

@@ -7,9 +7,9 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 
 import java.text.NumberFormat;
@@ -18,16 +18,12 @@ import java.util.function.Supplier;
 
 public class EnergyWidget extends EIOWidget {
 
-    // TODO: Will need some way of displaying no tooltip and instead asking for a capacitor on non-simple machines.
-
     protected static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/widgets.png");
 
-    protected final Screen screen;
     private final Supplier<IMachineEnergyStorage> storageSupplier;
 
-    public EnergyWidget(Screen screen, Supplier<IMachineEnergyStorage> storageSupplier, int x, int y, int width, int height) {
+    public EnergyWidget(int x, int y, int width, int height, Supplier<IMachineEnergyStorage> storageSupplier) {
         super(x, y, width, height);
-        this.screen = screen;
         this.storageSupplier = storageSupplier;
     }
 
@@ -66,10 +62,12 @@ public class EnergyWidget extends EIOWidget {
 
     public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
+            Minecraft minecraft = Minecraft.getInstance();
+
             IMachineEnergyStorage storage = storageSupplier.get();
 
             NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-            guiGraphics.renderTooltip(screen.getMinecraft().font,
+            guiGraphics.renderTooltip(minecraft.font,
                 TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(getEnergyStored(storage)) + "/" + fmt.format(
                getMaxEnergyStored(storage))), mouseX, mouseY);
         }

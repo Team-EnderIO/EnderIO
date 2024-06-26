@@ -1,7 +1,12 @@
-package com.enderio.machines.common.menu;
+package com.enderio.machines.common.menu.base;
 
-import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.menu.SyncedMenu;
+import com.enderio.api.misc.RedstoneControl;
+import com.enderio.core.common.menu.BaseBlockEntityMenu;
+import com.enderio.machines.common.blockentity.MachineState;
+import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.io.item.MachineInventory;
+import com.enderio.machines.common.menu.GhostMachineSlot;
+import com.enderio.machines.common.menu.MachineSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -11,10 +16,56 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class MachineMenu<T extends EnderBlockEntity> extends SyncedMenu<T> {
+import java.util.Set;
 
-    protected MachineMenu(@Nullable T blockEntity, Inventory inventory, @Nullable MenuType<?> pMenuType, int pContainerId) {
-        super(blockEntity, inventory, pMenuType, pContainerId);
+/**
+ * Common machine helpers, such as ghost slots and accessing common properties.
+ * @param <T>
+ */
+public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBlockEntityMenu<T> {
+
+    protected MachineMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity, Inventory playerInventory) {
+        super(menuType, containerId, blockEntity, playerInventory);
+    }
+
+    public MachineInventory getMachineInventory() {
+        if (getBlockEntity() == null) {
+            throw new IllegalStateException("BlockEntity is null");
+        }
+
+        if (getBlockEntity().getInventory() == null) {
+            throw new IllegalStateException("Machine does not have an inventory.");
+        }
+
+        return getBlockEntity().getInventory();
+    }
+
+    public boolean supportsRedstoneControl() {
+        return getBlockEntity() != null && getBlockEntity().supportsRedstoneControl();
+    }
+
+    public RedstoneControl getRedstoneControl() {
+        if (getBlockEntity() == null) {
+            throw new IllegalStateException("BlockEntity is null");
+        }
+
+        return getBlockEntity().getRedstoneControl();
+    }
+
+    public void setRedstoneControl(RedstoneControl redstoneControl) {
+        if (getBlockEntity() == null) {
+            throw new IllegalStateException("BlockEntity is null");
+        }
+
+        getBlockEntity().setRedstoneControl(redstoneControl);
+    }
+
+    public Set<MachineState> getMachineStates() {
+        if (getBlockEntity() == null) {
+            throw new IllegalStateException("BlockEntity is null");
+        }
+
+        return getBlockEntity().getMachineStates();
     }
 
     @Override
@@ -42,6 +93,8 @@ public abstract class MachineMenu<T extends EnderBlockEntity> extends SyncedMenu
         return super.canDragTo(slot);
     }
 
+    // TODO: This menu does not have the safety guarantee that the player inventory has been added.
+    //       While I'm pretty sure all menus using this will, maybe worth handling the case where this might not be handled (in other words, no-op if no player inv?)
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         ItemStack itemstack = ItemStack.EMPTY;
@@ -56,11 +109,11 @@ public abstract class MachineMenu<T extends EnderBlockEntity> extends SyncedMenu
         if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            if (pIndex < this.slots.size() - 36) {
-                if (!this.moveItemStackTo(itemstack1, this.slots.size() - 36, this.slots.size(), true)) {
+            if (pIndex < this.slots.size() - PLAYER_INVENTORY_SIZE) {
+                if (!this.moveItemStackTo(itemstack1, this.slots.size() - PLAYER_INVENTORY_SIZE, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(itemstack1, 0, this.slots.size() - 36, false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 0, this.slots.size() - PLAYER_INVENTORY_SIZE, false)) {
                 return ItemStack.EMPTY;
             }
 

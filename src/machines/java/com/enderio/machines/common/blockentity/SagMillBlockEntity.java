@@ -84,7 +84,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new SagMillMenu(this, inventory, containerId);
+        return new SagMillMenu(containerId, this, inventory);
     }
 
     @Override

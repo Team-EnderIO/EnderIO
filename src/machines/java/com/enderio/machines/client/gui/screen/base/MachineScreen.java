@@ -1,22 +1,19 @@
-package com.enderio.machines.client.gui.screen;
+package com.enderio.machines.client.gui.screen.base;
 
-import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.machines.common.menu.GhostMachineSlot;
-import com.enderio.machines.common.menu.MachineMenu;
+import com.enderio.machines.common.menu.base.MachineMenu;
 import com.enderio.machines.common.menu.PreviewMachineSlot;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 
-public abstract class MachineScreen<T extends MachineMenu<?>> extends EIOScreen<T> {
+public abstract class MachineScreen<T extends MachineMenu<?>> extends EnderContainerScreen<T> {
     public static final int SLOT_COLOR = -2130706433;
+
     protected MachineScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-    }
-
-    protected MachineScreen(T pMenu, Inventory pPlayerInventory, Component pTitle, boolean renderLabels) {
-        super(pMenu, pPlayerInventory, pTitle, renderLabels);
     }
 
     @Override

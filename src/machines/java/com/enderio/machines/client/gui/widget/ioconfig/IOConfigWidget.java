@@ -21,6 +21,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -68,7 +69,7 @@ import java.util.SequencedMap;
  * <p>
  * Definition  of {@link GhostBuffers}, {@link GhostRenderLayer} and initBuffers method are taken from Patchouli (License information: <a href="https://github.com/VazkiiMods/Patchouli">here</a>)
  */
-public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
+public class IOConfigWidget<U extends AbstractContainerScreen<?>> extends AbstractWidget {
 
     private static final Quaternionf ROT_180_Z = Axis.ZP.rotation((float) Math.PI);
     private static final Vec3 RAY_ORIGIN = new Vec3(1.5, 1.5, 1.5);

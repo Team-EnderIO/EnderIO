@@ -7,7 +7,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Supplier;
@@ -15,12 +14,11 @@ import java.util.function.Supplier;
 public class ExperienceWidget extends EIOWidget {
     protected static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_background");
     protected static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_progress");
-    private final Screen screen;
+
     private final Supplier<MachineFluidTank> getFluid;
 
-    public ExperienceWidget(Screen screen, Supplier<MachineFluidTank> getFluid, int pX, int pY, int pWidth, int pHeight) {
-        super(pX, pY, pWidth, pHeight);
-        this.screen = screen;
+    public ExperienceWidget(int x, int y, int width, int height, Supplier<MachineFluidTank> getFluid) {
+        super(x, y, width, height);
         this.getFluid = getFluid;
     }
 
@@ -43,7 +41,6 @@ public class ExperienceWidget extends EIOWidget {
         guiGraphics.drawString(font, text, this.x + this.width/2f - xOffset, (float)(this.y - this.height - 3 + 1), 0, false);
         guiGraphics.drawString(font, text, this.x + this.width/2f - xOffset, (float)(this.y - this.height - 3 - 1), 0, false);
         guiGraphics.drawString(font, text, this.x + this.width/2f - xOffset, (float)this.y - this.height - 3, 8453920, false);
-
     }
 
     @Override

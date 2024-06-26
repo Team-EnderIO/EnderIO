@@ -200,7 +200,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-        return new SoulEngineMenu(this, playerInventory, containerId);
+        return new SoulEngineMenu(containerId, this, playerInventory);
     }
 
     protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {

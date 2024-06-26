@@ -5,7 +5,7 @@ import com.enderio.api.misc.Vector2i;
 import com.enderio.base.client.gui.widget.EIOCommonWidgets;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.widgets.ToggleIconButton;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
@@ -21,7 +21,9 @@ import java.util.Optional;
 
 public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
 
-    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/powered_spawner_spawn.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/screen/powered_spawner_spawn.png");
+    private static final int WIDTH = 176;
+    private static final int HEIGHT = 166;
 
     public PoweredSpawnerScreen(PoweredSpawnerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -31,33 +33,27 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(new CapacitorEnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, getMenu().getBlockEntity()::isCapacitorInstalled, 16 + leftPos, 14 + topPos, 9, 42));
+        addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage, menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
-            control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl,
+            menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
         addRenderableWidget(EIOCommonWidgets.createRange(
             leftPos + imageWidth - 6 - 16,
             topPos + 24,
             EIOLang.HIDE_RANGE,
             EIOLang.SHOW_RANGE,
-            () -> menu.getBlockEntity().isRangeVisible(),
-            state -> menu.getBlockEntity().setRangeVisible(state)));
+            menu::isRangeVisible,
+            menu::setRangeVisible));
 
-        addRenderableWidget(new ActivityWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16 * 4));
+        addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
-        addRenderableOnly(new ProgressWidget.BottomUp(this, () -> menu.getBlockEntity().getSpawnProgress(), getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
-
+        addRenderableOnly(new ProgressWidget.BottomUp(BG_TEXTURE, () -> menu.getBlockEntity().getSpawnProgress(), getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
     }
 
     @Override
-    public ResourceLocation getBackgroundImage() {
-        return BG_TEXTURE;
-    }
-
-    @Override
-    protected Vector2i getBackgroundImageSize() {
-        return new Vector2i(176, 166);
+    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+        pGuiGraphics.blit(BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 
     @Override

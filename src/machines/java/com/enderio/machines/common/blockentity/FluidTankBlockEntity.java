@@ -359,7 +359,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     @Nullable
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new FluidTankMenu(this, pInventory, pContainerId);
+        return new FluidTankMenu(pContainerId, this, pInventory);
     }
 
     @Override

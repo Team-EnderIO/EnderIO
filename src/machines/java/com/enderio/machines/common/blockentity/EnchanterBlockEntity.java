@@ -26,7 +26,6 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
 
 public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvider {
@@ -62,7 +61,7 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new EnchanterMenu(this, pInventory, pContainerId);
+        return new EnchanterMenu(pInventory, pContainerId, this);
     }
 
     // endregion

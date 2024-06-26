@@ -7,7 +7,6 @@ import com.enderio.conduits.common.conduit.block.ConduitBundleBlock;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.core.common.menu.BaseBlockEntityMenu;
-import com.enderio.core.common.menu.SyncedMenu;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -50,29 +49,6 @@ public class ConduitMenu extends BaseBlockEntityMenu<ConduitBundleBlockEntity> {
 
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
-        /*ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(pIndex);
-
-        if (slot.hasItem()) {
-            ItemStack itemstack1 = slot.getItem();
-            itemstack = itemstack1.copy();
-            if (pIndex < this.slots.size() - 36) {
-                if (!this.moveItemStackTo(itemstack1, this.slots.size() - 36, this.slots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.moveItemStackTo(itemstack1, 0, this.slots.size() - 36, false)) {
-                return ItemStack.EMPTY;
-            }
-
-            if (itemstack1.isEmpty()) {
-                slot.set(ItemStack.EMPTY);
-            } else {
-                slot.setChanged();
-            }
-        }
-
-        return itemstack;*/
-
         ItemStack resultItemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(pIndex);
         if (slot.hasItem()) {

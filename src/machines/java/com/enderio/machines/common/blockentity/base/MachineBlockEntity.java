@@ -17,7 +17,6 @@ import com.enderio.machines.common.io.SidedIOConfigurable;
 import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -270,10 +269,18 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     public RedstoneControl getRedstoneControl() {
+        if (!supportsRedstoneControl()) {
+            throw new IllegalStateException("This machine does not support redstone control.");
+        }
+
         return getData(MachineAttachments.REDSTONE_CONTROL);
     }
 
     public void setRedstoneControl(RedstoneControl redstoneControl) {
+        if (!supportsRedstoneControl()) {
+            throw new IllegalStateException("This machine does not support redstone control.");
+        }
+
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(redstoneControlDataSlot, redstoneControl);
         } else {
