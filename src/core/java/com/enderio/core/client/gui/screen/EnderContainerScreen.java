@@ -1,6 +1,8 @@
 package com.enderio.core.client.gui.screen;
 
 import com.enderio.core.common.menu.BaseBlockEntityMenu;
+import com.enderio.core.common.menu.EnderSlot;
+import com.enderio.core.common.menu.SlotWithOverlay;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -18,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -27,7 +30,7 @@ import java.util.stream.Collectors;
 
 public abstract class EnderContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
 
-    private static final double ITEM_RENDER_Z = 500D;
+    private static final int ITEM_RENDER_Z = 400;
 
     private final Multimap<Integer, Renderable> overlayRenderables = HashMultimap.create();
     private final Multimap<Integer, GuiEventListener> overlayWidgets = HashMultimap.create();
@@ -45,23 +48,46 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
         }
 
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+    }
 
-        // TODO: This is blocking tooltips. Needs further work.
+    @Override
+    protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
+        super.renderLabels(pGuiGraphics, pMouseX, pMouseY);
+
+        // Move back to screen space rather than aligned to the background coordinates
         pGuiGraphics.pose().pushPose();
+        pGuiGraphics.pose().translate(-leftPos, -topPos, 0.0D);
+
+        int zOffset = 200;
         for (var layer : overlayRenderables.keySet()) {
             // Offset deeper for each layer.
-            pGuiGraphics.pose().translate(0.0D, 0.0D, ITEM_RENDER_Z);
+            pGuiGraphics.pose().pushPose();
+            zOffset += 150;
+            pGuiGraphics.pose().translate(0.0D, 0.0D, zOffset);
 
             for (var overlay : overlayRenderables.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    overlay.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+                    overlay.render(pGuiGraphics, pMouseX, pMouseY, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false));
+
+                    if (overlay instanceof BaseOverlay baseOverlay) {
+                        zOffset += baseOverlay.getAdditionalZOffset();
+                    }
                 }
             }
+
+            pGuiGraphics.pose().popPose();
         }
 
         pGuiGraphics.pose().popPose();
 
+        pGuiGraphics.pose().translate(0, 0, zOffset);
+
+        pGuiGraphics.pose().pushPose();
+        pGuiGraphics.pose().translate(-leftPos, -topPos, 0.0D);
+
         renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+
+        pGuiGraphics.pose().popPose();
     }
 
     @Override
@@ -78,6 +104,19 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
         }
 
         super.renderTooltip(pGuiGraphics, pX, pY);
+    }
+
+    @Override
+    protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot, @Nullable String countString) {
+        super.renderSlotContents(guiGraphics, itemstack, slot, countString);
+
+        if (slot instanceof SlotWithOverlay slotWithOverlay) {
+            if (slotWithOverlay.getForegroundSprite() != null) {
+                RenderSystem.disableDepthTest();
+                guiGraphics.blitSprite(slotWithOverlay.getForegroundSprite(), slot.x, slot.y, 16, 16);
+                RenderSystem.enableDepthTest();
+            }
+        }
     }
 
     public <U extends StateRestoringWidget> U addRestorableState(String key, U widget) {
@@ -122,8 +161,6 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
             stateRestoringWidgets.get(key).restoreValue(valuesBeforeResize.get(key));
         }
     }
-
-    // TODO: Pass events through to overlays.
 
     // region Gui event passthrough
 

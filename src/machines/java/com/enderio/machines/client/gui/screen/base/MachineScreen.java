@@ -2,7 +2,7 @@ package com.enderio.machines.client.gui.screen.base;
 
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
-import com.enderio.machines.client.gui.widget.ioconfig.IOConfigWidget;
+import com.enderio.machines.client.gui.widget.ioconfig.IOConfigOverlay;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.machines.common.menu.GhostMachineSlot;
 import com.enderio.machines.common.menu.base.MachineMenu;
@@ -22,19 +22,19 @@ public abstract class MachineScreen<T extends MachineMenu<?>> extends EnderConta
         super(pMenu, pPlayerInventory, pTitle);
     }
 
-    protected IOConfigWidget addIOConfigOverlay(int layer, int x, int y, int width, int height) {
+    protected IOConfigOverlay addIOConfigOverlay(int layer, int x, int y, int width, int height) {
         // TODO: getConfigurables on MachineMenu.
         List<BlockPos> configurables = menu.getBlockEntity() instanceof MultiConfigurable multiConfigurable ?
             multiConfigurable.getConfigurables() :
             List.of(menu.getBlockEntity().getBlockPos());
 
-        var widget = addOverlayRenderable(layer, new IOConfigWidget(x, y, width, height, configurables));
+        var widget = addOverlayRenderable(layer, new IOConfigOverlay(x, y, width, height, configurables));
         addRestorableState("io_config", widget);
         widget.setVisible(false);
         return widget;
     }
 
-    protected IOConfigButton addIOConfigButton(int x, int y, IOConfigWidget configRenderer) {
+    protected IOConfigButton addIOConfigButton(int x, int y, IOConfigOverlay configRenderer) {
         return addRenderableWidget(new IOConfigButton(x, y, configRenderer));
     }
 

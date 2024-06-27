@@ -2,7 +2,6 @@ package com.enderio.machines.client.gui.widget.ioconfig;
 
 import com.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.BaseOverlay;
-import com.enderio.core.client.gui.screen.StateRestoringWidget;
 import com.enderio.machines.client.rendering.model.ModelRenderUtil;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -66,7 +65,7 @@ import java.util.SequencedMap;
  * <p>
  * Definition  of {@link GhostBuffers}, {@link GhostRenderLayer} and initBuffers method are taken from Patchouli (License information: <a href="https://github.com/VazkiiMods/Patchouli">here</a>)
  */
-public class IOConfigWidget extends BaseOverlay {
+public class IOConfigOverlay extends BaseOverlay {
 
     private static final Quaternionf ROT_180_Z = Axis.ZP.rotation((float) Math.PI);
     private static final Vec3 RAY_ORIGIN = new Vec3(1.5, 1.5, 1.5);
@@ -74,25 +73,23 @@ public class IOConfigWidget extends BaseOverlay {
     private static final Vec3 RAY_END = new Vec3(1.5, 1.5, 3);
     private static final BlockPos POS = new BlockPos(1, 1, 1);
     private static final int Z_OFFSET = 100;
+    private static final int OVERLAY_Z_OFFSET = 500;
     private static final ResourceLocation IO_CONFIG_OVERLAY = EnderIO.loc("buttons/io_config_overlay");
     private static final ResourceLocation SELECTED_ICON = EnderIO.loc("block/overlay/selected_face");
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
     private static MultiBufferSource.BufferSource ghostBuffers;
+    private static MultiBufferSource.BufferSource solidBuffers;
     private final Vector3f worldOrigin;
     private final Vector3f multiblockSize;
     private final List<BlockPos> configurable = new ArrayList<>();
     private final List<BlockPos> neighbours = new ArrayList<>();
-    private float SCALE = 20;
+    private float scale = 20;
     private float pitch;
     private float yaw;
     private boolean neighbourVisible = true;
     private Optional<SelectedFace> selection = Optional.empty();
 
-    public IOConfigWidget(int x, int y, int width, int height, BlockPos configurable) {
-        this(x, y, width, height, List.of(configurable));
-    }
-
-    public IOConfigWidget(int x, int y, int width, int height, List<BlockPos> _configurable) {
+    public IOConfigOverlay(int x, int y, int width, int height, List<BlockPos> _configurable) {
         super(x, y, width, height, Component.empty());
         this.configurable.addAll(_configurable);
 
@@ -115,8 +112,8 @@ public class IOConfigWidget extends BaseOverlay {
         }
 
         var radius = Math.max(Math.max(multiblockSize.x(), multiblockSize.y()), multiblockSize.z());
-        SCALE -= (radius - 1) * 3; //adjust later
-        SCALE = Math.min(40, Math.max(10, SCALE)); //clamp
+        scale -= (radius - 1) * 3; //adjust later
+        scale = Math.min(40, Math.max(10, scale)); //clamp
 
         configurable.forEach(pos -> {
             for (Direction dir : Direction.values()) {
@@ -130,7 +127,44 @@ public class IOConfigWidget extends BaseOverlay {
         pitch = MINECRAFT.player.getXRot();
         yaw = MINECRAFT.player.getYRot();
 
-        ghostBuffers = initBuffers(MINECRAFT.renderBuffers().bufferSource());
+        initBuffers(MINECRAFT.renderBuffers().bufferSource());
+    }
+
+    @Override
+    public int getAdditionalZOffset() {
+        return OVERLAY_Z_OFFSET;
+    }
+
+    @Override
+    public Object getValueForRestore() {
+        return new RestoreData(this.visible, yaw, pitch, scale);
+    }
+
+    @Override
+    public void restoreValue(Object value) {
+        if (value instanceof RestoreData restoreData) {
+            this.visible = restoreData.isVisible;
+            this.yaw = restoreData.yaw;
+            this.pitch = restoreData.pitch;
+            this.scale = restoreData.scale;
+        }
+    }
+
+    private record RestoreData(boolean isVisible, float yaw, float pitch, float scale) {
+    }
+
+    private void initBuffers(MultiBufferSource.BufferSource original) {
+        ByteBufferBuilder fallback = original.sharedBuffer;
+        SequencedMap<RenderType, ByteBufferBuilder> layerBuffers = original.fixedBuffers;
+        SequencedMap<RenderType, ByteBufferBuilder> ghostLayers = new Object2ObjectLinkedOpenHashMap<>();
+        SequencedMap<RenderType, ByteBufferBuilder> solidLayers = new Object2ObjectLinkedOpenHashMap<>();
+
+        for (Map.Entry<RenderType, ByteBufferBuilder> e : layerBuffers.entrySet()) {
+            ghostLayers.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
+            solidLayers.put(SolidRenderLayer.remap(e.getKey()), e.getValue());
+        }
+        ghostBuffers = new GhostBuffers(fallback, ghostLayers);
+        solidBuffers = new SolidBuffers(fallback, solidLayers);
     }
 
     private static Vec3 transform(Vec3 vec, Matrix4f transform) {
@@ -157,16 +191,6 @@ public class IOConfigWidget extends BaseOverlay {
         Vector3f centerPos = new Vector3f(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f).sub(worldOrigin);
         shape = shape.move(centerPos.x(), centerPos.y(), centerPos.z());
         return shape.clip(start, end, POS);
-    }
-
-    private static MultiBufferSource.BufferSource initBuffers(MultiBufferSource.BufferSource original) {
-        ByteBufferBuilder fallback = original.sharedBuffer;
-        SequencedMap<RenderType, ByteBufferBuilder> layerBuffers = original.fixedBuffers;
-        SequencedMap<RenderType, ByteBufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
-        for (Map.Entry<RenderType, ByteBufferBuilder> e : layerBuffers.entrySet()) {
-            remapped.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
-        }
-        return new GhostBuffers(fallback, remapped);
     }
 
     public void toggleNeighbourVisibility() {
@@ -209,8 +233,8 @@ public class IOConfigWidget extends BaseOverlay {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         if (visible) {
-            SCALE -= deltaY;
-            SCALE = Math.min(40, Math.max(10, SCALE)); //clamp
+            scale -= deltaY;
+            scale = Math.min(40, Math.max(10, scale)); //clamp
             return true;
         }
         return false;
@@ -220,14 +244,16 @@ public class IOConfigWidget extends BaseOverlay {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (visible) {
             guiGraphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
+            RenderSystem.disableDepthTest();
             guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
+            RenderSystem.enableDepthTest();
 
             // Calculate widget center
             int centerX = getX() + (width / 2);
             int centerY = getY() + (height / 2);
             // Calculate mouse offset from center and scale to the block space
-            float diffX = (mouseX - centerX) / SCALE;
-            float diffY = (mouseY - centerY) / SCALE;
+            float diffX = (mouseX - centerX) / scale;
+            float diffY = (mouseY - centerY) / scale;
 
             Quaternionf rotPitch = Axis.XN.rotationDegrees(pitch);
             Quaternionf rotYaw = Axis.YP.rotationDegrees(yaw);
@@ -281,7 +307,7 @@ public class IOConfigWidget extends BaseOverlay {
         Lighting.setupForFlatItems();
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(centerX, centerY, Z_OFFSET);
-        guiGraphics.pose().scale(SCALE, SCALE, -SCALE);
+        guiGraphics.pose().scale(scale, scale, -scale);
         guiGraphics.pose().mulPose(transform);
 
         // RenderNeighbours
@@ -295,12 +321,11 @@ public class IOConfigWidget extends BaseOverlay {
         ghostBuffers.endBatch();
 
         // Render configurable
-        MultiBufferSource.BufferSource normalBuffers = MINECRAFT.renderBuffers().bufferSource();
         for (var configurable : configurable) {
             Vector3f pos = new Vector3f(configurable.getX() - worldOrigin.x(), configurable.getY() - worldOrigin.y(), configurable.getZ() - worldOrigin.z());
-            renderBlock(guiGraphics, configurable, pos, normalBuffers, partialTick);
+            renderBlock(guiGraphics, configurable, pos, solidBuffers, partialTick);
         }
-        normalBuffers.endBatch();
+        solidBuffers.endBatch();
 
         guiGraphics.pose().popPose();
         Lighting.setupFor3DItems();
@@ -346,7 +371,7 @@ public class IOConfigWidget extends BaseOverlay {
         }
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(centerX, centerY, Z_OFFSET);
-        guiGraphics.pose().scale(SCALE, SCALE, -SCALE);
+        guiGraphics.pose().scale(scale, scale, -scale);
         guiGraphics.pose().mulPose(transform);
 
         BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
@@ -383,7 +408,7 @@ public class IOConfigWidget extends BaseOverlay {
                 guiGraphics.blitSprite(IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
                     getY() + height - 4 - minecraft.font.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(), iconBounds.getHeight());
                 guiGraphics.pose().pushPose();
-                guiGraphics.pose().translate(0, 0, 1000); // to ensure that string is drawn on top
+                guiGraphics.pose().translate(0, 0, OVERLAY_Z_OFFSET); // to ensure that string is drawn on top
                 guiGraphics.drawString(minecraft.font, map.getComponent(), getX() + 4, getY() + height - 2 - minecraft.font.lineHeight, 0xFFFFFFFF);
                 guiGraphics.pose().popPose();
             }
@@ -404,6 +429,44 @@ public class IOConfigWidget extends BaseOverlay {
         @Override
         public VertexConsumer getBuffer(RenderType type) {
             return super.getBuffer(GhostRenderLayer.remap(type));
+        }
+    }
+
+    private static class SolidBuffers extends MultiBufferSource.BufferSource {
+        private SolidBuffers(ByteBufferBuilder fallback, SequencedMap<RenderType, ByteBufferBuilder> layerBuffers) {
+            super(fallback, layerBuffers);
+        }
+
+        @Override
+        public VertexConsumer getBuffer(RenderType type) {
+            return super.getBuffer(SolidRenderLayer.remap(type));
+        }
+    }
+
+    // Solid buffers, but without depth testing.
+    private static class SolidRenderLayer extends RenderType {
+        private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
+
+        private SolidRenderLayer(RenderType original) {
+            super(String.format("%s_%s_solid", original, EnderIO.MODID), original.format(), original.mode(), original.bufferSize(),
+                original.affectsCrumbling(), true, () -> {
+                    original.setupRenderState();
+
+                    RenderSystem.disableDepthTest();
+                },
+                () -> {
+                    RenderSystem.enableDepthTest();
+
+                    original.clearRenderState();
+                });
+        }
+
+        public static RenderType remap(RenderType in) {
+            if (in instanceof SolidRenderLayer) {
+                return in;
+            } else {
+                return REMAPPED_TYPES.computeIfAbsent(in, SolidRenderLayer::new);
+            }
         }
     }
 
