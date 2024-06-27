@@ -6,6 +6,7 @@ import com.enderio.api.conduit.screen.ConduitScreenExtension;
 import com.enderio.api.conduit.screen.RegisterConduitScreenExtensionsEvent;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.neoforged.fml.ModLoader;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class ConduitScreenExtensions {
     }
 
     @EnsureSide(EnsureSide.Side.CLIENT)
+    @Nullable
     public static <T extends ConduitData<T>> ConduitScreenExtension<T> get(ConduitType<T> type) {
         //noinspection unchecked
         return (ConduitScreenExtension<T>) EXTENSIONS.get(type);

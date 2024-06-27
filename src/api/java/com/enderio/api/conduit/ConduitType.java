@@ -32,7 +32,8 @@ public abstract class ConduitType<T extends ConduitData<T>> {
      * @return the conduit item that holds this type
      */
     public Item getConduitItem() {
-        return BuiltInRegistries.ITEM.get(EnderIORegistries.CONDUIT_TYPES.getKey(this));
+        ResourceLocation key = EnderIORegistries.CONDUIT_TYPES.getKey(this);
+        return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(key.getNamespace(), key.getPath() + "_conduit"));
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

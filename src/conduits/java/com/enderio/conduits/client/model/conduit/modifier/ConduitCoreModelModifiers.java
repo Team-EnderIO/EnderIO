@@ -8,6 +8,7 @@ import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModLoader;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class ConduitCoreModelModifiers {
     }
 
     @EnsureSide(EnsureSide.Side.CLIENT)
+    @Nullable
     public static <T extends ConduitData<T>> ConduitCoreModelModifier<T> getModifier(ConduitType<T> type) {
         //noinspection unchecked
         return (ConduitCoreModelModifier<T>) MODIFIERS.get(type);

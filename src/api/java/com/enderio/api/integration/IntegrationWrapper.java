@@ -15,9 +15,9 @@ public class IntegrationWrapper<T extends Integration> {
     @Nullable
     private final T value;
 
-    public IntegrationWrapper(String modid, Supplier<T> supplier, IEventBus modEventBus) {
+    public IntegrationWrapper(String modid, Supplier<Supplier<T>> supplier, IEventBus modEventBus) {
         this.modid = modid;
-        value = ModList.get().isLoaded(modid) ? supplier.get() : null;
+        value = ModList.get().isLoaded(modid) ? supplier.get().get() : null;
         ifPresent(integration -> {
             IntegrationManager.addIntegration(integration);
             integration.addEventListener(modEventBus, NeoForge.EVENT_BUS);
