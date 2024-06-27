@@ -37,6 +37,7 @@ public class PaintingRecipeProvider extends EnderRecipeProvider {
         build(EIOBlocks.PAINTED_TRAPDOOR, Ingredient.of(ItemTags.WOODEN_TRAPDOORS), pFinishedRecipeConsumer);
         build(EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE, Ingredient.of(ItemTags.WOODEN_PRESSURE_PLATES), pFinishedRecipeConsumer);
         build(EIOBlocks.PAINTED_SLAB, Ingredient.of(ItemTags.WOODEN_SLABS), pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_WALL, Ingredient.of(ItemTags.WALLS), pFinishedRecipeConsumer);
         build(EIOBlocks.PAINTED_GLOWSTONE, Ingredient.of(Items.GLOWSTONE), pFinishedRecipeConsumer);
         build(MachineBlocks.PAINTED_TRAVEL_ANCHOR, Ingredient.of(MachineBlocks.TRAVEL_ANCHOR), pFinishedRecipeConsumer);
         //Painted block to painted block

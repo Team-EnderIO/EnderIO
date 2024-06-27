@@ -8,8 +8,15 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "enderio:copy_paint",
-              "should_copy_primary": true
+              "function": "minecraft:copy_nbt",
+              "ops": [
+                {
+                  "op": "replace",
+                  "source": "Paint",
+                  "target": "BlockEntityTag.Paint"
+                }
+              ],
+              "source": "block_entity"
             }
           ],
           "name": "enderio:painted_wall"
