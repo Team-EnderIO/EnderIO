@@ -42,9 +42,10 @@ public class TravelTargetRendering {
         return (TravelRenderer<T>) RENDERERS.get(type);
     }
 
-    private static <T extends TravelTarget> void render(T target, LevelRenderer levelRender, PoseStack poseStack, double distanceSquared, boolean isActive) {
+    private static <T extends TravelTarget> void render(T target, LevelRenderer levelRender, PoseStack poseStack, double distanceSquared, boolean isActive,
+        float partialTick) {
         //noinspection unchecked
-        getRenderer((TravelTargetType<T>)target.type()).render(target, levelRender, poseStack, distanceSquared, isActive);
+        getRenderer((TravelTargetType<T>)target.type()).render(target, levelRender, poseStack, distanceSquared, isActive, partialTick);
     }
 
     @SubscribeEvent
@@ -80,7 +81,11 @@ public class TravelTargetRendering {
 
             boolean active = activeTarget == target;
 
-            render(target, event.getLevelRenderer(), poseStack, distanceSquared, active);
+            // needed for smooth rendering
+            // the boolean value controls whether it's still smooth while the game world is paused (e.g. /tick freeze)
+            float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(true);
+
+            render(target, event.getLevelRenderer(), poseStack, distanceSquared, active, partialTick);
             poseStack.popPose();
         }
     }
