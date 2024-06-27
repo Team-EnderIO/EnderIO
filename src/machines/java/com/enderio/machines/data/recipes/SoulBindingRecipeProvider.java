@@ -3,6 +3,7 @@ package com.enderio.machines.data.recipes;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.recipe.SoulBindingRecipe;
 import com.enderio.machines.common.souldata.EngineSoul;
@@ -40,6 +41,10 @@ public class SoulBindingRecipeProvider extends RecipeProvider {
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityType.VILLAGER, recipeOutput);
         build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.MONSTER, recipeOutput);
         build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.CREATURE, recipeOutput);
+        build(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC), Ingredient.of(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)), 12800, 8, EntityType.PHANTOM, recipeOutput);
+        build(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING), Ingredient.of(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)), 51200, 12, EntityType.PHANTOM, recipeOutput);
+        build(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT), Ingredient.of(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)), 288000, 14, EntityType.PHANTOM, recipeOutput);
+
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, EntityType<? extends Entity> entityType, RecipeOutput recipeOutput) {
