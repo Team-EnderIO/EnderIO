@@ -1,5 +1,6 @@
 package com.enderio.machines.client.gui.widget;
 
+import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
@@ -9,6 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -16,7 +18,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class NewCapacitorEnergyWidget extends NewEnergyWidget {
-    public static final ItemStack CAPACITOR = new ItemStack(EIOItems.BASIC_CAPACITOR.get());
+    private static final ResourceLocation ENERGY_BAR_ERROR_SPRITE = EnderIO.loc("widget/energy_bar_error");
+
     private final Supplier<Boolean> cap;
 
     public NewCapacitorEnergyWidget(int x, int y, Supplier<IMachineEnergyStorage> storageSupplier, Supplier<Boolean> cap) {
@@ -27,15 +30,18 @@ public class NewCapacitorEnergyWidget extends NewEnergyWidget {
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!cap.get()) {
-            renderCapacitor(guiGraphics);
+            guiGraphics.blitSprite(ENERGY_BAR_ERROR_SPRITE, x, y, width, height);
 
             if (isHoveredOrFocused()) {
                 renderCapacitorTooltip(guiGraphics, mouseX, mouseY);
             }
+
             return;
         }
+
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
     }
+
 
     public void renderCapacitorTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
@@ -51,20 +57,5 @@ public class NewCapacitorEnergyWidget extends NewEnergyWidget {
         pose.translate(0,0,1);
         guiGraphics.renderComponentTooltip(minecraft.font, list, mouseX, mouseY);
         pose.popPose();
-    }
-
-    public void renderCapacitor(GuiGraphics guiGraphics) {
-        var level = Minecraft.getInstance().level;
-        if (level == null) {
-            return;
-        }
-        
-        long tick = level.getGameTime() % 90;
-
-        int heightModifier = (int) Math.round(Math.sin(level.getGameTime() * 0.05) * 12);
-        guiGraphics.renderFakeItem(CAPACITOR, x + width / 2 - 8, y + height/2 - 8 + heightModifier);
-
-        //noinspection IntegerDivisionInFloatingPointContext
-        //guiGraphics.blit(WIDGETS, x, y + height/2 + 6, 0, 160 + tick / 10 * 9, 128, width, height, 256, 256);
     }
 }

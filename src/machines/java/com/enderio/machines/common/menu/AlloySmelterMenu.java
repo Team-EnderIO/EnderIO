@@ -21,16 +21,16 @@ public class AlloySmelterMenu extends PoweredMachineMenu<AlloySmelterBlockEntity
 
         if (blockEntity != null) {
             // Capacitor slot
-            addSlot(new MachineSlot(getMachineInventory(), getCapacitorSlotIndex(), 7, 79))
+            addSlot(new MachineSlot(getMachineInventory(), getCapacitorSlotIndex(), 8, 89))
                 .setBackground(InventoryMenu.BLOCK_ATLAS, EMPTY_CAPACITOR_SLOT);
 
-            addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(0), 55, 28));
-            addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(1), 80, 18));
-            addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(2), 104, 28));
-            addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.OUTPUT, 80, 69));
+            addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(0), 55, 38));
+            addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(1), 80, 28));
+            addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(2), 104, 38));
+            addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.OUTPUT, 80, 79));
         }
 
-        addPlayerInventorySlots(8,115);
+        addPlayerInventorySlots(8,126);
     }
 
     public float getCraftingProgress() {

@@ -1,12 +1,18 @@
 package com.enderio.machines.common.menu;
 
+import com.enderio.core.common.menu.SlotWithOverlay;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
+import org.jetbrains.annotations.Nullable;
 
-public class MachineSlot extends SlotItemHandler {
+public class MachineSlot extends SlotItemHandler implements SlotWithOverlay {
+
+    @Nullable
+    private ResourceLocation foregroundSprite;
 
     public MachineSlot(MachineInventory itemHandler, int index, int xPosition, int yPosition) {
         super(itemHandler, index, xPosition, yPosition);
@@ -33,5 +39,16 @@ public class MachineSlot extends SlotItemHandler {
 
     public boolean canQuickInsertStack() {
         return getItemHandler().getLayout().guiCanInsert(getSlotIndex());
+    }
+
+    @Override
+    @Nullable
+    public ResourceLocation getForegroundSprite() {
+        return foregroundSprite;
+    }
+
+    public MachineSlot setForeground(ResourceLocation sprite) {
+        foregroundSprite = sprite;
+        return this;
     }
 }

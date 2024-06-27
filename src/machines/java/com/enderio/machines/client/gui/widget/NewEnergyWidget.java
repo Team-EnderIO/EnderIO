@@ -44,20 +44,6 @@ public class NewEnergyWidget extends EIOWidget {
 
         guiGraphics.blitSprite(ENERGY_BAR_FILL_SPRITE, width, height, 0, hiddenHeight, x, y + hiddenHeight, width, renderableHeight);
 
-       /* guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(0, height-16, 0);
-        for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
-            int drawingHeight = Math.min(16, renderableHeight - 16*i);
-            int notDrawingHeight = 16 - drawingHeight;
-
-            guiGraphics.blitSprite(ENERGY_BAR_FILL_SPRITE, width, height, );
-
-            guiGraphics.pose().translate(0,-16, 0);
-        }
-
-        RenderSystem.disableDepthTest();
-        guiGraphics.pose().popPose();*/
-
         RenderSystem.disableDepthTest();
 
         renderToolTip(guiGraphics, mouseX, mouseY);

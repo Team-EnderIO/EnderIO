@@ -22,7 +22,7 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
     private static final ResourceLocation BG_TEXTURE_FURNACE = EnderIO.loc("textures/gui/screen/alloy_smelter_furnace.png");
 
     private static final int WIDTH = 176;
-    private static final int HEIGHT = 197;
+    private static final int HEIGHT = 208;
 
     private static final ResourceLocation PROGRESS_SPRITE = EnderIO.loc("screen/alloy_smelter/lit_progress");
 
@@ -31,7 +31,8 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
 
-        inventoryLabelY = 104;
+        titleLabelY = 6 + 2;
+        inventoryLabelY = 115;
     }
 
     @Override
@@ -43,16 +44,17 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
         addRenderableOnly(NewProgressWidget.bottomUp(leftPos + 56, topPos + 46, 14, 14, PROGRESS_SPRITE, menu::getCraftingProgress, true));
         addRenderableOnly(NewProgressWidget.bottomUp(leftPos + 104, topPos + 46, 14, 14, PROGRESS_SPRITE, menu::getCraftingProgress, true));
 
-        addRenderableOnly(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getMachineStates));
+        addRenderableOnly(new ActivityWidget(leftPos + 153, topPos + 89, menu::getMachineStates));
 
-        addRenderableOnly(new NewCapacitorEnergyWidget(leftPos + 7, topPos + 17, menu::getEnergyStorage, menu::isCapacitorInstalled));
+        addRenderableOnly(new NewCapacitorEnergyWidget(leftPos + 7, topPos + 27, menu::getEnergyStorage, menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 73 - 16 - 2, menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55 - 16 - 2, menu::getRedstoneControl,
+            menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(new AlloySmelterModeWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 73, menu::getMode, menu::setMode, MachineLang.ALLOY_SMELTER_MODE));
+        addRenderableWidget(new AlloySmelterModeWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55, menu::getMode, menu::setMode, MachineLang.ALLOY_SMELTER_MODE));
 
-        var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 104, 162, 86);
-        addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 6 + 73 - (16 + 2) * 2, overlay);
+        var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 114, 162, 87);
+        addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 6 + 55 - (16 + 2) * 2, overlay);
     }
 
     @Override

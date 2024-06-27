@@ -28,6 +28,7 @@ public class ActivityWidget extends AbstractWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderSystem.defaultBlendFunc();
+        RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
 
         MachineState prio = null;
@@ -43,6 +44,7 @@ public class ActivityWidget extends AbstractWidget {
 
         guiGraphics.blitSprite(Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), getX(), getY(), 16, 16);
 
+        RenderSystem.disableBlend();
         RenderSystem.disableDepthTest();
         renderToolTip(guiGraphics, mouseX, mouseY);
     }
