@@ -27,6 +27,7 @@ import com.enderio.base.common.block.painted.PaintedSandBlock;
 import com.enderio.base.common.block.painted.PaintedSlabBlock;
 import com.enderio.base.common.block.painted.PaintedStairBlock;
 import com.enderio.base.common.block.painted.PaintedTrapDoorBlock;
+import com.enderio.base.common.block.painted.PaintedWallBlock;
 import com.enderio.base.common.block.painted.PaintedWoodenPressurePlateBlock;
 import com.enderio.base.common.block.painted.SinglePaintedBlock;
 import com.enderio.base.common.item.PaintedBlockItem;
@@ -384,6 +385,9 @@ public class EIOBlocks {
 
     public static final BlockEntry<SinglePaintedBlock> PAINTED_GLOWSTONE = paintedBlock("painted_glowstone", SinglePaintedBlock::new,
         Blocks.GLOWSTONE).register();
+
+    public static BlockEntry<PaintedWallBlock> PAINTED_WALL = paintedBlock("painted_wall", PaintedWallBlock::new, Blocks.COBBLESTONE_WALL,
+        BlockTags.WALLS, BlockTags.MINEABLE_WITH_PICKAXE).register();
 
     // endregion
 

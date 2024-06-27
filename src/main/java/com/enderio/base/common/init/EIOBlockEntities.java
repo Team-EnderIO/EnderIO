@@ -23,6 +23,7 @@ public class EIOBlockEntities {
             EIOBlocks.PAINTED_REDSTONE_BLOCK,
             EIOBlocks.PAINTED_TRAPDOOR,
             EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE,
+            EIOBlocks.PAINTED_WALL,
             EIOBlocks.PAINTED_GLOWSTONE
         )
         .register();
