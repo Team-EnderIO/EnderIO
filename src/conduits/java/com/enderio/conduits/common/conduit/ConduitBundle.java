@@ -143,7 +143,11 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         } else {
             types.add(type);
             nodes.put(type, node);
-            node.getConduitData().onCreated(type, level, pos, player);
+            if (types.size() != 1 || !IS_NEO_ENV_AFTER_ON_LOAD_CHANGE) {
+                //NeoForge contains a patch that calls onLoad after the conduit has been placed if it's the first one, so onCreated would be called twice. it's easier to detect here
+                //Forge does not have this patch
+                node.getConduitData().onCreated(type, level, pos, player);
+            }
         }
 
         onChanged();
