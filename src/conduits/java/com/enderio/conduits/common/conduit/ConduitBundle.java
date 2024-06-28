@@ -31,7 +31,6 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.forgespi.language.IModInfo;
-import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.jetbrains.annotations.Nullable;
 
@@ -144,10 +143,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         } else {
             types.add(type);
             nodes.put(type, node);
-            if (types.size() != 1) {
-                //NeoForge contains a patch that calls onLoad after the conduit has been placed if it's the first one, so onCreated would be called twice. it's easier to detect here
-                node.getConduitData().onCreated(type, level, pos, player);
-            }
+            node.getConduitData().onCreated(type, level, pos, player);
         }
 
         onChanged();
