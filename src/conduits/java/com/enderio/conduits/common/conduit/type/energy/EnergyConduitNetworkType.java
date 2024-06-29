@@ -94,7 +94,8 @@ public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyCondui
     public ConduitConnectionData getDefaultConnection(EnergyConduitOptions options, Level level, BlockPos pos, Direction direction) {
         IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos.relative(direction), direction.getOpposite());
         if (capability != null) {
-            return new ConduitConnectionData(capability.canReceive(), capability.canExtract(), RedstoneControl.ALWAYS_ACTIVE);
+            // Always default to both directions.
+            return new ConduitConnectionData(true, true, RedstoneControl.ALWAYS_ACTIVE);
         }
 
         return ConduitNetworkType.super.getDefaultConnection(options, level, pos, direction);
