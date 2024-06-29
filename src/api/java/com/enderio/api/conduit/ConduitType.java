@@ -6,13 +6,17 @@ import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.registry.EnderIORegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Set;
 
 public record ConduitType<TOptions, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>>(
@@ -71,6 +75,10 @@ public record ConduitType<TOptions, TContext extends ConduitNetworkContext<TCont
 
     public ConduitNetworkType.ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {
         return networkType.getDefaultConnection(options, level, pos, direction);
+    }
+
+    public List<Component> getHoverText(Item.TooltipContext context, TooltipFlag tooltipFlag) {
+        return networkType.getHoverText(options, context, tooltipFlag);
     }
 
     @Nullable

@@ -67,6 +67,9 @@ public class MekanismIntegration implements Integration {
     private static final Component LANG_PRESSURIZED_CHEMICAL_CONDUIT = addTranslation("item", EnderIO.loc("conduit.pressurized_chemical"), "Pressurized Chemical");
     private static final Component LANG_ENDER_CHEMICAL_CONDUIT = addTranslation("item", EnderIO.loc("conduit.ender_chemical"), "Ender Chemical");
 
+    public static final Component LANG_MULTI_CHEMICAL_TOOLTIP = addTranslation("item", EnderIO.loc("conduit.chemical.multi"),
+        "Allows multiple chemical types to be transported on the same line");
+
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
         return EnderIO.getRegilite().addTranslation(prefix, id, translation);
     }

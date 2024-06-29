@@ -12,8 +12,6 @@ public record EnergyConduitStorage(
     ConduitNode<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> node
 ) implements IEnergyStorage {
 
-    // TODO: EnergyConduitOptions for rates.
-
     @Override
     public int receiveEnergy(int toReceive, boolean simulate) {
         if (!canReceive()) {
@@ -26,6 +24,7 @@ public record EnergyConduitStorage(
         }
 
         // Cap to transfer rate.
+        // TODO: Do we cap the transfer rate at all, or should we receive as much as we can and only cap output?
         toReceive = Math.min(options.transferLimit() - context.energyInsertedThisTick(), toReceive);
 
         int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), toReceive);

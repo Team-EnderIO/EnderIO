@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -29,6 +30,7 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -114,6 +116,19 @@ public class ConduitBlockItem extends BlockItem {
         }
 
         return super.place(context);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
+        ConduitType<?, ?, ?> conduitType = getType(pStack);
+        if (conduitType != null) {
+            List<Component> conduitTooltips = conduitType.getHoverText(pContext, pTooltipFlag);
+            if (!conduitTooltips.isEmpty()) {
+                pTooltipComponents.addAll(conduitTooltips);
+            }
+        }
+
+        super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
     }
 
     // High priority so conduits appear at the top of the conduits tab.

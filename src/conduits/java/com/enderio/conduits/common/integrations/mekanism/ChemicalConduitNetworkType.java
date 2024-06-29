@@ -5,9 +5,16 @@ import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitNetworkType;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.conduits.common.init.ConduitLang;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ChemicalConduitNetworkType implements ConduitNetworkType<ChemicalConduitOptions, ConduitNetworkContext.Dummy, ChemicalConduitData> {
 
@@ -64,6 +71,19 @@ public class ChemicalConduitNetworkType implements ConduitNetworkType<ChemicalCo
         }
 
         return false;
+    }
+
+    @Override
+    public List<Component> getHoverText(ChemicalConduitOptions options, Item.TooltipContext context, TooltipFlag tooltipFlag) {
+        // Get transfer rate, adjusted for the ticker rate.
+        String transferLimitFormatted = String.format("%,d", options.transferRate() * (20 / getTicker().getTickRate()));
+        Component rateTooltip = TooltipUtil.styledWithArgs(ConduitLang.FLUID_RATE_TOOLTIP, transferLimitFormatted);
+
+        if (options.isMultiChemical()) {
+            return List.of(rateTooltip, MekanismIntegration.LANG_MULTI_CHEMICAL_TOOLTIP);
+        }
+
+        return List.of(rateTooltip);
     }
 
     @Override

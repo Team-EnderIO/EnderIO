@@ -7,14 +7,21 @@ import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.RedstoneControl;
+import com.enderio.conduits.common.init.ConduitLang;
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Set;
 
 public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> {
@@ -98,6 +105,12 @@ public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyCondui
         }
 
         return ConduitNetworkType.super.getDefaultConnection(options, level, pos, direction);
+    }
+
+    @Override
+    public List<Component> getHoverText(EnergyConduitOptions options, Item.TooltipContext context, TooltipFlag tooltipFlag) {
+        String transferLimitFormatted = String.format("%,d", options.transferLimit());
+        return List.of(TooltipUtil.styledWithArgs(ConduitLang.ENERGY_RATE_TOOLTIP, transferLimitFormatted));
     }
 
     @Override

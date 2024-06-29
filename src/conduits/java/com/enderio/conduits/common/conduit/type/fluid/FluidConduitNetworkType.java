@@ -11,13 +11,20 @@ import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
+import com.enderio.conduits.common.init.ConduitLang;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class FluidConduitNetworkType implements ConduitNetworkType<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData> {
 
-    public static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
+    public static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, true, false, false, true);
     private static final FluidConduitTicker TICKER = new FluidConduitTicker();
 
     @Override
@@ -77,6 +84,19 @@ public class FluidConduitNetworkType implements ConduitNetworkType<FluidConduitO
     @Override
     public boolean canApplyFilter(FluidConduitOptions fluidConduitOptions, SlotType slotType, ResourceFilter resourceFilter) {
         return resourceFilter instanceof FluidStackFilter;
+    }
+
+    @Override
+    public List<Component> getHoverText(FluidConduitOptions options, Item.TooltipContext context, TooltipFlag tooltipFlag) {
+        // Get transfer rate, adjusted for the ticker rate.
+        String transferLimitFormatted = String.format("%,d", options.transferRate() * (20 / getTicker().getTickRate()));
+        Component rateTooltip = TooltipUtil.styledWithArgs(ConduitLang.FLUID_RATE_TOOLTIP, transferLimitFormatted);
+
+        if (options.isMultiFluid()) {
+            return List.of(rateTooltip, ConduitLang.MULTI_FLUID_TOOLTIP);
+        }
+
+        return List.of(rateTooltip);
     }
 
     @Override

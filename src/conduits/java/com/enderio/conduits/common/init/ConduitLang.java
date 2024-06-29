@@ -20,6 +20,11 @@ public class ConduitLang {
 
     // endregion
 
+    public static final MutableComponent ENERGY_RATE_TOOLTIP = addTranslation("tooltip", EnderIO.loc("conduit.energy.rate"), "Max Output %s \u00B5I/t");
+    public static final MutableComponent FLUID_RATE_TOOLTIP = addTranslation("tooltip", EnderIO.loc("conduit.fluid.rate"), "Transfer Rate %s mB/t");
+    public static final Component MULTI_FLUID_TOOLTIP = addTranslation("tooltip", EnderIO.loc("conduit.fluid.multi"),
+        "Allows multiple fluids to be transported on the same line");
+
     public static final Component CONDUIT_INSERT = addTranslation("gui", EnderIO.loc("conduit.insert"), "Insert");
     public static final Component CONDUIT_EXTRACT = addTranslation("gui", EnderIO.loc("conduit.extract"), "Extract");
 
