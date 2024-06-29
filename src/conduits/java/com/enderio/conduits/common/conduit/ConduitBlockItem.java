@@ -5,10 +5,12 @@ import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.common.components.RepresentedConduitType;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
+import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -21,16 +23,21 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
 @EventBusSubscriber(modid = "enderio", bus = EventBusSubscriber.Bus.MOD)
 public class ConduitBlockItem extends BlockItem {
+
+    private static HashMap<ConduitType<?, ?, ?>, String> TYPE_DESCRIPTION_IDS = new HashMap<>();
 
     public ConduitBlockItem(Block block, Properties properties) {
         super(block, properties);
@@ -41,7 +48,7 @@ public class ConduitBlockItem extends BlockItem {
     }
 
     public static ItemStack getStackFor(ConduitType<?, ?, ?> conduitType, int count) {
-        var stack = new ItemStack(ConduitItems.CONDUIT_ITEM.get(), count);
+        var stack = new ItemStack(ConduitBlocks.CONDUIT.asItem(), count);
         stack.set(ConduitComponents.REPRESENTED_CONDUIT_TYPE, new RepresentedConduitType(conduitType));
         return stack;
     }
@@ -59,7 +66,12 @@ public class ConduitBlockItem extends BlockItem {
             return super.getName(pStack);
         }
 
-        return Component.literal(EnderIORegistries.CONDUIT_TYPES.getKey(conduitType).toString());
+        return Component.translatable(TYPE_DESCRIPTION_IDS.computeIfAbsent(conduitType, this::createDescriptionId));
+    }
+
+    private String createDescriptionId(ConduitType<?, ?, ?> conduitType) {
+        ResourceLocation conduitTypeKey = EnderIORegistries.CONDUIT_TYPES.getKey(conduitType);
+        return String.format("item.%s.conduit.%s", conduitTypeKey.getNamespace(), conduitTypeKey.getPath());
     }
 
     @Override
@@ -106,11 +118,16 @@ public class ConduitBlockItem extends BlockItem {
         return super.place(context);
     }
 
-    @SubscribeEvent
+    // High priority so conduits appear at the top of the conduits tab.
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public static void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() == EIOCreativeTabs.CONDUITS_TAB.get()) {
-            var conduitTypes = EnderIORegistries.CONDUIT_TYPES.entrySet()
-                .stream().map(Map.Entry::getValue).toList();
+            // Get all conduit types, grouped by conduit type.
+            // TODO: Add comparator to ConduitType so we can order by low-to-high quality
+            var conduitTypes = EnderIORegistries.CONDUIT_TYPES.entrySet().stream()
+                .sorted(Comparator.comparing(o -> EnderIORegistries.CONDUIT_NETWORK_TYPES.getKey(o.getValue().graphType()).toString()))
+                .map(Map.Entry::getValue)
+                .toList();
 
             for (var conduitType : conduitTypes) {
                 event.accept(getStackFor(conduitType, 1), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);

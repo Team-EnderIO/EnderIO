@@ -17,6 +17,8 @@ import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -52,8 +54,11 @@ public class AE2Integration implements Integration {
     public static final Supplier<ConduitDataSerializer<AE2InWorldConduitNodeHost>> DATA_SERIALIZER =
         CONDUIT_DATA_SERIALIZERS.register("me", () -> AE2InWorldConduitNodeHost.Serializer.INSTANCE);
 
-    @Override
-    public void onModConstruct() {
+    private static final Component LANG_ME_CONDUIT = addTranslation("item", EnderIO.loc("conduit.me"), "ME Conduit");
+    private static final Component LANG_DENSE_ME_CONDUIT = addTranslation("item", EnderIO.loc("conduit.dense_me"), "Dense ME Conduit");
+
+    private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
+        return EnderIO.getRegilite().addTranslation(prefix, id, translation);
     }
 
     @Override

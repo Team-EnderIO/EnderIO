@@ -26,11 +26,6 @@ import java.util.function.Supplier;
 public class ConduitItems {
     private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
 
-    public static final RegiliteItem<ConduitBlockItem> CONDUIT_ITEM = ITEM_REGISTRY
-        .registerItem("conduit", p -> new ConduitBlockItem(ConduitBlocks.CONDUIT.get(), p))
-        .setModelProvider((prov, ctx) -> {})
-        .setTranslation("TEMPORARY");
-
     public static final RegiliteItem<SpeedUpgradeItem> EXTRACTION_SPEED_UPGRADE_1 = ITEM_REGISTRY.registerItem("extraction_speed_upgrade_1", properties ->
             new SpeedUpgradeItem(properties.component(ConduitComponents.EXTRACTION_SPEED_UPGRADE_TIER, 1)))
         .setTranslation("Tier 1 Extraction Speed Upgrade")

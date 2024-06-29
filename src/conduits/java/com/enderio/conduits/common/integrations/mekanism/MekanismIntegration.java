@@ -22,6 +22,8 @@ import mekanism.api.chemical.pigment.IPigmentHandler;
 import mekanism.api.chemical.slurry.ISlurryHandler;
 import mekanism.api.heat.IHeatHandler;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
@@ -59,6 +61,15 @@ public class MekanismIntegration implements Integration {
     public static final BlockCapability<IInfusionHandler, Direction> INFUSION = BlockCapability.createSided(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "infusion_handler"), IInfusionHandler.class);
     public static final BlockCapability<IPigmentHandler, Direction> PIGMENT = BlockCapability.createSided(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "pigment_handler"), IPigmentHandler.class);
     public static final BlockCapability<IHeatHandler, Direction> HEAT = BlockCapability.createSided(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "heat_handler"), IHeatHandler.class);
+
+    private static final Component LANG_HEAT_CONDUIT = addTranslation("item", EnderIO.loc("conduit.heat"), "Heat Conduit");
+    private static final Component LANG_CHEMICAL_CONDUIT = addTranslation("item", EnderIO.loc("conduit.chemical"), "Chemical Conduit");
+    private static final Component LANG_PRESSURIZED_CHEMICAL_CONDUIT = addTranslation("item", EnderIO.loc("conduit.pressurized_chemical"), "Pressurized Chemical");
+    private static final Component LANG_ENDER_CHEMICAL_CONDUIT = addTranslation("item", EnderIO.loc("conduit.ender_chemical"), "Ender Chemical");
+
+    private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
+        return EnderIO.getRegilite().addTranslation(prefix, id, translation);
+    }
 
     @Override
     public void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {

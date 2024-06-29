@@ -4,6 +4,7 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.components.RepresentedConduitType;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
+import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitIngredientTypes;
 import com.enderio.conduits.common.init.ConduitItems;
@@ -41,7 +42,7 @@ public class ConduitIngredient implements ICustomIngredient {
 
     @Override
     public boolean test(ItemStack stack) {
-        if (!stack.is(ConduitItems.CONDUIT_ITEM)) {
+        if (!stack.is(ConduitBlocks.CONDUIT.asItem())) {
             return false;
         }
 
