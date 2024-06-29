@@ -5,6 +5,8 @@ import com.enderio.machines.common.network.MachinePayloadHandler;
 import com.enderio.machines.common.network.PoweredSpawnerSoulPacket;
 import com.enderio.machines.common.network.SoulEngineSoulPacket;
 import com.enderio.machines.common.network.UpdateCrafterTemplatePacket;
+import com.enderio.machines.common.network.VatDumpTankPacket;
+import com.enderio.machines.common.network.VatMoveTankPacket;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -34,5 +36,8 @@ public class MachineNetwork {
 
         registrar.playToServer(UpdateCrafterTemplatePacket.TYPE, UpdateCrafterTemplatePacket.STREAM_CODEC,
             MachinePayloadHandler.Server.getInstance()::updateCrafterTemplate);
+
+        registrar.playToServer(VatMoveTankPacket.TYPE, VatMoveTankPacket.STREAM_CODEC, MachinePayloadHandler.Server.getInstance()::vatMoveTank);
+        registrar.playToServer(VatDumpTankPacket.TYPE, VatDumpTankPacket.STREAM_CODEC, MachinePayloadHandler.Server.getInstance()::vatDumpTank);
     }
 }

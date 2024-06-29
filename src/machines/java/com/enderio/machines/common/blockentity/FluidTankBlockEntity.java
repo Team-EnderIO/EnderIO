@@ -245,7 +245,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         ItemStack stack = player.getItemInHand(hand);
         if (!stack.isEmpty() && handleFluidItemInteraction(player, hand, stack, this, TANK)) {
             player.getInventory().setChanged();
-            return ItemInteractionResult.CONSUME;
+            return ItemInteractionResult.sidedSuccess(level.isClientSide());
         }
         return super.onBlockEntityUsed(state, level, pos, player, hand, hit);
     }

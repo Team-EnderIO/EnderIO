@@ -1,5 +1,6 @@
 package com.enderio.machines.common.network;
 
+import com.enderio.machines.common.blockentity.VatBlockEntity;
 import com.enderio.machines.common.menu.CrafterMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.SpawnerSoul;
@@ -35,6 +36,22 @@ public class MachinePayloadHandler {
                     for (int i = 0; i < packet.recipeInputs().size(); i++) {
                         crafterMenu.slots.get(CrafterMenu.INPUTS_INDEX + i).set(packet.recipeInputs().get(i));
                     }
+                }
+            });
+        }
+
+        public void vatMoveTank(VatMoveTankPacket packet, IPayloadContext context) {
+            context.enqueueWork(() -> {
+                if (context.player().level().getBlockEntity(packet.pos()) instanceof VatBlockEntity vatBlockEntity) {
+                    vatBlockEntity.moveFluidToOutputTank();
+                }
+            });
+        }
+
+        public void vatDumpTank(VatDumpTankPacket packet, IPayloadContext context) {
+            context.enqueueWork(() -> {
+                if (context.player().level().getBlockEntity(packet.pos()) instanceof VatBlockEntity vatBlockEntity) {
+                    vatBlockEntity.dumpOutputTank();
                 }
             });
         }

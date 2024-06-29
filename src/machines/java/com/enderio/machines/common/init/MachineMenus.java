@@ -18,6 +18,7 @@ import com.enderio.machines.client.gui.screen.SoulEngineScreen;
 import com.enderio.machines.client.gui.screen.StirlingGeneratorScreen;
 import com.enderio.machines.client.gui.screen.TravelAnchorScreen;
 import com.enderio.machines.client.gui.screen.VacuumChestScreen;
+import com.enderio.machines.client.gui.screen.VatScreen;
 import com.enderio.machines.client.gui.screen.WiredChargerScreen;
 import com.enderio.machines.client.gui.screen.XPObeliskScreen;
 import com.enderio.machines.client.gui.screen.XPVacuumScreen;
@@ -38,6 +39,7 @@ import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
 import com.enderio.machines.common.menu.TravelAnchorMenu;
 import com.enderio.machines.common.menu.VacuumChestMenu;
+import com.enderio.machines.common.menu.VatMenu;
 import com.enderio.machines.common.menu.WiredChargerMenu;
 import com.enderio.machines.common.menu.XPObeliskMenu;
 import com.enderio.machines.common.menu.XPVacuumMenu;
@@ -90,6 +92,7 @@ public class MachineMenus {
         .registerMenu("travel_anchor", TravelAnchorMenu::factory, () -> TravelAnchorScreen::new);
     public static final RegiliteMenu<XPObeliskMenu> XP_OBELISK = MENU_REGISTRY
         .registerMenu("xp_obelisk", XPObeliskMenu::factory, () -> XPObeliskScreen::new);
+    public static final RegiliteMenu<VatMenu> VAT = MENU_REGISTRY.registerMenu("vat", VatMenu::factory, () -> VatScreen::new);
 
     public static void register(IEventBus bus) {
         MENU_REGISTRY.register(bus);

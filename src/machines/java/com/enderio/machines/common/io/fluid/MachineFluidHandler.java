@@ -84,6 +84,14 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         return layout.isFluidValid(tank, stack);
     }
 
+    public boolean canInsert(int tank) {
+        return layout.canInsert(tank);
+    }
+
+    public boolean canExtract(int tank) {
+        return layout.canExtract(tank);
+    }
+
     @Nullable
     public IFluidHandler getForSide(@Nullable Direction side) {
         if (side == null) {
@@ -158,8 +166,9 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         int totalFilled = 0;
 
         for (int index = 0; index < getTanks(); index++) {
-            if (!layout.canInsert(index))
+            if (!canInsert(index)) {
                 continue;
+            }
 
             // Attempt to fill the tank
             int filled = fill(index, resourceLeft, action);
@@ -205,13 +214,15 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
         for (int index = 0; index < getTanks(); index++) {
-            if (drain(index, resource, FluidAction.SIMULATE) != FluidStack.EMPTY) {
-                FluidStack drained = drain(index, resource, action);
-                if (!drained.isEmpty()) {
-                    onContentsChanged(index);
-                    changeListener.accept(index);
+            if (canExtract(index)) {
+                if (drain(index, resource, FluidAction.SIMULATE) != FluidStack.EMPTY) {
+                    FluidStack drained = drain(index, resource, action);
+                    if (!drained.isEmpty()) {
+                        onContentsChanged(index);
+                        changeListener.accept(index);
+                    }
+                    return drained;
                 }
-                return drained;
             }
         }
 
@@ -221,13 +232,15 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
         for (int index = 0; index < getTanks(); index++) {
-            if (drain(index, maxDrain, FluidAction.SIMULATE) != FluidStack.EMPTY) {
-                FluidStack drained = drain(index, maxDrain, action);
-                if (!drained.isEmpty()) {
-                    onContentsChanged(index);
-                    changeListener.accept(index);
+            if (canExtract(index)) {
+                if (drain(index, maxDrain, FluidAction.SIMULATE) != FluidStack.EMPTY) {
+                    FluidStack drained = drain(index, maxDrain, action);
+                    if (!drained.isEmpty()) {
+                        onContentsChanged(index);
+                        changeListener.accept(index);
+                    }
+                    return drained;
                 }
-                return drained;
             }
         }
 
@@ -243,7 +256,6 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
             CompoundTag tankTag = new CompoundTag();
             tankTag.putInt(TANK_INDEX, i);
             tankTag.put(TANK_CONTENTS, stacks.get(i).saveOptional(lookupProvider));
-
             nbtTagList.add(tankTag);
         }
         CompoundTag nbt = new CompoundTag();
@@ -257,7 +269,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag tankTag = tagList.getCompound(i);
             int index = tankTag.getInt(TANK_INDEX);
-            stacks.set(index, FluidStack.parseOptional(lookupProvider, tankTag));
+            stacks.set(index, FluidStack.parseOptional(lookupProvider, tankTag.getCompound(TANK_CONTENTS)));
         }
     }
 

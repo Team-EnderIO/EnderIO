@@ -64,6 +64,22 @@ public class TankAccess {
         return getFluid(handler).isEmpty();
     }
 
+    public boolean canInsert(FluidTankUser machine) {
+        return canInsert(machine.getFluidHandler());
+    }
+
+    public boolean canInsert(MachineFluidHandler handler) {
+        return handler.canInsert(index);
+    }
+
+    public boolean canExtract(FluidTankUser machine) {
+        return canExtract(machine.getFluidHandler());
+    }
+
+    public boolean canExtract(MachineFluidHandler handler) {
+        return handler.canExtract(index);
+    }
+
     public int fill(MachineFluidHandler handler, FluidStack stack, IFluidHandler.FluidAction action) {
         return handler.fill(index, stack, action);
     }
