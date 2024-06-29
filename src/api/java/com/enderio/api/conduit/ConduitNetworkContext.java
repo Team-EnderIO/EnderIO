@@ -1,9 +1,18 @@
 package com.enderio.api.conduit;
 
+import org.jetbrains.annotations.Nullable;
+
 public interface ConduitNetworkContext<T extends ConduitNetworkContext<T>> {
     T mergeWith(T other);
 
     T splitFor(ConduitNetwork<T, ?> selfGraph, ConduitNetwork<T, ?> otherGraph);
+
+    /**
+     * Get the serializer for this context.
+     * @apiNote Returning null means this context cannot be serialized.
+     */
+    @Nullable
+    ConduitNetworkContextSerializer<T> serializer();
 
     Dummy DUMMY = new Dummy();
 
@@ -17,6 +26,11 @@ public interface ConduitNetworkContext<T extends ConduitNetworkContext<T>> {
         @Override
         public Dummy splitFor(ConduitNetwork<Dummy, ?> selfGraph, ConduitNetwork<Dummy, ?> otherGraph) {
             return this;
+        }
+
+        @Override
+        public @Nullable ConduitNetworkContextSerializer<Dummy> serializer() {
+            return null;
         }
     }
 }

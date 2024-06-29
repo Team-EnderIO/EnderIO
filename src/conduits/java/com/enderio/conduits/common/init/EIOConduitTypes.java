@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitNetworkContext;
+import com.enderio.api.conduit.ConduitNetworkContextSerializer;
 import com.enderio.api.conduit.ConduitNetworkType;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.registry.EnderIORegistries;
@@ -39,6 +40,14 @@ public class EIOConduitTypes {
 
         public static final Supplier<FluidConduitNetworkType> FLUID =
             CONDUIT_GRAPH_TYPES.register("fluid", FluidConduitNetworkType::new);
+    }
+
+    public static class ContextSerializers {
+        public static final DeferredRegister<ConduitNetworkContextSerializer<?>> CONDUIT_NETWORK_CONTEXT_SERIALIZERS =
+            DeferredRegister.create(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_SERIALIZERS, EnderIO.MODID);
+
+        public static final Supplier<EnergyConduitNetworkContext.Serializer> ENERGY =
+            CONDUIT_NETWORK_CONTEXT_SERIALIZERS.register("energy", () -> EnergyConduitNetworkContext.Serializer.INSTANCE);
     }
 
     public static class Types {
@@ -87,6 +96,7 @@ public class EIOConduitTypes {
 
     public static void register(IEventBus bus) {
         NetworkTypes.CONDUIT_GRAPH_TYPES.register(bus);
+        ContextSerializers.CONDUIT_NETWORK_CONTEXT_SERIALIZERS.register(bus);
         Types.CONDUIT_TYPES.register(bus);
         Serializers.CONDUIT_DATA_SERIALIZERS.register(bus);
     }

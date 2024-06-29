@@ -2,6 +2,9 @@ package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNetworkContext;
+import com.enderio.api.conduit.ConduitNetworkContextSerializer;
+import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.Nullable;
 
 public class EnergyConduitNetworkContext implements ConduitNetworkContext<EnergyConduitNetworkContext> {
 
@@ -14,6 +17,17 @@ public class EnergyConduitNetworkContext implements ConduitNetworkContext<Energy
 
     public EnergyConduitNetworkContext(int energyStored) {
         this.energyStored = energyStored;
+    }
+
+    public EnergyConduitNetworkContext(int energyStored, int rotatingIndex) {
+        this.energyStored = energyStored;
+        this.rotatingIndex = rotatingIndex;
+    }
+
+    @Override
+    @Nullable
+    public ConduitNetworkContextSerializer<EnergyConduitNetworkContext> serializer() {
+        return Serializer.INSTANCE;
     }
 
     public int energyStored() {
@@ -57,5 +71,28 @@ public class EnergyConduitNetworkContext implements ConduitNetworkContext<Energy
 
         float proportion = (float) selfGraph.getNodes().size() / (selfGraph.getNodes().size() + otherGraph.getNodes().size());
         return new EnergyConduitNetworkContext((int) (this.energyStored * proportion));
+    }
+
+    public static class Serializer implements ConduitNetworkContextSerializer<EnergyConduitNetworkContext> {
+
+        public static Serializer INSTANCE = new Serializer();
+
+        private static final String KEY_ENERGY_STORED = "EnergyStored";
+        private static final String KEY_ROTATING_INDEX = "RotatingIndex";
+
+        @Override
+        public CompoundTag save(EnergyConduitNetworkContext context) {
+            CompoundTag tag = new CompoundTag();
+            tag.putInt(KEY_ENERGY_STORED, context.energyStored);
+            tag.putInt(KEY_ROTATING_INDEX, context.rotatingIndex);
+            return tag;
+        }
+
+        @Override
+        public EnergyConduitNetworkContext load(CompoundTag tag) {
+            int energyStored = tag.contains(KEY_ENERGY_STORED) ? tag.getInt(KEY_ENERGY_STORED) : 0;
+            int rotatingIndex = tag.contains(KEY_ROTATING_INDEX) ? tag.getInt(KEY_ROTATING_INDEX) : 0;
+            return new EnergyConduitNetworkContext(energyStored, rotatingIndex);
+        }
     }
 }

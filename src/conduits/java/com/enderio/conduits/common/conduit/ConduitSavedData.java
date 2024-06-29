@@ -11,6 +11,7 @@ import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.datafixers.util.Pair;
+import dev.gigaherz.graph3.ContextDataFactory;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
@@ -62,6 +63,7 @@ public class ConduitSavedData extends SavedData {
     private static final String KEY_TYPE = "Type";
     private static final String KEY_GRAPH_OBJECTS = "GraphObjects";
     private static final String KEY_GRAPH_CONNECTIONS = "GraphConnections";
+    private static final String KEY_GRAPH_CONTEXT = "GraphContext";
 
     // Deserialization
     private ConduitSavedData(Level level, CompoundTag nbt, HolderLookup.Provider lookupProvider) {
@@ -104,9 +106,14 @@ public class ConduitSavedData extends SavedData {
                 connections.add(new Pair<>(graphObjects.get(connectionTag.getInt("0")), graphObjects.get(connectionTag.getInt("1"))));
             }
 
-            // TODO: Need to deserialize the graph context.
+            ContextDataFactory<InternalGraphContext<T>> factory = InternalGraphContext.factoryFor(type);
+
+            if (graphTag.contains(KEY_GRAPH_CONTEXT)) {
+                factory = InternalGraphContext.factoryForLoad(type, graphTag.getCompound(KEY_GRAPH_CONTEXT));
+            }
+
             ConduitGraphObject<T, U> graphObject = graphObjects.get(0);
-            Graph.integrate(graphObject, List.of(), InternalGraphContext.factoryFor(type));
+            Graph.integrate(graphObject, List.of(), factory);
             merge(type, graphObject, connections);
 
             networks.computeIfAbsent(type, ignored -> new ArrayList<>()).add(graphObject.getGraph());
@@ -180,8 +187,8 @@ public class ConduitSavedData extends SavedData {
 
         CompoundTag graphTag = new CompoundTag();
 
-        if (graph.getContextData() instanceof InternalGraphContext<?> internalGraphContext) {
-            // TODO: Serialize graph context...
+        if (graph.getContextData() instanceof InternalGraphContext<?> internalGraphContext && internalGraphContext.canSerialize()) {
+            graphTag.put(KEY_GRAPH_CONTEXT, internalGraphContext.save());
         }
 
         ListTag graphObjectsTag = new ListTag();

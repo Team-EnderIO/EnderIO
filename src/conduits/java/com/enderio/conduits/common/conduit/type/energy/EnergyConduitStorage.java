@@ -2,7 +2,10 @@ package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitNetwork;
+import com.enderio.api.conduit.ConduitNode;
+import net.minecraft.core.Direction;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 public record EnergyConduitStorage(
     EnergyConduitOptions options,

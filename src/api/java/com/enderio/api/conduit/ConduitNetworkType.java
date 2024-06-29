@@ -21,6 +21,12 @@ public interface ConduitNetworkType<TOptions, TContext extends ConduitNetworkCon
     ConduitTicker<TOptions, TContext, TData> getTicker();
     ConduitMenuData getMenuData(TOptions options);
 
+    /**
+     * Create an instance of this network type's context.
+     * @param type The conduit type that this network represents.
+     * @param network The conduit network that this context is for.
+     * @apiNote Do not store the network in the context, it is passed in for reference only.
+     */
     @Nullable
     TContext createNetworkContext(ConduitType<TOptions, TContext, TData> type, ConduitNetwork<TContext, TData> network);
     TData createConduitData(ConduitType<TOptions, TContext, TData> type, Level level, BlockPos pos);
