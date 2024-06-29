@@ -1,8 +1,8 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
-import com.enderio.api.conduit.ConduitGraph;
-import com.enderio.api.conduit.ConduitGraphContext;
+import com.enderio.api.conduit.ConduitNetwork;
+import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.conduit.ConduitNode;
@@ -21,14 +21,14 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import java.util.List;
 import java.util.Optional;
 
-public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduitOptions, ConduitGraphContext.Dummy, FluidConduitData, IFluidHandler> {
+public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData, IFluidHandler> {
 
     @Override
     public void tickGraph(
         ServerLevel level,
-        ConduitType<FluidConduitOptions, ConduitGraphContext.Dummy, FluidConduitData> type,
-        List<ConduitNode<ConduitGraphContext.Dummy, FluidConduitData>> loadedNodes,
-        ConduitGraph<ConduitGraphContext.Dummy, FluidConduitData> graph,
+        ConduitType<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData> type,
+        List<ConduitNode<ConduitNetworkContext.Dummy, FluidConduitData>> loadedNodes,
+        ConduitNetwork<ConduitNetworkContext.Dummy, FluidConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         boolean shouldReset = false;
@@ -51,10 +51,10 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
     @Override
     protected void tickCapabilityGraph(
         ServerLevel level,
-        ConduitType<FluidConduitOptions, ConduitGraphContext.Dummy, FluidConduitData> type,
+        ConduitType<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData> type,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
-        ConduitGraph<ConduitGraphContext.Dummy, FluidConduitData> graph,
+        ConduitNetwork<ConduitNetworkContext.Dummy, FluidConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (CapabilityConnection extract : extracts) {
@@ -100,7 +100,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
                 if (!transferredFluid.isEmpty()) {
                     transferred += transferredFluid.getAmount();
                     if (!type.options().isMultiFluid()) {
-                        for (ConduitNode<ConduitGraphContext.Dummy, FluidConduitData> node : graph.getNodes()) {
+                        for (ConduitNode<ConduitNetworkContext.Dummy, FluidConduitData> node : graph.getNodes()) {
                             Fluid fluid = transferredFluid.getFluid();
                             if (fluid instanceof FlowingFluid flowing) {
                                 fluid = flowing.getSource();

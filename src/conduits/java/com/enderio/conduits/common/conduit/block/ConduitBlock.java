@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit.block;
 
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitGraphContext;
+import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
@@ -250,7 +250,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         return Optional.empty();
     }
 
-    private <T extends ConduitGraphContext<T>, U extends ConduitData<U>> void internalHandleYeta(ConduitType<?, T, U> type, @Nullable Direction direction,
+    private <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> void internalHandleYeta(ConduitType<?, T, U> type, @Nullable Direction direction,
         ConduitBlockEntity conduit, BlockHitResult hit) {
         ConduitBundle bundle = conduit.getBundle();
 

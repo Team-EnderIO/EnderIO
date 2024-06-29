@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public interface ConduitGraphType<TOptions, TContext extends ConduitGraphContext<TContext>, TData extends ConduitData<TData>> {
+public interface ConduitNetworkType<TOptions, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> {
     /**
      * Get the ticker for this conduit graph type.
      * @apiNote The ticker should never change, it can use the options to determine behaviour in its implementation.
@@ -58,7 +58,7 @@ public interface ConduitGraphType<TOptions, TContext extends ConduitGraphContext
     // endregion
 
     @Nullable
-    default <K> K proxyCapability(TOptions options, BlockCapability<K, Direction> capability, ConduitGraph<TContext, TData> graph, TData conduitData, Level level, BlockPos pos,
+    default <K> K proxyCapability(TOptions options, BlockCapability<K, Direction> capability, ConduitNetwork<TContext, TData> graph, TData conduitData, Level level, BlockPos pos,
         @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
         return null;
     }

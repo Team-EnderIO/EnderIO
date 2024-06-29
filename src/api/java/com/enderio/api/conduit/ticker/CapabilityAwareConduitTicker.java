@@ -2,8 +2,8 @@ package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitGraph;
-import com.enderio.api.conduit.ConduitGraphContext;
+import com.enderio.api.conduit.ConduitNetwork;
+import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
@@ -18,11 +18,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CapabilityAwareConduitTicker<TOptions, TContext extends ConduitGraphContext<TContext>, TData extends ConduitData<TData>, TCap> implements IOAwareConduitTicker<TOptions, TContext, TData> {
+public abstract class CapabilityAwareConduitTicker<TOptions, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>, TCap> implements IOAwareConduitTicker<TOptions, TContext, TData> {
 
     @Override
     public final void tickColoredGraph(ServerLevel level, ConduitType<TOptions, TContext, TData> type, List<Connection<TData>> inserts, List<Connection<TData>> extracts,
-        ColorControl color, ConduitGraph<TContext, TData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
+        ColorControl color, ConduitNetwork<TContext, TData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
         List<CapabilityConnection> insertCaps = new ArrayList<>();
         for (Connection<TData> insert : inserts) {
@@ -57,7 +57,7 @@ public abstract class CapabilityAwareConduitTicker<TOptions, TContext extends Co
     }
 
     protected abstract void tickCapabilityGraph(ServerLevel level, ConduitType<TOptions, TContext, TData> type, List<CapabilityConnection> inserts,
-        List<CapabilityConnection> extracts, ConduitGraph<TContext, TData> graph, ColoredRedstoneProvider coloredRedstoneProvider);
+        List<CapabilityConnection> extracts, ConduitNetwork<TContext, TData> graph, ColoredRedstoneProvider coloredRedstoneProvider);
 
     protected abstract BlockCapability<TCap, Direction> getCapability();
 

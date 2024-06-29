@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.conduit;
 
-import com.enderio.api.conduit.ConduitGraphContext;
+import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.SlotType;
@@ -136,7 +136,7 @@ public final class ConduitBundle {
      * @param type
      * @return an action containing the type that is now not in this bundle
      */
-    public <T extends ConduitGraphContext<T>, U extends ConduitData<U>> RightClickAction addType(Level level,
+    public <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> RightClickAction addType(Level level,
         ConduitType<?, T, U> type, Player player) {
         if (types.size() == MAX_CONDUIT_TYPES) {
             return new RightClickAction.Blocked();
@@ -205,7 +205,7 @@ public final class ConduitBundle {
         types.forEach(type -> onLoad(type, level, pos));
     }
 
-    private <T extends ConduitGraphContext<T>, U extends ConduitData<U>> void onLoad(ConduitType<?, T, U> conduitType,
+    private <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> void onLoad(ConduitType<?, T, U> conduitType,
         Level level, BlockPos pos) {
         var node = getNodeFor(conduitType);
         conduitType.onCreated(node.getConduitData(), level, pos, null);
@@ -337,12 +337,12 @@ public final class ConduitBundle {
     }
 
     @Nullable
-    public <T extends ConduitGraphContext<T>, U extends ConduitData<U>> ConduitGraphObject<T, U> getNodeForTypeExact(ConduitType<?, T, U> type) {
+    public <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> ConduitGraphObject<T, U> getNodeForTypeExact(ConduitType<?, T, U> type) {
         //noinspection unchecked
         return (ConduitGraphObject<T, U>) nodes.get(type);
     }
 
-    public <T extends ConduitGraphContext<T>, U extends ConduitData<U>> ConduitGraphObject<T, U> getNodeFor(ConduitType<?, T, U> type) {
+    public <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> ConduitGraphObject<T, U> getNodeFor(ConduitType<?, T, U> type) {
         for (var entry : nodes.entrySet()) {
             if (entry.getKey().getTicker().canConnectTo(entry.getKey(), type)) {
                 //noinspection unchecked
@@ -367,7 +367,7 @@ public final class ConduitBundle {
         }
     }
 
-    public <T extends ConduitGraphContext<T>, U extends ConduitData<U>> void removeNodeFor(Level level, ConduitType<?, T, U> type) {
+    public <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> void removeNodeFor(Level level, ConduitType<?, T, U> type) {
         var node = getNodeForTypeExact(type);
         if (node != null) {
             type.onRemoved(node.getConduitData(), level, pos);

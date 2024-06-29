@@ -2,11 +2,8 @@ package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitGraphContext;
-import com.enderio.api.conduit.ConduitNode;
-import com.enderio.api.conduit.ConduitGraph;
+import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
@@ -18,9 +15,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
-import java.util.function.IntConsumer;
 
-public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyConduitOptions, EnergyConduitGraphContext, ConduitData.EmptyConduitData, IEnergyStorage> {
+public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData, IEnergyStorage> {
 
     public EnergyConduitTicker() {
     }
@@ -28,13 +24,13 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
     @Override
     public void tickCapabilityGraph(
         ServerLevel level,
-        ConduitType<EnergyConduitOptions, EnergyConduitGraphContext, ConduitData.EmptyConduitData> type,
+        ConduitType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> type,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
-        ConduitGraph<EnergyConduitGraphContext, ConduitData.EmptyConduitData> graph,
+        ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        EnergyConduitGraphContext context = graph.getContext();
+        EnergyConduitNetworkContext context = graph.getContext();
         if (context == null) {
             return;
         }

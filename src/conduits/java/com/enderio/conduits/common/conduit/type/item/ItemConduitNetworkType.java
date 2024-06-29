@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit.type.item;
 
 import com.enderio.api.conduit.ConduitMenuData;
-import com.enderio.api.conduit.SimpleConduitGraphType;
+import com.enderio.api.conduit.SimpleConduitNetworkType;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ItemStackFilter;
@@ -10,7 +10,7 @@ import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
-public class ItemConduitGraphType implements SimpleConduitGraphType<ItemConduitData> {
+public class ItemConduitNetworkType implements SimpleConduitNetworkType<ItemConduitData> {
 
     private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(true, true, true, true, true, true);
 

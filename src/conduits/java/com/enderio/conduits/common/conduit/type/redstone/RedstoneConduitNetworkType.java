@@ -1,8 +1,8 @@
 package com.enderio.conduits.common.conduit.type.redstone;
 
-import com.enderio.api.conduit.ConduitGraphContext;
+import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitMenuData;
-import com.enderio.api.conduit.SimpleConduitGraphType;
+import com.enderio.api.conduit.SimpleConduitNetworkType;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.filter.ResourceFilter;
@@ -12,13 +12,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class RedstoneConduitGraphType implements SimpleConduitGraphType<RedstoneConduitData> {
+public class RedstoneConduitNetworkType implements SimpleConduitNetworkType<RedstoneConduitData> {
 
     private static final RedstoneConduitTicker TICKER = new RedstoneConduitTicker();
     private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(true, true, false, true, true, false);
 
     @Override
-    public ConduitTicker<Void, ConduitGraphContext.Dummy, RedstoneConduitData> getTicker() {
+    public ConduitTicker<Void, ConduitNetworkContext.Dummy, RedstoneConduitData> getTicker() {
         return TICKER;
     }
 
@@ -29,7 +29,7 @@ public class RedstoneConduitGraphType implements SimpleConduitGraphType<Redstone
 
     @Override
     @Nullable
-    public ConduitGraphContext.Dummy createGraphContext(Void unused) {
+    public ConduitNetworkContext.Dummy createGraphContext(Void unused) {
         return null;
     }
 

@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
-import com.enderio.api.conduit.ConduitGraphContext;
-import com.enderio.api.conduit.ConduitGraphType;
+import com.enderio.api.conduit.ConduitNetworkContext;
+import com.enderio.api.conduit.ConduitNetworkType;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.SlotType;
@@ -14,13 +14,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class FluidConduitGraphType implements ConduitGraphType<FluidConduitOptions, ConduitGraphContext.Dummy, FluidConduitData> {
+public class FluidConduitNetworkType implements ConduitNetworkType<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData> {
 
     public static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
     private static final FluidConduitTicker TICKER = new FluidConduitTicker();
 
     @Override
-    public ConduitTicker<FluidConduitOptions, ConduitGraphContext.Dummy, FluidConduitData> getTicker() {
+    public ConduitTicker<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData> getTicker() {
         return TICKER;
     }
 
@@ -31,7 +31,7 @@ public class FluidConduitGraphType implements ConduitGraphType<FluidConduitOptio
 
     @Override
     @Nullable
-    public ConduitGraphContext.Dummy createGraphContext(FluidConduitOptions options) {
+    public ConduitNetworkContext.Dummy createGraphContext(FluidConduitOptions options) {
         return null;
     }
 
@@ -45,7 +45,7 @@ public class FluidConduitGraphType implements ConduitGraphType<FluidConduitOptio
         if (conduitType.graphType() != this) {
             return true;
         }
-        
+
         return false;
     }
 

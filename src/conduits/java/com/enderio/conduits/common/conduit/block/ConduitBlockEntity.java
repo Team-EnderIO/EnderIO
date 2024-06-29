@@ -2,8 +2,8 @@ package com.enderio.conduits.common.conduit.block;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitGraph;
-import com.enderio.api.conduit.ConduitGraphContext;
+import com.enderio.api.conduit.ConduitNetwork;
+import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
@@ -148,7 +148,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         }
     }
 
-    private <T extends ConduitGraphContext<T>, U extends ConduitData<U>> void loadNode(ServerLevel serverLevel, ConduitType<?, T, U> conduitType,
+    private <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> void loadNode(ServerLevel serverLevel, ConduitType<?, T, U> conduitType,
         ConduitGraphObject<?, ?> node) {
 
         //noinspection unchecked
@@ -273,7 +273,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return bundle.hasType(type);
     }
 
-    public <T extends ConduitGraphContext<T>, U extends ConduitData<U>> RightClickAction addType(ConduitType<?, T, U> type, Player player) {
+    public <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> RightClickAction addType(ConduitType<?, T, U> type, Player player) {
         RightClickAction action = bundle.addType(level, type, player);
         //something has changed
         if (action.hasChanged()) {
@@ -302,7 +302,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return action;
     }
 
-    public <T extends ConduitGraphContext<T>, U extends ConduitData<U>> Optional<GraphObject<InternalGraphContext<T>>>
+    public <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> Optional<GraphObject<InternalGraphContext<T>>>
     tryConnectTo(Direction dir, ConduitType<?, T, U> type, boolean forceMerge, boolean shouldMergeGraph) {
         if (level.getBlockEntity(getBlockPos().relative(dir)) instanceof ConduitBlockEntity conduit
             && conduit.connectTo(dir.getOpposite(), type, bundle.getNodeFor(type).getConduitData(), forceMerge)) {
@@ -408,7 +408,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         level.addFreshEntity(new ItemEntity(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), stack));
     }
 
-    public <T extends ConduitGraphContext<T>> void removeNeighborConnections(ConduitType<?, T, ?> type) {
+    public <T extends ConduitNetworkContext<T>> void removeNeighborConnections(ConduitType<?, T, ?> type) {
         for (Direction dir : Direction.values()) {
             if (level.getBlockEntity(getBlockPos().relative(dir)) instanceof ConduitBlockEntity conduit) {
                 conduit.disconnect(dir.getOpposite(), type);
@@ -449,7 +449,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     @UseOnly(LogicalSide.SERVER)
-    private <T extends ConduitGraphContext<T>, U extends ConduitData<U>> void loadConduitFromSavedData(ConduitSavedData savedData, ConduitType<?, T, U> conduitType, int typeIndex) {
+    private <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> void loadConduitFromSavedData(ConduitSavedData savedData, ConduitType<?, T, U> conduitType, int typeIndex) {
         if (level == null) {
             return;
         }
@@ -570,7 +570,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     @Nullable
-    private static <T, U extends ConduitGraphContext<U>, V extends ConduitData<V>> T getProxiedCapability(BlockCapability<T, Direction> capability,
+    private static <T, U extends ConduitNetworkContext<U>, V extends ConduitData<V>> T getProxiedCapability(BlockCapability<T, Direction> capability,
         ConduitBlockEntity conduitBlockEntity, ConduitType<?, U, V> type, Direction side) {
 
         if (conduitBlockEntity.level == null) {
@@ -579,7 +579,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
         ConduitGraphObject<U, V> node = conduitBlockEntity.bundle.getNodeFor(type);
         ConduitGraphObject.IOState state = node.getIOState(side).orElse(null);
-        ConduitGraph<U, V> graph = Objects.requireNonNull(node.getParentGraph());
+        ConduitNetwork<U, V> graph = Objects.requireNonNull(node.getParentGraph());
 
         return type.proxyCapability(capability, graph, node.getConduitData(), conduitBlockEntity.level, conduitBlockEntity.getBlockPos(), side, state);
     }

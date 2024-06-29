@@ -2,8 +2,8 @@ package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitGraph;
-import com.enderio.api.conduit.ConduitGraphContext;
+import com.enderio.api.conduit.ConduitNetwork;
+import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ConduitNode;
@@ -19,10 +19,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface IOAwareConduitTicker<TOptions, TContext extends ConduitGraphContext<TContext>, TData extends ConduitData<TData>> extends LoadedAwareConduitTicker<TOptions, TContext, TData> {
+public interface IOAwareConduitTicker<TOptions, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> extends LoadedAwareConduitTicker<TOptions, TContext, TData> {
     @Override
     default void tickGraph(ServerLevel level, ConduitType<TOptions, TContext, TData> type,
-        List<ConduitNode<TContext, TData>> loadedNodes, ConduitGraph<TContext, TData> graph,
+        List<ConduitNode<TContext, TData>> loadedNodes, ConduitNetwork<TContext, TData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         ListMultimap<ColorControl, Connection<TData>> extracts = ArrayListMultimap.create();
@@ -75,7 +75,7 @@ public interface IOAwareConduitTicker<TOptions, TContext extends ConduitGraphCon
         List<Connection<TData>> inserts,
         List<Connection<TData>> extracts,
         ColorControl color,
-        ConduitGraph<TContext, TData> graph,
+        ConduitNetwork<TContext, TData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
     default boolean isRedstoneMode(ConduitType<?, ?, ?> type, ServerLevel level, BlockPos pos, ConduitNode.IOState state,

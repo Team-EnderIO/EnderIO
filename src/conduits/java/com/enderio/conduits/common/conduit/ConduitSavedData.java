@@ -2,7 +2,7 @@ package com.enderio.conduits.common.conduit;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitGraphContext;
+import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.ColorControl;
@@ -78,7 +78,7 @@ public class ConduitSavedData extends SavedData {
         }
     }
 
-    private <T extends ConduitGraphContext<T>, U extends ConduitData<U>> void deserializeGraphs(HolderLookup.Provider lookupProvider,
+    private <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> void deserializeGraphs(HolderLookup.Provider lookupProvider,
         ConduitType<?, T, U> type, ListTag graphs) {
         for (Tag tag1 : graphs) {
             CompoundTag graphTag = (CompoundTag) tag1;
@@ -223,7 +223,7 @@ public class ConduitSavedData extends SavedData {
 
     // endregion
 
-    private <T extends ConduitGraphContext<T>, U extends ConduitData<U>> void merge(ConduitType<?, T, U> conduitType, ConduitGraphObject<T, U> object,
+    private <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> void merge(ConduitType<?, T, U> conduitType, ConduitGraphObject<T, U> object,
         List<Pair<ConduitGraphObject<T, U>, ConduitGraphObject<T, U>>> connections) {
         var filteredConnections = connections.stream().filter(pair -> (pair.getFirst() == object || pair.getSecond() == object)).toList();
         List<ConduitGraphObject<T, U>> neighbors = filteredConnections
@@ -243,7 +243,7 @@ public class ConduitSavedData extends SavedData {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    public <T extends ConduitGraphContext<T>, U extends ConduitData<U>> ConduitGraphObject<T, U> takeUnloadedNodeIdentifier(ConduitType<?, T, U> type, BlockPos pos) {
+    public <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> ConduitGraphObject<T, U> takeUnloadedNodeIdentifier(ConduitType<?, T, U> type, BlockPos pos) {
         ChunkPos chunkPos = new ChunkPos(pos);
 
         Map<ChunkPos, Map<BlockPos, ConduitGraphObject<?, ?>>> typeMap = deserializedNodes.get(type);
@@ -302,14 +302,14 @@ public class ConduitSavedData extends SavedData {
         }
     }
 
-    private <T, U extends ConduitGraphContext<U>, V extends ConduitData<V>, W extends Mergeable<W>>
+    private <T, U extends ConduitNetworkContext<U>, V extends ConduitData<V>, W extends Mergeable<W>>
     void tickConduitGraph(ServerLevel serverLevel, ConduitType<T, U, V> type, Graph<W> graph) {
         ConduitTicker<T, U, V> conduitTicker = type.getTicker();
 
         if (serverLevel.getGameTime() % conduitTicker.getTickRate() == EnderIORegistries.CONDUIT_TYPES.getId(type) % conduitTicker.getTickRate()) {
             // TODO: Can I clean up this gross cast.
             //noinspection unchecked
-            conduitTicker.tickGraph(serverLevel, type, new WrappedConduitGraph<>((Graph<InternalGraphContext<U>>) graph), ConduitSavedData::isRedstoneActive);
+            conduitTicker.tickGraph(serverLevel, type, new WrappedConduitNetwork<>((Graph<InternalGraphContext<U>>) graph), ConduitSavedData::isRedstoneActive);
         }
     }
 
@@ -330,11 +330,11 @@ public class ConduitSavedData extends SavedData {
         return data.isActive(color);
     }
 
-    public static <T extends ConduitGraphContext<T>> void addPotentialGraph(ConduitType<?, T, ?> type, Graph<InternalGraphContext<T>> graph, ServerLevel level) {
+    public static <T extends ConduitNetworkContext<T>> void addPotentialGraph(ConduitType<?, T, ?> type, Graph<InternalGraphContext<T>> graph, ServerLevel level) {
         get(level).addPotentialGraph(type, graph);
     }
 
-    private <T extends ConduitGraphContext<T>> void addPotentialGraph(ConduitType<?, T, ?> type, Graph<InternalGraphContext<T>> graph) {
+    private <T extends ConduitNetworkContext<T>> void addPotentialGraph(ConduitType<?, T, ?> type, Graph<InternalGraphContext<T>> graph) {
         if (!networks.computeIfAbsent(type, unused -> new ArrayList<>()).contains(graph)) {
             networks.get(type).add(graph);
         }

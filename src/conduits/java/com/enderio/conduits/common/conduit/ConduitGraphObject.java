@@ -2,8 +2,8 @@ package com.enderio.conduits.common.conduit;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitGraph;
-import com.enderio.api.conduit.ConduitGraphContext;
+import com.enderio.api.conduit.ConduitNetwork;
+import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.filter.ResourceFilter;
@@ -14,7 +14,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
-import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -27,7 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class ConduitGraphObject<TContext extends ConduitGraphContext<TContext>, TData extends ConduitData<TData>>
+public class ConduitGraphObject<TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>>
     implements GraphObject<InternalGraphContext<TContext>>, ConduitNode<TContext, TData> {
 
     public static final Codec<ConduitGraphObject<?, ?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -52,7 +51,7 @@ public class ConduitGraphObject<TContext extends ConduitGraphContext<TContext>, 
     private final BlockPos pos;
 
     @Nullable private Graph<InternalGraphContext<TContext>> graph = null;
-    @Nullable private WrappedConduitGraph<TContext, TData> wrappedGraph = null;
+    @Nullable private WrappedConduitNetwork<TContext, TData> wrappedGraph = null;
 
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
     private final TData conduitData;
@@ -72,12 +71,12 @@ public class ConduitGraphObject<TContext extends ConduitGraphContext<TContext>, 
     @Override
     public void setGraph(Graph<InternalGraphContext<TContext>> graph) {
         this.graph = graph;
-        this.wrappedGraph = new WrappedConduitGraph<>(graph);
+        this.wrappedGraph = new WrappedConduitNetwork<>(graph);
     }
 
     @Nullable
     @Override
-    public ConduitGraph<TContext, TData> getParentGraph() {
+    public ConduitNetwork<TContext, TData> getParentGraph() {
         return wrappedGraph;
     }
 

@@ -16,8 +16,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public record ConduitType<TOptions, TContext extends ConduitGraphContext<TContext>, TData extends ConduitData<TData>>(
-    ConduitGraphType<TOptions, TContext, TData> graphType,
+public record ConduitType<TOptions, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>>(
+    ConduitNetworkType<TOptions, TContext, TData> graphType,
     TOptions options
 ) {
     public ConduitTicker<TOptions, TContext, TData> getTicker() {
@@ -66,11 +66,11 @@ public record ConduitType<TOptions, TContext extends ConduitGraphContext<TContex
     }
 
     @Nullable
-    public <K> K proxyCapability(BlockCapability<K, Direction> capability, ConduitGraph<TContext, TData> graph, TData conduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
+    public <K> K proxyCapability(BlockCapability<K, Direction> capability, ConduitNetwork<TContext, TData> graph, TData conduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
         return graphType.proxyCapability(options, capability, graph, conduitData, level, pos, direction, state);
     }
 
-    public ConduitGraphType.ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {
+    public ConduitNetworkType.ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {
         return graphType.getDefaultConnection(options, level, pos, direction);
     }
 

@@ -1,12 +1,12 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitGraph;
+import com.enderio.api.conduit.ConduitNetwork;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public record EnergyConduitStorage(
     EnergyConduitOptions options,
-    ConduitGraph<EnergyConduitGraphContext, ConduitData.EmptyConduitData> graph
+    ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph
 ) implements IEnergyStorage {
 
     // TODO: EnergyConduitOptions for rates.

@@ -1,13 +1,11 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitGraph;
-import com.enderio.api.conduit.ConduitGraphContext;
-import com.enderio.api.conduit.ConduitGraphType;
+import com.enderio.api.conduit.ConduitNetwork;
+import com.enderio.api.conduit.ConduitNetworkType;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
@@ -18,7 +16,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-public class EnergyConduitGraphType implements ConduitGraphType<EnergyConduitOptions, EnergyConduitGraphContext, ConduitData.EmptyConduitData> {
+public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> {
 
     private static final EnergyConduitTicker TICKER = new EnergyConduitTicker();
     private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
@@ -35,8 +33,8 @@ public class EnergyConduitGraphType implements ConduitGraphType<EnergyConduitOpt
 
     @Nullable
     @Override
-    public EnergyConduitGraphContext createGraphContext(EnergyConduitOptions options) {
-        return new EnergyConduitGraphContext();
+    public EnergyConduitNetworkContext createGraphContext(EnergyConduitOptions options) {
+        return new EnergyConduitNetworkContext();
     }
 
     @Override
@@ -68,7 +66,7 @@ public class EnergyConduitGraphType implements ConduitGraphType<EnergyConduitOpt
 
     @Override
     public <K> @Nullable K proxyCapability(EnergyConduitOptions options, BlockCapability<K, Direction> capability,
-        ConduitGraph<EnergyConduitGraphContext, ConduitData.EmptyConduitData> graph, ConduitData.EmptyConduitData conduitData, Level level, BlockPos pos,
+        ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph, ConduitData.EmptyConduitData conduitData, Level level, BlockPos pos,
         @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
         if (Capabilities.EnergyStorage.BLOCK == capability
             && (state == null || state.isExtract())
@@ -91,6 +89,6 @@ public class EnergyConduitGraphType implements ConduitGraphType<EnergyConduitOpt
             return new ConduitConnectionData(capability.canReceive(), capability.canExtract(), RedstoneControl.ALWAYS_ACTIVE);
         }
 
-        return ConduitGraphType.super.getDefaultConnection(options, level, pos, direction);
+        return ConduitNetworkType.super.getDefaultConnection(options, level, pos, direction);
     }
 }
