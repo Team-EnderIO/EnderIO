@@ -10,6 +10,7 @@ plugins {
     id("com.modrinth.minotaur") version "2.+"
     id("net.neoforged.gradle.userdev") version "7.0.145"
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
+    //id("checkstyle")
 }
 
 val mod_id: String by project
@@ -34,6 +35,10 @@ idea {
         isDownloadSources = true
     }
 }
+
+/*checkstyle {
+    isIgnoreFailures = false
+}*/
 
 val mod_version = getVersionString()
 
@@ -253,8 +258,8 @@ dependencies {
     runtimeOnly("maven.modrinth:athena-ctm:${athena_version}")
 
     // AE2
-    compileOnly("appeng:appliedenergistics2-neoforge:${ae2_version}:api")
-    runtimeOnly("appeng:appliedenergistics2-neoforge:${ae2_version}")
+    compileOnly("appeng:appliedenergistics2:${ae2_version}:api")
+    runtimeOnly("appeng:appliedenergistics2:${ae2_version}")
 
     // Enchantment descriptions
     //runtimeOnly("net.darkhax.bookshelf:Bookshelf-NeoForge-${minecraft_version}:${bookshelf_version}")
@@ -289,9 +294,9 @@ dependencies {
     runtimeOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
 
     //CC-Tweaked
-    //compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cctVersion")
-    //compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cctVersion")
-    //runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cctVersion")
+    compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cctVersion")
+    compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cctVersion")
+    runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cctVersion")
 
     // Jetbrains annotations
     compileOnly("org.jetbrains:annotations:23.0.0")
@@ -327,6 +332,8 @@ tasks.register<Jar>("apiJar") {
 
 tasks.register<Jar>("sourcesJar") {
     dependsOn(tasks.classes)
+    // TODO: See EnderIO#716
+    //dependsOn(tasks.getByName("checkstyleMain"))
     archiveClassifier.set("sources")
 
     from(sourceSets.getByName("api").allJava)

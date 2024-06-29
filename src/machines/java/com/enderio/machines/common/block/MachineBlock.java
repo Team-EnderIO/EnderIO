@@ -101,7 +101,7 @@ public class MachineBlock extends BaseEntityBlock {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
-        if (stack.is(EIOTags.Items.WRENCH)) {
+        if (!level.isClientSide && stack.is(EIOTags.Items.WRENCH)) {
             var res = machineBlockEntity.onWrenched(player, hit.getDirection());
             if (res != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
                 return res;

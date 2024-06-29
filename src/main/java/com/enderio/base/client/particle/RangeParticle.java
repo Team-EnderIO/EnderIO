@@ -62,6 +62,11 @@ public class RangeParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
+    @Override
+    public AABB getRenderBoundingBox(float partialTicks) {
+        return AABB.INFINITE;
+    }
+
     public Vector3f[] calcPoints(Direction face, Vector3f vec) {
         return calcPoints(face, vec.x(), vec.y(), vec.z(), 2 * range + 1 + (offset * 2), 2 * range + 1 + (offset * 2));
     }
