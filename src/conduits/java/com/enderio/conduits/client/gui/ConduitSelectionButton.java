@@ -1,12 +1,15 @@
 package com.enderio.conduits.client.gui;
 
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.registry.EnderIORegistries;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -44,8 +47,13 @@ public class ConduitSelectionButton extends AbstractButton {
             guiGraphics.blit(ConduitScreen.TEXTURE, getX() - 3, getY(), 224, 0, 3, this.height);
         }
 
-        TextureAtlasSprite iconSprite = ConduitIconTextureManager.INSTANCE.get(type);
-        guiGraphics.blit(getX() + 3, getY() + 6, 0, 12, 12, iconSprite);
+        ResourceLocation iconLocation = MissingTextureAtlasSprite.getLocation();
+        ResourceLocation conduitTypeKey = EnderIORegistries.CONDUIT_TYPES.getKey(type);
+        if (conduitTypeKey != null) {
+            iconLocation = ResourceLocation.fromNamespaceAndPath(conduitTypeKey.getNamespace(), "conduit_icon/" + conduitTypeKey.getPath());
+        }
+
+        guiGraphics.blitSprite(iconLocation, getX() + 3, getY() + 6, 12, 12);
 
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();

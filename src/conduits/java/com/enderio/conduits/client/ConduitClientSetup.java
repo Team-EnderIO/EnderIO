@@ -4,7 +4,6 @@ import com.enderio.EnderIO;
 import com.enderio.api.conduit.model.RegisterConduitCoreModelModifiersEvent;
 import com.enderio.api.conduit.screen.RegisterConduitScreenExtensionsEvent;
 import com.enderio.api.misc.ColorControl;
-import com.enderio.conduits.client.gui.ConduitIconTextureManager;
 import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
 import com.enderio.conduits.client.model.ConduitGeometry;
 import com.enderio.conduits.client.model.ConduitItemModelLoader;
@@ -75,11 +74,6 @@ public class ConduitClientSetup {
         event.register(EIOConduitTypes.Types.PRESSURIZED_FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
         event.register(EIOConduitTypes.Types.ENDER_FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
         event.register(EIOConduitTypes.Types.ITEM.get(), ItemConduitScreenExtension::new);
-    }
-
-    @SubscribeEvent
-    public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
-        event.registerReloadListener(new ConduitIconTextureManager(Minecraft.getInstance().getTextureManager()));
     }
 
     @SubscribeEvent
