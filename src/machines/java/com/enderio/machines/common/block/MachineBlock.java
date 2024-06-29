@@ -96,7 +96,7 @@ public class MachineBlock extends BaseEntityBlock {
             return InteractionResult.PASS;
         }
 
-        if (player.getItemInHand(hand).is(EIOTags.Items.WRENCH)) {
+        if (!level.isClientSide && player.getItemInHand(hand).is(EIOTags.Items.WRENCH)) {
             InteractionResult res = machineBlockEntity.onWrenched(player, hit.getDirection());
             if (res != InteractionResult.PASS) {
                 return res;

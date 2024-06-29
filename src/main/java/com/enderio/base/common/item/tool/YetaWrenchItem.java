@@ -32,7 +32,7 @@ public class YetaWrenchItem extends Item {
         Level level = pContext.getLevel();
         BlockPos pos = pContext.getClickedPos();
 
-        if(level.getBlockEntity(pos) instanceof IWrenchable wrenchable) {
+        if(!level.isClientSide && level.getBlockEntity(pos) instanceof IWrenchable wrenchable) {
             return wrenchable.onWrenched(pContext.getPlayer(), pContext.getClickedFace());
         }
         
