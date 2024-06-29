@@ -2,6 +2,7 @@ package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.machines.client.gui.screen.AlloySmelterScreen;
+import com.enderio.machines.client.gui.screen.AversionObeliskScreen;
 import com.enderio.machines.client.gui.screen.CapacitorBankScreen;
 import com.enderio.machines.client.gui.screen.CrafterScreen;
 import com.enderio.machines.client.gui.screen.DrainScreen;
@@ -24,6 +25,7 @@ import com.enderio.machines.client.gui.screen.WiredChargerScreen;
 import com.enderio.machines.client.gui.screen.XPObeliskScreen;
 import com.enderio.machines.client.gui.screen.XPVacuumScreen;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
+import com.enderio.machines.common.menu.AversionObeliskMenu;
 import com.enderio.machines.common.menu.CapacitorBankMenu;
 import com.enderio.machines.common.menu.CrafterMenu;
 import com.enderio.machines.common.menu.DrainMenu;
@@ -96,6 +98,8 @@ public class MachineMenus {
         .registerMenu("xp_obelisk", XPObeliskMenu::factory, () -> XPObeliskScreen::new);
     public static final RegiliteMenu<InhibitorObeliskMenu> INHIBITOR_OBELISK = MENU_REGISTRY
         .registerMenu("inhibitor_obelisk", InhibitorObeliskMenu::factory, () -> InhibitorObeliskScreen::new);
+    public static final RegiliteMenu<AversionObeliskMenu> AVERSION_OBELISK = MENU_REGISTRY
+        .registerMenu("aversion_obelisk", AversionObeliskMenu::factory, () -> AversionObeliskScreen::new);
     public static final RegiliteMenu<VatMenu> VAT = MENU_REGISTRY.registerMenu("vat", VatMenu::factory, () -> VatScreen::new);
 
     public static void register(IEventBus bus) {

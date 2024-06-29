@@ -2,12 +2,14 @@ package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.machines.client.rendering.blockentity.AversionObeliskBER;
 import com.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
 import com.enderio.machines.client.rendering.blockentity.InhibitorObeliskBER;
 import com.enderio.machines.client.rendering.blockentity.XPObeliskBER;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
+import com.enderio.machines.common.blockentity.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.CrafterBlockEntity;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
 import com.enderio.machines.common.blockentity.DrainBlockEntity;
@@ -185,6 +187,11 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<InhibitorObeliskBlockEntity> INHIBITOR_OBELISK =
         register("inhibitor_obelisk", InhibitorObeliskBlockEntity::new, MachineBlocks.INHIBITOR_OBELISK)
             .setRenderer(() -> InhibitorObeliskBER::new)
+            .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+
+    public static final RegiliteBlockEntity<AversionObeliskBlockEntity> AVERSION_OBELISK =
+        register("aversion_obelisk", AversionObeliskBlockEntity::new, MachineBlocks.AVERSION_OBELISK)
+            .setRenderer(() -> AversionObeliskBER::new)
             .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
     @SafeVarargs
