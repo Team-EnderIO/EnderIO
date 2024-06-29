@@ -33,7 +33,7 @@ public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyCondui
 
     @Nullable
     @Override
-    public EnergyConduitNetworkContext createGraphContext(EnergyConduitOptions options) {
+    public EnergyConduitNetworkContext createNetworkContext(EnergyConduitOptions options, ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> network) {
         return new EnergyConduitNetworkContext();
     }
 
@@ -66,13 +66,13 @@ public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyCondui
 
     @Override
     public <K> @Nullable K proxyCapability(EnergyConduitOptions options, BlockCapability<K, Direction> capability,
-        ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph, ConduitData.EmptyConduitData conduitData, Level level, BlockPos pos,
+        ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> network, ConduitData.EmptyConduitData conduitData, Level level, BlockPos pos,
         @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
         if (Capabilities.EnergyStorage.BLOCK == capability
             && (state == null || state.isExtract())
             && (direction == null || !level.getBlockState(pos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE))) {
             //noinspection unchecked
-            return (K) new EnergyConduitStorage(options, graph);
+            return (K) new EnergyConduitStorage(options, network);
         }
         return null;
     }

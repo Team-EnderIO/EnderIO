@@ -28,12 +28,6 @@ public class RedstoneConduitNetworkType implements SimpleConduitNetworkType<Reds
     }
 
     @Override
-    @Nullable
-    public ConduitNetworkContext.Dummy createGraphContext(Void unused) {
-        return null;
-    }
-
-    @Override
     public RedstoneConduitData createConduitData(Void unused, Level level, BlockPos pos) {
         return new RedstoneConduitData();
     }

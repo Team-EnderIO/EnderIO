@@ -29,8 +29,8 @@ public record ConduitType<TOptions, TContext extends ConduitNetworkContext<TCont
     }
 
     @Nullable
-    public TContext createGraphContext() {
-        return graphType.createGraphContext(options);
+    public TContext createGraphContext(ConduitNetwork<TContext, TData> network) {
+        return graphType.createNetworkContext(options, network);
     }
 
     public TData createConduitData(Level level, BlockPos pos) {

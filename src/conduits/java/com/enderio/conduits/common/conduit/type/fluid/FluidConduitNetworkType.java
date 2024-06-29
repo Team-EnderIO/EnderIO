@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
+import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitNetworkType;
 import com.enderio.api.conduit.ConduitMenuData;
@@ -31,7 +32,7 @@ public class FluidConduitNetworkType implements ConduitNetworkType<FluidConduitO
 
     @Override
     @Nullable
-    public ConduitNetworkContext.Dummy createGraphContext(FluidConduitOptions options) {
+    public ConduitNetworkContext.Dummy createNetworkContext(FluidConduitOptions options, ConduitNetwork<ConduitNetworkContext.Dummy, FluidConduitData> network) {
         return null;
     }
 

@@ -23,7 +23,7 @@ public record InternalGraphContext<T extends ConduitNetworkContext<T>>(T context
 
     public static <T extends ConduitNetworkContext<T>> ContextDataFactory<InternalGraphContext<T>> factoryFor(ConduitType<?, T, ?> conduitType) {
         return graph -> {
-            var context = conduitType.createGraphContext();
+            var context = conduitType.createGraphContext(new WrappedConduitNetwork<>(graph));
             return context == null ? null : new InternalGraphContext<>(context);
         };
     }
