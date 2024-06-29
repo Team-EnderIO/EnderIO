@@ -7,7 +7,6 @@ import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.RedstoneControl;
-import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -47,7 +46,7 @@ public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyCondui
 
     @Override
     public boolean canBeInSameBundle(EnergyConduitOptions energyConduitOptions, ConduitType<?, ?, ?> conduitType) {
-        if (conduitType.graphType() != this) {
+        if (conduitType.networkType() != this) {
             return true;
         }
 
@@ -56,7 +55,7 @@ public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyCondui
 
     @Override
     public boolean canBeReplacedBy(EnergyConduitOptions energyConduitOptions, ConduitType<?, ?, ?> conduitType) {
-        if (conduitType.graphType() != this) {
+        if (conduitType.networkType() != this) {
             return false;
         }
 
@@ -99,5 +98,16 @@ public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyCondui
         }
 
         return ConduitNetworkType.super.getDefaultConnection(options, level, pos, direction);
+    }
+
+    @Override
+    public int compare(EnergyConduitOptions o1, EnergyConduitOptions o2) {
+        if (o1.transferLimit() < o2.transferLimit()) {
+            return -1;
+        } else if (o1.transferLimit() > o2.transferLimit()) {
+            return 1;
+        }
+
+        return 0;
     }
 }

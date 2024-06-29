@@ -7,7 +7,6 @@ import com.enderio.conduits.common.components.RepresentedConduitType;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitComponents;
-import com.enderio.conduits.common.init.ConduitItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -29,7 +28,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -122,18 +120,28 @@ public class ConduitBlockItem extends BlockItem {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() == EIOCreativeTabs.CONDUITS_TAB.get()) {
+            // TODO: When we switch to datapacks:
+            //event.getParameters().holders()
+
             // Get all conduit types, grouped by conduit type.
-            // TODO: Add comparator to ConduitType so we can order by low-to-high quality
             var conduitTypes = EnderIORegistries.CONDUIT_TYPES.entrySet().stream()
-                .sorted(Comparator.comparing(o -> EnderIORegistries.CONDUIT_NETWORK_TYPES.getKey(o.getValue().graphType()).toString()))
                 .map(Map.Entry::getValue)
                 .toList();
 
-            for (var conduitType : conduitTypes) {
-                event.accept(getStackFor(conduitType, 1), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            var conduitNetworkTypes = EnderIORegistries.CONDUIT_NETWORK_TYPES.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(Map.Entry::getValue)
+                .toList();
 
-                // TODO: When we switch to datapacks:
-                //event.getParameters().holders()
+            for (var conduitNetworkType : conduitNetworkTypes) {
+                var matchingConduitTypes = conduitTypes.stream()
+                    .filter(e -> e.networkType() == conduitNetworkType)
+                    .sorted()
+                    .toList();
+
+                for (var conduitType : matchingConduitTypes) {
+                    event.accept(getStackFor(conduitType, 1), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+                }
             }
         }
     }

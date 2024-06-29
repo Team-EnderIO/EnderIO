@@ -11,9 +11,10 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.Set;
 
-public interface ConduitNetworkType<TOptions, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> {
+public interface ConduitNetworkType<TOptions, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> extends Comparator<TOptions> {
     /**
      * Get the ticker for this conduit graph type.
      * @apiNote The ticker should never change, it can use the options to determine behaviour in its implementation.

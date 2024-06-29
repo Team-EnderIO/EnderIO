@@ -44,7 +44,7 @@ public class FluidConduitNetworkType implements ConduitNetworkType<FluidConduitO
 
     @Override
     public boolean canBeInSameBundle(FluidConduitOptions options, ConduitType<?, ?, ?> conduitType) {
-        if (conduitType.graphType() != this) {
+        if (conduitType.networkType() != this) {
             return true;
         }
 
@@ -53,7 +53,7 @@ public class FluidConduitNetworkType implements ConduitNetworkType<FluidConduitO
 
     @Override
     public boolean canBeReplacedBy(FluidConduitOptions options, ConduitType<?, ?, ?> conduitType) {
-        if (conduitType.graphType() != this) {
+        if (conduitType.networkType() != this) {
             return false;
         }
 
@@ -77,5 +77,20 @@ public class FluidConduitNetworkType implements ConduitNetworkType<FluidConduitO
     @Override
     public boolean canApplyFilter(FluidConduitOptions fluidConduitOptions, SlotType slotType, ResourceFilter resourceFilter) {
         return resourceFilter instanceof FluidStackFilter;
+    }
+
+    @Override
+    public int compare(FluidConduitOptions o1, FluidConduitOptions o2) {
+        if (o1.isMultiFluid() && !o2.isMultiFluid()) {
+            return 1;
+        }
+
+        if (o1.transferRate() < o2.transferRate()) {
+            return -1;
+        } else if (o1.transferRate() > o2.transferRate()) {
+            return 1;
+        }
+
+        return 0;
     }
 }

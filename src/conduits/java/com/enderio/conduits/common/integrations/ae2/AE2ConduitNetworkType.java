@@ -97,6 +97,17 @@ public class AE2ConduitNetworkType implements ConduitNetworkType<AE2ConduitOptio
         return Set.of(AE2Integration.IN_WORLD_GRID_NODE_HOST);
     }
 
+    @Override
+    public int compare(AE2ConduitOptions o1, AE2ConduitOptions o2) {
+        if (o1.isDense() && !o2.isDense()) {
+            return 1;
+        } else if (!o1.isDense() && o2.isDense()) {
+            return -1;
+        }
+
+        return 0;
+    }
+
     private static final class MenuData implements ConduitMenuData {
 
         private static final MenuData INSTANCE = new MenuData();
@@ -164,7 +175,7 @@ public class AE2ConduitNetworkType implements ConduitNetworkType<AE2ConduitOptio
 
         @Override
         public boolean canConnectTo(ConduitType<?, ?, ?> thisType, ConduitType<?, ?, ?> other) {
-            return thisType.graphType() == other.graphType();
+            return thisType.networkType() == other.networkType();
         }
     }
 }

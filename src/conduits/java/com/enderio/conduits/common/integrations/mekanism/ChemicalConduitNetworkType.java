@@ -41,7 +41,7 @@ public class ChemicalConduitNetworkType implements ConduitNetworkType<ChemicalCo
 
     @Override
     public boolean canBeInSameBundle(ChemicalConduitOptions options, ConduitType<?, ?, ?> conduitType) {
-        if (conduitType.graphType() != this) {
+        if (conduitType.networkType() != this) {
             return true;
         }
 
@@ -50,7 +50,7 @@ public class ChemicalConduitNetworkType implements ConduitNetworkType<ChemicalCo
 
     @Override
     public boolean canBeReplacedBy(ChemicalConduitOptions options, ConduitType<?, ?, ?> conduitType) {
-        if (conduitType.graphType() != this) {
+        if (conduitType.networkType() != this) {
             return false;
         }
 
@@ -64,6 +64,21 @@ public class ChemicalConduitNetworkType implements ConduitNetworkType<ChemicalCo
         }
 
         return false;
+    }
+
+    @Override
+    public int compare(ChemicalConduitOptions o1, ChemicalConduitOptions o2) {
+        if (o1.isMultiChemical() && !o2.isMultiChemical()) {
+            return 1;
+        }
+
+        if (o1.transferRate() < o2.transferRate()) {
+            return -1;
+        } else if (o1.transferRate() > o2.transferRate()) {
+            return 1;
+        }
+
+        return 0;
     }
 
     // TODO: Support for extract upgrades

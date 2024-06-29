@@ -9,4 +9,9 @@ public interface SimpleConduitNetworkType<T extends ConduitData<T>> extends Cond
         ConduitNetwork<ConduitNetworkContext.Dummy, T> network) {
         return null;
     }
+
+    @Override
+    default int compare(Void o1, Void o2) {
+        return 0;
+    }
 }
