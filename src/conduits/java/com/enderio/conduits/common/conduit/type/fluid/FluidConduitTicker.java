@@ -86,7 +86,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
 
             int transferred = 0;
             for (CapabilityConnection insert : inserts) {
-                if (extract.insertFilter instanceof FluidStackFilter fluidStackFilter) {
+                if (insert.insertFilter instanceof FluidStackFilter fluidStackFilter) {
                     if (!fluidStackFilter.test(extractedFluid)) {
                         continue;
                     }
