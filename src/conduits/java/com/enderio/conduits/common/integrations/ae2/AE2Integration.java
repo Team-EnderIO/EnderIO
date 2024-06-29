@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 
 public class AE2Integration implements Integration {
 
-    public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_TYPES, EnderIO.MODID);
+    /*public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_TYPES, EnderIO.MODID);
     public static final DeferredRegister<ConduitDataSerializer<?>> CONDUIT_DATA_SERIALIZERS = DeferredRegister.create(EnderIORegistries.CONDUIT_DATA_SERIALIZERS, EnderIO.MODID);
 
     private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
@@ -90,5 +90,5 @@ public class AE2Integration implements Integration {
 
     public void addCapability(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(IN_WORLD_GRID_NODE_HOST, ConduitBlockEntities.CONDUIT.get(), ConduitBlockEntity.createConduitCap(IN_WORLD_GRID_NODE_HOST));
-    }
+    }*/
 }

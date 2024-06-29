@@ -20,14 +20,14 @@ import java.util.function.Supplier;
 
 public class ConduitBlockItem extends BlockItem {
 
-    private final Supplier<? extends ConduitType<?>> type;
+    private final Supplier<? extends ConduitType<?, ?, ?>> type;
 
-    public ConduitBlockItem(Supplier<? extends ConduitType<?>> type, Block block, Properties properties) {
+    public ConduitBlockItem(Supplier<? extends ConduitType<?, ?, ?>> type, Block block, Properties properties) {
         super(block, properties);
         this.type = type;
     }
 
-    public ConduitType<?> getType() {
+    public ConduitType<?, ?, ?> getType() {
         return type.get();
     }
 

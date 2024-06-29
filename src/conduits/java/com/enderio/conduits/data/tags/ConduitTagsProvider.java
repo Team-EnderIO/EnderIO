@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ConduitTagsProvider extends TagsProvider<ConduitType<?>> {
+public class ConduitTagsProvider extends TagsProvider<ConduitType<?, ?, ?>> {
 
     public ConduitTagsProvider(PackOutput packOutput,
         CompletableFuture<HolderLookup.Provider> registries, @Nullable ExistingFileHelper existingFileHelper) {

@@ -13,13 +13,13 @@ public class RegisterConduitScreenExtensionsEvent extends Event implements IModB
         ConduitScreenExtension<T> createExtension();
     }
 
-    private final Map<ConduitType<?>, ConduitScreenExtensionFactory<?>> extensions = new ConcurrentHashMap<>();
+    private final Map<ConduitType<?, ?, ?>, ConduitScreenExtensionFactory<?>> extensions = new ConcurrentHashMap<>();
 
-    public <T extends ConduitData<T>> void register(ConduitType<T> type, ConduitScreenExtensionFactory<T> extensionFactory) {
+    public <T extends ConduitData<T>> void register(ConduitType<?, ?, T> type, ConduitScreenExtensionFactory<T> extensionFactory) {
         extensions.put(type, extensionFactory);
     }
 
-    public Map<ConduitType<?>, ConduitScreenExtensionFactory<?>> getExtensions() {
+    public Map<ConduitType<?, ?, ?>, ConduitScreenExtensionFactory<?>> getExtensions() {
         return Map.copyOf(extensions);
     }
 }

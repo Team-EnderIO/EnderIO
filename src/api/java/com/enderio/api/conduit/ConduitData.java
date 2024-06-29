@@ -5,19 +5,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import io.netty.buffer.ByteBuf;
 import me.liliandev.ensure.ensures.EnsureSide;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Set;
 
 /**
  * used for special single use things like RoundRobin for ItemConduits or proxying Caps.
@@ -35,12 +28,6 @@ public interface ConduitData<T extends ConduitData<T>> {
     EmptyConduitData EMPTY = new EmptyConduitData();
 
     // region Events
-
-    default void onCreated(ConduitType<T> type, Level level, BlockPos pos, @Nullable Player player) {}
-
-    default void onRemoved(ConduitType<T> type, Level level, BlockPos pos) {}
-
-    default void updateConnection(Set<Direction> connectedSides) {}
 
     /**
      * @return true if a node with this extradata can connect to a node with the otherData as extradata. this.canConnectTo(other) and other.canConnectTo(this) should be the same

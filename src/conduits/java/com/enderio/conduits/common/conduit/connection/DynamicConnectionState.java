@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.conduit.connection;
 
 import com.enderio.api.UseOnly;
+import com.enderio.api.conduit.ConduitGraphType;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.misc.ColorControl;
@@ -68,8 +69,8 @@ public record DynamicConnectionState(
         DynamicConnectionState::new
     );
 
-    public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction, ConduitType<?> type) {
-        ConduitType.ConduitConnectionData defaultConnection = type.getDefaultConnection(level, pos, direction);
+    public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction, ConduitType<?, ?, ?> type) {
+        ConduitGraphType.ConduitConnectionData defaultConnection = type.getDefaultConnection(level, pos, direction);
         return new DynamicConnectionState(defaultConnection.isInsert(), ColorControl.GREEN, defaultConnection.isExtract(), ColorControl.GREEN, defaultConnection.control(), ColorControl.RED, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
     }
 

@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.network;
 
-import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitData;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.core.EnderCore;
 import net.minecraft.core.BlockPos;
@@ -12,7 +12,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record C2SSetConduitExtendedData<T extends ConduitData<T>>(
     BlockPos pos,
-    ConduitType<T> conduitType,
+    ConduitType<?, ?, T> conduitType,
     ConduitData<T> extendedConduitData
 ) implements CustomPacketPayload {
 

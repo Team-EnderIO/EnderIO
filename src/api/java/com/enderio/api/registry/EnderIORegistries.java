@@ -1,6 +1,7 @@
 package com.enderio.api.registry;
 
 import com.enderio.api.conduit.ConduitDataSerializer;
+import com.enderio.api.conduit.ConduitGraphType;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.travel.TravelTargetSerializer;
 import com.enderio.api.travel.TravelTargetType;
@@ -19,7 +20,11 @@ public class EnderIORegistries {
         .sync(true)
         .create();
 
-    public static final Registry<ConduitType<?>> CONDUIT_TYPES = new RegistryBuilder<>(Keys.CONDUIT_TYPES)
+    public static final Registry<ConduitGraphType<?, ?, ?>> CONDUIT_GRAPH_TYPES = new RegistryBuilder<>(Keys.CONDUIT_GRAPH_TYPES)
+        .sync(true)
+        .create();
+
+    public static final Registry<ConduitType<?, ?, ?>> CONDUIT_TYPES = new RegistryBuilder<>(Keys.CONDUIT_TYPES)
         .sync(true)
         .create();
 
@@ -30,7 +35,8 @@ public class EnderIORegistries {
     public static class Keys {
         public static final ResourceKey<Registry<TravelTargetType<?>>> TRAVEL_TARGET_TYPES = createKey("travel_target_types");
         public static final ResourceKey<Registry<TravelTargetSerializer<?>>> TRAVEL_TARGET_SERIALIZERS = createKey("travel_target_serializers");
-        public static final ResourceKey<Registry<ConduitType<?>>> CONDUIT_TYPES = createKey("conduit_types");
+        public static final ResourceKey<Registry<ConduitGraphType<?, ?, ?>>> CONDUIT_GRAPH_TYPES = createKey("conduit_graph_types");
+        public static final ResourceKey<Registry<ConduitType<?, ?, ?>>> CONDUIT_TYPES = createKey("conduit_types");
         public static final ResourceKey<Registry<ConduitDataSerializer<?>>> CONDUIT_DATA_SERIALIZERS = createKey("conduit_data_serializers");
 
         private static <T> ResourceKey<Registry<T>> createKey(String name) {

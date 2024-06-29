@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 public class ConduitApiImpl implements ConduitApi {
 
     @Override
-    public Item createConduitItem(Supplier<? extends ConduitType<?>> type, Item.Properties properties) {
+    public Item createConduitItem(Supplier<? extends ConduitType<?, ?, ?>> type, Item.Properties properties) {
         return new ConduitBlockItem(type, ConduitBlocks.CONDUIT.get(), properties);
     }
 }

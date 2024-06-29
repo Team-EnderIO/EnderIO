@@ -2,8 +2,9 @@ package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitGraph;
-import com.enderio.api.filter.FluidStackFilter;
+import com.enderio.api.conduit.ConduitGraphContext;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
@@ -20,22 +21,14 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import java.util.List;
 import java.util.Optional;
 
-public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduitData, IFluidHandler> {
-
-    private final boolean lockFluids;
-    private final int fluidRate;
-
-    public FluidConduitTicker(boolean lockFluids, int fluidRate) {
-        this.lockFluids = lockFluids;
-        this.fluidRate = fluidRate;
-    }
+public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduitOptions, ConduitGraphContext.Dummy, FluidConduitData, IFluidHandler> {
 
     @Override
     public void tickGraph(
         ServerLevel level,
-        ConduitType<FluidConduitData> type,
-        List<ConduitNode<FluidConduitData>> loadedNodes,
-        ConduitGraph<FluidConduitData> graph,
+        ConduitType<FluidConduitOptions, ConduitGraphContext.Dummy, FluidConduitData> type,
+        List<ConduitNode<ConduitGraphContext.Dummy, FluidConduitData>> loadedNodes,
+        ConduitGraph<ConduitGraphContext.Dummy, FluidConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         boolean shouldReset = false;
@@ -58,17 +51,17 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
     @Override
     protected void tickCapabilityGraph(
         ServerLevel level,
-        ConduitType<FluidConduitData> type,
+        ConduitType<FluidConduitOptions, ConduitGraphContext.Dummy, FluidConduitData> type,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
-        ConduitGraph<FluidConduitData> graph,
+        ConduitGraph<ConduitGraphContext.Dummy, FluidConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (CapabilityConnection extract : extracts) {
             IFluidHandler extractHandler = extract.capability;
             FluidConduitData fluidExtendedData = extract.data;
 
-            int temp = fluidRate;
+            int temp = type.options().transferRate();
             if (extract.upgrade instanceof ExtractionSpeedUpgrade speedUpgrade) {
                 // TODO: Review scaling.
                 temp *= (int) Math.pow(2, speedUpgrade.tier());
@@ -100,14 +93,14 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
                 }
 
                 FluidStack transferredFluid = fluidExtendedData.lockedFluid() != null ?
-                    FluidUtil.tryFluidTransfer(insert.capability, extractHandler, new FluidStack(fluidExtendedData.lockedFluid(), fluidRate - transferred),
+                    FluidUtil.tryFluidTransfer(insert.capability, extractHandler, new FluidStack(fluidExtendedData.lockedFluid(), rate - transferred),
                         true) :
                     FluidUtil.tryFluidTransfer(insert.capability, extractHandler, rate - transferred, true);
 
                 if (!transferredFluid.isEmpty()) {
                     transferred += transferredFluid.getAmount();
-                    if (lockFluids) {
-                        for (ConduitNode<FluidConduitData> node : graph.getNodes()) {
+                    if (!type.options().isMultiFluid()) {
+                        for (ConduitNode<ConduitGraphContext.Dummy, FluidConduitData> node : graph.getNodes()) {
                             Fluid fluid = transferredFluid.getFluid();
                             if (fluid instanceof FlowingFluid flowing) {
                                 fluid = flowing.getSource();

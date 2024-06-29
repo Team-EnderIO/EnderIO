@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConduitScreenExtensions {
-    private static Map<ConduitType<?>, ConduitScreenExtension<?>> EXTENSIONS;
+    private static Map<ConduitType<?, ?, ?>, ConduitScreenExtension<?>> EXTENSIONS;
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     public static void init() {
@@ -26,7 +26,7 @@ public class ConduitScreenExtensions {
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     @Nullable
-    public static <T extends ConduitData<T>> ConduitScreenExtension<T> get(ConduitType<T> type) {
+    public static <T extends ConduitData<T>> ConduitScreenExtension<T> get(ConduitType<?, ?, T> type) {
         //noinspection unchecked
         return (ConduitScreenExtension<T>) EXTENSIONS.get(type);
     }

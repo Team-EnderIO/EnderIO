@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ConduitShape {
-    private final Map<ConduitType<?>, VoxelShape> conduitShapes = new HashMap<>();
+    private final Map<ConduitType<?, ?, ?>, VoxelShape> conduitShapes = new HashMap<>();
     private final Map<Direction, VoxelShape> directionShapes = new HashMap<>();
     private static final VoxelShape CONNECTOR = Block.box(2.5f, 2.5, 15f, 13.5f, 13.5f, 16f);
     private static final VoxelShape CONNECTION = Block.box(6.5f, 6.5f, 9.5, 9.5f, 9.5f, 16);
@@ -37,7 +37,7 @@ public class ConduitShape {
     public void updateConduit(ConduitBundle bundle) {
         this.conduitShapes.clear();
         this.directionShapes.clear();
-        for (ConduitType<?> type : bundle.getTypes()) {
+        for (ConduitType<?, ?, ?> type : bundle.getTypes()) {
             updateShapeForConduit(bundle, type);
         }
         updateTotalShape();
@@ -48,7 +48,7 @@ public class ConduitShape {
     }
 
     @Nullable
-    public ConduitType<?> getConduit(BlockPos pos, HitResult result) {
+    public ConduitType<?, ?, ?> getConduit(BlockPos pos, HitResult result) {
         return getLookUpValue(conduitShapes, pos, result);
     }
 
@@ -84,10 +84,10 @@ public class ConduitShape {
         return this.totalShape;
     }
 
-    private void updateShapeForConduit(ConduitBundle conduitBundle, ConduitType<?> conduitType) {
+    private void updateShapeForConduit(ConduitBundle conduitBundle, ConduitType<?, ?, ?> conduitType) {
         VoxelShape conduitShape = Shapes.empty();
         Direction.Axis axis = OffsetHelper.findMainAxis(conduitBundle);
-        Map<ConduitType<?>, List<Vec3i>> offsets = new HashMap<>();
+        Map<ConduitType<?, ?, ?>, List<Vec3i>> offsets = new HashMap<>();
         for (Direction direction : Direction.values()) {
             VoxelShape directionShape = directionShapes.getOrDefault(direction, Shapes.empty());
             if (conduitBundle.getConnectionState(direction, conduitType) instanceof DynamicConnectionState) {
@@ -110,7 +110,7 @@ public class ConduitShape {
 
         var allTypes = conduitBundle.getTypes();
         @Nullable Area box = null;
-        @Nullable ConduitType<?> notRendered = null;
+        @Nullable ConduitType<?, ?, ?> notRendered = null;
         int i = allTypes.indexOf(conduitType);
         if (i == -1) {
             conduitShapes.put(conduitType, Shapes.block());

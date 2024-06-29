@@ -3,16 +3,19 @@ package com.enderio.conduits.common.init;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitDataSerializer;
+import com.enderio.api.conduit.ConduitGraphContext;
+import com.enderio.api.conduit.ConduitGraphType;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.conduit.type.energy.EnergyConduitData;
-import com.enderio.conduits.common.conduit.type.energy.EnergyConduitType;
+import com.enderio.conduits.common.conduit.type.energy.EnergyConduitGraphType;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
-import com.enderio.conduits.common.conduit.type.fluid.FluidConduitType;
+import com.enderio.conduits.common.conduit.type.fluid.FluidConduitGraphType;
+import com.enderio.conduits.common.conduit.type.fluid.FluidConduitOptions;
 import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
-import com.enderio.conduits.common.conduit.type.item.ItemConduitType;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitGraphType;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
-import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitType;
+import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitGraphType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -21,30 +24,46 @@ import java.util.function.Supplier;
 
 public class EIOConduitTypes {
 
+    public static class Graphs {
+        public static final DeferredRegister<ConduitGraphType<?, ?, ?>> CONDUIT_GRAPH_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_GRAPH_TYPES, EnderIO.MODID);
+
+        public static final Supplier<EnergyConduitGraphType> ENERGY =
+            CONDUIT_GRAPH_TYPES.register("energy", EnergyConduitGraphType::new);
+
+        public static final Supplier<RedstoneConduitGraphType> REDSTONE =
+            CONDUIT_GRAPH_TYPES.register("redstone", RedstoneConduitGraphType::new);
+
+        public static final Supplier<ItemConduitGraphType> ITEM =
+            CONDUIT_GRAPH_TYPES.register("item", ItemConduitGraphType::new);
+
+        public static final Supplier<FluidConduitGraphType> FLUID =
+            CONDUIT_GRAPH_TYPES.register("fluid", FluidConduitGraphType::new);
+    }
+
     public static class Types {
-        public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_TYPES, EnderIO.MODID);
+        public static final DeferredRegister<ConduitType<?, ?, ?>> CONDUIT_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_TYPES, EnderIO.MODID);
 
-        public static final DeferredHolder<ConduitType<?>, EnergyConduitType> ENERGY =
-            CONDUIT_TYPES.register("energy", EnergyConduitType::new);
+        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<Void, ConduitGraphContext.Dummy, EnergyConduitData>> ENERGY =
+            register("energy", Graphs.ENERGY, null);
 
-        public static final DeferredHolder<ConduitType<?>, RedstoneConduitType> REDSTONE =
-            CONDUIT_TYPES.register("redstone", RedstoneConduitType::new);
+        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<Void, ConduitGraphContext.Dummy, RedstoneConduitData>> REDSTONE =
+            register("redstone", Graphs.REDSTONE, null);
 
-        public static final DeferredHolder<ConduitType<?>, FluidConduitType> FLUID =
-            fluidConduit("fluid", 50, false);
+        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<FluidConduitOptions, ConduitGraphContext.Dummy, FluidConduitData>> FLUID =
+            register("fluid", Graphs.FLUID, new FluidConduitOptions(false, 50));
 
-        public static final DeferredHolder<ConduitType<?>, FluidConduitType> FLUID2 =
-            fluidConduit("pressurized_fluid", 100, false);
+        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<FluidConduitOptions, ConduitGraphContext.Dummy, FluidConduitData>> FLUID2 =
+            register("fluid2", Graphs.FLUID, new FluidConduitOptions(false, 100));
 
-        public static final DeferredHolder<ConduitType<?>, FluidConduitType> FLUID3 =
-            fluidConduit("ender_fluid", 200, true);
+        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<FluidConduitOptions, ConduitGraphContext.Dummy, FluidConduitData>> FLUID3 =
+            register("fluid3", Graphs.FLUID, new FluidConduitOptions(true, 200));
 
-        public static final DeferredHolder<ConduitType<?>, ItemConduitType> ITEM =
-            CONDUIT_TYPES.register("item", ItemConduitType::new);
+        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<Void, ConduitGraphContext.Dummy, ItemConduitData>> ITEM =
+            register("item", Graphs.ITEM, null);
 
-        private static DeferredHolder<ConduitType<?>, FluidConduitType> fluidConduit(String name, int tier, boolean isMultiFluid) {
-            return CONDUIT_TYPES.register(name,
-                () -> new FluidConduitType(EnderIO.loc(name + "_conduit"), tier, isMultiFluid));
+        private static <T, U extends ConduitGraphContext<U>, V extends ConduitData<V>, W extends ConduitGraphType<T, U, V>> DeferredHolder<ConduitType<?, ?, ?>, ConduitType<T, U, V>> register(String name,
+            Supplier<W> graphType, T options) {
+            return CONDUIT_TYPES.register(name, () -> new ConduitType<>(graphType.get(), options));
         }
     }
 
@@ -69,6 +88,7 @@ public class EIOConduitTypes {
     }
 
     public static void register(IEventBus bus) {
+        Graphs.CONDUIT_GRAPH_TYPES.register(bus);
         Types.CONDUIT_TYPES.register(bus);
         Serializers.CONDUIT_DATA_SERIALIZERS.register(bus);
     }

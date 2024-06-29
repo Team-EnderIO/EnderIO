@@ -20,7 +20,7 @@ public class ConduitIconTextureManager extends TextureAtlasHolder {
         INSTANCE = this;
     }
 
-    public TextureAtlasSprite get(ConduitType<?> conduitType) {
+    public TextureAtlasSprite get(ConduitType<?, ?, ?> conduitType) {
         return this.getSprite(Objects.requireNonNull(EnderIORegistries.CONDUIT_TYPES.getKey(conduitType)));
     }
 }

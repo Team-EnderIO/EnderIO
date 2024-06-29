@@ -1,8 +1,8 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ConduitDataSerializer;
-import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ConduitData;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.network.DumbStreamCodec;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
@@ -61,11 +61,6 @@ public class EnergyConduitData implements ConduitData<EnergyConduitData> {
 
     public void setStored(int stored) {
         this.stored = stored;
-    }
-
-    @Override
-    public void onRemoved(ConduitType<EnergyConduitData> type, Level level, BlockPos pos) {
-        level.invalidateCapabilities(pos);
     }
 
     public EnergySidedData compute(Direction direction) {

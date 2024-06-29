@@ -1,17 +1,19 @@
 package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ConduitGraphContext;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitGraph;
+import com.enderio.api.conduit.ConduitType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
-public interface ConduitTicker<T extends ConduitData<T>> {
+public interface ConduitTicker<TOptions, TContext extends ConduitGraphContext<TContext>, TData extends ConduitData<TData>> {
 
-    void tickGraph(ServerLevel level, ConduitType<T> type, ConduitGraph<T> graph,
+    // TODO: Sending the entire type might be excessive now. It may be possible to just send the options.
+    void tickGraph(ServerLevel level, ConduitType<TOptions, TContext, TData> type, ConduitGraph<TContext, TData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
     /**
@@ -37,7 +39,7 @@ public interface ConduitTicker<T extends ConduitData<T>> {
      * @return true if both types are similar and share the same extended conduit data
      */
     // TODO: This should be in ConduitType too.
-    default boolean canConnectTo(ConduitType<?> thisType, ConduitType<?> other) {
+    default boolean canConnectTo(ConduitType<?, ?, ?> thisType, ConduitType<?, ?, ?> other) {
         return thisType == other;
     }
 }

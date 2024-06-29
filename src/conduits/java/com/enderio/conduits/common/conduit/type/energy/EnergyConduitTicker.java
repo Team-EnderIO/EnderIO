@@ -1,9 +1,10 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ConduitGraphContext;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitGraph;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.conduits.common.tag.ConduitTags;
@@ -18,7 +19,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import java.util.List;
 import java.util.function.IntConsumer;
 
-public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyConduitData, IEnergyStorage> {
+public class EnergyConduitTicker extends CapabilityAwareConduitTicker<Void, ConduitGraphContext.Dummy, EnergyConduitData, IEnergyStorage> {
 
     public EnergyConduitTicker() {
     }
@@ -26,14 +27,14 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
     @Override
     public void tickGraph(
         ServerLevel level,
-        ConduitType<EnergyConduitData> type,
-        List<ConduitNode<EnergyConduitData>> loadedNodes,
-        ConduitGraph<EnergyConduitData> graph,
+        ConduitType<Void, ConduitGraphContext.Dummy, EnergyConduitData> type,
+        List<ConduitNode<ConduitGraphContext.Dummy, EnergyConduitData>> loadedNodes,
+        ConduitGraph<ConduitGraphContext.Dummy, EnergyConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
 
-        for (ConduitNode<EnergyConduitData> node : loadedNodes) {
+        for (ConduitNode<ConduitGraphContext.Dummy, EnergyConduitData> node : loadedNodes) {
             EnergyConduitData energyExtendedData = node.getConduitData();
             IEnergyStorage energy = energyExtendedData.getSelfCap();
             if (energy.getEnergyStored() == 0) {
@@ -42,7 +43,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
             }
 
             int previousStored = energy.getEnergyStored();
-            for (ConduitNode<?> otherNode : loadedNodes) {
+            for (ConduitNode<ConduitGraphContext.Dummy, EnergyConduitData> otherNode : loadedNodes) {
                for (Direction dir: Direction.values()) {
                    if (otherNode.getIOState(dir).map(ConduitGraphObject.IOState::isInsert).orElse(false)) {
                        IEnergyStorage capability = level.getCapability(getCapability(), otherNode.getPos().relative(dir), dir.getOpposite());
@@ -68,10 +69,10 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
     @Override
     public void tickCapabilityGraph(
         ServerLevel level,
-        ConduitType<EnergyConduitData> type,
+        ConduitType<Void, ConduitGraphContext.Dummy, EnergyConduitData> type,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
-        ConduitGraph<EnergyConduitData> graph,
+        ConduitGraph<ConduitGraphContext.Dummy, EnergyConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (var extract : extracts) {

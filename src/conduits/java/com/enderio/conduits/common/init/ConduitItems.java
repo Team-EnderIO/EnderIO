@@ -6,7 +6,6 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
-import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
 import com.enderio.conduits.common.conduit.upgrade.SpeedUpgradeItem;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
@@ -83,7 +82,7 @@ public class ConduitItems {
     public static final RegiliteItem<RedstoneFilterItem> TIMER_FILTER = createRedstoneFilter("redstone_timer_filter", ConduitComponents.REDSTONE_TIMER_FILTER,
         RedstoneTimerFilter.INSTANCE, RedstoneFilterItem.TIMER_FILTER_PROVIDER, ConduitMenus.REDSTONE_TIMER_FILTER::get);
 
-    private static RegiliteItem<Item> createConduitItem(Supplier<? extends ConduitType<?>> type, String itemName) {
+    private static RegiliteItem<Item> createConduitItem(Supplier<? extends ConduitType<?, ?, ?>> type, String itemName) {
         return ITEM_REGISTRY
             .registerItem(itemName + "_conduit",
                 p -> ConduitApi.INSTANCE.createConduitItem(type, p))

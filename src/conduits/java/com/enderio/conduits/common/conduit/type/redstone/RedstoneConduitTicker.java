@@ -1,9 +1,10 @@
 package com.enderio.conduits.common.conduit.type.redstone;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ConduitGraphContext;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitGraph;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.init.ConduitBlocks;
@@ -15,13 +16,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneConduitData> {
+public class RedstoneConduitTicker implements IOAwareConduitTicker<Void, ConduitGraphContext.Dummy, RedstoneConduitData> {
 
     private final Map<ColorControl, Integer> activeColors = new EnumMap<>(ColorControl.class);
     @Override
@@ -34,11 +34,11 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
     @Override
     public void tickGraph(
         ServerLevel level,
-        ConduitType<RedstoneConduitData> type,
-        ConduitGraph<RedstoneConduitData> graph,
+        ConduitType<Void, ConduitGraphContext.Dummy, RedstoneConduitData> type,
+        ConduitGraph<ConduitGraphContext.Dummy, RedstoneConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        Collection<ConduitNode<RedstoneConduitData>> nodeIdentifiers = graph.getNodes();
+        Collection<ConduitNode<ConduitGraphContext.Dummy, RedstoneConduitData>> nodeIdentifiers = graph.getNodes();
 
         activeColors.clear();
         tickGraph(level, type, nodeIdentifiers.stream().filter(node -> isLoaded(level, node.getPos())).toList(), graph, coloredRedstoneProvider);
@@ -55,11 +55,11 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
     @Override
     public void tickColoredGraph(
         ServerLevel level,
-        ConduitType<RedstoneConduitData> type,
+        ConduitType<Void, ConduitGraphContext.Dummy, RedstoneConduitData> type,
         List<Connection<RedstoneConduitData>> inserts,
         List<Connection<RedstoneConduitData>> extracts,
         ColorControl color,
-        ConduitGraph<RedstoneConduitData> graph,
+        ConduitGraph<ConduitGraphContext.Dummy, RedstoneConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (Connection<RedstoneConduitData> extract : extracts) {

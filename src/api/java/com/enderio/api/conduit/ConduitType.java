@@ -3,87 +3,86 @@ package com.enderio.api.conduit;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
-import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.registry.EnderIORegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.Set;
 
-public abstract class ConduitType<T extends ConduitData<T>> {
+public record ConduitType<TOptions, TContext extends ConduitGraphContext<TContext>, TData extends ConduitData<TData>>(
+    ConduitGraphType<TOptions, TContext, TData> graphType,
+    TOptions options
+) {
+    public ConduitTicker<TOptions, TContext, TData> getTicker() {
+        return graphType.getTicker();
+    }
 
-    public abstract ConduitTicker<T> getTicker();
+    public ConduitMenuData getMenuData() {
+        return graphType.getMenuData(options);
+    }
 
-    public abstract ConduitMenuData getMenuData();
+    public TData createConduitData(Level level, BlockPos pos) {
+        return graphType.createConduitData(options, level, pos);
+    }
 
-    public abstract T createConduitData(Level level, BlockPos pos);
+    public boolean canBeInSameBundle(ConduitType<?, ?, ?> conduitType) {
+        return graphType.canBeInSameBundle(options, conduitType);
+    }
 
+    public boolean canBeReplacedBy(ConduitType<?, ?, ?> conduitType) {
+        return graphType.canBeReplacedBy(options, conduitType);
+    }
+
+    public boolean canApplyUpgrade(SlotType slotType, ConduitUpgrade conduitUpgrade) {
+        return graphType.canApplyUpgrade(options, slotType, conduitUpgrade);
+    }
+
+    public boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
+        return graphType.canApplyFilter(options, slotType, resourceFilter);
+    }
+
+    public void onCreated(TData data, Level level, BlockPos pos, @Nullable Player player) {
+        graphType.onCreated(options, data, level, pos, player);
+    }
+
+    public void onRemoved(TData data, Level level, BlockPos pos) {
+        graphType.onRemoved(options, data, level, pos);
+    }
+
+    public void onConnectionsUpdated(TData data, Level level, BlockPos pos, Set<Direction> connectedSides) {
+        graphType.onConnectionsUpdated(options, data, level, pos, connectedSides);
+    }
+
+    @Nullable
+    public <K> K proxyCapability(BlockCapability<K, Direction> capability, TData conduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
+        return graphType.proxyCapability(options, capability, conduitData, level, pos, direction, state);
+    }
+
+    public ConduitGraphType.ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {
+        return graphType.getDefaultConnection(options, level, pos, direction);
+    }
+
+    // TODO: 1.21: I want to have a single conduit item
     /**
      * Override this method if your conduit type and your conduit item registry name don't match
      * @return the conduit item that holds this type
      */
     public Item getConduitItem() {
-        ResourceLocation key = EnderIORegistries.CONDUIT_TYPES.getKey(this);
-        return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(key.getNamespace(), key.getPath() + "_conduit"));
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean canBeInSameBlock(ConduitType<?> other) {
-        return true;
-    }
-
-    public boolean canBeReplacedBy(ConduitType<?> other) {
-        return false;
-    }
-
-    public boolean canApplyUpgrade(SlotType slotType, ConduitUpgrade conduitUpgrade) {
-        return false;
-    }
-
-    public boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
-        return false;
-    }
-
-    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, T extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction,
-        @Nullable ConduitNode.IOState state) {
-        return Optional.empty();
-    }
-
-    /**
-     * @param level the level
-     * @param pos conduit position
-     * @param direction direction the conduit connects to
-     * @return the connectiondata that should be set on connection based on context
-     */
-    public ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {
-        return new ConduitConnectionData(false, true, RedstoneControl.NEVER_ACTIVE);
-    }
-
-    public record ConduitConnectionData(boolean isInsert, boolean isExtract, RedstoneControl control) {}
-
-    public final boolean is(TagKey<ConduitType<?>> tag) {
-        return getAsHolder().is(tag);
-    }
-
-    public final Stream<TagKey<ConduitType<?>>> getTags() {
-        return getAsHolder().tags();
-    }
-
-    public final Holder<ConduitType<?>> getAsHolder() {
-        return EnderIORegistries.CONDUIT_TYPES.wrapAsHolder(this);
+        //ResourceLocation key = EnderIORegistries.CONDUIT_TYPES.getKey(this);
+        //return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(key.getNamespace(), key.getPath() + "_conduit"));
+        // TODO...
+        return Items.GRANITE;
     }
 
     @Nullable
-    public static ResourceLocation getKey(ConduitType<?> conduitType) {
+    public static ResourceLocation getKey(ConduitType<?, ?, ?> conduitType) {
         return EnderIORegistries.CONDUIT_TYPES.getKey(conduitType);
     }
 }

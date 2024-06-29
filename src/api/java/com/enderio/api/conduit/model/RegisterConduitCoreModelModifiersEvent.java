@@ -13,13 +13,13 @@ public class RegisterConduitCoreModelModifiersEvent extends Event implements IMo
         ConduitCoreModelModifier<T> createModifier();
     }
 
-    private final Map<ConduitType<?>, ConduitCoreModelModifierFactory<?>> modifiers = new ConcurrentHashMap<>();
+    private final Map<ConduitType<?, ?, ?>, ConduitCoreModelModifierFactory<?>> modifiers = new ConcurrentHashMap<>();
 
-    public <T extends ConduitData<T>> void register(ConduitType<T> type, ConduitCoreModelModifierFactory<T> modifierFactory) {
+    public <T extends ConduitData<T>> void register(ConduitType<?, ?, T> type, ConduitCoreModelModifierFactory<T> modifierFactory) {
         modifiers.put(type, modifierFactory);
     }
 
-    public Map<ConduitType<?>, ConduitCoreModelModifierFactory<?>> getModifiers() {
+    public Map<ConduitType<?, ?, ?>, ConduitCoreModelModifierFactory<?>> getModifiers() {
         return Map.copyOf(modifiers);
     }
 }

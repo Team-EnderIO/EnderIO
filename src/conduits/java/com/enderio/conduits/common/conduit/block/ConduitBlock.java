@@ -1,5 +1,7 @@
 package com.enderio.conduits.common.conduit.block;
 
+import com.enderio.api.conduit.ConduitData;
+import com.enderio.api.conduit.ConduitGraphContext;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
@@ -202,7 +204,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         if (action instanceof RightClickAction.Upgrade upgradeAction) {
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
-                player.getInventory().placeItemBackInInventory(upgradeAction.getNotInConduit().getConduitItem().getDefaultInstance());
+                player.getInventory().placeItemBackInInventory(upgradeAction.notInConduit().getConduitItem().getDefaultInstance());
             }
             result = ItemInteractionResult.sidedSuccess(isClientSide);
         } else if (action instanceof RightClickAction.Insert) {
@@ -231,7 +233,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     private Optional<ItemInteractionResult> handleYeta(ConduitBlockEntity conduit, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
         if (stack.is(EIOTags.Items.WRENCH)) {
-            @Nullable ConduitType<?> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
+            @Nullable ConduitType<?, ?, ?> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
             @Nullable Direction direction = conduit.getShape().getDirection(hit.getBlockPos(), hit);
             if (type == null) {
                 return Optional.empty();
@@ -241,48 +243,52 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 return Optional.of(ItemInteractionResult.sidedSuccess(isClientSide));
             }
 
-            ConduitBundle bundle = conduit.getBundle();
-
-            if (direction != null) {
-                ConnectionState connectionState = bundle.getConnectionState(direction, type);
-
-                if (connectionState instanceof DynamicConnectionState dyn) {
-                    bundle.getNodeFor(type).clearState(direction);
-                    conduit.dropConnection(dyn);
-                    bundle.setConnectionState(direction, type, StaticConnectionStates.DISABLED);
-                    conduit.updateShape();
-                    conduit.updateConnectionToData(type);
-                } else {
-                    bundle.setConnectionState(direction, type, StaticConnectionStates.DISABLED);
-                    conduit.updateShape();
-                    conduit.updateConnectionToData(type);
-
-                    if (conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(direction)) instanceof ConduitBlockEntity other) {
-                        Direction oppositeDirection = direction.getOpposite();
-
-                        bundle.setConnectionState(oppositeDirection, type, StaticConnectionStates.DISABLED);
-                        other.updateShape();
-                        other.updateConnectionToData(type);
-                        ConduitGraphObject<?> thisNode = bundle.getNodeFor(type);
-                        ConduitGraphObject<?> otherNode = other.getBundle().getNodeFor(type);
-                        thisNode.getGraph().removeSingleEdge(thisNode, otherNode);
-                        thisNode.getGraph().removeSingleEdge(otherNode, thisNode);
-                        ConduitSavedData.addPotentialGraph(type, thisNode.getGraph(), (ServerLevel) conduit.getLevel());
-                        ConduitSavedData.addPotentialGraph(type, otherNode.getGraph(), (ServerLevel) other.getLevel());
-                    }
-                }
-            } else {
-                ConnectionState connectionState = bundle.getConnectionState(hit.getDirection(), type);
-
-                if (connectionState == StaticConnectionStates.DISABLED) {
-                    conduit.tryConnectTo(hit.getDirection(), type, true, true);
-                }
-            }
-
+            internalHandleYeta(type, direction, conduit, hit);
             return Optional.of(ItemInteractionResult.sidedSuccess(isClientSide));
         }
 
         return Optional.empty();
+    }
+
+    private <T extends ConduitGraphContext<T>, U extends ConduitData<U>> void internalHandleYeta(ConduitType<?, T, U> type, @Nullable Direction direction,
+        ConduitBlockEntity conduit, BlockHitResult hit) {
+        ConduitBundle bundle = conduit.getBundle();
+
+        if (direction != null) {
+            ConnectionState connectionState = bundle.getConnectionState(direction, type);
+
+            if (connectionState instanceof DynamicConnectionState dyn) {
+                bundle.getNodeFor(type).clearState(direction);
+                conduit.dropConnection(dyn);
+                bundle.setConnectionState(direction, type, StaticConnectionStates.DISABLED);
+                conduit.updateShape();
+                conduit.updateConnectionToData(type);
+            } else {
+                bundle.setConnectionState(direction, type, StaticConnectionStates.DISABLED);
+                conduit.updateShape();
+                conduit.updateConnectionToData(type);
+
+                if (conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(direction)) instanceof ConduitBlockEntity other) {
+                    Direction oppositeDirection = direction.getOpposite();
+
+                    bundle.setConnectionState(oppositeDirection, type, StaticConnectionStates.DISABLED);
+                    other.updateShape();
+                    other.updateConnectionToData(type);
+                    ConduitGraphObject<T, U> thisNode = bundle.getNodeFor(type);
+                    ConduitGraphObject<T, U> otherNode = other.getBundle().getNodeFor(type);
+                    thisNode.getGraph().removeSingleEdge(thisNode, otherNode);
+                    thisNode.getGraph().removeSingleEdge(otherNode, thisNode);
+                    ConduitSavedData.addPotentialGraph(type, thisNode.getGraph(), (ServerLevel) conduit.getLevel());
+                    ConduitSavedData.addPotentialGraph(type, otherNode.getGraph(), (ServerLevel) other.getLevel());
+                }
+            }
+        } else {
+            ConnectionState connectionState = bundle.getConnectionState(hit.getDirection(), type);
+
+            if (connectionState == StaticConnectionStates.DISABLED) {
+                conduit.tryConnectTo(hit.getDirection(), type, true, true);
+            }
+        }
     }
 
     @SubscribeEvent
@@ -291,7 +297,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             && event.getLevel().getBlockEntity(event.getPos()) instanceof ConduitBlockEntity conduit
             && event.getEntity().isCrouching()) {
 
-            @Nullable ConduitType<?> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
+            @Nullable ConduitType<?, ?, ?> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
             if (type != null) {
                 conduit.removeTypeAndDelete(type);
                 if (event.getLevel() instanceof ServerLevel serverLevel) {
@@ -339,7 +345,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     }
 
     private Optional<OpenInformation> getOpenInformation(ConduitBlockEntity conduit, BlockHitResult hit) {
-        @Nullable ConduitType<?> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
+        @Nullable ConduitType<?, ?, ?> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
         @Nullable Direction direction = conduit.getShape().getDirection(hit.getBlockPos(), hit);
 
         if (direction != null && type != null) {
@@ -365,7 +371,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         //fallback
         for (Direction potential : Direction.values()) {
             if (bundle.isConnectionEnd(potential)) {
-                for (ConduitType<?> potentialType : bundle.getTypes()) {
+                for (ConduitType<?, ?, ?> potentialType : bundle.getTypes()) {
                     if (bundle.getConnectionState(potential, potentialType) instanceof DynamicConnectionState) {
                         return Optional.of(new OpenInformation(potential, potentialType));
                     }
@@ -375,7 +381,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         }
         for (Direction potential : Direction.values()) {
             if (!(conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(potential)) instanceof ConduitBlockEntity)) {
-                for (ConduitType<?> potentialType : bundle.getTypes()) {
+                for (ConduitType<?, ?, ?> potentialType : bundle.getTypes()) {
                     if (canBeValidConnection(conduit, potentialType, potential)) {
                         return Optional.of(new OpenInformation(potential, potentialType));
                     }
@@ -388,14 +394,14 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     // endregion
 
-    public static boolean canBeOrIsValidConnection(ConduitBlockEntity conduit, ConduitType<?> type, Direction direction) {
+    public static boolean canBeOrIsValidConnection(ConduitBlockEntity conduit, ConduitType<?, ?, ?> type, Direction direction) {
         ConduitBundle bundle = conduit.getBundle();
 
         return bundle.getConnectionState(direction, type) instanceof DynamicConnectionState
             || canBeValidConnection(conduit, type, direction);
     }
 
-    public static boolean canBeValidConnection(ConduitBlockEntity conduit, ConduitType<?> type, Direction direction) {
+    public static boolean canBeValidConnection(ConduitBlockEntity conduit, ConduitType<?, ?, ?> type, Direction direction) {
         ConduitBundle bundle = conduit.getBundle();
         ConnectionState connectionState = bundle.getConnectionState(direction, type);
         return connectionState instanceof StaticConnectionStates state
@@ -419,7 +425,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         }
 
         if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
-            @Nullable ConduitType<?> type = conduit.getShape().getConduit(pos, target);
+            @Nullable ConduitType<?, ?, ?> type = conduit.getShape().getConduit(pos, target);
             if (type != null) {
                 return type.getConduitItem().getDefaultInstance();
             }
@@ -457,7 +463,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         HitResult hit = player.pick(player.blockInteractionRange() + 5, 1, false);
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ConduitBlockEntity conduit) {
-            @Nullable ConduitType<?> conduitType = conduit.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
+            @Nullable ConduitType<?, ?, ?> conduitType = conduit.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
             if (conduitType == null) {
                 if (!conduit.getBundle().getTypes().isEmpty()) {
                     level.playSound(player, pos, SoundEvents.GENERIC_SMALL_FALL, SoundSource.BLOCKS, 1F, 1F);
@@ -512,5 +518,5 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     // endregion
 
-    private record OpenInformation(Direction direction, ConduitType<?> type) {}
+    private record OpenInformation(Direction direction, ConduitType<?, ?, ?> type) {}
 }

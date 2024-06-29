@@ -14,7 +14,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 public record C2SSetConduitConnectionState(
     BlockPos pos,
     Direction direction,
-    ConduitType<?> conduitType,
+    ConduitType<?, ?, ?> conduitType,
     DynamicConnectionState connectionState
 ) implements CustomPacketPayload {
 

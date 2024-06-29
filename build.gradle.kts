@@ -36,6 +36,14 @@ idea {
     }
 }
 
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType<JavaCompile> {
+            options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "400"))
+        }
+    }
+}
+
 /*checkstyle {
     isIgnoreFailures = false
 }*/
@@ -200,11 +208,12 @@ repositories {
     exclusiveRepo("https://modmaven.dev/", "mezz.jei", "mcjty.theoneprobe", "appeng", "mekanism")
     exclusiveRepo("https://cursemaven.com", "curse.maven")
     exclusiveRepo("https://maven.blamejared.com", "vazkii.patchouli", "net.darkhax.bookshelf", "net.darkhax.enchdesc", "com.almostreliable.mods")
-    exclusiveRepo("https://dogforce-games.com/maven", "dev.gigaherz.graph")
+    //exclusiveRepo("https://dogforce-games.com/maven", "dev.gigaherz.graph")
     exclusiveRepo("https://api.modrinth.com/maven", "maven.modrinth")
     exclusiveRepo("https://maven.parchmentmc.org/", "org.parchmentmc.data")
     exclusiveRepo("https://maven.rover656.dev/releases", "com.enderio")
     exclusiveRepo("https://squiddev.cc/maven/", "cc.tweaked")
+    mavenLocal()
 }
 
 jarJar.enable()

@@ -142,8 +142,8 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
         }
 
-        List<ConduitType<?>> validConnections = new ArrayList<>();
-        for (ConduitType<?> type : getBundle().getTypes()) {
+        List<ConduitType<?, ?, ?>> validConnections = new ArrayList<>();
+        for (ConduitType<?, ?, ?> type : getBundle().getTypes()) {
             if (getConnectionState(type) instanceof DynamicConnectionState) {
                 validConnections.add(type);
             }
@@ -153,7 +153,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             typeSelectionButtons.forEach(this::removeWidget);
             typeSelectionButtons.clear();
             for (int i = 0; i < validConnections.size(); i++) {
-                ConduitType<?> connection = validConnections.get(i);
+                ConduitType<?, ?, ?> connection = validConnections.get(i);
                 ConduitSelectionButton button = new ConduitSelectionButton(getGuiLeft() + 206, getGuiTop() + 4 + 24*i, connection, menu::getConduitType, type -> {
                     menu.setConduitType(type);
                     recalculateTypedButtons = true;
@@ -166,7 +166,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     }
 
     private <T extends ConduitData<T>> void sendExtendedConduitUpdate(Function<T, T> map) {
-        ConduitType<T> conduitType = (ConduitType<T>)menu.getConduitType();
+        ConduitType<?, ?, T> conduitType = (ConduitType<?, ?, T>)menu.getConduitType();
         T currentData = getBundle().getNodeFor(conduitType).getConduitData().cast();
         var menu = getMenu();
 
@@ -199,7 +199,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
         return getConnectionState(menu.getConduitType());
     }
 
-    private ConnectionState getConnectionState(ConduitType<?> type) {
+    private ConnectionState getConnectionState(ConduitType<?, ?, ?> type) {
         return getBundle().getConnectionState(menu.getDirection(), type);
     }
 

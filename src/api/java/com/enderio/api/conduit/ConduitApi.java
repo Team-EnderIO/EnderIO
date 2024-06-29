@@ -5,6 +5,7 @@ import net.minecraft.world.item.Item;
 import java.util.ServiceLoader;
 import java.util.function.Supplier;
 
+// TODO: 1.21: Kill this :)
 public interface ConduitApi {
 
     ConduitApi INSTANCE = ServiceLoader.load(ConduitApi.class).findFirst().orElseThrow();
@@ -12,5 +13,5 @@ public interface ConduitApi {
     /**
      * This will create a Conduit Item. If, during porting, EIOConduits isn't available, a dummy item will be returned.
      */
-    Item createConduitItem(Supplier<? extends ConduitType<?>> type, Item.Properties properties);
+    Item createConduitItem(Supplier<? extends ConduitType<?, ?, ?>> type, Item.Properties properties);
 }

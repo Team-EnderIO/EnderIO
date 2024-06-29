@@ -1,7 +1,6 @@
 package com.enderio.conduits.common.conduit;
 
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.registry.EnderIORegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -18,11 +17,12 @@ import java.util.List;
  */
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class ConduitTypeSorter {
-    private static final List<ConduitType<?>> SORTED_TYPES = new ArrayList<>();
+    private static final List<ConduitType<?, ?, ?>> SORTED_TYPES = new ArrayList<>();
 
     @SubscribeEvent
     public static void afterRegistryFreeze(FMLCommonSetupEvent event) {
-        List<ResourceLocation> tieredTypes = new ArrayList<>();
+        // TODO...
+        /*List<ResourceLocation> tieredTypes = new ArrayList<>();
         for (ConduitType<?> value : EnderIORegistries.CONDUIT_TYPES) {
             if (value instanceof TieredConduit<?> tiered && !tieredTypes.contains(tiered.getType())) {
                 tieredTypes.add(tiered.getType());
@@ -39,20 +39,20 @@ public class ConduitTypeSorter {
             }
             typesInType.sort(Comparator.comparing(EnderIORegistries.CONDUIT_TYPES::getKey));
             SORTED_TYPES.addAll(typesInType);
-        }
+        }*/
 
-        List<ConduitType<?>> unadded = new ArrayList<>();
-        for (ConduitType<?> type: EnderIORegistries.CONDUIT_TYPES) {
-            if (!(type instanceof TieredConduit)) {
+        List<ConduitType<?, ?, ?>> unadded = new ArrayList<>();
+        for (ConduitType<?, ?, ?> type: EnderIORegistries.CONDUIT_TYPES) {
+            //if (!(type instanceof TieredConduit)) {
                 unadded.add(type);
-            }
+            //}
         }
 
         unadded.sort(Comparator.comparing(EnderIORegistries.CONDUIT_TYPES::getKey));
         SORTED_TYPES.addAll(unadded);
     }
 
-    public static int getSortIndex(ConduitType<?> type) {
+    public static int getSortIndex(ConduitType<?, ?, ?> type) {
         return SORTED_TYPES.indexOf(type);
     }
 }
