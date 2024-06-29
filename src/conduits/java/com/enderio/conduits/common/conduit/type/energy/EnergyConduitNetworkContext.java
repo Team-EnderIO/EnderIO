@@ -6,6 +6,7 @@ import com.enderio.api.conduit.ConduitNetworkContext;
 public class EnergyConduitNetworkContext implements ConduitNetworkContext<EnergyConduitNetworkContext> {
 
     private int energyStored = 0;
+    private int energyInsertedThisTick = 0;
     private int rotatingIndex = 0;
 
     public EnergyConduitNetworkContext() {
@@ -21,6 +22,14 @@ public class EnergyConduitNetworkContext implements ConduitNetworkContext<Energy
 
     public void setEnergyStored(int energyStored) {
         this.energyStored = energyStored;
+    }
+
+    public int energyInsertedThisTick() {
+        return energyInsertedThisTick;
+    }
+
+    public void setEnergyInsertedThisTick(int energyInsertedThisTick) {
+        this.energyInsertedThisTick = energyInsertedThisTick;
     }
 
     public int rotatingIndex() {

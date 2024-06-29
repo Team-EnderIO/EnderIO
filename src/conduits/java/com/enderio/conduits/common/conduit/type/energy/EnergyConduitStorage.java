@@ -17,12 +17,18 @@ public record EnergyConduitStorage(
             return 0;
         }
 
+        EnergyConduitNetworkContext context = graph.getContext();
+        if (context == null) {
+            return 0;
+        }
+
         // Cap to transfer rate.
-        toReceive = Math.min(options.transferRate(), toReceive);
+        toReceive = Math.min(options.transferLimit() - context.energyInsertedThisTick(), toReceive);
 
         int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), toReceive);
         if (!simulate) {
-            graph.getContext().setEnergyStored(graph.getContext().energyStored() + energyReceived);
+            context.setEnergyInsertedThisTick(context.energyInsertedThisTick() + energyReceived);
+            context.setEnergyStored(graph.getContext().energyStored() + energyReceived);
         }
 
         return energyReceived;
@@ -40,7 +46,7 @@ public record EnergyConduitStorage(
 
     @Override
     public int getMaxEnergyStored() {
-        return graph.getNodes().size() * options.transferRate() / 2;
+        return graph.getNodes().size() * options.transferLimit() / 2;
     }
 
     @Override

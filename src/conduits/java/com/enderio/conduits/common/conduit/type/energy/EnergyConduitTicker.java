@@ -3,6 +3,7 @@ package com.enderio.conduits.common.conduit.type.energy;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitNetwork;
+import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.conduits.common.tag.ConduitTags;
@@ -22,6 +23,20 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
     }
 
     @Override
+    public void tickGraph(ServerLevel level, ConduitType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> type,
+        List<ConduitNode<EnergyConduitNetworkContext, ConduitData.EmptyConduitData>> loadedNodes,
+        ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
+
+        // Reset insertion cap
+        EnergyConduitNetworkContext context = graph.getContext();
+        if (context != null) {
+            context.setEnergyInsertedThisTick(0);
+        }
+
+        super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
+    }
+
+    @Override
     public void tickCapabilityGraph(
         ServerLevel level,
         ConduitType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> type,
@@ -35,6 +50,14 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
             return;
         }
 
+        // Revert overflow.
+        if (inserts.size() <= context.rotatingIndex()) {
+            context.setRotatingIndex(0);
+        }
+
+        int availableEnergy = context.energyStored();
+        int totalEnergyInserted = 0;
+
         int startingRotatingIndex = context.rotatingIndex();
         for (int i = startingRotatingIndex; i < startingRotatingIndex + inserts.size(); i++) {
             int insertIndex = i % inserts.size();
@@ -46,9 +69,17 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
                 continue;
             }
 
-            int energyInserted = insertHandler.receiveEnergy(Math.min(type.options().transferRate(), context.energyStored()), false);
+            int energyToInsert = Math.min(type.options().transferLimit() - totalEnergyInserted, availableEnergy);
+
+            int energyInserted = insertHandler.receiveEnergy(energyToInsert, false);
             context.setEnergyStored(context.energyStored() - energyInserted);
             context.setRotatingIndex(insertIndex + 1);
+
+            totalEnergyInserted += energyInserted;
+
+            if (totalEnergyInserted >= type.options().transferLimit()) {
+                break;
+            }
         }
     }
 

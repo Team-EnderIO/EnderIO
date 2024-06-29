@@ -58,7 +58,7 @@ public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyCondui
         }
 
         if (conduitType.options() instanceof EnergyConduitOptions otherOptions) {
-            return energyConduitOptions.transferRate() <= otherOptions.transferRate();
+            return energyConduitOptions.transferLimit() <= otherOptions.transferLimit();
         }
 
         return false;
