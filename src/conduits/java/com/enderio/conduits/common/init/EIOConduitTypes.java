@@ -53,8 +53,16 @@ public class EIOConduitTypes {
     public static class Types {
         public static final DeferredRegister<ConduitType<?, ?, ?>> CONDUIT_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_TYPES, EnderIO.MODID);
 
+        // TODO: Need to decide on transfer rates. These are just here to get the types in.
+
         public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData>> ENERGY =
             register("energy", NetworkTypes.ENERGY, new EnergyConduitOptions(1000));
+
+        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData>> ENHANCED_ENERGY =
+            register("enhanced_energy", NetworkTypes.ENERGY, new EnergyConduitOptions(5000));
+
+        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData>> ENDER_ENERGY =
+            register("ender_energy", NetworkTypes.ENERGY, new EnergyConduitOptions(10000));
 
         public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<Void, ConduitNetworkContext.Dummy, RedstoneConduitData>> REDSTONE =
             register("redstone", NetworkTypes.REDSTONE, null);

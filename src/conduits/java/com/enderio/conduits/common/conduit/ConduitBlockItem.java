@@ -54,7 +54,12 @@ public class ConduitBlockItem extends BlockItem {
 
     @Override
     public Component getName(ItemStack pStack) {
-        return Component.literal(EnderIORegistries.CONDUIT_TYPES.getKey(getType(pStack)).toString());
+        var conduitType = getType(pStack);
+        if (conduitType == null) {
+            return super.getName(pStack);
+        }
+
+        return Component.literal(EnderIORegistries.CONDUIT_TYPES.getKey(conduitType).toString());
     }
 
     @Override

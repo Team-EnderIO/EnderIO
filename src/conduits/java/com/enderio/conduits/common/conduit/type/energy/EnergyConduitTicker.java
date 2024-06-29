@@ -8,6 +8,8 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
+import com.enderio.conduits.common.conduit.ConduitBundle;
+import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -105,6 +107,10 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduitOp
 
     @Override
     public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
+        if (level.getBlockEntity(conduitPos.relative(direction)) instanceof ConduitBlockEntity) {
+            return false;
+        }
+
         IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, conduitPos.relative(direction), direction.getOpposite());
         return capability != null;
     }
