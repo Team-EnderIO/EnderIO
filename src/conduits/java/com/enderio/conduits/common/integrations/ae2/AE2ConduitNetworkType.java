@@ -82,11 +82,11 @@ public class AE2ConduitNetworkType implements ConduitNetworkType<AE2ConduitOptio
 
     @Override
     public <K> @Nullable K proxyCapability(ConduitType<AE2ConduitOptions, ConduitNetworkContext.Dummy, AE2InWorldConduitNodeHost> type,
-        BlockCapability<K, Direction> capability, ConduitNetwork<ConduitNetworkContext.Dummy, AE2InWorldConduitNodeHost> network,
-        AE2InWorldConduitNodeHost conduitData, Level level, BlockPos pos, @Nullable Direction direction, ConduitNode.@Nullable IOState state) {
+        BlockCapability<K, Direction> capability, ConduitNode<ConduitNetworkContext.Dummy, AE2InWorldConduitNodeHost> node, Level level, BlockPos pos,
+        @Nullable Direction direction, ConduitNode.@Nullable IOState state) {
 
         if (capability == AE2Integration.IN_WORLD_GRID_NODE_HOST) {
-            return (K) conduitData;
+            return (K) node.getConduitData();
         }
 
         return null;

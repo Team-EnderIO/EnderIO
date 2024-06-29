@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 public record EnergyConduitStorage(
     EnergyConduitOptions options,
-    ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph
+    ConduitNode<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> node
 ) implements IEnergyStorage {
 
     // TODO: EnergyConduitOptions for rates.
@@ -20,7 +20,7 @@ public record EnergyConduitStorage(
             return 0;
         }
 
-        EnergyConduitNetworkContext context = graph.getContext();
+        EnergyConduitNetworkContext context = node.getParentGraph().getContext();
         if (context == null) {
             return 0;
         }
@@ -31,7 +31,7 @@ public record EnergyConduitStorage(
         int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), toReceive);
         if (!simulate) {
             context.setEnergyInsertedThisTick(context.energyInsertedThisTick() + energyReceived);
-            context.setEnergyStored(graph.getContext().energyStored() + energyReceived);
+            context.setEnergyStored(context.energyStored() + energyReceived);
         }
 
         return energyReceived;
@@ -44,12 +44,13 @@ public record EnergyConduitStorage(
 
     @Override
     public int getEnergyStored() {
-        return Math.min(getMaxEnergyStored(), graph.getContext().energyStored());
+        EnergyConduitNetworkContext context = node.getParentGraph().getContext();
+        return Math.min(getMaxEnergyStored(), context.energyStored());
     }
 
     @Override
     public int getMaxEnergyStored() {
-        return graph.getNodes().size() * options.transferLimit() / 2;
+        return node.getParentGraph().getNodes().size() * options.transferLimit() / 2;
     }
 
     @Override
@@ -61,6 +62,6 @@ public record EnergyConduitStorage(
     // This means we don't have to worry about checking if we can extract at this point.
     @Override
     public boolean canReceive() {
-        return graph.getContext() != null;
+        return node.getParentGraph() != null && node.getParentGraph().getContext() != null;
     }
 }

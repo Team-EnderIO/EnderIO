@@ -63,7 +63,7 @@ public interface ConduitNetworkType<TOptions, TContext extends ConduitNetworkCon
     // endregion
 
     @Nullable
-    default <K> K proxyCapability(ConduitType<TOptions, TContext, TData> type, BlockCapability<K, Direction> capability, ConduitNetwork<TContext, TData> network, TData conduitData,
+    default <K> K proxyCapability(ConduitType<TOptions, TContext, TData> type, BlockCapability<K, Direction> capability, ConduitNode<TContext, TData> node,
         Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
         return null;
     }

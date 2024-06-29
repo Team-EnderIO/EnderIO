@@ -69,12 +69,12 @@ public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyCondui
 
     @Override
     public <K> @Nullable K proxyCapability(ConduitType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> type,
-        BlockCapability<K, Direction> capability, ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> network,
-        ConduitData.EmptyConduitData conduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
+        BlockCapability<K, Direction> capability, ConduitNode<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> node,
+        Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
 
         if (Capabilities.EnergyStorage.BLOCK == capability && (state == null || state.isExtract())) {
             //noinspection unchecked
-            return (K) new EnergyConduitStorage(type.options(), network);
+            return (K) new EnergyConduitStorage(type.options(), node);
         }
 
         return null;
