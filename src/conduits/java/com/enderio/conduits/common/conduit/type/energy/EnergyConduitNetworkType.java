@@ -72,9 +72,7 @@ public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyCondui
         BlockCapability<K, Direction> capability, ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> network,
         ConduitData.EmptyConduitData conduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
 
-        if (Capabilities.EnergyStorage.BLOCK == capability
-            && (state == null || state.isExtract())
-            && (direction == null || !level.getBlockState(pos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE))) {
+        if (Capabilities.EnergyStorage.BLOCK == capability && (state == null || state.isExtract())) {
             //noinspection unchecked
             return (K) new EnergyConduitStorage(type.options(), network);
         }

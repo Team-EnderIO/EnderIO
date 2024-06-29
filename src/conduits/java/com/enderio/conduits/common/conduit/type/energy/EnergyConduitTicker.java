@@ -6,6 +6,8 @@ import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
+import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
+import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,9 +17,10 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData, IEnergyStorage> {
+public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> {
 
     public EnergyConduitTicker() {
     }
@@ -33,25 +36,29 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
             context.setEnergyInsertedThisTick(0);
         }
 
-        super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
+        IOAwareConduitTicker.super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
     }
 
     @Override
-    public void tickCapabilityGraph(
-        ServerLevel level,
-        ConduitType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> type,
-        List<CapabilityConnection> inserts,
-        List<CapabilityConnection> extracts,
-        ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph,
-        ColoredRedstoneProvider coloredRedstoneProvider) {
+    public void tickColoredGraph(ServerLevel level, ConduitType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> type,
+        List<Connection<ConduitData.EmptyConduitData>> inserts, List<Connection<ConduitData.EmptyConduitData>> extracts, ColorControl color,
+        ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
         EnergyConduitNetworkContext context = graph.getContext();
         if (context == null) {
             return;
         }
 
+        List<IEnergyStorage> storagesForInsert = new ArrayList<>();
+        for (var insert : inserts) {
+            IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, insert.move(), insert.dir().getOpposite());
+            if (capability != null) {
+                storagesForInsert.add(capability);
+            }
+        }
+
         // Revert overflow.
-        if (inserts.size() <= context.rotatingIndex()) {
+        if (storagesForInsert.size() <= context.rotatingIndex()) {
             context.setRotatingIndex(0);
         }
 
@@ -59,11 +66,10 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
         int totalEnergyInserted = 0;
 
         int startingRotatingIndex = context.rotatingIndex();
-        for (int i = startingRotatingIndex; i < startingRotatingIndex + inserts.size(); i++) {
-            int insertIndex = i % inserts.size();
+        for (int i = startingRotatingIndex; i < startingRotatingIndex + storagesForInsert.size(); i++) {
+            int insertIndex = i % storagesForInsert.size();
 
-            CapabilityConnection insert = inserts.get(insertIndex);
-            IEnergyStorage insertHandler = insert.capability;
+            IEnergyStorage insertHandler = storagesForInsert.get(insertIndex);
 
             if (!insertHandler.canReceive()) {
                 continue;
@@ -83,6 +89,11 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
         }
     }
 
+    @Override
+    public boolean shouldSkipColor(List<Connection<ConduitData.EmptyConduitData>> extractList, List<Connection<ConduitData.EmptyConduitData>> insertList) {
+        return insertList.isEmpty();
+    }
+
     /**
      * This ensures consistent behaviour for FE/t caps and more.
      * @return how often the conduit should tick. 1 is every tick, 5 is every 5th tick, so 4 times a second
@@ -93,12 +104,8 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyCond
     }
 
     @Override
-    public BlockCapability<IEnergyStorage, Direction> getCapability() {
-        return Capabilities.EnergyStorage.BLOCK;
-    }
-
-    @Override
     public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
-        return super.canConnectTo(level, conduitPos, direction) && !level.getBlockState(conduitPos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE);
+        IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, conduitPos.relative(direction), direction.getOpposite());
+        return capability != null;
     }
 }
