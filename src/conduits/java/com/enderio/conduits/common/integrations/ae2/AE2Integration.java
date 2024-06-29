@@ -6,6 +6,8 @@ import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitApi;
 import com.enderio.api.conduit.ConduitDataSerializer;
+import com.enderio.api.conduit.ConduitNetworkContext;
+import com.enderio.api.conduit.ConduitNetworkType;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.integration.Integration;
 import com.enderio.api.registry.EnderIORegistries;
@@ -31,22 +33,26 @@ import java.util.function.Supplier;
 
 public class AE2Integration implements Integration {
 
-    /*public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_TYPES, EnderIO.MODID);
+    public static final DeferredRegister<ConduitNetworkType<?, ?, ?>> CONDUIT_NETWORK_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_NETWORK_TYPES, EnderIO.MODID);
+    public static final DeferredRegister<ConduitType<?, ?, ?>> CONDUIT_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_TYPES, EnderIO.MODID);
     public static final DeferredRegister<ConduitDataSerializer<?>> CONDUIT_DATA_SERIALIZERS = DeferredRegister.create(EnderIORegistries.CONDUIT_DATA_SERIALIZERS, EnderIO.MODID);
 
     private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
 
+    public static final Supplier<AE2ConduitNetworkType> NETWORK_TYPE = CONDUIT_NETWORK_TYPES.register("ae2", AE2ConduitNetworkType::new);
+
     //TODO use capability when moved to api by ea2
     public static BlockCapability<IInWorldGridNodeHost, @Nullable Direction> IN_WORLD_GRID_NODE_HOST = BlockCapability
         .createSided(ResourceLocation.fromNamespaceAndPath(AEConstants.MOD_ID, "inworld_gridnode_host"), IInWorldGridNodeHost.class);
-    public static final DeferredHolder<ConduitType<?>, AE2ConduitType> DENSE = CONDUIT_TYPES.register("dense_me", () -> new AE2ConduitType(true));
-    public static final DeferredHolder<ConduitType<?>, AE2ConduitType> NORMAL = CONDUIT_TYPES.register("me", () -> new AE2ConduitType(false));
 
-    public static final Supplier<ConduitDataSerializer<AE2InWorldConduitNodeHost>> NORMAL_DATA_SERIALIZER =
-        CONDUIT_DATA_SERIALIZERS.register("me", AE2InWorldConduitNodeHost.Normal.Serializer::new);
+    public static final Supplier<ConduitType<AE2ConduitOptions, ConduitNetworkContext.Dummy, AE2InWorldConduitNodeHost>> DENSE = CONDUIT_TYPES
+        .register("dense_me", () -> new ConduitType<>(NETWORK_TYPE.get(), new AE2ConduitOptions(true)));
 
-    public static final Supplier<ConduitDataSerializer<AE2InWorldConduitNodeHost>> DENSE_DATA_SERIALIZER =
-        CONDUIT_DATA_SERIALIZERS.register("dense_me", AE2InWorldConduitNodeHost.Dense.Serializer::new);
+    public static final Supplier<ConduitType<AE2ConduitOptions, ConduitNetworkContext.Dummy, AE2InWorldConduitNodeHost>> NORMAL = CONDUIT_TYPES
+        .register("me", () -> new ConduitType<>(NETWORK_TYPE.get(), new AE2ConduitOptions(false)));
+
+    public static final Supplier<ConduitDataSerializer<AE2InWorldConduitNodeHost>> DATA_SERIALIZER =
+        CONDUIT_DATA_SERIALIZERS.register("me", () -> AE2InWorldConduitNodeHost.Serializer.INSTANCE);
 
     public static final RegiliteItem<Item> DENSE_ITEM = createConduitItem(DENSE, "dense_me", "Dense ME Conduit");
     public static final RegiliteItem<Item> NORMAL_ITEM = createConduitItem(NORMAL, "me", "ME Conduit");
@@ -58,9 +64,9 @@ public class AE2Integration implements Integration {
     @Override
     public void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {
         ITEM_REGISTRY.register(modEventBus);
+        CONDUIT_NETWORK_TYPES.register(modEventBus);
         CONDUIT_TYPES.register(modEventBus);
         CONDUIT_DATA_SERIALIZERS.register(modEventBus);
-        modEventBus.addListener(this::addCapability);
     }
 
     public Optional<BlockState> getFacadeOf(ItemStack stack) {
@@ -74,7 +80,7 @@ public class AE2Integration implements Integration {
         return IN_WORLD_GRID_NODE_HOST;
     }
 
-    private static RegiliteItem<Item> createConduitItem(Supplier<? extends ConduitType<?>> type, String itemName, String english) {
+    private static RegiliteItem<Item> createConduitItem(Supplier<? extends ConduitType<?, ?, ?>> type, String itemName, String english) {
         return ITEM_REGISTRY
             .registerItem(itemName + "_conduit",
                 properties -> ConduitApi.INSTANCE.createConduitItem(type, properties))
@@ -87,8 +93,4 @@ public class AE2Integration implements Integration {
                     .texture("0", EnderIO.loc("block/conduit/" + conduitTypeKey.getPath()));
             });
     }
-
-    public void addCapability(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(IN_WORLD_GRID_NODE_HOST, ConduitBlockEntities.CONDUIT.get(), ConduitBlockEntity.createConduitCap(IN_WORLD_GRID_NODE_HOST));
-    }*/
 }

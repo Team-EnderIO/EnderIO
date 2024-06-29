@@ -223,32 +223,32 @@ public class ConduitRecipes extends RecipeProvider {
         if (Integrations.AE2_INTEGRATION.isPresent()) {
             var ae2RecipeOutput = recipeOutput.withConditions(new ModLoadedCondition("ae2"));
 
-//            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, AE2Integration.NORMAL_ITEM, 3)
-//                .pattern("BBB")
-//                .pattern("III")
-//                .pattern("BBB")
-//                .define('B', EIOItems.CONDUIT_BINDER)
-//                .define('I', ConduitTags.Items.COVERED_CABLE)
-//                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-//                .save(ae2RecipeOutput, EnderIO.loc("ae_covered_cable"));
-//
-//            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, AE2Integration.NORMAL_ITEM, 3)
-//                .pattern("BBB")
-//                .pattern("III")
-//                .pattern("BBB")
-//                .define('B', EIOItems.CONDUIT_BINDER)
-//                .define('I', ConduitTags.Items.GLASS_CABLE)
-//                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-//                .save(ae2RecipeOutput, EnderIO.loc("ae_glass_cable"));
-//
-//            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, AE2Integration.DENSE_ITEM, 3)
-//                .pattern("BBB")
-//                .pattern("III")
-//                .pattern("BBB")
-//                .define('B', EIOItems.CONDUIT_BINDER)
-//                .define('I', ConduitTags.Items.COVERED_DENSE_CABLE)
-//                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-//                .save(ae2RecipeOutput, EnderIO.loc("ae_covered_dense_cable"));
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, AE2Integration.NORMAL_ITEM, 3)
+                .pattern("BBB")
+                .pattern("III")
+                .pattern("BBB")
+                .define('B', EIOItems.CONDUIT_BINDER)
+                .define('I', ConduitTags.Items.COVERED_CABLE)
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+                .save(ae2RecipeOutput, EnderIO.loc("ae_covered_cable"));
+
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, AE2Integration.NORMAL_ITEM, 3)
+                .pattern("BBB")
+                .pattern("III")
+                .pattern("BBB")
+                .define('B', EIOItems.CONDUIT_BINDER)
+                .define('I', ConduitTags.Items.GLASS_CABLE)
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+                .save(ae2RecipeOutput, EnderIO.loc("ae_glass_cable"));
+
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, AE2Integration.DENSE_ITEM, 3)
+                .pattern("BBB")
+                .pattern("III")
+                .pattern("BBB")
+                .define('B', EIOItems.CONDUIT_BINDER)
+                .define('I', ConduitTags.Items.COVERED_DENSE_CABLE)
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+                .save(ae2RecipeOutput, EnderIO.loc("ae_covered_dense_cable"));
         }
 
         if (Integrations.MEKANISM_INTEGRATION.isPresent()) {

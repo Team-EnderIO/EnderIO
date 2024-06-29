@@ -2,6 +2,7 @@ package com.enderio.conduits.common.conduit.type.redstone;
 
 import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitMenuData;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.SimpleConduitNetworkType;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.ticker.ConduitTicker;
@@ -28,7 +29,7 @@ public class RedstoneConduitNetworkType implements SimpleConduitNetworkType<Reds
     }
 
     @Override
-    public RedstoneConduitData createConduitData(Void unused, Level level, BlockPos pos) {
+    public RedstoneConduitData createConduitData(ConduitType<Void, ConduitNetworkContext.Dummy, RedstoneConduitData> type, Level level, BlockPos pos) {
         return new RedstoneConduitData();
     }
 

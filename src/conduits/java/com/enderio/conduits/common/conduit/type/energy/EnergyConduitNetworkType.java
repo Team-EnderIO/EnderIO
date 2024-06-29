@@ -35,12 +35,13 @@ public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyCondui
 
     @Nullable
     @Override
-    public EnergyConduitNetworkContext createNetworkContext(EnergyConduitOptions options, ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> network) {
+    public EnergyConduitNetworkContext createNetworkContext(ConduitType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> type,
+        ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> network) {
         return new EnergyConduitNetworkContext();
     }
 
     @Override
-    public ConduitData.EmptyConduitData createConduitData(EnergyConduitOptions options, Level level, BlockPos pos) {
+    public ConduitData.EmptyConduitData createConduitData(ConduitType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> type, Level level, BlockPos pos) {
         return ConduitData.EMPTY;
     }
 
@@ -67,16 +68,17 @@ public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyCondui
     }
 
     @Override
-    public <K> @Nullable K proxyCapability(EnergyConduitOptions options, BlockCapability<K, Direction> capability,
-        ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> network, ConduitData.EmptyConduitData conduitData, Level level, BlockPos pos,
-        @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
+    public <K> @Nullable K proxyCapability(ConduitType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> type,
+        BlockCapability<K, Direction> capability, ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> network,
+        ConduitData.EmptyConduitData conduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
+
         if (Capabilities.EnergyStorage.BLOCK == capability
             && (state == null || state.isExtract())
             && (direction == null || !level.getBlockState(pos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE))) {
             //noinspection unchecked
-            return (K) new EnergyConduitStorage(options, network);
+            return (K) new EnergyConduitStorage(type.options(), network);
         }
-        
+
         return null;
     }
 

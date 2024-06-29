@@ -1,6 +1,8 @@
 package com.enderio.conduits.common.conduit.type.item;
 
 import com.enderio.api.conduit.ConduitMenuData;
+import com.enderio.api.conduit.ConduitNetworkContext;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.SimpleConduitNetworkType;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
@@ -25,7 +27,7 @@ public class ItemConduitNetworkType implements SimpleConduitNetworkType<ItemCond
     }
 
     @Override
-    public ItemConduitData createConduitData(Void unused, Level level, BlockPos pos) {
+    public ItemConduitData createConduitData(ConduitType<Void, ConduitNetworkContext.Dummy, ItemConduitData> type, Level level, BlockPos pos) {
         return new ItemConduitData();
     }
 

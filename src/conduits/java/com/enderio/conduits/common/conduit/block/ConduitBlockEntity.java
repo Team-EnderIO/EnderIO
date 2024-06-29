@@ -579,9 +579,17 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
         ConduitGraphObject<U, V> node = conduitBlockEntity.bundle.getNodeFor(type);
         ConduitGraphObject.IOState state = node.getIOState(side).orElse(null);
-        ConduitNetwork<U, V> graph = Objects.requireNonNull(node.getParentGraph());
+        ConduitNetwork<U, V> graph = getParentGraph(node);
+
+        if (graph == null) {
+            return null;
+        }
 
         return type.proxyCapability(capability, graph, node.getConduitData(), conduitBlockEntity.level, conduitBlockEntity.getBlockPos(), side, state);
+    }
+
+    private static <U extends ConduitNetworkContext<U>, V extends ConduitData<V>> @Nullable ConduitNetwork<U, V> getParentGraph(ConduitGraphObject<U, V> node) {
+        return node.getParentGraph();
     }
 
     public IItemHandler getConduitItemHandler() {

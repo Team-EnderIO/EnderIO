@@ -30,11 +30,11 @@ public record ConduitType<TOptions, TContext extends ConduitNetworkContext<TCont
 
     @Nullable
     public TContext createGraphContext(ConduitNetwork<TContext, TData> network) {
-        return graphType.createNetworkContext(options, network);
+        return graphType.createNetworkContext(this, network);
     }
 
     public TData createConduitData(Level level, BlockPos pos) {
-        return graphType.createConduitData(options, level, pos);
+        return graphType.createConduitData(this, level, pos);
     }
 
     public boolean canBeInSameBundle(ConduitType<?, ?, ?> conduitType) {
@@ -67,7 +67,7 @@ public record ConduitType<TOptions, TContext extends ConduitNetworkContext<TCont
 
     @Nullable
     public <K> K proxyCapability(BlockCapability<K, Direction> capability, ConduitNetwork<TContext, TData> graph, TData conduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
-        return graphType.proxyCapability(options, capability, graph, conduitData, level, pos, direction, state);
+        return graphType.proxyCapability(this, capability, graph, conduitData, level, pos, direction, state);
     }
 
     public ConduitNetworkType.ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {

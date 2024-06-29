@@ -32,13 +32,14 @@ public class FluidConduitNetworkType implements ConduitNetworkType<FluidConduitO
 
     @Override
     @Nullable
-    public ConduitNetworkContext.Dummy createNetworkContext(FluidConduitOptions options, ConduitNetwork<ConduitNetworkContext.Dummy, FluidConduitData> network) {
+    public ConduitNetworkContext.Dummy createNetworkContext(ConduitType<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData> type,
+        ConduitNetwork<ConduitNetworkContext.Dummy, FluidConduitData> network) {
         return null;
     }
 
     @Override
-    public FluidConduitData createConduitData(FluidConduitOptions options, Level level, BlockPos pos) {
-        return new FluidConduitData(options.isMultiFluid());
+    public FluidConduitData createConduitData(ConduitType<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData> type, Level level, BlockPos pos) {
+        return new FluidConduitData(type.options().isMultiFluid());
     }
 
     @Override

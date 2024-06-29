@@ -22,8 +22,8 @@ public interface ConduitNetworkType<TOptions, TContext extends ConduitNetworkCon
     ConduitMenuData getMenuData(TOptions options);
 
     @Nullable
-    TContext createNetworkContext(TOptions options, ConduitNetwork<TContext, TData> network);
-    TData createConduitData(TOptions options, Level level, BlockPos pos);
+    TContext createNetworkContext(ConduitType<TOptions, TContext, TData> type, ConduitNetwork<TContext, TData> network);
+    TData createConduitData(ConduitType<TOptions, TContext, TData> type, Level level, BlockPos pos);
 
     // TODO: This might be able to take the options of the other conduit type.
     //       Checking against other graphs is likely unnecessary.
@@ -57,7 +57,7 @@ public interface ConduitNetworkType<TOptions, TContext extends ConduitNetworkCon
     // endregion
 
     @Nullable
-    default <K> K proxyCapability(TOptions options, BlockCapability<K, Direction> capability, ConduitNetwork<TContext, TData> network, TData conduitData,
+    default <K> K proxyCapability(ConduitType<TOptions, TContext, TData> type, BlockCapability<K, Direction> capability, ConduitNetwork<TContext, TData> network, TData conduitData,
         Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
         return null;
     }
