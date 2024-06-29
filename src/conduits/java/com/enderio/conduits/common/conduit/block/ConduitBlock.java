@@ -467,6 +467,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             if (conduitType == null) {
                 if (!conduit.getBundle().getTypes().isEmpty()) {
                     level.playSound(player, pos, SoundEvents.GENERIC_SMALL_FALL, SoundSource.BLOCKS, 1F, 1F);
+                    // TODO: Bug falls here sometimes when unable to break conduit for some reason.
                     return false;
                 }
                 return true;

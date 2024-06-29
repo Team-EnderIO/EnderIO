@@ -87,7 +87,7 @@ public class ConduitSavedData extends SavedData {
             ListTag graphConnectionsTag = graphTag.getList(KEY_GRAPH_CONNECTIONS, Tag.TAG_COMPOUND);
 
             List<ConduitGraphObject<T, U>> graphObjects = new ArrayList<>();
-            List<Pair<GraphObject<InternalGraphContext<T>>, GraphObject<InternalGraphContext<T>>>> connections = new ArrayList<>();
+            List<Pair<ConduitGraphObject<T, U>, ConduitGraphObject<T, U>>> connections = new ArrayList<>();
 
             for (Tag tag2 : graphObjectsTag) {
                 CompoundTag nodeTag = (CompoundTag) tag2;
@@ -104,9 +104,10 @@ public class ConduitSavedData extends SavedData {
                 connections.add(new Pair<>(graphObjects.get(connectionTag.getInt("0")), graphObjects.get(connectionTag.getInt("1"))));
             }
 
+            // TODO: Need to deserialize the graph context.
             ConduitGraphObject<T, U> graphObject = graphObjects.get(0);
-            Graph.integrate(graphObject, List.of());
-            merge(graphObject, connections);
+            Graph.integrate(graphObject, List.of(), InternalGraphContext.factoryFor(type));
+            merge(type, graphObject, connections);
 
             networks.computeIfAbsent(type, ignored -> new ArrayList<>()).add(graphObject.getGraph());
         }
@@ -222,20 +223,21 @@ public class ConduitSavedData extends SavedData {
 
     // endregion
 
-    private <T extends Mergeable<T>> void merge(GraphObject<T> object, List<Pair<GraphObject<T>, GraphObject<T>>> connections) {
+    private <T extends ConduitGraphContext<T>, U extends ConduitData<U>> void merge(ConduitType<?, T, U> conduitType, ConduitGraphObject<T, U> object,
+        List<Pair<ConduitGraphObject<T, U>, ConduitGraphObject<T, U>>> connections) {
         var filteredConnections = connections.stream().filter(pair -> (pair.getFirst() == object || pair.getSecond() == object)).toList();
-        List<GraphObject<T>> neighbors = filteredConnections
+        List<ConduitGraphObject<T, U>> neighbors = filteredConnections
             .stream()
             .map(pair -> pair.getFirst() == object ? pair.getSecond() : pair.getFirst())
             .toList();
 
-        for (GraphObject<T> neighbor : neighbors) {
-            Graph.connect(object, neighbor);
+        for (var neighbor : neighbors) {
+            Graph.connect(object, neighbor, InternalGraphContext.factoryFor(conduitType));
         }
 
         connections = connections.stream().filter(v -> !filteredConnections.contains(v)).toList();
         if (!connections.isEmpty()) {
-            merge(connections.get(0).getFirst(), connections);
+            merge(conduitType, connections.get(0).getFirst(), connections);
         }
     }
 

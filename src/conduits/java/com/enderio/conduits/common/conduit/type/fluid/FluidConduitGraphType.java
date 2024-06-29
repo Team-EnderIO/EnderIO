@@ -45,11 +45,7 @@ public class FluidConduitGraphType implements ConduitGraphType<FluidConduitOptio
         if (conduitType.graphType() != this) {
             return true;
         }
-
-        if (conduitType.options() instanceof FluidConduitOptions otherOptions) {
-            return !options.equals(otherOptions);
-        }
-
+        
         return false;
     }
 

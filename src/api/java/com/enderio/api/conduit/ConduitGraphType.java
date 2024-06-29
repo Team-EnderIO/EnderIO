@@ -21,6 +21,7 @@ public interface ConduitGraphType<TOptions, TContext extends ConduitGraphContext
     ConduitTicker<TOptions, TContext, TData> getTicker();
     ConduitMenuData getMenuData(TOptions options);
 
+    // TODO: Could expose the graph to this method too...
     @Nullable
     TContext createGraphContext(TOptions options);
     TData createConduitData(TOptions options, Level level, BlockPos pos);
@@ -57,7 +58,7 @@ public interface ConduitGraphType<TOptions, TContext extends ConduitGraphContext
     // endregion
 
     @Nullable
-    default <K> K proxyCapability(TOptions options, BlockCapability<K, Direction> capability, TData conduitData, Level level, BlockPos pos,
+    default <K> K proxyCapability(TOptions options, BlockCapability<K, Direction> capability, ConduitGraph<TContext, TData> graph, TData conduitData, Level level, BlockPos pos,
         @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
         return null;
     }

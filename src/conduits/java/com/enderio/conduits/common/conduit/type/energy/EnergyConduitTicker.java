@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitGraphContext;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitGraph;
@@ -19,96 +20,39 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import java.util.List;
 import java.util.function.IntConsumer;
 
-public class EnergyConduitTicker extends CapabilityAwareConduitTicker<Void, ConduitGraphContext.Dummy, EnergyConduitData, IEnergyStorage> {
+public class EnergyConduitTicker extends CapabilityAwareConduitTicker<EnergyConduitOptions, EnergyConduitGraphContext, ConduitData.EmptyConduitData, IEnergyStorage> {
 
     public EnergyConduitTicker() {
     }
 
     @Override
-    public void tickGraph(
-        ServerLevel level,
-        ConduitType<Void, ConduitGraphContext.Dummy, EnergyConduitData> type,
-        List<ConduitNode<ConduitGraphContext.Dummy, EnergyConduitData>> loadedNodes,
-        ConduitGraph<ConduitGraphContext.Dummy, EnergyConduitData> graph,
-        ColoredRedstoneProvider coloredRedstoneProvider) {
-
-        super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
-
-        for (ConduitNode<ConduitGraphContext.Dummy, EnergyConduitData> node : loadedNodes) {
-            EnergyConduitData energyExtendedData = node.getConduitData();
-            IEnergyStorage energy = energyExtendedData.getSelfCap();
-            if (energy.getEnergyStored() == 0) {
-                energyExtendedData.setCapacity(500);
-                continue;
-            }
-
-            int previousStored = energy.getEnergyStored();
-            for (ConduitNode<ConduitGraphContext.Dummy, EnergyConduitData> otherNode : loadedNodes) {
-               for (Direction dir: Direction.values()) {
-                   if (otherNode.getIOState(dir).map(ConduitGraphObject.IOState::isInsert).orElse(false)) {
-                       IEnergyStorage capability = level.getCapability(getCapability(), otherNode.getPos().relative(dir), dir.getOpposite());
-                       if (capability != null) {
-                           extractEnergy(energy, List.of(capability), 0, i -> {});
-                       }
-                   }
-               }
-            }
-
-            if (energy.getEnergyStored() == 0) {
-                if (previousStored == energy.getMaxEnergyStored()) {
-                    energyExtendedData.setCapacity(Math.min(1_000_000_000, 2 * energyExtendedData.getCapacity()));
-                } else if (previousStored < energyExtendedData.getCapacity() / 2) {
-                    energyExtendedData.setCapacity(Math.max(500, energyExtendedData.getCapacity() / 2));
-                }
-            } else if (energy.getEnergyStored() > 0) {
-                energyExtendedData.setCapacity(Math.max(500, energy.getEnergyStored()));
-            }
-        }
-    }
-
-    @Override
     public void tickCapabilityGraph(
         ServerLevel level,
-        ConduitType<Void, ConduitGraphContext.Dummy, EnergyConduitData> type,
+        ConduitType<EnergyConduitOptions, EnergyConduitGraphContext, ConduitData.EmptyConduitData> type,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
-        ConduitGraph<ConduitGraphContext.Dummy, EnergyConduitData> graph,
+        ConduitGraph<EnergyConduitGraphContext, ConduitData.EmptyConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        for (var extract : extracts) {
-            IEnergyStorage extractHandler = extract.capability;
-
-            EnergyConduitData.EnergySidedData sidedExtractData = extract.data.compute(extract.direction);
-            extractEnergy(extractHandler, inserts.stream().map(
-                connection -> connection.capability).toList(),
-                sidedExtractData.rotatingIndex, i -> sidedExtractData.rotatingIndex = i);
-        }
-    }
-
-    private void extractEnergy(IEnergyStorage extractHandler, List<IEnergyStorage> inserts, int startingIndex, IntConsumer rotationIndexSetter) {
-        int availableForExtraction = extractHandler.extractEnergy(Integer.MAX_VALUE, true);
-        if (availableForExtraction <= 0) {
+        EnergyConduitGraphContext context = graph.getContext();
+        if (context == null) {
             return;
         }
 
-        if (inserts.size() <= startingIndex) {
-            startingIndex = 0;
-            rotationIndexSetter.accept(0);
-        }
+        int startingRotatingIndex = context.rotatingIndex();
+        for (int i = startingRotatingIndex; i < startingRotatingIndex + inserts.size(); i++) {
+            int insertIndex = i % inserts.size();
 
-        for (int j = startingIndex; j < startingIndex + inserts.size(); j++) {
-            int insertIndex = j % inserts.size();
-            IEnergyStorage insert = inserts.get(insertIndex);
+            CapabilityConnection insert = inserts.get(insertIndex);
+            IEnergyStorage insertHandler = insert.capability;
 
-            int inserted = insert.receiveEnergy(availableForExtraction, false);
-            extractHandler.extractEnergy(inserted, false);
-
-            if (inserted == availableForExtraction) {
-                rotationIndexSetter.accept(startingIndex + (insertIndex) + 1);
-                return;
+            if (!insertHandler.canReceive()) {
+                continue;
             }
 
-            availableForExtraction -= inserted;
+            int energyInserted = insertHandler.receiveEnergy(Math.min(type.options().transferRate(), context.energyStored()), false);
+            context.setEnergyStored(context.energyStored() - energyInserted);
+            context.setRotatingIndex(insertIndex + 1);
         }
     }
 

@@ -28,6 +28,11 @@ public record ConduitType<TOptions, TContext extends ConduitGraphContext<TContex
         return graphType.getMenuData(options);
     }
 
+    @Nullable
+    public TContext createGraphContext() {
+        return graphType.createGraphContext(options);
+    }
+
     public TData createConduitData(Level level, BlockPos pos) {
         return graphType.createConduitData(options, level, pos);
     }
@@ -61,8 +66,8 @@ public record ConduitType<TOptions, TContext extends ConduitGraphContext<TContex
     }
 
     @Nullable
-    public <K> K proxyCapability(BlockCapability<K, Direction> capability, TData conduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
-        return graphType.proxyCapability(options, capability, conduitData, level, pos, direction, state);
+    public <K> K proxyCapability(BlockCapability<K, Direction> capability, ConduitGraph<TContext, TData> graph, TData conduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
+        return graphType.proxyCapability(options, capability, graph, conduitData, level, pos, direction, state);
     }
 
     public ConduitGraphType.ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {

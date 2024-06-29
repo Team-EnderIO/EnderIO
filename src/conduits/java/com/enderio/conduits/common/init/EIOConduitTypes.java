@@ -7,8 +7,9 @@ import com.enderio.api.conduit.ConduitGraphContext;
 import com.enderio.api.conduit.ConduitGraphType;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.registry.EnderIORegistries;
-import com.enderio.conduits.common.conduit.type.energy.EnergyConduitData;
+import com.enderio.conduits.common.conduit.type.energy.EnergyConduitGraphContext;
 import com.enderio.conduits.common.conduit.type.energy.EnergyConduitGraphType;
+import com.enderio.conduits.common.conduit.type.energy.EnergyConduitOptions;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitGraphType;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitOptions;
@@ -43,8 +44,8 @@ public class EIOConduitTypes {
     public static class Types {
         public static final DeferredRegister<ConduitType<?, ?, ?>> CONDUIT_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_TYPES, EnderIO.MODID);
 
-        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<Void, ConduitGraphContext.Dummy, EnergyConduitData>> ENERGY =
-            register("energy", Graphs.ENERGY, null);
+        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<EnergyConduitOptions, EnergyConduitGraphContext, ConduitData.EmptyConduitData>> ENERGY =
+            register("energy", Graphs.ENERGY, new EnergyConduitOptions(1000));
 
         public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<Void, ConduitGraphContext.Dummy, RedstoneConduitData>> REDSTONE =
             register("redstone", Graphs.REDSTONE, null);
@@ -73,9 +74,6 @@ public class EIOConduitTypes {
         // Register the API data type.
         public static DeferredHolder<ConduitDataSerializer<?>, ConduitData.EmptyConduitData.Serializer> EMPTY =
             CONDUIT_DATA_SERIALIZERS.register("empty", () -> ConduitData.EmptyConduitData.Serializer.INSTANCE);
-
-        public static final Supplier<ConduitDataSerializer<EnergyConduitData>> ENERGY =
-            CONDUIT_DATA_SERIALIZERS.register("energy", EnergyConduitData.Serializer::new);
 
         public static final Supplier<ConduitDataSerializer<FluidConduitData>> FLUID =
             CONDUIT_DATA_SERIALIZERS.register("fluid", FluidConduitData.Serializer::new);
