@@ -6,6 +6,7 @@ import com.enderio.machines.client.rendering.blockentity.AversionObeliskBER;
 import com.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
 import com.enderio.machines.client.rendering.blockentity.InhibitorObeliskBER;
+import com.enderio.machines.client.rendering.blockentity.RelocatorObeliskBER;
 import com.enderio.machines.client.rendering.blockentity.XPObeliskBER;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
@@ -21,6 +22,7 @@ import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.PaintingMachineBlockEntity;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.blockentity.PrimitiveAlloySmelterBlockEntity;
+import com.enderio.machines.common.blockentity.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.blockentity.SlicerBlockEntity;
 import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
@@ -192,6 +194,11 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<AversionObeliskBlockEntity> AVERSION_OBELISK =
         register("aversion_obelisk", AversionObeliskBlockEntity::new, MachineBlocks.AVERSION_OBELISK)
             .setRenderer(() -> AversionObeliskBER::new)
+            .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+
+    public static final RegiliteBlockEntity<RelocatorObeliskBlockEntity> RELOCATOR_OBELISK =
+        register("relocator_obelisk", RelocatorObeliskBlockEntity::new, MachineBlocks.RELOCATOR_OBELISK)
+            .setRenderer(() -> RelocatorObeliskBER::new)
             .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
     @SafeVarargs
