@@ -10,6 +10,7 @@ import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.registry.EnderIORegistries;
+import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -77,7 +78,7 @@ public final class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, Co
         }
 
         mainNode = GridHelper.createManagedNode(this, new GridNodeListener())
-            .setVisualRepresentation(type.getConduitItem())
+            .setVisualRepresentation(ConduitBlockItem.getStackFor(type, 1))
             .setInWorldNode(true)
             .setTagName("conduit");
 

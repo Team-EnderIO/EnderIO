@@ -5,6 +5,7 @@ import com.enderio.base.data.EIODataProvider;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitComponents;
+import com.enderio.conduits.common.init.ConduitIngredientTypes;
 import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitMenus;
@@ -35,6 +36,7 @@ public class EIOConduits {
         ConduitBlocks.register(bus);
         ConduitItems.register(bus);
         ConduitComponents.register(bus);
+        ConduitIngredientTypes.register(bus);
         Integrations.register();
         ConduitLang.register();
         ConduitTags.register();

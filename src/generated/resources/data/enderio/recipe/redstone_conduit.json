@@ -15,7 +15,10 @@
     "BBB"
   ],
   "result": {
+    "components": {
+      "enderio:represented_conduit_type": "enderio:redstone"
+    },
     "count": 8,
-    "id": "enderio:redstone_conduit"
+    "id": "enderio:conduit"
   }
 }

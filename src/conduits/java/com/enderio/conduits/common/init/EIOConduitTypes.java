@@ -62,11 +62,11 @@ public class EIOConduitTypes {
         public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData>> FLUID =
             register("fluid", NetworkTypes.FLUID, new FluidConduitOptions(false, 50));
 
-        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData>> FLUID2 =
-            register("fluid2", NetworkTypes.FLUID, new FluidConduitOptions(false, 100));
+        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData>> PRESSURIZED_FLUID =
+            register("pressurized_fluid", NetworkTypes.FLUID, new FluidConduitOptions(false, 100));
 
-        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData>> FLUID3 =
-            register("fluid3", NetworkTypes.FLUID, new FluidConduitOptions(true, 200));
+        public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData>> ENDER_FLUID =
+            register("ender_fluid", NetworkTypes.FLUID, new FluidConduitOptions(true, 200));
 
         public static final DeferredHolder<ConduitType<?, ?, ?>, ConduitType<Void, ConduitNetworkContext.Dummy, ItemConduitData>> ITEM =
             register("item", NetworkTypes.ITEM, null);

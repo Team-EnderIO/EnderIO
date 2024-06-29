@@ -66,24 +66,12 @@ public record ConduitType<TOptions, TContext extends ConduitNetworkContext<TCont
     }
 
     @Nullable
-    public <K> K proxyCapability(BlockCapability<K, Direction> capability, ConduitNetwork<TContext, TData> graph, TData conduitData, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
-        return graphType.proxyCapability(this, capability, graph, conduitData, level, pos, direction, state);
+    public <K> K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode<TContext, TData> node, Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
+        return graphType.proxyCapability(this, capability, node, level, pos, direction, state);
     }
 
     public ConduitNetworkType.ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {
         return graphType.getDefaultConnection(options, level, pos, direction);
-    }
-
-    // TODO: 1.21: I want to have a single conduit item
-    /**
-     * Override this method if your conduit type and your conduit item registry name don't match
-     * @return the conduit item that holds this type
-     */
-    public Item getConduitItem() {
-        //ResourceLocation key = EnderIORegistries.CONDUIT_TYPES.getKey(this);
-        //return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(key.getNamespace(), key.getPath() + "_conduit"));
-        // TODO...
-        return Items.GRANITE;
     }
 
     @Nullable

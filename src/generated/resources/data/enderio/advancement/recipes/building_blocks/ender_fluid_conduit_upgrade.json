@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:pressurized_fluid_conduit"
+            "items": "enderio:conduit_binder"
           }
         ]
       },

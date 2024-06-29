@@ -9,7 +9,8 @@
   "category": "building",
   "key": {
     "C": {
-      "item": "enderio:chemical_conduit"
+      "type": "enderio:conduit",
+      "conduit_type": "enderio:chemical"
     },
     "U": {
       "item": "mekanism:alloy_infused"
@@ -21,7 +22,10 @@
     "CCC"
   ],
   "result": {
+    "components": {
+      "enderio:represented_conduit_type": "enderio:pressurized_chemical"
+    },
     "count": 8,
-    "id": "enderio:pressurized_chemical_conduit"
+    "id": "enderio:conduit"
   }
 }

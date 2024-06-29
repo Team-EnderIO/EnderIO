@@ -7,6 +7,7 @@ import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.client.gui.ConduitIconTextureManager;
 import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
 import com.enderio.conduits.client.model.ConduitGeometry;
+import com.enderio.conduits.client.model.ConduitItemModelLoader;
 import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
 import com.enderio.conduits.client.model.conduit.modifier.FluidConduitCoreModelModifier;
 import com.enderio.conduits.client.model.conduit.modifier.RedstoneConduitCoreModelModifier;
@@ -19,7 +20,6 @@ import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -64,16 +64,16 @@ public class ConduitClientSetup {
     @SubscribeEvent
     public static void registerConduitCoreModelModifiers(RegisterConduitCoreModelModifiersEvent event) {
         event.register(EIOConduitTypes.Types.FLUID.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
-        event.register(EIOConduitTypes.Types.FLUID2.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
-        event.register(EIOConduitTypes.Types.FLUID3.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
+        event.register(EIOConduitTypes.Types.PRESSURIZED_FLUID.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
+        event.register(EIOConduitTypes.Types.ENDER_FLUID.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
         event.register(EIOConduitTypes.Types.REDSTONE.get(), RedstoneConduitCoreModelModifier::new);
     }
 
     @SubscribeEvent
     public static void registerConduitScreenExtensions(RegisterConduitScreenExtensionsEvent event) {
         event.register(EIOConduitTypes.Types.FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
-        event.register(EIOConduitTypes.Types.FLUID2.get(), () -> FluidConduitScreenExtension.INSTANCE);
-        event.register(EIOConduitTypes.Types.FLUID3.get(), () -> FluidConduitScreenExtension.INSTANCE);
+        event.register(EIOConduitTypes.Types.PRESSURIZED_FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
+        event.register(EIOConduitTypes.Types.ENDER_FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
         event.register(EIOConduitTypes.Types.ITEM.get(), ItemConduitScreenExtension::new);
     }
 
@@ -85,6 +85,7 @@ public class ConduitClientSetup {
     @SubscribeEvent
     public static void modelLoader(ModelEvent.RegisterGeometryLoaders event) {
         event.register(EnderIO.loc("conduit"), new ConduitGeometry.Loader());
+        event.register(EnderIO.loc("conduit_item"), new ConduitItemModelLoader());
     }
 
     @SubscribeEvent

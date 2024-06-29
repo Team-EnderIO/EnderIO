@@ -27,8 +27,8 @@ public class ConduitTagsProvider extends TagsProvider<ConduitType<?, ?, ?>> {
 
         tag(ConduitTags.ConduitTypes.FLUID)
             .add(EIOConduitTypes.Types.FLUID.getKey(),
-                EIOConduitTypes.Types.FLUID2.getKey(),
-                EIOConduitTypes.Types.FLUID3.getKey());
+                EIOConduitTypes.Types.PRESSURIZED_FLUID.getKey(),
+                EIOConduitTypes.Types.ENDER_FLUID.getKey());
 
         tag(ConduitTags.ConduitTypes.ENERGY)
             .add(EIOConduitTypes.Types.ENERGY.getKey());

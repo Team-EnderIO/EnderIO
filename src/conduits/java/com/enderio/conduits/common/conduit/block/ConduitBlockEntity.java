@@ -9,6 +9,7 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.conduits.common.conduit.InternalGraphContext;
@@ -370,7 +371,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public boolean removeType(ConduitType<?, ?, ?> type, boolean shouldDrop) {
         if (shouldDrop && !level.isClientSide()) {
-            dropItem(type.getConduitItem().getDefaultInstance());
+            dropItem(ConduitBlockItem.getStackFor(type, 1));
             for (Direction dir : Direction.values()) {
                 if (bundle.getConnectionState(dir, type) instanceof DynamicConnectionState dyn) {
                     dropConnection(dyn);

@@ -18,7 +18,10 @@
     "BBB"
   ],
   "result": {
+    "components": {
+      "enderio:represented_conduit_type": "enderio:fluid3"
+    },
     "count": 8,
-    "id": "enderio:ender_fluid_conduit"
+    "id": "enderio:conduit"
   }
 }

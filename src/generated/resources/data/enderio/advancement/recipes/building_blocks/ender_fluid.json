@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:pressurized_fluid_conduit"
+            "items": "enderio:conduit_binder"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:ender_fluid_conduit"
+        "recipe": "enderio:ender_fluid"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:ender_fluid_conduit"
+      "enderio:ender_fluid"
     ]
   }
 }

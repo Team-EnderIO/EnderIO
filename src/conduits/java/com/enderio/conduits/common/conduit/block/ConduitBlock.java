@@ -4,6 +4,7 @@ import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
@@ -16,7 +17,6 @@ import com.enderio.conduits.common.conduit.RightClickAction;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.EIOConduitTypes;
-import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.ConduitSavedData;
 import com.enderio.conduits.common.redstone.RedstoneInsertFilter;
 import net.minecraft.core.BlockPos;
@@ -66,6 +66,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @EventBusSubscriber
@@ -194,7 +195,12 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             return Optional.empty();
         }
 
-        RightClickAction action = conduit.addType(conduitBlockItem.getType(), player);
+        var conduitType = ConduitBlockItem.getType(stack);
+        if (conduitType == null) {
+            return Optional.empty();
+        }
+
+        RightClickAction action = conduit.addType(conduitType, player);
         if (!(action instanceof RightClickAction.Blocked)) {
             conduit.getLevel().setBlockAndUpdate(conduit.getBlockPos(), conduit.getBlockState());
         }
@@ -204,7 +210,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         if (action instanceof RightClickAction.Upgrade upgradeAction) {
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
-                player.getInventory().placeItemBackInInventory(upgradeAction.notInConduit().getConduitItem().getDefaultInstance());
+                player.getInventory().placeItemBackInInventory(ConduitBlockItem.getStackFor(upgradeAction.notInConduit(), 1));
             }
             result = ItemInteractionResult.sidedSuccess(isClientSide);
         } else if (action instanceof RightClickAction.Insert) {
@@ -302,7 +308,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 conduit.removeTypeAndDelete(type);
                 if (event.getLevel() instanceof ServerLevel serverLevel) {
                     Inventory inventory = event.getEntity().getInventory();
-                    inventory.placeItemBackInInventory(new ItemStack(type.getConduitItem()));
+                    inventory.placeItemBackInInventory(ConduitBlockItem.getStackFor(type, 1));
                 }
                 event.setCanceled(true);
             }
@@ -427,7 +433,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
             @Nullable ConduitType<?, ?, ?> type = conduit.getShape().getConduit(pos, target);
             if (type != null) {
-                return type.getConduitItem().getDefaultInstance();
+                return ConduitBlockItem.getStackFor(type, 1);
             }
         }
         return super.getCloneItemStack(state, target, level, pos, player);
@@ -447,10 +453,11 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        ConduitBlockItem item = (ConduitBlockItem) stack.getItem();
         if (placer instanceof Player player) {
             if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
-                conduit.addType(item.getType(), player);
+                var conduitType = Objects.requireNonNull(ConduitBlockItem.getType(stack));
+
+                conduit.addType(conduitType, player);
                 if (level.isClientSide()) {
                     conduit.updateClient();
                 }

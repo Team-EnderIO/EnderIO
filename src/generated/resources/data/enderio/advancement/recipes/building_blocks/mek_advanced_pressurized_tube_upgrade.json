@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:pressurized_chemical_conduit"
+            "items": "enderio:conduit_binder"
           }
         ]
       },

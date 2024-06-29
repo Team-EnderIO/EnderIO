@@ -37,8 +37,6 @@ public class AE2Integration implements Integration {
     public static final DeferredRegister<ConduitType<?, ?, ?>> CONDUIT_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_TYPES, EnderIO.MODID);
     public static final DeferredRegister<ConduitDataSerializer<?>> CONDUIT_DATA_SERIALIZERS = DeferredRegister.create(EnderIORegistries.CONDUIT_DATA_SERIALIZERS, EnderIO.MODID);
 
-    private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
-
     public static final Supplier<AE2ConduitNetworkType> NETWORK_TYPE = CONDUIT_NETWORK_TYPES.register("ae2", AE2ConduitNetworkType::new);
 
     //TODO use capability when moved to api by ea2
@@ -54,16 +52,12 @@ public class AE2Integration implements Integration {
     public static final Supplier<ConduitDataSerializer<AE2InWorldConduitNodeHost>> DATA_SERIALIZER =
         CONDUIT_DATA_SERIALIZERS.register("me", () -> AE2InWorldConduitNodeHost.Serializer.INSTANCE);
 
-    public static final RegiliteItem<Item> DENSE_ITEM = createConduitItem(DENSE, "dense_me", "Dense ME Conduit");
-    public static final RegiliteItem<Item> NORMAL_ITEM = createConduitItem(NORMAL, "me", "ME Conduit");
-
     @Override
     public void onModConstruct() {
     }
 
     @Override
     public void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {
-        ITEM_REGISTRY.register(modEventBus);
         CONDUIT_NETWORK_TYPES.register(modEventBus);
         CONDUIT_TYPES.register(modEventBus);
         CONDUIT_DATA_SERIALIZERS.register(modEventBus);
@@ -78,19 +72,5 @@ public class AE2Integration implements Integration {
 
     public BlockCapability<IInWorldGridNodeHost, Direction> getInWorldGridNodeHost() {
         return IN_WORLD_GRID_NODE_HOST;
-    }
-
-    private static RegiliteItem<Item> createConduitItem(Supplier<? extends ConduitType<?, ?, ?>> type, String itemName, String english) {
-        return ITEM_REGISTRY
-            .registerItem(itemName + "_conduit",
-                properties -> ConduitApi.INSTANCE.createConduitItem(type, properties))
-            .setTab(EIOCreativeTabs.CONDUITS)
-            .setTranslation(english)
-            .setModelProvider((prov, ctx) -> {
-                var conduitTypeKey = ConduitType.getKey(type.get());
-                prov
-                    .withExistingParent(conduitTypeKey.getPath() + "_conduit", EnderIO.loc("item/conduit"))
-                    .texture("0", EnderIO.loc("block/conduit/" + conduitTypeKey.getPath()));
-            });
     }
 }

@@ -6,7 +6,8 @@
       "item": "enderio:conduit_binder"
     },
     "C": {
-      "item": "enderio:pressurized_fluid_conduit"
+      "type": "enderio:conduit",
+      "conduit_type": "enderio:fluid2"
     },
     "I": {
       "item": "enderio:vibrant_alloy_ingot"
@@ -18,7 +19,10 @@
     "BBB"
   ],
   "result": {
+    "components": {
+      "enderio:represented_conduit_type": "enderio:fluid3"
+    },
     "count": 8,
-    "id": "enderio:ender_fluid_conduit"
+    "id": "enderio:conduit"
   }
 }

@@ -1,7 +1,7 @@
 {
   "values": [
     "enderio:fluid",
-    "enderio:pressurized_fluid",
-    "enderio:ender_fluid"
+    "enderio:fluid2",
+    "enderio:fluid3"
   ]
 }

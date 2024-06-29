@@ -21,7 +21,10 @@
     "BBB"
   ],
   "result": {
+    "components": {
+      "enderio:represented_conduit_type": "enderio:chemical"
+    },
     "count": 3,
-    "id": "enderio:chemical_conduit"
+    "id": "enderio:conduit"
   }
 }
