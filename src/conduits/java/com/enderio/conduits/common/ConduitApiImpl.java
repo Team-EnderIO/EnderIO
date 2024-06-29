@@ -3,17 +3,19 @@ package com.enderio.conduits.common;
 import com.enderio.api.conduit.ConduitApi;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
-import com.enderio.conduits.common.init.ConduitBlocks;
-import net.minecraft.world.item.Item;
-import org.apache.commons.lang3.NotImplementedException;
-
-import java.util.function.Supplier;
+import com.enderio.conduits.common.recipe.ConduitIngredient;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 public class ConduitApiImpl implements ConduitApi {
 
-    // TODO: Take away this API.
     @Override
-    public Item createConduitItem(Supplier<? extends ConduitType<?, ?, ?>> type, Item.Properties properties) {
-        throw new NotImplementedException();
+    public ItemStack getStackForType(ConduitType<?, ?, ?> type, int count) {
+        return ConduitBlockItem.getStackFor(type, count);
+    }
+
+    @Override
+    public Ingredient getIngredientForType(ConduitType<?, ?, ?> type) {
+        return ConduitIngredient.of(type);
     }
 }
