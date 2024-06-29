@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 public interface ConduitNetworkContext<T extends ConduitNetworkContext<T>> {
     T mergeWith(T other);
 
-    T splitFor(ConduitNetwork<T, ?> selfGraph, ConduitNetwork<T, ?> otherGraph);
+    T copy();
 
     /**
      * Get the serializer for this context.
@@ -24,7 +24,7 @@ public interface ConduitNetworkContext<T extends ConduitNetworkContext<T>> {
         }
 
         @Override
-        public Dummy splitFor(ConduitNetwork<Dummy, ?> selfGraph, ConduitNetwork<Dummy, ?> otherGraph) {
+        public Dummy copy() {
             return this;
         }
 

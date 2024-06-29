@@ -31,7 +31,7 @@ public record EnergyConduitStorage(
         int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), toReceive);
         if (!simulate) {
             context.setEnergyInsertedThisTick(context.energyInsertedThisTick() + energyReceived);
-            context.setEnergyStored(context.energyStored() + energyReceived);
+            context.setEnergyStored(getEnergyStored() + energyReceived);
         }
 
         return energyReceived;

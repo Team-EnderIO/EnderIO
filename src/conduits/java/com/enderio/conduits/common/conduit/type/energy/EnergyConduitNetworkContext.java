@@ -30,6 +30,9 @@ public class EnergyConduitNetworkContext implements ConduitNetworkContext<Energy
         return Serializer.INSTANCE;
     }
 
+    /**
+     * @implNote Never trust the value stored here, always Min it with the capacity. When the graph splits, this will just be copied across all sides.
+     */
     public int energyStored() {
         return energyStored;
     }
@@ -60,17 +63,8 @@ public class EnergyConduitNetworkContext implements ConduitNetworkContext<Energy
     }
 
     @Override
-    public EnergyConduitNetworkContext splitFor(ConduitNetwork<EnergyConduitNetworkContext, ?> selfGraph, ConduitNetwork<EnergyConduitNetworkContext, ?> otherGraph) {
-        if (selfGraph.getNodes().isEmpty()) {
-            return new EnergyConduitNetworkContext();
-        }
-
-        if (otherGraph.getNodes().isEmpty()) {
-            return new EnergyConduitNetworkContext(this.energyStored);
-        }
-
-        float proportion = (float) selfGraph.getNodes().size() / (selfGraph.getNodes().size() + otherGraph.getNodes().size());
-        return new EnergyConduitNetworkContext((int) (this.energyStored * proportion));
+    public EnergyConduitNetworkContext copy() {
+        return new EnergyConduitNetworkContext(energyStored);
     }
 
     public static class Serializer implements ConduitNetworkContextSerializer<EnergyConduitNetworkContext> {

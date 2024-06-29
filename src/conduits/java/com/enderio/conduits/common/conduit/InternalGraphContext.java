@@ -20,8 +20,8 @@ public record InternalGraphContext<T extends ConduitNetworkContext<T>>(T context
     }
 
     @Override
-    public InternalGraphContext<T> splitFor(Graph<InternalGraphContext<T>> graph, Graph<InternalGraphContext<T>> graph1) {
-        return new InternalGraphContext<>(context.splitFor(new WrappedConduitNetwork<>(graph), new WrappedConduitNetwork<>(graph1)));
+    public InternalGraphContext<T> copy() {
+        return new InternalGraphContext<>(context.copy());
     }
 
     public boolean canSerialize() {
