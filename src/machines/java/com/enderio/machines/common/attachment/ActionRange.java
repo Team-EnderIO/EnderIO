@@ -1,6 +1,5 @@
 package com.enderio.machines.common.attachment;
 
-import com.enderio.api.UseOnly;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.mojang.serialization.Codec;
@@ -11,7 +10,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.neoforged.fml.LogicalSide;
 
 public record ActionRange(int range, boolean isVisible) {
     public static final Codec<ActionRange> CODEC = RecordCodecBuilder.create(instance ->
