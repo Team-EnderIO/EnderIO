@@ -258,8 +258,8 @@ dependencies {
     runtimeOnly("maven.modrinth:athena-ctm:${athena_version}")
 
     // AE2
-    compileOnly("appeng:appliedenergistics2-neoforge:${ae2_version}:api")
-    runtimeOnly("appeng:appliedenergistics2-neoforge:${ae2_version}")
+    compileOnly("appeng:appliedenergistics2:${ae2_version}:api")
+    runtimeOnly("appeng:appliedenergistics2:${ae2_version}")
 
     // Enchantment descriptions
     //runtimeOnly("net.darkhax.bookshelf:Bookshelf-NeoForge-${minecraft_version}:${bookshelf_version}")
@@ -294,9 +294,9 @@ dependencies {
     runtimeOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
 
     //CC-Tweaked
-    //compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cctVersion")
-    //compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cctVersion")
-    //runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cctVersion")
+    compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cctVersion")
+    compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cctVersion")
+    runtimeOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cctVersion")
 
     // Jetbrains annotations
     compileOnly("org.jetbrains:annotations:23.0.0")
