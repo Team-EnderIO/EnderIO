@@ -62,6 +62,10 @@ public interface ConduitNetworkType<TOptions, TContext extends ConduitNetworkCon
         return null;
     }
 
+    default Set<BlockCapability<?, Direction>> getExposedCapabilities() {
+        return Set.of();
+    }
+
     default ConduitConnectionData getDefaultConnection(TOptions options, Level level, BlockPos pos, Direction direction) {
         return new ConduitConnectionData(false, true, RedstoneControl.NEVER_ACTIVE);
     }

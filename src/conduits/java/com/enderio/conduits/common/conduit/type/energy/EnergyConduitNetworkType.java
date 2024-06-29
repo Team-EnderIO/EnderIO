@@ -16,6 +16,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Set;
+
 public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyConduitOptions, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> {
 
     private static final EnergyConduitTicker TICKER = new EnergyConduitTicker();
@@ -74,7 +76,13 @@ public class EnergyConduitNetworkType implements ConduitNetworkType<EnergyCondui
             //noinspection unchecked
             return (K) new EnergyConduitStorage(options, network);
         }
+        
         return null;
+    }
+
+    @Override
+    public Set<BlockCapability<?, Direction>> getExposedCapabilities() {
+        return Set.of(Capabilities.EnergyStorage.BLOCK);
     }
 
     @Override
