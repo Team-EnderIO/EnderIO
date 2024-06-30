@@ -25,10 +25,13 @@ public class ConduitBlocks {
                 .noOcclusion()
                 .dynamicShape()
                 .mapColor(MapColor.STONE))
+        .setTranslation("Conduit Bundle")
         .setBlockStateProvider(ConduitBlockState::conduit)
         .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)
         .createBlockItem(ITEM_REGISTRY, b -> new ConduitBlockItem(b, new Item.Properties()),
-            item -> item.setModelProvider((prov, ctx) -> {}));
+            item -> item
+                .setTranslation("<MISSING> Conduit")
+                .setModelProvider((prov, ctx) -> {}));
 
     public static void register(IEventBus bus) {
         BLOCK_REGISTRY.register(bus);

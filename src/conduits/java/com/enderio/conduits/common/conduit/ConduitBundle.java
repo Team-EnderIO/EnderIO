@@ -96,14 +96,6 @@ public final class ConduitBundle {
         this.pos = pos;
     }
 
-    private ConduitBundle(BlockPos pos, List<ConduitType<?, ?, ?>> types, Map<Direction, ConduitConnection> connections) {
-        this(pos, types, connections, Map.of(), Map.of());
-    }
-
-//    private ConduitBundle(BlockPos pos, List<ConduitType<?>> types, Map<Direction, ConduitConnection> connections, Map<Direction, BlockState> facadeTextures) {
-//        this(pos, types, connections, facadeTextures, Map.of());
-//    }
-
     private ConduitBundle(BlockPos pos, List<ConduitType<?, ?, ?>> types, Map<Direction, ConduitConnection> connections, Map<ConduitType<?, ?, ?>, ConduitGraphObject<?, ?>> nodes) {
         this(pos, types, connections, Map.of(), nodes);
     }
@@ -122,6 +114,7 @@ public final class ConduitBundle {
         this.nodes.putAll(nodes);
     }
 
+    // TODO: I kind of want to get rid of this.
     public void setOnChangedRunnable(Runnable onChangedRunnable) {
         this.onChangedRunnable = onChangedRunnable;
     }
@@ -146,9 +139,11 @@ public final class ConduitBundle {
             return new RightClickAction.Blocked();
         }
 
+        // New node
+        ConduitGraphObject<T, U> node = new ConduitGraphObject<>(pos, type.createConduitData(level, pos));
+
         //upgrade a conduit
         Optional<? extends ConduitType<?, ?, ?>> first = types.stream().filter(existingConduit -> existingConduit.canBeReplacedBy(type)).findFirst();
-        ConduitGraphObject<T, U> node = new ConduitGraphObject<>(pos, type.createConduitData(level, pos));
         if (first.isPresent()) {
             int index = types.indexOf(first.get());
             types.set(index, type);
@@ -243,6 +238,10 @@ public final class ConduitBundle {
 
     // endregion
 
+    public List<ConduitType<?, ?, ?>> getTypes() {
+        return types;
+    }
+
     // region Connections
 
     public List<ConduitType<?, ?, ?>> getConnectedTypes(Direction direction) {
@@ -266,11 +265,6 @@ public final class ConduitBundle {
 
     public boolean isConnectionEnd(Direction direction) {
         return connections.get(direction).isEnd();
-    }
-
-    public void removeType(Direction direction, ConduitType<?, ?, ?> conduitType) {
-        connections.get(direction).removeType(getTypeIndex(conduitType));
-        onChanged();
     }
 
     // Not a fan of this.
@@ -303,9 +297,7 @@ public final class ConduitBundle {
 
     // endregion
 
-    public List<ConduitType<?, ?, ?>> getTypes() {
-        return types;
-    }
+    // region Facades
 
     public boolean hasFacade(Direction direction) {
         return facadeTextures.containsKey(direction);
@@ -319,6 +311,8 @@ public final class ConduitBundle {
         facadeTextures.put(direction, facade);
         onChanged();
     }
+
+    // endregion
 
     public void connectTo(Level level, BlockPos pos, Direction direction, ConduitType<?, ?, ?> type, boolean end) {
         connections.get(direction).connectTo(level, pos, getNodeFor(type), direction, type, getTypeIndex(type), end);
@@ -361,7 +355,7 @@ public final class ConduitBundle {
             if (index >= 0) {
                 var state = connection.getConnectionState(index);
                 if (state instanceof DynamicConnectionState dynamicState) {
-                    ConduitBlockEntity.pushIOState(direction, node, dynamicState);
+                    node.pushState(direction, dynamicState);
                 }
             }
         }
@@ -473,7 +467,7 @@ public final class ConduitBundle {
             if (end) {
                 var state = DynamicConnectionState.defaultConnection(level, pos, direction, type);
                 connectionStates[typeIndex] = state;
-                ConduitBlockEntity.pushIOState(direction, conduitGraphObject, state);
+                conduitGraphObject.pushState(direction, state);
             } else {
                 connectionStates[typeIndex] = StaticConnectionStates.CONNECTED;
             }
@@ -549,8 +543,11 @@ public final class ConduitBundle {
             }
         }
 
+        int i = 0;
+
         @Override
         public int hashCode() {
+            //return i++;
             return Objects.hash((Object[]) connectionStates);
         }
     }

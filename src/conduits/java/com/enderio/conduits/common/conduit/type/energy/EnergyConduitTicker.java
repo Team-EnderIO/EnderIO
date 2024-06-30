@@ -51,6 +51,11 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduitOp
             return;
         }
 
+        int availableEnergy = Math.max(context.energyStored(), 0);
+        if (availableEnergy == 0) {
+            return;
+        }
+
         List<IEnergyStorage> storagesForInsert = new ArrayList<>();
         for (var insert : inserts) {
             IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, insert.move(), insert.dir().getOpposite());
@@ -64,7 +69,6 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduitOp
             context.setRotatingIndex(0);
         }
 
-        int availableEnergy = context.energyStored();
         int totalEnergyInserted = 0;
 
         int startingRotatingIndex = context.rotatingIndex();

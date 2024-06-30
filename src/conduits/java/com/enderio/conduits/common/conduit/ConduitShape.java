@@ -1,8 +1,7 @@
-package com.enderio.conduits.common;
+package com.enderio.conduits.common.conduit;
 
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.conduits.common.conduit.ConduitBundle;
-import com.enderio.conduits.common.conduit.OffsetHelper;
+import com.enderio.conduits.common.Area;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

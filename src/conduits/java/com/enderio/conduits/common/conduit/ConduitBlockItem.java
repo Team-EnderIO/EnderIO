@@ -92,27 +92,10 @@ public class ConduitBlockItem extends BlockItem {
             return InteractionResult.FAIL;
         }
 
-        // Handle placing into an existing block
-        if (level.getBlockEntity(blockpos) instanceof ConduitBlockEntity conduit) {
-            if (conduit.hasType(type)) {
-                // Pass through to block
-                return level.getBlockState(blockpos).useItemOn(context.getItemInHand(), level, player, context.getHand(), context.getHitResult()).result();
-            }
-
-            conduit.addType(type, player);
-            if (level.isClientSide()) {
-                conduit.updateClient();
-            }
-
-            BlockState blockState = level.getBlockState(blockpos);
-            SoundType soundtype = blockState.getSoundType(level, blockpos, player);
-            level.playSound(player, blockpos, this.getPlaceSound(blockState, level, blockpos, player), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-            level.gameEvent(GameEvent.BLOCK_PLACE, blockpos, GameEvent.Context.of(player, blockState));
-
-            if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
-            }
-            return InteractionResult.sidedSuccess(level.isClientSide());
+        // Pass through to existing block.
+        BlockState blockState = level.getBlockState(blockpos);
+        if (!blockState.isAir()) {
+            return level.getBlockState(blockpos).useItemOn(context.getItemInHand(), level, player, context.getHand(), context.getHitResult()).result();
         }
 
         return super.place(context);

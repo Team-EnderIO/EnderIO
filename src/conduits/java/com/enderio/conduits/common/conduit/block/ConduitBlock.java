@@ -118,6 +118,10 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
 
+        if (level.getBlockEntity(currentPos) instanceof ConduitBlockEntity conduit) {
+            conduit.updateShape();
+        }
+
         return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
     }
 
@@ -191,7 +195,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     }
 
     private Optional<ItemInteractionResult> addConduit(ConduitBlockEntity conduit, Player player, ItemStack stack, boolean isClientSide) {
-        if (!(stack.getItem() instanceof ConduitBlockItem conduitBlockItem)) {
+        if (!(stack.getItem() instanceof ConduitBlockItem)) {
             return Optional.empty();
         }
 
@@ -201,9 +205,6 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         }
 
         RightClickAction action = conduit.addType(conduitType, player);
-        if (!(action instanceof RightClickAction.Blocked)) {
-            conduit.getLevel().setBlockAndUpdate(conduit.getBlockPos(), conduit.getBlockState());
-        }
 
         ItemInteractionResult result;
 
@@ -265,21 +266,21 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
             if (connectionState instanceof DynamicConnectionState dyn) {
                 bundle.getNodeFor(type).clearState(direction);
-                conduit.dropConnection(dyn);
+                conduit.dropConnectionItems(dyn);
                 bundle.setConnectionState(direction, type, StaticConnectionStates.DISABLED);
                 conduit.updateShape();
-                conduit.updateConnectionToData(type);
+                conduit.onConnectionsUpdated(type);
             } else {
                 bundle.setConnectionState(direction, type, StaticConnectionStates.DISABLED);
                 conduit.updateShape();
-                conduit.updateConnectionToData(type);
+                conduit.onConnectionsUpdated(type);
 
                 if (conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(direction)) instanceof ConduitBlockEntity other) {
                     Direction oppositeDirection = direction.getOpposite();
 
                     bundle.setConnectionState(oppositeDirection, type, StaticConnectionStates.DISABLED);
                     other.updateShape();
-                    other.updateConnectionToData(type);
+                    other.onConnectionsUpdated(type);
                     ConduitGraphObject<T, U> thisNode = bundle.getNodeFor(type);
                     ConduitGraphObject<T, U> otherNode = other.getBundle().getNodeFor(type);
                     thisNode.getGraph().removeSingleEdge(thisNode, otherNode);
@@ -479,9 +480,11 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 }
                 return true;
             }
+
             if (conduit.removeType(conduitType, !player.getAbilities().instabuild)) {
                 return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
             }
+
             SoundType soundtype = state.getSoundType(level, pos, player);
             level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
             level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
@@ -515,6 +518,13 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             && conduit.getBundle().getNodeFor(EIOConduitTypes.Types.REDSTONE.get()).getConduitData() instanceof RedstoneConduitData redstoneExtendedData
             ? getSignalOutput(dyn, redstoneExtendedData) : 0;
     }
+
+    // TODO: Redstone conduit strong signals.
+    @Override
+    protected int getDirectSignal(BlockState pState, BlockGetter pLevel, BlockPos pPos, Direction pDirection) {
+        return super.getDirectSignal(pState, pLevel, pPos, pDirection);
+    }
+
     //@formatter:on
 
     private int getSignalOutput(DynamicConnectionState dyn, RedstoneConduitData data) {

@@ -44,7 +44,7 @@ public record EnergyConduitStorage(
     @Override
     public int getEnergyStored() {
         EnergyConduitNetworkContext context = node.getParentGraph().getContext();
-        return Math.min(getMaxEnergyStored(), context.energyStored());
+        return Math.max(Math.min(getMaxEnergyStored(), context.energyStored()), 0);
     }
 
     @Override
