@@ -1,8 +1,7 @@
-package com.enderio.conduits.common;
+package com.enderio.conduits.common.conduit;
 
 import com.enderio.api.conduit.ConduitApi;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.recipe.ConduitIngredient;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
