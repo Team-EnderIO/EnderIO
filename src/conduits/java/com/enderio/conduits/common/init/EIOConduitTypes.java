@@ -52,7 +52,7 @@ public class EIOConduitTypes {
 
     private static RegistryObject<FluidConduitType> fluidConduit(String name, int tier, boolean isMultiFluid) {
         return CONDUIT_TYPES.register(name,
-            () -> new FluidConduitType(EnderIO.loc(name + "_conduit"), tier, isMultiFluid));
+            () -> new FluidConduitType(EnderIO.loc(name), tier, isMultiFluid));
     }
 
     public static void register(IEventBus bus) {
