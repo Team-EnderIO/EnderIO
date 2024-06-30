@@ -270,7 +270,7 @@ public class EIOItems {
         .addItemTags(EIOTags.Items.ENTITY_STORAGE)
         .setModelProvider(ModelHelper::fakeBlockModel)
         .setTab(EIOCreativeTabs.MAIN)
-        .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.gePossibleStacks()));
+        .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.getPossibleStacks()));
 
     // endregion
 

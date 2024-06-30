@@ -70,7 +70,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<SoulBindingRecipe
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SoulBindingRecipe recipe, IFocusGroup focuses) {
-    List<ItemStack> vials = new ArrayList<>();
+        List<ItemStack> vials = new ArrayList<>();
         Optional<IFocus<ItemStack>> output = focuses.getItemStackFocuses(OUTPUT).findFirst();
         Optional<IFocus<ItemStack>> input = focuses.getItemStackFocuses(INPUT).filter(f -> f.getTypedValue().getItemStack().get().is(EIOItems.FILLED_SOUL_VIAL.asItem())).findFirst();
 

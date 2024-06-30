@@ -23,7 +23,7 @@ public class BrokenSpawnerItem extends Item {
         return brokenSpawner;
     }
 
-    public static List<ItemStack> gePossibleStacks() {
+    public static List<ItemStack> getPossibleStacks() {
         // Register for every mob that can be captured.
         List<ItemStack> items = new ArrayList<>();
         for (ResourceLocation entity : EntityCaptureUtils.getCapturableEntities()) {

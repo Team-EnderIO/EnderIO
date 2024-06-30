@@ -1,10 +1,13 @@
 package com.enderio.base.common.integrations.jei;
 
 import com.enderio.EnderIO;
+import com.enderio.base.common.block.glass.GlassBlocks;
+import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.integrations.jei.category.FireCraftingCategory;
 import com.enderio.base.common.integrations.jei.extension.ShapedEntityStorageCategoryExtension;
 import com.enderio.base.common.integrations.jei.subtype.EntityStorageSubtypeInterpreter;
+import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
 import mezz.jei.api.IModPlugin;
@@ -21,6 +24,9 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @JeiPlugin
 public class EnderIOJEI implements IModPlugin {
@@ -49,6 +55,17 @@ public class EnderIOJEI implements IModPlugin {
 
         registration.addIngredientInfo(new ItemStack(EIOItems.GRAINS_OF_INFINITY.get()), VanillaTypes.ITEM_STACK, EIOLang.JEI_GRAINS_HAND_GRIND);
         registration.addIngredientInfo(new ItemStack(EIOItems.POWDERED_COAL.get()), VanillaTypes.ITEM_STACK, EIOLang.JEI_COAL_HAND_GRIND);
+
+        List<ItemStack> spawners = BrokenSpawnerItem.getPossibleStacks();
+        registration.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, spawners);
+
+        List<ItemStack> glasses = new ArrayList<>();
+        for (GlassBlocks glass : EIOBlocks.GLASS_BLOCKS.values()) {
+            for (var color : glass.COLORS.values()) {
+                glasses.add(new ItemStack(color.asItem()));
+            }
+        }
+        registration.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, glasses);
     }
 
     @Override
