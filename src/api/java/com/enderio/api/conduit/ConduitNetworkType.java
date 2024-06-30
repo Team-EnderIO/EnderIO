@@ -43,7 +43,7 @@ public interface ConduitNetworkType<TOptions, TContext extends ConduitNetworkCon
     }
 
     default boolean canBeReplacedBy(TOptions options, ConduitType<?, ?, ?> conduitType) {
-        return true;
+        return false;
     }
 
     default boolean canApplyUpgrade(TOptions options, SlotType slotType, ConduitUpgrade conduitUpgrade) {
