@@ -366,7 +366,7 @@ public class MachineRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.XP_OBELISK.get())
             .define('R', EIOItems.EXPERIENCE_ROD)
-            .define('I', EIOItems.SOULARIUM_INGOT)
+            .define('I', EIOTags.Items.INGOTS_SOULARIUM)
             .define('C', EIOBlocks.ENSOULED_CHASSIS)
             .pattern(" R ")
             .pattern(" I ")
@@ -374,6 +374,40 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.EXPERIENCE_ROD).build()))
             .save(recipeOutput);
 
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.AVERSION_OBELISK.get())
+            .define('H', EIOBlocks.ENDERMAN_HEAD) //TODO Tormented Ender
+            .define('E', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
+            .define('I', EIOTags.Items.INGOTS_SOULARIUM)
+            .define('C', EIOBlocks.ENSOULED_CHASSIS)
+            .pattern(" H ")
+            .pattern("EIE")
+            .pattern("ICI")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOBlocks.ENDERMAN_HEAD).build()))
+            .save(recipeOutput);
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.INHIBITOR_OBELISK.get())
+            .define('M', EIOItems.ENDER_CRYSTAL)
+            .define('E', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
+            .define('G', EIOItems.GEAR_IRON)
+            .define('I', EIOTags.Items.INGOTS_SOULARIUM)
+            .define('C', EIOBlocks.ENSOULED_CHASSIS)
+            .pattern(" M ")
+            .pattern("EGE")
+            .pattern("ICI")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.ENDER_CRYSTAL).build()))
+            .save(recipeOutput);
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.RELOCATOR_OBELISK.get())
+            .define('P', Items.PRISMARINE)
+            .define('A', MachineBlocks.AVERSION_OBELISK)
+            .pattern("P")
+            .pattern("A")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.AVERSION_OBELISK).build()))
+            .save(recipeOutput);
+            
         // TODO: Enable once the block detector has a model.
         /*ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.BLOCK_DETECTOR.get())

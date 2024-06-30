@@ -1,12 +1,11 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.machines.client.rendering.blockentity.AversionObeliskBER;
 import com.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
-import com.enderio.machines.client.rendering.blockentity.InhibitorObeliskBER;
-import com.enderio.machines.client.rendering.blockentity.RelocatorObeliskBER;
+import com.enderio.machines.client.rendering.blockentity.ObeliskBER;
 import com.enderio.machines.client.rendering.blockentity.XPObeliskBER;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
@@ -44,6 +43,7 @@ import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.Util;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -188,17 +188,17 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<InhibitorObeliskBlockEntity> INHIBITOR_OBELISK =
         register("inhibitor_obelisk", InhibitorObeliskBlockEntity::new, MachineBlocks.INHIBITOR_OBELISK)
-            .setRenderer(() -> InhibitorObeliskBER::new)
+            .setRenderer(() -> context -> new ObeliskBER(context, () -> Items.ENDER_PEARL))
             .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<AversionObeliskBlockEntity> AVERSION_OBELISK =
         register("aversion_obelisk", AversionObeliskBlockEntity::new, MachineBlocks.AVERSION_OBELISK)
-            .setRenderer(() -> AversionObeliskBER::new)
+            .setRenderer(() -> context -> new ObeliskBER(context, EIOBlocks.ENDERMAN_HEAD::asItem))
             .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<RelocatorObeliskBlockEntity> RELOCATOR_OBELISK =
         register("relocator_obelisk", RelocatorObeliskBlockEntity::new, MachineBlocks.RELOCATOR_OBELISK)
-            .setRenderer(() -> RelocatorObeliskBER::new)
+            .setRenderer(() -> context -> new ObeliskBER(context, () -> Items.PRISMARINE))
             .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
     @SafeVarargs

@@ -1,9 +1,6 @@
 package com.enderio.machines.client.rendering.blockentity;
 
-import com.enderio.base.common.init.EIOBlocks;
-import com.enderio.base.common.init.EIOItems;
-import com.enderio.machines.common.blockentity.AversionObeliskBlockEntity;
-import com.enderio.machines.common.blockentity.InhibitorObeliskBlockEntity;
+import com.enderio.machines.common.blockentity.base.ObeliskBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -12,19 +9,23 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
-public class AversionObeliskBER implements BlockEntityRenderer<AversionObeliskBlockEntity> {
+import java.util.function.Supplier;
 
-    public AversionObeliskBER(BlockEntityRendererProvider.Context context) {
+public class ObeliskBER implements BlockEntityRenderer<ObeliskBlockEntity> {
 
+    private final Supplier<Item> supplier;
+
+    public ObeliskBER(BlockEntityRendererProvider.Context context, Supplier<Item> itemSupplier) {
+        this.supplier = itemSupplier;
     }
 
     @Override
-    public void render(AversionObeliskBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+    public void render(ObeliskBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         poseStack.pushPose();
         poseStack.translate(0.5, 0.75, 0.5);
         poseStack.scale(0.5f, 0.5f, 0.5f);
@@ -32,7 +33,7 @@ public class AversionObeliskBER implements BlockEntityRenderer<AversionObeliskBl
         Vec3 position = minecraft.player.position();
         float f1 = (float) (Mth.atan2(position.z - blockEntity.getBlockPos().getZ() - 0.5D, position.x - blockEntity.getBlockPos().getX() - 0.5D) * 180.0f / Math.PI + 90);
         poseStack.mulPose(Axis.YP.rotationDegrees(-f1));
-        ItemStack stack = new ItemStack(EIOBlocks.ENDERMAN_HEAD);
+        ItemStack stack = new ItemStack(supplier.get());
         BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, blockEntity.getLevel(), null, 0);
         minecraft.getItemRenderer()
             .render(stack, ItemDisplayContext.GUI, true, poseStack, buffer, packedLight, packedOverlay, bakedmodel);
