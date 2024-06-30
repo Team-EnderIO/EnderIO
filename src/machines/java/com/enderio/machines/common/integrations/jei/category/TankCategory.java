@@ -1,4 +1,3 @@
-/*
 package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIO;
@@ -55,22 +54,21 @@ public class TankCategory implements IRecipeCategory<TankRecipe> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, TankRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 39, 3)
-            .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(recipe.getFluid()))
+            .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(recipe.fluid()))
             .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
 
-        if (recipe.isEmptying()) {
+        if (recipe.mode() == TankRecipe.Mode.EMPTY) {
             builder.addSlot(RecipeIngredientRole.INPUT, 3, 3)
-                .addIngredients(recipe.getInput());
+                .addIngredients(recipe.input());
 
             builder.addSlot(RecipeIngredientRole.OUTPUT, 3, 34)
-                .addItemStack(new ItemStack(recipe.getOutput()));
-        } else {
+                .addItemStack(new ItemStack(recipe.output()));
+        } else if (recipe.mode() == TankRecipe.Mode.FILL) {
             builder.addSlot(RecipeIngredientRole.INPUT, 75, 3)
-                .addIngredients(recipe.getInput());
+                .addIngredients(recipe.input());
 
             builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 34)
-                .addItemStack(new ItemStack(recipe.getOutput()));
+                .addItemStack(new ItemStack(recipe.output()));
         }
     }
 }
-*/

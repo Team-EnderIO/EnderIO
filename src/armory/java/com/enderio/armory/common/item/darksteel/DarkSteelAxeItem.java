@@ -24,8 +24,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.ToolAction;
-import net.neoforged.neoforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -106,8 +106,8 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
     }
 
     @Override
-    public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
-        return super.canPerformAction(stack,toolAction) || (hasFork(stack) && ToolActions.DEFAULT_HOE_ACTIONS.contains(toolAction));
+    public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
+        return super.canPerformAction(stack,itemAbility) || (hasFork(stack) && ItemAbilities.DEFAULT_HOE_ACTIONS.contains(itemAbility));
     }
 
     private boolean canHarvest(ItemStack stack, BlockState state) {

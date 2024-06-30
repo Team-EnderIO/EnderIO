@@ -5,13 +5,11 @@ import com.enderio.base.client.paint.PaintedBlockColor;
 import com.enderio.base.common.block.ColdFireBlock;
 import com.enderio.base.common.block.DarkSteelLadderBlock;
 import com.enderio.base.common.block.EIOPressurePlateBlock;
-import com.enderio.base.common.block.skull.EnderSkullBlock;
 import com.enderio.base.common.block.IndustrialInsulationBlock;
 import com.enderio.base.common.block.ReinforcedObsidianBlock;
 import com.enderio.base.common.block.ResettingLeverBlock;
 import com.enderio.base.common.block.SilentPressurePlateBlock;
 import com.enderio.base.common.block.SilentWeightedPressurePlateBlock;
-import com.enderio.base.common.block.skull.WallEnderSkullBlock;
 import com.enderio.base.common.block.glass.GlassBlocks;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassIdentifier;
@@ -19,6 +17,9 @@ import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.base.common.block.light.Light;
 import com.enderio.base.common.block.light.LightNode;
 import com.enderio.base.common.block.light.PoweredLight;
+import com.enderio.base.common.block.skull.EnderSkullBlock;
+import com.enderio.base.common.block.skull.WallEnderSkullBlock;
+import com.enderio.base.common.item.misc.EnderSkullBlockItem;
 import com.enderio.base.common.paint.block.PaintedCraftingTableBlock;
 import com.enderio.base.common.paint.block.PaintedFenceBlock;
 import com.enderio.base.common.paint.block.PaintedFenceGateBlock;
@@ -27,11 +28,11 @@ import com.enderio.base.common.paint.block.PaintedSandBlock;
 import com.enderio.base.common.paint.block.PaintedSlabBlock;
 import com.enderio.base.common.paint.block.PaintedStairBlock;
 import com.enderio.base.common.paint.block.PaintedTrapDoorBlock;
+import com.enderio.base.common.paint.block.PaintedWallBlock;
 import com.enderio.base.common.paint.block.PaintedWoodenPressurePlateBlock;
 import com.enderio.base.common.paint.block.SinglePaintedBlock;
 import com.enderio.base.common.paint.item.PaintedBlockItem;
 import com.enderio.base.common.paint.item.PaintedSlabBlockItem;
-import com.enderio.base.common.item.misc.EnderSkullBlockItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
@@ -381,6 +382,9 @@ public class EIOBlocks {
 
     public static final RegiliteBlock<SinglePaintedBlock> PAINTED_GLOWSTONE = paintedBlock("painted_glowstone", SinglePaintedBlock::new,
         Blocks.GLOWSTONE);
+
+    public static RegiliteBlock<PaintedWallBlock> PAINTED_WALL = paintedBlock("painted_wall", PaintedWallBlock::new, Blocks.COBBLESTONE_WALL,
+        BlockTags.WALLS, BlockTags.MINEABLE_WITH_PICKAXE);
 
     // endregion
 

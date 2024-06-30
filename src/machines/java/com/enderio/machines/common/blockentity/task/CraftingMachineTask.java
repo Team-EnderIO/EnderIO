@@ -2,6 +2,7 @@ package com.enderio.machines.common.blockentity.task;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.MachineState;
+import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
@@ -27,6 +28,8 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
 
     protected final Level level;
     protected final MachineInventory inventory;
+    @Nullable protected final MachineFluidHandler fluidHandler;
+    @Nullable
     protected final MultiSlotAccess outputSlots;
     protected final T recipeInput;
 
@@ -43,9 +46,21 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
 
     private boolean isComplete;
 
-    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, T recipeInput, MultiSlotAccess outputSlots, @Nullable RecipeHolder<R> recipe) {
+    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, T recipeInput, @Nullable MultiSlotAccess outputSlots,
+        @Nullable RecipeHolder<R> recipe) {
+        this(level, inventory, null, recipeInput, outputSlots, recipe);
+    }
+
+    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, @Nullable MachineFluidHandler fluidHandler, T recipeInput,
+        @Nullable RecipeHolder<R> recipe) {
+        this(level, inventory, fluidHandler, recipeInput, null, recipe);
+    }
+
+    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, @Nullable MachineFluidHandler fluidHandler, T recipeInput,
+        @Nullable MultiSlotAccess outputSlots, @Nullable RecipeHolder<R> recipe) {
         this.level = level;
         this.inventory = inventory;
+        this.fluidHandler = fluidHandler;
         this.recipeInput = recipeInput;
         this.outputSlots = outputSlots;
         this.recipe = recipe;
@@ -61,6 +76,11 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     @Nullable
     public R getRecipe() {
         return recipe.value();
+    }
+
+    @Nullable
+    public ResourceLocation getRecipeId() {
+        return recipe.id();
     }
 
     // region Abstract Implementation
@@ -159,6 +179,11 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
 
     protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
         // TODO: Handle fluids too.
+
+        //return early if there are no output slots
+        if (outputSlots == null) {
+            return false;
+        }
 
         // See that we can add all the outputs
         for (OutputStack output : outputs) {
