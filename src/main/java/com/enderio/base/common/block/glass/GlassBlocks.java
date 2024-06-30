@@ -110,7 +110,7 @@ public class GlassBlocks {
     private RegiliteBlock<FusedQuartzBlock> register(BlockRegistry blockRegistry, ItemRegistry itemRegistry, String name, DyeColor color) {
         var block = blockRegistry
             .registerBlock(name,
-                p -> new FusedQuartzBlock(p, glassIdentifier, null),
+                p -> new FusedQuartzBlock(p, glassIdentifier, color),
                 BlockBehaviour.Properties.of()
                     .noOcclusion()
                     .strength(0.3F)
