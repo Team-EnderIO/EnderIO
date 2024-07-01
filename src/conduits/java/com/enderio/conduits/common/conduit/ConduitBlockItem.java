@@ -1,9 +1,9 @@
 package com.enderio.conduits.common.conduit;
 
+import com.enderio.EnderIO;
 import com.enderio.api.conduit.Conduit;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.base.common.init.EIOCreativeTabs;
-import com.enderio.conduits.common.components.RepresentedConduitType;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitComponents;
 import net.minecraft.core.BlockPos;
@@ -26,34 +26,29 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
-@EventBusSubscriber(modid = "enderio", bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = EnderIO.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ConduitBlockItem extends BlockItem {
 
     public ConduitBlockItem(Block block, Properties properties) {
         super(block, properties);
     }
 
-    public static ItemStack getStackFor(Holder<Conduit<?, ?, ?>> conduitType, int count) {
+    public static ItemStack getStackFor(Holder<Conduit<?, ?, ?>> conduit, int count) {
         var stack = new ItemStack(ConduitBlocks.CONDUIT.asItem(), count);
-        stack.set(ConduitComponents.REPRESENTED_CONDUIT_TYPE, new RepresentedConduitType(conduitType));
+        stack.set(ConduitComponents.CONDUIT, conduit);
         return stack;
-    }
-
-    public static Optional<Holder<Conduit<?, ?, ?>>> getType(ItemStack stack) {
-        var representedConduitType = stack.get(ConduitComponents.REPRESENTED_CONDUIT_TYPE);
-        return representedConduitType != null
-            ? Optional.of(representedConduitType.conduitType())
-            : Optional.empty();
     }
 
     @Override
     public Component getName(ItemStack pStack) {
-        return getType(pStack).map(typeHolder -> typeHolder.value().description())
-            .orElseGet(() -> super.getName(pStack));
+        Holder<Conduit<?, ?, ?>> conduit = pStack.get(ConduitComponents.CONDUIT);
+        if (conduit == null) {
+            return super.getName(pStack);
+        }
+
+        return conduit.value().description();
     }
 
     // Do not use block description, as that is Conduit Bundle.
@@ -71,14 +66,15 @@ public class ConduitBlockItem extends BlockItem {
         BlockPos blockpos = context.getClickedPos();
         ItemStack itemstack = context.getItemInHand();
 
-        // Ensure we have a type
-        if (getType(itemstack).isEmpty()) {
+        Holder<Conduit<?, ?, ?>> conduit = itemstack.get(ConduitComponents.CONDUIT);
+        if (conduit == null) {
             return InteractionResult.FAIL;
         }
 
         // Pass through to existing block.
         BlockState blockState = level.getBlockState(blockpos);
         if (!blockState.isAir()) {
+            //noinspection DataFlowIssue
             return level.getBlockState(blockpos).useItemOn(context.getItemInHand(), level, player, context.getHand(), context.getHitResult()).result();
         }
 
@@ -87,12 +83,10 @@ public class ConduitBlockItem extends BlockItem {
 
     @Override
     public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
-        getType(pStack).ifPresent(typeHolder -> {
-            List<Component> conduitTooltips = typeHolder.value().getHoverText(pContext, pTooltipFlag);
-            if (!conduitTooltips.isEmpty()) {
-                pTooltipComponents.addAll(conduitTooltips);
-            }
-        });
+        Holder<Conduit<?, ?, ?>> conduit = pStack.get(ConduitComponents.CONDUIT);
+        if (conduit != null) {
+            conduit.value().addToTooltip(pContext, pTooltipComponents::add, pTooltipFlag);
+        }
 
         super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
     }

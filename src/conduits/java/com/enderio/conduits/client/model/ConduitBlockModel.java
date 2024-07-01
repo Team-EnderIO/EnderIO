@@ -5,12 +5,12 @@ import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.model.ConduitCoreModelModifier;
 import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
+import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.client.paint.model.PaintingQuadTransformer;
 import com.enderio.conduits.common.Area;
-import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.OffsetHelper;
 import com.enderio.core.data.model.ModelHelper;
@@ -67,8 +67,8 @@ public class ConduitBlockModel implements IDynamicBakedModel {
         @Nullable RenderType renderType) {
 
         List<BakedQuad> quads = new ArrayList<>();
-        ConduitBundle conduitBundle = extraData.get(ConduitBlockEntity.BUNDLE_MODEL_PROPERTY);
-        BlockPos pos = extraData.get(ConduitBlockEntity.POS);
+        ConduitBundle conduitBundle = extraData.get(ConduitBundleBlockEntity.BUNDLE_MODEL_PROPERTY);
+        BlockPos pos = extraData.get(ConduitBundleBlockEntity.POS);
 
         if (conduitBundle != null && pos != null) {
             Direction.Axis axis = OffsetHelper.findMainAxis(conduitBundle);
@@ -83,7 +83,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                     quads.addAll(rotation.process(modelOf(CONDUIT_CONNECTOR).getQuads(state, preRotation, rand, extraData, renderType)));
                 }
 
-                var connectedTypes = conduitBundle.getConnectedTypes(direction);
+                var connectedTypes = conduitBundle.getConnectedConduits(direction);
                 for (int i = 0; i < connectedTypes.size(); i++) {
                     Holder<Conduit<?, ?, ?>> type = connectedTypes.get(i);
                     ConduitGraphObject<?, ?> node = conduitBundle.getNodeFor(type);
@@ -142,7 +142,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                 }
             }
 
-            var allTypes = conduitBundle.getTypes();
+            var allTypes = conduitBundle.getConduits();
             @Nullable Area box = null;
             Map<Holder<Conduit<?, ?, ?>>, Integer> notRendered = new HashMap<>();
             List<Holder<Conduit<?, ?, ?>>> rendered = new ArrayList<>();

@@ -15,25 +15,25 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ConduitSelectionButton extends AbstractButton {
-    private final Holder<Conduit<?, ?, ?>> type;
+    private final Holder<Conduit<?, ?, ?>> conduit;
     private final Supplier<Holder<Conduit<?, ?, ?>>> getter;
     private final Consumer<Holder<Conduit<?, ?, ?>>> setter;
 
-    public ConduitSelectionButton(int pX, int pY, Holder<Conduit<?, ?, ?>> type, Supplier<Holder<Conduit<?, ?, ?>>> getter, Consumer<Holder<Conduit<?, ?, ?>>> setter) {
+    public ConduitSelectionButton(int pX, int pY, Holder<Conduit<?, ?, ?>> conduit, Supplier<Holder<Conduit<?, ?, ?>>> getter, Consumer<Holder<Conduit<?, ?, ?>>> setter) {
         super(pX, pY, 21, 24, Component.empty());
-        this.type = type;
+        this.conduit = conduit;
         this.getter = getter;
         this.setter = setter;
     }
 
     @Override
     protected boolean isValidClickButton(int pButton) {
-        return super.isValidClickButton(pButton) && getter.get() != type;
+        return super.isValidClickButton(pButton) && getter.get() != conduit;
     }
 
     @Override
     public void onPress() {
-        setter.accept(type);
+        setter.accept(conduit);
     }
 
     @Override
@@ -43,12 +43,12 @@ public class ConduitSelectionButton extends AbstractButton {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
         guiGraphics.blit(ConduitScreen.TEXTURE, getX(), getY(), 227, 0, this.width, this.height);
-        if (getter.get() == type) {
+        if (getter.get() == conduit) {
             guiGraphics.blit(ConduitScreen.TEXTURE, getX() - 3, getY(), 224, 0, 3, this.height);
         }
 
         ResourceLocation iconLocation = MissingTextureAtlasSprite.getLocation();
-        ResourceLocation conduitTypeKey = type.unwrapKey().map(ResourceKey::location).orElse(null);
+        ResourceLocation conduitTypeKey = conduit.unwrapKey().map(ResourceKey::location).orElse(null);
         if (conduitTypeKey != null) {
             iconLocation = ResourceLocation.fromNamespaceAndPath(conduitTypeKey.getNamespace(), "conduit_icon/" + conduitTypeKey.getPath());
         }
@@ -63,7 +63,7 @@ public class ConduitSelectionButton extends AbstractButton {
     protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
     }
 
-    public Holder<Conduit<?, ?, ?>> getType() {
-        return type;
+    public Holder<Conduit<?, ?, ?>> getConduit() {
+        return conduit;
     }
 }

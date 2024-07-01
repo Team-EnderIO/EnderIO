@@ -23,8 +23,14 @@ public interface ConduitType<T extends Conduit<T, ?, ?>> {
         streamCodec -> ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_TYPE)
     );
 
+    /**
+     * @return The codec used for datapack read and sync.
+     */
     MapCodec<T> codec();
 
+    /**
+     * @return The list of block capabilities that should be exposed and passed to the conduit proxy.
+     */
     Set<BlockCapability<?, Direction>> exposedCapabilities();
 
     static <T extends Conduit<T, ?, ?>> ConduitType<T> of(MapCodec<T> codec) {

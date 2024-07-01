@@ -1,12 +1,13 @@
 package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.conduits.common.components.RepresentedConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneTLatchFilter;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
 import com.mojang.serialization.Codec;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -18,8 +19,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ConduitComponents {
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister.createDataComponents(EnderIO.MODID);
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<RepresentedConduitType>> REPRESENTED_CONDUIT_TYPE = DATA_COMPONENT_TYPES
-        .registerComponentType("represented_conduit_type", builder -> builder.persistent(RepresentedConduitType.CODEC).networkSynchronized(RepresentedConduitType.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<Conduit<?, ?, ?>>>> CONDUIT = DATA_COMPONENT_TYPES
+        .registerComponentType("conduit", builder -> builder.persistent(Conduit.CODEC).networkSynchronized(Conduit.STREAM_CODEC));
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> EXTRACTION_SPEED_UPGRADE_TIER = DATA_COMPONENT_TYPES
         .registerComponentType("extraction_speed_upgrade_tier", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));

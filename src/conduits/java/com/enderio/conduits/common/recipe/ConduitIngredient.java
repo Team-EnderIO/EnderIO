@@ -1,7 +1,6 @@
 package com.enderio.conduits.common.recipe;
 
 import com.enderio.api.conduit.Conduit;
-import com.enderio.conduits.common.components.RepresentedConduitType;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitComponents;
@@ -45,12 +44,12 @@ public class ConduitIngredient implements ICustomIngredient {
             return false;
         }
 
-        RepresentedConduitType representedConduitType = stack.get(ConduitComponents.REPRESENTED_CONDUIT_TYPE);
-        if (representedConduitType == null) {
+        if (!stack.has(ConduitComponents.CONDUIT)) {
             return false;
         }
 
-        return conduitType.value().equals(representedConduitType.conduitType());
+        Holder<Conduit<?, ?, ?>> conduit = stack.get(ConduitComponents.CONDUIT);
+        return conduitType.value().equals(conduit);
     }
 
     @Override

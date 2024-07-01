@@ -20,15 +20,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
-public interface Conduit<TType extends Conduit<TType, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> extends
-    Comparable<TType> {
+public interface Conduit<TConduit extends Conduit<TConduit, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> extends
+    Comparable<TConduit>, TooltipProvider {
 
     Codec<Conduit<?, ?, ?>> DIRECT_CODEC = EnderIORegistries.CONDUIT_TYPE.byNameCodec()
         .dispatch(Conduit::type, ConduitType::codec);
@@ -45,13 +47,13 @@ public interface Conduit<TType extends Conduit<TType, TContext, TData>, TContext
      * Gets the conduit description, used for the conduit item.
      */
     Component description();
-    ConduitType<TType> type();
+    ConduitType<TConduit> type();
 
     /**
      * Get the ticker for this conduit graph type.
      * @apiNote The ticker should never change, it can use the options to determine behaviour in its implementation.
      */
-    ConduitTicker<TType, TContext, TData> getTicker();
+    ConduitTicker<TConduit, TContext, TData> getTicker();
     ConduitMenuData getMenuData();
 
     /**
@@ -63,11 +65,11 @@ public interface Conduit<TType extends Conduit<TType, TContext, TData>, TContext
     TContext createNetworkContext(ConduitNetwork<TContext, TData> network);
     TData createConduitData(Level level, BlockPos pos);
 
-    default boolean canBeInSameBundle(Holder<Conduit<?, ?, ?>> otherType) {
+    default boolean canBeInSameBundle(Holder<Conduit<?, ?, ?>> otherConduit) {
         return true;
     }
 
-    default boolean canBeReplacedBy(Holder<Conduit<?, ?, ?>> otherType) {
+    default boolean canBeReplacedBy(Holder<Conduit<?, ?, ?>> otherConduit) {
         return false;
     }
 
@@ -111,16 +113,7 @@ public interface Conduit<TType extends Conduit<TType, TContext, TData>, TContext
 
     record ConduitConnectionData(boolean isInsert, boolean isExtract, RedstoneControl control) {}
 
-    default List<Component> getHoverText(Item.TooltipContext context, TooltipFlag tooltipFlag) {
-        return List.of();
-    }
-
-    default Holder<Conduit<?, ?, ?>> wrapAsHolder(RegistryAccess registryAccess) {
-        var registry = registryAccess.registryOrThrow(EnderIORegistries.Keys.CONDUIT);
-        return registry.wrapAsHolder(this);
-    }
-
-    default ResourceKey<Conduit<?, ?, ?>> getKey(RegistryAccess registryAccess) {
-        return wrapAsHolder(registryAccess).unwrapKey().orElseThrow();
+    @Override
+    default void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
     }
 }

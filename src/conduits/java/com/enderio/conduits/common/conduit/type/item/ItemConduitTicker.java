@@ -23,7 +23,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduit,
     @Override
     protected void tickCapabilityGraph(
         ServerLevel level,
-        ItemConduit type,
+        ItemConduit conduit,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
         ConduitNetwork<ConduitNetworkContext.Dummy, ItemConduitData> graph,

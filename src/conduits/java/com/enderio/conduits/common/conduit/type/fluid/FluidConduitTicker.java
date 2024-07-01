@@ -25,7 +25,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
     @Override
     public void tickGraph(
         ServerLevel level,
-        FluidConduit type,
+        FluidConduit conduit,
         List<ConduitNode<ConduitNetworkContext.Dummy, FluidConduitData>> loadedNodes,
         ConduitNetwork<ConduitNetworkContext.Dummy, FluidConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
@@ -44,13 +44,13 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
                 loadedNode.getConduitData().setLockedFluid(null);
             }
         }
-        super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
+        super.tickGraph(level, conduit, loadedNodes, graph, coloredRedstoneProvider);
     }
 
     @Override
     protected void tickCapabilityGraph(
         ServerLevel level,
-        FluidConduit type,
+        FluidConduit conduit,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
         ConduitNetwork<ConduitNetworkContext.Dummy, FluidConduitData> graph,
@@ -60,7 +60,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
             IFluidHandler extractHandler = extract.capability;
             FluidConduitData fluidExtendedData = extract.data;
 
-            int temp = type.transferRate();
+            int temp = conduit.transferRate();
             if (extract.upgrade instanceof ExtractionSpeedUpgrade speedUpgrade) {
                 // TODO: Review scaling.
                 temp *= (int) Math.pow(2, speedUpgrade.tier());
@@ -98,7 +98,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
 
                 if (!transferredFluid.isEmpty()) {
                     transferred += transferredFluid.getAmount();
-                    if (!type.isMultiFluid()) {
+                    if (!conduit.isMultiFluid()) {
                         for (ConduitNode<ConduitNetworkContext.Dummy, FluidConduitData> node : graph.getNodes()) {
                             Fluid fluid = transferredFluid.getFluid();
                             if (fluid instanceof FlowingFluid flowing) {

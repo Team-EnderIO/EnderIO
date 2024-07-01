@@ -110,7 +110,7 @@ public class OffsetHelper {
     public static Direction.Axis findMainAxis(ConduitBundle bundle) {
         List<Direction> connectedDirs = new ArrayList<>();
         for (Direction dir: Direction.values()) {
-            if (!bundle.getConnectedTypes(dir).isEmpty()) {
+            if (!bundle.getConnectedConduits(dir).isEmpty()) {
                 connectedDirs.add(dir);
             }
         }

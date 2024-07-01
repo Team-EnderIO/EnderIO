@@ -10,12 +10,12 @@ import net.minecraft.world.item.crafting.Ingredient;
 public class ConduitApiImpl implements ConduitApi {
 
     @Override
-    public ItemStack getStackForType(Holder<Conduit<?, ?, ?>> type, int count) {
-        return ConduitBlockItem.getStackFor(type, count);
+    public ItemStack getStackForType(Holder<Conduit<?, ?, ?>> conduit, int count) {
+        return ConduitBlockItem.getStackFor(conduit, count);
     }
 
     @Override
-    public Ingredient getIngredientForType(Holder<Conduit<?, ?, ?>> type) {
-        return ConduitIngredient.of(type);
+    public Ingredient getIngredientForType(Holder<Conduit<?, ?, ?>> conduit) {
+        return ConduitIngredient.of(conduit);
     }
 }

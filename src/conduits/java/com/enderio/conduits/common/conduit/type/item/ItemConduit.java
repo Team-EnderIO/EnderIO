@@ -9,7 +9,6 @@ import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
 import com.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.conduits.common.init.Conduits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

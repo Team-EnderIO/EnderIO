@@ -18,10 +18,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CapabilityAwareConduitTicker<TType extends Conduit<TType, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>, TCap> implements IOAwareConduitTicker<TType, TContext, TData> {
+public abstract class CapabilityAwareConduitTicker<TConduit extends Conduit<TConduit, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>, TCap> implements IOAwareConduitTicker<TConduit, TContext, TData> {
 
     @Override
-    public final void tickColoredGraph(ServerLevel level, TType type, List<Connection<TData>> inserts, List<Connection<TData>> extracts,
+    public final void tickColoredGraph(ServerLevel level, TConduit conduit, List<Connection<TData>> inserts, List<Connection<TData>> extracts,
         ColorControl color, ConduitNetwork<TContext, TData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
         List<CapabilityConnection> insertCaps = new ArrayList<>();
@@ -45,7 +45,7 @@ public abstract class CapabilityAwareConduitTicker<TType extends Conduit<TType, 
             }
 
             if (!extractCaps.isEmpty()) {
-                tickCapabilityGraph(level, type, insertCaps, extractCaps, graph, coloredRedstoneProvider);
+                tickCapabilityGraph(level, conduit, insertCaps, extractCaps, graph, coloredRedstoneProvider);
             }
         }
     }
@@ -56,7 +56,7 @@ public abstract class CapabilityAwareConduitTicker<TType extends Conduit<TType, 
         return capability != null;
     }
 
-    protected abstract void tickCapabilityGraph(ServerLevel level, TType type, List<CapabilityConnection> inserts,
+    protected abstract void tickCapabilityGraph(ServerLevel level, TConduit conduit, List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts, ConduitNetwork<TContext, TData> graph, ColoredRedstoneProvider coloredRedstoneProvider);
 
     protected abstract BlockCapability<TCap, Direction> getCapability();

@@ -19,9 +19,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface IOAwareConduitTicker<TType extends Conduit<TType, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> extends LoadedAwareConduitTicker<TType, TContext, TData> {
+public interface IOAwareConduitTicker<TConduit extends Conduit<TConduit, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> extends LoadedAwareConduitTicker<TConduit, TContext, TData> {
     @Override
-    default void tickGraph(ServerLevel level, TType type,
+    default void tickGraph(ServerLevel level, TConduit conduit,
         List<ConduitNode<TContext, TData>> loadedNodes, ConduitNetwork<TContext, TData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
@@ -32,7 +32,7 @@ public interface IOAwareConduitTicker<TType extends Conduit<TType, TContext, TDa
                 node.getIOState(direction).ifPresent(ioState -> {
                     ioState
                         .extract()
-                        .filter(extract -> isRedstoneMode(type, level, node.getPos(), ioState, coloredRedstoneProvider))
+                        .filter(extract -> isRedstoneMode(conduit, level, node.getPos(), ioState, coloredRedstoneProvider))
                         .ifPresent(
                             color -> extracts.get(color).add(new Connection<>(
                                 node.getPos(),
@@ -61,7 +61,7 @@ public interface IOAwareConduitTicker<TType extends Conduit<TType, TContext, TDa
                 continue;
             }
 
-            tickColoredGraph(level, type, insertList, extractList, color, graph, coloredRedstoneProvider);
+            tickColoredGraph(level, conduit, insertList, extractList, color, graph, coloredRedstoneProvider);
         }
     }
 
@@ -71,16 +71,16 @@ public interface IOAwareConduitTicker<TType extends Conduit<TType, TContext, TDa
 
     void tickColoredGraph(
         ServerLevel level,
-        TType type,
+        TConduit conduit,
         List<Connection<TData>> inserts,
         List<Connection<TData>> extracts,
         ColorControl color,
         ConduitNetwork<TContext, TData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
-    default boolean isRedstoneMode(TType type, ServerLevel level, BlockPos pos, ConduitNode.IOState state,
+    default boolean isRedstoneMode(TConduit conduit, ServerLevel level, BlockPos pos, ConduitNode.IOState state,
         ColoredRedstoneProvider coloredRedstoneProvider) {
-        if (!type.getMenuData().showRedstoneExtract()) {
+        if (!conduit.getMenuData().showRedstoneExtract()) {
             return true;
         }
 

@@ -1,7 +1,6 @@
 package com.enderio.conduits.client.model;
 
 import com.enderio.api.conduit.Conduit;
-import com.enderio.conduits.common.components.RepresentedConduitType;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.core.client.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -12,7 +11,7 @@ import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -27,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class ConduitItemModel extends BakedModelWrapper<BakedModel> {
 
@@ -44,19 +42,19 @@ public class ConduitItemModel extends BakedModelWrapper<BakedModel> {
 
     public static class ConduitItemOverrides extends ItemOverrides {
 
-        private final Map<RepresentedConduitType, BakedModel> CACHE = new HashMap<>();
+        private final Map<Holder<Conduit<?, ?, ?>>, BakedModel> CACHE = new HashMap<>();
 
         @Nullable
         @Override
         public BakedModel resolve(BakedModel pModel, ItemStack pStack, @Nullable ClientLevel pLevel, @Nullable LivingEntity pEntity, int pSeed) {
-            RepresentedConduitType representedConduitType = pStack.get(ConduitComponents.REPRESENTED_CONDUIT_TYPE);
-            return CACHE.computeIfAbsent(representedConduitType, t -> createBakedModel(t, pModel, pLevel));
+            Holder<Conduit<?, ?, ?>> conduit = pStack.get(ConduitComponents.CONDUIT);
+            return CACHE.computeIfAbsent(conduit, t -> createBakedModel(t, pModel, pLevel));
         }
 
-        private BakedModel createBakedModel(@Nullable RepresentedConduitType representedConduitType, BakedModel model, @Nullable ClientLevel level) {
+        private BakedModel createBakedModel(@Nullable Holder<Conduit<?, ?, ?>> conduit, BakedModel model, @Nullable ClientLevel level) {
             ResourceLocation conduitTexture = MissingTextureAtlasSprite.getLocation();
-            if (representedConduitType != null) {
-                conduitTexture = representedConduitType.conduitType().value().texture();
+            if (conduit != null) {
+                conduitTexture = conduit.value().texture();
             }
 
             // Get the replacement texture.

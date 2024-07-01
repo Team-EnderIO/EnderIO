@@ -33,14 +33,14 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
     @Override
     public void tickGraph(
         ServerLevel level,
-        RedstoneConduit type,
+        RedstoneConduit conduit,
         ConduitNetwork<ConduitNetworkContext.Dummy, RedstoneConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         Collection<ConduitNode<ConduitNetworkContext.Dummy, RedstoneConduitData>> nodeIdentifiers = graph.getNodes();
 
         activeColors.clear();
-        tickGraph(level, type, nodeIdentifiers.stream().filter(node -> isLoaded(level, node.getPos())).toList(), graph, coloredRedstoneProvider);
+        tickGraph(level, conduit, nodeIdentifiers.stream().filter(node -> isLoaded(level, node.getPos())).toList(), graph, coloredRedstoneProvider);
 
         for (var nodeIdentifier : nodeIdentifiers) {
             RedstoneConduitData data = nodeIdentifier.getConduitData();
@@ -54,7 +54,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
     @Override
     public void tickColoredGraph(
         ServerLevel level,
-        RedstoneConduit type,
+        RedstoneConduit conduit,
         List<Connection<RedstoneConduitData>> inserts,
         List<Connection<RedstoneConduitData>> extracts,
         ColorControl color,

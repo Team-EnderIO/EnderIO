@@ -144,13 +144,13 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
         }
 
         List<Holder<Conduit<?, ?, ?>>> validConnections = new ArrayList<>();
-        for (Holder<Conduit<?, ?, ?>> type : getBundle().getTypes()) {
+        for (Holder<Conduit<?, ?, ?>> type : getBundle().getConduits()) {
             if (getConnectionState(type) instanceof DynamicConnectionState) {
                 validConnections.add(type);
             }
         }
 
-        if (forceUpdate || !typeSelectionButtons.stream().map(ConduitSelectionButton::getType).toList().equals(validConnections)) {
+        if (forceUpdate || !typeSelectionButtons.stream().map(ConduitSelectionButton::getConduit).toList().equals(validConnections)) {
             typeSelectionButtons.forEach(this::removeWidget);
             typeSelectionButtons.clear();
             for (int i = 0; i < validConnections.size(); i++) {

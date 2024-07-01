@@ -6,7 +6,7 @@ import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
-import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -23,7 +23,7 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit, 
     }
 
     @Override
-    public void tickGraph(ServerLevel level, EnergyConduit type,
+    public void tickGraph(ServerLevel level, EnergyConduit conduit,
         List<ConduitNode<EnergyConduitNetworkContext, ConduitData.EmptyConduitData>> loadedNodes,
         ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
@@ -33,11 +33,11 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit, 
             context.setEnergyInsertedThisTick(0);
         }
 
-        IOAwareConduitTicker.super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
+        IOAwareConduitTicker.super.tickGraph(level, conduit, loadedNodes, graph, coloredRedstoneProvider);
     }
 
     @Override
-    public void tickColoredGraph(ServerLevel level, EnergyConduit type,
+    public void tickColoredGraph(ServerLevel level, EnergyConduit conduit,
         List<Connection<ConduitData.EmptyConduitData>> inserts, List<Connection<ConduitData.EmptyConduitData>> extracts, ColorControl color,
         ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
@@ -76,7 +76,7 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit, 
                 continue;
             }
 
-            int energyToInsert = Math.min(type.transferRate() - totalEnergyInserted, availableEnergy);
+            int energyToInsert = Math.min(conduit.transferRate() - totalEnergyInserted, availableEnergy);
 
             int energyInserted = insertHandler.receiveEnergy(energyToInsert, false);
             context.setEnergyStored(context.energyStored() - energyInserted);
@@ -84,7 +84,7 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit, 
 
             totalEnergyInserted += energyInserted;
 
-            if (totalEnergyInserted >= type.transferRate()) {
+            if (totalEnergyInserted >= conduit.transferRate()) {
                 break;
             }
         }
@@ -106,7 +106,7 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit, 
 
     @Override
     public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
-        if (level.getBlockEntity(conduitPos.relative(direction)) instanceof ConduitBlockEntity) {
+        if (level.getBlockEntity(conduitPos.relative(direction)) instanceof ConduitBundleBlockEntity) {
             return false;
         }
 

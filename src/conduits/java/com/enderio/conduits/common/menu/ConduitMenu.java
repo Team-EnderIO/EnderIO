@@ -1,10 +1,10 @@
 package com.enderio.conduits.common.menu;
 
 import com.enderio.api.conduit.Conduit;
-import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.api.conduit.SlotType;
-import com.enderio.conduits.common.conduit.block.ConduitBlock;
+import com.enderio.conduits.common.conduit.block.ConduitBundleBlock;
 import com.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.core.common.menu.SyncedMenu;
 import net.minecraft.core.Direction;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
+public class ConduitMenu extends SyncedMenu<ConduitBundleBlockEntity> {
 
     public List<ConduitSlot> getConduitSlots() {
         return conduitSlots;
@@ -35,16 +35,16 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
     private Direction direction;
     private Holder<Conduit<?, ?, ?>> type;
 
-    public ConduitMenu(@Nullable ConduitBlockEntity blockEntity, Inventory inventory, int pContainerId, Direction direction, Holder<Conduit<?, ?, ?>> type) {
+    public ConduitMenu(@Nullable ConduitBundleBlockEntity blockEntity, Inventory inventory, int pContainerId, Direction direction, Holder<Conduit<?, ?, ?>> type) {
         super(blockEntity, inventory, ConduitMenus.CONDUIT_MENU.get(), pContainerId);
         this.direction = direction;
         this.type = type;
         if (blockEntity != null) {
             IItemHandler conduitItemHandler = blockEntity.getConduitItemHandler();
             for (Direction forDirection : Direction.values()) {
-                for (int i = 0; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
+                for (int i = 0; i < ConduitBundle.MAX_CONDUITS; i++) {
                     for (SlotType slotType: SlotType.values()) {
-                        ConduitSlot slot = new ConduitSlot(blockEntity.getBundle(),conduitItemHandler, () -> this.direction, forDirection, () -> blockEntity.getBundle().getTypes().indexOf(this.type), i, slotType);
+                        ConduitSlot slot = new ConduitSlot(blockEntity.getBundle(),conduitItemHandler, () -> this.direction, forDirection, () -> blockEntity.getBundle().getConduits().indexOf(this.type), i, slotType);
                         conduitSlots.add(slot);
                         slot.updateVisibilityPosition();
                         addSlot(slot);
@@ -90,15 +90,15 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
     }
 
     private boolean clientValid() {
-        return getBlockEntity().getBundle().getTypes().contains(type)
-            && ConduitBlock.canBeOrIsValidConnection(getBlockEntity(), type, direction);
+        return getBlockEntity().getBundle().getConduits().contains(type)
+            && ConduitBundleBlock.canBeOrIsValidConnection(getBlockEntity(), type, direction);
     }
 
     public static ConduitMenu factory(int pContainerId, Inventory inventory, RegistryFriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         Direction direction = buf.readEnum(Direction.class);
         Holder<Conduit<?, ?, ?>> type = Conduit.STREAM_CODEC.decode(buf);
-        if (entity instanceof ConduitBlockEntity castBlockEntity) {
+        if (entity instanceof ConduitBundleBlockEntity castBlockEntity) {
             return new ConduitMenu(castBlockEntity, inventory, pContainerId, direction, type);
         }
 

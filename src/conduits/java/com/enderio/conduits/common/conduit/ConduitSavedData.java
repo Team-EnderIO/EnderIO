@@ -7,7 +7,7 @@ import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
-import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import com.enderio.conduits.common.init.Conduits;
 import com.mojang.datafixers.util.Pair;
@@ -328,14 +328,14 @@ public class ConduitSavedData extends SavedData {
             return false;
         }
 
-        if (!(serverLevel.getBlockEntity(pos) instanceof ConduitBlockEntity conduit)) {
+        if (!(serverLevel.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduit)) {
             return false;
         }
 
         var registry = serverLevel.holderLookup(EnderIORegistries.Keys.CONDUIT);
         var redstoneConduitType = registry.get(Conduits.REDSTONE);
 
-        if (redstoneConduitType.isEmpty() || !conduit.getBundle().getTypes().contains(redstoneConduitType.get())) {
+        if (redstoneConduitType.isEmpty() || !conduit.getBundle().getConduits().contains(redstoneConduitType.get())) {
             return false;
         }
 

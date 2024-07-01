@@ -2,7 +2,7 @@ package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.api.registry.EnderIORegistries;
-import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import net.minecraft.core.Direction;
@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 public class ConduitBlockEntities {
     private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIO.getRegilite().blockEntityRegistry();
 
-    public static final RegiliteBlockEntity<ConduitBlockEntity> CONDUIT = BLOCK_ENTITY_REGISTRY
-        .registerBlockEntity("conduit", ConduitBlockEntity::new, ConduitBlocks.CONDUIT);
+    public static final RegiliteBlockEntity<ConduitBundleBlockEntity> CONDUIT = BLOCK_ENTITY_REGISTRY
+        .registerBlockEntity("conduit", ConduitBundleBlockEntity::new, ConduitBlocks.CONDUIT);
 
     @SubscribeEvent
     public static void registerConduitCapabilities(RegisterCapabilitiesEvent event) {
@@ -34,7 +34,7 @@ public class ConduitBlockEntities {
     }
 
     private static <T> void registerConduitCapability(RegisterCapabilitiesEvent event, BlockCapability<T, Direction> capability) {
-        event.registerBlockEntity(capability, CONDUIT.get(), ConduitBlockEntity.createConduitCap(capability));
+        event.registerBlockEntity(capability, CONDUIT.get(), ConduitBundleBlockEntity.createConduitCap(capability));
     }
 
     public static void register(IEventBus bus) {

@@ -9,7 +9,6 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.conduits.common.init.Conduits;
 import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -29,8 +28,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Set;
+import java.util.function.Consumer;
 
 public record EnergyConduit(
     ResourceLocation texture,
@@ -80,21 +78,17 @@ public record EnergyConduit(
     }
 
     @Override
-    public boolean canBeInSameBundle(Holder<Conduit<?, ?, ?>> conduitType) {
-        if (conduitType.value() instanceof EnergyConduit) {
-            return false;
-        }
-
-        return true;
+    public boolean canBeInSameBundle(Holder<Conduit<?, ?, ?>> otherConduit) {
+        return !(otherConduit.value() instanceof EnergyConduit);
     }
 
     @Override
-    public boolean canBeReplacedBy(Holder<Conduit<?, ?, ?>> conduitType) {
-        if (!(conduitType.value() instanceof EnergyConduit energyConduitType)) {
+    public boolean canBeReplacedBy(Holder<Conduit<?, ?, ?>> otherConduit) {
+        if (!(otherConduit.value() instanceof EnergyConduit otherEnergyConduit)) {
             return false;
         }
 
-        return this.transferRate() < energyConduitType.transferRate();
+        return compareTo(otherEnergyConduit) > 0;
     }
 
     @Override
@@ -103,7 +97,7 @@ public record EnergyConduit(
 
         if (Capabilities.EnergyStorage.BLOCK == capability && (state == null || state.isExtract())) {
             //noinspection unchecked
-            return (K) new EnergyConduitStorage(transferRate(), node);
+            return (K)new EnergyConduitStorage(transferRate(), node);
         }
 
         return null;
@@ -126,9 +120,9 @@ public record EnergyConduit(
     }
 
     @Override
-    public List<Component> getHoverText(Item.TooltipContext context, TooltipFlag tooltipFlag) {
+    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
         String transferLimitFormatted = String.format("%,d", transferRate());
-        return List.of(TooltipUtil.styledWithArgs(ConduitLang.ENERGY_RATE_TOOLTIP, transferLimitFormatted));
+        pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.ENERGY_RATE_TOOLTIP, transferLimitFormatted));
     }
 
     @Override

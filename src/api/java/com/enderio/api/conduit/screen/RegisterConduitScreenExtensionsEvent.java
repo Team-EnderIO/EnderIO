@@ -16,8 +16,8 @@ public class RegisterConduitScreenExtensionsEvent extends Event implements IModB
 
     private final Map<ConduitType<?>, ConduitScreenExtensionFactory<?>> extensions = new ConcurrentHashMap<>();
 
-    public <T extends ConduitData<T>> void register(ConduitType<? extends Conduit<?, ?, T>> type, ConduitScreenExtensionFactory<T> extensionFactory) {
-        extensions.put(type, extensionFactory);
+    public <T extends ConduitData<T>> void register(ConduitType<? extends Conduit<?, ?, T>> conduitType, ConduitScreenExtensionFactory<T> extensionFactory) {
+        extensions.put(conduitType, extensionFactory);
     }
 
     public Map<ConduitType<?>, ConduitScreenExtensionFactory<?>> getExtensions() {

@@ -25,7 +25,7 @@ public class ConduitScreenExtensions {
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     @Nullable
-    public static ConduitScreenExtension<?> get(ConduitType<?> type) {
-        return EXTENSIONS.get(type);
+    public static ConduitScreenExtension<?> get(ConduitType<?> conduitType) {
+        return EXTENSIONS.get(conduitType);
     }
 }

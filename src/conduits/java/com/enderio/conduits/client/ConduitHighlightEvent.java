@@ -1,6 +1,6 @@
 package com.enderio.conduits.client;
 
-import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
@@ -16,7 +16,7 @@ public class ConduitHighlightEvent {
 
     @SubscribeEvent
     public static void highlight(RenderHighlightEvent.Block event) {
-        if (Minecraft.getInstance().level.getBlockEntity(event.getTarget().getBlockPos()) instanceof ConduitBlockEntity conduit) {
+        if (Minecraft.getInstance().level.getBlockEntity(event.getTarget().getBlockPos()) instanceof ConduitBundleBlockEntity conduit) {
             event.setCanceled(true);
             BlockPos pos = event.getTarget().getBlockPos();
             Vec3 camPos = event.getCamera().getPosition();

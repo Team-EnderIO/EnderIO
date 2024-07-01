@@ -12,21 +12,21 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public interface LoadedAwareConduitTicker<TType extends Conduit<TType, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>>
-    extends ConduitTicker<TType, TContext, TData> {
+public interface LoadedAwareConduitTicker<TConduit extends Conduit<TConduit, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>>
+    extends ConduitTicker<TConduit, TContext, TData> {
 
     @Override
-    default void tickGraph(ServerLevel level, TType type, ConduitNetwork<TContext, TData> graph,
+    default void tickGraph(ServerLevel level, TConduit conduit, ConduitNetwork<TContext, TData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         List<ConduitNode<TContext, TData>> nodeIdentifiers = graph.getNodes()
             .stream().filter(node -> isLoaded(level, node.getPos()))
             .toList();
 
-        tickGraph(level, type, nodeIdentifiers, graph, coloredRedstoneProvider);
+        tickGraph(level, conduit, nodeIdentifiers, graph, coloredRedstoneProvider);
     }
 
-    void tickGraph(ServerLevel level, TType type,
+    void tickGraph(ServerLevel level, TConduit type,
         List<ConduitNode<TContext, TData>> loadedNodes, ConduitNetwork<TContext, TData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 

@@ -18,7 +18,7 @@ import java.util.List;
  * This is needed, so upgrading conduits doesn't require shifting of types, but just recalculating the current connection
  */
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
-public class ConduitTypeSorter {
+public class ConduitSorter {
     private static final List<Holder<Conduit<?, ?, ?>>> SORTED_TYPES = new ArrayList<>();
 
     @SubscribeEvent

@@ -12,7 +12,6 @@ import com.enderio.api.filter.ResourceFilter;
 import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.conduits.common.init.Conduits;
 import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -28,7 +27,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public record FluidConduit(
     ResourceLocation texture,
@@ -77,26 +76,17 @@ public record FluidConduit(
     }
 
     @Override
-    public boolean canBeInSameBundle(Holder<Conduit<?, ?, ?>> conduitType) {
-        if (conduitType.value() instanceof FluidConduit) {
-            return false;
-        }
-
-        return true;
+    public boolean canBeInSameBundle(Holder<Conduit<?, ?, ?>> otherConduit) {
+        return !(otherConduit.value() instanceof FluidConduit);
     }
 
     @Override
-    public boolean canBeReplacedBy(Holder<Conduit<?, ?, ?>> conduitType) {
-        if (!(conduitType.value() instanceof FluidConduit fluidConduitType)) {
+    public boolean canBeReplacedBy(Holder<Conduit<?, ?, ?>> otherConduit) {
+        if (!(otherConduit.value() instanceof FluidConduit otherFluidConduit)) {
             return false;
         }
 
-        // Replacement must support multi fluid if the current does.
-        if (isMultiFluid() && !fluidConduitType.isMultiFluid()) {
-            return false;
-        }
-
-        return transferRate() <= fluidConduitType.transferRate();
+        return compareTo(otherFluidConduit) > 0;
     }
 
     @Override
@@ -110,16 +100,13 @@ public record FluidConduit(
     }
 
     @Override
-    public List<Component> getHoverText(Item.TooltipContext context, TooltipFlag tooltipFlag) {
-        // Get transfer rate, adjusted for the ticker rate.
+    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
         String transferLimitFormatted = String.format("%,d", transferRate() * (20 / getTicker().getTickRate()));
-        Component rateTooltip = TooltipUtil.styledWithArgs(ConduitLang.FLUID_RATE_TOOLTIP, transferLimitFormatted);
+        pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RATE_TOOLTIP, transferLimitFormatted));
 
         if (isMultiFluid()) {
-            return List.of(rateTooltip, ConduitLang.MULTI_FLUID_TOOLTIP);
+            pTooltipAdder.accept(ConduitLang.MULTI_FLUID_TOOLTIP);
         }
-
-        return List.of(rateTooltip);
     }
 
     @Override

@@ -11,10 +11,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
-public interface ConduitTicker<TType extends Conduit<TType, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> {
+public interface ConduitTicker<TConduit extends Conduit<TConduit, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> {
 
-    // TODO: Sending the entire type might be excessive now. It may be possible to just send the options.
-    void tickGraph(ServerLevel level, TType type, ConduitNetwork<TContext, TData> graph,
+    void tickGraph(ServerLevel level, TConduit conduit, ConduitNetwork<TContext, TData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
     /**

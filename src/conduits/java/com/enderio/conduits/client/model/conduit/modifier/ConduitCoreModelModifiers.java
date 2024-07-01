@@ -1,7 +1,5 @@
 package com.enderio.conduits.client.model.conduit.modifier;
 
-import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.model.ConduitCoreModelModifier;
 import com.enderio.api.conduit.model.RegisterConduitCoreModelModifiersEvent;

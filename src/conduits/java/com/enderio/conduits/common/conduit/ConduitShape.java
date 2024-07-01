@@ -37,7 +37,7 @@ public class ConduitShape {
     public void updateConduit(ConduitBundle bundle) {
         this.conduitShapes.clear();
         this.directionShapes.clear();
-        for (Holder<Conduit<?, ?, ?>> type : bundle.getTypes()) {
+        for (Holder<Conduit<?, ?, ?>> type : bundle.getConduits()) {
             updateShapeForConduit(bundle, type);
         }
         updateTotalShape();
@@ -95,7 +95,7 @@ public class ConduitShape {
                 directionShape = Shapes.joinUnoptimized(directionShape, connectorShape, BooleanOp.OR);
                 conduitShape = Shapes.joinUnoptimized(conduitShape, connectorShape, BooleanOp.OR);
             }
-            var connectedTypes = conduitBundle.getConnectedTypes(direction);
+            var connectedTypes = conduitBundle.getConnectedConduits(direction);
             if (connectedTypes.contains(conduitType)) {
                 Vec3i offset = OffsetHelper.translationFor(direction.getAxis(),
                     OffsetHelper.offsetConduit(connectedTypes.indexOf(conduitType), connectedTypes.size()));
@@ -108,7 +108,7 @@ public class ConduitShape {
             directionShapes.put(direction, directionShape.optimize());
         }
 
-        var allTypes = conduitBundle.getTypes();
+        var allTypes = conduitBundle.getConduits();
         @Nullable Area box = null;
         @Nullable Holder<Conduit<?, ?, ?>> notRendered = null;
         int i = allTypes.indexOf(conduitType);

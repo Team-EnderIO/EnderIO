@@ -2,7 +2,7 @@ package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
-import com.enderio.conduits.common.conduit.block.ConduitBlock;
+import com.enderio.conduits.common.conduit.block.ConduitBundleBlock;
 import com.enderio.conduits.data.model.ConduitBlockState;
 import com.enderio.regilite.holder.RegiliteBlock;
 import com.enderio.regilite.registry.BlockRegistry;
@@ -17,8 +17,8 @@ public class ConduitBlocks {
     private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
     private static final BlockRegistry BLOCK_REGISTRY = EnderIO.getRegilite().blockRegistry();
 
-    public static final RegiliteBlock<ConduitBlock> CONDUIT = BLOCK_REGISTRY
-        .registerBlock("conduit", ConduitBlock::new,
+    public static final RegiliteBlock<ConduitBundleBlock> CONDUIT = BLOCK_REGISTRY
+        .registerBlock("conduit", ConduitBundleBlock::new,
             BlockBehaviour.Properties.of()
                 .strength(1.5f, 10)
                 .noLootTable()
