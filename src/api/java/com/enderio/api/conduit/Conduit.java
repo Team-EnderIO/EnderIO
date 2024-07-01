@@ -36,9 +36,15 @@ public interface Conduit<TType extends Conduit<TType, TContext, TData>, TContext
     Codec<Holder<Conduit<?, ?, ?>>> CODEC = RegistryFixedCodec.create(EnderIORegistries.Keys.CONDUIT);
     StreamCodec<RegistryFriendlyByteBuf, Holder<Conduit<?, ?, ?>>> STREAM_CODEC = ByteBufCodecs.holderRegistry(EnderIORegistries.Keys.CONDUIT);
 
+    /**
+     * Gets the default conduit texture.
+     */
     ResourceLocation texture();
-    Component description();
 
+    /**
+     * Gets the conduit description, used for the conduit item.
+     */
+    Component description();
     ConduitType<TType> type();
 
     /**
@@ -73,6 +79,13 @@ public interface Conduit<TType extends Conduit<TType, TContext, TData>, TContext
         return false;
     }
 
+    /**
+     * Gets the conduit texture to display, given the data.
+     */
+    default ResourceLocation getTexture(TData data) {
+        return texture();
+    }
+
     // region Events
 
     default void onCreated(TData data, Level level, BlockPos pos, @Nullable Player player) {
@@ -90,10 +103,6 @@ public interface Conduit<TType extends Conduit<TType, TContext, TData>, TContext
     default <K> K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode<TContext, TData> node,
         Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
         return null;
-    }
-
-    default Set<BlockCapability<?, Direction>> getExposedCapabilities() {
-        return Set.of();
     }
 
     default ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {

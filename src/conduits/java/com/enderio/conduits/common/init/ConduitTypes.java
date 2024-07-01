@@ -22,7 +22,7 @@ public class ConduitTypes {
             .build());
 
     public static final Supplier<ConduitType<RedstoneConduit>> REDSTONE = CONDUIT_TYPES
-        .register("redstone", () -> ConduitType.of(RedstoneConduit::new));
+        .register("redstone", () -> ConduitType.of(RedstoneConduit.CODEC));
 
     public static final Supplier<ConduitType<FluidConduit>> FLUID = CONDUIT_TYPES
         .register("fluid", () -> ConduitType.of(FluidConduit.CODEC));

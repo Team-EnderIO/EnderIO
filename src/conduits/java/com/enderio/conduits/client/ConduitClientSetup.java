@@ -8,7 +8,9 @@ import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
 import com.enderio.conduits.client.model.ConduitGeometry;
 import com.enderio.conduits.client.model.ConduitItemModelLoader;
 import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
+import com.enderio.conduits.client.model.conduit.modifier.FluidConduitCoreModelModifier;
 import com.enderio.conduits.common.init.ConduitBlocks;
+import com.enderio.conduits.common.init.ConduitTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.resources.model.BakedModel;
@@ -56,11 +58,7 @@ public class ConduitClientSetup {
 
     @SubscribeEvent
     public static void registerConduitCoreModelModifiers(RegisterConduitCoreModelModifiersEvent event) {
-        // TODO: These need to be reworked
-        /*event.register(EIOConduitTypes.Types.FLUID.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
-        event.register(EIOConduitTypes.Types.PRESSURIZED_FLUID.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
-        event.register(EIOConduitTypes.Types.ENDER_FLUID.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
-        event.register(EIOConduitTypes.Types.REDSTONE.get(), RedstoneConduitCoreModelModifier::new);*/
+        event.register(ConduitTypes.FLUID.get(), FluidConduitCoreModelModifier::new);
     }
 
     @SubscribeEvent

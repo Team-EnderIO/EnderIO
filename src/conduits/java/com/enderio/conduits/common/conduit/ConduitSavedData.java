@@ -191,7 +191,7 @@ public class ConduitSavedData extends SavedData {
         CompoundTag graphTag = new CompoundTag();
 
         var context = graph.getContextData();
-        if (context.canSerialize()) {
+        if (context != null && context.canSerialize()) {
             graphTag.put(KEY_GRAPH_CONTEXT, context.save());
         }
 

@@ -1,5 +1,6 @@
 {
   "type": "enderio:redstone",
+  "active_texture": "enderio:block/conduit/redstone_active",
   "description": {
     "translate": "item.enderio.conduit.redstone"
   },

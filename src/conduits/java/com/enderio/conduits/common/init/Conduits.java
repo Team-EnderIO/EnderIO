@@ -44,7 +44,8 @@ public class Conduits {
         context.register(ENDER_ENERGY,
             new EnergyConduit(EnderIO.loc("block/conduit/ender_energy"), ConduitLang.ENDER_ENERGY_CONDUIT, 10000));
 
-        context.register(REDSTONE, new RedstoneConduit(EnderIO.loc("block/conduit/redstone"), ConduitLang.REDSTONE_CONDUIT));
+        context.register(REDSTONE, new RedstoneConduit(EnderIO.loc("block/conduit/redstone"), EnderIO.loc("block/conduit/redstone_active"),
+            ConduitLang.REDSTONE_CONDUIT));
 
         context.register(FLUID,
             new FluidConduit(EnderIO.loc("block/conduit/fluid"), ConduitLang.FLUID_CONDUIT, 50, false));

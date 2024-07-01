@@ -13,14 +13,6 @@ import java.util.List;
 
 public interface ConduitCoreModelModifier<T extends ConduitData<T>> {
     /**
-     * @return A sprite to be used for the conduit core, or null to use the default sprite.
-     */
-    @Nullable
-    default ResourceLocation getSpriteLocation(T data) {
-        return null;
-    }
-
-    /**
      * Create additional quads to be rendered at the point of conduit connection.
      */
     default List<BakedQuad> createConnectionQuads(T data, @Nullable Direction facing, Direction connectionDirection, RandomSource rand,

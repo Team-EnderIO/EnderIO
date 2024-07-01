@@ -24,8 +24,6 @@ import java.util.List;
 
 public class FluidConduitCoreModelModifier implements ConduitCoreModelModifier<FluidConduitData> {
 
-    public static final FluidConduitCoreModelModifier INSTANCE = new FluidConduitCoreModelModifier();
-
     private static final ModelResourceLocation FLUID_MODEL = ModelResourceLocation.standalone(EnderIO.loc("block/extra/fluids"));
 
     @Override

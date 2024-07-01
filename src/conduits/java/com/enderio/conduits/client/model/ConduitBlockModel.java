@@ -3,6 +3,7 @@ package com.enderio.conduits.client.model;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.model.ConduitCoreModelModifier;
+import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
@@ -19,7 +20,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -96,8 +96,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                         .andThen(rotationTranslation)
                         .process(modelOf(CONDUIT_CONNECTION).getQuads(state, preRotation, rand, extraData, renderType)));
 
-                    // TODO: Requires rework
-                    ConduitCoreModelModifier<?> conduitCoreModifier = null;//ConduitCoreModelModifiers.getModifier(type);
+                    ConduitCoreModelModifier<?> conduitCoreModifier = ConduitCoreModelModifiers.getModifier(type.value().type());
                     if (conduitCoreModifier != null) {
                         quads.addAll(rotationTranslation.process(conduitCoreModifier.createConnectionQuads(data.cast(), side, direction, rand, renderType)));
                     }
@@ -291,27 +290,9 @@ public class ConduitBlockModel implements IDynamicBakedModel {
         return ChunkRenderTypeSet.of(RenderType.cutout());
     }
 
-    private static <T extends ConduitData<T>> TextureAtlasSprite sprite(ConduitBundle conduitBundle, Holder<Conduit<?, ?, ?>> type) {
+    private static TextureAtlasSprite sprite(ConduitBundle conduitBundle, Holder<Conduit<?, ?, ?>> type) {
         ConduitData<?> data = conduitBundle.getNodeFor(type).getConduitData();
-
-        ResourceLocation textureLocation = null;
-
-        // TODO: Requires rework
-        ConduitCoreModelModifier<T> conduitCoreModifier = null; //ConduitCoreModelModifiers.getModifier(type);
-        if (conduitCoreModifier != null) {
-            textureLocation = conduitCoreModifier.getSpriteLocation(data.cast());
-        }
-
-        // Default to a standard location
-        if (textureLocation == null) {
-            textureLocation = type.value().texture();
-        }
-
-        // Oops, fallback
-        if (textureLocation == null) {
-            textureLocation = MissingTextureAtlasSprite.getLocation();
-        }
-
+        ResourceLocation textureLocation = type.value().getTexture(data.cast());
         return Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(textureLocation);
     }
 

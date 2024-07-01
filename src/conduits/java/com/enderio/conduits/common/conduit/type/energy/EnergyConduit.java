@@ -110,11 +110,6 @@ public record EnergyConduit(
     }
 
     @Override
-    public Set<BlockCapability<?, Direction>> getExposedCapabilities() {
-        return Set.of(Capabilities.EnergyStorage.BLOCK);
-    }
-
-    @Override
     public void onRemoved(ConduitData.EmptyConduitData data, Level level, BlockPos pos) {
         level.invalidateCapabilities(pos);
     }
