@@ -49,7 +49,7 @@ public class EIOConduits {
         var pack = event.getGenerator().getVanillaPack(true);
         var registries = event.getLookupProvider();
 
-        pack.addProvider(output -> new DatapackBuiltinEntriesProvider(output, registries,
+        var datapackEntriesProvider = pack.addProvider(output -> new DatapackBuiltinEntriesProvider(output, registries,
             createDatapackEntriesBuilder(), Set.of(EnderIO.MODID)));
 
         PackOutput packOutput = event.getGenerator().getPackOutput();
@@ -57,7 +57,7 @@ public class EIOConduits {
         EIODataProvider provider = new EIODataProvider("conduits");
 
         provider.addSubProvider(event.includeServer(), new ConduitTagProvider(packOutput, registries, event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, registries));
+        provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, datapackEntriesProvider.getRegistryProvider()));
         provider.addSubProvider(event.includeServer(), new RedstoneFilterRecipes(packOutput, registries));
 
         event.getGenerator().addProvider(true, provider);
