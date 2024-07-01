@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.conduit;
 
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.registry.EnderIORegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -19,21 +19,21 @@ import java.util.List;
  */
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
 public class ConduitTypeSorter {
-    private static final List<Holder<ConduitType<?, ?, ?>>> SORTED_TYPES = new ArrayList<>();
+    private static final List<Holder<Conduit<?, ?, ?>>> SORTED_TYPES = new ArrayList<>();
 
     @SubscribeEvent
     public static void serverSortTypes(ServerStartedEvent event) {
-        var conduitRegistry = event.getServer().registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT_TYPES);
+        var conduitRegistry = event.getServer().registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT);
         sortTypes(conduitRegistry);
     }
 
     @SubscribeEvent
     public static void clientSortTypes(ClientPlayerNetworkEvent.LoggingIn event) {
-        var conduitRegistry = event.getPlayer().registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT_TYPES);
+        var conduitRegistry = event.getPlayer().registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT);
         sortTypes(conduitRegistry);
     }
 
-    private static void sortTypes(Registry<ConduitType<?, ?, ?>> registry) {
+    private static void sortTypes(Registry<Conduit<?, ?, ?>> registry) {
         SORTED_TYPES.clear();
 
         // TODO...
@@ -56,8 +56,8 @@ public class ConduitTypeSorter {
             SORTED_TYPES.addAll(typesInType);
         }*/
 
-        List<Holder<ConduitType<?, ?, ?>>> unadded = new ArrayList<>();
-        for (Holder<ConduitType<?, ?, ?>> type : registry.holders().toList()) {
+        List<Holder<Conduit<?, ?, ?>>> unadded = new ArrayList<>();
+        for (Holder<Conduit<?, ?, ?>> type : registry.holders().toList()) {
             //if (!(type instanceof TieredConduit)) {
             unadded.add(type);
             //}
@@ -67,7 +67,7 @@ public class ConduitTypeSorter {
         SORTED_TYPES.addAll(unadded);
     }
 
-    public static int getSortIndex(Holder<ConduitType<?, ?, ?>> type) {
+    public static int getSortIndex(Holder<Conduit<?, ?, ?>> type) {
         return SORTED_TYPES.indexOf(type);
     }
 }

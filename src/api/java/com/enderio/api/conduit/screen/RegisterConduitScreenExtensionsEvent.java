@@ -1,7 +1,7 @@
 package com.enderio.api.conduit.screen;
 
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import net.neoforged.bus.api.Event;
 import net.neoforged.fml.event.IModBusEvent;
 
@@ -13,13 +13,13 @@ public class RegisterConduitScreenExtensionsEvent extends Event implements IModB
         ConduitScreenExtension<T> createExtension();
     }
 
-    private final Map<ConduitType<?, ?, ?>, ConduitScreenExtensionFactory<?>> extensions = new ConcurrentHashMap<>();
+    private final Map<Conduit<?, ?, ?>, ConduitScreenExtensionFactory<?>> extensions = new ConcurrentHashMap<>();
 
-    public <T extends ConduitData<T>> void register(ConduitType<?, ?, T> type, ConduitScreenExtensionFactory<T> extensionFactory) {
+    public <T extends ConduitData<T>> void register(Conduit<?, ?, T> type, ConduitScreenExtensionFactory<T> extensionFactory) {
         extensions.put(type, extensionFactory);
     }
 
-    public Map<ConduitType<?, ?, ?>, ConduitScreenExtensionFactory<?>> getExtensions() {
+    public Map<Conduit<?, ?, ?>, ConduitScreenExtensionFactory<?>> getExtensions() {
         return Map.copyOf(extensions);
     }
 }

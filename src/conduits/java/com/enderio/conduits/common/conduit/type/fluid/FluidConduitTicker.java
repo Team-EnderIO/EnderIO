@@ -20,12 +20,12 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import java.util.List;
 import java.util.Optional;
 
-public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduitType, ConduitNetworkContext.Dummy, FluidConduitData, IFluidHandler> {
+public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduit, ConduitNetworkContext.Dummy, FluidConduitData, IFluidHandler> {
 
     @Override
     public void tickGraph(
         ServerLevel level,
-        FluidConduitType type,
+        FluidConduit type,
         List<ConduitNode<ConduitNetworkContext.Dummy, FluidConduitData>> loadedNodes,
         ConduitNetwork<ConduitNetworkContext.Dummy, FluidConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
@@ -50,7 +50,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
     @Override
     protected void tickCapabilityGraph(
         ServerLevel level,
-        FluidConduitType type,
+        FluidConduit type,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
         ConduitNetwork<ConduitNetworkContext.Dummy, FluidConduitData> graph,

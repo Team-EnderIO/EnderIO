@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.recipe;
 
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.conduits.common.components.RepresentedConduitType;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.init.ConduitBlocks;
@@ -21,21 +21,21 @@ public class ConduitIngredient implements ICustomIngredient {
     public static final MapCodec<ConduitIngredient> CODEC = RecordCodecBuilder.mapCodec(
         builder -> builder
             .group(
-                ConduitType.CODEC.fieldOf("conduit_type").forGetter(ConduitIngredient::conduitType)
+                Conduit.CODEC.fieldOf("conduit_type").forGetter(ConduitIngredient::conduitType)
             ).apply(builder, ConduitIngredient::new)
     );
 
-    private final Holder<ConduitType<?, ?, ?>> conduitType;
+    private final Holder<Conduit<?, ?, ?>> conduitType;
 
-    private ConduitIngredient(Holder<ConduitType<?, ?, ?>> conduitType) {
+    private ConduitIngredient(Holder<Conduit<?, ?, ?>> conduitType) {
         this.conduitType = conduitType;
     }
 
-    public static Ingredient of(Holder<ConduitType<?, ?, ?>> conduitType) {
+    public static Ingredient of(Holder<Conduit<?, ?, ?>> conduitType) {
         return new ConduitIngredient(conduitType).toVanilla();
     }
 
-    public Holder<ConduitType<?, ?, ?>> conduitType() {
+    public Holder<Conduit<?, ?, ?>> conduitType() {
         return conduitType;
     }
 

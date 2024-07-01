@@ -1,6 +1,6 @@
 package com.enderio.conduits.common.integrations.cctweaked;
 
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
@@ -23,7 +23,7 @@ public class EIOBundledRedstoneProvider implements BundledRedstoneProvider {
     public int getBundledRedstoneOutput(Level world, BlockPos pos, Direction side) {
         BlockEntity be = world.getBlockEntity(pos);
 
-        Holder<ConduitType<?, ?, ?>> redstoneConduit = world.holderOrThrow(EIOConduitTypes.Types.REDSTONE);
+        Holder<Conduit<?, ?, ?>> redstoneConduit = world.holderOrThrow(EIOConduitTypes.Types.REDSTONE);
 
         if (be instanceof ConduitBlockEntity conduit) {
             ConnectionState connectionState = conduit.getBundle().getConnectionState(side, redstoneConduit);

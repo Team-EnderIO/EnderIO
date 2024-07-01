@@ -19,10 +19,10 @@ import net.minecraft.network.codec.StreamCodec;
  */
 public interface ConduitData<T extends ConduitData<T>> {
 
-    Codec<ConduitData<?>> CODEC = EnderIORegistries.CONDUIT_DATA_SERIALIZERS.byNameCodec()
+    Codec<ConduitData<?>> CODEC = EnderIORegistries.CONDUIT_DATA_SERIALIZER.byNameCodec()
         .dispatch(ConduitData::serializer, ConduitDataSerializer::codec);
 
-    StreamCodec<RegistryFriendlyByteBuf, ConduitData<?>> STREAM_CODEC = ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_DATA_SERIALIZERS)
+    StreamCodec<RegistryFriendlyByteBuf, ConduitData<?>> STREAM_CODEC = ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_DATA_SERIALIZER)
         .dispatch(ConduitData::serializer, ConduitDataSerializer::streamCodec);
 
     EmptyConduitData EMPTY = new EmptyConduitData();

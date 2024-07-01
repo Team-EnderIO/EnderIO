@@ -2,7 +2,7 @@ package com.enderio.conduits.common.conduit;
 
 import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitNetworkContextSerializer;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.registry.EnderIORegistries;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
@@ -36,7 +36,7 @@ public record ConduitGraphContext(ConduitNetworkContext<?> context) implements M
 
     public CompoundTag save() {
         var serializer = Objects.requireNonNull(context.serializer(), "This context type cannot be serialized.");
-        var serializerKey = Objects.requireNonNull(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_SERIALIZERS.getKey(serializer), "Serializer is not registered!");
+        var serializerKey = Objects.requireNonNull(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_SERIALIZER.getKey(serializer), "Serializer is not registered!");
 
         var tag = new CompoundTag();
         tag.putString("Type", serializerKey.toString());
@@ -49,27 +49,27 @@ public record ConduitGraphContext(ConduitNetworkContext<?> context) implements M
     }
 
     @Nullable
-    public static ConduitGraphContext createNetworkContext(Holder<ConduitType<?, ?, ?>> conduitType, Graph<ConduitGraphContext> graph) {
+    public static ConduitGraphContext createNetworkContext(Holder<Conduit<?, ?, ?>> conduitType, Graph<ConduitGraphContext> graph) {
         ConduitNetworkContext<?> context = createNetworkContext(conduitType.value(), graph);
         return context == null ? null : new ConduitGraphContext(context);
     }
 
     @Nullable
-    private static <T extends ConduitNetworkContext<T>> T createNetworkContext(ConduitType<?, T, ?> conduitType,
+    private static <T extends ConduitNetworkContext<T>> T createNetworkContext(Conduit<?, T, ?> conduit,
         Graph<ConduitGraphContext> graph) {
-        return conduitType.createNetworkContext(new WrappedConduitNetwork<>(graph));
+        return conduit.createNetworkContext(new WrappedConduitNetwork<>(graph));
     }
 
-    public static ConduitGraphContext loadNetworkContext(Holder<ConduitType<?, ?, ?>> conduitType, Graph<ConduitGraphContext> graph,
+    public static ConduitGraphContext loadNetworkContext(Holder<Conduit<?, ?, ?>> conduitType, Graph<ConduitGraphContext> graph,
         CompoundTag contextTag) {
         ConduitNetworkContext<?> context = loadNetworkContext(conduitType.value(), contextTag);
         return new ConduitGraphContext(context);
     }
 
-    private static <T extends ConduitNetworkContext<T>> T loadNetworkContext(ConduitType<?, T, ?> conduitType, CompoundTag contextTag) {
+    private static <T extends ConduitNetworkContext<T>> T loadNetworkContext(Conduit<?, T, ?> conduit, CompoundTag contextTag) {
         ResourceLocation serializerKey = ResourceLocation.parse(contextTag.getString("Type"));
         //noinspection unchecked
-        var serializer = (ConduitNetworkContextSerializer<T>)Objects.requireNonNull(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_SERIALIZERS.get(serializerKey),
+        var serializer = (ConduitNetworkContextSerializer<T>)Objects.requireNonNull(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_SERIALIZER.get(serializerKey),
             "Unable to find conduit network context serializer with key " + serializerKey);
 
         return serializer.load(contextTag.getCompound("Data"));

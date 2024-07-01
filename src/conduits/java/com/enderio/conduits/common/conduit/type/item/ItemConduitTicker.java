@@ -16,14 +16,14 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.List;
 
-public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitType, ConduitNetworkContext.Dummy, ItemConduitData, IItemHandler> {
+public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduit, ConduitNetworkContext.Dummy, ItemConduitData, IItemHandler> {
 
     public static ItemConduitTicker INSTANCE = new ItemConduitTicker();
 
     @Override
     protected void tickCapabilityGraph(
         ServerLevel level,
-        ItemConduitType type,
+        ItemConduit type,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
         ConduitNetwork<ConduitNetworkContext.Dummy, ItemConduitData> graph,

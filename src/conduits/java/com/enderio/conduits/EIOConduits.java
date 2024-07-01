@@ -65,6 +65,6 @@ public class EIOConduits {
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
         return new RegistrySetBuilder()
-            .add(EnderIORegistries.Keys.CONDUIT_TYPES, EIOConduitTypes.Types::bootstrap);
+            .add(EnderIORegistries.Keys.CONDUIT, EIOConduitTypes.Types::bootstrap);
     }
 }

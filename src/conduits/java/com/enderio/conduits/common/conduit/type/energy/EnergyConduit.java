@@ -2,10 +2,10 @@ package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitNetwork;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitNode;
-import com.enderio.api.conduit.NewConduitTypeSerializer;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.EIOConduitTypes;
@@ -31,30 +31,30 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Set;
 
-public record EnergyConduitType(
+public record EnergyConduit(
     ResourceLocation texture,
     Component description,
     int transferRate
-) implements ConduitType<EnergyConduitType, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> {
+) implements Conduit<EnergyConduit, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> {
 
-    public static final MapCodec<EnergyConduitType> CODEC = RecordCodecBuilder.mapCodec(
+    public static final MapCodec<EnergyConduit> CODEC = RecordCodecBuilder.mapCodec(
         builder -> builder
             .group(
-                ResourceLocation.CODEC.fieldOf("texture").forGetter(ConduitType::texture),
-                ComponentSerialization.CODEC.fieldOf("description").forGetter(ConduitType::description),
-                Codec.INT.fieldOf("transfer_rate").forGetter(EnergyConduitType::transferRate)
-            ).apply(builder, EnergyConduitType::of)
+                ResourceLocation.CODEC.fieldOf("texture").forGetter(Conduit::texture),
+                ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
+                Codec.INT.fieldOf("transfer_rate").forGetter(EnergyConduit::transferRate)
+            ).apply(builder, EnergyConduit::of)
     );
 
-    public static EnergyConduitType of (ResourceLocation texture, Component description, int transferRate) {
-        return new EnergyConduitType(texture, description, transferRate);
+    public static EnergyConduit of (ResourceLocation texture, Component description, int transferRate) {
+        return new EnergyConduit(texture, description, transferRate);
     }
 
     private static final EnergyConduitTicker TICKER = new EnergyConduitTicker();
     private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
 
     @Override
-    public NewConduitTypeSerializer<EnergyConduitType> serializer() {
+    public ConduitType<EnergyConduit> type() {
         return EIOConduitTypes.TypeSerializers.ENERGY.get();
     }
 
@@ -79,8 +79,8 @@ public record EnergyConduitType(
     }
 
     @Override
-    public boolean canBeInSameBundle(Holder<ConduitType<?, ?, ?>> conduitType) {
-        if (conduitType.value() instanceof EnergyConduitType) {
+    public boolean canBeInSameBundle(Holder<Conduit<?, ?, ?>> conduitType) {
+        if (conduitType.value() instanceof EnergyConduit) {
             return false;
         }
 
@@ -88,8 +88,8 @@ public record EnergyConduitType(
     }
 
     @Override
-    public boolean canBeReplacedBy(Holder<ConduitType<?, ?, ?>> conduitType) {
-        if (!(conduitType.value() instanceof EnergyConduitType energyConduitType)) {
+    public boolean canBeReplacedBy(Holder<Conduit<?, ?, ?>> conduitType) {
+        if (!(conduitType.value() instanceof EnergyConduit energyConduitType)) {
             return false;
         }
 
@@ -126,7 +126,7 @@ public record EnergyConduitType(
             return new ConduitConnectionData(true, true, RedstoneControl.ALWAYS_ACTIVE);
         }
 
-        return ConduitType.super.getDefaultConnection(level, pos, direction);
+        return Conduit.super.getDefaultConnection(level, pos, direction);
     }
 
     @Override
@@ -136,7 +136,7 @@ public record EnergyConduitType(
     }
 
     @Override
-    public int compareTo(@NotNull EnergyConduitType o) {
+    public int compareTo(@NotNull EnergyConduit o) {
         if (transferRate() < o.transferRate()) {
             return -1;
         } else if (transferRate() > o.transferRate()) {

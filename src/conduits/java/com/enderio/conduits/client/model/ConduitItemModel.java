@@ -1,7 +1,6 @@
 package com.enderio.conduits.client.model;
 
-import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.registry.EnderIORegistries;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.conduits.common.components.RepresentedConduitType;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.core.client.RenderUtil;
@@ -57,7 +56,7 @@ public class ConduitItemModel extends BakedModelWrapper<BakedModel> {
         private BakedModel createBakedModel(@Nullable RepresentedConduitType representedConduitType, BakedModel model, @Nullable ClientLevel level) {
             ResourceLocation conduitTexture = MissingTextureAtlasSprite.getLocation();
             if (representedConduitType != null) {
-                Optional<ResourceKey<ConduitType<?, ?, ?>>> key = representedConduitType.conduitType().unwrapKey();
+                Optional<ResourceKey<Conduit<?, ?, ?>>> key = representedConduitType.conduitType().unwrapKey();
 
                 if (key.isPresent()) {
                     ResourceLocation location = key.get().location();

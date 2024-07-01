@@ -1,8 +1,6 @@
 package com.enderio.conduits.common.conduit.block;
 
-import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitNetworkContext;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
@@ -10,13 +8,11 @@ import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
 import com.enderio.api.integration.IntegrationManager;
-import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.RightClickAction;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
-import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.conduit.ConduitSavedData;
 import com.enderio.conduits.common.redstone.RedstoneInsertFilter;
 import net.minecraft.core.BlockPos;
@@ -67,7 +63,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @EventBusSubscriber
@@ -241,7 +236,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     private Optional<ItemInteractionResult> handleYeta(ConduitBlockEntity conduit, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
         if (stack.is(EIOTags.Items.WRENCH)) {
-            @Nullable Holder<ConduitType<?, ?, ?>> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
+            @Nullable Holder<Conduit<?, ?, ?>> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
             @Nullable Direction direction = conduit.getShape().getDirection(hit.getBlockPos(), hit);
             if (type == null) {
                 return Optional.empty();
@@ -258,7 +253,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         return Optional.empty();
     }
 
-    private void internalHandleYeta(Holder<ConduitType<?, ?, ?>> type, @Nullable Direction direction, ConduitBlockEntity conduit, BlockHitResult hit) {
+    private void internalHandleYeta(Holder<Conduit<?, ?, ?>> type, @Nullable Direction direction, ConduitBlockEntity conduit, BlockHitResult hit) {
         ConduitBundle bundle = conduit.getBundle();
 
         if (direction != null) {
@@ -304,7 +299,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             && event.getLevel().getBlockEntity(event.getPos()) instanceof ConduitBlockEntity conduit
             && event.getEntity().isCrouching()) {
 
-            @Nullable Holder<ConduitType<?, ?, ?>> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
+            @Nullable Holder<Conduit<?, ?, ?>> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
             if (type != null) {
                 conduit.removeTypeAndDelete(type);
                 if (event.getLevel() instanceof ServerLevel serverLevel) {
@@ -341,7 +336,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 serverPlayer.openMenu(conduit.menuProvider(openInformation.get().direction(), openInformation.get().type()), buf -> {
                     buf.writeBlockPos(conduit.getBlockPos());
                     buf.writeEnum(openInformation.get().direction());
-                    ConduitType.STREAM_CODEC.encode(buf, openInformation.get().type());
+                    Conduit.STREAM_CODEC.encode(buf, openInformation.get().type());
                 });
             }
 
@@ -352,7 +347,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     }
 
     private Optional<OpenInformation> getOpenInformation(ConduitBlockEntity conduit, BlockHitResult hit) {
-        @Nullable Holder<ConduitType<?, ?, ?>> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
+        @Nullable Holder<Conduit<?, ?, ?>> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
         @Nullable Direction direction = conduit.getShape().getDirection(hit.getBlockPos(), hit);
 
         if (direction != null && type != null) {
@@ -378,7 +373,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         //fallback
         for (Direction potential : Direction.values()) {
             if (bundle.isConnectionEnd(potential)) {
-                for (Holder<ConduitType<?, ?, ?>> potentialType : bundle.getTypes()) {
+                for (Holder<Conduit<?, ?, ?>> potentialType : bundle.getTypes()) {
                     if (bundle.getConnectionState(potential, potentialType) instanceof DynamicConnectionState) {
                         return Optional.of(new OpenInformation(potential, potentialType));
                     }
@@ -388,7 +383,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         }
         for (Direction potential : Direction.values()) {
             if (!(conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(potential)) instanceof ConduitBlockEntity)) {
-                for (Holder<ConduitType<?, ?, ?>> potentialType : bundle.getTypes()) {
+                for (Holder<Conduit<?, ?, ?>> potentialType : bundle.getTypes()) {
                     if (canBeValidConnection(conduit, potentialType, potential)) {
                         return Optional.of(new OpenInformation(potential, potentialType));
                     }
@@ -401,14 +396,14 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     // endregion
 
-    public static boolean canBeOrIsValidConnection(ConduitBlockEntity conduit, Holder<ConduitType<?, ?, ?>> type, Direction direction) {
+    public static boolean canBeOrIsValidConnection(ConduitBlockEntity conduit, Holder<Conduit<?, ?, ?>> type, Direction direction) {
         ConduitBundle bundle = conduit.getBundle();
 
         return bundle.getConnectionState(direction, type) instanceof DynamicConnectionState
             || canBeValidConnection(conduit, type, direction);
     }
 
-    public static boolean canBeValidConnection(ConduitBlockEntity conduit, Holder<ConduitType<?, ?, ?>> type, Direction direction) {
+    public static boolean canBeValidConnection(ConduitBlockEntity conduit, Holder<Conduit<?, ?, ?>> type, Direction direction) {
         ConduitBundle bundle = conduit.getBundle();
         ConnectionState connectionState = bundle.getConnectionState(direction, type);
         return connectionState instanceof StaticConnectionStates state
@@ -432,7 +427,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         }
 
         if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
-            @Nullable Holder<ConduitType<?, ?, ?>> type = conduit.getShape().getConduit(pos, target);
+            @Nullable Holder<Conduit<?, ?, ?>> type = conduit.getShape().getConduit(pos, target);
             if (type != null) {
                 return ConduitBlockItem.getStackFor(type, 1);
             }
@@ -471,7 +466,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         HitResult hit = player.pick(player.blockInteractionRange() + 5, 1, false);
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ConduitBlockEntity conduit) {
-            @Nullable Holder<ConduitType<?, ?, ?>> conduitType = conduit.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
+            @Nullable Holder<Conduit<?, ?, ?>> conduitType = conduit.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
             if (conduitType == null) {
                 if (!conduit.getBundle().getTypes().isEmpty()) {
                     level.playSound(player, pos, SoundEvents.GENERIC_SMALL_FALL, SoundSource.BLOCKS, 1F, 1F);
@@ -542,5 +537,5 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     // endregion
 
-    private record OpenInformation(Direction direction, Holder<ConduitType<?, ?, ?>> type) {}
+    private record OpenInformation(Direction direction, Holder<Conduit<?, ?, ?>> type) {}
 }

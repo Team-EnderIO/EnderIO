@@ -1,13 +1,11 @@
 package com.enderio.conduits.client.gui;
 
-import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.registry.EnderIORegistries;
+import com.enderio.api.conduit.Conduit;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -17,11 +15,11 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ConduitSelectionButton extends AbstractButton {
-    private final Holder<ConduitType<?, ?, ?>> type;
-    private final Supplier<Holder<ConduitType<?, ?, ?>>> getter;
-    private final Consumer<Holder<ConduitType<?, ?, ?>>> setter;
+    private final Holder<Conduit<?, ?, ?>> type;
+    private final Supplier<Holder<Conduit<?, ?, ?>>> getter;
+    private final Consumer<Holder<Conduit<?, ?, ?>>> setter;
 
-    public ConduitSelectionButton(int pX, int pY, Holder<ConduitType<?, ?, ?>> type, Supplier<Holder<ConduitType<?, ?, ?>>> getter, Consumer<Holder<ConduitType<?, ?, ?>>> setter) {
+    public ConduitSelectionButton(int pX, int pY, Holder<Conduit<?, ?, ?>> type, Supplier<Holder<Conduit<?, ?, ?>>> getter, Consumer<Holder<Conduit<?, ?, ?>>> setter) {
         super(pX, pY, 21, 24, Component.empty());
         this.type = type;
         this.getter = getter;
@@ -65,7 +63,7 @@ public class ConduitSelectionButton extends AbstractButton {
     protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
     }
 
-    public Holder<ConduitType<?, ?, ?>> getType() {
+    public Holder<Conduit<?, ?, ?>> getType() {
         return type;
     }
 }

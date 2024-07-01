@@ -4,7 +4,7 @@ import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNetworkContext;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.ColorControl;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CapabilityAwareConduitTicker<TType extends ConduitType<TType, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>, TCap> implements IOAwareConduitTicker<TType, TContext, TData> {
+public abstract class CapabilityAwareConduitTicker<TType extends Conduit<TType, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>, TCap> implements IOAwareConduitTicker<TType, TContext, TData> {
 
     @Override
     public final void tickColoredGraph(ServerLevel level, TType type, List<Connection<TData>> inserts, List<Connection<TData>> extracts,

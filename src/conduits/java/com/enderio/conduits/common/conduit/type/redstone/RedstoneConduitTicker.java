@@ -4,7 +4,6 @@ import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitNetwork;
-import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.init.ConduitBlocks;
@@ -21,7 +20,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneConduitType, ConduitNetworkContext.Dummy, RedstoneConduitData> {
+public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneConduit, ConduitNetworkContext.Dummy, RedstoneConduitData> {
 
     private final Map<ColorControl, Integer> activeColors = new EnumMap<>(ColorControl.class);
     @Override
@@ -34,7 +33,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
     @Override
     public void tickGraph(
         ServerLevel level,
-        RedstoneConduitType type,
+        RedstoneConduit type,
         ConduitNetwork<ConduitNetworkContext.Dummy, RedstoneConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
@@ -55,7 +54,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
     @Override
     public void tickColoredGraph(
         ServerLevel level,
-        RedstoneConduitType type,
+        RedstoneConduit type,
         List<Connection<RedstoneConduitData>> inserts,
         List<Connection<RedstoneConduitData>> extracts,
         ColorControl color,

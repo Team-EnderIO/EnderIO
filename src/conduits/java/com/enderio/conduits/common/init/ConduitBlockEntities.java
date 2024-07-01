@@ -10,7 +10,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 import java.util.Set;
@@ -25,16 +24,13 @@ public class ConduitBlockEntities {
 
     @SubscribeEvent
     public static void registerConduitCapabilities(RegisterCapabilitiesEvent event) {
-        // TODO: Come back and resolve this with a custom RegisterConduitCapabilitiesEvent?
-//        Set<BlockCapability<?, Direction>> capabilities = EnderIORegistries.CONDUIT_NETWORK_TYPES.entrySet().stream()
-//            .flatMap(e -> e.getValue().getExposedCapabilities().stream())
-//            .collect(Collectors.toUnmodifiableSet());
-//
-//        for (var capability : capabilities) {
-//            registerConduitCapability(event, capability);
-//        }
+        Set<BlockCapability<?, Direction>> capabilities = EnderIORegistries.CONDUIT_TYPE.entrySet().stream()
+            .flatMap(e -> e.getValue().exposedCapabilities().stream())
+            .collect(Collectors.toUnmodifiableSet());
 
-        registerConduitCapability(event, Capabilities.EnergyStorage.BLOCK);
+        for (var capability : capabilities) {
+            registerConduitCapability(event, capability);
+        }
     }
 
     private static <T> void registerConduitCapability(RegisterCapabilitiesEvent event, BlockCapability<T, Direction> capability) {

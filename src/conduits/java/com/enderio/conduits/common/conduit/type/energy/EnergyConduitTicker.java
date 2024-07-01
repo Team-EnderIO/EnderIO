@@ -17,13 +17,13 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduitType, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> {
+public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> {
 
     public EnergyConduitTicker() {
     }
 
     @Override
-    public void tickGraph(ServerLevel level, EnergyConduitType type,
+    public void tickGraph(ServerLevel level, EnergyConduit type,
         List<ConduitNode<EnergyConduitNetworkContext, ConduitData.EmptyConduitData>> loadedNodes,
         ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
@@ -37,7 +37,7 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduitTy
     }
 
     @Override
-    public void tickColoredGraph(ServerLevel level, EnergyConduitType type,
+    public void tickColoredGraph(ServerLevel level, EnergyConduit type,
         List<Connection<ConduitData.EmptyConduitData>> inserts, List<Connection<ConduitData.EmptyConduitData>> extracts, ColorControl color,
         ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 

@@ -1,18 +1,14 @@
 package com.enderio.conduits.common.conduit;
 
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.common.components.RepresentedConduitType;
-import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitComponents;
-import com.enderio.conduits.common.init.EIOConduitTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -22,9 +18,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -34,26 +28,24 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @EventBusSubscriber(modid = "enderio", bus = EventBusSubscriber.Bus.MOD)
 public class ConduitBlockItem extends BlockItem {
 
-    private static HashMap<Holder<ConduitType<?, ?, ?>>, String> TYPE_DESCRIPTION_IDS = new HashMap<>();
+    private static HashMap<Holder<Conduit<?, ?, ?>>, String> TYPE_DESCRIPTION_IDS = new HashMap<>();
 
     public ConduitBlockItem(Block block, Properties properties) {
         super(block, properties);
     }
 
-    public static ItemStack getStackFor(Holder<ConduitType<?, ?, ?>> conduitType, int count) {
+    public static ItemStack getStackFor(Holder<Conduit<?, ?, ?>> conduitType, int count) {
         var stack = new ItemStack(ConduitBlocks.CONDUIT.asItem(), count);
         stack.set(ConduitComponents.REPRESENTED_CONDUIT_TYPE, new RepresentedConduitType(conduitType));
         return stack;
     }
 
-    public static Optional<Holder<ConduitType<?, ?, ?>>> getType(ItemStack stack) {
+    public static Optional<Holder<Conduit<?, ?, ?>>> getType(ItemStack stack) {
         var representedConduitType = stack.get(ConduitComponents.REPRESENTED_CONDUIT_TYPE);
         return representedConduitType != null
             ? Optional.of(representedConduitType.conduitType())
@@ -104,7 +96,7 @@ public class ConduitBlockItem extends BlockItem {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() == EIOCreativeTabs.CONDUITS_TAB.get()) {
-            var registry = event.getParameters().holders().lookupOrThrow(EnderIORegistries.Keys.CONDUIT_TYPES);
+            var registry = event.getParameters().holders().lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
             var conduitTypes = registry.listElements().toList();
 
             var conduitClassTypes = conduitTypes.stream()
@@ -127,7 +119,7 @@ public class ConduitBlockItem extends BlockItem {
         }
     }
 
-    private static <T extends ConduitType<T, ?, ?>> int compareConduitTo(ConduitType<T, ?, ?> o1, ConduitType<?, ?, ?> o2) {
+    private static <T extends Conduit<T, ?, ?>> int compareConduitTo(Conduit<T, ?, ?> o1, Conduit<?, ?, ?> o2) {
         return o1.compareTo((T)o2);
     }
 }

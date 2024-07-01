@@ -1,9 +1,8 @@
 package com.enderio.conduits.common.conduit.type.redstone;
 
 import com.enderio.api.conduit.ConduitMenuData;
-import com.enderio.api.conduit.ConduitTypeSerializer;
-import com.enderio.api.conduit.NewConduitTypeSerializer;
-import com.enderio.api.conduit.SimpleConduitNetworkType;
+import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.SimpleConduit;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.conduits.common.init.EIOConduitTypes;
@@ -15,16 +14,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public record RedstoneConduitType(
+public record RedstoneConduit(
     ResourceLocation texture,
     Component description
-) implements SimpleConduitNetworkType<RedstoneConduitType, RedstoneConduitData> {
+) implements SimpleConduit<RedstoneConduit, RedstoneConduitData> {
 
     private static final RedstoneConduitTicker TICKER = new RedstoneConduitTicker();
     private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(true, true, false, true, true, false);
 
     @Override
-    public NewConduitTypeSerializer<RedstoneConduitType> serializer() {
+    public ConduitType<RedstoneConduit> type() {
         return EIOConduitTypes.TypeSerializers.REDSTONE.get();
     }
 
@@ -53,7 +52,7 @@ public record RedstoneConduitType(
     }
 
     @Override
-    public int compareTo(@NotNull RedstoneConduitType o) {
+    public int compareTo(@NotNull RedstoneConduit o) {
         return 0;
     }
 }

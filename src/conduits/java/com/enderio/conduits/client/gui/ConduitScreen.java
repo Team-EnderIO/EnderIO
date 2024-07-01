@@ -3,10 +3,9 @@ package com.enderio.conduits.client.gui;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitMenuData;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.screen.ConduitScreenExtension;
-import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.ColorControl;
@@ -144,8 +143,8 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
         }
 
-        List<Holder<ConduitType<?, ?, ?>>> validConnections = new ArrayList<>();
-        for (Holder<ConduitType<?, ?, ?>> type : getBundle().getTypes()) {
+        List<Holder<Conduit<?, ?, ?>>> validConnections = new ArrayList<>();
+        for (Holder<Conduit<?, ?, ?>> type : getBundle().getTypes()) {
             if (getConnectionState(type) instanceof DynamicConnectionState) {
                 validConnections.add(type);
             }
@@ -155,7 +154,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             typeSelectionButtons.forEach(this::removeWidget);
             typeSelectionButtons.clear();
             for (int i = 0; i < validConnections.size(); i++) {
-                Holder<ConduitType<?, ?, ?>> connection = validConnections.get(i);
+                Holder<Conduit<?, ?, ?>> connection = validConnections.get(i);
                 ConduitSelectionButton button = new ConduitSelectionButton(getGuiLeft() + 206, getGuiTop() + 4 + 24*i, connection, menu::getConduitType, type -> {
                     menu.setConduitType(type);
                     recalculateTypedButtons = true;
@@ -168,7 +167,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     }
 
     private <T extends ConduitData<T>> void sendExtendedConduitUpdate(Function<T, T> map) {
-        Holder<ConduitType<?, ?, ?>> conduitType = menu.getConduitType();
+        Holder<Conduit<?, ?, ?>> conduitType = menu.getConduitType();
         T currentData = getBundle().getNodeFor(conduitType).getConduitData().cast();
         var menu = getMenu();
 
@@ -201,7 +200,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
         return getConnectionState(menu.getConduitType());
     }
 
-    private ConnectionState getConnectionState(Holder<ConduitType<?, ?, ?>> type) {
+    private ConnectionState getConnectionState(Holder<Conduit<?, ?, ?>> type) {
         return getBundle().getConnectionState(menu.getDirection(), type);
     }
 

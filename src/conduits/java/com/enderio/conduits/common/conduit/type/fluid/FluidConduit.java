@@ -2,10 +2,9 @@ package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNetworkContext;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.ConduitMenuData;
-import com.enderio.api.conduit.ConduitTypeSerializer;
-import com.enderio.api.conduit.NewConduitTypeSerializer;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.FluidStackFilter;
@@ -30,28 +29,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public record FluidConduitType(
+public record FluidConduit(
     ResourceLocation texture,
     Component description,
     int transferRate,
     boolean isMultiFluid
-) implements ConduitType<FluidConduitType, ConduitNetworkContext.Dummy, FluidConduitData> {
+) implements Conduit<FluidConduit, ConduitNetworkContext.Dummy, FluidConduitData> {
 
-    public static final MapCodec<FluidConduitType> CODEC = RecordCodecBuilder.mapCodec(
+    public static final MapCodec<FluidConduit> CODEC = RecordCodecBuilder.mapCodec(
         builder -> builder
             .group(
-                ResourceLocation.CODEC.fieldOf("texture").forGetter(FluidConduitType::texture),
-                ComponentSerialization.CODEC.fieldOf("description").forGetter(FluidConduitType::description),
-                Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduitType::transferRate),
-                Codec.BOOL.fieldOf("is_multi_fluid").forGetter(FluidConduitType::isMultiFluid)
-            ).apply(builder, FluidConduitType::new)
+                ResourceLocation.CODEC.fieldOf("texture").forGetter(FluidConduit::texture),
+                ComponentSerialization.CODEC.fieldOf("description").forGetter(FluidConduit::description),
+                Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduit::transferRate),
+                Codec.BOOL.fieldOf("is_multi_fluid").forGetter(FluidConduit::isMultiFluid)
+            ).apply(builder, FluidConduit::new)
     );
 
     public static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, true, false, false, true);
     private static final FluidConduitTicker TICKER = new FluidConduitTicker();
 
     @Override
-    public NewConduitTypeSerializer<FluidConduitType> serializer() {
+    public ConduitType<FluidConduit> type() {
         return EIOConduitTypes.TypeSerializers.FLUID.get();
     }
 
@@ -77,8 +76,8 @@ public record FluidConduitType(
     }
 
     @Override
-    public boolean canBeInSameBundle(Holder<ConduitType<?, ?, ?>> conduitType) {
-        if (conduitType.value() instanceof FluidConduitType) {
+    public boolean canBeInSameBundle(Holder<Conduit<?, ?, ?>> conduitType) {
+        if (conduitType.value() instanceof FluidConduit) {
             return false;
         }
 
@@ -86,8 +85,8 @@ public record FluidConduitType(
     }
 
     @Override
-    public boolean canBeReplacedBy(Holder<ConduitType<?, ?, ?>> conduitType) {
-        if (!(conduitType.value() instanceof FluidConduitType fluidConduitType)) {
+    public boolean canBeReplacedBy(Holder<Conduit<?, ?, ?>> conduitType) {
+        if (!(conduitType.value() instanceof FluidConduit fluidConduitType)) {
             return false;
         }
 
@@ -123,7 +122,7 @@ public record FluidConduitType(
     }
 
     @Override
-    public int compareTo(@NotNull FluidConduitType o) {
+    public int compareTo(@NotNull FluidConduit o) {
         if (isMultiFluid() && !o.isMultiFluid()) {
             return 1;
         }

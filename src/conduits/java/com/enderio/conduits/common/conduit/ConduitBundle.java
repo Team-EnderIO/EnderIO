@@ -2,7 +2,7 @@ package com.enderio.conduits.common.conduit;
 
 import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
@@ -46,13 +46,13 @@ public final class ConduitBundle {
     public static Codec<ConduitBundle> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             BlockPos.CODEC.fieldOf("pos").forGetter(i -> i.pos),
-            ConduitType.CODEC.listOf()
+            Conduit.CODEC.listOf()
                 .fieldOf("types").forGetter(i -> i.types),
             Codec.unboundedMap(Direction.CODEC, ConduitConnection.CODEC)
                 .fieldOf("connections").forGetter(i -> i.connections),
             Codec.unboundedMap(Direction.CODEC, BlockState.CODEC)
                 .fieldOf("facades").forGetter(i -> i.facadeTextures),
-            Codec.unboundedMap(ConduitType.CODEC, ConduitGraphObject.CODEC)
+            Codec.unboundedMap(Conduit.CODEC, ConduitGraphObject.CODEC)
                 .fieldOf("nodes").forGetter(i -> i.nodes)
         ).apply(instance, ConduitBundle::new)
     );
@@ -61,13 +61,13 @@ public final class ConduitBundle {
     public static StreamCodec<RegistryFriendlyByteBuf, ConduitBundle> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,
         i -> i.pos,
-        ConduitType.STREAM_CODEC.apply(ByteBufCodecs.list()),
+        Conduit.STREAM_CODEC.apply(ByteBufCodecs.list()),
         i -> i.types,
         ByteBufCodecs.map(HashMap::new, Direction.STREAM_CODEC, ConduitConnection.STREAM_CODEC),
         i -> i.connections,
         //ByteBufCodecs.map(HashMap::new, Direction.STREAM_CODEC, BlockState.STREAM_CODEC),
         //i -> i.facadeTextures,
-        ByteBufCodecs.map(HashMap::new, ConduitType.STREAM_CODEC, ConduitGraphObject.STREAM_CODEC),
+        ByteBufCodecs.map(HashMap::new, Conduit.STREAM_CODEC, ConduitGraphObject.STREAM_CODEC),
         i -> i.nodes,
         ConduitBundle::new
     );
@@ -75,10 +75,10 @@ public final class ConduitBundle {
     public static NetworkDataSlot.CodecType<ConduitBundle> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(CODEC, STREAM_CODEC);
 
     private final Map<Direction, ConduitConnection> connections = new EnumMap<>(Direction.class);
-    private final List<Holder<ConduitType<?, ?, ?>>> types = new ArrayList<>();
+    private final List<Holder<Conduit<?, ?, ?>>> types = new ArrayList<>();
 
     //fill back after world save
-    private final Map<Holder<ConduitType<?, ?, ?>>, ConduitGraphObject<?, ?>> nodes = new HashMap<>();
+    private final Map<Holder<Conduit<?, ?, ?>>, ConduitGraphObject<?, ?>> nodes = new HashMap<>();
     private final BlockPos pos;
 
     private final Map<Direction, BlockState> facadeTextures = new EnumMap<>(Direction.class);
@@ -94,17 +94,17 @@ public final class ConduitBundle {
         this.pos = pos;
     }
 
-    private ConduitBundle(BlockPos pos, List<Holder<ConduitType<?, ?, ?>>> types, Map<Direction, ConduitConnection> connections,
-        Map<Holder<ConduitType<?, ?, ?>>, ConduitGraphObject<?, ?>> nodes) {
+    private ConduitBundle(BlockPos pos, List<Holder<Conduit<?, ?, ?>>> types, Map<Direction, ConduitConnection> connections,
+        Map<Holder<Conduit<?, ?, ?>>, ConduitGraphObject<?, ?>> nodes) {
         this(pos, types, connections, Map.of(), nodes);
     }
 
     private ConduitBundle(
         BlockPos pos,
-        List<Holder<ConduitType<?, ?, ?>>> types,
+        List<Holder<Conduit<?, ?, ?>>> types,
         Map<Direction, ConduitConnection> connections,
         Map<Direction, BlockState> facadeTextures,
-        Map<Holder<ConduitType<?, ?, ?>>, ConduitGraphObject<?, ?>> nodes) {
+        Map<Holder<Conduit<?, ?, ?>>, ConduitGraphObject<?, ?>> nodes) {
 
         this.pos = pos;
         this.types.addAll(types);
@@ -128,7 +128,7 @@ public final class ConduitBundle {
      * @param type
      * @return an action containing the type that is now not in this bundle
      */
-    public RightClickAction addType(Level level, Holder<ConduitType<?, ?, ?>> type, Player player) {
+    public RightClickAction addType(Level level, Holder<Conduit<?, ?, ?>> type, Player player) {
         if (types.size() == MAX_CONDUIT_TYPES) {
             return new RightClickAction.Blocked();
         }
@@ -140,14 +140,14 @@ public final class ConduitBundle {
        return addTypeInternal(level, type, type.value(), player);
     }
 
-    public <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> RightClickAction addTypeInternal(Level level, Holder<ConduitType<?, ?, ?>> typeHolder,
-        ConduitType<?, T, U> type, Player player) {
+    public <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> RightClickAction addTypeInternal(Level level, Holder<Conduit<?, ?, ?>> typeHolder,
+        Conduit<?, T, U> type, Player player) {
 
         // New node
         ConduitGraphObject<T, U> node = new ConduitGraphObject<>(pos, type.createConduitData(level, pos));
 
         //upgrade a conduit
-        Optional<? extends Holder<ConduitType<?, ?, ?>>> first = types.stream().filter(existingConduit -> existingConduit.value().canBeReplacedBy(typeHolder)).findFirst();
+        Optional<? extends Holder<Conduit<?, ?, ?>>> first = types.stream().filter(existingConduit -> existingConduit.value().canBeReplacedBy(typeHolder)).findFirst();
         if (first.isPresent()) {
             int index = types.indexOf(first.get());
             types.set(index, typeHolder);
@@ -202,7 +202,7 @@ public final class ConduitBundle {
     }
 
     public void onLoad(Level level, BlockPos pos) {
-        for (Holder<ConduitType<?, ?, ?>> conduitType : types) {
+        for (Holder<Conduit<?, ?, ?>> conduitType : types) {
             var node = getNodeFor(conduitType);
             conduitType.value().onCreated(node.getConduitData().cast(), level, pos, null);
         }
@@ -213,7 +213,7 @@ public final class ConduitBundle {
      * @return if this bundle is empty and the block has to be removed
      * @throws IllegalArgumentException if this type is not in the conduit bundle and we are in dev env
      */
-    public boolean removeType(Level level, Holder<ConduitType<?, ?, ?>> type) {
+    public boolean removeType(Level level, Holder<Conduit<?, ?, ?>> type) {
         int index = types.indexOf(type);
         if (index == -1) {
             if (!FMLLoader.isProduction()) {
@@ -243,13 +243,13 @@ public final class ConduitBundle {
 
     // endregion
 
-    public List<Holder<ConduitType<?, ?, ?>>> getTypes() {
+    public List<Holder<Conduit<?, ?, ?>>> getTypes() {
         return types;
     }
 
     // region Connections
 
-    public List<Holder<ConduitType<?, ?, ?>>> getConnectedTypes(Direction direction) {
+    public List<Holder<Conduit<?, ?, ?>>> getConnectedTypes(Direction direction) {
         return connections.get(direction).getConnectedTypes(this);
     }
 
@@ -259,11 +259,11 @@ public final class ConduitBundle {
         return connections.get(direction).getConnectionState(index);
     }
 
-    public ConnectionState getConnectionState(Direction direction, Holder<ConduitType<?, ?, ?>> conduitType) {
+    public ConnectionState getConnectionState(Direction direction, Holder<Conduit<?, ?, ?>> conduitType) {
         return connections.get(direction).getConnectionState(getTypeIndex(conduitType));
     }
 
-    public void setConnectionState(Direction direction, Holder<ConduitType<?, ?, ?>> conduitType, ConnectionState state) {
+    public void setConnectionState(Direction direction, Holder<Conduit<?, ?, ?>> conduitType, ConnectionState state) {
         connections.get(direction).setConnectionState(getTypeIndex(conduitType), state);
         onChanged();
     }
@@ -279,7 +279,7 @@ public final class ConduitBundle {
         onChanged();
     }
 
-    public void disableType(Direction direction, Holder<ConduitType<?, ?, ?>> conduitType) {
+    public void disableType(Direction direction, Holder<Conduit<?, ?, ?>> conduitType) {
         disableType(direction, getTypeIndex(conduitType));
     }
 
@@ -287,7 +287,7 @@ public final class ConduitBundle {
         return connections.get(direction).getItem(slotType, conduitIndex);
     }
 
-    public ItemStack getConnectionItem(Direction direction, Holder<ConduitType<?, ?, ?>> conduitType, SlotType slotType) {
+    public ItemStack getConnectionItem(Direction direction, Holder<Conduit<?, ?, ?>> conduitType, SlotType slotType) {
         return getConnectionItem(direction, getTypeIndex(conduitType), slotType);
     }
 
@@ -296,7 +296,7 @@ public final class ConduitBundle {
         onChanged();
     }
 
-    public void setConnectionItem(Direction direction, Holder<ConduitType<?, ?, ?>> conduitType, SlotType slotType, ItemStack itemStack) {
+    public void setConnectionItem(Direction direction, Holder<Conduit<?, ?, ?>> conduitType, SlotType slotType, ItemStack itemStack) {
         setConnectionItem(direction, getTypeIndex(conduitType), slotType, itemStack);
     }
 
@@ -319,12 +319,12 @@ public final class ConduitBundle {
 
     // endregion
 
-    public void connectTo(Level level, BlockPos pos, Direction direction, Holder<ConduitType<?, ?, ?>> type, boolean end) {
+    public void connectTo(Level level, BlockPos pos, Direction direction, Holder<Conduit<?, ?, ?>> type, boolean end) {
         connections.get(direction).connectTo(level, pos, getNodeFor(type), direction, type, getTypeIndex(type), end);
         onChanged();
     }
 
-    public boolean disconnectFrom(Direction direction, Holder<ConduitType<?, ?, ?>> type) {
+    public boolean disconnectFrom(Direction direction, Holder<Conduit<?, ?, ?>> type) {
         for (int i = 0; i < types.size(); i++) {
             if (type.value().getTicker().canConnectTo(type, types.get(i))) {
                 connections.get(direction).tryDisconnect(i);
@@ -336,11 +336,11 @@ public final class ConduitBundle {
     }
 
     @Nullable
-    public ConduitGraphObject<?, ?> getNodeForTypeExact(Holder<ConduitType<?, ?, ?>> type) {
+    public ConduitGraphObject<?, ?> getNodeForTypeExact(Holder<Conduit<?, ?, ?>> type) {
         return nodes.get(type);
     }
 
-    public <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> ConduitGraphObject<T, U> getTypedNodeFor(Holder<ConduitType<?, ?, ?>> type) {
+    public <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> ConduitGraphObject<T, U> getTypedNodeFor(Holder<Conduit<?, ?, ?>> type) {
         for (var entry : nodes.entrySet()) {
             if (entry.getKey().value().getTicker().canConnectTo(entry.getKey(), type)) {
                 //noinspection unchecked
@@ -351,7 +351,7 @@ public final class ConduitBundle {
         throw new IllegalStateException("no node matching original type");
     }
 
-    public ConduitGraphObject<?, ?> getNodeFor(Holder<ConduitType<?, ?, ?>> type) {
+    public ConduitGraphObject<?, ?> getNodeFor(Holder<Conduit<?, ?, ?>> type) {
         for (var entry : nodes.entrySet()) {
             if (entry.getKey().value().getTicker().canConnectTo(entry.getKey(), type)) {
                 return nodes.get(entry.getKey());
@@ -361,7 +361,7 @@ public final class ConduitBundle {
         throw new IllegalStateException("no node matching original type");
     }
 
-    public void setNodeFor(Holder<ConduitType<?, ?, ?>> type, ConduitGraphObject<?, ?> node) {
+    public void setNodeFor(Holder<Conduit<?, ?, ?>> type, ConduitGraphObject<?, ?> node) {
         nodes.put(type, node);
         for (var direction : Direction.values()) {
             ConduitConnection connection = connections.get(direction);
@@ -375,7 +375,7 @@ public final class ConduitBundle {
         }
     }
 
-    private <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> void removeNode(Level level, Holder<ConduitType<?, ?, ?>> conduitType,
+    private <T extends ConduitNetworkContext<T>, U extends ConduitData<U>> void removeNode(Level level, Holder<Conduit<?, ?, ?>> conduitType,
         ConduitGraphObject<T, U> node) {
         conduitType.value().onRemoved(node.getConduitData().cast(), level, pos);
         if (node.getGraph() != null) {
@@ -385,7 +385,7 @@ public final class ConduitBundle {
         nodes.remove(conduitType);
     }
 
-    public boolean hasType(Holder<ConduitType<?, ?, ?>> type) {
+    public boolean hasType(Holder<Conduit<?, ?, ?>> type) {
         for (var conduitType : types) {
             if (conduitType.value().getTicker().canConnectTo(conduitType, type)) {
                 return true;
@@ -394,7 +394,7 @@ public final class ConduitBundle {
         return false;
     }
 
-    public int getTypeIndex(Holder<ConduitType<?, ?, ?>> type) {
+    public int getTypeIndex(Holder<Conduit<?, ?, ?>> type) {
         for (int i = 0; i < types.size(); i++) {
             if (types.get(i).value().getTicker().canConnectTo(types.get(i), type)) {
                 return i;
@@ -475,7 +475,7 @@ public final class ConduitBundle {
             connectionStates[index] = StaticConnectionStates.DISCONNECTED;
         }
 
-        public void connectTo(Level level, BlockPos pos, ConduitGraphObject<?, ?> conduitGraphObject, Direction direction, Holder<ConduitType<?, ?, ?>> type, int typeIndex, boolean end) {
+        public void connectTo(Level level, BlockPos pos, ConduitGraphObject<?, ?> conduitGraphObject, Direction direction, Holder<Conduit<?, ?, ?>> type, int typeIndex, boolean end) {
             if (end) {
                 var state = DynamicConnectionState.defaultConnection(level, pos, direction, type);
                 connectionStates[typeIndex] = state;
@@ -515,8 +515,8 @@ public final class ConduitBundle {
             return Arrays.stream(connectionStates).anyMatch(DynamicConnectionState.class::isInstance);
         }
 
-        public List<Holder<ConduitType<?, ?, ?>>> getConnectedTypes(ConduitBundle bundle) {
-            List<Holder<ConduitType<?, ?, ?>>> connected = new ArrayList<>();
+        public List<Holder<Conduit<?, ?, ?>>> getConnectedTypes(ConduitBundle bundle) {
+            List<Holder<Conduit<?, ?, ?>>> connected = new ArrayList<>();
             for (int i = 0; i < connectionStates.length; i++) {
                 if (connectionStates[i].isConnection()) {
                     connected.add(bundle.getTypes().get(i));

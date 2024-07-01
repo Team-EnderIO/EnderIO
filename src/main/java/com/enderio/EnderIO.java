@@ -1,6 +1,6 @@
 package com.enderio;
 
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.base.common.config.BaseConfig;
@@ -130,15 +130,15 @@ public class EnderIO {
 
     private void registerRegistries(NewRegistryEvent event) {
         // TODO: Do this in conduits?
-        event.register(EnderIORegistries.CONDUIT_TYPE_SERIALIZERS);
-        event.register(EnderIORegistries.CONDUIT_DATA_SERIALIZERS);
-        event.register(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_SERIALIZERS);
+        event.register(EnderIORegistries.CONDUIT_TYPE);
+        event.register(EnderIORegistries.CONDUIT_DATA_SERIALIZER);
+        event.register(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_SERIALIZER);
         event.register(EnderIORegistries.TRAVEL_TARGET_TYPES);
         event.register(EnderIORegistries.TRAVEL_TARGET_SERIALIZERS);
     }
 
     private void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
-        event.dataPackRegistry(EnderIORegistries.Keys.CONDUIT_TYPES, ConduitType.DIRECT_CODEC, ConduitType.DIRECT_CODEC);
+        event.dataPackRegistry(EnderIORegistries.Keys.CONDUIT, Conduit.DIRECT_CODEC, Conduit.DIRECT_CODEC);
     }
 
     public void onGatherData(GatherDataEvent event) {

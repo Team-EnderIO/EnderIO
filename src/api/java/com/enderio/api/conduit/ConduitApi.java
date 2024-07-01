@@ -10,11 +10,11 @@ public interface ConduitApi {
 
     ConduitApi INSTANCE = ServiceLoader.load(ConduitApi.class).findFirst().orElseThrow();
 
-    default ItemStack getStackForType(Holder<ConduitType<?, ?, ?>> type) {
+    default ItemStack getStackForType(Holder<Conduit<?, ?, ?>> type) {
         return getStackForType(type, 1);
     }
 
-    ItemStack getStackForType(Holder<ConduitType<?, ?, ?>> type, int count);
+    ItemStack getStackForType(Holder<Conduit<?, ?, ?>> type, int count);
 
-    Ingredient getIngredientForType(Holder<ConduitType<?, ?, ?>> type);
+    Ingredient getIngredientForType(Holder<Conduit<?, ?, ?>> type);
 }

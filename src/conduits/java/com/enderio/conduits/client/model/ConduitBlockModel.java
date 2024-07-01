@@ -1,10 +1,8 @@
 package com.enderio.conduits.client.model;
 
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.model.ConduitCoreModelModifier;
-import com.enderio.api.registry.EnderIORegistries;
-import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
@@ -28,7 +26,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Vec3i;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -48,7 +45,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -76,7 +72,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
 
         if (conduitBundle != null && pos != null) {
             Direction.Axis axis = OffsetHelper.findMainAxis(conduitBundle);
-            Map<Holder<ConduitType<?, ?, ?>>, List<Vec3i>> offsets = new HashMap<>();
+            Map<Holder<Conduit<?, ?, ?>>, List<Vec3i>> offsets = new HashMap<>();
 
             for (Direction direction : Direction.values()) {
                 boolean isEnd = conduitBundle.isConnectionEnd(direction);
@@ -89,7 +85,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
 
                 var connectedTypes = conduitBundle.getConnectedTypes(direction);
                 for (int i = 0; i < connectedTypes.size(); i++) {
-                    Holder<ConduitType<?, ?, ?>> type = connectedTypes.get(i);
+                    Holder<Conduit<?, ?, ?>> type = connectedTypes.get(i);
                     ConduitGraphObject<?, ?> node = conduitBundle.getNodeFor(type);
                     ConduitData<?> data = node.getConduitData();
 
@@ -149,8 +145,8 @@ public class ConduitBlockModel implements IDynamicBakedModel {
 
             var allTypes = conduitBundle.getTypes();
             @Nullable Area box = null;
-            Map<Holder<ConduitType<?, ?, ?>>, Integer> notRendered = new HashMap<>();
-            List<Holder<ConduitType<?, ?, ?>>> rendered = new ArrayList<>();
+            Map<Holder<Conduit<?, ?, ?>>, Integer> notRendered = new HashMap<>();
+            List<Holder<Conduit<?, ?, ?>>> rendered = new ArrayList<>();
             for (int i = 0; i < allTypes.size(); i++) {
                 var type = allTypes.get(i);
                 @Nullable List<Vec3i> offsetsForType = offsets.get(type);
@@ -180,7 +176,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                     box.makeContain(duplicatePosition);
                 }
             }
-            for (Holder<ConduitType<?, ?, ?>> toRender : rendered) {
+            for (Holder<Conduit<?, ?, ?>> toRender : rendered) {
                 List<Vec3i> offsetsForType = offsets.get(toRender);
                 if (box == null || !box.contains(offsetsForType.get(0))) {
                     quads.addAll(new ConduitTextureEmissiveQuadTransformer(sprite(conduitBundle, toRender), 0)
@@ -190,7 +186,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
             }
 
             if (box != null) {
-                for (Map.Entry<Holder<ConduitType<?, ?, ?>>, Integer> notRenderedEntry : notRendered.entrySet()) {
+                for (Map.Entry<Holder<Conduit<?, ?, ?>>, Integer> notRenderedEntry : notRendered.entrySet()) {
                     Vec3i offset = OffsetHelper.translationFor(axis, OffsetHelper.offsetConduit(notRenderedEntry.getValue(), allTypes.size()));
                     if (!box.contains(offset)) {
                         quads.addAll(new ConduitTextureEmissiveQuadTransformer(
@@ -204,7 +200,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                     .andThen(QuadTransformers.applying(translateTransformation(box.getMin())))
                     .process(modelOf(BOX).getQuads(state, side, rand, extraData, renderType)));
             } else {
-                for (Map.Entry<Holder<ConduitType<?, ?, ?>>, Integer> notRenderedEntry : notRendered.entrySet()) {
+                for (Map.Entry<Holder<Conduit<?, ?, ?>>, Integer> notRenderedEntry : notRendered.entrySet()) {
                     quads.addAll(new ConduitTextureEmissiveQuadTransformer(
                         sprite(conduitBundle, notRenderedEntry.getKey()), 0)
                         .andThen(QuadTransformers.applying(translateTransformation(
@@ -295,7 +291,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
         return ChunkRenderTypeSet.of(RenderType.cutout());
     }
 
-    private static <T extends ConduitData<T>> TextureAtlasSprite sprite(ConduitBundle conduitBundle, Holder<ConduitType<?, ?, ?>> type) {
+    private static <T extends ConduitData<T>> TextureAtlasSprite sprite(ConduitBundle conduitBundle, Holder<Conduit<?, ?, ?>> type) {
         ConduitData<?> data = conduitBundle.getNodeFor(type).getConduitData();
 
         ResourceLocation textureLocation = null;
