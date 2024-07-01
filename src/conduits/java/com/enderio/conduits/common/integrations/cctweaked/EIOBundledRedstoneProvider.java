@@ -6,7 +6,7 @@ import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
-import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.init.Conduits;
 import dan200.computercraft.api.redstone.BundledRedstoneProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +23,7 @@ public class EIOBundledRedstoneProvider implements BundledRedstoneProvider {
     public int getBundledRedstoneOutput(Level world, BlockPos pos, Direction side) {
         BlockEntity be = world.getBlockEntity(pos);
 
-        Holder<Conduit<?, ?, ?>> redstoneConduit = world.holderOrThrow(EIOConduitTypes.Types.REDSTONE);
+        Holder<Conduit<?, ?, ?>> redstoneConduit = world.holderOrThrow(Conduits.REDSTONE);
 
         if (be instanceof ConduitBlockEntity conduit) {
             ConnectionState connectionState = conduit.getBundle().getConnectionState(side, redstoneConduit);

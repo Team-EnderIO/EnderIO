@@ -3,7 +3,7 @@ package com.enderio.conduits.common.conduit.type.fluid;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.init.Conduits;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -63,7 +63,7 @@ public class FluidConduitData implements ConduitData<FluidConduitData> {
 
     @Override
     public ConduitDataSerializer<FluidConduitData> serializer() {
-        return EIOConduitTypes.Serializers.FLUID.get();
+        return Conduits.Serializers.FLUID.get();
     }
 
     @Override

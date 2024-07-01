@@ -8,7 +8,8 @@ import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
-import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.init.Conduits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +25,7 @@ public record ItemConduit(
 
     @Override
     public ConduitType<ItemConduit> type() {
-        return EIOConduitTypes.TypeSerializers.ITEM.get();
+        return ConduitTypes.ITEM.get();
     }
 
     @Override

@@ -10,7 +10,8 @@ import com.enderio.conduits.common.init.ConduitIngredientTypes;
 import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitMenus;
-import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.init.Conduits;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
@@ -33,7 +34,8 @@ public class EIOConduits {
         EnderIO.LOGGER.atDebug().log("================ Conduits construct ==================");
         IEventBus bus = EnderIO.modEventBus;
 
-        EIOConduitTypes.register(bus);
+        Conduits.register(bus);
+        ConduitTypes.register(bus);
         ConduitBlockEntities.register(bus);
         ConduitMenus.register(bus);
         ConduitBlocks.register(bus);
@@ -65,6 +67,6 @@ public class EIOConduits {
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
         return new RegistrySetBuilder()
-            .add(EnderIORegistries.Keys.CONDUIT, EIOConduitTypes.Types::bootstrap);
+            .add(EnderIORegistries.Keys.CONDUIT, Conduits::bootstrap);
     }
 }

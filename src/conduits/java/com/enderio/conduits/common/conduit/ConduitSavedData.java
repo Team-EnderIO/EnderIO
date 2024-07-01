@@ -9,7 +9,7 @@ import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
-import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.init.Conduits;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -333,7 +333,7 @@ public class ConduitSavedData extends SavedData {
         }
 
         var registry = serverLevel.holderLookup(EnderIORegistries.Keys.CONDUIT);
-        var redstoneConduitType = registry.get(EIOConduitTypes.Types.REDSTONE);
+        var redstoneConduitType = registry.get(Conduits.REDSTONE);
 
         if (redstoneConduitType.isEmpty() || !conduit.getBundle().getTypes().contains(redstoneConduitType.get())) {
             return false;
@@ -344,11 +344,11 @@ public class ConduitSavedData extends SavedData {
         return data.isActive(color);
     }
 
-    public static <T extends ConduitNetworkContext<T>> void addPotentialGraph(Holder<Conduit<?, ?, ?>> type, Graph<ConduitGraphContext> graph, ServerLevel level) {
+    public static void addPotentialGraph(Holder<Conduit<?, ?, ?>> type, Graph<ConduitGraphContext> graph, ServerLevel level) {
         get(level).addPotentialGraph(type, graph);
     }
 
-    private <T extends ConduitNetworkContext<T>> void addPotentialGraph(Holder<Conduit<?, ?, ?>> type, Graph<ConduitGraphContext> graph) {
+    private void addPotentialGraph(Holder<Conduit<?, ?, ?>> type, Graph<ConduitGraphContext> graph) {
         if (!networks.computeIfAbsent(type, unused -> new ArrayList<>()).contains(graph)) {
             networks.get(type).add(graph);
         }

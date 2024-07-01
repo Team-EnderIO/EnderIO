@@ -11,7 +11,8 @@ import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
 import com.enderio.conduits.common.init.ConduitLang;
-import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.init.Conduits;
 import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -51,7 +52,7 @@ public record FluidConduit(
 
     @Override
     public ConduitType<FluidConduit> type() {
-        return EIOConduitTypes.TypeSerializers.FLUID.get();
+        return ConduitTypes.FLUID.get();
     }
 
     @Override

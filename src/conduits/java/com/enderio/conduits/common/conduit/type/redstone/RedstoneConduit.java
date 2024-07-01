@@ -5,7 +5,8 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.SimpleConduit;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.filter.ResourceFilter;
-import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.init.Conduits;
 import com.enderio.conduits.common.redstone.RedstoneExtractFilter;
 import com.enderio.conduits.common.redstone.RedstoneInsertFilter;
 import net.minecraft.core.BlockPos;
@@ -24,7 +25,7 @@ public record RedstoneConduit(
 
     @Override
     public ConduitType<RedstoneConduit> type() {
-        return EIOConduitTypes.TypeSerializers.REDSTONE.get();
+        return ConduitTypes.REDSTONE.get();
     }
 
     @Override

@@ -3,21 +3,18 @@ package com.enderio.conduits.common.conduit.type.redstone;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.misc.ColorControl;
-import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.init.Conduits;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.mojang.serialization.codecs.UnboundedMapCodec;
 import io.netty.buffer.ByteBuf;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -40,7 +37,7 @@ public class RedstoneConduitData implements ConduitData<RedstoneConduitData> {
 
     @Override
     public ConduitDataSerializer<RedstoneConduitData> serializer() {
-        return EIOConduitTypes.Serializers.REDSTONE.get();
+        return Conduits.Serializers.REDSTONE.get();
     }
 
     public boolean isActive() {

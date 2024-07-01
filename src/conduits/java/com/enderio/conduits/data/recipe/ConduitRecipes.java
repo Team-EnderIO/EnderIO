@@ -7,7 +7,7 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.init.ConduitItems;
-import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.init.Conduits;
 import com.enderio.conduits.common.recipe.ConduitIngredient;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderGetter;
@@ -39,12 +39,12 @@ public class ConduitRecipes extends RecipeProvider {
         HolderLookup.Provider lookupProvider = registries.resultNow();
         HolderGetter<Conduit<?, ?, ?>> conduitRegistry = lookupProvider.lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
 
-        var itemConduit = conduitRegistry.getOrThrow(EIOConduitTypes.Types.ITEM);
-        var fluidConduit = conduitRegistry.getOrThrow(EIOConduitTypes.Types.FLUID);
-        var pressurizedFluidConduit = conduitRegistry.getOrThrow(EIOConduitTypes.Types.PRESSURIZED_FLUID);
-        var enderFluidConduit = conduitRegistry.getOrThrow(EIOConduitTypes.Types.ENDER_FLUID);
-        var energyConduit = conduitRegistry.getOrThrow(EIOConduitTypes.Types.ENERGY);
-        var redstoneConduit = conduitRegistry.getOrThrow(EIOConduitTypes.Types.REDSTONE);
+        var itemConduit = conduitRegistry.getOrThrow(Conduits.ITEM);
+        var fluidConduit = conduitRegistry.getOrThrow(Conduits.FLUID);
+        var pressurizedFluidConduit = conduitRegistry.getOrThrow(Conduits.PRESSURIZED_FLUID);
+        var enderFluidConduit = conduitRegistry.getOrThrow(Conduits.ENDER_FLUID);
+        var energyConduit = conduitRegistry.getOrThrow(Conduits.ENERGY);
+        var redstoneConduit = conduitRegistry.getOrThrow(Conduits.REDSTONE);
 
         buildUpgradeRecipes(recipeOutput);
 

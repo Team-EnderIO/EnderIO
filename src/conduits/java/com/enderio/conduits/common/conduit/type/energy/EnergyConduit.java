@@ -8,7 +8,8 @@ import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.init.ConduitLang;
-import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.init.Conduits;
 import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -55,7 +56,7 @@ public record EnergyConduit(
 
     @Override
     public ConduitType<EnergyConduit> type() {
-        return EIOConduitTypes.TypeSerializers.ENERGY.get();
+        return ConduitTypes.ENERGY.get();
     }
 
     @Override
