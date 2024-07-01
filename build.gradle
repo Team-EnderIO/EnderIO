@@ -201,7 +201,7 @@ void exclusiveRepo(RepositoryHandler handler, String url, Consumer<InclusiveRepo
 
 repositories { RepositoryHandler handler ->
     exclusiveRepo(handler, 'https://maven.tterrag.com/', 'com.tterrag.registrate', 'com.jozufozu.flywheel')
-    exclusiveRepo(handler, "https://modmaven.dev/", "mezz.jei", "mcjty.theoneprobe", "appeng", "mekanism")
+    exclusiveRepo(handler, "https://modmaven.dev/", "mezz.jei", "mcjty.theoneprobe", "appeng", "mekanism", "me.desht.pneumaticcraft")
     exclusiveRepo(handler, 'https://cursemaven.com', 'curse.maven')
     exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli', 'net.darkhax.bookshelf', 'net.darkhax.enchdesc', 'com.almostreliable.mods')
     exclusiveRepo(handler, 'https://dogforce-games.com/maven', 'dev.gigaherz.graph')
@@ -281,6 +281,11 @@ dependencies {
     compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cctVersion")
     compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cctVersion")
     runtimeOnly(fg.deobf("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cctVersion"))
+
+    // Pneumaticcraft
+    compileOnly(fg.deobf("me.desht.pneumaticcraft:pneumaticcraft-repressurized:6.0.9+mc1.20.1"))
+    runtimeOnly(fg.deobf("me.desht.pneumaticcraft:pneumaticcraft-repressurized:6.0.9+mc1.20.1"))
+
 
     // Jetbrains annotations
     compileOnly 'org.jetbrains:annotations:23.0.0'
