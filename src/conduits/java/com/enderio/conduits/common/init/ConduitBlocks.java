@@ -30,7 +30,7 @@ public class ConduitBlocks {
         .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)
         .createBlockItem(ITEM_REGISTRY, b -> new ConduitBlockItem(b, new Item.Properties()),
             item -> item
-                .setTranslation("<MISSING> Conduit")
+                //.setTranslation("<MISSING> Conduit")
                 .setModelProvider((prov, ctx) -> {}));
 
     public static void register(IEventBus bus) {

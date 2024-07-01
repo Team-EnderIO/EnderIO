@@ -33,6 +33,8 @@ public class ConduitBlockEntities {
 //        for (var capability : capabilities) {
 //            registerConduitCapability(event, capability);
 //        }
+
+        registerConduitCapability(event, Capabilities.EnergyStorage.BLOCK);
     }
 
     private static <T> void registerConduitCapability(RegisterCapabilitiesEvent event, BlockCapability<T, Direction> capability) {

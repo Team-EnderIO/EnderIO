@@ -10,13 +10,11 @@ import com.enderio.conduits.common.init.ConduitIngredientTypes;
 import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitMenus;
-import com.enderio.conduits.common.init.ConduitTags;
 import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
 import com.enderio.conduits.data.recipe.RedstoneFilterRecipes;
-import com.enderio.conduits.data.tags.ConduitTagsProvider;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.IEventBus;
@@ -44,7 +42,6 @@ public class EIOConduits {
         ConduitIngredientTypes.register(bus);
         Integrations.register();
         ConduitLang.register();
-        ConduitTags.register();
     }
 
     @SubscribeEvent
@@ -62,7 +59,6 @@ public class EIOConduits {
         provider.addSubProvider(event.includeServer(), new ConduitTagProvider(packOutput, registries, event.getExistingFileHelper()));
         provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, registries));
         provider.addSubProvider(event.includeServer(), new RedstoneFilterRecipes(packOutput, registries));
-        provider.addSubProvider(event.includeServer(), new ConduitTagsProvider(packOutput, registries, event.getExistingFileHelper()));
 
         event.getGenerator().addProvider(true, provider);
     }

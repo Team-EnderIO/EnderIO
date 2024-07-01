@@ -317,7 +317,7 @@ public class ConduitSavedData extends SavedData {
 
     private <T extends ConduitType<T, U, V>, U extends ConduitNetworkContext<U>, V extends ConduitData<V>> void tickConduitGraph(ServerLevel serverLevel,
         Holder<ConduitType<?, ?, ?>> conduitType, ConduitTicker<T, U, V> ticker, Graph<ConduitGraphContext> graph) {
-        if (serverLevel.getGameTime() % ticker.getTickRate() == ticker.getTickRate()) {
+        if (serverLevel.getGameTime() % ticker.getTickRate() == 0) {
             //noinspection unchecked
             ticker.tickGraph(serverLevel, (T)conduitType.value(), new WrappedConduitNetwork<>(graph), ConduitSavedData::isRedstoneActive);
         }

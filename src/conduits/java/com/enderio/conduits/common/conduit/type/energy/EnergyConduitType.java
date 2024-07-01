@@ -43,8 +43,12 @@ public record EnergyConduitType(
                 ResourceLocation.CODEC.fieldOf("texture").forGetter(ConduitType::texture),
                 ComponentSerialization.CODEC.fieldOf("description").forGetter(ConduitType::description),
                 Codec.INT.fieldOf("transfer_rate").forGetter(EnergyConduitType::transferRate)
-            ).apply(builder, EnergyConduitType::new)
+            ).apply(builder, EnergyConduitType::of)
     );
+
+    public static EnergyConduitType of (ResourceLocation texture, Component description, int transferRate) {
+        return new EnergyConduitType(texture, description, transferRate);
+    }
 
     private static final EnergyConduitTicker TICKER = new EnergyConduitTicker();
     private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);

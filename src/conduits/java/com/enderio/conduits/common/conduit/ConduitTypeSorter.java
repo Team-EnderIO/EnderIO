@@ -6,8 +6,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.registries.ModifyRegistriesEvent;
-import net.neoforged.neoforge.registries.callback.BakeCallback;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,17 +17,23 @@ import java.util.List;
  * This class is used to sort conduit types for display.
  * This is needed, so upgrading conduits doesn't require shifting of types, but just recalculating the current connection
  */
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
 public class ConduitTypeSorter {
     private static final List<Holder<ConduitType<?, ?, ?>>> SORTED_TYPES = new ArrayList<>();
 
     @SubscribeEvent
-    public static void modifyRegistriesEvent(ModifyRegistriesEvent event) {
-        event.getRegistry(EnderIORegistries.Keys.CONDUIT_TYPES)
-            .addCallback((BakeCallback<ConduitType<?, ?, ?>>) ConduitTypeSorter::onBake);
+    public static void serverSortTypes(ServerStartedEvent event) {
+        var conduitRegistry = event.getServer().registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT_TYPES);
+        sortTypes(conduitRegistry);
     }
 
-    private static void onBake(Registry<ConduitType<?, ?, ?>> registry) {
+    @SubscribeEvent
+    public static void clientSortTypes(ClientPlayerNetworkEvent.LoggingIn event) {
+        var conduitRegistry = event.getPlayer().registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT_TYPES);
+        sortTypes(conduitRegistry);
+    }
+
+    private static void sortTypes(Registry<ConduitType<?, ?, ?>> registry) {
         SORTED_TYPES.clear();
 
         // TODO...

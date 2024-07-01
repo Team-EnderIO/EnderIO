@@ -110,12 +110,14 @@ public class ConduitBlockItem extends BlockItem {
             var conduitClassTypes = conduitTypes.stream()
                 .map(e -> e.value().getClass())
                 .sorted(Comparator.comparing(Class::getName))
+                .distinct()
                 .toList();
 
             for (var conduitClass : conduitClassTypes) {
                 var matchingConduitTypes = conduitTypes.stream()
                     .filter(e -> e.value().getClass() == conduitClass)
-                    .sorted()
+                    // GRIM...
+                    .sorted((o1, o2) -> compareConduitTo(o1.value(), o2.value()))
                     .toList();
 
                 for (var conduitType : matchingConduitTypes) {
@@ -123,5 +125,9 @@ public class ConduitBlockItem extends BlockItem {
                 }
             }
         }
+    }
+
+    private static <T extends ConduitType<T, ?, ?>> int compareConduitTo(ConduitType<T, ?, ?> o1, ConduitType<?, ?, ?> o2) {
+        return o1.compareTo((T)o2);
     }
 }

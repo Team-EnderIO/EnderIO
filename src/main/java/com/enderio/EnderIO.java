@@ -124,11 +124,13 @@ public class EnderIO {
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
         modEventBus.addListener(SoulVialItem::onCommonSetup);
         modEventBus.addListener(this::registerRegistries);
+        modEventBus.addListener(this::registerDatapackRegistries);
         IntegrationManager.addIntegration(EnderIOSelfIntegration.INSTANCE);
     }
 
     private void registerRegistries(NewRegistryEvent event) {
         // TODO: Do this in conduits?
+        event.register(EnderIORegistries.CONDUIT_TYPE_SERIALIZERS);
         event.register(EnderIORegistries.CONDUIT_DATA_SERIALIZERS);
         event.register(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_SERIALIZERS);
         event.register(EnderIORegistries.TRAVEL_TARGET_TYPES);
