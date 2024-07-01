@@ -56,12 +56,7 @@ public class ConduitItemModel extends BakedModelWrapper<BakedModel> {
         private BakedModel createBakedModel(@Nullable RepresentedConduitType representedConduitType, BakedModel model, @Nullable ClientLevel level) {
             ResourceLocation conduitTexture = MissingTextureAtlasSprite.getLocation();
             if (representedConduitType != null) {
-                Optional<ResourceKey<Conduit<?, ?, ?>>> key = representedConduitType.conduitType().unwrapKey();
-
-                if (key.isPresent()) {
-                    ResourceLocation location = key.get().location();
-                    conduitTexture = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "block/conduit/" + location.getPath());
-                }
+                conduitTexture = representedConduitType.conduitType().value().texture();
             }
 
             // Get the replacement texture.
