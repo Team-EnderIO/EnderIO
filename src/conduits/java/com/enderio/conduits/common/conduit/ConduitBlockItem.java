@@ -33,8 +33,6 @@ import java.util.Optional;
 @EventBusSubscriber(modid = "enderio", bus = EventBusSubscriber.Bus.MOD)
 public class ConduitBlockItem extends BlockItem {
 
-    private static HashMap<Holder<Conduit<?, ?, ?>>, String> TYPE_DESCRIPTION_IDS = new HashMap<>();
-
     public ConduitBlockItem(Block block, Properties properties) {
         super(block, properties);
     }
@@ -56,6 +54,13 @@ public class ConduitBlockItem extends BlockItem {
     public Component getName(ItemStack pStack) {
         return getType(pStack).map(typeHolder -> typeHolder.value().description())
             .orElseGet(() -> super.getName(pStack));
+    }
+
+    // Do not use block description, as that is Conduit Bundle.
+    // This will ensure missing conduits use the missing conduit string.
+    @Override
+    public String getDescriptionId() {
+        return getOrCreateDescriptionId();
     }
 
     @Override
