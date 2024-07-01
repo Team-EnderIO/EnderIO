@@ -6,7 +6,6 @@ import com.enderio.api.conduit.SimpleConduit;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.conduits.common.init.Conduits;
 import com.enderio.conduits.common.redstone.RedstoneExtractFilter;
 import com.enderio.conduits.common.redstone.RedstoneInsertFilter;
 import com.mojang.serialization.MapCodec;

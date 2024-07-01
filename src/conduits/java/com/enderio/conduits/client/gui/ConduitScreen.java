@@ -6,6 +6,7 @@ import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.screen.ConduitScreenExtension;
+import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.api.misc.ColorControl;
@@ -131,8 +132,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
                         EIOLang.REDSTONE_CHANNEL));
             }
 
-            // TODO: This needs to be reworked now.
-            ConduitScreenExtension<?> conduitScreenExtension = null;//ConduitScreenExtensions.get(menu.getConduitType());
+            ConduitScreenExtension<?> conduitScreenExtension = ConduitScreenExtensions.get(menu.getConduitType().value().type());
 
             if (conduitScreenExtension != null) {
                 conduitScreenExtension

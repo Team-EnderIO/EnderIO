@@ -5,6 +5,8 @@ import com.enderio.api.conduit.model.RegisterConduitCoreModelModifiersEvent;
 import com.enderio.api.conduit.screen.RegisterConduitScreenExtensionsEvent;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
+import com.enderio.conduits.client.gui.conduit.FluidConduitScreenExtension;
+import com.enderio.conduits.client.gui.conduit.ItemConduitScreenExtension;
 import com.enderio.conduits.client.model.ConduitGeometry;
 import com.enderio.conduits.client.model.ConduitItemModelLoader;
 import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
@@ -63,11 +65,8 @@ public class ConduitClientSetup {
 
     @SubscribeEvent
     public static void registerConduitScreenExtensions(RegisterConduitScreenExtensionsEvent event) {
-        // TODO: These need to be reworked
-        /*event.register(EIOConduitTypes.Types.FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
-        event.register(EIOConduitTypes.Types.PRESSURIZED_FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
-        event.register(EIOConduitTypes.Types.ENDER_FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
-        event.register(EIOConduitTypes.Types.ITEM.get(), ItemConduitScreenExtension::new);*/
+        event.register(ConduitTypes.FLUID.get(), FluidConduitScreenExtension::new);
+        event.register(ConduitTypes.ITEM.get(), ItemConduitScreenExtension::new);
     }
 
     @SubscribeEvent

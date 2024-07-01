@@ -29,12 +29,7 @@ import java.util.function.Supplier;
 
 public final class FluidConduitScreenExtension implements ConduitScreenExtension<FluidConduitData> {
 
-    public static final FluidConduitScreenExtension INSTANCE = new FluidConduitScreenExtension();
-
     private static final ResourceLocation WIDGET_TEXTURE = EnderIO.loc("textures/gui/fluidbackground.png");
-
-    private FluidConduitScreenExtension() {
-    }
 
     @Override
     public List<AbstractWidget> createWidgets(Screen screen, Supplier<FluidConduitData> conduitDataSupplier, UpdateExtendedData<FluidConduitData> updateConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
