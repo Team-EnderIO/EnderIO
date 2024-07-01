@@ -19,9 +19,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface IOAwareConduitTicker<TOptions, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> extends LoadedAwareConduitTicker<TOptions, TContext, TData> {
+public interface IOAwareConduitTicker<TType extends ConduitType<TType, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> extends LoadedAwareConduitTicker<TType, TContext, TData> {
     @Override
-    default void tickGraph(ServerLevel level, ConduitType<TOptions, TContext, TData> type,
+    default void tickGraph(ServerLevel level, TType type,
         List<ConduitNode<TContext, TData>> loadedNodes, ConduitNetwork<TContext, TData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
@@ -71,14 +71,14 @@ public interface IOAwareConduitTicker<TOptions, TContext extends ConduitNetworkC
 
     void tickColoredGraph(
         ServerLevel level,
-        ConduitType<TOptions, TContext, TData> type,
+        TType type,
         List<Connection<TData>> inserts,
         List<Connection<TData>> extracts,
         ColorControl color,
         ConduitNetwork<TContext, TData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
-    default boolean isRedstoneMode(ConduitType<?, ?, ?> type, ServerLevel level, BlockPos pos, ConduitNode.IOState state,
+    default boolean isRedstoneMode(TType type, ServerLevel level, BlockPos pos, ConduitNode.IOState state,
         ColoredRedstoneProvider coloredRedstoneProvider) {
         if (!type.getMenuData().showRedstoneExtract()) {
             return true;

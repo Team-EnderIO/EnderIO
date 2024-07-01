@@ -22,7 +22,8 @@ public class ConduitTagsProvider extends TagsProvider<ConduitType<?, ?, ?>> {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-        tag(ConduitTags.ConduitTypes.ITEM)
+        // TODO: remove conduit tags
+        /*tag(ConduitTags.ConduitTypes.ITEM)
             .add(EIOConduitTypes.Types.ITEM.getKey());
 
         tag(ConduitTags.ConduitTypes.FLUID)
@@ -34,6 +35,6 @@ public class ConduitTagsProvider extends TagsProvider<ConduitType<?, ?, ?>> {
             .add(EIOConduitTypes.Types.ENERGY.getKey());
 
         tag(ConduitTags.ConduitTypes.REDSTONE)
-            .add(EIOConduitTypes.Types.REDSTONE.getKey());
+            .add(EIOConduitTypes.Types.REDSTONE.getKey());*/
     }
 }

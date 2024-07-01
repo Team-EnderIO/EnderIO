@@ -2,10 +2,12 @@ package com.enderio.conduits.common.conduit;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.registry.EnderIORegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.registries.ModifyRegistriesEvent;
+import net.neoforged.neoforge.registries.callback.BakeCallback;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,10 +19,17 @@ import java.util.List;
  */
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class ConduitTypeSorter {
-    private static final List<ConduitType<?, ?, ?>> SORTED_TYPES = new ArrayList<>();
+    private static final List<Holder<ConduitType<?, ?, ?>>> SORTED_TYPES = new ArrayList<>();
 
     @SubscribeEvent
-    public static void afterRegistryFreeze(FMLCommonSetupEvent event) {
+    public static void modifyRegistriesEvent(ModifyRegistriesEvent event) {
+        event.getRegistry(EnderIORegistries.Keys.CONDUIT_TYPES)
+            .addCallback((BakeCallback<ConduitType<?, ?, ?>>) ConduitTypeSorter::onBake);
+    }
+
+    private static void onBake(Registry<ConduitType<?, ?, ?>> registry) {
+        SORTED_TYPES.clear();
+
         // TODO...
         /*List<ResourceLocation> tieredTypes = new ArrayList<>();
         for (ConduitType<?> value : EnderIORegistries.CONDUIT_TYPES) {
@@ -41,18 +50,18 @@ public class ConduitTypeSorter {
             SORTED_TYPES.addAll(typesInType);
         }*/
 
-        List<ConduitType<?, ?, ?>> unadded = new ArrayList<>();
-        for (ConduitType<?, ?, ?> type: EnderIORegistries.CONDUIT_TYPES) {
+        List<Holder<ConduitType<?, ?, ?>>> unadded = new ArrayList<>();
+        for (Holder<ConduitType<?, ?, ?>> type : registry.holders().toList()) {
             //if (!(type instanceof TieredConduit)) {
-                unadded.add(type);
+            unadded.add(type);
             //}
         }
 
-        unadded.sort(Comparator.comparing(EnderIORegistries.CONDUIT_TYPES::getKey));
+        unadded.sort(Comparator.comparing(Holder::getRegisteredName));
         SORTED_TYPES.addAll(unadded);
     }
 
-    public static int getSortIndex(ConduitType<?, ?, ?> type) {
+    public static int getSortIndex(Holder<ConduitType<?, ?, ?>> type) {
         return SORTED_TYPES.indexOf(type);
     }
 }

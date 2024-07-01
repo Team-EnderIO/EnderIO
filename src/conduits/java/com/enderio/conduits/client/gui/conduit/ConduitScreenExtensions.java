@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: This needs to be reworked now.
 public class ConduitScreenExtensions {
     private static Map<ConduitType<?, ?, ?>, ConduitScreenExtension<?>> EXTENSIONS;
 
@@ -28,6 +29,8 @@ public class ConduitScreenExtensions {
     @Nullable
     public static <T extends ConduitData<T>> ConduitScreenExtension<T> get(ConduitType<?, ?, T> type) {
         //noinspection unchecked
-        return (ConduitScreenExtension<T>) EXTENSIONS.get(type);
+        //return (ConduitScreenExtension<T>) EXTENSIONS.get(type);
+
+        return null;
     }
 }

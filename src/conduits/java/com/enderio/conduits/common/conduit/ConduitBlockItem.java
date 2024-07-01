@@ -7,7 +7,9 @@ import com.enderio.conduits.common.components.RepresentedConduitType;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitComponents;
+import com.enderio.conduits.common.init.EIOConduitTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
@@ -29,54 +31,39 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 @EventBusSubscriber(modid = "enderio", bus = EventBusSubscriber.Bus.MOD)
 public class ConduitBlockItem extends BlockItem {
 
-    private static HashMap<ConduitType<?, ?, ?>, String> TYPE_DESCRIPTION_IDS = new HashMap<>();
+    private static HashMap<Holder<ConduitType<?, ?, ?>>, String> TYPE_DESCRIPTION_IDS = new HashMap<>();
 
     public ConduitBlockItem(Block block, Properties properties) {
         super(block, properties);
     }
 
-    public static <T extends ConduitType<?, ?, ?>> ItemStack getStackFor(Supplier<T> conduitType, int count) {
-        return getStackFor(conduitType.get(), count);
-    }
-
-    public static ItemStack getStackFor(ConduitType<?, ?, ?> conduitType, int count) {
+    public static ItemStack getStackFor(Holder<ConduitType<?, ?, ?>> conduitType, int count) {
         var stack = new ItemStack(ConduitBlocks.CONDUIT.asItem(), count);
         stack.set(ConduitComponents.REPRESENTED_CONDUIT_TYPE, new RepresentedConduitType(conduitType));
         return stack;
     }
 
-    @Nullable
-    public static ConduitType<?, ?, ?> getType(ItemStack stack) {
+    public static Optional<Holder<ConduitType<?, ?, ?>>> getType(ItemStack stack) {
         var representedConduitType = stack.get(ConduitComponents.REPRESENTED_CONDUIT_TYPE);
-        return representedConduitType == null ? null : representedConduitType.conduitType();
+        return representedConduitType != null
+            ? Optional.of(representedConduitType.conduitType())
+            : Optional.empty();
     }
 
     @Override
     public Component getName(ItemStack pStack) {
-        var conduitType = getType(pStack);
-        if (conduitType == null) {
-            return super.getName(pStack);
-        }
-
-        return Component.translatable(TYPE_DESCRIPTION_IDS.computeIfAbsent(conduitType, this::createDescriptionId));
-    }
-
-    private String createDescriptionId(ConduitType<?, ?, ?> conduitType) {
-        ResourceLocation conduitTypeKey = EnderIORegistries.CONDUIT_TYPES.getKey(conduitType);
-        return String.format("item.%s.conduit.%s", conduitTypeKey.getNamespace(), conduitTypeKey.getPath());
-    }
-
-    @Override
-    public String getDescriptionId() {
-        return getOrCreateDescriptionId();
+        return getType(pStack).map(typeHolder -> typeHolder.value().description())
+            .orElseGet(() -> super.getName(pStack));
     }
 
     @Override
@@ -87,8 +74,8 @@ public class ConduitBlockItem extends BlockItem {
         BlockPos blockpos = context.getClickedPos();
         ItemStack itemstack = context.getItemInHand();
 
-        ConduitType<?, ?, ?> type = getType(itemstack);
-        if (type == null) {
+        // Ensure we have a type
+        if (getType(itemstack).isEmpty()) {
             return InteractionResult.FAIL;
         }
 
@@ -103,13 +90,12 @@ public class ConduitBlockItem extends BlockItem {
 
     @Override
     public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
-        ConduitType<?, ?, ?> conduitType = getType(pStack);
-        if (conduitType != null) {
-            List<Component> conduitTooltips = conduitType.getHoverText(pContext, pTooltipFlag);
+        getType(pStack).ifPresent(typeHolder -> {
+            List<Component> conduitTooltips = typeHolder.value().getHoverText(pContext, pTooltipFlag);
             if (!conduitTooltips.isEmpty()) {
                 pTooltipComponents.addAll(conduitTooltips);
             }
-        }
+        });
 
         super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
     }
@@ -118,22 +104,17 @@ public class ConduitBlockItem extends BlockItem {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() == EIOCreativeTabs.CONDUITS_TAB.get()) {
-            // TODO: When we switch to datapacks:
-            //event.getParameters().holders()
+            var registry = event.getParameters().holders().lookupOrThrow(EnderIORegistries.Keys.CONDUIT_TYPES);
+            var conduitTypes = registry.listElements().toList();
 
-            // Get all conduit types, grouped by conduit type.
-            var conduitTypes = EnderIORegistries.CONDUIT_TYPES.entrySet().stream()
-                .map(Map.Entry::getValue)
+            var conduitClassTypes = conduitTypes.stream()
+                .map(e -> e.value().getClass())
+                .sorted(Comparator.comparing(Class::getName))
                 .toList();
 
-            var conduitNetworkTypes = EnderIORegistries.CONDUIT_NETWORK_TYPES.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .map(Map.Entry::getValue)
-                .toList();
-
-            for (var conduitNetworkType : conduitNetworkTypes) {
+            for (var conduitClass : conduitClassTypes) {
                 var matchingConduitTypes = conduitTypes.stream()
-                    .filter(e -> e.networkType() == conduitNetworkType)
+                    .filter(e -> e.value().getClass() == conduitClass)
                     .sorted()
                     .toList();
 

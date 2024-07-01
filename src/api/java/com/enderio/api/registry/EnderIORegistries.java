@@ -2,8 +2,9 @@ package com.enderio.api.registry;
 
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitNetworkContextSerializer;
-import com.enderio.api.conduit.ConduitNetworkType;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ConduitTypeSerializer;
+import com.enderio.api.conduit.NewConduitTypeSerializer;
 import com.enderio.api.travel.TravelTargetSerializer;
 import com.enderio.api.travel.TravelTargetType;
 import net.minecraft.core.Registry;
@@ -21,14 +22,6 @@ public class EnderIORegistries {
         .sync(true)
         .create();
 
-    public static final Registry<ConduitNetworkType<?, ?, ?>> CONDUIT_NETWORK_TYPES = new RegistryBuilder<>(Keys.CONDUIT_NETWORK_TYPES)
-        .sync(true)
-        .create();
-
-    public static final Registry<ConduitType<?, ?, ?>> CONDUIT_TYPES = new RegistryBuilder<>(Keys.CONDUIT_TYPES)
-        .sync(true)
-        .create();
-
     public static final Registry<ConduitDataSerializer<?>> CONDUIT_DATA_SERIALIZERS = new RegistryBuilder<>(Keys.CONDUIT_DATA_SERIALIZERS)
         .sync(true)
         .create();
@@ -37,13 +30,22 @@ public class EnderIORegistries {
         .sync(true)
         .create();
 
+    public static final Registry<NewConduitTypeSerializer<?>> CONDUIT_TYPE_SERIALIZERS = new RegistryBuilder<>(Keys.CONDUIT_TYPE_SERIALIZERS)
+        .sync(true)
+        .create();
+
     public static class Keys {
         public static final ResourceKey<Registry<TravelTargetType<?>>> TRAVEL_TARGET_TYPES = createKey("travel_target_types");
         public static final ResourceKey<Registry<TravelTargetSerializer<?>>> TRAVEL_TARGET_SERIALIZERS = createKey("travel_target_serializers");
-        public static final ResourceKey<Registry<ConduitNetworkType<?, ?, ?>>> CONDUIT_NETWORK_TYPES = createKey("conduit_network_types");
-        public static final ResourceKey<Registry<ConduitType<?, ?, ?>>> CONDUIT_TYPES = createKey("conduit_types");
+
         public static final ResourceKey<Registry<ConduitDataSerializer<?>>> CONDUIT_DATA_SERIALIZERS = createKey("conduit_data_serializers");
+        public static final ResourceKey<Registry<NewConduitTypeSerializer<?>>> CONDUIT_TYPE_SERIALIZERS = createKey("conduit_type_serializers");
         public static final ResourceKey<Registry<ConduitNetworkContextSerializer<?>>> CONDUIT_NETWORK_CONTEXT_SERIALIZERS = createKey("conduit_network_context_serializers");
+
+        /**
+         * Conduit types are now a datapack registry.
+         */
+        public static final ResourceKey<Registry<ConduitType<?, ?, ?>>> CONDUIT_TYPES = createKey("conduit_types");
 
         private static <T> ResourceKey<Registry<T>> createKey(String name) {
             return ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("enderio", name));

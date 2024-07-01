@@ -3,7 +3,6 @@ package com.enderio.conduits.common.conduit.type.fluid;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNetworkContext;
-import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
@@ -21,12 +20,12 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import java.util.List;
 import java.util.Optional;
 
-public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData, IFluidHandler> {
+public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduitType, ConduitNetworkContext.Dummy, FluidConduitData, IFluidHandler> {
 
     @Override
     public void tickGraph(
         ServerLevel level,
-        ConduitType<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData> type,
+        FluidConduitType type,
         List<ConduitNode<ConduitNetworkContext.Dummy, FluidConduitData>> loadedNodes,
         ConduitNetwork<ConduitNetworkContext.Dummy, FluidConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
@@ -51,7 +50,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
     @Override
     protected void tickCapabilityGraph(
         ServerLevel level,
-        ConduitType<FluidConduitOptions, ConduitNetworkContext.Dummy, FluidConduitData> type,
+        FluidConduitType type,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
         ConduitNetwork<ConduitNetworkContext.Dummy, FluidConduitData> graph,
@@ -61,7 +60,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
             IFluidHandler extractHandler = extract.capability;
             FluidConduitData fluidExtendedData = extract.data;
 
-            int temp = type.options().transferRate();
+            int temp = type.transferRate();
             if (extract.upgrade instanceof ExtractionSpeedUpgrade speedUpgrade) {
                 // TODO: Review scaling.
                 temp *= (int) Math.pow(2, speedUpgrade.tier());
@@ -99,7 +98,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
 
                 if (!transferredFluid.isEmpty()) {
                     transferred += transferredFluid.getAmount();
-                    if (!type.options().isMultiFluid()) {
+                    if (!type.isMultiFluid()) {
                         for (ConduitNode<ConduitNetworkContext.Dummy, FluidConduitData> node : graph.getNodes()) {
                             Fluid fluid = transferredFluid.getFluid();
                             if (fluid instanceof FlowingFluid flowing) {

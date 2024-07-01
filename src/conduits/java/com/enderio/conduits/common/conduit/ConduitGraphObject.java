@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class ConduitGraphObject<TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>>
-    implements GraphObject<InternalGraphContext<TContext>>, ConduitNode<TContext, TData> {
+    implements GraphObject<ConduitGraphContext>, ConduitNode<TContext, TData> {
 
     public static final Codec<ConduitGraphObject<?, ?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         BlockPos.CODEC.fieldOf("pos").forGetter(ConduitGraphObject::getPos),
@@ -50,7 +50,7 @@ public class ConduitGraphObject<TContext extends ConduitNetworkContext<TContext>
 
     private final BlockPos pos;
 
-    @Nullable private Graph<InternalGraphContext<TContext>> graph = null;
+    @Nullable private Graph<ConduitGraphContext> graph = null;
     @Nullable private WrappedConduitNetwork<TContext, TData> wrappedGraph = null;
 
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
@@ -64,12 +64,12 @@ public class ConduitGraphObject<TContext extends ConduitNetworkContext<TContext>
 
     @Nullable
     @Override
-    public Graph<InternalGraphContext<TContext>> getGraph() {
+    public Graph<ConduitGraphContext> getGraph() {
         return graph;
     }
 
     @Override
-    public void setGraph(Graph<InternalGraphContext<TContext>> graph) {
+    public void setGraph(Graph<ConduitGraphContext> graph) {
         this.graph = graph;
         this.wrappedGraph = new WrappedConduitNetwork<>(graph);
     }
@@ -125,5 +125,9 @@ public class ConduitGraphObject<TContext extends ConduitNetworkContext<TContext>
     // Separate method to avoid breaking the graph
     public int hashContents() {
         return Objects.hash(pos, conduitData, ioStates, connectionStates);
+    }
+
+    public <Z extends ConduitNode<?, ?>> Z castNode() {
+        return (Z)this;
     }
 }

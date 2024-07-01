@@ -18,10 +18,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CapabilityAwareConduitTicker<TOptions, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>, TCap> implements IOAwareConduitTicker<TOptions, TContext, TData> {
+public abstract class CapabilityAwareConduitTicker<TType extends ConduitType<TType, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>, TCap> implements IOAwareConduitTicker<TType, TContext, TData> {
 
     @Override
-    public final void tickColoredGraph(ServerLevel level, ConduitType<TOptions, TContext, TData> type, List<Connection<TData>> inserts, List<Connection<TData>> extracts,
+    public final void tickColoredGraph(ServerLevel level, TType type, List<Connection<TData>> inserts, List<Connection<TData>> extracts,
         ColorControl color, ConduitNetwork<TContext, TData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
         List<CapabilityConnection> insertCaps = new ArrayList<>();
@@ -56,7 +56,7 @@ public abstract class CapabilityAwareConduitTicker<TOptions, TContext extends Co
         return capability != null;
     }
 
-    protected abstract void tickCapabilityGraph(ServerLevel level, ConduitType<TOptions, TContext, TData> type, List<CapabilityConnection> inserts,
+    protected abstract void tickCapabilityGraph(ServerLevel level, TType type, List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts, ConduitNetwork<TContext, TData> graph, ColoredRedstoneProvider coloredRedstoneProvider);
 
     protected abstract BlockCapability<TCap, Direction> getCapability();

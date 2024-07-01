@@ -82,7 +82,7 @@ public interface ConduitData<T extends ConduitData<T>> {
 
     // endregion
 
-    default <Z extends ConduitData<Z>> Z cast() {
+    default <Z extends ConduitData<?>> Z cast() {
         return (Z) this;
     }
 

@@ -2,16 +2,10 @@ package com.enderio.api.conduit;
 
 import org.jetbrains.annotations.Nullable;
 
-public interface SimpleConduitNetworkType<T extends ConduitData<T>> extends ConduitNetworkType<Void, ConduitNetworkContext.Dummy, T> {
+public interface SimpleConduitNetworkType<TType extends SimpleConduitNetworkType<TType, TData>, TData extends ConduitData<TData>> extends ConduitType<TType, ConduitNetworkContext.Dummy, TData> {
     @Override
     @Nullable
-    default ConduitNetworkContext.Dummy createNetworkContext(ConduitType<Void, ConduitNetworkContext.Dummy, T> type,
-        ConduitNetwork<ConduitNetworkContext.Dummy, T> network) {
+    default ConduitNetworkContext.Dummy createNetworkContext(ConduitNetwork<ConduitNetworkContext.Dummy, TData> network) {
         return null;
-    }
-
-    @Override
-    default int compare(Void o1, Void o2) {
-        return 0;
     }
 }

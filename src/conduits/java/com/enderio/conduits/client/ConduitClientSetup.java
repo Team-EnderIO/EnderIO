@@ -62,18 +62,20 @@ public class ConduitClientSetup {
 
     @SubscribeEvent
     public static void registerConduitCoreModelModifiers(RegisterConduitCoreModelModifiersEvent event) {
-        event.register(EIOConduitTypes.Types.FLUID.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
+        // TODO: These need to be reworked
+        /*event.register(EIOConduitTypes.Types.FLUID.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
         event.register(EIOConduitTypes.Types.PRESSURIZED_FLUID.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
         event.register(EIOConduitTypes.Types.ENDER_FLUID.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
-        event.register(EIOConduitTypes.Types.REDSTONE.get(), RedstoneConduitCoreModelModifier::new);
+        event.register(EIOConduitTypes.Types.REDSTONE.get(), RedstoneConduitCoreModelModifier::new);*/
     }
 
     @SubscribeEvent
     public static void registerConduitScreenExtensions(RegisterConduitScreenExtensionsEvent event) {
-        event.register(EIOConduitTypes.Types.FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
+        // TODO: These need to be reworked
+        /*event.register(EIOConduitTypes.Types.FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
         event.register(EIOConduitTypes.Types.PRESSURIZED_FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
         event.register(EIOConduitTypes.Types.ENDER_FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
-        event.register(EIOConduitTypes.Types.ITEM.get(), ItemConduitScreenExtension::new);
+        event.register(EIOConduitTypes.Types.ITEM.get(), ItemConduitScreenExtension::new);*/
     }
 
     @SubscribeEvent

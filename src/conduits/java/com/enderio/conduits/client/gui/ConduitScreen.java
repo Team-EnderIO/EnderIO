@@ -25,6 +25,7 @@ import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -55,7 +56,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
 
-        ConduitMenuData data = menu.getConduitType().getMenuData();
+        ConduitMenuData data = menu.getConduitType().value().getMenuData();
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(getGuiLeft(), getGuiTop(), 0);
         if (data.showBarSeparator()) {
@@ -73,7 +74,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
 
-        ConduitMenuData data = menu.getConduitType().getMenuData();
+        ConduitMenuData data = menu.getConduitType().value().getMenuData();
 
         guiGraphics.drawString(this.font, ConduitLang.CONDUIT_INSERT,  22 + 16,  7 + 4, 4210752, false);
 
@@ -87,7 +88,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             recalculateTypedButtons = false;
             typedButtons.forEach(this::removeWidget);
             typedButtons.clear();
-            ConduitMenuData data = menu.getConduitType().getMenuData();
+            ConduitMenuData data = menu.getConduitType().value().getMenuData();
             Vector2i pos = new Vector2i(22, 7).add(getGuiLeft(), getGuiTop());
 
             addTypedButton(
@@ -131,7 +132,8 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
                         EIOLang.REDSTONE_CHANNEL));
             }
 
-            ConduitScreenExtension<?> conduitScreenExtension = ConduitScreenExtensions.get(menu.getConduitType());
+            // TODO: This needs to be reworked now.
+            ConduitScreenExtension<?> conduitScreenExtension = null;//ConduitScreenExtensions.get(menu.getConduitType());
 
             if (conduitScreenExtension != null) {
                 conduitScreenExtension
@@ -142,8 +144,8 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
         }
 
-        List<ConduitType<?, ?, ?>> validConnections = new ArrayList<>();
-        for (ConduitType<?, ?, ?> type : getBundle().getTypes()) {
+        List<Holder<ConduitType<?, ?, ?>>> validConnections = new ArrayList<>();
+        for (Holder<ConduitType<?, ?, ?>> type : getBundle().getTypes()) {
             if (getConnectionState(type) instanceof DynamicConnectionState) {
                 validConnections.add(type);
             }
@@ -153,7 +155,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             typeSelectionButtons.forEach(this::removeWidget);
             typeSelectionButtons.clear();
             for (int i = 0; i < validConnections.size(); i++) {
-                ConduitType<?, ?, ?> connection = validConnections.get(i);
+                Holder<ConduitType<?, ?, ?>> connection = validConnections.get(i);
                 ConduitSelectionButton button = new ConduitSelectionButton(getGuiLeft() + 206, getGuiTop() + 4 + 24*i, connection, menu::getConduitType, type -> {
                     menu.setConduitType(type);
                     recalculateTypedButtons = true;
@@ -166,7 +168,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     }
 
     private <T extends ConduitData<T>> void sendExtendedConduitUpdate(Function<T, T> map) {
-        ConduitType<?, ?, T> conduitType = (ConduitType<?, ?, T>)menu.getConduitType();
+        Holder<ConduitType<?, ?, ?>> conduitType = menu.getConduitType();
         T currentData = getBundle().getNodeFor(conduitType).getConduitData().cast();
         var menu = getMenu();
 
@@ -199,7 +201,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
         return getConnectionState(menu.getConduitType());
     }
 
-    private ConnectionState getConnectionState(ConduitType<?, ?, ?> type) {
+    private ConnectionState getConnectionState(Holder<ConduitType<?, ?, ?>> type) {
         return getBundle().getConnectionState(menu.getDirection(), type);
     }
 

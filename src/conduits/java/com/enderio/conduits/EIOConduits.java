@@ -1,6 +1,7 @@
 package com.enderio.conduits;
 
 import com.enderio.EnderIO;
+import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitBlocks;
@@ -16,12 +17,16 @@ import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
 import com.enderio.conduits.data.recipe.RedstoneFilterRecipes;
 import com.enderio.conduits.data.tags.ConduitTagsProvider;
+import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
+import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+
+import java.util.Set;
 
 @EventBusSubscriber(modid = EnderIO.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class EIOConduits {
@@ -44,15 +49,26 @@ public class EIOConduits {
 
     @SubscribeEvent
     public static void onData(GatherDataEvent event) {
+        var pack = event.getGenerator().getVanillaPack(true);
+        var registries = event.getLookupProvider();
+
+        pack.addProvider(output -> new DatapackBuiltinEntriesProvider(output, registries,
+            createDatapackEntriesBuilder(), Set.of(EnderIO.MODID)));
+
         PackOutput packOutput = event.getGenerator().getPackOutput();
 
         EIODataProvider provider = new EIODataProvider("conduits");
 
-        provider.addSubProvider(event.includeServer(), new ConduitTagProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, event.getLookupProvider()));
-        provider.addSubProvider(event.includeServer(), new RedstoneFilterRecipes(packOutput, event.getLookupProvider()));
-        provider.addSubProvider(event.includeServer(), new ConduitTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(), new ConduitTagProvider(packOutput, registries, event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, registries));
+        provider.addSubProvider(event.includeServer(), new RedstoneFilterRecipes(packOutput, registries));
+        provider.addSubProvider(event.includeServer(), new ConduitTagsProvider(packOutput, registries, event.getExistingFileHelper()));
 
         event.getGenerator().addProvider(true, provider);
+    }
+
+    private static RegistrySetBuilder createDatapackEntriesBuilder() {
+        return new RegistrySetBuilder()
+            .add(EnderIORegistries.Keys.CONDUIT_TYPES, EIOConduitTypes.Types::bootstrap);
     }
 }

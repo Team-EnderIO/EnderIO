@@ -25,13 +25,14 @@ public class ConduitBlockEntities {
 
     @SubscribeEvent
     public static void registerConduitCapabilities(RegisterCapabilitiesEvent event) {
-        Set<BlockCapability<?, Direction>> capabilities = EnderIORegistries.CONDUIT_NETWORK_TYPES.entrySet().stream()
-            .flatMap(e -> e.getValue().getExposedCapabilities().stream())
-            .collect(Collectors.toUnmodifiableSet());
-
-        for (var capability : capabilities) {
-            registerConduitCapability(event, capability);
-        }
+        // TODO: Come back and resolve this with a custom RegisterConduitCapabilitiesEvent?
+//        Set<BlockCapability<?, Direction>> capabilities = EnderIORegistries.CONDUIT_NETWORK_TYPES.entrySet().stream()
+//            .flatMap(e -> e.getValue().getExposedCapabilities().stream())
+//            .collect(Collectors.toUnmodifiableSet());
+//
+//        for (var capability : capabilities) {
+//            registerConduitCapability(event, capability);
+//        }
     }
 
     private static <T> void registerConduitCapability(RegisterCapabilitiesEvent event, BlockCapability<T, Direction> capability) {

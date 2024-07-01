@@ -12,7 +12,7 @@ import java.util.Collection;
 /**
  * Wrap the graph for public API consumption.
  */
-public record WrappedConduitNetwork<TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>>(Graph<InternalGraphContext<TContext>> graph)
+public record WrappedConduitNetwork<TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>>(Graph<ConduitGraphContext> graph)
     implements ConduitNetwork<TContext, TData> {
 
     @Override
@@ -26,9 +26,10 @@ public record WrappedConduitNetwork<TContext extends ConduitNetworkContext<TCont
     @Nullable
     @Override
     public TContext getContext() {
-        InternalGraphContext<TContext> wrappedContext = graph.getContextData();
+        ConduitGraphContext wrappedContext = graph.getContextData();
         if (wrappedContext != null) {
-            return wrappedContext.context();
+            //noinspection unchecked
+            return (TContext)wrappedContext.context();
         }
 
         return null;

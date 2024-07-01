@@ -1,14 +1,11 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNode;
-import net.minecraft.core.Direction;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.Nullable;
 
 public record EnergyConduitStorage(
-    EnergyConduitOptions options,
+    int transferRate,
     ConduitNode<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> node
 ) implements IEnergyStorage {
 
@@ -25,7 +22,7 @@ public record EnergyConduitStorage(
 
         // Cap to transfer rate.
         // TODO: Do we cap the transfer rate at all, or should we receive as much as we can and only cap output?
-        toReceive = Math.min(options.transferLimit() - context.energyInsertedThisTick(), toReceive);
+        toReceive = Math.min(transferRate() - context.energyInsertedThisTick(), toReceive);
 
         int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), toReceive);
         if (!simulate) {
@@ -49,7 +46,7 @@ public record EnergyConduitStorage(
 
     @Override
     public int getMaxEnergyStored() {
-        return node.getParentGraph().getNodes().size() * options.transferLimit() / 2;
+        return node.getParentGraph().getNodes().size() * transferRate() / 2;
     }
 
     @Override

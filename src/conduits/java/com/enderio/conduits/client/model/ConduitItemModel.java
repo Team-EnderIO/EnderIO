@@ -1,5 +1,6 @@
 package com.enderio.conduits.client.model;
 
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.components.RepresentedConduitType;
 import com.enderio.conduits.common.init.ConduitComponents;
@@ -12,6 +13,7 @@ import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -26,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ConduitItemModel extends BakedModelWrapper<BakedModel> {
 
@@ -54,8 +57,12 @@ public class ConduitItemModel extends BakedModelWrapper<BakedModel> {
         private BakedModel createBakedModel(@Nullable RepresentedConduitType representedConduitType, BakedModel model, @Nullable ClientLevel level) {
             ResourceLocation conduitTexture = MissingTextureAtlasSprite.getLocation();
             if (representedConduitType != null) {
-                ResourceLocation conduitTypeKey = EnderIORegistries.CONDUIT_TYPES.getKey(representedConduitType.conduitType());
-                conduitTexture = ResourceLocation.fromNamespaceAndPath(conduitTypeKey.getNamespace(), "block/conduit/" + conduitTypeKey.getPath());
+                Optional<ResourceKey<ConduitType<?, ?, ?>>> key = representedConduitType.conduitType().unwrapKey();
+
+                if (key.isPresent()) {
+                    ResourceLocation location = key.get().location();
+                    conduitTexture = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "block/conduit/" + location.getPath());
+                }
             }
 
             // Get the replacement texture.

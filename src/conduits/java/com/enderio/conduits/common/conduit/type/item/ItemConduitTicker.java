@@ -3,7 +3,6 @@ package com.enderio.conduits.common.conduit.type.item;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNetworkContext;
-import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
@@ -17,14 +16,14 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.List;
 
-public class ItemConduitTicker extends CapabilityAwareConduitTicker<Void, ConduitNetworkContext.Dummy, ItemConduitData, IItemHandler> {
+public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitType, ConduitNetworkContext.Dummy, ItemConduitData, IItemHandler> {
 
     public static ItemConduitTicker INSTANCE = new ItemConduitTicker();
 
     @Override
     protected void tickCapabilityGraph(
         ServerLevel level,
-        ConduitType<Void, ConduitNetworkContext.Dummy, ItemConduitData> type,
+        ItemConduitType type,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
         ConduitNetwork<ConduitNetworkContext.Dummy, ItemConduitData> graph,

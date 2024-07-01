@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitNetworkContextSerializer;
 import net.minecraft.nbt.CompoundTag;

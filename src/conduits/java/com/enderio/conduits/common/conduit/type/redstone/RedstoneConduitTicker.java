@@ -21,7 +21,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-public class RedstoneConduitTicker implements IOAwareConduitTicker<Void, ConduitNetworkContext.Dummy, RedstoneConduitData> {
+public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneConduitType, ConduitNetworkContext.Dummy, RedstoneConduitData> {
 
     private final Map<ColorControl, Integer> activeColors = new EnumMap<>(ColorControl.class);
     @Override
@@ -34,7 +34,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<Void, Conduit
     @Override
     public void tickGraph(
         ServerLevel level,
-        ConduitType<Void, ConduitNetworkContext.Dummy, RedstoneConduitData> type,
+        RedstoneConduitType type,
         ConduitNetwork<ConduitNetworkContext.Dummy, RedstoneConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
@@ -55,7 +55,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<Void, Conduit
     @Override
     public void tickColoredGraph(
         ServerLevel level,
-        ConduitType<Void, ConduitNetworkContext.Dummy, RedstoneConduitData> type,
+        RedstoneConduitType type,
         List<Connection<RedstoneConduitData>> inserts,
         List<Connection<RedstoneConduitData>> extracts,
         ColorControl color,

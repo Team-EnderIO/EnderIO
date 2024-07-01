@@ -13,10 +13,7 @@ public class ConduitSubtypeInterpreter implements IIngredientSubtypeInterpreter<
     public String apply(ItemStack ingredient, UidContext context) {
         if (ingredient.has(ConduitComponents.REPRESENTED_CONDUIT_TYPE)) {
             RepresentedConduitType representedConduitType = ingredient.get(ConduitComponents.REPRESENTED_CONDUIT_TYPE);
-            ResourceLocation conduitTypeKey = EnderIORegistries.CONDUIT_TYPES.getKey(representedConduitType.conduitType());
-            if (conduitTypeKey != null) {
-                return conduitTypeKey.toString();
-            }
+            return representedConduitType.conduitType().getRegisteredName();
         }
 
         return IIngredientSubtypeInterpreter.NONE;

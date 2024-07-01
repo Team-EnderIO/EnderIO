@@ -8,18 +8,20 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ConduitSelectionButton extends AbstractButton {
-    private final ConduitType<?, ?, ?> type;
-    private final Supplier<ConduitType<?, ?, ?>> getter;
-    private final Consumer<ConduitType<?, ?, ?>> setter;
+    private final Holder<ConduitType<?, ?, ?>> type;
+    private final Supplier<Holder<ConduitType<?, ?, ?>>> getter;
+    private final Consumer<Holder<ConduitType<?, ?, ?>>> setter;
 
-    public ConduitSelectionButton(int pX, int pY, ConduitType<?, ?, ?> type, Supplier<ConduitType<?, ?, ?>> getter, Consumer<ConduitType<?, ?, ?>> setter) {
+    public ConduitSelectionButton(int pX, int pY, Holder<ConduitType<?, ?, ?>> type, Supplier<Holder<ConduitType<?, ?, ?>>> getter, Consumer<Holder<ConduitType<?, ?, ?>>> setter) {
         super(pX, pY, 21, 24, Component.empty());
         this.type = type;
         this.getter = getter;
@@ -48,7 +50,7 @@ public class ConduitSelectionButton extends AbstractButton {
         }
 
         ResourceLocation iconLocation = MissingTextureAtlasSprite.getLocation();
-        ResourceLocation conduitTypeKey = EnderIORegistries.CONDUIT_TYPES.getKey(type);
+        ResourceLocation conduitTypeKey = type.unwrapKey().map(ResourceKey::location).orElse(null);
         if (conduitTypeKey != null) {
             iconLocation = ResourceLocation.fromNamespaceAndPath(conduitTypeKey.getNamespace(), "conduit_icon/" + conduitTypeKey.getPath());
         }
@@ -63,7 +65,7 @@ public class ConduitSelectionButton extends AbstractButton {
     protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
     }
 
-    public ConduitType<?, ?, ?> getType() {
+    public Holder<ConduitType<?, ?, ?>> getType() {
         return type;
     }
 }
