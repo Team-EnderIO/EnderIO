@@ -49,8 +49,8 @@ public record ConduitGraphContext(ConduitNetworkContext<?> context) implements M
     }
 
     @Nullable
-    public static ConduitGraphContext createNetworkContext(Holder<Conduit<?, ?, ?>> conduitType, Graph<ConduitGraphContext> graph) {
-        ConduitNetworkContext<?> context = createNetworkContext(conduitType.value(), graph);
+    public static ConduitGraphContext createNetworkContext(Holder<Conduit<?, ?, ?>> conduit, Graph<ConduitGraphContext> graph) {
+        ConduitNetworkContext<?> context = createNetworkContext(conduit.value(), graph);
         return context == null ? null : new ConduitGraphContext(context);
     }
 

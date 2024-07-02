@@ -19,7 +19,7 @@ import java.util.List;
  */
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
 public class ConduitSorter {
-    private static final List<Holder<Conduit<?, ?, ?>>> SORTED_TYPES = new ArrayList<>();
+    private static final List<Holder<Conduit<?, ?, ?>>> SORTED_CONDUITS = new ArrayList<>();
 
     @SubscribeEvent
     public static void serverSortTypes(ServerStartedEvent event) {
@@ -34,7 +34,7 @@ public class ConduitSorter {
     }
 
     private static void sortTypes(Registry<Conduit<?, ?, ?>> registry) {
-        SORTED_TYPES.clear();
+        SORTED_CONDUITS.clear();
 
         // TODO...
         /*List<ResourceLocation> tieredTypes = new ArrayList<>();
@@ -64,10 +64,10 @@ public class ConduitSorter {
         }
 
         unadded.sort(Comparator.comparing(Holder::getRegisteredName));
-        SORTED_TYPES.addAll(unadded);
+        SORTED_CONDUITS.addAll(unadded);
     }
 
-    public static int getSortIndex(Holder<Conduit<?, ?, ?>> type) {
-        return SORTED_TYPES.indexOf(type);
+    public static int getSortIndex(Holder<Conduit<?, ?, ?>> conduit) {
+        return SORTED_CONDUITS.indexOf(conduit);
     }
 }

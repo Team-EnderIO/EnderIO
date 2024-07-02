@@ -36,6 +36,8 @@ public class Conduits {
     public static ResourceKey<Conduit<?, ?, ?>> ITEM = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("item"));
 
     public static void bootstrap(BootstrapContext<Conduit<?, ?, ?>> context) {
+        // TODO: Is there a way to generate conditions for these? i.e. "neoforge:conditions":[{"type":"neoforge:mod_loaded","modid":"ae2"}]
+
         // TODO: Need to decide on transfer rates. These are just here to get the types in.
         context.register(ENERGY,
             new EnergyConduit(EnderIO.loc("block/conduit/energy"), ConduitLang.ENERGY_CONDUIT, 1000));

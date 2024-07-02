@@ -54,27 +54,27 @@ public class OffsetHelper {
         return positions;
     });
 
-    public static Vector2i offsetConduit(int typeIndex, int maxTypes) {
-        if (typeIndex >= maxTypes) {
-            EnderIO.LOGGER.warn(ThrowableUtil.addStackTrace(new IndexOutOfBoundsException("higher index than existing types")));
+    public static Vector2i offsetConduit(int conduitIndex, int maxConduits) {
+        if (conduitIndex >= maxConduits) {
+            EnderIO.LOGGER.warn(ThrowableUtil.addStackTrace(new IndexOutOfBoundsException("higher index than existing conduits")));
             return Vector2i.ZERO;
         }
 
-        if (typeIndex < 0) {
+        if (conduitIndex < 0) {
             EnderIO.LOGGER.warn(ThrowableUtil.addStackTrace(new IndexOutOfBoundsException("negative index")));
             return Vector2i.ZERO;
         }
 
-        if (maxTypes == 1) {
+        if (maxConduits == 1) {
             return Vector2i.ZERO;
         }
 
-        if (maxTypes == 2) {
-            return typeIndex == 0 ? new Vector2i(0, -1) : new Vector2i(0, 1);
+        if (maxConduits == 2) {
+            return conduitIndex == 0 ? new Vector2i(0, -1) : new Vector2i(0, 1);
         }
 
-        if (maxTypes == 3) {
-            switch (typeIndex) {
+        if (maxConduits == 3) {
+            switch (conduitIndex) {
                 case 0 -> {
                     return new Vector2i(-1, -1);
                 }
@@ -88,8 +88,8 @@ public class OffsetHelper {
             }
         }
 
-        if (maxTypes < 9) {
-            Vector2i vector2i = positions.get(typeIndex + 1);
+        if (maxConduits < 9) {
+            Vector2i vector2i = positions.get(conduitIndex + 1);
             if (vector2i != null) {
                 return vector2i;
             }
@@ -109,7 +109,7 @@ public class OffsetHelper {
 
     public static Direction.Axis findMainAxis(ConduitBundle bundle) {
         List<Direction> connectedDirs = new ArrayList<>();
-        for (Direction dir: Direction.values()) {
+        for (Direction dir : Direction.values()) {
             if (!bundle.getConnectedConduits(dir).isEmpty()) {
                 connectedDirs.add(dir);
             }
