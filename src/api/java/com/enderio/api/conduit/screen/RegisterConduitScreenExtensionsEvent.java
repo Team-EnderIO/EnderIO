@@ -1,7 +1,7 @@
 package com.enderio.api.conduit.screen;
 
-import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.Conduit;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitType;
 import net.neoforged.bus.api.Event;
 import net.neoforged.fml.event.IModBusEvent;

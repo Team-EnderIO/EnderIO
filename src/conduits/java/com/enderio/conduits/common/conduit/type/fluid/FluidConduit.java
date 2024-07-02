@@ -1,9 +1,9 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
-import com.enderio.api.conduit.ConduitNetwork;
-import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.ConduitMenuData;
+import com.enderio.api.conduit.ConduitNetwork;
+import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;

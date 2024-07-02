@@ -1,9 +1,9 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.Conduit;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitMenuData;
+import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.RedstoneControl;

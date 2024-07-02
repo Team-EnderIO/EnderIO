@@ -1,10 +1,10 @@
 package com.enderio.conduits.common.menu;
 
 import com.enderio.api.conduit.Conduit;
-import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
-import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.api.conduit.SlotType;
+import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlock;
+import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.core.common.menu.SyncedMenu;
 import net.minecraft.core.Direction;

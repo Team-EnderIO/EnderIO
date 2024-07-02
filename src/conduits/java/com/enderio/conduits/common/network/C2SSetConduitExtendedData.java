@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.network;
 
-import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.Conduit;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.core.EnderCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

@@ -1,8 +1,8 @@
 package com.enderio.conduits.common.menu;
 
+import com.enderio.api.conduit.SlotType;
 import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.SlotData;
-import com.enderio.api.conduit.SlotType;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

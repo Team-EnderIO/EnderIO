@@ -1,18 +1,18 @@
 package com.enderio.conduits.client.model;
 
-import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.Conduit;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.model.ConduitCoreModelModifier;
+import com.enderio.api.misc.RedstoneControl;
+import com.enderio.base.client.paint.model.PaintingQuadTransformer;
 import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
+import com.enderio.conduits.common.Area;
+import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
+import com.enderio.conduits.common.conduit.OffsetHelper;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
-import com.enderio.api.misc.RedstoneControl;
-import com.enderio.base.client.paint.model.PaintingQuadTransformer;
-import com.enderio.conduits.common.Area;
-import com.enderio.conduits.common.conduit.ConduitBundle;
-import com.enderio.conduits.common.conduit.OffsetHelper;
 import com.enderio.core.data.model.ModelHelper;
 import com.mojang.math.Axis;
 import com.mojang.math.Transformation;
@@ -48,17 +48,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.enderio.conduits.client.ConduitClientSetup.BOX;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_CONNECTION;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_CONNECTION_BOX;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_CONNECTOR;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_CORE;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_FACADE;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_IO_IN;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_IO_IN_OUT;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_IO_OUT;
-import static com.enderio.conduits.client.ConduitClientSetup.CONDUIT_IO_REDSTONE;
-import static com.enderio.conduits.client.ConduitClientSetup.modelOf;
+import static com.enderio.conduits.client.ConduitClientSetup.*;
 
 public class ConduitBlockModel implements IDynamicBakedModel {
 

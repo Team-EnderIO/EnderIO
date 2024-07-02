@@ -1,10 +1,10 @@
 package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNetworkContext;
-import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.ColorControl;

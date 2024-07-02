@@ -1,9 +1,9 @@
 package com.enderio.conduits.common.conduit.type.redstone;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
+import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitNode;
-import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.init.ConduitBlocks;

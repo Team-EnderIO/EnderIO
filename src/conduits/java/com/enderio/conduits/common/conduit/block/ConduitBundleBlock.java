@@ -1,19 +1,19 @@
 package com.enderio.conduits.common.conduit.block;
 
 import com.enderio.api.conduit.Conduit;
+import com.enderio.api.integration.IntegrationManager;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
+import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
+import com.enderio.conduits.common.conduit.ConduitSavedData;
+import com.enderio.conduits.common.conduit.RightClickAction;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
-import com.enderio.api.integration.IntegrationManager;
-import com.enderio.base.common.tag.EIOTags;
-import com.enderio.conduits.common.conduit.ConduitBundle;
-import com.enderio.conduits.common.conduit.RightClickAction;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
-import com.enderio.conduits.common.conduit.ConduitSavedData;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.Conduits;
 import com.enderio.conduits.common.redstone.RedstoneInsertFilter;

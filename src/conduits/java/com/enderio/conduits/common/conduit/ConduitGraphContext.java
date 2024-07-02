@@ -1,8 +1,8 @@
 package com.enderio.conduits.common.conduit;
 
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitNetworkContextSerializer;
-import com.enderio.api.conduit.Conduit;
 import com.enderio.api.registry.EnderIORegistries;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;

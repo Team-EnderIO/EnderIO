@@ -1,24 +1,22 @@
 package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitNetworkContextSerializer;
-import com.enderio.api.conduit.Conduit;
-import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.registry.EnderIORegistries;
-import com.enderio.conduits.common.conduit.type.energy.EnergyConduitNetworkContext;
 import com.enderio.conduits.common.conduit.type.energy.EnergyConduit;
-import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
+import com.enderio.conduits.common.conduit.type.energy.EnergyConduitNetworkContext;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduit;
-import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
+import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
 import com.enderio.conduits.common.conduit.type.item.ItemConduit;
-import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduit;
+import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 

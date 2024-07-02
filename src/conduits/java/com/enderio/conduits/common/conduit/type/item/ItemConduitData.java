@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit.type.item;
 
-import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitData;
+import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.conduits.common.init.Conduits;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
