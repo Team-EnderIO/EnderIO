@@ -37,6 +37,7 @@ public class EnderBlockEntity extends BlockEntity {
 
     public static final String DATA = "Data";
     public static final String INDEX = "Index";
+    private boolean changed = true;
     private final List<NetworkDataSlot<?>> dataSlots = new ArrayList<>();
 
     private final List<Runnable> afterDataSync = new ArrayList<>();
@@ -56,6 +57,7 @@ public class EnderBlockEntity extends BlockEntity {
         } else {
             blockEntity.serverTick();
         }
+        blockEntity.endTick();
     }
 
     /**
@@ -74,6 +76,24 @@ public class EnderBlockEntity extends BlockEntity {
      */
     public void clientTick() {
 
+    }
+
+    /**
+     * Perform tick on both client and server, on the end.
+     */
+    public void endTick() {
+        if (this.level != null) {
+            return;
+        }
+        if (changed) {
+            changed = false;
+            setChanged(level, getBlockPos(), getBlockState());
+        }
+    }
+
+    @Override
+    public void setChanged() {
+        this.changed = true;
     }
 
     // endregion
