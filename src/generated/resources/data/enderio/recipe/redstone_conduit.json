@@ -16,7 +16,7 @@
   ],
   "result": {
     "components": {
-      "enderio:represented_conduit_type": "enderio:redstone"
+      "enderio:conduit": "enderio:redstone"
     },
     "count": 8,
     "id": "enderio:conduit"

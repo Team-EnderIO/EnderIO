@@ -16,7 +16,7 @@
   ],
   "result": {
     "components": {
-      "enderio:represented_conduit_type": "enderio:energy"
+      "enderio:conduit": "enderio:energy"
     },
     "count": 8,
     "id": "enderio:conduit"
