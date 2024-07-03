@@ -233,6 +233,7 @@ public class ConduitRecipes extends RecipeProvider {
             .save(recipeOutput);
 
         // TODO: When re-enabled, these need to move to their own recipe provider.
+        // TODO: Blocked by NeoForge#1216
 //        if (Integrations.AE2_INTEGRATION.isPresent()) {
 //            var ae2RecipeOutput = recipeOutput.withConditions(new ModLoadedCondition("ae2"));
 //
