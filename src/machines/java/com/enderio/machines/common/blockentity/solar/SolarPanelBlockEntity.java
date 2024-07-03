@@ -156,7 +156,7 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
     private boolean hasLiquidSunshine() {
         for (Direction direction : Direction.values()) {
             BlockState state = this.level.getBlockState(this.getBlockPos().relative(direction));
-            if (state.getFluidState().is(EIOTags.Fluids.SOLAR)) {
+            if (state.getFluidState().is(EIOTags.Fluids.SOLAR_PANNEL_LIGHT)) {
                 return true;
             }
         }

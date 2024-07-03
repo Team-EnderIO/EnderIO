@@ -53,7 +53,7 @@ public class EIOFluids {
 
     public static final RegiliteFluid<FluidType> LIQUID_SUNSHINE =
         fluid("liquid_sunshine", "Liquid Sunshine", FluidType.Properties.create().density(200).viscosity(400))
-            .addFluidTags(EIOTags.Fluids.SOLAR);
+            .addFluidTags(EIOTags.Fluids.SOLAR_PANNEL_LIGHT);
 
     public static final RegiliteFluid<FluidType> CLOUD_SEED =
         fluid("cloud_seed", "Cloud Seed", FluidType.Properties.create().density(500).viscosity(800));
