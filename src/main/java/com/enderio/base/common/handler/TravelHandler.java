@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -71,6 +72,12 @@ public class TravelHandler {
                     player.teleportTo(eventPos.get().x(), eventPos.get().y(), eventPos.get().z());
                     serverPlayer.connection.resetPosition();
                     player.fallDistance = 0;
+
+                    if (player.isInWall()) {
+                        // without this line the player takes 1 tick of damage before their pose changes
+                        player.setPose(Pose.SWIMMING);
+                    }
+
                     player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                 } else {
                     player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);

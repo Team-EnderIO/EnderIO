@@ -18,15 +18,17 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FastColor;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Math;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.Optional;
 
@@ -35,7 +37,8 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
     public static final RenderType VERY_BOLD_LINES = OutlineRenderType.createLines("very_bold_lines", 5);
 
     @Override
-    public void render(AnchorTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack, double distanceSquared, boolean active) {
+    public void render(AnchorTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack, double distanceSquared, boolean active,
+        float partialTick) {
         if (!travelData.isVisible()) {
             return;
         }
@@ -80,8 +83,12 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             FastColor.ARGB32.blue(color) / 255F, 1);
 
         LocalPlayer player = Minecraft.getInstance().player;
-        Vec3 position = player.position();
-        float f1 = (float) (Mth.atan2(position.z - travelData.pos().getZ() - 0.5D, position.x - travelData.pos().getX() - 0.5D) + Math.PI/2D);
+
+        Vec2 playerLookRotation = player.getRotationVector();
+        Vec3 playerEyePosition = player.getEyePosition(partialTick);
+        Vec3 playerOffset = travelData.pos().getCenter().vectorTo(playerEyePosition);
+        Vec3 playerOffsetNormalized = playerOffset.normalize();
+
         // Render Text
         if (!travelData.name().trim().isEmpty()) {
             // Scale for rendering
@@ -95,9 +102,12 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             }
             float scale = (float) doubleScale;
 
+            Quaternionf textRotation = Axis.YN.rotationDegrees(playerLookRotation.y).mul(Axis.XP.rotationDegrees(playerLookRotation.x));
+            Vec3 offset = playerOffsetNormalized.scale(1.25);
+
             poseStack.pushPose();
-            poseStack.translate(0.5, 1.05 + (doubleScale * Minecraft.getInstance().font.lineHeight), 0.5);
-            poseStack.mulPose(Axis.YN.rotation(f1));
+            poseStack.translate(offset.x() + 0.5, offset.y() + 1.05 + (doubleScale * Minecraft.getInstance().font.lineHeight), offset.z() + 0.5);
+            poseStack.mulPose(textRotation);
             poseStack.scale(-scale, -scale, scale);
 
             Matrix4f matrix4f = poseStack.last().pose();
@@ -121,11 +131,16 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 doubleScale *= 1.3;
             }
             float scale = (float) doubleScale;
+
+            Vector3f direction = playerOffsetNormalized.toVector3f();
+            Quaternionf iconRotation = new Quaternionf().lookAlong(direction.x(), direction.y(), direction.z(), 0F, 1F, 0F);
+            Vec3 offset = playerOffsetNormalized.scale(0.9);
+
             poseStack.pushPose();
-            poseStack.translate(0.5, 0.5, 0.5);
-            poseStack.mulPose(Axis.YN.rotation(f1));
-            poseStack.translate(0, 0, -1);
+            poseStack.translate(offset.x() + 0.5, offset.y() + 0.5, offset.z() + 0.5);
+            poseStack.mulPose(iconRotation.invert());
             poseStack.scale(-scale, scale, -scale);
+
             ItemStack stack = new ItemStack(travelData.icon());
             BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
             minecraft
