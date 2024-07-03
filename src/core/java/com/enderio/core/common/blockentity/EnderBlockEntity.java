@@ -63,26 +63,27 @@ public class EnderBlockEntity extends BlockEntity {
     /**
      * Perform server-side ticking
      */
-    public void serverTick() {
+    @UseOnly(LogicalSide.SERVER)
+    protected void serverTick() {
         // Perform syncing.
-        if (level != null && !level.isClientSide) {
+        if (level != null) {
             sync();
-            level.blockEntityChanged(worldPosition);
         }
     }
 
     /**
      * Perform client side ticking.
      */
-    public void clientTick() {
+    @UseOnly(LogicalSide.CLIENT)
+    protected void clientTick() {
 
     }
 
     /**
      * Perform tick on both client and server, on the end.
      */
-    public void endTick() {
-        if (this.level != null) {
+    protected void endTick() {
+        if (this.level == null) {
             return;
         }
         if (changed) {
@@ -201,6 +202,7 @@ public class EnderBlockEntity extends BlockEntity {
     public void sync() {
         var syncData = createBufferSlotUpdate();
         if (syncData != null) {
+            setChanged();
             CoreNetwork.sendToTracking(level.getChunkAt(getBlockPos()), new S2CDataSlotUpdate(getBlockPos(), syncData));
         }
     }
