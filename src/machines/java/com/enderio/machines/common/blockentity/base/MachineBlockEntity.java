@@ -331,6 +331,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return true;
     }
 
+    public boolean isRedstoneBlocked() {
+        return redstoneBlocked;
+    }
+
     public RedstoneControl getRedstoneControl() {
         return redstoneControl;
     }
