@@ -20,22 +20,22 @@ public class ConduitIngredient implements ICustomIngredient {
     public static final MapCodec<ConduitIngredient> CODEC = RecordCodecBuilder.mapCodec(
         builder -> builder
             .group(
-                Conduit.CODEC.fieldOf("conduit_type").forGetter(ConduitIngredient::conduitType)
+                Conduit.CODEC.fieldOf("conduit_type").forGetter(ConduitIngredient::conduit)
             ).apply(builder, ConduitIngredient::new)
     );
 
-    private final Holder<Conduit<?, ?, ?>> conduitType;
+    private final Holder<Conduit<?, ?, ?>> conduit;
 
-    private ConduitIngredient(Holder<Conduit<?, ?, ?>> conduitType) {
-        this.conduitType = conduitType;
+    private ConduitIngredient(Holder<Conduit<?, ?, ?>> conduit) {
+        this.conduit = conduit;
     }
 
-    public static Ingredient of(Holder<Conduit<?, ?, ?>> conduitType) {
-        return new ConduitIngredient(conduitType).toVanilla();
+    public static Ingredient of(Holder<Conduit<?, ?, ?>> conduit) {
+        return new ConduitIngredient(conduit).toVanilla();
     }
 
-    public Holder<Conduit<?, ?, ?>> conduitType() {
-        return conduitType;
+    public Holder<Conduit<?, ?, ?>> conduit() {
+        return conduit;
     }
 
     @Override
@@ -49,12 +49,12 @@ public class ConduitIngredient implements ICustomIngredient {
         }
 
         Holder<Conduit<?, ?, ?>> conduit = stack.get(ConduitComponents.CONDUIT);
-        return conduitType.value().equals(conduit);
+        return this.conduit.value().equals(conduit);
     }
 
     @Override
     public Stream<ItemStack> getItems() {
-        return Stream.of(ConduitBlockItem.getStackFor(conduitType, 1));
+        return Stream.of(ConduitBlockItem.getStackFor(conduit, 1));
     }
 
     @Override

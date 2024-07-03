@@ -71,8 +71,8 @@ public record ChemicalConduit(
     }
 
     @Override
-    public boolean canBeInSameBundle(Holder<Conduit<?, ?, ?>> conduitType) {
-        if (conduitType.value().type() != type()) {
+    public boolean canBeInSameBundle(Holder<Conduit<?, ?, ?>> otherConduit) {
+        if (otherConduit.value().type() != type()) {
             return true;
         }
 
@@ -80,12 +80,12 @@ public record ChemicalConduit(
     }
 
     @Override
-    public boolean canBeReplacedBy(Holder<Conduit<?, ?, ?>> conduitType) {
-        if (conduitType.value().type() != type()) {
+    public boolean canBeReplacedBy(Holder<Conduit<?, ?, ?>> otherConduit) {
+        if (otherConduit.value().type() != type()) {
             return false;
         }
 
-        if (conduitType.value() instanceof ChemicalConduit otherChemicalConduit) {
+        if (otherConduit.value() instanceof ChemicalConduit otherChemicalConduit) {
             // Replacement must support multi fluid if the current does.
             if (isMultiChemical() && !otherChemicalConduit.isMultiChemical()) {
                 return false;

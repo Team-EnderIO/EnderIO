@@ -60,9 +60,9 @@ public record ConduitGraphContext(ConduitNetworkContext<?> context) implements M
         return conduit.createNetworkContext(new WrappedConduitNetwork<>(graph));
     }
 
-    public static ConduitGraphContext loadNetworkContext(Holder<Conduit<?, ?, ?>> conduitType, Graph<ConduitGraphContext> graph,
+    public static ConduitGraphContext loadNetworkContext(Holder<Conduit<?, ?, ?>> conduit, Graph<ConduitGraphContext> graph,
         CompoundTag contextTag) {
-        ConduitNetworkContext<?> context = loadNetworkContext(conduitType.value(), contextTag);
+        ConduitNetworkContext<?> context = loadNetworkContext(conduit.value(), contextTag);
         return new ConduitGraphContext(context);
     }
 

@@ -33,18 +33,18 @@ public class ConduitMenu extends SyncedMenu<ConduitBundleBlockEntity> {
     private final List<ConduitSlot> conduitSlots = new ArrayList<>();
 
     private Direction direction;
-    private Holder<Conduit<?, ?, ?>> type;
+    private Holder<Conduit<?, ?, ?>> conduit;
 
-    public ConduitMenu(@Nullable ConduitBundleBlockEntity blockEntity, Inventory inventory, int pContainerId, Direction direction, Holder<Conduit<?, ?, ?>> type) {
+    public ConduitMenu(@Nullable ConduitBundleBlockEntity blockEntity, Inventory inventory, int pContainerId, Direction direction, Holder<Conduit<?, ?, ?>> conduit) {
         super(blockEntity, inventory, ConduitMenus.CONDUIT_MENU.get(), pContainerId);
         this.direction = direction;
-        this.type = type;
+        this.conduit = conduit;
         if (blockEntity != null) {
             IItemHandler conduitItemHandler = blockEntity.getConduitItemHandler();
             for (Direction forDirection : Direction.values()) {
                 for (int i = 0; i < ConduitBundle.MAX_CONDUITS; i++) {
                     for (SlotType slotType: SlotType.values()) {
-                        ConduitSlot slot = new ConduitSlot(blockEntity.getBundle(),conduitItemHandler, () -> this.direction, forDirection, () -> blockEntity.getBundle().getConduits().indexOf(this.type), i, slotType);
+                        ConduitSlot slot = new ConduitSlot(blockEntity.getBundle(),conduitItemHandler, () -> this.direction, forDirection, () -> blockEntity.getBundle().getConduits().indexOf(this.conduit), i, slotType);
                         conduitSlots.add(slot);
                         slot.updateVisibilityPosition();
                         addSlot(slot);
@@ -90,8 +90,8 @@ public class ConduitMenu extends SyncedMenu<ConduitBundleBlockEntity> {
     }
 
     private boolean clientValid() {
-        return getBlockEntity().getBundle().getConduits().contains(type)
-            && ConduitBundleBlock.canBeOrIsValidConnection(getBlockEntity(), type, direction);
+        return getBlockEntity().getBundle().getConduits().contains(conduit)
+            && ConduitBundleBlock.canBeOrIsValidConnection(getBlockEntity(), conduit, direction);
     }
 
     public static ConduitMenu factory(int pContainerId, Inventory inventory, RegistryFriendlyByteBuf buf) {
@@ -106,12 +106,12 @@ public class ConduitMenu extends SyncedMenu<ConduitBundleBlockEntity> {
         return new ConduitMenu(null, inventory, pContainerId, direction, type);
     }
 
-    public Holder<Conduit<?, ?, ?>> getConduitType() {
-        return type;
+    public Holder<Conduit<?, ?, ?>> getConduit() {
+        return conduit;
     }
 
-    public void setConduitType(Holder<Conduit<?, ?, ?>> type) {
-        this.type = type;
+    public void setConduit(Holder<Conduit<?, ?, ?>> conduit) {
+        this.conduit = conduit;
     }
 
     public Direction getDirection() {

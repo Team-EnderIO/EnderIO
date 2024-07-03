@@ -308,8 +308,8 @@ public class ConduitSavedData extends SavedData {
 
         for (var entry : networks.entrySet()) {
             for (var graph : entry.getValue()) {
-                var conduitType = entry.getKey();
-                var conduitTicker = conduitType.value().getTicker();
+                var conduit = entry.getKey();
+                var conduitTicker = conduit.value().getTicker();
                 tickConduitGraph(serverLevel, entry.getKey(), conduitTicker, graph);
             }
         }
@@ -333,13 +333,13 @@ public class ConduitSavedData extends SavedData {
         }
 
         var registry = serverLevel.holderLookup(EnderIORegistries.Keys.CONDUIT);
-        var redstoneConduitType = registry.get(Conduits.REDSTONE);
+        var redstoneConduit = registry.get(Conduits.REDSTONE);
 
-        if (redstoneConduitType.isEmpty() || !blockEntity.getBundle().getConduits().contains(redstoneConduitType.get())) {
+        if (redstoneConduit.isEmpty() || !blockEntity.getBundle().getConduits().contains(redstoneConduit.get())) {
             return false;
         }
 
-        var node = blockEntity.getBundle().getNodeFor(redstoneConduitType.get());
+        var node = blockEntity.getBundle().getNodeFor(redstoneConduit.get());
         RedstoneConduitData data = (RedstoneConduitData)node.getConduitData();
         return data.isActive(color);
     }

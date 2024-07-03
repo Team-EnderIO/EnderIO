@@ -56,7 +56,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
 
-        ConduitMenuData data = menu.getConduitType().value().getMenuData();
+        ConduitMenuData data = menu.getConduit().value().getMenuData();
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(getGuiLeft(), getGuiTop(), 0);
         if (data.showBarSeparator()) {
@@ -74,7 +74,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
 
-        ConduitMenuData data = menu.getConduitType().value().getMenuData();
+        ConduitMenuData data = menu.getConduit().value().getMenuData();
 
         guiGraphics.drawString(this.font, ConduitLang.CONDUIT_INSERT,  22 + 16,  7 + 4, 4210752, false);
 
@@ -88,7 +88,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             recalculateTypedButtons = false;
             typedButtons.forEach(this::removeWidget);
             typedButtons.clear();
-            ConduitMenuData data = menu.getConduitType().value().getMenuData();
+            ConduitMenuData data = menu.getConduit().value().getMenuData();
             Vector2i pos = new Vector2i(22, 7).add(getGuiLeft(), getGuiTop());
 
             addTypedButton(
@@ -132,11 +132,11 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
                         EIOLang.REDSTONE_CHANNEL));
             }
 
-            ConduitScreenExtension<?> conduitScreenExtension = ConduitScreenExtensions.get(menu.getConduitType().value().type());
+            ConduitScreenExtension<?> conduitScreenExtension = ConduitScreenExtensions.get(menu.getConduit().value().type());
 
             if (conduitScreenExtension != null) {
                 conduitScreenExtension
-                    .createWidgets(this, () -> getBundle().getNodeFor(menu.getConduitType()).getConduitData().cast(),
+                    .createWidgets(this, () -> getBundle().getNodeFor(menu.getConduit()).getConduitData().cast(),
                         this::sendExtendedConduitUpdate, menu::getDirection,
                         new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
                     .forEach(this::addTypedButton);
@@ -155,8 +155,8 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             typeSelectionButtons.clear();
             for (int i = 0; i < validConnections.size(); i++) {
                 Holder<Conduit<?, ?, ?>> connection = validConnections.get(i);
-                ConduitSelectionButton button = new ConduitSelectionButton(getGuiLeft() + 206, getGuiTop() + 4 + 24*i, connection, menu::getConduitType, type -> {
-                    menu.setConduitType(type);
+                ConduitSelectionButton button = new ConduitSelectionButton(getGuiLeft() + 206, getGuiTop() + 4 + 24*i, connection, menu::getConduit, conduit -> {
+                    menu.setConduit(conduit);
                     recalculateTypedButtons = true;
                 });
 
@@ -167,13 +167,13 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     }
 
     private <T extends ConduitData<T>> void sendExtendedConduitUpdate(Function<T, T> map) {
-        Holder<Conduit<?, ?, ?>> conduitType = menu.getConduitType();
-        T currentData = getBundle().getNodeFor(conduitType).getConduitData().cast();
+        Holder<Conduit<?, ?, ?>> conduit = menu.getConduit();
+        T currentData = getBundle().getNodeFor(conduit).getConduitData().cast();
         var menu = getMenu();
 
         PacketDistributor.sendToServer(new C2SSetConduitExtendedData(
             menu.getBlockEntity().getBlockPos(),
-            menu.getConduitType(),
+            menu.getConduit(),
             map.apply(currentData)));
     }
 
@@ -187,7 +187,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             PacketDistributor.sendToServer(new C2SSetConduitConnectionState(
                 getMenu().getBlockEntity().getBlockPos(),
                 getMenu().getDirection(),
-                getMenu().getConduitType(),
+                getMenu().getConduit(),
                 map.apply(dyn)
             ));
         }
@@ -197,7 +197,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     }
 
     private ConnectionState getConnectionState() {
-        return getConnectionState(menu.getConduitType());
+        return getConnectionState(menu.getConduit());
     }
 
     private ConnectionState getConnectionState(Holder<Conduit<?, ?, ?>> type) {

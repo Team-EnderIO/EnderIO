@@ -21,7 +21,7 @@ public class ConduitServerPayloadHandler {
             var level = context.player().level();
             BlockEntity be = level.getBlockEntity(packet.pos());
             if (be instanceof ConduitBundleBlockEntity conduitBundleBlockEntity) {
-                conduitBundleBlockEntity.handleConnectionStateUpdate(packet.direction(), packet.conduitType(), packet.connectionState());
+                conduitBundleBlockEntity.handleConnectionStateUpdate(packet.direction(), packet.conduit(), packet.connectionState());
             }
         });
     }
@@ -31,7 +31,7 @@ public class ConduitServerPayloadHandler {
             var level = context.player().level();
             BlockEntity be = level.getBlockEntity(packet.pos());
             if (be instanceof ConduitBundleBlockEntity conduitBundleBlockEntity) {
-                conduitBundleBlockEntity.handleExtendedDataUpdate(packet.conduitType(), packet.extendedConduitData());
+                conduitBundleBlockEntity.handleExtendedDataUpdate(packet.conduit(), packet.extendedConduitData());
             }
         });
     }

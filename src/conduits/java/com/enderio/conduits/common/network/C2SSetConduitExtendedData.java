@@ -11,7 +11,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record C2SSetConduitExtendedData<T extends ConduitData<T>>(
     BlockPos pos,
-    Holder<Conduit<?, ?, ?>> conduitType,
+    Holder<Conduit<?, ?, ?>> conduit,
     T extendedConduitData
 ) implements CustomPacketPayload {
 
@@ -21,7 +21,7 @@ public record C2SSetConduitExtendedData<T extends ConduitData<T>>(
         BlockPos.STREAM_CODEC,
         C2SSetConduitExtendedData::pos,
         Conduit.STREAM_CODEC,
-        C2SSetConduitExtendedData::conduitType,
+        C2SSetConduitExtendedData::conduit,
         ConduitData.STREAM_CODEC,
         C2SSetConduitExtendedData::extendedConduitData,
         (pos, conduitType, extendedConduitData) -> new C2SSetConduitExtendedData<>(pos, conduitType, extendedConduitData.cast())

@@ -159,9 +159,9 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
             sync();
             bundle.onLoad(level, getBlockPos());
             for (var entry: lazyNodes.entrySet()) {
-                Holder<Conduit<?, ?, ?>> conduitType = entry.getKey();
+                Holder<Conduit<?, ?, ?>> conduit = entry.getKey();
                 ConduitGraphObject<?, ?> node = entry.getValue();
-                loadNode(serverLevel, conduitType, node);
+                loadNode(serverLevel, conduit, node);
             }
         }
     }

@@ -13,7 +13,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 public record C2SSetConduitConnectionState(
     BlockPos pos,
     Direction direction,
-    Holder<Conduit<?, ?, ?>> conduitType,
+    Holder<Conduit<?, ?, ?>> conduit,
     DynamicConnectionState connectionState
 ) implements CustomPacketPayload {
 
@@ -25,7 +25,7 @@ public record C2SSetConduitConnectionState(
         Direction.STREAM_CODEC,
         C2SSetConduitConnectionState::direction,
         Conduit.STREAM_CODEC,
-        C2SSetConduitConnectionState::conduitType,
+        C2SSetConduitConnectionState::conduit,
         DynamicConnectionState.STREAM_CODEC,
         C2SSetConduitConnectionState::connectionState,
         C2SSetConduitConnectionState::new
