@@ -7,8 +7,10 @@ import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.common.integrations.ae2.AE2Integration;
 import com.enderio.conduits.common.integrations.mekanism.MekanismIntegration;
+import com.enderio.conduits.common.integrations.refinedstorage.RSIntegration;
 import com.enderio.conduits.common.tag.ConduitTags;
 import mekanism.api.MekanismAPI;
+import com.refinedmods.refinedstorage.RSItems;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -147,7 +149,6 @@ public class ConduitRecipes extends RecipeProvider {
             .build(pWriter, EnderIO.loc("ae_covered_dense_cable"));
 
         if (Integrations.MEKANISM_INTEGRATION.isPresent()) {
-
             ConditionalRecipe.builder()
                 .addCondition(new ModLoadedCondition(MekanismAPI.MEKANISM_MODID))
                 .addRecipe(ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MekanismIntegration.CHEMICAL_ITEM, 3)
@@ -219,6 +220,20 @@ public class ConduitRecipes extends RecipeProvider {
                     .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                     ::save)
                 .build(pWriter, EnderIO.loc("mek_advanced_thermodynamic_conductor"));
+        }
+
+        if (Integrations.RS_INTEGRATION.isPresent()) {
+            ConditionalRecipe.builder()
+                .addCondition(new ModLoadedCondition("refinedstorage"))
+                .addRecipe(ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, RSIntegration.NORMAL_ITEM, 3)
+                    .pattern("BBB")
+                    .pattern("III")
+                    .pattern("BBB")
+                    .define('B', EIOItems.CONDUIT_BINDER)
+                    .define('I', RSItems.CABLE.get())
+                    .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+                    ::save)
+                .build(pWriter, EnderIO.loc("rs_cable"));
         }
     }
 
