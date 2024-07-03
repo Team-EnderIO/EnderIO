@@ -74,7 +74,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TContext, TData>, TC
      * @return true if both types are compatible
      */
     default boolean canConnectTo(Holder<Conduit<?, ?, ?>> other) {
-        return this.equals(other);
+        return this.equals(other.value());
     }
 
     default boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
