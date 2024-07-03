@@ -70,6 +70,24 @@ public interface Conduit<TConduit extends Conduit<TConduit, TContext, TData>, TC
         return false;
     }
 
+    /**
+     * @return true if both types are compatible
+     */
+    default boolean canConnectTo(Holder<Conduit<?, ?, ?>> other) {
+        return this.equals(other);
+    }
+
+    default boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
+        return getTicker().canConnectTo(level, conduitPos, direction);
+    }
+
+    /**
+     * @return if this is not always able to determine connectivity to its neighbours at time of placement, but the tick later
+     */
+    default boolean hasConnectionDelay() {
+        return false;
+    }
+
     default boolean canApplyUpgrade(SlotType slotType, ConduitUpgrade conduitUpgrade) {
         return false;
     }

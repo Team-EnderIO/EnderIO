@@ -222,14 +222,14 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
         for (Direction direction : Direction.values()) {
             if (fromPos == null || !(level.getBlockEntity(fromPos) instanceof ConduitBundleBlockEntity)) {
                 for (Holder<Conduit<?, ?, ?>> conduit : bundle.getConduits()) {
-                    if (shouldActivate && conduit.value().getTicker().hasConnectionDelay()) {
+                    if (shouldActivate && conduit.value().hasConnectionDelay()) {
                         checkConnection = checkConnection.activate();
                         continue;
                     }
 
                     ConnectionState connectionState = bundle.getConnectionState(direction, conduit);
                     if (connectionState instanceof DynamicConnectionState dyn) {
-                        if (!conduit.value().getTicker().canConnectTo(level, pos, direction)) {
+                        if (!conduit.value().canConnectTo(level, pos, direction)) {
                             bundle.getNodeFor(conduit).clearState(direction);
                             dropConnectionItems(dyn);
                             bundle.setConnectionState(direction, conduit, StaticConnectionStates.DISCONNECTED);
@@ -316,7 +316,7 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
                 ConduitSavedData.addPotentialGraph(conduit, Objects.requireNonNull(thisNode.getGraph()), serverLevel);
             }
 
-            if (action instanceof RightClickAction.Upgrade upgrade && !upgrade.replacedConduit().value().getTicker().canConnectTo(upgrade.replacedConduit(), conduit)) {
+            if (action instanceof RightClickAction.Upgrade upgrade && !upgrade.replacedConduit().value().canConnectTo(conduit)) {
                 removeNeighborConnections(upgrade.replacedConduit());
             }
 
@@ -365,7 +365,7 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
             }
 
             return Optional.of(adjacentBundle.getNodeFor(conduit));
-        } else if (conduit.value().getTicker().canConnectTo(level, getBlockPos(), dir)) {
+        } else if (conduit.value().canConnectTo(level, getBlockPos(), dir)) {
             connectEnd(dir, conduit);
             onConnectionsUpdated(conduit);
         }
@@ -539,7 +539,7 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
 
     private boolean doTypesMatch(Holder<Conduit<?, ?, ?>> conduitToMatch) {
         for (Holder<Conduit<?, ?, ?>> conduit : bundle.getConduits()) {
-            if (conduit.value().getTicker().canConnectTo(conduit, conduitToMatch)) {
+            if (conduit.value().canConnectTo(conduitToMatch)) {
                 return true;
             }
         }

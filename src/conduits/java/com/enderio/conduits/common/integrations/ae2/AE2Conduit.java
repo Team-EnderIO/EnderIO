@@ -66,6 +66,16 @@ public record AE2Conduit(
     }
 
     @Override
+    public boolean hasConnectionDelay() {
+        return true;
+    }
+
+    @Override
+    public boolean canConnectTo(Holder<Conduit<?, ?, ?>> other) {
+        return other.value().type() == type();
+    }
+
+    @Override
     public void onCreated(AE2InWorldConduitNodeHost data, Level level, BlockPos pos, @Nullable Player player) {
         if (data.getMainNode() == null) {
             data.initMainNode();
@@ -181,16 +191,6 @@ public record AE2Conduit(
         @Override
         public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
             return GridHelper.getExposedNode(level, conduitPos.relative(direction), direction.getOpposite()) != null;
-        }
-
-        @Override
-        public boolean hasConnectionDelay() {
-            return true;
-        }
-
-        @Override
-        public boolean canConnectTo(Holder<Conduit<?, ?, ?>> thisType, Holder<Conduit<?, ?, ?>> other) {
-            return thisType.value() instanceof AE2Conduit && other.value() instanceof AE2Conduit;
         }
     }
 }

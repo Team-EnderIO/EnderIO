@@ -23,23 +23,8 @@ public interface ConduitTicker<TConduit extends Conduit<TConduit, TContext, TDat
         return 5;
     }
 
-    // TODO: I'd argue this goes into ConduitType, and then you can use getTicker() if you need additional context from it.
+    /**
+     * @return Whether the conduit can interact with the block in this direction
+     */
     boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction);
-
-    /**
-     *
-     * @return if this is not always able to determine connectivity to its neighbours at time of placement, but the tick later
-     */
-    // TODO: Also belongs in ConduitType imo.
-    default boolean hasConnectionDelay() {
-        return false;
-    }
-
-    /**
-     * @return true if both types are similar and share the same extended conduit data
-     */
-    // TODO: This should be in ConduitType too.
-    default boolean canConnectTo(Holder<Conduit<?, ?, ?>> thisType, Holder<Conduit<?, ?, ?>> other) {
-        return thisType.equals(other);
-    }
 }
