@@ -7,7 +7,6 @@ import com.enderio.api.conduit.ticker.ConduitTicker;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.filter.ResourceFilter;
-import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.capability.ExtractionSpeedUpgrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +14,8 @@ import net.minecraft.world.level.Level;
 
 public class FluidConduitType extends TieredConduit<FluidConduitData> {
 
-    public static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
+    public static final ConduitMenuData NORMAL_MENU_DATA = new ConduitMenuData.Simple(true, true, true, false, false, true);
+    public static final ConduitMenuData ADVANCED_MENU_DATA = new ConduitMenuData.Simple(true, true, true, true, true, true);
 
     private final boolean isMultiFluid;
     private final int transferRate;
@@ -36,7 +36,7 @@ public class FluidConduitType extends TieredConduit<FluidConduitData> {
 
     @Override
     public ConduitMenuData getMenuData() {
-        return MENU_DATA;
+        return isMultiFluid ? ADVANCED_MENU_DATA : NORMAL_MENU_DATA;
     }
 
     @Override

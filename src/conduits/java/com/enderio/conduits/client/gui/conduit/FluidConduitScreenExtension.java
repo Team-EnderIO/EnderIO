@@ -38,6 +38,9 @@ public final class FluidConduitScreenExtension implements ConduitScreenExtension
 
     @Override
     public List<AbstractWidget> createWidgets(Screen screen, Supplier<FluidConduitData> conduitDataSupplier, UpdateExtendedData<FluidConduitData> updateConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+        if (conduitDataSupplier.get().isMultiFluid) {
+            return List.of();
+        }
         return List.of(
             new FluidWidget(widgetsStart.add(0, 20),
                 () -> conduitDataSupplier.get().lockedFluid(),
