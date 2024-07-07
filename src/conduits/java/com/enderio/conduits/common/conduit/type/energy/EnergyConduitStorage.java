@@ -9,6 +9,8 @@ public record EnergyConduitStorage(
     ConduitNode node
 ) implements IEnergyStorage {
 
+    private static final int ENERGY_BUFFER_SCALER = 4;
+
     @Override
     public int receiveEnergy(int toReceive, boolean simulate) {
         if (!canReceive()) {
@@ -47,11 +49,18 @@ public record EnergyConduitStorage(
 
     @Override
     public int getMaxEnergyStored() {
-        // TODO: Handle int overflowing here...
-
         // Capacity is transfer rate + nodeCount * transferRate / 2 (expanded).
         // This ensures at least the transfer rate of the cable is available, but capacity doesn't grow outrageously.
-        return (1 + node.getParentGraph().getNodes().size()) * transferRate() / 4;
+        int nodeCount = node.getParentGraph().getNodes().size();
+
+        // The maximum number of nodes before the network capacity is INT_MAX.
+        int maxNodesBeforeLimit = Integer.MAX_VALUE / (transferRate() / ENERGY_BUFFER_SCALER) - ENERGY_BUFFER_SCALER;
+        if (nodeCount >= maxNodesBeforeLimit) {
+            return Integer.MAX_VALUE;
+        }
+
+        // Always full transfer rate plus the extra buffer.
+        return transferRate() + nodeCount * (transferRate() / ENERGY_BUFFER_SCALER);
     }
 
     @Override
