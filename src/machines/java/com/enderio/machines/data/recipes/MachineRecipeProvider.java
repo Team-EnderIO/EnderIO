@@ -374,7 +374,8 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.EXPERIENCE_ROD).build()))
             .save(recipeOutput);
 
-        ShapedRecipeBuilder
+        // TODO: Enable once the block detector has a model.
+        /*ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.BLOCK_DETECTOR.get())
             .define('D', EIOBlocks.DARK_STEEL_PRESSURE_PLATE)
             .define('N', EIOItems.DARK_STEEL_NUGGET)
@@ -384,6 +385,6 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("NPN")
             .pattern("NRN")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Items.PISTON).build()))
-            .save(recipeOutput);
+            .save(recipeOutput);*/
     }
 }
