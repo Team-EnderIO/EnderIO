@@ -38,7 +38,10 @@ public class XPObeliskMenu extends MachineMenu<XPObeliskBlockEntity> {
     @Override
     public boolean clickMenuButton(Player player, int id) {
         XPObeliskBlockEntity blockEntity = getBlockEntity();
-        if (blockEntity == null) return false;
+        if (blockEntity == null) {
+            return false;
+        }
+
         switch (id) {
         case 0 -> blockEntity.addLevelToPlayer(1, player);
         case 1 -> blockEntity.addLevelToPlayer(-1, player);
@@ -46,6 +49,7 @@ public class XPObeliskMenu extends MachineMenu<XPObeliskBlockEntity> {
         case 3 -> blockEntity.addLevelToPlayer(-10, player);
         case 4 -> blockEntity.addAllLevelToPlayer(true, player);
         case 5 -> blockEntity.addAllLevelToPlayer(false, player);
+        default -> throw new IllegalStateException("Unexpected value: " + id);
         }
         return true;
     }

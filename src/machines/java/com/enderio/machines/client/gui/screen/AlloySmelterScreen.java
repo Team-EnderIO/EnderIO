@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import org.apache.commons.lang3.NotImplementedException;
 
 public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
 
@@ -63,6 +64,7 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
             case ALL -> pGuiGraphics.blit(BG_TEXTURE_AUTO, leftPos, topPos, 0, 0, imageWidth, imageHeight);
             case ALLOYS -> pGuiGraphics.blit(BG_TEXTURE_ALLOY, leftPos, topPos, 0, 0, imageWidth, imageHeight);
             case FURNACE -> pGuiGraphics.blit(BG_TEXTURE_FURNACE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+            default -> throw new NotImplementedException();
         }
     }
 }

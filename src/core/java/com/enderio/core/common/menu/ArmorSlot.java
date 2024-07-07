@@ -10,8 +10,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
-import static net.minecraft.world.inventory.InventoryMenu.*;
+import static net.minecraft.world.inventory.InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS;
+import static net.minecraft.world.inventory.InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE;
 import static net.minecraft.world.inventory.InventoryMenu.EMPTY_ARMOR_SLOT_HELMET;
+import static net.minecraft.world.inventory.InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS;
 
 public class ArmorSlot extends Slot {
 

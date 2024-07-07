@@ -63,7 +63,10 @@ public class NewProgressWidget extends AbstractWidget {
 
         float progress = progressSupplier.get();
 
-        int x, y, uWidth, vHeight;
+        int x;
+        int y;
+        int uWidth;
+        int vHeight;
         switch (flowDirection) {
         case BOTTOM_UP -> {
             int yOffset = (int) (this.height * (1.0f - progress));
