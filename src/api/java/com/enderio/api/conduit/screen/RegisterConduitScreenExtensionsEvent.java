@@ -10,17 +10,17 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RegisterConduitScreenExtensionsEvent extends Event implements IModBusEvent {
-    public interface ConduitScreenExtensionFactory<T extends ConduitData<T>> {
-        ConduitScreenExtension<T> createExtension();
+    public interface ConduitScreenExtensionFactory {
+        ConduitScreenExtension createExtension();
     }
 
-    private final Map<ConduitType<?>, ConduitScreenExtensionFactory<?>> extensions = new ConcurrentHashMap<>();
+    private final Map<ConduitType<?>, ConduitScreenExtensionFactory> extensions = new ConcurrentHashMap<>();
 
-    public <T extends ConduitData<T>> void register(ConduitType<? extends Conduit<?, ?, T>> conduitType, ConduitScreenExtensionFactory<T> extensionFactory) {
+    public void register(ConduitType<? extends Conduit<?>> conduitType, ConduitScreenExtensionFactory extensionFactory) {
         extensions.put(conduitType, extensionFactory);
     }
 
-    public Map<ConduitType<?>, ConduitScreenExtensionFactory<?>> getExtensions() {
+    public Map<ConduitType<?>, ConduitScreenExtensionFactory> getExtensions() {
         return Map.copyOf(extensions);
     }
 }

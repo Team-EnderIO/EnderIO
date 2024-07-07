@@ -1,5 +1,6 @@
 package com.enderio.api.conduit;
 
+import com.enderio.api.ConduitDataAccessor;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.ColorControl;
@@ -10,10 +11,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public interface ConduitNode<TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> {
+public interface ConduitNode extends ConduitDataAccessor {
     Optional<IOState> getIOState(Direction direction);
     BlockPos getPos();
-    TData getConduitData();
 
     @Nullable
     ConduitUpgrade getUpgrade(Direction direction);
@@ -25,7 +25,7 @@ public interface ConduitNode<TContext extends ConduitNetworkContext<TContext>, T
     ResourceFilter getInsertFilter(Direction direction);
 
     @Nullable
-    ConduitNetwork<TContext, TData> getParentGraph();
+    ConduitNetwork getParentGraph();
 
     record IOState(Optional<ColorControl> insert, Optional<ColorControl> extract, RedstoneControl control, ColorControl redstoneChannel) {
 

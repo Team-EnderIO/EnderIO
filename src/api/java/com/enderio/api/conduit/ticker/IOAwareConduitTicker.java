@@ -2,9 +2,7 @@ package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.Conduit;
-import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitNetwork;
-import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
@@ -19,44 +17,29 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface IOAwareConduitTicker<TConduit extends Conduit<TConduit, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> extends LoadedAwareConduitTicker<TConduit, TContext, TData> {
+public interface IOAwareConduitTicker<TConduit extends Conduit<TConduit>> extends LoadedAwareConduitTicker<TConduit> {
     @Override
-    default void tickGraph(ServerLevel level, TConduit conduit,
-        List<ConduitNode<TContext, TData>> loadedNodes, ConduitNetwork<TContext, TData> graph,
+    default void tickGraph(ServerLevel level, TConduit conduit, List<ConduitNode> loadedNodes, ConduitNetwork graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        ListMultimap<ColorControl, Connection<TData>> extracts = ArrayListMultimap.create();
-        ListMultimap<ColorControl, Connection<TData>> inserts = ArrayListMultimap.create();
-        for (ConduitNode<TContext, TData> node : loadedNodes) {
+        ListMultimap<ColorControl, Connection> extracts = ArrayListMultimap.create();
+        ListMultimap<ColorControl, Connection> inserts = ArrayListMultimap.create();
+        for (ConduitNode node : loadedNodes) {
             for (Direction direction : Direction.values()) {
                 node.getIOState(direction).ifPresent(ioState -> {
                     ioState
                         .extract()
                         .filter(extract -> isRedstoneMode(conduit, level, node.getPos(), ioState, coloredRedstoneProvider))
-                        .ifPresent(
-                            color -> extracts.get(color).add(new Connection<>(
-                                node.getPos(),
-                                direction,
-                                node.getConduitData(),
-                                node.getUpgrade(direction),
-                                node.getExtractFilter(direction),
-                                node.getInsertFilter(direction))));
+                        .ifPresent(color -> extracts.get(color).add(new Connection(direction, node)));
                     ioState
                         .insert()
-                        .ifPresent(
-                            color -> inserts.get(color).add(new Connection<>(
-                                node.getPos(),
-                                direction,
-                                node.getConduitData(),
-                                node.getUpgrade(direction),
-                                node.getExtractFilter(direction),
-                                node.getInsertFilter(direction))));
+                        .ifPresent(color -> inserts.get(color).add(new Connection(direction, node)));
                 });
             }
         }
         for (ColorControl color : ColorControl.values()) {
-            List<Connection<TData>> extractList = extracts.get(color);
-            List<Connection<TData>> insertList = inserts.get(color);
+            List<Connection> extractList = extracts.get(color);
+            List<Connection> insertList = inserts.get(color);
             if (shouldSkipColor(extractList, insertList)) {
                 continue;
             }
@@ -65,17 +48,17 @@ public interface IOAwareConduitTicker<TConduit extends Conduit<TConduit, TContex
         }
     }
 
-    default boolean shouldSkipColor(List<Connection<TData>> extractList, List<Connection<TData>> insertList) {
+    default boolean shouldSkipColor(List<Connection> extractList, List<Connection> insertList) {
         return extractList.isEmpty() || insertList.isEmpty();
     }
 
     void tickColoredGraph(
         ServerLevel level,
         TConduit conduit,
-        List<Connection<TData>> inserts,
-        List<Connection<TData>> extracts,
+        List<Connection> inserts,
+        List<Connection> extracts,
         ColorControl color,
-        ConduitNetwork<TContext, TData> graph,
+        ConduitNetwork graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
     default boolean isRedstoneMode(TConduit conduit, ServerLevel level, BlockPos pos, ConduitNode.IOState state,
@@ -103,15 +86,44 @@ public interface IOAwareConduitTicker<TConduit extends Conduit<TConduit, TContex
         return state.control().isActive(hasRedstone || coloredRedstoneProvider.isRedstoneActive(level, pos, state.redstoneChannel()));
     }
 
-    record Connection<T extends ConduitData<T>>(
-        BlockPos pos,
-        Direction dir,
-        T data,
-        @Nullable ConduitUpgrade upgrade,
-        @Nullable ResourceFilter extractFilter,
-        @Nullable ResourceFilter insertFilter) {
+    class Connection {
+        private final Direction direction;
+        private final ConduitNode node;
+
+        public Connection(Direction direction, ConduitNode node) {
+            this.direction = direction;
+            this.node = node;
+        }
+
+        public Direction direction() {
+            return direction;
+        }
+
+        public ConduitNode node() {
+            return node;
+        }
+
+        public BlockPos pos() {
+            return node.getPos();
+        }
+
         public BlockPos move() {
-            return pos.relative(dir);
+            return pos().relative(direction);
+        }
+
+        @Nullable
+        public ConduitUpgrade upgrade() {
+            return node.getUpgrade(direction);
+        }
+
+        @Nullable
+        public ResourceFilter extractFilter() {
+            return node.getExtractFilter(direction);
+        }
+
+        @Nullable
+        public ResourceFilter insertFilter() {
+            return node.getInsertFilter(direction);
         }
     }
 }

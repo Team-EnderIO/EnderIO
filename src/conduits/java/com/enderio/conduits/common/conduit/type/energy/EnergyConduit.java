@@ -34,7 +34,7 @@ public record EnergyConduit(
     ResourceLocation texture,
     Component description,
     int transferRate
-) implements Conduit<EnergyConduit, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> {
+) implements Conduit<EnergyConduit> {
 
     public static final MapCodec<EnergyConduit> CODEC = RecordCodecBuilder.mapCodec(
         builder -> builder
@@ -68,22 +68,12 @@ public record EnergyConduit(
     }
 
     @Override
-    public EnergyConduitNetworkContext createNetworkContext(ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> network) {
-        return new EnergyConduitNetworkContext();
-    }
-
-    @Override
-    public ConduitData.EmptyConduitData createConduitData(Level level, BlockPos pos) {
-        return ConduitData.EMPTY;
-    }
-
-    @Override
-    public boolean canBeInSameBundle(Holder<Conduit<?, ?, ?>> otherConduit) {
+    public boolean canBeInSameBundle(Holder<Conduit<?>> otherConduit) {
         return !(otherConduit.value() instanceof EnergyConduit);
     }
 
     @Override
-    public boolean canBeReplacedBy(Holder<Conduit<?, ?, ?>> otherConduit) {
+    public boolean canBeReplacedBy(Holder<Conduit<?>> otherConduit) {
         if (!(otherConduit.value() instanceof EnergyConduit otherEnergyConduit)) {
             return false;
         }
@@ -92,7 +82,7 @@ public record EnergyConduit(
     }
 
     @Override
-    public <K> @Nullable K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> node,
+    public <K> @Nullable K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode node,
         Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
 
         if (Capabilities.EnergyStorage.BLOCK == capability && (state == null || state.isExtract())) {
@@ -104,7 +94,7 @@ public record EnergyConduit(
     }
 
     @Override
-    public void onRemoved(ConduitData.EmptyConduitData data, Level level, BlockPos pos) {
+    public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
         level.invalidateCapabilities(pos);
     }
 

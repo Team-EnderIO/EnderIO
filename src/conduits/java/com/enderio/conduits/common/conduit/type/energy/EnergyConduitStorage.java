@@ -1,12 +1,12 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitNode;
+import com.enderio.conduits.common.init.Conduits;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public record EnergyConduitStorage(
     int transferRate,
-    ConduitNode<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> node
+    ConduitNode node
 ) implements IEnergyStorage {
 
     @Override
@@ -15,10 +15,7 @@ public record EnergyConduitStorage(
             return 0;
         }
 
-        EnergyConduitNetworkContext context = node.getParentGraph().getContext();
-        if (context == null) {
-            return 0;
-        }
+        EnergyConduitNetworkContext context = node.getParentGraph().getOrCreateContext(Conduits.ContextSerializers.ENERGY.get());
 
         // Cap to transfer rate.
         // TODO: Do we cap the transfer rate at all, or should we receive as much as we can and only cap output?
@@ -40,13 +37,21 @@ public record EnergyConduitStorage(
 
     @Override
     public int getEnergyStored() {
-        EnergyConduitNetworkContext context = node.getParentGraph().getContext();
+        EnergyConduitNetworkContext context = node.getParentGraph().getContext(Conduits.ContextSerializers.ENERGY.get());
+        if (context == null) {
+            return 0;
+        }
+
         return Math.max(Math.min(getMaxEnergyStored(), context.energyStored()), 0);
     }
 
     @Override
     public int getMaxEnergyStored() {
-        return node.getParentGraph().getNodes().size() * transferRate() / 2;
+        // TODO: Handle int overflowing here...
+
+        // Capacity is transfer rate + nodeCount * transferRate / 2 (expanded).
+        // This ensures at least the transfer rate of the cable is available, but capacity doesn't grow outrageously.
+        return (1 + node.getParentGraph().getNodes().size()) * transferRate() / 4;
     }
 
     @Override
@@ -58,6 +63,6 @@ public record EnergyConduitStorage(
     // This means we don't have to worry about checking if we can extract at this point.
     @Override
     public boolean canReceive() {
-        return node.getParentGraph() != null && node.getParentGraph().getContext() != null;
+        return node.getParentGraph() != null;
     }
 }

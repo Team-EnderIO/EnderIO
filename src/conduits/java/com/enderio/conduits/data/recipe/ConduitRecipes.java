@@ -37,7 +37,7 @@ public class ConduitRecipes extends RecipeProvider {
     protected void buildRecipes(RecipeOutput recipeOutput) {
         // We know that the registries are now available.
         HolderLookup.Provider lookupProvider = registries.resultNow();
-        HolderGetter<Conduit<?, ?, ?>> conduitRegistry = lookupProvider.lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
+        HolderGetter<Conduit<?>> conduitRegistry = lookupProvider.lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
 
         var itemConduit = conduitRegistry.getOrThrow(Conduits.ITEM);
         var fluidConduit = conduitRegistry.getOrThrow(Conduits.FLUID);

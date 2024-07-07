@@ -1,8 +1,9 @@
 package com.enderio.conduits.common.conduit.type.redstone;
 
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.ConduitMenuData;
+import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.SimpleConduit;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.conduits.common.init.ConduitTypes;
@@ -10,18 +11,16 @@ import com.enderio.conduits.common.redstone.RedstoneExtractFilter;
 import com.enderio.conduits.common.redstone.RedstoneInsertFilter;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public record RedstoneConduit(
     ResourceLocation texture,
     ResourceLocation activeTexture,
     Component description
-) implements SimpleConduit<RedstoneConduit, RedstoneConduitData> {
+) implements Conduit<RedstoneConduit> {
 
     public static MapCodec<RedstoneConduit> CODEC = RecordCodecBuilder.mapCodec(
         builder -> builder.group(
@@ -50,11 +49,6 @@ public record RedstoneConduit(
     }
 
     @Override
-    public RedstoneConduitData createConduitData(Level level, BlockPos pos) {
-        return new RedstoneConduitData();
-    }
-
-    @Override
     public boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
         return switch (slotType) {
             case FILTER_EXTRACT -> resourceFilter instanceof RedstoneExtractFilter;
@@ -64,8 +58,9 @@ public record RedstoneConduit(
     }
 
     @Override
-    public ResourceLocation getTexture(RedstoneConduitData data) {
-        return data.isActive() ? activeTexture() : texture();
+    public ResourceLocation getTexture(ConduitNode node) {
+        RedstoneConduitData data = node.getData(ConduitTypes.Data.REDSTONE.get());
+        return data != null && data.isActive() ? activeTexture() : texture();
     }
 
     @Override

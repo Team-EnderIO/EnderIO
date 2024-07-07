@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ConduitCoreModelModifiers {
-    private static Map<ConduitType<?>, ConduitCoreModelModifier<?>> MODIFIERS;
+    private static Map<ConduitType<?>, ConduitCoreModelModifier> MODIFIERS;
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     public static void init() {
@@ -28,8 +28,7 @@ public class ConduitCoreModelModifiers {
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     @Nullable
-    public static ConduitCoreModelModifier<?> getModifier(ConduitType<?> type) {
-        //noinspection unchecked
+    public static ConduitCoreModelModifier getModifier(ConduitType<?> type) {
         return MODIFIERS.get(type);
     }
 

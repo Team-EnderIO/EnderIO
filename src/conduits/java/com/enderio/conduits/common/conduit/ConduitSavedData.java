@@ -9,6 +9,7 @@ import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
+import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.init.Conduits;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
@@ -42,10 +43,10 @@ import java.util.Optional;
 @EventBusSubscriber
 public class ConduitSavedData extends SavedData {
 
-    private final Map<Holder<Conduit<?, ?, ?>>, List<Graph<ConduitGraphContext>>> networks = new HashMap<>();
+    private final Map<Holder<Conduit<?>>, List<Graph<ConduitGraphContext>>> networks = new HashMap<>();
 
     // Used to find the NodeIdentifier(s) of a conduit when it is loaded
-    private final Map<Holder<Conduit<?, ?, ?>>, Map<ChunkPos, Map<BlockPos, ConduitGraphObject<?, ?>>>> deserializedNodes = new HashMap<>();
+    private final Map<Holder<Conduit<?>>, Map<ChunkPos, Map<BlockPos, ConduitGraphObject>>> deserializedNodes = new HashMap<>();
 
     public static ConduitSavedData get(ServerLevel level) {
         return level.getDataStorage().computeIfAbsent(new Factory<>(
@@ -69,12 +70,12 @@ public class ConduitSavedData extends SavedData {
         ListTag graphsTag = nbt.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
         for (Tag tag : graphsTag) {
             CompoundTag typedGraphTag = (CompoundTag) tag;
-            ResourceKey<Conduit<?, ?, ?>> conduitKey = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
+            ResourceKey<Conduit<?>> conduitKey = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
                 ResourceLocation.parse(typedGraphTag.getString(KEY_TYPE)));
 
             var registry = lookupProvider.lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
 
-            Optional<Holder.Reference<Conduit<?, ?, ?>>> conduit = registry.get(conduitKey);
+            Optional<Holder.Reference<Conduit<?>>> conduit = registry.get(conduitKey);
 
             if (conduit.isPresent()) {
                 ListTag graphsForTypeTag = typedGraphTag.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
@@ -85,15 +86,15 @@ public class ConduitSavedData extends SavedData {
         }
     }
 
-    private void deserializeGraphs(HolderLookup.Provider lookupProvider, Holder<Conduit<?, ?, ?>> conduit, ListTag graphs) {
+    private void deserializeGraphs(HolderLookup.Provider lookupProvider, Holder<Conduit<?>> conduit, ListTag graphs) {
         for (Tag tag1 : graphs) {
             CompoundTag graphTag = (CompoundTag) tag1;
 
             ListTag graphObjectsTag = graphTag.getList(KEY_GRAPH_OBJECTS, Tag.TAG_COMPOUND);
             ListTag graphConnectionsTag = graphTag.getList(KEY_GRAPH_CONNECTIONS, Tag.TAG_COMPOUND);
 
-            List<ConduitGraphObject<?, ?>> graphObjects = new ArrayList<>();
-            List<Pair<? extends ConduitGraphObject<?, ?>, ? extends ConduitGraphObject<?, ?>>> connections = new ArrayList<>();
+            List<ConduitGraphObject> graphObjects = new ArrayList<>();
+            List<Pair<ConduitGraphObject, ConduitGraphObject>> connections = new ArrayList<>();
 
             for (int i = 0; i < graphObjectsTag.size(); i++) {
                 CompoundTag nodeTag = graphObjectsTag.getCompound(i);
@@ -110,9 +111,9 @@ public class ConduitSavedData extends SavedData {
                 connections.add(new Pair<>(graphObjects.get(connectionTag.getInt("0")), graphObjects.get(connectionTag.getInt("1"))));
             }
 
-            ConduitGraphObject<?, ?> graphObject = graphObjects.get(0);
+            ConduitGraphObject graphObject = graphObjects.get(0);
             if (graphTag.contains(KEY_GRAPH_CONTEXT)) {
-                ConduitGraphUtility.integrateWithLoad(conduit, graphObject, List.of(), graphTag.getCompound(KEY_GRAPH_CONTEXT));
+                ConduitGraphUtility.integrateWithLoad(conduit, graphObject, List.of(), lookupProvider, graphTag.getCompound(KEY_GRAPH_CONTEXT));
             } else {
                 ConduitGraphUtility.integrate(conduit, graphObject, List.of());
             }
@@ -152,7 +153,7 @@ public class ConduitSavedData extends SavedData {
     public CompoundTag save(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
         ListTag graphsTag = new ListTag();
         for (var entry : networks.entrySet()) {
-            Holder<Conduit<?, ?, ?>> type = entry.getKey();
+            Holder<Conduit<?>> type = entry.getKey();
             List<Graph<ConduitGraphContext>> graphs = entry.getValue();
             if (graphs.isEmpty() || !type.isBound()) {
                 continue;
@@ -191,8 +192,11 @@ public class ConduitSavedData extends SavedData {
         CompoundTag graphTag = new CompoundTag();
 
         var context = graph.getContextData();
-        if (context != null && context.canSerialize()) {
-            graphTag.put(KEY_GRAPH_CONTEXT, context.save());
+        if (context != null) {
+            CompoundTag tag = context.save(lookupProvider);
+            if (tag != null) {
+                graphTag.put(KEY_GRAPH_CONTEXT, tag);
+            }
         }
 
         ListTag graphObjectsTag = new ListTag();
@@ -206,7 +210,7 @@ public class ConduitSavedData extends SavedData {
                 }
             }
 
-            if (graphObject instanceof ConduitGraphObject<?, ?> conduitGraphObject) {
+            if (graphObject instanceof ConduitGraphObject conduitGraphObject) {
                 var tag = ConduitGraphObject.CODEC
                     .encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), conduitGraphObject)
                     .getOrThrow();
@@ -234,11 +238,10 @@ public class ConduitSavedData extends SavedData {
 
     // endregion
 
-    private void merge(Holder<Conduit<?, ?, ?>> conduit, GraphObject<ConduitGraphContext> object,
-        List<Pair<? extends ConduitGraphObject<?, ?>, ? extends ConduitGraphObject<?, ?>>> connections) {
+    private void merge(Holder<Conduit<?>> conduit, GraphObject<ConduitGraphContext> object, List<Pair<ConduitGraphObject, ConduitGraphObject>> connections) {
         var filteredConnections = connections.stream().filter(pair -> (pair.getFirst() == object || pair.getSecond() == object)).toList();
 
-        List<? extends ConduitGraphObject<?, ?>> neighbors = filteredConnections
+        List<? extends ConduitGraphObject> neighbors = filteredConnections
             .stream()
             .map(pair -> pair.getFirst() == object ? pair.getSecond() : pair.getFirst())
             .toList();
@@ -254,20 +257,20 @@ public class ConduitSavedData extends SavedData {
     }
 
     @Nullable
-    public ConduitGraphObject<?, ?> takeUnloadedNodeIdentifier(Holder<Conduit<?, ?, ?>> conduit, BlockPos pos) {
+    public ConduitGraphObject takeUnloadedNodeIdentifier(Holder<Conduit<?>> conduit, BlockPos pos) {
         ChunkPos chunkPos = new ChunkPos(pos);
 
-        Map<ChunkPos, Map<BlockPos, ConduitGraphObject<?, ?>>> typeMap = deserializedNodes.get(conduit);
+        Map<ChunkPos, Map<BlockPos, ConduitGraphObject>> typeMap = deserializedNodes.get(conduit);
         if (typeMap == null) {
             EnderIO.LOGGER.warn("Conduit data is missing!");
             return null;
         }
-        Map<BlockPos, ConduitGraphObject<?, ?>> chunkMap = typeMap.get(chunkPos);
+        Map<BlockPos, ConduitGraphObject> chunkMap = typeMap.get(chunkPos);
         if (chunkMap == null) {
             EnderIO.LOGGER.warn("Conduit data is missing!");
             return null;
         }
-        ConduitGraphObject<?, ?> node = chunkMap.get(pos);
+        ConduitGraphObject node = chunkMap.get(pos);
 
         chunkMap.remove(pos);
         if (chunkMap.isEmpty()) {
@@ -281,10 +284,10 @@ public class ConduitSavedData extends SavedData {
         return node;
     }
 
-    public void putUnloadedNodeIdentifier(Holder<Conduit<?, ?, ?>> conduit, BlockPos pos, ConduitGraphObject<?, ?> node) {
+    public void putUnloadedNodeIdentifier(Holder<Conduit<?>> conduit, BlockPos pos, ConduitGraphObject node) {
         ChunkPos chunkPos = new ChunkPos(pos);
-        Map<ChunkPos, Map<BlockPos, ConduitGraphObject<?, ?>>> typeMap = deserializedNodes.computeIfAbsent(conduit, k -> new HashMap<>());
-        Map<BlockPos, ConduitGraphObject<?, ?>> chunkMap = typeMap.computeIfAbsent(chunkPos, k -> new HashMap<>());
+        Map<ChunkPos, Map<BlockPos, ConduitGraphObject>> typeMap = deserializedNodes.computeIfAbsent(conduit, k -> new HashMap<>());
+        Map<BlockPos, ConduitGraphObject> chunkMap = typeMap.computeIfAbsent(chunkPos, k -> new HashMap<>());
         chunkMap.put(pos, node);
     }
 
@@ -315,11 +318,10 @@ public class ConduitSavedData extends SavedData {
         }
     }
 
-    private <T extends Conduit<T, U, V>, U extends ConduitNetworkContext<U>, V extends ConduitData<V>> void tickConduitGraph(ServerLevel serverLevel,
-        Holder<Conduit<?, ?, ?>> conduit, ConduitTicker<T, U, V> ticker, Graph<ConduitGraphContext> graph) {
+    private <T extends Conduit<T>> void tickConduitGraph(ServerLevel serverLevel, Holder<Conduit<?>> conduit, ConduitTicker<T> ticker, Graph<ConduitGraphContext> graph) {
         if (serverLevel.getGameTime() % ticker.getTickRate() == 0) {
             //noinspection unchecked
-            ticker.tickGraph(serverLevel, (T)conduit.value(), new WrappedConduitNetwork<>(graph), ConduitSavedData::isRedstoneActive);
+            ticker.tickGraph(serverLevel, (T)conduit.value(), new WrappedConduitNetwork(graph), ConduitSavedData::isRedstoneActive);
         }
     }
 
@@ -332,6 +334,7 @@ public class ConduitSavedData extends SavedData {
             return false;
         }
 
+        // TODO: Decouple from hard-coded REDSTONE conduit.
         var registry = serverLevel.holderLookup(EnderIORegistries.Keys.CONDUIT);
         var redstoneConduit = registry.get(Conduits.REDSTONE);
 
@@ -340,15 +343,15 @@ public class ConduitSavedData extends SavedData {
         }
 
         var node = blockEntity.getBundle().getNodeFor(redstoneConduit.get());
-        RedstoneConduitData data = (RedstoneConduitData)node.getConduitData();
-        return data.isActive(color);
+        RedstoneConduitData data = node.getData(ConduitTypes.Data.REDSTONE.get());
+        return data != null && data.isActive(color);
     }
 
-    public static void addPotentialGraph(Holder<Conduit<?, ?, ?>> conduit, Graph<ConduitGraphContext> graph, ServerLevel level) {
+    public static void addPotentialGraph(Holder<Conduit<?>> conduit, Graph<ConduitGraphContext> graph, ServerLevel level) {
         get(level).addPotentialGraph(conduit, graph);
     }
 
-    private void addPotentialGraph(Holder<Conduit<?, ?, ?>> conduit, Graph<ConduitGraphContext> graph) {
+    private void addPotentialGraph(Holder<Conduit<?>> conduit, Graph<ConduitGraphContext> graph) {
         if (!networks.computeIfAbsent(conduit, unused -> new ArrayList<>()).contains(graph)) {
             networks.get(conduit).add(graph);
         }

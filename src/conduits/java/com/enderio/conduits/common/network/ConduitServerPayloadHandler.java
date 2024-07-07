@@ -26,12 +26,12 @@ public class ConduitServerPayloadHandler {
         });
     }
 
-    public void handleConduitExtendedData(final C2SSetConduitExtendedData<?> packet, final IPayloadContext context) {
+    public void handleConduitExtendedData(final C2SSetConduitExtendedData packet, final IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
             BlockEntity be = level.getBlockEntity(packet.pos());
             if (be instanceof ConduitBundleBlockEntity conduitBundleBlockEntity) {
-                conduitBundleBlockEntity.handleExtendedDataUpdate(packet.conduit(), packet.extendedConduitData());
+                conduitBundleBlockEntity.handleConduitDataUpdate(packet.conduit(), packet.conduitDataContainer());
             }
         });
     }

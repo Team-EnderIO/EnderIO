@@ -5,6 +5,7 @@ import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitDataSerializer;
 import com.enderio.api.conduit.ConduitNetworkContextSerializer;
+import com.enderio.api.conduit.ConduitNetworkContextType;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.conduit.type.energy.EnergyConduit;
 import com.enderio.conduits.common.conduit.type.energy.EnergyConduitNetworkContext;
@@ -24,16 +25,16 @@ import java.util.function.Supplier;
 
 public class Conduits {
 
-    public static ResourceKey<Conduit<?, ?, ?>> ENERGY = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("energy"));
-    public static ResourceKey<Conduit<?, ?, ?>> ENHANCED_ENERGY = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("enhanced_energy"));
-    public static ResourceKey<Conduit<?, ?, ?>> ENDER_ENERGY = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("ender_energy"));
-    public static ResourceKey<Conduit<?, ?, ?>> REDSTONE = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("redstone"));
-    public static ResourceKey<Conduit<?, ?, ?>> FLUID = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("fluid"));
-    public static ResourceKey<Conduit<?, ?, ?>> PRESSURIZED_FLUID = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("pressurized_fluid"));
-    public static ResourceKey<Conduit<?, ?, ?>> ENDER_FLUID = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("ender_fluid"));
-    public static ResourceKey<Conduit<?, ?, ?>> ITEM = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("item"));
+    public static ResourceKey<Conduit<?>> ENERGY = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("energy"));
+    public static ResourceKey<Conduit<?>> ENHANCED_ENERGY = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("enhanced_energy"));
+    public static ResourceKey<Conduit<?>> ENDER_ENERGY = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("ender_energy"));
+    public static ResourceKey<Conduit<?>> REDSTONE = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("redstone"));
+    public static ResourceKey<Conduit<?>> FLUID = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("fluid"));
+    public static ResourceKey<Conduit<?>> PRESSURIZED_FLUID = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("pressurized_fluid"));
+    public static ResourceKey<Conduit<?>> ENDER_FLUID = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("ender_fluid"));
+    public static ResourceKey<Conduit<?>> ITEM = ResourceKey.create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("item"));
 
-    public static void bootstrap(BootstrapContext<Conduit<?, ?, ?>> context) {
+    public static void bootstrap(BootstrapContext<Conduit<?>> context) {
         // TODO: Is there a way to generate conditions for these? i.e. "neoforge:conditions":[{"type":"neoforge:mod_loaded","modid":"ae2"}]
 
         // TODO: Need to decide on transfer rates. These are just here to get the types in.
@@ -58,32 +59,15 @@ public class Conduits {
     }
 
     public static class ContextSerializers {
-        public static final DeferredRegister<ConduitNetworkContextSerializer<?>> CONDUIT_NETWORK_CONTEXT_SERIALIZERS =
-            DeferredRegister.create(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_SERIALIZER, EnderIO.MODID);
+        public static final DeferredRegister<ConduitNetworkContextType<?>> CONDUIT_NETWORK_CONTEXT_TYPES =
+            DeferredRegister.create(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIO.MODID);
 
-        public static final Supplier<EnergyConduitNetworkContext.Serializer> ENERGY =
-            CONDUIT_NETWORK_CONTEXT_SERIALIZERS.register("energy", () -> EnergyConduitNetworkContext.Serializer.INSTANCE);
-    }
-
-    public static class Serializers {
-        public static final DeferredRegister<ConduitDataSerializer<?>> CONDUIT_DATA_SERIALIZERS = DeferredRegister.create(EnderIORegistries.CONDUIT_DATA_SERIALIZER, EnderIO.MODID);
-
-        // Register the API data type.
-        public static DeferredHolder<ConduitDataSerializer<?>, ConduitData.EmptyConduitData.Serializer> EMPTY =
-            CONDUIT_DATA_SERIALIZERS.register("empty", () -> ConduitData.EmptyConduitData.Serializer.INSTANCE);
-
-        public static final Supplier<ConduitDataSerializer<FluidConduitData>> FLUID =
-            CONDUIT_DATA_SERIALIZERS.register("fluid", FluidConduitData.Serializer::new);
-
-        public static final Supplier<ConduitDataSerializer<RedstoneConduitData>> REDSTONE =
-            CONDUIT_DATA_SERIALIZERS.register("redstone", RedstoneConduitData.Serializer::new);
-
-        public static final Supplier<ConduitDataSerializer<ItemConduitData>> ITEM =
-            CONDUIT_DATA_SERIALIZERS.register("item", ItemConduitData.Serializer::new);
+        public static final Supplier<ConduitNetworkContextType<EnergyConduitNetworkContext>> ENERGY =
+            CONDUIT_NETWORK_CONTEXT_TYPES.register("energy", () -> new ConduitNetworkContextType<>(EnergyConduitNetworkContext.CODEC,
+                EnergyConduitNetworkContext::new));
     }
 
     public static void register(IEventBus bus) {
-        ContextSerializers.CONDUIT_NETWORK_CONTEXT_SERIALIZERS.register(bus);
-        Serializers.CONDUIT_DATA_SERIALIZERS.register(bus);
+        ContextSerializers.CONDUIT_NETWORK_CONTEXT_TYPES.register(bus);
     }
 }

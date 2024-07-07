@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConduitScreenExtensions {
-    private static Map<ConduitType<?>, ConduitScreenExtension<?>> EXTENSIONS;
+    private static Map<ConduitType<?>, ConduitScreenExtension> EXTENSIONS;
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     public static void init() {
@@ -25,7 +25,7 @@ public class ConduitScreenExtensions {
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     @Nullable
-    public static ConduitScreenExtension<?> get(ConduitType<?> conduitType) {
+    public static ConduitScreenExtension get(ConduitType<?> conduitType) {
         return EXTENSIONS.get(conduitType);
     }
 }

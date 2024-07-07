@@ -35,7 +35,7 @@ public class ConduitBlockItem extends BlockItem {
         super(block, properties);
     }
 
-    public static ItemStack getStackFor(Holder<Conduit<?, ?, ?>> conduit, int count) {
+    public static ItemStack getStackFor(Holder<Conduit<?>> conduit, int count) {
         var stack = new ItemStack(ConduitBlocks.CONDUIT.asItem(), count);
         stack.set(ConduitComponents.CONDUIT, conduit);
         return stack;
@@ -43,7 +43,7 @@ public class ConduitBlockItem extends BlockItem {
 
     @Override
     public Component getName(ItemStack pStack) {
-        Holder<Conduit<?, ?, ?>> conduit = pStack.get(ConduitComponents.CONDUIT);
+        Holder<Conduit<?>> conduit = pStack.get(ConduitComponents.CONDUIT);
         if (conduit == null) {
             return super.getName(pStack);
         }
@@ -66,7 +66,7 @@ public class ConduitBlockItem extends BlockItem {
         BlockPos blockpos = context.getClickedPos();
         ItemStack itemstack = context.getItemInHand();
 
-        Holder<Conduit<?, ?, ?>> conduit = itemstack.get(ConduitComponents.CONDUIT);
+        Holder<Conduit<?>> conduit = itemstack.get(ConduitComponents.CONDUIT);
         if (conduit == null) {
             return InteractionResult.FAIL;
         }
@@ -83,7 +83,7 @@ public class ConduitBlockItem extends BlockItem {
 
     @Override
     public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
-        Holder<Conduit<?, ?, ?>> conduit = pStack.get(ConduitComponents.CONDUIT);
+        Holder<Conduit<?>> conduit = pStack.get(ConduitComponents.CONDUIT);
         if (conduit != null) {
             conduit.value().addToTooltip(pContext, pTooltipComponents::add, pTooltipFlag);
         }
@@ -118,7 +118,7 @@ public class ConduitBlockItem extends BlockItem {
         }
     }
 
-    private static <T extends Conduit<T, ?, ?>> int compareConduitTo(Conduit<T, ?, ?> o1, Conduit<?, ?, ?> o2) {
+    private static <T extends Conduit<T>> int compareConduitTo(Conduit<T> o1, Conduit<?> o2) {
         return o1.compareTo((T)o2);
     }
 }

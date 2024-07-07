@@ -1,8 +1,8 @@
 package com.enderio.conduits.common.conduit.type.item;
 
+import com.enderio.api.conduit.ConduitDataType;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitDataSerializer;
-import com.enderio.conduits.common.init.Conduits;
+import com.enderio.conduits.common.init.ConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -18,6 +18,18 @@ import java.util.Objects;
 
 public class ItemConduitData implements ConduitData<ItemConduitData> {
 
+    public static MapCodec<ItemConduitData> CODEC = RecordCodecBuilder.mapCodec(
+        instance -> instance.group(
+            Codec.unboundedMap(Direction.CODEC, ItemSidedData.CODEC)
+                .fieldOf("item_sided_data").forGetter(i -> i.itemSidedData)
+        ).apply(instance, ItemConduitData::new)
+    );
+
+    public static StreamCodec<RegistryFriendlyByteBuf, ItemConduitData> STREAM_CODEC =
+        ByteBufCodecs.map(i -> (Map<Direction, ItemSidedData>) new HashMap<Direction, ItemSidedData>(i),
+                Direction.STREAM_CODEC, ItemSidedData.STREAM_CODEC)
+            .map(ItemConduitData::new, i -> i.itemSidedData).cast();
+
     public Map<Direction, ItemSidedData> itemSidedData;
 
     public ItemConduitData() {
@@ -29,15 +41,14 @@ public class ItemConduitData implements ConduitData<ItemConduitData> {
     }
 
     @Override
-    public void applyClientChanges(ItemConduitData guiData) {
+    public ItemConduitData withClientChanges(ItemConduitData guiData) {
         for (Direction direction : Direction.values()) {
             compute(direction).applyGuiChanges(guiData.get(direction));
         }
-    }
 
-    @Override
-    public ConduitDataSerializer<ItemConduitData> serializer() {
-        return Conduits.Serializers.ITEM.get();
+        // TODO: Soon we will swap to records which will mean this will be a new instance.
+        //       This API has been designed with this pending change in mind.
+        return this;
     }
 
     public ItemSidedData get(Direction direction) {
@@ -51,6 +62,23 @@ public class ItemConduitData implements ConduitData<ItemConduitData> {
     @Override
     public int hashCode() {
         return itemSidedData.hashCode();
+    }
+
+    @Override
+    public ConduitDataType<ItemConduitData> type() {
+        return ConduitTypes.Data.ITEM.get();
+    }
+
+    @Override
+    public ItemConduitData deepCopy() {
+        var newSidedData = new HashMap<Direction, ItemSidedData>(Direction.values().length);
+        for (Direction direction : Direction.values()) {
+            if (itemSidedData.containsKey(direction)) {
+                newSidedData.put(direction, itemSidedData.get(direction).deepCopy());
+            }
+        }
+
+        return new ItemConduitData(newSidedData);
     }
 
     public static class ItemSidedData {
@@ -103,33 +131,13 @@ public class ItemConduitData implements ConduitData<ItemConduitData> {
             this.priority = guiChanges.priority;
         }
 
+        public ItemSidedData deepCopy() {
+            return new ItemSidedData(isRoundRobin, rotatingIndex, isSelfFeed, priority);
+        }
+
         @Override
         public int hashCode() {
             return Objects.hash(isRoundRobin, isSelfFeed, priority);
-        }
-    }
-
-    public static class Serializer implements ConduitDataSerializer<ItemConduitData> {
-        public static MapCodec<ItemConduitData> CODEC = RecordCodecBuilder.mapCodec(
-            instance -> instance.group(
-                Codec.unboundedMap(Direction.CODEC, ItemSidedData.CODEC)
-                    .fieldOf("item_sided_data").forGetter(i -> i.itemSidedData)
-            ).apply(instance, ItemConduitData::new)
-        );
-
-        public static StreamCodec<ByteBuf, ItemConduitData> STREAM_CODEC =
-            ByteBufCodecs.map(i -> (Map<Direction, ItemSidedData>) new HashMap<Direction, ItemSidedData>(i),
-                    Direction.STREAM_CODEC, ItemSidedData.STREAM_CODEC)
-                .map(ItemConduitData::new, i -> i.itemSidedData);
-
-        @Override
-        public MapCodec<ItemConduitData> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ItemConduitData> streamCodec() {
-            return STREAM_CODEC.cast();
         }
     }
 }

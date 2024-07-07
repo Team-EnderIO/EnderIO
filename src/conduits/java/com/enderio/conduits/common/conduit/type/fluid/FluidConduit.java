@@ -1,9 +1,11 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
+import com.enderio.EnderIO;
 import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNetworkContext;
+import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
@@ -34,7 +36,7 @@ public record FluidConduit(
     Component description,
     int transferRate,
     boolean isMultiFluid
-) implements Conduit<FluidConduit, ConduitNetworkContext.Dummy, FluidConduitData> {
+) implements Conduit<FluidConduit> {
 
     public static final MapCodec<FluidConduit> CODEC = RecordCodecBuilder.mapCodec(
         builder -> builder
@@ -65,28 +67,41 @@ public record FluidConduit(
     }
 
     @Override
-    @Nullable
-    public ConduitNetworkContext.Dummy createNetworkContext(ConduitNetwork<ConduitNetworkContext.Dummy, FluidConduitData> network) {
-        return null;
-    }
-
-    @Override
-    public FluidConduitData createConduitData(Level level, BlockPos pos) {
-        return new FluidConduitData(isMultiFluid());
-    }
-
-    @Override
-    public boolean canBeInSameBundle(Holder<Conduit<?, ?, ?>> otherConduit) {
+    public boolean canBeInSameBundle(Holder<Conduit<?>> otherConduit) {
         return !(otherConduit.value() instanceof FluidConduit);
     }
 
     @Override
-    public boolean canBeReplacedBy(Holder<Conduit<?, ?, ?>> otherConduit) {
+    public boolean canBeReplacedBy(Holder<Conduit<?>> otherConduit) {
         if (!(otherConduit.value() instanceof FluidConduit otherFluidConduit)) {
             return false;
         }
 
         return compareTo(otherFluidConduit) > 0;
+    }
+
+    @Override
+    public boolean canConnectTo(ConduitNode selfNode, ConduitNode otherNode) {
+        FluidConduitData selfData = selfNode.getOrCreateData(ConduitTypes.Data.FLUID.get());
+        FluidConduitData otherData = otherNode.getOrCreateData(ConduitTypes.Data.FLUID.get());
+
+        return selfData.lockedFluid() == null || otherData.lockedFluid() == null || selfData.lockedFluid() == otherData.lockedFluid();
+    }
+
+    @Override
+    public void onConnectTo(ConduitNode selfNode, ConduitNode otherNode) {
+        FluidConduitData selfData = selfNode.getOrCreateData(ConduitTypes.Data.FLUID.get());
+        FluidConduitData otherData = otherNode.getOrCreateData(ConduitTypes.Data.FLUID.get());
+
+        if (selfData.lockedFluid() != null) {
+            if (otherData.lockedFluid() != null && selfData.lockedFluid() != otherData.lockedFluid()) {
+                EnderIO.LOGGER.warn("incompatible fluid conduits merged");
+            }
+
+            otherData.setLockedFluid(selfData.lockedFluid());
+        } else if (otherData.lockedFluid() != null) {
+            selfData.setLockedFluid(otherData.lockedFluid());
+        }
     }
 
     @Override

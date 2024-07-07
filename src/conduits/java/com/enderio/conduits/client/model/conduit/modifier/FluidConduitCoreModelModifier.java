@@ -1,8 +1,12 @@
 package com.enderio.conduits.client.model.conduit.modifier;
 
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.Conduit;
+import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.model.ConduitCoreModelModifier;
+import com.enderio.conduits.common.conduit.type.fluid.FluidConduit;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
+import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.core.client.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -10,6 +14,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.Blocks;
@@ -21,14 +26,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FluidConduitCoreModelModifier implements ConduitCoreModelModifier<FluidConduitData> {
+public class FluidConduitCoreModelModifier implements ConduitCoreModelModifier {
 
     private static final ModelResourceLocation FLUID_MODEL = ModelResourceLocation.standalone(EnderIO.loc("block/extra/fluids"));
 
     @Override
-    public List<BakedQuad> createConnectionQuads(FluidConduitData data, @Nullable Direction facing, Direction connectionDirection, RandomSource rand,
+    public List<BakedQuad> createConnectionQuads(Holder<Conduit<?>> conduit, ConduitNode node, @Nullable Direction facing, Direction connectionDirection, RandomSource rand,
         @Nullable RenderType type) {
-        if (!data.isMultiFluid && data.lockedFluid() != null) {
+        if (!(conduit.value() instanceof FluidConduit fluidConduit && fluidConduit.isMultiFluid())) {
+            return List.of();
+        }
+
+        FluidConduitData data = node.getData(ConduitTypes.Data.FLUID.get());
+
+        if (data != null && data.lockedFluid() != null) {
             return new FluidPaintQuadTransformer(data.lockedFluid())
                 .process(Minecraft.getInstance().getModelManager().getModel(FLUID_MODEL)
                     .getQuads(Blocks.COBBLESTONE.defaultBlockState(), facing, rand, ModelData.EMPTY, type));

@@ -26,14 +26,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public interface Conduit<TConduit extends Conduit<TConduit, TContext, TData>, TContext extends ConduitNetworkContext<TContext>, TData extends ConduitData<TData>> extends
+public interface Conduit<TConduit extends Conduit<TConduit>> extends
     Comparable<TConduit>, TooltipProvider {
 
-    Codec<Conduit<?, ?, ?>> DIRECT_CODEC = EnderIORegistries.CONDUIT_TYPE.byNameCodec()
+    Codec<Conduit<?>> DIRECT_CODEC = EnderIORegistries.CONDUIT_TYPE.byNameCodec()
         .dispatch(Conduit::type, ConduitType::codec);
 
-    Codec<Holder<Conduit<?, ?, ?>>> CODEC = RegistryFixedCodec.create(EnderIORegistries.Keys.CONDUIT);
-    StreamCodec<RegistryFriendlyByteBuf, Holder<Conduit<?, ?, ?>>> STREAM_CODEC = ByteBufCodecs.holderRegistry(EnderIORegistries.Keys.CONDUIT);
+    Codec<Holder<Conduit<?>>> CODEC = RegistryFixedCodec.create(EnderIORegistries.Keys.CONDUIT);
+
+    StreamCodec<RegistryFriendlyByteBuf, Holder<Conduit<?>>> STREAM_CODEC = ByteBufCodecs.holderRegistry(EnderIORegistries.Keys.CONDUIT);
 
     /**
      * Gets the default conduit texture.
@@ -44,37 +45,41 @@ public interface Conduit<TConduit extends Conduit<TConduit, TContext, TData>, TC
      * Gets the conduit description, used for the conduit item.
      */
     Component description();
+
+    /**
+     * Gets the conduit type.
+     * This is used to define serialization and exposing proxied capabilities.
+     */
     ConduitType<TConduit> type();
 
     /**
      * Get the ticker for this conduit graph type.
      * @apiNote The ticker should never change, it can use the options to determine behaviour in its implementation.
      */
-    ConduitTicker<TConduit, TContext, TData> getTicker();
+    ConduitTicker<TConduit> getTicker();
     ConduitMenuData getMenuData();
 
-    /**
-     * Create an instance of this network type's context.
-     * @param network The conduit network that this context is for.
-     * @apiNote Do not store the network in the context, it is passed in for reference only.
-     */
-    @Nullable
-    TContext createNetworkContext(ConduitNetwork<TContext, TData> network);
-    TData createConduitData(Level level, BlockPos pos);
-
-    default boolean canBeInSameBundle(Holder<Conduit<?, ?, ?>> otherConduit) {
+    default boolean canBeInSameBundle(Holder<Conduit<?>> otherConduit) {
         return true;
     }
 
-    default boolean canBeReplacedBy(Holder<Conduit<?, ?, ?>> otherConduit) {
+    default boolean canBeReplacedBy(Holder<Conduit<?>> otherConduit) {
         return false;
     }
 
     /**
      * @return true if both types are compatible
      */
-    default boolean canConnectTo(Holder<Conduit<?, ?, ?>> other) {
+    default boolean canConnectTo(Holder<Conduit<?>> other) {
         return this.equals(other.value());
+    }
+
+    /**
+     * This can be used to prevent connection between nodes with incompatible data.
+     * @return true if both nodes are compatible.
+     */
+    default boolean canConnectTo(ConduitNode selfNode, ConduitNode otherNode) {
+        return true;
     }
 
     default boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
@@ -99,26 +104,29 @@ public interface Conduit<TConduit extends Conduit<TConduit, TContext, TData>, TC
     /**
      * Gets the conduit texture to display, given the data.
      */
-    default ResourceLocation getTexture(TData data) {
+    default ResourceLocation getTexture(ConduitNode node) {
         return texture();
     }
 
     // region Events
 
-    default void onCreated(TData data, Level level, BlockPos pos, @Nullable Player player) {
+    default void onCreated(ConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
     }
 
-    default void onRemoved(TData data, Level level, BlockPos pos) {
+    default void onRemoved(ConduitNode node, Level level, BlockPos pos) {
     }
 
-    default void onConnectionsUpdated(TData data, Level level, BlockPos pos, Set<Direction> connectedSides) {
+    default void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
+    }
+
+    default void onConnectTo(ConduitNode selfNode, ConduitNode otherNode) {
     }
 
     // endregion
 
     @Nullable
-    default <K> K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode<TContext, TData> node,
-        Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
+    default <K> K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode node, Level level, BlockPos pos, @Nullable Direction direction,
+        @Nullable ConduitNode.IOState state) {
         return null;
     }
 

@@ -7,6 +7,7 @@ import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
+import com.enderio.conduits.common.init.Conduits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,18 +18,18 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit, EnergyConduitNetworkContext, ConduitData.EmptyConduitData> {
+public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> {
 
     public EnergyConduitTicker() {
     }
 
     @Override
     public void tickGraph(ServerLevel level, EnergyConduit conduit,
-        List<ConduitNode<EnergyConduitNetworkContext, ConduitData.EmptyConduitData>> loadedNodes,
-        ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
+                          List<ConduitNode> loadedNodes,
+                          ConduitNetwork graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
         // Reset insertion cap
-        EnergyConduitNetworkContext context = graph.getContext();
+        EnergyConduitNetworkContext context = graph.getContext(Conduits.ContextSerializers.ENERGY.get());
         if (context != null) {
             context.setEnergyInsertedThisTick(0);
         }
@@ -37,11 +38,10 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit, 
     }
 
     @Override
-    public void tickColoredGraph(ServerLevel level, EnergyConduit conduit,
-        List<Connection<ConduitData.EmptyConduitData>> inserts, List<Connection<ConduitData.EmptyConduitData>> extracts, ColorControl color,
-        ConduitNetwork<EnergyConduitNetworkContext, ConduitData.EmptyConduitData> graph, ColoredRedstoneProvider coloredRedstoneProvider) {
+    public void tickColoredGraph(ServerLevel level, EnergyConduit conduit, List<Connection> inserts, List<Connection> extracts, ColorControl color,
+        ConduitNetwork graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        EnergyConduitNetworkContext context = graph.getContext();
+        EnergyConduitNetworkContext context = graph.getContext(Conduits.ContextSerializers.ENERGY.get());
         if (context == null) {
             return;
         }
@@ -53,7 +53,7 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit, 
 
         List<IEnergyStorage> storagesForInsert = new ArrayList<>();
         for (var insert : inserts) {
-            IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, insert.move(), insert.dir().getOpposite());
+            IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, insert.move(), insert.direction().getOpposite());
             if (capability != null) {
                 storagesForInsert.add(capability);
             }
@@ -91,7 +91,7 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit, 
     }
 
     @Override
-    public boolean shouldSkipColor(List<Connection<ConduitData.EmptyConduitData>> extractList, List<Connection<ConduitData.EmptyConduitData>> insertList) {
+    public boolean shouldSkipColor(List<Connection> extractList, List<Connection> insertList) {
         return insertList.isEmpty();
     }
 

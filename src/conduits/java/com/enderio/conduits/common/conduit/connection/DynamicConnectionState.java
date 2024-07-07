@@ -69,7 +69,7 @@ public record DynamicConnectionState(
         DynamicConnectionState::new
     );
 
-    public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction, Holder<Conduit<?, ?, ?>> type) {
+    public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction, Holder<Conduit<?>> type) {
         Conduit.ConduitConnectionData defaultConnection = type.value().getDefaultConnection(level, pos, direction);
         return new DynamicConnectionState(defaultConnection.isInsert(), ColorControl.GREEN, defaultConnection.isExtract(), ColorControl.GREEN, defaultConnection.control(), ColorControl.RED, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
     }

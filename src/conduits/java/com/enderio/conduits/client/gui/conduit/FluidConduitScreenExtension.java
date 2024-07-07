@@ -1,10 +1,12 @@
 package com.enderio.conduits.client.gui.conduit;
 
 import com.enderio.EnderIO;
+import com.enderio.api.ConduitDataAccessor;
 import com.enderio.api.conduit.screen.ConduitScreenExtension;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
+import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -27,21 +29,21 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import java.util.List;
 import java.util.function.Supplier;
 
-public final class FluidConduitScreenExtension implements ConduitScreenExtension<FluidConduitData> {
+public final class FluidConduitScreenExtension implements ConduitScreenExtension {
 
     private static final ResourceLocation WIDGET_TEXTURE = EnderIO.loc("textures/gui/fluidbackground.png");
 
     @Override
-    public List<AbstractWidget> createWidgets(Screen screen, Supplier<FluidConduitData> conduitDataSupplier, UpdateExtendedData<FluidConduitData> updateConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+    public List<AbstractWidget> createWidgets(Screen screen, ConduitDataAccessor conduitDataAccessor, UpdateDispatcher updateConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         return List.of(
             new FluidWidget(widgetsStart.add(0, 20),
-                () -> conduitDataSupplier.get().lockedFluid(),
-                () -> updateConduitData.update(data -> {
+                () -> conduitDataAccessor.getOrCreateData(ConduitTypes.Data.FLUID.get()).lockedFluid(),
+                () -> {
+                    FluidConduitData data = conduitDataAccessor.getOrCreateData(ConduitTypes.Data.FLUID.get());
                     data.setShouldReset(true);
-                    return data;
+                    updateConduitData.sendUpdate();
                 })
-            )
-        );
+            );
     }
 
     private static class FluidWidget extends AbstractWidget {

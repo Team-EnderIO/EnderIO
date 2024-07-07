@@ -1,12 +1,16 @@
 package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.ConduitDataType;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.conduit.type.energy.EnergyConduit;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduit;
+import com.enderio.conduits.common.conduit.type.fluid.FluidConduitData;
 import com.enderio.conduits.common.conduit.type.item.ItemConduit;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduit;
+import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -14,7 +18,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 public class ConduitTypes {
-    public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MODID);
+    private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MODID);
 
     public static final Supplier<ConduitType<EnergyConduit>> ENERGY = CONDUIT_TYPES
         .register("energy", () -> ConduitType.builder(EnergyConduit.CODEC)
@@ -30,7 +34,21 @@ public class ConduitTypes {
     public static final Supplier<ConduitType<ItemConduit>> ITEM = CONDUIT_TYPES
         .register("item", () -> ConduitType.of(ItemConduit::new));
 
+    public static class Data {
+        private static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister.create(EnderIORegistries.CONDUIT_DATA_TYPE, EnderIO.MODID);
+
+        public static final Supplier<ConduitDataType<ItemConduitData>> ITEM = CONDUIT_DATA_TYPES
+            .register("item", () -> new ConduitDataType<>(ItemConduitData.CODEC, ItemConduitData.STREAM_CODEC, ItemConduitData::new));
+
+        public static final Supplier<ConduitDataType<FluidConduitData>> FLUID = CONDUIT_DATA_TYPES
+            .register("fluid", () -> new ConduitDataType<>(FluidConduitData.CODEC, FluidConduitData.STREAM_CODEC, FluidConduitData::new));
+
+        public static final Supplier<ConduitDataType<RedstoneConduitData>> REDSTONE = CONDUIT_DATA_TYPES
+            .register("redstone", () -> new ConduitDataType<>(RedstoneConduitData.CODEC, RedstoneConduitData.STREAM_CODEC, RedstoneConduitData::new));
+    }
+
     public static void register(IEventBus bus) {
         CONDUIT_TYPES.register(bus);
+        Data.CONDUIT_DATA_TYPES.register(bus);
     }
 }

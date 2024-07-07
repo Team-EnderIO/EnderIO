@@ -10,17 +10,17 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RegisterConduitCoreModelModifiersEvent extends Event implements IModBusEvent {
-    public interface ConduitCoreModelModifierFactory<T extends ConduitData<T>> {
-        ConduitCoreModelModifier<T> createModifier();
+    public interface ConduitCoreModelModifierFactory {
+        ConduitCoreModelModifier createModifier();
     }
 
-    private final Map<ConduitType<?>, ConduitCoreModelModifierFactory<?>> modifiers = new ConcurrentHashMap<>();
+    private final Map<ConduitType<?>, ConduitCoreModelModifierFactory> modifiers = new ConcurrentHashMap<>();
 
-    public <T extends ConduitData<T>> void register(ConduitType<? extends Conduit<?, ?, T>> type, ConduitCoreModelModifierFactory<T> modifierFactory) {
+    public void register(ConduitType<? extends Conduit<?>> type, ConduitCoreModelModifierFactory modifierFactory) {
         modifiers.put(type, modifierFactory);
     }
 
-    public Map<ConduitType<?>, ConduitCoreModelModifierFactory<?>> getModifiers() {
+    public Map<ConduitType<?>, ConduitCoreModelModifierFactory> getModifiers() {
         return Map.copyOf(modifiers);
     }
 }
