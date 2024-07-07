@@ -9,6 +9,9 @@ import net.minecraft.core.Direction;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * Extend the conduit screen with additional widgets.
+ */
 public interface ConduitScreenExtension {
 
     @FunctionalInterface

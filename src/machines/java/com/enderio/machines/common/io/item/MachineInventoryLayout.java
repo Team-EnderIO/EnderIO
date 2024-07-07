@@ -1,6 +1,5 @@
 package com.enderio.machines.common.io.item;
 
-import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.init.EIODataComponents;
 import net.minecraft.world.item.ItemStack;
 

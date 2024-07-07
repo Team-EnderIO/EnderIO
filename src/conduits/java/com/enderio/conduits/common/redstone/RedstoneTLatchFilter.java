@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.redstone;
 
-import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.mojang.serialization.Codec;
@@ -8,6 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
 public class RedstoneTLatchFilter implements RedstoneInsertFilter {
@@ -20,7 +20,7 @@ public class RedstoneTLatchFilter implements RedstoneInsertFilter {
     }
 
     @Override
-    public int getOutputSignal(RedstoneConduitData data, ColorControl control) {
+    public int getOutputSignal(RedstoneConduitData data, DyeColor control) {
         boolean active1 = isActive();
         if (data.isActive(control) && isDeactivated()) {
             active1 = !active1;

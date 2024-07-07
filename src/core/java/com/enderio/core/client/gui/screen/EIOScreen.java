@@ -1,13 +1,10 @@
 package com.enderio.core.client.gui.screen;
 
 import com.enderio.api.misc.Vector2i;
-import com.enderio.core.client.gui.widgets.EnumIconWidget;
-import com.enderio.core.common.menu.SyncedMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -21,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated(forRemoval = true, since = "7.0")
 public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements EnderScreen {
 
     private final boolean renderLabels;
@@ -44,28 +42,18 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
             oldEditBoxValues.put(editBox.getMessage().getString(), editBox.getValue());
         }
         editBoxList.clear();
-        Map<String, Boolean> oldEnums = new HashMap<>();
-        for (Renderable renderable: renderables) {
-            if (renderable instanceof EnumIconWidget<?,?> enumIconWidget) {
-                oldEnums.put(enumIconWidget.getOptionName().getString(), enumIconWidget.isExpanded());
-            }
-        }
+
         super.resize(pMinecraft, pWidth, pHeight);
         for (EditBox editBox : editBoxList) {
             editBox.setValue(oldEditBoxValues.getOrDefault(editBox.getMessage().getString(), ""));
-        }
-        for (Renderable renderable: renderables) {
-            if (renderable instanceof EnumIconWidget<?,?> enumIconWidget) {
-                enumIconWidget.setExpanded(oldEnums.getOrDefault(enumIconWidget.getOptionName().getString(), false));
-            }
         }
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
-        if (menu instanceof SyncedMenu<?> syncedMenu && syncedMenu.getBlockEntity() == null) {
+        /*if (menu instanceof SyncedMenu<?> syncedMenu && syncedMenu.getBlockEntity() == null) {
             return;
-        }
+        }*/
 
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         this.renderTooltip(guiGraphics, pMouseX, pMouseY);
@@ -81,22 +69,14 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
         if (pKeyCode == 256) { //ESC has priority
             Minecraft.getInstance().player.closeContainer();
         }
+
         for (EditBox editBox : editBoxList) {
             if (editBox.keyPressed(pKeyCode, pScanCode, pModifiers) || editBox.canConsumeInput()) {
                 return true;
             }
         }
-        return super.keyPressed(pKeyCode, pScanCode, pModifiers);
-    }
 
-    @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        for (GuiEventListener widget : children()) {
-            if (widget instanceof AbstractWidget abstractWidget && abstractWidget.isActive() && widget instanceof FullScreenListener fullScreenListener) {
-                fullScreenListener.onGlobalClick(pMouseX, pMouseY);
-            }
-        }
-        return super.mouseClicked(pMouseX, pMouseY, pButton);
+        return super.keyPressed(pKeyCode, pScanCode, pModifiers);
     }
 
     @Override
@@ -133,13 +113,5 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
         if (guiEventListener instanceof EditBox editBox) {
             editBoxList.remove(editBox);
         }
-    }
-
-    /**
-     * makes this public instead of protected
-     */
-    @Override
-    public void setTooltipForNextRenderPass(Component pTooltip) {
-        super.setTooltipForNextRenderPass(pTooltip);
     }
 }

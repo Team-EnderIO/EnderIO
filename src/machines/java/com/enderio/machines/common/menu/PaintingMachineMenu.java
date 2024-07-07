@@ -2,23 +2,35 @@ package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.blockentity.PaintingMachineBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
+import com.enderio.machines.common.menu.base.MachineMenu;
+import com.enderio.machines.common.menu.base.PoweredMachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
-public class PaintingMachineMenu extends MachineMenu<PaintingMachineBlockEntity> {
+public class PaintingMachineMenu extends PoweredMachineMenu<PaintingMachineBlockEntity> {
     public PaintingMachineMenu(@Nullable PaintingMachineBlockEntity blockEntity, Inventory inventory, int pContainerId) {
-        super(blockEntity, inventory, MachineMenus.PAINTING_MACHINE.get(), pContainerId);
-        if (blockEntity != null) {
-            addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
+        super(MachineMenus.PAINTING_MACHINE.get(), pContainerId, blockEntity, inventory);
 
-            addSlot(new MachineSlot(blockEntity.getInventory(), PaintingMachineBlockEntity.INPUT, 67, 34));
-            addSlot(new MachineSlot(blockEntity.getInventory(), PaintingMachineBlockEntity.PAINT, 38, 34));
-            addSlot(new MachineSlot(blockEntity.getInventory(), PaintingMachineBlockEntity.OUTPUT, 120, 34));
+        if (blockEntity != null) {
+            addSlot(new MachineSlot(getMachineInventory(), getCapacitorSlotIndex(), 12, 60));
+
+            addSlot(new MachineSlot(getMachineInventory(), PaintingMachineBlockEntity.INPUT, 67, 34));
+            addSlot(new MachineSlot(getMachineInventory(), PaintingMachineBlockEntity.PAINT, 38, 34));
+            addSlot(new MachineSlot(getMachineInventory(), PaintingMachineBlockEntity.OUTPUT, 120, 34));
         }
-        addInventorySlots(8,84);
+
+        addPlayerInventorySlots(8,84);
+    }
+
+    public float getCraftingProgress() {
+        if (getBlockEntity() == null) {
+            throw new IllegalStateException("BlockEntity is null");
+        }
+
+        return getBlockEntity().getCraftingProgress();
     }
 
     public static PaintingMachineMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {

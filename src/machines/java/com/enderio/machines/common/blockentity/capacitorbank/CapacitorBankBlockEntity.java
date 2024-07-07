@@ -85,7 +85,7 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new CapacitorBankMenu(this, pPlayerInventory, pContainerId);
+        return new CapacitorBankMenu(pContainerId, this, pPlayerInventory);
     }
 
     @Override

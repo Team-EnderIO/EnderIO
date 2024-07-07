@@ -5,7 +5,6 @@ import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ticker.IOAwareConduitTicker;
-import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.redstone.RedstoneExtractFilter;
@@ -13,6 +12,7 @@ import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneConduit> {
 
-    private final Map<ColorControl, Integer> activeColors = new EnumMap<>(ColorControl.class);
+    private final Map<DyeColor, Integer> activeColors = new EnumMap<>(DyeColor.class);
 
     @Override
     public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
@@ -59,7 +59,7 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
         RedstoneConduit conduit,
         List<Connection> inserts,
         List<Connection> extracts,
-        ColorControl color,
+        DyeColor color,
         ConduitNetwork graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 

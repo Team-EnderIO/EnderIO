@@ -1,6 +1,7 @@
 package com.enderio.base.common.block.glass;
 
 import com.enderio.base.common.config.BaseConfig;
+import com.enderio.base.common.lang.EIOEnumLang;
 import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -60,7 +61,10 @@ public class FusedQuartzBlock extends TransparentBlock {
             pTooltip.add(EIOLang.FUSED_QUARTZ_BLOCKS_LIGHT);
         }
 
-        collisionPredicate.getDescription().ifPresent(pTooltip::add);
+        Component collisionTooltip = EIOEnumLang.GLASS_COLLISION.get(collisionPredicate);
+        if (collisionTooltip != null) {
+            pTooltip.add(collisionTooltip);
+        }
     }
 
     @Override

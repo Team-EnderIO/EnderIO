@@ -2,7 +2,6 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.core.common.capability.IFilterCapability;
 import com.enderio.core.common.capability.ItemFilterCapability;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -28,7 +27,7 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
 
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new VacuumChestMenu(this, inventory, containerId);
+        return new VacuumChestMenu(containerId, this, inventory);
     }
 
     @Override

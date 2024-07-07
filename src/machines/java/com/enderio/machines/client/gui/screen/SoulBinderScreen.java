@@ -1,52 +1,52 @@
 package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
-import com.enderio.api.misc.Vector2i;
+import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.widgets.EnumIconWidget;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.ExperienceCraftingWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
-import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.menu.SoulBinderMenu;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class SoulBinderScreen extends MachineScreen<SoulBinderMenu> {
 
-    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/soul_binder.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/screen/soul_binder.png");
+    private static final int WIDTH = 176;
+    private static final int HEIGHT = 166;
 
     public SoulBinderScreen(SoulBinderMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+        imageWidth = WIDTH;
+        imageHeight = HEIGHT;
     }
 
     @Override
     protected void init() {
         super.init();
 
-        addRenderableOnly(new ProgressWidget.LeftRight(this, () -> menu.getBlockEntity().getCraftingProgress(), getGuiLeft() + 80, getGuiTop() + 34, 24, 17, 176, 14));
+        addRenderableOnly(new ProgressWidget.LeftRight(BG_TEXTURE, menu::getCraftingProgress, getGuiLeft() + 80, getGuiTop() + 34, 24, 17, 176, 14));
 
-        addRenderableOnly(new CapacitorEnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, getMenu().getBlockEntity()::isCapacitorInstalled, 16 + leftPos, 14 + topPos, 9, 42));
+        addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage, menu::isCapacitorInstalled));
 
-        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 6 - 16, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
-            control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl,
+            EIOLang.REDSTONE_MODE));
 
-        addRenderableOnly(new ExperienceCraftingWidget(this, getMenu().getBlockEntity()::getFluidTank, () -> getMenu().getBlockEntity().getClientExp(), 56 + leftPos, 68 + topPos, 65, 5));
+        addRenderableOnly(new ExperienceCraftingWidget(56 + leftPos, 68 + topPos, 65, 5, menu::getFluidTank, menu::getExperience));
 
-        addRenderableWidget(new ActivityWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16 * 4));
+        addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
-        addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font));
+        var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 83, 162, 76);
+        addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);
     }
 
     @Override
-    public ResourceLocation getBackgroundImage() {
-        return BG_TEXTURE;
-    }
-
-    @Override
-    protected Vector2i getBackgroundImageSize() {
-        return new Vector2i(176, 166);
+    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+        pGuiGraphics.blit(BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 }

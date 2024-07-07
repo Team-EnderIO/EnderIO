@@ -6,7 +6,7 @@ import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlock;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitMenus;
-import com.enderio.core.common.menu.SyncedMenu;
+import com.enderio.core.common.menu.BaseBlockEntityMenu;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -23,62 +23,53 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConduitMenu extends SyncedMenu<ConduitBundleBlockEntity> {
-
-    public List<ConduitSlot> getConduitSlots() {
-        return conduitSlots;
-    }
-
-    //List capped to MaxConduitTypes inner list with 3 (2 filter, 1 upgrade) slots, because that's the maximum. All non visible slots will be made noninteractable
-    private final List<ConduitSlot> conduitSlots = new ArrayList<>();
-
+public class ConduitMenu extends BaseBlockEntityMenu<ConduitBundleBlockEntity> {
     private Direction direction;
     private Holder<Conduit<?>> conduit;
 
     public ConduitMenu(@Nullable ConduitBundleBlockEntity blockEntity, Inventory inventory, int pContainerId, Direction direction, Holder<Conduit<?>> conduit) {
-        super(blockEntity, inventory, ConduitMenus.CONDUIT_MENU.get(), pContainerId);
+        super(ConduitMenus.CONDUIT_MENU.get(), pContainerId, blockEntity, inventory);
+
         this.direction = direction;
         this.conduit = conduit;
         if (blockEntity != null) {
             IItemHandler conduitItemHandler = blockEntity.getConduitItemHandler();
             for (Direction forDirection : Direction.values()) {
                 for (int i = 0; i < ConduitBundle.MAX_CONDUITS; i++) {
-                    for (SlotType slotType: SlotType.values()) {
-                        ConduitSlot slot = new ConduitSlot(blockEntity.getBundle(),conduitItemHandler, () -> this.direction, forDirection, () -> blockEntity.getBundle().getConduits().indexOf(this.conduit), i, slotType);
-                        conduitSlots.add(slot);
-                        slot.updateVisibilityPosition();
-                        addSlot(slot);
+                    for (SlotType slotType : SlotType.values()) {
+                        addSlot(new ConduitSlot(blockEntity.getBundle(),conduitItemHandler, () -> this.direction, forDirection,
+                            () -> blockEntity.getBundle().getConduits().indexOf(this.conduit), i, slotType));
                     }
                 }
             }
         }
-        addInventorySlots(23,113);
+
+        addPlayerInventorySlots(23,113);
     }
 
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
-        ItemStack itemstack = ItemStack.EMPTY;
+        ItemStack resultItemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(pIndex);
-
         if (slot.hasItem()) {
-            ItemStack itemstack1 = slot.getItem();
-            itemstack = itemstack1.copy();
-            if (pIndex < this.slots.size() - 36) {
-                if (!this.moveItemStackTo(itemstack1, this.slots.size() - 36, this.slots.size(), true)) {
+            ItemStack itemInSlot = slot.getItem();
+            resultItemStack = itemInSlot.copy();
+            if (pIndex < this.slots.size() - PLAYER_INVENTORY_SIZE) {
+                if (!this.moveItemStackTo(itemInSlot, this.slots.size() -  PLAYER_INVENTORY_SIZE, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(itemstack1, 0, this.slots.size() - 36, false)) {
+            } else if (!this.moveItemStackTo(itemInSlot, 0, this.slots.size() -  PLAYER_INVENTORY_SIZE, false)) {
                 return ItemStack.EMPTY;
             }
 
-            if (itemstack1.isEmpty()) {
-                slot.set(ItemStack.EMPTY);
+            if (itemInSlot.isEmpty()) {
+                slot.setByPlayer(ItemStack.EMPTY);
             } else {
                 slot.setChanged();
             }
         }
 
-        return itemstack;
+        return resultItemStack;
     }
 
     @Override

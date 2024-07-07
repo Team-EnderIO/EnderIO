@@ -1,11 +1,11 @@
 package com.enderio.conduits.client.model;
 
-import com.enderio.api.misc.ColorControl;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.world.item.DyeColor;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
 import org.jetbrains.annotations.Nullable;
 
-public record ColorQuadTransformer(@Nullable ColorControl insert, @Nullable ColorControl extract) implements IQuadTransformer {
+public record ColorQuadTransformer(@Nullable DyeColor insert, @Nullable DyeColor extract) implements IQuadTransformer {
     @Override
     public void processInPlace(BakedQuad quad) {
         if (quad.isTinted()) {

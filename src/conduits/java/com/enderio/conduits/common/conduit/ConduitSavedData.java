@@ -5,7 +5,6 @@ import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ticker.ConduitTicker;
-import com.enderio.api.misc.ColorControl;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
@@ -26,6 +25,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -325,7 +325,7 @@ public class ConduitSavedData extends SavedData {
         }
     }
 
-    private static boolean isRedstoneActive(ServerLevel serverLevel, BlockPos pos, ColorControl color) {
+    private static boolean isRedstoneActive(ServerLevel serverLevel, BlockPos pos, DyeColor color) {
         if (!serverLevel.isLoaded(pos) || !serverLevel.shouldTickBlocksAt(pos)) {
             return false;
         }

@@ -24,6 +24,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import java.util.Set;
 
@@ -31,7 +32,6 @@ import java.util.Set;
 public class EIOConduits {
     @SubscribeEvent
     public static void onConstruct(FMLConstructModEvent event) {
-        EnderIO.LOGGER.atDebug().log("================ Conduits construct ==================");
         IEventBus bus = EnderIO.modEventBus;
 
         Conduits.register(bus);
@@ -44,6 +44,13 @@ public class EIOConduits {
         ConduitIngredientTypes.register(bus);
         Integrations.register();
         ConduitLang.register();
+    }
+
+    @SubscribeEvent
+    public static void onNewRegistries(NewRegistryEvent event) {
+        event.register(EnderIORegistries.CONDUIT_TYPE);
+        event.register(EnderIORegistries.CONDUIT_DATA_TYPE);
+        event.register(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE);
     }
 
     @SubscribeEvent

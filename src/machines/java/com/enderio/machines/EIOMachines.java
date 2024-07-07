@@ -12,6 +12,7 @@ import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.init.MachineTravelTargets;
 import com.enderio.machines.common.integrations.EnderIOMachinesSelfIntegration;
+import com.enderio.machines.common.lang.MachineEnumLang;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.menu.GhostMachineSlot;
@@ -66,6 +67,7 @@ public class EIOMachines {
         MachineAttachments.register(EnderIO.modEventBus);
 
         MachineLang.register();
+        MachineEnumLang.register();
         MachineTags.register();
 
         IntegrationManager.addIntegration(EnderIOMachinesSelfIntegration.INSTANCE);

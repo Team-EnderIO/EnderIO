@@ -242,7 +242,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-        return new DrainMenu(this, playerInventory, containerId);
+        return new DrainMenu(containerId, this, playerInventory);
     }
 
     @Override

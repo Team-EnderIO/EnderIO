@@ -72,8 +72,8 @@ public class ClientSetup {
     public static void itemDecorators(RegisterItemDecorationsEvent event) {
         // Register tools
         event.register(EIOItems.LEVITATION_STAFF.get(), FluidBarDecorator.INSTANCE);
-        //        event.register(EIOItems.DARK_STEEL_AXE.get(), EnergyBarDecorator.INSTANCE);
-        //        event.register(EIOItems.DARK_STEEL_PICKAXE.get(), EnergyBarDecorator.INSTANCE);
+//        event.register(EIOItems.DARK_STEEL_AXE.get(), EnergyBarDecorator.INSTANCE);
+//        event.register(EIOItems.DARK_STEEL_PICKAXE.get(), EnergyBarDecorator.INSTANCE);
 
         // Register all glass blocks
         EIOBlocks.GLASS_BLOCKS.values().forEach(blocks -> blocks.getAllBlocks().forEach(block -> event.register(block.get(), GlassIconDecorator.INSTANCE)));
@@ -87,7 +87,6 @@ public class ClientSetup {
             }
         }
     }
-
 
     @SubscribeEvent
     public static void bakingCompleted(ModelEvent.BakingCompleted event) {

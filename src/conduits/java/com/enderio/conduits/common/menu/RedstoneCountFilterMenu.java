@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.menu;
 
-import com.enderio.api.misc.ColorControl;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.conduits.common.network.CountFilterPacket;
@@ -12,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +64,7 @@ public class RedstoneCountFilterMenu extends AbstractContainerMenu {
         }
     }
 
-    public void setChannel(ColorControl channel) {
+    public void setChannel(DyeColor channel) {
         filter.setChannel(channel);
         PacketDistributor.sendToServer(new CountFilterPacket(filter.getChannel(), filter.getMaxCount(), filter.getCount(), filter.isDeactivated()));
     }

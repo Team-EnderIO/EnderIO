@@ -42,7 +42,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-        return new XPObeliskMenu(this, playerInventory, containerId);
+        return new XPObeliskMenu(containerId, this, playerInventory);
     }
 
     @Override

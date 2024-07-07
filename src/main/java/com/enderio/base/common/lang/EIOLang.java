@@ -2,7 +2,6 @@ package com.enderio.base.common.lang;
 
 import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.api.misc.ApiLang;
 import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.network.chat.Component;
@@ -27,13 +26,6 @@ public class EIOLang {
     public static final Component FUSED_QUARTZ_EMITS_LIGHT = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("fused_quartz.emits_light"), "Emits light"));
     public static final Component FUSED_QUARTZ_BLOCKS_LIGHT = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("fused_quartz.blocks_light"), "Blocks light"));
 
-    public static final Component GLASS_COLLISION_PLAYERS_PASS = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("collision.players_pass"), "Not solid to players"));
-    public static final Component GLASS_COLLISION_PLAYERS_BLOCK = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("collision.players_block"), "Only solid to players"));
-    public static final Component GLASS_COLLISION_MOBS_PASS = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("collision.mobs_pass"), "Not solid to monsters"));
-    public static final Component GLASS_COLLISION_MOBS_BLOCK = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("collision.mobs_block"), "Only solid to monsters"));
-    public static final Component GLASS_COLLISION_ANIMALS_PASS = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("collision.animals_pass"), "Not solid to animals"));
-    public static final Component GLASS_COLLISION_ANIMALS_BLOCK = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("collision.animals_block"), "Only solid to animals"));
-
     // endregion
 
     // region Items
@@ -55,10 +47,6 @@ public class EIOLang {
     public static final Component CONDUIT_CHANNEL = addTranslation("gui", EnderIO.loc("conduit_channel"), "Conduit-Channel");
     public static final Component REDSTONE_CHANNEL = addTranslation("gui", EnderIO.loc("redstone_channel"), "Redstone-Channel");
     public static final Component REDSTONE_MODE = addTranslation("gui", EnderIO.loc("redstone.mode"), "Redstone Mode");
-    public static final Component REDSTONE_ALWAYS_ACTIVE = addTranslation("gui", EnderIO.loc("redstone.always_active"), "Always active");
-    public static final Component REDSTONE_ACTIVE_WITH_SIGNAL = addTranslation("gui", EnderIO.loc("redstone.active_with_signal"), "Active with signal");
-    public static final Component REDSTONE_ACTIVE_WITHOUT_SIGNAL = addTranslation("gui", EnderIO.loc("redstone.active_without_signal"), "Active without signal");
-    public static final Component REDSTONE_NEVER_ACTIVE = addTranslation("gui", EnderIO.loc("redstone.never_active"), "Never active");
     public static final Component ROUND_ROBIN_ENABLED = addTranslation("gui", EnderIO.loc("round_robin.enabled"), "Round Robin Enabled");
     public static final Component ROUND_ROBIN_DISABLED = addTranslation("gui", EnderIO.loc("round_robin.disabled"), "Round Robin Disabled");
     public static final Component SELF_FEED_ENABLED = addTranslation("gui", EnderIO.loc("self_feed.enabled"), "Self Feed Enabled");
@@ -296,12 +284,6 @@ public class EIOLang {
     }
 
     public static void register() {
-        // TODO: NEO-PORT: This is gross. We should probably just hand-write a lang json for core/api?
-        ApiLang.REDSTONE_ACTIVE_WITH_SIGNAL = REDSTONE_ACTIVE_WITH_SIGNAL;
-        ApiLang.REDSTONE_NEVER_ACTIVE = REDSTONE_NEVER_ACTIVE;
-        ApiLang.REDSTONE_ALWAYS_ACTIVE = REDSTONE_ALWAYS_ACTIVE;
-        ApiLang.REDSTONE_ACTIVE_WITHOUT_SIGNAL = REDSTONE_ACTIVE_WITHOUT_SIGNAL;
-
         registerGlassLang();
     }
 }

@@ -2,14 +2,13 @@ package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
 import com.enderio.api.grindingball.GrindingBallData;
-import com.enderio.api.misc.Vector2i;
+import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
-import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.SagMillMenu;
@@ -26,38 +25,38 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class SagMillScreen extends MachineScreen<SagMillMenu> {
-    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/sag_mill.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/screen/sag_mill.png");
+    private static final int WIDTH = 176;
+    private static final int HEIGHT = 166;
 
     public SagMillScreen(SagMillMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+        imageWidth = WIDTH;
+        imageHeight = HEIGHT;
     }
 
     @Override
     protected void init() {
         super.init();
 
-        addRenderableOnly(new ProgressWidget.TopDown(this, () -> menu.getBlockEntity().getCraftingProgress(), getGuiLeft() + 81, getGuiTop() + 31, 15, 23, 202, 0));
+        addRenderableOnly(new ProgressWidget.TopDown(BG_TEXTURE, menu::getCraftingProgress, getGuiLeft() + 81, getGuiTop() + 31, 15, 23, 202, 0));
 
-        addRenderableOnly(new CapacitorEnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, getMenu().getBlockEntity()::isCapacitorInstalled, 16 + leftPos, 14 + topPos, 9, 42));
+        addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage, menu::isCapacitorInstalled));
 
         addRenderableOnly(new GrindingBallWidget(142 + leftPos, 23 + topPos));
 
-        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 6 - 16, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
-            control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl,
+            EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(new ActivityWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16 * 4));
+        addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
-        addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font));
+        var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 83, 162, 76);
+        addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);
     }
 
     @Override
-    public ResourceLocation getBackgroundImage() {
-        return BG_TEXTURE;
-    }
-
-    @Override
-    protected Vector2i getBackgroundImageSize() {
-        return new Vector2i(176, 166);
+    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+        pGuiGraphics.blit(BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 
     private class GrindingBallWidget extends AbstractWidget {

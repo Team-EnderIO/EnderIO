@@ -3,7 +3,6 @@ package com.enderio.conduits.client;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.model.RegisterConduitCoreModelModifiersEvent;
 import com.enderio.api.conduit.screen.RegisterConduitScreenExtensionsEvent;
-import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
 import com.enderio.conduits.client.gui.conduit.FluidConduitScreenExtension;
 import com.enderio.conduits.client.gui.conduit.ItemConduitScreenExtension;
@@ -18,6 +17,7 @@ import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -102,7 +102,7 @@ public class ConduitClientSetup {
 
         @Override
         public int getColor(BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tintIndex) {
-            return ColorControl.values()[tintIndex].getColor();
+            return DyeColor.values()[tintIndex].getTextureDiffuseColor();
         }
     }
 

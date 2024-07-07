@@ -6,13 +6,13 @@ import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
-import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -22,8 +22,8 @@ public interface IOAwareConduitTicker<TConduit extends Conduit<TConduit>> extend
     default void tickGraph(ServerLevel level, TConduit conduit, List<ConduitNode> loadedNodes, ConduitNetwork graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        ListMultimap<ColorControl, Connection> extracts = ArrayListMultimap.create();
-        ListMultimap<ColorControl, Connection> inserts = ArrayListMultimap.create();
+        ListMultimap<DyeColor, Connection> extracts = ArrayListMultimap.create();
+        ListMultimap<DyeColor, Connection> inserts = ArrayListMultimap.create();
         for (ConduitNode node : loadedNodes) {
             for (Direction direction : Direction.values()) {
                 node.getIOState(direction).ifPresent(ioState -> {
@@ -37,7 +37,7 @@ public interface IOAwareConduitTicker<TConduit extends Conduit<TConduit>> extend
                 });
             }
         }
-        for (ColorControl color : ColorControl.values()) {
+        for (DyeColor color : DyeColor.values()) {
             List<Connection> extractList = extracts.get(color);
             List<Connection> insertList = inserts.get(color);
             if (shouldSkipColor(extractList, insertList)) {
@@ -57,7 +57,7 @@ public interface IOAwareConduitTicker<TConduit extends Conduit<TConduit>> extend
         TConduit conduit,
         List<Connection> inserts,
         List<Connection> extracts,
-        ColorControl color,
+        DyeColor color,
         ConduitNetwork graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 

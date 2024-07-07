@@ -1,18 +1,18 @@
 package com.enderio.conduits.common.redstone;
 
-import com.enderio.api.misc.ColorControl;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 
 public class DoubleRedstoneChannel {
 
-    public static final Component INSTANCE = new Component(ColorControl.GREEN, ColorControl.BROWN);
+    public static final Component INSTANCE = new Component(DyeColor.GREEN, DyeColor.BROWN);
 
     private final Supplier<DataComponentType<Component>> componentType;
     private final ItemStack stack;
@@ -22,38 +22,38 @@ public class DoubleRedstoneChannel {
         this.componentType = componentType;
     }
 
-    public ColorControl getFirstChannel() {
+    public DyeColor getFirstChannel() {
         return stack.get(componentType.get()).channel1();
     }
 
-    public ColorControl getSecondChannel() {
+    public DyeColor getSecondChannel() {
         return stack.get(componentType.get()).channel2();
     }
 
-    public void setFirstChannel(ColorControl channel1) {
+    public void setFirstChannel(DyeColor channel1) {
         stack.set(componentType.get(), new Component(channel1, getSecondChannel()));
     }
 
-    public void setSecondChannel(ColorControl channel2) {
+    public void setSecondChannel(DyeColor channel2) {
         stack.set(componentType.get(), new Component(getFirstChannel(), channel2));
     }
 
-    public void setChannels(ColorControl channel1, ColorControl channel2) {
+    public void setChannels(DyeColor channel1, DyeColor channel2) {
         stack.set(componentType.get(), new Component(channel1, channel2));
     }
 
-    public record Component(ColorControl channel1, ColorControl channel2) {
+    public record Component(DyeColor channel1, DyeColor channel2) {
 
         public static final Codec<Component> CODEC = RecordCodecBuilder.create(instance ->
-            instance.group(ColorControl.CODEC.fieldOf("channel1").forGetter(Component::channel1),
-                    ColorControl.CODEC.fieldOf("channel2").forGetter(Component::channel2))
+            instance.group(DyeColor.CODEC.fieldOf("channel1").forGetter(Component::channel1),
+                    DyeColor.CODEC.fieldOf("channel2").forGetter(Component::channel2))
                 .apply(instance, Component::new)
         );
 
         public static final StreamCodec<ByteBuf, Component> STREAM_CODEC = StreamCodec.composite(
-            ColorControl.STREAM_CODEC,
+            DyeColor.STREAM_CODEC,
             Component::channel1,
-            ColorControl.STREAM_CODEC,
+            DyeColor.STREAM_CODEC,
             Component::channel2,
             Component::new
         );

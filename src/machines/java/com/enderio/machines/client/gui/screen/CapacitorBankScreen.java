@@ -1,19 +1,19 @@
 package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
-import com.enderio.api.misc.Vector2i;
+import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.widgets.EnumIconWidget;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.EnergyWidget;
-import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.menu.CapacitorBankMenu;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class CapacitorBankScreen extends MachineScreen<CapacitorBankMenu> {
 
-    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/capacitor_bank.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/screen/capacitor_bank.png");
 
     public CapacitorBankScreen(CapacitorBankMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -22,21 +22,16 @@ public class CapacitorBankScreen extends MachineScreen<CapacitorBankMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableOnly(new EnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, 8 + leftPos, 9 + topPos, 9, 68));
+        addRenderableOnly(new EnergyWidget(8 + leftPos, 9 + topPos, 9, 68, menu::getEnergyStorage));
 
-        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 6 - 16, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
-            control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font));
+        var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 83, 162, 76);
+        addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);
     }
 
     @Override
-    public ResourceLocation getBackgroundImage() {
-        return BG_TEXTURE;
-    }
-
-    @Override
-    protected Vector2i getBackgroundImageSize() {
-        return new Vector2i(176, 166);
+    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+        pGuiGraphics.blit(BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 }

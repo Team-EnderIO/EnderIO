@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.redstone;
 
-import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.network.CountFilterPacket;
@@ -10,11 +9,12 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
 public class RedstoneCountFilter implements RedstoneInsertFilter {
 
-    public static Component INSTANCE = new Component(ColorControl.GREEN, 8, 0, false);
+    public static Component INSTANCE = new Component(DyeColor.GREEN, 8, 0, false);
     private final ItemStack stack;
 
     public RedstoneCountFilter(ItemStack stack) {
@@ -22,8 +22,8 @@ public class RedstoneCountFilter implements RedstoneInsertFilter {
     }
 
     @Override
-    public int getOutputSignal(RedstoneConduitData data, ColorControl control) {
-        ColorControl channel = getChannel();
+    public int getOutputSignal(RedstoneConduitData data, DyeColor control) {
+        DyeColor channel = getChannel();
         int maxCount = getMaxCount();
         boolean deactivated = isDeactivated();
         int count = getCount();
@@ -42,7 +42,7 @@ public class RedstoneCountFilter implements RedstoneInsertFilter {
         return count == maxCount ? 15 : 0;
     }
 
-    public ColorControl getChannel() {
+    public DyeColor getChannel() {
         return stack.get(ConduitComponents.REDSTONE_COUNT_FILTER).channel1();
     }
 
@@ -77,14 +77,14 @@ public class RedstoneCountFilter implements RedstoneInsertFilter {
         stack.set(ConduitComponents.REDSTONE_COUNT_FILTER, new Component(packet.channel1(), packet.maxCount(), packet.count(), packet.active()));
     }
 
-    public void setChannel(ColorControl channel) {
+    public void setChannel(DyeColor channel) {
         var component = stack.get(ConduitComponents.REDSTONE_COUNT_FILTER);
         stack.set(ConduitComponents.REDSTONE_COUNT_FILTER, new Component(channel, component.maxCount, component.count, component.deactivated));
     }
 
-    public record Component(ColorControl channel1, int maxCount, int count, boolean deactivated) {
+    public record Component(DyeColor channel1, int maxCount, int count, boolean deactivated) {
         public static final Codec<Component> CODEC = RecordCodecBuilder.create(instance ->
-            instance.group(ColorControl.CODEC.fieldOf("channel1").forGetter(Component::channel1),
+            instance.group(DyeColor.CODEC.fieldOf("channel1").forGetter(Component::channel1),
                     ExtraCodecs.POSITIVE_INT.fieldOf("maxCount").forGetter(Component::maxCount),
                     ExtraCodecs.POSITIVE_INT.fieldOf("ticks").forGetter(Component::count),
                     Codec.BOOL.fieldOf("deactivated").forGetter(Component::deactivated))
@@ -92,7 +92,7 @@ public class RedstoneCountFilter implements RedstoneInsertFilter {
         );
 
         public static final StreamCodec<ByteBuf, Component> STREAM_CODEC = StreamCodec.composite(
-            ColorControl.STREAM_CODEC,
+            DyeColor.STREAM_CODEC,
             Component::channel1,
             ByteBufCodecs.VAR_INT,
             Component::maxCount,

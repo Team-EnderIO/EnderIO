@@ -28,6 +28,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.function.IntFunction;
 
@@ -77,9 +78,8 @@ public record TankRecipe(
 
                 return input.test(recipeInput.getItem(1));
             }
+            default -> throw new NotImplementedException();
         }
-
-        return false;
     }
 
     @Override

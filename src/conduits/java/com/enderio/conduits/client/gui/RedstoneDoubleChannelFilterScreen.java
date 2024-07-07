@@ -2,10 +2,10 @@ package com.enderio.conduits.client.gui;
 
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
+import com.enderio.base.client.gui.widget.DyeColorPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.common.menu.RedstoneDoubleChannelFilterMenu;
 import com.enderio.core.client.gui.screen.EIOScreen;
-import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,11 +22,11 @@ public class RedstoneDoubleChannelFilterScreen extends EIOScreen<RedstoneDoubleC
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new EnumIconWidget<>(this, this.leftPos + 15, this.topPos + 30,
+        addRenderableWidget(new DyeColorPickerWidget(this.leftPos + 15, this.topPos + 30,
             getMenu().getChannels()::getFirstChannel,
             getMenu()::setFirstChannel,
             EIOLang.REDSTONE_CHANNEL));
-        addRenderableWidget(new EnumIconWidget<>(this, this.leftPos + 15 + 60, this.topPos + 30,
+        addRenderableWidget(new DyeColorPickerWidget(this.leftPos + 15 + 60, this.topPos + 30,
             getMenu().getChannels()::getSecondChannel,
             getMenu()::setSecondChannel,
             EIOLang.REDSTONE_CHANNEL));

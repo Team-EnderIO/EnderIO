@@ -1,11 +1,10 @@
 package com.enderio.base.client.gui.screen;
 
 import com.enderio.EnderIO;
-import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.CoordinateMenu;
 import com.enderio.base.common.network.UpdateCoordinateSelectionNameMenuPacket;
-import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -15,31 +14,37 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
+public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
 
-    private static final Vector2i BG_SIZE = new Vector2i(176,116);
     private static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/40/location_printout.png");
+    private static final int WIDTH = 176;
+    private static final int HEIGHT = 116;
+
+    private EditBox nameInput;
 
     public CoordinateMenuScreen(CoordinateMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+        this.imageWidth = WIDTH;
+        this.imageHeight = HEIGHT;
     }
 
     @Override
     protected void init() {
         super.init();
 
-        EditBox name = new EditBox(this.font, leftPos + 43 + 4, topPos + 20 + 4, 92 - 12, 18, Component.literal("name"));
-        name.setCanLoseFocus(false);
-        name.setTextColor(0xFFFFFFFF);
-        name.setTextColorUneditable(0xFFFFFFFF);
-        name.setBordered(false);
-        name.setMaxLength(50);
-        name.setResponder(this::onNameChanged);
-        name.setValue(menu.getName());
+        nameInput = new EditBox(this.font, leftPos + 43 + 4, topPos + 20 + 4, 92 - 12, 18, Component.literal("name"));
+        nameInput.setCanLoseFocus(false);
+        nameInput.setTextColor(0xFFFFFFFF);
+        nameInput.setTextColorUneditable(0xFFFFFFFF);
+        nameInput.setBordered(false);
+        nameInput.setMaxLength(50);
+        nameInput.setResponder(this::onNameChanged);
+        nameInput.setValue(menu.getName());
 
-        this.addRenderableWidget(name);
-        this.setInitialFocus(name);
-        name.setEditable(true);
+        addRenderableWidget(nameInput);
+        addRestorableState("name", nameInput);
+        setInitialFocus(nameInput);
+        nameInput.setEditable(true);
 
         this.addRenderableWidget(new Button.Builder(EIOLang.OK, mouseButton -> Minecraft.getInstance().player.closeContainer())
             .bounds(getGuiLeft() + imageWidth - 30, getGuiTop() + imageHeight - 30, 20, 20)
@@ -48,7 +53,7 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float pPartialTicks, int pMouseX, int pMouseY) {
-        super.renderBg(guiGraphics, pPartialTicks, pMouseX, pMouseY);
+        guiGraphics.blit(BG_TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
 
         int midX = this.width / 2;
         int y = topPos + 48;
@@ -62,13 +67,14 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
     }
 
     @Override
-    public ResourceLocation getBackgroundImage() {
-        return BG_TEXTURE;
-    }
+    public boolean onKeyPressed(int keyCode, int scanCode, int modifiers) {
+        if (nameInput.isFocused()) {
+            if (nameInput.keyPressed(keyCode, scanCode, modifiers) || nameInput.canConsumeInput()) {
+                return true;
+            }
+        }
 
-    @Override
-    protected Vector2i getBackgroundImageSize() {
-        return BG_SIZE;
+        return super.onKeyPressed(keyCode, scanCode, modifiers);
     }
 
     private void onNameChanged(String name) {

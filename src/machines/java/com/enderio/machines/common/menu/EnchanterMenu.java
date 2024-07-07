@@ -1,42 +1,55 @@
 package com.enderio.machines.common.menu;
 
+import com.enderio.core.common.menu.BaseBlockEntityMenu;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
+import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
+import com.enderio.machines.common.menu.base.MachineMenu;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
-public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
+public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
     public static int INPUTS_INDEX = 0;
     public static int INPUT_COUNT = 3;
     public static int LAST_INDEX = 3;
 
-    public EnchanterMenu(@Nullable EnchanterBlockEntity blockEntity, Inventory inventory, int pContainerId) {
-        super(blockEntity, inventory, MachineMenus.ENCHANTER.get(), pContainerId);
+    public EnchanterMenu(Inventory inventory, int pContainerId, @Nullable EnchanterBlockEntity blockEntity) {
+        super(MachineMenus.ENCHANTER.get(), pContainerId, blockEntity, inventory);
+
         if (blockEntity != null) {
-            addSlot(new MachineSlot(blockEntity.getInventory(), EnchanterBlockEntity.BOOK, 16, 35));
-            addSlot(new MachineSlot(blockEntity.getInventory(), EnchanterBlockEntity.CATALYST, 65, 35));
-            addSlot(new MachineSlot(blockEntity.getInventory(), EnchanterBlockEntity.LAPIS, 85, 35));
+            addSlot(new MachineSlot(getMachineInventory(), EnchanterBlockEntity.BOOK, 16, 35));
+            addSlot(new MachineSlot(getMachineInventory(), EnchanterBlockEntity.CATALYST, 65, 35));
+            addSlot(new MachineSlot(getMachineInventory(), EnchanterBlockEntity.LAPIS, 85, 35));
             addSlot(new EnchanterOutputMachineSlot(blockEntity, EnchanterBlockEntity.OUTPUT, 144, 35));
         }
-        addInventorySlots(8,84);
+
+        addPlayerInventorySlots(8,84);
+    }
+
+    public MachineInventory getMachineInventory() {
+        if (getBlockEntity() == null) {
+            throw new IllegalStateException("BlockEntity is null");
+        }
+
+        return getBlockEntity().getInventory();
     }
 
     public static EnchanterMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof EnchanterBlockEntity castBlockEntity) {
-            return new EnchanterMenu(castBlockEntity, inventory, pContainerId);
+            return new EnchanterMenu(inventory, pContainerId, castBlockEntity);
         }
 
         LogManager.getLogger().warn("couldn't find BlockEntity");
-        return new EnchanterMenu(null, inventory, pContainerId);
+        return new EnchanterMenu(inventory, pContainerId, null);
     }
 
     public int getCurrentCost() {
@@ -45,6 +58,34 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
             return recipe.getXPCost(this.getBlockEntity().createRecipeInput());
         }
         return -1;
+    }
+
+    // TODO: need to find a way to factor this out somehow...
+    @Override
+    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(pIndex);
+        if (slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
+            itemstack = itemstack1.copy();
+            if (pIndex < this.slots.size() - PLAYER_INVENTORY_SIZE) {
+                if (!this.moveItemStackTo(itemstack1, this.slots.size() - PLAYER_INVENTORY_SIZE, this.slots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(itemstack1, 0, this.slots.size() - PLAYER_INVENTORY_SIZE, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemstack1.isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+
+            slot.onTake(pPlayer, itemstack1);
+        }
+
+        return itemstack;
     }
 
     public static class EnchanterOutputMachineSlot extends MachineSlot {

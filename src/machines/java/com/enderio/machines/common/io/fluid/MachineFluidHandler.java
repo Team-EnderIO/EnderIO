@@ -108,8 +108,9 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     public int fill(int tank, FluidStack resource, IFluidHandler.FluidAction action) {
         FluidStack fluid = getFluidInTank(tank);
         int capacity = getTankCapacity(tank);
-        if (resource.isEmpty())
+        if (resource.isEmpty()) {
             return 0;
+        }
 
         if (!isFluidValid(tank, resource)) {
             return 0;
@@ -203,11 +204,14 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     }
 
     public FluidStack drain(int tank, FluidStack resource, IFluidHandler.FluidAction action) {
-        if (resource.isEmpty() || !isFluidValid(tank, resource))
+        if (resource.isEmpty() || !isFluidValid(tank, resource)) {
             return FluidStack.EMPTY;
+        }
+
         if (!getFluidInTank(tank).isEmpty() && !getFluidInTank(tank).isFluidEqual(resource)) {
             return FluidStack.EMPTY;
         }
+
         return drain(tank, resource.getAmount(), action);
     }
 

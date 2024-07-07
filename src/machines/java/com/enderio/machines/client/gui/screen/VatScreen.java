@@ -1,22 +1,19 @@
 package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
-import com.enderio.api.misc.Vector2i;
+import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EIOScreen;
-import com.enderio.core.client.gui.widgets.EIOImageButton;
-import com.enderio.core.client.gui.widgets.EnumIconWidget;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.FermentationWidget;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
-import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
-import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.VatMenu;
 import com.enderio.machines.common.recipe.FermentingRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -28,43 +25,53 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class VatScreen extends EIOScreen<VatMenu> {
+public class VatScreen extends MachineScreen<VatMenu> {
 
-    private static final ResourceLocation VAT_BG = EnderIO.loc("textures/gui/vat.png");
+    private static final ResourceLocation VAT_BG = EnderIO.loc("textures/gui/screen/vat.png");
+    private static final int WIDTH = 176;
+    private static final int HEIGHT = 166;
+
     private static final ResourceLocation VAT_COVER = EnderIO.loc("vat_cover");
     public static final ResourceLocation MOVE_FLUID = EnderIO.loc("buttons/move_fluid");
     public static final ResourceLocation VOID_FLUID = EnderIO.loc("buttons/void_fluid");
+
+    private static final WidgetSprites MOVE_SPRITES = new WidgetSprites(MOVE_FLUID, MOVE_FLUID);
+    private static final WidgetSprites VOID_SPRITES = new WidgetSprites(VOID_FLUID, VOID_FLUID);
+
 
     private FermentingRecipe recipeCache;
     private ResourceLocation recipeId;
 
     public VatScreen(VatMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle, false);
+        super(pMenu, pPlayerInventory, pTitle);
+
+        imageWidth = WIDTH;
+        imageHeight = HEIGHT;
     }
 
     @Override
     protected void init() {
         super.init();
         updateRecipeCache();
-        addRenderableOnly(new FluidStackWidget(this, this::wrappedInputTank, 30 + leftPos, 12 + topPos, 15, 47));
-        addRenderableOnly(new FluidStackWidget(this, getMenu().getBlockEntity()::getOutputTank, 132 + leftPos, 12 + topPos, 15, 47));
+        addRenderableOnly(new FluidStackWidget(30 + leftPos, 12 + topPos, 15, 47, this::wrappedInputTank));
+        addRenderableOnly(new FluidStackWidget(132 + leftPos, 12 + topPos, 15, 47, menu::getOutputTank));
 
         addRenderableOnly(
             new FermentationWidget(this::isCrafting, this::inputFluidStack, this::outputFluidStack, this::getProgress, 76 + leftPos, 34 + topPos, 26, 28));
 
-        addRenderableOnly(new ProgressWidget.BottomUp(this, this::getProgress, 82 + leftPos, 64 + topPos, 14, 14, 176, 0));
+        addRenderableOnly(new ProgressWidget.BottomUp(VAT_BG, this::getProgress, 82 + leftPos, 64 + topPos, 14, 14, 176, 0));
 
-        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 6 - 16, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
-            control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font));
-        addRenderableWidget(new ActivityWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16 * 4));
+        addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
-        addRenderableWidget(new EIOImageButton(this, leftPos + 29, topPos + 62, 16, 16, new WidgetSprites(MOVE_FLUID, MOVE_FLUID),
-            press -> menu.getBlockEntity().moveFluidToOutputTank(), MachineLang.TRANSFER_TANK));
+        addRenderableWidget(new ImageButton(leftPos + 29, topPos + 62, 16, 16, MOVE_SPRITES,
+            (b) -> menu.moveFluidToOutputTank()));
+        addRenderableWidget(new ImageButton(leftPos + 131, topPos + 62, 16, 16, VOID_SPRITES,
+            (b) -> menu.dumpOutputTank()));
 
-        addRenderableWidget(new EIOImageButton(this, leftPos + 131, topPos + 62, 16, 16, new WidgetSprites(VOID_FLUID, VOID_FLUID),
-            press -> menu.getBlockEntity().dumpOutputTank(), MachineLang.DUMP_TANK));
+        var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 83, 162, 76);
+        addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);
     }
 
     @Override
@@ -77,13 +84,8 @@ public class VatScreen extends EIOScreen<VatMenu> {
     }
 
     @Override
-    public ResourceLocation getBackgroundImage() {
-        return VAT_BG;
-    }
-
-    @Override
-    protected Vector2i getBackgroundImageSize() {
-        return new Vector2i(176, 166);
+    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+        pGuiGraphics.blit(VAT_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 
     private void updateRecipeCache() {
