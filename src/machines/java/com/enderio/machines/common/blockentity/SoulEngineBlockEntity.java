@@ -6,6 +6,7 @@ import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.capacitor.LinearScalable;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.attachment.FluidTankUser;
@@ -230,6 +231,12 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         updateMachineState(MachineState.FULL_POWER,
             (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
         loadTank(lookupProvider, pTag);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+        entityData = components.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
     }
 
     @Override

@@ -263,9 +263,11 @@ public class MachineBlocks {
                 BlockBehaviour.Properties.of().strength(2.5f, 8))
             .setBlockStateProvider((prov, ctx) -> MachineModelUtil.solarPanel(prov, ctx, tier))
             .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)
+            .setLootTable(MachinesLootTable::copyComponents)
             .createBlockItem(ITEM_REGISTRY, item -> item
                 .setModelProvider((prov, ctx) -> MachineModelUtil.solarPanel(prov, ctx, tier))
                 .setTab(EIOCreativeTabs.MACHINES)
+                .addItemTags(EIOTags.Items.ENTITY_STORAGE)
             );
     }
 

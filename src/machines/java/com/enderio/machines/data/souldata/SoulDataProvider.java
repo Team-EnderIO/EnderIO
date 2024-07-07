@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
 import com.enderio.machines.common.souldata.EngineSoul;
+import com.enderio.machines.common.souldata.SolarSoul;
 import com.enderio.machines.common.souldata.SoulData;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.google.common.collect.Sets;
@@ -16,15 +17,19 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -116,6 +121,8 @@ public class SoulDataProvider implements DataProvider {
         addEngineData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 500, 15, finshedSoulDataConsumer);
         addEngineData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 500, 15, finshedSoulDataConsumer);
         addEngineData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.getSource(), 900, 10, finshedSoulDataConsumer);
+
+        addSolarData(EntityType.PHANTOM, false, true, null, finshedSoulDataConsumer);
     }
 
     @Override
@@ -156,6 +163,12 @@ public class SoulDataProvider implements DataProvider {
         String fluidRL = "#" + fluid.location();
         EngineSoul.SoulData data = new EngineSoul.SoulData(entityRL, fluidRL, powerpermb, tickpermb);
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data, EngineSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
+    }
+
+    private void addSolarData(EntityType<?> entityType, boolean daytime, boolean nighttime, @Nullable ResourceKey<Level> level, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
+        ResourceLocation entityRL = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+        SolarSoul.SoulData data = new SolarSoul.SoulData(entityRL, daytime, nighttime, Optional.ofNullable(level));
+        finshedSoulDataConsumer.accept(new FinshedSoulData<>(SolarSoul.CODEC, data, SolarSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
     }
 
     public static class FinshedSoulData<T extends SoulData> {

@@ -1,26 +1,40 @@
 package com.enderio.machines.common.blockentity.solar;
 
+import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.common.tag.EIOTags;
+import com.enderio.core.common.network.NetworkDataSlot;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyNode;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyStorageWrapper;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
+import com.enderio.machines.common.souldata.SolarSoul;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
+
+import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
 
 public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
 
@@ -28,12 +42,18 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
 
     private final MultiEnergyNode node;
 
+    private StoredEntityData entityData = StoredEntityData.EMPTY;
+    private SolarSoul.SoulData soulData;
+    private static boolean reload = false;
+    private boolean reloadCache = !reload;
+
     public SolarPanelBlockEntity(BlockPos worldPosition, BlockState blockState, SolarPanelTier tier) {
         super(EnergyIOMode.Output, new FixedScalable(tier::getStorageCapacity), new FixedScalable(tier::getStorageCapacity),
             MachineBlockEntities.SOLAR_PANELS.get(tier).get(), worldPosition, blockState);
 
         this.tier = tier;
         this.node = new MultiEnergyNode(() -> energyStorage, () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
+        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
     }
 
     @Nullable
@@ -52,6 +72,11 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
         if (isGenerating()) {
             getEnergyStorage().addEnergy(getGenerationRate());
         }
+        if (reloadCache != reload && entityData.hasEntity()) {
+            Optional<SolarSoul.SoulData> op = SolarSoul.SOLAR.matches(entityData.entityType().get());
+            op.ifPresent(data -> soulData = data);
+            reloadCache = reload;
+        }
 
         super.serverTick();
     }
@@ -65,6 +90,9 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
         if (level == null || !this.level.canSeeSky(getBlockPos().above())) {
             return false;
         }
+        if (!this.level.dimensionType().hasSkyLight()) {
+            return soulData == null || (soulData.level().isPresent() && !soulData.level().get().equals(this.level.dimension()));
+        }
 
         return getGenerationRate() > 0;
     }
@@ -74,18 +102,40 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
         if (level == null) {
             return 0;
         }
+        boolean day = true;
+        boolean night = false;
+        if (soulData != null) {
+            day = soulData.daytime();
+            night = soulData.nighttime();
+        }
 
         int dayTime = (int) (level.getDayTime() % (minuteInTicks * 20));
-        if (dayTime > minuteInTicks * 9) {
-            return 0;
+        float progress = 0;
+        if ((day && night) || (day && hasLiquidSunshine())) {
+            progress = 1;
+        } else if (day) {
+            if (dayTime > minuteInTicks * 9) {
+                return 0;
+            }
+
+            if (dayTime < minuteInTicks) {
+                return 0;
+            }
+
+            progress = dayTime > minuteInTicks * 5 ? 10 * minuteInTicks - dayTime : dayTime;
+            progress = (progress - minuteInTicks) / (4 * minuteInTicks);
+        } else if (night) {
+            if (dayTime < minuteInTicks * 11) {
+                return 0;
+            }
+
+            if (dayTime > minuteInTicks * 18) {
+                return 0;
+            }
+            progress = dayTime > minuteInTicks * 15 ? 20 * minuteInTicks - dayTime :  minuteInTicks * 15 - dayTime;
+            progress = (progress - minuteInTicks) / (4 * minuteInTicks);
         }
 
-        if (dayTime < minuteInTicks) {
-            return 0;
-        }
-
-        float progress = dayTime > minuteInTicks * 5 ? 10 * minuteInTicks - dayTime : dayTime;
-        progress = (progress - minuteInTicks) / (4 * minuteInTicks);
         double easing = easing(progress);
 
         if (level.isRaining() && !level.isThundering()) {
@@ -101,6 +151,16 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
         }
 
         return (int) (easing * tier.getProductionRate());
+    }
+
+    private boolean hasLiquidSunshine() {
+        for (Direction direction : Direction.values()) {
+            BlockState state = this.level.getBlockState(this.getBlockPos().relative(direction));
+            if (state.getFluidState().is(EIOTags.Fluids.SOLAR_PANEL_LIGHT)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -165,5 +225,38 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public boolean canOpenMenu() {
         return false;
+    }
+
+    @Override
+    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        entityData = StoredEntityData.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+
+        super.loadAdditional(pTag, lookupProvider);
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(lookupProvider));
+
+        super.saveAdditional(pTag, lookupProvider);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+        entityData = components.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+    }
+
+    public Optional<ResourceLocation> getEntityType() {
+        return entityData.entityType();
+    }
+
+    public void setEntityType(ResourceLocation entityType) {
+        entityData = StoredEntityData.of(entityType);
+    }
+
+    @SubscribeEvent
+    static void onReload(RecipesUpdatedEvent event) {
+        reload = !reload;
     }
 }
