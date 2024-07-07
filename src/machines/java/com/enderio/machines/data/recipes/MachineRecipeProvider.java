@@ -373,5 +373,18 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("ICI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.EXPERIENCE_ROD).build()))
             .save(recipeOutput);
+
+        // TODO: Enable once the block detector has a model.
+        /*ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.BLOCK_DETECTOR.get())
+            .define('D', EIOBlocks.DARK_STEEL_PRESSURE_PLATE)
+            .define('N', EIOItems.DARK_STEEL_NUGGET)
+            .define('P', Items.PISTON)
+            .define('R', Items.REDSTONE_BLOCK)
+            .pattern("NDN")
+            .pattern("NPN")
+            .pattern("NRN")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Items.PISTON).build()))
+            .save(recipeOutput);*/
     }
 }
