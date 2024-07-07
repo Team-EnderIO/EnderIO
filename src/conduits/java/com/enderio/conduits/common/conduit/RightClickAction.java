@@ -1,17 +1,13 @@
 package com.enderio.conduits.common.conduit;
 
-import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.registry.EnderIORegistries;
+import com.enderio.api.conduit.Conduit;
+import net.minecraft.core.Holder;
 
 public sealed interface RightClickAction permits RightClickAction.Upgrade, RightClickAction.Blocked, RightClickAction.Insert{
-     record Upgrade(ConduitType<?> notInConduit) implements RightClickAction {
-        public ConduitType<?> getNotInConduit() {
-            return notInConduit;
-        }
-
-         @Override
-         public String toString() {
-             return "Upgrade[" + EnderIORegistries.CONDUIT_TYPES.getKey(notInConduit) + "]";
+     record Upgrade(Holder<Conduit<?>> replacedConduit) implements RightClickAction {
+        @Override
+        public String toString() {
+             return "Upgrade[" + replacedConduit.getRegisteredName() + "]";
          }
      }
 

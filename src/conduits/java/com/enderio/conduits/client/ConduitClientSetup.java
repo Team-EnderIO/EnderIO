@@ -4,22 +4,20 @@ import com.enderio.EnderIO;
 import com.enderio.api.conduit.model.RegisterConduitCoreModelModifiersEvent;
 import com.enderio.api.conduit.screen.RegisterConduitScreenExtensionsEvent;
 import com.enderio.api.misc.ColorControl;
-import com.enderio.conduits.client.gui.ConduitIconTextureManager;
 import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
-import com.enderio.conduits.client.model.ConduitGeometry;
-import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
-import com.enderio.conduits.client.model.conduit.modifier.FluidConduitCoreModelModifier;
-import com.enderio.conduits.client.model.conduit.modifier.RedstoneConduitCoreModelModifier;
 import com.enderio.conduits.client.gui.conduit.FluidConduitScreenExtension;
 import com.enderio.conduits.client.gui.conduit.ItemConduitScreenExtension;
+import com.enderio.conduits.client.model.ConduitGeometry;
+import com.enderio.conduits.client.model.ConduitItemModelLoader;
+import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
+import com.enderio.conduits.client.model.conduit.modifier.FluidConduitCoreModelModifier;
 import com.enderio.conduits.common.init.ConduitBlocks;
-import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.init.ConduitTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,7 +26,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,28 +60,19 @@ public class ConduitClientSetup {
 
     @SubscribeEvent
     public static void registerConduitCoreModelModifiers(RegisterConduitCoreModelModifiersEvent event) {
-        event.register(EIOConduitTypes.Types.FLUID.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
-        event.register(EIOConduitTypes.Types.FLUID2.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
-        event.register(EIOConduitTypes.Types.FLUID3.get(), () -> FluidConduitCoreModelModifier.INSTANCE);
-        event.register(EIOConduitTypes.Types.REDSTONE.get(), RedstoneConduitCoreModelModifier::new);
+        event.register(ConduitTypes.FLUID.get(), FluidConduitCoreModelModifier::new);
     }
 
     @SubscribeEvent
     public static void registerConduitScreenExtensions(RegisterConduitScreenExtensionsEvent event) {
-        event.register(EIOConduitTypes.Types.FLUID.get(), () -> FluidConduitScreenExtension.INSTANCE);
-        event.register(EIOConduitTypes.Types.FLUID2.get(), () -> FluidConduitScreenExtension.INSTANCE);
-        event.register(EIOConduitTypes.Types.FLUID3.get(), () -> FluidConduitScreenExtension.INSTANCE);
-        event.register(EIOConduitTypes.Types.ITEM.get(), ItemConduitScreenExtension::new);
-    }
-
-    @SubscribeEvent
-    public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
-        event.registerReloadListener(new ConduitIconTextureManager(Minecraft.getInstance().getTextureManager()));
+        event.register(ConduitTypes.FLUID.get(), FluidConduitScreenExtension::new);
+        event.register(ConduitTypes.ITEM.get(), ItemConduitScreenExtension::new);
     }
 
     @SubscribeEvent
     public static void modelLoader(ModelEvent.RegisterGeometryLoaders event) {
         event.register(EnderIO.loc("conduit"), new ConduitGeometry.Loader());
+        event.register(EnderIO.loc("conduit_item"), new ConduitItemModelLoader());
     }
 
     @SubscribeEvent

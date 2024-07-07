@@ -2,18 +2,18 @@ package com.enderio.conduits.common.conduit;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitGraph;
-import com.enderio.api.conduit.upgrade.ConduitUpgrade;
+import com.enderio.api.conduit.ConduitDataType;
+import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNode;
+import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
-import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
-import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -26,56 +26,55 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class ConduitGraphObject<T extends ConduitData<T>> implements GraphObject<Mergeable.Dummy>, ConduitNode<T> {
+public class ConduitGraphObject implements GraphObject<ConduitGraphContext>, ConduitNode {
 
-    public static final Codec<ConduitGraphObject<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<ConduitGraphObject> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         BlockPos.CODEC.fieldOf("pos").forGetter(ConduitGraphObject::getPos),
-        ConduitData.CODEC.fieldOf("data").forGetter(ConduitGraphObject::getConduitData)
-    ).apply(instance, ConduitGraphObject::of));
+        ConduitDataContainer.CODEC.fieldOf("data").forGetter(i -> i.conduitDataContainer)
+    ).apply(instance, ConduitGraphObject::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ConduitGraphObject<?>> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, ConduitGraphObject> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,
         ConduitGraphObject::getPos,
-        ConduitData.STREAM_CODEC,
-        ConduitGraphObject::getConduitData,
-        ConduitGraphObject::of
+        ConduitDataContainer.STREAM_CODEC,
+        i -> i.conduitDataContainer,
+        ConduitGraphObject::new
     );
-
-    // Performs a dirty cast during deserialization, but it's safe because the cast is only done on the same type.
-    private static <T extends ConduitData<T>, Z extends ConduitData<?>> ConduitGraphObject<T> of(BlockPos pos, Z cast) {
-        //noinspection unchecked
-        return new ConduitGraphObject<>(pos, (T) cast);
-    }
 
     private final BlockPos pos;
 
-    @Nullable private Graph<Mergeable.Dummy> graph = null;
-    @Nullable private WrappedConduitGraph<T> wrappedGraph = null;
+    @Nullable private Graph<ConduitGraphContext> graph = null;
+    @Nullable private WrappedConduitNetwork wrappedGraph = null;
 
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
-    private final T conduitData;
+    private final ConduitDataContainer conduitDataContainer;
     private final Map<Direction, DynamicConnectionState> connectionStates = new EnumMap<>(Direction.class);
 
-    public ConduitGraphObject(BlockPos pos, T conduitData) {
+    public ConduitGraphObject(BlockPos pos) {
         this.pos = pos;
-        this.conduitData = conduitData;
+        this.conduitDataContainer = new ConduitDataContainer();
+    }
+
+    public ConduitGraphObject(BlockPos pos, ConduitDataContainer conduitDataContainer) {
+        this.pos = pos;
+        this.conduitDataContainer = conduitDataContainer;
     }
 
     @Nullable
     @Override
-    public Graph<Mergeable.Dummy> getGraph() {
+    public Graph<ConduitGraphContext> getGraph() {
         return graph;
     }
 
     @Override
-    public void setGraph(Graph<Mergeable.Dummy> graph) {
+    public void setGraph(Graph<ConduitGraphContext> graph) {
         this.graph = graph;
-        this.wrappedGraph = new WrappedConduitGraph<>(graph);
+        this.wrappedGraph = new WrappedConduitNetwork(graph);
     }
 
     @Nullable
     @Override
-    public ConduitGraph<T> getParentGraph() {
+    public ConduitNetwork getParentGraph() {
         return wrappedGraph;
     }
 
@@ -89,9 +88,6 @@ public class ConduitGraphObject<T extends ConduitData<T>> implements GraphObject
         return Optional.ofNullable(ioStates.get(direction));
     }
 
-    public T getConduitData() {
-        return conduitData;
-    }
 
     public void clearState(Direction direction) {
         ioStates.remove(direction);
@@ -100,6 +96,35 @@ public class ConduitGraphObject<T extends ConduitData<T>> implements GraphObject
     public BlockPos getPos() {
         return pos;
     }
+
+    // region Conduit Data
+
+    // We're implementing ConduitDataAccessor for ease here, but we just pass through to the container.
+
+    @Override
+    public boolean hasData(ConduitDataType<?> type) {
+        return conduitDataContainer.hasData(type);
+    }
+
+    @Override
+    public <T extends ConduitData<T>> @Nullable T getData(ConduitDataType<T> type) {
+        return conduitDataContainer.getData(type);
+    }
+
+    @Override
+    public <T extends ConduitData<T>> T getOrCreateData(ConduitDataType<T> type) {
+        return conduitDataContainer.getOrCreateData(type);
+    }
+
+    public ConduitDataContainer conduitDataContainer() {
+        return conduitDataContainer;
+    }
+
+    public void handleClientChanges(ConduitDataContainer clientDataContainer) {
+        conduitDataContainer.handleClientChanges(clientDataContainer);
+    }
+
+    // endregion
 
     @Override
     public @Nullable ConduitUpgrade getUpgrade(Direction direction) {
@@ -117,12 +142,12 @@ public class ConduitGraphObject<T extends ConduitData<T>> implements GraphObject
     }
 
     @UseOnly(LogicalSide.CLIENT)
-    public ConduitGraphObject<T> deepCopy() {
-        return new ConduitGraphObject<>(pos, conduitData.deepCopy());
+    public ConduitGraphObject deepCopy() {
+        return new ConduitGraphObject(pos, conduitDataContainer.deepCopy());
     }
 
     // Separate method to avoid breaking the graph
     public int hashContents() {
-        return Objects.hash(pos, conduitData, ioStates, connectionStates);
+        return Objects.hash(pos, conduitDataContainer, ioStates, connectionStates);
     }
 }

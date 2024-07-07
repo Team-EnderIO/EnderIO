@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit.connection;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
@@ -10,6 +10,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -68,8 +69,8 @@ public record DynamicConnectionState(
         DynamicConnectionState::new
     );
 
-    public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction, ConduitType<?> type) {
-        ConduitType.ConduitConnectionData defaultConnection = type.getDefaultConnection(level, pos, direction);
+    public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction, Holder<Conduit<?>> type) {
+        Conduit.ConduitConnectionData defaultConnection = type.value().getDefaultConnection(level, pos, direction);
         return new DynamicConnectionState(defaultConnection.isInsert(), ColorControl.GREEN, defaultConnection.isExtract(), ColorControl.GREEN, defaultConnection.control(), ColorControl.RED, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
     }
 

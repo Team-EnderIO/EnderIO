@@ -1,5 +1,6 @@
 package com.enderio;
 
+import com.enderio.api.conduit.Conduit;
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.base.common.config.BaseConfig;
@@ -58,6 +59,7 @@ import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -122,15 +124,21 @@ public class EnderIO {
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
         modEventBus.addListener(SoulVialItem::onCommonSetup);
         modEventBus.addListener(this::registerRegistries);
+        modEventBus.addListener(this::registerDatapackRegistries);
         IntegrationManager.addIntegration(EnderIOSelfIntegration.INSTANCE);
     }
 
     private void registerRegistries(NewRegistryEvent event) {
         // TODO: Do this in conduits?
-        event.register(EnderIORegistries.CONDUIT_TYPES);
-        event.register(EnderIORegistries.CONDUIT_DATA_SERIALIZERS);
+        event.register(EnderIORegistries.CONDUIT_TYPE);
+        event.register(EnderIORegistries.CONDUIT_DATA_TYPE);
+        event.register(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE);
         event.register(EnderIORegistries.TRAVEL_TARGET_TYPES);
         event.register(EnderIORegistries.TRAVEL_TARGET_SERIALIZERS);
+    }
+
+    private void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
+        event.dataPackRegistry(EnderIORegistries.Keys.CONDUIT, Conduit.DIRECT_CODEC, Conduit.DIRECT_CODEC);
     }
 
     public void onGatherData(GatherDataEvent event) {

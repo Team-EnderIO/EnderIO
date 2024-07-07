@@ -1,89 +1,80 @@
 package com.enderio.api.conduit;
 
-import com.enderio.api.conduit.ticker.ConduitTicker;
-import com.enderio.api.conduit.upgrade.ConduitUpgrade;
-import com.enderio.api.filter.ResourceFilter;
-import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.registry.EnderIORegistries;
-import net.minecraft.core.BlockPos;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.BiFunction;
 
-public abstract class ConduitType<T extends ConduitData<T>> {
-
-    public abstract ConduitTicker<T> getTicker();
-
-    public abstract ConduitMenuData getMenuData();
-
-    public abstract T createConduitData(Level level, BlockPos pos);
+public interface ConduitType<T extends Conduit<T>> {
+    Codec<ConduitType<?>> CODEC = Codec.lazyInitialized(EnderIORegistries.CONDUIT_TYPE::byNameCodec);
+    StreamCodec<RegistryFriendlyByteBuf, ConduitType<?>> STREAM_CODEC = StreamCodec.recursive(
+        streamCodec -> ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_TYPE)
+    );
 
     /**
-     * Override this method if your conduit type and your conduit item registry name don't match
-     * @return the conduit item that holds this type
+     * @return The codec used for datapack read and sync.
      */
-    public Item getConduitItem() {
-        ResourceLocation key = EnderIORegistries.CONDUIT_TYPES.getKey(this);
-        return BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(key.getNamespace(), key.getPath() + "_conduit"));
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean canBeInSameBlock(ConduitType<?> other) {
-        return true;
-    }
-
-    public boolean canBeReplacedBy(ConduitType<?> other) {
-        return false;
-    }
-
-    public boolean canApplyUpgrade(SlotType slotType, ConduitUpgrade conduitUpgrade) {
-        return false;
-    }
-
-    public boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
-        return false;
-    }
-
-    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, T extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction,
-        @Nullable ConduitNode.IOState state) {
-        return Optional.empty();
-    }
+    MapCodec<T> codec();
 
     /**
-     * @param level the level
-     * @param pos conduit position
-     * @param direction direction the conduit connects to
-     * @return the connectiondata that should be set on connection based on context
+     * @return The list of block capabilities that should be exposed and passed to the conduit proxy.
      */
-    public ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {
-        return new ConduitConnectionData(false, true, RedstoneControl.NEVER_ACTIVE);
+    Set<BlockCapability<?, Direction>> exposedCapabilities();
+
+    static <T extends Conduit<T>> ConduitType<T> of(MapCodec<T> codec) {
+        return builder(codec).build();
     }
 
-    public record ConduitConnectionData(boolean isInsert, boolean isExtract, RedstoneControl control) {}
-
-    public final boolean is(TagKey<ConduitType<?>> tag) {
-        return getAsHolder().is(tag);
+    static <T extends Conduit<T>> ConduitType.Builder<T> builder(MapCodec<T> codec) {
+        return new ConduitType.Builder<>(codec);
     }
 
-    public final Stream<TagKey<ConduitType<?>>> getTags() {
-        return getAsHolder().tags();
+    static <T extends Conduit<T>> ConduitType<T> of(BiFunction<ResourceLocation, Component, T> factory) {
+        return builder(factory).build();
     }
 
-    public final Holder<ConduitType<?>> getAsHolder() {
-        return EnderIORegistries.CONDUIT_TYPES.wrapAsHolder(this);
+    static <T extends Conduit<T>> ConduitType.Builder<T> builder(BiFunction<ResourceLocation, Component, T> factory) {
+        return new ConduitType.Builder<T>(RecordCodecBuilder.mapCodec(
+            builder -> builder.group(
+                ResourceLocation.CODEC.fieldOf("texture").forGetter(Conduit::texture),
+                ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description)
+            ).apply(builder, factory)
+        ));
     }
 
-    @Nullable
-    public static ResourceLocation getKey(ConduitType<?> conduitType) {
-        return EnderIORegistries.CONDUIT_TYPES.getKey(conduitType);
+    class Builder<T extends Conduit<T>> {
+        private final MapCodec<T> codec;
+        private final Set<BlockCapability<?, Direction>> exposedCapabilities;
+
+        private Builder(MapCodec<T> codec) {
+            this.codec = codec;
+            this.exposedCapabilities = new HashSet<>();
+        }
+
+        public <U> Builder<T> exposeCapability(BlockCapability<U, Direction> capability) {
+            exposedCapabilities.add(capability);
+            return this;
+        }
+
+        public ConduitType<T> build() {
+            return new SimpleType<>(codec, exposedCapabilities);
+        }
+
+        record SimpleType<T extends Conduit<T>>(
+            MapCodec<T> codec,
+            Set<BlockCapability<?, Direction>> exposedCapabilities
+        ) implements ConduitType<T> {}
     }
 }

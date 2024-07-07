@@ -1,12 +1,13 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
-import com.enderio.api.conduit.ConduitGraph;
-import com.enderio.api.filter.FluidStackFilter;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.ConduitNetwork;
+import com.enderio.api.conduit.ConduitNetworkContext;
 import com.enderio.api.conduit.ConduitNode;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
+import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
+import com.enderio.conduits.common.init.ConduitTypes;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -20,27 +21,19 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import java.util.List;
 import java.util.Optional;
 
-public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduitData, IFluidHandler> {
-
-    private final boolean lockFluids;
-    private final int fluidRate;
-
-    public FluidConduitTicker(boolean lockFluids, int fluidRate) {
-        this.lockFluids = lockFluids;
-        this.fluidRate = fluidRate;
-    }
+public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduit, IFluidHandler> {
 
     @Override
     public void tickGraph(
         ServerLevel level,
-        ConduitType<FluidConduitData> type,
-        List<ConduitNode<FluidConduitData>> loadedNodes,
-        ConduitGraph<FluidConduitData> graph,
+        FluidConduit conduit,
+        List<ConduitNode> loadedNodes,
+        ConduitNetwork graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         boolean shouldReset = false;
         for (var loadedNode : loadedNodes) {
-            FluidConduitData fluidExtendedData = loadedNode.getConduitData();
+            FluidConduitData fluidExtendedData = loadedNode.getOrCreateData(ConduitTypes.Data.FLUID.get());
             if (fluidExtendedData.shouldReset()) {
                 shouldReset = true;
                 fluidExtendedData.setShouldReset(false);
@@ -49,27 +42,28 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
 
         if (shouldReset) {
             for (var loadedNode : loadedNodes) {
-                loadedNode.getConduitData().setLockedFluid(null);
+                FluidConduitData fluidExtendedData = loadedNode.getOrCreateData(ConduitTypes.Data.FLUID.get());
+                fluidExtendedData.setLockedFluid(null);
             }
         }
-        super.tickGraph(level, type, loadedNodes, graph, coloredRedstoneProvider);
+        super.tickGraph(level, conduit, loadedNodes, graph, coloredRedstoneProvider);
     }
 
     @Override
     protected void tickCapabilityGraph(
         ServerLevel level,
-        ConduitType<FluidConduitData> type,
+        FluidConduit conduit,
         List<CapabilityConnection> inserts,
         List<CapabilityConnection> extracts,
-        ConduitGraph<FluidConduitData> graph,
+        ConduitNetwork graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (CapabilityConnection extract : extracts) {
-            IFluidHandler extractHandler = extract.capability;
-            FluidConduitData fluidExtendedData = extract.data;
+            IFluidHandler extractHandler = extract.capability();
+            FluidConduitData fluidExtendedData = extract.node().getOrCreateData(ConduitTypes.Data.FLUID.get());
 
-            int temp = fluidRate;
-            if (extract.upgrade instanceof ExtractionSpeedUpgrade speedUpgrade) {
+            int temp = conduit.transferRate();
+            if (extract.upgrade() instanceof ExtractionSpeedUpgrade speedUpgrade) {
                 // TODO: Review scaling.
                 temp *= (int) Math.pow(2, speedUpgrade.tier());
             }
@@ -85,7 +79,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
                 continue;
             }
 
-            if (extract.extractFilter instanceof FluidStackFilter fluidStackFilter) {
+            if (extract.extractFilter() instanceof FluidStackFilter fluidStackFilter) {
                 if (!fluidStackFilter.test(extractedFluid)) {
                     continue;
                 }
@@ -93,27 +87,28 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
 
             int transferred = 0;
             for (CapabilityConnection insert : inserts) {
-                if (extract.insertFilter instanceof FluidStackFilter fluidStackFilter) {
+                if (insert.insertFilter() instanceof FluidStackFilter fluidStackFilter) {
                     if (!fluidStackFilter.test(extractedFluid)) {
                         continue;
                     }
                 }
 
                 FluidStack transferredFluid = fluidExtendedData.lockedFluid() != null ?
-                    FluidUtil.tryFluidTransfer(insert.capability, extractHandler, new FluidStack(fluidExtendedData.lockedFluid(), fluidRate - transferred),
+                    FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, new FluidStack(fluidExtendedData.lockedFluid(), rate - transferred),
                         true) :
-                    FluidUtil.tryFluidTransfer(insert.capability, extractHandler, rate - transferred, true);
+                    FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, rate - transferred, true);
 
                 if (!transferredFluid.isEmpty()) {
                     transferred += transferredFluid.getAmount();
-                    if (lockFluids) {
-                        for (ConduitNode<FluidConduitData> node : graph.getNodes()) {
+                    if (!conduit.isMultiFluid()) {
+                        for (ConduitNode node : graph.getNodes()) {
                             Fluid fluid = transferredFluid.getFluid();
                             if (fluid instanceof FlowingFluid flowing) {
                                 fluid = flowing.getSource();
                             }
 
-                            node.getConduitData().setLockedFluid(fluid);
+                            FluidConduitData nodeFluidData = node.getOrCreateData(ConduitTypes.Data.FLUID.get());
+                            nodeFluidData.setLockedFluid(fluid);
                         }
                     }
 

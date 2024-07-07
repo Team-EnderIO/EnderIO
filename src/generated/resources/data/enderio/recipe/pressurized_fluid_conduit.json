@@ -15,7 +15,10 @@
     "BBB"
   ],
   "result": {
+    "components": {
+      "enderio:conduit": "enderio:pressurized_fluid"
+    },
     "count": 8,
-    "id": "enderio:pressurized_fluid_conduit"
+    "id": "enderio:conduit"
   }
 }

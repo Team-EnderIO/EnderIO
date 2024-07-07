@@ -36,6 +36,14 @@ idea {
     }
 }
 
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType<JavaCompile> {
+            options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "400"))
+        }
+    }
+}
+
 /*checkstyle {
     isIgnoreFailures = false
 }*/

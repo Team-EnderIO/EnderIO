@@ -6,7 +6,8 @@
       "item": "enderio:conduit_binder"
     },
     "C": {
-      "item": "enderio:fluid_conduit"
+      "type": "enderio:conduit",
+      "conduit_type": "enderio:fluid"
     },
     "G": {
       "tag": "c:glass_blocks/fused_quartz"
@@ -18,7 +19,10 @@
     "BBB"
   ],
   "result": {
+    "components": {
+      "enderio:conduit": "enderio:pressurized_fluid"
+    },
     "count": 8,
-    "id": "enderio:pressurized_fluid_conduit"
+    "id": "enderio:conduit"
   }
 }

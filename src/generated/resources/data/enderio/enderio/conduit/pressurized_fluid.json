@@ -1,0 +1,9 @@
+{
+  "type": "enderio:fluid",
+  "description": {
+    "translate": "item.enderio.conduit.pressurized_fluid"
+  },
+  "is_multi_fluid": false,
+  "texture": "enderio:block/conduit/pressurized_fluid",
+  "transfer_rate": 100
+}

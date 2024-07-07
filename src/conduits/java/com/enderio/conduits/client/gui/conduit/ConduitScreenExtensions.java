@@ -1,6 +1,5 @@
 package com.enderio.conduits.client.gui.conduit;
 
-import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.conduit.screen.ConduitScreenExtension;
 import com.enderio.api.conduit.screen.RegisterConduitScreenExtensionsEvent;
@@ -12,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConduitScreenExtensions {
-    private static Map<ConduitType<?>, ConduitScreenExtension<?>> EXTENSIONS;
+    private static Map<ConduitType<?>, ConduitScreenExtension> EXTENSIONS;
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     public static void init() {
@@ -26,8 +25,7 @@ public class ConduitScreenExtensions {
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     @Nullable
-    public static <T extends ConduitData<T>> ConduitScreenExtension<T> get(ConduitType<T> type) {
-        //noinspection unchecked
-        return (ConduitScreenExtension<T>) EXTENSIONS.get(type);
+    public static ConduitScreenExtension get(ConduitType<?> conduitType) {
+        return EXTENSIONS.get(conduitType);
     }
 }

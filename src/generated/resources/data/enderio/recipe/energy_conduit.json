@@ -15,7 +15,10 @@
     "BBB"
   ],
   "result": {
+    "components": {
+      "enderio:conduit": "enderio:energy"
+    },
     "count": 8,
-    "id": "enderio:energy_conduit"
+    "id": "enderio:conduit"
   }
 }

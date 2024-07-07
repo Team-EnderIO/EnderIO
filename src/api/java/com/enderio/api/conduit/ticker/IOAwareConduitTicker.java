@@ -1,11 +1,10 @@
 package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.ColoredRedstoneProvider;
-import com.enderio.api.conduit.ConduitData;
-import com.enderio.api.conduit.ConduitGraph;
-import com.enderio.api.conduit.upgrade.ConduitUpgrade;
-import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.Conduit;
+import com.enderio.api.conduit.ConduitNetwork;
 import com.enderio.api.conduit.ConduitNode;
+import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
@@ -18,68 +17,53 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface IOAwareConduitTicker<T extends ConduitData<T>> extends LoadedAwareConduitTicker<T> {
+public interface IOAwareConduitTicker<TConduit extends Conduit<TConduit>> extends LoadedAwareConduitTicker<TConduit> {
     @Override
-    default void tickGraph(ServerLevel level, ConduitType<T> type,
-        List<ConduitNode<T>> loadedNodes, ConduitGraph<T> graph,
+    default void tickGraph(ServerLevel level, TConduit conduit, List<ConduitNode> loadedNodes, ConduitNetwork graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        ListMultimap<ColorControl, Connection<T>> extracts = ArrayListMultimap.create();
-        ListMultimap<ColorControl, Connection<T>> inserts = ArrayListMultimap.create();
-        for (ConduitNode<T> node : loadedNodes) {
+        ListMultimap<ColorControl, Connection> extracts = ArrayListMultimap.create();
+        ListMultimap<ColorControl, Connection> inserts = ArrayListMultimap.create();
+        for (ConduitNode node : loadedNodes) {
             for (Direction direction : Direction.values()) {
                 node.getIOState(direction).ifPresent(ioState -> {
                     ioState
                         .extract()
-                        .filter(extract -> isRedstoneMode(type, level, node.getPos(), ioState, coloredRedstoneProvider))
-                        .ifPresent(
-                            color -> extracts.get(color).add(new Connection<T>(
-                                node.getPos(),
-                                direction,
-                                node.getConduitData(),
-                                node.getUpgrade(direction),
-                                node.getExtractFilter(direction),
-                                node.getInsertFilter(direction))));
+                        .filter(extract -> isRedstoneMode(conduit, level, node.getPos(), ioState, coloredRedstoneProvider))
+                        .ifPresent(color -> extracts.get(color).add(new Connection(direction, node)));
                     ioState
                         .insert()
-                        .ifPresent(
-                            color -> inserts.get(color).add(new Connection<T>(
-                                node.getPos(),
-                                direction,
-                                node.getConduitData(),
-                                node.getUpgrade(direction),
-                                node.getExtractFilter(direction),
-                                node.getInsertFilter(direction))));
+                        .ifPresent(color -> inserts.get(color).add(new Connection(direction, node)));
                 });
             }
         }
         for (ColorControl color : ColorControl.values()) {
-            List<Connection<T>> extractList = extracts.get(color);
-            List<Connection<T>> insertList = inserts.get(color);
+            List<Connection> extractList = extracts.get(color);
+            List<Connection> insertList = inserts.get(color);
             if (shouldSkipColor(extractList, insertList)) {
                 continue;
             }
 
-            tickColoredGraph(level, type, insertList, extractList, color, graph, coloredRedstoneProvider);
+            tickColoredGraph(level, conduit, insertList, extractList, color, graph, coloredRedstoneProvider);
         }
     }
 
-    default boolean shouldSkipColor(List<Connection<T>> extractList, List<Connection<T>> insertList) {
+    default boolean shouldSkipColor(List<Connection> extractList, List<Connection> insertList) {
         return extractList.isEmpty() || insertList.isEmpty();
     }
 
     void tickColoredGraph(
         ServerLevel level,
-        ConduitType<T> type,
-        List<Connection<T>> inserts,
-        List<Connection<T>> extracts,
+        TConduit conduit,
+        List<Connection> inserts,
+        List<Connection> extracts,
         ColorControl color,
-        ConduitGraph<T> graph,
+        ConduitNetwork graph,
         ColoredRedstoneProvider coloredRedstoneProvider);
 
-    default boolean isRedstoneMode(ConduitType<?> type, ServerLevel level, BlockPos pos, ConduitNode.IOState state,
+    default boolean isRedstoneMode(TConduit conduit, ServerLevel level, BlockPos pos, ConduitNode.IOState state,
         ColoredRedstoneProvider coloredRedstoneProvider) {
-        if (!type.getMenuData().showRedstoneExtract()) {
+        if (!conduit.getMenuData().showRedstoneExtract()) {
             return true;
         }
 
@@ -102,15 +86,44 @@ public interface IOAwareConduitTicker<T extends ConduitData<T>> extends LoadedAw
         return state.control().isActive(hasRedstone || coloredRedstoneProvider.isRedstoneActive(level, pos, state.redstoneChannel()));
     }
 
-    record Connection<T extends ConduitData<T>>(
-        BlockPos pos,
-        Direction dir,
-        T data,
-        @Nullable ConduitUpgrade upgrade,
-        @Nullable ResourceFilter extractFilter,
-        @Nullable ResourceFilter insertFilter) {
+    class Connection {
+        private final Direction direction;
+        private final ConduitNode node;
+
+        public Connection(Direction direction, ConduitNode node) {
+            this.direction = direction;
+            this.node = node;
+        }
+
+        public Direction direction() {
+            return direction;
+        }
+
+        public ConduitNode node() {
+            return node;
+        }
+
+        public BlockPos pos() {
+            return node.getPos();
+        }
+
         public BlockPos move() {
-            return pos.relative(dir);
+            return pos().relative(direction);
+        }
+
+        @Nullable
+        public ConduitUpgrade upgrade() {
+            return node.getUpgrade(direction);
+        }
+
+        @Nullable
+        public ResourceFilter extractFilter() {
+            return node.getExtractFilter(direction);
+        }
+
+        @Nullable
+        public ResourceFilter insertFilter() {
+            return node.getInsertFilter(direction);
         }
     }
 }

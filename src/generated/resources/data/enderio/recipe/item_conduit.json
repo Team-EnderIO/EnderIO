@@ -15,7 +15,10 @@
     "BBB"
   ],
   "result": {
+    "components": {
+      "enderio:conduit": "enderio:item"
+    },
     "count": 8,
-    "id": "enderio:item_conduit"
+    "id": "enderio:conduit"
   }
 }

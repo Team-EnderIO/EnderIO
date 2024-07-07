@@ -61,10 +61,6 @@ public interface Integration {
     default void createData(GatherDataEvent event) {
     }
 
-    default void onModConstruct() {
-
-    }
-
     /**
      * @param stack The ItemStack a conduit was rightclicked with
      * @return empty Optional if this stack is not a facade item. Or the BlockState this facade disguises as

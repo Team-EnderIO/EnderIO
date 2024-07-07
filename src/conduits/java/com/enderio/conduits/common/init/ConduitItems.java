@@ -1,12 +1,9 @@
 package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.ConduitApi;
-import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
-import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
 import com.enderio.conduits.common.conduit.upgrade.SpeedUpgradeItem;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
@@ -18,7 +15,6 @@ import com.enderio.regilite.registry.ItemRegistry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.util.Unit;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
@@ -28,13 +24,6 @@ import java.util.function.Supplier;
 
 public class ConduitItems {
     private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
-
-    public static final RegiliteItem<Item> ENERGY = createConduitItem(EIOConduitTypes.Types.ENERGY, "energy");
-    public static final RegiliteItem<Item> FLUID = createConduitItem(EIOConduitTypes.Types.FLUID, "fluid");
-    public static final RegiliteItem<Item> PRESSURIZED_FLUID = createConduitItem(EIOConduitTypes.Types.FLUID2, "pressurized_fluid");
-    public static final RegiliteItem<Item> ENDER_FLUID = createConduitItem(EIOConduitTypes.Types.FLUID3, "ender_fluid");
-    public static final RegiliteItem<Item> REDSTONE = createConduitItem(EIOConduitTypes.Types.REDSTONE, "redstone");
-    public static final RegiliteItem<Item> ITEM = createConduitItem(EIOConduitTypes.Types.ITEM, "item");
 
     public static final RegiliteItem<SpeedUpgradeItem> EXTRACTION_SPEED_UPGRADE_1 = ITEM_REGISTRY.registerItem("extraction_speed_upgrade_1", properties ->
             new SpeedUpgradeItem(properties.component(ConduitComponents.EXTRACTION_SPEED_UPGRADE_TIER, 1)))
@@ -82,19 +71,6 @@ public class ConduitItems {
         Unit.INSTANCE, RedstoneFilterItem.SENSOR_FILTER_PROVIDER, null);
     public static final RegiliteItem<RedstoneFilterItem> TIMER_FILTER = createRedstoneFilter("redstone_timer_filter", ConduitComponents.REDSTONE_TIMER_FILTER,
         RedstoneTimerFilter.INSTANCE, RedstoneFilterItem.TIMER_FILTER_PROVIDER, ConduitMenus.REDSTONE_TIMER_FILTER::get);
-
-    private static RegiliteItem<Item> createConduitItem(Supplier<? extends ConduitType<?>> type, String itemName) {
-        return ITEM_REGISTRY
-            .registerItem(itemName + "_conduit",
-                p -> ConduitApi.INSTANCE.createConduitItem(type, p))
-            .setTab(EIOCreativeTabs.CONDUITS)
-            .setModelProvider((prov, ctx) -> {
-                var conduitTypeKey = ConduitType.getKey(type.get());
-                prov
-                    .withExistingParent(conduitTypeKey.getPath() + "_conduit", EnderIO.loc("item/conduit"))
-                    .texture("0", EnderIO.loc("block/conduit/" + conduitTypeKey.getPath()));
-            });
-    }
 
     public static <T> RegiliteItem<RedstoneFilterItem> createRedstoneFilter(String name, DeferredHolder<DataComponentType<?>, DataComponentType<T>> type, T defaultValue, ICapabilityProvider<ItemStack, Void, ResourceFilter> provider, Supplier<MenuType<?>> menu) {
         return ITEM_REGISTRY

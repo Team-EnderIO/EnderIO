@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.network;
 
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
+import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
@@ -20,8 +20,8 @@ public class ConduitServerPayloadHandler {
         context.enqueueWork(() -> {
             var level = context.player().level();
             BlockEntity be = level.getBlockEntity(packet.pos());
-            if (be instanceof ConduitBlockEntity conduitBlockEntity) {
-                conduitBlockEntity.handleConnectionStateUpdate(packet.direction(), packet.conduitType(), packet.connectionState());
+            if (be instanceof ConduitBundleBlockEntity conduitBundleBlockEntity) {
+                conduitBundleBlockEntity.handleConnectionStateUpdate(packet.direction(), packet.conduit(), packet.connectionState());
             }
         });
     }
@@ -30,8 +30,8 @@ public class ConduitServerPayloadHandler {
         context.enqueueWork(() -> {
             var level = context.player().level();
             BlockEntity be = level.getBlockEntity(packet.pos());
-            if (be instanceof ConduitBlockEntity conduitBlockEntity) {
-                conduitBlockEntity.handleExtendedDataUpdate(packet.conduitType(), packet.extendedConduitData());
+            if (be instanceof ConduitBundleBlockEntity conduitBundleBlockEntity) {
+                conduitBundleBlockEntity.handleConduitDataUpdate(packet.conduit(), packet.conduitDataContainer());
             }
         });
     }
