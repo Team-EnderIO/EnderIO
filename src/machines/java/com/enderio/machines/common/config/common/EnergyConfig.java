@@ -40,6 +40,12 @@ public class EnergyConfig {
     public final ModConfigSpec.ConfigValue<Double> SOUL_ENGINE_GENERATION;
     public final ModConfigSpec.ConfigValue<Integer> DRAIN_CAPACITY;
     public final ModConfigSpec.ConfigValue<Integer> DRAIN_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> INHIBITOR_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> INHIBITOR_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> AVERSION_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> AVERSION_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> RELOCATOR_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> RELOCATOR_USAGE;
 
     public EnergyConfig(ModConfigSpec.Builder builder) {
         builder.push("energy");
@@ -131,6 +137,21 @@ public class EnergyConfig {
         builder.push("drain");
             DRAIN_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
             DRAIN_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage",  10, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("inhibitor");
+            INHIBITOR_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
+            INHIBITOR_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage",  10, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("aversion");
+            AVERSION_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
+            AVERSION_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage",  10, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("relocator");
+            RELOCATOR_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
+            RELOCATOR_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage",  10, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();

@@ -231,10 +231,34 @@ public class MachineBlocks {
         .setTranslation("XP Obelisk")
         .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
+    public static final RegiliteBlock<MachineBlock> INHIBITOR_OBELISK = BLOCK_REGISTRY
+        .registerBlock("inhibitor_obelisk", props -> new MachineBlock(MachineBlockEntities.INHIBITOR_OBELISK, props),
+            BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
+        .setLootTable(MachinesLootTable::copyComponents)
+        .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+        .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+        
     public static final RegiliteBlock<BlockDetectorBlock> BLOCK_DETECTOR = BLOCK_REGISTRY
         .registerBlock("block_detector", BlockDetectorBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER))
         .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)
         .setBlockStateProvider((prov, ctx) -> prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName())))
+        .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+
+    public static final RegiliteBlock<MachineBlock> AVERSION_OBELISK = BLOCK_REGISTRY
+        .registerBlock("aversion_obelisk", props -> new MachineBlock(MachineBlockEntities.AVERSION_OBELISK, props),
+            BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
+        .setLootTable(MachinesLootTable::copyComponents)
+        .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+        .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+
+    public static final RegiliteBlock<MachineBlock> RELOCATOR_OBELISK = BLOCK_REGISTRY
+        .registerBlock("relocator_obelisk", props -> new MachineBlock(MachineBlockEntities.RELOCATOR_OBELISK, props),
+            BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
+        .setLootTable(MachinesLootTable::copyComponents)
+        .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
         .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
     //used when single methods needs to be overridden in the block class

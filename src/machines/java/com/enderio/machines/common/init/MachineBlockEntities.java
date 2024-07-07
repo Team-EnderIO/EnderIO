@@ -1,22 +1,27 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
+import com.enderio.machines.client.rendering.blockentity.ObeliskBER;
 import com.enderio.machines.client.rendering.blockentity.XPObeliskBER;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
+import com.enderio.machines.common.blockentity.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.CrafterBlockEntity;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
 import com.enderio.machines.common.blockentity.DrainBlockEntity;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
+import com.enderio.machines.common.blockentity.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.PaintingMachineBlockEntity;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.blockentity.PrimitiveAlloySmelterBlockEntity;
+import com.enderio.machines.common.blockentity.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.blockentity.SlicerBlockEntity;
 import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
@@ -38,6 +43,7 @@ import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.Util;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -179,6 +185,21 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<VatBlockEntity> VAT = register("vat", VatBlockEntity::new, MachineBlocks.VAT)
         .apply(MachineBlockEntities::machineBlockEntityCapabilities)
         .apply(MachineBlockEntities::fluidHandlerCapability);
+
+    public static final RegiliteBlockEntity<InhibitorObeliskBlockEntity> INHIBITOR_OBELISK =
+        register("inhibitor_obelisk", InhibitorObeliskBlockEntity::new, MachineBlocks.INHIBITOR_OBELISK)
+            .setRenderer(() -> context -> new ObeliskBER(context, () -> Items.ENDER_PEARL))
+            .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+
+    public static final RegiliteBlockEntity<AversionObeliskBlockEntity> AVERSION_OBELISK =
+        register("aversion_obelisk", AversionObeliskBlockEntity::new, MachineBlocks.AVERSION_OBELISK)
+            .setRenderer(() -> context -> new ObeliskBER(context, EIOBlocks.ENDERMAN_HEAD::asItem))
+            .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+
+    public static final RegiliteBlockEntity<RelocatorObeliskBlockEntity> RELOCATOR_OBELISK =
+        register("relocator_obelisk", RelocatorObeliskBlockEntity::new, MachineBlocks.RELOCATOR_OBELISK)
+            .setRenderer(() -> context -> new ObeliskBER(context, () -> Items.PRISMARINE))
+            .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
     @SafeVarargs
     private static <B extends BlockEntity> RegiliteBlockEntity<B> register(String name, BlockEntityType.BlockEntitySupplier<B> beFactory,

@@ -5,6 +5,7 @@ import com.enderio.api.capacitor.CapacitorData;
 import com.enderio.api.grindingball.GrindingBallData;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
+import com.enderio.base.common.item.filter.EntityFilter;
 import com.enderio.base.common.item.filter.FluidFilter;
 import com.enderio.base.common.item.filter.ItemFilter;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
@@ -24,6 +25,7 @@ import com.enderio.base.common.item.tool.TravelStaffItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.model.item.GliderItemModel;
+import com.enderio.core.common.capability.EntityFilterCapability;
 import com.enderio.core.common.capability.FluidFilterCapability;
 import com.enderio.core.common.capability.ItemFilterCapability;
 import com.enderio.core.data.model.ModelHelper;
@@ -427,6 +429,11 @@ public class EIOItems {
         .registerItem("fluid_filter", properties -> new FluidFilter(properties.component(EIODataComponents.FLUID_FILTER, new FluidFilterCapability.Component(5))))
         .setTab(EIOCreativeTabs.GEAR)
         .addCapability(EIOCapabilities.Filter.ITEM, FluidFilter.FILTER_PROVIDER);
+
+    public static final RegiliteItem<EntityFilter> ENTITY_FILTER = ITEM_REGISTRY
+        .registerItem("entity_filter", properties -> new EntityFilter(properties.component(EIODataComponents.ENTITY_FILTER, new EntityFilterCapability.Component(5))))
+        .setTab(EIOCreativeTabs.GEAR)
+        .addCapability(EIOCapabilities.Filter.ITEM, EntityFilter.ENTITY_FILTER);
 
     // endregion
 

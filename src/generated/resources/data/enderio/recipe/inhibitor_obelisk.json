@@ -5,20 +5,26 @@
     "C": {
       "item": "enderio:ensouled_chassis"
     },
+    "E": {
+      "tag": "c:ingots/energetic_alloy"
+    },
+    "G": {
+      "item": "enderio:iron_gear"
+    },
     "I": {
       "tag": "c:ingots/soularium"
     },
-    "R": {
-      "item": "enderio:experience_rod"
+    "M": {
+      "item": "enderio:ender_crystal"
     }
   },
   "pattern": [
-    " R ",
-    " I ",
+    " M ",
+    "EGE",
     "ICI"
   ],
   "result": {
     "count": 1,
-    "id": "enderio:xp_obelisk"
+    "id": "enderio:inhibitor_obelisk"
   }
 }
