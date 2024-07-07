@@ -76,7 +76,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-        return new VatMenu(this, playerInventory, containerId);
+        return new VatMenu(containerId, this, playerInventory);
     }
 
     @Override

@@ -19,6 +19,7 @@ import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
@@ -30,6 +31,8 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class AlloySmeltingCategory extends MachineRecipeCategory<AlloySmeltingRecipe> {
 
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/screen/alloy_smelter_jei.png");
+
     public static final RecipeType<AlloySmeltingRecipe> TYPE = RecipeType.create(EnderIO.MODID, "alloy_smelting", AlloySmeltingRecipe.class);
 
     private final IDrawable background;
@@ -38,9 +41,10 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<AlloySmeltingRe
     private final IDrawable animatedFlame;
 
     public AlloySmeltingCategory(IGuiHelper guiHelper) {
-        this.background = guiHelper.createDrawable(AlloySmelterScreen.BG_TEXTURE_AUTO, 53, 6, 67 + 40, 73); // + 40 text space
+        this.background = guiHelper.createDrawable(BG_TEXTURE, 0, 0, 67 + 40, 73); // + 40 text space
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.ALLOY_SMELTER.get()));
 
+        // TODO: Swap to our sprites.
         staticFlame = guiHelper.createDrawable(StirlingGeneratorScreen.BG_TEXTURE, 176, 0, 14, 14);
         animatedFlame = guiHelper.createAnimatedDrawable(staticFlame, 300, IDrawableAnimated.StartDirection.BOTTOM, false);
     }

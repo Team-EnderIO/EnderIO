@@ -41,8 +41,8 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
 
         titleLabelX = imageWidth / 2 - minecraft.font.width(getTitle()) / 2;
 
-        addRenderableOnly(NewProgressWidget.bottomUp(leftPos + 56, topPos + 46, 14, 14, PROGRESS_SPRITE, menu::getCraftingProgress, true));
-        addRenderableOnly(NewProgressWidget.bottomUp(leftPos + 104, topPos + 46, 14, 14, PROGRESS_SPRITE, menu::getCraftingProgress, true));
+        addRenderableOnly(NewProgressWidget.bottomUp(leftPos + 56, topPos + 56, 14, 14, PROGRESS_SPRITE, menu::getCraftingProgress, true));
+        addRenderableOnly(NewProgressWidget.bottomUp(leftPos + 104, topPos + 56, 14, 14, PROGRESS_SPRITE, menu::getCraftingProgress, true));
 
         addRenderableOnly(new ActivityWidget(leftPos + 153, topPos + 89, menu::getMachineStates));
 
