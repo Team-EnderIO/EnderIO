@@ -68,5 +68,7 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
                 guiGraphics.drawString(font, rl.get().toString(), imageWidth / 2f - font.width(rl.get().toString()) / 2f, 15, 4210752, false);
             }
         }
+
+        super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }
 }

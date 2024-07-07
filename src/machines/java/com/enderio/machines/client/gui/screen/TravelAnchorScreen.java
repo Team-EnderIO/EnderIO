@@ -49,8 +49,4 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         pGuiGraphics.blit(TRAVEL_ANCHOR_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
-
-    @Override
-    protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
-    }
 }

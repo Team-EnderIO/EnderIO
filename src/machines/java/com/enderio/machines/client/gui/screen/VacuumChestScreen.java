@@ -29,6 +29,7 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
         super(pMenu, pPlayerInventory, pTitle);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
+        shouldRenderLabels = true;
         inventoryLabelY = imageHeight - 94;
     }
 

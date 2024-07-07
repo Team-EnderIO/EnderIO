@@ -37,6 +37,9 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
 
     private final Map<String, StateRestoringWidget> stateRestoringWidgets = new HashMap<>();
 
+    // TODO: 1.21: Intention is that all screens will have labels in future.
+    protected boolean shouldRenderLabels = false;
+
     public EnderContainerScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }
@@ -52,7 +55,9 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
 
     @Override
     protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
-        super.renderLabels(pGuiGraphics, pMouseX, pMouseY);
+        if (shouldRenderLabels) {
+            super.renderLabels(pGuiGraphics, pMouseX, pMouseY);
+        }
 
         // Move back to screen space rather than aligned to the background coordinates
         pGuiGraphics.pose().pushPose();

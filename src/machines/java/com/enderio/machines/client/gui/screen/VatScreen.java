@@ -27,7 +27,7 @@ import java.util.Optional;
 
 public class VatScreen extends MachineScreen<VatMenu> {
 
-    private static final ResourceLocation VAT_BG = EnderIO.loc("textures/gui/vat.png");
+    private static final ResourceLocation VAT_BG = EnderIO.loc("textures/gui/screen/vat.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
@@ -63,14 +63,15 @@ public class VatScreen extends MachineScreen<VatMenu> {
 
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
-        // TODO: IO Config
-        //addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font));
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
         addRenderableWidget(new ImageButton(leftPos + 29, topPos + 62, 16, 16, MOVE_SPRITES,
             (b) -> menu.moveFluidToOutputTank()));
         addRenderableWidget(new ImageButton(leftPos + 131, topPos + 62, 16, 16, VOID_SPRITES,
             (b) -> menu.dumpOutputTank()));
+
+        var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 83, 162, 76);
+        addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);
     }
 
     @Override

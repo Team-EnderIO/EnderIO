@@ -61,20 +61,13 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
         addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, 4, XP_ADD_ALL, MachineLang.RETRIEVE_ALL));
         addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, 5, XP_REMOVE_ALL, MachineLang.STORE_ALL));
 
-        // TODO: IO Config
-        //IOConfigButton.Inset insets = new IOConfigButton.Inset(0, 22, -26,0);
-        //addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font, insets,
-        //    this::ioConfigCallback));
-
+        var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 7, 136, 102);
+        addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);
     }
 
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         pGuiGraphics.blit(BG, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-    }
-
-    @Override
-    protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
     }
 
     private void handlePress(int id) {

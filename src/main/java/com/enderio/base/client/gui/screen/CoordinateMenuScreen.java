@@ -67,10 +67,6 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
     }
 
     @Override
-    protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
-    }
-
-    @Override
     public boolean onKeyPressed(int keyCode, int scanCode, int modifiers) {
         if (nameInput.isFocused()) {
             if (nameInput.keyPressed(keyCode, scanCode, modifiers) || nameInput.canConsumeInput()) {

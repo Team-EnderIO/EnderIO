@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class InhibitorObeliskScreen extends MachineScreen<InhibitorObeliskMenu> {
 
-    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/inhibitor.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/screen/inhibitor.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
@@ -71,7 +71,7 @@ public class InhibitorObeliskScreen extends MachineScreen<InhibitorObeliskMenu> 
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        super.renderLabels(guiGraphics, pMouseX, pMouseY);
         guiGraphics.drawString(font, EIOLang.RANGE, imageWidth - 6 - font.width(EIOLang.RANGE), 16 + 8, 4210752, false);
+        super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }
 }

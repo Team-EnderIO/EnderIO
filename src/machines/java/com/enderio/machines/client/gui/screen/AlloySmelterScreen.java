@@ -31,6 +31,7 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
         super(pMenu, pPlayerInventory, pTitle);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
+        shouldRenderLabels = true;
 
         titleLabelY = 6 + 2;
         inventoryLabelY = 115;

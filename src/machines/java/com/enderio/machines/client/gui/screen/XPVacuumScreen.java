@@ -30,6 +30,7 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
         super(pMenu, pPlayerInventory, pTitle);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
+        shouldRenderLabels = true;
         this.inventoryLabelY = this.imageHeight - 106;
     }
 
@@ -64,6 +65,7 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         guiGraphics.drawString(font, EIOLang.RANGE, this.imageWidth - 6 - this.font.width(EIOLang.RANGE), 24, 4210752, false);
         guiGraphics.drawString(font, menu.getRange() + "", leftPos + imageWidth - 6 - 16 - 2 - 8 - 10, topPos + 38, 0, false);
+        super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }
 
 }

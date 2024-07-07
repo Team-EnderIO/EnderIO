@@ -85,8 +85,6 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        super.renderLabels(guiGraphics, pMouseX, pMouseY);
-
         ConduitMenuData data = getMenuData();
 
         guiGraphics.drawString(this.font, ConduitLang.CONDUIT_INSERT,  22 + 16 + 2,  7 + 4, 4210752, false);
@@ -94,6 +92,8 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         if (data.showBothEnable()) {
             guiGraphics.drawString(this.font, ConduitLang.CONDUIT_EXTRACT, 112 + 16 + 2, 7 + 4, 4210752, false);
         }
+
+        super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }
 
     @Override
