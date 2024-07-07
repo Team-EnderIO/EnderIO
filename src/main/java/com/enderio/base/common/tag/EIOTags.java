@@ -174,7 +174,7 @@ public class EIOTags {
         public static final TagKey<Fluid> COLD_FIRE_IGNITER_FUEL = tag("fluid_fuel/cold_fire_igniter");
         public static final TagKey<Fluid> STAFF_OF_LEVITY_FUEL = tag("fluid_fuel/staff_of_levity");
         public static final TagKey<Fluid> EXPERIENCE = commonTag("experience");
-        public static final TagKey<Fluid> SOLAR_PANNEL_LIGHT = tag("solar_pannel_light");
+        public static final TagKey<Fluid> SOLAR_PANEL_LIGHT = tag("solar_panel_light");
 
         private static TagKey<Fluid> commonTag(String name) {
             return FluidTags.create(ResourceLocation.fromNamespaceAndPath(COMMON, name));
