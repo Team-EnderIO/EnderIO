@@ -1,0 +1,7 @@
+// 1.21	2024-07-13T23:05:43.28474337	Ender IO Data (armory)
+611c1639645e4b82ea4a17ba948b13b0c6b177b3 data/enderio/advancement/recipes/tools/dark_steel_sword.json
+775158c399d1baf80b36bc412c27723a78b0b69e data/enderio/loot_modifiers/direct_upgrade.json
+671cc71908175e7905a0b6e45bb27ff964b619e9 data/enderio/recipe/dark_steel_sword.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/enderio/tags/block/dark_steel_explodable_allow_list.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/enderio/tags/block/dark_steel_explodable_deny_list.json
+6ee10960773e571038482699d0c0c8b72eb0bf9b data/neoforge/loot_modifiers/global_loot_modifiers.json

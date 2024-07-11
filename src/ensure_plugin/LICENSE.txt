@@ -1,2 +1,0 @@
-The Ensure Compiler Plugin has no license yet and therefore ARR.
-Adding a more open license is on my to do list and will probably be done at some point, if you need this before, ask me.

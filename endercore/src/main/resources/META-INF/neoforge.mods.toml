@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+issueTrackerURL="https://github.com/Team-EnderIO/EnderIO/issues"
+license="CC0"
+
+[[mods]]
+modId="endercore"
+version="${mod_version}"
+displayName="Ender Core"
+authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rover656, HypherionSA, agnor99, Ferri_Arnus, mystchonky"
+description="Supporting library for Ender IO and its Modules"
+displayURL="https://enderio.com/"
+logoFile="logo.png"
+
+[[dependencies.enderio]]
+modId="minecraft"
+type="required"
+versionRange="${mcversion}"
+side="BOTH"
+
+[[dependencies.enderio]]
+modId="neoforge"
+type="required"
+versionRange="${neo_version}"
+side="BOTH"

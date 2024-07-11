@@ -17,6 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Get Minecraft Version
+        uses: madhead/read-java-properties@latest
+        id: mc_version
+        with:
+          file: gradle.properties
+          property: minecraft_version
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -54,13 +61,6 @@ jobs:
         with:
           stringToTruncate: ${{ github.event.release.body }}
           maxLength: 1000
-
-      - name: Get Minecraft Version
-        uses: madhead/read-java-properties@latest
-        id: mc_version
-        with:
-          file: gradle.properties
-          property: minecraft_version
 
       - name: Discord Notification Success
         uses: tsickert/discord-webhook@v5.3.0
