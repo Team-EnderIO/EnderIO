@@ -97,9 +97,9 @@ public record ChemicalConduit(
         var otherData = otherNode.getOrCreateData(MekanismModule.CHEMICAL_DATA_TYPE.get());
 
         if (!selfData.lockedChemical.isEmpty()) {
-            if (!otherData.lockedChemical.isEmpty() && !selfData.lockedChemical.equals(otherData.lockedChemical)) {
-                //EnderIO.LOGGER.warn("incompatible chemical conduits merged");
-            }
+//            if (!otherData.lockedChemical.isEmpty() && !selfData.lockedChemical.equals(otherData.lockedChemical)) {
+//                //EnderIO.LOGGER.warn("incompatible chemical conduits merged");
+//            }
             otherData.setlockedChemical(selfData.lockedChemical);
         } else if (!otherData.lockedChemical.isEmpty()) {
             selfData.setlockedChemical(otherData.lockedChemical);
