@@ -41,7 +41,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: release-build
-          path: build/libs/*.jar
+          path: enderio/build/libs/*.jar
 
       - name: Publish to CurseForge and Modrinth
         env:
@@ -53,7 +53,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: build/libs/*.jar
+          files: enderio/build/libs/*.jar
 
       - name: Truncate Build Notes
         uses: 2428392/gh-truncate-string-action@v1.2.0
