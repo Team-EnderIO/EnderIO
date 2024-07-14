@@ -24,12 +24,20 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @JeiPlugin
 public class EnderIOJEI implements IModPlugin {
+
+    public static <T extends Recipe<?>> mezz.jei.api.recipe.RecipeType<RecipeHolder<T>> createRecipeType(String namespace, String path, Class<T> recipeClass) {
+        //noinspection unchecked
+        Class<? extends RecipeHolder<T>> holderClass = (Class<? extends RecipeHolder<T>>) (Object) RecipeHolder.class;
+        return mezz.jei.api.recipe.RecipeType.create(namespace, path, holderClass);
+    }
 
     @Override
     public ResourceLocation getPluginUid() {

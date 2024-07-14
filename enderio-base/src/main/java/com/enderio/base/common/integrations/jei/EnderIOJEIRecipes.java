@@ -25,8 +25,8 @@ public class EnderIOJEIRecipes {
         this.recipeManager = Objects.requireNonNull(level).getRecipeManager();
     }
 
-    public List<FireCraftingRecipe> getAllFireCraftingRecipes() {
-        return recipeManager.getAllRecipesFor(EIORecipes.FIRE_CRAFTING.type().get()).stream().map(RecipeHolder::value).toList();
+    public List<RecipeHolder<FireCraftingRecipe>> getAllFireCraftingRecipes() {
+        return recipeManager.getAllRecipesFor(EIORecipes.FIRE_CRAFTING.type().get()).stream().toList();
     }
 
     public List<FakeGrindingRecipe> getAllGrindingRecipes() {

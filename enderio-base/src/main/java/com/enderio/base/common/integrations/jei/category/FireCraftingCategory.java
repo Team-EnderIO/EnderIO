@@ -3,6 +3,7 @@ package com.enderio.base.common.integrations.jei.category;
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.integrations.jei.EnderIOJEI;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -32,11 +33,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -48,9 +51,10 @@ import java.util.Map;
 /**
  * @author TagnumElite
  */
-public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe> {
+public class FireCraftingCategory implements IRecipeCategory<RecipeHolder<FireCraftingRecipe>> {
 
-    public static final RecipeType<FireCraftingRecipe> TYPE = RecipeType.create(EnderIOBase.REGISTRY_NAMESPACE, "fire_crafting", FireCraftingRecipe.class);
+    public static final RecipeType<RecipeHolder<FireCraftingRecipe>> TYPE = EnderIOJEI.createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "fire_crafting",
+        FireCraftingRecipe.class);
 
     private static final ResourceLocation BG_LOCATION = EnderIOBase.loc("textures/gui/jei_infinity.png");
 
@@ -69,7 +73,7 @@ public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe>
     }
 
     @Override
-    public RecipeType<FireCraftingRecipe> getRecipeType() {
+    public RecipeType<RecipeHolder<FireCraftingRecipe>> getRecipeType() {
         return TYPE;
     }
 
@@ -89,10 +93,10 @@ public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe>
     }
 
     @Override
-    public List<Component> getTooltipStrings(FireCraftingRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+    public List<Component> getTooltipStrings(RecipeHolder<FireCraftingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         // Middle Right, above the tooltip icon
         if (mouseX >= 87 && mouseX <= 105 && mouseY >= 25 && mouseY <= 38) {
-            List<ResourceKey<Level>> validDimensions = recipe.dimensions();
+            List<ResourceKey<Level>> validDimensions = recipe.value().dimensions();
             List<Component> tooltip = new ArrayList<>(validDimensions.size() + 1);
             tooltip.add(EIOLang.JEI_FIRE_CRAFTING_VALID_DIMENSIONS);
 
@@ -104,7 +108,7 @@ public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe>
         }
         // Block tool tip
         if (mouseX >= 17 && mouseX <= 47 && mouseY >= 31 && mouseY <= 57) {
-            List<Block> bases = recipe.getAllBaseBlocks();
+            List<Block> bases = recipe.value().getAllBaseBlocks();
             List<Component> tooltip = new ArrayList<>(bases.size() + 1);
             tooltip.add(EIOLang.JEI_FIRE_CRAFTING_VALID_BLOCKS);
 
@@ -119,16 +123,16 @@ public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe>
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, FireCraftingRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<FireCraftingRecipe> recipe, IFocusGroup focuses) {
         IIngredientAcceptor<?> block = builder.addInvisibleIngredients(RecipeIngredientRole.CATALYST);
-        block.addIngredients(Ingredient.of(recipe.getAllBaseBlocks().toArray(Block[]::new)));
+        block.addIngredients(Ingredient.of(recipe.value().getAllBaseBlocks().toArray(Block[]::new)));
 
         // TODO: Get and display chance
         IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 88, 39).addTooltipCallback((slowView, tooltip) -> {
             Component lootTableComponent = MutableComponent.create(EIOLang.JEI_FIRE_CRAFTING_LOOT_TABLE.getContents())
-                .append(Component.literal(" " + recipe.lootTable()));
+                .append(Component.literal(" " + recipe.value().lootTable()));
             Component maxDropsComponent = MutableComponent.create(EIOLang.JEI_FIRE_CRAFTING_MAX_DROPS.getContents())
-                .append(Component.literal(" " + recipe.maxItemDrops()));
+                .append(Component.literal(" " + recipe.value().maxItemDrops()));
             tooltip.clear();
             tooltip.add(lootTableComponent);
             tooltip.add(maxDropsComponent);
@@ -140,7 +144,7 @@ public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe>
     }
 
     @Override
-    public void draw(FireCraftingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<FireCraftingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         if (!Screen.hasShiftDown() && timer.getValue() != changed) {
 //            EnderIO.LOGGER.debug("Block {} IDX: {}, ({} - {}) {}", recipe.getId(), blockIdx.get(recipe.getId()), timer.getValue(), changed, blockIdx);
 //            blockIdx.put(recipe.getId(), blockIdx.get(recipe.getId()) + 1);
@@ -148,7 +152,7 @@ public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe>
             changed = timer.getValue();
         }
 
-        List<Block> blocks = recipe.getAllBaseBlocks();
+        List<Block> blocks = recipe.value().getAllBaseBlocks();
         Block block = blocks.get(0);
 
         // Borrowed a bunch of rendering code from Patchouli$PageMultiblock
