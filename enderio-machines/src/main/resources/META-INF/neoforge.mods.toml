@@ -33,5 +33,5 @@ side="BOTH"
 [[dependencies.enderio_machines]]
 modId="enderio_base"
 type="required"
-versionRange="${mod_version}"
+versionRange="[${mod_version}]"
 side="BOTH"
