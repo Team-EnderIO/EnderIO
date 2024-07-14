@@ -17,6 +17,7 @@ import com.enderio.machines.common.io.SidedIOConfigurable;
 import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -505,7 +506,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
 
-    //@EnsureSide(EnsureSide.Side.SERVER)
+    @EnsureSide(EnsureSide.Side.CLIENT)
     @Override
     public ItemInteractionResult onWrenched(@Nullable Player player, @Nullable Direction side) {
         if (player == null || level == null) {
