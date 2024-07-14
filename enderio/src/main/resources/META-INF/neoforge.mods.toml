@@ -25,25 +25,7 @@ versionRange="${neo_version}"
 side="BOTH"
 
 [[dependencies.enderio]]
-modId="enderio_base"
+modId="endercore"
 type="required"
-versionRange="[${mod_version}]"
-side="BOTH"
-
-[[dependencies.enderio]]
-modId="enderio_armory"
-type="required"
-versionRange="[${mod_version}]"
-side="BOTH"
-
-[[dependencies.enderio]]
-modId="enderio_conduits"
-type="required"
-versionRange="[${mod_version}]"
-side="BOTH"
-
-[[dependencies.enderio]]
-modId="enderio_machines"
-type="required"
-versionRange="[${mod_version}]"
+versionRange="${mod_version}"
 side="BOTH"
