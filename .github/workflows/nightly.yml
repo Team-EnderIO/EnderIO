@@ -46,7 +46,7 @@ jobs:
         with:
           name: nightly-build
           path: |
-            build/libs/*.jar
+            enderio/build/libs/*.jar
 
       - name: Discord Notification Success
         uses: tsickert/discord-webhook@v5.3.0
