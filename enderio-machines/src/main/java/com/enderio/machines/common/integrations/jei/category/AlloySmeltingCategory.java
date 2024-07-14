@@ -1,6 +1,7 @@
 package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIOBase;
+import com.enderio.base.common.integrations.jei.JEIUtils;
 import com.enderio.machines.client.gui.screen.StirlingGeneratorScreen;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
@@ -20,6 +21,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
 import java.util.Arrays;
@@ -28,11 +30,11 @@ import java.util.List;
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
-public class AlloySmeltingCategory extends MachineRecipeCategory<AlloySmeltingRecipe> {
+public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<AlloySmeltingRecipe>> {
 
     public static final ResourceLocation BG_TEXTURE = EnderIOBase.loc("textures/gui/screen/alloy_smelter_jei.png");
 
-    public static final RecipeType<AlloySmeltingRecipe> TYPE = RecipeType.create(EnderIOBase.REGISTRY_NAMESPACE, "alloy_smelting", AlloySmeltingRecipe.class);
+    public static final RecipeType<RecipeHolder<AlloySmeltingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "alloy_smelting", AlloySmeltingRecipe.class);
 
     private final IDrawable background;
     private final IDrawable icon;
@@ -49,7 +51,7 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<AlloySmeltingRe
     }
 
     @Override
-    public RecipeType<AlloySmeltingRecipe> getRecipeType() {
+    public RecipeType<RecipeHolder<AlloySmeltingRecipe>> getRecipeType() {
         return TYPE;
     }
 
@@ -69,8 +71,8 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<AlloySmeltingRe
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, AlloySmeltingRecipe recipe, IFocusGroup focuses) {
-        List<SizedIngredient> inputs = recipe.inputs();
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<AlloySmeltingRecipe> recipe, IFocusGroup focuses) {
+        List<SizedIngredient> inputs = recipe.value().inputs();
 
         if (!inputs.isEmpty()) {
             builder.addSlot(INPUT, 1, 11)
@@ -92,14 +94,14 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<AlloySmeltingRe
     }
 
     @Override
-    public void draw(AlloySmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         animatedFlame.draw(guiGraphics, 3, 29);
         animatedFlame.draw(guiGraphics, 51, 29);
         guiGraphics.drawString(Minecraft.getInstance().font, getBasicEnergyString(recipe), 60, 50, 0xff808080, false);
     }
 
     @Override
-    public List<Component> getTooltipStrings(AlloySmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+    public List<Component> getTooltipStrings(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         Minecraft mc = Minecraft.getInstance();
         if (mouseX > 60 && mouseY > 50 && mouseX < 60 + mc.font.width(getBasicEnergyString(recipe)) && mouseY < 50 + mc.font.lineHeight) {
             return List.of(MachineLang.TOOLTIP_ENERGY_EQUIVALENCE);

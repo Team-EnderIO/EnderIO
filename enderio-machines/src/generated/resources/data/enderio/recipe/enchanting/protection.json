@@ -1,0 +1,9 @@
+{
+  "type": "enderio:enchanting",
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:protection",
+  "input": {
+    "count": 16,
+    "tag": "c:ingots/dark_steel"
+  }
+}

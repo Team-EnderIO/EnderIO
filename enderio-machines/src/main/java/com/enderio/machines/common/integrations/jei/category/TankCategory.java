@@ -1,6 +1,7 @@
 package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIOBase;
+import com.enderio.base.common.integrations.jei.JEIUtils;
 import com.enderio.machines.client.gui.screen.FluidTankScreen;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineBlocks;
@@ -16,12 +17,13 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.List;
 
 // TODO: 1.20.1+ Add a custom TankRecipe for JEI to show mending and maybe fill/empty too.
-public class TankCategory implements IRecipeCategory<TankRecipe> {
-    public static final RecipeType<TankRecipe> TYPE = RecipeType.create(EnderIOBase.REGISTRY_NAMESPACE, "tank", TankRecipe.class);
+public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
+    public static final RecipeType<RecipeHolder<TankRecipe>> TYPE = JEIUtils.createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "tank", TankRecipe.class);
 
     private final IDrawable background;
     private final IDrawable icon;
@@ -32,7 +34,7 @@ public class TankCategory implements IRecipeCategory<TankRecipe> {
     }
 
     @Override
-    public RecipeType<TankRecipe> getRecipeType() {
+    public RecipeType<RecipeHolder<TankRecipe>> getRecipeType() {
         return TYPE;
     }
 
@@ -52,23 +54,23 @@ public class TankCategory implements IRecipeCategory<TankRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, TankRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<TankRecipe> recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 39, 3)
-            .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(recipe.fluid()))
+            .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(recipe.value().fluid()))
             .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
 
-        if (recipe.mode() == TankRecipe.Mode.EMPTY) {
+        if (recipe.value().mode() == TankRecipe.Mode.EMPTY) {
             builder.addSlot(RecipeIngredientRole.INPUT, 3, 3)
-                .addIngredients(recipe.input());
+                .addIngredients(recipe.value().input());
 
             builder.addSlot(RecipeIngredientRole.OUTPUT, 3, 34)
-                .addItemStack(new ItemStack(recipe.output()));
-        } else if (recipe.mode() == TankRecipe.Mode.FILL) {
+                .addItemStack(new ItemStack(recipe.value().output()));
+        } else if (recipe.value().mode() == TankRecipe.Mode.FILL) {
             builder.addSlot(RecipeIngredientRole.INPUT, 75, 3)
-                .addIngredients(recipe.input());
+                .addIngredients(recipe.value().input());
 
             builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 34)
-                .addItemStack(new ItemStack(recipe.output()));
+                .addItemStack(new ItemStack(recipe.value().output()));
         }
     }
 }

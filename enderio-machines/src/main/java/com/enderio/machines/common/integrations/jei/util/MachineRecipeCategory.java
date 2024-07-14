@@ -6,6 +6,7 @@ import com.enderio.machines.common.recipe.MachineRecipe;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.NumberFormat;
@@ -25,6 +26,10 @@ public abstract class MachineRecipeCategory<T> implements IRecipeCategory<T> {
             return true;
         }
         return cost < 40 && cost <= player.experienceLevel;
+    }
+
+    protected static <T extends MachineRecipe<?>> Component getBasicEnergyString(RecipeHolder<T> recipe) {
+        return TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, NumberFormat.getIntegerInstance(Locale.ENGLISH).format(recipe.value().getBaseEnergyCost()));
     }
 
     protected static <T extends MachineRecipe<?>> Component getBasicEnergyString(T recipe) {

@@ -1,0 +1,9 @@
+{
+  "type": "enderio:enchanting",
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:fortune",
+  "input": {
+    "count": 1,
+    "tag": "c:gems/emerald"
+  }
+}

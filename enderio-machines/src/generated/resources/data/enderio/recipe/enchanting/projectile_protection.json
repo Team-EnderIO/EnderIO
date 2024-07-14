@@ -1,0 +1,9 @@
+{
+  "type": "enderio:enchanting",
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:projectile_protection",
+  "input": {
+    "count": 16,
+    "tag": "c:leathers"
+  }
+}

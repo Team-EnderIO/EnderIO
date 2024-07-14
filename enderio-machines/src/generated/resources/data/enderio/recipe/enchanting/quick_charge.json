@@ -1,0 +1,9 @@
+{
+  "type": "enderio:enchanting",
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:quick_charge",
+  "input": {
+    "count": 16,
+    "item": "minecraft:sugar"
+  }
+}

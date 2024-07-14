@@ -1,0 +1,9 @@
+{
+  "type": "enderio:enchanting",
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:efficiency",
+  "input": {
+    "count": 12,
+    "tag": "c:dusts/redstone"
+  }
+}

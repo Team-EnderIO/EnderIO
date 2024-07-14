@@ -1,6 +1,7 @@
 package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIOBase;
+import com.enderio.base.common.integrations.jei.JEIUtils;
 import com.enderio.machines.client.gui.screen.SlicerScreen;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
@@ -16,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.List;
@@ -24,9 +26,9 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.CATALYST;
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
-public class SlicingRecipeCategory extends MachineRecipeCategory<SlicingRecipe> {
+public class SlicingRecipeCategory extends MachineRecipeCategory<RecipeHolder<SlicingRecipe>> {
 
-    public static final RecipeType<SlicingRecipe> TYPE = RecipeType.create(EnderIOBase.REGISTRY_NAMESPACE, "slicing", SlicingRecipe.class);
+    public static final RecipeType<RecipeHolder<SlicingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "slicing", SlicingRecipe.class);
 
     private final IDrawable background;
     private final IDrawable icon;
@@ -37,7 +39,7 @@ public class SlicingRecipeCategory extends MachineRecipeCategory<SlicingRecipe> 
     }
 
     @Override
-    public RecipeType<SlicingRecipe> getRecipeType() {
+    public RecipeType<RecipeHolder<SlicingRecipe>> getRecipeType() {
         return TYPE;
     }
 
@@ -57,7 +59,7 @@ public class SlicingRecipeCategory extends MachineRecipeCategory<SlicingRecipe> 
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, SlicingRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<SlicingRecipe> recipe, IFocusGroup focuses) {
         // Tool slots
         builder.addSlot(CATALYST, 11, 1)
             .addIngredients(Ingredient.of(ItemTags.AXES));
@@ -65,17 +67,17 @@ public class SlicingRecipeCategory extends MachineRecipeCategory<SlicingRecipe> 
             .addIngredients(Ingredient.of(Tags.Items.TOOLS_SHEAR));
 
         builder.addSlot(INPUT, 1, 25)
-            .addIngredients(recipe.inputs().get(0));
+            .addIngredients(recipe.value().inputs().get(0));
         builder.addSlot(INPUT, 19, 25)
-            .addIngredients(recipe.inputs().get(1));
+            .addIngredients(recipe.value().inputs().get(1));
         builder.addSlot(INPUT, 37, 25)
-            .addIngredients(recipe.inputs().get(2));
+            .addIngredients(recipe.value().inputs().get(2));
         builder.addSlot(INPUT, 1, 43)
-            .addIngredients(recipe.inputs().get(3));
+            .addIngredients(recipe.value().inputs().get(3));
         builder.addSlot(INPUT, 19, 43)
-            .addIngredients(recipe.inputs().get(4));
+            .addIngredients(recipe.value().inputs().get(4));
         builder.addSlot(INPUT, 37, 43)
-            .addIngredients(recipe.inputs().get(5));
+            .addIngredients(recipe.value().inputs().get(5));
 
         // Output
         builder.addSlot(OUTPUT, 91, 34)

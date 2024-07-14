@@ -1,6 +1,7 @@
 package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIOBase;
+import com.enderio.base.common.integrations.jei.JEIUtils;
 import com.enderio.machines.client.gui.screen.PrimitiveAlloySmelterScreen;
 import com.enderio.machines.client.gui.screen.StirlingGeneratorScreen;
 import com.enderio.machines.common.init.MachineBlocks;
@@ -18,8 +19,11 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,9 +31,10 @@ import java.util.List;
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
-public class PrimitiveAlloySmeltingCategory extends MachineRecipeCategory<AlloySmeltingRecipe> {
+// TODO: Not a massive fan of how the primitive alloy smelter has been implemented and the resulting complexity...
+public class PrimitiveAlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<AlloySmeltingRecipe>> {
 
-    public static final RecipeType<AlloySmeltingRecipe> TYPE = RecipeType.create(EnderIOBase.REGISTRY_NAMESPACE, "primitive_alloy_smelting", AlloySmeltingRecipe.class);
+    public static final RecipeType<RecipeHolder<AlloySmeltingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "primitive_alloy_smelting", AlloySmeltingRecipe.class);
 
     private final IDrawable background;
     private final IDrawable icon;
@@ -45,7 +50,13 @@ public class PrimitiveAlloySmeltingCategory extends MachineRecipeCategory<AlloyS
     }
 
     @Override
-    public RecipeType<AlloySmeltingRecipe> getRecipeType() {
+    public @Nullable ResourceLocation getRegistryName(RecipeHolder<AlloySmeltingRecipe> recipe) {
+        // Prevent overlap with normal alloy smelter recipes
+        return ResourceLocation.fromNamespaceAndPath(recipe.id().getNamespace(), "primitive_" + recipe.id().getPath());
+    }
+
+    @Override
+    public RecipeType<RecipeHolder<AlloySmeltingRecipe>> getRecipeType() {
         return TYPE;
     }
 
@@ -65,8 +76,8 @@ public class PrimitiveAlloySmeltingCategory extends MachineRecipeCategory<AlloyS
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, AlloySmeltingRecipe recipe, IFocusGroup focuses) {
-        List<SizedIngredient> inputs = recipe.inputs();
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<AlloySmeltingRecipe> recipe, IFocusGroup focuses) {
+        List<SizedIngredient> inputs = recipe.value().inputs();
 
         if (!inputs.isEmpty()) {
             builder.addSlot(INPUT, 1, 1)
@@ -88,7 +99,7 @@ public class PrimitiveAlloySmeltingCategory extends MachineRecipeCategory<AlloyS
     }
 
     @Override
-    public void draw(AlloySmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         animatedFlame.draw(guiGraphics, 22, 20);
 
         // TODO: Draw time to smelt

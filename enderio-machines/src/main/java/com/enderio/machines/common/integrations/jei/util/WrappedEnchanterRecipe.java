@@ -9,6 +9,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -20,16 +21,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WrappedEnchanterRecipe implements Recipe<EnchanterRecipe.Input> {
-    private final EnchanterRecipe recipe;
+    private final RecipeHolder<EnchanterRecipe> recipe;
     private final int level;
 
-    public WrappedEnchanterRecipe(EnchanterRecipe recipe, int level) {
+    public WrappedEnchanterRecipe(RecipeHolder<EnchanterRecipe> recipe, int level) {
         this.recipe = recipe;
         this.level = level;
     }
 
+    public ResourceLocation id() {
+        return ResourceLocation.fromNamespaceAndPath(recipe.id().getNamespace(), recipe.id().getPath() + "_" + level);
+    }
+
     public List<ItemStack> getInputs() {
-        return Arrays.stream(recipe.input().getItems()).map(item -> {
+        return Arrays.stream(recipe.value().input().getItems()).map(item -> {
             var copy = item.copy();
             copy.setCount(copy.getCount() * level);
             return copy;
@@ -37,11 +42,11 @@ public class WrappedEnchanterRecipe implements Recipe<EnchanterRecipe.Input> {
     }
 
     public List<ItemStack> getLapis() {
-        return Arrays.stream(Ingredient.of(Tags.Items.GEMS_LAPIS).getItems()).peek(item -> item.setCount(recipe.getLapisForLevel(level))).toList();
+        return Arrays.stream(Ingredient.of(Tags.Items.GEMS_LAPIS).getItems()).peek(item -> item.setCount(recipe.value().getLapisForLevel(level))).toList();
     }
 
     public ItemStack getBook() {
-        return recipe.getBookForLevel(level);
+        return recipe.value().getBookForLevel(level);
     }
 
     public int getLevel() {
@@ -49,11 +54,11 @@ public class WrappedEnchanterRecipe implements Recipe<EnchanterRecipe.Input> {
     }
 
     public Holder<Enchantment> getEnchantment() {
-        return recipe.enchantment();
+        return recipe.value().enchantment();
     }
 
     public int getCost() {
-        return recipe.getXPCostForLevel(level);
+        return recipe.value().getXPCostForLevel(level);
     }
 
     @Override
@@ -83,6 +88,6 @@ public class WrappedEnchanterRecipe implements Recipe<EnchanterRecipe.Input> {
 
     @Override
     public RecipeType<?> getType() {
-        return recipe.getType();
+        return recipe.value().getType();
     }
 }

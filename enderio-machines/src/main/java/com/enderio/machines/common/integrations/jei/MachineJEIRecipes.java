@@ -1,6 +1,7 @@
 package com.enderio.machines.common.integrations.jei;
 
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.integrations.jei.util.WrappedEnchanterRecipe;
 import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
@@ -28,39 +29,40 @@ public class MachineJEIRecipes {
         this.recipeManager = Objects.requireNonNull(level).getRecipeManager();
     }
 
-    public List<AlloySmeltingRecipe> getAlloySmeltingRecipes() {
-        return new ArrayList<>(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()).stream().map(RecipeHolder::value).toList());
+    public List<RecipeHolder<AlloySmeltingRecipe>> getAlloySmeltingRecipes() {
+        return new ArrayList<>(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()));
     }
 
-    public List<AlloySmeltingRecipe> getAlloySmeltingRecipesWithSmelting() {
-        List<AlloySmeltingRecipe> recipes = new ArrayList<>();
-        recipes.addAll(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()).stream().map(RecipeHolder::value).toList());
-        recipes.addAll(recipeManager.getAllRecipesFor(RecipeType.SMELTING).stream().map(h -> new VanillaAlloySmeltingRecipe(h.value())).toList());
+    public List<RecipeHolder<AlloySmeltingRecipe>> getAlloySmeltingRecipesWithSmelting() {
+        List<RecipeHolder<AlloySmeltingRecipe>> recipes = new ArrayList<>();
+        recipes.addAll(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()));
+        recipes.addAll(recipeManager.getAllRecipesFor(RecipeType.SMELTING).stream()
+            .map(h -> new RecipeHolder<AlloySmeltingRecipe>(h.id(), new VanillaAlloySmeltingRecipe(h.value()))).toList());
         return recipes;
     }
 
-    public List<SlicingRecipe> getSlicingRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.SLICING.type().get()).stream().map(RecipeHolder::value).toList();
+    public List<RecipeHolder<SlicingRecipe>> getSlicingRecipes() {
+        return recipeManager.getAllRecipesFor(MachineRecipes.SLICING.type().get());
     }
 
-    public List<SoulBindingRecipe> getSoulBindingRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.SOUL_BINDING.type().get()).stream().map(RecipeHolder::value).toList();
+    public List<RecipeHolder<SoulBindingRecipe>> getSoulBindingRecipes() {
+        return recipeManager.getAllRecipesFor(MachineRecipes.SOUL_BINDING.type().get());
     }
 
-    public List<TankRecipe> getTankRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.TANK.type().get()).stream().map(RecipeHolder::value).toList();
+    public List<RecipeHolder<TankRecipe>> getTankRecipes() {
+        return recipeManager.getAllRecipesFor(MachineRecipes.TANK.type().get());
     }
 
     public List<WrappedEnchanterRecipe> getEnchanterRecipes() {
         return recipeManager.getAllRecipesFor(MachineRecipes.ENCHANTING.type().get()).stream().<WrappedEnchanterRecipe>mapMulti((recipe, consumer) -> {
             for (int i = 1; i <= recipe.value().enchantment().value().getMaxLevel(); i++) {
-                consumer.accept(new WrappedEnchanterRecipe(recipe.value(), i));
+                consumer.accept(new WrappedEnchanterRecipe(recipe, i));
             }
         }).toList();
     }
 
-    public List<SagMillingRecipe> getSagMillingRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.SAG_MILLING.type().get()).stream().map(RecipeHolder::value).toList();
+    public List<RecipeHolder<SagMillingRecipe>> getSagMillingRecipes() {
+        return recipeManager.getAllRecipesFor(MachineRecipes.SAG_MILLING.type().get());
     }
 
     public List<EngineSoul.SoulData> getMobGeneratorRecipes() {

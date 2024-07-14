@@ -1,0 +1,9 @@
+{
+  "type": "enderio:enchanting",
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:flame",
+  "input": {
+    "count": 1,
+    "tag": "c:netherracks"
+  }
+}

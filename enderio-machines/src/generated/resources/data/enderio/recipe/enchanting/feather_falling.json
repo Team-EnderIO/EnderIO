@@ -1,0 +1,9 @@
+{
+  "type": "enderio:enchanting",
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:feather_falling",
+  "input": {
+    "count": 1,
+    "tag": "c:feathers"
+  }
+}

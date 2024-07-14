@@ -33,12 +33,6 @@ import java.util.List;
 @JeiPlugin
 public class EnderIOJEI implements IModPlugin {
 
-    public static <T extends Recipe<?>> mezz.jei.api.recipe.RecipeType<RecipeHolder<T>> createRecipeType(String namespace, String path, Class<T> recipeClass) {
-        //noinspection unchecked
-        Class<? extends RecipeHolder<T>> holderClass = (Class<? extends RecipeHolder<T>>) (Object) RecipeHolder.class;
-        return mezz.jei.api.recipe.RecipeType.create(namespace, path, holderClass);
-    }
-
     @Override
     public ResourceLocation getPluginUid() {
         return EnderIOBase.loc("base");

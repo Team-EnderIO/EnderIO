@@ -4,6 +4,7 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.integrations.jei.EnderIOJEI;
+import com.enderio.base.common.integrations.jei.JEIUtils;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -53,7 +54,7 @@ import java.util.Map;
  */
 public class FireCraftingCategory implements IRecipeCategory<RecipeHolder<FireCraftingRecipe>> {
 
-    public static final RecipeType<RecipeHolder<FireCraftingRecipe>> TYPE = EnderIOJEI.createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "fire_crafting",
+    public static final RecipeType<RecipeHolder<FireCraftingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "fire_crafting",
         FireCraftingRecipe.class);
 
     private static final ResourceLocation BG_LOCATION = EnderIOBase.loc("textures/gui/jei_infinity.png");

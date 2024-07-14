@@ -244,9 +244,7 @@ public class EIOItems {
 
     // region Misc Materials
 
-    public static final RegiliteItem<MaterialItem> PHOTOVOLTAIC_PLATE = materialItem("photovoltaic_plate")
-        .setModelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("block/pressure_plate_up")).texture("texture", prov.itemTexture(ctx.get())))
-        ;
+    public static final RegiliteItem<MaterialItem> PHOTOVOLTAIC_PLATE = materialItem("photovoltaic_plate");
 
     public static final RegiliteItem<MaterialItem> NUTRITIOUS_STICK = materialItem("nutritious_stick");
 

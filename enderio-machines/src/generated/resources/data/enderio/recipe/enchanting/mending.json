@@ -1,0 +1,9 @@
+{
+  "type": "enderio:enchanting",
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:mending",
+  "input": {
+    "count": 1,
+    "item": "enderio:experience_rod"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "enderio:enchanting",
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:frost_walker",
+  "input": {
+    "count": 16,
+    "item": "minecraft:ice"
+  }
+}

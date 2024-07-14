@@ -17,9 +17,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
+import org.jetbrains.annotations.Nullable;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
@@ -34,6 +36,11 @@ public class EnchanterCategory extends MachineRecipeCategory<WrappedEnchanterRec
     public EnchanterCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(EnchanterScreen.BG_TEXTURE, 15, 24, 146, 28 + 12);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.ENCHANTER.get()));
+    }
+
+    @Override
+    public @Nullable ResourceLocation getRegistryName(WrappedEnchanterRecipe recipe) {
+        return recipe.id();
     }
 
     @Override
