@@ -69,7 +69,7 @@ public class AE2ConduitsModule implements ConduitModule {
     }
 
     @Override
-    public void bootstrap(BootstrapContext<Conduit<?>> context) {
+    public void bootstrapConduits(BootstrapContext<Conduit<?>> context) {
         context.register(NORMAL, new MEConduit(EnderIOBase.loc("block/conduit/me"), LANG_ME_CONDUIT, false));
         context.register(DENSE, new MEConduit(EnderIOBase.loc("block/conduit/dense_me"), LANG_DENSE_ME_CONDUIT, true));
     }

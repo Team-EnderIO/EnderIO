@@ -24,6 +24,7 @@ sourceSets {
 val regiliteVersion: String by project
 val jeiVersion: String by project
 val ae2Version: String by project
+val mekanismVersion: String by project
 
 dependencies {
     implementation("com.enderio:Regilite:$regiliteVersion")
@@ -44,6 +45,10 @@ dependencies {
     // AE2
     compileOnly("appeng:appliedenergistics2:${ae2Version}:api")
     runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
+
+    // Mekanism
+    compileOnly("mekanism:Mekanism:${minecraftVersion}-${mekanismVersion}:api")
+    runtimeOnly("mekanism:Mekanism:${minecraftVersion}-${mekanismVersion}")
 }
 
 neoForge {

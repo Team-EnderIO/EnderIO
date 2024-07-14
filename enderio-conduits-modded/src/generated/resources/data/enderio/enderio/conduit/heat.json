@@ -1,5 +1,10 @@
 {
-  "neoforge:conditions":[{"type":"neoforge:mod_loaded","modid":"mekanism"}],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
   "type": "enderio:heat",
   "description": {
     "translate": "item.enderio.conduit.heat"
