@@ -1,33 +1,32 @@
-package com.enderio.core.common.menu;
+package com.enderio.base.common.menu;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
-public class ItemFilterSlot extends Slot {
+public class FluidFilterSlot extends Slot {
 
     private static Container emptyInventory = new SimpleContainer(0);
-    private final Supplier<ItemStack> item;
-    private final Consumer<ItemStack> consumer;
+    private final Consumer<FluidStack> consumer;
 
-    public ItemFilterSlot(Supplier<ItemStack> item, Consumer<ItemStack> consumer, int pSlot, int pX, int pY) {
+    public FluidFilterSlot(Consumer<FluidStack> consumer, int pSlot, int pX, int pY) {
         super(emptyInventory, pSlot, pX, pY);
-        this.item = item;
         this.consumer = consumer;
     }
 
     @Override
     public ItemStack getItem() {
-        return item.get();
+        return ItemStack.EMPTY;
     }
 
     @Override
     public void set(ItemStack pStack) {
-        consumer.accept(pStack);
         setChanged();
     }
 
@@ -50,10 +49,10 @@ public class ItemFilterSlot extends Slot {
     @Override
     public ItemStack safeInsert(ItemStack stack, int amount) {
         // If this stack is valid, set the inventory slot value.
-        if (!stack.isEmpty() && mayPlace(stack)) {
-            ItemStack ghost = stack.copy();
-            ghost.setCount(Math.min(ghost.getCount(), this.getMaxStackSize()));
-            set(ghost);
+        IFluidHandlerItem capability = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (!stack.isEmpty() && mayPlace(stack) && capability != null) {
+            FluidStack ghost = capability.getFluidInTank(0).copy();
+            consumer.accept(ghost);
         }
 
         return stack;

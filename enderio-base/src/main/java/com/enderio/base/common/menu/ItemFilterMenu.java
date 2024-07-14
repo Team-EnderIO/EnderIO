@@ -4,7 +4,6 @@ import com.enderio.base.common.capability.ItemFilterCapability;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.network.FilterUpdatePacket;
-import com.enderio.core.common.menu.ItemFilterSlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
