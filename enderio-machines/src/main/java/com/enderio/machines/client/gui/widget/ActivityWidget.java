@@ -19,10 +19,16 @@ import java.util.function.Supplier;
 
 public class ActivityWidget extends AbstractWidget {
     private final Supplier<Set<MachineState>> state;
+    private final boolean useNewIcons;
 
     public ActivityWidget(int x, int y, Supplier<Set<MachineState>> state) {
+        this(x, y, state, false);
+    }
+
+    public ActivityWidget(int x, int y, Supplier<Set<MachineState>> state, boolean useNewIcons) {
         super(x, y, 16, 16, Component.empty());
         this.state = state;
+        this.useNewIcons = useNewIcons;
     }
 
     @Override
@@ -42,7 +48,11 @@ public class ActivityWidget extends AbstractWidget {
             prio = MachineState.IDLE;
         }
 
-        guiGraphics.blitSprite(Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), getX(), getY(), 16, 16);
+        if (useNewIcons) {
+            guiGraphics.blitSprite(Objects.requireNonNull(MachineEnumIcons.NEW_MACHINE_STATE_TYPE.get(prio.type())), getX(), getY(), 16, 16);
+        } else {
+            guiGraphics.blitSprite(Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), getX(), getY(), 16, 16);
+        }
 
         RenderSystem.disableBlend();
         RenderSystem.disableDepthTest();

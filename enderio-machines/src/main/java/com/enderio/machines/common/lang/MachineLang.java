@@ -16,8 +16,9 @@ public class MachineLang {
     public static final Component TOOLTIP_ENERGY_EQUIVALENCE = addTranslation("gui", EnderIOBase.loc("energy_equivalence"), "A unit of energy, equivalent to FE.");
     public static final MutableComponent TOOLTIP_SAG_MILL_CHANCE_BALL = addTranslation("gui", EnderIOBase.loc("sag_mill_chance_ball"), "Chance: %s%% (modified by grinding ball)");
     public static final MutableComponent TOOLTIP_SAG_MILL_CHANCE = addTranslation("gui", EnderIOBase.loc("sag_mill_chance"), "Chance: %s%%");
+
     public static final MutableComponent TOOLTIP_ACTIVE = addTranslation("gui", EnderIOBase.loc("active"), "The machine is active");
-    public static final MutableComponent TOOLTIP_IDLE = addTranslation("gui", EnderIOBase.loc("idle"), "The machine is ready to work");
+    public static final MutableComponent TOOLTIP_IDLE = addTranslation("gui", EnderIOBase.loc("idle"), "The machine is idle");
 
     public static final MutableComponent TOOLTIP_NO_CAPACITOR = addTranslation("gui", EnderIOBase.loc("no_capacitor"), "Install a capacitor to be able to use the machine");
     public static final MutableComponent TOOLTIP_NO_POWER = addTranslation("gui", EnderIOBase.loc("no_power"), "There is not enough power to use the machine");
