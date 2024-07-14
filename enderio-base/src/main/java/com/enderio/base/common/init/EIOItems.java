@@ -432,6 +432,7 @@ public class EIOItems {
 
     public static final RegiliteItem<EntityFilter> ENTITY_FILTER = ITEM_REGISTRY
         .registerItem("entity_filter", properties -> new EntityFilter(properties.component(EIODataComponents.ENTITY_FILTER, new EntityFilterCapability.Component(5))))
+        .setTranslation("Soul Filter")
         .setTab(EIOCreativeTabs.GEAR)
         .addCapability(EIOCapabilities.Filter.ITEM, EntityFilter.ENTITY_FILTER);
 
