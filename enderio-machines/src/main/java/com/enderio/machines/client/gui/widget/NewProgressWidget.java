@@ -63,6 +63,8 @@ public class NewProgressWidget extends AbstractWidget {
 
         float progress = progressSupplier.get();
 
+        int u = 0;
+        int v = 0;
         int x;
         int y;
         int uWidth;
@@ -72,6 +74,7 @@ public class NewProgressWidget extends AbstractWidget {
             int yOffset = (int) (this.height * (1.0f - progress));
             x = getX();
             y = getY() + yOffset;
+            v = yOffset;
             uWidth = width;
             vHeight = (int) (this.height * progress);
         }
@@ -90,7 +93,7 @@ public class NewProgressWidget extends AbstractWidget {
         default -> throw new NotImplementedException();
         }
 
-        guiGraphics.blitSprite(sprite, width, height, 0, 0, x, y, uWidth, vHeight);
+        guiGraphics.blitSprite(sprite, width, height, u, v, x, y, uWidth, vHeight);
 
         // Update the contents of the tooltip whenever its hovered, don't waste any time doing it when not hovered.
         // Should also mean when tooltip is false it never gets populated
