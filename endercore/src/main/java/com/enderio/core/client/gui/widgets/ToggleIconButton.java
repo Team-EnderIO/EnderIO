@@ -1,5 +1,6 @@
 package com.enderio.core.client.gui.widgets;
 
+import com.enderio.core.EnderCore;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -35,7 +36,7 @@ public class ToggleIconButton extends EnderButton {
 
     // region Presets and helpers
 
-    private static final ResourceLocation CHECKMARK = ResourceLocation.fromNamespaceAndPath("enderio", "icon/checkmark");
+    private static final ResourceLocation CHECKMARK = ResourceLocation.fromNamespaceAndPath(EnderCore.MOD_ID, "icon/checkmark");
 
     public static ToggleIconButton createCheckbox(int x, int y, Supplier<Boolean> getter, Consumer<Boolean> setter) {
         return new ToggleIconButton(x, y, 16, 16, isChecked -> isChecked ? CHECKMARK : null, null, getter, setter);

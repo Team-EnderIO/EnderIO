@@ -52,7 +52,9 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         Vector2i elementDistance = new Vector2i(width, height).add(SPACE_BETWEEN_ELEMENTS, SPACE_BETWEEN_ELEMENTS);
         for (int i = 0; i < values.length; i++) {
             T value = values[i];
-            Vector2i subWidgetPos = pos.add(getColumn(i) * elementDistance.x(), getRow(i) * elementDistance.y()).add(pX, pY);
+            Vector2i subWidgetPos = new Vector2i(
+                pos.x() + getColumn(i) * elementDistance.x() + pX,
+                pos.y() + getRow(i) * elementDistance.y() + pY);
             SelectionWidget widget = new SelectionWidget(subWidgetPos, width + 2, height + 2, value);
 
             Component tooltip = getValueTooltip(value);
@@ -66,10 +68,10 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         Vector2i topLeft = new Vector2i(Integer.MAX_VALUE, Integer.MAX_VALUE);
         Vector2i bottomRight = new Vector2i(Integer.MIN_VALUE, Integer.MIN_VALUE);
         for (SelectionWidget widget : icons.values()) {
-            topLeft = topLeft.add(Math.min(topLeft.x(), widget.getX()), 0);
-            topLeft = topLeft.add(0, Math.min(topLeft.y(), widget.getY()));
-            bottomRight = bottomRight.add(Math.max(bottomRight.x(), widget.getX() + widget.getWidth()), 0);
-            bottomRight = bottomRight.add(0, Math.max(bottomRight.y(), widget.getY() + widget.getHeight()));
+            topLeft = new Vector2i(Math.min(topLeft.x(), widget.getX()), topLeft.y());
+            topLeft = new Vector2i(topLeft.x(), Math.min(topLeft.y(), widget.getY()));
+            bottomRight = new Vector2i(Math.max(bottomRight.x(), widget.getX() + widget.getWidth()), bottomRight.y());
+            bottomRight = new Vector2i(bottomRight.x(), Math.max(bottomRight.y(), widget.getY() + widget.getHeight()));
         }
 
         expandTopLeft = topLeft.sub(SPACE_BETWEEN_ELEMENTS, SPACE_BETWEEN_ELEMENTS);
