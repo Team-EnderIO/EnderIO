@@ -21,6 +21,8 @@ sourceSets {
     }
 }
 
+// TODO: Add ae2, rs2, mekanism etc. as optional deps in mods.toml
+
 val regiliteVersion: String by project
 val jeiVersion: String by project
 val ae2Version: String by project
