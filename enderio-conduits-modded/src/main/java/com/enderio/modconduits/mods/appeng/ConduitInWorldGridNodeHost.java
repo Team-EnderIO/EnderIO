@@ -1,4 +1,4 @@
-package com.enderio.modconduits.appeng;
+package com.enderio.modconduits.mods.appeng;
 
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IInWorldGridNodeHost;

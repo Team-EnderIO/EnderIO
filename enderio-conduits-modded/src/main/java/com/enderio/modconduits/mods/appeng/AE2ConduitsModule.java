@@ -1,14 +1,13 @@
-package com.enderio.modconduits.appeng;
+package com.enderio.modconduits.mods.appeng;
 
 import appeng.api.AECapabilities;
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.conduits.api.Conduit;
+import com.enderio.conduits.api.ConduitApi;
 import com.enderio.conduits.api.ConduitDataType;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
-import com.enderio.conduits.common.conduit.ConduitBlockItem;
-import com.enderio.conduits.common.tag.ConduitTags;
 import com.enderio.modconduits.ConduitModule;
 import com.enderio.modconduits.ModdedConduits;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -21,6 +20,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
@@ -56,12 +58,14 @@ public class AE2ConduitsModule implements ConduitModule {
         return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
     }
 
+    private static final TagKey<Item> COVERED_DENSE_CABLE = ItemTags.create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_dense_cable"));
+    private static final TagKey<Item> COVERED_CABLE = ItemTags.create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_cable"));
+    private static final TagKey<Item> GLASS_CABLE = ItemTags.create(ResourceLocation.fromNamespaceAndPath("ae2", "glass_cable"));
+
     @Override
     public void register(IEventBus modEventBus) {
         CONDUIT_TYPES.register(modEventBus);
         CONDUIT_DATA_TYPES.register(modEventBus);
-
-        // TODO: Register datagen for conduits and their recipes...
     }
 
     @Override
@@ -83,30 +87,30 @@ public class AE2ConduitsModule implements ConduitModule {
         var normalConduit = lookupProvider.holderOrThrow(NORMAL);
         var denseConduit = lookupProvider.holderOrThrow(DENSE);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(normalConduit, 3))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApi.INSTANCE.getStackForType(normalConduit, 3))
             .pattern("BBB")
             .pattern("III")
             .pattern("BBB")
             .define('B', EIOItems.CONDUIT_BINDER)
-            .define('I', ConduitTags.Items.COVERED_CABLE) // TODO: move these tags into here.
+            .define('I', COVERED_CABLE)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
             .save(ae2RecipeOutput, EnderIOBase.loc("ae_covered_cable"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(normalConduit, 3))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApi.INSTANCE.getStackForType(normalConduit, 3))
             .pattern("BBB")
             .pattern("III")
             .pattern("BBB")
             .define('B', EIOItems.CONDUIT_BINDER)
-            .define('I', ConduitTags.Items.GLASS_CABLE)
+            .define('I', GLASS_CABLE)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
             .save(ae2RecipeOutput, EnderIOBase.loc("ae_glass_cable"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(denseConduit, 3))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApi.INSTANCE.getStackForType(denseConduit, 3))
             .pattern("BBB")
             .pattern("III")
             .pattern("BBB")
             .define('B', EIOItems.CONDUIT_BINDER)
-            .define('I', ConduitTags.Items.COVERED_DENSE_CABLE)
+            .define('I', COVERED_DENSE_CABLE)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
             .save(ae2RecipeOutput, EnderIOBase.loc("ae_covered_dense_cable"));
     }
