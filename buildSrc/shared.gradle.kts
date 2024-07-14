@@ -63,6 +63,12 @@ repositories {
                 includeGroup("maven.modrinth")
             }
         }
+
+        mavenLocal() {
+            content {
+                includeGroup("com.enderio")
+            }
+        }
     }
 }
 

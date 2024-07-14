@@ -12,16 +12,22 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ObeliskBER implements BlockEntityRenderer<ObeliskBlockEntity> {
 
     private final Supplier<Item> supplier;
 
-    public ObeliskBER(BlockEntityRendererProvider.Context context, Supplier<Item> itemSupplier) {
+    public ObeliskBER(Supplier<Item> itemSupplier) {
         this.supplier = itemSupplier;
+    }
+
+    public static <T extends ObeliskBlockEntity> Function<BlockEntityRendererProvider.Context, BlockEntityRenderer<? super T>> factory(Supplier<Item> itemSupplier) {
+        return context -> new ObeliskBER(itemSupplier);
     }
 
     @Override
