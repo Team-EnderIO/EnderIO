@@ -1,4 +1,4 @@
-// 1.21	2024-07-14T14:03:14.028337742	Ender IO Data (enderio)
+// 1.21	2024-07-15T22:58:16.143761332	Ender IO Data (enderio)
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass_a.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass_a_black.json
@@ -788,7 +788,7 @@ fffb418818fa4ec53a362ef433d0c30f00f9d39d assets/enderio/blockstates/vibrant_allo
 9214740bec77480a6a8811eeed78ccb9e6a988bb assets/enderio/blockstates/void_chassis.json
 94ee00eebd82061338b6db439a84b3fdf98f3942 assets/enderio/blockstates/wall_enderman_head.json
 e5a33b4a2db42195222fa1709b3d9533ac41e453 assets/enderio/blockstates/xp_juice.json
-adac22769162f1e1a2917b95941a21a7ab4b2b7d assets/enderio/lang/en_us.json
+77c198e1119cd600749eb6af7d191cde04f69825 assets/enderio/lang/en_us.json
 85968b6918885e5e706e34021e4a865eacecd54d assets/enderio/models/block/conductive_alloy_block.json
 e9c1e159d4fc7d7bf25c14535542eeef91a27134 assets/enderio/models/block/copper_alloy_block.json
 1b75396effc27d3d9a37f74e00accc09a59f0e99 assets/enderio/models/block/dark_steel_bars_no_side.json
