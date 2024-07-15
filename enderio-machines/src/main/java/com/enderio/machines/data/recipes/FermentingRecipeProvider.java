@@ -3,6 +3,7 @@ package com.enderio.machines.data.recipes;
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.machines.common.recipe.FermentingRecipe;
+import com.enderio.machines.common.tag.MachineTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -26,6 +27,8 @@ public class FermentingRecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
         build(new FluidStack(EIOFluids.HOOTCH.getSource(), 250), SizedFluidIngredient.of(FluidTags.WATER, 1000), Tags.Items.SEEDS, Tags.Items.CROPS, 100,
+            recipeOutput);
+        build(new FluidStack(EIOFluids.ROCKET_FUEL.getSource(), 250), SizedFluidIngredient.of(EIOFluids.HOOTCH.getSource(), 1000), MachineTags.ItemTags.EXPLOSIVES, MachineTags.ItemTags.REDSTONE_SOURCE, 100,
             recipeOutput);
     }
 
