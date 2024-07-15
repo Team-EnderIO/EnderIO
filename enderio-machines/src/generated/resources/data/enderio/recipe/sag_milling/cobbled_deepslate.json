@@ -1,0 +1,16 @@
+{
+  "type": "enderio:sag_milling",
+  "energy": 2400,
+  "input": {
+    "tag": "c:cobblestones/deepslate"
+  },
+  "outputs": [
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "chance": 0.3,
+      "item": "enderio:grains_of_infinity"
+    }
+  ]
+}
