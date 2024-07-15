@@ -131,7 +131,7 @@ public class FireCraftingCategory implements IRecipeCategory<RecipeHolder<FireCr
         // TODO: Get and display chance
         IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 88, 39).addTooltipCallback((slowView, tooltip) -> {
             Component lootTableComponent = MutableComponent.create(EIOLang.JEI_FIRE_CRAFTING_LOOT_TABLE.getContents())
-                .append(Component.literal(" " + recipe.value().lootTable()));
+                .append(Component.literal(" " + recipe.value().lootTable().location()));
             Component maxDropsComponent = MutableComponent.create(EIOLang.JEI_FIRE_CRAFTING_MAX_DROPS.getContents())
                 .append(Component.literal(" " + recipe.value().maxItemDrops()));
             tooltip.clear();
