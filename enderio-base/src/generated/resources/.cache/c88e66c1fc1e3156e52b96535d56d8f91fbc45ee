@@ -1,4 +1,4 @@
-// 1.21	2024-07-15T22:44:05.643054461	Ender IO Data (base)
+// 1.21	2024-07-15T23:05:47.581110916	Ender IO Data (base)
 9068849fcf8112dee702f42c36005a62845e6e7b data/c/tags/block/storage_blocks.json
 980d474fc49d341e2b2915950ca5bf0a71af1f04 data/c/tags/item/dusts.json
 fe6bb416b05a8c18474317f7e09bc7b069e2626a data/c/tags/item/dusts/prismarine.json
@@ -884,7 +884,7 @@ e5e2a2119595f43aa583c69f2b7928c49f518e6d data/enderio/loot_modifiers/common_loot
 4351f67d51821444bb0799acf61494b41a44cee4 data/enderio/loot_table/chests/alloy_loot.json
 d8c8241709f401b2e5371ba95c9cf08e4b8c1e4e data/enderio/loot_table/chests/common_loot.json
 62736b0c0c41c1e5389d4b815aea1ced66d59aab data/enderio/loot_table/fire_crafting/bedrock_infinity.json
-d7ae73c20b16e59666f3a750387c981408b9f8e1 data/enderio/loot_table/fire_crafting/deepslate_infinity.json
+35572b57dde42fb9e6593d75f89cdcba1b1d8acc data/enderio/loot_table/fire_crafting/deepslate_infinity.json
 fdc06ba6737baaed3d302fc2c0106f6f42777e3a data/enderio/recipe/advanced_filter.json
 3fad3d2830c629b04ba7ccb7fc86c54e41c00687 data/enderio/recipe/basic_capacitor.json
 ab108b5e7fbbb0f432875a666a139af7414a9a70 data/enderio/recipe/basic_filter.json
