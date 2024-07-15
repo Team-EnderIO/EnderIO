@@ -1,11 +1,11 @@
 {
   "type": "enderio:fire_crafting",
   "base_blocks": [
-    "minecraft:bedrock"
+    "minecraft:deepslate"
   ],
   "dimensions": [
     "minecraft:overworld"
   ],
-  "loot_table": "enderio:fire_crafting/infinity",
+  "loot_table": "enderio:fire_crafting/deepslate_infinity",
   "max_item_drops": 1
 }

@@ -1,4 +1,4 @@
-// 1.21	2024-07-09T23:30:21.500572687	Ender IO Data (base)
+// 1.21	2024-07-15T22:44:05.643054461	Ender IO Data (base)
 9068849fcf8112dee702f42c36005a62845e6e7b data/c/tags/block/storage_blocks.json
 980d474fc49d341e2b2915950ca5bf0a71af1f04 data/c/tags/item/dusts.json
 fe6bb416b05a8c18474317f7e09bc7b069e2626a data/c/tags/item/dusts/prismarine.json
@@ -883,7 +883,8 @@ e09c009d7f751a0c2ee7919ba3708e3a12690a36 data/enderio/advancement/recipes/tools/
 e5e2a2119595f43aa583c69f2b7928c49f518e6d data/enderio/loot_modifiers/common_loot.json
 4351f67d51821444bb0799acf61494b41a44cee4 data/enderio/loot_table/chests/alloy_loot.json
 d8c8241709f401b2e5371ba95c9cf08e4b8c1e4e data/enderio/loot_table/chests/common_loot.json
-9fb6080be234aec21e26b06b48c729766b286122 data/enderio/loot_table/fire_crafting/infinity.json
+62736b0c0c41c1e5389d4b815aea1ced66d59aab data/enderio/loot_table/fire_crafting/bedrock_infinity.json
+d7ae73c20b16e59666f3a750387c981408b9f8e1 data/enderio/loot_table/fire_crafting/deepslate_infinity.json
 fdc06ba6737baaed3d302fc2c0106f6f42777e3a data/enderio/recipe/advanced_filter.json
 3fad3d2830c629b04ba7ccb7fc86c54e41c00687 data/enderio/recipe/basic_capacitor.json
 ab108b5e7fbbb0f432875a666a139af7414a9a70 data/enderio/recipe/basic_filter.json
@@ -947,7 +948,8 @@ b1eda915ad8d023bcb7660267c9316b6fb9f17eb data/enderio/recipe/energetic_alloy_nug
 77601ec0ffe2b1c021b3869250b872bdebbe8041 data/enderio/recipe/ensouled_chassis.json
 1cf5cbb7e26df5d9c61499a9f15f91165ff300b1 data/enderio/recipe/entity_filter.json
 ee808fbf373ce30c9aa0a08971b8f51e8f23ab8d data/enderio/recipe/experience_rod.json
-390639639ed2425bbc98b43dad8d485afe08c52d data/enderio/recipe/fire_crafting/infinity.json
+7e4d6aa9465ab492e29c717a7f21a884e573618a data/enderio/recipe/fire_crafting/bedrock_infinity.json
+a21ea2120a531ccbe921daa0c255315fb3f61e9d data/enderio/recipe/fire_crafting/deepslate_infinity.json
 5d5626c88871d11e83ed1755ac33c53142bc2495 data/enderio/recipe/fluid_filter.json
 2b2cd82ec3cc5866c1f5c86123ae6e1d88a13950 data/enderio/recipe/glider_wing.json
 39c3cde30d749c5860bbb7b71b531bf00e3c4a61 data/enderio/recipe/infinity_rod.json

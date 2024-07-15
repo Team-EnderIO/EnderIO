@@ -8,7 +8,7 @@
           "type": "minecraft:item",
           "conditions": [
             {
-              "chance": 0.5,
+              "chance": 0.8,
               "condition": "minecraft:random_chance"
             }
           ],
@@ -16,8 +16,12 @@
         }
       ],
       "name": "infinity_in_world_crafting",
-      "rolls": 1.0
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 3.0,
+        "min": 1.0
+      }
     }
   ],
-  "random_sequence": "enderio:fire_crafting/infinity"
+  "random_sequence": "enderio:fire_crafting/bedrock_infinity"
 }
