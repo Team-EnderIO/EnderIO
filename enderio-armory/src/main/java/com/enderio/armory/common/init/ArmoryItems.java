@@ -28,7 +28,7 @@ public class ArmoryItems {
         .registerItem("dark_steel_sword", DarkSteelSwordItem::new, new Item.Properties().durability(2000))
         .withTab(EIOCreativeTabs.GEAR)
         .withTranslation("The Ender")
-        .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+        .withModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
 
     // TODO: Bring these back when they are finished.
 //    public static final ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE

@@ -26,12 +26,12 @@ public class ConduitBlocks {
                 .dynamicShape()
                 .mapColor(MapColor.STONE))
         .withTranslation("Conduit Bundle")
-        .setBlockStateProvider(ConduitBlockState::conduit)
+        .withBlockStateProvider(ConduitBlockState::conduit)
         .withTags(BlockTags.MINEABLE_WITH_PICKAXE)
         .withBlockItem(ITEM_REGISTRY, b -> new ConduitBlockItem(b, new Item.Properties()),
             item -> item
                 .withTranslation("<MISSING> Conduit")
-                .setModelProvider((prov, ctx) -> {}));
+                .withModelProvider((prov, ctx) -> {}));
 
     public static void register(IEventBus bus) {
         BLOCK_REGISTRY.register(bus);
