@@ -223,6 +223,12 @@ public class MachineBlocks {
 
     public static final RegiliteBlock<MachineBlock> VAT = machine("vat", () -> MachineBlockEntities.VAT).setTranslation("VAT");
 
+    public static final RegiliteBlock<BlockDetectorBlock> BLOCK_DETECTOR = BLOCK_REGISTRY
+        .registerBlock("block_detector", BlockDetectorBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER))
+        .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)
+        .setBlockStateProvider((prov, ctx) -> prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName())))
+        .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+
     public static final RegiliteBlock<MachineBlock> XP_OBELISK = BLOCK_REGISTRY
         .registerBlock("xp_obelisk", props -> new MachineBlock(MachineBlockEntities.XP_OBELISK, props),
             BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
@@ -238,12 +244,6 @@ public class MachineBlocks {
         .setLootTable(MachinesLootTable::copyComponents)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
-        .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
-        
-    public static final RegiliteBlock<BlockDetectorBlock> BLOCK_DETECTOR = BLOCK_REGISTRY
-        .registerBlock("block_detector", BlockDetectorBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER))
-        .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)
-        .setBlockStateProvider((prov, ctx) -> prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName())))
         .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
     public static final RegiliteBlock<MachineBlock> AVERSION_OBELISK = BLOCK_REGISTRY

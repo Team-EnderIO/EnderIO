@@ -16,12 +16,15 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity {
 
@@ -30,8 +33,18 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity {
 
     public RelocatorObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.RELOCATOR_OBELISK.get(), worldPosition, blockState);
+    }
 
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
         NeoForge.EVENT_BUS.addListener(this::spawnEvent);
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        NeoForge.EVENT_BUS.unregister((Consumer<FinalizeSpawnEvent>)this::spawnEvent);
     }
 
     @Override
@@ -51,7 +64,7 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity {
 
     @Override
     public int getMaxRange() {
-        return 255;
+        return 32;
     }
 
     @Override
@@ -61,7 +74,8 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity {
 
     @SubscribeEvent
     public void spawnEvent(FinalizeSpawnEvent event) {
-        if (level.isClientSide || event.getSpawnType() != MobSpawnType.NATURAL) {
+        // TODO: Check dimension!
+        if (level == null || level.isClientSide || event.getSpawnType() != MobSpawnType.NATURAL) {
             return;
         }
         if (FILTER.getItemStack(this).getCapability(EIOCapabilities.Filter.ITEM) instanceof EntityFilter entityFilter) {

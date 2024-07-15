@@ -12,11 +12,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity {
 
@@ -25,8 +29,18 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity {
 
     public InhibitorObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.INHIBITOR_OBELISK.get(), worldPosition, blockState);
+    }
 
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
         NeoForge.EVENT_BUS.addListener(this::teleportEvent);
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        NeoForge.EVENT_BUS.unregister((Consumer<EntityTeleportEvent>)this::teleportEvent);
     }
 
     @Override
@@ -44,7 +58,7 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity {
 
     @Override
     public int getMaxRange() {
-        return 255;
+        return 32;
     }
 
     @Override
@@ -54,7 +68,8 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity {
 
     @SubscribeEvent
     public void teleportEvent(EntityTeleportEvent event) {
-        if (level.isClientSide) {
+        // TODO: Check dimension!
+        if (level == null || level.isClientSide) {
             return;
         }
         if (isActive() && getAABB().contains(event.getTargetX(), event.getTargetY(), event.getTargetZ())) {
