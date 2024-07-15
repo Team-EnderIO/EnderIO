@@ -41,6 +41,7 @@ public class MachineLang {
     public static final MutableComponent CATEGORY_SOUL_BINDING = addTranslation("gui", EnderIOBase.loc("category.soul_binding"), "Soul Binding");
     public static final MutableComponent CATEGORY_TANK = addTranslation("gui", EnderIOBase.loc("category.tank"), "Fluid Tank");
     public static final MutableComponent CATEGORY_SOUL_ENGINE = addTranslation("gui", EnderIOBase.loc("category.soul_engine"), "Soul Engine");
+    public static final MutableComponent CATEGORY_VAT = addTranslation("gui", EnderIOBase.loc("category.vat"), "VAT");
 
     // endregion
 

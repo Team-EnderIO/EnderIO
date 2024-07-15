@@ -27,7 +27,7 @@ import java.util.Optional;
 
 public class VatScreen extends MachineScreen<VatMenu> {
 
-    private static final ResourceLocation VAT_BG = EnderIOBase.loc("textures/gui/screen/vat.png");
+    public static final ResourceLocation VAT_BG = EnderIOBase.loc("textures/gui/screen/vat.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
