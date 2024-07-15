@@ -74,8 +74,7 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity {
 
     @SubscribeEvent
     public void spawnEvent(FinalizeSpawnEvent event) {
-        // TODO: Check dimension!
-        if (level == null || level.isClientSide || event.getSpawnType() != MobSpawnType.NATURAL) {
+        if (level == null || level.isClientSide || event.getSpawnType() != MobSpawnType.NATURAL || !event.getLevel().getLevel().dimension().equals(this.level.dimension())) {
             return;
         }
         if (FILTER.getItemStack(this).getCapability(EIOCapabilities.Filter.ITEM) instanceof EntityFilter entityFilter) {

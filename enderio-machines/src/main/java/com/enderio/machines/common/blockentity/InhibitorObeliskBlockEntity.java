@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
-import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -68,8 +67,7 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity {
 
     @SubscribeEvent
     public void teleportEvent(EntityTeleportEvent event) {
-        // TODO: Check dimension!
-        if (level == null || level.isClientSide) {
+        if (level == null || level.isClientSide || !event.getEntity().level().dimension().equals(this.level.dimension())) {
             return;
         }
         if (isActive() && getAABB().contains(event.getTargetX(), event.getTargetY(), event.getTargetZ())) {
