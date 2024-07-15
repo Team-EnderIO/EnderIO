@@ -49,11 +49,11 @@ public class EIOFluids {
 
     public static final RegiliteFluid<FluidType> XP_JUICE =
         fluid("xp_juice", "XP Juice", FluidType.Properties.create().lightLevel(10).density(800).viscosity(1500))
-        .addFluidTags(EIOTags.Fluids.EXPERIENCE);
+            .withTags(EIOTags.Fluids.EXPERIENCE);
 
     public static final RegiliteFluid<FluidType> LIQUID_SUNSHINE =
         fluid("liquid_sunshine", "Liquid Sunshine", FluidType.Properties.create().density(200).viscosity(400))
-            .addFluidTags(EIOTags.Fluids.SOLAR_PANEL_LIGHT);
+            .withTags(EIOTags.Fluids.SOLAR_PANEL_LIGHT);
 
     public static final RegiliteFluid<FluidType> CLOUD_SEED =
         fluid("cloud_seed", "Cloud Seed", FluidType.Properties.create().density(500).viscosity(800));
@@ -63,29 +63,26 @@ public class EIOFluids {
 
     private static RegiliteFluid<FluidType> fluid(String name, String translation, FluidType.Properties properties) {
         return baseFluid(name, properties)
-            .setTranslation(translation)
-            .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid.get(), new Item.Properties().stacksTo(1)))
-            .setTab(EIOCreativeTabs.MAIN)
-            .setTranslation(translation + " Bucket")
-            .finishBucket();
+            .withTranslation(translation)
+            .withBucket(ITEM_REGISTRY, item -> item
+                .withTab(EIOCreativeTabs.MAIN)
+                .withTranslation(translation + " Bucket"));
     }
 
     private static RegiliteFluid<FluidType> gasFluid(String name, String translation, FluidType.Properties properties) {
         return baseFluid(name, properties)
-            .setTranslation(translation)
-            .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid.get(), new Item.Properties().stacksTo(1)))
-            .setTab(EIOCreativeTabs.MAIN)
-            .setTranslation(translation + " Bucket")
-            .finishBucket();
+            .withTranslation(translation)
+            .withBucket(ITEM_REGISTRY, item -> item
+                .withTab(EIOCreativeTabs.MAIN)
+                .withTranslation(translation + " Bucket"));
     }
 
     private static RegiliteFluid<FluidType> baseFluid(String name, FluidType.Properties properties) {
         return FLUID_TYPE_REGISTRY
             .registerFluid(name, properties)
-            .setRenderType(() -> RenderType::translucent)
+            .withRenderType(() -> RenderType::translucent)
             .createFluid(FLUID_REGISTRY)
-            .withBlock(BLOCK_REGISTRY, fluid -> new LiquidBlock(fluid.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)))
-            .finishLiquidBlock();
+            .withBlock(BLOCK_REGISTRY, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER));
     }
 
     public static void register(IEventBus bus) {

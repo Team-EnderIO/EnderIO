@@ -156,11 +156,11 @@ fun getVersionString(): String {
     val versionSeries: String by project
 
     // If this is not a release, we're going to get the last tag, add the ci build number, then append -dev+<commit_hash>
-    var commitHash = shellRunAndRead("git rev-parse --short HEAD").trim();
-    var previousTagVersion = shellRunAndRead("git describe --tags --abbrev=0").trim();
+    val commitHash = shellRunAndRead("git rev-parse --short HEAD").trim();
+    val previousTagVersion = shellRunAndRead("git describe --tags --abbrev=0").trim();
 
     // Extract the numeric component of the last version.
-    var versionRegex = Regex("""\d+(\.\d+)+""")
+    val versionRegex = Regex("""\d+(\.\d+)+""")
     var currentVersion = versionRegex.find(previousTagVersion)?.value
     if (currentVersion == null) {
         // Fallback to version series if we're unable to discover the previous version.

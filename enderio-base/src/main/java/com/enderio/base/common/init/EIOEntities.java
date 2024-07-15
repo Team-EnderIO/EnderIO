@@ -15,8 +15,8 @@ public class EIOEntities {
 
     public static final RegiliteEntity<PaintedSandEntity> PAINTED_SAND = ENTITY_REGISTRY
         .registerEntity("painted_sand", (EntityType.EntityFactory<PaintedSandEntity>) PaintedSandEntity::new, MobCategory.MISC)
-        .setRenderer(() -> PaintedSandRenderer::new)
-        .setTranslation("Painted Sand");
+        .withRenderer(() -> PaintedSandRenderer::new)
+        .withTranslation("Painted Sand");
 
     public static void register(IEventBus bus) {
         ENTITY_REGISTRY.register(bus);

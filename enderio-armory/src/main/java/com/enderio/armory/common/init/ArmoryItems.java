@@ -26,8 +26,8 @@ public class ArmoryItems {
 
     public static final RegiliteItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEM_REGISTRY
         .registerItem("dark_steel_sword", DarkSteelSwordItem::new, new Item.Properties().durability(2000))
-        .setTab(EIOCreativeTabs.GEAR)
-        .setTranslation("The Ender")
+        .withTab(EIOCreativeTabs.GEAR)
+        .withTranslation("The Ender")
         .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
 
     // TODO: Bring these back when they are finished.
