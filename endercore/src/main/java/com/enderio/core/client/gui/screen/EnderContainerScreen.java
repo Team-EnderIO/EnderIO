@@ -42,6 +42,10 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
         super(pMenu, pPlayerInventory, pTitle);
     }
 
+    protected void centerAlignTitleLabelX() {
+        this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
+    }
+
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (menu instanceof BaseBlockEntityMenu<?> baseBlockEntityMenu && baseBlockEntityMenu.getBlockEntity() == null) {

@@ -8,6 +8,8 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
+import com.enderio.machines.client.gui.widget.NewCapacitorEnergyWidget;
+import com.enderio.machines.client.gui.widget.NewProgressWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.lang.MachineLang;
@@ -27,31 +29,39 @@ import java.util.List;
 public class SagMillScreen extends MachineScreen<SagMillMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIOBase.loc("textures/gui/screen/sag_mill.png");
     private static final int WIDTH = 176;
-    private static final int HEIGHT = 166;
+    private static final int HEIGHT = 208;
+
+    private static final ResourceLocation PROGRESS_SPRITE = EnderIOBase.loc("screen/sag_mill/progress");
+    private static final ResourceLocation BALL_DURABILITY_SPRITE = EnderIOBase.loc("screen/sag_mill/grinding_ball_durability");
 
     public SagMillScreen(SagMillMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
+        shouldRenderLabels = true;
+
+        titleLabelY = 6 + 2;
+        inventoryLabelY = 115;
     }
 
     @Override
     protected void init() {
         super.init();
+        centerAlignTitleLabelX();
 
-        addRenderableOnly(new ProgressWidget.TopDown(BG_TEXTURE, menu::getCraftingProgress, getGuiLeft() + 81, getGuiTop() + 31, 15, 23, 202, 0));
+        addRenderableOnly(NewProgressWidget.topDown(leftPos + 80, topPos + 47, 16, 24, PROGRESS_SPRITE, menu::getCraftingProgress, true));
 
-        addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage, menu::isCapacitorInstalled));
+        addRenderableOnly(new ActivityWidget(leftPos + 153, topPos + 89, menu::getMachineStates, true));
 
-        addRenderableOnly(new GrindingBallWidget(142 + leftPos, 23 + topPos));
+        addRenderableOnly(new NewCapacitorEnergyWidget(leftPos + 7, topPos + 27, menu::getEnergyStorage, menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl,
+        addRenderableOnly(new GrindingBallWidget(142 + leftPos, 39 + topPos));
+
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55, menu::getRedstoneControl, menu::setRedstoneControl,
             EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
-
-        var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 83, 162, 76);
-        addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);
+        var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 125, 162, 76);
+        addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 6 + 55 - 16 - 2, overlay);
     }
 
     @Override
@@ -94,9 +104,8 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
             var data = be.getGrindingBallData();
 
             int yOffset = (int) Math.ceil(this.height * (1.0f - durability));
-            int height = (int) Math.ceil(this.height * durability);
 
-            guiGraphics.blit(SagMillScreen.BG_TEXTURE, getX(), getY() + yOffset, U, V + yOffset, width, height);
+            guiGraphics.blitSprite(BALL_DURABILITY_SPRITE, WIDTH, HEIGHT, 0, yOffset, getX(), getY() + yOffset, WIDTH, HEIGHT - yOffset);
 
             if (this.isHoveredOrFocused() && (tooltipDataCache != data || tooltipDuraCache != durability)) {
                 tooltipDataCache = data;
