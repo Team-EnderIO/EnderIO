@@ -1,5 +1,26 @@
 {
   "values": {
+    "minecraft:fire_charge": {
+      "#enderio:explosives": 0.5
+    },
+    "minecraft:firework_rocket": {
+      "#enderio:explosives": 0.5
+    },
+    "minecraft:glow_berries": {
+      "#enderio:natural_lights": 0.15
+    },
+    "minecraft:glow_ink_sac": {
+      "#enderio:natural_lights": 0.2
+    },
+    "minecraft:glow_lichen": {
+      "#enderio:natural_lights": 0.2
+    },
+    "minecraft:glowstone_dust": {
+      "#enderio:natural_lights": 0.25
+    },
+    "minecraft:sea_pickle": {
+      "#enderio:natural_lights": 0.25
+    },
     "minecraft:wheat": {
       "#c:crops": 3.0,
       "#c:seeds": 2.0

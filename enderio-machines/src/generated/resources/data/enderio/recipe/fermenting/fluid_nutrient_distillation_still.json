@@ -1,0 +1,14 @@
+{
+  "type": "enderio:vat_fermenting",
+  "input": {
+    "amount": 1000,
+    "tag": "minecraft:water"
+  },
+  "left_reagent": "minecraft:meat",
+  "output": {
+    "amount": 250,
+    "id": "enderio:fluid_nutrient_distillation_still"
+  },
+  "right_reagent": "c:crops",
+  "ticks": 100
+}

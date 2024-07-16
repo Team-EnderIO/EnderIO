@@ -121,6 +121,7 @@ public class SoulDataProvider implements DataProvider {
         addEngineData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 500, 15, finshedSoulDataConsumer);
         addEngineData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 500, 15, finshedSoulDataConsumer);
         addEngineData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.getSource(), 900, 10, finshedSoulDataConsumer);
+        addEngineData(EntityType.CREEPER, EIOFluids.ROCKET_FUEL.getSource(), 500, 15, finshedSoulDataConsumer);
 
         addSolarData(EntityType.PHANTOM, false, true, null, finshedSoulDataConsumer);
     }

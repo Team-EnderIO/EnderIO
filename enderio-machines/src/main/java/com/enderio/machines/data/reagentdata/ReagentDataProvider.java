@@ -2,6 +2,7 @@ package com.enderio.machines.data.reagentdata;
 
 import com.enderio.EnderIOBase;
 import com.enderio.machines.common.datamap.VatReagent;
+import com.enderio.machines.common.tag.MachineTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
@@ -35,6 +36,14 @@ public class ReagentDataProvider implements DataProvider {
     protected void gather() {
         addReagent(Items.WHEAT, Tags.Items.CROPS, 3D);
         addReagent(Items.WHEAT, Tags.Items.SEEDS, 2D);
+        addReagent(Items.GLOWSTONE_DUST, MachineTags.ItemTags.NATURAL_LIGHTS, 0.25D);
+        addReagent(Items.SEA_PICKLE, MachineTags.ItemTags.NATURAL_LIGHTS, 0.25D);
+        addReagent(Items.GLOW_INK_SAC, MachineTags.ItemTags.NATURAL_LIGHTS, 0.20D);
+        addReagent(Items.GLOW_LICHEN, MachineTags.ItemTags.NATURAL_LIGHTS, 0.20D);
+        addReagent(Items.GLOW_BERRIES, MachineTags.ItemTags.NATURAL_LIGHTS, 0.15D);
+
+        addReagent(Items.FIRE_CHARGE, MachineTags.ItemTags.EXPLOSIVES, 0.5D);
+        addReagent(Items.FIREWORK_ROCKET, MachineTags.ItemTags.EXPLOSIVES, 0.5D);
     }
 
     @Override

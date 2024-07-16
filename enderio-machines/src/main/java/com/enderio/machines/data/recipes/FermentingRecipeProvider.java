@@ -10,6 +10,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.Tags;
@@ -26,10 +27,11 @@ public class FermentingRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
-        build(new FluidStack(EIOFluids.HOOTCH.getSource(), 250), SizedFluidIngredient.of(FluidTags.WATER, 1000), Tags.Items.SEEDS, Tags.Items.CROPS, 100,
-            recipeOutput);
-        build(new FluidStack(EIOFluids.ROCKET_FUEL.getSource(), 250), SizedFluidIngredient.of(EIOFluids.HOOTCH.getSource(), 1000), MachineTags.ItemTags.EXPLOSIVES, MachineTags.ItemTags.REDSTONE_SOURCE, 100,
-            recipeOutput);
+        build(new FluidStack(EIOFluids.HOOTCH.getSource(), 250), SizedFluidIngredient.of(FluidTags.WATER, 1000), Tags.Items.SEEDS, Tags.Items.CROPS, 100, recipeOutput);
+        build(new FluidStack(EIOFluids.ROCKET_FUEL.getSource(), 1000), SizedFluidIngredient.of(EIOFluids.HOOTCH.getSource(), 1000), MachineTags.ItemTags.EXPLOSIVES, Tags.Items.DUSTS_REDSTONE, 150, recipeOutput);
+        build(new FluidStack(EIOFluids.NUTRIENT_DISTILLATION.getSource(), 250), SizedFluidIngredient.of(FluidTags.WATER, 1000), ItemTags.MEAT, Tags.Items.CROPS, 100, recipeOutput);
+        build(new FluidStack(EIOFluids.FIRE_WATER.getSource(), 1000), SizedFluidIngredient.of(EIOFluids.HOOTCH.getSource(), 1000), MachineTags.ItemTags.BLAZE_POWDER, Tags.Items.DUSTS_REDSTONE, 150, recipeOutput);
+        build(new FluidStack(EIOFluids.LIQUID_SUNSHINE.getSource(), 1000), SizedFluidIngredient.of(FluidTags.WATER, 1000), MachineTags.ItemTags.NATURAL_LIGHTS, MachineTags.ItemTags.SUNFLOWER, 100, recipeOutput);
     }
 
     protected void build(FluidStack output, SizedFluidIngredient input, TagKey<Item> leftReagent, TagKey<Item> rightReagent,
