@@ -1,4 +1,4 @@
-// 1.21	2024-07-14T18:54:03.733953507	Ender IO Data (enderio)
+// 1.21	2024-07-17T19:28:24.935490689	Ender IO Data (enderio)
 c0afef86948f97002463d9553c53c98c6fd31756 assets/enderio/blockstates/advanced_capacitor_bank.json
 5eb6fa2e4b3854a4416143811fc778a469358dae assets/enderio/blockstates/alloy_smelter.json
 5fc1624abc3ea179bc8434dc49590aabcf1af661 assets/enderio/blockstates/aversion_obelisk.json
@@ -134,5 +134,5 @@ c01ae41f62d2924a996cdc0ce31144c3ae8e4c76 data/enderio/loot_table/blocks/vibrant_
 2e9ef4858758805a42b6c1effffeb39cd53e282a data/enderio/loot_table/blocks/wired_charger.json
 44325a19cdf0b62d794870d7bdf4ff85d8aa9d56 data/enderio/loot_table/blocks/xp_obelisk.json
 528650351f0d1e599b3d8632d202681f65c26d57 data/enderio/loot_table/blocks/xp_vacuum.json
-e9875ba1919042cfa1c744ca3e111bd4561fecec data/minecraft/tags/block/mineable/pickaxe.json
+a0b5dc1b17dab24b0b79254dc8db331b8fac6597 data/minecraft/tags/block/mineable/pickaxe.json
 4c0a477c2848d1b8781e290d49ff13810ae948cf data/minecraft/tags/block/needs_iron_tool.json
