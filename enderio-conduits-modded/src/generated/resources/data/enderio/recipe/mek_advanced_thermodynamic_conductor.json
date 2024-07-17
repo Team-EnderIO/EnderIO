@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": {
+      "item": "enderio:conduit_binder"
+    },
+    "I": {
+      "item": "mekanism:advanced_thermodynamic_conductor"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "III",
+    "BBB"
+  ],
+  "result": {
+    "components": {
+      "enderio:conduit": "enderio:heat"
+    },
+    "count": 3,
+    "id": "enderio:conduit"
+  }
+}
