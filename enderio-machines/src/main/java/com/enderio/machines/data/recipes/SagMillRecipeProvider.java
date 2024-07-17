@@ -131,8 +131,9 @@ public class SagMillRecipeProvider extends RecipeProvider {
 
         build("cobbled_deepslate", Ingredient.of(Tags.Items.COBBLESTONES_DEEPSLATE), List.of(
             output(COBBLESTONE),
-            output(EIOItems.GRAINS_OF_INFINITY.get(), 0.3f)),
+            output(EIOItems.GRAINS_OF_INFINITY.get(), 0.12f)),
             BASE_ENERGY_PER_OPERATION,
+            BonusType.CHANCE_ONLY,
             recipeOutput);
 
         build("coal", Ingredient.of(ItemTags.COALS), List.of(
