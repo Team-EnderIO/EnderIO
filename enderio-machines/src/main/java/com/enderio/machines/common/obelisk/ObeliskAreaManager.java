@@ -12,7 +12,7 @@ public abstract class ObeliskAreaManager<T extends ObeliskBlockEntity> {
     private final ChunkBoundLookup<T> lookup = new ChunkBoundLookup<>();
 
     public void register(T obelisk) {
-        lookup.addForRadius(obelisk.getBlockPos(), obelisk.getRange(), obelisk);
+        lookup.addForBlockRadius(obelisk.getBlockPos(), obelisk.getRange(), obelisk);
     }
 
     public void unregister(T obelisk) {
@@ -20,9 +20,7 @@ public abstract class ObeliskAreaManager<T extends ObeliskBlockEntity> {
     }
 
     public void update(T obelisk) {
-        // TODO: Do we need to do anything fancier in here? We have enough information to create a "diff" between before and after in the lookup.
-        unregister(obelisk);
-        register(obelisk);
+        lookup.updateForBlockRadius(obelisk.getBlockPos(), obelisk.getRange(), obelisk);
     }
 
     @Nullable
