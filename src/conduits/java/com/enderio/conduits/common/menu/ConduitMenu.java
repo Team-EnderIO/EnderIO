@@ -10,6 +10,8 @@ import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.network.ConduitSelectionPacket;
 import com.enderio.core.common.menu.SyncedMenu;
 import com.enderio.core.common.network.CoreNetwork;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,7 +39,6 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
 
     private Direction direction;
     private ConduitType<?> type;
-
 
     public ConduitMenu(@Nullable ConduitBlockEntity blockEntity, Inventory inventory, int pContainerId, Direction direction, ConduitType type) {
         super(blockEntity, inventory, ConduitMenus.CONDUIT_MENU.get(), pContainerId);
@@ -116,7 +117,10 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
 
     public void setConduitType(ConduitType<?> type) {
         this.type = type;
-        CoreNetwork.sendToServer(new ConduitSelectionPacket(EIOConduitTypes.getConduitId(type)));
+
+        if (getBlockEntity().getLevel() != null && getBlockEntity().getLevel().isClientSide) {
+            CoreNetwork.sendToServer(new ConduitSelectionPacket(EIOConduitTypes.getConduitId(type)));
+        }
     }
 
     public Direction getDirection() {
