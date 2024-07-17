@@ -1,4 +1,4 @@
-// 1.21	2024-07-15T23:05:47.581110916	Ender IO Data (base)
+// 1.21	2024-07-17T23:32:56.95774	Ender IO Data (base)
 9068849fcf8112dee702f42c36005a62845e6e7b data/c/tags/block/storage_blocks.json
 980d474fc49d341e2b2915950ca5bf0a71af1f04 data/c/tags/item/dusts.json
 fe6bb416b05a8c18474317f7e09bc7b069e2626a data/c/tags/item/dusts/prismarine.json
@@ -949,7 +949,7 @@ b1eda915ad8d023bcb7660267c9316b6fb9f17eb data/enderio/recipe/energetic_alloy_nug
 1cf5cbb7e26df5d9c61499a9f15f91165ff300b1 data/enderio/recipe/entity_filter.json
 ee808fbf373ce30c9aa0a08971b8f51e8f23ab8d data/enderio/recipe/experience_rod.json
 7e4d6aa9465ab492e29c717a7f21a884e573618a data/enderio/recipe/fire_crafting/bedrock_infinity.json
-a21ea2120a531ccbe921daa0c255315fb3f61e9d data/enderio/recipe/fire_crafting/deepslate_infinity.json
+6fe6851d12d4dcfede9c7b7668da36b8246ae4af data/enderio/recipe/fire_crafting/deepslate_infinity.json
 5d5626c88871d11e83ed1755ac33c53142bc2495 data/enderio/recipe/fluid_filter.json
 2b2cd82ec3cc5866c1f5c86123ae6e1d88a13950 data/enderio/recipe/glider_wing.json
 39c3cde30d749c5860bbb7b71b531bf00e3c4a61 data/enderio/recipe/infinity_rod.json

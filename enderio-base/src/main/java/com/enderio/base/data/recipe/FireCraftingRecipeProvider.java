@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class FireCraftingRecipeProvider extends RecipeProvider {
@@ -28,7 +29,8 @@ public class FireCraftingRecipeProvider extends RecipeProvider {
                 3,
                 List.of(Blocks.BEDROCK),
                 List.of(),
-                List.of(Level.OVERWORLD)),
+                List.of(Level.OVERWORLD),
+                Optional.empty()),
             null);
 
         recipeOutput.accept(EnderIOBase.loc("fire_crafting/deepslate_infinity"),
@@ -37,7 +39,8 @@ public class FireCraftingRecipeProvider extends RecipeProvider {
                 1,
                 List.of(Blocks.DEEPSLATE),
                 List.of(),
-                List.of(Level.OVERWORLD)),
+                List.of(Level.OVERWORLD),
+                Optional.of(Blocks.COBBLESTONE)),
             null);
     }
 }

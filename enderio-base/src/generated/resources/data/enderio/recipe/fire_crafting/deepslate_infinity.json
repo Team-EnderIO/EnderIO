@@ -1,5 +1,6 @@
 {
   "type": "enderio:fire_crafting",
+  "base_after_burning": "minecraft:cobblestone",
   "base_blocks": [
     "minecraft:deepslate"
   ],

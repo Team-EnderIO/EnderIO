@@ -45,7 +45,7 @@ public class FireCraftingLootProvider implements LootTableSubProvider {
                 .lootPool()
                 .name("infinity_in_world_crafting")
                 .setRolls(ConstantValue.exactly(1))
-                .add(LootItem.lootTableItem(EIOItems.GRAINS_OF_INFINITY.get()).when(LootItemRandomChanceCondition.randomChance(0.35f))))
+                .add(LootItem.lootTableItem(EIOItems.GRAINS_OF_INFINITY.get()).when(LootItemRandomChanceCondition.randomChance(0.4f))))
             .setParamSet(LootContextParamSet.builder().build());
 
         writer.accept(DEEPSLATE_CRAFTING, deepslate);
