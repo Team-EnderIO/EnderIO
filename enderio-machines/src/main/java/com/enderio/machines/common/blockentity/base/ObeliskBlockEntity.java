@@ -89,7 +89,7 @@ public abstract class ObeliskBlockEntity extends PoweredMachineBlockEntity imple
         updateLocations();
     }
 
-    private void updateLocations() {
+    protected void updateLocations() {
         aabb = new AABB(getBlockPos()).inflate(getRange());
     }
 
