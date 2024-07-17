@@ -6,6 +6,8 @@ import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.blockentity.AversionObeliskBlockEntity;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.obelisk.AversionObeliskManager;
+import com.enderio.machines.common.obelisk.InhibitorObeliskManager;
+import com.enderio.machines.common.obelisk.RelocatorObeliskManager;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -31,6 +33,12 @@ public class MachineAttachments {
 
     public static final Supplier<AttachmentType<AversionObeliskManager>> AVERSION_OBELISK_MANAGER
         = ATTACHMENT_TYPES.register("aversion_obelisk_manager", () -> AttachmentType.builder(AversionObeliskManager::new).build());
+
+    public static final Supplier<AttachmentType<InhibitorObeliskManager>> INHIBITOR_OBELISK_MANAGER
+        = ATTACHMENT_TYPES.register("inhibitor_obelisk_manager", () -> AttachmentType.builder(InhibitorObeliskManager::new).build());
+
+    public static final Supplier<AttachmentType<RelocatorObeliskManager>> RELOCATOR_OBELISK_MANAGER
+        = ATTACHMENT_TYPES.register("relocator_obelisk_manager", () -> AttachmentType.builder(RelocatorObeliskManager::new).build());
 
     public static void register(IEventBus bus) {
         ATTACHMENT_TYPES.register(bus);

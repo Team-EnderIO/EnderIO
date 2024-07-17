@@ -1,7 +1,7 @@
 package com.enderio.machines.common.obelisk;
 
 import com.enderio.machines.EnderIOMachines;
-import com.enderio.machines.common.blockentity.AversionObeliskBlockEntity;
+import com.enderio.machines.common.blockentity.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.init.MachineAttachments;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -14,10 +14,10 @@ import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import java.util.Set;
 
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME)
-public class AversionObeliskManager extends ObeliskAreaManager<AversionObeliskBlockEntity> {
+public class RelocatorObeliskManager extends ObeliskAreaManager<RelocatorObeliskBlockEntity> {
 
-    public static AversionObeliskManager getManager(ServerLevel serverLevel) {
-        return serverLevel.getData(MachineAttachments.AVERSION_OBELISK_MANAGER);
+    public static RelocatorObeliskManager getManager(ServerLevel serverLevel) {
+        return serverLevel.getData(MachineAttachments.RELOCATOR_OBELISK_MANAGER);
     }
 
     @SuppressWarnings("unused")
@@ -32,12 +32,12 @@ public class AversionObeliskManager extends ObeliskAreaManager<AversionObeliskBl
 
         var obeliskManager = getManager(levelAccessor.getLevel());
 
-        Set<AversionObeliskBlockEntity> obelisks = obeliskManager.getObelisksFor(pos);
+        Set<RelocatorObeliskBlockEntity> obelisks = obeliskManager.getObelisksFor(pos);
         if (obelisks == null || obelisks.isEmpty()) {
             return;
         }
 
-        for (AversionObeliskBlockEntity obelisk : obelisks) {
+        for (RelocatorObeliskBlockEntity obelisk : obelisks) {
             if (obelisk.handleSpawnEvent(event)) {
                 break;
             }
