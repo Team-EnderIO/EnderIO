@@ -18,6 +18,7 @@ val regiliteVersion: String by project
 val jeiVersion: String by project
 val graphlibVersion: String by project
 val graphlibVersionRange: String by project
+val crafttweakerVersion: String by project
 
 dependencies {
     implementation("com.enderio:Regilite:$regiliteVersion")
@@ -43,6 +44,9 @@ dependencies {
             prefer(graphlibVersion)
         }
     }
+
+    //Crafttweaker
+    implementation("com.blamejared.crafttweaker:CraftTweaker-neoforge-$minecraftVersion:$crafttweakerVersion")
 }
 
 neoForge {

@@ -45,6 +45,8 @@ repositories {
                 includeGroup("net.darkhax.bookshelf")
                 includeGroup("net.darkhax.enchdesc")
                 includeGroup("com.almostreliable.mods")
+                includeGroup("com.blamejared.crafttweaker")
+                includeGroup("org.openzen.zencode")
             }
         }
 
