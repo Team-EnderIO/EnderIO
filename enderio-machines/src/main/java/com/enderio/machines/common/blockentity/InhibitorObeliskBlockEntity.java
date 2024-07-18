@@ -8,18 +8,16 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.InhibitorObeliskMenu;
+import com.enderio.machines.common.obelisk.InhibitorObeliskManager;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
 
 public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity {
 
@@ -33,13 +31,29 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity {
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-        NeoForge.EVENT_BUS.addListener(this::teleportEvent);
+
+        if (level instanceof ServerLevel serverLevel) {
+            InhibitorObeliskManager.getManager(serverLevel).register(this);
+        }
     }
 
     @Override
     public void setRemoved() {
+        if (level instanceof ServerLevel serverLevel) {
+            InhibitorObeliskManager.getManager(serverLevel).unregister(this);
+        }
+
         super.setRemoved();
-        NeoForge.EVENT_BUS.unregister((Consumer<EntityTeleportEvent>)this::teleportEvent);
+    }
+
+    @Override
+    protected void updateLocations() {
+        super.updateLocations();
+
+        // Update range in obelisk manager
+        if (level instanceof ServerLevel serverLevel) {
+            InhibitorObeliskManager.getManager(serverLevel).update(this);
+        }
     }
 
     @Override
@@ -65,17 +79,16 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity {
         return MachinesConfig.CLIENT.BLOCKS.INHIBITOR_RANGE_COLOR.get();
     }
 
-    @SubscribeEvent
-    public void teleportEvent(EntityTeleportEvent event) {
-        if (level == null || level.isClientSide || !event.getEntity().level().dimension().equals(this.level.dimension())) {
-            return;
-        }
+    public boolean handleTeleportEvent(EntityTeleportEvent event) {
         if (isActive() && getAABB().contains(event.getTargetX(), event.getTargetY(), event.getTargetZ())) {
             int cost = ENERGY_USAGE.base().get(); //TODO scale on entity and range? The issue is that it needs the energy "now" and can't wait for it like other machines
             int energy = getEnergyStorage().consumeEnergy(cost, false);
             if (energy == cost) {
                 event.setCanceled(true);
+                return true;
             }
         }
+
+        return false;
     }
 }

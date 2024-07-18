@@ -1,0 +1,12 @@
+{
+  "type": "enderio:fire_crafting",
+  "base_after_burning": "minecraft:cobblestone",
+  "base_blocks": [
+    "minecraft:deepslate"
+  ],
+  "dimensions": [
+    "minecraft:overworld"
+  ],
+  "loot_table": "enderio:fire_crafting/deepslate_infinity",
+  "max_item_drops": 1
+}
