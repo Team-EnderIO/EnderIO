@@ -29,7 +29,21 @@ public class FermenterRecipeManager implements IRecipeManager<FermentingRecipe> 
         return MachineRecipes.VAT_FERMENTING.type().get();
     }
 
-
+    /**
+     *
+     * @param name The recipe name
+     * @param inputFluid The input fluid used
+     * @param leftItem The item in the left slot
+     * @param rightItem The item in the right slot
+     * @param output The output fluid
+     * @param ticks The processing time
+     * @docParam name "vat_test_recipe"
+     * @docParam inputFluid <fluid:minecraft:water> * 100
+     * @docParam leftItem <tag:item:c:netherracks>
+     * @docParam rightItem <tag:item:minecraft:coals>
+     * @docParam output <fluid:minecraft:lava> * 100
+     * @docParam ticks 100
+     */
     @ZenCodeType.Method
     public void addRecipe(String name, CTFluidIngredient inputFluid, KnownTag<Item> leftItem, KnownTag<Item> rightItem, IFluidStack output, int ticks) {
         final ResourceLocation location = ResourceLocation.parse("crafttweaker:" + name);
