@@ -25,6 +25,11 @@ public class InhibitorObeliskManager extends ObeliskAreaManager<InhibitorObelisk
             return;
         }
 
+        // If there is no obelisk manager, there is nothing to do.
+        if (!serverLevel.hasData(MachineAttachments.INHIBITOR_OBELISK_MANAGER)) {
+            return;
+        }
+
         var pos = new BlockPos((int)event.getTargetX(), (int)event.getTargetY(), (int)event.getTargetZ());
 
         var obeliskManager = getManager(serverLevel);

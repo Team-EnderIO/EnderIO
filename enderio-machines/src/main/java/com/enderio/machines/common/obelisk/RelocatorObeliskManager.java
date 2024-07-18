@@ -23,14 +23,21 @@ public class RelocatorObeliskManager extends ObeliskAreaManager<RelocatorObelisk
     @SuppressWarnings("unused")
     @SubscribeEvent
     public static void onSpawnEvent(FinalizeSpawnEvent event) {
+        // Only affects natural spawns
         if (event.getSpawnType() != MobSpawnType.NATURAL) {
             return;
         }
 
+        // If there is no obelisk manager, there is nothing to do.
         ServerLevelAccessor levelAccessor = event.getLevel();
+        ServerLevel level = levelAccessor.getLevel();
+        if (!level.hasData(MachineAttachments.RELOCATOR_OBELISK_MANAGER)) {
+            return;
+        }
+
         var pos = new BlockPos((int)event.getX(), (int)event.getY(), (int)event.getZ());
 
-        var obeliskManager = getManager(levelAccessor.getLevel());
+        var obeliskManager = getManager(level);
 
         Set<RelocatorObeliskBlockEntity> obelisks = obeliskManager.getObelisksFor(pos);
         if (obelisks == null || obelisks.isEmpty()) {

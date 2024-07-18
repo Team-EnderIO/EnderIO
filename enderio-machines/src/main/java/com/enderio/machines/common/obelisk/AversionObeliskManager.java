@@ -23,14 +23,20 @@ public class AversionObeliskManager extends ObeliskAreaManager<AversionObeliskBl
     @SuppressWarnings("unused")
     @SubscribeEvent
     public static void onSpawnEvent(FinalizeSpawnEvent event) {
+        // Only affects natural spawns
         if (event.getSpawnType() != MobSpawnType.NATURAL) {
             return;
         }
 
+        // If there is no obelisk manager, there is nothing to do.
         ServerLevelAccessor levelAccessor = event.getLevel();
-        var pos = new BlockPos((int)event.getX(), (int)event.getY(), (int)event.getZ());
+        ServerLevel level = levelAccessor.getLevel();
+        if (!level.hasData(MachineAttachments.AVERSION_OBELISK_MANAGER)) {
+            return;
+        }
 
-        var obeliskManager = getManager(levelAccessor.getLevel());
+        var pos = new BlockPos((int)event.getX(), (int)event.getY(), (int)event.getZ());
+        var obeliskManager = getManager(level);
 
         Set<AversionObeliskBlockEntity> obelisks = obeliskManager.getObelisksFor(pos);
         if (obelisks == null || obelisks.isEmpty()) {
