@@ -1,6 +1,7 @@
 package com.enderio.machines.data.recipes;
 
 import com.enderio.EnderIOBase;
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import com.enderio.machines.common.recipe.SagMillingRecipe.BonusType;
@@ -12,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.Tags;
 
@@ -125,6 +127,14 @@ public class SagMillRecipeProvider extends RecipeProvider {
         buildOre("copper_ore", Ingredient.of(Tags.Items.ORES_COPPER), POWDERED_COPPER.get(), recipeOutput);
 
         build1toN("stone", Tags.Items.STONES, COBBLESTONE, 1, BonusType.NONE, recipeOutput);
+        build1toN("deepslate", Items.DEEPSLATE, Items.COBBLED_DEEPSLATE, 1, BonusType.NONE, recipeOutput);
+
+        build("cobbled_deepslate", Ingredient.of(Tags.Items.COBBLESTONES_DEEPSLATE), List.of(
+            output(COBBLESTONE),
+            output(EIOItems.GRAINS_OF_INFINITY.get(), 0.12f)),
+            BASE_ENERGY_PER_OPERATION,
+            BonusType.CHANCE_ONLY,
+            recipeOutput);
 
         build("coal", Ingredient.of(ItemTags.COALS), List.of(
                 output(POWDERED_COAL.get()),
@@ -185,11 +195,16 @@ public class SagMillRecipeProvider extends RecipeProvider {
         		output(Tags.Items.SEEDS_WHEAT, 1, 0.2f, true)),
         		BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("cobblestone", Ingredient.of(Tags.Items.COBBLESTONES), List.of(
+        build("cobblestone", Ingredient.of(Tags.Items.COBBLESTONES_NORMAL), List.of(
         		output(GRAVEL, 0.7f),
         		output(GRAVEL, 0.3f),
         		output(SAND, 0.1f),
         		output(FLINT, 0.05f)),
+        		BASE_ENERGY_PER_OPERATION, recipeOutput);
+
+        build("mossy_cobblestone", Ingredient.of(Tags.Items.COBBLESTONES_MOSSY), List.of(
+        		output(COBBLESTONE),
+        		output(VINE, 0.7f)),
         		BASE_ENERGY_PER_OPERATION, recipeOutput);
 
         build("gravel", Ingredient.of(Tags.Items.GRAVELS), List.of(
