@@ -1,0 +1,16 @@
+{
+  "type": "enderio:sag_milling",
+  "energy": 2400,
+  "input": {
+    "tag": "c:cobblestones/mossy"
+  },
+  "outputs": [
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "chance": 0.7,
+      "item": "minecraft:vine"
+    }
+  ]
+}

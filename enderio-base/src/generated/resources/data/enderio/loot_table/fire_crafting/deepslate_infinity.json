@@ -8,7 +8,7 @@
           "type": "minecraft:item",
           "conditions": [
             {
-              "chance": 0.5,
+              "chance": 0.35,
               "condition": "minecraft:random_chance"
             }
           ],
@@ -19,5 +19,5 @@
       "rolls": 1.0
     }
   ],
-  "random_sequence": "enderio:fire_crafting/infinity"
+  "random_sequence": "enderio:fire_crafting/deepslate_infinity"
 }

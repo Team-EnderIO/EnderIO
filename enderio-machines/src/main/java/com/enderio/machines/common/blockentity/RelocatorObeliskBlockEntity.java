@@ -10,21 +10,19 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.RelocatorObeliskMenu;
+import com.enderio.machines.common.obelisk.RelocatorObeliskManager;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
 
 public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity {
 
@@ -38,13 +36,29 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity {
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-        NeoForge.EVENT_BUS.addListener(this::spawnEvent);
+
+        if (level instanceof ServerLevel serverLevel) {
+            RelocatorObeliskManager.getManager(serverLevel).register(this);
+        }
     }
 
     @Override
     public void setRemoved() {
+        if (level instanceof ServerLevel serverLevel) {
+            RelocatorObeliskManager.getManager(serverLevel).unregister(this);
+        }
+
         super.setRemoved();
-        NeoForge.EVENT_BUS.unregister((Consumer<FinalizeSpawnEvent>)this::spawnEvent);
+    }
+
+    @Override
+    protected void updateLocations() {
+        super.updateLocations();
+
+        // Update range in obelisk manager
+        if (level instanceof ServerLevel serverLevel) {
+            RelocatorObeliskManager.getManager(serverLevel).update(this);
+        }
     }
 
     @Override
@@ -72,16 +86,13 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity {
         return MachinesConfig.CLIENT.BLOCKS.RELOCATOR_RANGE_COLOR.get();
     }
 
-    @SubscribeEvent
-    public void spawnEvent(FinalizeSpawnEvent event) {
-        if (level == null || level.isClientSide || event.getSpawnType() != MobSpawnType.NATURAL || !event.getLevel().getLevel().dimension().equals(this.level.dimension())) {
-            return;
-        }
+    public boolean handleSpawnEvent(FinalizeSpawnEvent event) {
         if (FILTER.getItemStack(this).getCapability(EIOCapabilities.Filter.ITEM) instanceof EntityFilter entityFilter) {
             if (!entityFilter.test(event.getEntity())) {
-                return;
+                return false;
             }
         }
+
         if (isActive() && getAABB().contains(event.getX(), event.getY(), event.getZ())) {
             int cost = ENERGY_USAGE.base().get(); //TODO scale on entity and range? The issue is that it needs the energy "now" and can't wait for it like other machines
             int energy = getEnergyStorage().consumeEnergy(cost, true);
@@ -94,8 +105,11 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity {
                 if (!NeoForge.EVENT_BUS.post(telEvent).isCanceled()) {
                     event.getEntity().teleportTo(x, y, z);
                     getEnergyStorage().consumeEnergy(cost, false);
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 }

@@ -1,4 +1,4 @@
-// 1.21	2024-07-14T14:21:25.167610699	Ender IO Data (machines)
+// 1.21	2024-07-17T23:33:15.962877	Ender IO Data (machines)
 9c99444249ea9362072a08ee44c2d01c8ab03176 data/c/tags/item/crops.json
 9c99444249ea9362072a08ee44c2d01c8ab03176 data/c/tags/item/seeds.json
 9ff2ab17ab68f1a6c36efa69ca816a618adb5fa9 data/enderio/advancement/place_capacitor_bank.json
@@ -251,10 +251,12 @@ c776f5fe91abdd454925cfb3586c807854f710dc data/enderio/recipe/sag_milling/bone_bl
 77be9401bdb259317777544d400e54b55664edf7 data/enderio/recipe/sag_milling/clay.json
 577437f170bc6d4b68aae40e5bb15645f4f0859a data/enderio/recipe/sag_milling/coal.json
 e3f2b0697e983861ea841063c60248cc3eb23bb6 data/enderio/recipe/sag_milling/coal_ore.json
-2767597899e8f31c6091d098a949e261e1a145df data/enderio/recipe/sag_milling/cobblestone.json
+4df741cbba84544dbd2c7a5743c72dc1e5e09280 data/enderio/recipe/sag_milling/cobbled_deepslate.json
+a87bd9d220fe8a27ea2362b7e61e5527dd40a6fc data/enderio/recipe/sag_milling/cobblestone.json
 57d79e7369bd9660ba81dda76ce8971b9f32eab0 data/enderio/recipe/sag_milling/cobweb.json
 5631d13465850f668d23c28a520c98bca32d80fc data/enderio/recipe/sag_milling/copper_ore.json
 2f48d5bf15f562a9a497be98a04373544b56e13a data/enderio/recipe/sag_milling/dandelion.json
+18a377f0a266a01c92f5b92ddea5451629f30162 data/enderio/recipe/sag_milling/deepslate.json
 0cdbaed85baf10afc9fecae46e6aabcb9808fdfe data/enderio/recipe/sag_milling/diamond_ore.json
 976de4fb4d4c3da9dd64f517337f43e27790613c data/enderio/recipe/sag_milling/emerald_ore.json
 6ab7161da1edbdb2fbe39e6fdb1889548a7639e6 data/enderio/recipe/sag_milling/ender_crystal.json
@@ -274,6 +276,7 @@ e6f144dd4ab0da52c7b041a129f29ecf5097b325 data/enderio/recipe/sag_milling/lapis_o
 d2524f8a6f64b2bc36e473f667f27783c9fd672b data/enderio/recipe/sag_milling/large_fern.json
 c82d7cea26efe6f6d7f72d49d9595794965694ee data/enderio/recipe/sag_milling/leaves.json
 f52a9a3980873db5b48511e43f317733749d562e data/enderio/recipe/sag_milling/lily_pad.json
+ff48d0997348dc521679515091b631c6ff408d0b data/enderio/recipe/sag_milling/mossy_cobblestone.json
 049250de6d62fb754fef48b7d36fd3b11132699e data/enderio/recipe/sag_milling/obsidian.json
 55520d2558ce5674cf9739e95e0214447261fe94 data/enderio/recipe/sag_milling/orange_tulip.json
 57ba4125ca01a4ad5bb6243230becb8d4df8d139 data/enderio/recipe/sag_milling/oxeye_daisy.json

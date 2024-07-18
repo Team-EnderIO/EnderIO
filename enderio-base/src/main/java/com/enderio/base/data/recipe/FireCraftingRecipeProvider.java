@@ -2,6 +2,7 @@ package com.enderio.base.data.recipe;
 
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
+import com.enderio.base.data.loot.FireCraftingLootProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class FireCraftingRecipeProvider extends RecipeProvider {
@@ -21,13 +23,24 @@ public class FireCraftingRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
-        recipeOutput.accept(EnderIOBase.loc("fire_crafting/infinity"),
+        recipeOutput.accept(EnderIOBase.loc("fire_crafting/bedrock_infinity"),
             new FireCraftingRecipe(
-                ResourceKey.create(Registries.LOOT_TABLE, EnderIOBase.loc("fire_crafting/infinity")),
-                1,
+                FireCraftingLootProvider.BEDROCK_CRAFTING,
+                3,
                 List.of(Blocks.BEDROCK),
                 List.of(),
-                List.of(Level.OVERWORLD)),
+                List.of(Level.OVERWORLD),
+                Optional.empty()),
+            null);
+
+        recipeOutput.accept(EnderIOBase.loc("fire_crafting/deepslate_infinity"),
+            new FireCraftingRecipe(
+                FireCraftingLootProvider.DEEPSLATE_CRAFTING,
+                1,
+                List.of(Blocks.DEEPSLATE),
+                List.of(),
+                List.of(Level.OVERWORLD),
+                Optional.of(Blocks.COBBLESTONE)),
             null);
     }
 }
