@@ -36,7 +36,7 @@ public class AlloySmelterRecipeManager implements IRecipeManager<AlloySmeltingRe
      * @docParam experience 0.7
      */
     @ZenCodeType.Method
-    public void addRecipe(String name, IIngredientWithAmount[] inputs, IItemStack output, int energy, @ZenCodeType.OptionalFloat float experience) {
+    public void addRecipe(String name, IItemStack output, IIngredientWithAmount[] inputs, int energy, @ZenCodeType.OptionalFloat float experience) {
         final ResourceLocation location = ResourceLocation.parse("crafttweaker:" + name);
         final ArrayList<SizedIngredient> internalInputs = new ArrayList<>();
         for (IIngredientWithAmount ingredient : inputs) {
