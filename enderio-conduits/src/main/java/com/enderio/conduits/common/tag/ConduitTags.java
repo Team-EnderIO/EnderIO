@@ -18,10 +18,6 @@ public class ConduitTags {
     public static class Items {
 
         private static void init() {}
-
-        public static final TagKey<Item> COVERED_DENSE_CABLE = ItemTags.create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_dense_cable"));
-        public static final TagKey<Item> COVERED_CABLE = ItemTags.create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_cable"));
-        public static final TagKey<Item> GLASS_CABLE = ItemTags.create(ResourceLocation.fromNamespaceAndPath("ae2", "glass_cable"));
     }
 
     public static class Blocks {

@@ -44,6 +44,8 @@ public class ConduitRecipes extends RecipeProvider {
         var pressurizedFluidConduit = conduitRegistry.getOrThrow(Conduits.PRESSURIZED_FLUID);
         var enderFluidConduit = conduitRegistry.getOrThrow(Conduits.ENDER_FLUID);
         var energyConduit = conduitRegistry.getOrThrow(Conduits.ENERGY);
+        var enhancedEnergyConduit = conduitRegistry.getOrThrow(Conduits.ENHANCED_ENERGY);
+        var enderEnergyConduit = conduitRegistry.getOrThrow(Conduits.ENDER_ENERGY);
         var redstoneConduit = conduitRegistry.getOrThrow(Conduits.REDSTONE);
 
         buildUpgradeRecipes(recipeOutput);
@@ -113,6 +115,24 @@ public class ConduitRecipes extends RecipeProvider {
             .define('I', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
             .save(recipeOutput, EnderIOBase.loc("energy_conduit"));
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(enhancedEnergyConduit, 8))
+            .pattern("BBB")
+            .pattern("III")
+            .pattern("BBB")
+            .define('B', EIOItems.CONDUIT_BINDER)
+            .define('I', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+            .save(recipeOutput, EnderIOBase.loc("enhanced_energy_conduit"));
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(enderEnergyConduit, 8))
+            .pattern("BBB")
+            .pattern("III")
+            .pattern("BBB")
+            .define('B', EIOItems.CONDUIT_BINDER)
+            .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+            .save(recipeOutput, EnderIOBase.loc("ender_energy_conduit"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(redstoneConduit, 8))
             .pattern("BBB")
@@ -232,39 +252,6 @@ public class ConduitRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_FILTER_BASE))
             .save(recipeOutput);
 
-        // TODO: When re-enabled, these need to move to their own recipe provider.
-        // TODO: Blocked by NeoForge#1216
-//        if (Integrations.AE2_INTEGRATION.isPresent()) {
-//            var ae2RecipeOutput = recipeOutput.withConditions(new ModLoadedCondition("ae2"));
-//
-//            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(AE2Integration.NORMAL, 3))
-//                .pattern("BBB")
-//                .pattern("III")
-//                .pattern("BBB")
-//                .define('B', EIOItems.CONDUIT_BINDER)
-//                .define('I', ConduitTags.Items.COVERED_CABLE)
-//                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-//                .save(ae2RecipeOutput, EnderIO.loc("ae_covered_cable"));
-//
-//            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(AE2Integration.NORMAL, 3))
-//                .pattern("BBB")
-//                .pattern("III")
-//                .pattern("BBB")
-//                .define('B', EIOItems.CONDUIT_BINDER)
-//                .define('I', ConduitTags.Items.GLASS_CABLE)
-//                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-//                .save(ae2RecipeOutput, EnderIO.loc("ae_glass_cable"));
-//
-//            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(AE2Integration.DENSE, 3))
-//                .pattern("BBB")
-//                .pattern("III")
-//                .pattern("BBB")
-//                .define('B', EIOItems.CONDUIT_BINDER)
-//                .define('I', ConduitTags.Items.COVERED_DENSE_CABLE)
-//                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-//                .save(ae2RecipeOutput, EnderIO.loc("ae_covered_dense_cable"));
-//        }
-//
 //        if (Integrations.MEKANISM_INTEGRATION.isPresent()) {
 //            var mekRecipeOutput = recipeOutput.withConditions(new ModLoadedCondition("mekanism"));
 //

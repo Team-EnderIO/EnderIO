@@ -14,6 +14,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -30,11 +31,15 @@ public class SlicingRecipeCategory extends MachineRecipeCategory<RecipeHolder<Sl
 
     public static final RecipeType<RecipeHolder<SlicingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "slicing", SlicingRecipe.class);
 
+    public static final ResourceLocation BG_TEXTURE = EnderIOBase.loc("textures/gui/viewer/slice_and_splice.png");
+    private static final int WIDTH = 108;
+    private static final int HEIGHT = 60;
+
     private final IDrawable background;
     private final IDrawable icon;
 
     public SlicingRecipeCategory(IGuiHelper guiHelper) {
-        this.background = guiHelper.createDrawable(SlicerScreen.BG_TEXTURE, 43, 15, 108, 60);
+        this.background = guiHelper.createDrawable(BG_TEXTURE, 0, 0, WIDTH, HEIGHT);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.SLICE_AND_SPLICE.get()));
     }
 

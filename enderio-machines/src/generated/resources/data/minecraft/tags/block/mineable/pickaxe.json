@@ -27,9 +27,9 @@
     "enderio:soul_engine",
     "enderio:drain",
     "enderio:vat",
+    "enderio:block_detector",
     "enderio:xp_obelisk",
     "enderio:inhibitor_obelisk",
-    "enderio:block_detector",
     "enderio:aversion_obelisk",
     "enderio:relocator_obelisk"
   ]

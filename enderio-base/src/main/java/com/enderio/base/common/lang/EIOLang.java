@@ -221,15 +221,6 @@ public class EIOLang {
     public static final Component JEI_FIRE_CRAFTING_LOOT_TABLE = addTranslation("jei", EnderIOBase.loc("fire_crafting"), "loot_table", "Loot Table:");
     public static final Component JEI_FIRE_CRAFTING_MAX_DROPS = addTranslation("jei", EnderIOBase.loc("fire_crafting"), "max_drops", "Max Item Drops:");
 
-    public static final Component JEI_GRINDING_CRAFTING_TITLE = addTranslation("jei", EnderIOBase.loc("grinding"), "title", "Grinding");
-    public static final MutableComponent JEI_GRINDING_CONSUME_CHANCE = addTranslation("jei", EnderIOBase.loc("grinding"), "consume_chance", "33% chance to be consumed");
-
-    public static final MutableComponent JEI_GRAINS_HAND_GRIND = addTranslation("jei", EnderIOBase.loc("grinding"), "hand_grinding_infinity",
-        "Hold some flint in your offhand and some deepslate or cobbled deepslate in your main hand, then shift right-click a block of obsidian, crying obsidian or a grindstone to produce early grains of infinity.");
-
-    public static final MutableComponent JEI_COAL_HAND_GRIND = addTranslation("jei", EnderIOBase.loc("grinding"), "hand_grinding_coal",
-        "Hold some flint in your offhand and 3 or more coal in your main hand, then shift right-click a block of obsidian, crying obsidian or a grindstone to produce early powdered coal.");
-
     // endregion
 
     // region Glass Names

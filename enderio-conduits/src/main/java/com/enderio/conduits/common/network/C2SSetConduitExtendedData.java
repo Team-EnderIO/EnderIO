@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.network;
 
+import com.enderio.EnderIOBase;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.common.conduit.ConduitDataContainer;
 import com.enderio.core.EnderCore;
@@ -15,7 +16,7 @@ public record C2SSetConduitExtendedData(
     ConduitDataContainer conduitDataContainer
 ) implements CustomPacketPayload {
 
-    public static final Type<C2SSetConduitExtendedData> TYPE = new Type<>(EnderCore.loc("c2s_conduit_extended_data"));
+    public static final Type<C2SSetConduitExtendedData> TYPE = new Type<>(EnderIOBase.loc("c2s_conduit_extended_data"));
 
     public static StreamCodec<RegistryFriendlyByteBuf, C2SSetConduitExtendedData> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,

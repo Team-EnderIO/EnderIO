@@ -24,6 +24,7 @@ import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -41,11 +42,15 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMillingRecipe>> {
     public static final RecipeType<RecipeHolder<SagMillingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "sagmilling", SagMillingRecipe.class);
 
+    private static final ResourceLocation BG_TEXTURE = EnderIOBase.loc("textures/gui/viewer/sag_mill.png");
+    private static final int WIDTH = 123;
+    private static final int HEIGHT = 65;
+
     private final IDrawable background;
     private final IDrawable icon;
 
     public SagMillCategory(IGuiHelper guiHelper) {
-        this.background = guiHelper.createDrawable(SagMillScreen.BG_TEXTURE, 48, 11, 99 + 24, 65);
+        this.background = guiHelper.createDrawable(BG_TEXTURE, 0, 0, WIDTH, HEIGHT);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.SAG_MILL.get()));
     }
 

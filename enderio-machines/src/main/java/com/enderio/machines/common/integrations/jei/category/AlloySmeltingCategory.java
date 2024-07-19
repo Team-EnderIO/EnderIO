@@ -32,7 +32,9 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<AlloySmeltingRecipe>> {
 
-    public static final ResourceLocation BG_TEXTURE = EnderIOBase.loc("textures/gui/screen/alloy_smelter_jei.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIOBase.loc("textures/gui/viewer/alloy_smelter.png");
+    private static final int WIDTH = 67 + 40; // + 40 text space
+    private static final int HEIGHT = 73;
 
     public static final RecipeType<RecipeHolder<AlloySmeltingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "alloy_smelting", AlloySmeltingRecipe.class);
 
@@ -42,7 +44,7 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
     private final IDrawable animatedFlame;
 
     public AlloySmeltingCategory(IGuiHelper guiHelper) {
-        this.background = guiHelper.createDrawable(BG_TEXTURE, 0, 0, 67 + 40, 73); // + 40 text space
+        this.background = guiHelper.createDrawable(BG_TEXTURE, 0, 0, WIDTH, HEIGHT);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.ALLOY_SMELTER.get()));
 
         // TODO: Swap to our sprites.

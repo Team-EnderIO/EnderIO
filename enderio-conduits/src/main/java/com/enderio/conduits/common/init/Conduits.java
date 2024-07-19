@@ -31,13 +31,13 @@ public class Conduits {
     public static void bootstrap(BootstrapContext<Conduit<?>> context) {
         // TODO: Is there a way to generate conditions for these? i.e. "neoforge:conditions":[{"type":"neoforge:mod_loaded","modid":"ae2"}]
 
-        // TODO: Need to decide on transfer rates. These are just here to get the types in.
+        // TODO: These rates are still up for change, but will refine through testing.
         context.register(ENERGY,
-            new EnergyConduit(EnderIOBase.loc("block/conduit/energy"), ConduitLang.ENERGY_CONDUIT, 1000));
+            new EnergyConduit(EnderIOBase.loc("block/conduit/energy"), ConduitLang.ENERGY_CONDUIT, 1_000));
         context.register(ENHANCED_ENERGY,
-            new EnergyConduit(EnderIOBase.loc("block/conduit/enhanced_energy"), ConduitLang.ENHANCED_ENERGY_CONDUIT, 5000));
+            new EnergyConduit(EnderIOBase.loc("block/conduit/enhanced_energy"), ConduitLang.ENHANCED_ENERGY_CONDUIT, 12_000));
         context.register(ENDER_ENERGY,
-            new EnergyConduit(EnderIOBase.loc("block/conduit/ender_energy"), ConduitLang.ENDER_ENERGY_CONDUIT, 10000));
+            new EnergyConduit(EnderIOBase.loc("block/conduit/ender_energy"), ConduitLang.ENDER_ENERGY_CONDUIT, 48_000));
 
         context.register(REDSTONE, new RedstoneConduit(EnderIOBase.loc("block/conduit/redstone"), EnderIOBase.loc("block/conduit/redstone_active"),
             ConduitLang.REDSTONE_CONDUIT));

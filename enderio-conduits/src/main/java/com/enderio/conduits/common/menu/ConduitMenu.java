@@ -6,6 +6,7 @@ import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlock;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitMenus;
+import com.enderio.conduits.common.network.ConduitMenuSelectionPacket;
 import com.enderio.core.common.menu.BaseBlockEntityMenu;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -17,6 +18,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
@@ -100,6 +102,10 @@ public class ConduitMenu extends BaseBlockEntityMenu<ConduitBundleBlockEntity> {
 
     public void setConduit(Holder<Conduit<?>> conduit) {
         this.conduit = conduit;
+
+        if (getBlockEntity().hasLevel() && getBlockEntity().getLevel().isClientSide()) {
+            PacketDistributor.sendToServer(new ConduitMenuSelectionPacket(this.conduit));
+        }
     }
 
     public Direction getDirection() {

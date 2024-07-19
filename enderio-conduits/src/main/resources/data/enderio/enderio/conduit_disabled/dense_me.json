@@ -1,9 +1,0 @@
-{
-  "neoforge:conditions":[{"type":"neoforge:mod_loaded","modid":"ae2"}],
-  "type": "enderio:ae2",
-  "description": {
-    "translate": "item.enderio.conduit.me"
-  },
-  "texture": "enderio:block/conduit/me",
-  "is_dense": false
-}

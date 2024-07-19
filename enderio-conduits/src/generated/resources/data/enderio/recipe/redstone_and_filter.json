@@ -10,7 +10,9 @@
     }
   },
   "pattern": [
-    "TBT"
+    " T ",
+    " B ",
+    " T "
   ],
   "result": {
     "count": 1,

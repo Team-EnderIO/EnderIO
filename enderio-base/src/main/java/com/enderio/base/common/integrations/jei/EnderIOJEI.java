@@ -55,9 +55,6 @@ public class EnderIOJEI implements IModPlugin {
         EnderIOJEIRecipes recipes = new EnderIOJEIRecipes();
         registration.addRecipes(FireCraftingCategory.TYPE, recipes.getAllFireCraftingRecipes());
 
-        registration.addIngredientInfo(new ItemStack(EIOItems.GRAINS_OF_INFINITY.get()), VanillaTypes.ITEM_STACK, EIOLang.JEI_GRAINS_HAND_GRIND);
-        registration.addIngredientInfo(new ItemStack(EIOItems.POWDERED_COAL.get()), VanillaTypes.ITEM_STACK, EIOLang.JEI_COAL_HAND_GRIND);
-
         List<ItemStack> spawners = BrokenSpawnerItem.getPossibleStacks();
         registration.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, spawners);
 

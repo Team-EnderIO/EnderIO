@@ -67,6 +67,7 @@ repositories {
         mavenLocal() {
             content {
                 includeGroup("com.enderio")
+                includeGroup("net.neoforged")
             }
         }
     }

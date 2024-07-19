@@ -6,6 +6,7 @@ import com.enderio.machines.common.menu.base.MachineMenu;
 import com.enderio.machines.common.menu.base.PoweredMachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
@@ -19,19 +20,20 @@ public class SagMillMenu extends PoweredMachineMenu<SagMillBlockEntity> {
         super(MachineMenus.SAG_MILL.get(), pContainerId, blockEntity, inventory);
 
         if (blockEntity != null) {
-            addSlot(new MachineSlot(getMachineInventory(), blockEntity.getCapacitorSlot(), 12, 60));
+            addSlot(new MachineSlot(getMachineInventory(), blockEntity.getCapacitorSlot(), 8, 89))
+                .setBackground(InventoryMenu.BLOCK_ATLAS, EMPTY_CAPACITOR_SLOT);
 
-            addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.INPUT, 80, 12));
+            addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.INPUT, 80, 28));
 
-            addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.get(0), 49, 59));
-            addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.get(1), 70, 59));
-            addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.get(2), 91, 59));
-            addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.get(3), 112, 59));
+            addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.get(0), 49, 75));
+            addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.get(1), 70, 75));
+            addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.get(2), 91, 75));
+            addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.get(3), 112, 75));
 
-            addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.GRINDING_BALL, 122, 23));
+            addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.GRINDING_BALL, 122, 39));
         }
 
-        addPlayerInventorySlots(8,84);
+        addPlayerInventorySlots(8,126);
     }
 
     public float getCraftingProgress() {
