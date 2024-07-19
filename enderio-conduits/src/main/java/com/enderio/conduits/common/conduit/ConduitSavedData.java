@@ -16,6 +16,7 @@ import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
@@ -308,17 +309,21 @@ public class ConduitSavedData extends SavedData {
             entry.getValue().removeIf(graph -> graph.getObjects().isEmpty() || graph.getObjects().iterator().next().getGraph() != graph);
         }
 
+        Registry<Conduit<?>> conduitRegistry = serverLevel.registryAccess().registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT);
+
         for (var entry : networks.entrySet()) {
+            var conduit = entry.getKey();
+            int conduitId = conduitRegistry.getId(conduit.value());
+            var conduitTicker = conduit.value().getTicker();
+
             for (var graph : entry.getValue()) {
-                var conduit = entry.getKey();
-                var conduitTicker = conduit.value().getTicker();
-                tickConduitGraph(serverLevel, entry.getKey(), conduitTicker, graph);
+                tickConduitGraph(serverLevel, entry.getKey(), conduitId, conduitTicker, graph);
             }
         }
     }
 
-    private <T extends Conduit<T>> void tickConduitGraph(ServerLevel serverLevel, Holder<Conduit<?>> conduit, ConduitTicker<T> ticker, Graph<ConduitGraphContext> graph) {
-        if (serverLevel.getGameTime() % ticker.getTickRate() == 0) {
+    private <T extends Conduit<T>> void tickConduitGraph(ServerLevel serverLevel, Holder<Conduit<?>> conduit, int conduitId, ConduitTicker<T> ticker, Graph<ConduitGraphContext> graph) {
+        if (serverLevel.getGameTime() % ticker.getTickRate() == conduitId % ticker.getTickRate()) {
             //noinspection unchecked
             ticker.tickGraph(serverLevel, (T)conduit.value(), new WrappedConduitNetwork(graph), ConduitSavedData::isRedstoneActive);
         }

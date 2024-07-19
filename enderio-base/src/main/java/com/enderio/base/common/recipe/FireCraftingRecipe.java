@@ -26,6 +26,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public record FireCraftingRecipe(
@@ -33,7 +34,8 @@ public record FireCraftingRecipe(
     int maxItemDrops,
     List<Block> bases,
     List<TagKey<Block>> baseTags,
-    List<ResourceKey<Level>> dimensions
+    List<ResourceKey<Level>> dimensions,
+    Optional<Block> blockAfterBurning
 ) implements Recipe<RecipeInput> {
 
     // Get all base blocks
@@ -104,7 +106,8 @@ public record FireCraftingRecipe(
                 Codec.INT.fieldOf("max_item_drops").forGetter(FireCraftingRecipe::maxItemDrops),
                 BuiltInRegistries.BLOCK.byNameCodec().listOf().optionalFieldOf("base_blocks", List.of()).forGetter(FireCraftingRecipe::bases),
                 TagKey.codec(Registries.BLOCK).listOf().optionalFieldOf("base_tags", List.of()).forGetter(FireCraftingRecipe::baseTags),
-                ResourceKey.codec(Registries.DIMENSION).listOf().fieldOf("dimensions").forGetter(FireCraftingRecipe::dimensions))
+                ResourceKey.codec(Registries.DIMENSION).listOf().fieldOf("dimensions").forGetter(FireCraftingRecipe::dimensions),
+                BuiltInRegistries.BLOCK.byNameCodec().optionalFieldOf("block_after_burning").forGetter(FireCraftingRecipe::blockAfterBurning))
             .apply(inst, FireCraftingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, FireCraftingRecipe> STREAM_CODEC = StreamCodec.composite(
@@ -120,6 +123,8 @@ public record FireCraftingRecipe(
             FireCraftingRecipe::baseTags,
             ResourceKey.streamCodec(Registries.DIMENSION).apply(ByteBufCodecs.list()),
             FireCraftingRecipe::dimensions,
+            ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.BLOCK)),
+            FireCraftingRecipe::blockAfterBurning,
             FireCraftingRecipe::new
         );
 

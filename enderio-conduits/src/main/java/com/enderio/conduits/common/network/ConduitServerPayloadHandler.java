@@ -2,6 +2,7 @@ package com.enderio.conduits.common.network;
 
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
+import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
@@ -32,6 +33,14 @@ public class ConduitServerPayloadHandler {
             BlockEntity be = level.getBlockEntity(packet.pos());
             if (be instanceof ConduitBundleBlockEntity conduitBundleBlockEntity) {
                 conduitBundleBlockEntity.handleConduitDataUpdate(packet.conduit(), packet.conduitDataContainer());
+            }
+        });
+    }
+
+    public void handleConduitMenuSelection(final ConduitMenuSelectionPacket packet, final IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (context.player().containerMenu instanceof ConduitMenu menu) {
+                menu.setConduit(packet.conduit());
             }
         });
     }

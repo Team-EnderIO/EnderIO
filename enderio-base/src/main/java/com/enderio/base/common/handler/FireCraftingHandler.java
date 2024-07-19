@@ -97,22 +97,22 @@ public class FireCraftingHandler {
                 FIRE_TRACKER.putIfAbsent(fireIndex, gameTime + BaseConfig.COMMON.INFINITY.FIRE_MIN_AGE.get());
             } else if (FIRE_TRACKER.containsKey(fireIndex)) {
                 if (level.getBlockState(pos).isAir() && gameTime > FIRE_TRACKER.get(fireIndex)) {
-                    spawnInfinityDrops(level, pos, matchingRecipe.lootTable(), matchingRecipe.maxItemDrops());
+                    spawnInfinityDrops(level, pos, matchingRecipe);
                 }
                 FIRE_TRACKER.remove(fireIndex);
             }
         }
     }
 
-    public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, ResourceKey<LootTable> lootTable, int maxItemDrops) {
+    public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, FireCraftingRecipe recipe) {
         LootParams lootparams = (new LootParams.Builder(level)).withParameter(LootContextParams.ORIGIN, pos.getCenter()).create(LootContextParamSets.COMMAND);
 
-        LootTable table = level.getServer().reloadableRegistries().getLootTable(lootTable);
+        LootTable table = level.getServer().reloadableRegistries().getLootTable(recipe.lootTable());
 
         if (table != LootTable.EMPTY) {
             ObjectArrayList<ItemStack> randomItems = table.getRandomItems(lootparams);
             for (int i = 0; i < randomItems.size(); i++) {
-                if (i >= maxItemDrops) {
+                if (i >= recipe.maxItemDrops()) {
                     break;
                 }
 
@@ -134,6 +134,11 @@ public class FireCraftingHandler {
 
                 // Play explosion sound
                 level.playSound(null, pos, SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, SoundSource.BLOCKS, 1.0f, RANDOM.nextFloat() * 0.4f + 0.8f);
+
+                // Replace the base (if applicable)
+                if (recipe.blockAfterBurning().isPresent()) {
+                    level.setBlock(pos.below(), recipe.blockAfterBurning().get().defaultBlockState(), Block.UPDATE_ALL);
+                }
             }
         }
     }

@@ -1,8 +1,8 @@
-// 1.21	2024-07-10T21:58:11.088689532	vanilla/Registries
-0f020ab84a63d0f79f6358df853ee49124c5b848 data/enderio/enderio/conduit/ender_energy.json
+// 1.21	2024-07-19T18:12:18.3820794	vanilla/Registries
+8b154d4abbb8aeecb7133fc0b9532521041fd726 data/enderio/enderio/conduit/ender_energy.json
 019ec818d39effe4facf56fe4a84c7c7474251a3 data/enderio/enderio/conduit/ender_fluid.json
 f8a9b5cb2f489d0869e54fd5d9e721977c1a65b2 data/enderio/enderio/conduit/energy.json
-f4c05446a954cb7fa2a938f82323bf33ad52a840 data/enderio/enderio/conduit/enhanced_energy.json
+99c7957a53e48ddeef97b66a695941c62f563756 data/enderio/enderio/conduit/enhanced_energy.json
 c8ec59d6e71ede1b31308ce3b7a4604479e7830e data/enderio/enderio/conduit/fluid.json
 0952417e7576b510142901d1b88ce507b6d053ee data/enderio/enderio/conduit/item.json
 bc632f2ee4273015c4403deae61a35a320c2a475 data/enderio/enderio/conduit/pressurized_fluid.json

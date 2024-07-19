@@ -24,10 +24,12 @@ dependencies {
     jarJar(project(":enderio-base"))
     jarJar(project(":enderio-machines"))
     jarJar(project(":enderio-conduits"))
+    jarJar(project(":enderio-conduits-modded"))
     jarJar(project(":enderio-armory"))
     implementation(project(":enderio-base"))
     implementation(project(":enderio-machines"))
     implementation(project(":enderio-conduits"))
+    implementation(project(":enderio-conduits-modded"))
     implementation(project(":enderio-armory"))
 
     // JEI
@@ -101,6 +103,10 @@ neoForge {
 
         create("enderio_conduits") {
             sourceSet(project(":enderio-conduits").sourceSets["main"])
+        }
+
+        create("enderio_conduits_modded") {
+            sourceSet(project(":enderio-conduits-modded").sourceSets["main"])
         }
 
         create("enderio_armory") {
