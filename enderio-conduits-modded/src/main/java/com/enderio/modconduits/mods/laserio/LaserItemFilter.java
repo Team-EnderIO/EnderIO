@@ -1,4 +1,4 @@
-package com.enderio.base.common.integrations.laserio;
+package com.enderio.modconduits.mods.laserio;
 
 import com.direwolf20.laserio.common.containers.customhandler.FilterCountHandler;
 import com.direwolf20.laserio.common.items.cards.BaseCard;

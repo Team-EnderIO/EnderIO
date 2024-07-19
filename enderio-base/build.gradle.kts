@@ -37,10 +37,6 @@ dependencies {
     compileOnly("mezz.jei:jei-$minecraftVersion-neoforge-api:$jeiVersion")
     runtimeOnly("mezz.jei:jei-$minecraftVersion-common:$jeiVersion")
     runtimeOnly("mezz.jei:jei-$minecraftVersion-neoforge:$jeiVersion")
-
-    //Laserio
-    compileOnly("curse.maven:laserio-626839:5447489")
-    runtimeOnly("curse.maven:laserio-626839:5447489")
 }
 
 neoForge {

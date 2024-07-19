@@ -1,17 +1,17 @@
-package com.enderio.base.common.integrations.laserio;
+package com.enderio.modconduits.mods.laserio;
 
 import com.direwolf20.laserio.setup.Registration;
-import com.enderio.EnderIOBase;
 import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.api.integration.Integration;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.modconduits.ModdedConduits;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = EnderIOBase.MODULE_MOD_ID)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = ModdedConduits.MODULE_MOD_ID)
 public class LaserIOIntegration implements Integration {
 
     public static ICapabilityProvider<ItemStack, Void, ResourceFilter> ITEM_FILTER_PROVIDER =
