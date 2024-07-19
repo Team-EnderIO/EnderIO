@@ -32,10 +32,10 @@ public class FermenterRecipeManager implements IRecipeManager<FermentingRecipe> 
     /**
      *
      * @param name The recipe name
+     * @param output The output fluid
      * @param inputFluid The input fluid used
      * @param leftItem The item in the left slot
      * @param rightItem The item in the right slot
-     * @param output The output fluid
      * @param ticks The processing time
      * @docParam name "vat_test_recipe"
      * @docParam inputFluid <fluid:minecraft:water> * 100
@@ -45,7 +45,7 @@ public class FermenterRecipeManager implements IRecipeManager<FermentingRecipe> 
      * @docParam ticks 100
      */
     @ZenCodeType.Method
-    public void addRecipe(String name, CTFluidIngredient inputFluid, KnownTag<Item> leftItem, KnownTag<Item> rightItem, IFluidStack output, int ticks) {
+    public void addRecipe(String name, IFluidStack output, CTFluidIngredient inputFluid, KnownTag<Item> leftItem, KnownTag<Item> rightItem, int ticks) {
         final ResourceLocation location = ResourceLocation.parse("crafttweaker:" + name);
         final SizedFluidIngredient fluid = ExpandCTFluidIngredientNeoForge.asSizedFluidIngredient(inputFluid);
         final FermentingRecipe recipe = new FermentingRecipe(fluid, TagKey.create(Registries.ITEM, leftItem.id()), TagKey.create(Registries.ITEM, rightItem.id()), output.getInternal(), ticks);

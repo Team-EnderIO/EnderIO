@@ -31,8 +31,8 @@ public class SagMillRecipeManager implements IRecipeManager<SagMillingRecipe> {
     /**
      *
      * @param name The name of the recipe
-     * @param input The input item
      * @param output The possible outputs
+     * @param input The input item
      * @param energy The energy required
      * @param type The BonusType used
      * @docParam name "gravel_crushing"
@@ -41,7 +41,7 @@ public class SagMillRecipeManager implements IRecipeManager<SagMillingRecipe> {
      * @docParam energy 1000
      */
     @ZenCodeType.Method
-    public void addRecipe(String name, IIngredient input, Percentaged<IItemStack>[] output, int energy, @ZenCodeType.Optional("<constant:enderio:bonus_type:none>") SagMillingRecipe.BonusType type) {
+    public void addRecipe(String name, Percentaged<IItemStack>[] output, IIngredient input, int energy, @ZenCodeType.Optional("<constant:enderio:bonus_type:none>") SagMillingRecipe.BonusType type) {
         final ResourceLocation location = ResourceLocation.parse("crafttweaker:" + name);
         ArrayList<SagMillingRecipe.OutputItem> outputs = new ArrayList<>();
         for (Percentaged<IItemStack> item : output) {
