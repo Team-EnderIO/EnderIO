@@ -25,8 +25,11 @@ sourceSets {
 
 val regiliteVersion: String by project
 val jeiVersion: String by project
+val graphlibVersion: String by project
 val ae2Version: String by project
 val mekanismVersion: String by project
+val refinedstorageVersion: String by project
+
 
 dependencies {
     implementation("com.enderio:Regilite:$regiliteVersion")
@@ -44,6 +47,8 @@ dependencies {
     runtimeOnly("mezz.jei:jei-$minecraftVersion-common:$jeiVersion")
     runtimeOnly("mezz.jei:jei-$minecraftVersion-neoforge:$jeiVersion")
 
+    implementation("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
+
     // AE2
     compileOnly("appeng:appliedenergistics2:${ae2Version}:api")
     runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
@@ -51,6 +56,9 @@ dependencies {
     // Mekanism
     compileOnly("mekanism:Mekanism:${minecraftVersion}-${mekanismVersion}:api")
     runtimeOnly("mekanism:Mekanism:${minecraftVersion}-${mekanismVersion}")
+
+    api("com.refinedmods.refinedstorage:refinedstorage-platform-neoforge:${refinedstorageVersion}")
+    runtimeOnly("com.refinedmods.refinedstorage:refinedstorage-platform-neoforge:${refinedstorageVersion}")
 }
 
 neoForge {

@@ -5,5 +5,6 @@
   "item.enderio.conduit.ender_chemical": "Ender Chemical Conduit",
   "item.enderio.conduit.heat": "Heat Conduit",
   "item.enderio.conduit.me": "ME Conduit",
-  "item.enderio.conduit.pressurized_chemical": "Pressurized Chemical Conduit"
+  "item.enderio.conduit.pressurized_chemical": "Pressurized Chemical Conduit",
+  "item.enderio.rs2": "Refined Storage Conduit"
 }
