@@ -24,6 +24,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
@@ -36,13 +37,13 @@ import java.util.Optional;
 import java.util.Set;
 
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
-public class ClientSetup {
+@Mod(value = EnderIOBase.MODULE_MOD_ID, dist = Dist.CLIENT)
+public class EnderIOBaseClient {
 
     private static final Map<Item, ModelResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
     public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
 
-    @SubscribeEvent
-    public static void clientSetup(FMLClientSetupEvent event) {
+    public EnderIOBaseClient() {
         TravelTargetRendering.init();
     }
 
