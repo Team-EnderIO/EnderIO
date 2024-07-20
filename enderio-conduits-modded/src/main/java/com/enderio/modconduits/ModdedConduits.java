@@ -2,6 +2,7 @@ package com.enderio.modconduits;
 
 import com.enderio.EnderIOBase;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
+import com.enderio.modconduits.mods.Integrations;
 import com.enderio.modconduits.mods.appeng.AE2ConduitsModule;
 import com.enderio.modconduits.data.ModConduitRecipeProvider;
 import com.enderio.modconduits.mods.mekanism.MekanismModule;
@@ -39,8 +40,12 @@ public class ModdedConduits {
         entry("mekanism", () -> MekanismModule.INSTANCE)
     );
 
+    public static IEventBus modEventBus;
+
     public ModdedConduits(IEventBus modEventBus) {
         REGILITE.register(modEventBus);
+        ModdedConduits.modEventBus = modEventBus;
+        Integrations.register();
 
         executeOnLoadedModules(module -> module.register(modEventBus));
     }

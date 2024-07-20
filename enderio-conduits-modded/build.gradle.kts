@@ -7,6 +7,8 @@ val minecraft_version_range: String by project
 val neoForgeVersion: String by project
 val neo_version_range: String by project
 val loader_version_range: String by project
+val curseforge_laserio_id: String by project
+val curseforge_laserio_file: String by project
 
 apply(from = rootProject.file("buildSrc/shared.gradle.kts"))
 
@@ -51,6 +53,10 @@ dependencies {
     // Mekanism
     compileOnly("mekanism:Mekanism:${minecraftVersion}-${mekanismVersion}:api")
     runtimeOnly("mekanism:Mekanism:${minecraftVersion}-${mekanismVersion}")
+
+    //Laserio
+    compileOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
+    runtimeOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
 }
 
 neoForge {
