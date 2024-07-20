@@ -22,6 +22,9 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
 
     private static final ResourceLocation VISIBILITY_BTNS = EnderIOBase.loc("textures/gui/icons/visibility_buttons.png");
 
+    private static final ResourceLocation VISIBLE_BUTTON = EnderIOBase.loc("screen/travel_anchor/visible");
+    private static final ResourceLocation NOT_VISIBLE_BUTTON = EnderIOBase.loc("screen/travel_anchor/not_visible");
+
     public TravelAnchorScreen(TravelAnchorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         imageWidth = WIDTH;
@@ -32,12 +35,6 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
     protected void init() {
         super.init();
 
-        name.setEditable(true);
-
-        // TODO: Redo toggle image button
-        //addRenderableWidget(
-        //    new ToggleImageButton<>(this, leftPos + 150, topPos + 10, 16, 16, 0, 0, 16, 0, VISIBILITY_BTNS, 32, 16, () -> menu.getBlockEntity().isVisible(),
-        //        menu.getBlockEntity()::setIsVisible, () -> menu.getBlockEntity().isVisible() ? EIOLang.VISIBLE : EIOLang.NOT_VISIBLE));
         nameInput = new EditBox(this.font, leftPos + 25, topPos + 14, 87, 18, Component.literal("name"));
         nameInput.setCanLoseFocus(true);
         nameInput.setTextColor(0xFFFFFFFF);
@@ -48,6 +45,10 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
         nameInput.setValue(menu.getName());
         this.addRenderableWidget(nameInput);
         this.setInitialFocus(nameInput);
+        nameInput.setEditable(true);
+
+        addRenderableWidget(ToggleIconButton.of(leftPos + 150, topPos + 10, 16, 16, VISIBLE_BUTTON, NOT_VISIBLE_BUTTON,
+            EIOLang.VISIBLE, EIOLang.NOT_VISIBLE, menu::isVisible, menu::setVisible));
     }
 
     @Override
