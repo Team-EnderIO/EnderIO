@@ -2,17 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
+    "A": {
+      "tag": "c:ingots/redstone_alloy"
+    },
     "B": {
       "item": "enderio:redstone_filter_base"
-    },
-    "I": {
-      "tag": "c:ingots/redstone_alloy"
     }
   },
   "pattern": [
-    " I ",
-    " B ",
-    " I "
+    "ABA"
   ],
   "result": {
     "count": 1,

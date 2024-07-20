@@ -10,5 +10,5 @@
     "id": "enderio:fluid_fire_water_still"
   },
   "right_reagent": "c:dusts/redstone",
-  "ticks": 150
+  "ticks": 400
 }

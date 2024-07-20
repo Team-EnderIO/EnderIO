@@ -10,5 +10,5 @@
     "id": "enderio:fluid_rocket_fuel_still"
   },
   "right_reagent": "c:dusts/redstone",
-  "ticks": 150
+  "ticks": 400
 }

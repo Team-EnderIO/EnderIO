@@ -1,10 +1,13 @@
 {
   "values": {
     "minecraft:fire_charge": {
-      "#enderio:explosives": 0.5
+      "#enderio:explosives": 0.2
     },
     "minecraft:firework_rocket": {
-      "#enderio:explosives": 0.5
+      "#enderio:explosives": 0.1
+    },
+    "minecraft:firework_star": {
+      "#enderio:explosives": 0.2
     },
     "minecraft:glow_berries": {
       "#enderio:natural_lights": 0.15

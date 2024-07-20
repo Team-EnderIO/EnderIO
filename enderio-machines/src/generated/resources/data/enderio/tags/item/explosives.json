@@ -2,6 +2,7 @@
   "values": [
     "minecraft:tnt",
     "minecraft:firework_star",
-    "minecraft:firework_rocket"
+    "minecraft:firework_rocket",
+    "minecraft:fire_charge"
   ]
 }

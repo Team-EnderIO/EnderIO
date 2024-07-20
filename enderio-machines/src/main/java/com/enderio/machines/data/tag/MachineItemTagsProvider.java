@@ -19,7 +19,7 @@ public class MachineItemTagsProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        tag(MachineTags.ItemTags.EXPLOSIVES).add(Items.TNT, Items.FIREWORK_STAR, Items.FIREWORK_ROCKET);
+        tag(MachineTags.ItemTags.EXPLOSIVES).add(Items.TNT, Items.FIREWORK_STAR, Items.FIREWORK_ROCKET, Items.FIRE_CHARGE);
         tag(MachineTags.ItemTags.NATURAL_LIGHTS).add(Items.GLOWSTONE_DUST, Items.GLOWSTONE, Items.SEA_LANTERN, Items.SEA_PICKLE, Items.GLOW_LICHEN, Items.GLOW_BERRIES, Items.GLOW_INK_SAC);
         tag(MachineTags.ItemTags.SUNFLOWER).add(Items.SUNFLOWER);
         tag(MachineTags.ItemTags.BLAZE_POWDER).add(Items.BLAZE_POWDER);
