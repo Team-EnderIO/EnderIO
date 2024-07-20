@@ -25,6 +25,7 @@ import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -43,6 +44,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -238,6 +240,26 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
         entityData = components.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+
+        SimpleFluidContent storedFluid = components.get(EIODataComponents.ITEM_FLUID_CONTENT);
+        if (storedFluid != null) {
+            var tank = TANK.getTank(this);
+            tank.setFluid(storedFluid.copy());
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        if (entityData.hasEntity()) {
+            components.set(EIODataComponents.STORED_ENTITY, entityData);
+        }
+
+        var tank = TANK.getTank(this);
+        if (!tank.isEmpty()) {
+            components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(tank.getFluid()));
+        }
     }
 
     @Override
