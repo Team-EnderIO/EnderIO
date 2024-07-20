@@ -360,23 +360,4 @@ public class ConduitSavedData extends SavedData {
             networks.get(conduit).add(graph);
         }
     }
-
-    @Override
-    public void save(File file, HolderLookup.Provider lookupProvider) {
-        if (isDirty()) {
-            //This is an exact copy of Mekanism MekanismSavedData's system which is loosely based on
-            // Refined Storage's RSSavedData's system of saving first to a temp file
-            // to reduce the odds of corruption if the user's computer crashes while the file is being written
-
-            //Thanks pupnewfster
-            File tempFile = file.toPath().getParent().resolve(file.getName() + ".tmp").toFile();
-            super.save(tempFile, lookupProvider);
-            if (file.exists() && !file.delete()) {
-                EnderIOBase.LOGGER.error("Failed to delete " + file.getName());
-            }
-            if (!tempFile.renameTo(file)) {
-                EnderIOBase.LOGGER.error("Failed to rename " + tempFile.getName());
-            }
-        }
-    }
 }
