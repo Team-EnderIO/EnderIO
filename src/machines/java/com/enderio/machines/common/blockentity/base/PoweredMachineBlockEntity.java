@@ -312,17 +312,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     }
 
     private void cacheCapacitorData() {
-        if (level == null) {
-            return;
-        }
-
         capacitorCacheDirty = false;
-
-        // Don't do this on client side, client waits for the sync packet.
-        // TODO Do we want to sync with a packet cause right now we don't
-//        if (level.isClientSide()) {
-//            return;
-//        }
 
         MachineInventoryLayout layout = getInventoryLayout();
         if (requiresCapacitor() && layout != null) {
@@ -353,14 +343,14 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     @Override
     public void load(CompoundTag pTag) {
+        super.load(pTag);
+
+        cacheCapacitorData();
+
         var energyStorage = getEnergyStorage();
         if (energyStorage instanceof MachineEnergyStorage storage && pTag.contains(MachineNBTKeys.ENERGY)) {
             storage.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENERGY));
         }
-
-        super.load(pTag);
-
-        cacheCapacitorData();
 
         updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
         updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
