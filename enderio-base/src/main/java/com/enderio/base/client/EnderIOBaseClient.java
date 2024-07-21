@@ -43,7 +43,8 @@ public class EnderIOBaseClient {
     private static final Map<Item, ModelResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
     public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
 
-    public EnderIOBaseClient() {
+    @SubscribeEvent
+    public static void clientSetup(FMLClientSetupEvent event) {
         TravelTargetRendering.init();
     }
 
