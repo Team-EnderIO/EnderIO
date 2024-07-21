@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -160,5 +161,21 @@ public class MachineBlock extends BaseEntityBlock {
             return machineBlock.getLightEmission();
         }
         return super.getLightEmission(state, level, pos);
+    }
+
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+        if (level.getBlockEntity(pos) instanceof MachineBlockEntity machineBlock) {
+            machineBlock.neighborChanged(state, level, pos, neighborPos);
+        }
+    }
+
+    @Override
+    public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
+        super.onNeighborChange(state, level, pos, neighbor);
+        if (level.getBlockEntity(pos) instanceof MachineBlockEntity machineBlock) {
+            machineBlock.neighborChanged(state, level, pos, neighbor);
+        }
     }
 }

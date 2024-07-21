@@ -42,6 +42,7 @@ public class EnderBlockEntity extends BlockEntity {
     public static final String INDEX = "Index";
     private final List<NetworkDataSlot<?>> dataSlots = new ArrayList<>();
     private final List<Runnable> afterDataSync = new ArrayList<>();
+    private boolean changed = true;
 
     private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> selfCapabilities = new HashMap<>();
     private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> neighbourCapabilities = new HashMap<>();
@@ -59,24 +60,44 @@ public class EnderBlockEntity extends BlockEntity {
         } else {
             blockEntity.serverTick();
         }
+        blockEntity.endTick();
     }
 
     /**
      * Perform server-side ticking
      */
+    @EnsureSide(EnsureSide.Side.SERVER)
     public void serverTick() {
         // Perform syncing.
-        if (level != null && !level.isClientSide) {
+        if (level != null) {
             sync();
-            level.blockEntityChanged(worldPosition);
         }
     }
 
     /**
      * Perform client side ticking.
      */
+    @EnsureSide(EnsureSide.Side.CLIENT)
     public void clientTick() {
 
+    }
+
+    /**
+     * Perform client and server side ticking.
+     */
+    public void endTick() {
+        if (this.level == null) {
+            return;
+        }
+        if (changed) {
+            changed = false;
+            setChanged(level, getBlockPos(), getBlockState());
+        }
+    }
+
+    @Override
+    public void setChanged() {
+        this.changed = true;
     }
 
     // endregion
@@ -128,26 +149,25 @@ public class EnderBlockEntity extends BlockEntity {
     }
 
     private byte @Nullable [] createBufferSlotUpdate() {
-        RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
-        int amount = 0;
+        List<Integer> needsUpdate = new ArrayList<>();
         for (int i = 0; i < dataSlots.size(); i++) {
-            var networkDataSlot = dataSlots.get(i);
-            if (networkDataSlot.doesNeedUpdate()) {
-                amount ++;
-                buf.writeInt(i);
-                networkDataSlot.write(buf);
+            if (dataSlots.get(i).doesNeedUpdate()) {
+                needsUpdate.add(i);
             }
         }
 
-        if (amount == 0) {
+        if (needsUpdate.isEmpty()) {
             return null;
         }
 
         // Fine to use a normal byte buf here, we're not using codecs in here.
-        FriendlyByteBuf result = new FriendlyByteBuf(Unpooled.buffer()); //Use 2 buffers to be able to write the amount of data
-        result.writeInt(amount);
-        result.writeBytes(buf.copy());
-        return result.array();
+        RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
+        buf.writeInt(needsUpdate.size());
+        needsUpdate.forEach(i -> {
+            buf.writeInt(i);
+            dataSlots.get(i).write(buf);
+        });
+        return buf.array();
     }
 
     public <T extends NetworkDataSlot<?>> T addDataSlot(T slot) {
@@ -184,6 +204,7 @@ public class EnderBlockEntity extends BlockEntity {
     public void sync() {
         var syncData = createBufferSlotUpdate();
         if (syncData != null && level instanceof ServerLevel serverLevel) {
+            setChanged();
             PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(getBlockPos()),
                 new ServerboundCDataSlotUpdate(getBlockPos(), syncData));
         }

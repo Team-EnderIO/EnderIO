@@ -63,6 +63,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     private CapacitorData cachedCapacitorData = CapacitorData.NONE;
     private boolean capacitorCacheDirty;
     private boolean updateModel = false;
+    private final boolean hasActiveState;
 
     public PoweredMachineBlockEntity(EnergyIOMode energyIOMode, CapacitorScalable capacity, CapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -81,6 +82,8 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         // new new new new way of syncing energy storage.
         addDataSlot(createEnergyDataSlot());
+
+        this.hasActiveState = blockState.hasProperty(ProgressMachineBlock.POWERED);
     }
 
     public NetworkDataSlot<?> createEnergyDataSlot() {
@@ -97,7 +100,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         if (level != null) {
             BlockState blockState = getBlockState();
-            boolean isBlockStateOutdated = blockState.hasProperty(ProgressMachineBlock.POWERED) && blockState.getValue(ProgressMachineBlock.POWERED) != isActive();
+            boolean isBlockStateOutdated = hasActiveState && blockState.getValue(ProgressMachineBlock.POWERED) != isActive();
             boolean isMachineStateOutdated = getMachineStates().contains(MachineState.ACTIVE) != isActive();
             if (isBlockStateOutdated || isMachineStateOutdated) {
                 if (updateModel) {
@@ -316,10 +319,6 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     }
 
     private void cacheCapacitorData() {
-        if (level == null) {
-            return;
-        }
-
         capacitorCacheDirty = false;
 
         MachineInventoryLayout layout = getInventoryLayout();
@@ -351,14 +350,14 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-
-        cacheCapacitorData();
-
         var energyStorage = getEnergyStorage();
         if (energyStorage instanceof MachineEnergyStorage storage && pTag.contains(MachineNBTKeys.ENERGY)) {
             storage.deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.ENERGY));
         }
+
+        super.loadAdditional(pTag, lookupProvider);
+
+        cacheCapacitorData();
 
         updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
         updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
