@@ -1,7 +1,7 @@
 plugins {
     id("maven-publish")
     //id("com.modrinth.minotaur") version "2.+"
-    id("net.neoforged.moddev") version "1.0.8" apply false
+    id("net.neoforged.moddev") version "1.0.14" apply false
     //id("com.hypherionmc.modutils.modpublisher") version "2.+"
     //id("checkstyle")
     id("idea")
