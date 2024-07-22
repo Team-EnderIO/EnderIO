@@ -41,3 +41,6 @@ modId="enderio_conduits"
 type="required"
 versionRange="${mod_version}"
 side="BOTH"
+
+[[mixins]]
+config="enderioconduitsmodded.mixins.json"

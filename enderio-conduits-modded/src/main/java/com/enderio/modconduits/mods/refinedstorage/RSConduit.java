@@ -10,7 +10,9 @@ import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.refinedmods.refinedstorage.platform.api.PlatformApi;
 import com.refinedmods.refinedstorage.platform.api.support.network.AbstractNetworkNodeContainerBlockEntity;
+import com.refinedmods.refinedstorage.platform.api.support.network.NetworkNodeContainerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -22,6 +24,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 public record RSConduit(ResourceLocation texture, Component description) implements Conduit<RSConduit> {
     public static final ConduitMenuData.Simple MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, false);
@@ -63,27 +67,24 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
     }
 
     @Override
-    public void onCreated(ConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
-        var data = node.getOrCreateData(RSConduitsModule.DATA.get());
-        data.setup(level, pos);
-    }
-
-    @Override
     public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
         var data = node.getOrCreateData(RSConduitsModule.DATA.get());
         data.setRemoved(level);
     }
 
     @Override
-    public void onConnectTo(ConduitNode selfNode, ConduitNode otherNode) {
-        if (otherNode.hasData(RSConduitsModule.DATA.get())) {
-            otherNode.getData(RSConduitsModule.DATA.get()).update();
+    public void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
+        RSNetworkHost data = node.getOrCreateData(RSConduitsModule.DATA.get());
+        for (Direction dir : connectedSides) {
+            if (level.getBlockEntity(pos.relative(dir)) instanceof NetworkNodeContainerBlockEntity network) {
+                for (var connection : network.getContainers()) {
+                    if (connection.canAcceptIncomingConnection(dir.getOpposite(), data.getBlockState())) {
+                        data.addConnection(connection);
+                    }
+                }
+            }
         }
-    }
-
-    @Override
-    public boolean hasConnectionDelay() {
-        return true;
+        level.updateNeighborsAt(pos, level.getBlockState(pos).getBlock());
     }
 
     private static final class Ticker implements ConduitTicker<RSConduit> {
@@ -100,22 +101,14 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
             if (level.getBlockEntity(conduitPos) instanceof ConduitBundleBlockEntity conduit) {
                 Holder<Conduit<?>> rsConduit = conduit.getLevel().holderOrThrow(RSConduitsModule.RS2);
 
-                RSNetworkHost data = conduit.getBundle().getNodeFor(rsConduit).getData(RSConduitsModule.DATA.get());
-                if (data == null) {
-                    return false;
-                }
-                data.update();
+                RSNetworkHost data = conduit.getBundle().getNodeFor(rsConduit).getOrCreateData(RSConduitsModule.DATA.get());
 
-                if (level.getBlockEntity(conduitPos.relative(direction)) instanceof AbstractNetworkNodeContainerBlockEntity<?> containerBlockEntity) {
+                if (level.getBlockEntity(conduitPos.relative(direction)) instanceof NetworkNodeContainerBlockEntity containerBlockEntity) {
                     for (var connection : containerBlockEntity.getContainers()) {
                         if (connection.canAcceptIncomingConnection(direction.getOpposite(), data.getBlockState())) {
                             return true;
                         }
                     }
-                }
-
-                if (level.getBlockEntity(conduitPos.relative(direction)) instanceof ConduitBundleBlockEntity other) {
-                    return other.hasType(rsConduit);
                 }
             }
             return false;
