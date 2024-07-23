@@ -58,7 +58,7 @@ public class ItemRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder
             .shaped(RecipeCategory.TOOLS, EIOItems.YETA_WRENCH.get())
             .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
-            .define('G', EIOItems.GEAR_STONE)
+            .define('G', EIOTags.Items.GEARS_STONE)
             .pattern("I I")
             .pattern(" G ")
             .pattern(" I ")
