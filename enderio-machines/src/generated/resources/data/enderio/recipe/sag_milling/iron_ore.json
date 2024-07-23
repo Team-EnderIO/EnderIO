@@ -6,11 +6,11 @@
   },
   "outputs": [
     {
-      "item": "enderio:powdered_iron"
+      "item": "minecraft:raw_iron"
     },
     {
       "chance": 0.33,
-      "item": "enderio:powdered_iron"
+      "item": "minecraft:raw_iron"
     },
     {
       "chance": 0.15,
