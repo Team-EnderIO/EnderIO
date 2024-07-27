@@ -1,9 +1,0 @@
-{
-    "required" : true,
-    "package" : "com.enderio.modconduits.mods.refinedstorage.mixin",
-    "compatibilityLevel" : "JAVA_17",
-    "mixins" : [
-        "ConduitRSMixin"
-    ],
-    "minVersion" : "0.8"
-}

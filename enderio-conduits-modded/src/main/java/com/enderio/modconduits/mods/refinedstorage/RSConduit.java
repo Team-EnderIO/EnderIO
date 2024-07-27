@@ -7,21 +7,19 @@ import com.enderio.conduits.api.ConduitNetwork;
 import com.enderio.conduits.api.ConduitNode;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.ticker.ConduitTicker;
-import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.refinedmods.refinedstorage.platform.api.PlatformApi;
-import com.refinedmods.refinedstorage.platform.api.support.network.AbstractNetworkNodeContainerBlockEntity;
-import com.refinedmods.refinedstorage.platform.api.support.network.NetworkNodeContainerBlockEntity;
+import com.refinedmods.refinedstorage.common.api.support.network.NetworkNodeContainerProvider;
+import com.refinedmods.refinedstorage.neoforge.RefinedStorageNeoForgeApiImpl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,24 +65,52 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
     }
 
     @Override
+    public void onCreated(ConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
+        var data = node.getOrCreateData(RSConduitsModule.DATA.get());
+        if (data.mainNode == null) {
+            data.mainNode = new RSNetworkHost.ConduitRSNode(level, pos);
+            data.addContainer(data.mainNode);
+            data.initialize(level, () -> {});
+        }
+    }
+
+    @Override
     public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
         var data = node.getOrCreateData(RSConduitsModule.DATA.get());
-        data.setRemoved(level);
+        if (data.mainNode != null) {
+            data.mainNode.setRemoved(true);
+            data.remove(level);
+        }
     }
 
     @Override
     public void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
-        RSNetworkHost data = node.getOrCreateData(RSConduitsModule.DATA.get());
-        for (Direction dir : connectedSides) {
-            if (level.getBlockEntity(pos.relative(dir)) instanceof NetworkNodeContainerBlockEntity network) {
-                for (var connection : network.getContainers()) {
-                    if (connection.canAcceptIncomingConnection(dir.getOpposite(), data.getBlockState())) {
-                        data.addConnection(connection);
+        var data = node.getOrCreateData(RSConduitsModule.DATA.get());
+        if (data.mainNode != null) {
+            for (Direction direction : connectedSides) {
+                NetworkNodeContainerProvider capability = level.getCapability(RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability(), pos.relative(direction), direction.getOpposite());
+                if (capability != null) {
+                    for (var connection : capability.getContainers()) {
+                        if (connection.canAcceptIncomingConnection(direction.getOpposite(), level.getBlockState(pos))) {
+                            data.addContainer(connection);
+                            capability.addContainer(data.mainNode);
+                        }
                     }
+                    capability.update(level);
                 }
             }
+            data.update(level);
         }
-        level.updateNeighborsAt(pos, level.getBlockState(pos).getBlock());
+    }
+
+    @Override
+    public <K> @Nullable K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode node, Level level, BlockPos pos, @Nullable Direction direction,
+        ConduitNode.@Nullable IOState state) {
+        if (capability == RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability()) {
+            //noinspection unchecked
+            return (K) node.getOrCreateData(RSConduitsModule.DATA.get());
+        }
+        return null;
     }
 
     private static final class Ticker implements ConduitTicker<RSConduit> {
@@ -98,16 +124,11 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
 
         @Override
         public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
-            if (level.getBlockEntity(conduitPos) instanceof ConduitBundleBlockEntity conduit) {
-                Holder<Conduit<?>> rsConduit = conduit.getLevel().holderOrThrow(RSConduitsModule.RS2);
-
-                RSNetworkHost data = conduit.getBundle().getNodeFor(rsConduit).getOrCreateData(RSConduitsModule.DATA.get());
-
-                if (level.getBlockEntity(conduitPos.relative(direction)) instanceof NetworkNodeContainerBlockEntity containerBlockEntity) {
-                    for (var connection : containerBlockEntity.getContainers()) {
-                        if (connection.canAcceptIncomingConnection(direction.getOpposite(), data.getBlockState())) {
-                            return true;
-                        }
+            var cap = level.getCapability(RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability(), conduitPos.relative(direction), direction.getOpposite());
+            if (cap != null) {
+                for (var connection: cap.getContainers()) {
+                    if (connection.canAcceptIncomingConnection(direction.getOpposite(), level.getBlockState(conduitPos))) {
+                        return true;
                     }
                 }
             }

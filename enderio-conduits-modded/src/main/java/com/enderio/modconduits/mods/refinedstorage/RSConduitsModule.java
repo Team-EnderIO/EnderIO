@@ -1,5 +1,6 @@
 package com.enderio.modconduits.mods.refinedstorage;
 
+import appeng.api.AECapabilities;
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.conduits.api.Conduit;
@@ -9,6 +10,7 @@ import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.modconduits.ConduitModule;
 import com.enderio.modconduits.ModdedConduits;
+import com.refinedmods.refinedstorage.neoforge.RefinedStorageNeoForgeApiImpl;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -37,6 +39,7 @@ public class RSConduitsModule implements ConduitModule {
 
     public static final Supplier<ConduitType<RSConduit>> RS2_CONDUIT = CONDUIT_TYPES
         .register("rs2", () -> ConduitType.builder(RSConduit.CODEC)
+            .exposeCapability(RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability())
             .build());
 
     public static ResourceKey<Conduit<?>> RS2 = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIOBase.loc("rs2"));

@@ -58,8 +58,8 @@ dependencies {
     runtimeOnly("mekanism:Mekanism:${minecraftVersion}-${mekanismVersion}")
 
     // Refined Storage
-    api("com.refinedmods.refinedstorage:refinedstorage-platform-neoforge:${refinedstorageVersion}")
-    runtimeOnly("com.refinedmods.refinedstorage:refinedstorage-platform-neoforge:${refinedstorageVersion}")
+    api("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
+    runtimeOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
 }
 
 neoForge {
