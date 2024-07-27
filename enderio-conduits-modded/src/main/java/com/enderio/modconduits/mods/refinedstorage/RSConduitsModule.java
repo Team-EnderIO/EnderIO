@@ -62,7 +62,7 @@ public class RSConduitsModule implements ConduitModule {
 
     @Override
     public void bootstrapConduits(BootstrapContext<Conduit<?>> context) {
-        context.register(RS2, new RSConduit(EnderIOBase.loc("block/conduit/rs"), LANG_RS2_CONDUIT));
+        context.register(RS2, new RSConduit(EnderIOBase.loc("block/conduit/rs2"), LANG_RS2_CONDUIT));
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.refinedmods.refinedstorage.common.api.RefinedStorageApi;
 import com.refinedmods.refinedstorage.common.api.support.network.NetworkNodeContainerProvider;
 import com.refinedmods.refinedstorage.neoforge.RefinedStorageNeoForgeApiImpl;
 import net.minecraft.core.BlockPos;
@@ -71,6 +72,8 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
             data.mainNode = new RSNetworkHost.ConduitRSNode(level, pos);
             data.addContainer(data.mainNode);
             data.initialize(level, () -> {});
+            level.blockUpdated(pos, level.getBlockState(pos).getBlock());
+            data.update(level);
         }
     }
 
@@ -87,18 +90,6 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
     public void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
         var data = node.getOrCreateData(RSConduitsModule.DATA.get());
         if (data.mainNode != null) {
-            for (Direction direction : connectedSides) {
-                NetworkNodeContainerProvider capability = level.getCapability(RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability(), pos.relative(direction), direction.getOpposite());
-                if (capability != null) {
-                    for (var connection : capability.getContainers()) {
-                        if (connection.canAcceptIncomingConnection(direction.getOpposite(), level.getBlockState(pos))) {
-                            data.addContainer(connection);
-                            capability.addContainer(data.mainNode);
-                        }
-                    }
-                    capability.update(level);
-                }
-            }
             data.update(level);
         }
     }
@@ -108,7 +99,7 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
         ConduitNode.@Nullable IOState state) {
         if (capability == RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability()) {
             //noinspection unchecked
-            return (K) node.getOrCreateData(RSConduitsModule.DATA.get());
+            return (K) node.getData(RSConduitsModule.DATA.get());
         }
         return null;
     }

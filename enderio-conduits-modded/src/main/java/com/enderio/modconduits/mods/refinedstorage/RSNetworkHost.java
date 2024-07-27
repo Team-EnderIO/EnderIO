@@ -9,6 +9,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.refinedmods.refinedstorage.api.network.impl.node.grid.GridNetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.common.api.support.network.ConnectionSink;
+import com.refinedmods.refinedstorage.common.api.support.network.ConnectionStrategy;
 import com.refinedmods.refinedstorage.common.api.support.network.InWorldNetworkNodeContainer;
 import com.refinedmods.refinedstorage.common.support.network.InWorldNetworkNodeContainerImpl;
 import com.refinedmods.refinedstorage.common.support.network.NetworkNodeContainerProviderImpl;
@@ -98,7 +99,9 @@ public class RSNetworkHost extends NetworkNodeContainerProviderImpl implements C
 
         @Override
         public void addOutgoingConnections(ConnectionSink connectionSink) {
-            connectionSink.tryConnect(this.globalPos);
+            for (Direction direction : Direction.values()) {
+                connectionSink.tryConnectInSameDimension(this.globalPos.pos().relative(direction), direction.getOpposite());
+            }
         }
 
         @Override
