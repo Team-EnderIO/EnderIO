@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "G": {
-      "item": "enderio:iron_gear"
+      "tag": "c:gears/iron"
     },
     "I": {
       "item": "enderio:dark_steel_ingot"

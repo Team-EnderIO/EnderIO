@@ -1,8 +1,10 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.EnderIOBase;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
@@ -23,6 +25,7 @@ import com.enderio.machines.common.network.VatMoveTankPacket;
 import com.enderio.machines.common.recipe.FermentingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -37,12 +40,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser, FluidItemInteractive {
 
@@ -242,6 +247,31 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
             return recipe.ticks();
         }
 
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+
+        NamedFluidContents fluidContents = components.get(EIODataComponents.NAMED_FLUID_CONTENTS);
+        if (fluidContents != null) {
+            INPUT_TANK.setFluid(this, fluidContents.copy("input_tank"));
+            OUTPUT_TANK.setFluid(this, fluidContents.copy("output_tank"));
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        var inputTank = INPUT_TANK.getTank(this);
+        var outputTank = OUTPUT_TANK.getTank(this);
+        if (!inputTank.isEmpty() || !outputTank.isEmpty()) {
+            components.set(EIODataComponents.NAMED_FLUID_CONTENTS, NamedFluidContents.copyOf(Map.of(
+                "input_tank", inputTank.getFluid(),
+                "output_tank", outputTank.getFluid()
+            )));
+        }
     }
 
     @Override

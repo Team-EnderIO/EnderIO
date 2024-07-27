@@ -7,6 +7,8 @@ val minecraft_version_range: String by project
 val neoForgeVersion: String by project
 val neo_version_range: String by project
 val loader_version_range: String by project
+val curseforge_laserio_id: String by project
+val curseforge_laserio_file: String by project
 
 apply(from = rootProject.file("buildSrc/shared.gradle.kts"))
 
@@ -60,6 +62,10 @@ dependencies {
     // Refined Storage
     api("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
     runtimeOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
+
+    //Laserio
+    compileOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
+    runtimeOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
 }
 
 neoForge {

@@ -9,6 +9,7 @@ import com.enderio.base.common.capability.EntityFilterCapability;
 import com.enderio.base.common.capability.FluidFilterCapability;
 import com.enderio.base.common.capability.ItemFilterCapability;
 import com.enderio.base.common.paint.BlockPaintData;
+import com.enderio.core.common.util.NamedFluidContents;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -23,6 +24,9 @@ public class EIODataComponents {
 
     public static Supplier<DataComponentType<SimpleFluidContent>> ITEM_FLUID_CONTENT = DATA_COMPONENT_TYPES.registerComponentType("item_fluid_content",
         builder -> builder.persistent(SimpleFluidContent.CODEC).networkSynchronized(SimpleFluidContent.STREAM_CODEC));
+
+    public static Supplier<DataComponentType<NamedFluidContents>> NAMED_FLUID_CONTENTS = DATA_COMPONENT_TYPES.registerComponentType("named_fluid_contents",
+        builder -> builder.persistent(NamedFluidContents.CODEC).networkSynchronized(NamedFluidContents.STREAM_CODEC));
 
     public static Supplier<DataComponentType<Integer>> ENERGY = DATA_COMPONENT_TYPES.registerComponentType("energy",
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));

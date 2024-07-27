@@ -56,6 +56,7 @@
   "gui.enderio.category.soul_binding": "Soul Binding",
   "gui.enderio.category.soul_engine": "Soul Engine",
   "gui.enderio.category.tank": "Fluid Tank",
+  "gui.enderio.category.vat": "VAT",
   "gui.enderio.empty_tank": "The tank is empty",
   "gui.enderio.energy_equivalence": "A unit of energy, equivalent to FE.",
   "gui.enderio.full_power": "The energy storage is full",

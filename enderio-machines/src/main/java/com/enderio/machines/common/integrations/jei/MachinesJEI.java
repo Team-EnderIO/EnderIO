@@ -12,6 +12,7 @@ import com.enderio.machines.common.integrations.jei.category.SlicingRecipeCatego
 import com.enderio.machines.common.integrations.jei.category.SoulBindingCategory;
 import com.enderio.machines.common.integrations.jei.category.SoulEngineCategory;
 import com.enderio.machines.common.integrations.jei.category.TankCategory;
+import com.enderio.machines.common.integrations.jei.category.VATCategory;
 import com.enderio.machines.common.integrations.jei.transfer.CrafterRecipeTransferHandler;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.menu.EnchanterMenu;
@@ -19,6 +20,7 @@ import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.menu.SagMillMenu;
 import com.enderio.machines.common.menu.SlicerMenu;
 import com.enderio.machines.common.menu.SoulBinderMenu;
+import com.enderio.machines.common.menu.VatMenu;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -48,6 +50,7 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.FLUID_TANK.get()), TankCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.PRESSURIZED_FLUID_TANK.get()), TankCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SOUL_ENGINE.get()), SoulEngineCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.VAT.get()), VATCategory.TYPE);
     }
 
     @Override
@@ -60,6 +63,7 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipeCategories(new SoulBindingCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new TankCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new SoulEngineCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new VATCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -74,6 +78,7 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipes(SoulBindingCategory.TYPE, recipes.getSoulBindingRecipes());
         registration.addRecipes(TankCategory.TYPE, recipes.getTankRecipes());
         registration.addRecipes(SoulEngineCategory.TYPE, recipes.getMobGeneratorRecipes());
+        registration.addRecipes(VATCategory.TYPE, recipes.getVATRecipes());
     }
 
     @Override
@@ -101,6 +106,10 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipeTransferHandler(SoulBinderMenu.class, MachineMenus.SOUL_BINDER.get(), SoulBindingCategory.TYPE,
             SoulBinderMenu.INPUTS_INDEX, SoulBinderMenu.INPUT_COUNT,
             SoulBinderMenu.LAST_INDEX + 1, 36);
+
+        registration.addRecipeTransferHandler(VatMenu.class, MachineMenus.VAT.get(), VATCategory.TYPE,
+            VatMenu.INPUTS_INDEX, VatMenu.INPUT_COUNT,
+            VatMenu.LAST_INDEX + 1, 36);
 
         registration.addRecipeTransferHandler(new CrafterRecipeTransferHandler(registration.getTransferHelper()), RecipeTypes.CRAFTING);
     }

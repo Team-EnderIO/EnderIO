@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:energized_gear"
+            "items": "#c:gears/energized"
           }
         ]
       },

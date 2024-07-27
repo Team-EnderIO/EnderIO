@@ -1,10 +1,10 @@
 package com.enderio.machines.common.integrations.jei;
 
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.integrations.jei.util.WrappedEnchanterRecipe;
 import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
+import com.enderio.machines.common.recipe.FermentingRecipe;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import com.enderio.machines.common.recipe.SlicingRecipe;
 import com.enderio.machines.common.recipe.SoulBindingRecipe;
@@ -67,5 +67,9 @@ public class MachineJEIRecipes {
 
     public List<EngineSoul.SoulData> getMobGeneratorRecipes() {
         return EngineSoul.ENGINE.map.values().stream().toList();
+    }
+
+    public List<RecipeHolder<FermentingRecipe>> getVATRecipes() {
+        return recipeManager.getAllRecipesFor(MachineRecipes.VAT_FERMENTING.type().get());
     }
 }

@@ -36,6 +36,22 @@ public class TravelAnchorMenu extends MachineMenu<TravelAnchorBlockEntity> {
         getBlockEntity().setName(name);
     }
 
+    public boolean isVisible() {
+        if (getBlockEntity() == null) {
+            throw new IllegalStateException("BlockEntity is null");
+        }
+
+        return getBlockEntity().isVisible();
+    }
+
+    public void setVisible(boolean visible) {
+        if (getBlockEntity() == null) {
+            throw new IllegalStateException("BlockEntity is null");
+        }
+
+        getBlockEntity().setIsVisible(visible);
+    }
+
     public static TravelAnchorMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof TravelAnchorBlockEntity castBlockEntity) {

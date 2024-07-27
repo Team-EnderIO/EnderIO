@@ -11,6 +11,10 @@ import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 public class VatMenu extends MachineMenu<VatBlockEntity> {
+    public static int INPUTS_INDEX = 0;
+    public static int INPUT_COUNT = 2;
+    public static int LAST_INDEX = 1;
+
     public VatMenu(int pContainerId, @Nullable VatBlockEntity blockEntity, Inventory inventory) {
         super(MachineMenus.VAT.get(), pContainerId, blockEntity, inventory);
         if (blockEntity != null) {

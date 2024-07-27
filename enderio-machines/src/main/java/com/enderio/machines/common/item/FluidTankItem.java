@@ -44,19 +44,6 @@ public class FluidTankItem extends BlockItem implements AdvancedTooltipProvider 
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-            // Minecraft can be null during datagen
-            final Lazy<BlockEntityWithoutLevelRenderer> renderer = Lazy.of(() -> FluidTankBEWLR.INSTANCE);
-
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return renderer.get();
-            }
-        });
-    }
-
-    @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         var fluidHandler = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler != null) {

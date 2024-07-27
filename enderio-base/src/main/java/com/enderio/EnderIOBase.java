@@ -1,8 +1,8 @@
 package com.enderio;
 
-import com.enderio.base.api.integration.IntegrationManager;
 import com.enderio.base.api.registry.EnderIORegistries;
 import com.enderio.base.common.config.BaseConfig;
+import com.enderio.base.common.config.BaseConfigLang;
 import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
@@ -16,10 +16,12 @@ import com.enderio.base.common.init.EIOLootModifiers;
 import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.init.EIOParticles;
 import com.enderio.base.common.init.EIORecipes;
-import com.enderio.base.common.integrations.EnderIOSelfIntegration;
+import com.enderio.base.common.integrations.Integrations;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOEnumLang;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.menu.FluidFilterSlot;
+import com.enderio.base.common.menu.ItemFilterSlot;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
@@ -36,8 +38,6 @@ import com.enderio.base.data.tags.EIOBlockTagsProvider;
 import com.enderio.base.data.tags.EIOEntityTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
 import com.enderio.base.data.tags.EIOItemTagsProvider;
-import com.enderio.base.common.menu.FluidFilterSlot;
-import com.enderio.base.common.menu.ItemFilterSlot;
 import com.enderio.regilite.Regilite;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -99,6 +99,7 @@ public class EnderIOBase {
         // Register config files
         modContainer.registerConfig(ModConfig.Type.COMMON, BaseConfig.COMMON_SPEC, "enderio/base-common.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, BaseConfig.CLIENT_SPEC, "enderio/base-client.toml");
+        BaseConfigLang.register();
 
         // Perform initialization and registration for everything so things are registered.
         EIODataComponents.register(modEventBus);
@@ -124,7 +125,7 @@ public class EnderIOBase {
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
         modEventBus.addListener(SoulVialItem::onCommonSetup);
         modEventBus.addListener(this::registerRegistries);
-        IntegrationManager.addIntegration(EnderIOSelfIntegration.INSTANCE);
+        Integrations.register();
     }
 
     private void registerRegistries(NewRegistryEvent event) {

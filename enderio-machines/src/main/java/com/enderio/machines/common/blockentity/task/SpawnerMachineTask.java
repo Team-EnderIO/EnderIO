@@ -209,7 +209,7 @@ public class SpawnerMachineTask implements PoweredMachineTask {
                 }
 
                 if (entity instanceof Mob mob) { // based on vanilla spawner
-                    FinalizeSpawnEvent event = EventHooks.finalizeMobSpawnSpawner(mob, level, level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, null, false);
+                    FinalizeSpawnEvent event = EventHooks.finalizeMobSpawnSpawner(mob, level, level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, blockEntity, false);
                     if (event.isSpawnCancelled()) {
                         blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
                         continue;

@@ -16,7 +16,6 @@ import com.enderio.conduits.common.init.Conduits;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
-import com.enderio.conduits.data.recipe.RedstoneFilterRecipes;
 import com.enderio.regilite.Regilite;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.PackOutput;
@@ -81,7 +80,6 @@ public class EnderIOConduits {
 
         provider.addSubProvider(event.includeServer(), new ConduitTagProvider(packOutput, registries, event.getExistingFileHelper()));
         provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, datapackEntriesProvider.getRegistryProvider()));
-        provider.addSubProvider(event.includeServer(), new RedstoneFilterRecipes(packOutput, registries));
 
         event.getGenerator().addProvider(true, provider);
     }
