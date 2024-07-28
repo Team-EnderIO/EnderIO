@@ -48,7 +48,6 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack>, Flu
     @Override
     public void setInverted(Boolean inverted) {
         container.set(componentType, this.getComponent().withInvert(inverted));
-
     }
 
     @Override

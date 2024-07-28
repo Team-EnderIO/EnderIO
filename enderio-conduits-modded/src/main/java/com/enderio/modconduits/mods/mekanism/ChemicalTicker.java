@@ -8,6 +8,7 @@ import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.ChemicalType;
 import mekanism.api.chemical.IChemicalHandler;
+import mekanism.api.chemical.merged.BoxedChemicalStack;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -30,12 +31,15 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<ChemicalCo
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (var extract : extractCaps) {
-            tickExtractCapability(conduit, extract.capability(), extract.node(), insertCaps);
+            tickExtractCapability(conduit, extract, insertCaps);
         }
     }
 
-    private <C extends Chemical<C>, S extends ChemicalStack<C>> void tickExtractCapability(ChemicalConduit conduit, IChemicalHandler<C, S> extractHandler,
-        ConduitNode node, List<CapabilityConnection<IChemicalHandler<?, ?>>> insertCaps) {
+    private <C extends Chemical<C>, S extends ChemicalStack<C>> void tickExtractCapability(ChemicalConduit conduit,
+        CapabilityConnection<IChemicalHandler<?, ?>> extractCap, List<CapabilityConnection<IChemicalHandler<?, ?>>> insertCaps) {
+
+        IChemicalHandler<C, S> extractHandler = (IChemicalHandler<C, S>) extractCap.capability();
+        ConduitNode node = extractCap.node();
 
         ChemicalConduitData data = node.getOrCreateData(MekanismModule.CHEMICAL_DATA_TYPE.get());
 
@@ -52,9 +56,19 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<ChemicalCo
         if (result.isEmpty()) {
             return;
         }
+        if (extractCap.extractFilter() instanceof ChemicalFilter filter) {
+            if (!filter.test(BoxedChemicalStack.box(result))) {
+                return;
+            }
+        }
 
         long transferred = 0;
         for (var insert : insertCaps) {
+            if (insert.insertFilter() instanceof ChemicalFilter filter) {
+                if (!filter.test(BoxedChemicalStack.box(result))) {
+                    continue;
+                }
+            }
             ChemicalType insertType = ChemicalType.getTypeFor(insert.capability());
             if (extractType != insertType) {
                 continue;

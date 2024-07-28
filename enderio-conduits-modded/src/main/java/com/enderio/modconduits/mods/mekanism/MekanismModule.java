@@ -1,7 +1,14 @@
 package com.enderio.modconduits.mods.mekanism;
 
 import com.enderio.EnderIOBase;
+import com.enderio.base.client.gui.screen.FluidFilterScreen;
+import com.enderio.base.common.capability.FluidFilterCapability;
+import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.init.EIOCreativeTabs;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.item.filter.FluidFilter;
+import com.enderio.base.common.menu.FluidFilterMenu;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitDataType;
 import com.enderio.conduits.api.ConduitType;
@@ -10,6 +17,10 @@ import com.enderio.conduits.common.conduit.ConduitApiImpl;
 import com.enderio.conduits.common.recipe.ConduitIngredient;
 import com.enderio.modconduits.ConduitModule;
 import com.enderio.modconduits.ModdedConduits;
+import com.enderio.regilite.holder.RegiliteItem;
+import com.enderio.regilite.holder.RegiliteMenu;
+import com.enderio.regilite.registry.ItemRegistry;
+import com.enderio.regilite.registry.MenuRegistry;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.gas.IGasHandler;
 import mekanism.api.chemical.infuse.IInfusionHandler;
@@ -19,6 +30,7 @@ import mekanism.api.heat.IHeatHandler;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -30,6 +42,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -45,6 +58,23 @@ public class MekanismModule implements ConduitModule {
 
     public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister.create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE,
         ModdedConduits.REGISTRY_NAMESPACE);
+
+    private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister.createDataComponents(ModdedConduits.REGISTRY_NAMESPACE);
+
+    public static final Supplier<DataComponentType<ChemicalFilterCapability.Component>> CHEMICAL_FILTER = DATA_COMPONENT_TYPES
+        .registerComponentType("chemical_filter", builder -> builder.persistent(ChemicalFilterCapability.Component.CODEC).networkSynchronized(ChemicalFilterCapability.Component.STREAM_CODEC));
+
+    private static final ItemRegistry ITEM_REGISTRY = ModdedConduits.REGILITE.itemRegistry();
+
+    public static final RegiliteItem<ChemicalFilterItem> BASIC_CHEMICAL_FILTER = ITEM_REGISTRY
+        .registerItem("chemical_filter", properties -> new ChemicalFilterItem(properties.component(CHEMICAL_FILTER, new ChemicalFilterCapability.Component(5))))
+        .setTab(EIOCreativeTabs.GEAR)
+        .addCapability(EIOCapabilities.Filter.ITEM, ChemicalFilterItem.FILTER_PROVIDER);
+
+    private static final MenuRegistry MENU_REGISTRY = ModdedConduits.REGILITE.menuRegistry();
+
+    public static final RegiliteMenu<ChemicalFilterMenu> CHEMICAL_FILTER_MENU = MENU_REGISTRY
+        .registerMenu("chemical_filter", ChemicalFilterMenu::factory, () -> ChemicalFilterScreen::new);
 
     public static class Types {
 
@@ -67,6 +97,17 @@ public class MekanismModule implements ConduitModule {
             ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "pigment_handler"), IPigmentHandler.class);
         public static final BlockCapability<IHeatHandler, Direction> HEAT = BlockCapability.createSided(
             ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "heat_handler"), IHeatHandler.class);
+
+        public static class Item {
+            public static final ItemCapability<IGasHandler, Void> GAS = ItemCapability.createVoid(
+                ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "gas_handler"), IGasHandler.class);
+            public static final ItemCapability<ISlurryHandler, Void> SLURRY = ItemCapability.createVoid(
+                ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "slurry_handler"), ISlurryHandler.class);
+            public static final ItemCapability<IInfusionHandler, Void> INFUSION = ItemCapability.createVoid(
+                ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "infusion_handler"), IInfusionHandler.class);
+            public static final ItemCapability<IPigmentHandler, Void> PIGMENT = ItemCapability.createVoid(
+                ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "pigment_handler"), IPigmentHandler.class);
+        }
     }
 
     public static final ResourceKey<Conduit<?>> CHEMICAL = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIOBase.loc("chemical"));
@@ -95,6 +136,9 @@ public class MekanismModule implements ConduitModule {
     public void register(IEventBus modEventBus) {
         Types.CONDUIT_TYPES.register(modEventBus);
         CONDUIT_DATA_TYPES.register(modEventBus);
+        DATA_COMPONENT_TYPES.register(modEventBus);
+        ITEM_REGISTRY.register(modEventBus);
+        MENU_REGISTRY.register(modEventBus);
     }
 
     @Override
