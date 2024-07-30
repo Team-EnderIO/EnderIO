@@ -21,7 +21,7 @@ public class PaintedSlabBlockItem extends PaintedBlockItem {
 
     @Override
     protected boolean updateCustomBlockEntityTag(BlockPos pPos, Level pLevel, @Nullable Player pPlayer, ItemStack pStack, BlockState pState) {
-        boolean result = super.updateCustomBlockEntityTag(pPos, pLevel, pPlayer, pStack, pState);
+        boolean result = updateCustomBlockEntityTag(pLevel, pPlayer, pPos, pStack);
 
         var paintData = pStack.get(EIODataComponents.BLOCK_PAINT);
 
