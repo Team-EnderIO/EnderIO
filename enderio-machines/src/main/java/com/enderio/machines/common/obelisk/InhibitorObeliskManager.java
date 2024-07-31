@@ -30,13 +30,17 @@ public class InhibitorObeliskManager extends ObeliskAreaManager<InhibitorObelisk
             return;
         }
 
-        var pos = new BlockPos((int)event.getTargetX(), (int)event.getTargetY(), (int)event.getTargetZ());
+        var target = new BlockPos((int)event.getTargetX(), (int)event.getTargetY(), (int)event.getTargetZ());
 
         var obeliskManager = getManager(serverLevel);
 
-        Set<InhibitorObeliskBlockEntity> obelisks = obeliskManager.getObelisksFor(pos);
+        Set<InhibitorObeliskBlockEntity> obelisks = obeliskManager.getObelisksFor(target);
         if (obelisks == null || obelisks.isEmpty()) {
-            return;
+            var prev = new BlockPos((int) event.getPrevX(), (int) event.getPrevY(), (int) event.getPrevZ());
+            obelisks = obeliskManager.getObelisksFor(prev);
+            if (obelisks == null || obelisks.isEmpty()) {
+                return;
+            }
         }
 
         for (InhibitorObeliskBlockEntity obelisk : obelisks) {
