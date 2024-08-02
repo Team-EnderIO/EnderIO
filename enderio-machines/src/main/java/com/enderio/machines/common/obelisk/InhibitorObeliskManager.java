@@ -25,6 +25,11 @@ public class InhibitorObeliskManager extends ObeliskAreaManager<InhibitorObelisk
             return;
         }
 
+        //don't work on server commands
+        if (event instanceof EntityTeleportEvent.TeleportCommand || event instanceof EntityTeleportEvent.SpreadPlayersCommand){
+            return;
+        }
+
         // If there is no obelisk manager, there is nothing to do.
         if (!serverLevel.hasData(MachineAttachments.INHIBITOR_OBELISK_MANAGER)) {
             return;
