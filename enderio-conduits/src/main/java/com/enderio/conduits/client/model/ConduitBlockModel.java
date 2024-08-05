@@ -175,7 +175,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
 
             Set<Vec3i> duplicateFinder = new HashSet<>();
             //rendered have only one distinct pos, so I can safely assume get(0) is valid
-            List<Vec3i> duplicatePositions = rendered.stream().map(offsets::get).map(l -> l.get(0)).filter(n -> !duplicateFinder.add(n)).toList();
+            List<Vec3i> duplicatePositions = rendered.stream().map(offsets::get).map(List::getFirst).filter(n -> !duplicateFinder.add(n)).toList();
             for (Vec3i duplicatePosition : duplicatePositions) {
                 if (box == null) {
                     box = new Area(duplicatePosition);
@@ -185,9 +185,9 @@ public class ConduitBlockModel implements IDynamicBakedModel {
             }
             for (Holder<Conduit<?>> toRender : rendered) {
                 List<Vec3i> offsetsForType = offsets.get(toRender);
-                if (box == null || !box.contains(offsetsForType.get(0))) {
+                if (box == null || !box.contains(offsetsForType.getFirst())) {
                     quads.addAll(new ConduitTextureEmissiveQuadTransformer(sprite(conduitBundle, toRender), 0)
-                        .andThen(QuadTransformers.applying(translateTransformation(offsetsForType.get(0))))
+                        .andThen(QuadTransformers.applying(translateTransformation(offsetsForType.getFirst())))
                         .process(modelOf(CONDUIT_CORE).getQuads(state, side, rand, extraData, renderType)));
                 }
             }

@@ -142,9 +142,17 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof ConduitBundleBlockEntity conduit) {
-            if (conduit.getBundle().hasFacade() && FacadeHelper.areFacadesVisible()) {
+        return getBundleShape(level, pos, true);
+    }
+
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return getBundleShape(level, pos, false);
+    }
+
+    private VoxelShape getBundleShape(BlockGetter level, BlockPos pos, boolean canHideFacade) {
+        if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduit) {
+            if (conduit.getBundle().hasFacade() && (!canHideFacade || FacadeHelper.areFacadesVisible())) {
                 return Shapes.block();
             }
 
@@ -152,6 +160,11 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
         }
 
         return Shapes.block();
+    }
+
+    @Override
+    protected VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return super.getVisualShape(state, level, pos, context);
     }
 
     // region Block Interaction
