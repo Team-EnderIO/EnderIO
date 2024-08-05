@@ -46,6 +46,10 @@ dependencies {
     compileOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-core-api:$cctVersion")
     compileOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge-api:$cctVersion")
 
+    // For painting recipe.
+    // TODO: This isn't great.
+    compileOnly(project(":enderio-machines"))
+
     api("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
     jarJar("dev.gigaherz.graph:GraphLib3:$graphlibVersion") {
         version {

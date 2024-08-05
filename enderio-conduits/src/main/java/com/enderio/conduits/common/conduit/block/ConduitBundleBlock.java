@@ -1,10 +1,10 @@
 package com.enderio.conduits.common.conduit.block;
 
-import com.enderio.base.api.integration.IntegrationManager;
+import com.enderio.conduits.api.Conduit;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.EnderIOConduits;
-import com.enderio.conduits.api.Conduit;
+import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
@@ -15,6 +15,7 @@ import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
+import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.init.Conduits;
@@ -49,7 +50,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.ConduitBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -76,8 +76,6 @@ import java.util.Optional;
 public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-
-    private static final boolean ENABLE_FACADES = true;
 
     public ConduitBundleBlock(Properties properties) {
         super(properties);
@@ -146,7 +144,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ConduitBundleBlockEntity conduit) {
-            if (conduit.getBundle().hasFacade()) { // TODO: Yeta visibility check.
+            if (conduit.getBundle().hasFacade() && FacadeHelper.areFacadesVisible()) {
                 return Shapes.block();
             }
 
@@ -318,21 +316,21 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     }
 
     private Optional<ItemInteractionResult> handleFacade(ConduitBundleBlockEntity blockEntity, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
-        Optional<Block> facade = IntegrationManager.findFirst(integration -> integration.getFacadeOf(stack));
-        if (facade.isPresent() && ENABLE_FACADES) {
-            if (blockEntity.getBundle().hasFacade()) {
-                return Optional.of(ItemInteractionResult.FAIL);
-            }
-
-            blockEntity.getBundle().setFacade(facade.get());
-            if (!player.getAbilities().instabuild) {
-                stack.shrink(1);
-            }
-
-            return Optional.of(ItemInteractionResult.sidedSuccess(isClientSide));
+        var facade = stack.getCapability(ConduitCapabilities.ConduitFacade.ITEM);
+        if (facade == null || !facade.isValid()) {
+            return Optional.empty();
         }
 
-        return Optional.empty();
+        if (blockEntity.getBundle().hasFacade()) {
+            return Optional.of(ItemInteractionResult.FAIL);
+        }
+
+        blockEntity.getBundle().facade(facade.block(), facade.type());
+        if (!player.getAbilities().instabuild) {
+            stack.shrink(1);
+        }
+
+        return Optional.of(ItemInteractionResult.sidedSuccess(isClientSide));
     }
 
     private Optional<InteractionResult> handleScreen(ConduitBundleBlockEntity blockEntity, Player player, BlockHitResult hit, boolean isClientSide) {
@@ -437,7 +435,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
         }
 
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity blockEntity) {
-            Optional<Block> facade = blockEntity.getBundle().getFacade();
+            Optional<Block> facade = blockEntity.getBundle().facade();
             if (facade.isPresent()) {
                 return facade.get().asItem().getDefaultInstance();
             }
@@ -488,20 +486,29 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         HitResult hit = player.pick(player.blockInteractionRange() + 5, 1, false);
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity blockEntity) {
-            Holder<Conduit<?>> conduit = blockEntity.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
-            if (conduit == null) {
-                if (!blockEntity.getBundle().getConduits().isEmpty()) {
-                    level.playSound(player, pos, SoundEvents.GENERIC_SMALL_FALL, SoundSource.BLOCKS, 1F, 1F);
-                    return false;
+
+            if (blockEntity.getBundle().hasFacade() && FacadeHelper.areFacadesVisible()) {
+                blockEntity.getBundle().clearFacade();
+
+                if (!player.getAbilities().instabuild) {
+                    blockEntity.dropFacadeItem();
                 }
-                return true;
-            }
+            } else {
+                Holder<Conduit<?>> conduit = blockEntity.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
+                if (conduit == null) {
+                    if (!blockEntity.getBundle().getConduits().isEmpty()) {
+                        level.playSound(player, pos, SoundEvents.GENERIC_SMALL_FALL, SoundSource.BLOCKS, 1F, 1F);
+                        return false;
+                    }
+                    return true;
+                }
 
-            SoundType soundtype = state.getSoundType(level, pos, player);
-            level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                SoundType soundtype = state.getSoundType(level, pos, player);
+                level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
-            if (blockEntity.removeType(conduit, !player.getAbilities().instabuild)) {
-                return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+                if (blockEntity.removeType(conduit, !player.getAbilities().instabuild)) {
+                    return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+                }
             }
 
             level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
@@ -587,7 +594,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
         @Nullable BlockPos queryPos) {
 
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduit) {
-            Optional<Block> facade = conduit.getBundle().getFacade();
+            Optional<Block> facade = conduit.getBundle().facade();
             if (facade.isPresent()) {
                 return facade.get().defaultBlockState();
             }

@@ -9,9 +9,12 @@ import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.init.Conduits;
 import com.enderio.conduits.common.recipe.ConduitIngredient;
+import com.enderio.machines.EnderIOMachines;
+import com.enderio.machines.common.recipe.PaintingRecipe;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -20,7 +23,9 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -51,6 +56,8 @@ public class ConduitRecipes extends RecipeProvider {
         buildUpgradeRecipes(recipeOutput);
         buildFilterRecipes(recipeOutput);
         buildFilterConversionRecipes(recipeOutput);
+        buildFacadeCraftingRecipes(recipeOutput);
+        buildFacadePaintingRecipes(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(itemConduit, 8))
             .pattern("BBB")
@@ -375,5 +382,25 @@ public class ConduitRecipes extends RecipeProvider {
             .requires(ConduitItems.XOR_FILTER)
             .unlockedBy("has_ingredient", has(ConduitItems.XOR_FILTER))
             .save(recipeOutput, EnderIOBase.loc("xnor_filter_from_xor_filter"));
+    }
+
+    private void buildFacadeCraftingRecipes(RecipeOutput recipeOutput) {
+
+    }
+
+    private void buildFacadePaintingRecipes(RecipeOutput recipeOutput) {
+        paintingRecipe(ConduitItems.CONDUIT_FACADE, Ingredient.of(ConduitItems.CONDUIT_FACADE), recipeOutput);
+        paintingRecipe(ConduitItems.HARDENED_CONDUIT_FACADE, Ingredient.of(ConduitItems.HARDENED_CONDUIT_FACADE), recipeOutput);
+        paintingRecipe(ConduitItems.TRANSPARENT_CONDUIT_FACADE, Ingredient.of(ConduitItems.TRANSPARENT_CONDUIT_FACADE), recipeOutput);
+        paintingRecipe(ConduitItems.TRANSPARENT_HARDENED_CONDUIT_FACADE, Ingredient.of(ConduitItems.TRANSPARENT_HARDENED_CONDUIT_FACADE), recipeOutput);
+    }
+
+    // TODO: I want to have a builder for all EIO recipes in the API.
+    protected void paintingRecipe(ItemLike output, Ingredient input, RecipeOutput recipeOutput) {
+        recipeOutput.accept(
+            EnderIOBase.loc("painting/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
+            new PaintingRecipe(input, output.asItem()),
+            null,
+            new ModLoadedCondition(EnderIOMachines.MODULE_MOD_ID));
     }
 }

@@ -5,7 +5,7 @@ import com.enderio.conduits.api.SlotType;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
-import com.enderio.conduits.common.conduit.facades.FacadeOptions;
+import com.enderio.conduits.common.conduit.facades.FacadeType;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -26,8 +26,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import org.jetbrains.annotations.Nullable;
@@ -56,15 +54,14 @@ public final class ConduitBundle {
             BuiltInRegistries.BLOCK.byNameCodec()
                 .optionalFieldOf("facade")
                 .forGetter(i -> Optional.ofNullable(i.facade)),
-            FacadeOptions.CODEC
-                .optionalFieldOf("facade_options")
-                .forGetter(i -> Optional.ofNullable(i.facadeOptions)),
+            FacadeType.CODEC
+                .optionalFieldOf("facade_type")
+                .forGetter(i -> Optional.ofNullable(i.facadeType)),
             Codec.unboundedMap(Conduit.CODEC, ConduitGraphObject.CODEC)
                 .fieldOf("nodes").forGetter(i -> i.conduitNodes)
         ).apply(instance, ConduitBundle::new)
     );
 
-    // TODO: Facades.
     public static StreamCodec<RegistryFriendlyByteBuf, ConduitBundle> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,
         i -> i.pos,
@@ -74,8 +71,8 @@ public final class ConduitBundle {
         i -> i.connections,
         ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.BLOCK)),
         i -> Optional.ofNullable(i.facade),
-        ByteBufCodecs.optional(FacadeOptions.STREAM_CODEC),
-        i -> Optional.ofNullable(i.facadeOptions),
+        ByteBufCodecs.optional(FacadeType.STREAM_CODEC),
+        i -> Optional.ofNullable(i.facadeType),
         ByteBufCodecs.map(HashMap::new, Conduit.STREAM_CODEC, ConduitGraphObject.STREAM_CODEC),
         i -> i.conduitNodes,
         ConduitBundle::new
@@ -94,7 +91,7 @@ public final class ConduitBundle {
     private Block facade;
 
     @Nullable
-    private FacadeOptions facadeOptions;
+    private FacadeType facadeType;
 
     @Nullable
     private Runnable onChangedRunnable;
@@ -112,7 +109,7 @@ public final class ConduitBundle {
         List<Holder<Conduit<?>>> conduits,
         Map<Direction, ConduitConnection> connections,
         Optional<Block> facade,
-        Optional<FacadeOptions> facadeOptions,
+        Optional<FacadeType> facadeType,
         Map<Holder<Conduit<?>>, ConduitGraphObject> conduitNodes) {
 
         this.pos = pos;
@@ -120,7 +117,7 @@ public final class ConduitBundle {
         this.connections.putAll(connections);
         this.conduitNodes.putAll(conduitNodes);
         this.facade = facade.orElse(null);
-        this.facadeOptions = facadeOptions.orElse(null);
+        this.facadeType = facadeType.orElse(null);
     }
 
     // TODO: I kind of want to get rid of this.
@@ -309,16 +306,23 @@ public final class ConduitBundle {
         return facade != null;
     }
 
-    public Optional<Block> getFacade() {
+    public Optional<Block> facade() {
         return Optional.ofNullable(facade);
     }
 
-    public Optional<FacadeOptions> getFacadeOptions() {
-        return Optional.ofNullable(facadeOptions);
+    public Optional<FacadeType> facadeType() {
+        return Optional.ofNullable(facadeType);
     }
 
-    public void setFacade(@Nullable Block facade) {
+    public void facade(Block facade, FacadeType facadeType) {
         this.facade = facade;
+        this.facadeType = facadeType;
+        onChanged();
+    }
+
+    public void clearFacade() {
+        facade = null;
+        facadeType = null;
         onChanged();
     }
 
@@ -425,6 +429,7 @@ public final class ConduitBundle {
         connections.forEach((dir, connection) -> bundle.connections.put(dir, connection.deepCopy()));
         conduitNodes.forEach((conduit, node) -> bundle.setNodeFor(conduit, node.deepCopy()));
         bundle.facade = facade;
+        bundle.facadeType = facadeType;
         return bundle;
     }
 

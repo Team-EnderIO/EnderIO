@@ -14,7 +14,7 @@ import com.enderio.conduits.common.conduit.OffsetHelper;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
-import com.enderio.conduits.common.conduit.facades.FacadeOptions;
+import com.enderio.conduits.common.conduit.facades.FacadeType;
 import com.enderio.core.data.model.ModelHelper;
 import com.mojang.math.Axis;
 import com.mojang.math.Transformation;
@@ -75,7 +75,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
 
         if (conduitBundle != null && pos != null) {
             if (FacadeHelper.areFacadesVisible()) {
-                Optional<Block> facadeOpt = conduitBundle.getFacade();
+                Optional<Block> facadeOpt = conduitBundle.facade();
                 if (facadeOpt.isPresent()) {
                     BlockState facade = facadeOpt.get().defaultBlockState();
 
@@ -83,16 +83,16 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                             .andThen(*/new PaintingQuadTransformer(facade, renderType)/*)*/
                         .process(modelOf(CONDUIT_FACADE).getQuads(state, side, rand, ModelData.EMPTY, renderType)));
                 }
-            }
 
-            // If the facade should hide the conduits, escape early.
-            if (conduitBundle.hasFacade()) {
-                boolean areConduitsHidden = conduitBundle.getFacadeOptions()
-                    .map(FacadeOptions::doesHideConduits)
-                    .orElse(false);
+                // If the facade should hide the conduits, escape early.
+                if (conduitBundle.hasFacade()) {
+                    boolean areConduitsHidden = conduitBundle.facadeType()
+                        .map(FacadeType::doesHideConduits)
+                        .orElse(false);
 
-                if (areConduitsHidden) {
-                    return quads;
+                    if (areConduitsHidden) {
+                        return quads;
+                    }
                 }
             }
 
