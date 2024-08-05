@@ -5,6 +5,7 @@ import com.enderio.conduits.api.ConduitNode;
 import com.enderio.conduits.api.model.ConduitCoreModelModifier;
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.client.paint.model.PaintingQuadTransformer;
+import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
 import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
 import com.enderio.conduits.common.Area;
 import com.enderio.conduits.common.conduit.ConduitBundle;
@@ -13,6 +14,7 @@ import com.enderio.conduits.common.conduit.OffsetHelper;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
+import com.enderio.conduits.common.conduit.facades.FacadeOptions;
 import com.enderio.core.data.model.ModelHelper;
 import com.mojang.math.Axis;
 import com.mojang.math.Transformation;
@@ -29,6 +31,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.IDynamicBakedModel;
@@ -71,6 +74,28 @@ public class ConduitBlockModel implements IDynamicBakedModel {
         BlockPos pos = extraData.get(ConduitBundleBlockEntity.POS);
 
         if (conduitBundle != null && pos != null) {
+            if (FacadeHelper.areFacadesVisible()) {
+                Optional<Block> facadeOpt = conduitBundle.getFacade();
+                if (facadeOpt.isPresent()) {
+                    BlockState facade = facadeOpt.get().defaultBlockState();
+
+                    quads.addAll(/*new BlockColorQuadDataTransformer(pos, Minecraft.getInstance().level, facade)
+                            .andThen(*/new PaintingQuadTransformer(facade, renderType)/*)*/
+                        .process(modelOf(CONDUIT_FACADE).getQuads(state, side, rand, ModelData.EMPTY, renderType)));
+                }
+            }
+
+            // If the facade should hide the conduits, escape early.
+            if (conduitBundle.hasFacade()) {
+                boolean areConduitsHidden = conduitBundle.getFacadeOptions()
+                    .map(FacadeOptions::doesHideConduits)
+                    .orElse(false);
+
+                if (areConduitsHidden) {
+                    return quads;
+                }
+            }
+
             Direction.Axis axis = OffsetHelper.findMainAxis(conduitBundle);
             Map<Holder<Conduit<?>>, List<Vec3i>> offsets = new HashMap<>();
 
@@ -91,9 +116,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                     Vec3i offset = OffsetHelper.translationFor(direction.getAxis(), OffsetHelper.offsetConduit(i, connectedTypes.size()));
                     offsets.computeIfAbsent(conduit, ignored -> new ArrayList<>()).add(offset);
                     IQuadTransformer rotationTranslation = rotation.andThen(QuadTransformers.applying(translateTransformation(offset)));
-                    quads.addAll(new ConduitTextureEmissiveQuadTransformer(sprite(conduitBundle, conduit), 0)
-                        .andThen(rotationTranslation)
-                        .process(modelOf(CONDUIT_CONNECTION).getQuads(state, preRotation, rand, extraData, renderType)));
+                    quads.addAll(new ConduitTextureEmissiveQuadTransformer(sprite(conduitBundle, conduit), 0).andThen(rotationTranslation).process(modelOf(CONDUIT_CONNECTION).getQuads(state, preRotation, rand, extraData, renderType)));
 
                     ConduitCoreModelModifier conduitCoreModifier = ConduitCoreModelModifiers.getModifier(conduit.value().type());
                     if (conduitCoreModifier != null) {
@@ -120,24 +143,10 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                             }
 
                             if (dyn.control() == RedstoneControl.ACTIVE_WITH_SIGNAL || dyn.control() == RedstoneControl.ACTIVE_WITHOUT_SIGNAL) {
-                                quads.addAll(rotationTranslation
-                                    .andThen(new ColorQuadTransformer(null, dyn.redstoneChannel()))
-                                    .process(modelOf(CONDUIT_IO_REDSTONE).getQuads(state, preRotation, rand, extraData, renderType)));
+                                quads.addAll(rotationTranslation.andThen(new ColorQuadTransformer(null, dyn.redstoneChannel())).process(modelOf(CONDUIT_IO_REDSTONE).getQuads(state, preRotation, rand, extraData, renderType)));
                             }
                         }
                     }
-                }
-
-                Optional<BlockState> facadeOpt = conduitBundle.getFacade(direction);
-                if (facadeOpt.isPresent()) {
-                    BlockState facade = facadeOpt.get();
-                    BakedModel facadeModel = Minecraft.getInstance().getBlockRenderer().getBlockModel(facade);
-                    List<BakedQuad> textureQuads = facadeModel.getQuads(state, preRotation, rand, ModelData.EMPTY, renderType);
-
-                    quads.addAll(rotation
-                        .andThen(new BlockColorQuadDataTransformer(pos, Minecraft.getInstance().level, facade))
-                        .andThen(new PaintingQuadTransformer(facade, renderType))
-                        .process(modelOf(CONDUIT_FACADE).getQuads(state, preRotation, rand, ModelData.EMPTY, renderType)));
                 }
             }
 
@@ -256,7 +265,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
 
     @Override
     public boolean useAmbientOcclusion() {
-        return false;
+        return true;
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.enderio.conduits.api.SlotType;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
+import com.enderio.conduits.common.conduit.facades.FacadeOptions;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -14,6 +15,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -22,6 +25,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.util.thread.EffectiveSide;
@@ -48,8 +53,12 @@ public final class ConduitBundle {
                 .fieldOf("conduits").forGetter(i -> i.conduits),
             Codec.unboundedMap(Direction.CODEC, ConduitConnection.CODEC)
                 .fieldOf("connections").forGetter(i -> i.connections),
-            Codec.unboundedMap(Direction.CODEC, BlockState.CODEC)
-                .fieldOf("facades").forGetter(i -> i.facadeTextures),
+            BuiltInRegistries.BLOCK.byNameCodec()
+                .optionalFieldOf("facade")
+                .forGetter(i -> Optional.ofNullable(i.facade)),
+            FacadeOptions.CODEC
+                .optionalFieldOf("facade_options")
+                .forGetter(i -> Optional.ofNullable(i.facadeOptions)),
             Codec.unboundedMap(Conduit.CODEC, ConduitGraphObject.CODEC)
                 .fieldOf("nodes").forGetter(i -> i.conduitNodes)
         ).apply(instance, ConduitBundle::new)
@@ -63,8 +72,10 @@ public final class ConduitBundle {
         i -> i.conduits,
         ByteBufCodecs.map(HashMap::new, Direction.STREAM_CODEC, ConduitConnection.STREAM_CODEC),
         i -> i.connections,
-        //ByteBufCodecs.map(HashMap::new, Direction.STREAM_CODEC, BlockState.STREAM_CODEC),
-        //i -> i.facadeTextures,
+        ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.BLOCK)),
+        i -> Optional.ofNullable(i.facade),
+        ByteBufCodecs.optional(FacadeOptions.STREAM_CODEC),
+        i -> Optional.ofNullable(i.facadeOptions),
         ByteBufCodecs.map(HashMap::new, Conduit.STREAM_CODEC, ConduitGraphObject.STREAM_CODEC),
         i -> i.conduitNodes,
         ConduitBundle::new
@@ -79,7 +90,11 @@ public final class ConduitBundle {
     private final Map<Holder<Conduit<?>>, ConduitGraphObject> conduitNodes = new HashMap<>();
     private final BlockPos pos;
 
-    private final Map<Direction, BlockState> facadeTextures = new EnumMap<>(Direction.class);
+    @Nullable
+    private Block facade;
+
+    @Nullable
+    private FacadeOptions facadeOptions;
 
     @Nullable
     private Runnable onChangedRunnable;
@@ -92,23 +107,20 @@ public final class ConduitBundle {
         this.pos = pos;
     }
 
-    private ConduitBundle(BlockPos pos, List<Holder<Conduit<?>>> conduits, Map<Direction, ConduitConnection> connections,
-        Map<Holder<Conduit<?>>, ConduitGraphObject> conduitNodes) {
-        this(pos, conduits, connections, Map.of(), conduitNodes);
-    }
-
     private ConduitBundle(
         BlockPos pos,
         List<Holder<Conduit<?>>> conduits,
         Map<Direction, ConduitConnection> connections,
-        Map<Direction, BlockState> facadeTextures,
+        Optional<Block> facade,
+        Optional<FacadeOptions> facadeOptions,
         Map<Holder<Conduit<?>>, ConduitGraphObject> conduitNodes) {
 
         this.pos = pos;
         this.conduits.addAll(conduits);
         this.connections.putAll(connections);
-        this.facadeTextures.putAll(facadeTextures);
         this.conduitNodes.putAll(conduitNodes);
+        this.facade = facade.orElse(null);
+        this.facadeOptions = facadeOptions.orElse(null);
     }
 
     // TODO: I kind of want to get rid of this.
@@ -293,16 +305,20 @@ public final class ConduitBundle {
 
     // region Facades
 
-    public boolean hasFacade(Direction direction) {
-        return facadeTextures.containsKey(direction);
+    public boolean hasFacade() {
+        return facade != null;
     }
 
-    public Optional<BlockState> getFacade(Direction direction) {
-        return Optional.ofNullable(facadeTextures.get(direction));
+    public Optional<Block> getFacade() {
+        return Optional.ofNullable(facade);
     }
 
-    public void setFacade(BlockState facade, Direction direction) {
-        facadeTextures.put(direction, facade);
+    public Optional<FacadeOptions> getFacadeOptions() {
+        return Optional.ofNullable(facadeOptions);
+    }
+
+    public void setFacade(@Nullable Block facade) {
+        this.facade = facade;
         onChanged();
     }
 
@@ -383,7 +399,7 @@ public final class ConduitBundle {
 
     @Override
     public int hashCode() {
-        int hash = Objects.hash(connections, conduits, facadeTextures);
+        int hash = Objects.hash(connections, conduits, facade);
 
         // Manually hash the map, using hashContents instead of hashCode to avoid breaking the graph.
         for (var entry : conduitNodes.entrySet()) {
@@ -407,8 +423,8 @@ public final class ConduitBundle {
         var bundle = new ConduitBundle(() -> {}, pos);
         bundle.conduits.addAll(conduits);
         connections.forEach((dir, connection) -> bundle.connections.put(dir, connection.deepCopy()));
-        bundle.facadeTextures.putAll(facadeTextures);
         conduitNodes.forEach((conduit, node) -> bundle.setNodeFor(conduit, node.deepCopy()));
+        bundle.facade = facade;
         return bundle;
     }
 

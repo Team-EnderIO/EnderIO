@@ -36,6 +36,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -48,6 +49,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ConduitBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -75,7 +77,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    private static final boolean ENABLE_FACADES = false;
+    private static final boolean ENABLE_FACADES = true;
 
     public ConduitBundleBlock(Properties properties) {
         super(properties);
@@ -144,8 +146,13 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ConduitBundleBlockEntity conduit) {
+            if (conduit.getBundle().hasFacade()) { // TODO: Yeta visibility check.
+                return Shapes.block();
+            }
+
             return conduit.getShape().getTotalShape();
         }
+
         return Shapes.block();
     }
 
@@ -311,13 +318,13 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     }
 
     private Optional<ItemInteractionResult> handleFacade(ConduitBundleBlockEntity blockEntity, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
-        Optional<BlockState> facade = IntegrationManager.findFirst(integration -> integration.getFacadeOf(stack));
+        Optional<Block> facade = IntegrationManager.findFirst(integration -> integration.getFacadeOf(stack));
         if (facade.isPresent() && ENABLE_FACADES) {
-            if (blockEntity.getBundle().hasFacade(hit.getDirection())) {
+            if (blockEntity.getBundle().hasFacade()) {
                 return Optional.of(ItemInteractionResult.FAIL);
             }
 
-            blockEntity.getBundle().setFacade(facade.get(), hit.getDirection());
+            blockEntity.getBundle().setFacade(facade.get());
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
             }
@@ -430,11 +437,19 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
         }
 
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity blockEntity) {
-            Holder<Conduit<?>> conduit = blockEntity.getShape().getConduit(pos, target);
-            if (conduit != null) {
-                return ConduitBlockItem.getStackFor(conduit, 1);
+            Optional<Block> facade = blockEntity.getBundle().getFacade();
+            if (facade.isPresent()) {
+                return facade.get().asItem().getDefaultInstance();
             }
+
+            Holder<Conduit<?>> conduit = blockEntity.getShape().getConduit(pos, target);
+            if (conduit == null) {
+                conduit = blockEntity.getBundle().getConduits().getFirst();
+            }
+
+            return ConduitBlockItem.getStackFor(conduit, 1);
         }
+
         return super.getCloneItemStack(state, target, level, pos, player);
     }
 
@@ -566,6 +581,20 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     }
 
     // endregion
+
+    @Override
+    public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side, @Nullable BlockState queryState,
+        @Nullable BlockPos queryPos) {
+
+        if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduit) {
+            Optional<Block> facade = conduit.getBundle().getFacade();
+            if (facade.isPresent()) {
+                return facade.get().defaultBlockState();
+            }
+        }
+
+        return super.getAppearance(state, level, pos, side, queryState, queryPos);
+    }
 
     private record OpenInformation(Direction direction, Holder<Conduit<?>> conduit) {}
 
