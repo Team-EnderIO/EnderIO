@@ -1,6 +1,7 @@
 package com.enderio.conduits.client;
 
 import com.enderio.conduits.EnderIOConduits;
+import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -17,7 +18,18 @@ public class ConduitHighlightEvent {
 
     @SubscribeEvent
     public static void highlight(RenderHighlightEvent.Block event) {
-        if (Minecraft.getInstance().level.getBlockEntity(event.getTarget().getBlockPos()) instanceof ConduitBundleBlockEntity conduit) {
+        var minecraft = Minecraft.getInstance();
+
+        if (minecraft.level == null) {
+            return;
+        }
+
+        if (minecraft.level.getBlockEntity(event.getTarget().getBlockPos()) instanceof ConduitBundleBlockEntity conduit) {
+            // Use standard block highlights for facades.
+            if (conduit.getBundle().hasFacade() && FacadeHelper.areFacadesVisible()) {
+                return;
+            }
+
             event.setCanceled(true);
             BlockPos pos = event.getTarget().getBlockPos();
             Vec3 camPos = event.getCamera().getPosition();

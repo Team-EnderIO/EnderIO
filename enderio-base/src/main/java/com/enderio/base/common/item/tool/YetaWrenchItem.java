@@ -120,5 +120,4 @@ public class YetaWrenchItem extends Item {
 
         return property.getPossibleValues().iterator().next();
     }
-
 }
