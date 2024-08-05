@@ -2,6 +2,7 @@ package com.enderio.conduits.common.init;
 
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.EnderIOConduits;
+import com.enderio.conduits.common.conduit.facades.FacadeType;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneTLatchFilter;
@@ -21,6 +22,9 @@ public class ConduitComponents {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<Conduit<?>>>> CONDUIT = DATA_COMPONENT_TYPES
         .registerComponentType("conduit", builder -> builder.persistent(Conduit.CODEC).networkSynchronized(Conduit.STREAM_CODEC));
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<FacadeType>> FACADE_TYPE = DATA_COMPONENT_TYPES
+        .registerComponentType("facade_type", builder -> builder.persistent(FacadeType.CODEC).networkSynchronized(FacadeType.STREAM_CODEC));
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> EXTRACTION_SPEED_UPGRADE_TIER = DATA_COMPONENT_TYPES
         .registerComponentType("extraction_speed_upgrade_tier", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));

@@ -1,0 +1,13 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderio_machines"
+    }
+  ],
+  "type": "enderio:painting",
+  "input": {
+    "item": "enderio:conduit_facade"
+  },
+  "output": "enderio:conduit_facade"
+}
