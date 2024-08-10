@@ -12,11 +12,14 @@ java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 
 println("Building Ender IO version ${project.version}")
 
+val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
+val cctMinecraftVersion: String by project
 val cctVersion: String by project
 val athenaVersion: String by project
 val ae2Version: String by project
 val jadeFileId: String by project
+val mekanismMinecraftVersion: String by project
 val mekanismVersion: String by project
 
 dependencies {
@@ -33,12 +36,12 @@ dependencies {
     implementation(project(":enderio-armory"))
 
     // JEI
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-common:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-neoforge:$jeiVersion")
+    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-common:$jeiVersion")
+    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge:$jeiVersion")
 
     // CC: Tweaked
     // TODO: Does not start on latest NeoForge
-//    runtimeOnly("cc.tweaked:cc-tweaked-$minecraftVersion-forge:$cctVersion")
+//    runtimeOnly("cc.tweaked:cc-tweaked-cctMinecraftVersion-forge:$cctVersion")
 
     //Athena ctm
     runtimeOnly("maven.modrinth:athena-ctm:${athenaVersion}")
@@ -68,7 +71,7 @@ dependencies {
     //runtimeOnly("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // Mekanism
-    runtimeOnly("mekanism:Mekanism:${minecraftVersion}-${mekanismVersion}")
+    runtimeOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}")
 }
 
 neoForge {

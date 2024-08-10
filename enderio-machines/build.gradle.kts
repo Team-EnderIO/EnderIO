@@ -15,6 +15,7 @@ sourceSets {
 }
 
 val regiliteVersion: String by project
+val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
 val graphlibVersion: String by project
 val graphlibVersionRange: String by project
@@ -31,10 +32,10 @@ dependencies {
     implementation(project(":endercore"))
 
     // JEI
-    compileOnly("mezz.jei:jei-$minecraftVersion-common-api:$jeiVersion")
-    compileOnly("mezz.jei:jei-$minecraftVersion-neoforge-api:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-common:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-neoforge:$jeiVersion")
+    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
+    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge-api:$jeiVersion")
+    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-common:$jeiVersion")
+    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge:$jeiVersion")
 
     implementation("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
     jarJar("dev.gigaherz.graph:GraphLib3:$graphlibVersion") {

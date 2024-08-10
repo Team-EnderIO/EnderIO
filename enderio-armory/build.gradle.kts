@@ -22,9 +22,11 @@ sourceSets {
 }
 
 val regiliteVersion: String by project
+val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
 val graphlibVersion: String by project
 val graphlibVersionRange: String by project
+val cctMinecraftVersion: String by project
 val cctVersion: String by project
 
 dependencies {
@@ -38,14 +40,14 @@ dependencies {
     implementation(project(":endercore"))
 
     // JEI
-    compileOnly("mezz.jei:jei-$minecraftVersion-common-api:$jeiVersion")
-    compileOnly("mezz.jei:jei-$minecraftVersion-neoforge-api:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-common:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-neoforge:$jeiVersion")
+    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
+    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge-api:$jeiVersion")
+    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-common:$jeiVersion")
+    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge:$jeiVersion")
 
     //CC-Tweaked
-    compileOnly("cc.tweaked:cc-tweaked-$minecraftVersion-core-api:$cctVersion")
-    compileOnly("cc.tweaked:cc-tweaked-$minecraftVersion-forge-api:$cctVersion")
+    compileOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-core-api:$cctVersion")
+    compileOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge-api:$cctVersion")
     // TODO: Does not start on latest NeoForge
 //    runtimeOnly("cc.tweaked:cc-tweaked-$minecraftVersion-forge:$cctVersion")
 }
