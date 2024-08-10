@@ -41,7 +41,7 @@ dependencies {
 
     // CC: Tweaked
     // TODO: Does not start on latest NeoForge
-//    runtimeOnly("cc.tweaked:cc-tweaked-cctMinecraftVersion-forge:$cctVersion")
+//    runtimeOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge:$cctVersion")
 
     //Athena ctm
     runtimeOnly("maven.modrinth:athena-ctm:${athenaVersion}")
