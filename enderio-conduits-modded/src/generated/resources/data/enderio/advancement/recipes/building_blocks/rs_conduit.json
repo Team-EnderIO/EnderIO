@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:rs2_conduit"
+        "recipe": "enderio:rs_conduit"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -32,7 +32,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:rs2_conduit"
+      "enderio:rs_conduit"
     ]
   }
 }

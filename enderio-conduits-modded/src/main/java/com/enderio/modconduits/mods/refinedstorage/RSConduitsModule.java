@@ -1,6 +1,5 @@
 package com.enderio.modconduits.mods.refinedstorage;
 
-import appeng.api.AECapabilities;
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.conduits.api.Conduit;
@@ -10,6 +9,7 @@ import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.modconduits.ConduitModule;
 import com.enderio.modconduits.ModdedConduits;
+import com.refinedmods.refinedstorage.common.content.Tags;
 import com.refinedmods.refinedstorage.neoforge.RefinedStorageNeoForgeApiImpl;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
@@ -37,18 +37,18 @@ public class RSConduitsModule implements ConduitModule {
 
     private static final ModLoadedCondition CONDITION = new ModLoadedCondition("refinedstorage");
 
-    public static final Supplier<ConduitType<RSConduit>> RS2_CONDUIT = CONDUIT_TYPES
-        .register("rs2", () -> ConduitType.builder(RSConduit.CODEC)
+    public static final Supplier<ConduitType<RSConduit>> RS_CONDUIT = CONDUIT_TYPES
+        .register("rs", () -> ConduitType.builder(RSConduit.CODEC)
             .exposeCapability(RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability())
             .build());
 
-    public static ResourceKey<Conduit<?>> RS2 = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIOBase.loc("rs2"));
+    public static ResourceKey<Conduit<?>> RS = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIOBase.loc("rs"));
 
     public static final Supplier<ConduitDataType<RSNetworkHost>> DATA =
-        CONDUIT_DATA_TYPES.register("rs2", () -> new ConduitDataType<>(RSNetworkHost.CODEC, RSNetworkHost.STREAM_CODEC,
+        CONDUIT_DATA_TYPES.register("rs", () -> new ConduitDataType<>(RSNetworkHost.CODEC, RSNetworkHost.STREAM_CODEC,
             RSNetworkHost::new));
 
-    private static final Component LANG_RS2_CONDUIT = addTranslation("item", EnderIOBase.loc("rs2"), "Refined Storage Conduit");
+    private static final Component LANG_RS_CONDUIT = addTranslation("item", EnderIOBase.loc("rs"), "Refined Storage Conduit");
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
         return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
@@ -62,27 +62,27 @@ public class RSConduitsModule implements ConduitModule {
 
     @Override
     public void bootstrapConduits(BootstrapContext<Conduit<?>> context) {
-        context.register(RS2, new RSConduit(EnderIOBase.loc("block/conduit/rs2"), LANG_RS2_CONDUIT));
+        context.register(RS, new RSConduit(EnderIOBase.loc("block/conduit/rs"), LANG_RS_CONDUIT));
     }
 
     @Override
     public void buildConduitConditions(BiConsumer<ResourceKey<?>, ICondition> conditions) {
-        conditions.accept(RS2, CONDITION);
+        conditions.accept(RS, CONDITION);
     }
 
     @Override
     public void buildRecipes(HolderLookup.Provider lookupProvider, RecipeOutput recipeOutput) {
-        var rs2RecipeOutput = recipeOutput.withConditions(CONDITION);
+        var rsRecipeOutput = recipeOutput.withConditions(CONDITION);
 
-        var conduit = lookupProvider.holderOrThrow(RS2);
+        var conduit = lookupProvider.holderOrThrow(RS);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApi.INSTANCE.getStackForType(conduit, 3))
             .pattern("BBB")
             .pattern("III")
             .pattern("BBB")
             .define('B', EIOItems.CONDUIT_BINDER)
-            .define('I', EIOItems.CONDUIT_BINDER)
+            .define('I', Tags.CABLES)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-            .save(rs2RecipeOutput, EnderIOBase.loc("rs2_conduit"));
+            .save(rsRecipeOutput, EnderIOBase.loc("rs_conduit"));
     }
 }

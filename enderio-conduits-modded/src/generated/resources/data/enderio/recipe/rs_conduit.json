@@ -12,7 +12,7 @@
       "item": "enderio:conduit_binder"
     },
     "I": {
-      "item": "enderio:conduit_binder"
+      "tag": "refinedstorage:cables"
     }
   },
   "pattern": [
@@ -22,7 +22,7 @@
   ],
   "result": {
     "components": {
-      "enderio:conduit": "enderio:rs2"
+      "enderio:conduit": "enderio:rs"
     },
     "count": 3,
     "id": "enderio:conduit"

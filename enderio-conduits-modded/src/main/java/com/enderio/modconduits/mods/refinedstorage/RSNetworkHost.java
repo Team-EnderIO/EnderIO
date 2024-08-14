@@ -9,9 +9,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.refinedmods.refinedstorage.api.network.impl.node.grid.GridNetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.common.api.support.network.ConnectionSink;
-import com.refinedmods.refinedstorage.common.api.support.network.ConnectionStrategy;
 import com.refinedmods.refinedstorage.common.api.support.network.InWorldNetworkNodeContainer;
-import com.refinedmods.refinedstorage.common.support.network.InWorldNetworkNodeContainerImpl;
 import com.refinedmods.refinedstorage.common.support.network.NetworkNodeContainerProviderImpl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -89,7 +87,7 @@ public class RSNetworkHost extends NetworkNodeContainerProviderImpl implements C
 
         @Override
         public String getName() {
-            return "RS2 Conduit";
+            return "RS Conduit";
         }
 
         @Override

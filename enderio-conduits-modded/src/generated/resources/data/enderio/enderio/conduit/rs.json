@@ -5,9 +5,9 @@
       "modid": "refinedstorage"
     }
   ],
-  "type": "enderio:rs2",
+  "type": "enderio:rs",
   "description": {
-    "translate": "item.enderio.rs2"
+    "translate": "item.enderio.rs"
   },
-  "texture": "enderio:block/conduit/rs2"
+  "texture": "enderio:block/conduit/rs"
 }

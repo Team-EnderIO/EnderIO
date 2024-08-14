@@ -9,8 +9,6 @@ import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.refinedmods.refinedstorage.common.api.RefinedStorageApi;
-import com.refinedmods.refinedstorage.common.api.support.network.NetworkNodeContainerProvider;
 import com.refinedmods.refinedstorage.neoforge.RefinedStorageNeoForgeApiImpl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -47,7 +45,7 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
 
     @Override
     public ConduitType<RSConduit> type() {
-        return RSConduitsModule.RS2_CONDUIT.get();
+        return RSConduitsModule.RS_CONDUIT.get();
     }
 
     @Override
@@ -98,6 +96,10 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
     public <K> @Nullable K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode node, Level level, BlockPos pos, @Nullable Direction direction,
         ConduitNode.@Nullable IOState state) {
         if (capability == RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability()) {
+            var data = node.getData(RSConduitsModule.DATA.get());
+            if (data != null && data.mainNode != null && data.mainNode.isRemoved()) {
+                return null;
+            }
             //noinspection unchecked
             return (K) node.getData(RSConduitsModule.DATA.get());
         }
