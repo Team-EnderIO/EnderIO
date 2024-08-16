@@ -14,9 +14,6 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 public class ObeliskBER implements BlockEntityRenderer<ObeliskBlockEntity> {
     private final Item obeliskRenderItem;
 
