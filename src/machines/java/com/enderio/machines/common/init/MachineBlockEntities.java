@@ -1,7 +1,10 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.base.common.init.EIOBlocks;
+import com.enderio.machines.client.rendering.blockentity.ObeliskBER;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
+import com.enderio.machines.common.blockentity.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.CrafterBlockEntity;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
 import com.enderio.machines.common.blockentity.DrainBlockEntity;
@@ -109,6 +112,8 @@ public class MachineBlockEntities {
 
     public static final BlockEntityEntry<SoulEngineBlockEntity> SOUL_ENGINE = register("soul_engine", SoulEngineBlockEntity::new, MachineBlocks.SOUL_ENGINE);
     public static final BlockEntityEntry<XPObeliskBlockEntity> XP_OBELISK = register("xp_obelisk", XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK);
+
+    public static final BlockEntityEntry<AversionObeliskBlockEntity> AVERSION_OBELISK = register("aversion_obelisk", AversionObeliskBlockEntity::new, MachineBlocks.AVERSION_OBELISK);
 
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,

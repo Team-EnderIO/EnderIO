@@ -2,6 +2,7 @@ package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.machines.client.gui.screen.AlloySmelterScreen;
+import com.enderio.machines.client.gui.screen.AversionObeliskScreen;
 import com.enderio.machines.client.gui.screen.CapacitorBankScreen;
 import com.enderio.machines.client.gui.screen.CrafterScreen;
 import com.enderio.machines.client.gui.screen.DrainScreen;
@@ -22,6 +23,7 @@ import com.enderio.machines.client.gui.screen.WiredChargerScreen;
 import com.enderio.machines.client.gui.screen.XPObeliskScreen;
 import com.enderio.machines.client.gui.screen.XPVacuumScreen;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
+import com.enderio.machines.common.menu.AversionObeliskMenu;
 import com.enderio.machines.common.menu.CapacitorBankMenu;
 import com.enderio.machines.common.menu.CrafterMenu;
 import com.enderio.machines.common.menu.DrainMenu;
@@ -69,6 +71,7 @@ public class MachineMenus {
     public static final MenuEntry<SoulEngineMenu> SOUL_ENGINE = REGISTRATE.menu("soul_engine", SoulEngineMenu::factory, () -> SoulEngineScreen::new).register();
     public static final MenuEntry<TravelAnchorMenu> TRAVEL_ANCHOR = REGISTRATE.menu("travel_anchor", TravelAnchorMenu::factory, () -> TravelAnchorScreen::new).register();
     public static final MenuEntry<XPObeliskMenu> XP_OBELISK = REGISTRATE.menu("xp_obelisk", XPObeliskMenu::factory, () -> XPObeliskScreen::new).register();
+    public static final MenuEntry<AversionObeliskMenu> AVERSION_OBELISK = REGISTRATE.menu("aversion_obelisk", AversionObeliskMenu::factory, () -> AversionObeliskScreen::new).register();
 
     public static void register() {}
 }

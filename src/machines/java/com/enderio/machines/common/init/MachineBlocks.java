@@ -234,6 +234,17 @@ public class MachineBlocks {
         .build()
         .register();
 
+    public static final BlockEntry<MachineBlock> AVERSION_OBELISK = REGISTRATE
+        .block("aversion_obelisk", props -> new MachineBlock(props, MachineBlockEntities.AVERSION_OBELISK))
+        .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
+        .loot(MachinesLootTable::copyNBT)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+        .item()
+        .tab(EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
     //used when single methods needs to be overridden in the block class
     private static <T extends MachineBlock> BlockBuilder<T, Registrate> baseMachine(BlockBuilder<T, Registrate> machineBlock,
         NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> blockStateProvider) {
