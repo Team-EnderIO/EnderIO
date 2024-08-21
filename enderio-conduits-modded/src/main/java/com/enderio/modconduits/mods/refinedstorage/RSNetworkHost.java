@@ -44,7 +44,7 @@ public class RSNetworkHost extends NetworkNodeContainerProviderImpl implements C
 
     @Override
     public ConduitDataType<RSNetworkHost> type() {
-        return RSConduitsModule.DATA.get();
+        return RefinedStorageModule.DATA.get();
     }
 
     public static class ConduitRSNode implements InWorldNetworkNodeContainer {

@@ -46,7 +46,7 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
 
     @Override
     public ConduitType<RSConduit> type() {
-        return RSConduitsModule.RS_CONDUIT.get();
+        return RefinedStorageModule.RS_CONDUIT.get();
     }
 
     @Override
@@ -66,7 +66,7 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
 
     @Override
     public void onCreated(ConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
-        var data = node.getOrCreateData(RSConduitsModule.DATA.get());
+        var data = node.getOrCreateData(RefinedStorageModule.DATA.get());
         if (data.mainNode == null) {
             data.mainNode = new RSNetworkHost.ConduitRSNode(level, pos);
             data.addContainer(data.mainNode);
@@ -83,7 +83,7 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
 
     @Override
     public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
-        var data = node.getOrCreateData(RSConduitsModule.DATA.get());
+        var data = node.getOrCreateData(RefinedStorageModule.DATA.get());
         if (data.mainNode != null) {
             data.mainNode.setRemoved(true);
             data.remove(level);
@@ -92,7 +92,7 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
 
     @Override
     public void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
-        var data = node.getOrCreateData(RSConduitsModule.DATA.get());
+        var data = node.getOrCreateData(RefinedStorageModule.DATA.get());
         if (data.mainNode != null) {
             data.update(level);
         }
@@ -102,12 +102,12 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
     public <K> @Nullable K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode node, Level level, BlockPos pos, @Nullable Direction direction,
         ConduitNode.@Nullable IOState state) {
         if (capability == RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability()) {
-            var data = node.getData(RSConduitsModule.DATA.get());
+            var data = node.getData(RefinedStorageModule.DATA.get());
             if (data != null && data.mainNode != null && data.mainNode.isRemoved()) {
                 return null;
             }
             //noinspection unchecked
-            return (K) node.getData(RSConduitsModule.DATA.get());
+            return (K) node.getData(RefinedStorageModule.DATA.get());
         }
         return null;
     }

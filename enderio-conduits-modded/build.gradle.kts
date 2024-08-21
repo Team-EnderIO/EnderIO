@@ -49,8 +49,6 @@ dependencies {
     runtimeOnly("mezz.jei:jei-$minecraftVersion-common:$jeiVersion")
     runtimeOnly("mezz.jei:jei-$minecraftVersion-neoforge:$jeiVersion")
 
-    implementation("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
-
     // AE2
     compileOnly("appeng:appliedenergistics2:${ae2Version}:api")
     runtimeOnly("appeng:appliedenergistics2:${ae2Version}")

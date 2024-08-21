@@ -29,11 +29,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class RSConduitsModule implements ConduitModule {
+public class RefinedStorageModule implements ConduitModule {
 
     public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister.create(EnderIOConduitsRegistries.CONDUIT_TYPE, ModdedConduits.REGISTRY_NAMESPACE);
     public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister.create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, ModdedConduits.REGISTRY_NAMESPACE);
-    public static final ConduitModule INSTANCE = new RSConduitsModule();
+    public static final ConduitModule INSTANCE = new RefinedStorageModule();
 
     private static final ModLoadedCondition CONDITION = new ModLoadedCondition("refinedstorage");
 

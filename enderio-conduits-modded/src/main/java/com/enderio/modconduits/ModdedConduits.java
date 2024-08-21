@@ -6,7 +6,7 @@ import com.enderio.modconduits.mods.Integrations;
 import com.enderio.modconduits.mods.appeng.AE2ConduitsModule;
 import com.enderio.modconduits.data.ModConduitRecipeProvider;
 import com.enderio.modconduits.mods.mekanism.MekanismModule;
-import com.enderio.modconduits.mods.refinedstorage.RSConduitsModule;
+import com.enderio.modconduits.mods.refinedstorage.RefinedStorageModule;
 import com.enderio.regilite.Regilite;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.PackOutput;
@@ -39,7 +39,7 @@ public class ModdedConduits {
     private static final Map<String, Supplier<ConduitModule>> CONDUIT_MODULES = Map.ofEntries(
         entry("ae2", () -> AE2ConduitsModule.INSTANCE),
         entry("mekanism", () -> MekanismModule.INSTANCE),
-        entry("refinedstorage", () -> RSConduitsModule.INSTANCE)
+        entry("refinedstorage", () -> RefinedStorageModule.INSTANCE)
     );
 
     public static IEventBus modEventBus;
