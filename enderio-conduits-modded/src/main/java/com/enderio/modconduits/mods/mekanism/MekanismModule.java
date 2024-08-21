@@ -11,10 +11,7 @@ import com.enderio.conduits.common.recipe.ConduitIngredient;
 import com.enderio.modconduits.ConduitModule;
 import com.enderio.modconduits.ModdedConduits;
 import mekanism.api.MekanismAPI;
-import mekanism.api.chemical.gas.IGasHandler;
-import mekanism.api.chemical.infuse.IInfusionHandler;
-import mekanism.api.chemical.pigment.IPigmentHandler;
-import mekanism.api.chemical.slurry.ISlurryHandler;
+import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.heat.IHeatHandler;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.Direction;
@@ -57,14 +54,8 @@ public class MekanismModule implements ConduitModule {
     }
 
     public static class Capabilities {
-        public static final BlockCapability<IGasHandler, Direction> GAS = BlockCapability.createSided(
-            ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "gas_handler"), IGasHandler.class);
-        public static final BlockCapability<ISlurryHandler, Direction> SLURRY = BlockCapability.createSided(
-            ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "slurry_handler"), ISlurryHandler.class);
-        public static final BlockCapability<IInfusionHandler, Direction> INFUSION = BlockCapability.createSided(
-            ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "infusion_handler"), IInfusionHandler.class);
-        public static final BlockCapability<IPigmentHandler, Direction> PIGMENT = BlockCapability.createSided(
-            ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "pigment_handler"), IPigmentHandler.class);
+        public static final BlockCapability<IChemicalHandler, Direction> CHEMICAL = BlockCapability.createSided(
+            ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "chemical_handler"), IChemicalHandler.class);
         public static final BlockCapability<IHeatHandler, Direction> HEAT = BlockCapability.createSided(
             ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "heat_handler"), IHeatHandler.class);
     }
