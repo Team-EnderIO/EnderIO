@@ -75,27 +75,11 @@ public class ConduitBlockItem extends BlockItem {
 
         Holder<Conduit<?>> conduit = itemstack.get(ConduitComponents.CONDUIT);
 
-        // Handle placing into an existing block
-        if (conduit != null && level.getBlockEntity(blockpos) instanceof ConduitBundleBlockEntity blockEntity) {
-            if (blockEntity.hasType(conduit)) {
-                // Pass through to block
-                return level.getBlockState(blockpos).useWithoutItem(level, player, context.getHitResult());
-            }
-
-            blockEntity.addType(conduit, player);
-            if (level.isClientSide()) {
-                blockEntity.updateClient();
-            }
-
-            BlockState blockState = level.getBlockState(blockpos);
-            SoundType soundtype = blockState.getSoundType(level, blockpos, context.getPlayer());
-            level.playSound(player, blockpos, this.getPlaceSound(blockState, level, blockpos, context.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-            level.gameEvent(GameEvent.BLOCK_PLACE, blockpos, GameEvent.Context.of(player, blockState));
-
-            if (!player.getAbilities().instabuild) {
-                itemstack.shrink(1);
-            }
-            return InteractionResult.sidedSuccess(level.isClientSide());
+        // Pass through to existing block.
+        BlockState blockState = level.getBlockState(blockpos);
+        if (!blockState.isAir()) {
+            //noinspection DataFlowIssue
+            return blockState.useItemOn(context.getItemInHand(), level, player, context.getHand(), context.getHitResult().withPosition(blockpos)).result();
         }
 
         return super.place(context);
