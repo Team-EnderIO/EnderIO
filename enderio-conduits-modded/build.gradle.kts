@@ -28,9 +28,12 @@ sourceSets {
 val regiliteVersion: String by project
 val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
+val graphlibVersion: String by project
 val ae2Version: String by project
 val mekanismMinecraftVersion: String by project
 val mekanismVersion: String by project
+val refinedstorageVersion: String by project
+
 
 dependencies {
     implementation("com.enderio:Regilite:$regiliteVersion")
@@ -55,6 +58,10 @@ dependencies {
     // Mekanism
     compileOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}:api")
     runtimeOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}")
+
+    // Refined Storage
+    api("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
+    runtimeOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
 
     //Laserio
     compileOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
