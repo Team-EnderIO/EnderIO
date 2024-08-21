@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -71,6 +72,11 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
             data.addContainer(data.mainNode);
             data.initialize(level, () -> {});
             level.blockUpdated(pos, level.getBlockState(pos).getBlock());
+
+            // Update pipe shape
+            var state = level.getBlockState(pos);
+            state.updateNeighbourShapes(level, pos, Block.UPDATE_ALL);
+
             data.update(level);
         }
     }
