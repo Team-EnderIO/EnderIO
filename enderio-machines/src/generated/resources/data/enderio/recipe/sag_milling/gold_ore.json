@@ -6,11 +6,11 @@
   },
   "outputs": [
     {
-      "item": "enderio:powdered_gold"
+      "item": "minecraft:raw_gold"
     },
     {
       "chance": 0.33,
-      "item": "enderio:powdered_gold"
+      "item": "minecraft:raw_gold"
     },
     {
       "chance": 0.15,
