@@ -41,3 +41,9 @@ modId="enderio_conduits"
 type="required"
 versionRange="${mod_version}"
 side="BOTH"
+
+[[dependencies.enderio_conduits_modded]]
+modId="mekanism"
+type="optional"
+versionRange="${mekanism_version_range}"
+side="BOTH"
