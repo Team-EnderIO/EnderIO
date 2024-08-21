@@ -26,8 +26,10 @@ sourceSets {
 // TODO: Add ae2, rs2, mekanism etc. as optional deps in mods.toml
 
 val regiliteVersion: String by project
+val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
 val ae2Version: String by project
+val mekanismMinecraftVersion: String by project
 val mekanismVersion: String by project
 
 dependencies {
@@ -43,16 +45,16 @@ dependencies {
     implementation(project(":endercore"))
 
     // JEI
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-common:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-neoforge:$jeiVersion")
+    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-common:$jeiVersion")
+    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge:$jeiVersion")
 
     // AE2
     compileOnly("appeng:appliedenergistics2:${ae2Version}:api")
     runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
 
     // Mekanism
-    compileOnly("mekanism:Mekanism:${minecraftVersion}-${mekanismVersion}:api")
-    runtimeOnly("mekanism:Mekanism:${minecraftVersion}-${mekanismVersion}")
+    compileOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}:api")
+    runtimeOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}")
 
     //Laserio
     compileOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")

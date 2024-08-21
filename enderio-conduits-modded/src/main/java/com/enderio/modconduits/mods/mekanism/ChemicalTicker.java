@@ -3,80 +3,58 @@ package com.enderio.modconduits.mods.mekanism;
 import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.ConduitNetwork;
 import com.enderio.conduits.api.ConduitNode;
+import com.enderio.conduits.api.ticker.CapabilityAwareConduitTicker;
 import mekanism.api.Action;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
-import mekanism.api.chemical.ChemicalType;
 import mekanism.api.chemical.IChemicalHandler;
-import mekanism.api.chemical.merged.BoxedChemicalStack;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 
 import java.util.List;
 
-public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<ChemicalConduit, IChemicalHandler<?, ?>> {
-
-    @SafeVarargs
-    public ChemicalTicker(BlockCapability<? extends IChemicalHandler<?, ?>, Direction>... capabilities) {
-        super(capabilities);
-    }
+public class ChemicalTicker extends CapabilityAwareConduitTicker<ChemicalConduit, IChemicalHandler> {
 
     @Override
-    protected void tickCapabilityGraph(
+    protected void tickCapabilityGraph(ServerLevel level,
         ChemicalConduit conduit,
-        List<CapabilityConnection<IChemicalHandler<?, ?>>> insertCaps,
-        List<CapabilityConnection<IChemicalHandler<?, ?>>> extractCaps, ServerLevel level,
+        List<CapabilityConnection> inserts,
+        List<CapabilityConnection> extracts,
         ConduitNetwork graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        for (var extract : extractCaps) {
-            tickExtractCapability(conduit, extract, insertCaps);
+        for (var extract : extracts) {
+            tickExtractCapability(conduit, extract.capability(), extract.node(), inserts);
         }
     }
 
-    private <C extends Chemical<C>, S extends ChemicalStack<C>> void tickExtractCapability(ChemicalConduit conduit,
-        CapabilityConnection<IChemicalHandler<?, ?>> extractCap, List<CapabilityConnection<IChemicalHandler<?, ?>>> insertCaps) {
-
-        IChemicalHandler<C, S> extractHandler = (IChemicalHandler<C, S>) extractCap.capability();
-        ConduitNode node = extractCap.node();
+    private void tickExtractCapability(ChemicalConduit conduit, IChemicalHandler extractHandler,
+        ConduitNode node, List<CapabilityConnection> insertCaps) {
 
         ChemicalConduitData data = node.getOrCreateData(MekanismModule.CHEMICAL_DATA_TYPE.get());
 
-        ChemicalType extractType = ChemicalType.getTypeFor(extractHandler);
-        S result;
+        Chemical extractType = extractHandler.extractChemical(Long.MAX_VALUE, Action.SIMULATE).getChemical();
+        ChemicalStack result;
         if (!data.lockedChemical.isEmpty()) {
-            if (data.lockedChemical.getChemicalType() != extractType) {
+            if (data.lockedChemical.getChemical() != extractType) {
                 return;
             }
-            result = extractHandler.extractChemical((S) data.lockedChemical.getChemical().getStack(conduit.transferRate()), Action.SIMULATE);
+
+            result = extractHandler.extractChemical(data.lockedChemical.getChemical().getStack(conduit.transferRate()), Action.SIMULATE);
         } else {
             result = extractHandler.extractChemical(conduit.transferRate(), Action.SIMULATE);
         }
         if (result.isEmpty()) {
             return;
         }
-        if (extractCap.extractFilter() instanceof ChemicalFilter filter) {
-            if (!filter.test(BoxedChemicalStack.box(result))) {
-                return;
-            }
-        }
 
         long transferred = 0;
         for (var insert : insertCaps) {
-            if (insert.insertFilter() instanceof ChemicalFilter filter) {
-                if (!filter.test(BoxedChemicalStack.box(result))) {
-                    continue;
-                }
-            }
-            ChemicalType insertType = ChemicalType.getTypeFor(insert.capability());
-            if (extractType != insertType) {
-                continue;
-            }
-            IChemicalHandler<C, S> destinationHandler = (IChemicalHandler<C, S>) insert.capability();
-            S transferredChemical;
+            IChemicalHandler destinationHandler = insert.capability();
+            ChemicalStack transferredChemical;
             if (!data.lockedChemical.isEmpty()) {
-                transferredChemical = tryChemicalTransfer(destinationHandler, extractHandler, (S) data.lockedChemical.getChemical().getStack(conduit.transferRate() - transferred), true);
+                transferredChemical = tryChemicalTransfer(destinationHandler, extractHandler, data.lockedChemical.getChemical().getStack(conduit.transferRate() - transferred), true);
             } else {
                 transferredChemical = tryChemicalTransfer(destinationHandler, extractHandler, conduit.transferRate() - transferred, true);
             }
@@ -88,23 +66,25 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<ChemicalCo
         }
     }
 
-    private static <C extends Chemical<C>, S extends ChemicalStack<C>> S tryChemicalTransfer(IChemicalHandler<C, S> chemicalDestination, IChemicalHandler<C, S> chemicalSource, long maxAmount, boolean doTransfer) {
+    private static ChemicalStack tryChemicalTransfer(IChemicalHandler chemicalDestination, IChemicalHandler chemicalSource, long maxAmount, boolean doTransfer) {
         var drainable = chemicalSource.extractChemical(maxAmount, Action.SIMULATE);
         if (!drainable.isEmpty()) {
             return tryChemicalTransfer_Internal(chemicalDestination, chemicalSource, drainable, doTransfer);
         }
-        return chemicalSource.getEmptyStack();
+
+        return ChemicalStack.EMPTY;
     }
 
-    private static <C extends Chemical<C>, S extends ChemicalStack<C>> S tryChemicalTransfer(IChemicalHandler<C, S> chemicalDestination, IChemicalHandler<C, S> chemicalSource, S resource, boolean doTransfer) {
+    private static ChemicalStack tryChemicalTransfer(IChemicalHandler chemicalDestination, IChemicalHandler chemicalSource, ChemicalStack resource, boolean doTransfer) {
         var drainable = chemicalSource.extractChemical(resource, Action.SIMULATE);
         if (!drainable.isEmpty() && resource.equals(drainable)) {
             return tryChemicalTransfer_Internal(chemicalDestination, chemicalSource, drainable, doTransfer);
         }
-        return chemicalSource.getEmptyStack();
+
+        return ChemicalStack.EMPTY;
     }
 
-    private static <C extends Chemical<C>, S extends ChemicalStack<C>> S tryChemicalTransfer_Internal(IChemicalHandler<C, S> chemicalDestination, IChemicalHandler<C, S> chemicalSource, S drainable, boolean doTransfer) {
+    private static ChemicalStack tryChemicalTransfer_Internal(IChemicalHandler chemicalDestination, IChemicalHandler chemicalSource, ChemicalStack drainable, boolean doTransfer) {
         long fillableAmount = drainable.getAmount() - chemicalDestination.insertChemical(drainable, Action.SIMULATE).getAmount();
         if (fillableAmount > 0) {
             drainable.setAmount(fillableAmount);
@@ -118,6 +98,11 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<ChemicalCo
                 return drainable;
             }
         }
-        return chemicalSource.getEmptyStack();
+        return ChemicalStack.EMPTY;
+    }
+
+    @Override
+    protected BlockCapability<IChemicalHandler, Direction> getCapability() {
+        return MekanismModule.Capabilities.CHEMICAL;
     }
 }

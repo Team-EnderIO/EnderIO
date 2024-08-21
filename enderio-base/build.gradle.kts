@@ -22,6 +22,7 @@ sourceSets {
 }
 
 val regiliteVersion: String by project
+val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
 
 dependencies {
@@ -33,10 +34,10 @@ dependencies {
     jarJar(project(":endercore"))
 
     // JEI
-    compileOnly("mezz.jei:jei-$minecraftVersion-common-api:$jeiVersion")
-    compileOnly("mezz.jei:jei-$minecraftVersion-neoforge-api:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-common:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-neoforge:$jeiVersion")
+    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
+    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge-api:$jeiVersion")
+    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-common:$jeiVersion")
+    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge:$jeiVersion")
 }
 
 neoForge {

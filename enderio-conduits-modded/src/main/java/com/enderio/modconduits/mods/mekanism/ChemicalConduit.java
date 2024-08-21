@@ -37,8 +37,7 @@ public record ChemicalConduit(
         ).apply(builder, ChemicalConduit::new)
     );
 
-    private static final ChemicalTicker TICKER = new ChemicalTicker(MekanismModule.Capabilities.GAS, MekanismModule.Capabilities.SLURRY,
-        MekanismModule.Capabilities.INFUSION, MekanismModule.Capabilities.PIGMENT);
+    private static final ChemicalTicker TICKER = new ChemicalTicker();
 
     private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(true, true, false, false, false, true);
     private static final ConduitMenuData MULTI_MENU_DATA = new ConduitMenuData.Simple(true, true, false, true, true, true);
