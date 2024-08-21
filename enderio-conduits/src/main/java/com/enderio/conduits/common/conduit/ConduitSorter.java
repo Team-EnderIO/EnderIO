@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.conduit;
 
+import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.EnderIOConduits;
@@ -13,11 +14,13 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This class is used to sort conduit types for display.
  * This is needed, so upgrading conduits doesn't require shifting of types, but just recalculating the current connection
  */
+@SuppressWarnings("unused")
 @EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class ConduitSorter {
     private static final List<Holder<Conduit<?>>> SORTED_CONDUITS = new ArrayList<>();
@@ -37,35 +40,31 @@ public class ConduitSorter {
     private static void sortTypes(Registry<Conduit<?>> registry) {
         SORTED_CONDUITS.clear();
 
-        // TODO...
-        /*List<ResourceLocation> tieredTypes = new ArrayList<>();
-        for (ConduitType<?> value : EnderIORegistries.CONDUIT_TYPES) {
-            if (value instanceof TieredConduit<?> tiered && !tieredTypes.contains(tiered.getType())) {
-                tieredTypes.add(tiered.getType());
-            }
-        }
+        // Group like types together.
+        List<ConduitType<?>> conduitTypes = EnderIOConduitsRegistries.CONDUIT_TYPE
+            .stream()
+            .sorted(Comparator.comparing(i -> Objects.requireNonNull(EnderIOConduitsRegistries.CONDUIT_TYPE.getKey(i)).toString()))
+            .toList();
 
-        tieredTypes.sort(ResourceLocation::compareTo);
-        for (ResourceLocation tieredType : tieredTypes) {
-            List<ConduitType<?>> typesInType = new ArrayList<>();
-            for (ConduitType<?> type: EnderIORegistries.CONDUIT_TYPES) {
-                if (type instanceof TieredConduit<?> tiered && tiered.getType().equals(tieredType)) {
-                    typesInType.add(type);
+        List<Holder<Conduit<?>>> sortedConduits = new ArrayList<>();
+        for (ConduitType<?> conduitType : conduitTypes) {
+             sortedConduits.addAll(gatherConduitsForType(registry, conduitType));
+        }
+        SORTED_CONDUITS.addAll(sortedConduits);
+    }
+
+    private static <T extends Conduit<T>> List<Holder<Conduit<?>>> gatherConduitsForType(Registry<Conduit<?>> registry, ConduitType<T> conduitType) {
+        return registry.holders()
+            .filter(i -> i.value().type() == conduitType)
+            // Group by tier, then by name
+            .sorted(new Comparator<Holder<Conduit<?>>>() {
+                @Override
+                public int compare(Holder<Conduit<?>> o1, Holder<Conduit<?>> o2) {
+                     return ((T)o1.value()).compareTo((T)o2.value());
                 }
-            }
-            typesInType.sort(Comparator.comparing(EnderIORegistries.CONDUIT_TYPES::getKey));
-            SORTED_TYPES.addAll(typesInType);
-        }*/
-
-        List<Holder<Conduit<?>>> unadded = new ArrayList<>();
-        for (Holder<Conduit<?>> type : registry.holders().toList()) {
-            //if (!(type instanceof TieredConduit)) {
-            unadded.add(type);
-            //}
-        }
-
-        unadded.sort(Comparator.comparing(Holder::getRegisteredName));
-        SORTED_CONDUITS.addAll(unadded);
+            }.thenComparing(Holder::getRegisteredName))
+            .map(i -> (Holder<Conduit<?>>)i)
+            .toList();
     }
 
     public static int getSortIndex(Holder<Conduit<?>> conduit) {
