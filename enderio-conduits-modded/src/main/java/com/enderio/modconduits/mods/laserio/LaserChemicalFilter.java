@@ -1,6 +1,6 @@
 package com.enderio.modconduits.mods.laserio;
 
-import com.direwolf20.laserio.common.containers.customhandler.FilterCountHandler;
+import com.direwolf20.laserio.common.containers.customhandler.FilterBasicHandler;
 import com.direwolf20.laserio.common.items.cards.BaseCard;
 import com.direwolf20.laserio.setup.LaserIODataComponents;
 import com.enderio.base.common.capability.IFilterCapability;
@@ -52,7 +52,7 @@ public class LaserChemicalFilter implements IFilterCapability<ChemicalStack>, Ch
     @Override
     public List<ChemicalStack> getEntries() {
         List<ChemicalStack> filteredChemicals = new ArrayList();
-        FilterCountHandler filterSlotHandler = new FilterCountHandler(15, container);
+        FilterBasicHandler filterSlotHandler = new FilterBasicHandler(15, container);
 
         for(int i = 0; i < (filterSlotHandler).getSlots(); ++i) {
             ItemStack stack = filterSlotHandler.getStackInSlot(i);
