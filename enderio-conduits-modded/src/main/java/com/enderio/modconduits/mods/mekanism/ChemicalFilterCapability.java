@@ -3,7 +3,7 @@ package com.enderio.modconduits.mods.mekanism;
 import com.enderio.base.common.capability.IFilterCapability;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import mekanism.api.chemical.merged.BoxedChemicalStack;
+import mekanism.api.chemical.ChemicalStack;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.function.Supplier;
 
-public class ChemicalFilterCapability implements IFilterCapability<BoxedChemicalStack>, ChemicalFilter {
+public class ChemicalFilterCapability implements IFilterCapability<ChemicalStack>, ChemicalFilter {
 
     public static final Component EMPTY = new Component(List.of(), false);
 
@@ -54,42 +54,42 @@ public class ChemicalFilterCapability implements IFilterCapability<BoxedChemical
     }
 
     @Override
-    public List<BoxedChemicalStack> getEntries() {
+    public List<ChemicalStack> getEntries() {
         return getComponent().chemicals;
     }
 
     @Override
-    public void setEntry(int index, BoxedChemicalStack entry) {
+    public void setEntry(int index, ChemicalStack entry) {
         this.container.set(componentType, getComponent().withChemicals(index, entry));
     }
 
 
     @Override
-    public boolean test(BoxedChemicalStack boxedChemicalStack) {
-        for (BoxedChemicalStack stack : getEntries()) {
-            if (stack.getChemicalStack().getChemical() == boxedChemicalStack.getChemicalStack().getChemical()) {
+    public boolean test(ChemicalStack boxedChemicalStack) {
+        for (ChemicalStack stack : getEntries()) {
+            if (ChemicalStack.isSameChemical(stack, boxedChemicalStack)) {
                 return !isInvert();
             }
         }
         return isInvert();
     }
 
-    public record Component(List<BoxedChemicalStack> chemicals, boolean invert) {
+    public record Component(List<ChemicalStack> chemicals, boolean invert) {
         public static Codec<Component> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
             .group(Component.Slot.CODEC.sizeLimitedListOf(256).fieldOf("chemicals").xmap(Component::fromList, Component::fromChemicals).forGetter(
                     Component::chemicals),
                 Codec.BOOL.fieldOf("nbt").forGetter(Component::invert))
             .apply(componentInstance, Component::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, Component> STREAM_CODEC = StreamCodec.composite(BoxedChemicalStack.OPTIONAL_STREAM_CODEC
+        public static final StreamCodec<RegistryFriendlyByteBuf, Component> STREAM_CODEC = StreamCodec.composite(ChemicalStack.OPTIONAL_STREAM_CODEC
                 .apply(ByteBufCodecs.list(256)), Component::chemicals,
             ByteBufCodecs.BOOL, Component::invert, Component::new);
 
         public Component(int size) {
-            this(NonNullList.withSize(size, BoxedChemicalStack.EMPTY), false);
+            this(NonNullList.withSize(size, ChemicalStack.EMPTY), false);
         }
 
-        private static List<Component.Slot> fromChemicals(List<BoxedChemicalStack> chemicals) {
+        private static List<Component.Slot> fromChemicals(List<ChemicalStack> chemicals) {
             List<Component.Slot> slots = new ArrayList<>();
             for (int i = 0; i < chemicals.size(); i++) {
                 slots.add(new Component.Slot(i, chemicals.get(i)));
@@ -97,12 +97,12 @@ public class ChemicalFilterCapability implements IFilterCapability<BoxedChemical
             return slots;
         }
 
-        private static List<BoxedChemicalStack> fromList(List<Component.Slot> slots) {
+        private static List<ChemicalStack> fromList(List<Component.Slot> slots) {
             OptionalInt optionalint = slots.stream().mapToInt(Component.Slot::index).max();
             if (optionalint.isEmpty()) {
                 return List.of();
             }
-            List<BoxedChemicalStack> chemicals = NonNullList.withSize(optionalint.getAsInt() + 1, BoxedChemicalStack.EMPTY);
+            List<ChemicalStack> chemicals = NonNullList.withSize(optionalint.getAsInt() + 1, ChemicalStack.EMPTY);
             for (Component.Slot slot : slots) {
                 chemicals.set(slot.index, slot.chemical);
             }
@@ -113,8 +113,8 @@ public class ChemicalFilterCapability implements IFilterCapability<BoxedChemical
             return new Component(this.chemicals, invert);
         }
 
-        public Component withChemicals(int pSlotId, BoxedChemicalStack entry) {
-            List<BoxedChemicalStack> newChemicals = new ArrayList<>();
+        public Component withChemicals(int pSlotId, ChemicalStack entry) {
+            List<ChemicalStack> newChemicals = new ArrayList<>();
             chemicals.forEach(f -> newChemicals.add(f.copy()));
             newChemicals.set(pSlotId, entry);
             return new Component(newChemicals, invert);
@@ -144,11 +144,11 @@ public class ChemicalFilterCapability implements IFilterCapability<BoxedChemical
             return Objects.hash(chemicals.hashCode(), invert);
         }
 
-        public record Slot(int index, BoxedChemicalStack chemical) {
+        public record Slot(int index, ChemicalStack chemical) {
             public static final Codec<Component.Slot> CODEC = RecordCodecBuilder.create(
                 p_331695_ -> p_331695_.group(
                         Codec.intRange(0, 255).fieldOf("slot").forGetter(Component.Slot::index),
-                        BoxedChemicalStack.OPTIONAL_CODEC.fieldOf("fluid").forGetter(Component.Slot::chemical)
+                        ChemicalStack.OPTIONAL_CODEC.fieldOf("fluid").forGetter(Component.Slot::chemical)
                     )
                     .apply(p_331695_, Component.Slot::new)
             );

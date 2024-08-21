@@ -6,14 +6,14 @@ import com.direwolf20.laserio.setup.LaserIODataComponents;
 import com.enderio.base.common.capability.IFilterCapability;
 import com.enderio.modconduits.mods.mekanism.ChemicalFilter;
 import com.enderio.modconduits.mods.mekanism.MekanismModule;
+import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
-import mekanism.api.chemical.merged.BoxedChemicalStack;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LaserChemicalFilter implements IFilterCapability<BoxedChemicalStack>, ChemicalFilter {
+public class LaserChemicalFilter implements IFilterCapability<ChemicalStack>, ChemicalFilter {
 
     private final ItemStack container;
 
@@ -50,29 +50,20 @@ public class LaserChemicalFilter implements IFilterCapability<BoxedChemicalStack
     }
 
     @Override
-    public List<BoxedChemicalStack> getEntries() {
-        List<BoxedChemicalStack> filteredChemicals = new ArrayList();
+    public List<ChemicalStack> getEntries() {
+        List<ChemicalStack> filteredChemicals = new ArrayList();
         FilterCountHandler filterSlotHandler = new FilterCountHandler(15, container);
 
         for(int i = 0; i < (filterSlotHandler).getSlots(); ++i) {
             ItemStack stack = filterSlotHandler.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                IChemicalHandler<?,?> capability = stack.getCapability(MekanismModule.Capabilities.Item.GAS);
-                if (capability == null) {
-                    capability = stack.getCapability(MekanismModule.Capabilities.Item.SLURRY);
-                }
-                if (capability == null) {
-                    capability = stack.getCapability(MekanismModule.Capabilities.Item.INFUSION);
-                }
-                if (capability == null) {
-                    capability = stack.getCapability(MekanismModule.Capabilities.Item.PIGMENT);
-                }
+                IChemicalHandler capability = stack.getCapability(MekanismModule.Capabilities.Item.CHEMICAL);
                 if (capability != null) {
 
-                    for(int tank = 0; tank < capability.getTanks(); ++tank) {
+                    for(int tank = 0; tank < capability.getChemicalTanks(); ++tank) {
                         var chemical = capability.getChemicalInTank(tank);
                         if (!chemical.isEmpty()) {
-                            filteredChemicals.add(BoxedChemicalStack.box(chemical));
+                            filteredChemicals.add(chemical);
                         }
                     }
                 }
@@ -83,14 +74,14 @@ public class LaserChemicalFilter implements IFilterCapability<BoxedChemicalStack
     }
 
     @Override
-    public void setEntry(int index, BoxedChemicalStack entry) {
+    public void setEntry(int index, ChemicalStack entry) {
 
     }
 
     @Override
-    public boolean test(BoxedChemicalStack boxedChemicalStack) {
-        for (BoxedChemicalStack stack : getEntries()) {
-            if (stack.getChemicalStack().getChemical() == boxedChemicalStack.getChemicalStack().getChemical()) {
+    public boolean test(ChemicalStack boxedChemicalStack) {
+        for (ChemicalStack stack : getEntries()) {
+            if (ChemicalStack.isSameChemical(stack, boxedChemicalStack)) {
                 return !isInvert();
             }
         }

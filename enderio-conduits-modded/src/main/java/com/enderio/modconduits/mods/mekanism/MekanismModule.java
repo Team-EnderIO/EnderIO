@@ -1,14 +1,9 @@
 package com.enderio.modconduits.mods.mekanism;
 
 import com.enderio.EnderIOBase;
-import com.enderio.base.client.gui.screen.FluidFilterScreen;
-import com.enderio.base.common.capability.FluidFilterCapability;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
-import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.item.filter.FluidFilter;
-import com.enderio.base.common.menu.FluidFilterMenu;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitDataType;
 import com.enderio.conduits.api.ConduitType;
@@ -25,6 +20,7 @@ import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.heat.IHeatHandler;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
@@ -37,6 +33,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
@@ -90,14 +91,8 @@ public class MekanismModule implements ConduitModule {
             ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "heat_handler"), IHeatHandler.class);
 
         public static class Item {
-            public static final ItemCapability<IGasHandler, Void> GAS = ItemCapability.createVoid(
-                ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "gas_handler"), IGasHandler.class);
-            public static final ItemCapability<ISlurryHandler, Void> SLURRY = ItemCapability.createVoid(
-                ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "slurry_handler"), ISlurryHandler.class);
-            public static final ItemCapability<IInfusionHandler, Void> INFUSION = ItemCapability.createVoid(
-                ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "infusion_handler"), IInfusionHandler.class);
-            public static final ItemCapability<IPigmentHandler, Void> PIGMENT = ItemCapability.createVoid(
-                ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "pigment_handler"), IPigmentHandler.class);
+            public static final ItemCapability<IChemicalHandler, Void> CHEMICAL = ItemCapability.createVoid(
+                ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "chemical_handler"), IChemicalHandler.class);
         }
     }
 
@@ -118,6 +113,8 @@ public class MekanismModule implements ConduitModule {
 
     public static final Component LANG_MULTI_CHEMICAL_TOOLTIP = addTranslation("item", EnderIOBase.loc("conduit.chemical.multi"),
         "Allows multiple chemical types to be transported on the same line");
+
+    private static final TagKey<Item> OSMIUM = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ingots/osmium"));
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
         return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
@@ -217,5 +214,15 @@ public class MekanismModule implements ConduitModule {
             .define('I', BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "advanced_thermodynamic_conductor")))
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
             .save(mekRecipeOutput, EnderIOBase.loc("mek_advanced_thermodynamic_conductor"));
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, BASIC_CHEMICAL_FILTER)
+            .pattern(" P ")
+            .pattern("POP")
+            .pattern(" P ")
+            .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
+            .define('O', OSMIUM)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(OSMIUM)))
+            .save(mekRecipeOutput, EnderIOBase.loc("mek_chemical_filter"));
     }
 }

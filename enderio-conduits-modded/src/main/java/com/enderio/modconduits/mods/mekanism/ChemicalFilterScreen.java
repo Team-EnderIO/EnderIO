@@ -5,14 +5,13 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.mojang.blaze3d.systems.RenderSystem;
-import mekanism.api.chemical.merged.BoxedChemicalStack;
+import mekanism.api.chemical.ChemicalStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -51,16 +50,16 @@ public class ChemicalFilterScreen extends EIOScreen<ChemicalFilterMenu> {
             return;
         }
 
-        BoxedChemicalStack stack = filterCapability.getEntries().get(pSlot.index);
+        ChemicalStack stack = filterCapability.getEntries().get(pSlot.index);
 
         if (stack.isEmpty()) {
             return;
         }
         TextureAtlasSprite sprite = Minecraft.getInstance()
             .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
-            .apply(stack.getChemicalStack().getChemical().getIcon());
+            .apply(stack.getChemical().getIcon());
 
-        int color = stack.getChemicalStack().getChemicalTint();
+        int color = stack.getChemicalTint();
         RenderSystem.setShaderColor(((color >> 16) & 0xFF) / 255.0F, ((color >> 8) & 0xFF) / 255.0F,
             (color & 0xFF) / 255.0F, 1);
         RenderSystem.enableBlend();
@@ -78,7 +77,7 @@ public class ChemicalFilterScreen extends EIOScreen<ChemicalFilterMenu> {
             ItemStack itemstack = this.hoveredSlot.getItem();
             var capability = getMenu().getFilter();
             if (hoveredSlot.index < capability.getEntries().size()) {
-                BoxedChemicalStack value = capability.getEntries().get(hoveredSlot.index);
+                ChemicalStack value = capability.getEntries().get(hoveredSlot.index);
                 if (!value.isEmpty()) {
                     guiGraphics.renderTooltip(this.font, value.getTextComponent(), x, y);
                     return;

@@ -1,9 +1,8 @@
 package com.enderio.modconduits.mods.mekanism;
 
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.network.FilterUpdatePacket;
-import mekanism.api.chemical.merged.BoxedChemicalStack;
+import mekanism.api.chemical.ChemicalStack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +31,7 @@ public class ChemicalFilterMenu extends AbstractContainerMenu {
 
         capability = filterCapability;
 
-        List<BoxedChemicalStack> items = capability.getEntries();
+        List<ChemicalStack> items = capability.getEntries();
         for (int i = 0; i < items.size(); i++) {
             int pSlot = i;
             addSlot(new ChemicalFilterSlot(fluidStack -> capability.setEntry(pSlot, fluidStack) ,i ,14 + ( i % 5) * 18, 35 + 20 * ( i / 5)));
@@ -89,7 +88,7 @@ public class ChemicalFilterMenu extends AbstractContainerMenu {
     public void clicked(int pSlotId, int pButton, ClickType pClickType, Player pPlayer) {
         if (pSlotId < capability.getEntries().size() && pSlotId >= 0) {
             if (!capability.getEntries().get(pSlotId).isEmpty()) {
-                capability.setEntry(pSlotId, BoxedChemicalStack.EMPTY);
+                capability.setEntry(pSlotId, ChemicalStack.EMPTY);
             }
         }
         super.clicked(pSlotId, pButton, pClickType, pPlayer);
