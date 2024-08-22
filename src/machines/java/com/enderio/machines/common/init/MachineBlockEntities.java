@@ -1,8 +1,6 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.init.EIOBlocks;
-import com.enderio.machines.client.rendering.blockentity.ObeliskBER;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.blockentity.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.CrafterBlockEntity;

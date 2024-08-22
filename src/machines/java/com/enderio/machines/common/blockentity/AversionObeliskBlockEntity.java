@@ -6,7 +6,6 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.blockentity.base.ObeliskBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
-import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.AversionObeliskMenu;
 import com.enderio.machines.common.obelisk.AversionObeliskManager;

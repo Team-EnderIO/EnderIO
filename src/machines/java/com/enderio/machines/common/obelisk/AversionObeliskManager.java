@@ -1,14 +1,11 @@
 package com.enderio.machines.common.obelisk;
 
 import com.enderio.EnderIO;
-import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.blockentity.AversionObeliskBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
