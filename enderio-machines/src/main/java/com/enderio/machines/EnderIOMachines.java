@@ -4,6 +4,7 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.api.integration.IntegrationManager;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.config.MachinesConfigLang;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineBlocks;
@@ -74,6 +75,7 @@ public class EnderIOMachines {
         MachineAttachments.register(modEventBus);
 
         MachineLang.register();
+        MachinesConfigLang.register();
         MachineEnumLang.register();
         MachineTags.register();
 
