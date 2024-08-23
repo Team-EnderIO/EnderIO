@@ -133,7 +133,9 @@ public class FireCraftingHandler {
                 level.addFreshEntity(itemEntity);
 
                 // Play explosion sound
-                level.playSound(null, pos, SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, SoundSource.BLOCKS, 1.0f, RANDOM.nextFloat() * 0.4f + 0.8f);
+                if (BaseConfig.COMMON.INFINITY.MAKES_SOUND.get()) {
+                    level.playSound(null, pos, SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, SoundSource.BLOCKS, 1.0f, RANDOM.nextFloat() * 0.4f + 0.8f);
+                }
 
                 // Replace the base (if applicable)
                 if (recipe.blockAfterBurning().isPresent()) {
