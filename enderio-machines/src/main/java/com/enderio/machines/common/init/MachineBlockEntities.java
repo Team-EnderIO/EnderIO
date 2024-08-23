@@ -2,7 +2,6 @@ package com.enderio.machines.common.init;
 
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.init.EIOItems;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
@@ -57,7 +56,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class MachineBlockEntities {
-    private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIOMachines.REGILTIE.blockEntityRegistry();
+    private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIOMachines.REGILITE.blockEntityRegistry();
 
     public static final RegiliteBlockEntity<FluidTankBlockEntity.Standard> FLUID_TANK =
         register("fluid_tank", FluidTankBlockEntity.Standard::new, MachineBlocks.FLUID_TANK)
