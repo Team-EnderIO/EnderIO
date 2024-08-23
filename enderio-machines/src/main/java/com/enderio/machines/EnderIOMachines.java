@@ -58,7 +58,7 @@ public class EnderIOMachines {
     public static final String MODULE_MOD_ID = "enderio_machines";
     public static final String REGISTRY_NAMESPACE = EnderIOBase.REGISTRY_NAMESPACE;
 
-    public static Regilite REGILTIE = new Regilite(EnderIOBase.REGISTRY_NAMESPACE);
+    public static Regilite REGILITE = new Regilite(EnderIOBase.REGISTRY_NAMESPACE);
 
     public EnderIOMachines(IEventBus modEventBus, ModContainer modContainer) {
         // Register machine config
@@ -77,7 +77,7 @@ public class EnderIOMachines {
         MachineEnumLang.register();
         MachineTags.register();
 
-        REGILTIE.register(modEventBus);
+        REGILITE.register(modEventBus);
 
         IntegrationManager.addIntegration(EnderIOMachinesSelfIntegration.INSTANCE);
     }
