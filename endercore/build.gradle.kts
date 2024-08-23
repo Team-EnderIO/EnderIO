@@ -10,10 +10,14 @@ apply(from = rootProject.file("buildSrc/shared.gradle.kts"))
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 
 val regiliteVersion: String by project
+val almostunifiedVersion: String by project
 
 dependencies {
     // Regilite
     implementation("com.enderio:Regilite:${regiliteVersion}")
+
+    // Almost Unified
+    compileOnly("com.almostreliable.mods:almostunified-neoforge:1.21.1-${almostunifiedVersion}:api")
 
     // TODO: How to apply plugin.
     compileOnly(project(":ensure_plugin"))
