@@ -5,7 +5,7 @@
       "modid": "ae2"
     }
   ],
-  "type": "enderio:ae2",
+  "type": "enderio:me",
   "description": {
     "translate": "item.enderio.conduit.dense_me"
   },

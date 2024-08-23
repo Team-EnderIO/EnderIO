@@ -26,6 +26,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.BiConsumer;
@@ -40,8 +41,8 @@ public class AE2ConduitsModule implements ConduitModule {
     public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister.create(EnderIOConduitsRegistries.CONDUIT_TYPE, ModdedConduits.REGISTRY_NAMESPACE);
     public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister.create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, ModdedConduits.REGISTRY_NAMESPACE);
 
-    public static final Supplier<ConduitType<MEConduit>> AE2_CONDUIT = CONDUIT_TYPES
-        .register("ae2", () -> ConduitType.builder(MEConduit.CODEC)
+    public static final DeferredHolder<ConduitType<?>, ConduitType<MEConduit>> AE2_CONDUIT = CONDUIT_TYPES
+        .register("me", () -> ConduitType.builder(MEConduit.CODEC)
             .exposeCapability(AECapabilities.IN_WORLD_GRID_NODE_HOST).build());
 
     public static ResourceKey<Conduit<?>> NORMAL = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIOBase.loc("me"));
@@ -61,6 +62,11 @@ public class AE2ConduitsModule implements ConduitModule {
     private static final TagKey<Item> COVERED_DENSE_CABLE = ItemTags.create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_dense_cable"));
     private static final TagKey<Item> COVERED_CABLE = ItemTags.create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_cable"));
     private static final TagKey<Item> GLASS_CABLE = ItemTags.create(ResourceLocation.fromNamespaceAndPath("ae2", "glass_cable"));
+
+    static {
+        // TODO: Ender IO 8 - remove backward compatibility.
+        CONDUIT_TYPES.addAlias(EnderIOBase.loc("ae2"), AE2_CONDUIT.getId());
+    }
 
     @Override
     public void register(IEventBus modEventBus) {
