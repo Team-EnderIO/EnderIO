@@ -51,8 +51,6 @@ public class AversionObeliskScreen extends MachineScreen<AversionObeliskMenu> {
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 2*16, topPos + 2 + 16*2 + 8, 8, 8, 8, 8, 16, BUTTONS, (b) -> menu.getBlockEntity().decreaseRange()));
 
         addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
-
-        addRenderableWidget(new MessageWidget(this, List.of(MachineLang.TOOLTIP_WIP), leftPos + 39, topPos + 59, 18, 18));
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.api.filter.EntityFilter;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.blockentity.base.ObeliskBlockEntity;
@@ -65,7 +66,7 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity {
     @Override
     public @Nullable MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot((integer, itemStack) -> itemStack.getCapability(EIOCapabilities.ENTITY_STORAGE).isPresent())
+            .inputSlot((integer, itemStack) -> itemStack.getCapability(EIOCapabilities.FILTER).orElse(null) instanceof EntityFilter)
             .slotAccess(FILTER)
             .capacitor()
             .build();
@@ -92,22 +93,12 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity {
             return false;
         }
 
-        // The part below has been disabled because there is no "Entity Filter" item in Ender IO 1.20.1
-        // TODO Implement Entity Filter and enable/tune the part below.
-        /*FILTER.getItemStack(this).getCapability(EIOCapabilities.ENTITY_STORAGE)
-            .ifPresent(capability -> {
-                capability.getStoredEntityData().getEntityType()
-                    .ifPresentOrElse(entityType -> {
-                        if (!entityType.equals(event.getEntity().getType())) {
-                            tryToAvertSpawning(event);
-                        }
-                    }, () -> tryToAvertSpawning(event));
-            });*/
+        if (FILTER.getItemStack(this).getCapability(EIOCapabilities.FILTER).orElse(null) instanceof EntityFilter entityFilter) {
+            if (entityFilter.test(event.getEntity())) { // This check was the exact opposite in 1.21, but it has to be a logic error since whitelisted entities SHOULD spawn.
+                return false;
+            }
+        }
 
-        return tryToAvertSpawning(event);
-    }
-
-    private boolean tryToAvertSpawning(MobSpawnEvent.FinalizeSpawn event) {
         if (isActive() && getAABB().contains(event.getX(), event.getY(), event.getZ())) {
             int cost = ENERGY_USAGE.base().get(); //TODO scale on entity and range? The issue is that it needs the energy "now" and can't wait for it like other machines
             int energy = getEnergyStorage().consumeEnergy(cost, true);
