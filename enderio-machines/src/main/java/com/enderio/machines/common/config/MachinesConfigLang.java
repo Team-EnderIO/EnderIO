@@ -37,12 +37,12 @@ public class MachinesConfigLang {
         addTranslation("pulsating", "Pulsating");
         addTranslation("vibrant", "Vibrant");
 
-        addTranslation("capacitor_bank_capacity", "Capacitor Bank Capacity");
+        addTranslation("capacitorBankCapacity", "Capacitor Bank Capacity");
         addTranslation("basic", "Basic");
         addTranslation("advanced", "Advanced");
 
         addTranslation("wiredCharger", "Wired Charger");
-        addTranslation("soul_engine", "Soul Engine");
+        addTranslation("soulEngine", "Soul Engine");
         addTranslation("drain", "Drain");
         addTranslation("inhibitor", "Inhibitor Obelisk");
         addTranslation("aversion", "Aversion Obelisk");
@@ -55,7 +55,7 @@ public class MachinesConfigLang {
         addTranslation("baseLevelCost", "Base Level Cost");
 
         // Powered Spawner
-        addTranslation("spawn_amount", "Spawn Amount");
+        addTranslation("spawnAmount", "Spawn Amount");
         addTranslation("maxEntities", "Max Entities");
         addTranslation("spawnType", "Spawn Type");
         addTranslation("maxSpawners", "Max Spawners");
