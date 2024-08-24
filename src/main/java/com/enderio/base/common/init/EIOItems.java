@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
+import com.enderio.base.common.item.filter.EntityFilter;
 import com.enderio.base.common.item.filter.FluidFilter;
 import com.enderio.base.common.item.filter.ItemFilter;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
@@ -358,6 +359,12 @@ public class EIOItems {
 
     public static final ItemEntry<FluidFilter> BASIC_FLUID_FILTER = REGISTRATE
         .item("basic_fluid_filter", props -> new FluidFilter(props, 10))
+        .tab(EIOCreativeTabs.GEAR)
+        .register();
+
+    public static final ItemEntry<EntityFilter> ENTITY_FILTER = REGISTRATE
+        .item("entity_filter", props -> new EntityFilter(props, 5))
+        .lang("Soul Filter")
         .tab(EIOCreativeTabs.GEAR)
         .register();
 

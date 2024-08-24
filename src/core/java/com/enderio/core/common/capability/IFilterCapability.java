@@ -3,7 +3,7 @@ package com.enderio.core.common.capability;
 import java.util.List;
 import java.util.function.Predicate;
 
-public interface IFilterCapability<T> extends Predicate<T> {
+public interface IFilterCapability<T> {
 
     void setNbt(Boolean nbt);
 

@@ -48,5 +48,14 @@ public class FilterRecipeProvider extends RecipeProvider {
             .pattern(" P ")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BUCKET))
             .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.ENTITY_FILTER.get())
+            .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
+            .define('S', EIOItems.EMPTY_SOUL_VIAL)
+            .pattern(" P ")
+            .pattern("PSP")
+            .pattern(" P ")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.EMPTY_SOUL_VIAL))
+            .save(consumer);
     }
 }
