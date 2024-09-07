@@ -93,7 +93,7 @@ public class FluidFilterMenu extends AbstractContainerMenu {
 
     @Override
     public void clicked(int pSlotId, int pButton, ClickType pClickType, Player pPlayer) {
-        if (pSlotId < capability.getEntries().size()) {
+        if (pSlotId >= 0 && pSlotId < capability.getEntries().size()) {
             if (!capability.getEntries().get(pSlotId).isEmpty()) {
                 capability.setEntry(pSlotId, FluidStack.EMPTY);
             }
