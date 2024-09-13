@@ -1,5 +1,8 @@
+import com.hypherionmc.modpublisher.properties.ModLoader
+
 plugins {
     id("net.neoforged.moddev")
+    id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
 val minecraftVersion: String by project
@@ -180,4 +183,65 @@ publishing {
             }
         }
     }
+}
+
+val curseforge_projectId: String by project
+val modrinth_projectId: String by project
+
+if (getReleaseType() != null) {
+    if (System.getenv("CHANGELOG") != null) {
+        publisher {
+
+            apiKeys {
+                curseforge(System.getenv("CURSEFORGE_TOKEN"))
+                modrinth(System.getenv("MODRINTH_TOKEN"))
+            }
+
+            debug.set(System.getenv("PUBLISH") != "true")
+
+            curseID.set(curseforge_projectId)
+            modrinthID.set(modrinth_projectId)
+
+            versionType.set(getReleaseType())
+            projectVersion.set("$project.version")
+
+            displayName.set("Ender IO - $project.version")
+            changelog.set(System.getenv("CHANGELOG"))
+
+            setGameVersions("1.21", "1.21.1")
+            setLoaders(ModLoader.NEOFORGE)
+
+            curseEnvironment.set("both")
+            artifact.set(tasks.jar)
+
+            setJavaVersions(JavaVersion.VERSION_21)
+
+            curseDepends {
+                optional("jei", /*"patchouli",*/ "athena", "applied-energistics-2", "mekanism", "cc-tweaked")
+            }
+
+            modrinthDepends {
+                optional("jei", "athena-ctm", "ae2", "mekanism", "cc-tweaked")
+            }
+        }
+    } else {
+        println("Release disabled, no changelog found in environment");
+    }
+}
+
+fun getReleaseType(): String? {
+    // If we"re doing a proper build
+    if (System.getenv("BUILD_VERSION") != null) {
+        val version_string = System.getenv("BUILD_VERSION")
+
+        if (version_string.lowercase().contains("alpha")) {
+            return "alpha"
+        } else if (version_string.lowercase().contains("beta")) {
+            return "beta"
+        }
+
+        return "release"
+    }
+
+    return "dev"
 }
