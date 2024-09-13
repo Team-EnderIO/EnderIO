@@ -22,7 +22,7 @@ jobs:
         id: mc_version
         with:
           file: gradle.properties
-          property: minecraft_version
+          property: minecraftVersion
 
       - name: Set up JDK
         uses: actions/setup-java@v4
