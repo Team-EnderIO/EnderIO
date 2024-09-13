@@ -203,9 +203,9 @@ if (getReleaseType() != null) {
             modrinthID.set(modrinth_projectId)
 
             versionType.set(getReleaseType())
-            projectVersion.set("$project.version")
+            projectVersion.set("${project.version}")
 
-            displayName.set("Ender IO - $project.version")
+            displayName.set("Ender IO - ${project.version}")
             changelog.set(System.getenv("CHANGELOG"))
 
             setGameVersions("1.21", "1.21.1")
