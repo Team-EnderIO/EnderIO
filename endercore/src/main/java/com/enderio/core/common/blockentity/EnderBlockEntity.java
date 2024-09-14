@@ -11,7 +11,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -42,7 +41,7 @@ public class EnderBlockEntity extends BlockEntity {
     public static final String INDEX = "Index";
     private final List<NetworkDataSlot<?>> dataSlots = new ArrayList<>();
     private final List<Runnable> afterDataSync = new ArrayList<>();
-    private boolean changed = true;
+    private boolean isChangedDeferred = true;
 
     private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> selfCapabilities = new HashMap<>();
     private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> neighbourCapabilities = new HashMap<>();
@@ -89,15 +88,15 @@ public class EnderBlockEntity extends BlockEntity {
         if (this.level == null) {
             return;
         }
-        if (changed) {
-            changed = false;
+        if (isChangedDeferred) {
+            isChangedDeferred = false;
             setChanged(level, getBlockPos(), getBlockState());
         }
     }
 
     @Override
     public void setChanged() {
-        this.changed = true;
+        this.isChangedDeferred = true;
     }
 
     // endregion

@@ -78,7 +78,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
-    private boolean redstoneBlocked;
+    private boolean isRedstoneBlocked;
 
     // region Common Dataslots
 
@@ -275,7 +275,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     public boolean isRedstoneBlocked() {
-        return redstoneBlocked;
+        return isRedstoneBlocked;
     }
 
     public RedstoneControl getRedstoneControl() {
@@ -377,7 +377,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             return false;
         }
 
-        return !redstoneBlocked;
+        return !isRedstoneBlocked;
     }
 
     public boolean canActSlow() {
@@ -591,7 +591,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (supportsRedstoneControl()) {
             boolean active = getRedstoneControl().isActive(this.level.hasNeighborSignal(worldPosition));
             updateMachineState(MachineState.REDSTONE, !active);
-            this.redstoneBlocked = !active;
+            this.isRedstoneBlocked = !active;
         }
     }
 }
