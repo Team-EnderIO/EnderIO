@@ -10,8 +10,10 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
@@ -141,7 +143,18 @@ public class ChemicalFilterCapability implements IFilterCapability<ChemicalStack
 
         @Override
         public int hashCode() {
-            return Objects.hash(chemicals.hashCode(), invert);
+            return Objects.hash(hashStackList(chemicals), invert);
+        }
+
+        public static int hashStackList(List<ChemicalStack> list) {
+            int i = 0;
+
+            ChemicalStack stack;
+            for(Iterator<ChemicalStack> var2 = list.iterator(); var2.hasNext(); i = i * 31 + stack.hashCode()) {
+                stack = var2.next();
+            }
+
+            return i;
         }
 
         public record Slot(int index, ChemicalStack chemical) {

@@ -12,11 +12,11 @@ import java.util.function.Consumer;
 
 public class FluidFilterSlot extends Slot {
 
-    private static Container emptyInventory = new SimpleContainer(0);
+    private static Container EMPTY_INVENTORY = new SimpleContainer(0);
     private final Consumer<FluidStack> consumer;
 
     public FluidFilterSlot(Consumer<FluidStack> consumer, int pSlot, int pX, int pY) {
-        super(emptyInventory, pSlot, pX, pY);
+        super(EMPTY_INVENTORY, pSlot, pX, pY);
         this.consumer = consumer;
     }
 

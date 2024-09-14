@@ -13,6 +13,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
@@ -147,7 +148,18 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack>, Flu
 
         @Override
         public int hashCode() {
-            return Objects.hash(fluids.hashCode(), nbt, invert);
+            return Objects.hash(hashStackList(fluids), nbt, invert);
+        }
+
+        public static int hashStackList(List<FluidStack> list) {
+            int i = 0;
+
+            FluidStack stack;
+            for(Iterator<FluidStack> var2 = list.iterator(); var2.hasNext(); i = i * 31 + FluidStack.hashFluidAndComponents(stack)) {
+                stack = var2.next();
+            }
+
+            return i;
         }
 
         public record Slot(int index, FluidStack fluid) {
