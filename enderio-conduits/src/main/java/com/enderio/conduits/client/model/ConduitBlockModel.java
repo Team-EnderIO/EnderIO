@@ -280,6 +280,15 @@ public class ConduitBlockModel implements IDynamicBakedModel {
     }
 
     @Override
+    public TextureAtlasSprite getParticleIcon(ModelData data) {
+        ConduitBundle conduitBundle = data.get(ConduitBundleBlockEntity.BUNDLE_MODEL_PROPERTY); //TODO temp particle fix
+        if (conduitBundle == null) {
+            return ModelHelper.getMissingTexture();
+        }
+        return sprite(conduitBundle, conduitBundle.getConduits().getFirst());
+    }
+
+    @Override
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
     }

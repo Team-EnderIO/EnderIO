@@ -12,6 +12,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -23,38 +24,36 @@ public class FluidConduitData implements ConduitData<FluidConduitData> {
         instance -> instance.group(
             Codec.BOOL.fieldOf("should_reset").forGetter(i -> i.shouldReset),
             BuiltInRegistries.FLUID.byNameCodec()
-                .optionalFieldOf("locked_fluid")
-                .forGetter(i -> Optional.ofNullable(i.lockedFluid))
+                .optionalFieldOf("locked_fluid", Fluids.EMPTY)
+                .forGetter(i -> i.lockedFluid)
         ).apply(instance, FluidConduitData::new)
     );
 
     public static StreamCodec<RegistryFriendlyByteBuf, FluidConduitData> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.BOOL,
         i -> i.shouldReset,
-        ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.FLUID)),
-        i -> Optional.ofNullable(i.lockedFluid),
+        ByteBufCodecs.registry(Registries.FLUID),
+        i -> i.lockedFluid,
         FluidConduitData::new
     );
 
-    @Nullable
-    private Fluid lockedFluid = null;
+    private Fluid lockedFluid = Fluids.EMPTY;
     private boolean shouldReset = false;
 
     public FluidConduitData() {
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public FluidConduitData(boolean shouldReset, Optional<Fluid> fluid) {
+    public FluidConduitData(boolean shouldReset, Fluid fluid) {
         this.shouldReset = shouldReset;
-        this.lockedFluid = fluid.orElse(null);
+        this.lockedFluid = fluid;
     }
 
-    @Nullable
     public Fluid lockedFluid() {
         return lockedFluid;
     }
 
-    public void setLockedFluid(@Nullable Fluid lockedFluid) {
+    public void setLockedFluid(Fluid lockedFluid) {
         this.lockedFluid = lockedFluid;
     }
 
@@ -77,7 +76,7 @@ public class FluidConduitData implements ConduitData<FluidConduitData> {
 
     @Override
     public FluidConduitData deepCopy() {
-        return new FluidConduitData(shouldReset, Optional.ofNullable(lockedFluid));
+        return new FluidConduitData(shouldReset, lockedFluid);
     }
 
     @Override

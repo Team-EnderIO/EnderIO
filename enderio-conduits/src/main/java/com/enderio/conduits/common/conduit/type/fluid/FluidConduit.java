@@ -43,7 +43,8 @@ public record FluidConduit(
             ).apply(builder, FluidConduit::new)
     );
 
-    public static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, true, false, false, true);
+    public static final ConduitMenuData NORMAL_MENU_DATA = new ConduitMenuData.Simple(true, true, true, false, false, true);
+    public static final ConduitMenuData ADVANCED_MENU_DATA = new ConduitMenuData.Simple(true, true, true, true, true, true);
     private static final FluidConduitTicker TICKER = new FluidConduitTicker();
 
     @Override
@@ -58,7 +59,7 @@ public record FluidConduit(
 
     @Override
     public ConduitMenuData getMenuData() {
-        return MENU_DATA;
+        return isMultiFluid ? ADVANCED_MENU_DATA : NORMAL_MENU_DATA;
     }
 
     @Override
@@ -72,7 +73,7 @@ public record FluidConduit(
             return false;
         }
 
-        return compareTo(otherFluidConduit) > 0;
+        return compareTo(otherFluidConduit) < 0;
     }
 
     @Override

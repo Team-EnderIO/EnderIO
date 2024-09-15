@@ -43,11 +43,11 @@ public class Conduits {
             ConduitLang.REDSTONE_CONDUIT));
 
         context.register(FLUID,
-            new FluidConduit(EnderIOBase.loc("block/conduit/fluid"), ConduitLang.FLUID_CONDUIT, 50, false));
+            new FluidConduit(EnderIOBase.loc("block/conduit/fluid"), ConduitLang.FLUID_CONDUIT, 100, false));
         context.register(PRESSURIZED_FLUID,
-            new FluidConduit(EnderIOBase.loc("block/conduit/pressurized_fluid"), ConduitLang.PRESSURIZED_FLUID_CONDUIT, 100, false));
+            new FluidConduit(EnderIOBase.loc("block/conduit/pressurized_fluid"), ConduitLang.PRESSURIZED_FLUID_CONDUIT, 1_000, false));
         context.register(ENDER_FLUID,
-            new FluidConduit(EnderIOBase.loc("block/conduit/ender_fluid"), ConduitLang.ENDER_FLUID_CONDUIT, 200, true));
+            new FluidConduit(EnderIOBase.loc("block/conduit/ender_fluid"), ConduitLang.ENDER_FLUID_CONDUIT, 10_000, true));
 
         context.register(ITEM, new ItemConduit(EnderIOBase.loc("block/conduit/item"), ConduitLang.ITEM_CONDUIT));
     }

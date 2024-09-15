@@ -23,6 +23,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import org.joml.Vector2i;
 
@@ -36,6 +37,9 @@ public final class FluidConduitScreenExtension implements ConduitScreenExtension
     @Override
     public List<AbstractWidget> createWidgets(Screen screen, ConduitDataAccessor conduitDataAccessor, UpdateDispatcher updateConduitData,
         Supplier<Direction> direction, Vector2i widgetsStart) {
+        if (conduitDataAccessor.getOrCreateData(ConduitTypes.Data.FLUID.get()).lockedFluid().isSame(Fluids.EMPTY)) {
+            return List.of();
+        }
         return List.of(
             new FluidWidget(widgetsStart.add(0, 20),
                 () -> conduitDataAccessor.getOrCreateData(ConduitTypes.Data.FLUID.get()).lockedFluid(),

@@ -19,6 +19,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
 import net.neoforged.neoforge.client.model.data.ModelData;
@@ -39,7 +40,7 @@ public class FluidConduitCoreModelModifier implements ConduitCoreModelModifier {
 
         FluidConduitData data = node.getData(ConduitTypes.Data.FLUID.get());
 
-        if (data != null && data.lockedFluid() != null) {
+        if (data != null && !data.lockedFluid().isSame(Fluids.EMPTY)) {
             return new FluidPaintQuadTransformer(data.lockedFluid())
                 .process(Minecraft.getInstance().getModelManager().getModel(FLUID_MODEL)
                     .getQuads(Blocks.COBBLESTONE.defaultBlockState(), facing, rand, ModelData.EMPTY, type));

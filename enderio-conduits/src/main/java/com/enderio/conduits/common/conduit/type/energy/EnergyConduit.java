@@ -76,7 +76,7 @@ public record EnergyConduit(
             return false;
         }
 
-        return compareTo(otherEnergyConduit) > 0;
+        return compareTo(otherEnergyConduit) < 0;
     }
 
     @Override
