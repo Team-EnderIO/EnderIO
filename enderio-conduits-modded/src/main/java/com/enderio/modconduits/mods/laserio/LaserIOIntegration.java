@@ -3,6 +3,8 @@ package com.enderio.modconduits.mods.laserio;
 import com.direwolf20.laserio.setup.Registration;
 import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.api.integration.Integration;
+import com.enderio.base.api.integration.IntegrationManager;
+import com.enderio.base.api.integration.IntegrationWrapper;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.modconduits.ModdedConduits;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +21,8 @@ public class LaserIOIntegration implements Integration {
 
     public static ICapabilityProvider<ItemStack, Void, ResourceFilter> FLUID_FILTER_PROVIDER =
         (stack, v) -> new LaserFluidFilter(stack);
+
+    public static final IntegrationWrapper<MekansimIntegration> MEK_LASER_IO_INTEGRATION = IntegrationManager.wrapper("mekanism", () -> MekansimIntegration::new, ModdedConduits.modEventBus);
 
     @Override
     public void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {

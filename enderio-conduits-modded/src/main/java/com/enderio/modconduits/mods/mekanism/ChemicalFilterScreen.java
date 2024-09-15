@@ -1,39 +1,31 @@
-package com.enderio.base.client.gui.screen;
+package com.enderio.modconduits.mods.mekanism;
 
 import com.enderio.EnderIOBase;
-import com.enderio.base.api.attachment.StoredEntityData;
-import com.enderio.base.common.capability.EntityFilterCapability;
-import com.enderio.base.common.capability.FluidFilterCapability;
-import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.menu.FluidFilterMenu;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.mojang.blaze3d.systems.RenderSystem;
+import mekanism.api.chemical.ChemicalStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.NotImplementedException;
 import org.joml.Vector2i;
 
-public class FluidFilterScreen extends EIOScreen<FluidFilterMenu> {
+public class ChemicalFilterScreen extends EIOScreen<ChemicalFilterMenu> {
 
     private static final Vector2i BG_SIZE = new Vector2i(183,201);
     private static ResourceLocation BG_TEXTURE = EnderIOBase.loc("textures/gui/40/item_filter.png");
     private static final ResourceLocation BLACKLIST_TEXTURE = EnderIOBase.loc("textures/gui/icons/blacklist.png");
     private static final ResourceLocation NBT_TEXTURE = EnderIOBase.loc("textures/gui/icons/range_buttons.png");
 
-    public FluidFilterScreen(FluidFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public ChemicalFilterScreen(ChemicalFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         BG_TEXTURE = switch (pMenu.getFilter().getEntries().size()) {
             case 5 -> EnderIOBase.loc("textures/gui/40/basic_item_filter.png");
@@ -46,38 +38,36 @@ public class FluidFilterScreen extends EIOScreen<FluidFilterMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36, 16, 16, 0, 0, 16, 0, NBT_TEXTURE, getMenu().getFilter()::isNbt, getMenu()::setNbt, () -> getMenu().getFilter().isNbt() ? EIOLang.NBT_FILTER : EIOLang.NO_NBT_FILTER));
         addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36 + 20, 16, 16, 0, 0, 16, 0, BLACKLIST_TEXTURE, getMenu().getFilter()::isInvert, getMenu()::setInverted, () -> getMenu().getFilter().isInvert() ? EIOLang.BLACKLIST_FILTER : EIOLang.WHITELIST_FILTER));
-
     }
 
     @Override
     public void renderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
-        FluidFilterCapability filterCapability = getMenu().getFilter();
+        ChemicalFilterCapability filterCapability = getMenu().getFilter();
         if (pSlot.index >= filterCapability.getEntries().size()) {
             super.renderSlot(pGuiGraphics, pSlot);
             return;
         }
-        FluidStack fluidStack = filterCapability.getEntries().get(pSlot.index);
-        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-        ResourceLocation still = props.getStillTexture(fluidStack);
-        if (still != null) {
-            AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
-            if (texture instanceof TextureAtlas atlas) {
-                TextureAtlasSprite sprite = atlas.getSprite(still);
 
-                int color = props.getTintColor();
-                RenderSystem.setShaderColor(FastColor.ARGB32.red(color) / 255.0F, FastColor.ARGB32.green(color) / 255.0F,
-                    FastColor.ARGB32.blue(color) / 255.0F, FastColor.ARGB32.alpha(color) / 255.0F);
-                RenderSystem.enableBlend();
+        ChemicalStack stack = filterCapability.getEntries().get(pSlot.index);
 
-                int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
-                int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-                pGuiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, pSlot.x, pSlot.y, 16, 16, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(),
-                    atlasWidth, atlasHeight);
-                RenderSystem.setShaderColor(1, 1, 1, 1);
-            }
+        if (stack.isEmpty()) {
+            return;
         }
+        TextureAtlasSprite sprite = Minecraft.getInstance()
+            .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
+            .apply(stack.getChemical().getIcon());
+
+        int color = stack.getChemicalTint();
+        RenderSystem.setShaderColor(((color >> 16) & 0xFF) / 255.0F, ((color >> 8) & 0xFF) / 255.0F,
+            (color & 0xFF) / 255.0F, 1);
+        RenderSystem.enableBlend();
+
+        int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
+        int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
+        pGuiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, pSlot.x, pSlot.y, 16, 16, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(),
+            atlasWidth, atlasHeight);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 
     @Override
@@ -86,9 +76,9 @@ public class FluidFilterScreen extends EIOScreen<FluidFilterMenu> {
             ItemStack itemstack = this.hoveredSlot.getItem();
             var capability = getMenu().getFilter();
             if (hoveredSlot.index < capability.getEntries().size()) {
-                FluidStack value = capability.getEntries().get(hoveredSlot.index);
+                ChemicalStack value = capability.getEntries().get(hoveredSlot.index);
                 if (!value.isEmpty()) {
-                    guiGraphics.renderTooltip(this.font, value.getHoverName(), x, y);
+                    guiGraphics.renderTooltip(this.font, value.getTextComponent(), x, y);
                     return;
                 }
             }

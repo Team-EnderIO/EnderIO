@@ -15,10 +15,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.function.Supplier;
 
@@ -148,6 +151,37 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
             entities.forEach(f -> newEntities.add(new StoredEntityData(f.entityTag(), f.maxHealth())));
             newEntities.set(pSlotId, entry);
             return new Component(newEntities, nbt, invert);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+            Component component = (Component) o;
+            for (int i = 0; i < entities.size(); i++) {
+                if (!entities.get(i).equals(component.entities.get(i))) {
+                    return false;
+                }
+            }
+            return nbt == component.nbt && invert == component.invert;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(hashList(entities), nbt, invert);
+        }
+
+        public static int hashList(List<StoredEntityData> list) {
+            int i = 0;
+
+            StoredEntityData stack;
+            for(Iterator<StoredEntityData> var2 = list.iterator(); var2.hasNext(); i = i * 31 + stack.hashCode()) {
+                stack = var2.next();
+            }
+
+            return i;
         }
 
         public record Slot(int index, StoredEntityData entity) {

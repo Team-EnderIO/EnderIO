@@ -25,12 +25,13 @@ public class ChemicalTicker extends CapabilityAwareConduitTicker<ChemicalConduit
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (var extract : extracts) {
-            tickExtractCapability(conduit, extract.capability(), extract.node(), inserts);
+            tickExtractCapability(conduit, extract, inserts);
         }
     }
 
-    private void tickExtractCapability(ChemicalConduit conduit, IChemicalHandler extractHandler,
-        ConduitNode node, List<CapabilityConnection> insertCaps) {
+    private void tickExtractCapability(ChemicalConduit conduit, CapabilityConnection extract, List<CapabilityConnection> insertCaps) {
+        IChemicalHandler extractHandler = extract.capability();
+        ConduitNode node = extract.node();
 
         ChemicalConduitData data = node.getOrCreateData(MekanismModule.CHEMICAL_DATA_TYPE.get());
 
@@ -48,9 +49,19 @@ public class ChemicalTicker extends CapabilityAwareConduitTicker<ChemicalConduit
         if (result.isEmpty()) {
             return;
         }
+        if (extract.extractFilter() instanceof ChemicalFilter filter) {
+            if (!filter.test(result)) {
+                return;
+            }
+        }
 
         long transferred = 0;
         for (var insert : insertCaps) {
+            if (insert.insertFilter() instanceof ChemicalFilter filter) {
+                if (!filter.test(result)) {
+                    continue;
+                }
+            }
             IChemicalHandler destinationHandler = insert.capability();
             ChemicalStack transferredChemical;
             if (!data.lockedChemical.isEmpty()) {

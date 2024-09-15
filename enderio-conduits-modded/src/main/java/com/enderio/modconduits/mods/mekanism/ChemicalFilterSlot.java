@@ -1,21 +1,20 @@
-package com.enderio.base.common.menu;
+package com.enderio.modconduits.mods.mekanism;
 
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.IChemicalHandler;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.function.Consumer;
 
-public class FluidFilterSlot extends Slot {
+public class ChemicalFilterSlot extends Slot {
 
-    private static Container EMPTY_INVENTORY = new SimpleContainer(0);
-    private final Consumer<FluidStack> consumer;
+    private static final Container EMPTY_INVENTORY = new SimpleContainer(0);
+    private final Consumer<ChemicalStack> consumer;
 
-    public FluidFilterSlot(Consumer<FluidStack> consumer, int pSlot, int pX, int pY) {
+    public ChemicalFilterSlot(Consumer<ChemicalStack> consumer, int pSlot, int pX, int pY) {
         super(EMPTY_INVENTORY, pSlot, pX, pY);
         this.consumer = consumer;
     }
@@ -49,9 +48,9 @@ public class FluidFilterSlot extends Slot {
     @Override
     public ItemStack safeInsert(ItemStack stack, int amount) {
         // If this stack is valid, set the inventory slot value.
-        IFluidHandlerItem capability = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        IChemicalHandler capability = stack.getCapability(MekanismModule.Capabilities.Item.CHEMICAL);
         if (!stack.isEmpty() && mayPlace(stack) && capability != null) {
-            FluidStack ghost = capability.getFluidInTank(0).copy();
+            var ghost = capability.getChemicalInTank(0).copy();
             consumer.accept(ghost);
         }
 
