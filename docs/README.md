@@ -73,8 +73,8 @@ The Ender IO Team are official Akliz partners! Akliz provides high-performance g
 ### Supported Minecraft Versions
 
 | Minecraft Version | Ender IO Version(s) | Support Status |
-| ----------------- | ------------------- | -------------- |
-| 1.21              | 7.x                 | 🚧             |
+|-------------------| ------------------- | -------------- |
+| 1.21.1            | 7.x                 | ✅             |
 | 1.20.1            | 6.x                 | ✳️             |
 | < 1.20.1          | < 6.x               | ❌             |
 
@@ -102,10 +102,10 @@ repositories {
 
 dependencies {
     // Include Ender IO API for compilation
-    compileOnly fg.deobf("com.enderio:EnderIO:<VERSION>:api")
+    compileOnly fg.deobf("com.enderio:enderio-<MC_VERSION>:<VERSION>:api")
     
     // Use EnderIO at runtime
-    runtimeOnly fg.deobf("com.enderio:EnderIO:<VERSION>")
+    runtimeOnly fg.deobf("com.enderio:enderio-<MC_VERSION>:<VERSION>")
 }
 ```
 If you need any feature in the api, contact us.
