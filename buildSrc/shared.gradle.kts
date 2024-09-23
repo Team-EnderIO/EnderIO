@@ -107,6 +107,8 @@ val loaderVersionRange: String by project
 
 // TODO: Doing this here temporarily, but should be done in separate projects instead of here tbh.
 val mekanismVersionRange: String by project
+val ae2VersionRange: String by project
+val refinedstorageVersionRange: String by project
 
 val replaceProperties = mapOf(
         "mod_version" to project.version,
@@ -114,6 +116,8 @@ val replaceProperties = mapOf(
         "neo_version" to neoForgeVersionRange,
         "loader_version_range" to loaderVersionRange,
         "mekanism_version_range" to mekanismVersionRange,
+        "ae2_version_range" to ae2VersionRange,
+        "refinedstorage_version_range" to refinedstorageVersionRange,
 )
 
 tasks.withType<ProcessResources>().configureEach {

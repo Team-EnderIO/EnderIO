@@ -47,3 +47,15 @@ modId="mekanism"
 type="optional"
 versionRange="${mekanism_version_range}"
 side="BOTH"
+
+[[dependencies.enderio_conduits_modded]]
+modId="ae2"
+type="optional"
+versionRange="${ae2_version_range}"
+side="BOTH"
+
+[[dependencies.enderio_conduits_modded]]
+modId="refinedstorage"
+type="optional"
+versionRange="${refinedstorage_version_range}"
+side="BOTH"
