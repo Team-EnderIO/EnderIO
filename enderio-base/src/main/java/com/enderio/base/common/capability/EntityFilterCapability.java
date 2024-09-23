@@ -155,10 +155,14 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
 
         @Override
         public boolean equals(Object o) {
-            if (this == o)
+            if (this == o) {
                 return true;
-            if (o == null || getClass() != o.getClass())
+            }
+
+            if (o == null || getClass() != o.getClass()) {
                 return false;
+            }
+
             Component component = (Component) o;
             for (int i = 0; i < entities.size(); i++) {
                 if (!entities.get(i).equals(component.entities.get(i))) {
