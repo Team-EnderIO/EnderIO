@@ -54,7 +54,7 @@ dependencies {
     compileOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}:api")
 
     // Refined Storage
-    api("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
+    compileOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
 
     //Laserio
     compileOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
