@@ -81,3 +81,62 @@ neoForge {
         }
     }
 }
+
+tasks.register<Jar>("apiJar") {
+    archiveClassifier.set("api")
+
+    from(sourceSets["main"].output)
+    from(sourceSets["main"].allJava)
+
+    include("com/enderio/api/**")
+    include("com/enderio/*/api/**")
+}
+
+tasks.register<Jar>("sourcesJar") {
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allJava)
+}
+
+tasks.build {
+    dependsOn(tasks["apiJar"])
+    dependsOn(tasks["sourcesJar"])
+}
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            groupId = "com.enderio"
+            artifactId = project.name
+            version = "${project.version}"
+
+            setOf("apiElements", "runtimeElements")
+                    .flatMap { configName -> configurations[configName].hierarchy }
+                    .forEach { configuration ->
+                        configuration.dependencies.removeIf { dependency ->
+                            dependency.name.contains("jei")
+                        }
+                    }
+
+            from(components["java"])
+            artifact(tasks["apiJar"])
+            artifact(tasks["sourcesJar"])
+
+            pom {
+                name.set("EnderIO Modded Conduits")
+                description.set("The modded conduits support module of Ender IO")
+                url.set("https://github.com/Team-EnderIO/EnderIO")
+
+                licenses {
+                    license {
+                        name.set("Unlicense")
+                        url.set("https://github.com/Team-EnderIO/EnderIO/blob/dev/1.21/LICENSE.txt")
+                    }
+                }
+
+                scm {
+                    url.set("https://github.com/Team-EnderIO/EnderIO.git")
+                }
+            }
+        }
+    }
+}
