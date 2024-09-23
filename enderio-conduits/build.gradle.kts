@@ -59,6 +59,19 @@ dependencies {
 neoForge {
     version = neoForgeVersion
 
+    runs {
+        create("data") {
+            data()
+
+            programArguments.addAll(
+                    "--mod", "enderio_conduits",
+                    "--all",
+                    "--output", file("src/generated/resources").absolutePath,
+                    "--existing", file("src/main/resources").absolutePath,
+            )
+        }
+    }
+
     mods {
         create("endercore") {
             dependency(project(":endercore"))

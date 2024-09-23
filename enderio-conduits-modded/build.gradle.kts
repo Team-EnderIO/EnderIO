@@ -34,7 +34,6 @@ val mekanismMinecraftVersion: String by project
 val mekanismVersion: String by project
 val refinedstorageVersion: String by project
 
-
 dependencies {
     implementation("com.enderio:Regilite:$regiliteVersion")
 
@@ -62,6 +61,25 @@ dependencies {
 
 neoForge {
     version = neoForgeVersion
+
+    runs {
+        create("data") {
+            data()
+
+            dependencies {
+                runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
+                runtimeOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}")
+                runtimeOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
+            }
+
+            programArguments.addAll(
+                    "--mod", "enderio_conduits_modded",
+                    "--all",
+                    "--output", file("src/generated/resources").absolutePath,
+                    "--existing", file("src/main/resources").absolutePath,
+            )
+        }
+    }
 
     mods {
         create("endercore") {

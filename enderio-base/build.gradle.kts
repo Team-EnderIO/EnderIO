@@ -46,6 +46,21 @@ neoForge {
         publish(project.file("src/main/resources/META-INF/accesstransformer.cfg"))
     }
 
+    runs {
+        create("data") {
+            data()
+
+            programArguments.addAll(
+                    "--mod", "enderio_base",
+                    // TODO: Fix missing models...
+                    //"--all",
+                    "--server", "--client",
+                    "--output", file("src/generated/resources").absolutePath,
+                    "--existing", file("src/main/resources").absolutePath,
+            )
+        }
+    }
+
     mods {
         register("endercore") {
             dependency(project(":endercore"))

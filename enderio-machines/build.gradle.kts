@@ -47,6 +47,20 @@ dependencies {
 neoForge {
     version = neoForgeVersion
 
+    runs {
+        create("data") {
+            data()
+
+            programArguments.addAll(
+                    "--mod", "enderio_machines",
+                    //"--all",
+                    "--server", "--client",
+                    "--output", file("src/generated/resources").absolutePath,
+                    "--existing", file("src/main/resources").absolutePath,
+            )
+        }
+    }
+
     mods {
         register("endercore") {
             dependency(project(":endercore"))
