@@ -87,7 +87,11 @@ public record MEConduit(
             mainNode.setOwningPlayer(player);
         }
 
-        GridHelper.onFirstTick(level.getBlockEntity(pos), blockEntity -> mainNode.create(level, pos));
+        GridHelper.onFirstTick(level.getBlockEntity(pos), blockEntity -> {
+            if (!mainNode.isReady()) {
+                mainNode.create(level, pos);
+            }
+        });
     }
 
     @Override
