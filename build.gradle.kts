@@ -1,3 +1,5 @@
+import com.github.spotbugs.snom.Effort
+import com.github.spotbugs.snom.SpotBugsTask
 import java.net.URI
 
 plugins {
@@ -5,6 +7,7 @@ plugins {
     id("net.neoforged.moddev") version "1.0.14" apply false
     id("checkstyle")
     id("idea")
+    id("com.github.spotbugs") version "6.0.22"
 }
 
 println("Release type: ${getReleaseType()}")
@@ -31,6 +34,22 @@ subprojects {
         apply(plugin = "maven-publish")
         apply(plugin = "net.neoforged.moddev")
         apply(plugin = "checkstyle")
+        apply(plugin = "com.github.spotbugs")
+
+        spotbugs {
+            reportsDir = project.layout.buildDirectory.dir("reports/spotbugs/")
+            effort = Effort.MAX
+            ignoreFailures = true
+        }
+
+        tasks.withType<SpotBugsTask> {
+            reports {
+                create("html") {
+                    required = true
+                    outputLocation = project.layout.buildDirectory.file("reports/spotbugs/spotbugs.html")
+                }
+            }
+        }
 
         publishing {
             repositories {
