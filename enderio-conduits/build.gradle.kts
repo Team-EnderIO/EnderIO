@@ -42,14 +42,10 @@ dependencies {
     // JEI
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge-api:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-common:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge:$jeiVersion")
 
     //CC-Tweaked
     compileOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-core-api:$cctVersion")
     compileOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge-api:$cctVersion")
-    // TODO: Does not start on latest NeoForge
-//    runtimeOnly("cc.tweaked:cc-tweaked-$minecraftVersion-forge:$cctVersion")
 
     implementation("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
     jarJar("dev.gigaherz.graph:GraphLib3:$graphlibVersion") {
@@ -63,35 +59,6 @@ dependencies {
 neoForge {
     version = neoForgeVersion
 
-    runs {
-        configureEach {
-            logLevel = org.slf4j.event.Level.INFO
-        }
-
-        create("client") {
-            client()
-        }
-
-        create("data") {
-            data()
-
-            programArguments.addAll(
-                    "--mod", "enderio_conduits",
-                    // TODO: Fix missing models...
-                    //"--all",
-                    "--server", "--client",
-                    "--output", file("src/generated/resources").absolutePath,
-                    "--existing", file("src/main/resources").absolutePath,
-                    "--existing", file("../enderio-base/src/main/resources").absolutePath,
-                    "--existing", file("../enderio-base/src/generated/resources").absolutePath,
-            )
-        }
-
-        create("server") {
-            server()
-        }
-    }
-
     mods {
         create("endercore") {
             dependency(project(":endercore"))
@@ -103,6 +70,65 @@ neoForge {
 
         create("enderio_conduits") {
             sourceSet(sourceSets.getByName("main"))
+        }
+    }
+}
+
+tasks.register<Jar>("apiJar") {
+    archiveClassifier.set("api")
+
+    from(sourceSets["main"].output)
+    from(sourceSets["main"].allJava)
+
+    include("com/enderio/api/**")
+    include("com/enderio/*/api/**")
+}
+
+tasks.register<Jar>("sourcesJar") {
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allJava)
+}
+
+tasks.build {
+    dependsOn(tasks["apiJar"])
+    dependsOn(tasks["sourcesJar"])
+}
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            groupId = "com.enderio"
+            artifactId = project.name
+            version = "${project.version}"
+
+            setOf("apiElements", "runtimeElements")
+                    .flatMap { configName -> configurations[configName].hierarchy }
+                    .forEach { configuration ->
+                        configuration.dependencies.removeIf { dependency ->
+                            dependency.name.contains("jei")
+                        }
+                    }
+
+            from(components["java"])
+            artifact(tasks["apiJar"])
+            artifact(tasks["sourcesJar"])
+
+            pom {
+                name.set("EnderIO Conduits")
+                description.set("The conduits module of Ender IO")
+                url.set("https://github.com/Team-EnderIO/EnderIO")
+
+                licenses {
+                    license {
+                        name.set("Unlicense")
+                        url.set("https://github.com/Team-EnderIO/EnderIO/blob/dev/1.21/LICENSE.txt")
+                    }
+                }
+
+                scm {
+                    url.set("https://github.com/Team-EnderIO/EnderIO.git")
+                }
+            }
         }
     }
 }

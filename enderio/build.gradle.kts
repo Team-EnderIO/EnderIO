@@ -153,52 +153,6 @@ tasks.build {
     dependsOn(tasks["sourcesJar"])
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("enderio") {
-            groupId = "com.enderio"
-            // TODO: Do we care about specifying MC version now that we're only releasing one major version per MC version?
-            //       Only real benefit is this being clear in maven directly.
-            artifactId = "enderio-${minecraftVersion}"
-            version = "${project.version}"
-
-            artifact(tasks["jar"])
-            artifact(tasks["apiJar"])
-            artifact(tasks["sourcesJar"])
-
-            pom {
-                name.set("EnderIO")
-                description.set("The core modules of Ender IO")
-                url.set("https://github.com/Team-EnderIO/EnderIO")
-
-                licenses {
-                    license {
-                        name.set("Unlicense")
-                        url.set("https://github.com/Team-EnderIO/EnderIO/blob/dev/1.21/LICENSE.txt")
-                    }
-                }
-
-                scm {
-                    url.set("https://github.com/Team-EnderIO/EnderIO.git")
-                }
-            }
-        }
-    }
-
-    repositories {
-        if (System.getenv("RVR_MAVEN_USER") != null) {
-            maven {
-                name = "Rover656"
-                url = URI("https://maven.rover656.dev/releases")
-                credentials {
-                    username = System.getenv("RVR_MAVEN_USER")
-                    password = System.getenv("RVR_MAVEN_PASSWORD")
-                }
-            }
-        }
-    }
-}
-
 val curseforge_projectId: String by project
 val modrinth_projectId: String by project
 

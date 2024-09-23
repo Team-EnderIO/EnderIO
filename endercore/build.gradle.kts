@@ -26,24 +26,6 @@ dependencies {
 neoForge {
     version = neoForgeVersion
 
-    runs {
-        configureEach {
-            logLevel = org.slf4j.event.Level.INFO
-        }
-
-        create("client") {
-            client()
-        }
-
-        create("data") {
-            data()
-        }
-
-        create("server") {
-            server()
-        }
-    }
-
     mods {
         create("endercore") {
             sourceSet(sourceSets["main"])
@@ -58,7 +40,7 @@ publishing {
             artifactId = "endercore"
             version = "${project.version}"
 
-            artifact(tasks["jar"])
+            from(components["java"])
 
             pom {
                 name.set("EnderCore")

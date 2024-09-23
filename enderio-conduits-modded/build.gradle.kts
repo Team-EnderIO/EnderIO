@@ -47,56 +47,21 @@ dependencies {
 
     implementation(project(":endercore"))
 
-    // JEI
-    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-common:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge:$jeiVersion")
-
     // AE2
     compileOnly("appeng:appliedenergistics2:${ae2Version}:api")
-    runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
 
     // Mekanism
     compileOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}:api")
-    runtimeOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}")
 
     // Refined Storage
     api("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
-    runtimeOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
 
     //Laserio
     compileOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
-    runtimeOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
 }
 
 neoForge {
     version = neoForgeVersion
-
-    runs {
-        configureEach {
-            logLevel = org.slf4j.event.Level.INFO
-        }
-
-        create("client") {
-            client()
-        }
-
-        create("data") {
-            data()
-
-            programArguments.addAll(
-                    "--mod", "enderio_conduits_modded",
-                    "--all",
-                    "--output", file("src/generated/resources").absolutePath,
-                    "--existing", file("src/main/resources").absolutePath,
-                    "--existing", file("../enderio-base/src/main/resources").absolutePath,
-                    "--existing", file("../enderio-base/src/generated/resources").absolutePath,
-            )
-        }
-
-        create("server") {
-            server()
-        }
-    }
 
     mods {
         create("endercore") {

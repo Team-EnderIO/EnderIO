@@ -1,3 +1,5 @@
+import java.net.URI
+
 plugins {
     id("maven-publish")
     //id("com.modrinth.minotaur") version "2.+"
@@ -30,19 +32,18 @@ subprojects {
     if (project.name != "ensure_plugin") {
         apply(plugin = "maven-publish")
         apply(plugin = "net.neoforged.moddev")
-    }
-}
 
-publishing {
-    repositories {
-        if (System.getenv("RVR_MAVEN_USER") != null) {
-            maven {
-                name = "Rover656"
-                url = uri("https://maven.rover656.dev/releases")
-
-                credentials {
-                    username = System.getenv("RVR_MAVEN_USER")
-                    password = System.getenv("RVR_MAVEN_PASSWORD")
+        publishing {
+            repositories {
+                if (System.getenv("RVR_MAVEN_USER") != null) {
+                    maven {
+                        name = "Rover656"
+                        url = URI("https://maven.rover656.dev/releases")
+                        credentials {
+                            username = System.getenv("RVR_MAVEN_USER")
+                            password = System.getenv("RVR_MAVEN_PASSWORD")
+                        }
+                    }
                 }
             }
         }
