@@ -30,7 +30,6 @@ dependencies {
     implementation("com.enderio:Regilite:$regiliteVersion")
     jarJar("com.enderio:Regilite:$regiliteVersion")
 
-    compileOnly(project(":ensure_plugin"))
     implementation(project(":endercore"))
     jarJar(project(":endercore"))
 

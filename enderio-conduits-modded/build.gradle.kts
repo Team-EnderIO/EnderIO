@@ -42,8 +42,6 @@ dependencies {
 
     implementation(project(":enderio-conduits"))
 
-    compileOnly(project(":ensure_plugin"))
-
     implementation(project(":endercore"))
 
     // AE2

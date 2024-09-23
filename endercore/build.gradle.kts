@@ -18,9 +18,6 @@ dependencies {
 
     // Almost Unified
     compileOnly("com.almostreliable.mods:almostunified-neoforge:1.21.1-${almostunifiedVersion}:api")
-
-    // TODO: How to apply plugin.
-    compileOnly(project(":ensure_plugin"))
 }
 
 neoForge {

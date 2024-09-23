@@ -35,8 +35,6 @@ dependencies {
     implementation(project(":enderio-base"))
     accessTransformers(project(":enderio-base"))
 
-    compileOnly(project(":ensure_plugin"))
-
     implementation(project(":endercore"))
 
     // JEI

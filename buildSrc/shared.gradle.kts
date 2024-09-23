@@ -84,7 +84,20 @@ repositories {
 dependencies {
     // TODO: Once EnderCore moves out, put common mods that we test alongside in here?
     add("compileOnly", "org.jetbrains:annotations:23.0.0")
+
+    if (project.name != "ensure_plugin") {
+        add("compileOnly", project(":ensure_plugin"))
+        add("annotationProcessor", project(":ensure_plugin"))
+    }
 }
+
+if (project.name != "ensure_plugin") {
+    tasks.withType<JavaCompile> {
+        options.encoding = "UTF-8"
+        options.compilerArgs.add("-Xplugin:ContextEnsure")
+    }
+}
+
 
 version = getVersionString()
 
