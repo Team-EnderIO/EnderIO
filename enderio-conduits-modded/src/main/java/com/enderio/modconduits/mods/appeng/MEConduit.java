@@ -135,13 +135,12 @@ public record MEConduit(
     }
 
     @Override
-    public <K> @Nullable K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode node, Level level, BlockPos pos,
-        @Nullable Direction direction, ConduitNode.@Nullable IOState state) {
+    public <TCap, TContext> @Nullable TCap proxyCapability(BlockCapability<TCap, TContext> capability, ConduitNode node,
+        Level level, BlockPos pos, @Nullable TContext context) {
 
         if (capability == AECapabilities.IN_WORLD_GRID_NODE_HOST) {
-            var data = node.getOrCreateData(AE2ConduitsModule.DATA.get());
             //noinspection unchecked
-            return (K)data;
+            return (TCap)node.getOrCreateData(AE2ConduitsModule.DATA.get());
         }
 
         return null;

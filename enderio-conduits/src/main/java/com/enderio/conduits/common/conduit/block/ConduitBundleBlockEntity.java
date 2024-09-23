@@ -588,10 +588,10 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
         }
     }
 
-    public static <T> ICapabilityProvider<ConduitBundleBlockEntity, Direction, T> createConduitCap(BlockCapability<T, Direction> cap) {
-         return (be, side) -> {
+    public static <TCap, TContext> ICapabilityProvider<ConduitBundleBlockEntity, TContext, TCap> createConduitCap(BlockCapability<TCap, TContext> cap) {
+         return (be, context) -> {
             for (Holder<Conduit<?>> conduit : be.bundle.getConduits()) {
-                var proxiedCap = getProxiedCapability(cap, be, conduit, side);
+                var proxiedCap = getProxiedCapability(cap, be, conduit, context);
                 if (proxiedCap != null) {
                     return proxiedCap;
                 }
@@ -602,17 +602,15 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
     }
 
     @Nullable
-    private static <T> T getProxiedCapability(BlockCapability<T, Direction> capability, ConduitBundleBlockEntity blockEntity, Holder<Conduit<?>> conduit,
-        Direction side) {
+    private static <TCap, TContext> TCap getProxiedCapability(BlockCapability<TCap, TContext> capability, ConduitBundleBlockEntity blockEntity, Holder<Conduit<?>> conduit,
+        @Nullable TContext context) {
 
         if (blockEntity.level == null) {
             return null;
         }
 
         ConduitGraphObject node = blockEntity.bundle.getNodeFor(conduit);
-        ConduitGraphObject.IOState state = node.getIOState(side).orElse(null);
-
-        return conduit.value().proxyCapability(capability, node, blockEntity.level, blockEntity.getBlockPos(), side, state);
+        return conduit.value().proxyCapability(capability, node, blockEntity.level, blockEntity.getBlockPos(), context);
     }
 
     public IItemHandler getConduitItemHandler() {
