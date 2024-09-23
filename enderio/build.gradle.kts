@@ -22,6 +22,7 @@ val cctMinecraftVersion: String by project
 val cctVersion: String by project
 val athenaVersion: String by project
 val ae2Version: String by project
+val refinedstorageVersion: String by project
 val jadeFileId: String by project
 val mekanismMinecraftVersion: String by project
 val mekanismVersion: String by project
@@ -52,6 +53,9 @@ dependencies {
 
     // AE2
     runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
+
+    // Refined storage
+    runtimeOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
 
     // Enchantment descriptions
     //runtimeOnly("net.darkhax.bookshelf:Bookshelf-NeoForge-${minecraft_version}:${bookshelf_version}")
