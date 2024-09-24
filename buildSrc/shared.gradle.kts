@@ -7,6 +7,9 @@ repositories {
             url = uri("https://maven.rover656.dev/releases")
             content {
                 includeGroup("com.enderio")
+
+                // Mirrors
+                includeGroup("dev.gigaherz.graph")
             }
         }
 
@@ -18,14 +21,6 @@ repositories {
                 includeGroup("mcjty.theoneprobe")
                 includeGroup("appeng")
                 includeGroup("mekanism")
-            }
-        }
-
-        maven {
-            name = "Dogforce Games Maven"
-            url = uri("https://dogforce-games.com/maven")
-            content {
-                includeGroup("dev.gigaherz.graph")
             }
         }
 
