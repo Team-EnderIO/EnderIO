@@ -30,12 +30,10 @@ val cctMinecraftVersion: String by project
 val cctVersion: String by project
 
 dependencies {
-    implementation("com.enderio:Regilite:$regiliteVersion")
+    api("com.enderio:Regilite:$regiliteVersion")
 
-    implementation(project(":enderio-base"))
+    api(project(":enderio-base"))
     accessTransformers(project(":enderio-base"))
-
-    implementation(project(":endercore"))
 
     // JEI
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
@@ -45,7 +43,7 @@ dependencies {
     compileOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-core-api:$cctVersion")
     compileOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge-api:$cctVersion")
 
-    implementation("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
+    api("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
     jarJar("dev.gigaherz.graph:GraphLib3:$graphlibVersion") {
         version {
             strictly(graphlibVersionRange)

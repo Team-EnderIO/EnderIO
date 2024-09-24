@@ -30,12 +30,10 @@ val cctMinecraftVersion: String by project
 val cctVersion: String by project
 
 dependencies {
-    implementation("com.enderio:Regilite:$regiliteVersion")
+    api("com.enderio:Regilite:$regiliteVersion")
 
-    implementation(project(":enderio-base"))
+    api(project(":enderio-base"))
     accessTransformers(project(":enderio-base"))
-
-    implementation(project(":endercore"))
 
     // JEI
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")

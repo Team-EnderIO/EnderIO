@@ -21,19 +21,17 @@ val graphlibVersion: String by project
 val graphlibVersionRange: String by project
 
 dependencies {
-    implementation("com.enderio:Regilite:$regiliteVersion")
+    api("com.enderio:Regilite:$regiliteVersion")
 
-    implementation(project(":enderio-base"))
+    api(project(":enderio-base"))
     accessTransformers(project(":enderio-base"))
     accessTransformersElements(project(":enderio-base"))
-
-    implementation(project(":endercore"))
 
     // JEI
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge-api:$jeiVersion")
 
-    implementation("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
+    api("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
     jarJar("dev.gigaherz.graph:GraphLib3:$graphlibVersion") {
         version {
             strictly(graphlibVersionRange)

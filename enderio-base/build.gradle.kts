@@ -1,4 +1,3 @@
-import java.net.URI
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,10 +26,10 @@ val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
 
 dependencies {
-    implementation("com.enderio:Regilite:$regiliteVersion")
-    jarJar("com.enderio:Regilite:$regiliteVersion")
+    api("com.enderio:Regilite:$regiliteVersion")
 
-    implementation(project(":endercore"))
+    // EnderIO Base will bundle Regilite and EnderCore in production.
+    jarJar("com.enderio:Regilite:$regiliteVersion")
     jarJar(project(":endercore"))
 
     // JEI

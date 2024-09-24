@@ -35,14 +35,12 @@ val mekanismVersion: String by project
 val refinedstorageVersion: String by project
 
 dependencies {
-    implementation("com.enderio:Regilite:$regiliteVersion")
+    api("com.enderio:Regilite:$regiliteVersion")
 
-    implementation(project(":enderio-base"))
+    api(project(":enderio-base"))
     accessTransformers(project(":enderio-base"))
 
-    implementation(project(":enderio-conduits"))
-
-    implementation(project(":endercore"))
+    api(project(":enderio-conduits"))
 
     // AE2
     compileOnly("appeng:appliedenergistics2:${ae2Version}:api")
