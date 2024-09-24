@@ -91,12 +91,12 @@ public class EIOItems {
 
     public static final RegiliteItem<MaterialItem> FRANK_N_ZOMBIE = materialItemGlinted("frank_n_zombie")
         .withTranslation("Frank'N'Zombie")
-        .withModelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.Z_LOGIC_CONTROLLER));
+        .setModelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.Z_LOGIC_CONTROLLER));
 
     public static final RegiliteItem<MaterialItem> ENDER_RESONATOR = materialItem("ender_resonator");
 
     public static final RegiliteItem<MaterialItem> SENTIENT_ENDER = materialItemGlinted("sentient_ender")
-        .withModelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.ENDER_RESONATOR));
+        .setModelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.ENDER_RESONATOR));
 
     public static final RegiliteItem<MaterialItem> SKELETAL_CONTRACTOR = materialItem("skeletal_contractor");
     public static final RegiliteItem<MaterialItem> GUARDIAN_DIODE = materialItem("guardian_diode");
@@ -268,7 +268,7 @@ public class EIOItems {
     public static final RegiliteItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEM_REGISTRY
         .registerItem("broken_spawner", BrokenSpawnerItem::new)
         .withTags(EIOTags.Items.ENTITY_STORAGE)
-        .withModelProvider(ModelHelper::fakeBlockModel)
+        .setModelProvider(ModelHelper::fakeBlockModel)
         .withTab(EIOCreativeTabs.MAIN)
         .withTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.getPossibleStacks()));
 
@@ -334,7 +334,7 @@ public class EIOItems {
         return dumbItem(name, HangGliderItem::new)
             .withTags(EIOTags.Items.GLIDER)
             .withTab(EIOCreativeTabs.MAIN)
-            .withModelProvider((prov, ctx) -> GliderItemModel.create(ctx.get(), prov));
+            .setModelProvider((prov, ctx) -> GliderItemModel.create(ctx.get(), prov));
     }
 
     private static RegiliteItem<MaterialItem> materialItem(String name) {

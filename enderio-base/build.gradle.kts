@@ -29,7 +29,7 @@ dependencies {
     api("com.enderio:regilite:$regiliteVersion")
 
     // EnderIO Base will bundle Regilite and EnderCore in production.
-    jarJar("com.enderio:Regilite:$regiliteVersion")
+    jarJar("com.enderio:regilite:$regiliteVersion")
     jarJar(project(":endercore"))
 
     // JEI

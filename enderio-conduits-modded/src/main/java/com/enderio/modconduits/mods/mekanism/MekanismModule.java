@@ -66,8 +66,8 @@ public class MekanismModule implements ConduitModule {
 
     public static final RegiliteItem<ChemicalFilterItem> BASIC_CHEMICAL_FILTER = ITEM_REGISTRY
         .registerItem("chemical_filter", properties -> new ChemicalFilterItem(properties.component(CHEMICAL_FILTER, new ChemicalFilterCapability.Component(5))))
-        .setTab(EIOCreativeTabs.GEAR)
-        .addCapability(EIOCapabilities.Filter.ITEM, ChemicalFilterItem.FILTER_PROVIDER);
+        .withTab(EIOCreativeTabs.GEAR)
+        .withCapability(EIOCapabilities.Filter.ITEM, ChemicalFilterItem.FILTER_PROVIDER);
 
     private static final MenuRegistry MENU_REGISTRY = ModdedConduits.REGILITE.menuRegistry();
 
