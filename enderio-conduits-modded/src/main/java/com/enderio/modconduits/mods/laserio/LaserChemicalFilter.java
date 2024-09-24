@@ -3,23 +3,21 @@ package com.enderio.modconduits.mods.laserio;
 import com.direwolf20.laserio.common.containers.customhandler.FilterBasicHandler;
 import com.direwolf20.laserio.common.items.cards.BaseCard;
 import com.direwolf20.laserio.setup.LaserIODataComponents;
-import com.enderio.base.api.filter.FluidStackFilter;
 import com.enderio.base.common.capability.IFilterCapability;
+import com.enderio.modconduits.mods.mekanism.ChemicalFilter;
+import com.enderio.modconduits.mods.mekanism.MekanismModule;
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.IChemicalHandler;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-public class LaserFluidFilter implements IFilterCapability<FluidStack>, FluidStackFilter {
+public class LaserChemicalFilter implements IFilterCapability<ChemicalStack>, ChemicalFilter {
 
     private final ItemStack container;
 
-    public LaserFluidFilter(ItemStack cardItem) {
+    public LaserChemicalFilter(ItemStack cardItem) {
         this.container = BaseCard.getFilter(cardItem);
     }
 
@@ -52,44 +50,41 @@ public class LaserFluidFilter implements IFilterCapability<FluidStack>, FluidSta
     }
 
     @Override
-    public List<FluidStack> getEntries() {
-        List<FluidStack> filteredFluids = new ArrayList();
+    public List<ChemicalStack> getEntries() {
+        List<ChemicalStack> filteredChemicals = new ArrayList();
         FilterBasicHandler filterSlotHandler = new FilterBasicHandler(15, container);
 
         for(int i = 0; i < (filterSlotHandler).getSlots(); ++i) {
-            ItemStack itemStack = filterSlotHandler.getStackInSlot(i);
-            if (!itemStack.isEmpty()) {
-                Optional<IFluidHandlerItem> fluidHandlerLazyOptional = FluidUtil.getFluidHandler(itemStack);
-                if (!fluidHandlerLazyOptional.isEmpty()) {
-                    IFluidHandler fluidHandler = fluidHandlerLazyOptional.get();
+            ItemStack stack = filterSlotHandler.getStackInSlot(i);
+            if (!stack.isEmpty()) {
+                IChemicalHandler capability = stack.getCapability(MekanismModule.Capabilities.Item.CHEMICAL);
+                if (capability != null) {
 
-                    for(int tank = 0; tank < fluidHandler.getTanks(); ++tank) {
-                        FluidStack fluidStack = fluidHandler.getFluidInTank(tank);
-                        if (!fluidStack.isEmpty()) {
-                            filteredFluids.add(fluidStack);
+                    for(int tank = 0; tank < capability.getChemicalTanks(); ++tank) {
+                        var chemical = capability.getChemicalInTank(tank);
+                        if (!chemical.isEmpty()) {
+                            filteredChemicals.add(chemical);
                         }
                     }
                 }
             }
         }
 
-        return filteredFluids;
+        return filteredChemicals;
     }
 
     @Override
-    public void setEntry(int index, FluidStack entry) {
-        //Not needed for working filters, however could be good for in gui changes
+    public void setEntry(int index, ChemicalStack entry) {
+
     }
 
     @Override
-    public boolean test(FluidStack stack) {
-        for (FluidStack testStack : getEntries()) {
-            boolean test = isNbt() ? FluidStack.isSameFluidSameComponents(testStack, stack) : testStack.is(stack.getFluid());
-            if (test) {
+    public boolean test(ChemicalStack boxedChemicalStack) {
+        for (ChemicalStack stack : getEntries()) {
+            if (ChemicalStack.isSameChemical(stack, boxedChemicalStack)) {
                 return !isInvert();
             }
         }
-
         return isInvert();
     }
 }

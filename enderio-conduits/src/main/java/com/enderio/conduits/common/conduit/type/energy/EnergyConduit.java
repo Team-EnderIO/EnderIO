@@ -80,12 +80,17 @@ public record EnergyConduit(
     }
 
     @Override
-    public <K> @Nullable K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode node,
-        Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
+    public <TCap, TContext> @Nullable TCap proxyCapability(BlockCapability<TCap, TContext> capability, ConduitNode node,
+        Level level, BlockPos pos, @Nullable TContext context) {
 
-        if (Capabilities.EnergyStorage.BLOCK == capability && (state == null || state.isExtract())) {
+        if (Capabilities.EnergyStorage.BLOCK == capability && context instanceof Direction side) {
+            var state = node.getIOState(side);
+            if (state.isPresent() && !state.get().isExtract()) {
+                return null;
+            }
+
             //noinspection unchecked
-            return (K)new EnergyConduitStorage(transferRate(), node);
+            return (TCap)new EnergyConduitStorage(transferRate(), node);
         }
 
         return null;

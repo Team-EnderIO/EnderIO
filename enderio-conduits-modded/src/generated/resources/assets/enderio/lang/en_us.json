@@ -1,4 +1,5 @@
 {
+  "item.enderio.chemical_filter": "Chemical Filter",
   "item.enderio.conduit.chemical": "Chemical Conduit",
   "item.enderio.conduit.chemical.multi": "Allows multiple chemical types to be transported on the same line",
   "item.enderio.conduit.dense_me": "Dense ME Conduit",

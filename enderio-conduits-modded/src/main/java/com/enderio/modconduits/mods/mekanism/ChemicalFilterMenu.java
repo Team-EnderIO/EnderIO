@@ -1,9 +1,8 @@
-package com.enderio.base.common.menu;
+package com.enderio.modconduits.mods.mekanism;
 
-import com.enderio.base.common.capability.FluidFilterCapability;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.network.FilterUpdatePacket;
+import mekanism.api.chemical.ChemicalStack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -12,41 +11,40 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 
-public class FluidFilterMenu extends AbstractContainerMenu {
+public class ChemicalFilterMenu extends AbstractContainerMenu {
 
     private final ItemStack stack;
-    private final FluidFilterCapability capability;
+    private final ChemicalFilterCapability capability;
 
-    public FluidFilterMenu(MenuType<?> pMenuType, int pContainerId, Inventory inventory, ItemStack stack) {
+    public ChemicalFilterMenu(MenuType<?> pMenuType, int pContainerId, Inventory inventory, ItemStack stack) {
         super(pMenuType, pContainerId);
         this.stack = stack;
 
         var resourceFilter = stack.getCapability(EIOCapabilities.Filter.ITEM);
-        if (!(resourceFilter instanceof FluidFilterCapability filterCapability)) {
+        if (!(resourceFilter instanceof ChemicalFilterCapability filterCapability)) {
             throw new IllegalArgumentException();
         }
 
         capability = filterCapability;
 
-        List<FluidStack> items = capability.getEntries();
+        List<ChemicalStack> items = capability.getEntries();
         for (int i = 0; i < items.size(); i++) {
             int pSlot = i;
-            addSlot(new FluidFilterSlot(fluidStack -> capability.setEntry(pSlot, fluidStack) ,i ,14 + ( i % 5) * 18, 35 + 20 * ( i / 5)));
+            addSlot(new ChemicalFilterSlot(fluidStack -> capability.setEntry(pSlot, fluidStack) ,i ,14 + ( i % 5) * 18, 35 + 20 * ( i / 5)));
         }
         addInventorySlots(14,119, inventory);
     }
 
-    public FluidFilterMenu(int pContainerId, Inventory inventory, ItemStack stack) {
-        this(EIOMenus.FLUID_FILTER.get(), pContainerId, inventory, stack);
+    public ChemicalFilterMenu(int pContainerId, Inventory inventory, ItemStack stack) {
+        this(MekanismModule.CHEMICAL_FILTER_MENU.get(), pContainerId, inventory, stack);
     }
 
-    public static FluidFilterMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
-        return new FluidFilterMenu(EIOMenus.FLUID_FILTER.get(), pContainerId, inventory, inventory.player.getMainHandItem());
+    public static ChemicalFilterMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+        return new ChemicalFilterMenu(MekanismModule.CHEMICAL_FILTER_MENU.get(), pContainerId, inventory, inventory.player.getMainHandItem());
     }
 
     @Override
@@ -77,13 +75,8 @@ public class FluidFilterMenu extends AbstractContainerMenu {
 
     }
 
-    public FluidFilterCapability getFilter() {
+    public ChemicalFilterCapability getFilter() {
         return capability;
-    }
-
-    public void setNbt(Boolean nbt) {
-        PacketDistributor.sendToServer(new FilterUpdatePacket(nbt, capability.isInvert()));
-        capability.setNbt(nbt);
     }
 
     public void setInverted(Boolean inverted) {
@@ -95,7 +88,7 @@ public class FluidFilterMenu extends AbstractContainerMenu {
     public void clicked(int pSlotId, int pButton, ClickType pClickType, Player pPlayer) {
         if (pSlotId < capability.getEntries().size() && pSlotId >= 0) {
             if (!capability.getEntries().get(pSlotId).isEmpty()) {
-                capability.setEntry(pSlotId, FluidStack.EMPTY);
+                capability.setEntry(pSlotId, ChemicalStack.EMPTY);
             }
         }
         super.clicked(pSlotId, pButton, pClickType, pPlayer);

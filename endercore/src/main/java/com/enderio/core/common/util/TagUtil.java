@@ -1,6 +1,7 @@
 package com.enderio.core.common.util;
 
 import com.enderio.core.EnderCore;
+import com.enderio.core.common.integration.AlmostUnifiedIntegration;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -20,12 +21,10 @@ public class TagUtil {
      * - If we found nothing in our specified lists, we will pick the first present item.
      */
     public static Optional<Item> getOptionalItem(TagKey<Item> tagKey) {
-        /*if (Integrations.ALMOST_UNIFIED_INTEGRATION.isPresent()) {
-            Item preferredItem = Integrations.ALMOST_UNIFIED_INTEGRATION.expectPresent().getPreferredItemForTag(tagKey);
-            if (preferredItem != null) {
-                return Optional.of(preferredItem);
-            }
-        }*/
+        Item preferredItem = AlmostUnifiedIntegration.getTagTargetItem(tagKey);
+        if (preferredItem != null) {
+            return Optional.of(preferredItem);
+        }
 
         Optional<HolderSet.Named<Item>> tag = BuiltInRegistries.ITEM.getTag(tagKey);
 

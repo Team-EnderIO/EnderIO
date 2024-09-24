@@ -99,15 +99,16 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
     }
 
     @Override
-    public <K> @Nullable K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode node, Level level, BlockPos pos, @Nullable Direction direction,
-        ConduitNode.@Nullable IOState state) {
+    public <TCap, TContext> @Nullable TCap proxyCapability(BlockCapability<TCap, TContext> capability, ConduitNode node,
+        Level level, BlockPos pos, @Nullable TContext context) {
+
         if (capability == RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability()) {
             var data = node.getData(RefinedStorageModule.DATA.get());
             if (data != null && data.mainNode != null && data.mainNode.isRemoved()) {
                 return null;
             }
             //noinspection unchecked
-            return (K) node.getData(RefinedStorageModule.DATA.get());
+            return (TCap) node.getData(RefinedStorageModule.DATA.get());
         }
         return null;
     }

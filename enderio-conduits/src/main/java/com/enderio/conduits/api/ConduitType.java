@@ -1,6 +1,5 @@
 package com.enderio.conduits.api;
 
-import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -31,7 +30,7 @@ public interface ConduitType<T extends Conduit<T>> {
     /**
      * @return The list of block capabilities that should be exposed and passed to the conduit proxy.
      */
-    Set<BlockCapability<?, Direction>> exposedCapabilities();
+    Set<BlockCapability<?, ?>> exposedCapabilities();
 
     static <T extends Conduit<T>> ConduitType<T> of(MapCodec<T> codec) {
         return builder(codec).build();
@@ -56,14 +55,14 @@ public interface ConduitType<T extends Conduit<T>> {
 
     class Builder<T extends Conduit<T>> {
         private final MapCodec<T> codec;
-        private final Set<BlockCapability<?, Direction>> exposedCapabilities;
+        private final Set<BlockCapability<?, ?>> exposedCapabilities;
 
         private Builder(MapCodec<T> codec) {
             this.codec = codec;
             this.exposedCapabilities = new HashSet<>();
         }
 
-        public <U> Builder<T> exposeCapability(BlockCapability<U, Direction> capability) {
+        public <U> Builder<T> exposeCapability(BlockCapability<U, ?> capability) {
             exposedCapabilities.add(capability);
             return this;
         }
@@ -74,7 +73,7 @@ public interface ConduitType<T extends Conduit<T>> {
 
         record SimpleType<T extends Conduit<T>>(
             MapCodec<T> codec,
-            Set<BlockCapability<?, Direction>> exposedCapabilities
+            Set<BlockCapability<?, ?>> exposedCapabilities
         ) implements ConduitType<T> {}
     }
 }

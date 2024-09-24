@@ -10,35 +10,18 @@ apply(from = rootProject.file("buildSrc/shared.gradle.kts"))
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 
 val regiliteVersion: String by project
+val almostunifiedVersion: String by project
 
 dependencies {
     // Regilite
     implementation("com.enderio:Regilite:${regiliteVersion}")
 
-    // TODO: How to apply plugin.
-    compileOnly(project(":ensure_plugin"))
+    // Almost Unified
+    compileOnly("com.almostreliable.mods:almostunified-neoforge:1.21.1-${almostunifiedVersion}:api")
 }
 
 neoForge {
     version = neoForgeVersion
-
-    runs {
-        configureEach {
-            logLevel = org.slf4j.event.Level.INFO
-        }
-
-        create("client") {
-            client()
-        }
-
-        create("data") {
-            data()
-        }
-
-        create("server") {
-            server()
-        }
-    }
 
     mods {
         create("endercore") {
@@ -54,7 +37,7 @@ publishing {
             artifactId = "endercore"
             version = "${project.version}"
 
-            artifact(tasks["jar"])
+            from(components["java"])
 
             pom {
                 name.set("EnderCore")
