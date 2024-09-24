@@ -83,10 +83,12 @@ public record EnergyConduit(
     public <TCap, TContext> @Nullable TCap proxyCapability(BlockCapability<TCap, TContext> capability, ConduitNode node,
         Level level, BlockPos pos, @Nullable TContext context) {
 
-        if (Capabilities.EnergyStorage.BLOCK == capability && context instanceof Direction side) {
-            var state = node.getIOState(side);
-            if (state.isPresent() && !state.get().isExtract()) {
-                return null;
+        if (Capabilities.EnergyStorage.BLOCK == capability && (context == null || context instanceof Direction)) {
+            if (context != null) {
+                var state = node.getIOState((Direction) context);
+                if (state.isPresent() && !state.get().isExtract()) {
+                    return null;
+                }
             }
 
             //noinspection unchecked
