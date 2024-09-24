@@ -1,0 +1,10 @@
+{
+  "item.enderio.conduit.chemical": "Kimyasal Oluğu",
+  "item.enderio.conduit.chemical.multi": "Birden fazla kimyasal türünün aynı hat üzerinde taşınmasına izin verir",
+  "item.enderio.conduit.dense_me": "Yoğun ME Oluk",
+  "item.enderio.conduit.ender_chemical": "Ender Kimyasal Oluğu",
+  "item.enderio.conduit.heat": "Isı Oluğu",
+  "item.enderio.conduit.me": "ME Oluk",
+  "item.enderio.conduit.pressurized_chemical": "Basınçlı Kimyasal Oluğu",
+  "item.enderio.rs": "Refined Storage Oluk"
+}
