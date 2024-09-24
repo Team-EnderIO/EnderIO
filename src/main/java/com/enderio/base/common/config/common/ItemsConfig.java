@@ -39,7 +39,7 @@ public class ItemsConfig {
 
         builder.push("levitationstaff");
         LEVITATION_STAFF_ENERGY_USE = builder.define("energyUse", 1);
-        LEVITATION_STAFF_MAX_ENERGY = builder.define("maxEnergy", 1000);
+        LEVITATION_STAFF_MAX_ENERGY = builder.define("maxEnergy", 10_000);
         builder.pop();
 
         builder.push("travelling");

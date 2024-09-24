@@ -118,7 +118,7 @@ public class EnergyConfig {
 
         builder.push("wiredCharger");
             WIRED_CHARGER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 128_000, 1, Integer.MAX_VALUE);
-            WIRED_CHARGER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 64, 1, Integer.MAX_VALUE);
+            WIRED_CHARGER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 30, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("soul_engine");

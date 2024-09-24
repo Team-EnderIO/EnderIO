@@ -92,13 +92,13 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
                 ITEM_CHARGED.setStackInSlot(this, chargeable);
                 ITEM_TO_CHARGE.setStackInSlot(this, ItemStack.EMPTY);
             } else {
-                //todo energy balancing
-                // The energyExtracted per tick should increase if the charged item has more energy and with the tier of the capacitor installed
-                int energyExtracted = itemEnergyStorage.getMaxEnergyStored() / ((int)getCapacitorData().getModifier(CapacitorModifier.ENERGY_USE)*333 -this.energyStorage.getMaxEnergyUse());
+                int energyToInsert = Math.min(
+                    itemEnergyStorage.getMaxEnergyStored() - itemEnergyStorage.getEnergyStored(),
+                    Math.max(this.energyStorage.getEnergyStored(), this.energyStorage.getMaxEnergyUse()));
 
-                if (this.energyStorage.getEnergyStored() >= energyExtracted) {
-                    itemEnergyStorage.receiveEnergy(energyExtracted, false);
-                    this.energyStorage.takeEnergy(energyExtracted);
+                if (energyToInsert > 0) {
+                    itemEnergyStorage.receiveEnergy(energyToInsert, false);
+                    this.energyStorage.takeEnergy(energyToInsert);
                     this.progress = (float)itemEnergyStorage.getEnergyStored()/itemEnergyStorage.getMaxEnergyStored();
                 }
             }
