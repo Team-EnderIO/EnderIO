@@ -1,7 +1,7 @@
 {
-  "block.enderio.conduit": "Conduit Bundle",
-  "gui.enderio.conduit.extract": "Extract",
-  "gui.enderio.conduit.insert": "Insert",
+  "block.enderio.conduit": "Αγωγός μεταφοράς",
+  "gui.enderio.conduit.extract": "Εξαγωγή",
+  "gui.enderio.conduit.insert": "Εισαγωγή",
   "item.enderio.conduit": "<MISSING> Conduit",
   "item.enderio.conduit.ender_energy": "Ender Energy Conduit",
   "item.enderio.conduit.ender_fluid": "Ender Fluid Conduit",
