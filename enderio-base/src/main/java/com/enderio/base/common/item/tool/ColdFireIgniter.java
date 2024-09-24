@@ -118,7 +118,7 @@ public class ColdFireIgniter extends Item implements CreativeTabVariants {
         var fluidHandler = is.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler != null) {
             if (fluidHandler instanceof StrictFluidHandlerItemStack strictFluidHandlerItemStack) {
-                strictFluidHandlerItemStack.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.getSource(), fluidHandler.getTankCapacity(0)));
+                strictFluidHandlerItemStack.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.sourceFluid(), fluidHandler.getTankCapacity(0)));
                 modifier.accept(is);
             }
         }

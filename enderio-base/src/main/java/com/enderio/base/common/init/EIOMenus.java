@@ -9,27 +9,30 @@ import com.enderio.base.common.menu.CoordinateMenu;
 import com.enderio.base.common.menu.EntityFilterMenu;
 import com.enderio.base.common.menu.FluidFilterMenu;
 import com.enderio.base.common.menu.ItemFilterMenu;
-import com.enderio.regilite.holder.RegiliteMenu;
-import com.enderio.regilite.registry.MenuRegistry;
-import net.neoforged.bus.api.IEventBus;
+import com.enderio.regilite.menus.RegiliteMenus;
+import net.minecraft.world.inventory.MenuType;
+
+import java.util.function.Supplier;
 
 public class EIOMenus {
-    private static final MenuRegistry MENU_REGISTRY = EnderIOBase.REGILITE.menuRegistry();
+    private static final RegiliteMenus MENUS = EnderIOBase.REGILITE.menus();
 
-    public static final RegiliteMenu<CoordinateMenu> COORDINATE = MENU_REGISTRY
-        .registerMenu("coordinate", CoordinateMenu::factory, () -> CoordinateMenuScreen::new);
+    public static final Supplier<MenuType<CoordinateMenu>> COORDINATE = MENUS
+        .create("coordinate", CoordinateMenu::factory, () -> CoordinateMenuScreen::new)
+        .finish();
 
-    public static final RegiliteMenu<ItemFilterMenu> ITEM_FILTER = MENU_REGISTRY
-        .registerMenu("item_filter", ItemFilterMenu::factory, () -> ItemFilterScreen::new);
+    public static final Supplier<MenuType<ItemFilterMenu>> ITEM_FILTER = MENUS
+        .create("item_filter", ItemFilterMenu::factory, () -> ItemFilterScreen::new)
+        .finish();
 
-    public static final RegiliteMenu<FluidFilterMenu> FLUID_FILTER = MENU_REGISTRY
-        .registerMenu("fluid_filter", FluidFilterMenu::factory, () -> FluidFilterScreen::new);
+    public static final Supplier<MenuType<FluidFilterMenu>> FLUID_FILTER = MENUS
+        .create("fluid_filter", FluidFilterMenu::factory, () -> FluidFilterScreen::new)
+        .finish();
 
-    public static final RegiliteMenu<EntityFilterMenu> ENTITY_FILTER = MENU_REGISTRY
-        .registerMenu("entity_filter", EntityFilterMenu::factory, () -> EntityFilterScreen::new);
+    public static final Supplier<MenuType<EntityFilterMenu>> ENTITY_FILTER = MENUS
+        .create("entity_filter", EntityFilterMenu::factory, () -> EntityFilterScreen::new)
+        .finish();
 
-
-    public static void register(IEventBus eventBus) {
-        MENU_REGISTRY.register(eventBus);
+    public static void register() {
     }
 }

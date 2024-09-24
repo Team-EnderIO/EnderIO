@@ -25,7 +25,7 @@ public class SinglePaintedBlock extends Block implements EntityBlock, PaintedBlo
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return EIOBlockEntities.SINGLE_PAINTED.create(pPos, pState);
+        return EIOBlockEntities.SINGLE_PAINTED.get().create(pPos, pState);
     }
 
     @Override

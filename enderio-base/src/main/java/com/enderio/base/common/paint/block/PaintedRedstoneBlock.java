@@ -27,7 +27,7 @@ public class PaintedRedstoneBlock extends PoweredBlock implements EntityBlock, P
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return EIOBlockEntities.SINGLE_PAINTED.create(pos, state);
+        return EIOBlockEntities.SINGLE_PAINTED.get().create(pos, state);
     }
 
     @Override

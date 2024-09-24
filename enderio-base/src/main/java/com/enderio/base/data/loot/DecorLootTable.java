@@ -1,7 +1,7 @@
 package com.enderio.base.data.loot;
 
 import com.enderio.base.common.paint.CopyPaintFunction;
-import com.enderio.regilite.data.RegiliteBlockLootProvider;
+import com.enderio.regilite.blocks.RegiliteBlockLootProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;

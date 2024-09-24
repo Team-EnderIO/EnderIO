@@ -20,7 +20,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 public class EIODataComponents {
-    private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister.createDataComponents(EnderIOBase.REGISTRY_NAMESPACE);
+    private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = EnderIOBase.REGILITE.dataComponents();
 
     public static Supplier<DataComponentType<SimpleFluidContent>> ITEM_FLUID_CONTENT = DATA_COMPONENT_TYPES.registerComponentType("item_fluid_content",
         builder -> builder.persistent(SimpleFluidContent.CODEC).networkSynchronized(SimpleFluidContent.STREAM_CODEC));
@@ -58,7 +58,6 @@ public class EIODataComponents {
     public static final Supplier<DataComponentType<EntityFilterCapability.Component>> ENTITY_FILTER = DATA_COMPONENT_TYPES
         .registerComponentType("entity_filter", builder -> builder.persistent(EntityFilterCapability.Component.CODEC).networkSynchronized(EntityFilterCapability.Component.STREAM_CODEC));
 
-    public static void register(IEventBus bus) {
-        DATA_COMPONENT_TYPES.register(bus);
+    public static void register() {
     }
 }

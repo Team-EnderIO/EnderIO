@@ -29,8 +29,8 @@ import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.model.item.GliderItemModel;
 import com.enderio.core.data.model.ModelHelper;
-import com.enderio.regilite.holder.RegiliteItem;
-import com.enderio.regilite.registry.ItemRegistry;
+import com.enderio.regilite.items.ItemBuilder;
+import com.enderio.regilite.items.RegiliteItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
@@ -39,163 +39,205 @@ import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.registries.DeferredItem;
 
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class EIOItems {
-    private static final ItemRegistry ITEM_REGISTRY = EnderIOBase.REGILITE.itemRegistry();
+    private static final RegiliteItems ITEMS = EnderIOBase.REGILITE.items();
 
     // region Alloys
 
-    public static final RegiliteItem<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot").withTags(EIOTags.Items.INGOTS_COPPER_ALLOY);
-    public static final RegiliteItem<MaterialItem> ENERGETIC_ALLOY_INGOT = materialItem("energetic_alloy_ingot").withTags(EIOTags.Items.INGOTS_ENERGETIC_ALLOY);
-    public static final RegiliteItem<MaterialItem> VIBRANT_ALLOY_INGOT = materialItem("vibrant_alloy_ingot").withTags(EIOTags.Items.INGOTS_VIBRANT_ALLOY);
-    public static final RegiliteItem<MaterialItem> REDSTONE_ALLOY_INGOT = materialItem("redstone_alloy_ingot").withTags(EIOTags.Items.INGOTS_REDSTONE_ALLOY);
-    public static final RegiliteItem<MaterialItem> CONDUCTIVE_ALLOY_INGOT = materialItem("conductive_alloy_ingot").withTags(EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY);
-    public static final RegiliteItem<MaterialItem> PULSATING_ALLOY_INGOT = materialItem("pulsating_alloy_ingot").withTags(EIOTags.Items.INGOTS_PULSATING_ALLOY);
-    public static final RegiliteItem<MaterialItem> DARK_STEEL_INGOT = materialItem("dark_steel_ingot").withTags(EIOTags.Items.INGOTS_DARK_STEEL);
-    public static final RegiliteItem<MaterialItem> SOULARIUM_INGOT = materialItem("soularium_ingot").withTags(EIOTags.Items.INGOTS_SOULARIUM);
-    public static final RegiliteItem<MaterialItem> END_STEEL_INGOT = materialItem("end_steel_ingot").withTags(EIOTags.Items.INGOTS_END_STEEL);
+    public static final DeferredItem<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot").tags(EIOTags.Items.INGOTS_COPPER_ALLOY).finish();
+    public static final DeferredItem<MaterialItem> ENERGETIC_ALLOY_INGOT = materialItem("energetic_alloy_ingot").tags(EIOTags.Items.INGOTS_ENERGETIC_ALLOY).finish();
+    public static final DeferredItem<MaterialItem> VIBRANT_ALLOY_INGOT = materialItem("vibrant_alloy_ingot").tags(EIOTags.Items.INGOTS_VIBRANT_ALLOY).finish();
+    public static final DeferredItem<MaterialItem> REDSTONE_ALLOY_INGOT = materialItem("redstone_alloy_ingot").tags(EIOTags.Items.INGOTS_REDSTONE_ALLOY).finish();
+    public static final DeferredItem<MaterialItem> CONDUCTIVE_ALLOY_INGOT = materialItem("conductive_alloy_ingot").tags(EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY).finish();
+    public static final DeferredItem<MaterialItem> PULSATING_ALLOY_INGOT = materialItem("pulsating_alloy_ingot").tags(EIOTags.Items.INGOTS_PULSATING_ALLOY).finish();
+    public static final DeferredItem<MaterialItem> DARK_STEEL_INGOT = materialItem("dark_steel_ingot").tags(EIOTags.Items.INGOTS_DARK_STEEL).finish();
+    public static final DeferredItem<MaterialItem> SOULARIUM_INGOT = materialItem("soularium_ingot").tags(EIOTags.Items.INGOTS_SOULARIUM).finish();
+    public static final DeferredItem<MaterialItem> END_STEEL_INGOT = materialItem("end_steel_ingot").tags(EIOTags.Items.INGOTS_END_STEEL).finish();
 
-    public static final RegiliteItem<MaterialItem> COPPER_ALLOY_NUGGET = materialItem("copper_alloy_nugget").withTags(EIOTags.Items.NUGGETS_COPPER_ALLOY);
-    public static final RegiliteItem<MaterialItem> ENERGETIC_ALLOY_NUGGET = materialItem("energetic_alloy_nugget").withTags(EIOTags.Items.NUGGETS_ENERGETIC_ALLOY);
-    public static final RegiliteItem<MaterialItem> VIBRANT_ALLOY_NUGGET = materialItem("vibrant_alloy_nugget").withTags(EIOTags.Items.NUGGETS_VIBRANT_ALLOY);
-    public static final RegiliteItem<MaterialItem> REDSTONE_ALLOY_NUGGET = materialItem("redstone_alloy_nugget").withTags(EIOTags.Items.NUGGETS_REDSTONE_ALLOY);
-    public static final RegiliteItem<MaterialItem> CONDUCTIVE_ALLOY_NUGGET = materialItem("conductive_alloy_nugget").withTags(EIOTags.Items.NUGGETS_CONDUCTIVE_ALLOY);
-    public static final RegiliteItem<MaterialItem> PULSATING_ALLOY_NUGGET = materialItem("pulsating_alloy_nugget").withTags(EIOTags.Items.NUGGETS_PULSATING_ALLOY);
-    public static final RegiliteItem<MaterialItem> DARK_STEEL_NUGGET = materialItem("dark_steel_nugget").withTags(EIOTags.Items.NUGGETS_DARK_STEEL);
-    public static final RegiliteItem<MaterialItem> SOULARIUM_NUGGET = materialItem("soularium_nugget").withTags(EIOTags.Items.NUGGETS_SOULARIUM);
-    public static final RegiliteItem<MaterialItem> END_STEEL_NUGGET = materialItem("end_steel_nugget").withTags(EIOTags.Items.NUGGETS_END_STEEL);
+    public static final DeferredItem<MaterialItem> COPPER_ALLOY_NUGGET = materialItem("copper_alloy_nugget").tags(EIOTags.Items.NUGGETS_COPPER_ALLOY).finish();
+    public static final DeferredItem<MaterialItem> ENERGETIC_ALLOY_NUGGET = materialItem("energetic_alloy_nugget").tags(EIOTags.Items.NUGGETS_ENERGETIC_ALLOY).finish();
+    public static final DeferredItem<MaterialItem> VIBRANT_ALLOY_NUGGET = materialItem("vibrant_alloy_nugget").tags(EIOTags.Items.NUGGETS_VIBRANT_ALLOY).finish();
+    public static final DeferredItem<MaterialItem> REDSTONE_ALLOY_NUGGET = materialItem("redstone_alloy_nugget").tags(EIOTags.Items.NUGGETS_REDSTONE_ALLOY).finish();
+    public static final DeferredItem<MaterialItem> CONDUCTIVE_ALLOY_NUGGET = materialItem("conductive_alloy_nugget").tags(EIOTags.Items.NUGGETS_CONDUCTIVE_ALLOY).finish();
+    public static final DeferredItem<MaterialItem> PULSATING_ALLOY_NUGGET = materialItem("pulsating_alloy_nugget").tags(EIOTags.Items.NUGGETS_PULSATING_ALLOY).finish();
+    public static final DeferredItem<MaterialItem> DARK_STEEL_NUGGET = materialItem("dark_steel_nugget").tags(EIOTags.Items.NUGGETS_DARK_STEEL).finish();
+    public static final DeferredItem<MaterialItem> SOULARIUM_NUGGET = materialItem("soularium_nugget").tags(EIOTags.Items.NUGGETS_SOULARIUM).finish();
+    public static final DeferredItem<MaterialItem> END_STEEL_NUGGET = materialItem("end_steel_nugget").tags(EIOTags.Items.NUGGETS_END_STEEL).finish();
 
     // endregion
 
     // region Crafting Components
 
-    public static final RegiliteItem<MaterialItem> SILICON = materialItem("silicon").withTags(EIOTags.Items.SILICON);
+    public static final DeferredItem<MaterialItem> SILICON = materialItem("silicon")
+        .tags(EIOTags.Items.SILICON)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity")
-        .withTags(EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
-        .withTranslation("Grains of Infinity");
+    public static final DeferredItem<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity")
+        .tags(EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
+        .translation("Grains of Infinity")
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> INFINITY_ROD = materialItem("infinity_rod");
+    public static final DeferredItem<MaterialItem> INFINITY_ROD = materialItem("infinity_rod").finish();
 
-    public static final RegiliteItem<MaterialItem> CONDUIT_BINDER_COMPOSITE = materialItem("conduit_binder_composite");
+    public static final DeferredItem<MaterialItem> CONDUIT_BINDER_COMPOSITE = materialItem("conduit_binder_composite").finish();
 
-    public static final RegiliteItem<MaterialItem> CONDUIT_BINDER = materialItem("conduit_binder");
+    public static final DeferredItem<MaterialItem> CONDUIT_BINDER = materialItem("conduit_binder").finish();
 
-    public static final RegiliteItem<MaterialItem> ZOMBIE_ELECTRODE = materialItem("zombie_electrode");
+    public static final DeferredItem<MaterialItem> ZOMBIE_ELECTRODE = materialItem("zombie_electrode").finish();
 
-    public static final RegiliteItem<MaterialItem> Z_LOGIC_CONTROLLER = materialItem("z_logic_controller")
-        .withTranslation("Z-Logic Controller");
+    public static final DeferredItem<MaterialItem> Z_LOGIC_CONTROLLER = materialItem("z_logic_controller")
+        .translation("Z-Logic Controller")
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> FRANK_N_ZOMBIE = materialItemGlinted("frank_n_zombie")
-        .withTranslation("Frank'N'Zombie")
-        .setModelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.Z_LOGIC_CONTROLLER));
+    public static final DeferredItem<MaterialItem> FRANK_N_ZOMBIE = materialItemGlinted("frank_n_zombie")
+        .translation("Frank'N'Zombie")
+        .modelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.Z_LOGIC_CONTROLLER))
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> ENDER_RESONATOR = materialItem("ender_resonator");
+    public static final DeferredItem<MaterialItem> ENDER_RESONATOR = materialItem("ender_resonator").finish();
 
-    public static final RegiliteItem<MaterialItem> SENTIENT_ENDER = materialItemGlinted("sentient_ender")
-        .setModelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.ENDER_RESONATOR));
+    public static final DeferredItem<MaterialItem> SENTIENT_ENDER = materialItemGlinted("sentient_ender")
+        .modelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.ENDER_RESONATOR))
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> SKELETAL_CONTRACTOR = materialItem("skeletal_contractor");
-    public static final RegiliteItem<MaterialItem> GUARDIAN_DIODE = materialItem("guardian_diode");
+    public static final DeferredItem<MaterialItem> SKELETAL_CONTRACTOR = materialItem("skeletal_contractor").finish();
+    public static final DeferredItem<MaterialItem> GUARDIAN_DIODE = materialItem("guardian_diode").finish();
 
     // endregion
 
     // region Capacitors
 
-    public static final RegiliteItem<CapacitorItem> BASIC_CAPACITOR = ITEM_REGISTRY
-        .registerItem("basic_capacitor",
+    public static final DeferredItem<CapacitorItem> BASIC_CAPACITOR = ITEMS
+        .create("basic_capacitor",
             props -> new CapacitorItem(
                 props.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(1))),
             new Item.Properties().stacksTo(1))
-        .withTab(EIOCreativeTabs.MAIN);
+        .tab(EIOCreativeTabs.MAIN)
+        .finish();
 
-    public static final RegiliteItem<CapacitorItem> DOUBLE_LAYER_CAPACITOR = ITEM_REGISTRY
-        .registerItem("double_layer_capacitor",
+    public static final DeferredItem<CapacitorItem> DOUBLE_LAYER_CAPACITOR = ITEMS
+        .create("double_layer_capacitor",
             props -> new CapacitorItem(
                 props.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(2))),
             new Item.Properties().stacksTo(1))
-        .withTab(EIOCreativeTabs.MAIN);
+        .tab(EIOCreativeTabs.MAIN)
+        .finish();
 
-    public static final RegiliteItem<CapacitorItem> OCTADIC_CAPACITOR = ITEM_REGISTRY
-        .registerItem("octadic_capacitor",
+    public static final DeferredItem<CapacitorItem> OCTADIC_CAPACITOR = ITEMS
+        .create("octadic_capacitor",
             props -> new CapacitorItem(
                 props.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(3))),
             new Item.Properties().stacksTo(1))
-        .withTab(EIOCreativeTabs.MAIN);
+        .tab(EIOCreativeTabs.MAIN)
+        .finish();
 
-    public static final RegiliteItem<LootCapacitorItem> LOOT_CAPACITOR = ITEM_REGISTRY
-        .registerItem("loot_capacitor", LootCapacitorItem::new, new Item.Properties()
-            .stacksTo(1));
+    public static final DeferredItem<LootCapacitorItem> LOOT_CAPACITOR = ITEMS
+        .create("loot_capacitor", LootCapacitorItem::new, new Item.Properties()
+            .stacksTo(1))
+        .finish();
 
     // endregion
 
     // region Crystals
 
-    public static final RegiliteItem<MaterialItem> PULSATING_CRYSTAL = materialItemGlinted("pulsating_crystal").withTags(EIOTags.Items.GEMS_PULSATING_CRYSTAL);
-    public static final RegiliteItem<MaterialItem> VIBRANT_CRYSTAL = materialItemGlinted("vibrant_crystal").withTags(EIOTags.Items.GEMS_VIBRANT_CRYSTAL);
-    public static final RegiliteItem<MaterialItem> ENDER_CRYSTAL = materialItemGlinted("ender_crystal").withTags(EIOTags.Items.GEMS_ENDER_CRYSTAL);
-    public static final RegiliteItem<MaterialItem> ENTICING_CRYSTAL = materialItemGlinted("enticing_crystal").withTags(EIOTags.Items.GEMS_ENTICING_CRYSTAL);
-    public static final RegiliteItem<MaterialItem> WEATHER_CRYSTAL = materialItemGlinted("weather_crystal").withTags(EIOTags.Items.GEMS_WEATHER_CRYSTAL);
-    public static final RegiliteItem<MaterialItem> PRESCIENT_CRYSTAL = materialItemGlinted("prescient_crystal").withTags(EIOTags.Items.GEMS_PRESCIENT_CRYSTAL);
+    public static final DeferredItem<MaterialItem> PULSATING_CRYSTAL = materialItemGlinted("pulsating_crystal")
+        .tags(EIOTags.Items.GEMS_PULSATING_CRYSTAL)
+        .finish();
+
+    public static final DeferredItem<MaterialItem> VIBRANT_CRYSTAL = materialItemGlinted("vibrant_crystal")
+        .tags(EIOTags.Items.GEMS_VIBRANT_CRYSTAL)
+        .finish();
+
+    public static final DeferredItem<MaterialItem> ENDER_CRYSTAL = materialItemGlinted("ender_crystal")
+        .tags(EIOTags.Items.GEMS_ENDER_CRYSTAL)
+        .finish();
+
+    public static final DeferredItem<MaterialItem> ENTICING_CRYSTAL = materialItemGlinted("enticing_crystal")
+        .tags(EIOTags.Items.GEMS_ENTICING_CRYSTAL)
+        .finish();
+
+    public static final DeferredItem<MaterialItem> WEATHER_CRYSTAL = materialItemGlinted("weather_crystal")
+        .tags(EIOTags.Items.GEMS_WEATHER_CRYSTAL)
+        .finish();
+
+    public static final DeferredItem<MaterialItem> PRESCIENT_CRYSTAL = materialItemGlinted("prescient_crystal")
+        .tags(EIOTags.Items.GEMS_PRESCIENT_CRYSTAL)
+        .finish();
 
     // endregion
 
     // region Powders and Fragments
 
-    public static final RegiliteItem<MaterialItem> FLOUR = materialItem("flour");
-    public static final RegiliteItem<MaterialItem> POWDERED_COAL = materialItem("powdered_coal")
-        .withTags(EIOTags.Items.DUSTS_COAL);
+    public static final DeferredItem<MaterialItem> FLOUR = materialItem("flour").finish();
+    public static final DeferredItem<MaterialItem> POWDERED_COAL = materialItem("powdered_coal")
+        .tags(EIOTags.Items.DUSTS_COAL)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> POWDERED_IRON = materialItem("powdered_iron")
-        .withTags(EIOTags.Items.DUSTS_IRON);
+    public static final DeferredItem<MaterialItem> POWDERED_IRON = materialItem("powdered_iron")
+        .tags(EIOTags.Items.DUSTS_IRON)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> POWDERED_GOLD = materialItem("powdered_gold")
-        .withTags(EIOTags.Items.DUSTS_GOLD);
+    public static final DeferredItem<MaterialItem> POWDERED_GOLD = materialItem("powdered_gold")
+        .tags(EIOTags.Items.DUSTS_GOLD)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> POWDERED_COPPER = materialItem("powdered_copper")
-        .withTags(EIOTags.Items.DUSTS_COPPER);
+    public static final DeferredItem<MaterialItem> POWDERED_COPPER = materialItem("powdered_copper")
+        .tags(EIOTags.Items.DUSTS_COPPER)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> POWDERED_TIN = materialItem("powdered_tin")
-        .withTags(EIOTags.Items.DUSTS_TIN); // TODO: hide if tin isn't present
+    public static final DeferredItem<MaterialItem> POWDERED_TIN = materialItem("powdered_tin")
+        .tags(EIOTags.Items.DUSTS_TIN)
+        .finish(); // TODO: hide if tin isn't present
 
-    public static final RegiliteItem<MaterialItem> POWDERED_ENDER_PEARL = materialItem("powdered_ender_pearl")
-        .withTags(EIOTags.Items.DUSTS_ENDER);
+    public static final DeferredItem<MaterialItem> POWDERED_ENDER_PEARL = materialItem("powdered_ender_pearl")
+        .tags(EIOTags.Items.DUSTS_ENDER)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> POWDERED_OBSIDIAN = materialItem("powdered_obsidian")
-        .withTags(EIOTags.Items.DUSTS_OBSIDIAN);
+    public static final DeferredItem<MaterialItem> POWDERED_OBSIDIAN = materialItem("powdered_obsidian")
+        .tags(EIOTags.Items.DUSTS_OBSIDIAN)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> POWDERED_COBALT = materialItem("powdered_cobalt")
-        .withTags(EIOTags.Items.DUSTS_COBALT); // TODO: hide if cobalt isnt present
+    public static final DeferredItem<MaterialItem> POWDERED_COBALT = materialItem("powdered_cobalt")
+        .tags(EIOTags.Items.DUSTS_COBALT)
+        .finish(); // TODO: hide if cobalt isnt present
 
-    public static final RegiliteItem<MaterialItem> POWDERED_LAPIS_LAZULI = materialItem("powdered_lapis_lazuli")
-        .withTags(EIOTags.Items.DUSTS_LAPIS);
+    public static final DeferredItem<MaterialItem> POWDERED_LAPIS_LAZULI = materialItem("powdered_lapis_lazuli")
+        .tags(EIOTags.Items.DUSTS_LAPIS)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> POWDERED_QUARTZ = materialItem("powdered_quartz")
-        .withTags(EIOTags.Items.DUSTS_QUARTZ);
+    public static final DeferredItem<MaterialItem> POWDERED_QUARTZ = materialItem("powdered_quartz")
+        .tags(EIOTags.Items.DUSTS_QUARTZ)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> PRESCIENT_POWDER = materialItemGlinted("prescient_powder")
-        .withTags(EIOTags.Items.DUSTS_GRAINS_OF_PRESCIENCE)
-        .withTranslation("Grains of Prescience");
+    public static final DeferredItem<MaterialItem> PRESCIENT_POWDER = materialItemGlinted("prescient_powder")
+        .tags(EIOTags.Items.DUSTS_GRAINS_OF_PRESCIENCE)
+        .translation("Grains of Prescience")
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> VIBRANT_POWDER = materialItemGlinted("vibrant_powder")
-        .withTags(EIOTags.Items.DUSTS_GRAINS_OF_VIBRANCY)
-        .withTranslation("Grains of Vibrancy");
+    public static final DeferredItem<MaterialItem> VIBRANT_POWDER = materialItemGlinted("vibrant_powder")
+        .tags(EIOTags.Items.DUSTS_GRAINS_OF_VIBRANCY)
+        .translation("Grains of Vibrancy")
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> PULSATING_POWDER = materialItemGlinted("pulsating_powder")
-        .withTags(EIOTags.Items.DUSTS_GRAINS_OF_PIZEALLITY)
-        .withTranslation("Grains of Piezallity");
+    public static final DeferredItem<MaterialItem> PULSATING_POWDER = materialItemGlinted("pulsating_powder")
+        .tags(EIOTags.Items.DUSTS_GRAINS_OF_PIZEALLITY)
+        .translation("Grains of Piezallity")
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> ENDER_CRYSTAL_POWDER = materialItemGlinted("ender_crystal_powder")
-        .withTags(EIOTags.Items.DUSTS_GRAINS_OF_THE_END)
-        .withTranslation("Grains of the End");
+    public static final DeferredItem<MaterialItem> ENDER_CRYSTAL_POWDER = materialItemGlinted("ender_crystal_powder")
+        .tags(EIOTags.Items.DUSTS_GRAINS_OF_THE_END)
+        .translation("Grains of the End")
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> PHOTOVOLTAIC_COMPOSITE = materialItem("photovoltaic_composite");
-    public static final RegiliteItem<MaterialItem> SOUL_POWDER = materialItem("soul_powder");
-    public static final RegiliteItem<MaterialItem> CONFUSION_POWDER = materialItem("confusing_powder");
-    public static final RegiliteItem<MaterialItem> WITHERING_POWDER = materialItem("withering_powder");
+    public static final DeferredItem<MaterialItem> PHOTOVOLTAIC_COMPOSITE = materialItem("photovoltaic_composite").finish();
+    public static final DeferredItem<MaterialItem> SOUL_POWDER = materialItem("soul_powder").finish();
+    public static final DeferredItem<MaterialItem> CONFUSION_POWDER = materialItem("confusing_powder").finish();
+    public static final DeferredItem<MaterialItem> WITHERING_POWDER = materialItem("withering_powder").finish();
 
     // endregion
 
@@ -203,74 +245,86 @@ public class EIOItems {
 
     // region Gears
 
-    public static final RegiliteItem<MaterialItem> GEAR_WOOD = materialItem("wood_gear")
-        .withTranslation("Wooden Gear")
-        .withTags(EIOTags.Items.GEARS_WOOD);
+    public static final DeferredItem<MaterialItem> GEAR_WOOD = materialItem("wood_gear")
+        .translation("Wooden Gear")
+        .tags(EIOTags.Items.GEARS_WOOD)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> GEAR_STONE = materialItem("stone_gear")
-        .withTranslation("Stone Compound Gear")
-        .withTags(EIOTags.Items.GEARS_STONE);
+    public static final DeferredItem<MaterialItem> GEAR_STONE = materialItem("stone_gear")
+        .translation("Stone Compound Gear")
+        .tags(EIOTags.Items.GEARS_STONE)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> GEAR_IRON = materialItem("iron_gear")
-        .withTranslation("Infinity Bimetal Gear")
-        .withTags(EIOTags.Items.GEARS_IRON);
+    public static final DeferredItem<MaterialItem> GEAR_IRON = materialItem("iron_gear")
+        .translation("Infinity Bimetal Gear")
+        .tags(EIOTags.Items.GEARS_IRON)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> GEAR_ENERGIZED = materialItem("energized_gear")
-        .withTranslation("Energized Bimetal Gear")
-        .withTags(EIOTags.Items.GEARS_ENERGIZED);
+    public static final DeferredItem<MaterialItem> GEAR_ENERGIZED = materialItem("energized_gear")
+        .translation("Energized Bimetal Gear")
+        .tags(EIOTags.Items.GEARS_ENERGIZED)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> GEAR_VIBRANT = materialItem("vibrant_gear")
-        .withTranslation("Vibrant Bimetal Gear")
-        .withTags(EIOTags.Items.GEARS_VIBRANT);
+    public static final DeferredItem<MaterialItem> GEAR_VIBRANT = materialItem("vibrant_gear")
+        .translation("Vibrant Bimetal Gear")
+        .tags(EIOTags.Items.GEARS_VIBRANT)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> GEAR_DARK_STEEL = materialItem("dark_bimetal_gear")
-        .withTranslation("Dark Bimetal Gear")
-        .withTags(EIOTags.Items.GEARS_DARK_STEEL);
+    public static final DeferredItem<MaterialItem> GEAR_DARK_STEEL = materialItem("dark_bimetal_gear")
+        .translation("Dark Bimetal Gear")
+        .tags(EIOTags.Items.GEARS_DARK_STEEL)
+        .finish();
 
     // endregion
 
     // region Dyes
 
-    public static final RegiliteItem<MaterialItem> DYE_GREEN = materialItem("organic_green_dye")
-        .withTags(Tags.Items.DYES_GREEN, Tags.Items.DYES);
+    public static final DeferredItem<MaterialItem> DYE_GREEN = materialItem("organic_green_dye")
+        .tags(Tags.Items.DYES_GREEN, Tags.Items.DYES)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> DYE_BROWN = materialItem("organic_brown_dye")
-        .withTags(Tags.Items.DYES_BROWN, Tags.Items.DYES);
+    public static final DeferredItem<MaterialItem> DYE_BROWN = materialItem("organic_brown_dye")
+        .tags(Tags.Items.DYES_BROWN, Tags.Items.DYES)
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> DYE_BLACK = materialItem("organic_black_dye")
-        .withTags(Tags.Items.DYES_BLACK, Tags.Items.DYES);
+    public static final DeferredItem<MaterialItem> DYE_BLACK = materialItem("organic_black_dye")
+        .tags(Tags.Items.DYES_BLACK, Tags.Items.DYES)
+        .finish();
 
     // endregion
 
     // region Misc Materials
 
-    public static final RegiliteItem<MaterialItem> PHOTOVOLTAIC_PLATE = materialItem("photovoltaic_plate");
+    public static final DeferredItem<MaterialItem> PHOTOVOLTAIC_PLATE = materialItem("photovoltaic_plate").finish();
 
-    public static final RegiliteItem<MaterialItem> NUTRITIOUS_STICK = materialItem("nutritious_stick");
+    public static final DeferredItem<MaterialItem> NUTRITIOUS_STICK = materialItem("nutritious_stick").finish();
 
-    public static final RegiliteItem<MaterialItem> PLANT_MATTER_GREEN = materialItem("plant_matter_green")
-        .withTranslation("Clippings and Trimmings");
+    public static final DeferredItem<MaterialItem> PLANT_MATTER_GREEN = materialItem("plant_matter_green")
+        .translation("Clippings and Trimmings")
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> PLANT_MATTER_BROWN = materialItem("plant_matter_brown")
-        .withTranslation("Twigs and Prunings");
+    public static final DeferredItem<MaterialItem> PLANT_MATTER_BROWN = materialItem("plant_matter_brown")
+        .translation("Twigs and Prunings")
+        .finish();
 
-    public static final RegiliteItem<MaterialItem> GLIDER_WING = materialItem("glider_wing");
+    public static final DeferredItem<MaterialItem> GLIDER_WING = materialItem("glider_wing").finish();
 
-    public static final RegiliteItem<MaterialItem> ANIMAL_TOKEN = materialItemGlinted("animal_token");
-    public static final RegiliteItem<MaterialItem> MONSTER_TOKEN = materialItemGlinted("monster_token");
-    public static final RegiliteItem<MaterialItem> PLAYER_TOKEN = materialItemGlinted("player_token");
-    public static final RegiliteItem<MaterialItem> CAKE_BASE = materialItem("cake_base");
-    public static final RegiliteItem<MaterialItem> BLACK_PAPER = materialItem("black_paper");
-    public static final RegiliteItem<MaterialItem> CLAYED_GLOWSTONE = materialItem("clayed_glowstone");
-    public static final RegiliteItem<MaterialItem> NETHERCOTTA = materialItem("nethercotta");
-    public static final RegiliteItem<MaterialItem> REDSTONE_FILTER_BASE = materialItem("redstone_filter_base");
+    public static final DeferredItem<MaterialItem> ANIMAL_TOKEN = materialItemGlinted("animal_token").finish();
+    public static final DeferredItem<MaterialItem> MONSTER_TOKEN = materialItemGlinted("monster_token").finish();
+    public static final DeferredItem<MaterialItem> PLAYER_TOKEN = materialItemGlinted("player_token").finish();
+    public static final DeferredItem<MaterialItem> CAKE_BASE = materialItem("cake_base").finish();
+    public static final DeferredItem<MaterialItem> BLACK_PAPER = materialItem("black_paper").finish();
+    public static final DeferredItem<MaterialItem> CLAYED_GLOWSTONE = materialItem("clayed_glowstone").finish();
+    public static final DeferredItem<MaterialItem> NETHERCOTTA = materialItem("nethercotta").finish();
+    public static final DeferredItem<MaterialItem> REDSTONE_FILTER_BASE = materialItem("redstone_filter_base").finish();
 
-    public static final RegiliteItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEM_REGISTRY
-        .registerItem("broken_spawner", BrokenSpawnerItem::new)
-        .withTags(EIOTags.Items.ENTITY_STORAGE)
-        .setModelProvider(ModelHelper::fakeBlockModel)
-        .withTab(EIOCreativeTabs.MAIN)
-        .withTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.getPossibleStacks()));
+    public static final DeferredItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEMS
+        .create("broken_spawner", BrokenSpawnerItem::new)
+        .tags(EIOTags.Items.ENTITY_STORAGE)
+        .modelProvider(ModelHelper::fakeBlockModel)
+        .tab(EIOCreativeTabs.MAIN)
+        .tab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.getPossibleStacks()))
+        .finish();
 
     // endregion
 
@@ -278,35 +332,35 @@ public class EIOItems {
 
     // TODO: 20.6: Config for grinding balls?
 
-    public static final RegiliteItem<MaterialItem> SOULARIUM_BALL = grindingBall("soularium_grinding_ball",
+    public static final DeferredItem<MaterialItem> SOULARIUM_BALL = grindingBall("soularium_grinding_ball",
         new GrindingBallData(1.2F, 2.15F, 0.9F, 80000));
 
-    public static final RegiliteItem<MaterialItem> CONDUCTIVE_ALLOY_BALL = grindingBall("conductive_alloy_grinding_ball",
+    public static final DeferredItem<MaterialItem> CONDUCTIVE_ALLOY_BALL = grindingBall("conductive_alloy_grinding_ball",
         new GrindingBallData(1.35F, 1.00F, 1.0F, 40000));
 
-    public static final RegiliteItem<MaterialItem> PULSATING_ALLOY_BALL = grindingBall("pulsating_alloy_grinding_ball",
+    public static final DeferredItem<MaterialItem> PULSATING_ALLOY_BALL = grindingBall("pulsating_alloy_grinding_ball",
         new GrindingBallData(1.00F, 1.85F, 1.0F, 100000));
 
-    public static final RegiliteItem<MaterialItem> REDSTONE_ALLOY_BALL = grindingBall("redstone_alloy_grinding_ball",
+    public static final DeferredItem<MaterialItem> REDSTONE_ALLOY_BALL = grindingBall("redstone_alloy_grinding_ball",
         new GrindingBallData(1.00F, 1.00F, 0.35F, 30000));
 
-    public static final RegiliteItem<MaterialItem> ENERGETIC_ALLOY_BALL = grindingBall("energetic_alloy_grinding_ball",
+    public static final DeferredItem<MaterialItem> ENERGETIC_ALLOY_BALL = grindingBall("energetic_alloy_grinding_ball",
         new GrindingBallData(1.6F, 1.1F, 1.1F, 80000));
 
-    public static final RegiliteItem<MaterialItem> VIBRANT_ALLOY_BALL = grindingBall("vibrant_alloy_grinding_ball",
+    public static final DeferredItem<MaterialItem> VIBRANT_ALLOY_BALL = grindingBall("vibrant_alloy_grinding_ball",
         new GrindingBallData(1.75F, 1.35F, 1.13F, 80000));
 
-    public static final RegiliteItem<MaterialItem> COPPER_ALLOY_BALL = grindingBall("copper_alloy_grinding_ball",
+    public static final DeferredItem<MaterialItem> COPPER_ALLOY_BALL = grindingBall("copper_alloy_grinding_ball",
         new GrindingBallData(1.2F, 1.65F, 0.8F, 40000));
 
-    public static final RegiliteItem<MaterialItem> DARK_STEEL_BALL = grindingBall("dark_steel_grinding_ball",
+    public static final DeferredItem<MaterialItem> DARK_STEEL_BALL = grindingBall("dark_steel_grinding_ball",
         new GrindingBallData(1.35F, 2.00F, 0.7F, 125000));
 
-    public static final RegiliteItem<MaterialItem> END_STEEL_BALL = grindingBall("end_steel_grinding_ball",
+    public static final DeferredItem<MaterialItem> END_STEEL_BALL = grindingBall("end_steel_grinding_ball",
         new GrindingBallData(1.4F, 2.4F, 0.7F, 75000));
 
-    //    public static final Map<DyeColor, RegiliteItem<HangGliderItem>> COLORED_HANG_GLIDERS = Util.make(() -> {
-    //       Map<DyeColor, RegiliteItem<HangGliderItem>> tempMap = new EnumMap<>(DyeColor.class);
+    //    public static final Map<DyeColor, DeferredItem<HangGliderItem>> COLORED_HANG_GLIDERS = Util.make(() -> {
+    //       Map<DyeColor, DeferredItem<HangGliderItem>> tempMap = new EnumMap<>(DyeColor.class);
     //       for (DyeColor color: DyeColor.values()) {
     //           var entry = gliderItem(color.getName() + "_glider");
     //           tempMap.put(color, entry);
@@ -314,123 +368,139 @@ public class EIOItems {
     //       return tempMap;
     //    });
 
-    //    public static final RegiliteItem<HangGliderItem> GLIDER = gliderItem("glider");
+    //    public static final DeferredItem<HangGliderItem> GLIDER = gliderItem("glider");
 
-    private static RegiliteItem<MaterialItem> grindingBall(String name, GrindingBallData grindingBallData) {
-        return ITEM_REGISTRY
-            .registerItem(name, props -> new MaterialItem(
+    private static DeferredItem<MaterialItem> grindingBall(String name, GrindingBallData grindingBallData) {
+        return ITEMS
+            .create(name, props -> new MaterialItem(
                 props
                     .component(EIODataComponents.GRINDING_BALL, grindingBallData),
                 false))
-            .withTags(EIOTags.Items.GRINDING_BALLS)
-            .withTab(EIOCreativeTabs.MAIN);
+            .tags(EIOTags.Items.GRINDING_BALLS)
+            .tab(EIOCreativeTabs.MAIN)
+            .finish();
     }
 
     // endregion
 
     // region Builders
 
-    private static RegiliteItem<HangGliderItem> gliderItem(String name) {
+    private static DeferredItem<HangGliderItem> gliderItem(String name) {
         return dumbItem(name, HangGliderItem::new)
-            .withTags(EIOTags.Items.GLIDER)
-            .withTab(EIOCreativeTabs.MAIN)
-            .setModelProvider((prov, ctx) -> GliderItemModel.create(ctx.get(), prov));
+            .tags(EIOTags.Items.GLIDER)
+            .tab(EIOCreativeTabs.MAIN)
+            .modelProvider((prov, ctx) -> GliderItemModel.create(ctx.get(), prov))
+            .finish();
     }
 
-    private static RegiliteItem<MaterialItem> materialItem(String name) {
-        return ITEM_REGISTRY
-            .registerItem(name, props -> new MaterialItem(props, false))
-            .withTab(EIOCreativeTabs.MAIN);
+    private static ItemBuilder<MaterialItem> materialItem(String name) {
+        return ITEMS
+            .create(name, props -> new MaterialItem(props, false))
+            .tab(EIOCreativeTabs.MAIN);
     }
 
-    private static RegiliteItem<MaterialItem> materialItemGlinted(String name) {
-        return ITEM_REGISTRY
-            .registerItem(name, props -> new MaterialItem(props, true))
-            .withTab(EIOCreativeTabs.MAIN);
+    private static ItemBuilder<MaterialItem> materialItemGlinted(String name) {
+        return ITEMS
+            .create(name, props -> new MaterialItem(props, true))
+            .tab(EIOCreativeTabs.MAIN);
     }
 
     // endregion
 
     // region Items
 
-    public static final RegiliteItem<SoulVialItem> EMPTY_SOUL_VIAL = groupedItem("empty_soul_vial", SoulVialItem::new, EIOCreativeTabs.SOULS);
+    public static final DeferredItem<SoulVialItem> EMPTY_SOUL_VIAL = groupedItem("empty_soul_vial", SoulVialItem::new, EIOCreativeTabs.SOULS).finish();
 
-    public static final RegiliteItem<SoulVialItem> FILLED_SOUL_VIAL = ITEM_REGISTRY
-        .registerItem("filled_soul_vial", SoulVialItem::new, new Item.Properties().stacksTo(1))
-        .withTags(EIOTags.Items.ENTITY_STORAGE)
-        .withTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled(), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY));
+    public static final DeferredItem<SoulVialItem> FILLED_SOUL_VIAL = ITEMS
+        .create("filled_soul_vial", SoulVialItem::new, new Item.Properties().stacksTo(1))
+        .tags(EIOTags.Items.ENTITY_STORAGE)
+        .tab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled(), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY))
+        .finish();
 
-    public static final RegiliteItem<EnderiosItem> ENDERIOS = ITEM_REGISTRY
-        .registerItem("enderios", EnderiosItem::new, new Item.Properties().stacksTo(1))
-        .withTab(EIOCreativeTabs.MAIN)
-        .withTranslation("\"Enderios\"");
+    public static final DeferredItem<EnderiosItem> ENDERIOS = ITEMS
+        .create("enderios", EnderiosItem::new, new Item.Properties().stacksTo(1))
+        .tab(EIOCreativeTabs.MAIN)
+        .translation("\"Enderios\"")
+        .finish();
 
     // endregion
 
     // region Tools
-    public static final RegiliteItem<YetaWrenchItem> YETA_WRENCH = ITEM_REGISTRY
-        .registerItem("yeta_wrench", YetaWrenchItem::new, new Item.Properties().stacksTo(1))
-        .withTab(EIOCreativeTabs.GEAR)
-        .withTags(EIOTags.Items.WRENCH);
+    public static final DeferredItem<YetaWrenchItem> YETA_WRENCH = ITEMS
+        .create("yeta_wrench", YetaWrenchItem::new, new Item.Properties().stacksTo(1))
+        .tab(EIOCreativeTabs.GEAR)
+        .tags(EIOTags.Items.WRENCH)
+        .finish();
 
-    public static final RegiliteItem<LocationPrintoutItem> LOCATION_PRINTOUT = ITEM_REGISTRY
-        .registerItem("location_printout", LocationPrintoutItem::new, new Item.Properties().stacksTo(1))
-        .withTab(EIOCreativeTabs.GEAR);
+    public static final DeferredItem<LocationPrintoutItem> LOCATION_PRINTOUT = ITEMS
+        .create("location_printout", LocationPrintoutItem::new, new Item.Properties().stacksTo(1))
+        .tab(EIOCreativeTabs.GEAR)
+        .finish();
 
-    public static final RegiliteItem<CoordinateSelectorItem> COORDINATE_SELECTOR = ITEM_REGISTRY
-        .registerItem("coordinate_selector", CoordinateSelectorItem::new, new Item.Properties().stacksTo(1))
-        .withTab(EIOCreativeTabs.GEAR);
+    public static final DeferredItem<CoordinateSelectorItem> COORDINATE_SELECTOR = ITEMS
+        .create("coordinate_selector", CoordinateSelectorItem::new, new Item.Properties().stacksTo(1))
+        .tab(EIOCreativeTabs.GEAR)
+        .finish();
 
-    public static final RegiliteItem<ExperienceRodItem> EXPERIENCE_ROD = ITEM_REGISTRY
-        .registerItem("experience_rod", ExperienceRodItem::new)
-        .withTab(EIOCreativeTabs.GEAR);
+    public static final DeferredItem<ExperienceRodItem> EXPERIENCE_ROD = ITEMS
+        .create("experience_rod", ExperienceRodItem::new)
+        .tab(EIOCreativeTabs.GEAR)
+        .finish();
 
-    public static final RegiliteItem<LevitationStaffItem> LEVITATION_STAFF = ITEM_REGISTRY
-        .registerItem("staff_of_levity", LevitationStaffItem::new)
-        .withTab(EIOCreativeTabs.GEAR, modifier -> EIOItems.LEVITATION_STAFF.get().addAllVariants(modifier))
-        .withCapability(Capabilities.FluidHandler.ITEM, LevitationStaffItem.FLUID_HANDLER_PROVIDER)
-        .with(EIOItems::poweredToggledItemCapabilities);
+    public static final DeferredItem<LevitationStaffItem> LEVITATION_STAFF = ITEMS
+        .create("staff_of_levity", LevitationStaffItem::new)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.LEVITATION_STAFF.get().addAllVariants(modifier))
+        .capability(Capabilities.FluidHandler.ITEM, LevitationStaffItem.FLUID_HANDLER_PROVIDER)
+        .with(EIOItems::poweredToggledItemCapabilities)
+        .finish();
 
-    public static final RegiliteItem<TravelStaffItem> TRAVEL_STAFF = ITEM_REGISTRY
-        .registerItem("staff_of_travelling", TravelStaffItem::new, new Item.Properties().stacksTo(1))
-        .withTab(EIOCreativeTabs.GEAR, modifier -> EIOItems.TRAVEL_STAFF.get().addAllVariants(modifier))
-        .withCapability(Capabilities.EnergyStorage.ITEM, TravelStaffItem.ENERGY_STORAGE_PROVIDER);
+    public static final DeferredItem<TravelStaffItem> TRAVEL_STAFF = ITEMS
+        .create("staff_of_travelling", TravelStaffItem::new, new Item.Properties().stacksTo(1))
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.TRAVEL_STAFF.get().addAllVariants(modifier))
+        .capability(Capabilities.EnergyStorage.ITEM, TravelStaffItem.ENERGY_STORAGE_PROVIDER)
+        .finish();
 
-    public static final RegiliteItem<ElectromagnetItem> ELECTROMAGNET = ITEM_REGISTRY
-        .registerItem("electromagnet", ElectromagnetItem::new)
-        .withTab(EIOCreativeTabs.GEAR, modifier -> EIOItems.ELECTROMAGNET.get().addAllVariants(modifier))
-        .with(EIOItems::poweredToggledItemCapabilities);
+    public static final DeferredItem<ElectromagnetItem> ELECTROMAGNET = ITEMS
+        .create("electromagnet", ElectromagnetItem::new)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.ELECTROMAGNET.get().addAllVariants(modifier))
+        .with(EIOItems::poweredToggledItemCapabilities)
+        .finish();
 
-    public static final RegiliteItem<ColdFireIgniter> COLD_FIRE_IGNITER = ITEM_REGISTRY
-        .registerItem("cold_fire_igniter", ColdFireIgniter::new)
-        .withTab(EIOCreativeTabs.GEAR,
+    public static final DeferredItem<ColdFireIgniter> COLD_FIRE_IGNITER = ITEMS
+        .create("cold_fire_igniter", ColdFireIgniter::new)
+        .tab(EIOCreativeTabs.GEAR,
             modifier -> EIOItems.COLD_FIRE_IGNITER.get().addAllVariants(modifier)) // TODO: Might PR this to ITEM_REGISTRY so its nicer, but I like the footprint.
-        .withCapability(Capabilities.FluidHandler.ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER);
+        .capability(Capabilities.FluidHandler.ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER)
+        .finish();
 
     // endregion
 
     // region filter
 
-    public static final RegiliteItem<ItemFilter> BASIC_ITEM_FILTER = ITEM_REGISTRY
-        .registerItem("basic_filter", properties -> new ItemFilter(properties.component(EIODataComponents.ITEM_FILTER, new ItemFilterCapability.Component(5))))
-        .withTab(EIOCreativeTabs.GEAR)
-        .withCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
+    public static final DeferredItem<ItemFilter> BASIC_ITEM_FILTER = ITEMS
+        .create("basic_filter", properties -> new ItemFilter(properties.component(EIODataComponents.ITEM_FILTER, new ItemFilterCapability.Component(5))))
+        .tab(EIOCreativeTabs.GEAR)
+        .capability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER)
+        .finish();
 
-    public static final RegiliteItem<ItemFilter> ADVANCED_ITEM_FILTER = ITEM_REGISTRY
-        .registerItem("advanced_filter", properties -> new ItemFilter(properties.component(EIODataComponents.ITEM_FILTER, new ItemFilterCapability.Component(10))))
-        .withTab(EIOCreativeTabs.GEAR)
-        .withCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
+    public static final DeferredItem<ItemFilter> ADVANCED_ITEM_FILTER = ITEMS
+        .create("advanced_filter", properties -> new ItemFilter(properties.component(EIODataComponents.ITEM_FILTER, new ItemFilterCapability.Component(10))))
+        .tab(EIOCreativeTabs.GEAR)
+        .capability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER)
+        .finish();
 
-    public static final RegiliteItem<FluidFilter> BASIC_FLUID_FILTER = ITEM_REGISTRY
-        .registerItem("fluid_filter", properties -> new FluidFilter(properties.component(EIODataComponents.FLUID_FILTER, new FluidFilterCapability.Component(5))))
-        .withTab(EIOCreativeTabs.GEAR)
-        .withCapability(EIOCapabilities.Filter.ITEM, FluidFilter.FILTER_PROVIDER);
+    public static final DeferredItem<FluidFilter> BASIC_FLUID_FILTER = ITEMS
+        .create("fluid_filter", properties -> new FluidFilter(properties.component(EIODataComponents.FLUID_FILTER, new FluidFilterCapability.Component(5))))
+        .tab(EIOCreativeTabs.GEAR)
+        .capability(EIOCapabilities.Filter.ITEM, FluidFilter.FILTER_PROVIDER)
+        .finish();
 
-    public static final RegiliteItem<EntityFilter> ENTITY_FILTER = ITEM_REGISTRY
-        .registerItem("entity_filter", properties -> new EntityFilter(properties.component(EIODataComponents.ENTITY_FILTER, new EntityFilterCapability.Component(5))))
-        .withTranslation("Soul Filter")
-        .withTab(EIOCreativeTabs.GEAR)
-        .withCapability(EIOCapabilities.Filter.ITEM, EntityFilter.ENTITY_FILTER);
+    public static final DeferredItem<EntityFilter> ENTITY_FILTER = ITEMS
+        .create("entity_filter", properties -> new EntityFilter(properties.component(EIODataComponents.ENTITY_FILTER, new EntityFilterCapability.Component(5))))
+        .translation("Soul Filter")
+        .tab(EIOCreativeTabs.GEAR)
+        .capability(EIOCapabilities.Filter.ITEM, EntityFilter.ENTITY_FILTER)
+        .finish();
 
     // endregion
 
@@ -446,37 +516,36 @@ public class EIOItems {
 
     // region Creative Tab Icons
 
-    public static final RegiliteItem<CreativeTabIconItem> CREATIVE_ICON_NONE = dumbItem("enderface_none", CreativeTabIconItem::new);
-    public static final RegiliteItem<CreativeTabIconItem> CREATIVE_ICON_ITEMS = dumbItem("enderface_items", CreativeTabIconItem::new);
-    public static final RegiliteItem<CreativeTabIconItem> CREATIVE_ICON_MATERIALS = dumbItem("enderface_materials", CreativeTabIconItem::new);
-    public static final RegiliteItem<CreativeTabIconItem> CREATIVE_ICON_MACHINES = dumbItem("enderface_machines", CreativeTabIconItem::new);
-    public static final RegiliteItem<CreativeTabIconItem> CREATIVE_ICON_CONDUITS = dumbItem("enderface_conduits", CreativeTabIconItem::new);
-    public static final RegiliteItem<CreativeTabIconItem> CREATIVE_ICON_MOBS = dumbItem("enderface_mobs", CreativeTabIconItem::new);
-    public static final RegiliteItem<CreativeTabIconItem> CREATIVE_ICON_INVPANEL = dumbItem("enderface_invpanel", CreativeTabIconItem::new);
+    public static final DeferredItem<CreativeTabIconItem> CREATIVE_ICON_NONE = dumbItem("enderface_none", CreativeTabIconItem::new).finish();
+    public static final DeferredItem<CreativeTabIconItem> CREATIVE_ICON_ITEMS = dumbItem("enderface_items", CreativeTabIconItem::new).finish();
+    public static final DeferredItem<CreativeTabIconItem> CREATIVE_ICON_MATERIALS = dumbItem("enderface_materials", CreativeTabIconItem::new).finish();
+    public static final DeferredItem<CreativeTabIconItem> CREATIVE_ICON_MACHINES = dumbItem("enderface_machines", CreativeTabIconItem::new).finish();
+    public static final DeferredItem<CreativeTabIconItem> CREATIVE_ICON_CONDUITS = dumbItem("enderface_conduits", CreativeTabIconItem::new).finish();
+    public static final DeferredItem<CreativeTabIconItem> CREATIVE_ICON_MOBS = dumbItem("enderface_mobs", CreativeTabIconItem::new).finish();
+    public static final DeferredItem<CreativeTabIconItem> CREATIVE_ICON_INVPANEL = dumbItem("enderface_invpanel", CreativeTabIconItem::new).finish();
 
     // endregion
 
     // region Helpers
 
-    public static <T extends Item> RegiliteItem<T> dumbItem(String name, Function<Item.Properties, T> factory) {
-        return ITEM_REGISTRY.registerItem(name, factory);
+    public static <T extends Item> ItemBuilder<T> dumbItem(String name, Function<Item.Properties, T> factory) {
+        return ITEMS.create(name, factory);
     }
 
-    public static RegiliteItem<Item> dumbItem(String name) {
-        return ITEM_REGISTRY.registerItem(name);
+    public static ItemBuilder<Item> dumbItem(String name) {
+        return ITEMS.createSimple(name);
     }
 
-    public static <T extends Item> RegiliteItem<T> groupedItem(String name, Function<Item.Properties, T> factory, ResourceKey<CreativeModeTab> tab) {
-        return ITEM_REGISTRY.registerItem(name, factory).withTab(tab);
+    public static <T extends Item> ItemBuilder<T> groupedItem(String name, Function<Item.Properties, T> factory, ResourceKey<CreativeModeTab> tab) {
+        return ITEMS.create(name, factory).tab(tab);
     }
 
-    private static <T extends PoweredToggledItem> void poweredToggledItemCapabilities(RegiliteItem<T> item) {
-        item.withCapability(Capabilities.EnergyStorage.ITEM, PoweredToggledItem.ENERGY_STORAGE_PROVIDER);
+    private static <T extends PoweredToggledItem> ItemBuilder<T> poweredToggledItemCapabilities(ItemBuilder<T> item) {
+        return item.capability(Capabilities.EnergyStorage.ITEM, PoweredToggledItem.ENERGY_STORAGE_PROVIDER);
     }
 
     // endregion
 
-    public static void register(IEventBus bus) {
-        ITEM_REGISTRY.register(bus);
+    public static void register() {
     }
 }

@@ -32,7 +32,7 @@ public class LightNode extends Block implements EntityBlock{
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return EIOBlockEntities.LIGHT_NODE.create(pos, state);
+		return EIOBlockEntities.LIGHT_NODE.get().create(pos, state);
 	}
 	
 	@Override
