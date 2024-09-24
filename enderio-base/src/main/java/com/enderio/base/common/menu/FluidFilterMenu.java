@@ -100,4 +100,12 @@ public class FluidFilterMenu extends AbstractContainerMenu {
         }
         super.clicked(pSlotId, pButton, pClickType, pPlayer);
     }
+
+    @Override
+    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+        if (clickType == ClickType.PICKUP && slotId < capability.getEntries().size() && slotId >= 0) {
+            this.getSlot(slotId).set(ItemStack.EMPTY);
+        }
+        super.doClick(slotId, button, clickType, player);
+    }
 }

@@ -9,6 +9,7 @@ import com.enderio.conduits.api.SlotType;
 import com.enderio.conduits.api.upgrade.ConduitUpgrade;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.ConduitNBTKeys;
+import com.enderio.conduits.client.particle.ConduitBreakParticle;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.ConduitDataContainer;
@@ -416,6 +417,11 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
         boolean shouldRemove = bundle.removeConduit(level, conduit);
         removeNeighborConnections(conduit);
         updateShape();
+
+        if (level.isClientSide) {
+            ConduitBreakParticle.addDestroyEffects(getBlockPos(), conduit.value());
+        }
+
         return shouldRemove;
     }
 

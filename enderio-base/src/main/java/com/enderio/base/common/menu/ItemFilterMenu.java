@@ -8,6 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -88,5 +89,13 @@ public class ItemFilterMenu extends AbstractContainerMenu {
     public void setInverted(Boolean inverted) {
         PacketDistributor.sendToServer(new FilterUpdatePacket(capability.isNbt(), inverted));
         capability.setInverted(inverted);
+    }
+
+    @Override
+    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+        if (clickType == ClickType.PICKUP && slotId < capability.getEntries().size() && slotId >= 0) {
+            this.getSlot(slotId).set(ItemStack.EMPTY);
+        }
+        super.doClick(slotId, button, clickType, player);
     }
 }

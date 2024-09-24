@@ -1,10 +1,10 @@
 package com.enderio.conduits.common.conduit.block;
 
-import com.enderio.conduits.api.Conduit;
 import com.enderio.base.api.integration.IntegrationManager;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.EnderIOConduits;
+import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.ConduitGraphObject;
@@ -567,4 +567,9 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     // endregion
 
     private record OpenInformation(Direction direction, Holder<Conduit<?>> conduit) {}
+
+    @Override
+    protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
+
+    }
 }
