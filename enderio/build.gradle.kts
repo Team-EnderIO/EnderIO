@@ -1,4 +1,5 @@
 import com.hypherionmc.modpublisher.properties.ModLoader
+import java.net.URI
 
 plugins {
     id("net.neoforged.moddev")
@@ -21,6 +22,7 @@ val cctMinecraftVersion: String by project
 val cctVersion: String by project
 val athenaVersion: String by project
 val ae2Version: String by project
+val refinedstorageVersion: String by project
 val jadeFileId: String by project
 val mekanismMinecraftVersion: String by project
 val mekanismVersion: String by project
@@ -51,6 +53,9 @@ dependencies {
 
     // AE2
     runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
+
+    // Refined storage
+    runtimeOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
 
     // Enchantment descriptions
     //runtimeOnly("net.darkhax.bookshelf:Bookshelf-NeoForge-${minecraft_version}:${bookshelf_version}")
@@ -150,39 +155,6 @@ tasks.register<Jar>("sourcesJar") {
 tasks.build {
     dependsOn(tasks["apiJar"])
     dependsOn(tasks["sourcesJar"])
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("enderio") {
-            groupId = "com.enderio"
-            // TODO: Do we care about specifying MC version now that we're only releasing one major version per MC version?
-            //       Only real benefit is this being clear in maven directly.
-            artifactId = "enderio-${minecraftVersion}"
-            version = "${project.version}"
-
-            artifact(tasks["jar"])
-            artifact(tasks["apiJar"])
-            artifact(tasks["sourcesJar"])
-
-            pom {
-                name.set("EnderIO")
-                description.set("The core modules of Ender IO")
-                url.set("https://github.com/Team-EnderIO/EnderIO")
-
-                licenses {
-                    license {
-                        name.set("Unlicense")
-                        url.set("https://github.com/Team-EnderIO/EnderIO/blob/dev/1.21/LICENSE.txt")
-                    }
-                }
-
-                scm {
-                    url.set("https://github.com/Team-EnderIO/EnderIO.git")
-                }
-            }
-        }
-    }
 }
 
 val curseforge_projectId: String by project

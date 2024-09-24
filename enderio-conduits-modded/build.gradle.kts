@@ -34,67 +34,46 @@ val mekanismMinecraftVersion: String by project
 val mekanismVersion: String by project
 val refinedstorageVersion: String by project
 
-
 dependencies {
-    implementation("com.enderio:Regilite:$regiliteVersion")
+    api("com.enderio:Regilite:$regiliteVersion")
 
-    implementation(project(":enderio-base"))
+    api(project(":enderio-base"))
     accessTransformers(project(":enderio-base"))
 
-    implementation(project(":enderio-conduits"))
-
-    compileOnly(project(":ensure_plugin"))
-
-    implementation(project(":endercore"))
-
-    // JEI
-    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-common:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge:$jeiVersion")
+    api(project(":enderio-conduits"))
 
     // AE2
     compileOnly("appeng:appliedenergistics2:${ae2Version}:api")
-    runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
 
     // Mekanism
     compileOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}:api")
-    runtimeOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}")
 
     // Refined Storage
-    api("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
-    runtimeOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
+    compileOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
 
     //Laserio
     compileOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
-    runtimeOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
 }
 
 neoForge {
     version = neoForgeVersion
 
     runs {
-        configureEach {
-            logLevel = org.slf4j.event.Level.INFO
-        }
-
-        create("client") {
-            client()
-        }
-
         create("data") {
             data()
+
+            dependencies {
+                runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
+                runtimeOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}")
+                runtimeOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
+            }
 
             programArguments.addAll(
                     "--mod", "enderio_conduits_modded",
                     "--all",
                     "--output", file("src/generated/resources").absolutePath,
                     "--existing", file("src/main/resources").absolutePath,
-                    "--existing", file("../enderio-base/src/main/resources").absolutePath,
-                    "--existing", file("../enderio-base/src/generated/resources").absolutePath,
             )
-        }
-
-        create("server") {
-            server()
         }
     }
 
@@ -113,6 +92,65 @@ neoForge {
 
         create("enderio_conduits_modded") {
             sourceSet(sourceSets.getByName("main"))
+        }
+    }
+}
+
+tasks.register<Jar>("apiJar") {
+    archiveClassifier.set("api")
+
+    from(sourceSets["main"].output)
+    from(sourceSets["main"].allJava)
+
+    include("com/enderio/api/**")
+    include("com/enderio/*/api/**")
+}
+
+tasks.register<Jar>("sourcesJar") {
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allJava)
+}
+
+tasks.build {
+    dependsOn(tasks["apiJar"])
+    dependsOn(tasks["sourcesJar"])
+}
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            groupId = "com.enderio"
+            artifactId = project.name
+            version = "${project.version}"
+
+            setOf("apiElements", "runtimeElements")
+                    .flatMap { configName -> configurations[configName].hierarchy }
+                    .forEach { configuration ->
+                        configuration.dependencies.removeIf { dependency ->
+                            dependency.name.contains("jei")
+                        }
+                    }
+
+            from(components["java"])
+            artifact(tasks["apiJar"])
+            artifact(tasks["sourcesJar"])
+
+            pom {
+                name.set("EnderIO Modded Conduits")
+                description.set("The modded conduits support module of Ender IO")
+                url.set("https://github.com/Team-EnderIO/EnderIO")
+
+                licenses {
+                    license {
+                        name.set("Unlicense")
+                        url.set("https://github.com/Team-EnderIO/EnderIO/blob/dev/1.21/LICENSE.txt")
+                    }
+                }
+
+                scm {
+                    url.set("https://github.com/Team-EnderIO/EnderIO.git")
+                }
+            }
         }
     }
 }

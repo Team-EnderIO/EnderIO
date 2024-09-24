@@ -14,35 +14,14 @@ val almostunifiedVersion: String by project
 
 dependencies {
     // Regilite
-    implementation("com.enderio:Regilite:${regiliteVersion}")
+    api("com.enderio:Regilite:${regiliteVersion}")
 
     // Almost Unified
     compileOnly("com.almostreliable.mods:almostunified-neoforge:1.21.1-${almostunifiedVersion}:api")
-
-    // TODO: How to apply plugin.
-    compileOnly(project(":ensure_plugin"))
 }
 
 neoForge {
     version = neoForgeVersion
-
-    runs {
-        configureEach {
-            logLevel = org.slf4j.event.Level.INFO
-        }
-
-        create("client") {
-            client()
-        }
-
-        create("data") {
-            data()
-        }
-
-        create("server") {
-            server()
-        }
-    }
 
     mods {
         create("endercore") {
@@ -58,7 +37,7 @@ publishing {
             artifactId = "endercore"
             version = "${project.version}"
 
-            artifact(tasks["jar"])
+            from(components["java"])
 
             pom {
                 name.set("EnderCore")

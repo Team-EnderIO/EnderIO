@@ -141,7 +141,7 @@ public class ItemFilterCapability implements IFilterCapability<ItemStack>, ItemS
 
         @Override
         public int hashCode() {
-            return Objects.hash(items.hashCode(), nbt, invert);
+            return Objects.hash(ItemStack.hashStackList(items), nbt, invert);
         }
 
         public record Slot(int index, ItemStack item) {

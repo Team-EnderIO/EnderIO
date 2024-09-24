@@ -1,0 +1,32 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "O": {
+      "tag": "c:ingots/osmium"
+    },
+    "P": [
+      {
+        "item": "minecraft:paper"
+      },
+      {
+        "item": "enderio:black_paper"
+      }
+    ]
+  },
+  "pattern": [
+    " P ",
+    "POP",
+    " P "
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:chemical_filter"
+  }
+}
