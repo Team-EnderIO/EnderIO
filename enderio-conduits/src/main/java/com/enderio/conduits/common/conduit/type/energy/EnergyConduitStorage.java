@@ -20,12 +20,10 @@ public record EnergyConduitStorage(
         EnergyConduitNetworkContext context = node.getParentGraph().getOrCreateContext(Conduits.ContextSerializers.ENERGY.get());
 
         // Cap to transfer rate.
-        // TODO: Do we cap the transfer rate at all, or should we receive as much as we can and only cap output?
-        toReceive = Math.min(transferRate() - context.energyInsertedThisTick(), toReceive);
+        toReceive = Math.min(transferRate(), toReceive);
 
         int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), toReceive);
         if (!simulate) {
-            context.setEnergyInsertedThisTick(context.energyInsertedThisTick() + energyReceived);
             context.setEnergyStored(getEnergyStored() + energyReceived);
         }
 
