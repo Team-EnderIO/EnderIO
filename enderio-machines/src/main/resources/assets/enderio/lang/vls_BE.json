@@ -1,7 +1,7 @@
 {
-  "advancements.enderio.place_capacitor_bank.description": "Build a Capacitor Bank",
-  "advancements.enderio.place_capacitor_bank.title": "Modular Power Storage",
-  "block.enderio.advanced_capacitor_bank": "Advanced Capacitor Bank",
+  "advancements.enderio.place_capacitor_bank.description": "Bouw een Condensatorbank",
+  "advancements.enderio.place_capacitor_bank.title": "Modulaire Energieopslag",
+  "block.enderio.advanced_capacitor_bank": "Geavanceerde Condensatorbank",
   "block.enderio.alloy_smelter": "Alloy Smelter",
   "block.enderio.aversion_obelisk": "Aversion Obelisk",
   "block.enderio.basic_capacitor_bank": "Basic Capacitor Bank",
@@ -110,7 +110,7 @@
   "gui.enderio.energy_equivalence": "A unit of energy, equivalent to FE.",
   "gui.enderio.full_power": "The energy storage is full",
   "gui.enderio.full_tank": "The tank is full",
-  "gui.enderio.idle": "The machine is idle",
+  "gui.enderio.idle": "The machine is ready to work",
   "gui.enderio.input_empty": "There is no item in the input",
   "gui.enderio.no_capacitor": "Install a capacitor to be able to use the machine",
   "gui.enderio.no_power": "There is not enough power to use the machine",
@@ -130,5 +130,5 @@
   "tooltip.enderio.photovoltaic_cell/advanced": "Produces Power during daylight hours",
   "tooltip.enderio.photovoltaic_cell/advanced2": "Must have a clear line of sight to the sky",
   "tooltip.enderio.photovoltaic_cell/advanced3": "Max Output: ",
-  "tooltip.enderio.photovoltaic_cell/main": "Solar Power!"
+  "tooltip.enderio.photovoltaic_cell/main": "Zonne-energie!"
 }
