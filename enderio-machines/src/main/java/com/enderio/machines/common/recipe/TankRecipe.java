@@ -69,14 +69,14 @@ public record TankRecipe(
                     return false;
                 }
 
-                return input.test(recipeInput.getItem(0));
+                return input.test(recipeInput.fillItem);
             }
             case EMPTY -> {
                 if (recipeInput.fluidTank().fill(fluid, IFluidHandler.FluidAction.SIMULATE) <= 0) {
                     return false;
                 }
 
-                return input.test(recipeInput.getItem(1));
+                return input.test(recipeInput.emptyItem);
             }
             default -> throw new NotImplementedException();
         }

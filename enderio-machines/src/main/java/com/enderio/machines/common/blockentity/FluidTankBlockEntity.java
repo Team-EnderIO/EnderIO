@@ -101,8 +101,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     private TankRecipe.Input createRecipeInput() {
         return new TankRecipe.Input(
-            FLUID_FILL_INPUT.getItemStack(getInventoryNN()),
             FLUID_DRAIN_INPUT.getItemStack(getInventoryNN()),
+            FLUID_FILL_INPUT.getItemStack(getInventoryNN()),
             TANK.getTank(this));
     }
 
@@ -218,6 +218,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     private void fillInternal() {
         ItemStack inputItem = FLUID_FILL_INPUT.getItemStack(this);
         ItemStack outputItem = FLUID_FILL_OUTPUT.getItemStack(this);
+
         if (!inputItem.isEmpty()) {
             if (inputItem.getItem() instanceof BucketItem filledBucket) {
                 if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET && outputItem.getCount() < outputItem.getMaxStackSize())) {
@@ -288,7 +289,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     private void tryTankRecipe() {
         currentRecipe.ifPresent(recipe -> {
             switch (recipe.value().mode()) {
-            case FILL -> {
+            case EMPTY -> {
                 ItemStack outputStack = FLUID_FILL_OUTPUT.getItemStack(this);
 
                 if (outputStack.isEmpty() || (outputStack.is(recipe.value().output()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
@@ -303,7 +304,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                     }
                 }
             }
-            case EMPTY -> {
+            case FILL -> {
                 ItemStack outputStack = FLUID_DRAIN_OUTPUT.getItemStack(this);
 
                 if (outputStack.isEmpty() || (outputStack.is(recipe.value().output()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
