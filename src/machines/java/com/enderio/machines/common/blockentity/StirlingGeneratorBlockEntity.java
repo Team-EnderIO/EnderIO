@@ -8,6 +8,7 @@ import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.capacitor.SteppedScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
@@ -160,9 +161,25 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     public void load(CompoundTag pTag) {
         super.load(pTag);
 
+        if (pTag.contains(MachineNBTKeys.BURN_TIME, CompoundTag.TAG_INT)) {
+            burnTime = pTag.getInt(MachineNBTKeys.BURN_TIME);
+        }
+
+        if (pTag.contains(MachineNBTKeys.BURN_DURATION, CompoundTag.TAG_INT)) {
+            burnDuration = pTag.getInt(MachineNBTKeys.BURN_DURATION);
+        }
+
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
         updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(getInventoryNN()).isEmpty());
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+
+        pTag.putInt(MachineNBTKeys.BURN_TIME, burnTime);
+        pTag.putInt(MachineNBTKeys.BURN_DURATION, burnDuration);
     }
 
     @Override
