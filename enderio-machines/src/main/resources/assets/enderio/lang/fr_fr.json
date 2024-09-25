@@ -77,6 +77,7 @@
   "enderio_machines.configuration.spawnAmount": "Spawn Amount",
   "enderio_machines.configuration.spawnType": "Spawn Type",
   "enderio_machines.configuration.stirlingGenerator": "Stirling Generator",
+  "enderio_machines.configuration.throttleEnergyUsage": "Throttle Energy Use",
   "enderio_machines.configuration.usage": "Consumption Rate (µI/t)",
   "enderio_machines.configuration.vacuumChestRangeColor": "Vaccum Chest Range Color",
   "enderio_machines.configuration.vacuumXpRangeColor": "XP Vacuum Range Color",
