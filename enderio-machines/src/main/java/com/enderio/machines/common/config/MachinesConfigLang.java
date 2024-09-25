@@ -1,6 +1,5 @@
 package com.enderio.machines.common.config;
 
-import com.enderio.EnderIOBase;
 import com.enderio.machines.EnderIOMachines;
 
 public class MachinesConfigLang {
@@ -11,6 +10,7 @@ public class MachinesConfigLang {
 
         // Energy
         addTranslation("energy", "Energy");
+        addTranslation("throttleEnergyUsage", "Throttle Energy Use");
         addTranslation("capacity", "Capacity (\u00B5I)");
         addTranslation("usage", "Consumption Rate (\u00B5I/t)");
         addTranslation("energyCost", "Energy Cost (\u00B5I)");
