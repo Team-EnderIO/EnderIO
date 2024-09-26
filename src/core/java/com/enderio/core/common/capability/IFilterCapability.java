@@ -13,7 +13,11 @@ public interface IFilterCapability<T> extends Predicate<T> {
 
     boolean isInvert();
 
+    int size();
+    
     List<T> getEntries();
+
+    T getEntry(int index);
 
     void setEntry(int index, T entry);
 }
