@@ -22,6 +22,15 @@ import java.util.Optional;
 
 public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduit, IFluidHandler> {
 
+    private int getScaledFluidRate(FluidConduit conduit, CapabilityConnection extractingConnection) {
+        int rate = conduit.transferRate();
+        if (extractingConnection.upgrade() instanceof ExtractionSpeedUpgrade speedUpgrade) {
+            // TODO: Review scaling.
+            rate *= (int) Math.pow(2, speedUpgrade.tier());
+        }
+        return rate;
+    }
+
     @Override
     public void tickGraph(
         ServerLevel level,
@@ -61,18 +70,12 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
             IFluidHandler extractHandler = extract.capability();
             FluidConduitData fluidExtendedData = extract.node().getOrCreateData(ConduitTypes.Data.FLUID.get());
 
-            int temp = conduit.transferRate();
-            if (extract.upgrade() instanceof ExtractionSpeedUpgrade speedUpgrade) {
-                // TODO: Review scaling.
-                temp *= (int) Math.pow(2, speedUpgrade.tier());
-            }
-
-            final int rate = temp;
+            final int transferRate = getScaledFluidRate(conduit, extract);
 
             FluidStack extractedFluid = Optional
                 .ofNullable(fluidExtendedData.lockedFluid())
-                .map(fluid -> extractHandler.drain(new FluidStack(fluid, rate), IFluidHandler.FluidAction.SIMULATE))
-                .orElseGet(() -> extractHandler.drain(rate, IFluidHandler.FluidAction.SIMULATE));
+                .map(fluid -> extractHandler.drain(new FluidStack(fluid, transferRate), IFluidHandler.FluidAction.SIMULATE))
+                .orElseGet(() -> extractHandler.drain(transferRate, IFluidHandler.FluidAction.SIMULATE));
 
             if (extractedFluid.isEmpty()) {
                 continue;
@@ -93,9 +96,9 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
                 }
 
                 FluidStack transferredFluid = fluidExtendedData.lockedFluid() != null ?
-                    FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, new FluidStack(fluidExtendedData.lockedFluid(), rate - transferred),
+                    FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, new FluidStack(fluidExtendedData.lockedFluid(), transferRate - transferred),
                         true) :
-                    FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, rate - transferred, true);
+                    FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, transferRate - transferred, true);
 
                 if (!transferredFluid.isEmpty()) {
                     transferred += transferredFluid.getAmount();
@@ -111,7 +114,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
                         }
                     }
 
-                    if (transferred > rate) {
+                    if (transferred > transferRate) {
                         break;
                     }
                 }
