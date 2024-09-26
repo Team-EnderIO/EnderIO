@@ -357,7 +357,7 @@ public class EIOItems {
         .register();
 
     public static final ItemEntry<FluidFilter> BASIC_FLUID_FILTER = REGISTRATE
-        .item("basic_fluid_filter", props -> new FluidFilter(props, 10))
+        .item("basic_fluid_filter", props -> new FluidFilter(props, 5))
         .tab(EIOCreativeTabs.GEAR)
         .register();
 

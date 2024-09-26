@@ -24,7 +24,7 @@ public class ItemFilterScreen extends EIOScreen<ItemFilterMenu> {
 
     public ItemFilterScreen(ItemFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-        BG_TEXTURE = switch (pMenu.getFilter().getEntries().size()) {
+        BG_TEXTURE = switch (pMenu.getFilter().size()) {
             case 5 -> EnderIO.loc("textures/gui/40/basic_item_filter.png");
             case 2*5 ->  EnderIO.loc("textures/gui/40/advanced_item_filter.png");
             case 4*9 ->  EnderIO.loc("textures/gui/40/big_item_filter.png");
@@ -38,17 +38,6 @@ public class ItemFilterScreen extends EIOScreen<ItemFilterMenu> {
         addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36, 16, 16, 0, 0, 16, 0, NBT_TEXTURE, getMenu().getFilter()::isNbt, getMenu()::setNbt, () -> getMenu().getFilter().isNbt() ? EIOLang.NBT_FILTER : EIOLang.NO_NBT_FILTER));
         addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36 + 20, 16, 16, 0, 0, 16, 0, BLACKLIST_TEXTURE, getMenu().getFilter()::isInvert, getMenu()::setInverted, () -> getMenu().getFilter().isInvert() ? EIOLang.BLACKLIST_FILTER : EIOLang.WHITELIST_FILTER));
 
-    }
-
-    @Override
-    protected void slotClicked(Slot pSlot, int pSlotId, int pMouseButton, ClickType pType) {
-        var filter = getMenu().getFilter();
-        if (pSlot != null && pSlot.index < filter.getEntries().size()) {
-            if (!filter.getEntries().get(pSlot.index).isEmpty()) {
-                filter.setEntry(pSlotId, ItemStack.EMPTY);
-            }
-        }
-        super.slotClicked(pSlot, pSlotId, pMouseButton, pType);
     }
 
     @Override
