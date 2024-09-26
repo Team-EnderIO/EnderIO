@@ -82,12 +82,17 @@ public class ChemicalFilterMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public void clicked(int pSlotId, int pButton, ClickType pClickType, Player pPlayer) {
-        if (pSlotId > 0 && pSlotId < capability.size()) {
-            if (!capability.getEntry(pSlotId).isEmpty()) {
-                capability.setEntry(pSlotId, ChemicalStack.EMPTY);
+    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+        if (slotId >= 0 && slotId < capability.size()) {
+            if (clickType == ClickType.PICKUP) {
+                if (!capability.getEntry(slotId).isEmpty()) {
+                    capability.setEntry(slotId, ChemicalStack.EMPTY);
+                }
+            } else if (clickType == ClickType.SWAP) {
+                return;
             }
         }
-        super.clicked(pSlotId, pButton, pClickType, pPlayer);
+
+        super.doClick(slotId, button, clickType, player);
     }
 }
