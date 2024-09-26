@@ -3,7 +3,6 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.EnderIOBase;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
-import com.enderio.base.api.integration.IntegrationManager;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
@@ -341,13 +340,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             if (optionalRecipe.isEmpty())
                 return Optional.empty();
 
-            var recipeId = optionalRecipe.get().id();
-            var recipe = optionalRecipe.get().value();
-
-            if (recipe.isSmelting() ? !getMode().canSmelt() : !getMode().canAlloy())
-                return Optional.empty();
-
-            if (recipe.isSmelting() && IntegrationManager.anyMatch(i -> !i.acceptSmeltingRecipe(recipeId)))
+            if (optionalRecipe.get().value().isSmelting() ? !getMode().canSmelt() : !getMode().canAlloy())
                 return Optional.empty();
 
             return optionalRecipe;

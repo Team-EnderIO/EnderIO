@@ -2,7 +2,6 @@ package com.enderio.base.api.integration;
 
 import com.enderio.base.api.glider.GliderMovementInfo;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -75,14 +74,5 @@ public interface Integration {
      */
     default boolean canBlockTeleport(Player player) {
         return false;
-    }
-
-    /**
-     * Usage intended for KubeJS EnderIO, tell us if you need it for something else
-     * @param recipeId The recipe ID of the smelting recipe that is tried to be used in the AlloySmelter.
-     * @return true if this recipe can be used
-     */
-    default boolean acceptSmeltingRecipe(ResourceLocation recipeId) {
-        return true;
     }
 }
