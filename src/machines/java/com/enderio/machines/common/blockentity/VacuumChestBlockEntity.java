@@ -3,7 +3,6 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.item.filter.ItemFilter;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -44,7 +43,9 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
     }
 
     private boolean acceptFilter(int slot, ItemStack itemStack) {
-        return itemStack.getCapability(EIOCapabilities.ITEM_FILTER).isPresent();
+        return itemStack.getCapability(EIOCapabilities.FILTER)
+            .map(filter -> filter instanceof ItemStackFilter)
+            .orElse(false);
     }
 
     @Override
@@ -68,12 +69,16 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
     @Override
     public Predicate<ItemEntity> getFilter() {
         ItemStack filterItemStack = FILTER_SLOT.getItemStack(this);
-        LazyOptional<ItemStackFilter> itemStackFilterOptional = filterItemStack.getCapability(EIOCapabilities.ITEM_FILTER);
+        LazyOptional<ResourceFilter> resourceFilter = filterItemStack.getCapability(EIOCapabilities.FILTER);
 
-        boolean t = itemStackFilterOptional.isPresent();
+        return resourceFilter
+            .map(filter -> {
+                if (filter instanceof ItemStackFilter itemStackFilter) {
+                    return (Predicate<ItemEntity>)(ItemEntity itemEntity) -> itemStackFilter.test(itemEntity.getItem());
+                }
 
-        return itemStackFilterOptional
-            .map(filter -> (Predicate<ItemEntity>)(ItemEntity itemEntity) -> filter.test(itemEntity.getItem()))
+                return ITEM_ENTITY_FILTER_TRUE;
+            })
             .orElse(ITEM_ENTITY_FILTER_TRUE);
     }
 

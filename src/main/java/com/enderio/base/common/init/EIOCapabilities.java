@@ -35,8 +35,6 @@ public class EIOCapabilities {
     public static final Capability<ISideConfig> SIDE_CONFIG = CapabilityManager.get(new CapabilityToken<>() {});
 
     public static final Capability<ResourceFilter> FILTER = CapabilityManager.get(new CapabilityToken<>() {});
-    public static final Capability<ItemStackFilter> ITEM_FILTER = CapabilityManager.get(new CapabilityToken<>() {});
-    public static final Capability<FluidStackFilter> FLUID_FILTER = CapabilityManager.get(new CapabilityToken<>() {});
 
     @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent event) {
