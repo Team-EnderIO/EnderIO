@@ -87,7 +87,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
 
         // Wrap container for fluid recipes
-        container = new TankRecipe.Container(getInventoryNN(), TANK.getTank(this));
+        container = new TankRecipe.Container(getInventoryNN(), () -> TANK.getTank(this));
     }
 
     @Override
