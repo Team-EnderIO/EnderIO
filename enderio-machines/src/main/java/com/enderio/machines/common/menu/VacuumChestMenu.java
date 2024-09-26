@@ -1,6 +1,7 @@
 package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.blockentity.VacuumChestBlockEntity;
+import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.menu.base.MachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,12 +16,13 @@ public class VacuumChestMenu extends MachineMenu<VacuumChestBlockEntity> {
         super(MachineMenus.VACUUM_CHEST.get(), pContainerId, blockEntity, inventory);
 
         if (blockEntity != null) {
+            this.addSlot(new MachineSlot(getMachineInventory(), VacuumMachineBlockEntity.FILTER, 8, 86));
+
             for (int j = 0; j < 3; ++j) {
                 for (int k = 0; k < 9; ++k) {
                     this.addSlot(new MachineSlot(getMachineInventory(), k + j * 9, 8 + k * 18, 18 + j * 18));
                 }
             }
-            this.addSlot(new MachineSlot(getMachineInventory(), 27, 8, 86));
         }
 
         addPlayerInventorySlots(8, 124);
