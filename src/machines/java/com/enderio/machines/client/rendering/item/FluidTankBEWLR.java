@@ -23,6 +23,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.registries.ForgeRegistries;
 
 // TODO: No longer lights in the inventory/hand like other machines...
@@ -42,34 +46,28 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
         // Render the main model
         Minecraft.getInstance().getItemRenderer().renderModelLists(model, stack, packedLight, packedOverlay, poseStack, buffer.getBuffer(RenderType.cutout()));
 
-        // Read the fluid from the NBT, if it has fluid, then we render it.
-        CompoundTag nbt = stack.getTag();
-        if (nbt != null && nbt.contains(BlockItem.BLOCK_ENTITY_TAG)) {
-            CompoundTag blockEntityTag = nbt.getCompound(BlockItem.BLOCK_ENTITY_TAG);
-            if (blockEntityTag.contains(MachineNBTKeys.FLUID)) {
-                CompoundTag tank = blockEntityTag.getCompound(MachineNBTKeys.FLUID);
+        LazyOptional<IFluidHandlerItem> fluidHandlerItemOptional = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
+        if (fluidHandlerItemOptional.isPresent()) {
+            IFluidHandlerItem fluidHandlerItem = fluidHandlerItemOptional.orElseThrow(IllegalStateException::new);
 
-                if (tank.contains("FluidName") && tank.contains("Amount")) {
-                    Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(tank.getString("FluidName")));
-                    int amount = tank.getInt("Amount");
+            FluidStack fluidStack = fluidHandlerItem.getFluidInTank(0);
 
-                    if (fluid != null && fluid != Fluids.EMPTY && amount > 0) {
-                        // Get the preferred render buffer
-                        VertexConsumer fluidBuffer = buffer.getBuffer(Sheets.translucentCullBlockSheet());
+            if (!fluidStack.isEmpty()) {
+                // Get the preferred render buffer
+                VertexConsumer fluidBuffer = buffer.getBuffer(Sheets.translucentCullBlockSheet());
 
-                        // Determine capacity.
-                        int capacity = FluidTankBlockEntity.Standard.CAPACITY;
-                        if (stack.is(MachineBlocks.PRESSURIZED_FLUID_TANK.get().asItem())) {
-                            capacity = FluidTankBlockEntity.Enhanced.CAPACITY;
-                        }
-
-                        PoseStack.Pose pose = poseStack.last();
-                        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
-                        FluidTankBER.renderFluid(pose.pose(), pose.normal(), fluidBuffer, fluid, amount / (float) capacity, props.getTintColor(), packedLight);
-                    }
+                // Determine capacity.
+                int capacity = FluidTankBlockEntity.Standard.CAPACITY;
+                if (stack.is(MachineBlocks.PRESSURIZED_FLUID_TANK.get().asItem())) {
+                    capacity = FluidTankBlockEntity.Enhanced.CAPACITY;
                 }
+
+                PoseStack.Pose pose = poseStack.last();
+                IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
+                FluidTankBER.renderFluid(pose.pose(), pose.normal(), fluidBuffer, fluidStack.getFluid(), fluidStack.getAmount() / (float) capacity, props.getTintColor(), packedLight);
             }
         }
+
         poseStack.popPose();
     }
 }
