@@ -58,8 +58,18 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
     }
 
     @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
     public List<StoredEntityData> getEntries() {
         return getComponent().entities;
+    }
+
+    @Override
+    public StoredEntityData getEntry(int index) {
+        return null;
     }
 
     @Override

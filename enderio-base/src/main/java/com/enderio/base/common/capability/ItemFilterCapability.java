@@ -1,6 +1,7 @@
 package com.enderio.base.common.capability;
 
 import com.enderio.base.api.filter.ItemStackFilter;
+import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
@@ -30,7 +31,11 @@ public class ItemFilterCapability implements IFilterCapability<ItemStack>, ItemS
 
     @Override
     public List<ItemStack> getEntries() {
-        return getComponent().items().stream().map(ItemStack::copy).toList();
+        Component data = getComponent();
+        return data.items().stream()
+            .map(ItemStack::copy)
+            .limit(data.size())
+            .toList();
     }
 
     @NotNull
@@ -39,8 +44,31 @@ public class ItemFilterCapability implements IFilterCapability<ItemStack>, ItemS
     }
 
     @Override
-    public void setEntry(int pSlotId, ItemStack stack) {
-        container.set(componentType, getComponent().withItem(pSlotId, stack));
+    public int size() {
+        return getComponent().size();
+    }
+
+    @Override
+    public ItemStack getEntry(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException(index);
+        }
+
+        var entries = getEntries();
+        if (index >= entries.size()) {
+            return ItemStack.EMPTY;
+        }
+
+        return entries.get(index);
+    }
+
+    @Override
+    public void setEntry(int index, ItemStack stack) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException(index);
+        }
+
+        container.set(componentType, getComponent().withItem(index, stack));
     }
 
     public void setNbt(Boolean nbt) {
@@ -61,62 +89,74 @@ public class ItemFilterCapability implements IFilterCapability<ItemStack>, ItemS
 
     @Override
     public boolean test(ItemStack stack) {
-        for (ItemStack testStack : getEntries()) {
-            boolean test = isNbt() ? ItemStack.isSameItemSameComponents(testStack, stack) : ItemStack.isSameItem(testStack, stack);
-            if (test) {
+        List<ItemStack> entries = getEntries();
+
+        for (int i = 0; i < entries.size() && i < size(); i++) {
+            var testStack = entries.get(i);
+            boolean isMatch = isNbt()
+                ? ItemStack.isSameItemSameComponents(testStack, stack)
+                : ItemStack.isSameItem(testStack, stack);
+
+            if (isMatch) {
                 return !isInvert();
             }
         }
         return isInvert();
     }
 
-    public record Component(List<ItemStack> items, boolean nbt, boolean invert) {
-        public static Codec<Component> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
-                .group(Slot.CODEC.sizeLimitedListOf(256).fieldOf("items").xmap(Component::fromList, Component::fromitems).forGetter(Component::items),
-                        Codec.BOOL.fieldOf("nbt").forGetter(Component::nbt), Codec.BOOL.fieldOf("nbt").forGetter(Component::invert))
+    public record Component(int size, List<ItemStack> items, boolean nbt, boolean invert) {
+        private static final Codec<Component> NEW_CODEC = RecordCodecBuilder.create(
+            componentInstance -> componentInstance
+                .group(
+                    Codec.INT.fieldOf("size").forGetter(Component::size),
+                    OrderedListCodec.create(256, ItemStack.OPTIONAL_CODEC, ItemStack.EMPTY)
+                        .fieldOf("items")
+                        .forGetter(Component::items),
+                    Codec.BOOL.fieldOf("isNbt").forGetter(Component::nbt),
+                    Codec.BOOL.fieldOf("isInvert").forGetter(Component::invert))
                 .apply(componentInstance, Component::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, Component> STREAM_CODEC = StreamCodec.composite(ItemStack.OPTIONAL_STREAM_CODEC
-                        .apply(ByteBufCodecs.list(256)), Component::items, ByteBufCodecs.BOOL, Component::nbt,
-                ByteBufCodecs.BOOL, Component::invert, Component::new);
+        // TODO: Remove in Ender IO 8
+        // The Codec used up to and including v7.0.2-alpha
+        private static final Codec<Component> LEGACY_CODEC = RecordCodecBuilder.create(
+            componentInstance -> componentInstance
+                .group(
+                    Slot.CODEC.sizeLimitedListOf(256)
+                        .fieldOf("items")
+                        .xmap(Component::fromList, Component::fromitems)
+                        .forGetter(Component::items),
+                    Codec.BOOL.fieldOf("nbt").forGetter(Component::nbt),
+                    Codec.BOOL.fieldOf("nbt").forGetter(Component::invert))
+                .apply(componentInstance, Component::new));
+
+        public static final Codec<Component> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, Component> STREAM_CODEC = StreamCodec.composite(
+            ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)),
+            Component::items,
+            ByteBufCodecs.BOOL,
+            Component::nbt,
+            ByteBufCodecs.BOOL,
+            Component::invert,
+            Component::new);
 
         public Component(int size) {
-            this(NonNullList.withSize(size, ItemStack.EMPTY), false, false);
-        }
-
-        private static List<Slot> fromitems(List<ItemStack> items) {
-            List<Slot> slots = new ArrayList<>();
-            for (int i = 0; i < items.size(); i++) {
-                slots.add(new Slot(i, items.get(i)));
-            }
-            return slots;
-        }
-
-        private static List<ItemStack> fromList(List<Slot> slots) {
-            OptionalInt optionalint = slots.stream().mapToInt(Slot::index).max();
-            if (optionalint.isEmpty()) {
-                return List.of();
-            }
-            List<ItemStack> items = NonNullList.withSize(optionalint.getAsInt() + 1, ItemStack.EMPTY);
-            for (Slot slot : slots) {
-                items.set(slot.index, slot.item);
-            }
-            return items;
+            this(size, NonNullList.withSize(size, ItemStack.EMPTY), false, false);
         }
 
         public Component withNBT(Boolean nbt){
-            return new Component(items, nbt, invert);
+            return new Component(size, items, nbt, invert);
         }
 
         public Component withInvert(Boolean invert){
-            return new Component(items, nbt, invert);
+            return new Component(size, items, nbt, invert);
         }
 
-        public Component withItem(int pSlotId, ItemStack entry) {
+        public Component withItem(int index, ItemStack entry) {
             List<ItemStack> newItems = new ArrayList<>();
             items.forEach(f -> newItems.add(f.copy()));
-            newItems.set(pSlotId, entry);
-            return new Component(newItems, nbt, invert);
+            newItems.set(index, entry);
+            return new Component(size, newItems, nbt, invert);
         }
 
         @Override
@@ -144,6 +184,35 @@ public class ItemFilterCapability implements IFilterCapability<ItemStack>, ItemS
             return Objects.hash(ItemStack.hashStackList(items), nbt, invert);
         }
 
+        // TODO: Remove in Ender IO 8
+        // region Legacy Serialization
+
+        // Used for legacy loading only.
+        @Deprecated(since = "7.0.3-alpha")
+        private Component(List<ItemStack> items, boolean nbt, boolean invert) {
+            this(items.size(), items, nbt, invert);
+        }
+
+        private static List<Slot> fromitems(List<ItemStack> items) {
+            List<Slot> slots = new ArrayList<>();
+            for (int i = 0; i < items.size(); i++) {
+                slots.add(new Slot(i, items.get(i)));
+            }
+            return slots;
+        }
+
+        private static List<ItemStack> fromList(List<Slot> slots) {
+            OptionalInt optionalint = slots.stream().mapToInt(Slot::index).max();
+            if (optionalint.isEmpty()) {
+                return List.of();
+            }
+            List<ItemStack> items = NonNullList.withSize(optionalint.getAsInt() + 1, ItemStack.EMPTY);
+            for (Slot slot : slots) {
+                items.set(slot.index, slot.item);
+            }
+            return items;
+        }
+
         public record Slot(int index, ItemStack item) {
             public static final Codec<Slot> CODEC = RecordCodecBuilder.create(
                     p_331695_ -> p_331695_.group(
@@ -153,5 +222,7 @@ public class ItemFilterCapability implements IFilterCapability<ItemStack>, ItemS
                             .apply(p_331695_, Slot::new)
             );
         }
+
+        // endregion
     }
 }

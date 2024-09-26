@@ -50,6 +50,11 @@ public class LaserChemicalFilter implements IFilterCapability<ChemicalStack>, Ch
     }
 
     @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
     public List<ChemicalStack> getEntries() {
         List<ChemicalStack> filteredChemicals = new ArrayList();
         FilterBasicHandler filterSlotHandler = new FilterBasicHandler(15, container);
@@ -71,6 +76,11 @@ public class LaserChemicalFilter implements IFilterCapability<ChemicalStack>, Ch
         }
 
         return filteredChemicals;
+    }
+
+    @Override
+    public ChemicalStack getEntry(int index) {
+        return null;
     }
 
     @Override

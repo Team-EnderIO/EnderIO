@@ -33,8 +33,7 @@ public class FluidFilterMenu extends AbstractContainerMenu {
 
         capability = filterCapability;
 
-        List<FluidStack> items = capability.getEntries();
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < capability.size(); i++) {
             int pSlot = i;
             addSlot(new FluidFilterSlot(fluidStack -> capability.setEntry(pSlot, fluidStack) ,i ,14 + ( i % 5) * 18, 35 + 20 * ( i / 5)));
         }
@@ -93,8 +92,8 @@ public class FluidFilterMenu extends AbstractContainerMenu {
 
     @Override
     public void clicked(int pSlotId, int pButton, ClickType pClickType, Player pPlayer) {
-        if (pSlotId < capability.getEntries().size() && pSlotId >= 0) {
-            if (!capability.getEntries().get(pSlotId).isEmpty()) {
+        if (pSlotId > 0 && pSlotId < capability.size()) {
+            if (!capability.getEntry(pSlotId).isEmpty()) {
                 capability.setEntry(pSlotId, FluidStack.EMPTY);
             }
         }

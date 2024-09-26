@@ -52,6 +52,11 @@ public class LaserFluidFilter implements IFilterCapability<FluidStack>, FluidSta
     }
 
     @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
     public List<FluidStack> getEntries() {
         List<FluidStack> filteredFluids = new ArrayList();
         FilterBasicHandler filterSlotHandler = new FilterBasicHandler(15, container);
@@ -74,6 +79,11 @@ public class LaserFluidFilter implements IFilterCapability<FluidStack>, FluidSta
         }
 
         return filteredFluids;
+    }
+
+    @Override
+    public FluidStack getEntry(int index) {
+        return null;
     }
 
     @Override
