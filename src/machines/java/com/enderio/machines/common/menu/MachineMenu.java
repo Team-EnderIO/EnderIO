@@ -176,16 +176,20 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMe
     // Overrides the swapping behaviour. Required for ghost slots to prevent duping
     @Override
     public void doClick(int slotId, int button, ClickType clickType, Player player) {
-        if(slotId >= 0 && clickType == ClickType.PICKUP && this.slots.get(slotId) instanceof GhostMachineSlot ghostSlot) {
-            ItemStack slotItem = ghostSlot.getItem();
-            ItemStack carriedItem = this.getCarried();
-            if(!slotItem.isEmpty() && !carriedItem.isEmpty() && ghostSlot.mayPlace(carriedItem)){
-                if(!ItemStack.isSameItemSameTags(slotItem, carriedItem)){
-                    int count = Math.min(carriedItem.getCount(), ghostSlot.getMaxStackSize(carriedItem));
-                    ghostSlot.setByPlayer(carriedItem.copyWithCount(count));
-                    ghostSlot.setChanged();
-                    return;
+        if(slotId >= 0 && this.slots.get(slotId) instanceof GhostMachineSlot ghostSlot) {
+            if (clickType == ClickType.PICKUP) {
+                ItemStack slotItem = ghostSlot.getItem();
+                ItemStack carriedItem = this.getCarried();
+                if(!slotItem.isEmpty() && !carriedItem.isEmpty() && ghostSlot.mayPlace(carriedItem)){
+                    if(!ItemStack.isSameItemSameTags(slotItem, carriedItem)){
+                        int count = Math.min(carriedItem.getCount(), ghostSlot.getMaxStackSize(carriedItem));
+                        ghostSlot.setByPlayer(carriedItem.copyWithCount(count));
+                        ghostSlot.setChanged();
+                        return;
+                    }
                 }
+            } else if (clickType == ClickType.SWAP) {
+                return;
             }
         }
         super.doClick(slotId, button, clickType, player);
