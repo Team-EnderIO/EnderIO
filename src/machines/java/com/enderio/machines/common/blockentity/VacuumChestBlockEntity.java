@@ -1,9 +1,14 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.api.filter.ItemStackFilter;
+import com.enderio.api.filter.ResourceFilter;
+import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.item.filter.ItemFilter;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MachineInventoryLayout.Builder;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.VacuumChestMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -13,10 +18,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.function.Predicate;
 
 public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity> {
+
+    public static final SingleSlotAccess FILTER_SLOT = new SingleSlotAccess();
 
     public VacuumChestBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState, ItemEntity.class);
@@ -30,8 +38,13 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return extractableGUISlot(MachineInventoryLayout.builder(), 27)
-            .slot(slot -> slot.guiInsert().guiExtract().filter((i, s) -> false))
-            .build(); //TODO add proper filter slot and predicate
+            .slot(slot -> slot.guiInsert().guiExtract().filter(this::acceptFilter))
+            .slotAccess(FILTER_SLOT)
+            .build();
+    }
+
+    private boolean acceptFilter(int slot, ItemStack itemStack) {
+        return itemStack.getCapability(EIOCapabilities.ITEM_FILTER).isPresent();
     }
 
     @Override
@@ -52,12 +65,16 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
         return MachinesConfig.CLIENT.BLOCKS.VACUUM_CHEST_RANGE_COLOR.get();
     }
 
-    //TODO filter
     @Override
     public Predicate<ItemEntity> getFilter() {
-        // get filter slot -> get filter item -> filter
-        // maybe cache on item insert
-        return super.getFilter();
+        ItemStack filterItemStack = FILTER_SLOT.getItemStack(this);
+        LazyOptional<ItemStackFilter> itemStackFilterOptional = filterItemStack.getCapability(EIOCapabilities.ITEM_FILTER);
+
+        boolean t = itemStackFilterOptional.isPresent();
+
+        return itemStackFilterOptional
+            .map(filter -> (Predicate<ItemEntity>)(ItemEntity itemEntity) -> filter.test(itemEntity.getItem()))
+            .orElse(ITEM_ENTITY_FILTER_TRUE);
     }
 
     // Slot config

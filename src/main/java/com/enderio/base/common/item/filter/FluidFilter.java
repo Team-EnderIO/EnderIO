@@ -36,7 +36,7 @@ public class FluidFilter extends Item {
         return new ICapabilityProvider() {
             @Override
             public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction direction) {
-                if (capability == EIOCapabilities.FILTER) {
+                if (capability == EIOCapabilities.FILTER || capability == EIOCapabilities.FLUID_FILTER) {
                     return LazyOptional.of(() -> new FluidFilterCapability(stack, size)).cast();
                 }
                 return LazyOptional.empty();
