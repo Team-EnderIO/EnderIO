@@ -13,8 +13,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.List;
-
 public class ChemicalFilterMenu extends AbstractContainerMenu {
 
     private final ItemStack stack;
@@ -31,8 +29,7 @@ public class ChemicalFilterMenu extends AbstractContainerMenu {
 
         capability = filterCapability;
 
-        List<ChemicalStack> items = capability.getEntries();
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < capability.size(); i++) {
             int pSlot = i;
             addSlot(new ChemicalFilterSlot(fluidStack -> capability.setEntry(pSlot, fluidStack) ,i ,14 + ( i % 5) * 18, 35 + 20 * ( i / 5)));
         }
@@ -86,8 +83,8 @@ public class ChemicalFilterMenu extends AbstractContainerMenu {
 
     @Override
     public void clicked(int pSlotId, int pButton, ClickType pClickType, Player pPlayer) {
-        if (pSlotId < capability.getEntries().size() && pSlotId >= 0) {
-            if (!capability.getEntries().get(pSlotId).isEmpty()) {
+        if (pSlotId > 0 && pSlotId < capability.size()) {
+            if (!capability.getEntry(pSlotId).isEmpty()) {
                 capability.setEntry(pSlotId, ChemicalStack.EMPTY);
             }
         }

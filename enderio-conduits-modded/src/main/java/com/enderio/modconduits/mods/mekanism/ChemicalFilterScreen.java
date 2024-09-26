@@ -27,7 +27,7 @@ public class ChemicalFilterScreen extends EIOScreen<ChemicalFilterMenu> {
 
     public ChemicalFilterScreen(ChemicalFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-        BG_TEXTURE = switch (pMenu.getFilter().getEntries().size()) {
+        BG_TEXTURE = switch (pMenu.getFilter().size()) {
             case 5 -> EnderIOBase.loc("textures/gui/40/basic_item_filter.png");
             case 2 * 5 -> EnderIOBase.loc("textures/gui/40/advanced_item_filter.png");
             case 4 * 9 -> EnderIOBase.loc("textures/gui/40/big_item_filter.png");
@@ -44,12 +44,12 @@ public class ChemicalFilterScreen extends EIOScreen<ChemicalFilterMenu> {
     @Override
     public void renderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
         ChemicalFilterCapability filterCapability = getMenu().getFilter();
-        if (pSlot.index >= filterCapability.getEntries().size()) {
+        if (pSlot.index >= filterCapability.size()) {
             super.renderSlot(pGuiGraphics, pSlot);
             return;
         }
 
-        ChemicalStack stack = filterCapability.getEntries().get(pSlot.index);
+        ChemicalStack stack = filterCapability.getEntry(pSlot.index);
 
         if (stack.isEmpty()) {
             return;
