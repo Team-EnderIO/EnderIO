@@ -1,10 +1,7 @@
 package com.enderio.machines.common.recipe;
 
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
-import com.enderio.machines.common.blockentity.PrimitiveAlloySmelterBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -20,8 +17,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
 import java.util.List;
 
@@ -30,12 +25,18 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     private final ItemStack output;
     private final int energy;
     private final float experience;
+    private final boolean isSmelting;
 
-    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience) {
+    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience, boolean isSmelting) {
         this.inputs = inputs;
         this.output = output;
         this.energy = energy;
         this.experience = experience;
+        this.isSmelting = isSmelting;
+    }
+
+    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience) {
+        this(inputs, output, energy, experience, false);
     }
 
     public List<SizedIngredient> inputs() {
@@ -52,6 +53,10 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
     public float experience() {
         return experience;
+    }
+
+    public boolean isSmelting() {
+        return isSmelting;
     }
 
     @Override
@@ -103,7 +108,11 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
     @Override
     public List<OutputStack> craft(Input container, RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.copy()));
+        ItemStack outputStack = output.copy();
+        if (isSmelting) {
+            outputStack.setCount(container.inputsConsumed);
+        }
+        return List.of(OutputStack.of(outputStack));
     }
 
     @Override

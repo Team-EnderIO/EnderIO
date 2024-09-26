@@ -4,7 +4,6 @@ import com.enderio.base.api.glider.GliderMovementInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -75,14 +74,5 @@ public interface Integration {
      */
     default boolean canBlockTeleport(Player player) {
         return false;
-    }
-
-    /**
-     * Usage intended for kubejs io, tell us if you need it for something else
-     * @param recipe The smelting recipe that is tried to be used in the AlloySmelter.
-     * @return true if this recipe can be used
-     */
-    default boolean acceptSmeltingRecipe(SmeltingRecipe recipe) {
-        return true;
     }
 }
