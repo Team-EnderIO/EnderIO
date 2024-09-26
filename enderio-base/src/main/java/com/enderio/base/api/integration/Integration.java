@@ -2,9 +2,9 @@ package com.enderio.base.api.integration;
 
 import com.enderio.base.api.glider.GliderMovementInfo;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -78,11 +78,11 @@ public interface Integration {
     }
 
     /**
-     * Usage intended for kubejs io, tell us if you need it for something else
-     * @param recipe The smelting recipe that is tried to be used in the AlloySmelter.
+     * Usage intended for KubeJS EnderIO, tell us if you need it for something else
+     * @param recipeId The recipe ID of the smelting recipe that is tried to be used in the AlloySmelter.
      * @return true if this recipe can be used
      */
-    default boolean acceptSmeltingRecipe(SmeltingRecipe recipe) {
+    default boolean acceptSmeltingRecipe(ResourceLocation recipeId) {
         return true;
     }
 }

@@ -108,7 +108,11 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
     @Override
     public List<OutputStack> craft(Input container, RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.copy()));
+        ItemStack outputStack = output.copy();
+        if (smelting) {
+            outputStack.setCount(container.inputsConsumed);
+        }
+        return List.of(OutputStack.of(outputStack));
     }
 
     @Override

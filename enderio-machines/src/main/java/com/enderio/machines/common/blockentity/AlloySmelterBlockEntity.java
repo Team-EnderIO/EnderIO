@@ -15,7 +15,6 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -35,8 +34,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -232,7 +229,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         @Override
         protected AlloySmeltingRecipe.Input prepareToDetermineOutputs(AlloySmeltingRecipe recipe, AlloySmeltingRecipe.Input recipeInput) {
             // This handles the output multiplication for vanilla smelting recipes.
-            if (recipe instanceof VanillaAlloySmeltingRecipe) {
+            if (recipe.isSmelting()) {
                 SizedIngredient input = recipe.inputs().getFirst();
 
                 int inputCount = 0;
@@ -255,7 +252,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         protected void consumeInputs(AlloySmeltingRecipe recipe) {
             MachineInventory inv = getInventory();
 
-            if (recipe instanceof VanillaAlloySmeltingRecipe) {
+            if (recipe.isSmelting()) {
                 SizedIngredient input = recipe.inputs().get(0);
 
                 int consumed = 0;
@@ -304,15 +301,12 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         @Nullable
         @Override
         protected RecipeHolder<AlloySmeltingRecipe> loadRecipe(ResourceLocation id) {
-            return level.getRecipeManager().byKey(id).map(recipe -> {
-                if (recipe.value().getType() == MachineRecipes.ALLOY_SMELTING.type().get()) {
-                    //noinspection unchecked
-                    return (RecipeHolder<AlloySmeltingRecipe>) recipe;
-                } else if (recipe.value().getType() == RecipeType.SMELTING) {
-                    return new RecipeHolder<AlloySmeltingRecipe>(id, new VanillaAlloySmeltingRecipe((SmeltingRecipe) recipe.value()));
-                }
-                return null;
-            }).orElse(null);
+            //noinspection unchecked
+            return (RecipeHolder<AlloySmeltingRecipe>) level
+                .getRecipeManager()
+                .byKey(id)
+                .filter(recipe -> recipe.value().getType() == MachineRecipes.ALLOY_SMELTING.type().get())
+                .orElse(null);
         }
 
         @Override
@@ -343,28 +337,20 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 return Optional.empty();
             }
 
-            // Get alloy smelting recipe (Default)
-            if (getMode().canAlloy()) {
-                var recipe = super.findRecipe();
-                if (recipe.isPresent()) {
-                    return recipe;
-                }
-            }
+            var optionalRecipe = super.findRecipe();
+            if (optionalRecipe.isEmpty())
+                return Optional.empty();
 
-            // Get vanilla smelting recipe.
-            if (getMode().canSmelt()) {
-                AlloySmeltingRecipe.Input recipeInput = createRecipeInput();
+            var recipeId = optionalRecipe.get().id();
+            var recipe = optionalRecipe.get().value();
 
-                for (int i = 0; i < recipeInput.size(); i++) {
-                    var recipe = level.getRecipeManager()
-                        .getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(recipeInput.getItem(i)), level);
+            if (recipe.isSmelting() ? !getMode().canSmelt() : !getMode().canAlloy())
+                return Optional.empty();
 
-                    if (recipe.isPresent() && IntegrationManager.allMatch(integration -> integration.acceptSmeltingRecipe(recipe.get().value()))) {
-                        return Optional.of(new RecipeHolder<>(recipe.get().id(), new VanillaAlloySmeltingRecipe(recipe.get().value())));
-                    }
-                }
-            }
-            return Optional.empty();
+            if (recipe.isSmelting() && IntegrationManager.anyMatch(i -> !i.acceptSmeltingRecipe(recipeId)))
+                return Optional.empty();
+
+            return optionalRecipe;
         }
     }
 
