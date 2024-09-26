@@ -500,4 +500,9 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     // endregion
 
     private record OpenInformation(Direction direction, ConduitType<?> type) {}
+
+    @Override
+    protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
+
+    }
 }
