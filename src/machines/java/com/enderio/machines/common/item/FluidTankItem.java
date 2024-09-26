@@ -6,8 +6,13 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.rendering.item.FluidTankBEWLR;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
+import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
+import com.enderio.machines.common.io.fluid.MachineFluidHandler;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -84,22 +89,73 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
 
         @NotNull
         public FluidStack getFluid() {
-            Optional<CompoundTag> tagCompoundOptional = Optional.ofNullable(container.getTag());
-            return tagCompoundOptional
-                .map(tagCompound -> tagCompound.getCompound(BLOCK_ENTITY_TAG))
-                .map(blockEntityTag -> blockEntityTag.getCompound(MachineNBTKeys.FLUID))
-                .map(FluidStack::loadFluidStackFromNBT)
-                .orElse(FluidStack.EMPTY);
+            CompoundTag itemTag = container.getTag();
+            if (itemTag == null) {
+                return FluidStack.EMPTY;
+            }
+
+            if (!itemTag.contains(BLOCK_ENTITY_TAG)) {
+                return FluidStack.EMPTY;
+            }
+            CompoundTag blockEntityTag = itemTag.getCompound(BLOCK_ENTITY_TAG);
+
+            if (!blockEntityTag.contains(MachineNBTKeys.FLUID)) {
+                return FluidStack.EMPTY;
+            }
+            CompoundTag fluidContainerTag = blockEntityTag.getCompound(MachineNBTKeys.FLUID);
+
+            // Support old NBT type.
+            if (fluidContainerTag.contains(MachineFluidHandler.TANKS)) {
+                ListTag tankList = fluidContainerTag.getList(MachineFluidHandler.TANKS, Tag.TAG_COMPOUND);
+                if (tankList.isEmpty()) {
+                    return FluidStack.EMPTY;
+                }
+
+                CompoundTag firstTank = tankList.getCompound(0);
+                return FluidStack.loadFluidStackFromNBT(firstTank);
+            } else {
+                return FluidStack.loadFluidStackFromNBT(blockEntityTag.getCompound(MachineNBTKeys.FLUID));
+            }
         }
 
         protected void setFluid(FluidStack fluid) {
             CompoundTag mainTag = container.getOrCreateTag();
-            CompoundTag blockEntityTag = new CompoundTag();
-            mainTag.put(BLOCK_ENTITY_TAG, blockEntityTag);
 
-            CompoundTag fluidTag = new CompoundTag();
-            fluid.writeToNBT(fluidTag);//rewrites the old value
-            blockEntityTag.put(MachineNBTKeys.FLUID, fluidTag);
+            CompoundTag blockEntityTag;
+            if (mainTag.contains(BLOCK_ENTITY_TAG)) {
+                blockEntityTag = mainTag.getCompound(BLOCK_ENTITY_TAG);
+            } else {
+                blockEntityTag = new CompoundTag();
+                mainTag.put(BLOCK_ENTITY_TAG, blockEntityTag);
+            }
+
+            CompoundTag fluidContainerTag;
+            if (blockEntityTag.contains(MachineNBTKeys.FLUID)) {
+                fluidContainerTag = blockEntityTag.getCompound(MachineNBTKeys.FLUID);
+            } else {
+                fluidContainerTag = new CompoundTag();
+                fluidContainerTag.putInt(MachineFluidHandler.TANK_LIST_SIZE, 1);
+                blockEntityTag.put(MachineNBTKeys.FLUID, fluidContainerTag);
+            }
+
+            ListTag tankList;
+            if (fluidContainerTag.contains(MachineFluidHandler.TANKS)) {
+                tankList = fluidContainerTag.getList(MachineFluidHandler.TANKS, Tag.TAG_COMPOUND);
+            } else {
+                tankList = new ListTag();
+                fluidContainerTag.put(MachineFluidHandler.TANKS, tankList);
+            }
+
+            CompoundTag tankTag;
+            if (!tankList.isEmpty()) {
+                tankTag = tankList.getCompound(0);
+            } else {
+                tankTag = new CompoundTag();
+                tankTag.putInt(MachineFluidTank.Capacity, capacity);
+                tankList.add(tankTag);
+            }
+
+            fluid.writeToNBT(tankTag);
         }
 
         @Override
