@@ -337,11 +337,13 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             }
 
             var optionalRecipe = super.findRecipe();
-            if (optionalRecipe.isEmpty())
+            if (optionalRecipe.isEmpty()) {
                 return Optional.empty();
+            }
 
-            if (optionalRecipe.get().value().isSmelting() ? !getMode().canSmelt() : !getMode().canAlloy())
+            if (optionalRecipe.get().value().isSmelting() ? !getMode().canSmelt() : !getMode().canAlloy()) {
                 return Optional.empty();
+            }
 
             return optionalRecipe;
         }
