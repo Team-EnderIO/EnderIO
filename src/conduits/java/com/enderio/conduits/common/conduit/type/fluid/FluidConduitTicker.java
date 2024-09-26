@@ -22,11 +22,20 @@ import java.util.Optional;
 public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduitData, IFluidHandler> {
 
     private final boolean lockFluids;
-    private final int fluidRate;
+    private final int baseFluidRate;
 
-    public FluidConduitTicker(boolean lockFluids, int fluidRate) {
+    public FluidConduitTicker(boolean lockFluids, int baseFluidRate) {
         this.lockFluids = lockFluids;
-        this.fluidRate = fluidRate;
+        this.baseFluidRate = baseFluidRate;
+    }
+
+    private int getScaledFluidRate(CapabilityConnection extractingConnection) {
+        int rate = baseFluidRate;
+        if (extractingConnection.upgrade instanceof ExtractionSpeedUpgrade speedUpgrade) {
+            // TODO: Review scaling.
+            rate *= (int) Math.pow(2, speedUpgrade.tier());
+        }
+        return rate;
     }
 
     @Override
@@ -66,18 +75,12 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
         for (CapabilityConnection extract : extracts) {
             IFluidHandler extractHandler = extract.capability;
             FluidConduitData fluidConduitData = extract.data.castTo(FluidConduitData.class);
-
-            int temp = fluidRate;
-            if (extract.upgrade instanceof ExtractionSpeedUpgrade speedUpgrade) {
-                // TODO: Review scaling.
-                temp *= (int) Math.pow(2, speedUpgrade.tier());
-            }
-
-            final int rate = temp;
+            
+            final int fluidRate = getScaledFluidRate(extract);
 
             FluidStack extractedFluid = Optional
                 .ofNullable(fluidConduitData.lockedFluid())
-                .map(fluid -> extractHandler.drain(new FluidStack(fluid, rate), IFluidHandler.FluidAction.SIMULATE))
+                .map(fluid -> extractHandler.drain(new FluidStack(fluid, fluidRate), IFluidHandler.FluidAction.SIMULATE))
                 .orElseGet(() -> extractHandler.drain(fluidRate, IFluidHandler.FluidAction.SIMULATE));
 
             if (extractedFluid.isEmpty()) {
