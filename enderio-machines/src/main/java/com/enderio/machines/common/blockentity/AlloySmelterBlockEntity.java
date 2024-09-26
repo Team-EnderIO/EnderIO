@@ -26,7 +26,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -295,17 +294,6 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                     }
                 }
             }
-        }
-
-        @Nullable
-        @Override
-        protected RecipeHolder<AlloySmeltingRecipe> loadRecipe(ResourceLocation id) {
-            //noinspection unchecked
-            return (RecipeHolder<AlloySmeltingRecipe>) level
-                .getRecipeManager()
-                .byKey(id)
-                .filter(recipe -> recipe.value().getType() == MachineRecipes.ALLOY_SMELTING.type().get())
-                .orElse(null);
         }
 
         @Override

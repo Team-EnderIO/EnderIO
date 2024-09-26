@@ -25,14 +25,14 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     private final ItemStack output;
     private final int energy;
     private final float experience;
-    private final boolean smelting;
+    private final boolean isSmelting;
 
-    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience, boolean smelting) {
+    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience, boolean isSmelting) {
         this.inputs = inputs;
         this.output = output;
         this.energy = energy;
         this.experience = experience;
-        this.smelting = smelting;
+        this.isSmelting = isSmelting;
     }
 
     public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience) {
@@ -56,7 +56,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     }
 
     public boolean isSmelting() {
-        return smelting;
+        return isSmelting;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     @Override
     public List<OutputStack> craft(Input container, RegistryAccess registryAccess) {
         ItemStack outputStack = output.copy();
-        if (smelting) {
+        if (isSmelting) {
             outputStack.setCount(container.inputsConsumed);
         }
         return List.of(OutputStack.of(outputStack));

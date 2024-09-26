@@ -15,9 +15,6 @@ logoFile="logo.png"
 [[mixins]]
 config="enderiobase.mixins.json"
 
-[[mixins]]
-config="enderio-machines.mixins.json"
-
 [[dependencies.enderio_base]]
 modId="minecraft"
 type="required"
