@@ -85,7 +85,7 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     // region Inventory
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
+    public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
             .setStackLimit(1) // Force all input slots to have 1 output
             .inputSlot(6, this::isValidInput)

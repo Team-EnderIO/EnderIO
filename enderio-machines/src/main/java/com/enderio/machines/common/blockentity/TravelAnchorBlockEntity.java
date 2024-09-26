@@ -45,7 +45,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public @Nullable MachineInventoryLayout getInventoryLayout() {
+    public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder().setStackLimit(1).ghostSlot().slotAccess(GHOST).build();
     }
 

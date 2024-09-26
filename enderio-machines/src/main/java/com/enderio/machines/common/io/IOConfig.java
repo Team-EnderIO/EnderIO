@@ -88,9 +88,18 @@ public record IOConfig(Map<Direction, IOMode> modes) {
         return Objects.equals(modes, that.modes);
     }
 
+    /**
+     * Simplified hashcode impl for EnumMap using ordinal instead of hashcode for enums
+     */
     @Override
     public int hashCode() {
-        return Objects.hashCode(modes);
+        int h = 0;
+
+        for (var entry : modes.entrySet()) {
+            h += entry.getKey().ordinal() ^ (31 * entry.getValue().ordinal());
+        }
+
+        return h;
     }
 
     public Tag save(HolderLookup.Provider lookupProvider) {
