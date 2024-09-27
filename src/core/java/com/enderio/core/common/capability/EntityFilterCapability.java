@@ -20,9 +20,11 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
     private static final String ENTRIES_KEY = "EntityEntries";
 
     private final ItemStack container;
+    private final int size;
 
     public EntityFilterCapability(ItemStack container, int size) {
         this.container = container;
+        this.size = size;
 
         CompoundTag tag = container.getOrCreateTag();
         if (!tag.contains(ENTRIES_KEY, CompoundTag.TAG_LIST)) {
@@ -59,6 +61,11 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
     }
 
     @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
     public List<StoredEntityData> getEntries() {
         CompoundTag tag = container.getOrCreateTag();
 
@@ -73,6 +80,20 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
         }
 
         return entries;
+    }
+
+    @Override
+    public StoredEntityData getEntry(int index) {
+        CompoundTag tag = container.getOrCreateTag();
+
+        if (!tag.contains(ENTRIES_KEY, CompoundTag.TAG_LIST)) {
+            return StoredEntityData.empty();
+        }
+
+        ListTag entriesList = tag.getList(ENTRIES_KEY, CompoundTag.TAG_COMPOUND);
+        StoredEntityData entityData = StoredEntityData.empty();
+        entityData.deserializeNBT(entriesList.get(index));
+        return entityData;
     }
 
     @Override
