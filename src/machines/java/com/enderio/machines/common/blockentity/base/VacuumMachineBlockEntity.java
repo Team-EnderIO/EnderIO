@@ -8,6 +8,7 @@ import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.io.FixedIOConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,6 +27,8 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     protected static final double SPEED_4 = SPEED * 4;
     private List<WeakReference<T>> entities = new ArrayList<>();
     private Class<T> targetClass;
+
+    protected static final Predicate<ItemEntity> ITEM_ENTITY_FILTER_TRUE = itemEntity -> true;
 
     public VacuumMachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> targetClass) {
         super(pType, pWorldPosition, pBlockState);

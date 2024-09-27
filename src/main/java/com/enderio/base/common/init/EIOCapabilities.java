@@ -8,6 +8,8 @@ import com.enderio.api.capability.IOwner;
 import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.capability.IToggled;
 import com.enderio.api.capacitor.ICapacitorData;
+import com.enderio.api.filter.FluidStackFilter;
+import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.api.filter.ResourceFilter;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;

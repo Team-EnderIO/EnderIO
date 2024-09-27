@@ -1,11 +1,13 @@
 package com.enderio.core.common.capability;
 
 import com.enderio.api.filter.FluidStackFilter;
+import com.enderio.core.common.util.NbtUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -21,16 +23,16 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack>, Flu
     private static final String ENTRIES_KEY = "FluidEntries";
 
     private final ItemStack container;
+    private final int size;
 
     public FluidFilterCapability(ItemStack container, int size) {
         this.container = container;
+        this.size = size;
 
         CompoundTag tag = container.getOrCreateTag();
         if (!tag.contains(ENTRIES_KEY, CompoundTag.TAG_LIST)) {
             ListTag entriesList = new ListTag();
-            for (int i = 0; i < size; i++) {
-                entriesList.add(ItemStack.EMPTY.serializeNBT());
-            }
+            ensureSize(entriesList);
             tag.put(ENTRIES_KEY, entriesList);
         }
     }
@@ -60,12 +62,19 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack>, Flu
     }
 
     @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
     public List<FluidStack> getEntries() {
         CompoundTag tag = container.getOrCreateTag();
 
         List<FluidStack> entries = new ArrayList<>();
         if (tag.contains(ENTRIES_KEY, CompoundTag.TAG_LIST)) {
             ListTag entriesList = tag.getList(ENTRIES_KEY, CompoundTag.TAG_COMPOUND);
+            ensureSize(entriesList);
+
             for (var entry : entriesList) {
                entries.add(FluidStack.loadFluidStackFromNBT((CompoundTag) entry));
             }
@@ -75,7 +84,28 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack>, Flu
     }
 
     @Override
-    public void setEntry(int pSlotId, FluidStack entry) {
+    public FluidStack getEntry(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(index);
+        }
+
+        CompoundTag tag = container.getOrCreateTag();
+
+        if (!tag.contains(ENTRIES_KEY, CompoundTag.TAG_LIST)) {
+            return FluidStack.EMPTY;
+        }
+
+        ListTag entriesList = tag.getList(ENTRIES_KEY, CompoundTag.TAG_COMPOUND);
+        ensureSize(entriesList);
+        return FluidStack.loadFluidStackFromNBT((CompoundTag) entriesList.get(index));
+    }
+
+    @Override
+    public void setEntry(int index, FluidStack entry) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException(index);
+        }
+
         CompoundTag tag = container.getOrCreateTag();
 
         ListTag entriesList;
@@ -86,7 +116,8 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack>, Flu
             tag.put(ENTRIES_KEY, entriesList);
         }
 
-        entriesList.set(pSlotId, entry.writeToNBT(new CompoundTag()));
+        ensureSize(entriesList);
+        entriesList.set(index, entry.writeToNBT(new CompoundTag()));
     }
 
     @Override
@@ -99,5 +130,9 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack>, Flu
         }
 
         return isInvert();
+    }
+
+    private void ensureSize(ListTag list) {
+        NbtUtil.ensureSize(list, size, () -> FluidStack.EMPTY.writeToNBT(new CompoundTag()));
     }
 }

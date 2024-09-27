@@ -24,6 +24,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
 
@@ -101,15 +102,15 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
 
     public static class Container extends RecipeWrapper {
 
-        private final MachineFluidTank fluidTank;
+        private final Supplier<MachineFluidTank> fluidTankSupplier;
 
-        public Container(IItemHandlerModifiable inv, MachineFluidTank fluidTank) {
+        public Container(IItemHandlerModifiable inv, Supplier<MachineFluidTank> fluidTankSupplier) {
             super(inv);
-            this.fluidTank = fluidTank;
+            this.fluidTankSupplier = fluidTankSupplier;
         }
 
         public MachineFluidTank getFluidTank() {
-            return fluidTank;
+            return fluidTankSupplier.get();
         }
     }
 

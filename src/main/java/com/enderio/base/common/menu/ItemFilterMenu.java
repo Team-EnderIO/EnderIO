@@ -11,10 +11,12 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -38,10 +40,9 @@ public class ItemFilterMenu extends AbstractContainerMenu {
 
         }).orElseThrow(IllegalArgumentException::new);
 
-        List<ItemStack> items = capability.getEntries();
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < capability.size(); i++) {
             int pSlot = i;
-            addSlot(new ItemFilterSlot(() -> capability.getEntries().get(pSlot), stack2 -> capability.setEntry(pSlot, stack2) ,i ,14 + ( i % 5) * 18, 35 + 20 * ( i / 5)));
+            addSlot(new ItemFilterSlot(() -> capability.getEntry(pSlot), stack2 -> capability.setEntry(pSlot, stack2) ,i ,14 + ( i % 5) * 18, 35 + 20 * ( i / 5)));
         }
         addInventorySlots(14,119, inventory);
     }
@@ -94,5 +95,20 @@ public class ItemFilterMenu extends AbstractContainerMenu {
     public void setInverted(Boolean inverted) {
         CoreNetwork.sendToServer(new FilterUpdatePacket(capability.isNbt(), inverted));
         capability.setInverted(inverted);
+    }
+
+    @Override
+    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+        if (slotId >= 0 && slotId < capability.size()) {
+            if (clickType == ClickType.PICKUP) {
+                if (!capability.getEntry(slotId).isEmpty()) {
+                    capability.setEntry(slotId, ItemStack.EMPTY);
+                }
+            } else if (clickType == ClickType.SWAP) {
+                return;
+            }
+        }
+
+        super.doClick(slotId, button, clickType, player);
     }
 }

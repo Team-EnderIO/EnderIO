@@ -13,13 +13,16 @@ public class VacuumChestMenu extends MachineMenu<VacuumChestBlockEntity> {
 
     public VacuumChestMenu(VacuumChestBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.VACUUM_CHEST.get(), pContainerId);
+
         if (blockEntity != null) {
+            // Filter slot first, means shift+right click targets it first
+            this.addSlot(new MachineSlot(blockEntity.getInventory(), VacuumChestBlockEntity.FILTER_SLOT, 8, 86));
+
             for (int j = 0; j < 3; ++j) {
                 for (int k = 0; k < 9; ++k) {
                     this.addSlot(new MachineSlot(blockEntity.getInventory(), k + j * 9, 8 + k * 18, 18 + j * 18));
                 }
             }
-            this.addSlot(new MachineSlot(blockEntity.getInventory(), 27, 8, 86));
         }
         addInventorySlots(8, 124);
     }

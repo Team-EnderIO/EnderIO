@@ -31,10 +31,17 @@ public class EnergyConduitType extends SimpleConduitType<EnergyConduitData> {
             LazyOptional<IEnergyStorage> capability = blockEntity.getCapability(ForgeCapabilities.ENERGY, direction.getOpposite());
             if (capability.isPresent()) {
                 IEnergyStorage storage = capability.orElseThrow(() -> new RuntimeException("present capability was not found"));
-                return new ConduitConnectionData(storage.canReceive(), storage.canExtract(), RedstoneControl.ALWAYS_ACTIVE);
 
+                if (!storage.canReceive() && !storage.canExtract()) {
+                    // This ensures that if there's an energy capability that might not be ready to be extracted from are still configured
+                    // For example Thermal's Dynamos report false until they have energy in them and flux networks always refuse.
+                    return new ConduitConnectionData(false, true, RedstoneControl.ALWAYS_ACTIVE);
+                }
+
+                return new ConduitConnectionData(storage.canReceive(), storage.canExtract(), RedstoneControl.ALWAYS_ACTIVE);
             }
         }
+        
         return super.getDefaultConnection(level, pos, direction);
     }
 

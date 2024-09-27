@@ -123,7 +123,10 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     @Override
     public void serverTick() {
-        tryCraft();
+        if (canAct()) {
+            tryCraft();
+        }
+
         super.serverTick();
         processOutputBuffer();
     }
@@ -150,7 +153,8 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private boolean hasPowerToCraft() {
-        return this.energyStorage.consumeEnergy(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(), true) > 0;
+        return this.energyStorage.consumeEnergy(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(), true) >=
+            MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get();
     }
 
     private void processOutputBuffer() {
