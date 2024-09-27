@@ -107,8 +107,13 @@ public record EnergyConduit(
     public ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {
         IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos.relative(direction), direction.getOpposite());
         if (capability != null) {
-            // Always default to both directions.
-            return new ConduitConnectionData(true, true, RedstoneControl.ALWAYS_ACTIVE);
+            if (!capability.canReceive() && !capability.canExtract()) {
+                // This ensures that if there's an energy capability that might be pushing but won't allow pulling is present, we can still interact
+                // For example Thermal's Dynamos report false until they have energy in them and flux networks always refuse.
+                return new ConduitConnectionData(false, true, RedstoneControl.ALWAYS_ACTIVE);
+            }
+
+            return new ConduitConnectionData(capability.canReceive(), capability.canExtract(), RedstoneControl.ALWAYS_ACTIVE);
         }
 
         return Conduit.super.getDefaultConnection(level, pos, direction);
