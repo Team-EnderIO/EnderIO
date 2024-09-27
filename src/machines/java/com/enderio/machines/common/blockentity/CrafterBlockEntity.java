@@ -123,7 +123,10 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     @Override
     public void serverTick() {
-        tryCraft();
+        if (canAct()) {
+            tryCraft();
+        }
+
         super.serverTick();
         processOutputBuffer();
     }
