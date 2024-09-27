@@ -42,7 +42,7 @@ public class RecipeManagerMixin {
         int energy = MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_VANILLA_ITEM_ENERGY.get();
         AlloySmeltingRecipe recipe = new AlloySmeltingRecipe(List.of(input), accessor.getResult(), energy, accessor.getExperience(), true);
 
-        String path = "smelting/" + originalId.getPath();
+        String path = "smelting/" + originalId.getNamespace() + "/" + originalId.getPath();
         ResourceLocation id = EnderIOBase.loc(path);
         return new RecipeHolder<>(id, recipe);
     }
