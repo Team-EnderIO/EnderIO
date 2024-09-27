@@ -18,6 +18,8 @@ public class ConduitLang {
     public static final Component PRESSURIZED_FLUID_CONDUIT = addTranslation("item", EnderIOBase.loc("conduit.pressurized_fluid"), "Pressurized Fluid Conduit");
     public static final Component ENDER_FLUID_CONDUIT = addTranslation("item", EnderIOBase.loc("conduit.ender_fluid"), "Ender Fluid Conduit");
     public static final Component ITEM_CONDUIT = addTranslation("item", EnderIOBase.loc("conduit.item"), "Item Conduit");
+    public static final Component ENHANCED_ITEM_CONDUIT = addTranslation("item", EnderIOBase.loc("conduit.enhanced_item"), "Enhanced Item Conduit");
+    public static final Component ENDER_ITEM_CONDUIT = addTranslation("item", EnderIOBase.loc("conduit.ender_item"), "Ender Item Conduit");
 
     // endregion
 
@@ -25,6 +27,13 @@ public class ConduitLang {
     public static final MutableComponent FLUID_RATE_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.fluid.rate"), "Transfer Rate %s mB/t");
     public static final Component MULTI_FLUID_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.fluid.multi"),
         "Allows multiple fluids to be transported on the same line");
+
+    public static final MutableComponent ITEM_CONDUIT_TRANSFER_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.item.transfer_rate"),
+        "Transfer Rate %s Items/cycle");
+    public static final MutableComponent ITEM_CONDUIT_CYCLE_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.item.tick_rate"),
+        "Cycle Rate %s/sec");
+    public static final MutableComponent ITEM_CONDUIT_CALCULATED_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.item.effective_rate"),
+        "Effective Transfer Rate %s Items/sec");
 
     public static final Component CONDUIT_INSERT = addTranslation("gui", EnderIOBase.loc("conduit.insert"), "Insert");
     public static final Component CONDUIT_EXTRACT = addTranslation("gui", EnderIOBase.loc("conduit.extract"), "Extract");

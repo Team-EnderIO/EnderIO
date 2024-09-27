@@ -33,7 +33,7 @@ public class ConduitTypes {
         .register("fluid", () -> ConduitType.of(FluidConduit.CODEC));
 
     public static final Supplier<ConduitType<ItemConduit>> ITEM = CONDUIT_TYPES
-        .register("item", () -> ConduitType.of(ItemConduit::new));
+        .register("item", () -> ConduitType.of(ItemConduit.CODEC));
 
     public static class Data {
         private static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister.create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, EnderIOBase.REGISTRY_NAMESPACE);

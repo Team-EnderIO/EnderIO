@@ -27,6 +27,8 @@ public class Conduits {
     public static ResourceKey<Conduit<?>> PRESSURIZED_FLUID = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIOBase.loc("pressurized_fluid"));
     public static ResourceKey<Conduit<?>> ENDER_FLUID = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIOBase.loc("ender_fluid"));
     public static ResourceKey<Conduit<?>> ITEM = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIOBase.loc("item"));
+    public static ResourceKey<Conduit<?>> ENHANCED_ITEM = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIOBase.loc("enhanced_item"));
+    public static ResourceKey<Conduit<?>> ENDER_ITEM = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIOBase.loc("ender_item"));
 
     public static void bootstrap(BootstrapContext<Conduit<?>> context) {
         // TODO: These rates are still up for change, but will refine through testing.
@@ -47,7 +49,9 @@ public class Conduits {
         context.register(ENDER_FLUID,
             new FluidConduit(EnderIOBase.loc("block/conduit/ender_fluid"), ConduitLang.ENDER_FLUID_CONDUIT, 10_000, true));
 
-        context.register(ITEM, new ItemConduit(EnderIOBase.loc("block/conduit/item"), ConduitLang.ITEM_CONDUIT));
+        context.register(ITEM, new ItemConduit(EnderIOBase.loc("block/conduit/item"), ConduitLang.ITEM_CONDUIT, 4, 20));
+        context.register(ENHANCED_ITEM, new ItemConduit(EnderIOBase.loc("block/conduit/item"), ConduitLang.ENHANCED_ITEM_CONDUIT, 4, 10));
+        context.register(ENDER_ITEM, new ItemConduit(EnderIOBase.loc("block/conduit/item"), ConduitLang.ENDER_ITEM_CONDUIT, 4, 5));
     }
 
     public static class ContextSerializers {
