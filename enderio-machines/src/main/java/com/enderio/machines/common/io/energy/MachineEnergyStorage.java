@@ -89,7 +89,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
     @Override
     public int consumeEnergy(int energy, boolean simulate) {
         // Cap rate
-        int usableEnergy = Math.min(energy, getMaxEnergyUse());
+        int usableEnergy = Math.min(getEnergyStored(), Math.min(energy, getMaxEnergyUse()));
         if (!simulate) {
             return takeEnergy(usableEnergy);
         }
