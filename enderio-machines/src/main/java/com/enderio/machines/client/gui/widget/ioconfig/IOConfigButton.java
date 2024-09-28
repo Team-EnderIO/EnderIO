@@ -12,10 +12,8 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
-// TODO: Redesign this
 public class IOConfigButton extends EnderButton {
     public static final ResourceLocation IO_CONFIG = EnderIOBase.loc("buttons/io_config");
-    public static final ResourceLocation NEIGHBOURS = EnderIOBase.loc("buttons/neighbour");
     private final IOConfigOverlay configRenderer;
     @Nullable private final Consumer<Boolean> callback;
 
@@ -28,13 +26,6 @@ public class IOConfigButton extends EnderButton {
         this.configRenderer = configRenderer;
         this.callback = callback;
         setTooltip(Tooltip.create(EIOLang.IOCONFIG.copy().withStyle(ChatFormatting.WHITE)));
-
-        // TODO: This should be a child of the config widget.
-        /*neighbourButton = new ImageButton(screen.getGuiLeft() + screen.getXSize() - 5 - 16, screen.getGuiTop() + screen.getYSize() - 5 - 16, 16, 16,
-            new WidgetSprites(NEIGHBOURS, NEIGHBOURS), (b) -> configRenderer.toggleNeighbourVisibility(), EIOLang.TOGGLE_NEIGHBOUR);
-        neighbourButton.setTooltip(Tooltip.create(EIOLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE)));
-        neighbourButton.visible = show;
-        addRenderableWidget.apply(neighbourButton);*/
     }
 
     @Override
@@ -53,7 +44,5 @@ public class IOConfigButton extends EnderButton {
 
     @Override
     public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
-
-    public record Inset(int left, int right, int top, int bottom) {}
 
 }
