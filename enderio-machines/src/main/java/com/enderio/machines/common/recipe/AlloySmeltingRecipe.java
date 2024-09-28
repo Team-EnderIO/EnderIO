@@ -169,7 +169,8 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
         public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmeltingRecipe> STREAM_CODEC = StreamCodec.composite(
             SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AlloySmeltingRecipe::inputs, ItemStack.STREAM_CODEC, AlloySmeltingRecipe::output,
-            ByteBufCodecs.INT, AlloySmeltingRecipe::energy, ByteBufCodecs.FLOAT, AlloySmeltingRecipe::experience, AlloySmeltingRecipe::new);
+            ByteBufCodecs.INT, AlloySmeltingRecipe::energy, ByteBufCodecs.FLOAT, AlloySmeltingRecipe::experience, ByteBufCodecs.BOOL,
+            AlloySmeltingRecipe::isSmelting, AlloySmeltingRecipe::new);
 
         @Override
         public MapCodec<AlloySmeltingRecipe> codec() {
