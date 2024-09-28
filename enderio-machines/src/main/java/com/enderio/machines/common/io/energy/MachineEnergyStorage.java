@@ -3,6 +3,7 @@ package com.enderio.machines.common.io.energy;
 import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.MachineNBTKeys;
+import com.enderio.machines.common.config.MachinesConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -88,7 +89,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
     @Override
     public int consumeEnergy(int energy, boolean simulate) {
         // Cap rate
-        int usableEnergy = Math.min(energy, getMaxEnergyUse());
+        int usableEnergy = Math.min(getEnergyStored(), Math.min(energy, getMaxEnergyUse()));
         if (!simulate) {
             return takeEnergy(usableEnergy);
         }
@@ -121,7 +122,14 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
             return 0;
         }
 
-        int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), Math.min(getMaxEnergyUse() * 2, maxReceive));
+        int maximumEnergyToReceive;
+        if (MachinesConfig.COMMON.ENERGY.THROTTLE_ENERGY_INPUT.get()) {
+            maximumEnergyToReceive = Math.min(getMaxEnergyUse() * 2, maxReceive);
+        } else {
+            maximumEnergyToReceive = maxReceive;
+        }
+
+        int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), maximumEnergyToReceive);
         if (!simulate) {
             addEnergy(energyReceived);
         }

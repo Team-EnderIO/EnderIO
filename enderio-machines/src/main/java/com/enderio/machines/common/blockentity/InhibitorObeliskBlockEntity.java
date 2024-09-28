@@ -57,7 +57,7 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity {
     }
 
     @Override
-    public @Nullable MachineInventoryLayout getInventoryLayout() {
+    public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
             .capacitor()
             .build();

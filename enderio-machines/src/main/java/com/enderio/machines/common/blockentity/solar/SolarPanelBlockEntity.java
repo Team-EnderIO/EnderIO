@@ -21,6 +21,7 @@ import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -245,6 +246,15 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
         entityData = components.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        if (entityData.hasEntity()) {
+            components.set(EIODataComponents.STORED_ENTITY, entityData);
+        }
     }
 
     public Optional<ResourceLocation> getEntityType() {

@@ -45,4 +45,21 @@ public record MachineState(MachineStateType type, MutableComponent component) {
 
     public static final NetworkDataSlot.CodecType<Set<MachineState>> DATA_SLOT_TYPE
         = NetworkDataSlot.CodecType.createSet(CODEC, STREAM_CODEC.cast());
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        MachineState that = (MachineState) obj;
+        return type == that.type && component == that.component; //Use identity
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * type.ordinal() + System.identityHashCode(component); //Only hash instance
+    }
 }

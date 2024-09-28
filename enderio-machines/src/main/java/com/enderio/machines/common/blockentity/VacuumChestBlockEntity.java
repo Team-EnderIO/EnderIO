@@ -31,7 +31,7 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
     }
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
+    public MachineInventoryLayout createInventoryLayout() {
         return extractableGUISlot(MachineInventoryLayout.builder(), 27)
             .slot(slot -> slot.guiInsert().guiExtract().filter((i, s) -> s.getCapability(EIOCapabilities.Filter.ITEM) instanceof ItemStackFilter))
             .slotAccess(FILTER)

@@ -122,7 +122,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     }
 
     @Override
-    public @Nullable MachineInventoryLayout getInventoryLayout() {
+    public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder().inputSlot(2).slotAccess(REAGENTS).build();
     }
 

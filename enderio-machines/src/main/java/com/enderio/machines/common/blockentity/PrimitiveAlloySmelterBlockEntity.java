@@ -63,7 +63,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     }
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
+    public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
             .inputSlot((s, i) -> i.getBurnTime(RecipeType.SMELTING) > 0)
             .slotAccess(FUEL)
