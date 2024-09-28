@@ -145,8 +145,13 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
                     access.getItemStack(inv).shrink(1);
                 }
 
-                AXE.getItemStack(inv).hurt(1, level.getRandom(), null);
-                SHEARS.getItemStack(inv).hurt(1, level.getRandom(), null);
+                if (AXE.getItemStack(inv).hurt(1, level.getRandom(), null)) {
+                    AXE.getItemStack(inv).shrink(1);
+                }
+
+                if (SHEARS.getItemStack(inv).hurt(1, level.getRandom(), null)) {
+                    SHEARS.getItemStack(inv).shrink(1);
+                }
             }
         };
     }
