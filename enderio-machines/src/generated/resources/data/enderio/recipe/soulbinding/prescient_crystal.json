@@ -6,5 +6,8 @@
   "input": {
     "tag": "c:gems/vibrant_crystal"
   },
-  "output": "enderio:prescient_crystal"
+  "output": {
+    "count": 1,
+    "id": "enderio:prescient_crystal"
+  }
 }

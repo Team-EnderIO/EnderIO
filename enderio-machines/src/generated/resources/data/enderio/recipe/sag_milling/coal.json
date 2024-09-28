@@ -6,16 +6,25 @@
   },
   "outputs": [
     {
-      "item": "enderio:powdered_coal"
+      "output": {
+        "count": 1,
+        "id": "enderio:powdered_coal"
+      }
     },
     {
       "chance": 0.1,
-      "item": "enderio:powdered_coal"
+      "output": {
+        "count": 1,
+        "id": "enderio:powdered_coal"
+      }
     },
     {
       "chance": 0.1,
       "optional": true,
-      "tag": "c:dusts/sulfur"
+      "output": {
+        "count": 1,
+        "tag": "c:dusts/sulfur"
+      }
     }
   ]
 }

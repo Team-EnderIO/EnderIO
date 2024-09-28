@@ -3,5 +3,8 @@
   "input": {
     "tag": "minecraft:wooden_fences"
   },
-  "output": "enderio:painted_fence"
+  "output": {
+    "count": 1,
+    "id": "enderio:painted_fence"
+  }
 }

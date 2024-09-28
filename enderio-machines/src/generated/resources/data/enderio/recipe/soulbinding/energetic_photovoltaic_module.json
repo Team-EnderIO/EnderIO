@@ -6,5 +6,8 @@
   "input": {
     "item": "enderio:energetic_photovoltaic_module"
   },
-  "output": "enderio:energetic_photovoltaic_module"
+  "output": {
+    "count": 1,
+    "id": "enderio:energetic_photovoltaic_module"
+  }
 }

@@ -21,5 +21,8 @@
       "tag": "c:gems/prismarine"
     }
   ],
-  "output": "enderio:guardian_diode"
+  "output": {
+    "count": 1,
+    "id": "enderio:guardian_diode"
+  }
 }
