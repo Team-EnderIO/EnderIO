@@ -9,6 +9,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -55,14 +56,14 @@ public class TankRecipeProvider extends RecipeProvider {
     protected void buildEmptying(Ingredient input, ItemLike output, FluidStack fluid, RecipeOutput recipeOutput) {
         recipeOutput.accept(
             EnderIOBase.loc("tank_empty/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
-            new TankRecipe(input, output.asItem(), fluid, TankRecipe.Mode.EMPTY),
+            new TankRecipe(input, new ItemStack(output), fluid, TankRecipe.Mode.EMPTY),
             null);
     }
 
     protected void buildFilling(Ingredient input, ItemLike output, FluidStack fluid, RecipeOutput recipeOutput) {
         recipeOutput.accept(
             EnderIOBase.loc("tank_fill/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
-            new TankRecipe(input, output.asItem(), fluid, TankRecipe.Mode.FILL),
+            new TankRecipe(input, new ItemStack(output), fluid, TankRecipe.Mode.FILL),
             null);
     }
 

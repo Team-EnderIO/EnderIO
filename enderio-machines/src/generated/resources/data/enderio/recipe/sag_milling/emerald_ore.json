@@ -6,16 +6,24 @@
   },
   "outputs": [
     {
-      "count": 2,
-      "item": "minecraft:emerald"
+      "output": {
+        "count": 2,
+        "id": "minecraft:emerald"
+      }
     },
     {
       "chance": 0.25,
-      "item": "minecraft:emerald"
+      "output": {
+        "count": 1,
+        "id": "minecraft:emerald"
+      }
     },
     {
       "chance": 0.15,
-      "item": "minecraft:cobblestone"
+      "output": {
+        "count": 1,
+        "id": "minecraft:cobblestone"
+      }
     }
   ]
 }

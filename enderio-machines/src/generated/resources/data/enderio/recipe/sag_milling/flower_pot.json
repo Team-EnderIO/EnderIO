@@ -7,19 +7,31 @@
   "outputs": [
     {
       "chance": 0.9,
-      "item": "minecraft:brick"
+      "output": {
+        "count": 1,
+        "id": "minecraft:brick"
+      }
     },
     {
       "chance": 0.3,
-      "item": "minecraft:brick"
+      "output": {
+        "count": 1,
+        "id": "minecraft:brick"
+      }
     },
     {
       "chance": 0.1,
-      "item": "minecraft:brick"
+      "output": {
+        "count": 1,
+        "id": "minecraft:brick"
+      }
     },
     {
       "chance": 0.05,
-      "item": "enderio:powdered_coal"
+      "output": {
+        "count": 1,
+        "id": "enderio:powdered_coal"
+      }
     }
   ]
 }

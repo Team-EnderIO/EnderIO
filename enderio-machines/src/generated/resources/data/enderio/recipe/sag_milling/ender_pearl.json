@@ -7,8 +7,10 @@
   },
   "outputs": [
     {
-      "count": 9,
-      "item": "enderio:powdered_ender_pearl"
+      "output": {
+        "count": 9,
+        "id": "enderio:powdered_ender_pearl"
+      }
     }
   ]
 }

@@ -11,6 +11,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.Tags;
@@ -60,7 +61,7 @@ public class SlicingRecipeProvider extends RecipeProvider {
     protected void build(Item output, List<Ingredient> inputs, int energy, RecipeOutput recipeOutput) {
         recipeOutput.accept(
             EnderIOBase.loc("slicing/" + BuiltInRegistries.ITEM.getKey(output).getPath()),
-            new SlicingRecipe(output, inputs, energy),
+            new SlicingRecipe(new ItemStack(output), inputs, energy),
             null);
     }
 

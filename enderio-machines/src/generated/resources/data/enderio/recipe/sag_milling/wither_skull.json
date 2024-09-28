@@ -6,12 +6,17 @@
   },
   "outputs": [
     {
-      "count": 2,
-      "item": "enderio:withering_powder"
+      "output": {
+        "count": 2,
+        "id": "enderio:withering_powder"
+      }
     },
     {
       "chance": 0.2,
-      "item": "enderio:withering_powder"
+      "output": {
+        "count": 1,
+        "id": "enderio:withering_powder"
+      }
     }
   ]
 }
