@@ -74,6 +74,21 @@ neoForge {
     }
 }
 
+tasks.withType<Jar> {
+    manifest {
+        attributes(mapOf(
+                "Specification-Title" to "Ender IO Base",
+                "Specification-Vendor" to "Team Ender IO",
+                "Specification-Version" to "1",
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to project.version,
+                "Implementation-Vendor" to "Team Ender IO",
+                "Implementation-Timestamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date()),
+                "MixinConfigs" to "enderiobase.mixins.json"
+        ))
+    }
+}
+
 tasks.register<Jar>("apiJar") {
     archiveClassifier.set("api")
 
@@ -122,20 +137,5 @@ publishing {
                 }
             }
         }
-    }
-}
-
-tasks.withType<Jar> {
-    manifest {
-        attributes(mapOf(
-                "Specification-Title" to "Ender IO",
-                "Specification-Vendor" to "Team Ender IO",
-                "Specification-Version" to "1",
-                "Implementation-Title" to project.name,
-                "Implementation-Version" to project.version,
-                "Implementation-Vendor" to "Team Ender IO",
-                "Implementation-Timestamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date()),
-                "MixinConfigs" to "enderiobase.mixins.json"
-        ))
     }
 }

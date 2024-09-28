@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat
+import java.util.*
+
 plugins {
     id("net.neoforged.moddev")
 }
@@ -93,6 +96,20 @@ neoForge {
         create("enderio_conduits_modded") {
             sourceSet(sourceSets.getByName("main"))
         }
+    }
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes(mapOf(
+                "Specification-Title" to "Ender IO Modded Conduits",
+                "Specification-Vendor" to "Team Ender IO",
+                "Specification-Version" to "1",
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to project.version,
+                "Implementation-Vendor" to "Team Ender IO",
+                "Implementation-Timestamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date()),
+        ))
     }
 }
 
