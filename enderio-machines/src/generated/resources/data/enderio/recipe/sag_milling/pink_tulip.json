@@ -7,19 +7,31 @@
   "outputs": [
     {
       "chance": 0.8,
-      "item": "minecraft:pink_dye"
+      "output": {
+        "count": 1,
+        "id": "minecraft:pink_dye"
+      }
     },
     {
       "chance": 0.6,
-      "item": "minecraft:pink_dye"
+      "output": {
+        "count": 1,
+        "id": "minecraft:pink_dye"
+      }
     },
     {
       "chance": 0.3,
-      "item": "minecraft:pink_dye"
+      "output": {
+        "count": 1,
+        "id": "minecraft:pink_dye"
+      }
     },
     {
       "chance": 0.1,
-      "item": "enderio:plant_matter_green"
+      "output": {
+        "count": 1,
+        "id": "enderio:plant_matter_green"
+      }
     }
   ]
 }

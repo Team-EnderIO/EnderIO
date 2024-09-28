@@ -3,5 +3,8 @@
   "input": {
     "item": "minecraft:redstone_block"
   },
-  "output": "enderio:painted_redstone_block"
+  "output": {
+    "count": 1,
+    "id": "enderio:painted_redstone_block"
+  }
 }

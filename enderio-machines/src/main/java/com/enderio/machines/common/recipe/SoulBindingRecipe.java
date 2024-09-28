@@ -40,7 +40,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public record SoulBindingRecipe(
-    Item output,
+    ItemStack output,
     Ingredient input,
     int energy,
     int experience,
@@ -49,15 +49,15 @@ public record SoulBindingRecipe(
     Optional<String> soulData
 ) implements MachineRecipe<SoulBindingRecipe.Input> {
 
-    public SoulBindingRecipe(Item output, Ingredient input, int energy, int exp, ResourceLocation entityType) {
+    public SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int exp, ResourceLocation entityType) {
         this(output, input, energy, exp, Optional.of(entityType), Optional.empty(), Optional.empty());
     }
 
-    public SoulBindingRecipe(Item output, Ingredient input, int energy, int exp, MobCategory mobCategory) {
+    public SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int exp, MobCategory mobCategory) {
         this(output, input, energy, exp, Optional.empty(), Optional.of(mobCategory), Optional.empty());
     }
 
-    public SoulBindingRecipe(Item output, Ingredient input, int energy, int exp, String souldata) {
+    public SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int exp, String souldata) {
         this(output, input, energy, exp, Optional.empty(), Optional.empty(), Optional.of(souldata));
     }
 
@@ -84,7 +84,7 @@ public record SoulBindingRecipe(
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.getDefaultInstance()), OutputStack.of(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance()));
+        return List.of(OutputStack.of(output.copy()), OutputStack.of(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance()));
     }
 
     @Override
@@ -184,7 +184,7 @@ public record SoulBindingRecipe(
     public static class Serializer implements RecipeSerializer<SoulBindingRecipe> {
 
         private static final MapCodec<SoulBindingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BuiltInRegistries.ITEM.byNameCodec().fieldOf("output").forGetter(SoulBindingRecipe::output),
+            ItemStack.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output),
             Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(SoulBindingRecipe::input),
             Codec.INT.fieldOf("energy").forGetter(SoulBindingRecipe::energy),
             Codec.INT.fieldOf("exp").forGetter(SoulBindingRecipe::experience),
@@ -194,7 +194,7 @@ public record SoulBindingRecipe(
         ).apply(instance, SoulBindingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> STREAM_CODEC = NeoForgeStreamCodecs.composite(
-            ByteBufCodecs.registry(Registries.ITEM),
+            ItemStack.STREAM_CODEC,
             SoulBindingRecipe::output,
             Ingredient.CONTENTS_STREAM_CODEC,
             SoulBindingRecipe::input,

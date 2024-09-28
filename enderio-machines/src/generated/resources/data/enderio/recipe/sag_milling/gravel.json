@@ -7,15 +7,24 @@
   "outputs": [
     {
       "chance": 0.7,
-      "item": "minecraft:sand"
+      "output": {
+        "count": 1,
+        "id": "minecraft:sand"
+      }
     },
     {
       "chance": 0.3,
-      "item": "minecraft:sand"
+      "output": {
+        "count": 1,
+        "id": "minecraft:sand"
+      }
     },
     {
       "chance": 0.1,
-      "item": "minecraft:flint"
+      "output": {
+        "count": 1,
+        "id": "minecraft:flint"
+      }
     }
   ]
 }

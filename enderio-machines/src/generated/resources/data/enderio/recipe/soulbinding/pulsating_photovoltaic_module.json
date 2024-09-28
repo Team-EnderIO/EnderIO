@@ -6,5 +6,8 @@
   "input": {
     "item": "enderio:pulsating_photovoltaic_module"
   },
-  "output": "enderio:pulsating_photovoltaic_module"
+  "output": {
+    "count": 1,
+    "id": "enderio:pulsating_photovoltaic_module"
+  }
 }
