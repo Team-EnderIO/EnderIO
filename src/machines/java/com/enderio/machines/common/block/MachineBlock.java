@@ -135,11 +135,17 @@ public class MachineBlock extends BaseEntityBlock {
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         BlockEntity existingBlockEntity;
-        if (ModList.get().isLoaded("flywheel")) {
-            existingBlockEntity =  FlywheelCompat.getExistingBlockEntity(level, pos);
+
+        // Using IForgeBlockGetter#getExistingBlockEntity() with Starlight causes chunk-loading deadlocks
+        // Credit: https://github.com/XFactHD/FramedBlocks/blob/1.20/src/main/java/xfacthd/framedblocks/common/util/InternalApiImpl.java#L13-L20
+        if (ModList.get().isLoaded("starlight")) {
+            existingBlockEntity = level.getBlockEntity(pos);
+        } else if (ModList.get().isLoaded("flywheel")) {
+            existingBlockEntity = FlywheelCompat.getExistingBlockEntity(level, pos);
         } else {
             existingBlockEntity = level.getExistingBlockEntity(pos);
         }
+
         if (existingBlockEntity instanceof MachineBlockEntity machineBlock) {
             return machineBlock.getLightEmission();
         }
