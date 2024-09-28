@@ -2,4 +2,4 @@
 @net.minecraft.MethodsReturnNonnullByDefault
 @com.tterrag.registrate.util.nullness.FieldsAreNonnullByDefault
 
-package com.enderio.machines.common.integrations.vanilla;
+package com.enderio.machines.mixin;

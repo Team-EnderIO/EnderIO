@@ -157,18 +157,24 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
         recipeConsumer.accept(new FinishedAlloyingRecipe(id, inputs, output, energy, experience));
     }
 
-    protected static class FinishedAlloyingRecipe extends EnderFinishedRecipe {
+    public static class FinishedAlloyingRecipe extends EnderFinishedRecipe {
         private final List<CountedIngredient> inputs;
         private final ItemStack output;
         private final int energy;
         private final float experience;
+        private final boolean isSmelting;
 
         public FinishedAlloyingRecipe(ResourceLocation id, List<CountedIngredient> inputs, ItemStack output, int energy, float experience) {
+            this(id, inputs, output, energy, experience, false);
+        }
+
+        public FinishedAlloyingRecipe(ResourceLocation id, List<CountedIngredient> inputs, ItemStack output, int energy, float experience, boolean isSmelting) {
             super(id);
             this.inputs = inputs;
             this.output = output;
             this.energy = energy;
             this.experience = experience;
+            this.isSmelting = isSmelting;
         }
 
         @Override
@@ -188,6 +194,10 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
             json.addProperty("energy", energy);
             json.addProperty("experience", experience);
+
+            if (isSmelting) {
+                json.addProperty("isSmelting", isSmelting);
+            }
 
             super.serializeRecipeData(json);
         }
