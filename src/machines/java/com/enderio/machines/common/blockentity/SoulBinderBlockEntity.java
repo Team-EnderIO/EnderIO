@@ -95,7 +95,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     // region Inventory
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
+    public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
             .setStackLimit(1)
             .inputSlot((slot, stack) -> stack.is(EIOItems.FILLED_SOUL_VIAL.get()))

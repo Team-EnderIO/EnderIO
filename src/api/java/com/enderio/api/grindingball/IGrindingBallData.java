@@ -41,10 +41,13 @@ public interface IGrindingBallData {
      * Grinding ball identity value. Used when no bonus grinding ball is installed.
      */
     IGrindingBallData IDENTITY = new IGrindingBallData() {
+
+        public static final ResourceLocation ENDERIO = new ResourceLocation("enderio", "grindingball/identity");
+
         @Override
         public ResourceLocation getGrindingBallId() {
             // ID isn't actually mapped anywhere.
-            return new ResourceLocation("enderio", "grindingball/identity");
+            return ENDERIO;
         }
 
         @Override

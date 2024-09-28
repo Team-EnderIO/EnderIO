@@ -37,6 +37,7 @@ public class EnderBlockEntity extends BlockEntity {
 
     public static final String DATA = "Data";
     public static final String INDEX = "Index";
+    private boolean isChangedDeferred = true;
     private final List<NetworkDataSlot<?>> dataSlots = new ArrayList<>();
 
     private final List<Runnable> afterDataSync = new ArrayList<>();
@@ -56,24 +57,44 @@ public class EnderBlockEntity extends BlockEntity {
         } else {
             blockEntity.serverTick();
         }
+        blockEntity.endTick();
     }
 
     /**
      * Perform server-side ticking
      */
-    public void serverTick() {
+    @UseOnly(LogicalSide.SERVER)
+    protected void serverTick() {
         // Perform syncing.
-        if (level != null && !level.isClientSide) {
+        if (level != null) {
             sync();
-            level.blockEntityChanged(worldPosition);
         }
     }
 
     /**
      * Perform client side ticking.
      */
-    public void clientTick() {
+    @UseOnly(LogicalSide.CLIENT)
+    protected void clientTick() {
 
+    }
+
+    /**
+     * Perform tick on both client and server, on the end.
+     */
+    protected void endTick() {
+        if (this.level == null) {
+            return;
+        }
+        if (isChangedDeferred) {
+            isChangedDeferred = false;
+            setChanged(level, getBlockPos(), getBlockState());
+        }
+    }
+
+    @Override
+    public void setChanged() {
+        this.isChangedDeferred = true;
     }
 
     // endregion
@@ -129,23 +150,24 @@ public class EnderBlockEntity extends BlockEntity {
 
     @Nullable
     private FriendlyByteBuf createBufferSlotUpdate() {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        int amount = 0;
+        List<Integer> needsUpdate = new ArrayList<>();
         for (int i = 0; i < dataSlots.size(); i++) {
-            NetworkDataSlot<?> networkDataSlot = dataSlots.get(i);
-            if (networkDataSlot.needsUpdate()) {
-                amount ++;
-                buf.writeInt(i);
-                networkDataSlot.writeBuffer(buf);
+            if (dataSlots.get(i).needsUpdate()) {
+                needsUpdate.add(i);
             }
         }
-        if (amount == 0) {
+
+        if (needsUpdate.isEmpty()) {
             return null;
         }
-        FriendlyByteBuf result = new FriendlyByteBuf(Unpooled.buffer()); //Use 2 buffers to be able to write the amount of data
-        result.writeInt(amount);
-        result.writeBytes(buf.copy());
-        return result;
+
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeInt(needsUpdate.size());
+        needsUpdate.forEach(i -> {
+            buf.writeInt(i);
+            dataSlots.get(i).writeBuffer(buf);
+        });
+        return buf;
     }
 
     public void addDataSlot(NetworkDataSlot<?> slot) {
@@ -181,6 +203,7 @@ public class EnderBlockEntity extends BlockEntity {
     public void sync() {
         var syncData = createBufferSlotUpdate();
         if (syncData != null) {
+            setChanged();
             CoreNetwork.sendToTracking(level.getChunkAt(getBlockPos()), new S2CDataSlotUpdate(getBlockPos(), syncData));
         }
     }

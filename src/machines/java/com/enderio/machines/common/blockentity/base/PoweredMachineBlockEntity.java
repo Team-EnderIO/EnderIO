@@ -44,6 +44,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
      */
     protected final MachineEnergyStorage energyStorage;
     @Nullable protected final MachineEnergyStorage exposedEnergyStorage;
+    private final boolean hasActiveState;
 
     /**
      * The client value of the energy storage.
@@ -75,6 +76,8 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         // new new new new way of syncing energy storage.
         addDataSlot(createEnergyDataSlot());
+
+        this.hasActiveState = blockState.hasProperty(ProgressMachineBlock.POWERED);
     }
 
     public NetworkDataSlot<?> createEnergyDataSlot() {
@@ -91,7 +94,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         if (level != null) {
             BlockState blockState = getBlockState();
-            if (blockState.hasProperty(ProgressMachineBlock.POWERED) && blockState.getValue(ProgressMachineBlock.POWERED) != isActive()) {
+            if (hasActiveState && blockState.getValue(ProgressMachineBlock.POWERED) != isActive()) {
                 if (updateModel) {
                     level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
                     updateMachineState(MachineState.ACTIVE, isActive());

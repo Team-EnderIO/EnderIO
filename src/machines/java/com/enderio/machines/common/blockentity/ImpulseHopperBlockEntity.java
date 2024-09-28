@@ -35,7 +35,7 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
+    public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
             .inputSlot(6, (integer, itemStack) -> ItemStack.isSameItemSameTags(itemStack, GHOST.get(integer).getItemStack(this)))
             .slotAccess(INPUT)

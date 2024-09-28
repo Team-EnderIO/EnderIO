@@ -69,7 +69,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public @Nullable MachineInventoryLayout getInventoryLayout() {
+    public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
             .capacitor()
             .build();

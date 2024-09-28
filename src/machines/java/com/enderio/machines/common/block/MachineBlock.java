@@ -69,12 +69,18 @@ public class MachineBlock extends BaseEntityBlock {
     public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
         super.neighborChanged(pState, pLevel, pPos, pBlock, pFromPos, pIsMoving);
         updateBlockEntityCache(pLevel, pPos);
+        if (pLevel.getBlockEntity(pPos) instanceof MachineBlockEntity machineBlock) {
+            machineBlock.neighborChanged(pState, pLevel, pPos, pFromPos);
+        }
     }
 
     @Override
     public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
         super.onNeighborChange(state, level, pos, neighbor);
         updateBlockEntityCache(level, pos);
+        if (level.getBlockEntity(pos) instanceof MachineBlockEntity machineBlock) {
+            machineBlock.neighborChanged(state, level, pos, neighbor);
+        }
     }
 
     private void updateBlockEntityCache(LevelReader level, BlockPos pos) {

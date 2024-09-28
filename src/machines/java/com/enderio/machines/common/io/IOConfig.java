@@ -6,7 +6,6 @@ import com.enderio.api.io.IOMode;
 import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -167,9 +166,18 @@ public class IOConfig implements IIOConfig {
         return config.equals(ioConfig.config);
     }
 
+    /**
+     * Simplified hashcode impl for EnumMap using ordinal instead of hashcode for enums
+     */
     @Override
     public int hashCode() {
-        return config.hashCode();
+        int h = 0;
+
+        for (var entry : config.entrySet()) {
+            h += entry.getKey().ordinal() ^ (31 * entry.getValue().ordinal());
+        }
+
+        return h;
     }
 
     // endregion
