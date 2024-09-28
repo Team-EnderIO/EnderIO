@@ -1,6 +1,7 @@
 package com.enderio.machines.client.gui.widget.ioconfig;
 
 import com.enderio.EnderIOBase;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.BaseOverlay;
 import com.enderio.machines.client.rendering.model.ModelRenderUtil;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
@@ -16,6 +17,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -89,6 +91,10 @@ public class IOConfigOverlay extends BaseOverlay {
     private boolean neighbourVisible = true;
     private Optional<SelectedFace> selection = Optional.empty();
 
+    //Neighbour Button
+    public static final ResourceLocation NEIGHBOURS_BTN = EnderIOBase.loc("buttons/neighbour");
+    private final Rect2i neighBtnRect;
+
     public IOConfigOverlay(int x, int y, int width, int height, List<BlockPos> _configurable) {
         super(x, y, width, height, Component.empty());
         this.configurable.addAll(_configurable);
@@ -128,6 +134,7 @@ public class IOConfigOverlay extends BaseOverlay {
         yaw = MINECRAFT.player.getYRot();
 
         initBuffers(MINECRAFT.renderBuffers().bufferSource());
+        neighBtnRect = new Rect2i(getX() + getWidth() - 2 - 16, getY() + getHeight() - 2 -16, 16, 16);
     }
 
     @Override
@@ -200,13 +207,20 @@ public class IOConfigOverlay extends BaseOverlay {
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         if (this.active && this.visible) {
+            if (pButton == 0) {
+                if(neighBtnRect.contains((int) pMouseX, (int) pMouseY)) {
+                    toggleNeighbourVisibility();
+                    this.playDownSound(MINECRAFT.getSoundManager());
+                    return true;
+                }
+            }
             if (pButton == 1) {
                 if (selection.isPresent()) {
                     var selectedFace = selection.get();
                     BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
                     if (entity instanceof MachineBlockEntity machine) {
                         machine.cycleIOMode(selectedFace.side);
-                        this.playDownSound(Minecraft.getInstance().getSoundManager());
+                        this.playDownSound(MINECRAFT.getSoundManager());
                         return true;
                     }
                 }
@@ -217,10 +231,9 @@ public class IOConfigOverlay extends BaseOverlay {
 
     @Override
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        if (visible && isValidClickButton(pButton) && isMouseOver(pMouseX, pMouseY)) {
-            Minecraft minecraft = Minecraft.getInstance();
-            double dx = pDragX / (double) minecraft.getWindow().getGuiScaledWidth();
-            double dy = pDragY / (double) minecraft.getWindow().getGuiScaledHeight();
+        if (visible && isValidClickButton(pButton) && isMouseOver(pMouseX, pMouseY) && !neighBtnRect.contains((int) pMouseX, (int) pMouseY)) {
+            double dx = pDragX / (double) MINECRAFT.getWindow().getGuiScaledWidth();
+            double dy = pDragY / (double) MINECRAFT.getWindow().getGuiScaledHeight();
             yaw += 4 * (float)dx * 180;
             pitch += 2 * (float)dy * 180;
 
@@ -300,6 +313,9 @@ public class IOConfigOverlay extends BaseOverlay {
             renderOverlay(guiGraphics);
 
             guiGraphics.disableScissor();
+
+            // after scissor to prevent clipping the tooltip
+            renderNeighbourButton(guiGraphics, mouseX, mouseY);
         }
     }
 
@@ -397,8 +413,6 @@ public class IOConfigOverlay extends BaseOverlay {
 
     private void renderOverlay(GuiGraphics guiGraphics) {
         if (selection.isPresent()) {
-            Minecraft minecraft = Minecraft.getInstance();
-
             var selectedFace = selection.get();
             BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
             if (entity instanceof MachineBlockEntity machine) {
@@ -406,12 +420,19 @@ public class IOConfigOverlay extends BaseOverlay {
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();
                 guiGraphics.blitSprite(IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
-                    getY() + height - 4 - minecraft.font.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(), iconBounds.getHeight());
+                    getY() + height - 4 - MINECRAFT.font.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(), iconBounds.getHeight());
                 guiGraphics.pose().pushPose();
                 guiGraphics.pose().translate(0, 0, OVERLAY_Z_OFFSET); // to ensure that string is drawn on top
-                guiGraphics.drawString(minecraft.font, map.getComponent(), getX() + 4, getY() + height - 2 - minecraft.font.lineHeight, 0xFFFFFFFF);
+                guiGraphics.drawString(MINECRAFT.font, map.getComponent(), getX() + 4, getY() + height - 2 - MINECRAFT.font.lineHeight, 0xFFFFFFFF);
                 guiGraphics.pose().popPose();
             }
+        }
+    }
+
+    private void renderNeighbourButton(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        guiGraphics.blitSprite(NEIGHBOURS_BTN, neighBtnRect.getX(), neighBtnRect.getY(), 16, 16);
+        if(neighBtnRect.contains(mouseX, mouseY)) {
+            guiGraphics.renderTooltip(MINECRAFT.font, EIOLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE), mouseX, mouseY);
         }
     }
 
