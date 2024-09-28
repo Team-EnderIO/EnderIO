@@ -80,13 +80,4 @@ public interface Integration {
     default boolean canBlockTeleport(Player player) {
         return false;
     }
-
-    /**
-     * Usage intended for kubejs io, tell us if you need it for something else
-     * @param recipe The smelting recipe that is tried to be used in the AlloySmelter.
-     * @return true if this recipe can be used
-     */
-    default boolean acceptSmeltingRecipe(SmeltingRecipe recipe) {
-        return true;
-    }
 }

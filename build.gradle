@@ -228,6 +228,7 @@ dependencies {
     implementation implementation(fg.deobf("dev.gigaherz.graph:GraphLib3:${graphlib_version}"))
     jarJar(group: 'dev.gigaherz.graph', name: 'GraphLib3', version: "${graphlib_version_range}")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    machinesAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
@@ -298,7 +299,9 @@ dependencies {
 // MixinGradle Settings
 mixin {
     add sourceSets.main, "mixins.enderio.refmap.json"
+    add sourceSets.machines, "mixins.enderio-machines.refmap.json"
     config "mixins.enderio.json"
+    config "mixins.enderio-machines.json"
 }
 
 reobf.create('jarJar')
@@ -314,7 +317,7 @@ jar {
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "SleepyTrousers",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs"            : "mixins.enderio.json"
+                "MixinConfigs"            : "mixins.enderio.json,mixins.enderio-machines.json"
         ])
     }
 

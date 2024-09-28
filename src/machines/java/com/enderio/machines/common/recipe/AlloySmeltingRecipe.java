@@ -34,13 +34,19 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     private final ItemStack output;
     private final int energy;
     private final float experience;
+    private final boolean isSmelting;
 
-    public AlloySmeltingRecipe(ResourceLocation id, List<CountedIngredient> inputs, ItemStack output, int energy, float experience) {
+    public AlloySmeltingRecipe(ResourceLocation id, List<CountedIngredient> inputs, ItemStack output, int energy, float experience, boolean isSmelting) {
         this.id = id;
         this.inputs = inputs;
         this.output = output;
         this.energy = energy;
         this.experience = experience;
+        this.isSmelting = isSmelting;
+    }
+
+    public AlloySmeltingRecipe(ResourceLocation id, List<CountedIngredient> inputs, ItemStack output, int energy, float experience) {
+        this(id, inputs, output, energy, experience, false);
     }
 
     /**
@@ -55,6 +61,10 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
      */
     public float getExperience() {
         return experience;
+    }
+
+    public boolean isSmelting() {
+        return isSmelting;
     }
 
     @Override
@@ -107,7 +117,12 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
 
     @Override
     public List<OutputStack> craft(ContainerWrapper container, RegistryAccess registryAccess) {
-         return List.of(OutputStack.of(output.copy()));
+        ItemStack outputStack = output.copy();
+        if (isSmelting) {
+            outputStack.setCount(container.inputsTaken);
+        }
+
+        return List.of(OutputStack.of(outputStack));
     }
 
     @Override
@@ -173,7 +188,8 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
             ItemStack result = CraftingHelper.getItemStack(serializedRecipe.getAsJsonObject("result"), true);
             int energy = serializedRecipe.get("energy").getAsInt();
             float experience = serializedRecipe.get("experience").getAsFloat();
-            return new AlloySmeltingRecipe(recipeId, inputs, result, energy, experience);
+            boolean isSmelting = serializedRecipe.has("isSmelting") && serializedRecipe.get("isSmelting").getAsBoolean();
+            return new AlloySmeltingRecipe(recipeId, inputs, result, energy, experience, isSmelting);
         }
 
         @Nullable

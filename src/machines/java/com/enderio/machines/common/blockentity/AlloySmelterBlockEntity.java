@@ -3,7 +3,6 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
-import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
@@ -14,7 +13,6 @@ import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -25,14 +23,12 @@ import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -162,7 +158,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     protected boolean acceptSlotInput(int slot, ItemStack stack) {
         if (getMode().canAlloy()) {
-            if (RecipeCaches.ALLOY_SMELTING.hasValidRecipeIf(getInventoryNN(), getInputsSlotAccess(), slot, stack)) {
+            if (RecipeCaches.getAlloySmeltingCache(getMode()).hasValidRecipeIf(getInventoryNN(), getInputsSlotAccess(), slot, stack)) {
                 return true;
             }
         }
@@ -219,7 +215,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         @Override
         protected void onDetermineOutputs(AlloySmeltingRecipe recipe) {
             // This handles the output multiplication for vanilla smelting recipes.
-            if (recipe instanceof VanillaAlloySmeltingRecipe) {
+            if (recipe.isSmelting()) {
                 CountedIngredient input = recipe.getInputs().get(0);
 
                 int inputCount = 0;
@@ -239,7 +235,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         protected void consumeInputs(AlloySmeltingRecipe recipe) {
             MachineInventory inv = getInventory();
 
-            if (recipe instanceof VanillaAlloySmeltingRecipe) {
+            if (recipe.isSmelting()) {
                 CountedIngredient input = recipe.getInputs().get(0);
 
                 int consumed = 0;
@@ -284,19 +280,6 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 }
             }
         }
-
-        @Nullable
-        @Override
-        protected AlloySmeltingRecipe loadRecipe(ResourceLocation id) {
-            return level.getRecipeManager().byKey(id).map(recipe -> {
-                if (recipe.getType() == MachineRecipes.ALLOY_SMELTING.type().get()) {
-                    return (AlloySmeltingRecipe) recipe;
-                } else if (recipe.getType() == RecipeType.SMELTING) {
-                    return new VanillaAlloySmeltingRecipe((SmeltingRecipe) recipe);
-                }
-                return null;
-            }).orElse(null);
-        }
     }
 
     protected class AlloySmeltingMachineTaskHost extends CraftingMachineTaskHost<AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> {
@@ -313,25 +296,16 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 return Optional.empty();
             }
 
-            // Get alloy smelting recipe (Default)
-            if (getMode().canAlloy()) {
-                var recipe = super.findRecipe();
-                if (recipe.isPresent()) {
-                    return recipe;
-                }
+            var optionalRecipe = super.findRecipe();
+            if (optionalRecipe.isEmpty()) {
+                return Optional.empty();
             }
 
-            // Get vanilla smelting recipe.
-            if (getMode().canSmelt()) {
-                for (int i = 0; i < AlloySmelterBlockEntity.INPUTS.size(); i++) {
-                    var recipe = level.getRecipeManager()
-                        .getRecipeFor(RecipeType.SMELTING, new ContainerSubWrapper(getContainer(), i), level);
-                    if (recipe.isPresent() && IntegrationManager.allMatch(integration -> integration.acceptSmeltingRecipe(recipe.get()))) {
-                        return Optional.of(new VanillaAlloySmeltingRecipe(recipe.get()));
-                    }
-                }
+            if (optionalRecipe.get().isSmelting() ? !getMode().canSmelt() : !getMode().canAlloy()) {
+                return Optional.empty();
             }
-            return Optional.empty();
+
+            return optionalRecipe;
         }
     }
 
