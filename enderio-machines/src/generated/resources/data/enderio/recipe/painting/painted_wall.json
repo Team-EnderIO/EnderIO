@@ -3,8 +3,5 @@
   "input": {
     "tag": "minecraft:walls"
   },
-  "output": {
-    "count": 1,
-    "id": "enderio:painted_wall"
-  }
+  "output": "enderio:painted_wall"
 }

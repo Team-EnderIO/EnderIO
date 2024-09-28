@@ -6,8 +6,5 @@
   "input": {
     "item": "enderio:z_logic_controller"
   },
-  "output": {
-    "count": 1,
-    "id": "enderio:frank_n_zombie"
-  }
+  "output": "enderio:frank_n_zombie"
 }

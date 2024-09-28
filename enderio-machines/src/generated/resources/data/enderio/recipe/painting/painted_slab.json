@@ -3,8 +3,5 @@
   "input": {
     "tag": "minecraft:wooden_slabs"
   },
-  "output": {
-    "count": 1,
-    "id": "enderio:painted_slab"
-  }
+  "output": "enderio:painted_slab"
 }

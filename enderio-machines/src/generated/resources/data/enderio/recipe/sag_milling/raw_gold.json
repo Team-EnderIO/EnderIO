@@ -6,24 +6,15 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 1,
-        "id": "enderio:powdered_gold"
-      }
+      "item": "enderio:powdered_gold"
     },
     {
       "chance": 0.25,
-      "output": {
-        "count": 1,
-        "id": "enderio:powdered_gold"
-      }
+      "item": "enderio:powdered_gold"
     },
     {
       "chance": 0.2,
-      "output": {
-        "count": 1,
-        "tag": "c:dusts/copper"
-      }
+      "tag": "c:dusts/copper"
     }
   ]
 }

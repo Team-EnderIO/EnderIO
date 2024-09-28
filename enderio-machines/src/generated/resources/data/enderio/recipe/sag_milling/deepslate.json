@@ -7,10 +7,7 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 1,
-        "id": "minecraft:cobbled_deepslate"
-      }
+      "item": "minecraft:cobbled_deepslate"
     }
   ]
 }

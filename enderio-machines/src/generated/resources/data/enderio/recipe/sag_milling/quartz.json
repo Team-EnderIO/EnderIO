@@ -7,17 +7,11 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 1,
-        "id": "enderio:powdered_quartz"
-      }
+      "item": "enderio:powdered_quartz"
     },
     {
       "chance": 0.1,
-      "output": {
-        "count": 1,
-        "id": "enderio:powdered_quartz"
-      }
+      "item": "enderio:powdered_quartz"
     }
   ]
 }

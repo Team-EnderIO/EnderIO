@@ -6,8 +6,5 @@
   "input": {
     "item": "enderio:ender_resonator"
   },
-  "output": {
-    "count": 1,
-    "id": "enderio:sentient_ender"
-  }
+  "output": "enderio:sentient_ender"
 }

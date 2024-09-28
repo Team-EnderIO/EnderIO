@@ -25,7 +25,7 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public record SlicingRecipe(
-    ItemStack output,
+    Item output,
     List<Ingredient> inputs,
     int energy
 ) implements MachineRecipe<SlicingRecipe.Input> {
@@ -42,7 +42,7 @@ public record SlicingRecipe(
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.copy()));
+        return List.of(OutputStack.of(new ItemStack(output, 1)));
     }
 
     @Override
@@ -89,13 +89,13 @@ public record SlicingRecipe(
 
     public static class Serializer implements RecipeSerializer<SlicingRecipe> {
         public static final MapCodec<SlicingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemStack.CODEC.fieldOf("output").forGetter(SlicingRecipe::output),
-            new ValidatingListCodec<>(Ingredient.LIST_CODEC, 6).fieldOf("inputs").forGetter(SlicingRecipe::inputs),
-            Codec.INT.fieldOf("energy").forGetter(SlicingRecipe::energy)
+                BuiltInRegistries.ITEM.byNameCodec().fieldOf("output").forGetter(SlicingRecipe::output),
+		        new ValidatingListCodec<>(Ingredient.LIST_CODEC, 6).fieldOf("inputs").forGetter(SlicingRecipe::inputs),
+		        Codec.INT.fieldOf("energy").forGetter(SlicingRecipe::energy)
 	    ).apply(instance, SlicingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, SlicingRecipe> STREAM_CODEC = StreamCodec.composite(
-            ItemStack.STREAM_CODEC,
+            ByteBufCodecs.registry(Registries.ITEM),
             SlicingRecipe::output,
             Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()),
             SlicingRecipe::inputs,

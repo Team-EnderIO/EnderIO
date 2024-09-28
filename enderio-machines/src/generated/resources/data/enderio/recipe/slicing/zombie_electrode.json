@@ -21,8 +21,5 @@
       "tag": "c:silicon"
     }
   ],
-  "output": {
-    "count": 1,
-    "id": "enderio:zombie_electrode"
-  }
+  "output": "enderio:zombie_electrode"
 }

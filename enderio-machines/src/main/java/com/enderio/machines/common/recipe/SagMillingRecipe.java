@@ -11,6 +11,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -26,10 +27,12 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.IntFunction;
 
@@ -73,25 +76,26 @@ public record SagMillingRecipe(
                 for (OutputItem output : this.outputs) {
                     if (output.isPresent() && RANDOM.nextFloat() < output.chance() * chanceMult) {
                         // Collect the output
-                        ItemStack outputStack = output.getItemStack();
+                        Item item = output.getItem();
+                        int count = output.count();
 
                         // Attempt to add to an existing stack.
                         for (OutputStack stack : outputs) {
-                            if (outputStack.getCount() <= 0) {
+                            if (count <= 0) {
                                 break;
                             }
 
                             ItemStack itemStack = stack.getItem();
-                            if (itemStack.is(outputStack.getItem())) {
-                                int growth = Math.min(outputStack.getCount(), itemStack.getMaxStackSize());
+                            if (itemStack.is(item)) {
+                                int growth = Math.min(count, itemStack.getMaxStackSize());
                                 itemStack.grow(growth);
-                                outputStack.shrink(growth);
+                                count -= growth;
                             }
                         }
 
                         // Add new stack.
-                        if (outputStack.getCount() >= 0) {
-                            outputs.add(OutputStack.of(outputStack));
+                        if (count >= 0) {
+                            outputs.add(OutputStack.of(new ItemStack(item, count)));
                         }
                     }
                 }
@@ -109,7 +113,7 @@ public record SagMillingRecipe(
         List<OutputStack> guaranteedOutputs = new ArrayList<>();
         for (OutputItem item : outputs) {
             if (item.chance >= 1.0f && item.isPresent()) {
-                guaranteedOutputs.add(OutputStack.of(item.getItemStack()));
+                guaranteedOutputs.add(OutputStack.of(new ItemStack(item.getItem(), item.count())));
             }
         }
         return guaranteedOutputs;
@@ -173,66 +177,90 @@ public record SagMillingRecipe(
     }
 
     public record OutputItem(
-        Either<ItemStack, SizedTagOutput> output,
+        Either<Item, TagKey<Item>> item,
+        int count,
         float chance,
         boolean isOptional
     ) {
+
         private static final Codec<OutputItem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.either(ItemStack.CODEC, SizedTagOutput.CODEC).fieldOf("output").forGetter(OutputItem::output),
+            TagKey.codec(Registries.ITEM).optionalFieldOf("tag").forGetter(output -> output.item.right()),
+            BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("item").forGetter(output -> output.item.left()),
+            Codec.INT.optionalFieldOf("count", 1).forGetter(OutputItem::count),
             Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter(OutputItem::chance),
             Codec.BOOL.optionalFieldOf("optional", false).forGetter(OutputItem::isOptional)
-        ).apply(instance, OutputItem::new));
+        ).apply(instance, OutputItem::of));
 
-        private static final StreamCodec<RegistryFriendlyByteBuf, OutputItem> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.either(ItemStack.STREAM_CODEC, SizedTagOutput.STREAM_CODEC),
-            OutputItem::output,
+        public static final StreamCodec<RegistryFriendlyByteBuf, OutputItem> STREAM_CODEC = StreamCodec.composite(
+            ResourceLocation.STREAM_CODEC
+                .map(loc -> TagKey.create(Registries.ITEM, loc), TagKey::location)
+                .apply(ByteBufCodecs::optional),
+            e -> e.item.right(),
+            ByteBufCodecs.registry(Registries.ITEM)
+                .apply(ByteBufCodecs::optional),
+            e -> e.item.left(),
+            ByteBufCodecs.INT,
+            OutputItem::count,
             ByteBufCodecs.FLOAT,
             OutputItem::chance,
             ByteBufCodecs.BOOL,
             OutputItem::isOptional,
-            OutputItem::new
+            OutputItem::of
         );
 
         public static OutputItem of(Item item, int count, float chance, boolean optional) {
-            return of(new ItemStack(item, count), chance, optional);
-        }
-
-        public static OutputItem of(ItemStack item, float chance, boolean optional) {
-            return new OutputItem(Either.left(item), chance, optional);
+            return new OutputItem(Either.left(item), count, chance, optional);
         }
 
         public static OutputItem of(TagKey<Item> tag, int count, float chance, boolean optional) {
-            return new OutputItem(Either.right(new SizedTagOutput(tag, count)), chance, optional);
+            return new OutputItem(Either.right(tag), count, chance, optional);
+        }
+
+        public static OutputItem of(Optional<TagKey<Item>> tag, Optional<Item> item, int count, float chance, boolean optional) {
+            if (tag.isPresent()) {
+                return new OutputItem(Either.right(tag.get()), count, chance, optional);
+            }
+
+            if (item.isPresent()) {
+                return new OutputItem(Either.left(item.get()), count, chance, optional);
+            }
+
+            throw new IllegalStateException("either tag or item need to be present");
         }
 
         public boolean isPresent() {
-            return !getItemStack().isEmpty();
+            return getItem() != null;
+        }
+
+        @Nullable
+        public Item getItem() {
+            return item.left().or(() -> TagUtil.getOptionalItem(item.right().get())).orElse(null);
         }
 
         public ItemStack getItemStack() {
-            return output.map(ItemStack::copy, SizedTagOutput::getItemStack);
+            Item item = getItem();
+            if (item != null) {
+                return new ItemStack(item, count);
+            }
+
+            return ItemStack.EMPTY;
         }
 
-        public record SizedTagOutput(TagKey<Item> itemTag, int count) {
-            private static final Codec<SizedTagOutput> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                TagKey.codec(Registries.ITEM).fieldOf("tag").forGetter(SizedTagOutput::itemTag),
-                Codec.intRange(0, Integer.MAX_VALUE).fieldOf("count").forGetter(SizedTagOutput::count)
-            ).apply(instance, SizedTagOutput::new));
-
-            private static final StreamCodec<RegistryFriendlyByteBuf, SizedTagOutput> STREAM_CODEC = StreamCodec.composite(
-                ResourceLocation.STREAM_CODEC
-                    .map(loc -> TagKey.create(Registries.ITEM, loc), TagKey::location),
-                SizedTagOutput::itemTag,
-                ByteBufCodecs.INT,
-                SizedTagOutput::count,
-                SizedTagOutput::new
-            );
-
-            public ItemStack getItemStack() {
-                return TagUtil.getOptionalItem(itemTag)
-                    .map(ItemStack::new)
-                    .orElse(ItemStack.EMPTY);
+        @Nullable
+        public TagKey<Item> getTag() {
+            if (!isTag()) {
+                return null;
             }
+
+            return item.right().get();
+        }
+
+        public boolean isTag() {
+            return item.right().isPresent();
+        }
+
+        public boolean isItem() {
+            return item.left().isPresent();
         }
     }
 

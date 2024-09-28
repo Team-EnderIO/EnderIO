@@ -6,8 +6,5 @@
     "item": "enderio:soularium_grinding_ball"
   },
   "mob_category": "monster",
-  "output": {
-    "count": 1,
-    "id": "enderio:monster_token"
-  }
+  "output": "enderio:monster_token"
 }

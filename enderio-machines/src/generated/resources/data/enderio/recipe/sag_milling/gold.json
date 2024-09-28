@@ -7,10 +7,7 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 1,
-        "id": "enderio:powdered_gold"
-      }
+      "item": "enderio:powdered_gold"
     }
   ]
 }

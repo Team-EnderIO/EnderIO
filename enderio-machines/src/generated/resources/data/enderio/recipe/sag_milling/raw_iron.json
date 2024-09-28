@@ -6,24 +6,15 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 1,
-        "id": "enderio:powdered_iron"
-      }
+      "item": "enderio:powdered_iron"
     },
     {
       "chance": 0.25,
-      "output": {
-        "count": 1,
-        "id": "enderio:powdered_iron"
-      }
+      "item": "enderio:powdered_iron"
     },
     {
       "chance": 0.05,
-      "output": {
-        "count": 1,
-        "tag": "c:dusts/tin"
-      }
+      "tag": "c:dusts/tin"
     }
   ]
 }

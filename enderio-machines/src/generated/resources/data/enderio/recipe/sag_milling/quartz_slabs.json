@@ -7,17 +7,11 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 1,
-        "id": "minecraft:quartz"
-      }
+      "item": "minecraft:quartz"
     },
     {
       "chance": 0.25,
-      "output": {
-        "count": 1,
-        "id": "minecraft:quartz"
-      }
+      "item": "minecraft:quartz"
     }
   ]
 }

@@ -7,10 +7,7 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 1,
-        "id": "enderio:vibrant_powder"
-      }
+      "item": "enderio:vibrant_powder"
     }
   ]
 }

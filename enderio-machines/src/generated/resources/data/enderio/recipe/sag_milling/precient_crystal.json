@@ -7,10 +7,7 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 1,
-        "id": "enderio:prescient_powder"
-      }
+      "item": "enderio:prescient_powder"
     }
   ]
 }

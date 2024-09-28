@@ -7,10 +7,7 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 1,
-        "id": "minecraft:cobblestone"
-      }
+      "item": "minecraft:cobblestone"
     }
   ]
 }

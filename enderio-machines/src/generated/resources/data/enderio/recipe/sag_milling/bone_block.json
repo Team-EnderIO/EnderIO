@@ -7,10 +7,8 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 9,
-        "id": "minecraft:bone_meal"
-      }
+      "count": 9,
+      "item": "minecraft:bone_meal"
     }
   ]
 }

@@ -6,17 +6,11 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 1,
-        "id": "minecraft:cobblestone"
-      }
+      "item": "minecraft:cobblestone"
     },
     {
       "chance": 0.7,
-      "output": {
-        "count": 1,
-        "id": "minecraft:vine"
-      }
+      "item": "minecraft:vine"
     }
   ]
 }

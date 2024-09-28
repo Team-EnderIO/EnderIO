@@ -7,10 +7,7 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 1,
-        "id": "enderio:ender_crystal_powder"
-      }
+      "item": "enderio:ender_crystal_powder"
     }
   ]
 }

@@ -5,8 +5,5 @@
   "input": {
     "item": "enderio:broken_spawner"
   },
-  "output": {
-    "count": 1,
-    "id": "enderio:broken_spawner"
-  }
+  "output": "enderio:broken_spawner"
 }

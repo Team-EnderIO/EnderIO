@@ -6,8 +6,5 @@
   "input": {
     "tag": "c:gems/emerald"
   },
-  "output": {
-    "count": 1,
-    "id": "enderio:enticing_crystal"
-  }
+  "output": "enderio:enticing_crystal"
 }

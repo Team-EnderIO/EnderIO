@@ -31,7 +31,7 @@ import java.util.List;
 
 public record PaintingRecipe(
     Ingredient input,
-    ItemStack output
+    Item output
 ) implements MachineRecipe<PaintingRecipe.Input> {
 
     @Override
@@ -52,7 +52,7 @@ public record PaintingRecipe(
     @Override
     public List<OutputStack> craft(Input recipeInput, RegistryAccess registryAccess) {
         List<OutputStack> outputs = new ArrayList<>();
-        ItemStack outputStack = output.copy();
+        ItemStack outputStack = new ItemStack(output);
 
         var paintItem = recipeInput.getItem(1);
         if (!(paintItem.getItem() instanceof BlockItem blockItem)) {
@@ -68,7 +68,7 @@ public record PaintingRecipe(
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.copy()));
+        return List.of(OutputStack.of(output.getDefaultInstance()));
     }
 
     @Override
@@ -78,7 +78,7 @@ public record PaintingRecipe(
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
-        return output.copy();
+        return new ItemStack(output);
     }
 
     @Override
@@ -112,13 +112,13 @@ public record PaintingRecipe(
 
         public static final MapCodec<PaintingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Ingredient.CODEC.fieldOf("input").forGetter(PaintingRecipe::input),
-            ItemStack.CODEC.fieldOf("output").forGetter(PaintingRecipe::output)
+            BuiltInRegistries.ITEM.byNameCodec().fieldOf("output").forGetter(PaintingRecipe::output)
         ).apply(instance, PaintingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, PaintingRecipe> STREAM_CODEC = StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC,
             PaintingRecipe::input,
-            ItemStack.STREAM_CODEC,
+            ByteBufCodecs.registry(Registries.ITEM),
             PaintingRecipe::output,
             PaintingRecipe::new
         );

@@ -3,8 +3,5 @@
   "input": {
     "tag": "minecraft:sand"
   },
-  "output": {
-    "count": 1,
-    "id": "enderio:painted_sand"
-  }
+  "output": "enderio:painted_sand"
 }

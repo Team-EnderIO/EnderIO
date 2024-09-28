@@ -5,9 +5,6 @@
   "input": {
     "item": "enderio:soul_engine"
   },
-  "output": {
-    "count": 1,
-    "id": "enderio:soul_engine"
-  },
+  "output": "enderio:soul_engine",
   "souldata": "engine"
 }

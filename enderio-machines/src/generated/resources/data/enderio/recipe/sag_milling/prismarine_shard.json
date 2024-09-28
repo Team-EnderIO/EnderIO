@@ -7,17 +7,11 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 1,
-        "id": "minecraft:prismarine_crystals"
-      }
+      "item": "minecraft:prismarine_crystals"
     },
     {
       "chance": 0.1,
-      "output": {
-        "count": 1,
-        "id": "minecraft:prismarine_crystals"
-      }
+      "item": "minecraft:prismarine_crystals"
     }
   ]
 }

@@ -3,8 +3,5 @@
   "input": {
     "item": "enderio:painted_trapdoor"
   },
-  "output": {
-    "count": 1,
-    "id": "enderio:painted_trapdoor"
-  }
+  "output": "enderio:painted_trapdoor"
 }

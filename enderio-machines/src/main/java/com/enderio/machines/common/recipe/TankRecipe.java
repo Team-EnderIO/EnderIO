@@ -34,7 +34,7 @@ import java.util.function.IntFunction;
 
 public record TankRecipe(
     Ingredient input,
-    ItemStack output,
+    Item output,
     FluidStack fluid,
     Mode mode
 ) implements Recipe<TankRecipe.Input> {
@@ -94,7 +94,7 @@ public record TankRecipe(
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
-        return output.copy();
+        return new ItemStack(output);
     }
 
     @Override
@@ -133,7 +133,7 @@ public record TankRecipe(
 
         private static final MapCodec<TankRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(TankRecipe::input),
-            ItemStack.CODEC.fieldOf("output").forGetter(TankRecipe::output),
+            BuiltInRegistries.ITEM.byNameCodec().fieldOf("output").forGetter(TankRecipe::output),
             FluidStack.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid),
             Mode.CODEC.fieldOf("mode").forGetter(TankRecipe::mode)
         ).apply(instance, TankRecipe::new));
@@ -141,7 +141,7 @@ public record TankRecipe(
         public static final StreamCodec<RegistryFriendlyByteBuf, TankRecipe> STREAM_CODEC = StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC,
             TankRecipe::input,
-            ItemStack.STREAM_CODEC,
+            ByteBufCodecs.registry(Registries.ITEM),
             TankRecipe::output,
             FluidStack.STREAM_CODEC,
             TankRecipe::fluid,

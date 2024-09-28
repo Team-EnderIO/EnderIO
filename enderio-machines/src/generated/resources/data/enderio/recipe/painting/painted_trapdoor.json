@@ -3,8 +3,5 @@
   "input": {
     "tag": "minecraft:wooden_trapdoors"
   },
-  "output": {
-    "count": 1,
-    "id": "enderio:painted_trapdoor"
-  }
+  "output": "enderio:painted_trapdoor"
 }

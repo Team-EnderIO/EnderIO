@@ -288,19 +288,17 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     private void tryTankRecipe() {
         currentRecipe.ifPresent(recipe -> {
-            ItemStack recipeResultStack = recipe.value().output();
-
             switch (recipe.value().mode()) {
             case EMPTY -> {
                 ItemStack outputStack = FLUID_FILL_OUTPUT.getItemStack(this);
 
-                if (outputStack.isEmpty() || (outputStack.is(recipeResultStack.getItem()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
+                if (outputStack.isEmpty() || (outputStack.is(recipe.value().output()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
                     FLUID_FILL_INPUT.getItemStack(this).shrink(1);
 
                     TANK.fill(this, recipe.value().fluid(), IFluidHandler.FluidAction.EXECUTE);
 
                     if (outputStack.isEmpty()) {
-                        FLUID_FILL_OUTPUT.setStackInSlot(this, recipeResultStack.copy());
+                        FLUID_FILL_OUTPUT.setStackInSlot(this, new ItemStack(recipe.value().output(), 1));
                     } else {
                         FLUID_FILL_OUTPUT.getItemStack(this).grow(1);
                     }
@@ -309,13 +307,13 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
             case FILL -> {
                 ItemStack outputStack = FLUID_DRAIN_OUTPUT.getItemStack(this);
 
-                if (outputStack.isEmpty() || (outputStack.is(recipeResultStack.getItem()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
+                if (outputStack.isEmpty() || (outputStack.is(recipe.value().output()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
                     FLUID_DRAIN_INPUT.getItemStack(this).shrink(1);
 
                     TANK.drain(this, recipe.value().fluid(), IFluidHandler.FluidAction.EXECUTE);
 
                     if (outputStack.isEmpty()) {
-                        FLUID_DRAIN_OUTPUT.setStackInSlot(this, recipeResultStack.copy());
+                        FLUID_DRAIN_OUTPUT.setStackInSlot(this, new ItemStack(recipe.value().output(), 1));
                     } else {
                         FLUID_DRAIN_OUTPUT.getItemStack(this).grow(1);
                     }

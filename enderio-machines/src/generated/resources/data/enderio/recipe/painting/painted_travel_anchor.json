@@ -3,8 +3,5 @@
   "input": {
     "item": "enderio:travel_anchor"
   },
-  "output": {
-    "count": 1,
-    "id": "enderio:painted_travel_anchor"
-  }
+  "output": "enderio:painted_travel_anchor"
 }

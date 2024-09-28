@@ -3,8 +3,5 @@
   "input": {
     "item": "enderio:painted_fence"
   },
-  "output": {
-    "count": 1,
-    "id": "enderio:painted_fence"
-  }
+  "output": "enderio:painted_fence"
 }

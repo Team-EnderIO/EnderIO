@@ -6,24 +6,16 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 2,
-        "id": "minecraft:quartz"
-      }
+      "count": 2,
+      "item": "minecraft:quartz"
     },
     {
       "chance": 0.1,
-      "output": {
-        "count": 1,
-        "id": "enderio:powdered_quartz"
-      }
+      "item": "enderio:powdered_quartz"
     },
     {
       "chance": 0.15,
-      "output": {
-        "count": 1,
-        "id": "minecraft:netherrack"
-      }
+      "item": "minecraft:netherrack"
     }
   ]
 }

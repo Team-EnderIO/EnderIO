@@ -6,24 +6,15 @@
   },
   "outputs": [
     {
-      "output": {
-        "count": 1,
-        "id": "minecraft:raw_copper"
-      }
+      "item": "minecraft:raw_copper"
     },
     {
       "chance": 0.33,
-      "output": {
-        "count": 1,
-        "id": "minecraft:raw_copper"
-      }
+      "item": "minecraft:raw_copper"
     },
     {
       "chance": 0.15,
-      "output": {
-        "count": 1,
-        "id": "minecraft:cobblestone"
-      }
+      "item": "minecraft:cobblestone"
     }
   ]
 }
