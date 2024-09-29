@@ -175,7 +175,8 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private Optional<ItemStack> getRecipeResult() {
-        if (recipe != null) {
+        // Ensures that the recipe still matches before attempting to assemble it.
+        if (recipe != null && recipe.matches(DUMMY_CRAFTING_CONTAINER, getLevel())) {
             return Optional.of(recipe.assemble(DUMMY_CRAFTING_CONTAINER, getLevel().registryAccess()));
         }
         return Optional.empty();
