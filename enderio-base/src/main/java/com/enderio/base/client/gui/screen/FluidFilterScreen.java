@@ -1,7 +1,11 @@
 package com.enderio.base.client.gui.screen;
 
 import com.enderio.EnderIOBase;
+import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.common.capability.EntityFilterCapability;
 import com.enderio.base.common.capability.FluidFilterCapability;
+import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.FluidFilterMenu;
 import com.enderio.core.client.gui.screen.EIOScreen;
@@ -16,6 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.NotImplementedException;
@@ -30,7 +35,7 @@ public class FluidFilterScreen extends EIOScreen<FluidFilterMenu> {
 
     public FluidFilterScreen(FluidFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-        BG_TEXTURE = switch (pMenu.getFilter().getEntries().size()) {
+        BG_TEXTURE = switch (pMenu.getFilter().size()) {
             case 5 -> EnderIOBase.loc("textures/gui/40/basic_item_filter.png");
             case 2 * 5 -> EnderIOBase.loc("textures/gui/40/advanced_item_filter.png");
             case 4 * 9 -> EnderIOBase.loc("textures/gui/40/big_item_filter.png");
@@ -49,11 +54,11 @@ public class FluidFilterScreen extends EIOScreen<FluidFilterMenu> {
     @Override
     public void renderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
         FluidFilterCapability filterCapability = getMenu().getFilter();
-        if (pSlot.index >= filterCapability.getEntries().size()) {
+        if (pSlot.index >= filterCapability.size()) {
             super.renderSlot(pGuiGraphics, pSlot);
             return;
         }
-        FluidStack fluidStack = filterCapability.getEntries().get(pSlot.index);
+        FluidStack fluidStack = filterCapability.getEntry(pSlot.index);
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
         ResourceLocation still = props.getStillTexture(fluidStack);
         if (still != null) {
@@ -72,6 +77,25 @@ public class FluidFilterScreen extends EIOScreen<FluidFilterMenu> {
                     atlasWidth, atlasHeight);
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             }
+        }
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
+        if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null) {
+            ItemStack itemstack = this.hoveredSlot.getItem();
+            var capability = getMenu().getFilter();
+            if (hoveredSlot.index < capability.getEntries().size()) {
+                FluidStack value = capability.getEntries().get(hoveredSlot.index);
+                if (!value.isEmpty()) {
+                    guiGraphics.renderTooltip(this.font, value.getHoverName(), x, y);
+                    return;
+                }
+            }
+            if (itemstack.isEmpty()) {
+                return;
+            }
+            guiGraphics.renderTooltip(this.font, this.getTooltipFromContainerItem(itemstack), itemstack.getTooltipImage(), itemstack, x, y);
         }
     }
 

@@ -124,8 +124,8 @@ public interface Conduit<TConduit extends Conduit<TConduit>> extends
     // endregion
 
     @Nullable
-    default <K> K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode node, Level level, BlockPos pos, @Nullable Direction direction,
-        @Nullable ConduitNode.IOState state) {
+    default <TCapability, TContext> TCapability proxyCapability(BlockCapability<TCapability, TContext> capability, ConduitNode node, Level level, BlockPos pos,
+        @Nullable TContext context) {
         return null;
     }
 

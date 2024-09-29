@@ -1,5 +1,6 @@
 package com.enderio.base.data.recipe;
 
+import com.enderio.EnderIOBase;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -26,6 +27,7 @@ public class ItemRecipeProvider extends RecipeProvider {
     protected void buildRecipes(RecipeOutput recipeOutput) {
         addTools(recipeOutput);
         addGliders(recipeOutput);
+        eraseFilterRecipes(recipeOutput);
     }
 
     private void addGliders(RecipeOutput recipeOutput) {
@@ -59,7 +61,7 @@ public class ItemRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder
             .shaped(RecipeCategory.TOOLS, EIOItems.YETA_WRENCH.get())
             .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
-            .define('G', EIOItems.GEAR_STONE)
+            .define('G', EIOTags.Items.GEARS_STONE)
             .pattern("I I")
             .pattern(" G ")
             .pattern(" I ")
@@ -132,5 +134,22 @@ public class ItemRecipeProvider extends RecipeProvider {
             .requires(Tags.Items.SEEDS)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.EMPTY_SOUL_VIAL))
             .save(recipeOutput);
+    }
+
+    private void eraseFilterRecipes(RecipeOutput recipeOutput) {
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.BASIC_ITEM_FILTER)
+            .requires(EIOItems.BASIC_ITEM_FILTER)
+            .unlockedBy("has_ingredient", has(EIOItems.BASIC_ITEM_FILTER))
+            .save(recipeOutput, EnderIOBase.loc("erase_basic_item_filter"));
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.ADVANCED_ITEM_FILTER)
+            .requires(EIOItems.ADVANCED_ITEM_FILTER)
+            .unlockedBy("has_ingredient", has(EIOItems.ADVANCED_ITEM_FILTER))
+            .save(recipeOutput, EnderIOBase.loc("erase_advanced_item_filter"));
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.BASIC_FLUID_FILTER)
+            .requires(EIOItems.BASIC_FLUID_FILTER)
+            .unlockedBy("has_ingredient", has(EIOItems.BASIC_FLUID_FILTER))
+            .save(recipeOutput, EnderIOBase.loc("erase_basic_fluid_filter"));
     }
 }

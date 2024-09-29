@@ -6,15 +6,24 @@
   },
   "outputs": [
     {
-      "item": "enderio:powdered_copper"
+      "item": {
+        "count": 1,
+        "id": "minecraft:raw_copper"
+      }
     },
     {
       "chance": 0.33,
-      "item": "enderio:powdered_copper"
+      "item": {
+        "count": 1,
+        "id": "minecraft:raw_copper"
+      }
     },
     {
       "chance": 0.15,
-      "item": "minecraft:cobblestone"
+      "item": {
+        "count": 1,
+        "id": "minecraft:cobblestone"
+      }
     }
   ]
 }

@@ -53,8 +53,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class MachineBlocks {
-    private static final BlockRegistry BLOCK_REGISTRY = EnderIOMachines.REGILTIE.blockRegistry();
-    private static final ItemRegistry ITEM_REGISTRY = EnderIOMachines.REGILTIE.itemRegistry();
+    private static final BlockRegistry BLOCK_REGISTRY = EnderIOMachines.REGILITE.blockRegistry();
+    private static final ItemRegistry ITEM_REGISTRY = EnderIOMachines.REGILITE.itemRegistry();
 
     public static final RegiliteBlock<MachineBlock> FLUID_TANK = BLOCK_REGISTRY
         .registerBlock("fluid_tank", props -> new MachineBlock(MachineBlockEntities.FLUID_TANK, props),

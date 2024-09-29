@@ -1,6 +1,5 @@
 package com.enderio.core;
 
-import com.enderio.core.common.integration.Integrations;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
@@ -16,10 +15,6 @@ public class EnderCore {
     public static final String MOD_ID = "endercore";
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID + ":core");
-
-    public EnderCore() {
-        Integrations.register();
-    }
 
     public static ResourceLocation loc(String name) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);

@@ -8,5 +8,8 @@
     "item": "minecraft:cyan_concrete_powder"
   },
   "mode": "fill",
-  "output": "minecraft:cyan_concrete"
+  "output": {
+    "count": 1,
+    "id": "minecraft:cyan_concrete"
+  }
 }

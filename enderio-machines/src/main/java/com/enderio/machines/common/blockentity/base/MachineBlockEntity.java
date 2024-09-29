@@ -34,6 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -72,8 +73,12 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     @Nullable
     private final MachineInventory inventory;
+    @Nullable
+    private final MachineInventoryLayout inventoryLayout;
 
     // endregion
+
+    private boolean isRedstoneBlocked;
 
     // region Common Dataslots
 
@@ -98,9 +103,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         // If the machine declares an inventory layout, use it to create a handler
-        MachineInventoryLayout slotLayout = getInventoryLayout();
-        if (slotLayout != null) {
-            inventory = createMachineInventory(slotLayout);
+        inventoryLayout = createInventoryLayout();
+        if (inventoryLayout != null) {
+            inventory = createMachineInventory(inventoryLayout);
         } else {
             inventory = null;
         }
@@ -269,6 +274,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return true;
     }
 
+    public boolean isRedstoneBlocked() {
+        return isRedstoneBlocked;
+    }
+
     public RedstoneControl getRedstoneControl() {
         if (!supportsRedstoneControl()) {
             throw new IllegalStateException("This machine does not support redstone control.");
@@ -292,6 +301,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     private void internalSetRedstoneControl(RedstoneControl redstoneControl) {
         setData(MachineAttachments.REDSTONE_CONTROL, redstoneControl);
         setChanged();
+        updateRedstone();
     }
 
     // endregion
@@ -299,11 +309,19 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     // region Inventory
 
     /**
+     * Create the block entity's inventory slot layout.
+     */
+    @Nullable
+    public MachineInventoryLayout createInventoryLayout() {
+        return null;
+    }
+
+    /**
      * Get the block entity's inventory slot layout.
      */
     @Nullable
     public MachineInventoryLayout getInventoryLayout() {
-        return null;
+        return inventoryLayout;
     }
 
     @Nullable
@@ -359,13 +377,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             return false;
         }
 
-        if (supportsRedstoneControl()) {
-            boolean active = getRedstoneControl().isActive(this.level.hasNeighborSignal(worldPosition));
-            updateMachineState(MachineState.REDSTONE, !active);
-            return active;
-        }
-
-        return true;
+        return !isRedstoneBlocked;
     }
 
     public boolean canActSlow() {
@@ -422,6 +434,12 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     // endregion
 
     // region Serialization
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        updateRedstone();
+    }
 
     @Override
     public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
@@ -562,6 +580,18 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             states.add(state);
         } else {
             states.remove(state);
+        }
+    }
+
+    public void neighborChanged(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
+        updateRedstone();
+    }
+
+    private void updateRedstone() {
+        if (supportsRedstoneControl()) {
+            boolean active = getRedstoneControl().isActive(this.level.hasNeighborSignal(worldPosition));
+            updateMachineState(MachineState.REDSTONE, !active);
+            this.isRedstoneBlocked = !active;
         }
     }
 }

@@ -6,8 +6,10 @@
   },
   "outputs": [
     {
-      "count": 4,
-      "item": "minecraft:blaze_powder"
+      "item": {
+        "count": 4,
+        "id": "minecraft:blaze_powder"
+      }
     }
   ]
 }

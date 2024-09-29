@@ -8,5 +8,8 @@
     "item": "minecraft:glass_bottle"
   },
   "mode": "fill",
-  "output": "minecraft:experience_bottle"
+  "output": {
+    "count": 1,
+    "id": "minecraft:experience_bottle"
+  }
 }

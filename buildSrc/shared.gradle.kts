@@ -7,6 +7,9 @@ repositories {
             url = uri("https://maven.rover656.dev/releases")
             content {
                 includeGroup("com.enderio")
+
+                // Mirrors
+                includeGroup("dev.gigaherz.graph")
             }
         }
 
@@ -18,14 +21,6 @@ repositories {
                 includeGroup("mcjty.theoneprobe")
                 includeGroup("appeng")
                 includeGroup("mekanism")
-            }
-        }
-
-        maven {
-            name = "Dogforce Games Maven"
-            url = uri("https://dogforce-games.com/maven")
-            content {
-                includeGroup("dev.gigaherz.graph")
             }
         }
 
@@ -64,6 +59,14 @@ repositories {
             }
         }
 
+        maven {
+            url = uri("https://maven.pkg.github.com/refinedmods/refinedstorage2")
+            credentials {
+                username = "anything"
+                password = "\u0067hp_oGjcDFCn8jeTzIj4Ke9pLoEVtpnZMP4VQgaX"
+            }
+        }
+
         mavenLocal() {
             content {
                 includeGroup("com.enderio")
@@ -76,7 +79,24 @@ repositories {
 dependencies {
     // TODO: Once EnderCore moves out, put common mods that we test alongside in here?
     add("compileOnly", "org.jetbrains:annotations:23.0.0")
+
+    if (project.name != "ensure_plugin") {
+        add("compileOnly", project(":ensure_plugin"))
+        add("annotationProcessor", project(":ensure_plugin"))
+
+        if (project.name != "endercore") {
+            add("api", project(":endercore"))
+        }
+    }
 }
+
+if (project.name != "ensure_plugin") {
+    tasks.withType<JavaCompile> {
+        options.encoding = "UTF-8"
+        options.compilerArgs.add("-Xplugin:ContextEnsure")
+    }
+}
+
 
 version = getVersionString()
 
@@ -84,11 +104,19 @@ val minecraftVersionRange: String by project
 val neoForgeVersionRange: String by project
 val loaderVersionRange: String by project
 
+// TODO: Doing this here temporarily, but should be done in separate projects instead of here tbh.
+val mekanismVersionRange: String by project
+val ae2VersionRange: String by project
+val refinedstorageVersionRange: String by project
+
 val replaceProperties = mapOf(
         "mod_version" to project.version,
         "mcversion" to minecraftVersionRange,
         "neo_version" to neoForgeVersionRange,
-        "loader_version_range" to loaderVersionRange
+        "loader_version_range" to loaderVersionRange,
+        "mekanism_version_range" to mekanismVersionRange,
+        "ae2_version_range" to ae2VersionRange,
+        "refinedstorage_version_range" to refinedstorageVersionRange,
 )
 
 tasks.withType<ProcessResources>().configureEach {

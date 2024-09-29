@@ -2,6 +2,7 @@ package com.enderio;
 
 import com.enderio.base.api.registry.EnderIORegistries;
 import com.enderio.base.common.config.BaseConfig;
+import com.enderio.base.common.config.BaseConfigLang;
 import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
@@ -98,6 +99,7 @@ public class EnderIOBase {
         // Register config files
         modContainer.registerConfig(ModConfig.Type.COMMON, BaseConfig.COMMON_SPEC, "enderio/base-common.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, BaseConfig.CLIENT_SPEC, "enderio/base-client.toml");
+        BaseConfigLang.register();
 
         // Perform initialization and registration for everything so things are registered.
         EIODataComponents.register(modEventBus);

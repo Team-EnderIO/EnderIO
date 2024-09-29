@@ -1,9 +1,11 @@
 package com.enderio.modconduits.mods.mekanism;
 
+import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitMenuData;
 import com.enderio.conduits.api.ConduitNode;
 import com.enderio.conduits.api.ConduitType;
+import com.enderio.conduits.api.SlotType;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.serialization.Codec;
@@ -35,11 +37,10 @@ public record ChemicalConduit(
         ).apply(builder, ChemicalConduit::new)
     );
 
-    private static final ChemicalTicker TICKER = new ChemicalTicker(MekanismModule.Capabilities.GAS, MekanismModule.Capabilities.SLURRY,
-        MekanismModule.Capabilities.INFUSION, MekanismModule.Capabilities.PIGMENT);
+    private static final ChemicalTicker TICKER = new ChemicalTicker();
 
-    private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
-    private static final ConduitMenuData MULTI_MENU_DATA = new ConduitMenuData.Simple(false, false, false, true, true, true);
+    private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(true, true, false, false, false, true);
+    private static final ConduitMenuData MULTI_MENU_DATA = new ConduitMenuData.Simple(true, true, false, true, true, true);
 
     @Override
     public ConduitType<ChemicalConduit> type() {
@@ -133,4 +134,9 @@ public record ChemicalConduit(
     }
 
     // TODO: Support for extract upgrades
+
+    @Override
+    public boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
+        return resourceFilter instanceof ChemicalFilter;
+    }
 }

@@ -8,6 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -44,7 +45,7 @@ public class ItemFilterMenu extends AbstractContainerMenu {
         this(EIOMenus.ITEM_FILTER.get(), pContainerId, inventory, stack);
     }
 
-        public static ItemFilterMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static ItemFilterMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         return new ItemFilterMenu(EIOMenus.ITEM_FILTER.get(), pContainerId, inventory, inventory.player.getMainHandItem());
     }
 
@@ -88,5 +89,21 @@ public class ItemFilterMenu extends AbstractContainerMenu {
     public void setInverted(Boolean inverted) {
         PacketDistributor.sendToServer(new FilterUpdatePacket(capability.isNbt(), inverted));
         capability.setInverted(inverted);
+    }
+
+    @Override
+    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+        if (slotId >= 0 && slotId < capability.size()) {
+            // Only allow PICKUP (click) or QUICK_MOVE (shift + click) events.
+            if (clickType != ClickType.PICKUP && clickType != ClickType.QUICK_MOVE) {
+                return;
+            }
+
+            if (!capability.getEntry(slotId).isEmpty()) {
+                capability.setEntry(slotId, ItemStack.EMPTY);
+            }
+        }
+
+        super.doClick(slotId, button, clickType, player);
     }
 }

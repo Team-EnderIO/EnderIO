@@ -15,6 +15,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.List;
@@ -80,6 +81,9 @@ import static net.minecraft.world.item.Items.PRISMARINE_SHARD;
 import static net.minecraft.world.item.Items.QUARTZ;
 import static net.minecraft.world.item.Items.QUARTZ_SLAB;
 import static net.minecraft.world.item.Items.QUARTZ_STAIRS;
+import static net.minecraft.world.item.Items.RAW_COPPER;
+import static net.minecraft.world.item.Items.RAW_GOLD;
+import static net.minecraft.world.item.Items.RAW_IRON;
 import static net.minecraft.world.item.Items.REDSTONE;
 import static net.minecraft.world.item.Items.RED_DYE;
 import static net.minecraft.world.item.Items.RED_TULIP;
@@ -107,6 +111,9 @@ public class SagMillRecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
 
+        buildOreBlockRecipes(recipeOutput);
+        buildRawOreRecipes(recipeOutput);
+
         build1toN("iron", Tags.Items.INGOTS_IRON, POWDERED_IRON.get(), 1, BonusType.NONE, recipeOutput);
         build1toN("gold", Tags.Items.INGOTS_GOLD, POWDERED_GOLD.get(), 1, BonusType.NONE, recipeOutput);
         build1toN("obsidian", Tags.Items.OBSIDIANS, POWDERED_OBSIDIAN.get(), 4, recipeOutput);
@@ -121,10 +128,6 @@ public class SagMillRecipeProvider extends RecipeProvider {
         build1toN("glass", Tags.Items.GLASS_BLOCKS, SAND, 1, BonusType.NONE, recipeOutput);
         build1toN("bone_block", BONE_BLOCK, BONE_MEAL, 9, BonusType.NONE, recipeOutput);
         build1toN("soularium", EIOTags.Items.INGOTS_SOULARIUM, SOUL_POWDER.get(), 1, BonusType.NONE, recipeOutput);
-
-        buildOre("iron_ore", Ingredient.of(Tags.Items.ORES_IRON), POWDERED_IRON.get(), recipeOutput);
-        buildOre("gold_ore", Ingredient.of(Tags.Items.ORES_GOLD), POWDERED_GOLD.get(), recipeOutput);
-        buildOre("copper_ore", Ingredient.of(Tags.Items.ORES_COPPER), POWDERED_COPPER.get(), recipeOutput);
 
         build1toN("stone", Tags.Items.STONES, COBBLESTONE, 1, BonusType.NONE, recipeOutput);
         build1toN("deepslate", Items.DEEPSLATE, Items.COBBLED_DEEPSLATE, 1, BonusType.NONE, recipeOutput);
@@ -142,33 +145,6 @@ public class SagMillRecipeProvider extends RecipeProvider {
                 output(EIOTags.Items.DUSTS_SULFUR, 1, 0.1f, true)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("coal_ore", Ingredient.of(Tags.Items.ORES_COAL), List.of(
-                output(COAL, 3),
-                output(POWDERED_COAL.get(), 0.6f),
-            	output(DIAMOND, 0.005f),
-            	output(COBBLESTONE, 0.15f)),
-        		BASE_ENERGY_PER_OPERATION, recipeOutput);
-
-        build("redstone_ore", Ingredient.of(Tags.Items.ORES_REDSTONE), List.of(
-        		output(REDSTONE, 8),
-            	output(REDSTONE, 0.2f),
-            	output(SILICON.get(), 0.8f),
-            	output(COBBLESTONE, 0.15f)
-            	), BASE_ENERGY_PER_OPERATION, recipeOutput);
-
-        build("diamond_ore", Ingredient.of(Tags.Items.ORES_DIAMOND), List.of(
-        		output(DIAMOND, 2),
-            	output(DIAMOND, 0.25f),
-            	output(POWDERED_COAL.get(), 0.1f),
-        		output(COBBLESTONE, 0.15f)
-        		),BASE_ENERGY_PER_OPERATION, recipeOutput);
-
-        build("emerald_ore", Ingredient.of(Tags.Items.ORES_EMERALD), List.of(
-        		output(EMERALD, 2),
-            	output(EMERALD, 0.25f),
-        		output(COBBLESTONE, 0.15f)
-        		),BASE_ENERGY_PER_OPERATION, recipeOutput);
-
         build("lapis_ore", Ingredient.of(Tags.Items.ORES_LAPIS), List.of(
         		output(LAPIS_LAZULI, 8),
             	output(LAPIS_LAZULI, 0.2f),
@@ -178,12 +154,6 @@ public class SagMillRecipeProvider extends RecipeProvider {
         build("lapis", Ingredient.of(Tags.Items.GEMS_LAPIS), List.of(
             output(POWDERED_LAPIS_LAZULI.get(), 1)
         ),BASE_ENERGY_PER_OPERATION, BonusType.NONE, recipeOutput);
-
-        build("quartz_ore", Ingredient.of(Tags.Items.ORES_QUARTZ), List.of(
-        		output(QUARTZ, 2),
-            	output(POWDERED_QUARTZ.get(), 0.1f),
-        		output(NETHERRACK, 0.15f)
-        		),BASE_ENERGY_PER_OPERATION, recipeOutput);
 
         build("quartz", Ingredient.of(Tags.Items.GEMS_QUARTZ), List.of(
         		output(POWDERED_QUARTZ.get(), 1),
@@ -319,7 +289,7 @@ public class SagMillRecipeProvider extends RecipeProvider {
         		output(PLANT_MATTER_GREEN.get(), 3, 0.1f)),
         		BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("sun_flower", Ingredient.of(VINE), List.of(
+        build("sun_flower", Ingredient.of(Items.SUNFLOWER), List.of(
         		output(YELLOW_DYE, 2, 0.8f),
         		output(YELLOW_DYE, 0.6f),
         		output(YELLOW_DYE, 2, 0.3f),
@@ -383,6 +353,67 @@ public class SagMillRecipeProvider extends RecipeProvider {
         ), BASE_ENERGY_PER_OPERATION, recipeOutput);
     }
 
+    private void buildOreBlockRecipes(RecipeOutput recipeOutput) {
+        buildOre("iron_ore", Ingredient.of(Tags.Items.ORES_IRON), RAW_IRON, recipeOutput);
+        buildOre("gold_ore", Ingredient.of(Tags.Items.ORES_GOLD), RAW_GOLD, recipeOutput);
+        buildOre("copper_ore", Ingredient.of(Tags.Items.ORES_COPPER), RAW_COPPER, recipeOutput);
+
+        build("coal_ore", Ingredient.of(Tags.Items.ORES_COAL), List.of(
+                output(COAL, 3),
+                output(POWDERED_COAL.get(), 0.6f),
+                output(DIAMOND, 0.005f),
+                output(COBBLESTONE, 0.15f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput);
+
+        build("redstone_ore", Ingredient.of(Tags.Items.ORES_REDSTONE), List.of(
+            output(REDSTONE, 8),
+            output(REDSTONE, 0.2f),
+            output(SILICON.get(), 0.8f),
+            output(COBBLESTONE, 0.15f)
+        ), BASE_ENERGY_PER_OPERATION, recipeOutput);
+
+        build("diamond_ore", Ingredient.of(Tags.Items.ORES_DIAMOND), List.of(
+            output(DIAMOND, 2),
+            output(DIAMOND, 0.25f),
+            output(POWDERED_COAL.get(), 0.1f),
+            output(COBBLESTONE, 0.15f)
+        ),BASE_ENERGY_PER_OPERATION, recipeOutput);
+
+        build("emerald_ore", Ingredient.of(Tags.Items.ORES_EMERALD), List.of(
+            output(EMERALD, 2),
+            output(EMERALD, 0.25f),
+            output(COBBLESTONE, 0.15f)
+        ),BASE_ENERGY_PER_OPERATION, recipeOutput);
+
+        build("quartz_ore", Ingredient.of(Tags.Items.ORES_QUARTZ), List.of(
+            output(QUARTZ, 2),
+            output(POWDERED_QUARTZ.get(), 0.1f),
+            output(NETHERRACK, 0.15f)
+        ),BASE_ENERGY_PER_OPERATION, recipeOutput);
+    }
+
+    private void buildRawOreRecipes(RecipeOutput recipeOutput) {
+        build("raw_iron", Ingredient.of(Tags.Items.RAW_MATERIALS_IRON), List.of(
+                output(POWDERED_IRON),
+                output(POWDERED_IRON, 0.25f),
+                output(EIOTags.Items.DUSTS_TIN, 0.05f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput);
+
+        build("raw_copper", Ingredient.of(Tags.Items.RAW_MATERIALS_COPPER), List.of(
+                output(POWDERED_COPPER),
+                output(POWDERED_COPPER, 0.25f),
+                output(EIOTags.Items.DUSTS_GOLD, 0.12f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput);
+
+        build("raw_gold", Ingredient.of(Tags.Items.RAW_MATERIALS_GOLD), List.of(
+                output(POWDERED_GOLD),
+                output(POWDERED_GOLD, 0.25f),
+                output(EIOTags.Items.DUSTS_COPPER, 0.20f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput);
+    }
+
+    // region Helpers
+
     private void buildOre(String name, Ingredient input, Item output, RecipeOutput recipeOutput) {
     	build(name, input, List.of(
     			output(output),
@@ -391,7 +422,7 @@ public class SagMillRecipeProvider extends RecipeProvider {
     			BASE_ENERGY_PER_OPERATION, recipeOutput);
     }
 
-    private void buildFlower(String name, Item input, Item output, RecipeOutput recipeOutput){
+    private void buildFlower(String name, ItemLike input, Item output, RecipeOutput recipeOutput){
     	build(name, Ingredient.of(input), List.of(
     			output(output, 0.8f),
     			output(output, 0.6f),
@@ -400,7 +431,7 @@ public class SagMillRecipeProvider extends RecipeProvider {
     			BASE_ENERGY_PER_OPERATION, recipeOutput);
     }
 
-    private void build1toN(String name, Item input, Item output, int number, BonusType bonusType, RecipeOutput recipeOutput) {
+    private void build1toN(String name, ItemLike input, Item output, int number, BonusType bonusType, RecipeOutput recipeOutput) {
     	build(name, Ingredient.of(input), List.of(output(output, number)), BASE_ENERGY_PER_OPERATION, bonusType, recipeOutput);
     }
 
@@ -424,24 +455,24 @@ public class SagMillRecipeProvider extends RecipeProvider {
         recipeOutput.accept(id, new SagMillingRecipe(input, outputs, energy, bonusType), null);
     }
 
-    protected SagMillingRecipe.OutputItem output(Item item) {
+    protected SagMillingRecipe.OutputItem output(ItemLike item) {
         return output(item, 1, 1.0f, false);
     }
 
-    protected SagMillingRecipe.OutputItem output(Item item, int count) {
+    protected SagMillingRecipe.OutputItem output(ItemLike item, int count) {
         return output(item, count, 1.0f, false);
     }
 
-    protected SagMillingRecipe.OutputItem output(Item item, float chance) {
+    protected SagMillingRecipe.OutputItem output(ItemLike item, float chance) {
         return output(item, 1, chance, false);
     }
 
-    protected SagMillingRecipe.OutputItem output(Item item, int count, float chance) {
+    protected SagMillingRecipe.OutputItem output(ItemLike item, int count, float chance) {
         return output(item, count, chance, false);
     }
 
-    protected SagMillingRecipe.OutputItem output(Item item, int count, float chance, boolean optional) {
-        return SagMillingRecipe.OutputItem.of(item, count, chance, optional);
+    protected SagMillingRecipe.OutputItem output(ItemLike item, int count, float chance, boolean optional) {
+        return SagMillingRecipe.OutputItem.of(item.asItem(), count, chance, optional);
     }
 
     protected SagMillingRecipe.OutputItem output(TagKey<Item> tag) {
@@ -463,5 +494,7 @@ public class SagMillRecipeProvider extends RecipeProvider {
     protected SagMillingRecipe.OutputItem output(TagKey<Item> tag, int count, float chance, boolean optional) {
         return SagMillingRecipe.OutputItem.of(tag, count, chance, optional);
     }
+
+    // endregion
 
 }

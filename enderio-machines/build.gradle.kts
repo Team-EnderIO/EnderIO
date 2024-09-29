@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat
+import java.util.*
+
 val minecraftVersion: String by project
 val neoForgeVersion: String by project
 
@@ -15,28 +18,23 @@ sourceSets {
 }
 
 val regiliteVersion: String by project
+val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
 val graphlibVersion: String by project
 val graphlibVersionRange: String by project
 
 dependencies {
-    implementation("com.enderio:Regilite:$regiliteVersion")
+    api("com.enderio:Regilite:$regiliteVersion")
 
-    implementation(project(":enderio-base"))
+    api(project(":enderio-base"))
     accessTransformers(project(":enderio-base"))
     accessTransformersElements(project(":enderio-base"))
 
-    compileOnly(project(":ensure_plugin"))
-
-    implementation(project(":endercore"))
-
     // JEI
-    compileOnly("mezz.jei:jei-$minecraftVersion-common-api:$jeiVersion")
-    compileOnly("mezz.jei:jei-$minecraftVersion-neoforge-api:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-common:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-neoforge:$jeiVersion")
+    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
+    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge-api:$jeiVersion")
 
-    implementation("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
+    api("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
     jarJar("dev.gigaherz.graph:GraphLib3:$graphlibVersion") {
         version {
             strictly(graphlibVersionRange)
@@ -49,31 +47,16 @@ neoForge {
     version = neoForgeVersion
 
     runs {
-        configureEach {
-            logLevel = org.slf4j.event.Level.INFO
-        }
-
-        create("client") {
-            client()
-        }
-
         create("data") {
             data()
 
             programArguments.addAll(
                     "--mod", "enderio_machines",
-                    // TODO: Fix missing models...
                     //"--all",
                     "--server", "--client",
                     "--output", file("src/generated/resources").absolutePath,
                     "--existing", file("src/main/resources").absolutePath,
-                    "--existing", file("../enderio-base/src/main/resources").absolutePath,
-                    "--existing", file("../enderio-base/src/generated/resources").absolutePath,
             )
-        }
-
-        create("server") {
-            server()
         }
     }
 
@@ -88,6 +71,72 @@ neoForge {
 
         create("enderio_machines") {
             sourceSet(sourceSets["main"])
+        }
+    }
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes(mapOf(
+                "Specification-Title" to "Ender IO Machines",
+                "Specification-Vendor" to "Team Ender IO",
+                "Specification-Version" to "1",
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to project.version,
+                "Implementation-Vendor" to "Team Ender IO",
+                "Implementation-Timestamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date()),
+                "MixinConfigs" to "enderio-machines.mixins.json"
+        ))
+    }
+}
+
+tasks.register<Jar>("apiJar") {
+    archiveClassifier.set("api")
+
+    from(sourceSets["main"].output)
+    from(sourceSets["main"].allJava)
+
+    include("com/enderio/api/**")
+    include("com/enderio/*/api/**")
+}
+
+tasks.register<Jar>("sourcesJar") {
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allJava)
+}
+
+tasks.build {
+    dependsOn(tasks["apiJar"])
+    dependsOn(tasks["sourcesJar"])
+}
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            groupId = "com.enderio"
+            artifactId = project.name
+            version = "${project.version}"
+
+            from(components["java"])
+            artifact(tasks["apiJar"])
+            artifact(tasks["sourcesJar"])
+
+            pom {
+                name.set("EnderIO Machines")
+                description.set("The machines module of Ender IO")
+                url.set("https://github.com/Team-EnderIO/EnderIO")
+
+                licenses {
+                    license {
+                        name.set("Unlicense")
+                        url.set("https://github.com/Team-EnderIO/EnderIO/blob/dev/1.21/LICENSE.txt")
+                    }
+                }
+
+                scm {
+                    url.set("https://github.com/Team-EnderIO/EnderIO.git")
+                }
+            }
         }
     }
 }

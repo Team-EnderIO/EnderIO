@@ -20,7 +20,7 @@
       "tag": "c:ingots/gold"
     }
   ],
-  "result": {
+  "output": {
     "count": 1,
     "id": "enderio:soularium_ingot"
   }

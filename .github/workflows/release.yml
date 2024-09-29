@@ -22,7 +22,7 @@ jobs:
         id: mc_version
         with:
           file: gradle.properties
-          property: minecraft_version
+          property: minecraftVersion
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -96,28 +96,29 @@ jobs:
         with:
           arguments: publishAllPublicationsToRover656Repository
 
-  updateReleaseBranch:
-    needs: [release]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+  # Disabled for now, but may just remove this convention in favour of editing tags and releasing from side-branches.
+  #updateReleaseBranch:
+  #  needs: [release]
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - uses: actions/checkout@v3
+  #      with:
+  #        fetch-depth: 0
 
-      - name: Get Minecraft Version
-        uses: madhead/read-java-properties@latest
-        id: mc_version
-        with:
-          file: gradle.properties
-          property: minecraft_version
+  #    - name: Get Minecraft Version
+  #      uses: madhead/read-java-properties@latest
+  #      id: mc_version
+  #      with:
+  #        file: gradle.properties
+  #        property: minecraft_version
 
-      - uses: actions/checkout@v3
-        with:
-          ref: release/${{ steps.mc_version.outputs.value }}
-          fetch-depth: 0
+  #    - uses: actions/checkout@v3
+  #      with:
+  #        ref: release/${{ steps.mc_version.outputs.value }}
+  #        fetch-depth: 0
 
-      - run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git merge ${{ github.event.release.tag_name }}
-          git push
+  #    - run: |
+  #        git config user.name github-actions
+  #        git config user.email github-actions@github.com
+  #        git merge ${{ github.event.release.tag_name }}
+  #        git push

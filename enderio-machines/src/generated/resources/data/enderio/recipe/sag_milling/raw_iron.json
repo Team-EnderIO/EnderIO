@@ -1,0 +1,29 @@
+{
+  "type": "enderio:sag_milling",
+  "energy": 2400,
+  "input": {
+    "tag": "c:raw_materials/iron"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 1,
+        "id": "enderio:powdered_iron"
+      }
+    },
+    {
+      "chance": 0.25,
+      "item": {
+        "count": 1,
+        "id": "enderio:powdered_iron"
+      }
+    },
+    {
+      "chance": 0.05,
+      "item": {
+        "count": 1,
+        "tag": "c:dusts/tin"
+      }
+    }
+  ]
+}

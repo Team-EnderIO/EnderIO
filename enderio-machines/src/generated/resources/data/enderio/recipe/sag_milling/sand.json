@@ -7,7 +7,10 @@
   "outputs": [
     {
       "chance": 0.5,
-      "tag": "c:silicon"
+      "item": {
+        "count": 1,
+        "tag": "c:silicon"
+      }
     }
   ]
 }

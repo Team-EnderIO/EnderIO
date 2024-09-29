@@ -19,17 +19,25 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
     private final Supplier<RecipeType<R>> recipeType;
+    private final Predicate<R> filter;
+
     private final HashMap<Item, HashSet<RecipeHolder<R>>> itemToRecipesCache;
     private final HashMap<RecipeHolder<R>, List<Ingredient>> recipeToIngredientCache;
     private boolean isDirty;
 
     public RecipeInputCache(Supplier<RecipeType<R>> recipeType) {
+        this(recipeType, recipe -> true);
+    }
+
+    public RecipeInputCache(Supplier<RecipeType<R>> recipeType, Predicate<R> filter) {
         this.recipeType = recipeType;
+        this.filter = filter;
         this.itemToRecipesCache = new HashMap<>();
         this.recipeToIngredientCache = new HashMap<>();
     }
@@ -127,6 +135,8 @@ public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
         itemToRecipesCache.clear();
         recipeToIngredientCache.clear();
         recipeManager.getAllRecipesFor(recipeType.get())
+            .stream()
+            .filter(recipeHolder -> filter.test(recipeHolder.value()))
             .forEach(recipe -> {
                 var items = recipe.value().getIngredients().stream()
                     .flatMap(ingredient -> Arrays.stream(ingredient.getItems()))

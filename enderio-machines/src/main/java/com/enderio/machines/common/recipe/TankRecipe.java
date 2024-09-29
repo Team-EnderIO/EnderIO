@@ -34,7 +34,7 @@ import java.util.function.IntFunction;
 
 public record TankRecipe(
     Ingredient input,
-    Item output,
+    ItemStack output,
     FluidStack fluid,
     Mode mode
 ) implements Recipe<TankRecipe.Input> {
@@ -69,14 +69,14 @@ public record TankRecipe(
                     return false;
                 }
 
-                return input.test(recipeInput.getItem(0));
+                return input.test(recipeInput.fillItem);
             }
             case EMPTY -> {
                 if (recipeInput.fluidTank().fill(fluid, IFluidHandler.FluidAction.SIMULATE) <= 0) {
                     return false;
                 }
 
-                return input.test(recipeInput.getItem(1));
+                return input.test(recipeInput.emptyItem);
             }
             default -> throw new NotImplementedException();
         }
@@ -94,7 +94,7 @@ public record TankRecipe(
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
-        return new ItemStack(output);
+        return output.copy();
     }
 
     @Override
@@ -133,7 +133,7 @@ public record TankRecipe(
 
         private static final MapCodec<TankRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(TankRecipe::input),
-            BuiltInRegistries.ITEM.byNameCodec().fieldOf("output").forGetter(TankRecipe::output),
+            ItemStack.CODEC.fieldOf("output").forGetter(TankRecipe::output),
             FluidStack.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid),
             Mode.CODEC.fieldOf("mode").forGetter(TankRecipe::mode)
         ).apply(instance, TankRecipe::new));
@@ -141,7 +141,7 @@ public record TankRecipe(
         public static final StreamCodec<RegistryFriendlyByteBuf, TankRecipe> STREAM_CODEC = StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC,
             TankRecipe::input,
-            ByteBufCodecs.registry(Registries.ITEM),
+            ItemStack.STREAM_CODEC,
             TankRecipe::output,
             FluidStack.STREAM_CODEC,
             TankRecipe::fluid,

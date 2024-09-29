@@ -21,5 +21,8 @@
       "tag": "c:silicon"
     }
   ],
-  "output": "enderio:z_logic_controller"
+  "output": {
+    "count": 1,
+    "id": "enderio:z_logic_controller"
+  }
 }

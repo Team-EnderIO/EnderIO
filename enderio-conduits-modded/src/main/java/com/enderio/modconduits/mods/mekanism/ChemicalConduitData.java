@@ -5,7 +5,7 @@ import com.enderio.conduits.api.ConduitDataType;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import mekanism.api.chemical.merged.BoxedChemical;
+import mekanism.api.chemical.ChemicalStack;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -17,7 +17,7 @@ public class ChemicalConduitData implements ConduitData<ChemicalConduitData> {
     public static MapCodec<ChemicalConduitData> CODEC = RecordCodecBuilder.mapCodec(
         instance -> instance.group(
             Codec.BOOL.fieldOf("should_reset").forGetter(i -> i.shouldReset),
-            BoxedChemical.OPTIONAL_CODEC
+            ChemicalStack.OPTIONAL_CODEC
                 .optionalFieldOf("locked_fluid")
                 .forGetter(i -> Optional.of(i.lockedChemical))
         ).apply(instance, ChemicalConduitData::new)
@@ -26,20 +26,20 @@ public class ChemicalConduitData implements ConduitData<ChemicalConduitData> {
     public static StreamCodec<RegistryFriendlyByteBuf, ChemicalConduitData> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.BOOL,
         i -> i.shouldReset,
-        ByteBufCodecs.optional(BoxedChemical.OPTIONAL_STREAM_CODEC),
+        ByteBufCodecs.optional(ChemicalStack.OPTIONAL_STREAM_CODEC),
         i -> Optional.of(i.lockedChemical),
         ChemicalConduitData::new
     );
 
-    BoxedChemical lockedChemical = BoxedChemical.EMPTY;
+    ChemicalStack lockedChemical = ChemicalStack.EMPTY;
     boolean shouldReset = false;
 
     public ChemicalConduitData() {
     }
 
-    public ChemicalConduitData(boolean shouldReset, Optional<BoxedChemical> lockedChemical) {
+    public ChemicalConduitData(boolean shouldReset, Optional<ChemicalStack> lockedChemical) {
         this.shouldReset = shouldReset;
-        this.lockedChemical = lockedChemical.orElse(BoxedChemical.EMPTY);
+        this.lockedChemical = lockedChemical.orElse(ChemicalStack.EMPTY);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ChemicalConduitData implements ConduitData<ChemicalConduitData> {
         return new ChemicalConduitData(shouldReset, Optional.ofNullable(lockedChemical));
     }
 
-    public void setlockedChemical(BoxedChemical lockedChemical) {
+    public void setlockedChemical(ChemicalStack lockedChemical) {
         this.lockedChemical = lockedChemical;
     }
 }

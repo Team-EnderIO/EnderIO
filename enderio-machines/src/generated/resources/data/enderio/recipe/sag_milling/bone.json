@@ -6,13 +6,17 @@
   },
   "outputs": [
     {
-      "count": 6,
-      "item": "minecraft:bone_meal"
+      "item": {
+        "count": 6,
+        "id": "minecraft:bone_meal"
+      }
     },
     {
       "chance": 0.1,
-      "count": 2,
-      "item": "minecraft:bone_meal"
+      "item": {
+        "count": 2,
+        "id": "minecraft:bone_meal"
+      }
     }
   ]
 }

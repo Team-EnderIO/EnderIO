@@ -57,7 +57,7 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity {
     }
 
     @Override
-    public @Nullable MachineInventoryLayout getInventoryLayout() {
+    public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
             .capacitor()
             .build();
@@ -80,7 +80,8 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity {
     }
 
     public boolean handleTeleportEvent(EntityTeleportEvent event) {
-        if (isActive() && getAABB().contains(event.getTargetX(), event.getTargetY(), event.getTargetZ())) {
+        if (isActive() && (getAABB().contains(event.getTargetX(), event.getTargetY(), event.getTargetZ())
+            || getAABB().contains(event.getPrevX(), event.getPrevY(), event.getPrevZ()))) {
             int cost = ENERGY_USAGE.base().get(); //TODO scale on entity and range? The issue is that it needs the energy "now" and can't wait for it like other machines
             int energy = getEnergyStorage().consumeEnergy(cost, false);
             if (energy == cost) {

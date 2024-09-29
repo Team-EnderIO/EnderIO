@@ -319,7 +319,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
 
         @Override
         public FluidStack drain(int maxDrain, FluidAction action) {
-            if (master.getConfig().getNextIOMode(direction).canOutput()) {
+            if (master.getConfig().getIOMode(direction).canOutput()) {
                 return master.drain(maxDrain, action);
             }
 

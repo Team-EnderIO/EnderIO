@@ -249,22 +249,13 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
         protected ItemStack execute(BlockSource source, ItemStack stack) {
             BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
             for (LivingEntity livingentity : source
-                .level()
-                .getEntitiesOfClass(LivingEntity.class, new AABB(blockpos), living -> !(living instanceof Player))) {
-                Optional<ItemStack> filledVial = catchEntity(stack, livingentity, component -> {});
-                if (filledVial.isPresent()) {
-                    //push filledvial back into dispenser
-                    var itemHandler = source.level().getCapability(Capabilities.ItemHandler.BLOCK, source.pos(), null);
-                    if (itemHandler != null) {
-                        for (int i = 0; i < itemHandler.getSlots(); i++) {
-                            if (itemHandler.insertItem(i, filledVial.get(), true).isEmpty()) {
-                                itemHandler.insertItem(i, filledVial.get(), false);
-                                break;
-                            }
-                        }
-                    }
+                    .level()
+                    .getEntitiesOfClass(LivingEntity.class, new AABB(blockpos), living -> !(living instanceof Player))) {
 
-                    return stack;
+                // Copy, consumeWithRemainder will shrink the stack.
+                Optional<ItemStack> filledVial = catchEntity(stack.copy(), livingentity, component -> {});
+                if (filledVial.isPresent()) {
+                    return this.consumeWithRemainder(source, stack, filledVial.get());
                 }
             }
 

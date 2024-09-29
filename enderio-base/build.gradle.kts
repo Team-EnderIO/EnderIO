@@ -22,21 +22,19 @@ sourceSets {
 }
 
 val regiliteVersion: String by project
+val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
 
 dependencies {
-    implementation("com.enderio:Regilite:$regiliteVersion")
-    jarJar("com.enderio:Regilite:$regiliteVersion")
+    api("com.enderio:Regilite:$regiliteVersion")
 
-    compileOnly(project(":ensure_plugin"))
-    implementation(project(":endercore"))
+    // EnderIO Base will bundle Regilite and EnderCore in production.
+    jarJar("com.enderio:Regilite:$regiliteVersion")
     jarJar(project(":endercore"))
 
     // JEI
-    compileOnly("mezz.jei:jei-$minecraftVersion-common-api:$jeiVersion")
-    compileOnly("mezz.jei:jei-$minecraftVersion-neoforge-api:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-common:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$minecraftVersion-neoforge:$jeiVersion")
+    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
+    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge-api:$jeiVersion")
 }
 
 neoForge {
@@ -47,27 +45,17 @@ neoForge {
     }
 
     runs {
-        configureEach {
-            logLevel = org.slf4j.event.Level.INFO
-        }
-
-        create("client") {
-            client()
-        }
-
         create("data") {
             data()
 
             programArguments.addAll(
                     "--mod", "enderio_base",
-                    "--all",
+                    // TODO: Fix missing models...
+                    //"--all",
+                    "--server", "--client",
                     "--output", file("src/generated/resources").absolutePath,
                     "--existing", file("src/main/resources").absolutePath,
             )
-        }
-
-        create("server") {
-            server()
         }
     }
 
@@ -89,7 +77,7 @@ neoForge {
 tasks.withType<Jar> {
     manifest {
         attributes(mapOf(
-                "Specification-Title" to "Ender IO",
+                "Specification-Title" to "Ender IO Base",
                 "Specification-Vendor" to "Team Ender IO",
                 "Specification-Version" to "1",
                 "Implementation-Title" to project.name,
@@ -98,5 +86,56 @@ tasks.withType<Jar> {
                 "Implementation-Timestamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date()),
                 "MixinConfigs" to "enderiobase.mixins.json"
         ))
+    }
+}
+
+tasks.register<Jar>("apiJar") {
+    archiveClassifier.set("api")
+
+    from(sourceSets["main"].output)
+    from(sourceSets["main"].allJava)
+
+    include("com/enderio/api/**")
+    include("com/enderio/*/api/**")
+}
+
+tasks.register<Jar>("sourcesJar") {
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allJava)
+}
+
+tasks.build {
+    dependsOn(tasks["apiJar"])
+    dependsOn(tasks["sourcesJar"])
+}
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            groupId = "com.enderio"
+            artifactId = project.name
+            version = "${project.version}"
+
+            from(components["java"])
+            artifact(tasks["apiJar"])
+            artifact(tasks["sourcesJar"])
+
+            pom {
+                name.set("EnderIO Base")
+                description.set("The base module of Ender IO")
+                url.set("https://github.com/Team-EnderIO/EnderIO")
+
+                licenses {
+                    license {
+                        name.set("Unlicense")
+                        url.set("https://github.com/Team-EnderIO/EnderIO/blob/dev/1.21/LICENSE.txt")
+                    }
+                }
+
+                scm {
+                    url.set("https://github.com/Team-EnderIO/EnderIO.git")
+                }
+            }
+        }
     }
 }

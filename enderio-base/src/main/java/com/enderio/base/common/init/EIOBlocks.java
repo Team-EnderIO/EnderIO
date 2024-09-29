@@ -68,6 +68,7 @@ import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -243,7 +244,8 @@ public class EIOBlocks {
                 .mapColor(MapColor.NONE))
         .addBlockTags(
             BlockTags.NEEDS_IRON_TOOL,
-            BlockTags.MINEABLE_WITH_PICKAXE
+            BlockTags.MINEABLE_WITH_PICKAXE,
+            Tags.Blocks.CHAINS
         )
         .setBlockStateProvider((prov, ctx) -> {
             var model = prov
@@ -257,6 +259,7 @@ public class EIOBlocks {
         })
         .createBlockItem(ITEM_REGISTRY, item -> item
             .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("item/soul_chain")))
+            .addItemTags(Tags.Items.CHAINS)
             .setTab(EIOCreativeTabs.BLOCKS)
         );
 

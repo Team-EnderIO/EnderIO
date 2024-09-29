@@ -24,16 +24,12 @@ public class ConduitBlockEntities {
 
     @SubscribeEvent
     public static void registerConduitCapabilities(RegisterCapabilitiesEvent event) {
-        Set<BlockCapability<?, Direction>> capabilities = EnderIOConduitsRegistries.CONDUIT_TYPE.entrySet().stream()
+        EnderIOConduitsRegistries.CONDUIT_TYPE.entrySet().stream()
             .flatMap(e -> e.getValue().exposedCapabilities().stream())
-            .collect(Collectors.toUnmodifiableSet());
-
-        for (var capability : capabilities) {
-            registerConduitCapability(event, capability);
-        }
+            .forEach(e -> registerConduitCapability(event, e));
     }
 
-    private static <T> void registerConduitCapability(RegisterCapabilitiesEvent event, BlockCapability<T, Direction> capability) {
+    private static <TCap, TContext> void registerConduitCapability(RegisterCapabilitiesEvent event, BlockCapability<TCap, TContext> capability) {
         event.registerBlockEntity(capability, CONDUIT.get(), ConduitBundleBlockEntity.createConduitCap(capability));
     }
 

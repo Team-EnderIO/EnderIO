@@ -8,5 +8,8 @@
     "item": "minecraft:magenta_concrete_powder"
   },
   "mode": "fill",
-  "output": "minecraft:magenta_concrete"
+  "output": {
+    "count": 1,
+    "id": "minecraft:magenta_concrete"
+  }
 }

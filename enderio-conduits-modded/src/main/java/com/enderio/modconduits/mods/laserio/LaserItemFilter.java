@@ -1,6 +1,6 @@
 package com.enderio.modconduits.mods.laserio;
 
-import com.direwolf20.laserio.common.containers.customhandler.FilterCountHandler;
+import com.direwolf20.laserio.common.containers.customhandler.FilterBasicHandler;
 import com.direwolf20.laserio.common.items.cards.BaseCard;
 import com.direwolf20.laserio.setup.LaserIODataComponents;
 import com.enderio.base.api.filter.ItemStackFilter;
@@ -47,8 +47,13 @@ public class LaserItemFilter implements IFilterCapability<ItemStack>, ItemStackF
     }
 
     @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
     public List<ItemStack> getEntries() {
-        FilterCountHandler handler = new FilterCountHandler(15, container);
+        FilterBasicHandler handler = new FilterBasicHandler(15, container);
         List<ItemStack> list = NonNullList.withSize(15, ItemStack.EMPTY);
         for(int i = 0; i < 15; ++i) {
             ItemStack itemStack = handler.getStackInSlot(i);
@@ -56,6 +61,11 @@ public class LaserItemFilter implements IFilterCapability<ItemStack>, ItemStackF
             list.set(i, itemStack);
         }
         return list;
+    }
+
+    @Override
+    public ItemStack getEntry(int index) {
+        return null;
     }
 
     @Override

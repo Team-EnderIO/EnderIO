@@ -3,6 +3,8 @@ package com.enderio.machines.common.config.common;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class EnergyConfig {
+    public final ModConfigSpec.BooleanValue THROTTLE_ENERGY_INPUT;
+
     public final ModConfigSpec.ConfigValue<Integer> ALLOY_SMELTER_CAPACITY;
     public final ModConfigSpec.ConfigValue<Integer> ALLOY_SMELTER_USAGE;
     public final ModConfigSpec.ConfigValue<Integer> ALLOY_SMELTER_VANILLA_ITEM_ENERGY;
@@ -49,6 +51,10 @@ public class EnergyConfig {
 
     public EnergyConfig(ModConfigSpec.Builder builder) {
         builder.push("energy");
+
+        THROTTLE_ENERGY_INPUT = builder
+            .comment("Whether or not the machine should throttle energy input to 2x it's consumption rate")
+            .define("throttleEnergyUsage", true);
 
         builder.push("alloySmelter");
             ALLOY_SMELTER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
@@ -115,7 +121,7 @@ public class EnergyConfig {
             VIBRANT_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("vibrant", 64, 1, Integer.MAX_VALUE);
         builder.pop();
 
-        builder.push("capacitor_bank_capacity");
+        builder.push("capacitorBankCapacity");
             builder.comment("Capacity for capacitor banks");
             BASIC_CAPACITOR_BANK_CAPACITY = builder.defineInRange("basic", 500_000  , 1, Integer.MAX_VALUE);
             ADVANCED_CAPACITOR_BANK_CAPACITY = builder.defineInRange("advanced",  2_000_000  , 1, Integer.MAX_VALUE);
@@ -124,10 +130,10 @@ public class EnergyConfig {
 
         builder.push("wiredCharger");
             WIRED_CHARGER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 128_000, 1, Integer.MAX_VALUE);
-            WIRED_CHARGER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 64, 1, Integer.MAX_VALUE);
+            WIRED_CHARGER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 30, 1, Integer.MAX_VALUE);
         builder.pop();
 
-        builder.push("soul_engine");
+        builder.push("soulEngine");
             SOUL_ENGINE_CAPACITY = builder.defineInRange("capacity",100000, 1, Integer.MAX_VALUE);
             SOUL_ENGINE_BURN_SPEED = builder.comment("The base burn-rate the soul engine.").defineInRange("burnSpeed", 1, 1, Integer.MAX_VALUE);
             SOUL_ENGINE_GENERATION = builder.comment("Percentage increase in uI produced.").defineInRange("generation", 1.0d, 0.001d, Double.MAX_VALUE);

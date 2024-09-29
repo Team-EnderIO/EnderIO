@@ -20,6 +20,7 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.PoweredSpawnerMenu;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -28,16 +29,19 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.extensions.IOwnedSpawner;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 // TODO: I want to revisit the powered spawner and task
 //       But there's not enough time before alpha, so just porting as-is.
-public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements RangedActor {
+public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements RangedActor, IOwnedSpawner {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
@@ -129,10 +133,15 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         taskHost.onLevelReady();
     }
 
+    @Override
+    public @Nullable Either<BlockEntity, Entity> getOwner() {
+        return Either.left(this);
+    }
+
     // region Inventory
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
+    public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder().capacitor().build();
     }
 

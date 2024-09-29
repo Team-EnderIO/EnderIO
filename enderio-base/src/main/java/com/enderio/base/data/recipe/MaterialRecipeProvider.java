@@ -293,11 +293,11 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .save(recipeOutput, EnderIOBase.loc(EIOItems.GEAR_STONE.getId().getPath() + "_upgrade"));
 
         upgradeGear(recipeOutput, EIOItems.GEAR_IRON.get(), EIOItems.GRAINS_OF_INFINITY.get(), Tags.Items.INGOTS_IRON, Tags.Items.NUGGETS_IRON);
-        upgradeGear(recipeOutput, EIOItems.GEAR_ENERGIZED.get(), EIOItems.GEAR_IRON.get(), EIOItems.ENERGETIC_ALLOY_INGOT.get(),
+        upgradeGear(recipeOutput, EIOItems.GEAR_ENERGIZED.get(), EIOTags.Items.GEARS_IRON, EIOItems.ENERGETIC_ALLOY_INGOT.get(),
             EIOItems.ENERGETIC_ALLOY_NUGGET.get());
-        upgradeGear(recipeOutput, EIOItems.GEAR_VIBRANT.get(), EIOItems.GEAR_ENERGIZED.get(), EIOItems.VIBRANT_ALLOY_INGOT.get(),
+        upgradeGear(recipeOutput, EIOItems.GEAR_VIBRANT.get(), EIOTags.Items.GEARS_ENERGIZED, EIOItems.VIBRANT_ALLOY_INGOT.get(),
             EIOItems.VIBRANT_ALLOY_NUGGET.get());
-        upgradeGear(recipeOutput, EIOItems.GEAR_DARK_STEEL.get(), EIOItems.GEAR_IRON.get(), EIOItems.DARK_STEEL_INGOT.get(),
+        upgradeGear(recipeOutput, EIOItems.GEAR_DARK_STEEL.get(), EIOTags.Items.GEARS_IRON, EIOItems.DARK_STEEL_INGOT.get(),
             EIOItems.DARK_STEEL_NUGGET.get());
     }
 
@@ -349,6 +349,18 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .define('I', cross)
             .define('G', inputGear)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(inputGear))
+            .save(recipeOutput);
+    }
+
+    private void upgradeGear(RecipeOutput recipeOutput, Item resultGear, TagKey<Item> inputGear, ItemLike cross, ItemLike corner) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, resultGear)
+            .pattern("NIN")
+            .pattern("IGI")
+            .pattern("NIN")
+            .define('N', corner)
+            .define('I', cross)
+            .define('G', inputGear)
+            .unlockedBy("has_ingredient", has(inputGear))
             .save(recipeOutput);
     }
 

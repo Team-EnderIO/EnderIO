@@ -80,12 +80,19 @@ public record EnergyConduit(
     }
 
     @Override
-    public <K> @Nullable K proxyCapability(BlockCapability<K, Direction> capability, ConduitNode node,
-        Level level, BlockPos pos, @Nullable Direction direction, @Nullable ConduitNode.IOState state) {
+    public <TCap, TContext> @Nullable TCap proxyCapability(BlockCapability<TCap, TContext> capability, ConduitNode node,
+        Level level, BlockPos pos, @Nullable TContext context) {
 
-        if (Capabilities.EnergyStorage.BLOCK == capability && (state == null || state.isExtract())) {
+        if (Capabilities.EnergyStorage.BLOCK == capability && (context == null || context instanceof Direction)) {
+            if (context != null) {
+                var state = node.getIOState((Direction) context);
+                if (state.isPresent() && !state.get().isExtract()) {
+                    return null;
+                }
+            }
+
             //noinspection unchecked
-            return (K)new EnergyConduitStorage(transferRate(), node);
+            return (TCap)new EnergyConduitStorage(transferRate(), node);
         }
 
         return null;
@@ -100,8 +107,13 @@ public record EnergyConduit(
     public ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {
         IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos.relative(direction), direction.getOpposite());
         if (capability != null) {
-            // Always default to both directions.
-            return new ConduitConnectionData(true, true, RedstoneControl.ALWAYS_ACTIVE);
+            if (!capability.canReceive() && !capability.canExtract()) {
+                // This ensures that if there's an energy capability that might be pushing but won't allow pulling is present, we can still interact
+                // For example Thermal's Dynamos report false until they have energy in them and flux networks always refuse.
+                return new ConduitConnectionData(false, true, RedstoneControl.ALWAYS_ACTIVE);
+            }
+
+            return new ConduitConnectionData(capability.canReceive(), capability.canExtract(), RedstoneControl.ALWAYS_ACTIVE);
         }
 
         return Conduit.super.getDefaultConnection(level, pos, direction);

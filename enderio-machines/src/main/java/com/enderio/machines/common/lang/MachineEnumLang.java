@@ -20,7 +20,7 @@ public class MachineEnumLang {
 
     private static Component addTranslation(String prefix, ResourceLocation key, String english) {
         // TODO: Regilite should support a plain string key
-        return EnderIOMachines.REGILTIE.addTranslation(prefix, key, english);
+        return EnderIOMachines.REGILITE.addTranslation(prefix, key, english);
     }
 
     public static void register() {

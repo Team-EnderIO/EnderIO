@@ -10,6 +10,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -59,7 +60,7 @@ public class PaintingRecipeProvider extends RecipeProvider {
     protected void build(ItemLike output, Ingredient input, String suffix, RecipeOutput recipeOutput) {
         recipeOutput.accept(
             EnderIOBase.loc("painting/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath() + suffix),
-            new PaintingRecipe(input, output.asItem()),
+            new PaintingRecipe(input, new ItemStack(output)),
             null);
     }
 

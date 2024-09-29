@@ -7,11 +7,17 @@
   },
   "outputs": [
     {
-      "item": "minecraft:cobblestone"
+      "item": {
+        "count": 1,
+        "id": "minecraft:cobblestone"
+      }
     },
     {
       "chance": 0.12,
-      "item": "enderio:grains_of_infinity"
+      "item": {
+        "count": 1,
+        "id": "enderio:grains_of_infinity"
+      }
     }
   ]
 }

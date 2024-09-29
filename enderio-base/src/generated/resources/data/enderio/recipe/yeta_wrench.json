@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "G": {
-      "item": "enderio:stone_gear"
+      "tag": "c:gears/stone"
     },
     "I": {
       "tag": "c:ingots/copper_alloy"

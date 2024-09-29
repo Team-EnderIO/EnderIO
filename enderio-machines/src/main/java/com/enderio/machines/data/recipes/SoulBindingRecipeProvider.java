@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
@@ -68,7 +69,7 @@ public class SoulBindingRecipeProvider extends RecipeProvider {
         Optional<String> souldata, RecipeOutput recipeOutput) {
         recipeOutput.accept(
             EnderIOBase.loc("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
-            new SoulBindingRecipe(output.asItem(), input, energy, exp, entityType, mobCategory, souldata),
+            new SoulBindingRecipe(new ItemStack(output), input, energy, exp, entityType, mobCategory, souldata),
             null);
     }
 

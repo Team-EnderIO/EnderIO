@@ -3,8 +3,8 @@ package com.enderio.base.common.config.common;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class InfinityConfig {
-    public final ModConfigSpec.ConfigValue<Boolean> MAKES_SOUND;
-    public final ModConfigSpec.ConfigValue<Integer> FIRE_MIN_AGE;
+    public final ModConfigSpec.BooleanValue MAKES_SOUND;
+    public final ModConfigSpec.IntValue FIRE_MIN_AGE;
 
     public InfinityConfig(ModConfigSpec.Builder builder) {
         builder.push("grainsOfInfinity");

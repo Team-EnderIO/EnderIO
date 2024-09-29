@@ -23,20 +23,6 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
     }
 
     @Override
-    public void tickGraph(ServerLevel level, EnergyConduit conduit,
-                          List<ConduitNode> loadedNodes,
-                          ConduitNetwork graph, ColoredRedstoneProvider coloredRedstoneProvider) {
-
-        // Reset insertion cap
-        EnergyConduitNetworkContext context = graph.getContext(Conduits.ContextSerializers.ENERGY.get());
-        if (context != null) {
-            context.setEnergyInsertedThisTick(0);
-        }
-
-        IOAwareConduitTicker.super.tickGraph(level, conduit, loadedNodes, graph, coloredRedstoneProvider);
-    }
-
-    @Override
     public void tickColoredGraph(ServerLevel level, EnergyConduit conduit, List<Connection> inserts, List<Connection> extracts, DyeColor color,
         ConduitNetwork graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
@@ -63,8 +49,6 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
             context.setRotatingIndex(0);
         }
 
-        int totalEnergyInserted = 0;
-
         int startingRotatingIndex = context.rotatingIndex();
         for (int i = startingRotatingIndex; i < startingRotatingIndex + storagesForInsert.size(); i++) {
             int insertIndex = i % storagesForInsert.size();
@@ -75,17 +59,9 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
                 continue;
             }
 
-            int energyToInsert = Math.min(conduit.transferRate() - totalEnergyInserted, availableEnergy);
-
-            int energyInserted = insertHandler.receiveEnergy(energyToInsert, false);
+            int energyInserted = insertHandler.receiveEnergy(conduit.transferRate(), false);
             context.setEnergyStored(context.energyStored() - energyInserted);
             context.setRotatingIndex(insertIndex + 1);
-
-            totalEnergyInserted += energyInserted;
-
-            if (totalEnergyInserted >= conduit.transferRate()) {
-                break;
-            }
         }
     }
 

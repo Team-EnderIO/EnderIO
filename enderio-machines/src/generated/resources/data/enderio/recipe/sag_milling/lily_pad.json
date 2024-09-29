@@ -7,13 +7,17 @@
   "outputs": [
     {
       "chance": 0.15,
-      "count": 3,
-      "item": "enderio:plant_matter_green"
+      "item": {
+        "count": 3,
+        "id": "enderio:plant_matter_green"
+      }
     },
     {
       "chance": 0.1,
-      "count": 3,
-      "item": "enderio:plant_matter_green"
+      "item": {
+        "count": 3,
+        "id": "enderio:plant_matter_green"
+      }
     }
   ]
 }
