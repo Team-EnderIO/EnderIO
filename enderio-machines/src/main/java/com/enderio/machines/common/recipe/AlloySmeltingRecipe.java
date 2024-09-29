@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Input> {
     private final List<SizedIngredient> inputs;
@@ -37,6 +38,10 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
     public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience) {
         this(inputs, output, energy, experience, false);
+    }
+
+    private AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience, Optional<Boolean> isSmelting) {
+        this(inputs, output, energy, experience, isSmelting.orElse(false));
     }
 
     public List<SizedIngredient> inputs() {
@@ -161,10 +166,12 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     }
 
     public static class Serializer implements RecipeSerializer<AlloySmeltingRecipe> {
+        // Uses Optional for isSmelting to avoid polluting recipe generation.
         public static final MapCodec<AlloySmeltingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
             .group(SizedIngredient.FLAT_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs),
                 ItemStack.CODEC.fieldOf("result").forGetter(AlloySmeltingRecipe::output), Codec.INT.fieldOf("energy").forGetter(AlloySmeltingRecipe::energy),
-                Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience))
+                Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience),
+                Codec.BOOL.optionalFieldOf("isSmelting").forGetter(r -> r.isSmelting() ? Optional.of(r.isSmelting()) : Optional.empty()))
             .apply(inst, AlloySmeltingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmeltingRecipe> STREAM_CODEC = StreamCodec.composite(
