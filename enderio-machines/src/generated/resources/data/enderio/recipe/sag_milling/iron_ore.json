@@ -6,21 +6,21 @@
   },
   "outputs": [
     {
-      "output": {
+      "item": {
         "count": 1,
         "id": "minecraft:raw_iron"
       }
     },
     {
       "chance": 0.33,
-      "output": {
+      "item": {
         "count": 1,
         "id": "minecraft:raw_iron"
       }
     },
     {
       "chance": 0.15,
-      "output": {
+      "item": {
         "count": 1,
         "id": "minecraft:cobblestone"
       }

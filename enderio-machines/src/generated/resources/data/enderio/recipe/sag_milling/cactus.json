@@ -6,28 +6,28 @@
   },
   "outputs": [
     {
-      "output": {
+      "item": {
         "count": 3,
         "id": "enderio:plant_matter_green"
       }
     },
     {
       "chance": 0.75,
-      "output": {
+      "item": {
         "count": 3,
         "id": "enderio:plant_matter_green"
       }
     },
     {
       "chance": 0.5,
-      "output": {
+      "item": {
         "count": 3,
         "id": "enderio:plant_matter_green"
       }
     },
     {
       "chance": 0.25,
-      "output": {
+      "item": {
         "count": 3,
         "id": "enderio:plant_matter_brown"
       }

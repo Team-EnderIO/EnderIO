@@ -7,14 +7,14 @@
   },
   "outputs": [
     {
-      "output": {
+      "item": {
         "count": 2,
         "id": "minecraft:sand"
       }
     },
     {
       "chance": 0.4,
-      "output": {
+      "item": {
         "count": 2,
         "id": "minecraft:sand"
       }

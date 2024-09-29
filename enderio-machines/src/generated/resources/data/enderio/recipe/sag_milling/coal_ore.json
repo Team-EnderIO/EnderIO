@@ -6,28 +6,28 @@
   },
   "outputs": [
     {
-      "output": {
+      "item": {
         "count": 3,
         "id": "minecraft:coal"
       }
     },
     {
       "chance": 0.6,
-      "output": {
+      "item": {
         "count": 1,
         "id": "enderio:powdered_coal"
       }
     },
     {
       "chance": 0.005,
-      "output": {
+      "item": {
         "count": 1,
         "id": "minecraft:diamond"
       }
     },
     {
       "chance": 0.15,
-      "output": {
+      "item": {
         "count": 1,
         "id": "minecraft:cobblestone"
       }

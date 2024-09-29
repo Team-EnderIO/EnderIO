@@ -8,5 +8,8 @@
     "item": "minecraft:green_concrete_powder"
   },
   "mode": "fill",
-  "output": "minecraft:green_concrete"
+  "output": {
+    "count": 1,
+    "id": "minecraft:green_concrete"
+  }
 }

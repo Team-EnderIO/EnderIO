@@ -7,14 +7,14 @@
   },
   "outputs": [
     {
-      "output": {
+      "item": {
         "count": 1,
         "id": "minecraft:quartz"
       }
     },
     {
       "chance": 0.25,
-      "output": {
+      "item": {
         "count": 1,
         "id": "minecraft:quartz"
       }

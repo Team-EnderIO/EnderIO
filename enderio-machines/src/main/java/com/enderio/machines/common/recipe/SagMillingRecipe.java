@@ -178,7 +178,7 @@ public record SagMillingRecipe(
         boolean isOptional
     ) {
         private static final Codec<OutputItem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.either(ItemStack.CODEC, SizedTagOutput.CODEC).fieldOf("output").forGetter(OutputItem::output),
+            Codec.either(ItemStack.CODEC, SizedTagOutput.CODEC).fieldOf("item").forGetter(OutputItem::output),
             Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter(OutputItem::chance),
             Codec.BOOL.optionalFieldOf("optional", false).forGetter(OutputItem::isOptional)
         ).apply(instance, OutputItem::new));

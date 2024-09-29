@@ -7,7 +7,7 @@
   "outputs": [
     {
       "chance": 0.4,
-      "output": {
+      "item": {
         "count": 1,
         "id": "enderio:withering_powder"
       }

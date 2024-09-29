@@ -6,21 +6,21 @@
   },
   "outputs": [
     {
-      "output": {
+      "item": {
         "count": 8,
         "id": "minecraft:lapis_lazuli"
       }
     },
     {
       "chance": 0.2,
-      "output": {
+      "item": {
         "count": 1,
         "id": "minecraft:lapis_lazuli"
       }
     },
     {
       "chance": 0.15,
-      "output": {
+      "item": {
         "count": 1,
         "id": "minecraft:cobblestone"
       }

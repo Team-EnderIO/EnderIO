@@ -6,28 +6,28 @@
   },
   "outputs": [
     {
-      "output": {
+      "item": {
         "count": 8,
         "id": "minecraft:redstone"
       }
     },
     {
       "chance": 0.2,
-      "output": {
+      "item": {
         "count": 1,
         "id": "minecraft:redstone"
       }
     },
     {
       "chance": 0.8,
-      "output": {
+      "item": {
         "count": 1,
         "id": "enderio:silicon"
       }
     },
     {
       "chance": 0.15,
-      "output": {
+      "item": {
         "count": 1,
         "id": "minecraft:cobblestone"
       }
