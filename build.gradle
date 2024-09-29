@@ -410,7 +410,7 @@ publishing {
             artifactId = 'EnderIO'
             version = "${minecraft_version}-${version}"
 
-            from components.java
+            artifact jar
             artifact sourcesJar
             artifact apiJar
 
@@ -428,30 +428,6 @@ publishing {
 
                 scm {
                     url = 'https://github.com/Team-EnderIO/EnderIO.git'
-                }
-
-                // Taken from Mekanism, thank you :)
-                // https://github.com/mekanism/Mekanism/blob/1.20.x/build.gradle#L669
-                withXml {
-                    NodeList dependencies = asNode().dependencies
-                    NodeList allDeps = dependencies.'*'
-
-                    // Remove forge deps
-                    allDeps.<Node> findAll() { Node el ->
-                        el.artifactId.text() == 'forge' && el.groupId.text() == 'net.minecraftforge'
-                    }.forEach() { Node el ->
-                        el.parent().remove(el)
-                    }
-
-                    //remove NeoGradle's mapped suffix from versions & set as optional so anyone else doesn't inherit them
-                    allDeps.<Node> findAll() { Node el ->
-                        el.version.text().contains('_mapped_')
-                    }.each { Node el ->
-                        el.version.each { Node version ->
-                            def versionText = version.text()
-                            version.setValue(versionText.substring(0, versionText.indexOf('_mapped_')))
-                        }
-                    }
                 }
             }
         }
