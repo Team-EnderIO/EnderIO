@@ -3,5 +3,7 @@
   "input": {
     "tag": "minecraft:fence_gates"
   },
-  "output": "enderio:painted_fence_gate"
+  "output": {
+    "item": "enderio:painted_fence_gate"
+  }
 }

@@ -6,5 +6,7 @@
     "item": "enderio:soularium_grinding_ball"
   },
   "mob_category": "creature",
-  "output": "enderio:animal_token"
+  "output": {
+    "item": "enderio:animal_token"
+  }
 }

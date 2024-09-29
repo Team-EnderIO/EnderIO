@@ -5,6 +5,7 @@ import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.recipe.RecipeDataUtil;
+import com.enderio.core.common.util.JsonUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
@@ -13,6 +14,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -64,16 +66,16 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
     }
 
     protected void build(Item output, List<Ingredient> inputs, int energy, Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedSlicingRecipe(EnderIO.loc("slicing/" + ForgeRegistries.ITEMS.getKey(output).getPath()), output, inputs, energy));
+        finishedRecipeConsumer.accept(new FinishedSlicingRecipe(EnderIO.loc("slicing/" + ForgeRegistries.ITEMS.getKey(output).getPath()), output.getDefaultInstance(), inputs, energy));
     }
 
     protected static class FinishedSlicingRecipe extends EnderFinishedRecipe {
 
-        private final Item output;
+        private final ItemStack output;
         private final List<Ingredient> inputs;
         private final int energy;
 
-        public FinishedSlicingRecipe(ResourceLocation id, Item output, List<Ingredient> inputs, int energy) {
+        public FinishedSlicingRecipe(ResourceLocation id, ItemStack output, List<Ingredient> inputs, int energy) {
             super(id);
             this.output = output;
             this.inputs = inputs;
@@ -82,14 +84,14 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public void serializeRecipeData(JsonObject json) {
-            json.addProperty("output", ForgeRegistries.ITEMS.getKey(output).toString());
+            json.add("output", JsonUtil.serializeItemStackWithoutNBT(output));
 
             JsonArray inputsArray = new JsonArray();
             for (Ingredient input : inputs) {
                 inputsArray.add(input.toJson());
             }
-            json.add("inputs", inputsArray);
 
+            json.add("inputs", inputsArray);
             json.addProperty("energy", energy);
 
             super.serializeRecipeData(json);
@@ -98,7 +100,7 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
         @Override
         protected Set<String> getModDependencies() {
             Set<String> mods = new HashSet<>(RecipeDataUtil.getIngredientsModIds(inputs));
-            mods.add(ForgeRegistries.ITEMS.getKey(output).getNamespace());
+            mods.add(ForgeRegistries.ITEMS.getKey(output.getItem()).getNamespace());
             return mods;
         }
 

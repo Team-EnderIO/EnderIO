@@ -8,5 +8,7 @@
     "item": "minecraft:lime_concrete_powder"
   },
   "is_emptying": false,
-  "output": "minecraft:lime_concrete"
+  "output": {
+    "item": "minecraft:lime_concrete"
+  }
 }

@@ -8,5 +8,7 @@
     "item": "minecraft:wet_sponge"
   },
   "is_emptying": true,
-  "output": "minecraft:sponge"
+  "output": {
+    "item": "minecraft:sponge"
+  }
 }

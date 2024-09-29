@@ -3,5 +3,7 @@
   "input": {
     "item": "enderio:painted_redstone_block"
   },
-  "output": "enderio:painted_redstone_block"
+  "output": {
+    "item": "enderio:painted_redstone_block"
+  }
 }

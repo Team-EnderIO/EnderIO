@@ -62,13 +62,13 @@ public class TankCategory implements IRecipeCategory<TankRecipe> {
                 .addIngredients(recipe.getInput());
 
             builder.addSlot(RecipeIngredientRole.OUTPUT, 3, 34)
-                .addItemStack(new ItemStack(recipe.getOutput()));
+                .addItemStack(recipe.getOutput());
         } else {
             builder.addSlot(RecipeIngredientRole.INPUT, 75, 3)
                 .addIngredients(recipe.getInput());
 
             builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 34)
-                .addItemStack(new ItemStack(recipe.getOutput()));
+                .addItemStack(recipe.getOutput());
         }
     }
 }

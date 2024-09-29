@@ -11,6 +11,7 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.common.recipes.CountedIngredient;
+import com.enderio.core.common.util.JsonUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
@@ -183,14 +184,7 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
             inputs.forEach(ing -> jsonInputs.add(ing.toJson()));
 
             json.add("inputs", jsonInputs);
-
-            JsonObject jsonobject = new JsonObject();
-            jsonobject.addProperty("item", ForgeRegistries.ITEMS.getKey(output.getItem()).toString());
-            if (output.getCount() > 1) {
-                jsonobject.addProperty("count", output.getCount());
-            }
-
-            json.add("result", jsonobject);
+            json.add("result", JsonUtil.serializeItemStackWithoutNBT(output));
 
             json.addProperty("energy", energy);
             json.addProperty("experience", experience);

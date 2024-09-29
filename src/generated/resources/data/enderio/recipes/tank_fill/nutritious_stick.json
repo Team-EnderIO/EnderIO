@@ -8,5 +8,7 @@
     "item": "minecraft:stick"
   },
   "is_emptying": false,
-  "output": "enderio:nutritious_stick"
+  "output": {
+    "item": "enderio:nutritious_stick"
+  }
 }

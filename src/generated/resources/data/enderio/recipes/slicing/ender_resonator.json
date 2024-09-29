@@ -21,5 +21,7 @@
       "tag": "forge:silicon"
     }
   ],
-  "output": "enderio:ender_resonator"
+  "output": {
+    "item": "enderio:ender_resonator"
+  }
 }

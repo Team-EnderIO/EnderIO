@@ -2,6 +2,7 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.EnderRecipe;
+import com.enderio.core.common.util.JsonUtil;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
@@ -30,11 +31,11 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
 
     private final ResourceLocation id;
     private final Ingredient input;
-    private final Item output;
+    private final ItemStack output;
     private final FluidStack fluid;
     private final boolean isEmptying;
 
-    public TankRecipe(ResourceLocation id, Ingredient input, Item output, FluidStack fluid, boolean isEmptying) {
+    public TankRecipe(ResourceLocation id, Ingredient input, ItemStack output, FluidStack fluid, boolean isEmptying) {
         this.id = id;
         this.input = input;
         this.output = output;
@@ -46,7 +47,7 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
         return input;
     }
 
-    public Item getOutput() {
+    public ItemStack getOutput() {
         return output;
     }
 
@@ -82,7 +83,7 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
 
     @Override
     public ItemStack getResultItem(RegistryAccess p_267052_) {
-        return new ItemStack(output);
+        return output.copy();
     }
 
     @Override
@@ -119,9 +120,7 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
         @Override
         public TankRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
             Ingredient input = Ingredient.fromJson(serializedRecipe.get("input").getAsJsonObject());
-
-            ResourceLocation id = new ResourceLocation(serializedRecipe.get("output").getAsString());
-            Item output = ForgeRegistries.ITEMS.getValue(id);
+            ItemStack output = JsonUtil.deserializeItemStackWithOldFormat(serializedRecipe.get("output"), true, true);
 
             JsonObject fluidJson = serializedRecipe.get("fluid").getAsJsonObject();
             ResourceLocation fluidId = new ResourceLocation(fluidJson.get("fluid").getAsString());
@@ -136,17 +135,9 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
         public @Nullable TankRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             try {
                 Ingredient input = Ingredient.fromNetwork(buffer);
-
-                ResourceLocation outputId = buffer.readResourceLocation();
-                Item output = ForgeRegistries.ITEMS.getValue(outputId);
-                if (output == null) {
-                    throw new ResourceLocationException("The output of recipe " + recipeId + " does not exist.");
-                }
-
+                ItemStack output = buffer.readItem();
                 FluidStack fluid = FluidStack.readFromPacket(buffer);
-
                 boolean isEmptying = buffer.readBoolean();
-
                 return new TankRecipe(recipeId, input, output, fluid, isEmptying);
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error reading tank recipe from packet.", ex);
@@ -158,7 +149,7 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
         public void toNetwork(FriendlyByteBuf buffer, TankRecipe recipe) {
             try {
                 recipe.input.toNetwork(buffer);
-                buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(recipe.output)));
+                buffer.writeItem(recipe.output);
                 recipe.fluid.writeToPacket(buffer);
                 buffer.writeBoolean(recipe.isEmptying);
             } catch (Exception ex) {

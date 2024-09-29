@@ -8,5 +8,7 @@
     "item": "minecraft:light_gray_concrete_powder"
   },
   "is_emptying": false,
-  "output": "minecraft:light_gray_concrete"
+  "output": {
+    "item": "minecraft:light_gray_concrete"
+  }
 }

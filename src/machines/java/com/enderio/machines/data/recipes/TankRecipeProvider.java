@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.data.recipe.RecipeDataUtil;
+import com.enderio.core.common.util.JsonUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
@@ -11,6 +12,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -59,21 +61,23 @@ public class TankRecipeProvider extends EnderRecipeProvider {
     }
 
     protected void buildEmptying(Ingredient input, ItemLike output, FluidStack fluid, Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedTankRecipe(EnderIO.loc("tank_empty/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), input, output.asItem(), fluid, true));
+        finishedRecipeConsumer.accept(new FinishedTankRecipe(EnderIO.loc("tank_empty/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), input,
+            output.asItem().getDefaultInstance(), fluid, true));
     }
 
     protected void buildFilling(Ingredient input, ItemLike output, FluidStack fluid, Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedTankRecipe(EnderIO.loc("tank_fill/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), input, output.asItem(), fluid, false));
+        finishedRecipeConsumer.accept(new FinishedTankRecipe(EnderIO.loc("tank_fill/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), input,
+            output.asItem().getDefaultInstance(), fluid, false));
     }
 
     protected static class FinishedTankRecipe extends EnderFinishedRecipe {
 
         private final Ingredient input;
-        private final Item output;
+        private final ItemStack output;
         private final FluidStack fluid;
         private final boolean isEmptying;
 
-        protected FinishedTankRecipe(ResourceLocation id, Ingredient input, Item output, FluidStack fluid, boolean isEmptying) {
+        protected FinishedTankRecipe(ResourceLocation id, Ingredient input, ItemStack output, FluidStack fluid, boolean isEmptying) {
             super(id);
             this.input = input;
             this.output = output;
@@ -84,7 +88,7 @@ public class TankRecipeProvider extends EnderRecipeProvider {
         @Override
         public void serializeRecipeData(JsonObject json) {
             json.add("input", input.toJson());
-            json.addProperty("output", ForgeRegistries.ITEMS.getKey(output).toString());
+            json.add("output", JsonUtil.serializeItemStackWithoutNBT(output));
 
             JsonObject fluidJson = new JsonObject();
             fluidJson.addProperty("fluid", ForgeRegistries.FLUIDS.getKey(fluid.getFluid()).toString());
@@ -99,7 +103,7 @@ public class TankRecipeProvider extends EnderRecipeProvider {
         @Override
         protected Set<String> getModDependencies() {
             Set<String> mods = new HashSet<>(RecipeDataUtil.getIngredientModIds(input));
-            mods.add(ForgeRegistries.ITEMS.getKey(output).getNamespace());
+            mods.add(ForgeRegistries.ITEMS.getKey(output.getItem()).getNamespace());
             mods.add(ForgeRegistries.FLUIDS.getKey(fluid.getFluid()).getNamespace());
             return mods;
         }

@@ -6,5 +6,7 @@
   "input": {
     "tag": "forge:gems/emerald"
   },
-  "output": "enderio:enticing_crystal"
+  "output": {
+    "item": "enderio:enticing_crystal"
+  }
 }

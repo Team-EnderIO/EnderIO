@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.core.common.util.JsonUtil;
 import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.souldata.SoulDataReloadListener;
@@ -35,7 +36,7 @@ import java.util.function.Supplier;
 public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Container> {
 
     private final ResourceLocation id;
-    private final Item output;
+    private final ItemStack output;
     private final Ingredient input;
     private final int energy;
     private final int exp;
@@ -43,7 +44,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
     @Nullable private final MobCategory mobCategory;
     @Nullable private final String souldata;
 
-    public SoulBindingRecipe(ResourceLocation id, Item output, Ingredient input, int energy, int exp, @Nullable ResourceLocation entityType,
+    public SoulBindingRecipe(ResourceLocation id, ItemStack output, Ingredient input, int energy, int exp, @Nullable ResourceLocation entityType,
         @Nullable MobCategory mobCategory, @Nullable String souldata) {
         this.id = id;
         this.output = output;
@@ -109,7 +110,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.getDefaultInstance()), OutputStack.of(EIOItems.EMPTY_SOUL_VIAL.asStack()));
+        return List.of(OutputStack.of(output.copy()), OutputStack.of(EIOItems.EMPTY_SOUL_VIAL.asStack()));
     }
 
     @Override
@@ -199,9 +200,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
         @Override
         public SoulBindingRecipe fromJson(ResourceLocation pRecipeId, JsonObject serializedRecipe) {
-
-            ResourceLocation id = new ResourceLocation(serializedRecipe.get("output").getAsString());
-            Item output = ForgeRegistries.ITEMS.getValue(id);
+            ItemStack output = JsonUtil.deserializeItemStackWithOldFormat(serializedRecipe.get("output"), true, true);
 
             Ingredient input = Ingredient.fromJson(serializedRecipe.get("input").getAsJsonObject());
 
@@ -230,11 +229,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
         @Override
         public SoulBindingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             try {
-                ResourceLocation outputId = buffer.readResourceLocation();
-                Item output = ForgeRegistries.ITEMS.getValue(outputId);
-                if (output == null) {
-                    throw new ResourceLocationException("The output of recipe " + recipeId + " does not exist.");
-                }
+                ItemStack output = buffer.readItem();
                 Ingredient input = Ingredient.fromNetwork(buffer);
                 int energy = buffer.readInt();
                 int exp = buffer.readInt();
@@ -265,7 +260,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
         @Override
         public void toNetwork(FriendlyByteBuf buffer, SoulBindingRecipe recipe) {
             try {
-                buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(recipe.output)));
+                buffer.writeItem(recipe.output);
                 recipe.input.toNetwork(buffer);
                 buffer.writeInt(recipe.energy);
                 buffer.writeInt(recipe.exp);

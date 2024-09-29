@@ -3,5 +3,7 @@
   "input": {
     "item": "minecraft:glowstone"
   },
-  "output": "enderio:painted_glowstone"
+  "output": {
+    "item": "enderio:painted_glowstone"
+  }
 }
