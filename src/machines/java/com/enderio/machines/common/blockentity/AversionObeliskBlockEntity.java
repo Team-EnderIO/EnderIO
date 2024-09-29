@@ -94,7 +94,7 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity {
         }
 
         if (FILTER.getItemStack(this).getCapability(EIOCapabilities.FILTER).orElse(null) instanceof EntityFilter entityFilter) {
-            if (entityFilter.test(event.getEntity())) { // This check was the exact opposite in 1.21, but it has to be a logic error since whitelisted entities SHOULD spawn.
+            if (!entityFilter.test(event.getEntity())) {
                 return false;
             }
         }
