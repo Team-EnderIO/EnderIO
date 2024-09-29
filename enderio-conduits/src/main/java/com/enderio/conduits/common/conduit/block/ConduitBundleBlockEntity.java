@@ -374,6 +374,8 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
             }
             connectEnd(dir, conduit);
             onConnectionsUpdated(conduit);
+        } else {
+            this.disconnect(dir, conduit);
         }
 
         return Optional.empty();

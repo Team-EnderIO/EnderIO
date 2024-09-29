@@ -144,17 +144,17 @@ public final class ConduitBundle {
             conduits.set(index, conduit);
 
             ConduitGraphObject prevNode = conduitNodes.remove(first.get());
-            conduitNodes.put(conduit, prevNode);
 
             if (prevNode != null) {
+                node = new ConduitGraphObject(pos, prevNode.conduitDataContainer()); //new node with old data
                 conduit.value().onRemoved(prevNode, level, pos);
                 if (!level.isClientSide() && prevNode.getGraph() != null) {
                     prevNode.getGraph().remove(prevNode);
                 }
             }
 
-            conduit.value().onCreated(prevNode, level, pos, player);
-            //connections.values().forEach(connection -> connection.disconnectType(index));
+            conduitNodes.put(conduit, node);
+            conduit.value().onCreated(node, level, pos, player);
             onChanged();
 
             return new RightClickAction.Upgrade(first.get());
