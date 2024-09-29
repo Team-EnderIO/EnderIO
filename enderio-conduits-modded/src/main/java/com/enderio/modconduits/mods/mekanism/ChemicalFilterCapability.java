@@ -1,6 +1,7 @@
 package com.enderio.modconduits.mods.mekanism;
 
 import com.enderio.base.common.capability.IFilterCapability;
+import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mekanism.api.chemical.ChemicalStack;
@@ -10,7 +11,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,7 +37,6 @@ public class ChemicalFilterCapability implements IFilterCapability<ChemicalStack
 
     @Override
     public void setNbt(Boolean nbt) {
-
     }
 
     @Override
@@ -56,70 +55,99 @@ public class ChemicalFilterCapability implements IFilterCapability<ChemicalStack
     }
 
     @Override
+    public int size() {
+        return getComponent().size();
+    }
+
+    @Override
     public List<ChemicalStack> getEntries() {
-        return getComponent().chemicals;
+        Component data = getComponent();
+
+        return data.chemicals().stream()
+            .map(ChemicalStack::copy)
+            .limit(data.size())
+            .toList();
+    }
+
+    @Override
+    public ChemicalStack getEntry(int index) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException(index);
+        }
+
+        var entries = getEntries();
+        if (index >= entries.size()) {
+            return ChemicalStack.EMPTY;
+        }
+
+        return entries.get(index);
     }
 
     @Override
     public void setEntry(int index, ChemicalStack entry) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException(index);
+        }
+
         this.container.set(componentType, getComponent().withChemicals(index, entry));
     }
 
-
     @Override
-    public boolean test(ChemicalStack boxedChemicalStack) {
-        for (ChemicalStack stack : getEntries()) {
-            if (ChemicalStack.isSameChemical(stack, boxedChemicalStack)) {
+    public boolean test(ChemicalStack stack) {
+        List<ChemicalStack> entries = getEntries();
+
+        for (int i = 0; i < entries.size() && i < size(); i++) {
+            var testStack = entries.get(i);
+            if (ChemicalStack.isSameChemical(testStack, stack)) {
                 return !isInvert();
             }
         }
+
         return isInvert();
     }
 
-    public record Component(List<ChemicalStack> chemicals, boolean invert) {
-        public static Codec<Component> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
+    public record Component(int size, List<ChemicalStack> chemicals, boolean invert) {
+
+        private static final Codec<Component> NEW_CODEC = RecordCodecBuilder.create(
+            componentInstance -> componentInstance
+                .group(
+                    Codec.INT.fieldOf("size").forGetter(Component::size),
+                    OrderedListCodec.create(256, ChemicalStack.OPTIONAL_CODEC, ChemicalStack.EMPTY)
+                        .fieldOf("chemicals")
+                        .forGetter(Component::chemicals),
+                    Codec.BOOL.fieldOf("isInvert").forGetter(Component::invert))
+                .apply(componentInstance, Component::new));
+
+        // TODO: Remove in Ender IO 8
+        // The Codec used up to and including v7.0.2-alpha
+        private static final Codec<Component> LEGACY_CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
             .group(Component.Slot.CODEC.sizeLimitedListOf(256).fieldOf("chemicals").xmap(Component::fromList, Component::fromChemicals).forGetter(
                     Component::chemicals),
                 Codec.BOOL.fieldOf("nbt").forGetter(Component::invert))
             .apply(componentInstance, Component::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, Component> STREAM_CODEC = StreamCodec.composite(ChemicalStack.OPTIONAL_STREAM_CODEC
-                .apply(ByteBufCodecs.list(256)), Component::chemicals,
-            ByteBufCodecs.BOOL, Component::invert, Component::new);
+        public static final Codec<Component> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, Component> STREAM_CODEC = StreamCodec.composite(
+            ChemicalStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)),
+            Component::chemicals,
+            ByteBufCodecs.BOOL,
+            Component::invert,
+            Component::new);
 
         public Component(int size) {
-            this(NonNullList.withSize(size, ChemicalStack.EMPTY), false);
-        }
-
-        private static List<Component.Slot> fromChemicals(List<ChemicalStack> chemicals) {
-            List<Component.Slot> slots = new ArrayList<>();
-            for (int i = 0; i < chemicals.size(); i++) {
-                slots.add(new Component.Slot(i, chemicals.get(i)));
-            }
-            return slots;
-        }
-
-        private static List<ChemicalStack> fromList(List<Component.Slot> slots) {
-            OptionalInt optionalint = slots.stream().mapToInt(Component.Slot::index).max();
-            if (optionalint.isEmpty()) {
-                return List.of();
-            }
-            List<ChemicalStack> chemicals = NonNullList.withSize(optionalint.getAsInt() + 1, ChemicalStack.EMPTY);
-            for (Component.Slot slot : slots) {
-                chemicals.set(slot.index, slot.chemical);
-            }
-            return chemicals;
+            this(size, NonNullList.withSize(size, ChemicalStack.EMPTY), false);
         }
 
         public Component withInvert(boolean invert) {
-            return new Component(this.chemicals, invert);
+            return new Component(size, this.chemicals, invert);
         }
 
         public Component withChemicals(int pSlotId, ChemicalStack entry) {
             List<ChemicalStack> newChemicals = new ArrayList<>();
             chemicals.forEach(f -> newChemicals.add(f.copy()));
             newChemicals.set(pSlotId, entry);
-            return new Component(newChemicals, invert);
+            return new Component(size, newChemicals, invert);
         }
 
         @Override
@@ -157,6 +185,35 @@ public class ChemicalFilterCapability implements IFilterCapability<ChemicalStack
             return i;
         }
 
+        // TODO: Remove in Ender IO 8
+        // region Legacy Serialization
+
+        // Used for legacy loading only.
+        @Deprecated(since = "7.0.3-alpha")
+        private Component(List<ChemicalStack> chemicals, boolean invert) {
+            this(chemicals.size(), chemicals, invert);
+        }
+
+        private static List<Component.Slot> fromChemicals(List<ChemicalStack> chemicals) {
+            List<Component.Slot> slots = new ArrayList<>();
+            for (int i = 0; i < chemicals.size(); i++) {
+                slots.add(new Component.Slot(i, chemicals.get(i)));
+            }
+            return slots;
+        }
+
+        private static List<ChemicalStack> fromList(List<Component.Slot> slots) {
+            OptionalInt optionalint = slots.stream().mapToInt(Component.Slot::index).max();
+            if (optionalint.isEmpty()) {
+                return List.of();
+            }
+            List<ChemicalStack> chemicals = NonNullList.withSize(optionalint.getAsInt() + 1, ChemicalStack.EMPTY);
+            for (Component.Slot slot : slots) {
+                chemicals.set(slot.index, slot.chemical);
+            }
+            return chemicals;
+        }
+
         public record Slot(int index, ChemicalStack chemical) {
             public static final Codec<Component.Slot> CODEC = RecordCodecBuilder.create(
                 p_331695_ -> p_331695_.group(
@@ -166,6 +223,7 @@ public class ChemicalFilterCapability implements IFilterCapability<ChemicalStack
                     .apply(p_331695_, Component.Slot::new)
             );
         }
-    }
 
+        // endregion
+    }
 }

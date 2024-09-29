@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat
+import java.util.*
+
 val minecraftVersion: String by project
 val neoForgeVersion: String by project
 
@@ -69,6 +72,21 @@ neoForge {
         create("enderio_machines") {
             sourceSet(sourceSets["main"])
         }
+    }
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes(mapOf(
+                "Specification-Title" to "Ender IO Machines",
+                "Specification-Vendor" to "Team Ender IO",
+                "Specification-Version" to "1",
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to project.version,
+                "Implementation-Vendor" to "Team Ender IO",
+                "Implementation-Timestamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date()),
+                "MixinConfigs" to "enderio-machines.mixins.json"
+        ))
     }
 }
 

@@ -16,7 +16,7 @@
       "tag": "enderio:insulation_metals"
     }
   ],
-  "result": {
+  "output": {
     "count": 1,
     "id": "enderio:industrial_insulation_block"
   }

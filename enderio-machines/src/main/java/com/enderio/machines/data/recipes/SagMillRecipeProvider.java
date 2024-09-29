@@ -289,7 +289,7 @@ public class SagMillRecipeProvider extends RecipeProvider {
         		output(PLANT_MATTER_GREEN.get(), 3, 0.1f)),
         		BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("sun_flower", Ingredient.of(VINE), List.of(
+        build("sun_flower", Ingredient.of(Items.SUNFLOWER), List.of(
         		output(YELLOW_DYE, 2, 0.8f),
         		output(YELLOW_DYE, 0.6f),
         		output(YELLOW_DYE, 2, 0.3f),

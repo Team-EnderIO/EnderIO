@@ -8,5 +8,8 @@
     "item": "minecraft:sponge"
   },
   "mode": "fill",
-  "output": "minecraft:wet_sponge"
+  "output": {
+    "count": 1,
+    "id": "minecraft:wet_sponge"
+  }
 }

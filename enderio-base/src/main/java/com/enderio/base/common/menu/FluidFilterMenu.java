@@ -33,8 +33,7 @@ public class FluidFilterMenu extends AbstractContainerMenu {
 
         capability = filterCapability;
 
-        List<FluidStack> items = capability.getEntries();
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < capability.size(); i++) {
             int pSlot = i;
             addSlot(new FluidFilterSlot(fluidStack -> capability.setEntry(pSlot, fluidStack) ,i ,14 + ( i % 5) * 18, 35 + 20 * ( i / 5)));
         }
@@ -92,20 +91,18 @@ public class FluidFilterMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public void clicked(int pSlotId, int pButton, ClickType pClickType, Player pPlayer) {
-        if (pSlotId < capability.getEntries().size() && pSlotId >= 0) {
-            if (!capability.getEntries().get(pSlotId).isEmpty()) {
-                capability.setEntry(pSlotId, FluidStack.EMPTY);
+    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+        if (slotId >= 0 && slotId < capability.size()) {
+            // Only allow PICKUP (click) or QUICK_MOVE (shift + click) events.
+            if (clickType != ClickType.PICKUP && clickType != ClickType.QUICK_MOVE) {
+                return;
+            }
+
+            if (!capability.getEntry(slotId).isEmpty()) {
+                capability.setEntry(slotId, FluidStack.EMPTY);
             }
         }
-        super.clicked(pSlotId, pButton, pClickType, pPlayer);
-    }
 
-    @Override
-    public void doClick(int slotId, int button, ClickType clickType, Player player) {
-        if (clickType == ClickType.PICKUP && slotId < capability.getEntries().size() && slotId >= 0) {
-            this.getSlot(slotId).set(ItemStack.EMPTY);
-        }
         super.doClick(slotId, button, clickType, player);
     }
 }

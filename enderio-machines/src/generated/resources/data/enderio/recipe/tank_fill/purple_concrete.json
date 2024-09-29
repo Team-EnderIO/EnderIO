@@ -8,5 +8,8 @@
     "item": "minecraft:purple_concrete_powder"
   },
   "mode": "fill",
-  "output": "minecraft:purple_concrete"
+  "output": {
+    "count": 1,
+    "id": "minecraft:purple_concrete"
+  }
 }

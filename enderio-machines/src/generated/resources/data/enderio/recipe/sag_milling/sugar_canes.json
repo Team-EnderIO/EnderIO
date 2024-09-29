@@ -6,20 +6,31 @@
   },
   "outputs": [
     {
-      "item": "minecraft:sugar"
+      "item": {
+        "count": 1,
+        "id": "minecraft:sugar"
+      }
     },
     {
       "chance": 0.5,
-      "item": "minecraft:sugar"
+      "item": {
+        "count": 1,
+        "id": "minecraft:sugar"
+      }
     },
     {
       "chance": 0.5,
-      "count": 2,
-      "item": "minecraft:sugar"
+      "item": {
+        "count": 2,
+        "id": "minecraft:sugar"
+      }
     },
     {
       "chance": 0.2,
-      "item": "enderio:plant_matter_green"
+      "item": {
+        "count": 1,
+        "id": "enderio:plant_matter_green"
+      }
     }
   ]
 }

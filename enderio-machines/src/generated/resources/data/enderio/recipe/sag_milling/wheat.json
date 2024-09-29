@@ -6,12 +6,18 @@
   },
   "outputs": [
     {
-      "item": "enderio:flour"
+      "item": {
+        "count": 1,
+        "id": "enderio:flour"
+      }
     },
     {
       "chance": 0.2,
-      "optional": true,
-      "tag": "c:seeds/wheat"
+      "item": {
+        "count": 1,
+        "tag": "c:seeds/wheat"
+      },
+      "optional": true
     }
   ]
 }

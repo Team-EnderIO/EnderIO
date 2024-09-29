@@ -8,5 +8,8 @@
     "item": "minecraft:light_blue_concrete_powder"
   },
   "mode": "fill",
-  "output": "minecraft:light_blue_concrete"
+  "output": {
+    "count": 1,
+    "id": "minecraft:light_blue_concrete"
+  }
 }

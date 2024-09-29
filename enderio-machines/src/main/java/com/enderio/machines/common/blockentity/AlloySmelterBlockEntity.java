@@ -167,7 +167,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     protected boolean acceptSlotInput(int slot, ItemStack stack) {
         if (getMode().canAlloy()) {
-            if (RecipeCaches.ALLOY_SMELTING.hasValidRecipeIf(getInventoryNN(), getInputsSlotAccess(), slot, stack)) {
+            if (RecipeCaches.getAlloySmeltingCache(getMode()).hasValidRecipeIf(getInventoryNN(), getInputsSlotAccess(), slot, stack)) {
                 return true;
             }
         }

@@ -7,12 +7,17 @@
   },
   "outputs": [
     {
-      "count": 3,
-      "item": "minecraft:glowstone_dust"
+      "item": {
+        "count": 3,
+        "id": "minecraft:glowstone_dust"
+      }
     },
     {
       "chance": 0.8,
-      "item": "minecraft:glowstone_dust"
+      "item": {
+        "count": 1,
+        "id": "minecraft:glowstone_dust"
+      }
     }
   ]
 }

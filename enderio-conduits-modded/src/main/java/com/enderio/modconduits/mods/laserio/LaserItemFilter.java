@@ -47,6 +47,11 @@ public class LaserItemFilter implements IFilterCapability<ItemStack>, ItemStackF
     }
 
     @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
     public List<ItemStack> getEntries() {
         FilterBasicHandler handler = new FilterBasicHandler(15, container);
         List<ItemStack> list = NonNullList.withSize(15, ItemStack.EMPTY);
@@ -56,6 +61,11 @@ public class LaserItemFilter implements IFilterCapability<ItemStack>, ItemStackF
             list.set(i, itemStack);
         }
         return list;
+    }
+
+    @Override
+    public ItemStack getEntry(int index) {
+        return null;
     }
 
     @Override

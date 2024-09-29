@@ -12,7 +12,7 @@
       "item": "minecraft:egg"
     }
   ],
-  "result": {
+  "output": {
     "count": 2,
     "id": "enderio:cake_base"
   }

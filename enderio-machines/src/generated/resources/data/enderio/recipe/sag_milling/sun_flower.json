@@ -2,26 +2,36 @@
   "type": "enderio:sag_milling",
   "energy": 2400,
   "input": {
-    "item": "minecraft:vine"
+    "item": "minecraft:sunflower"
   },
   "outputs": [
     {
       "chance": 0.8,
-      "count": 2,
-      "item": "minecraft:yellow_dye"
+      "item": {
+        "count": 2,
+        "id": "minecraft:yellow_dye"
+      }
     },
     {
       "chance": 0.6,
-      "item": "minecraft:yellow_dye"
+      "item": {
+        "count": 1,
+        "id": "minecraft:yellow_dye"
+      }
     },
     {
       "chance": 0.3,
-      "count": 2,
-      "item": "minecraft:yellow_dye"
+      "item": {
+        "count": 2,
+        "id": "minecraft:yellow_dye"
+      }
     },
     {
       "chance": 0.2,
-      "item": "enderio:plant_matter_green"
+      "item": {
+        "count": 1,
+        "id": "enderio:plant_matter_green"
+      }
     }
   ]
 }

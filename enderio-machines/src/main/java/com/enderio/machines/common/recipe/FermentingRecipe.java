@@ -102,12 +102,12 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
         private static final StreamCodec<ByteBuf, TagKey<Item>> ITEM_TAG_STREAM_CODEC = ResourceLocation.STREAM_CODEC.map(
             loc -> TagKey.create(Registries.ITEM, loc), TagKey::location);
 
-        public static final MapCodec<FermentingRecipe> CODEC = RecordCodecBuilder.mapCodec(
-            instance -> instance.group(SizedFluidIngredient.FLAT_CODEC.fieldOf("input").forGetter(FermentingRecipe::input),
-                TagKey.codec(Registries.ITEM).fieldOf("left_reagent").forGetter(FermentingRecipe::leftReagent),
-                TagKey.codec(Registries.ITEM).fieldOf("right_reagent").forGetter(FermentingRecipe::rightReagent),
-                    FluidStack.CODEC.fieldOf("output").forGetter(FermentingRecipe::output), Codec.INT.fieldOf("ticks").forGetter(FermentingRecipe::ticks))
-            .apply(instance, FermentingRecipe::new));
+        public static final MapCodec<FermentingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            SizedFluidIngredient.FLAT_CODEC.fieldOf("input").forGetter(FermentingRecipe::input),
+            TagKey.codec(Registries.ITEM).fieldOf("left_reagent").forGetter(FermentingRecipe::leftReagent),
+            TagKey.codec(Registries.ITEM).fieldOf("right_reagent").forGetter(FermentingRecipe::rightReagent),
+            FluidStack.CODEC.fieldOf("output").forGetter(FermentingRecipe::output), Codec.INT.fieldOf("ticks").forGetter(FermentingRecipe::ticks))
+        .apply(instance, FermentingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, FermentingRecipe> STREAM_CODEC = StreamCodec.composite(SizedFluidIngredient.STREAM_CODEC,
             FermentingRecipe::input, ITEM_TAG_STREAM_CODEC, FermentingRecipe::leftReagent, ITEM_TAG_STREAM_CODEC, FermentingRecipe::rightReagent,

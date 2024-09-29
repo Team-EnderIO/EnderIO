@@ -35,7 +35,7 @@ public class FluidFilterScreen extends EIOScreen<FluidFilterMenu> {
 
     public FluidFilterScreen(FluidFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-        BG_TEXTURE = switch (pMenu.getFilter().getEntries().size()) {
+        BG_TEXTURE = switch (pMenu.getFilter().size()) {
             case 5 -> EnderIOBase.loc("textures/gui/40/basic_item_filter.png");
             case 2 * 5 -> EnderIOBase.loc("textures/gui/40/advanced_item_filter.png");
             case 4 * 9 -> EnderIOBase.loc("textures/gui/40/big_item_filter.png");
@@ -54,11 +54,11 @@ public class FluidFilterScreen extends EIOScreen<FluidFilterMenu> {
     @Override
     public void renderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
         FluidFilterCapability filterCapability = getMenu().getFilter();
-        if (pSlot.index >= filterCapability.getEntries().size()) {
+        if (pSlot.index >= filterCapability.size()) {
             super.renderSlot(pGuiGraphics, pSlot);
             return;
         }
-        FluidStack fluidStack = filterCapability.getEntries().get(pSlot.index);
+        FluidStack fluidStack = filterCapability.getEntry(pSlot.index);
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
         ResourceLocation still = props.getStillTexture(fluidStack);
         if (still != null) {
