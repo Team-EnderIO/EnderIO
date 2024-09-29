@@ -3,5 +3,7 @@
   "input": {
     "tag": "minecraft:wooden_stairs"
   },
-  "output": "enderio:painted_stairs"
+  "output": {
+    "item": "enderio:painted_stairs"
+  }
 }

@@ -6,8 +6,12 @@
   },
   "outputs": [
     {
-      "count": 4,
-      "item": "minecraft:blaze_powder"
+      "chance": 1.0,
+      "item": {
+        "count": 4,
+        "item": "minecraft:blaze_powder"
+      },
+      "optional": false
     }
   ]
 }

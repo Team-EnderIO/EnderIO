@@ -6,15 +6,25 @@
   },
   "outputs": [
     {
-      "item": "enderio:powdered_gold"
+      "chance": 1.0,
+      "item": {
+        "item": "enderio:powdered_gold"
+      },
+      "optional": false
     },
     {
       "chance": 0.33,
-      "item": "enderio:powdered_gold"
+      "item": {
+        "item": "enderio:powdered_gold"
+      },
+      "optional": false
     },
     {
       "chance": 0.15,
-      "item": "minecraft:cobblestone"
+      "item": {
+        "item": "minecraft:cobblestone"
+      },
+      "optional": false
     }
   ]
 }

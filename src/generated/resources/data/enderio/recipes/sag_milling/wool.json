@@ -7,12 +7,19 @@
   },
   "outputs": [
     {
-      "count": 2,
-      "item": "minecraft:string"
+      "chance": 1.0,
+      "item": {
+        "count": 2,
+        "item": "minecraft:string"
+      },
+      "optional": false
     },
     {
       "chance": 0.1,
-      "item": "minecraft:string"
+      "item": {
+        "item": "minecraft:string"
+      },
+      "optional": false
     }
   ]
 }

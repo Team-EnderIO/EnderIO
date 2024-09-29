@@ -3,5 +3,7 @@
   "input": {
     "tag": "minecraft:sand"
   },
-  "output": "enderio:painted_sand"
+  "output": {
+    "item": "enderio:painted_sand"
+  }
 }

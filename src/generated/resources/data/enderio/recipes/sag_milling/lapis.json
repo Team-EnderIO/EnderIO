@@ -7,7 +7,11 @@
   },
   "outputs": [
     {
-      "item": "enderio:powdered_lapis_lazuli"
+      "chance": 1.0,
+      "item": {
+        "item": "enderio:powdered_lapis_lazuli"
+      },
+      "optional": false
     }
   ]
 }

@@ -7,7 +7,11 @@
   },
   "outputs": [
     {
-      "item": "minecraft:cobblestone"
+      "chance": 1.0,
+      "item": {
+        "item": "minecraft:cobblestone"
+      },
+      "optional": false
     }
   ]
 }

@@ -3,5 +3,7 @@
   "input": {
     "tag": "minecraft:wooden_pressure_plates"
   },
-  "output": "enderio:painted_wooden_pressure_plate"
+  "output": {
+    "item": "enderio:painted_wooden_pressure_plate"
+  }
 }

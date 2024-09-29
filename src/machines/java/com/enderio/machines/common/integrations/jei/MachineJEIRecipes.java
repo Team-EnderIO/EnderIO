@@ -2,7 +2,6 @@ package com.enderio.machines.common.integrations.jei;
 
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.jei.util.WrappedEnchanterRecipe;
-import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import com.enderio.machines.common.recipe.SlicingRecipe;
@@ -12,9 +11,7 @@ import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,14 +25,11 @@ public class MachineJEIRecipes {
     }
 
     public List<AlloySmeltingRecipe> getAlloySmeltingRecipes() {
-        return new ArrayList<>(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()));
+        return recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()).stream().filter(recipe -> !recipe.isSmelting()).toList();
     }
 
     public List<AlloySmeltingRecipe> getAlloySmeltingRecipesWithSmelting() {
-        List<AlloySmeltingRecipe> recipes = new ArrayList<>();
-        recipes.addAll(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()));
-        recipes.addAll(recipeManager.getAllRecipesFor(RecipeType.SMELTING).stream().map(VanillaAlloySmeltingRecipe::new).toList());
-        return recipes;
+        return recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get());
     }
 
     public List<SlicingRecipe> getSlicingRecipes() {

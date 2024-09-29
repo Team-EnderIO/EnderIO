@@ -7,15 +7,24 @@
   "outputs": [
     {
       "chance": 0.7,
-      "item": "minecraft:sand"
+      "item": {
+        "item": "minecraft:sand"
+      },
+      "optional": false
     },
     {
       "chance": 0.3,
-      "item": "minecraft:sand"
+      "item": {
+        "item": "minecraft:sand"
+      },
+      "optional": false
     },
     {
       "chance": 0.1,
-      "item": "minecraft:flint"
+      "item": {
+        "item": "minecraft:flint"
+      },
+      "optional": false
     }
   ]
 }

@@ -19,6 +19,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id "me.hypherionmc.modutils.modpublisher" version "1.+"
+    id 'java-library'
 }
 
 apply plugin: 'org.spongepowered.mixin'
@@ -204,61 +205,67 @@ repositories { RepositoryHandler handler ->
     exclusiveRepo(handler, "https://modmaven.dev/", "mezz.jei", "mcjty.theoneprobe", "appeng", "mekanism")
     exclusiveRepo(handler, 'https://cursemaven.com', 'curse.maven')
     exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli', 'net.darkhax.bookshelf', 'net.darkhax.enchdesc', 'com.almostreliable.mods')
-    exclusiveRepo(handler, 'https://dogforce-games.com/maven', 'dev.gigaherz.graph')
     exclusiveRepo(handler, 'https://api.modrinth.com/maven', 'maven.modrinth')
     exclusiveRepo(handler, "https://squiddev.cc/maven/", "cc.tweaked")
     exclusiveRepo(handler, 'https://maven.creeperhost.net/', 'com.refinedmods')
+    exclusiveRepo(handler, 'https://maven.rover656.dev/releases/', 'dev.gigaherz.graph')
 
     mavenLocal()
 }
 
 jarJar.enable()
 
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
 dependencies {
     // Forge
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
     //implementation fg.deobf("blank:Xycraft+Core:0.5.2")
     //runtimeOnly fg.deobf("blank:Xycraft+Override:0.5.2")
     //runtimeOnly fg.deobf("blank:Xycraft+World:0.5.2")
     // Registrate
-    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
+    api fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
     jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
 
     // GraphLib
-    implementation implementation(fg.deobf("dev.gigaherz.graph:GraphLib3:${graphlib_version}"))
+    api implementation(fg.deobf("dev.gigaherz.graph:GraphLib3:${graphlib_version}"))
     jarJar(group: 'dev.gigaherz.graph', name: 'GraphLib3', version: "${graphlib_version_range}")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    machinesAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+    localRuntime fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
+    localRuntime fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     //RFTOOLS
-    runtimeOnly fg.deobf("maven.modrinth:rftools-power:f430rHkA")
-    runtimeOnly fg.deobf("maven.modrinth:mcjtylib:3LlgyvSh")
-    runtimeOnly fg.deobf("maven.modrinth:rftools-base:Uu1IkVMH")
-    runtimeOnly fg.deobf("maven.modrinth:spark:Yp6s4wsw")
+    localRuntime fg.deobf("maven.modrinth:rftools-power:f430rHkA")
+    localRuntime fg.deobf("maven.modrinth:mcjtylib:3LlgyvSh")
+    localRuntime fg.deobf("maven.modrinth:rftools-base:Uu1IkVMH")
+    localRuntime fg.deobf("maven.modrinth:spark:Yp6s4wsw")
 
     //Athena ctm
-    runtimeOnly fg.deobf("maven.modrinth:athena-ctm:X6GdUrpW")
+    localRuntime fg.deobf("maven.modrinth:athena-ctm:X6GdUrpW")
 
     // AE2
     compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
-    runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
+    localRuntime fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
 
     //RS
     compileOnly fg.deobf("com.refinedmods:refinedstorage:${rs_version}") {
         transitive = false
     }
-    runtimeOnly fg.deobf("com.refinedmods:refinedstorage:${rs_version}"){
+    localRuntime fg.deobf("com.refinedmods:refinedstorage:${rs_version}"){
         transitive = false
     }
 
     // Enchantment descriptions
-    runtimeOnly fg.deobf("net.darkhax.bookshelf:Bookshelf-Forge-${minecraft_version}:${bookshelf_version}")
-    runtimeOnly fg.deobf("net.darkhax.enchdesc:EnchantmentDescriptions-Forge-${minecraft_version}:${ench_desc_version}")
+    localRuntime fg.deobf("net.darkhax.bookshelf:Bookshelf-Forge-${minecraft_version}:${bookshelf_version}")
+    localRuntime fg.deobf("net.darkhax.enchdesc:EnchantmentDescriptions-Forge-${minecraft_version}:${ench_desc_version}")
 
     // The One Probe https://github.com/McJtyMods/TheOneProbe/issues/548
 //    compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
@@ -269,10 +276,10 @@ dependencies {
 //    }
 
     // Jade
-    runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_cf_id}")
+    localRuntime fg.deobf("curse.maven:jade-324717:${jade_cf_id}")
 
     //fluxnetworks
-    runtimeOnly fg.deobf("curse.maven:fluxnetworks-248020:4651164")
+    localRuntime fg.deobf("curse.maven:fluxnetworks-248020:4651164")
 
     //Flywheel
     compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.20.1:0.6.9-5") // REMOVE When crash is fixed
@@ -285,11 +292,11 @@ dependencies {
 //    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     compileOnly fg.deobf("mekanism:Mekanism:${minecraft_version}-${mekanism_version}:api")
-    runtimeOnly fg.deobf("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
+    localRuntime fg.deobf("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
 
     compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-core-api:$cctVersion")
     compileOnly("cc.tweaked:cc-tweaked-$minecraft_version-forge-api:$cctVersion")
-    runtimeOnly(fg.deobf("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cctVersion"))
+    localRuntime(fg.deobf("cc.tweaked:cc-tweaked-$minecraft_version-forge:$cctVersion"))
 
     // Jetbrains annotations
     compileOnly 'org.jetbrains:annotations:23.0.0'
@@ -298,7 +305,9 @@ dependencies {
 // MixinGradle Settings
 mixin {
     add sourceSets.main, "mixins.enderio.refmap.json"
+    add sourceSets.machines, "mixins.enderio-machines.refmap.json"
     config "mixins.enderio.json"
+    config "mixins.enderio-machines.json"
 }
 
 reobf.create('jarJar')
@@ -314,7 +323,7 @@ jar {
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "SleepyTrousers",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs"            : "mixins.enderio.json"
+                "MixinConfigs"            : "mixins.enderio.json,mixins.enderio-machines.json"
         ])
     }
 
@@ -408,17 +417,17 @@ publishing {
             pom {
                 name = 'Ender IO'
                 description = 'Ender IO is a full-featured tech mod. It has armor, tools, weapons, machines, conduits, inventory management, mobs, etc.'
-                url = 'https://github.com/SleepyTrousers/EnderIO-Rewrite'
+                url = 'https://github.com/Team-EnderIO/EnderIO'
 
                 licenses {
                     license {
                         name = 'Unlicense'
-                        url = 'https://github.com/SleepyTrousers/EnderIO-Rewrite/blob/dev/1.18.x/LICENSE.txt'
+                        url = 'https://github.com/Team-EnderIO/EnderIO/blob/lts/1.20.1/LICENSE.txt'
                     }
                 }
 
                 scm {
-                    url = 'https://github.com/SleepyTrousers/EnderIO-Rewrite.git'
+                    url = 'https://github.com/Team-EnderIO/EnderIO.git'
                 }
             }
         }

@@ -7,11 +7,18 @@
   },
   "outputs": [
     {
-      "item": "minecraft:prismarine_crystals"
+      "chance": 1.0,
+      "item": {
+        "item": "minecraft:prismarine_crystals"
+      },
+      "optional": false
     },
     {
       "chance": 0.1,
-      "item": "minecraft:prismarine_crystals"
+      "item": {
+        "item": "minecraft:prismarine_crystals"
+      },
+      "optional": false
     }
   ]
 }

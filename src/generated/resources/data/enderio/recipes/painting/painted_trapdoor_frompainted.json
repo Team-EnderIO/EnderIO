@@ -3,5 +3,7 @@
   "input": {
     "item": "enderio:painted_trapdoor"
   },
-  "output": "enderio:painted_trapdoor"
+  "output": {
+    "item": "enderio:painted_trapdoor"
+  }
 }

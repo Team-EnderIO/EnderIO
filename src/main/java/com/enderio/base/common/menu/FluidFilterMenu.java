@@ -100,12 +100,13 @@ public class FluidFilterMenu extends AbstractContainerMenu {
     @Override
     public void doClick(int slotId, int button, ClickType clickType, Player player) {
         if (slotId >= 0 && slotId < capability.size()) {
-            if (clickType == ClickType.PICKUP) {
-                if (!capability.getEntry(slotId).isEmpty()) {
-                    capability.setEntry(slotId, FluidStack.EMPTY);
-                }
-            } else if (clickType == ClickType.SWAP) {
+            // Only allow PICKUP (click) or QUICK_MOVE (shift + click) events.
+            if (clickType != ClickType.PICKUP && clickType != ClickType.QUICK_MOVE) {
                 return;
+            }
+
+            if (!capability.getEntry(slotId).isEmpty()) {
+                capability.setEntry(slotId, FluidStack.EMPTY);
             }
         }
 

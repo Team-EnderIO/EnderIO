@@ -7,7 +7,11 @@
   },
   "outputs": [
     {
-      "item": "enderio:pulsating_powder"
+      "chance": 1.0,
+      "item": {
+        "item": "enderio:pulsating_powder"
+      },
+      "optional": false
     }
   ]
 }

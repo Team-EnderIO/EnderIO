@@ -3,5 +3,7 @@
   "input": {
     "tag": "minecraft:walls"
   },
-  "output": "enderio:painted_wall"
+  "output": {
+    "item": "enderio:painted_wall"
+  }
 }

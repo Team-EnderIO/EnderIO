@@ -11,6 +11,7 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.common.recipes.CountedIngredient;
+import com.enderio.core.common.util.JsonUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
@@ -157,18 +158,24 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
         recipeConsumer.accept(new FinishedAlloyingRecipe(id, inputs, output, energy, experience));
     }
 
-    protected static class FinishedAlloyingRecipe extends EnderFinishedRecipe {
+    public static class FinishedAlloyingRecipe extends EnderFinishedRecipe {
         private final List<CountedIngredient> inputs;
         private final ItemStack output;
         private final int energy;
         private final float experience;
+        private final boolean isSmelting;
 
         public FinishedAlloyingRecipe(ResourceLocation id, List<CountedIngredient> inputs, ItemStack output, int energy, float experience) {
+            this(id, inputs, output, energy, experience, false);
+        }
+
+        public FinishedAlloyingRecipe(ResourceLocation id, List<CountedIngredient> inputs, ItemStack output, int energy, float experience, boolean isSmelting) {
             super(id);
             this.inputs = inputs;
             this.output = output;
             this.energy = energy;
             this.experience = experience;
+            this.isSmelting = isSmelting;
         }
 
         @Override
@@ -177,17 +184,14 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
             inputs.forEach(ing -> jsonInputs.add(ing.toJson()));
 
             json.add("inputs", jsonInputs);
-
-            JsonObject jsonobject = new JsonObject();
-            jsonobject.addProperty("item", ForgeRegistries.ITEMS.getKey(output.getItem()).toString());
-            if (output.getCount() > 1) {
-                jsonobject.addProperty("count", output.getCount());
-            }
-
-            json.add("result", jsonobject);
+            json.add("result", JsonUtil.serializeItemStackWithoutNBT(output));
 
             json.addProperty("energy", energy);
             json.addProperty("experience", experience);
+
+            if (isSmelting) {
+                json.addProperty("is_smelting", isSmelting);
+            }
 
             super.serializeRecipeData(json);
         }

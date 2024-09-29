@@ -21,5 +21,7 @@
       "tag": "forge:gems/prismarine"
     }
   ],
-  "output": "enderio:guardian_diode"
+  "output": {
+    "item": "enderio:guardian_diode"
+  }
 }

@@ -7,8 +7,12 @@
   },
   "outputs": [
     {
-      "count": 9,
-      "item": "enderio:powdered_ender_pearl"
+      "chance": 1.0,
+      "item": {
+        "count": 9,
+        "item": "enderio:powdered_ender_pearl"
+      },
+      "optional": false
     }
   ]
 }

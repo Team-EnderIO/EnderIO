@@ -3,5 +3,7 @@
   "input": {
     "item": "enderio:travel_anchor"
   },
-  "output": "enderio:painted_travel_anchor"
+  "output": {
+    "item": "enderio:painted_travel_anchor"
+  }
 }

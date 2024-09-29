@@ -6,5 +6,7 @@
   "input": {
     "item": "enderio:dark_steel_grinding_ball"
   },
-  "output": "enderio:player_token"
+  "output": {
+    "item": "enderio:player_token"
+  }
 }

@@ -6,17 +6,27 @@
   },
   "outputs": [
     {
-      "count": 2,
-      "item": "minecraft:clay_ball"
+      "chance": 1.0,
+      "item": {
+        "count": 2,
+        "item": "minecraft:clay_ball"
+      },
+      "optional": false
     },
     {
       "chance": 0.1,
-      "item": "minecraft:clay_ball"
+      "item": {
+        "item": "minecraft:clay_ball"
+      },
+      "optional": false
     },
     {
       "chance": 0.8,
-      "count": 2,
-      "item": "enderio:silicon"
+      "item": {
+        "count": 2,
+        "item": "enderio:silicon"
+      },
+      "optional": false
     }
   ]
 }

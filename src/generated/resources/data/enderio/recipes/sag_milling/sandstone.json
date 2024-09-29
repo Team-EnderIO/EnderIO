@@ -7,13 +7,20 @@
   },
   "outputs": [
     {
-      "count": 2,
-      "item": "minecraft:sand"
+      "chance": 1.0,
+      "item": {
+        "count": 2,
+        "item": "minecraft:sand"
+      },
+      "optional": false
     },
     {
       "chance": 0.4,
-      "count": 2,
-      "item": "minecraft:sand"
+      "item": {
+        "count": 2,
+        "item": "minecraft:sand"
+      },
+      "optional": false
     }
   ]
 }

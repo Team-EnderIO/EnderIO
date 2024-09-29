@@ -7,7 +7,11 @@
   },
   "outputs": [
     {
-      "item": "enderio:prescient_powder"
+      "chance": 1.0,
+      "item": {
+        "item": "enderio:prescient_powder"
+      },
+      "optional": false
     }
   ]
 }

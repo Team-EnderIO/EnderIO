@@ -8,5 +8,7 @@
     "item": "minecraft:purple_concrete_powder"
   },
   "is_emptying": false,
-  "output": "minecraft:purple_concrete"
+  "output": {
+    "item": "minecraft:purple_concrete"
+  }
 }

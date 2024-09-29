@@ -42,3 +42,10 @@ modId="computercraft"
 mandatory=false
 versionRange="[1.109,)"
 side="BOTH"
+
+# API breakages :)
+[[dependencies.enderio]]
+modId="kubejs_enderio"
+mandatory=false
+versionRange="[1.20.1-0.6.0,)"
+side="BOTH"

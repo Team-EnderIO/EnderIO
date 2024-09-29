@@ -6,16 +6,26 @@
   },
   "outputs": [
     {
-      "count": 8,
-      "item": "minecraft:lapis_lazuli"
+      "chance": 1.0,
+      "item": {
+        "count": 8,
+        "item": "minecraft:lapis_lazuli"
+      },
+      "optional": false
     },
     {
       "chance": 0.2,
-      "item": "minecraft:lapis_lazuli"
+      "item": {
+        "item": "minecraft:lapis_lazuli"
+      },
+      "optional": false
     },
     {
       "chance": 0.15,
-      "item": "minecraft:cobblestone"
+      "item": {
+        "item": "minecraft:cobblestone"
+      },
+      "optional": false
     }
   ]
 }

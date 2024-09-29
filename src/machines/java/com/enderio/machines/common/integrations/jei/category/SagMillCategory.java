@@ -102,8 +102,8 @@ public class SagMillCategory extends MachineRecipeCategory<SagMillingRecipe> {
 
     private IRecipeSlotTooltipCallback chanceTooltip(SagMillingRecipe recipe, SagMillingRecipe.OutputItem item) {
         return (recipeSlotView, tooltip) -> {
-            if (item.getChance() < 1.0f) {
-                String chance = item.getChance() > 0.01f ? NumberFormat.getIntegerInstance(Locale.ENGLISH).format(item.getChance() * 100) : "<1";
+            if (item.chance() < 1.0f) {
+                String chance = item.chance() > 0.01f ? NumberFormat.getIntegerInstance(Locale.ENGLISH).format(item.chance() * 100) : "<1";
                 if (recipe.getBonusType().useGrindingBall()) {
                     tooltip.add(TooltipUtil.styledWithArgs(MachineLang.TOOLTIP_SAG_MILL_CHANCE_BALL, chance));
                 } else {

@@ -21,5 +21,7 @@
       "item": "minecraft:rotten_flesh"
     }
   ],
-  "output": "enderio:skeletal_contractor"
+  "output": {
+    "item": "enderio:skeletal_contractor"
+  }
 }
