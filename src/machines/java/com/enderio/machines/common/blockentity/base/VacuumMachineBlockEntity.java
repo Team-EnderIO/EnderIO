@@ -43,7 +43,7 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
 
     @Override
     public void serverTick() {
-        if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
+        if (!isRedstoneBlocked()) {
             this.attractEntities(this.getLevel(), this.getBlockPos(), this.getRange());
         }
 
@@ -52,7 +52,7 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
 
     @Override
     public void clientTick() {
-        if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
+        if (!isRedstoneBlocked()) {
             this.attractEntities(this.getLevel(), this.getBlockPos(), this.getRange());
         }
 

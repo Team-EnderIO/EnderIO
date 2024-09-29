@@ -42,7 +42,7 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
+    public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
             .inputSlot((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
             .slotAccess(BOOK)

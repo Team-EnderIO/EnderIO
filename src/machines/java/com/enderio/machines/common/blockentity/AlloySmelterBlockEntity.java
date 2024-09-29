@@ -151,7 +151,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     // region Inventory
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
+    public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
             .inputSlot(3, this::acceptSlotInput)
             .slotAccess(INPUTS)

@@ -69,12 +69,18 @@ public class MachineBlock extends BaseEntityBlock {
     public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
         super.neighborChanged(pState, pLevel, pPos, pBlock, pFromPos, pIsMoving);
         updateBlockEntityCache(pLevel, pPos);
+        if (pLevel.getBlockEntity(pPos) instanceof MachineBlockEntity machineBlock) {
+            machineBlock.neighborChanged(pState, pLevel, pPos, pFromPos);
+        }
     }
 
     @Override
     public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
         super.onNeighborChange(state, level, pos, neighbor);
         updateBlockEntityCache(level, pos);
+        if (level.getBlockEntity(pos) instanceof MachineBlockEntity machineBlock) {
+            machineBlock.neighborChanged(state, level, pos, neighbor);
+        }
     }
 
     private void updateBlockEntityCache(LevelReader level, BlockPos pos) {
@@ -135,11 +141,17 @@ public class MachineBlock extends BaseEntityBlock {
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         BlockEntity existingBlockEntity;
-        if (ModList.get().isLoaded("flywheel")) {
-            existingBlockEntity =  FlywheelCompat.getExistingBlockEntity(level, pos);
+
+        // Using IForgeBlockGetter#getExistingBlockEntity() with Starlight causes chunk-loading deadlocks
+        // Credit: https://github.com/XFactHD/FramedBlocks/blob/1.20/src/main/java/xfacthd/framedblocks/common/util/InternalApiImpl.java#L13-L20
+        if (ModList.get().isLoaded("starlight")) {
+            existingBlockEntity = level.getBlockEntity(pos);
+        } else if (ModList.get().isLoaded("flywheel")) {
+            existingBlockEntity = FlywheelCompat.getExistingBlockEntity(level, pos);
         } else {
             existingBlockEntity = level.getExistingBlockEntity(pos);
         }
+
         if (existingBlockEntity instanceof MachineBlockEntity machineBlock) {
             return machineBlock.getLightEmission();
         }

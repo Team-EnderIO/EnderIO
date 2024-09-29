@@ -16,6 +16,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -37,6 +38,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -267,25 +269,28 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     // region Dispenser
     private static class FillSoulVialDispenseBehavior extends OptionalDispenseItemBehavior {
+        private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
+
         protected ItemStack execute(BlockSource source, ItemStack stack) {
             BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
             for (LivingEntity livingentity : source
-                .getLevel()
-                .getEntitiesOfClass(LivingEntity.class, new AABB(blockpos), living -> !(living instanceof Player))) {
+                    .getLevel()
+                    .getEntitiesOfClass(LivingEntity.class, new AABB(blockpos), living -> !(living instanceof Player))) {
+
                 Optional<ItemStack> filledVial = catchEntity(stack, livingentity, component -> {});
                 if (filledVial.isPresent()) {
-                    //push filledvial back into dispenser
-                    source.getEntity().getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-                        for (int i = 0; i < handler.getSlots(); i++) {
-                            if (handler.insertItem(i, filledVial.get(), true).isEmpty()) {
-                                handler.insertItem(i, filledVial.get(), false);
-                                break;
-                            }
-                        }
-                    });
+                    if (stack.isEmpty()) {
+                        return filledVial.get();
+                    }
+
+                    if (((DispenserBlockEntity)source.getEntity()).addItem(filledVial.get()) < 0) {
+                        this.defaultDispenseItemBehavior.dispense(source, filledVial.get());
+                    }
+
                     return stack;
                 }
             }
+            
             this.setSuccess(false);
             return stack;
         }

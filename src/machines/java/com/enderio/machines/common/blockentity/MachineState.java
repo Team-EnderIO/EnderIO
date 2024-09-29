@@ -21,7 +21,6 @@ public record MachineState(MachineStateType type, MutableComponent component) {
     public static final MachineState FULL_OUTPUT = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_OUTPUT_FULL);
     public static final MachineState REDSTONE = new MachineState(MachineStateType.DISABLED, MachineLang.TOOLTIP_BLOCKED_RESTONE);
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -31,17 +30,13 @@ public record MachineState(MachineStateType type, MutableComponent component) {
             return false;
         }
         MachineState that = (MachineState) o;
-
-        if (type != that.type) {
-            return false;
-        }
-        return component.equals(that.component);
+        return type == that.type && component == that.component; //Use identity
     }
 
     @Override
     public int hashCode() {
-        int result = type.hashCode();
-        result = 31 * result + component.hashCode();
+        int result = type.ordinal();
+        result = 31 * result + System.identityHashCode(component); //Only hash instance
         return result;
     }
 

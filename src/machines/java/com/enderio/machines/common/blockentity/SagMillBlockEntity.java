@@ -103,7 +103,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
+    public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
             .inputSlot(this::isValidInput)
             .slotAccess(INPUT)

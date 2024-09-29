@@ -152,7 +152,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     }
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
+    public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout
             .builder()
             .inputSlot((slot, stack) -> acceptItemFill(stack))

@@ -33,6 +33,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -61,8 +62,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
-
-import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider, IWrenchable {
 
@@ -115,6 +114,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     // endregion
 
     private Set<MachineState> states = new HashSet<>();
+    private boolean isRedstoneBlocked;
+    @Nullable
+    private final MachineInventoryLayout inventoryLayout;
 
     public MachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -124,9 +126,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         addCapabilityProvider(ioConfig);
 
         // If the machine declares an inventory layout, use it to create a handler
-        MachineInventoryLayout slotLayout = getInventoryLayout();
-        if (slotLayout != null) {
-            inventory = createMachineInventory(slotLayout);
+        inventoryLayout = createInventoryLayout();
+        if (inventoryLayout != null) {
+            inventory = createMachineInventory(inventoryLayout);
             addCapabilityProvider(inventory);
         } else {
             inventory = null;
@@ -145,7 +147,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
         if (supportsRedstoneControl()) {
             redstoneControlDataSlot = new EnumNetworkDataSlot<>(RedstoneControl.class,
-                this::getRedstoneControl, e -> redstoneControl = e);
+                this::getRedstoneControl, e -> {
+                redstoneControl = e;
+                updateRedstone();
+            });
             addDataSlot(redstoneControlDataSlot);
         } else {
             redstoneControlDataSlot = null;
@@ -326,6 +331,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return true;
     }
 
+    public boolean isRedstoneBlocked() {
+        return isRedstoneBlocked;
+    }
+
     public RedstoneControl getRedstoneControl() {
         return redstoneControl;
     }
@@ -335,6 +344,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             clientUpdateSlot(redstoneControlDataSlot, redstoneControl);
         } else {
             this.redstoneControl = redstoneControl;
+            updateRedstone();
         }
     }
 
@@ -343,11 +353,19 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     // region Inventory
 
     /**
-     * Get the block entity's inventory slot layout.
+     * Makes the block entity's inventory slot layout.
+     */
+    @Nullable
+    public MachineInventoryLayout createInventoryLayout() {
+        return null;
+    }
+
+    /**
+     * Gets the block entity's inventory slot layout.
      */
     @Nullable
     public MachineInventoryLayout getInventoryLayout() {
-        return null;
+        return inventoryLayout;
     }
 
     @Nullable
@@ -452,13 +470,13 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             return false;
         }
 
-        if (supportsRedstoneControl()) {
-            boolean active = redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition));
-            updateMachineState(MachineState.REDSTONE, !active);
-            return active;
-        }
+        return !isRedstoneBlocked;
+    }
 
-        return true;
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        updateRedstone();
     }
 
     public boolean canActSlow() {
@@ -754,6 +772,18 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             states.add(state);
         } else {
             states.remove(state);
+        }
+    }
+
+    public void neighborChanged(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
+        updateRedstone();
+    }
+
+    private void updateRedstone() {
+        if (supportsRedstoneControl()) {
+            boolean active = redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition));
+            updateMachineState(MachineState.REDSTONE, !active);
+            this.isRedstoneBlocked = !active;
         }
     }
 }
