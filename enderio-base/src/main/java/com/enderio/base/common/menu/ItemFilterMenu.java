@@ -45,7 +45,7 @@ public class ItemFilterMenu extends AbstractContainerMenu {
         this(EIOMenus.ITEM_FILTER.get(), pContainerId, inventory, stack);
     }
 
-        public static ItemFilterMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static ItemFilterMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         return new ItemFilterMenu(EIOMenus.ITEM_FILTER.get(), pContainerId, inventory, inventory.player.getMainHandItem());
     }
 
@@ -94,12 +94,13 @@ public class ItemFilterMenu extends AbstractContainerMenu {
     @Override
     public void doClick(int slotId, int button, ClickType clickType, Player player) {
         if (slotId >= 0 && slotId < capability.size()) {
-            if (clickType == ClickType.PICKUP) {
-                if (!capability.getEntry(slotId).isEmpty()) {
-                    capability.setEntry(slotId, ItemStack.EMPTY);
-                }
-            } else if (clickType == ClickType.SWAP) {
+            // Only allow PICKUP (click) or QUICK_MOVE (shift + click) events.
+            if (clickType != ClickType.PICKUP && clickType != ClickType.QUICK_MOVE) {
                 return;
+            }
+
+            if (!capability.getEntry(slotId).isEmpty()) {
+                capability.setEntry(slotId, ItemStack.EMPTY);
             }
         }
 

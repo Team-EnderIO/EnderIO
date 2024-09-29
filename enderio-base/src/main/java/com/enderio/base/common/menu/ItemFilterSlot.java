@@ -27,7 +27,7 @@ public class ItemFilterSlot extends Slot {
 
     @Override
     public void set(ItemStack pStack) {
-        consumer.accept(pStack);
+        consumer.accept(pStack.copyWithCount(1));
         setChanged();
     }
 
