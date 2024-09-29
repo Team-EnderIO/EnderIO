@@ -190,7 +190,7 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
             json.addProperty("experience", experience);
 
             if (isSmelting) {
-                json.addProperty("isSmelting", isSmelting);
+                json.addProperty("is_smelting", isSmelting);
             }
 
             super.serializeRecipeData(json);
