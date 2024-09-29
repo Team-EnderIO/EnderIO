@@ -177,7 +177,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private Optional<ItemStack> getRecipeResult() {
-        if (recipe != null) {
+        if (recipe != null && recipe.value().matches(DUMMY_CRAFTING_CONTAINER.asCraftInput(), getLevel())) {
             return Optional.of(recipe.value().assemble(DUMMY_CRAFTING_CONTAINER.asCraftInput(), getLevel().registryAccess()));
         }
         return Optional.empty();
