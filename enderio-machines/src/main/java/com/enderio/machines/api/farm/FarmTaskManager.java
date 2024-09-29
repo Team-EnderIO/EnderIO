@@ -1,4 +1,4 @@
-package com.enderio.api.farm;
+package com.enderio.machines.api.farm;
 
 import com.enderio.api.integration.IntegrationManager;
 import com.google.common.collect.ImmutableList;
