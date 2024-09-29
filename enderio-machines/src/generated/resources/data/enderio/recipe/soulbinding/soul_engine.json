@@ -1,7 +1,7 @@
 {
   "type": "enderio:soul_binding",
   "energy": 188000,
-  "exp": 5,
+  "experience": 5,
   "input": {
     "item": "enderio:soul_engine"
   },
@@ -9,5 +9,5 @@
     "count": 1,
     "id": "enderio:soul_engine"
   },
-  "souldata": "engine"
+  "soul_data": "engine"
 }

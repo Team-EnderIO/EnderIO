@@ -12,7 +12,7 @@
       "tag": "c:silicon"
     }
   ],
-  "result": {
+  "output": {
     "count": 1,
     "id": "enderio:redstone_alloy_ingot"
   }

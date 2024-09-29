@@ -12,7 +12,7 @@
       "item": "minecraft:clay_ball"
     }
   ],
-  "result": {
+  "output": {
     "count": 2,
     "id": "enderio:clayed_glowstone"
   }

@@ -2,7 +2,7 @@
   "type": "enderio:soul_binding",
   "energy": 51200,
   "entity_type": "minecraft:zombie",
-  "exp": 4,
+  "experience": 4,
   "input": {
     "item": "enderio:z_logic_controller"
   },

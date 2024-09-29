@@ -2,7 +2,7 @@
   "type": "enderio:soul_binding",
   "energy": 76800,
   "entity_type": "minecraft:enderman",
-  "exp": 6,
+  "experience": 6,
   "input": {
     "tag": "c:gems/vibrant_crystal"
   },

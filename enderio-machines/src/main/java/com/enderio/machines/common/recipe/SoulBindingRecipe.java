@@ -187,10 +187,10 @@ public record SoulBindingRecipe(
             ItemStack.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output),
             Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(SoulBindingRecipe::input),
             Codec.INT.fieldOf("energy").forGetter(SoulBindingRecipe::energy),
-            Codec.INT.fieldOf("exp").forGetter(SoulBindingRecipe::experience),
+            Codec.INT.fieldOf("experience").forGetter(SoulBindingRecipe::experience),
             ResourceLocation.CODEC.optionalFieldOf("entity_type").forGetter(SoulBindingRecipe::entityType),
             MobCategory.CODEC.optionalFieldOf("mob_category").forGetter(SoulBindingRecipe::mobCategory),
-            Codec.STRING.optionalFieldOf("souldata").forGetter(SoulBindingRecipe::soulData)
+            Codec.STRING.optionalFieldOf("soul_data").forGetter(SoulBindingRecipe::soulData)
         ).apply(instance, SoulBindingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> STREAM_CODEC = NeoForgeStreamCodecs.composite(

@@ -2,7 +2,7 @@
   "type": "enderio:soul_binding",
   "energy": 51200,
   "entity_type": "minecraft:phantom",
-  "exp": 12,
+  "experience": 12,
   "input": {
     "item": "enderio:pulsating_photovoltaic_module"
   },

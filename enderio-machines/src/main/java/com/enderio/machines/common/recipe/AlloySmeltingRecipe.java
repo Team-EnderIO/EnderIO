@@ -169,7 +169,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         // Uses Optional for isSmelting to avoid polluting recipe generation.
         public static final MapCodec<AlloySmeltingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
             .group(SizedIngredient.FLAT_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs),
-                ItemStack.CODEC.fieldOf("result").forGetter(AlloySmeltingRecipe::output), Codec.INT.fieldOf("energy").forGetter(AlloySmeltingRecipe::energy),
+                ItemStack.CODEC.fieldOf("output").forGetter(AlloySmeltingRecipe::output), Codec.INT.fieldOf("energy").forGetter(AlloySmeltingRecipe::energy),
                 Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience),
                 Codec.BOOL.optionalFieldOf("is_smelting").forGetter(r -> r.isSmelting() ? Optional.of(r.isSmelting()) : Optional.empty()))
             .apply(inst, AlloySmeltingRecipe::new));
