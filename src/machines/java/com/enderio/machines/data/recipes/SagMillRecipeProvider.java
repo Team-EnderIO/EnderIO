@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.Tags;
@@ -326,7 +327,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		output(PLANT_MATTER_GREEN.get(), 3, 0.1f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
 
-        build("sun_flower", Ingredient.of(VINE), List.of(
+        build("sun_flower", Ingredient.of(Items.SUNFLOWER), List.of(
         		output(YELLOW_DYE, 2, 0.8f),
         		output(YELLOW_DYE, 0.6f),
         		output(YELLOW_DYE, 2, 0.3f),

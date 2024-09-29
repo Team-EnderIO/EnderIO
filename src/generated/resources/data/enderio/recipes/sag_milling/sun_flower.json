@@ -2,7 +2,7 @@
   "type": "enderio:sag_milling",
   "energy": 2400,
   "input": {
-    "item": "minecraft:vine"
+    "item": "minecraft:sunflower"
   },
   "outputs": [
     {
