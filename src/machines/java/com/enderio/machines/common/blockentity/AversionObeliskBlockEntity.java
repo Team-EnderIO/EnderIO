@@ -64,7 +64,7 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity {
     }
 
     @Override
-    public @Nullable MachineInventoryLayout getInventoryLayout() {
+    public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
             .inputSlot((integer, itemStack) -> itemStack.getCapability(EIOCapabilities.FILTER).orElse(null) instanceof EntityFilter)
             .slotAccess(FILTER)
