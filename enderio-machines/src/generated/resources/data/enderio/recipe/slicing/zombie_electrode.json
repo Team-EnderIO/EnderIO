@@ -1,0 +1,28 @@
+{
+  "type": "enderio:slicing",
+  "energy": 20000,
+  "inputs": [
+    {
+      "tag": "c:ingots/energetic_alloy"
+    },
+    {
+      "item": "minecraft:zombie_head"
+    },
+    {
+      "tag": "c:ingots/energetic_alloy"
+    },
+    {
+      "tag": "c:silicon"
+    },
+    {
+      "item": "enderio:basic_capacitor"
+    },
+    {
+      "tag": "c:silicon"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "enderio:zombie_electrode"
+  }
+}

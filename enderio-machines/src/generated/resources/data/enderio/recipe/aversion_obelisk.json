@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "enderio:ensouled_chassis"
+    },
+    "E": {
+      "tag": "c:ingots/energetic_alloy"
+    },
+    "H": {
+      "item": "enderio:enderman_head"
+    },
+    "I": {
+      "tag": "c:ingots/soularium"
+    }
+  },
+  "pattern": [
+    " H ",
+    "EIE",
+    "ICI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:aversion_obelisk"
+  }
+}

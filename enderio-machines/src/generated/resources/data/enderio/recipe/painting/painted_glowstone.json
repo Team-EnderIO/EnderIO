@@ -1,0 +1,10 @@
+{
+  "type": "enderio:painting",
+  "input": {
+    "item": "minecraft:glowstone"
+  },
+  "output": {
+    "count": 1,
+    "id": "enderio:painted_glowstone"
+  }
+}

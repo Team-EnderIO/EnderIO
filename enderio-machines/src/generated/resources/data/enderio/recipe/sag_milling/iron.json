@@ -1,0 +1,16 @@
+{
+  "type": "enderio:sag_milling",
+  "bonus": "none",
+  "energy": 2400,
+  "input": {
+    "tag": "c:ingots/iron"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 1,
+        "id": "enderio:powdered_iron"
+      }
+    }
+  ]
+}

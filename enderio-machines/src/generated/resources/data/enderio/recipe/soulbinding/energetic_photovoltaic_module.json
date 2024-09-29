@@ -1,0 +1,13 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 12800,
+  "entity_type": "minecraft:phantom",
+  "experience": 8,
+  "input": {
+    "item": "enderio:energetic_photovoltaic_module"
+  },
+  "output": {
+    "count": 1,
+    "id": "enderio:energetic_photovoltaic_module"
+  }
+}

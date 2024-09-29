@@ -1,0 +1,22 @@
+{
+  "type": "enderio:sag_milling",
+  "energy": 2400,
+  "input": {
+    "tag": "c:bones"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 6,
+        "id": "minecraft:bone_meal"
+      }
+    },
+    {
+      "chance": 0.1,
+      "item": {
+        "count": 2,
+        "id": "minecraft:bone_meal"
+      }
+    }
+  ]
+}

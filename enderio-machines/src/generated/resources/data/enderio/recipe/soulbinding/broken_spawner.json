@@ -1,0 +1,12 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 288000,
+  "experience": 8,
+  "input": {
+    "item": "enderio:broken_spawner"
+  },
+  "output": {
+    "count": 1,
+    "id": "enderio:broken_spawner"
+  }
+}

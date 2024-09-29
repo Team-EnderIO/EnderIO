@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "tag": "c:gears/iron"
+    },
+    "I": {
+      "item": "enderio:dark_steel_ingot"
+    },
+    "N": {
+      "item": "enderio:dark_steel_nugget"
+    }
+  },
+  "pattern": [
+    "NIN",
+    "IGI",
+    "NIN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:dark_bimetal_gear"
+  }
+}

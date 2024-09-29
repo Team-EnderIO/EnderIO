@@ -1,0 +1,16 @@
+{
+  "type": "enderio:sag_milling",
+  "energy": 2400,
+  "input": {
+    "tag": "c:sands"
+  },
+  "outputs": [
+    {
+      "chance": 0.5,
+      "item": {
+        "count": 1,
+        "tag": "c:silicon"
+      }
+    }
+  ]
+}

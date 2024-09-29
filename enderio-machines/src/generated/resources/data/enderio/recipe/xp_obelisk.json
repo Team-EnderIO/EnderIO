@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "enderio:ensouled_chassis"
+    },
+    "I": {
+      "tag": "c:ingots/soularium"
+    },
+    "R": {
+      "item": "enderio:experience_rod"
+    }
+  },
+  "pattern": [
+    " R ",
+    " I ",
+    "ICI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:xp_obelisk"
+  }
+}

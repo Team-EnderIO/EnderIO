@@ -1,0 +1,10 @@
+{
+  "type": "enderio:painting",
+  "input": {
+    "tag": "minecraft:wooden_pressure_plates"
+  },
+  "output": {
+    "count": 1,
+    "id": "enderio:painted_wooden_pressure_plate"
+  }
+}

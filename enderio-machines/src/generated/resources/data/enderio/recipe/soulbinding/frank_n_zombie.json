@@ -1,0 +1,13 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 51200,
+  "entity_type": "minecraft:zombie",
+  "experience": 4,
+  "input": {
+    "item": "enderio:z_logic_controller"
+  },
+  "output": {
+    "count": 1,
+    "id": "enderio:frank_n_zombie"
+  }
+}

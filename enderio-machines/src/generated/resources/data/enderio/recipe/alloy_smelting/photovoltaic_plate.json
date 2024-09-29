@@ -1,0 +1,15 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 5600,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 3,
+      "item": "enderio:photovoltaic_composite"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "enderio:photovoltaic_plate"
+  }
+}

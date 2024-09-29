@@ -1,0 +1,23 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 4800,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "tag": "c:ingots/copper_alloy"
+    },
+    {
+      "count": 1,
+      "tag": "c:ingots/iron"
+    },
+    {
+      "count": 1,
+      "tag": "c:dusts/redstone"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "enderio:conductive_alloy_ingot"
+  }
+}

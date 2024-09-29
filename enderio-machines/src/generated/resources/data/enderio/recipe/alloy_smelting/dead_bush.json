@@ -1,0 +1,15 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 500,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "tag": "minecraft:saplings"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "minecraft:dead_bush"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "enderio:fluid",
+  "description": {
+    "translate": "item.enderio.conduit.ender_fluid"
+  },
+  "is_multi_fluid": true,
+  "texture": "enderio:block/conduit/ender_fluid",
+  "transfer_rate": 200
+}

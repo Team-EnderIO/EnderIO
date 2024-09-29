@@ -1,0 +1,8 @@
+{
+  "values": {
+    "minecraft:wheat": {
+      "#c:crops": 3.0,
+      "#c:seeds": 2.0
+    }
+  }
+}

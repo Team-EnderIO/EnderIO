@@ -1,0 +1,23 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 7600,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "tag": "c:bricks/nether"
+    },
+    {
+      "count": 4,
+      "item": "minecraft:nether_wart"
+    },
+    {
+      "count": 6,
+      "item": "minecraft:clay_ball"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "enderio:nethercotta"
+  }
+}

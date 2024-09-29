@@ -1,7 +1,0 @@
-{
-  "type": "enderio:painting",
-  "input": {
-    "item": "enderio:painted_wooden_pressure_plate"
-  },
-  "output": "enderio:painted_wooden_pressure_plate"
-}

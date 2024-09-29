@@ -1,0 +1,36 @@
+{
+  "type": "enderio:sag_milling",
+  "energy": 2400,
+  "input": {
+    "tag": "c:ores/coal"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 3,
+        "id": "minecraft:coal"
+      }
+    },
+    {
+      "chance": 0.6,
+      "item": {
+        "count": 1,
+        "id": "enderio:powdered_coal"
+      }
+    },
+    {
+      "chance": 0.005,
+      "item": {
+        "count": 1,
+        "id": "minecraft:diamond"
+      }
+    },
+    {
+      "chance": 0.15,
+      "item": {
+        "count": 1,
+        "id": "minecraft:cobblestone"
+      }
+    }
+  ]
+}

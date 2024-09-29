@@ -1,0 +1,19 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 3200,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "tag": "c:dusts/glowstone"
+    },
+    {
+      "count": 1,
+      "item": "minecraft:clay_ball"
+    }
+  ],
+  "output": {
+    "count": 2,
+    "id": "enderio:clayed_glowstone"
+  }
+}

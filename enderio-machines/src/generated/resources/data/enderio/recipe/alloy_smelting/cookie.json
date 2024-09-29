@@ -1,0 +1,19 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 2000,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "item": "enderio:flour"
+    },
+    {
+      "count": 1,
+      "item": "minecraft:cocoa_beans"
+    }
+  ],
+  "output": {
+    "count": 8,
+    "id": "minecraft:cookie"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "enderio:sag_milling",
+  "energy": 2400,
+  "input": {
+    "tag": "c:rods/blaze"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 4,
+        "id": "minecraft:blaze_powder"
+      }
+    }
+  ]
+}

@@ -1,7 +1,6 @@
 name: Nightly Build
 env:
   BUILD_NUMBER: ${{ github.run_number }}
-  NIGHTLY: true
 
 # Run on all develop pushes
 on:
@@ -30,7 +29,7 @@ jobs:
         id: mc_version
         with:
           file: gradle.properties
-          property: minecraft_version
+          property: minecraftVersion
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -47,8 +46,7 @@ jobs:
         with:
           name: nightly-build
           path: |
-            build/libs/*.jar
-            !build/libs/*-partial.jar
+            enderio/build/libs/*.jar
 
       - name: Discord Notification Success
         uses: tsickert/discord-webhook@v5.3.0

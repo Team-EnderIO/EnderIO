@@ -1,0 +1,30 @@
+{
+  "type": "enderio:sag_milling",
+  "energy": 2400,
+  "input": {
+    "tag": "minecraft:leaves"
+  },
+  "outputs": [
+    {
+      "chance": 0.3,
+      "item": {
+        "count": 1,
+        "id": "enderio:plant_matter_green"
+      }
+    },
+    {
+      "chance": 0.1,
+      "item": {
+        "count": 1,
+        "id": "enderio:plant_matter_green"
+      }
+    },
+    {
+      "chance": 0.02,
+      "item": {
+        "count": 1,
+        "id": "enderio:plant_matter_green"
+      }
+    }
+  ]
+}

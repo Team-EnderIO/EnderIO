@@ -1,0 +1,27 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 5600,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "type": "neoforge:compound",
+      "children": [
+        {
+          "item": "minecraft:soul_sand"
+        },
+        {
+          "item": "minecraft:soul_soil"
+        }
+      ],
+      "count": 1
+    },
+    {
+      "count": 1,
+      "tag": "c:ingots/gold"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "enderio:soularium_ingot"
+  }
+}

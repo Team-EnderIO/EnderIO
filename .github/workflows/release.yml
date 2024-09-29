@@ -17,6 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Get Minecraft Version
+        uses: madhead/read-java-properties@latest
+        id: mc_version
+        with:
+          file: gradle.properties
+          property: minecraftVersion
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -34,7 +41,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: release-build
-          path: build/libs/*.jar
+          path: enderio/build/libs/*.jar
 
       - name: Publish to CurseForge and Modrinth
         env:
@@ -46,7 +53,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: build/libs/*.jar
+          files: enderio/build/libs/*.jar
 
       - name: Truncate Build Notes
         uses: 2428392/gh-truncate-string-action@v1.2.0
@@ -54,13 +61,6 @@ jobs:
         with:
           stringToTruncate: ${{ github.event.release.body }}
           maxLength: 1000
-
-      - name: Get Minecraft Version
-        uses: madhead/read-java-properties@latest
-        id: mc_version
-        with:
-          file: gradle.properties
-          property: minecraft_version
 
       - name: Discord Notification Success
         uses: tsickert/discord-webhook@v5.3.0
@@ -96,28 +96,29 @@ jobs:
         with:
           arguments: publishAllPublicationsToRover656Repository
 
-  updateReleaseBranch:
-    needs: [release]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+  # Disabled for now, but may just remove this convention in favour of editing tags and releasing from side-branches.
+  #updateReleaseBranch:
+  #  needs: [release]
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - uses: actions/checkout@v3
+  #      with:
+  #        fetch-depth: 0
 
-      - name: Get Minecraft Version
-        uses: madhead/read-java-properties@latest
-        id: mc_version
-        with:
-          file: gradle.properties
-          property: minecraft_version
+  #    - name: Get Minecraft Version
+  #      uses: madhead/read-java-properties@latest
+  #      id: mc_version
+  #      with:
+  #        file: gradle.properties
+  #        property: minecraft_version
 
-      - uses: actions/checkout@v3
-        with:
-          ref: release/${{ steps.mc_version.outputs.value }}
-          fetch-depth: 0
+  #    - uses: actions/checkout@v3
+  #      with:
+  #        ref: release/${{ steps.mc_version.outputs.value }}
+  #        fetch-depth: 0
 
-      - run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git merge ${{ github.event.release.tag_name }}
-          git push
+  #    - run: |
+  #        git config user.name github-actions
+  #        git config user.email github-actions@github.com
+  #        git merge ${{ github.event.release.tag_name }}
+  #        git push

@@ -1,0 +1,19 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 1000,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "tag": "c:dusts/coal"
+    },
+    {
+      "count": 1,
+      "item": "minecraft:egg"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "enderio:organic_black_dye"
+  }
+}

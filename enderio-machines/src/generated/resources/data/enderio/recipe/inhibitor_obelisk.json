@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "enderio:ensouled_chassis"
+    },
+    "E": {
+      "tag": "c:ingots/energetic_alloy"
+    },
+    "G": {
+      "item": "enderio:iron_gear"
+    },
+    "I": {
+      "tag": "c:ingots/soularium"
+    },
+    "M": {
+      "item": "enderio:ender_crystal"
+    }
+  },
+  "pattern": [
+    " M ",
+    "EGE",
+    "ICI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:inhibitor_obelisk"
+  }
+}

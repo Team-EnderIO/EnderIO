@@ -1,0 +1,23 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 6400,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "tag": "c:ingots/iron"
+    },
+    {
+      "count": 1,
+      "tag": "c:dusts/coal"
+    },
+    {
+      "count": 1,
+      "tag": "c:obsidians"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "enderio:dark_steel_ingot"
+  }
+}

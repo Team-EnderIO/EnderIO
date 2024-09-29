@@ -1,0 +1,15 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 6400,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "tag": "c:storage_blocks/quartz"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "enderio:fused_quartz"
+  }
+}

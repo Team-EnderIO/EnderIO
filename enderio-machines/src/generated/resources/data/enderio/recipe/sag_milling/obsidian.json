@@ -1,0 +1,15 @@
+{
+  "type": "enderio:sag_milling",
+  "energy": 2400,
+  "input": {
+    "tag": "c:obsidians"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 4,
+        "id": "enderio:powdered_obsidian"
+      }
+    }
+  ]
+}

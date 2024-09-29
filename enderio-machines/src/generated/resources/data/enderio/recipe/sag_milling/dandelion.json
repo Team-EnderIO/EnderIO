@@ -1,0 +1,37 @@
+{
+  "type": "enderio:sag_milling",
+  "energy": 2400,
+  "input": {
+    "item": "minecraft:dandelion"
+  },
+  "outputs": [
+    {
+      "chance": 0.8,
+      "item": {
+        "count": 1,
+        "id": "minecraft:yellow_dye"
+      }
+    },
+    {
+      "chance": 0.6,
+      "item": {
+        "count": 1,
+        "id": "minecraft:yellow_dye"
+      }
+    },
+    {
+      "chance": 0.3,
+      "item": {
+        "count": 1,
+        "id": "minecraft:yellow_dye"
+      }
+    },
+    {
+      "chance": 0.1,
+      "item": {
+        "count": 1,
+        "id": "enderio:plant_matter_green"
+      }
+    }
+  ]
+}

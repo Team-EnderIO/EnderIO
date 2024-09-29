@@ -1,0 +1,19 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 4800,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "tag": "c:ingots/iron"
+    },
+    {
+      "count": 1,
+      "tag": "c:ender_pearls"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "enderio:pulsating_alloy_ingot"
+  }
+}

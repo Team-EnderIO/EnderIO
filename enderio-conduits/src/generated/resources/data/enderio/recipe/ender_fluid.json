@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": {
+      "item": "enderio:conduit_binder"
+    },
+    "G": {
+      "tag": "c:glass_blocks/fused_quartz"
+    },
+    "I": {
+      "tag": "c:ingots/vibrant_alloy"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "IGI",
+    "BBB"
+  ],
+  "result": {
+    "components": {
+      "enderio:conduit": "enderio:ender_fluid"
+    },
+    "count": 8,
+    "id": "enderio:conduit"
+  }
+}

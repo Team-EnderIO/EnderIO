@@ -1,0 +1,23 @@
+{
+  "type": "enderio:sag_milling",
+  "bonus": "chance_only",
+  "energy": 2400,
+  "input": {
+    "tag": "c:sandstone/blocks"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 2,
+        "id": "minecraft:sand"
+      }
+    },
+    {
+      "chance": 0.4,
+      "item": {
+        "count": 2,
+        "id": "minecraft:sand"
+      }
+    }
+  ]
+}

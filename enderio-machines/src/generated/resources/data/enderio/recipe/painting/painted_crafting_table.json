@@ -1,0 +1,10 @@
+{
+  "type": "enderio:painting",
+  "input": {
+    "item": "minecraft:crafting_table"
+  },
+  "output": {
+    "count": 1,
+    "id": "enderio:painted_crafting_table"
+  }
+}

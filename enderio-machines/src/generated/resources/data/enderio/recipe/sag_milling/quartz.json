@@ -1,0 +1,23 @@
+{
+  "type": "enderio:sag_milling",
+  "bonus": "chance_only",
+  "energy": 2400,
+  "input": {
+    "tag": "c:gems/quartz"
+  },
+  "outputs": [
+    {
+      "item": {
+        "count": 1,
+        "id": "enderio:powdered_quartz"
+      }
+    },
+    {
+      "chance": 0.1,
+      "item": {
+        "count": 1,
+        "id": "enderio:powdered_quartz"
+      }
+    }
+  ]
+}

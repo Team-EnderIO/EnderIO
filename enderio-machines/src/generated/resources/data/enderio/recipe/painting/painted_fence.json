@@ -1,0 +1,10 @@
+{
+  "type": "enderio:painting",
+  "input": {
+    "tag": "minecraft:wooden_fences"
+  },
+  "output": {
+    "count": 1,
+    "id": "enderio:painted_fence"
+  }
+}
