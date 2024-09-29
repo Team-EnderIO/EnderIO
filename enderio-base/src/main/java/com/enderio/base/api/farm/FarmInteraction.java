@@ -1,4 +1,4 @@
-package com.enderio.machines.api.farm;
+package com.enderio.base.api.farm;
 
 public enum FarmInteraction {
     FINISHED,

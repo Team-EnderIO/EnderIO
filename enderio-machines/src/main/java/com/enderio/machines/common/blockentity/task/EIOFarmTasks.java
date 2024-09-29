@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blockentity.task;
 
-import com.enderio.machines.api.farm.FarmInteraction;
-import com.enderio.machines.api.farm.FarmTask;
+import com.enderio.base.api.farm.FarmInteraction;
+import com.enderio.base.api.farm.FarmTask;
 import net.minecraft.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

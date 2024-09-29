@@ -2,16 +2,18 @@ package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.blockentity.FarmingStationBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
+import com.enderio.machines.common.menu.base.PoweredMachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
-public class FarmMenu extends MachineMenu<FarmingStationBlockEntity> {
+public class FarmMenu extends PoweredMachineMenu<FarmingStationBlockEntity> {
 
     public FarmMenu(@Nullable FarmingStationBlockEntity blockEntity, Inventory inventory, int pContainerId) {
-        super(blockEntity, inventory, MachineMenus.FARMING_STATION.get(), pContainerId);
+        super(MachineMenus.FARMING_STATION.get(), pContainerId, blockEntity, inventory);
         
         if (blockEntity != null) {
             // Capacitor slot
@@ -35,7 +37,7 @@ public class FarmMenu extends MachineMenu<FarmingStationBlockEntity> {
             }
         }
 
-        addInventorySlots(8,87);
+        addPlayerInventorySlots(8,87);
     }
 
     public static FarmMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
@@ -46,5 +48,29 @@ public class FarmMenu extends MachineMenu<FarmingStationBlockEntity> {
 
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new FarmMenu(null, inventory, pContainerId);
+    }
+
+    public boolean isRangeVisible() {
+        if (getBlockEntity() == null) {
+            throw new IllegalStateException("BlockEntity is null");
+        }
+
+        return getBlockEntity().isRangeVisible();
+    }
+
+    public void setRangeVisible(boolean isRangeVisible) {
+        if (getBlockEntity() == null) {
+            throw new IllegalStateException("BlockEntity is null");
+        }
+
+        getBlockEntity().setRangeVisible(isRangeVisible);
+    }
+
+    public MachineFluidTank getFluidTank() {
+        if (getBlockEntity() == null) {
+            throw new IllegalStateException("BlockEntity is null");
+        }
+
+        return getBlockEntity().getFluidTank();
     }
 }

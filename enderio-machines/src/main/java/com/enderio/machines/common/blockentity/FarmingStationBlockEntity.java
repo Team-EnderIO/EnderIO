@@ -1,19 +1,19 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.api.attachment.StoredEntityData;
-import com.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.api.capacitor.QuadraticScalable;
-import com.enderio.api.farm.FarmInteraction;
-import com.enderio.api.farm.FarmTaskManager;
-import com.enderio.api.farm.FarmingStation;
-import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.capacitor.CapacitorModifier;
+import com.enderio.base.api.capacitor.QuadraticScalable;
+import com.enderio.base.api.farm.FarmInteraction;
+import com.enderio.base.api.farm.FarmTask;
+import com.enderio.base.api.farm.FarmTaskManager;
+import com.enderio.base.api.farm.FarmingStation;
+import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.attachment.RangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
-import com.enderio.api.farm.FarmTask;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -31,6 +31,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -53,7 +54,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.common.FarmlandWaterManager;
-import net.neoforged.neoforge.common.IPlantable;
+import net.neoforged.neoforge.common.SpecialPlantable;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.ticket.AABBTicket;
 import net.neoforged.neoforge.common.util.FakePlayer;
@@ -66,6 +67,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
+
+;
 
 public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingStation, FluidTankUser, FluidItemInteractive {
     public static final String CONSUMED = "Consumed";
@@ -124,7 +127,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             .slotAccess(AXE)
             .inputSlot((i,s) -> s.is(ItemTags.HOES))
             .slotAccess(HOE)
-            .inputSlot((i,s) -> s.is(Tags.Items.TOOLS_SHEARS))
+            .inputSlot((i,s) -> s.is(Tags.Items.TOOLS_SHEAR))
             .slotAccess(SHEAR)
             .inputSlot()
             .slotAccess(NE)
@@ -279,7 +282,9 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     public boolean handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemStack stack) {
         ItemStack dummy = stack.copy();
         if (soulData != null) {
-            dummy.enchant(Enchantments.FORTUNE, dummy.getEnchantmentLevel(Enchantments.FORTUNE) + soulData.seeds());
+            var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+            var fortuneEnchantment = enchantmentsRecipe.getOrThrow(Enchantments.FORTUNE);
+            dummy.enchant(fortuneEnchantment, dummy.getEnchantmentLevel(fortuneEnchantment) + soulData.seeds());
         }
         List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) this.level, pos, blockEntity, getPlayer(), dummy);
         return collectDrops(drops, soil);
@@ -292,7 +297,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             if (soil != null) {
                 ItemStack seeds = getSeedForPos(soil).getItemStack(this);
                 if (seeds.isEmpty()) {
-                    if (drop.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof IPlantable) {
+                    if (drop.getItem() instanceof BlockItem || drop.getItem() instanceof SpecialPlantable) { //Collect potential seeds
                         getSeedForPos(soil).setStackInSlot(this, drop);
                         continue;
                     }

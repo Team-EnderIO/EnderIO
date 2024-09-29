@@ -1,6 +1,6 @@
-package com.enderio.machines.api.farm;
+package com.enderio.base.api.farm;
 
-import com.enderio.api.integration.IntegrationManager;
+import com.enderio.base.api.integration.IntegrationManager;
 import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FarmTaskManager {
-    private ArrayList<TaskEntry> tasks = new ArrayList<>();
+    private final ArrayList<TaskEntry> tasks = new ArrayList<>();
     private static ImmutableList<FarmTask> TASKS_IMMUTABLE;
 
     public static int PLANT = 1;

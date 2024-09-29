@@ -1,7 +1,7 @@
-package com.enderio.api.integration;
+package com.enderio.base.api.integration;
 
-import com.enderio.api.farm.FarmTaskManager;
-import com.enderio.api.glider.GliderMovementInfo;
+import com.enderio.base.api.farm.FarmTaskManager;
+import com.enderio.base.api.glider.GliderMovementInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

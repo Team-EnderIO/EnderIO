@@ -1,7 +1,7 @@
 package com.enderio.machines.common.integrations;
 
 import com.enderio.base.api.integration.Integration;
-import com.enderio.machines.api.farm.FarmTaskManager;
+import com.enderio.base.api.farm.FarmTaskManager;
 import com.enderio.machines.common.block.TravelAnchorBlock;
 import com.enderio.machines.common.blockentity.task.EIOFarmTasks;
 import net.minecraft.world.entity.player.Player;
