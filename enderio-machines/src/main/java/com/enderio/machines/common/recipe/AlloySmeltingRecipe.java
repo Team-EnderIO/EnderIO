@@ -171,7 +171,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
             .group(SizedIngredient.FLAT_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs),
                 ItemStack.CODEC.fieldOf("result").forGetter(AlloySmeltingRecipe::output), Codec.INT.fieldOf("energy").forGetter(AlloySmeltingRecipe::energy),
                 Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience),
-                Codec.BOOL.optionalFieldOf("isSmelting").forGetter(r -> r.isSmelting() ? Optional.of(r.isSmelting()) : Optional.empty()))
+                Codec.BOOL.optionalFieldOf("is_smelting").forGetter(r -> r.isSmelting() ? Optional.of(r.isSmelting()) : Optional.empty()))
             .apply(inst, AlloySmeltingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmeltingRecipe> STREAM_CODEC = StreamCodec.composite(
