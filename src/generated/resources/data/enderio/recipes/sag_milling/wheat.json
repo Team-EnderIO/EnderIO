@@ -6,12 +6,19 @@
   },
   "outputs": [
     {
-      "item": "enderio:flour"
+      "chance": 1.0,
+      "item": {
+        "item": "enderio:flour"
+      },
+      "optional": false
     },
     {
       "chance": 0.2,
-      "optional": true,
-      "tag": "forge:seeds/wheat"
+      "item": {
+        "count": 1,
+        "tag": "forge:seeds/wheat"
+      },
+      "optional": true
     }
   ]
 }

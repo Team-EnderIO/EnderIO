@@ -7,19 +7,31 @@
   "outputs": [
     {
       "chance": 0.7,
-      "item": "minecraft:gravel"
+      "item": {
+        "item": "minecraft:gravel"
+      },
+      "optional": false
     },
     {
       "chance": 0.3,
-      "item": "minecraft:gravel"
+      "item": {
+        "item": "minecraft:gravel"
+      },
+      "optional": false
     },
     {
       "chance": 0.1,
-      "item": "minecraft:sand"
+      "item": {
+        "item": "minecraft:sand"
+      },
+      "optional": false
     },
     {
       "chance": 0.05,
-      "item": "minecraft:flint"
+      "item": {
+        "item": "minecraft:flint"
+      },
+      "optional": false
     }
   ]
 }

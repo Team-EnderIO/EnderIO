@@ -16,7 +16,11 @@
   "outputs": [
     {
       "chance": 0.5,
-      "tag": "forge:silicon"
+      "item": {
+        "count": 1,
+        "tag": "forge:silicon"
+      },
+      "optional": false
     }
   ]
 }

@@ -7,19 +7,31 @@
   "outputs": [
     {
       "chance": 0.8,
-      "item": "minecraft:yellow_dye"
+      "item": {
+        "item": "minecraft:yellow_dye"
+      },
+      "optional": false
     },
     {
       "chance": 0.6,
-      "item": "minecraft:yellow_dye"
+      "item": {
+        "item": "minecraft:yellow_dye"
+      },
+      "optional": false
     },
     {
       "chance": 0.3,
-      "item": "minecraft:yellow_dye"
+      "item": {
+        "item": "minecraft:yellow_dye"
+      },
+      "optional": false
     },
     {
       "chance": 0.1,
-      "item": "enderio:plant_matter_green"
+      "item": {
+        "item": "enderio:plant_matter_green"
+      },
+      "optional": false
     }
   ]
 }

@@ -6,16 +6,26 @@
   },
   "outputs": [
     {
-      "count": 2,
-      "item": "minecraft:string"
+      "chance": 1.0,
+      "item": {
+        "count": 2,
+        "item": "minecraft:string"
+      },
+      "optional": false
     },
     {
       "chance": 0.6,
-      "item": "minecraft:string"
+      "item": {
+        "item": "minecraft:string"
+      },
+      "optional": false
     },
     {
       "chance": 0.3,
-      "item": "minecraft:string"
+      "item": {
+        "item": "minecraft:string"
+      },
+      "optional": false
     }
   ]
 }

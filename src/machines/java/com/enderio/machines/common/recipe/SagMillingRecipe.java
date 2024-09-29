@@ -2,15 +2,21 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.EnderIO;
 import com.enderio.api.grindingball.IGrindingBallData;
+import com.enderio.core.common.integration.Integrations;
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.core.common.util.JsonUtil;
 import com.enderio.core.common.util.TagUtil;
 import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -21,6 +27,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -86,28 +93,27 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
         while (outputCount > 0) {
             if (RANDOM.nextFloat() < outputCount) {
                 for (OutputItem output : this.outputs) {
-                    if (output.isPresent() && RANDOM.nextFloat() < output.getChance() * chanceMult) {
+                    if (output.isPresent() && RANDOM.nextFloat() < output.chance() * chanceMult) {
                         // Collect the output
-                        Item item = output.getItem();
-                        int count = output.getCount();
+                        ItemStack outputStack = output.getItemStack();
 
                         // Attempt to add to an existing stack.
                         for (OutputStack stack : outputs) {
-                            if (count <= 0) {
+                            if (outputStack.getCount() <= 0) {
                                 break;
                             }
 
                             ItemStack itemStack = stack.getItem();
-                            if (itemStack.is(item)) {
-                                int growth = Math.min(count, itemStack.getMaxStackSize());
+                            if (itemStack.is(outputStack.getItem())) {
+                                int growth = Math.min(outputStack.getCount(), itemStack.getMaxStackSize());
                                 itemStack.grow(growth);
-                                count -= growth;
+                                outputStack.shrink(growth);
                             }
                         }
 
                         // Add new stack.
-                        if (count >= 0) {
-                            outputs.add(OutputStack.of(new ItemStack(item, count)));
+                        if (outputStack.getCount() >= 0) {
+                            outputs.add(OutputStack.of(outputStack));
                         }
                     }
                 }
@@ -125,7 +131,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
         List<OutputStack> guaranteedOutputs = new ArrayList<>();
         for (OutputItem item : outputs) {
             if (item.chance >= 1.0f && item.isPresent()) {
-                guaranteedOutputs.add(OutputStack.of(new ItemStack(item.getItem(), item.getCount())));
+                guaranteedOutputs.add(OutputStack.of(item.getItemStack()));
             }
         }
         return guaranteedOutputs;
@@ -186,73 +192,110 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
         }
     }
 
-    public static class OutputItem {
+    public record OutputItem(
+        Either<ItemStack, SizedTagOutput> output,
+        float chance,
+        boolean isOptional
+    ) {
+        public static OutputItem of(@Nullable Item item, int count, float chance, boolean optional) {
+            return of(item == null ? ItemStack.EMPTY : new ItemStack(item, count), chance, optional);
+        }
 
-        private final Either<Item, TagKey<Item>> item;
-        private final int count;
-        private final float chance;
-        private final boolean optional;
-
-        public static OutputItem of(Item item, int count, float chance, boolean optional) {
-            return new OutputItem(Either.left(item), count, chance, optional);
+        public static OutputItem of(ItemStack item, float chance, boolean optional) {
+            return new OutputItem(Either.left(item), chance, optional);
         }
 
         public static OutputItem of(TagKey<Item> tag, int count, float chance, boolean optional) {
-            return new OutputItem(Either.right(tag), count, chance, optional);
-        }
-
-        public OutputItem(Either<Item, TagKey<Item>> item, int count, float chance, boolean optional) {
-            this.item = item;
-            this.count = count;
-            this.chance = chance;
-            this.optional = optional;
+            return new OutputItem(Either.right(new SizedTagOutput(tag, count)), chance, optional);
         }
 
         public boolean isPresent() {
-            return getItem() != null;
-        }
-
-        @Nullable
-        public Item getItem() {
-            return item.left().or(() -> TagUtil.getOptionalItem(item.right().get())).orElse(null);
+            return !getItemStack().isEmpty();
         }
 
         public ItemStack getItemStack() {
-            Item item = getItem();
-            if (item != null) {
-                return new ItemStack(item, count);
+            return output.map(ItemStack::copy, SizedTagOutput::getItemStack);
+        }
+
+        public JsonObject toJson() {
+            JsonObject json = new JsonObject();
+            json.add("item", output.map(JsonUtil::serializeItemStackWithoutNBT, SizedTagOutput::toJson));
+            json.addProperty("chance", chance);
+            json.addProperty("optional", isOptional);
+            return json;
+        }
+
+        public static OutputItem fromJson(JsonObject json, ResourceLocation recipeId) {
+            // Load misc properties
+            float chance = json.has("chance") ? json.get("chance").getAsFloat() : 1.0f;
+            boolean optional = json.has("optional") && json.get("optional").getAsBoolean();
+
+            // NOTE: Count is ignored if the new ItemStack or new Tag entries are present.
+            int legacyCount = json.has("count") ? json.get("count").getAsInt() : 1;
+
+            if (json.has("tag")) {
+                // Get tag
+                ResourceLocation id = new ResourceLocation(json.get("tag").getAsString());
+                TagKey<Item> tag = ItemTags.create(id);
+
+                // Check tag has entries if its required (although the point of a tag is generally this will be optional, its just in case
+                if (!optional && TagUtil.getOptionalItem(tag).isEmpty()) {
+                    EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output tag {}", recipeId, id);
+                    throw new RuntimeException("Sag milling recipe is missing a required output tag.");
+                }
+
+                return OutputItem.of(tag, legacyCount, chance, optional);
+            } else {
+                JsonElement itemJson = json.get("item");
+
+                if (itemJson.isJsonObject()) {
+                    // NEW!
+                    JsonObject newItemJson = itemJson.getAsJsonObject();
+
+                    if (newItemJson.has("tag")) {
+                        ResourceLocation id = new ResourceLocation(newItemJson.get("tag").getAsString());
+                        TagKey<Item> tag = ItemTags.create(id);
+                        int count = newItemJson.has("count") ? newItemJson.get("count").getAsInt() : 1;
+
+                        // Check tag has entries if its required (although the point of a tag is generally this will be optional, its just in case
+                        if (!optional && TagUtil.getOptionalItem(tag).isEmpty()) {
+                            EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output tag {}", recipeId, id);
+                            throw new RuntimeException("Sag milling recipe is missing a required output tag.");
+                        }
+
+                        return OutputItem.of(tag, count, chance, optional);
+                    } else {
+                        ItemStack item = CraftingHelper.getItemStack(newItemJson.getAsJsonObject(), true, true);
+                        return OutputItem.of(item, chance, optional);
+                    }
+                } else {
+                    ResourceLocation id = new ResourceLocation(json.get("item").getAsString());
+                    Item item = ForgeRegistries.ITEMS.getValue(id);
+
+                    // Check that the required item exists.
+                    if (item == null && !optional) {
+                        EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output item {}", recipeId, id);
+                        throw new RuntimeException("Sag milling recipe is missing a required output item.");
+                    }
+
+                    return OutputItem.of(item, legacyCount, chance, optional);
+                }
+            }
+        }
+
+        public record SizedTagOutput(TagKey<Item> itemTag, int count) {
+            public ItemStack getItemStack() {
+                return TagUtil.getOptionalItem(itemTag)
+                    .map(ItemStack::new)
+                    .orElse(ItemStack.EMPTY);
             }
 
-            return ItemStack.EMPTY;
-        }
-
-        @Nullable
-        public TagKey<Item> getTag() {
-            if (!isTag()) {
-                return null;
+            public JsonObject toJson() {
+                JsonObject json = new JsonObject();
+                json.addProperty("tag", itemTag.location().toString());
+                json.addProperty("count", count);
+                return json;
             }
-
-            return item.right().get();
-        }
-
-        public boolean isTag() {
-            return item.right().isPresent();
-        }
-
-        public boolean isItem() {
-            return item.left().isPresent();
-        }
-
-        public int getCount() {
-            return count;
-        }
-
-        public float getChance() {
-            return chance;
-        }
-
-        public boolean isOptional() {
-            return optional;
         }
     }
 
@@ -291,38 +334,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             List<OutputItem> outputs = new ArrayList<>();
             for (int i = 0; i < jsonOutputs.size(); i++) {
                 JsonObject obj = jsonOutputs.get(i).getAsJsonObject();
-
-                // Load misc properties
-                int count = obj.has("count") ? obj.get("count").getAsInt() : 1;
-                float chance = obj.has("chance") ? obj.get("chance").getAsFloat() : 1.0f;
-                boolean optional = obj.has("optional") && obj.get("optional").getAsBoolean();
-
-                // Load item/tag and create output element
-                if (obj.has("tag")) {
-                    // Get tag
-                    ResourceLocation id = new ResourceLocation(obj.get("tag").getAsString());
-                    TagKey<Item> tag = ItemTags.create(id);
-
-                    // TODO: move these tests into OutputItem instead..
-                    // Check tag has entries if its required (although the point of a tag is generally this will be optional, its just in case
-                    //if (!optional) {
-                    //    EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output tag {}", recipeId, id);
-                    //    throw new RuntimeException("Sag milling recipe is missing a required output tag.");
-                    //}
-
-                    outputs.add(OutputItem.of(tag, count, chance, optional));
-                } else {
-                    ResourceLocation id = new ResourceLocation(obj.get("item").getAsString());
-                    Item item = ForgeRegistries.ITEMS.getValue(id);
-
-                    // Check that the required item exists.
-                    if (item == null && !optional) {
-                        EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output item {}", recipeId, id);
-                        throw new RuntimeException("Sag milling recipe is missing a required output item.");
-                    }
-
-                    outputs.add(OutputItem.of(item, count, chance, optional));
-                }
+                outputs.add(OutputItem.fromJson(obj, recipeId));
             }
 
             return new SagMillingRecipe(recipeId, input, outputs, energy, bonusType);
@@ -339,35 +351,22 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                 List<OutputItem> outputs = new ArrayList<>();
                 int outputCount = buffer.readInt();
                 for (int i = 0; i < outputCount; i++) {
-                    boolean isTag = buffer.readBoolean();
-                    ResourceLocation id = buffer.readResourceLocation();
+                    boolean isItem = buffer.readBoolean();
 
-                    int count = buffer.readInt();
-                    float chance = buffer.readFloat();
-                    boolean optional = buffer.readBoolean();
-
-                    if (isTag) {
+                    if (isItem) {
+                        ItemStack output = buffer.readItem();
+                        float chance = buffer.readFloat();
+                        boolean optional = buffer.readBoolean();
+                        outputs.add(OutputItem.of(output, chance, optional));
+                    } else {
                         // Create tag
+                        ResourceLocation id = buffer.readResourceLocation();
                         TagKey<Item> tag = ItemTags.create(id);
 
-                        // TODO: move these tests into OutputItem instead..
-                        // Check tag has entries if its required (although the point of a tag is generally this will be optional, its just in case
-                        //if (!optional && ForgeRegistries.ITEMS.tags().getTag(tag).isEmpty()) {
-                        //    EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output tag {}", recipeId, id);
-                        //    throw new RuntimeException("Sag milling recipe is missing a required output tag.");
-                        //}
-
+                        int count = buffer.readInt();
+                        float chance = buffer.readFloat();
+                        boolean optional = buffer.readBoolean();
                         outputs.add(OutputItem.of(tag, count, chance, optional));
-                    } else {
-                        Item item = ForgeRegistries.ITEMS.getValue(id);
-
-                        // Check the required items are present.
-                        if (item == null && !optional) {
-                            EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output item {}", recipeId, id);
-                            throw new RuntimeException("Sag milling recipe is missing a required output item.");
-                        }
-
-                        outputs.add(OutputItem.of(item, count, chance, optional));
                     }
                 }
 
@@ -388,17 +387,17 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                 buffer.writeInt(recipe.outputs.size());
                 for (OutputItem item : recipe.outputs) {
                     // Set a flag to determine tag or item
-                    buffer.writeBoolean(item.isTag());
+                    buffer.writeBoolean(item.output.left().isPresent());
 
-                    if (item.isTag()) {
-                        buffer.writeResourceLocation(item.getTag().location());
+                    if (item.output.left().isPresent()) {
+                        buffer.writeItem(item.output.left().get());
                     } else {
-                        buffer.writeResourceLocation(ForgeRegistries.ITEMS.getKey(item.getItem()));
+                        buffer.writeResourceLocation(item.output.right().get().itemTag().location());
+                        buffer.writeInt(item.output.right().get().count());
                     }
 
-                    buffer.writeInt(item.count);
                     buffer.writeFloat(item.chance);
-                    buffer.writeBoolean(item.optional);
+                    buffer.writeBoolean(item.isOptional);
                 }
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error writing allow smelting recipe to packet.", ex);

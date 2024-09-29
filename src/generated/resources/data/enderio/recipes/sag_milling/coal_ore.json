@@ -6,20 +6,33 @@
   },
   "outputs": [
     {
-      "count": 3,
-      "item": "minecraft:coal"
+      "chance": 1.0,
+      "item": {
+        "count": 3,
+        "item": "minecraft:coal"
+      },
+      "optional": false
     },
     {
       "chance": 0.6,
-      "item": "enderio:powdered_coal"
+      "item": {
+        "item": "enderio:powdered_coal"
+      },
+      "optional": false
     },
     {
       "chance": 0.005,
-      "item": "minecraft:diamond"
+      "item": {
+        "item": "minecraft:diamond"
+      },
+      "optional": false
     },
     {
       "chance": 0.15,
-      "item": "minecraft:cobblestone"
+      "item": {
+        "item": "minecraft:cobblestone"
+      },
+      "optional": false
     }
   ]
 }

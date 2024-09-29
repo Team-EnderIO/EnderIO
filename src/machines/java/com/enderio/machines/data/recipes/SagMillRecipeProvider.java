@@ -488,8 +488,8 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
             // Make required tags a recipe condition.
             // TODO: I don't think this is the best way to do this, but it should prevent the issue we were having with tags not being ready at recipe time?
             for (SagMillingRecipe.OutputItem output : this.outputs) {
-                if (output.isTag() && !output.isOptional()) {
-                    addCondition(new NotCondition(new TagEmptyCondition(output.getTag().location())));
+                if (output.output().right().isPresent() && !output.isOptional()) {
+                    addCondition(new NotCondition(new TagEmptyCondition(output.output().right().get().itemTag().location())));
                 }
             }
         }
@@ -504,27 +504,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
             JsonArray outputJson = new JsonArray();
             for (SagMillingRecipe.OutputItem item : outputs) {
-                JsonObject obj = new JsonObject();
-
-                if (item.isTag()) {
-                    obj.addProperty("tag", item.getTag().location().toString());
-                } else {
-                    obj.addProperty("item", ForgeRegistries.ITEMS.getKey(item.getItem()).toString());
-                }
-
-                if (item.getCount() != 1) {
-                    obj.addProperty("count", item.getCount());
-                }
-
-                if (item.getChance() < 1.0f) {
-                    obj.addProperty("chance", item.getChance());
-                }
-
-                if (item.isOptional()) {
-                    obj.addProperty("optional", item.isOptional());
-                }
-
-                outputJson.add(obj);
+                outputJson.add(item.toJson());
             }
             json.add("outputs", outputJson);
 
@@ -535,9 +515,11 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         protected Set<String> getModDependencies() {
             Set<String> mods = new HashSet<>(RecipeDataUtil.getIngredientModIds(input));
             outputs.stream().forEach(outputItem -> {
-                var itemId = ForgeRegistries.ITEMS.getKey(outputItem.getItem());
-                if (itemId != null) {
-                    mods.add(itemId.getNamespace());
+                if (outputItem.output().left().isPresent()) {
+                    var itemId = ForgeRegistries.ITEMS.getKey(outputItem.output().left().get().getItem());
+                    if (itemId != null) {
+                        mods.add(itemId.getNamespace());
+                    }
                 }
             });
             return mods;
