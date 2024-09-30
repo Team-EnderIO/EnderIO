@@ -10,8 +10,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
-public record EmitParticlePacket(ParticleOptions particleOptions, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
-    implements CustomPacketPayload {
+public record EmitParticlePacket(ParticleOptions particleOptions, double x, double y, double z, double xSpeed,
+        double ySpeed, double zSpeed) implements CustomPacketPayload {
 
     public static final Type<EmitParticlePacket> TYPE = new Type<>(EnderCore.loc("emit_particle"));
 

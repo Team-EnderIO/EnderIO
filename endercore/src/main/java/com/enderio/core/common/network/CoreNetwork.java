@@ -12,20 +12,18 @@ public class CoreNetwork {
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event
-            .registrar(EnderCore.MOD_ID)
-            .versioned(PROTOCOL_VERSION);
+        final PayloadRegistrar registrar = event.registrar(EnderCore.MOD_ID).versioned(PROTOCOL_VERSION);
 
         registrar.playToClient(EmitParticlePacket.TYPE, EmitParticlePacket.STREAM_CODEC,
-            ClientPayloadHandler.getInstance()::handleEmitParticle);
+                ClientPayloadHandler.getInstance()::handleEmitParticle);
 
         registrar.playToClient(EmitParticlesPacket.TYPE, EmitParticlesPacket.STREAM_CODEC,
-            ClientPayloadHandler.getInstance()::handleEmitParticles);
+                ClientPayloadHandler.getInstance()::handleEmitParticles);
 
         registrar.playToClient(ServerboundCDataSlotUpdate.TYPE, ServerboundCDataSlotUpdate.STREAM_CODEC,
-            ClientPayloadHandler.getInstance()::handleDataSlotUpdate);
+                ClientPayloadHandler.getInstance()::handleDataSlotUpdate);
 
         registrar.playToServer(ClientboundDataSlotChange.TYPE, ClientboundDataSlotChange.STREAM_CODEC,
-            ServerPayloadHandler.getInstance()::handleDataSlotChange);
+                ServerPayloadHandler.getInstance()::handleDataSlotChange);
     }
 }

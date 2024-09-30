@@ -1,6 +1,7 @@
 package com.enderio.core.common.recipes;
 
 import com.mojang.serialization.MapCodec;
+import java.util.function.Function;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -14,8 +15,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Function;
 
 // Based on https://github.com/mekanism/Mekanism/blob/1.20.4/src/main/java/mekanism/common/recipe/WrappedShapedRecipe.java.
 // Thanks to Mekanism
@@ -41,8 +40,9 @@ public abstract class WrappedShapedRecipe extends ShapedRecipe implements Crafti
 
     @Override
     public boolean matches(CraftingInput inv, Level world) {
-        //Note: We do not override the matches method if it matches ignoring NBT,
-        // to ensure that we return the proper value for if there is a match that gives a proper output
+        // Note: We do not override the matches method if it matches ignoring NBT,
+        // to ensure that we return the proper value for if there is a match that gives
+        // a proper output
         return wrapped.matches(inv, world) && !assemble(inv, world.registryAccess()).isEmpty();
     }
 
@@ -118,7 +118,8 @@ public abstract class WrappedShapedRecipe extends ShapedRecipe implements Crafti
         @Override
         public StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
             if (streamCodec == null) {
-                streamCodec = RecipeSerializer.SHAPED_RECIPE.streamCodec().map(wrapper, WrappedShapedRecipe::getWrapped);
+                streamCodec = RecipeSerializer.SHAPED_RECIPE.streamCodec()
+                        .map(wrapper, WrappedShapedRecipe::getWrapped);
             }
 
             return streamCodec;

@@ -2,11 +2,10 @@ package com.enderio.core.common.serialization;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.NonNullList;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
+import net.minecraft.core.NonNullList;
 
 /**
  * Ensures the serialized list retains it's order.
@@ -20,7 +19,8 @@ public class OrderedListCodec {
     }
 
     public static <T> Codec<List<T>> create(int maxSize, Codec<T> itemCodec, T defaultValue) {
-        return createItemCodec(itemCodec, maxSize).sizeLimitedListOf(maxSize).xmap(list -> fromItems(list, defaultValue), OrderedListCodec::toItems);
+        return createItemCodec(itemCodec, maxSize).sizeLimitedListOf(maxSize)
+                .xmap(list -> fromItems(list, defaultValue), OrderedListCodec::toItems);
     }
 
     private static <T> Codec<Item<T>> createItemCodec(Codec<T> itemCodec, int maxSize) {
@@ -55,5 +55,6 @@ public class OrderedListCodec {
         return fluids;
     }
 
-    private record Item<T>(int index, T value) {}
+    private record Item<T>(int index, T value) {
+    }
 }

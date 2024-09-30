@@ -5,6 +5,9 @@ import com.enderio.core.common.menu.SlotWithOverlay;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.systems.RenderSystem;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
@@ -21,10 +24,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public abstract class EnderContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
 
@@ -48,7 +47,8 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
 
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        if (menu instanceof BaseBlockEntityMenu<?> baseBlockEntityMenu && baseBlockEntityMenu.getBlockEntity() == null) {
+        if (menu instanceof BaseBlockEntityMenu<?> baseBlockEntityMenu
+                && baseBlockEntityMenu.getBlockEntity() == null) {
             return;
         }
 
@@ -74,7 +74,8 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
 
             for (var overlay : overlayRenderables.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    overlay.render(pGuiGraphics, pMouseX, pMouseY, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false));
+                    overlay.render(pGuiGraphics, pMouseX, pMouseY,
+                            Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false));
 
                     if (overlay instanceof BaseOverlay baseOverlay) {
                         zOffset += baseOverlay.getAdditionalZOffset();
@@ -114,7 +115,8 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     }
 
     @Override
-    protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot, @Nullable String countString) {
+    protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot,
+            @Nullable String countString) {
         super.renderSlotContents(guiGraphics, itemstack, slot, countString);
 
         if (slot instanceof SlotWithOverlay slotWithOverlay) {
@@ -158,7 +160,8 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     @Override
     public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
         // Gather state to persist
-        Map<String, Object> valuesBeforeResize = stateRestoringWidgets.entrySet().stream()
+        Map<String, Object> valuesBeforeResize = stateRestoringWidgets.entrySet()
+                .stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getValueForRestore()));
 
         super.resize(pMinecraft, pWidth, pHeight);
