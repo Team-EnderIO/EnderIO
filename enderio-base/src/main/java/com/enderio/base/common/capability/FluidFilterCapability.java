@@ -187,8 +187,8 @@ public class FluidFilterCapability implements IFilterCapability<FluidStack>, Flu
 
             Component component = (Component) o;
 
-            if (nbt == component.nbt() || invert == component.invert()) {
-                return true;
+            if (nbt != component.nbt() || invert != component.invert()) {
+                return false;
             }
 
             for (int i = 0; i < size() && i < fluids.size(); i++) {
