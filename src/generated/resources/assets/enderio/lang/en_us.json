@@ -315,7 +315,6 @@
   "gui.enderio.spawner.unknown": "Unknown mob",
   "gui.enderio.visible.false": "Hidden",
   "gui.enderio.visible.true": "Visible",
-  "gui.enderio.wip": "This part is a work in progress.",
   "guidebook.enderio.book_title": "Book Title",
   "guidebook.enderio.landing_text": "Landing Text",
   "hint.enderio.connected_textures.text": "If you are looking for connected textures on the capacitor bank, you might want to install Athena on your client",
