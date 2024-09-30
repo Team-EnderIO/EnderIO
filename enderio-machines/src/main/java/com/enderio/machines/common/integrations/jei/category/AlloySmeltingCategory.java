@@ -27,8 +27,7 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import java.util.Arrays;
 import java.util.List;
 
-import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
-import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 
 public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<AlloySmeltingRecipe>> {
 
@@ -84,11 +83,15 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
         if (inputs.size() > 1) {
             builder.addSlot(INPUT, 26, 1)
                .addItemStacks(Arrays.stream(inputs.get(1).getItems()).toList());
+        } else {
+            builder.addSlot(RENDER_ONLY, 26, 1);
         }
 
         if (inputs.size() > 2) {
             builder.addSlot(INPUT, 50, 11)
                 .addItemStacks(Arrays.stream(inputs.get(2).getItems()).toList());
+        } else {
+            builder.addSlot(RENDER_ONLY, 50, 11);
         }
 
         builder.addSlot(OUTPUT, 26, 52)
