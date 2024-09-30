@@ -55,9 +55,6 @@ public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<TankRecipe> recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 39, 3)
-            .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(recipe.value().fluid()))
-            .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
 
         if (recipe.value().mode() == TankRecipe.Mode.EMPTY) {
             builder.addSlot(RecipeIngredientRole.INPUT, 3, 3)
@@ -65,12 +62,20 @@ public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
 
             builder.addSlot(RecipeIngredientRole.OUTPUT, 3, 34)
                 .addItemStack(recipe.value().output().copy());
+
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 39, 3)
+                .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(recipe.value().fluid()))
+                .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
         } else if (recipe.value().mode() == TankRecipe.Mode.FILL) {
             builder.addSlot(RecipeIngredientRole.INPUT, 75, 3)
                 .addIngredients(recipe.value().input());
 
             builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 34)
                 .addItemStack(recipe.value().output().copy());
+
+            builder.addSlot(RecipeIngredientRole.INPUT, 39, 3)
+                .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(recipe.value().fluid()))
+                .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
         }
     }
 }

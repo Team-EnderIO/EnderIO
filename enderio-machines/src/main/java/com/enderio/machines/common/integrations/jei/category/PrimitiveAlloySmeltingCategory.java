@@ -16,6 +16,7 @@ import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -28,8 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
-import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 
 // TODO: Not a massive fan of how the primitive alloy smelter has been implemented and the resulting complexity...
 public class PrimitiveAlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<AlloySmeltingRecipe>> {
@@ -87,15 +87,21 @@ public class PrimitiveAlloySmeltingCategory extends MachineRecipeCategory<Recipe
         if (inputs.size() > 1) {
             builder.addSlot(INPUT, 21, 1)
                 .addItemStacks(Arrays.stream(inputs.get(1).getItems()).toList());
+        } else {
+            builder.addSlot(RENDER_ONLY, 21, 1);
         }
 
         if (inputs.size() > 2) {
             builder.addSlot(INPUT, 41, 1)
                 .addItemStacks(Arrays.stream(inputs.get(2).getItems()).toList());
+        } else {
+            builder.addSlot(RENDER_ONLY, 41, 1);
         }
 
         builder.addSlot(OUTPUT, 97, 19)
             .addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).get(0).getItem()));
+
+        builder.addSlot(RENDER_ONLY, 21, 37);
     }
 
     @Override
