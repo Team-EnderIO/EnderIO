@@ -16,9 +16,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
+import javax.annotation.Nullable;
+
 public abstract class ObeliskBlockEntity extends PoweredMachineBlockEntity {
 
-    private AABB aabb;
+    private @Nullable AABB aabb;
     public static SingleSlotAccess FILTER = new SingleSlotAccess();
 
     public ObeliskBlockEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable usageRate, BlockEntityType<?> type,
@@ -84,7 +86,7 @@ public abstract class ObeliskBlockEntity extends PoweredMachineBlockEntity {
 
     public abstract String getColor();
 
-    public AABB getAABB() {
+    public @Nullable AABB getAABB() {
         return aabb;
     }
 

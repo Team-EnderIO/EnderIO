@@ -89,7 +89,7 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity {
     }
 
     public boolean handleSpawnEvent(MobSpawnEvent.FinalizeSpawn event) {
-        if (!isActive()) {
+        if (!isActive() || getAABB() == null) {
             return false;
         }
 
