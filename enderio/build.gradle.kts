@@ -180,7 +180,7 @@ if (getReleaseType() != null) {
             displayName.set("Ender IO - ${project.version}")
             changelog.set(System.getenv("CHANGELOG"))
 
-            setGameVersions("1.21", "1.21.1")
+            setGameVersions("1.21.1")
             setLoaders(ModLoader.NEOFORGE)
 
             curseEnvironment.set("both")
