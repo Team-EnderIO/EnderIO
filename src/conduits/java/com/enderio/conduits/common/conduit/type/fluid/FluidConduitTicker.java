@@ -38,6 +38,39 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
         return rate;
     }
 
+    private int doFluidTransfer(FluidStack fluid, CapabilityConnection extract, List<CapabilityConnection> inserts) {
+        FluidStack extractedFluid = extract.capability.drain(fluid, IFluidHandler.FluidAction.SIMULATE);
+
+        if (extractedFluid.isEmpty()) {
+            return fluid.getAmount();
+        }
+
+        if (extract.extractFilter instanceof FluidStackFilter fluidStackFilter) {
+            if (!fluidStackFilter.test(extractedFluid)) {
+                return fluid.getAmount();
+            }
+        }
+
+        for (CapabilityConnection insert : inserts) {
+            if (insert.insertFilter instanceof FluidStackFilter fluidStackFilter) {
+                if (!fluidStackFilter.test(extractedFluid)) {
+                    continue;
+                }
+            }
+
+            FluidStack transferredFluid = FluidUtil.tryFluidTransfer(insert.capability, extract.capability, fluid, true);
+
+            if (!transferredFluid.isEmpty()) {
+                fluid.shrink(transferredFluid.getAmount());
+            }
+            if (fluid.getAmount() <= 0) {
+                break;
+            }
+        }
+
+        return fluid.getAmount();
+    }
+
     @Override
     public void tickGraph(
         ServerLevel level,
@@ -75,51 +108,31 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
         for (CapabilityConnection extract : extracts) {
             IFluidHandler extractHandler = extract.capability;
             FluidConduitData fluidConduitData = extract.data.castTo(FluidConduitData.class);
-            
+
             final int fluidRate = getScaledFluidRate(extract);
 
-            FluidStack extractedFluid = Optional
-                .ofNullable(fluidConduitData.lockedFluid())
-                .map(fluid -> extractHandler.drain(new FluidStack(fluid, fluidRate), IFluidHandler.FluidAction.SIMULATE))
-                .orElseGet(() -> extractHandler.drain(fluidRate, IFluidHandler.FluidAction.SIMULATE));
+            if (fluidConduitData.lockedFluid() != null) {
+                doFluidTransfer(new FluidStack(fluidConduitData.lockedFluid(), fluidRate), extract, inserts);
+            } else {
+                int remaining = fluidRate;
 
-            if (extractedFluid.isEmpty()) {
-                continue;
-            }
+                for (int i = 0; i < extractHandler.getTanks() && remaining > 0; i++) {
 
-            if (extract.extractFilter instanceof FluidStackFilter fluidStackFilter) {
-                if (!fluidStackFilter.test(extractedFluid)) {
-                    continue;
-                }
-            }
-
-            int transferred = 0;
-            for (CapabilityConnection insert : inserts) {
-                if (insert.insertFilter instanceof FluidStackFilter fluidStackFilter) {
-                    if (!fluidStackFilter.test(extractedFluid)) {
+                    if (extractHandler.getFluidInTank(i).isEmpty()) {
                         continue;
                     }
-                }
 
-                FluidStack transferredFluid = fluidConduitData.lockedFluid() != null ?
-                    FluidUtil.tryFluidTransfer(insert.capability, extractHandler, new FluidStack(fluidConduitData.lockedFluid(), fluidRate - transferred),
-                        true) :
-                    FluidUtil.tryFluidTransfer(insert.capability, extractHandler, fluidRate - transferred, true);
+                    Fluid fluid = extractHandler.getFluidInTank(i).getFluid();
+                    remaining = doFluidTransfer(new FluidStack(fluid, remaining), extract, inserts);
 
-                if (!transferredFluid.isEmpty()) {
-                    transferred += transferredFluid.getAmount();
-                    if (lockFluids) {
+                    if (lockFluids && remaining < fluidRate) {
                         for (ConduitNode<FluidConduitData> node : graph.getNodes()) {
-                            Fluid fluid = transferredFluid.getFluid();
                             if (fluid instanceof FlowingFluid flowing) {
                                 fluid = flowing.getSource();
                             }
 
                             node.getConduitData().setLockedFluid(fluid);
                         }
-                    }
-
-                    if (transferred > fluidRate) {
                         break;
                     }
                 }
