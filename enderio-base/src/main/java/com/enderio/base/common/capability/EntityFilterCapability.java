@@ -69,11 +69,24 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
 
     @Override
     public StoredEntityData getEntry(int index) {
-        return null;
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException(index);
+        }
+
+        var entries = getEntries();
+        if (index >= entries.size()) {
+            return StoredEntityData.EMPTY;
+        }
+
+        return entries.get(index);
     }
 
     @Override
     public void setEntry(int index, StoredEntityData entry) {
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException(index);
+        }
+
         container.set(componentType, getComponent().withEntities(index, entry));
     }
 

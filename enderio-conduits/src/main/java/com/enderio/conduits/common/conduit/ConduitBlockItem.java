@@ -4,11 +4,13 @@ import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.EnderIOConduits;
+import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -18,7 +20,9 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -67,15 +71,28 @@ public class ConduitBlockItem extends BlockItem {
         ItemStack itemstack = context.getItemInHand();
 
         Holder<Conduit<?>> conduit = itemstack.get(ConduitComponents.CONDUIT);
-        if (conduit == null) {
-            return InteractionResult.FAIL;
-        }
 
-        // Pass through to existing block.
-        BlockState blockState = level.getBlockState(blockpos);
-        if (!blockState.isAir()) {
-            //noinspection DataFlowIssue
-            return level.getBlockState(blockpos).useItemOn(context.getItemInHand(), level, player, context.getHand(), context.getHitResult()).result();
+        // Handle placing into an existing block
+        if (conduit != null && level.getBlockEntity(blockpos) instanceof ConduitBundleBlockEntity blockEntity) {
+            if (blockEntity.hasType(conduit)) {
+                // Pass through to block
+                return level.getBlockState(blockpos).useWithoutItem(level, player, context.getHitResult());
+            }
+
+            blockEntity.addType(conduit, player);
+            if (level.isClientSide()) {
+                blockEntity.updateClient();
+            }
+
+            BlockState blockState = level.getBlockState(blockpos);
+            SoundType soundtype = blockState.getSoundType(level, blockpos, context.getPlayer());
+            level.playSound(player, blockpos, this.getPlaceSound(blockState, level, blockpos, context.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+            level.gameEvent(GameEvent.BLOCK_PLACE, blockpos, GameEvent.Context.of(player, blockState));
+
+            if (!player.getAbilities().instabuild) {
+                itemstack.shrink(1);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
 
         return super.place(context);

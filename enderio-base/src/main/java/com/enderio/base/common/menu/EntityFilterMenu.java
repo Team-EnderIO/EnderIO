@@ -101,4 +101,20 @@ public class EntityFilterMenu extends AbstractContainerMenu {
         }
         super.clicked(pSlotId, pButton, pClickType, pPlayer);
     }
+
+    @Override
+    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+        if (slotId >= 0 && slotId < capability.size()) {
+            // Only allow PICKUP (click) or QUICK_MOVE (shift + click) events.
+            if (clickType != ClickType.PICKUP && clickType != ClickType.QUICK_MOVE) {
+                return;
+            }
+
+            if (capability.getEntry(slotId).hasEntity()) {
+                capability.setEntry(slotId, StoredEntityData.EMPTY);
+            }
+        }
+
+        super.doClick(slotId, button, clickType, player);
+    }
 }

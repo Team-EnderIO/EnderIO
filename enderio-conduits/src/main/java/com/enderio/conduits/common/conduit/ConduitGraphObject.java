@@ -67,9 +67,9 @@ public class ConduitGraphObject implements GraphObject<ConduitGraphContext>, Con
     }
 
     @Override
-    public void setGraph(Graph<ConduitGraphContext> graph) {
+    public void setGraph(@Nullable Graph<ConduitGraphContext> graph) {
         this.graph = graph;
-        this.wrappedGraph = new WrappedConduitNetwork(graph);
+        this.wrappedGraph = graph == null ? null:  new WrappedConduitNetwork(graph);
     }
 
     @Nullable
