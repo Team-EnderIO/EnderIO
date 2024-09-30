@@ -3,9 +3,6 @@ package com.enderio.modconduits.mods.mekanism;
 import com.enderio.base.common.menu.FilterSlot;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
@@ -18,11 +15,13 @@ public class ChemicalFilterSlot extends FilterSlot<ChemicalStack> {
     }
 
     @Override
-    protected Optional<ChemicalStack> getResourceFrom(ItemStack itemStack) {
+    public Optional<ChemicalStack> getResourceFrom(ItemStack itemStack) {
         IChemicalHandler capability = itemStack.getCapability(MekanismModule.Capabilities.Item.CHEMICAL);
         if (capability != null) {
             var ghost = capability.getChemicalInTank(0).copy();
-            return Optional.of(ghost);
+            if (!ghost.isEmpty()) {
+                return Optional.of(ghost);
+            }
         }
 
         return Optional.empty();

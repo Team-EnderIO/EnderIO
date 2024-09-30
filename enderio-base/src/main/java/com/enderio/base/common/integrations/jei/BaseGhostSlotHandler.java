@@ -1,10 +1,8 @@
 package com.enderio.base.common.integrations.jei;
 
-import com.enderio.base.common.menu.EntityFilterSlot;
 import com.enderio.base.common.menu.FilterSlot;
 import com.enderio.base.common.menu.FluidFilterSlot;
 import com.enderio.base.common.menu.ItemFilterSlot;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
@@ -12,8 +10,6 @@ import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpawnEggItem;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -34,16 +30,12 @@ public class BaseGhostSlotHandler implements IGhostIngredientHandler<EIOScreen> 
             if (ingredient.getType() == VanillaTypes.ITEM_STACK) {
                 ItemStack currentIngredient = (ItemStack)ingredient.getIngredient();
 
-                // Any filter slot will accept items too, in case they are supported (like entity for example)
                 if (slot instanceof ItemFilterSlot itemFilterSlot) {
                     targets.add(new ItemStackTarget<>(bounds, itemFilterSlot));
-                } else if (slot instanceof FluidFilterSlot fluidFilterSlot) {
-                    if (currentIngredient.getCapability(Capabilities.FluidHandler.ITEM) != null) {
-                        targets.add(new IndirectItemStackTarget<>(bounds, fluidFilterSlot));
-                    }
-                } else if (slot instanceof EntityFilterSlot entityFilterSlot) {
-                    if (currentIngredient.is(EIOTags.Items.ENTITY_STORAGE) || currentIngredient.getItem() instanceof SpawnEggItem) {
-                        targets.add(new IndirectItemStackTarget<>(bounds, entityFilterSlot));
+                } else if (slot instanceof FilterSlot<?> otherFilterSlot) {
+                    // If the item can be converted to the resource, allow it to be dragged too.
+                    if (otherFilterSlot.getResourceFrom(currentIngredient).isPresent()) {
+                        targets.add(new IndirectItemStackTarget<>(bounds, otherFilterSlot));
                     }
                 }
             } else if (ingredient.getType() == NeoForgeTypes.FLUID_STACK) {

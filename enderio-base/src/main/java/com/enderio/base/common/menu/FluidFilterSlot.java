@@ -15,10 +15,13 @@ public class FluidFilterSlot extends FilterSlot<FluidStack> {
     }
 
     @Override
-    protected Optional<FluidStack> getResourceFrom(ItemStack itemStack) {
+    public Optional<FluidStack> getResourceFrom(ItemStack itemStack) {
         IFluidHandlerItem capability = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
         if (capability != null) {
-            return Optional.of(capability.getFluidInTank(0).copy());
+            var fluid = capability.getFluidInTank(0).copy();
+            if (!fluid.isEmpty()) {
+                return Optional.of(fluid);
+            }
         }
 
         return Optional.empty();
