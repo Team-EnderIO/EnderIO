@@ -16,9 +16,11 @@ public record EmitParticlesPacket(List<EmitParticlePacket> particles) implements
 
     public static final Type<EmitParticlesPacket> TYPE = new Type<>(EnderCore.loc("emit_particles"));
 
+    // @formatter:off
     public static final StreamCodec<RegistryFriendlyByteBuf, EmitParticlesPacket> STREAM_CODEC =
         EmitParticlePacket.STREAM_CODEC.apply(ByteBufCodecs.list())
             .map(EmitParticlesPacket::new, EmitParticlesPacket::particles);
+    // @formatter:on
 
     public EmitParticlesPacket() {
         this(new ArrayList<>());

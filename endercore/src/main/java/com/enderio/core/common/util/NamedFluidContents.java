@@ -15,9 +15,11 @@ public record NamedFluidContents(ImmutableMap<String, FluidStack> fluidMap) {
     public static Codec<NamedFluidContents> CODEC = Codec.unboundedMap(Codec.STRING, FluidStack.CODEC)
         .xmap(contents -> new NamedFluidContents(ImmutableMap.copyOf(contents)), NamedFluidContents::fluidMap);
 
+    // @formatter:off
     public static StreamCodec<RegistryFriendlyByteBuf, NamedFluidContents> STREAM_CODEC = ByteBufCodecs.map(
         HashMap::new, ByteBufCodecs.STRING_UTF8, FluidStack.STREAM_CODEC)
         .map(contents -> new NamedFluidContents(ImmutableMap.copyOf(contents)), i -> new HashMap<>(i.fluidMap()));
+    // @formatter:on
 
     public static NamedFluidContents copyOf(Map<String, FluidStack> fluidMap) {
         var copies = fluidMap.entrySet()
