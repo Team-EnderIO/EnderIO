@@ -5,7 +5,7 @@ import java.net.URI
 plugins {
     id("maven-publish")
     id("net.neoforged.moddev") version "1.0.19" apply false
-    id("checkstyle")
+    id("com.diffplug.spotless") version "6.25.0"
     id("idea")
     id("com.github.spotbugs") version "6.0.22"
 }
@@ -33,8 +33,31 @@ subprojects {
     if (project.name != "ensure_plugin") {
         apply(plugin = "maven-publish")
         apply(plugin = "net.neoforged.moddev")
-        apply(plugin = "checkstyle")
+        apply(plugin = "com.diffplug.spotless")
         apply(plugin = "com.github.spotbugs")
+
+        spotless {
+
+            if (project.name != "endercore") {
+                ratchetFrom = "origin/dev/1.21.1"
+            }
+
+            encoding("UTF-8")
+
+            java {
+                cleanthat()
+
+                eclipse().configFile("$rootDir/config/codeformat/codeformat.xml")
+
+                // Revert to spaces, thank you eclipse
+                indentWithSpaces(4)
+
+                importOrder()
+                removeUnusedImports()
+                trimTrailingWhitespace()
+                endWithNewline()
+            }
+        }
 
         spotbugs {
             reportsDir = project.layout.buildDirectory.dir("reports/spotbugs/")
