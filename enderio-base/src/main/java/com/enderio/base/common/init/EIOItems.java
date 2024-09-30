@@ -96,13 +96,13 @@ public class EIOItems {
 
     public static final DeferredItem<MaterialItem> FRANK_N_ZOMBIE = materialItemGlinted("frank_n_zombie")
         .translation("Frank'N'Zombie")
-        .modelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.Z_LOGIC_CONTROLLER))
+        .model((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.Z_LOGIC_CONTROLLER))
         .finish();
 
     public static final DeferredItem<MaterialItem> ENDER_RESONATOR = materialItem("ender_resonator").finish();
 
     public static final DeferredItem<MaterialItem> SENTIENT_ENDER = materialItemGlinted("sentient_ender")
-        .modelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.ENDER_RESONATOR))
+        .model((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.ENDER_RESONATOR))
         .finish();
 
     public static final DeferredItem<MaterialItem> SKELETAL_CONTRACTOR = materialItem("skeletal_contractor").finish();
@@ -321,7 +321,7 @@ public class EIOItems {
     public static final DeferredItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEMS
         .create("broken_spawner", BrokenSpawnerItem::new)
         .tags(EIOTags.Items.ENTITY_STORAGE)
-        .modelProvider(ModelHelper::fakeBlockModel)
+        .model(ModelHelper::fakeBlockModel)
         .tab(EIOCreativeTabs.MAIN)
         .tab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.getPossibleStacks()))
         .finish();
@@ -389,7 +389,7 @@ public class EIOItems {
         return dumbItem(name, HangGliderItem::new)
             .tags(EIOTags.Items.GLIDER)
             .tab(EIOCreativeTabs.MAIN)
-            .modelProvider((prov, ctx) -> GliderItemModel.create(ctx.get(), prov))
+            .model((prov, ctx) -> GliderItemModel.create(ctx.get(), prov))
             .finish();
     }
 

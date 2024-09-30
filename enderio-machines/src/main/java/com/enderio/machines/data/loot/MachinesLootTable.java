@@ -2,7 +2,7 @@ package com.enderio.machines.data.loot;
 
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.machines.common.init.MachineDataComponents;
-import com.enderio.regilite.data.RegiliteBlockLootProvider;
+import com.enderio.regilite.blocks.RegiliteBlockLootProvider;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.level.block.Block;

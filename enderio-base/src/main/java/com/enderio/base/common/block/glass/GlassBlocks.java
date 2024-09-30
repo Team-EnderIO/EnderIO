@@ -79,7 +79,7 @@ public class GlassBlocks {
                     .isSuffocating(GlassBlocks::never)
                     .isViewBlocking(GlassBlocks::never))
             .translation("")
-            .blockStateProvider((cons, ctx) -> cons.simpleBlock(ctx.get(), cons.models().getExistingFile(getModelFile())))
+            .blockState((cons, ctx) -> cons.simpleBlock(ctx.get(), cons.models().getExistingFile(getModelFile())))
             .tag(glassIdentifier.explosion_resistance() ? EIOTags.Blocks.FUSED_QUARTZ : EIOTags.Blocks.CLEAR_GLASS);
 
         block.createSimpleBlockItem(item -> {
@@ -88,7 +88,7 @@ public class GlassBlocks {
                     glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS,
                     EIOTags.Items.GLASS_TAGS.get(glassIdentifier)
                 )
-                .modelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), getModelFile()));
+                .model((prov, ctx) -> prov.withExistingParent(ctx.getName(), getModelFile()));
 
             if (glassIdentifier.lighting() == GlassLighting.EMITTING && glassIdentifier.explosion_resistance()) {
                 item.tag(EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ);
@@ -120,7 +120,7 @@ public class GlassBlocks {
                     .isViewBlocking(GlassBlocks::never)
                     .mapColor(color))
             .translation("")
-            .blockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(getModelFile())))
+            .blockState((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(getModelFile())))
             .blockColor(() -> () -> (state, level, pos, tintIndex) -> color.getMapColor().col)
             .tag(glassIdentifier.explosion_resistance() ? EIOTags.Blocks.FUSED_QUARTZ : EIOTags.Blocks.CLEAR_GLASS);
 
@@ -131,7 +131,7 @@ public class GlassBlocks {
                     glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS,
                     EIOTags.Items.GLASS_TAGS.get(glassIdentifier)
                 )
-                .modelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), getModelFile()));
+                .model((prov, ctx) -> prov.withExistingParent(ctx.getName(), getModelFile()));
 
             if (glassIdentifier.lighting() == GlassLighting.EMITTING && glassIdentifier.explosion_resistance()) {
                 item.tag(EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ);

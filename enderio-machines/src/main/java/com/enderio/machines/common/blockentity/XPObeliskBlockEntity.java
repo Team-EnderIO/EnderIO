@@ -38,7 +38,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
         fluidHandler = createFluidHandler();
 
         this.xpTankDataSlot = NetworkDataSlot.INT.create(() -> TANK.getFluidAmount(this),
-            amount -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), amount)));
+            amount -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.sourceFluid(), amount)));
         addDataSlot(xpTankDataSlot);
     }
 
@@ -121,7 +121,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
 
         } else {
             int cappedVolume = (int) Math.min(Integer.MAX_VALUE, -volumeToRemove); // Invert
-            int filled = TANK.fill(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), cappedVolume), IFluidHandler.FluidAction.EXECUTE);
+            int filled = TANK.fill(this, new FluidStack(EIOFluids.XP_JUICE.sourceFluid(), cappedVolume), IFluidHandler.FluidAction.EXECUTE);
             player.giveExperiencePoints(-1 * filled / ExperienceUtil.EXP_TO_FLUID); // Negative -> Take
         }
     }

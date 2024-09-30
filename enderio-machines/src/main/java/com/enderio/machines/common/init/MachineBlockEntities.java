@@ -39,15 +39,15 @@ import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockE
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
-import com.enderio.regilite.holder.RegiliteBlockEntity;
-import com.enderio.regilite.registry.BlockEntityRegistry;
+import com.enderio.regilite.blockentities.BlockEntityTypeBuilder;
+import com.enderio.regilite.blockentities.DeferredBlockEntityType;
+import com.enderio.regilite.blockentities.RegiliteBlockEntityTypes;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.Util;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 
 import java.util.HashMap;
@@ -56,109 +56,130 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class MachineBlockEntities {
-    private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIOMachines.REGILITE.blockEntityRegistry();
+    private static final RegiliteBlockEntityTypes BLOCK_ENTITY_TYPES = EnderIOMachines.REGILITE.blockEntityTypes();
 
-    public static final RegiliteBlockEntity<FluidTankBlockEntity.Standard> FLUID_TANK =
+    public static final DeferredBlockEntityType<FluidTankBlockEntity.Standard> FLUID_TANK =
         register("fluid_tank", FluidTankBlockEntity.Standard::new, MachineBlocks.FLUID_TANK)
-            .withRenderer(() -> FluidTankBER::new)
+            .renderer(() -> FluidTankBER::new)
             .with(MachineBlockEntities::machineBlockEntityCapabilities)
-            .with(MachineBlockEntities::fluidHandlerCapability);
+            .with(MachineBlockEntities::fluidHandlerCapability)
+            .finish();
 
-    public static final RegiliteBlockEntity<FluidTankBlockEntity.Enhanced> PRESSURIZED_FLUID_TANK =
+    public static final DeferredBlockEntityType<FluidTankBlockEntity.Enhanced> PRESSURIZED_FLUID_TANK =
         register("pressurized_fluid_tank", FluidTankBlockEntity.Enhanced::new, MachineBlocks.PRESSURIZED_FLUID_TANK)
-            .withRenderer(() -> FluidTankBER::new)
+            .renderer(() -> FluidTankBER::new)
             .with(MachineBlockEntities::machineBlockEntityCapabilities)
-            .with(MachineBlockEntities::fluidHandlerCapability);
+            .with(MachineBlockEntities::fluidHandlerCapability)
+            .finish();
 
-    public static final RegiliteBlockEntity<EnchanterBlockEntity> ENCHANTER =
-        register("enchanter", EnchanterBlockEntity::new, MachineBlocks.ENCHANTER);
+    public static final DeferredBlockEntityType<EnchanterBlockEntity> ENCHANTER =
+        register("enchanter", EnchanterBlockEntity::new, MachineBlocks.ENCHANTER)
+            .finish();
 
-    public static final RegiliteBlockEntity<PrimitiveAlloySmelterBlockEntity> PRIMITIVE_ALLOY_SMELTER =
+    public static final DeferredBlockEntityType<PrimitiveAlloySmelterBlockEntity> PRIMITIVE_ALLOY_SMELTER =
         register("primitive_alloy_smelter", PrimitiveAlloySmelterBlockEntity::new, MachineBlocks.PRIMITIVE_ALLOY_SMELTER)
-            .with(MachineBlockEntities::machineBlockEntityCapabilities);
+            .with(MachineBlockEntities::machineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<AlloySmelterBlockEntity> ALLOY_SMELTER =
+    public static final DeferredBlockEntityType<AlloySmelterBlockEntity> ALLOY_SMELTER =
         register("alloy_smelter", AlloySmelterBlockEntity::factory, MachineBlocks.ALLOY_SMELTER)
-            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<CreativePowerBlockEntity> CREATIVE_POWER =
+    public static final DeferredBlockEntityType<CreativePowerBlockEntity> CREATIVE_POWER =
         register("creative_power", CreativePowerBlockEntity::new, MachineBlocks.CREATIVE_POWER)
-            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<StirlingGeneratorBlockEntity> STIRLING_GENERATOR =
+    public static final DeferredBlockEntityType<StirlingGeneratorBlockEntity> STIRLING_GENERATOR =
         register("stirling_generator", StirlingGeneratorBlockEntity::new, MachineBlocks.STIRLING_GENERATOR)
-            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<SagMillBlockEntity> SAG_MILL =
+    public static final DeferredBlockEntityType<SagMillBlockEntity> SAG_MILL =
         register("sag_mill", SagMillBlockEntity::new, MachineBlocks.SAG_MILL)
-            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<SlicerBlockEntity> SLICE_AND_SPLICE =
+    public static final DeferredBlockEntityType<SlicerBlockEntity> SLICE_AND_SPLICE =
         register("slice_and_splice", SlicerBlockEntity::new, MachineBlocks.SLICE_AND_SPLICE)
-            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<ImpulseHopperBlockEntity> IMPULSE_HOPPER =
+    public static final DeferredBlockEntityType<ImpulseHopperBlockEntity> IMPULSE_HOPPER =
         register("impulse_hopper", ImpulseHopperBlockEntity::new, MachineBlocks.IMPULSE_HOPPER)
-            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<VacuumChestBlockEntity> VACUUM_CHEST =
+    public static final DeferredBlockEntityType<VacuumChestBlockEntity> VACUUM_CHEST =
         register("vacuum_chest", VacuumChestBlockEntity::new, MachineBlocks.VACUUM_CHEST)
-            .with(MachineBlockEntities::machineBlockEntityCapabilities);
+            .with(MachineBlockEntities::machineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<XPVacuumBlockEntity> XP_VACUUM =
+    public static final DeferredBlockEntityType<XPVacuumBlockEntity> XP_VACUUM =
         register("xp_vacuum", XPVacuumBlockEntity::new, MachineBlocks.XP_VACUUM)
             .with(MachineBlockEntities::machineBlockEntityCapabilities)
-            .with(MachineBlockEntities::fluidHandlerCapability);
+            .with(MachineBlockEntities::fluidHandlerCapability)
+            .finish();
 
-    public static final RegiliteBlockEntity<TravelAnchorBlockEntity> TRAVEL_ANCHOR =
+    public static final DeferredBlockEntityType<TravelAnchorBlockEntity> TRAVEL_ANCHOR =
         register("travel_anchor", TravelAnchorBlockEntity::new, MachineBlocks.TRAVEL_ANCHOR)
-            .with(MachineBlockEntities::machineBlockEntityCapabilities);
+            .with(MachineBlockEntities::machineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<PaintedTravelAnchorBlockEntity> PAINTED_TRAVEL_ANCHOR = register("painted_travel_anchor",
+    public static final DeferredBlockEntityType<PaintedTravelAnchorBlockEntity> PAINTED_TRAVEL_ANCHOR = register("painted_travel_anchor",
         PaintedTravelAnchorBlockEntity::new, MachineBlocks.PAINTED_TRAVEL_ANCHOR)
-        .with(MachineBlockEntities::machineBlockEntityCapabilities);
+        .with(MachineBlockEntities::machineBlockEntityCapabilities)
+        .finish();
 
-    public static final RegiliteBlockEntity<CrafterBlockEntity> CRAFTER =
+    public static final DeferredBlockEntityType<CrafterBlockEntity> CRAFTER =
         register("crafter", CrafterBlockEntity::new, MachineBlocks.CRAFTER)
-            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<DrainBlockEntity> DRAIN =
+    public static final DeferredBlockEntityType<DrainBlockEntity> DRAIN =
         register("drain", DrainBlockEntity::new, MachineBlocks.DRAIN)
             .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
-            .with(MachineBlockEntities::fluidHandlerCapability);
+            .with(MachineBlockEntities::fluidHandlerCapability)
+            .finish();
 
-    public static final RegiliteBlockEntity<SoulBinderBlockEntity> SOUL_BINDER =
+    public static final DeferredBlockEntityType<SoulBinderBlockEntity> SOUL_BINDER =
         register("soul_binder", SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER)
             .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
-            .with(MachineBlockEntities::fluidHandlerCapability);
+            .with(MachineBlockEntities::fluidHandlerCapability)
+            .finish();
 
-    public static final RegiliteBlockEntity<WiredChargerBlockEntity> WIRED_CHARGER =
+    public static final DeferredBlockEntityType<WiredChargerBlockEntity> WIRED_CHARGER =
         register("wired_charger", WiredChargerBlockEntity::new, MachineBlocks.WIRED_CHARGER)
-            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<PaintingMachineBlockEntity> PAINTING_MACHINE =
+    public static final DeferredBlockEntityType<PaintingMachineBlockEntity> PAINTING_MACHINE =
         register("painting_machine", PaintingMachineBlockEntity::new, MachineBlocks.PAINTING_MACHINE)
-            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<PoweredSpawnerBlockEntity> POWERED_SPAWNER =
+    public static final DeferredBlockEntityType<PoweredSpawnerBlockEntity> POWERED_SPAWNER =
         register("powered_spawner", PoweredSpawnerBlockEntity::new, MachineBlocks.POWERED_SPAWNER)
-            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .finish();
 
-    public static final Map<SolarPanelTier, RegiliteBlockEntity<SolarPanelBlockEntity>> SOLAR_PANELS = Util.make(() -> {
-       Map<SolarPanelTier, RegiliteBlockEntity<SolarPanelBlockEntity>> map = new HashMap<>();
+    public static final Map<SolarPanelTier, DeferredBlockEntityType<SolarPanelBlockEntity>> SOLAR_PANELS = Util.make(() -> {
+       Map<SolarPanelTier, DeferredBlockEntityType<SolarPanelBlockEntity>> map = new HashMap<>();
        for (SolarPanelTier tier : SolarPanelTier.values()) {
            map.put(
                tier,
                register(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell",
                    (worldPosition, blockState) -> new SolarPanelBlockEntity(worldPosition, blockState, tier),
                    () -> MachineBlocks.SOLAR_PANELS.get(tier).get())
-                   .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities));
+                   .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+                   .finish());
        }
        return ImmutableMap.copyOf(map);
     });
 
-    public static final Map<CapacitorTier, RegiliteBlockEntity<CapacitorBankBlockEntity>> CAPACITOR_BANKS = Util.make(() -> {
-       Map<CapacitorTier, RegiliteBlockEntity<CapacitorBankBlockEntity>> map = new HashMap<>();
+    public static final Map<CapacitorTier, DeferredBlockEntityType<CapacitorBankBlockEntity>> CAPACITOR_BANKS = Util.make(() -> {
+       Map<CapacitorTier, DeferredBlockEntityType<CapacitorBankBlockEntity>> map = new HashMap<>();
        for (CapacitorTier tier : CapacitorTier.values()) {
            map.put(
                tier,
@@ -166,66 +187,74 @@ public class MachineBlockEntities {
                    tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
                    (worldPosition, blockState) -> new CapacitorBankBlockEntity(worldPosition, blockState, tier),
                    () -> MachineBlocks.CAPACITOR_BANKS.get(tier).get())
-                   .withRenderer(() -> CapacitorBankBER::new)
-                   .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities));
+                   .renderer(() -> CapacitorBankBER::new)
+                   .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+                   .finish());
        }
        return ImmutableMap.copyOf(map);
     });
 
-    public static final RegiliteBlockEntity<SoulEngineBlockEntity> SOUL_ENGINE =
+    public static final DeferredBlockEntityType<SoulEngineBlockEntity> SOUL_ENGINE =
         register("soul_engine", SoulEngineBlockEntity::new, MachineBlocks.SOUL_ENGINE)
             .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
-            .with(MachineBlockEntities::fluidHandlerCapability);
+            .with(MachineBlockEntities::fluidHandlerCapability)
+            .finish();
 
-    public static final RegiliteBlockEntity<XPObeliskBlockEntity> XP_OBELISK =
+    public static final DeferredBlockEntityType<XPObeliskBlockEntity> XP_OBELISK =
         register("xp_obelisk", XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK)
-            .withRenderer(() -> XPObeliskBER::new)
+            .renderer(() -> XPObeliskBER::new)
             // TODO: Make XP Obelisk use the common base class :)
             //.setRenderer(() -> ObeliskBER.factory(EIOItems.EXPERIENCE_ROD::get))
             .with(MachineBlockEntities::machineBlockEntityCapabilities)
-            .with(MachineBlockEntities::fluidHandlerCapability);
+            .with(MachineBlockEntities::fluidHandlerCapability)
+            .finish();
 
-    public static final RegiliteBlockEntity<VatBlockEntity> VAT = register("vat", VatBlockEntity::new, MachineBlocks.VAT)
+    public static final DeferredBlockEntityType<VatBlockEntity> VAT = register("vat", VatBlockEntity::new, MachineBlocks.VAT)
         .with(MachineBlockEntities::machineBlockEntityCapabilities)
-        .with(MachineBlockEntities::fluidHandlerCapability);
+        .with(MachineBlockEntities::fluidHandlerCapability)
+        .finish();
 
-    public static final RegiliteBlockEntity<InhibitorObeliskBlockEntity> INHIBITOR_OBELISK =
+    public static final DeferredBlockEntityType<InhibitorObeliskBlockEntity> INHIBITOR_OBELISK =
         register("inhibitor_obelisk", InhibitorObeliskBlockEntity::new, MachineBlocks.INHIBITOR_OBELISK)
-            .withRenderer(() -> ObeliskBER.factory(() -> Items.ENDER_PEARL))
-            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            .renderer(() -> ObeliskBER.factory(() -> Items.ENDER_PEARL))
+            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<AversionObeliskBlockEntity> AVERSION_OBELISK =
+    public static final DeferredBlockEntityType<AversionObeliskBlockEntity> AVERSION_OBELISK =
         register("aversion_obelisk", AversionObeliskBlockEntity::new, MachineBlocks.AVERSION_OBELISK)
-            .withRenderer(() -> ObeliskBER.factory(EIOBlocks.ENDERMAN_HEAD::asItem))
-            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            .renderer(() -> ObeliskBER.factory(EIOBlocks.ENDERMAN_HEAD::asItem))
+            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .finish();
 
-    public static final RegiliteBlockEntity<RelocatorObeliskBlockEntity> RELOCATOR_OBELISK =
+    public static final DeferredBlockEntityType<RelocatorObeliskBlockEntity> RELOCATOR_OBELISK =
         register("relocator_obelisk", RelocatorObeliskBlockEntity::new, MachineBlocks.RELOCATOR_OBELISK)
-            .withRenderer(() -> ObeliskBER.factory(() -> Items.PRISMARINE))
-            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            .renderer(() -> ObeliskBER.factory(() -> Items.PRISMARINE))
+            .with(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .finish();
 
     @SafeVarargs
-    private static <B extends BlockEntity> RegiliteBlockEntity<B> register(String name, BlockEntityType.BlockEntitySupplier<B> beFactory,
+    private static <B extends BlockEntity> BlockEntityTypeBuilder<B> register(String name, BlockEntityType.BlockEntitySupplier<B> beFactory,
         Supplier<? extends Block>... blocks) {
-        return BLOCK_ENTITY_REGISTRY
-            .registerBlockEntity(name, beFactory, blocks);
+        return BLOCK_ENTITY_TYPES
+            .create(name, beFactory, blocks);
     }
 
-    private static void machineBlockEntityCapabilities(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
-        blockEntity.withCapability(EIOCapabilities.SideConfig.BLOCK, MachineBlockEntity.SIDE_CONFIG_PROVIDER);
-        blockEntity.withCapability(Capabilities.ItemHandler.BLOCK, MachineBlockEntity.ITEM_HANDLER_PROVIDER);
+    private static <T extends MachineBlockEntity> BlockEntityTypeBuilder<T> machineBlockEntityCapabilities(BlockEntityTypeBuilder<T> blockEntity) {
+        return blockEntity
+            .capability(EIOCapabilities.SideConfig.BLOCK, MachineBlockEntity.SIDE_CONFIG_PROVIDER)
+            .capability(Capabilities.ItemHandler.BLOCK, MachineBlockEntity.ITEM_HANDLER_PROVIDER);
     }
 
-    private static void poweredMachineBlockEntityCapabilities(RegiliteBlockEntity<? extends PoweredMachineBlockEntity> blockEntity) {
-        machineBlockEntityCapabilities(blockEntity);
-        blockEntity.withCapability(Capabilities.EnergyStorage.BLOCK, PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
+    private static <T extends PoweredMachineBlockEntity> BlockEntityTypeBuilder<T> poweredMachineBlockEntityCapabilities(BlockEntityTypeBuilder<T> blockEntity) {
+        return blockEntity
+            .with(MachineBlockEntities::machineBlockEntityCapabilities)
+            .capability(Capabilities.EnergyStorage.BLOCK, PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
     }
 
-    private static void fluidHandlerCapability(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
-        blockEntity.withCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
+    private static <T extends MachineBlockEntity> BlockEntityTypeBuilder<T> fluidHandlerCapability(BlockEntityTypeBuilder<T> blockEntity) {
+        return blockEntity.capability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
     }
 
-    public static void register(IEventBus bus) {
-        BLOCK_ENTITY_REGISTRY.register(bus);
+    public static void register() {
     }
 }

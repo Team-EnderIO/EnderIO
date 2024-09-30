@@ -132,7 +132,7 @@ public class EIOBlocks {
 
     public static final DeferredBlock<DarkSteelLadderBlock> DARK_STEEL_LADDER = BLOCKS
         .create("dark_steel_ladder", DarkSteelLadderBlock::new, BlockBehaviour.Properties.of().strength(0.4f).requiresCorrectToolForDrops().sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
-        .blockStateProvider((prov, ctx) -> prov.horizontalBlock(ctx.get(), prov
+        .blockState((prov, ctx) -> prov.horizontalBlock(ctx.get(), prov
             .models()
             .withExistingParent(ctx.getName(), prov.mcLoc("block/ladder"))
             .renderType(prov.mcLoc("cutout_mipped"))
@@ -140,21 +140,21 @@ public class EIOBlocks {
             .texture("texture", prov.blockTexture(ctx.get()))))
         .tags(BlockTags.CLIMBABLE, BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .createSimpleBlockItem(item -> item
-            .modelProvider((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("block/dark_steel_ladder")))
+            .model((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("block/dark_steel_ladder")))
             .tab(EIOCreativeTabs.BLOCKS))
         .finish();
 
     public static final DeferredBlock<IronBarsBlock> DARK_STEEL_BARS = BLOCKS
         .create("dark_steel_bars", IronBarsBlock::new,
             BlockBehaviour.Properties.of().strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion())
-        .blockStateProvider(EIOBlockState::paneBlock)
+        .blockState(EIOBlockState::paneBlock)
         .tags(
             BlockTags.NEEDS_IRON_TOOL,
             BlockTags.MINEABLE_WITH_PICKAXE
         )
         .createSimpleBlockItem(item -> item
             .tab(EIOCreativeTabs.BLOCKS)
-            .modelProvider((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("block/dark_steel_bars")))
+            .model((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("block/dark_steel_bars")))
         )
         .finish();
 
@@ -162,12 +162,12 @@ public class EIOBlocks {
         .create("dark_steel_door", props -> new DoorBlock(BlockSetType.IRON, props),
             BlockBehaviour.Properties.of().strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
         .lootTable(RegiliteBlockLootProvider::createDoor)
-        .blockStateProvider(
+        .blockState(
             (prov, ctx) -> prov.doorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_door_bottom"), prov.modLoc("block/dark_steel_door_top"),
                 prov.mcLoc("cutout")))
         .tags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
         .createSimpleBlockItem(item -> item
-            .modelProvider((prov, ctx) -> prov.basicItem(ctx.get()))
+            .model((prov, ctx) -> prov.basicItem(ctx.get()))
             .tab(EIOCreativeTabs.BLOCKS)
         )
         .finish();
@@ -175,10 +175,10 @@ public class EIOBlocks {
     public static final DeferredBlock<TrapDoorBlock> DARK_STEEL_TRAPDOOR = BLOCKS
         .create("dark_steel_trapdoor", props -> new TrapDoorBlock(BlockSetType.IRON, props),
             BlockBehaviour.Properties.of().strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
-        .blockStateProvider((prov, ctx) -> prov.trapdoorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true, prov.mcLoc("cutout")))
+        .blockState((prov, ctx) -> prov.trapdoorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true, prov.mcLoc("cutout")))
         .tags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
         .createSimpleBlockItem(item -> item
-            .modelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
+            .model((prov, ctx) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
             .tab(EIOCreativeTabs.BLOCKS)
         )
         .finish();
@@ -186,14 +186,14 @@ public class EIOBlocks {
     public static final DeferredBlock<IronBarsBlock> END_STEEL_BARS = BLOCKS
         .create("end_steel_bars", IronBarsBlock::new,
             BlockBehaviour.Properties.of().strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion())
-        .blockStateProvider(EIOBlockState::paneBlock)
+        .blockState(EIOBlockState::paneBlock)
         .tags(
             BlockTags.NEEDS_IRON_TOOL,
             BlockTags.MINEABLE_WITH_PICKAXE
         )
         .createSimpleBlockItem(item -> item
             .tab(EIOCreativeTabs.BLOCKS)
-            .modelProvider((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("block/end_steel_bars")))
+            .model((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("block/end_steel_bars")))
         )
         .finish();
 
@@ -251,7 +251,7 @@ public class EIOBlocks {
             BlockTags.MINEABLE_WITH_PICKAXE,
             Tags.Blocks.CHAINS
         )
-        .blockStateProvider((prov, ctx) -> {
+        .blockState((prov, ctx) -> {
             var model = prov
                 .models()
                 .withExistingParent(ctx.getName(), prov.mcLoc("block/chain"))
@@ -262,7 +262,7 @@ public class EIOBlocks {
             prov.axisBlock(ctx.get(), model, model);
         })
         .createSimpleBlockItem(item -> item
-            .modelProvider((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("item/soul_chain")))
+            .model((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("item/soul_chain")))
             .tags(Tags.Items.CHAINS)
             .tab(EIOCreativeTabs.BLOCKS)
         )
@@ -270,7 +270,7 @@ public class EIOBlocks {
 
     public static final DeferredBlock<ColdFireBlock> COLD_FIRE = BLOCKS
         .create("cold_fire", ColdFireBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.FIRE).noLootTable())
-        .blockStateProvider((prov, ctx) -> {
+        .blockState((prov, ctx) -> {
             // This generates the models used for the blockstate in our resources.
             // One day we may bother to datagen that file.
             String[] toCopy = { "fire_floor0", "fire_floor1", "fire_side0", "fire_side1", "fire_side_alt0", "fire_side_alt1", "fire_up0", "fire_up1",
@@ -409,25 +409,25 @@ public class EIOBlocks {
 
     public static final DeferredBlock<LightNode> LIGHT_NODE = BLOCKS
         .create("light_node", LightNode::new, BlockBehaviour.Properties.ofFullCopy(Blocks.AIR).lightLevel(l -> 15).noLootTable().noCollission().noOcclusion())
-        .blockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().withExistingParent("light_node", "block/air")))
+        .blockState((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().withExistingParent("light_node", "block/air")))
         .finish();
 
     public static final DeferredBlock<EnderSkullBlock> ENDERMAN_HEAD = BLOCKS
         .create("enderman_head", EnderSkullBlock::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY))
-        .blockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
-        .withBlockItem(
+        .blockState((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
+        .createBlockItem(
             // TODO: Properties being handled right? Maybe cleaner if we have a factory that takes properties, then a properties arg.
             (enderSkullBlock) -> new EnderSkullBlockItem(enderSkullBlock, new Item.Properties(), Direction.DOWN),
             item -> item
                 .tab(EIOCreativeTabs.MAIN)
-                .modelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), "item/template_skull")))
+                .model((prov, ctx) -> prov.withExistingParent(ctx.getName(), "item/template_skull")))
         .finish();
 
     public static final DeferredBlock<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = BLOCKS
         .create("wall_enderman_head", WallEnderSkullBlock::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).strength(1.0F).lootFrom(ENDERMAN_HEAD).pushReaction(PushReaction.DESTROY))
-        .blockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
+        .blockState((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
         .translation("")
         .finish();
 
@@ -449,7 +449,7 @@ public class EIOBlocks {
     private static DeferredBlock<Block> chassisBlock(String name) {
         return BLOCKS
             .create(name, Block::new, BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6))
-            .blockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+            .blockState((prov, ctx) -> prov.simpleBlock(ctx.get(),
                 prov.models().cubeAll(name, prov.blockTexture(ctx.get())).renderType(prov.mcLoc("translucent"))))
             .tags(
                 BlockTags.NEEDS_STONE_TOOL,
@@ -467,7 +467,7 @@ public class EIOBlocks {
         return BLOCKS
             .create(name, props -> new EIOPressurePlateBlock(props, type, silent),
                 BlockBehaviour.Properties.of().strength(5, 6).mapColor(MapColor.METAL))
-            .blockStateProvider((prov, ctx) -> {
+            .blockState((prov, ctx) -> {
                 BlockModelProvider modProv = prov.models();
                 ModelFile dm = modProv.withExistingParent(name + "_down", prov.mcLoc("block/pressure_plate_down")).texture("texture", texture);
                 ModelFile um = modProv.withExistingParent(name, prov.mcLoc("block/pressure_plate_up")).texture("texture", texture);
@@ -491,13 +491,13 @@ public class EIOBlocks {
             .create("silent_" + upModelLoc.getPath(), props -> new SilentPressurePlateBlock(block),
                 BlockBehaviour.Properties.of())
             .tags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
-            .blockStateProvider((prov, ctx) -> {
+            .blockState((prov, ctx) -> {
                 VariantBlockStateBuilder vb = prov.getVariantBuilder(ctx.get());
                 vb.partialState().with(PressurePlateBlock.POWERED, true).addModels(new ConfiguredModel(prov.models().getExistingFile(downModelLoc)));
                 vb.partialState().with(PressurePlateBlock.POWERED, false).addModels(new ConfiguredModel(prov.models().getExistingFile(upModelLoc)));
             })
             .createSimpleBlockItem(item -> item
-                .modelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), upModelLoc))
+                .model((prov, ctx) -> prov.withExistingParent(ctx.getName(), upModelLoc))
                 .tab(EIOCreativeTabs.BLOCKS)
             )
             .finish();
@@ -510,7 +510,7 @@ public class EIOBlocks {
         return BLOCKS
             .create("silent_" + upModelLoc.getPath(), props -> new SilentWeightedPressurePlateBlock(block),
                 BlockBehaviour.Properties.of())
-            .blockStateProvider((prov, ctx) -> prov.getVariantBuilder(ctx.get()).forAllStates(blockState -> {
+            .blockState((prov, ctx) -> prov.getVariantBuilder(ctx.get()).forAllStates(blockState -> {
                 if (blockState.getValue(WeightedPressurePlateBlock.POWER) == 0) {
                     return new ConfiguredModel[] { new ConfiguredModel(prov.models().getExistingFile(upModelLoc)) };
                 }
@@ -518,7 +518,7 @@ public class EIOBlocks {
             }))
             .tags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
             .createSimpleBlockItem(item -> item
-                .modelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), upModelLoc))
+                .model((prov, ctx) -> prov.withExistingParent(ctx.getName(), upModelLoc))
                 .tab(EIOCreativeTabs.BLOCKS)
             )
             .finish();
@@ -530,7 +530,7 @@ public class EIOBlocks {
         return BLOCKS
             .create(name, props -> new ResettingLeverBlock(duration, inverted), BlockBehaviour.Properties.of())
             .translation("Resetting Lever " + (inverted ? "Inverted " : "") + durationLabel)
-            .blockStateProvider((prov, ctx) -> {
+            .blockState((prov, ctx) -> {
                 BlockModelProvider modProv = prov.models();
                 ModelFile.ExistingModelFile baseModel = modProv.getExistingFile(prov.mcLoc("block/lever"));
                 ModelFile.ExistingModelFile onModel = modProv.getExistingFile(prov.mcLoc("block/lever_on"));
@@ -550,7 +550,7 @@ public class EIOBlocks {
                 });
             })
             .createSimpleBlockItem(item -> item
-                .modelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("item/lever")))
+                .model((prov, ctx) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("item/lever")))
                 .tab(EIOCreativeTabs.BLOCKS)
             )
             .finish();
@@ -589,11 +589,11 @@ public class EIOBlocks {
 
         return BLOCKS
             .create(name, blockFactory, BlockBehaviour.Properties.ofFullCopy(copyFrom).noOcclusion())
-            .blockStateProvider((prov, ctx) -> EIOBlockState.paintedBlock(name, prov, ctx.get(), copyFrom, itemTextureRotation))
+            .blockState((prov, ctx) -> EIOBlockState.paintedBlock(name, prov, ctx.get(), copyFrom, itemTextureRotation))
             .blockColor(() -> PaintedBlockColor::new)
             .lootTable(DecorLootTable::withPaint)
             .tags(tags)
-            .withBlockItem(
+            .createBlockItem(
                 b -> itemFactory.apply(b, new Item.Properties()),
                 item -> item
                     .itemColor(() -> PaintedBlockColor::new));
@@ -607,9 +607,9 @@ public class EIOBlocks {
                 }
                 return 0;
             }))
-            .blockStateProvider(EIOBlockState::lightBlock)
+            .blockState(EIOBlockState::lightBlock)
             .createSimpleBlockItem(item -> item
-                .modelProvider((prov, ctx) -> prov.withExistingParent(name, "block/button_inventory"))
+                .model((prov, ctx) -> prov.withExistingParent(name, "block/button_inventory"))
                 .tab(EIOCreativeTabs.BLOCKS)
             )
             .finish();

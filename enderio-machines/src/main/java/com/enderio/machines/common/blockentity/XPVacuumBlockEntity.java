@@ -38,7 +38,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
         // Sync fluid level.
         addDataSlot(NetworkDataSlot.INT.create(
             () -> TANK.getFluidAmount(this),
-            i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))));
+            i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.sourceFluid(), i))));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
     @Override
     public void handleEntity(ExperienceOrb xpe) {
-        int filled = TANK.fill(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), xpe.getValue() * EXP_TO_FLUID), FluidAction.EXECUTE);
+        int filled = TANK.fill(this, new FluidStack(EIOFluids.XP_JUICE.sourceFluid(), xpe.getValue() * EXP_TO_FLUID), FluidAction.EXECUTE);
         if (filled == xpe.getValue() * EXP_TO_FLUID) {
             xpe.discard();
         } else {

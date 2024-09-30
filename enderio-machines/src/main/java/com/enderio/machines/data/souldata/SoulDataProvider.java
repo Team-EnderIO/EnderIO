@@ -117,10 +117,10 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.ZOMBIFIED_PIGLIN, 32_000, SpawnerMachineTask.SpawnType.ENTITY_TYPE, finshedSoulDataConsumer);
 
         addEngineData(EntityType.BLAZE, FluidTags.LAVA, 300, 15, finshedSoulDataConsumer);
-        addEngineData(EntityType.ZOMBIE, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 500, 15, finshedSoulDataConsumer);
-        addEngineData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 500, 15, finshedSoulDataConsumer);
-        addEngineData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 500, 15, finshedSoulDataConsumer);
-        addEngineData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.getSource(), 900, 10, finshedSoulDataConsumer);
+        addEngineData(EntityType.ZOMBIE, EIOFluids.NUTRIENT_DISTILLATION.sourceFluid(), 500, 15, finshedSoulDataConsumer);
+        addEngineData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.sourceFluid(), 500, 15, finshedSoulDataConsumer);
+        addEngineData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.sourceFluid(), 500, 15, finshedSoulDataConsumer);
+        addEngineData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.sourceFluid(), 900, 10, finshedSoulDataConsumer);
 
         addSolarData(EntityType.PHANTOM, false, true, null, finshedSoulDataConsumer);
     }

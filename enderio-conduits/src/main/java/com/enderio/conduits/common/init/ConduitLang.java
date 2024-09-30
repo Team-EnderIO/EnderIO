@@ -30,11 +30,11 @@ public class ConduitLang {
     public static final Component CONDUIT_EXTRACT = addTranslation("gui", EnderIOBase.loc("conduit.extract"), "Extract");
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
-        return EnderIOConduits.REGILITE.addTranslation(prefix, id, translation);
+        return EnderIOConduits.REGILITE.lang().add(prefix, id, translation);
     }
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation path, String name, String translation) {
-        return EnderIOConduits.REGILITE.addTranslation(prefix, ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "/" + name), translation);
+        return EnderIOConduits.REGILITE.lang().add(prefix, ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "/" + name), translation);
     }
 
     public static void register() {

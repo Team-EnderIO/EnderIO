@@ -5,17 +5,16 @@ import com.enderio.armory.common.item.darksteel.DarkSteelSwordItem;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.regilite.holder.RegiliteItem;
-import com.enderio.regilite.registry.ItemRegistry;
+import com.enderio.regilite.items.RegiliteItems;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.SimpleTier;
+import net.neoforged.neoforge.registries.DeferredItem;
 
 @SuppressWarnings("unused")
 public class ArmoryItems {
-    private static final ItemRegistry ITEM_REGISTRY = EnderIOArmory.REGILITE.itemRegistry();
+    private static final RegiliteItems ITEMS = EnderIOArmory.REGILITE.items();
 
     /*public static final Tier DARK_STEEL_TIER = TierSortingRegistry.registerTier(
         new SimpleTier(3, 2000, 8.0F, 3, 25, ArmoryTags.Blocks.DARK_STEEL_TIER, () -> Ingredient.of(EIOItems.DARK_STEEL_INGOT.get())),
@@ -24,11 +23,12 @@ public class ArmoryItems {
     public static final Tier DARK_STEEL_TIER = new SimpleTier(ArmoryTags.Blocks.INCORRECT_FOR_DARK_STEEL_TOOL, 2000, 8.0f, 3.0f, 25, () -> Ingredient.of(
         EIOTags.Items.INGOTS_DARK_STEEL));
 
-    public static final RegiliteItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEM_REGISTRY
-        .registerItem("dark_steel_sword", DarkSteelSwordItem::new, new Item.Properties().durability(2000))
-        .withTab(EIOCreativeTabs.GEAR)
-        .withTranslation("The Ender")
-        .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+    public static final DeferredItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEMS
+        .create("dark_steel_sword", DarkSteelSwordItem::new, new Item.Properties().durability(2000))
+        .tab(EIOCreativeTabs.GEAR)
+        .translation("The Ender")
+        .model((prov, ctx) -> prov.handheld(ctx.get()))
+        .finish();
 
     // TODO: Bring these back when they are finished.
 //    public static final ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE
@@ -134,7 +134,6 @@ public class ArmoryItems {
 //        .lang("Explosive Penetration II" + UPGRADE_TEXT)
 //        .register();
 
-    public static void register(IEventBus bus) {
-        ITEM_REGISTRY.register(bus);
+    public static void register() {
     }
 }

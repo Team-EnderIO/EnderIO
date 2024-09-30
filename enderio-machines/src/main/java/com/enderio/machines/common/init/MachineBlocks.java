@@ -28,11 +28,10 @@ import com.enderio.machines.common.item.CapacitorBankItem;
 import com.enderio.machines.common.item.FluidTankItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
+import com.enderio.regilite.blockentities.DeferredBlockEntityType;
+import com.enderio.regilite.blocks.BlockBuilder;
+import com.enderio.regilite.blocks.RegiliteBlocks;
 import com.enderio.regilite.data.DataGenContext;
-import com.enderio.regilite.holder.RegiliteBlock;
-import com.enderio.regilite.holder.RegiliteBlockEntity;
-import com.enderio.regilite.registry.BlockRegistry;
-import com.enderio.regilite.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
@@ -41,10 +40,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
+import net.neoforged.neoforge.registries.DeferredBlock;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -53,15 +52,14 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class MachineBlocks {
-    private static final BlockRegistry BLOCK_REGISTRY = EnderIOMachines.REGILITE.blockRegistry();
-    private static final ItemRegistry ITEM_REGISTRY = EnderIOMachines.REGILITE.itemRegistry();
+    private static final RegiliteBlocks BLOCK_REGISTRY = EnderIOMachines.REGILITE.blocks();
 
-    public static final RegiliteBlock<MachineBlock> FLUID_TANK = BLOCK_REGISTRY
-        .registerBlock("fluid_tank", props -> new MachineBlock(MachineBlockEntities.FLUID_TANK, props),
+    public static final DeferredBlock<MachineBlock> FLUID_TANK = BLOCK_REGISTRY
+        .create("fluid_tank", props -> new MachineBlock(MachineBlockEntities.FLUID_TANK, props),
             BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
-        .withLootTable(MachinesLootTable::copyComponents)
-        .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .setBlockStateProvider((prov, ctx) -> prov.horizontalBlock(ctx.get(), prov.models()
+        .lootTable(MachinesLootTable::copyComponents)
+        .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockState((prov, ctx) -> prov.horizontalBlock(ctx.get(), prov.models()
             .getBuilder(ctx.getName())
             .customLoader(CompositeModelBuilder::begin)
                 .child("tank", ModelHelper.getExistingAsBuilder(prov.models(), EnderIOBase.loc(String.format("block/%s_body", ctx.getName()))))
@@ -69,20 +67,21 @@ public class MachineBlocks {
             .end()
             .texture("particle", EnderIOBase.loc("block/machine_side"))
         ))
-        .withBlockItem(ITEM_REGISTRY,
+        .createBlockItem(
             block -> new FluidTankItem(block, new Item.Properties(), 16000),
             item -> item
-                .setModelProvider((prov, ctx) -> {})
-                .withTab(EIOCreativeTabs.MACHINES)
-                .withCapability(Capabilities.FluidHandler.ITEM, FluidTankItem.FLUID_HANDLER_PROVIDER)
-        );
+                .model((prov, ctx) -> {})
+                .tab(EIOCreativeTabs.MACHINES)
+                .capability(Capabilities.FluidHandler.ITEM, FluidTankItem.FLUID_HANDLER_PROVIDER)
+        )
+        .finish();
 
-    public static final RegiliteBlock<MachineBlock> PRESSURIZED_FLUID_TANK = BLOCK_REGISTRY
-        .registerBlock("pressurized_fluid_tank", props -> new MachineBlock(MachineBlockEntities.PRESSURIZED_FLUID_TANK, props),
+    public static final DeferredBlock<MachineBlock> PRESSURIZED_FLUID_TANK = BLOCK_REGISTRY
+        .create("pressurized_fluid_tank", props -> new MachineBlock(MachineBlockEntities.PRESSURIZED_FLUID_TANK, props),
             BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
-        .withLootTable(MachinesLootTable::copyComponents)
-        .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .setBlockStateProvider((prov, ctx) -> prov.horizontalBlock(ctx.get(), prov.models()
+        .lootTable(MachinesLootTable::copyComponents)
+        .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockState((prov, ctx) -> prov.horizontalBlock(ctx.get(), prov.models()
                 .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
                 .customLoader(CompositeModelBuilder::begin)
             .child("tank", ModelHelper.getExistingAsBuilder(prov.models(), EnderIOBase.loc(String.format("block/%s_body", ctx.getName()))))
@@ -90,237 +89,261 @@ public class MachineBlocks {
                 .end()
                 .texture("particle", EnderIOBase.loc("block/machine_side"))
         ))
-        .withBlockItem(ITEM_REGISTRY, (block) -> new FluidTankItem(block, new Item.Properties(), 32000),
+        .createBlockItem((block) -> new FluidTankItem(block, new Item.Properties(), 32000),
             item -> item
-                .setModelProvider((prov, ctx) -> {})
-                .withTab(EIOCreativeTabs.MACHINES)
-                .withCapability(Capabilities.FluidHandler.ITEM, FluidTankItem.FLUID_HANDLER_PROVIDER)
-        );
+                .model((prov, ctx) -> {})
+                .tab(EIOCreativeTabs.MACHINES)
+                .capability(Capabilities.FluidHandler.ITEM, FluidTankItem.FLUID_HANDLER_PROVIDER)
+        )
+        .finish();
 
-    public static final RegiliteBlock<EnchanterBlock> ENCHANTER = BLOCK_REGISTRY
-        .registerBlock("enchanter", EnchanterBlock::new,
+    public static final DeferredBlock<EnchanterBlock> ENCHANTER = BLOCK_REGISTRY
+        .create("enchanter", EnchanterBlock::new,
             BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion().isViewBlocking((pState, pLevel, pPos) -> false))
-        .withLootTable(MachinesLootTable::copyComponents)
-        .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .setBlockStateProvider(MachineModelUtil::machineBlock)
-        .withBlockItem(ITEM_REGISTRY, item -> item.withTab(EIOCreativeTabs.MACHINES));
+        .lootTable(MachinesLootTable::copyComponents)
+        .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockState(MachineModelUtil::machineBlock)
+        .createSimpleBlockItem(item -> item.tab(EIOCreativeTabs.MACHINES))
+        .finish();
 
-    public static final RegiliteBlock<ProgressMachineBlock> PRIMITIVE_ALLOY_SMELTER =
-        progressMachine("primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER);
+    public static final DeferredBlock<ProgressMachineBlock> PRIMITIVE_ALLOY_SMELTER =
+        progressMachine("primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER)
+            .finish();
 
-    public static final RegiliteBlock<ProgressMachineBlock> ALLOY_SMELTER =
-        progressMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER);
+    public static final DeferredBlock<ProgressMachineBlock> ALLOY_SMELTER =
+        progressMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
+            .finish();
 
-    public static final RegiliteBlock<ProgressMachineBlock> PAINTING_MACHINE =
-        progressMachine("painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE);
+    public static final DeferredBlock<ProgressMachineBlock> PAINTING_MACHINE =
+        progressMachine("painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE)
+            .finish();
 
-    public static final RegiliteBlock<MachineBlock> WIRED_CHARGER =
-        machine("wired_charger", () -> MachineBlockEntities.WIRED_CHARGER);
+    public static final DeferredBlock<MachineBlock> WIRED_CHARGER =
+        machine("wired_charger", () -> MachineBlockEntities.WIRED_CHARGER)
+            .finish();
 
-    public static final RegiliteBlock<MachineBlock> CREATIVE_POWER = BLOCK_REGISTRY
-        .registerBlock("creative_power", props -> new MachineBlock(MachineBlockEntities.CREATIVE_POWER, props), BlockBehaviour.Properties.of())
-        .withBlockItem(ITEM_REGISTRY, item -> item.withTab(EIOCreativeTabs.MACHINES));
+    public static final DeferredBlock<MachineBlock> CREATIVE_POWER = BLOCK_REGISTRY
+        .create("creative_power", props -> new MachineBlock(MachineBlockEntities.CREATIVE_POWER, props), BlockBehaviour.Properties.of())
+        .createSimpleBlockItem(item -> item.tab(EIOCreativeTabs.MACHINES))
+        .finish();
 
-    public static final RegiliteBlock<ProgressMachineBlock> STIRLING_GENERATOR =
-        progressMachine("stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR);
+    public static final DeferredBlock<ProgressMachineBlock> STIRLING_GENERATOR =
+        progressMachine("stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR)
+            .finish();
 
-    public static final RegiliteBlock<ProgressMachineBlock> SAG_MILL =
+    public static final DeferredBlock<ProgressMachineBlock> SAG_MILL =
         progressMachine("sag_mill", () -> MachineBlockEntities.SAG_MILL)
-            .withTranslation("SAG Mill");
+            .translation("SAG Mill")
+            .finish();
 
-    public static final RegiliteBlock<ProgressMachineBlock> SLICE_AND_SPLICE =
+    public static final DeferredBlock<ProgressMachineBlock> SLICE_AND_SPLICE =
         progressMachine("slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE)
-            .withTranslation("Slice'N'Splice");
+            .translation("Slice'N'Splice")
+            .finish();
 
-    public static final RegiliteBlock<ProgressMachineBlock> IMPULSE_HOPPER =
+    public static final DeferredBlock<ProgressMachineBlock> IMPULSE_HOPPER =
         progressMachine("impulse_hopper", () -> MachineBlockEntities.IMPULSE_HOPPER)
-            .withTranslation("Impulse Hopper");
+            .translation("Impulse Hopper")
+            .finish();
 
-    public static final RegiliteBlock<ProgressMachineBlock> SOUL_BINDER =
+    public static final DeferredBlock<ProgressMachineBlock> SOUL_BINDER =
         progressMachine("soul_binder", () -> MachineBlockEntities.SOUL_BINDER)
-            .withTranslation("Soul Binder");
+            .translation("Soul Binder")
+            .finish();
 
-    public static final RegiliteBlock<ProgressMachineBlock> POWERED_SPAWNER = BLOCK_REGISTRY
-        .registerBlock("powered_spawner", properties -> new ProgressMachineBlock(MachineBlockEntities.POWERED_SPAWNER, properties),
+    public static final DeferredBlock<ProgressMachineBlock> POWERED_SPAWNER = BLOCK_REGISTRY
+        .create("powered_spawner", properties -> new ProgressMachineBlock(MachineBlockEntities.POWERED_SPAWNER, properties),
             BlockBehaviour.Properties.of().strength(2.5f, 8))
-        .withLootTable((l,t) -> MachinesLootTable.copyStandardComponentsWith(l, t, EIODataComponents.STORED_ENTITY.get()))
-        .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
-        .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .withBlockItem(ITEM_REGISTRY, b -> new BlockItem(b, new Item.Properties().component(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)),
+        .lootTable((l,t) -> MachinesLootTable.copyStandardComponentsWith(l, t, EIODataComponents.STORED_ENTITY.get()))
+        .blockState(MachineModelUtil::progressMachineBlock)
+        .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .createBlockItem(b -> new BlockItem(b, new Item.Properties().component(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)),
             item -> item
-                .withTab(EIOCreativeTabs.MACHINES)
-                .withTags(EIOTags.Items.ENTITY_STORAGE)
-        );
+                .tab(EIOCreativeTabs.MACHINES)
+                .tags(EIOTags.Items.ENTITY_STORAGE)
+        )
+        .finish();
 
-    public static final RegiliteBlock<MachineBlock> VACUUM_CHEST = BLOCK_REGISTRY
-        .registerBlock("vacuum_chest", p -> new MachineBlock(MachineBlockEntities.VACUUM_CHEST, p),
+    public static final DeferredBlock<MachineBlock> VACUUM_CHEST = BLOCK_REGISTRY
+        .create("vacuum_chest", p -> new MachineBlock(MachineBlockEntities.VACUUM_CHEST, p),
             BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
-        .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .withLootTable(MachinesLootTable::copyComponents)
-        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
-        .withBlockItem(ITEM_REGISTRY, item -> item.withTab(EIOCreativeTabs.MACHINES));
+        .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .lootTable(MachinesLootTable::copyComponents)
+        .blockState((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
+        .createSimpleBlockItem(item -> item.tab(EIOCreativeTabs.MACHINES))
+        .finish();
 
-    public static final RegiliteBlock<MachineBlock> XP_VACUUM = BLOCK_REGISTRY
-        .registerBlock("xp_vacuum", p -> new MachineBlock(MachineBlockEntities.XP_VACUUM, p),
+    public static final DeferredBlock<MachineBlock> XP_VACUUM = BLOCK_REGISTRY
+        .create("xp_vacuum", p -> new MachineBlock(MachineBlockEntities.XP_VACUUM, p),
             BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
-        .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .withLootTable(MachinesLootTable::copyComponents)
-        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
-        .withTranslation("XP Vacuum")
-        .withBlockItem(ITEM_REGISTRY, item -> item.withTab(EIOCreativeTabs.MACHINES));
+        .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .lootTable(MachinesLootTable::copyComponents)
+        .blockState((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
+        .translation("XP Vacuum")
+        .createSimpleBlockItem(item -> item.tab(EIOCreativeTabs.MACHINES))
+        .finish();
 
-    public static final RegiliteBlock<TravelAnchorBlock> TRAVEL_ANCHOR = BLOCK_REGISTRY
-        .registerBlock("travel_anchor", TravelAnchorBlock::new, BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
-        .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .withLootTable(MachinesLootTable::copyComponents)
-        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
-        .withBlockItem(ITEM_REGISTRY, item -> item.withTab(EIOCreativeTabs.MACHINES));
+    public static final DeferredBlock<TravelAnchorBlock> TRAVEL_ANCHOR = BLOCK_REGISTRY
+        .create("travel_anchor", TravelAnchorBlock::new, BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
+        .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .lootTable(MachinesLootTable::copyComponents)
+        .blockState((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
+        .createSimpleBlockItem(item -> item.tab(EIOCreativeTabs.MACHINES))
+        .finish();
 
-    public static final RegiliteBlock<PaintedTravelAnchorBlock> PAINTED_TRAVEL_ANCHOR = BLOCK_REGISTRY
-        .registerBlock("painted_travel_anchor", PaintedTravelAnchorBlock::new, BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
-        .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .withBlockColor(() -> PaintedBlockColor::new)
-        .withLootTable(DecorLootTable::withPaint)
-        .setBlockStateProvider((prov, ctx) -> EIOBlockState.paintedBlock("painted_travel_anchor", prov, ctx.get(), Blocks.DIRT, null)) //Any cube will do
-        .withBlockItem(
-            ITEM_REGISTRY,
+    public static final DeferredBlock<PaintedTravelAnchorBlock> PAINTED_TRAVEL_ANCHOR = BLOCK_REGISTRY
+        .create("painted_travel_anchor", PaintedTravelAnchorBlock::new, BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
+        .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockColor(() -> PaintedBlockColor::new)
+        .lootTable(DecorLootTable::withPaint)
+        .blockState((prov, ctx) -> EIOBlockState.paintedBlock("painted_travel_anchor", prov, ctx.get(), Blocks.DIRT, null)) //Any cube will do
+        .createBlockItem(
             b -> new PaintedBlockItem(b, new Item.Properties()),
-            item -> item.setColorSupplier(() -> PaintedBlockColor::new));
+            item -> item.itemColor(() -> PaintedBlockColor::new))
+        .finish();
 
-    public static final Map<SolarPanelTier, RegiliteBlock<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
-        Map<SolarPanelTier, RegiliteBlock<SolarPanelBlock>> panels = new HashMap<>();
+    public static final Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
+        Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> panels = new HashMap<>();
         for (SolarPanelTier tier: SolarPanelTier.values()) {
             panels.put(tier, solarPanel(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_module", () -> MachineBlockEntities.SOLAR_PANELS.get(tier), tier));
         }
         return ImmutableMap.copyOf(panels);
     });
 
-    public static final Map<CapacitorTier, RegiliteBlock<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
-        Map<CapacitorTier, RegiliteBlock<CapacitorBankBlock>> banks = new HashMap<>();
+    public static final Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
+        Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> banks = new HashMap<>();
         for (CapacitorTier tier: CapacitorTier.values()) {
             banks.put(tier, capacitorBank(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank", () -> MachineBlockEntities.CAPACITOR_BANKS.get(tier), tier));
         }
         return ImmutableMap.copyOf(banks);
     });
 
-    public static final RegiliteBlock<ProgressMachineBlock> CRAFTER =
-        progressMachine("crafter", () -> MachineBlockEntities.CRAFTER);
+    public static final DeferredBlock<ProgressMachineBlock> CRAFTER =
+        progressMachine("crafter", () -> MachineBlockEntities.CRAFTER)
+            .finish();
 
-    public static final RegiliteBlock<ProgressMachineBlock> SOUL_ENGINE = BLOCK_REGISTRY
-        .registerBlock("soul_engine", p -> new ProgressMachineBlock(MachineBlockEntities.SOUL_ENGINE, p),
+    public static final DeferredBlock<ProgressMachineBlock> SOUL_ENGINE = BLOCK_REGISTRY
+        .create("soul_engine", p -> new ProgressMachineBlock(MachineBlockEntities.SOUL_ENGINE, p),
             BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
-        .withLootTable(MachinesLootTable::copyComponents)
-        .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
-        .withBlockItem(ITEM_REGISTRY, b -> new BlockItem(b, new Item.Properties().component(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)),
+        .lootTable(MachinesLootTable::copyComponents)
+        .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockState(MachineModelUtil::progressMachineBlock)
+        .createBlockItem(b -> new BlockItem(b, new Item.Properties().component(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)),
             item -> item
-                .withTab(EIOCreativeTabs.MACHINES)
-                .withTags(EIOTags.Items.ENTITY_STORAGE)
-        );
+                .tab(EIOCreativeTabs.MACHINES)
+                .tags(EIOTags.Items.ENTITY_STORAGE)
+        )
+        .finish();
 
-    public static final RegiliteBlock<ProgressMachineBlock> DRAIN =
-        progressMachine("drain", () -> MachineBlockEntities.DRAIN);
+    public static final DeferredBlock<ProgressMachineBlock> DRAIN = 
+        progressMachine("drain", () -> MachineBlockEntities.DRAIN)
+            .finish();
 
-    public static final RegiliteBlock<MachineBlock> VAT = machine("vat", () -> MachineBlockEntities.VAT).withTranslation("VAT");
+    public static final DeferredBlock<MachineBlock> VAT = machine("vat", () -> MachineBlockEntities.VAT).translation("VAT").finish();
 
-    public static final RegiliteBlock<BlockDetectorBlock> BLOCK_DETECTOR = BLOCK_REGISTRY
-        .registerBlock("block_detector", BlockDetectorBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER))
-        .withTags(BlockTags.MINEABLE_WITH_PICKAXE)
-        .setBlockStateProvider((prov, ctx) -> prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName())))
-        .withBlockItem(ITEM_REGISTRY, item -> item.withTab((EIOCreativeTabs.MACHINES)));
+    public static final DeferredBlock<BlockDetectorBlock> BLOCK_DETECTOR = BLOCK_REGISTRY
+        .create("block_detector", BlockDetectorBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER))
+        .tags(BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockState((prov, ctx) -> prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName())))
+        .createSimpleBlockItem(item -> item.tab((EIOCreativeTabs.MACHINES)))
+        .finish();
 
-    public static final RegiliteBlock<MachineBlock> XP_OBELISK = BLOCK_REGISTRY
-        .registerBlock("xp_obelisk", props -> new MachineBlock(MachineBlockEntities.XP_OBELISK, props),
+    public static final DeferredBlock<MachineBlock> XP_OBELISK = BLOCK_REGISTRY
+        .create("xp_obelisk", props -> new MachineBlock(MachineBlockEntities.XP_OBELISK, props),
             BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
-        .withLootTable(MachinesLootTable::copyComponents)
-        .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
-        .withTranslation("XP Obelisk")
-        .withBlockItem(ITEM_REGISTRY, item -> item.withTab((EIOCreativeTabs.MACHINES)));
+        .lootTable(MachinesLootTable::copyComponents)
+        .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockState((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
+        .translation("XP Obelisk")
+        .createSimpleBlockItem(item -> item.tab((EIOCreativeTabs.MACHINES)))
+        .finish();
 
-    public static final RegiliteBlock<MachineBlock> INHIBITOR_OBELISK = BLOCK_REGISTRY
-        .registerBlock("inhibitor_obelisk", props -> new MachineBlock(MachineBlockEntities.INHIBITOR_OBELISK, props),
+    public static final DeferredBlock<MachineBlock> INHIBITOR_OBELISK = BLOCK_REGISTRY
+        .create("inhibitor_obelisk", props -> new MachineBlock(MachineBlockEntities.INHIBITOR_OBELISK, props),
             BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
-        .withLootTable(MachinesLootTable::copyComponents)
-        .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
-        .withBlockItem(ITEM_REGISTRY, item -> item.withTab((EIOCreativeTabs.MACHINES)));
+        .lootTable(MachinesLootTable::copyComponents)
+        .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockState((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
+        .createSimpleBlockItem(item -> item.tab((EIOCreativeTabs.MACHINES)))
+        .finish();
 
-    public static final RegiliteBlock<MachineBlock> AVERSION_OBELISK = BLOCK_REGISTRY
-        .registerBlock("aversion_obelisk", props -> new MachineBlock(MachineBlockEntities.AVERSION_OBELISK, props),
+    public static final DeferredBlock<MachineBlock> AVERSION_OBELISK = BLOCK_REGISTRY
+        .create("aversion_obelisk", props -> new MachineBlock(MachineBlockEntities.AVERSION_OBELISK, props),
             BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
-        .withLootTable(MachinesLootTable::copyComponents)
-        .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
-        .withBlockItem(ITEM_REGISTRY, item -> item.withTab((EIOCreativeTabs.MACHINES)));
+        .lootTable(MachinesLootTable::copyComponents)
+        .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockState((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
+        .createSimpleBlockItem(item -> item.tab((EIOCreativeTabs.MACHINES)))
+        .finish();
 
-    public static final RegiliteBlock<MachineBlock> RELOCATOR_OBELISK = BLOCK_REGISTRY
-        .registerBlock("relocator_obelisk", props -> new MachineBlock(MachineBlockEntities.RELOCATOR_OBELISK, props),
+    public static final DeferredBlock<MachineBlock> RELOCATOR_OBELISK = BLOCK_REGISTRY
+        .create("relocator_obelisk", props -> new MachineBlock(MachineBlockEntities.RELOCATOR_OBELISK, props),
             BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
-        .withLootTable(MachinesLootTable::copyComponents)
-        .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
-        .withBlockItem(ITEM_REGISTRY, item -> item.withTab((EIOCreativeTabs.MACHINES)));
+        .lootTable(MachinesLootTable::copyComponents)
+        .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockState((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
+        .createSimpleBlockItem(item -> item.tab((EIOCreativeTabs.MACHINES)))
+        .finish();
 
     //used when single methods needs to be overridden in the block class
-    private static <T extends MachineBlock> RegiliteBlock<T> baseMachine(RegiliteBlock<T> machineBlock,
+    private static <T extends MachineBlock> BlockBuilder<T> baseMachine(BlockBuilder<T> machineBlock,
         BiConsumer<BlockStateProvider, DataGenContext<Block, T>> blockStateProvider) {
         return machineBlock
-            .withLootTable(MachinesLootTable::copyComponents)
-            .withTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-            .setBlockStateProvider(blockStateProvider)
-            .withBlockItem(ITEM_REGISTRY, item -> item
-                .withTab(EIOCreativeTabs.MACHINES)
+            .lootTable(MachinesLootTable::copyComponents)
+            .tags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+            .blockState(blockStateProvider)
+            .createSimpleBlockItem(item -> item
+                .tab(EIOCreativeTabs.MACHINES)
             );
     }
 
-    private static RegiliteBlock<MachineBlock> machine(String name,
-        Supplier<RegiliteBlockEntity<? extends MachineBlockEntity>> RegiliteBlockEntity) {
+    private static BlockBuilder<MachineBlock> machine(String name,
+        Supplier<DeferredBlockEntityType<? extends MachineBlockEntity>> RegiliteBlockEntity) {
         return baseMachine(
-            BLOCK_REGISTRY.registerBlock(name, props -> new MachineBlock(RegiliteBlockEntity.get(), props), BlockBehaviour.Properties.of().strength(2.5f, 8)),
+            BLOCK_REGISTRY.create(name, props -> new MachineBlock(RegiliteBlockEntity.get(), props), BlockBehaviour.Properties.of().strength(2.5f, 8)),
             MachineModelUtil::machineBlock);
     }
 
-    private static RegiliteBlock<ProgressMachineBlock> progressMachine(String name,
-        Supplier<RegiliteBlockEntity<? extends MachineBlockEntity>> RegiliteBlockEntity) {
+    private static BlockBuilder<ProgressMachineBlock> progressMachine(String name,
+        Supplier<DeferredBlockEntityType<? extends MachineBlockEntity>> RegiliteBlockEntity) {
         return baseMachine(
-            BLOCK_REGISTRY.registerBlock(name, props -> new ProgressMachineBlock(RegiliteBlockEntity.get(), props),
+            BLOCK_REGISTRY.create(name, props -> new ProgressMachineBlock(RegiliteBlockEntity.get(), props),
                 BlockBehaviour.Properties.of().strength(2.5f, 8)),
             MachineModelUtil::progressMachineBlock);
     }
 
-    private static RegiliteBlock<SolarPanelBlock> solarPanel(String name, Supplier<RegiliteBlockEntity<? extends SolarPanelBlockEntity>> RegiliteBlockEntity, SolarPanelTier tier) {
+    private static DeferredBlock<SolarPanelBlock> solarPanel(String name, Supplier<DeferredBlockEntityType<? extends SolarPanelBlockEntity>> RegiliteBlockEntity, SolarPanelTier tier) {
         return BLOCK_REGISTRY
-            .registerBlock(name, props -> new SolarPanelBlock(RegiliteBlockEntity.get(), props, tier),
+            .create(name, props -> new SolarPanelBlock(RegiliteBlockEntity.get(), props, tier),
                 BlockBehaviour.Properties.of().strength(2.5f, 8))
-            .setBlockStateProvider((prov, ctx) -> MachineModelUtil.solarPanel(prov, ctx, tier))
-            .withTags(BlockTags.MINEABLE_WITH_PICKAXE)
-            .withLootTable(MachinesLootTable::copyComponents)
-            .withBlockItem(ITEM_REGISTRY, item -> item
-                .setModelProvider((prov, ctx) -> MachineModelUtil.solarPanel(prov, ctx, tier))
-                .withTab(EIOCreativeTabs.MACHINES)
-                .withTags(EIOTags.Items.ENTITY_STORAGE)
-            );
+            .blockState((prov, ctx) -> MachineModelUtil.solarPanel(prov, ctx, tier))
+            .tags(BlockTags.MINEABLE_WITH_PICKAXE)
+            .lootTable(MachinesLootTable::copyComponents)
+            .createSimpleBlockItem(item -> item
+                .model((prov, ctx) -> MachineModelUtil.solarPanel(prov, ctx, tier))
+                .tab(EIOCreativeTabs.MACHINES)
+                .tags(EIOTags.Items.ENTITY_STORAGE)
+            )
+            .finish();
     }
 
-    private static RegiliteBlock<CapacitorBankBlock> capacitorBank(String name, Supplier<RegiliteBlockEntity<? extends CapacitorBankBlockEntity>> RegiliteBlockEntity, CapacitorTier tier) {
+    private static DeferredBlock<CapacitorBankBlock> capacitorBank(String name, Supplier<DeferredBlockEntityType<? extends CapacitorBankBlockEntity>> RegiliteBlockEntity, CapacitorTier tier) {
         return BLOCK_REGISTRY
-            .registerBlock(name, props -> new CapacitorBankBlock(props, RegiliteBlockEntity.get(), tier),
+            .create(name, props -> new CapacitorBankBlock(props, RegiliteBlockEntity.get(), tier),
                 BlockBehaviour.Properties.of().strength(2.5f, 8))
-            .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc(ctx.getName()))))
-            .withLootTable(MachinesLootTable::copyComponents)
-            .withTags(BlockTags.MINEABLE_WITH_PICKAXE)
-            .withBlockItem(ITEM_REGISTRY,
+            .blockState((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIOBase.loc(ctx.getName()))))
+            .lootTable(MachinesLootTable::copyComponents)
+            .tags(BlockTags.MINEABLE_WITH_PICKAXE)
+            .createBlockItem(
                 block -> new CapacitorBankItem(block, new Item.Properties()),
                 item -> item
-                    .setModelProvider((prov, ctx) -> {})
-                    .withTab(EIOCreativeTabs.MACHINES)
-                    .withCapability(Capabilities.EnergyStorage.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER)
-            );
+                    .model((prov, ctx) -> {})
+                    .tab(EIOCreativeTabs.MACHINES)
+                    .capability(Capabilities.EnergyStorage.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER)
+            )
+            .finish();
     }
 
-    public static void register(IEventBus bus) {
-        BLOCK_REGISTRY.register(bus);
-        ITEM_REGISTRY.register(bus);
+    public static void register() {
     }
 }

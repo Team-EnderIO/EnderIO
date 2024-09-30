@@ -3,24 +3,19 @@ package com.enderio.conduits.common.init;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
-import com.enderio.regilite.holder.RegiliteBlockEntity;
-import com.enderio.regilite.registry.BlockEntityRegistry;
-import net.minecraft.core.Direction;
-import net.neoforged.bus.api.IEventBus;
+import com.enderio.regilite.blockentities.DeferredBlockEntityType;
+import com.enderio.regilite.blockentities.RegiliteBlockEntityTypes;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class ConduitBlockEntities {
-    private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIOConduits.REGILITE.blockEntityRegistry();
+    private static final RegiliteBlockEntityTypes BLOCK_ENTITY_TYPES = EnderIOConduits.REGILITE.blockEntityTypes();
 
-    public static final RegiliteBlockEntity<ConduitBundleBlockEntity> CONDUIT = BLOCK_ENTITY_REGISTRY
-        .registerBlockEntity("conduit", ConduitBundleBlockEntity::new, ConduitBlocks.CONDUIT);
+    public static final DeferredBlockEntityType<ConduitBundleBlockEntity> CONDUIT = BLOCK_ENTITY_TYPES
+        .create("conduit", ConduitBundleBlockEntity::new, ConduitBlocks.CONDUIT).finish();
 
     @SubscribeEvent
     public static void registerConduitCapabilities(RegisterCapabilitiesEvent event) {
@@ -33,7 +28,6 @@ public class ConduitBlockEntities {
         event.registerBlockEntity(capability, CONDUIT.get(), ConduitBundleBlockEntity.createConduitCap(capability));
     }
 
-    public static void register(IEventBus bus) {
-        BLOCK_ENTITY_REGISTRY.register(bus);
+    public static void register() {
     }
 }

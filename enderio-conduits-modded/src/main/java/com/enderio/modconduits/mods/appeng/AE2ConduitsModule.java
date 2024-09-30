@@ -56,7 +56,7 @@ public class AE2ConduitsModule implements ConduitModule {
     private static final Component LANG_DENSE_ME_CONDUIT = addTranslation("item", EnderIOBase.loc("conduit.dense_me"), "Dense ME Conduit");
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
-        return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
+        return ModdedConduits.REGILITE.lang().add(prefix, id, translation);
     }
 
     private static final TagKey<Item> COVERED_DENSE_CABLE = ItemTags.create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_dense_cable"));

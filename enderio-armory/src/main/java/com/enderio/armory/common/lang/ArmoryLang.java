@@ -62,11 +62,11 @@ public class ArmoryLang {
     // endregion
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
-        return EnderIOArmory.REGILITE.addTranslation(prefix, id, translation);
+        return EnderIOArmory.REGILITE.lang().add(prefix, id, translation);
     }
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation path, String name, String translation) {
-        return EnderIOArmory.REGILITE.addTranslation(prefix, ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "/" + name), translation);
+        return EnderIOArmory.REGILITE.lang().add(prefix, ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "/" + name), translation);
     }
 
     public static void register() {}

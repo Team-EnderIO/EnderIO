@@ -51,7 +51,7 @@ public class RefinedStorageModule implements ConduitModule {
     private static final Component LANG_RS_CONDUIT = addTranslation("item", EnderIOBase.loc("rs"), "Refined Storage Conduit");
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
-        return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
+        return ModdedConduits.REGILITE.lang().add(prefix, id, translation);
     }
 
     @Override

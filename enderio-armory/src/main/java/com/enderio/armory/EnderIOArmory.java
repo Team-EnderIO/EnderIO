@@ -41,7 +41,7 @@ public class EnderIOArmory {
         modContainer.registerConfig(ModConfig.Type.CLIENT, ArmoryConfig.CLIENT_SPEC, "enderio/armory-client.toml");
 
         // Perform initialization and registration for everything so things are registered.
-        ArmoryItems.register(modEventBus);
+        ArmoryItems.register();
         ArmoryRecipes.register(modEventBus);
         ArmoryLootModifiers.register(modEventBus);
         ArmoryTags.register();

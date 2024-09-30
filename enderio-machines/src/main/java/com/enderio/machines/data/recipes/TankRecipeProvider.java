@@ -27,13 +27,13 @@ public class TankRecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
         // TODO: Tag support for tank recipes.
-        buildEmptying(Ingredient.of(Items.EXPERIENCE_BOTTLE), Items.GLASS_BOTTLE, new FluidStack(EIOFluids.XP_JUICE.getSource(), 250), recipeOutput);
-        buildFilling(Ingredient.of(Items.GLASS_BOTTLE), Items.EXPERIENCE_BOTTLE, new FluidStack(EIOFluids.XP_JUICE.getSource(), 250), recipeOutput);
+        buildEmptying(Ingredient.of(Items.EXPERIENCE_BOTTLE), Items.GLASS_BOTTLE, new FluidStack(EIOFluids.XP_JUICE.sourceFluid(), 250), recipeOutput);
+        buildFilling(Ingredient.of(Items.GLASS_BOTTLE), Items.EXPERIENCE_BOTTLE, new FluidStack(EIOFluids.XP_JUICE.sourceFluid(), 250), recipeOutput);
 
         buildEmptying(Ingredient.of(Items.WET_SPONGE), Items.SPONGE, new FluidStack(Fluids.WATER, 1000), recipeOutput);
         buildFilling(Ingredient.of(Items.SPONGE), Items.WET_SPONGE, new FluidStack(Fluids.WATER, 1000), recipeOutput);
 
-        buildFilling(Ingredient.of(Items.STICK), EIOItems.NUTRITIOUS_STICK, new FluidStack(EIOFluids.NUTRIENT_DISTILLATION.getSource(), 1000), recipeOutput);
+        buildFilling(Ingredient.of(Items.STICK), EIOItems.NUTRITIOUS_STICK, new FluidStack(EIOFluids.NUTRIENT_DISTILLATION.sourceFluid(), 1000), recipeOutput);
 
         buildFilling(Ingredient.of(Items.WHITE_CONCRETE_POWDER), Items.WHITE_CONCRETE, new FluidStack(Fluids.WATER, 1000), recipeOutput);
         buildFilling(Ingredient.of(Items.ORANGE_CONCRETE_POWDER), Items.ORANGE_CONCRETE, new FluidStack(Fluids.WATER, 1000), recipeOutput);

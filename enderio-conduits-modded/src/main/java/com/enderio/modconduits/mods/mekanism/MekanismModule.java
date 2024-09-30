@@ -12,10 +12,8 @@ import com.enderio.conduits.common.conduit.ConduitApiImpl;
 import com.enderio.conduits.common.recipe.ConduitIngredient;
 import com.enderio.modconduits.ConduitModule;
 import com.enderio.modconduits.ModdedConduits;
-import com.enderio.regilite.holder.RegiliteItem;
-import com.enderio.regilite.holder.RegiliteMenu;
-import com.enderio.regilite.registry.ItemRegistry;
-import com.enderio.regilite.registry.MenuRegistry;
+import com.enderio.regilite.items.RegiliteItems;
+import com.enderio.regilite.menus.RegiliteMenuTypes;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.heat.IHeatHandler;
@@ -35,6 +33,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -43,6 +42,7 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.BiConsumer;
@@ -62,17 +62,18 @@ public class MekanismModule implements ConduitModule {
     public static final Supplier<DataComponentType<ChemicalFilterCapability.Component>> CHEMICAL_FILTER = DATA_COMPONENT_TYPES
         .registerComponentType("chemical_filter", builder -> builder.persistent(ChemicalFilterCapability.Component.CODEC).networkSynchronized(ChemicalFilterCapability.Component.STREAM_CODEC));
 
-    private static final ItemRegistry ITEM_REGISTRY = ModdedConduits.REGILITE.itemRegistry();
+    private static final RegiliteItems ITEMS = ModdedConduits.REGILITE.items();
 
-    public static final RegiliteItem<ChemicalFilterItem> BASIC_CHEMICAL_FILTER = ITEM_REGISTRY
-        .registerItem("chemical_filter", properties -> new ChemicalFilterItem(properties.component(CHEMICAL_FILTER, new ChemicalFilterCapability.Component(5))))
-        .withTab(EIOCreativeTabs.GEAR)
-        .withCapability(EIOCapabilities.Filter.ITEM, ChemicalFilterItem.FILTER_PROVIDER);
+    public static final DeferredItem<ChemicalFilterItem> BASIC_CHEMICAL_FILTER = ITEMS
+        .create("chemical_filter", properties -> new ChemicalFilterItem(properties.component(CHEMICAL_FILTER, new ChemicalFilterCapability.Component(5))))
+        .tab(EIOCreativeTabs.GEAR)
+        .capability(EIOCapabilities.Filter.ITEM, ChemicalFilterItem.FILTER_PROVIDER)
+        .finish();
 
-    private static final MenuRegistry MENU_REGISTRY = ModdedConduits.REGILITE.menuRegistry();
+    private static final RegiliteMenuTypes MENU_TYPES = ModdedConduits.REGILITE.menuTypes();
 
-    public static final RegiliteMenu<ChemicalFilterMenu> CHEMICAL_FILTER_MENU = MENU_REGISTRY
-        .registerMenu("chemical_filter", ChemicalFilterMenu::factory, () -> ChemicalFilterScreen::new);
+    public static final Supplier<MenuType<ChemicalFilterMenu>> CHEMICAL_FILTER_MENU = MENU_TYPES
+        .createOnly("chemical_filter", ChemicalFilterMenu::factory, () -> ChemicalFilterScreen::new);
 
     public static class Types {
 
@@ -117,7 +118,7 @@ public class MekanismModule implements ConduitModule {
     private static final TagKey<Item> OSMIUM = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ingots/osmium"));
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
-        return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
+        return ModdedConduits.REGILITE.lang().add(prefix, id, translation);
     }
 
     @Override
@@ -125,8 +126,6 @@ public class MekanismModule implements ConduitModule {
         Types.CONDUIT_TYPES.register(modEventBus);
         CONDUIT_DATA_TYPES.register(modEventBus);
         DATA_COMPONENT_TYPES.register(modEventBus);
-        ITEM_REGISTRY.register(modEventBus);
-        MENU_REGISTRY.register(modEventBus);
     }
 
     @Override

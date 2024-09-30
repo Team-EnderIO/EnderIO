@@ -68,9 +68,9 @@ public class EnderIOMachines {
 
         MachineDataComponents.register(modEventBus);
         MachineTravelTargets.register(modEventBus);
-        MachineBlocks.register(modEventBus);
-        MachineBlockEntities.register(modEventBus);
-        MachineMenus.register(modEventBus);
+        MachineBlocks.register();
+        MachineBlockEntities.register();
+        MachineMenus.register();
         MachineRecipes.register(modEventBus);
         MachineAttachments.register(modEventBus);
 
