@@ -48,7 +48,7 @@ public class PoweredLight extends Light implements EntityBlock{
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return EIOBlockEntities.POWERED_LIGHT.get().create(pos, state);
+		return EIOBlockEntities.POWERED_LIGHT.create(pos, state);
 	}
 
 	@Override

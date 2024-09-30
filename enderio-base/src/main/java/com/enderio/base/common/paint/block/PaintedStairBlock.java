@@ -25,7 +25,7 @@ public class PaintedStairBlock extends StairBlock implements EntityBlock, Painte
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return EIOBlockEntities.SINGLE_PAINTED.get().create(pos, state);
+        return EIOBlockEntities.SINGLE_PAINTED.create(pos, state);
     }
 
     @Override

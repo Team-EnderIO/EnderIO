@@ -36,7 +36,7 @@ public class PaintedCraftingTableBlock extends CraftingTableBlock implements Ent
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return EIOBlockEntities.SINGLE_PAINTED.get().create(pos, state);
+        return EIOBlockEntities.SINGLE_PAINTED.create(pos, state);
     }
 
     @Override
