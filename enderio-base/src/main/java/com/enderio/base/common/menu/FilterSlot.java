@@ -46,7 +46,7 @@ public abstract class FilterSlot<T> extends Slot {
         consumer.accept(processResource(resource));
     }
 
-    protected abstract Optional<T> getResourceFrom(ItemStack itemStack);
+    public abstract Optional<T> getResourceFrom(ItemStack itemStack);
 
     public T processResource(T resource) {
         return resource;

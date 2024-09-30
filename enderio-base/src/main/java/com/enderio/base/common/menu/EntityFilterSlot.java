@@ -4,11 +4,8 @@ import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 
@@ -22,7 +19,7 @@ public class EntityFilterSlot extends FilterSlot<StoredEntityData> {
     }
 
     @Override
-    protected Optional<StoredEntityData> getResourceFrom(ItemStack itemStack) {
+    public Optional<StoredEntityData> getResourceFrom(ItemStack itemStack) {
         if (itemStack.is(EIOTags.Items.ENTITY_STORAGE)) {
             StoredEntityData ghost = itemStack.get(EIODataComponents.STORED_ENTITY);
             return Optional.of(ghost);

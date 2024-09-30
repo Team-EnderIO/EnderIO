@@ -26,7 +26,7 @@ public class ItemFilterSlot extends FilterSlot<ItemStack> {
     }
 
     @Override
-    protected Optional<ItemStack> getResourceFrom(ItemStack itemStack) {
+    public Optional<ItemStack> getResourceFrom(ItemStack itemStack) {
         return Optional.of(itemStack);
     }
 }
