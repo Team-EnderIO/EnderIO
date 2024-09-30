@@ -2,6 +2,7 @@ package com.enderio.machines.common.integrations.jei;
 
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.integrations.jei.subtype.EntityStorageSubtypeInterpreter;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.integrations.jei.category.AlloySmeltingCategory;
@@ -24,6 +25,7 @@ import com.enderio.machines.common.menu.VatMenu;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
@@ -117,6 +119,10 @@ public class MachinesJEI implements IModPlugin {
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         registration.registerSubtypeInterpreter(MachineBlocks.SOUL_ENGINE.asItem(), new EntityStorageSubtypeInterpreter());
+    }
 
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addGhostIngredientHandler(MachineScreen.class, new MachinesGhostSlotHandler());
     }
 }

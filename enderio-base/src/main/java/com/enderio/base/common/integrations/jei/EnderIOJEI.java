@@ -10,10 +10,13 @@ import com.enderio.base.common.integrations.jei.subtype.EntityStorageSubtypeInte
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
+import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
@@ -71,6 +74,11 @@ public class EnderIOJEI implements IModPlugin {
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         registration.registerSubtypeInterpreter(EIOItems.FILLED_SOUL_VIAL.get(), new EntityStorageSubtypeInterpreter());
         registration.registerSubtypeInterpreter(EIOItems.BROKEN_SPAWNER.get(), new EntityStorageSubtypeInterpreter());
+    }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addGhostIngredientHandler(EIOScreen.class, new BaseGhostSlotHandler());
     }
 
     // region Utilities

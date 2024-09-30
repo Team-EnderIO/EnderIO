@@ -12,61 +12,29 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
-public class EntityFilterSlot extends Slot {
-
-    private static Container emptyInventory = new SimpleContainer(0);
-    private final Consumer<StoredEntityData> consumer;
+public class EntityFilterSlot extends FilterSlot<StoredEntityData> {
 
     public EntityFilterSlot(Consumer<StoredEntityData> consumer, int pSlot, int pX, int pY) {
-        super(emptyInventory, pSlot, pX, pY);
-        this.consumer = consumer;
+        super(consumer, pSlot, pX, pY);
     }
 
     @Override
-    public ItemStack getItem() {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void set(ItemStack pStack) {
-        setChanged();
-    }
-
-    @Override
-    public void setChanged() {
-
-    }
-
-    @Override
-    public ItemStack remove(int pAmount) {
-        set(ItemStack.EMPTY);
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public int getMaxStackSize() {
-        return getItem().getMaxStackSize();
-    }
-
-    @Override
-    public ItemStack safeInsert(ItemStack stack, int amount) {
-        // If this stack is valid, set the inventory slot value.
-        if (stack.isEmpty() || !mayPlace(stack)) {
-            return stack;
-        }
-        if (stack.is(EIOTags.Items.ENTITY_STORAGE)) {
-            StoredEntityData ghost = stack.get(EIODataComponents.STORED_ENTITY);
-            consumer.accept(ghost);
-        } else if (stack.getItem() instanceof SpawnEggItem spawnEggItem) {
-            Entity entity = spawnEggItem.getType(stack).create(Minecraft.getInstance().level);
+    protected Optional<StoredEntityData> getResourceFrom(ItemStack itemStack) {
+        if (itemStack.is(EIOTags.Items.ENTITY_STORAGE)) {
+            StoredEntityData ghost = itemStack.get(EIODataComponents.STORED_ENTITY);
+            return Optional.of(ghost);
+        } else if (itemStack.getItem() instanceof SpawnEggItem spawnEggItem) {
+            Entity entity = spawnEggItem.getType(itemStack).create(Minecraft.getInstance().level);
             if (entity instanceof LivingEntity livingEntity) {
-                StoredEntityData ghost = new StoredEntityData(livingEntity.serializeNBT(Minecraft.getInstance().level.registryAccess()), livingEntity.getMaxHealth());
-                consumer.accept(ghost);
+                StoredEntityData ghost = new StoredEntityData(livingEntity.serializeNBT(Minecraft.getInstance().level.registryAccess()),
+                    livingEntity.getMaxHealth());
+                return Optional.of(ghost);
             }
         }
 
-        return stack;
+        return Optional.empty();
     }
 }
