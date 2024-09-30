@@ -105,8 +105,8 @@ public abstract class ProgressWidget extends AbstractWidget {
         if (this.isHovered() && showTooltip) {
             Minecraft minecraft = Minecraft.getInstance();
 
-            guiGraphics.renderTooltip(minecraft.font, TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int) (progressSupplier.get() * 100)),
-                mouseX, mouseY);
+            /*guiGraphics.renderTooltip(minecraft.font, TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int) (progressSupplier.get() * 100)),
+                mouseX, mouseY);*/
         }
 
     }
