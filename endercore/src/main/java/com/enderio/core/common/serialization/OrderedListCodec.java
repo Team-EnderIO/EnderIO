@@ -24,9 +24,13 @@ public class OrderedListCodec {
     }
 
     private static <T> Codec<Item<T>> createItemCodec(Codec<T> itemCodec, int maxSize) {
+        // @formatter:off
         return RecordCodecBuilder.create(inst -> inst
-            .group(Codec.intRange(0, maxSize - 1).fieldOf("index").forGetter(Item::index), itemCodec.fieldOf("value").forGetter(Item::value))
-            .apply(inst, Item::new));
+            .group(
+                Codec.intRange(0, maxSize - 1).fieldOf("index").forGetter(Item::index),
+                itemCodec.fieldOf("value").forGetter(Item::value)
+            ).apply(inst, Item::new));
+        // @formatter:on
     }
 
     private static <T> List<Item<T>> toItems(List<T> values) {
