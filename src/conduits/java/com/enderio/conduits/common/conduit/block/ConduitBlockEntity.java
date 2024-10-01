@@ -1,22 +1,23 @@
 package com.enderio.conduits.common.conduit.block;
 
 import com.enderio.api.UseOnly;
+import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.ConduitMenuData;
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.api.conduit.ConduitData;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.conduits.ConduitNBTKeys;
+import com.enderio.conduits.client.particle.ConduitBreakParticle;
+import com.enderio.conduits.common.ConduitShape;
 import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.ConduitBundleNetworkDataSlot;
+import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.conduits.common.conduit.RightClickAction;
 import com.enderio.conduits.common.conduit.SlotData;
-import com.enderio.conduits.common.conduit.ConduitGraphObject;
-import com.enderio.conduits.ConduitNBTKeys;
-import com.enderio.conduits.common.ConduitShape;
-import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
+import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
 import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.enderio.conduits.common.menu.ConduitMenu;
@@ -305,8 +306,14 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
             return Optional.of(conduit.bundle.getNodeFor(type));
         } else if (type.getTicker().canConnectTo(level, getBlockPos(), dir)) {
+            if (bundle.getConnectionState(dir, type) instanceof DynamicConnectionState) { //Already connected
+                updateConnectionToData(type);
+                return Optional.empty();
+            }
             connectEnd(dir, type);
             updateConnectionToData(type);
+        } else {
+            this.disconnect(dir, type);
         }
 
         return Optional.empty();
@@ -348,6 +355,11 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         boolean shouldRemove = bundle.removeType(level, type);
         removeNeighborConnections(type);
         updateShape();
+
+        if (level.isClientSide) {
+            ConduitBreakParticle.addDestroyEffects(getBlockPos(), type);
+        }
+
         return shouldRemove;
     }
 

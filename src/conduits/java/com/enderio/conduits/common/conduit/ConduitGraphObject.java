@@ -45,9 +45,9 @@ public class ConduitGraphObject<T extends ConduitData<T>> implements GraphObject
     }
 
     @Override
-    public void setGraph(Graph<Mergeable.Dummy> graph) {
+    public void setGraph(@Nullable Graph<Mergeable.Dummy> graph) {
         this.graph = graph;
-        this.wrappedGraph = new WrappedConduitGraph<>(graph);
+        this.wrappedGraph = graph == null ? null : new WrappedConduitGraph<>(graph);
     }
 
     @Nullable
