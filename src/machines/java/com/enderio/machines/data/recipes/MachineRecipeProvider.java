@@ -371,5 +371,17 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("ICI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.EXPERIENCE_ROD).build()))
             .save(finishedRecipeConsumer);
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.AVERSION_OBELISK.get())
+            .define('H', EIOBlocks.ENDERMAN_HEAD) //TODO Tormented Ender
+            .define('E', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
+            .define('I', EIOTags.Items.INGOTS_SOULARIUM)
+            .define('C', EIOBlocks.ENSOULED_CHASSIS)
+            .pattern(" H ")
+            .pattern("EIE")
+            .pattern("ICI")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOBlocks.ENDERMAN_HEAD).build()))
+            .save(finishedRecipeConsumer);
     }
 }
