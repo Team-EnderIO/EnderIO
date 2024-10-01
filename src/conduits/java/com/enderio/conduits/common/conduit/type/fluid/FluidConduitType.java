@@ -8,9 +8,16 @@ import com.enderio.api.conduit.upgrade.ConduitUpgrade;
 import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.conduits.common.capability.ExtractionSpeedUpgrade;
+import com.enderio.conduits.common.init.ConduitLang;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 public class FluidConduitType extends TieredConduit<FluidConduitData> {
 
@@ -54,4 +61,13 @@ public class FluidConduitType extends TieredConduit<FluidConduitData> {
         return resourceFilter instanceof FluidStackFilter;
     }
 
+    @Override
+    public void addToTooltip(@Nullable Level level, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+        String transferLimitFormatted = String.format("%,d", transferRate * (20 / getTicker().getTickRate()));
+        tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RATE_TOOLTIP, transferLimitFormatted));
+
+        if (isMultiFluid) {
+            tooltipAdder.accept(ConduitLang.MULTI_FLUID_TOOLTIP);
+        }
+    }
 }
