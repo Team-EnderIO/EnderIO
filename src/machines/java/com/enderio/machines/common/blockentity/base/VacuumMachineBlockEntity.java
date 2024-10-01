@@ -6,7 +6,6 @@ import com.enderio.base.common.util.AttractionUtil;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.io.FixedIOConfig;
-import com.enderio.machines.common.io.item.SingleSlotAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -28,7 +27,6 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     protected static final double SPEED_4 = SPEED * 4;
     private List<WeakReference<T>> entities = new ArrayList<>();
     private Class<T> targetClass;
-    public static SingleSlotAccess FILTER = new SingleSlotAccess();
 
     protected static final Predicate<ItemEntity> ITEM_ENTITY_FILTER_TRUE = itemEntity -> true;
 
