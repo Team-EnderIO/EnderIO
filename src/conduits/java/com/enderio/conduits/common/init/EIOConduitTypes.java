@@ -39,13 +39,13 @@ public class EIOConduitTypes {
         CONDUIT_TYPES.register("redstone_conduit", RedstoneConduitType::new);
 
     public static final RegistryObject<FluidConduitType> FLUID =
-        fluidConduit("fluid_conduit", 50, false);
+        fluidConduit("fluid_conduit", 100, false);
 
     public static final RegistryObject<FluidConduitType> FLUID2 =
-        fluidConduit("pressurized_fluid_conduit", 100, false);
+        fluidConduit("pressurized_fluid_conduit", 1_000, false);
 
     public static final RegistryObject<FluidConduitType> FLUID3 =
-        fluidConduit("ender_fluid_conduit", 200, true);
+        fluidConduit("ender_fluid_conduit", 10_000, true);
 
     public static final RegistryObject<ItemConduitType> ITEM =
         CONDUIT_TYPES.register("item_conduit", ItemConduitType::new);

@@ -107,17 +107,17 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             types.set(index, type);
 
             var prevNode = (ConduitGraphObject<T>) nodes.remove(first.get());
-            nodes.put(type, node);
 
             if (prevNode != null) {
+                node = new ConduitGraphObject<>(pos, prevNode.getConduitData()); //new node with old data
                 prevNode.getConduitData().onRemoved(type, level, pos);
                 if (!level.isClientSide() && prevNode.getGraph() != null) {
                     prevNode.getGraph().remove(prevNode);
                 }
             }
 
+            nodes.put(type, node);
             node.getConduitData().onCreated(type, level, pos, player);
-            connections.values().forEach(connection -> connection.disconnectType(index));
             onChanged();
 
             return new RightClickAction.Upgrade(first.get());
