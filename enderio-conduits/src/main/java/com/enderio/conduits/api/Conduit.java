@@ -50,7 +50,6 @@ public interface Conduit<TConduit extends Conduit<TConduit>> extends
      * @return the number of ticks that should pass before the conduit graph ticks.
      */
     default int graphTickRate() {
-        // TODO: PR #822, remove this default
         return 5;
     }
 
