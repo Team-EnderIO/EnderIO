@@ -16,6 +16,7 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import org.slf4j.Logger;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -34,8 +35,9 @@ public class RecipeManagerMixin {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
+    @Final
     @Shadow
-    private final ICondition.IContext context = ICondition.IContext.EMPTY;
+    private ICondition.IContext context;
 
     @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At("HEAD"))
     private void onRecipeReload(Map<ResourceLocation, JsonElement> recipes, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
