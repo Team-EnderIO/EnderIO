@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.conduit;
 
+import com.enderio.base.client.tooltip.TooltipHandler;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.base.common.init.EIOCreativeTabs;
@@ -7,6 +8,8 @@ import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitComponents;
+import com.enderio.conduits.common.init.ConduitLang;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -99,13 +102,23 @@ public class ConduitBlockItem extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
-        Holder<Conduit<?>> conduit = pStack.get(ConduitComponents.CONDUIT);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        Holder<Conduit<?>> conduit = stack.get(ConduitComponents.CONDUIT);
         if (conduit != null) {
-            conduit.value().addToTooltip(pContext, pTooltipComponents::add, pTooltipFlag);
+            conduit.value().addToTooltip(context, tooltipComponents::add, tooltipFlag);
+
+            boolean showDetailTooltip = !tooltipFlag.hasShiftDown() && (conduit.value().hasAdvancedTooltip() || conduit.value().showDebugTooltip());
+
+            if (conduit.value().showDebugTooltip() && tooltipFlag.hasShiftDown()) {
+                tooltipComponents.add(TooltipUtil.styledWithArgs(ConduitLang.GRAPH_TICK_RATE_TOOLTIP, 20 / conduit.value().graphTickRate()));
+            }
+
+            if (showDetailTooltip) {
+                tooltipComponents.add(TooltipHandler.DETAIL_TOOLTIP);
+            }
         }
 
-        super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 
     // High priority so conduits appear at the top of the conduits tab.

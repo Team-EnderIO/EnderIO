@@ -28,10 +28,11 @@
   "item.enderio.redstone_toggle_filter": "Redstone Toggle Filter",
   "item.enderio.redstone_xnor_filter": "Redstone Xnor Filter",
   "item.enderio.redstone_xor_filter": "Redstone Xor Filter",
+  "tooltip.enderio.conduit.debug.tick_rate": "Graph Ticks: %s/sec",
   "tooltip.enderio.conduit.energy.rate": "Max Output %s µI/t",
+  "tooltip.enderio.conduit.fluid.effective_rate": "Effective Rate: %s mB/t",
   "tooltip.enderio.conduit.fluid.multi": "Allows multiple fluids to be transported on the same line",
-  "tooltip.enderio.conduit.fluid.rate": "Transfer Rate %s mB/t",
-  "tooltip.enderio.conduit.item.effective_rate": "Effective Transfer Rate %s Items/sec",
-  "tooltip.enderio.conduit.item.tick_rate": "Cycle Rate %s/sec",
-  "tooltip.enderio.conduit.item.transfer_rate": "Transfer Rate %s Items/cycle"
+  "tooltip.enderio.conduit.fluid.raw_rate": "Rate: %s mB/graph tick",
+  "tooltip.enderio.conduit.item.effective_rate": "Effective Rate: %s Items/sec",
+  "tooltip.enderio.conduit.item.raw_rate": "Rate: %s Items/graph tick"
 }

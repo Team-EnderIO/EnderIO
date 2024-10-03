@@ -50,8 +50,10 @@ public class Conduits {
             new FluidConduit(EnderIOBase.loc("block/conduit/ender_fluid"), ConduitLang.ENDER_FLUID_CONDUIT, 10_000, true));
 
         context.register(ITEM, new ItemConduit(EnderIOBase.loc("block/conduit/item"), ConduitLang.ITEM_CONDUIT, 4, 20));
-        context.register(ENHANCED_ITEM, new ItemConduit(EnderIOBase.loc("block/conduit/item"), ConduitLang.ENHANCED_ITEM_CONDUIT, 4, 10));
-        context.register(ENDER_ITEM, new ItemConduit(EnderIOBase.loc("block/conduit/item"), ConduitLang.ENDER_ITEM_CONDUIT, 4, 5));
+
+        // TODO: Implement the new item conduit tiers.
+        //context.register(ENHANCED_ITEM, new ItemConduit(EnderIOBase.loc("block/conduit/item"), ConduitLang.ENHANCED_ITEM_CONDUIT, 4, 10));
+        //context.register(ENDER_ITEM, new ItemConduit(EnderIOBase.loc("block/conduit/item"), ConduitLang.ENDER_ITEM_CONDUIT, 4, 5));
     }
 
     public static class ContextSerializers {

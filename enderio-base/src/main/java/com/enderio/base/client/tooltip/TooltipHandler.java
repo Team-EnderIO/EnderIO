@@ -34,7 +34,7 @@ import java.util.Optional;
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 public class TooltipHandler {
 
-    private static final Component DETAIL_TOOLTIP = EIOLang.SHOW_DETAIL_TOOLTIP.copy().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
+    public static final Component DETAIL_TOOLTIP = EIOLang.SHOW_DETAIL_TOOLTIP.copy().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
 
     @SubscribeEvent
     public static void addAdvancedTooltips(ItemTooltipEvent evt) {

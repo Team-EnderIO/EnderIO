@@ -23,17 +23,20 @@ public class ConduitLang {
 
     // endregion
 
+    public static final MutableComponent GRAPH_TICK_RATE_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.debug.tick_rate"), "Graph Ticks: %s/sec");
+
     public static final MutableComponent ENERGY_RATE_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.energy.rate"), "Max Output %s \u00B5I/t");
-    public static final MutableComponent FLUID_RATE_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.fluid.rate"), "Transfer Rate %s mB/t");
+
+    public static final MutableComponent FLUID_RAW_RATE_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.fluid.raw_rate"), "Rate: %s mB/graph tick");
+    public static final MutableComponent FLUID_EFFECTIVE_RATE_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.fluid.effective_rate"), "Effective Rate: %s mB/t");
+
     public static final Component MULTI_FLUID_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.fluid.multi"),
         "Allows multiple fluids to be transported on the same line");
 
-    public static final MutableComponent ITEM_CONDUIT_TRANSFER_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.item.transfer_rate"),
-        "Transfer Rate %s Items/cycle");
-    public static final MutableComponent ITEM_CONDUIT_CYCLE_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.item.tick_rate"),
-        "Cycle Rate %s/sec");
-    public static final MutableComponent ITEM_CONDUIT_CALCULATED_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.item.effective_rate"),
-        "Effective Transfer Rate %s Items/sec");
+    public static final MutableComponent ITEM_RAW_RATE_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.item.raw_rate"),
+        "Rate: %s Items/graph tick");
+    public static final MutableComponent ITEM_EFFECTIVE_RATE_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit.item.effective_rate"),
+        "Effective Rate: %s Items/sec");
 
     public static final Component CONDUIT_INSERT = addTranslation("gui", EnderIOBase.loc("conduit.insert"), "Insert");
     public static final Component CONDUIT_EXTRACT = addTranslation("gui", EnderIOBase.loc("conduit.extract"), "Extract");

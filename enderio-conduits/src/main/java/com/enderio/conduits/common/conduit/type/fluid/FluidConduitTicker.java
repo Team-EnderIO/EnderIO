@@ -24,7 +24,10 @@ import java.util.Optional;
 public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduit, IFluidHandler> {
 
     private int getScaledFluidRate(FluidConduit conduit, CapabilityConnection extractingConnection) {
-        int rate = conduit.transferRate();
+        // Adjust for tick rate.
+        int rate = conduit.transferAmountPerTick() * conduit.graphTickRate();
+
+        // Apply speed upgrade
         if (extractingConnection.upgrade() instanceof ExtractionSpeedUpgrade speedUpgrade) {
             // TODO: Review scaling.
             rate *= (int) Math.pow(2, speedUpgrade.tier());

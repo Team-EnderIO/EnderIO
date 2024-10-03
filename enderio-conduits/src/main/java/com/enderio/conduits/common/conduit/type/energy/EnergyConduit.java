@@ -31,7 +31,7 @@ import java.util.function.Consumer;
 public record EnergyConduit(
     ResourceLocation texture,
     Component description,
-    int transferRate
+    int transferRatePerTick
 ) implements Conduit<EnergyConduit> {
 
     public static final MapCodec<EnergyConduit> CODEC = RecordCodecBuilder.mapCodec(
@@ -39,16 +39,22 @@ public record EnergyConduit(
             .group(
                 ResourceLocation.CODEC.fieldOf("texture").forGetter(Conduit::texture),
                 ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
-                Codec.INT.fieldOf("transfer_rate").forGetter(EnergyConduit::transferRate)
+                Codec.INT.fieldOf("transfer_rate").forGetter(EnergyConduit::transferRatePerTick)
             ).apply(builder, EnergyConduit::of)
     );
 
-    public static EnergyConduit of (ResourceLocation texture, Component description, int transferRate) {
+    public static EnergyConduit of(ResourceLocation texture, Component description, int transferRate) {
         return new EnergyConduit(texture, description, transferRate);
     }
 
     private static final EnergyConduitTicker TICKER = new EnergyConduitTicker();
     private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
+
+    // Not configurable - energy is instantaneous
+    @Override
+    public int graphTickRate() {
+        return 1;
+    }
 
     @Override
     public ConduitType<EnergyConduit> type() {
@@ -92,7 +98,7 @@ public record EnergyConduit(
             }
 
             //noinspection unchecked
-            return (TCap)new EnergyConduitStorage(transferRate(), node);
+            return (TCap)new EnergyConduitStorage(transferRatePerTick(), node);
         }
 
         return null;
@@ -121,15 +127,15 @@ public record EnergyConduit(
 
     @Override
     public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
-        String transferLimitFormatted = String.format("%,d", transferRate());
+        String transferLimitFormatted = String.format("%,d", transferRatePerTick());
         pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.ENERGY_RATE_TOOLTIP, transferLimitFormatted));
     }
 
     @Override
     public int compareTo(@NotNull EnergyConduit o) {
-        if (transferRate() < o.transferRate()) {
+        if (transferRatePerTick() < o.transferRatePerTick()) {
             return -1;
-        } else if (transferRate() > o.transferRate()) {
+        } else if (transferRatePerTick() > o.transferRatePerTick()) {
             return 1;
         }
 
