@@ -31,8 +31,7 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
             return;
         }
 
-        int availableEnergy = Math.max(context.energyStored(), 0);
-        if (availableEnergy == 0) {
+        if (context.energyStored() <= 0) {
             return;
         }
 
@@ -59,7 +58,8 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
                 continue;
             }
 
-            int energyInserted = insertHandler.receiveEnergy(conduit.transferRate(), false);
+            int energyToInsert = Math.min(conduit.transferRate(), Math.max(context.energyStored(), 0));
+            int energyInserted = insertHandler.receiveEnergy(energyToInsert, false);
             context.setEnergyStored(context.energyStored() - energyInserted);
             context.setRotatingIndex(insertIndex + 1);
         }
