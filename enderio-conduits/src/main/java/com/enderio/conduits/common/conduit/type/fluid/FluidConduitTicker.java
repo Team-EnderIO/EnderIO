@@ -11,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -18,7 +19,6 @@ import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
-import java.util.Optional;
 
 public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidConduit, IFluidHandler> {
 
@@ -71,21 +71,36 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
             FluidConduitData fluidExtendedData = extract.node().getOrCreateData(ConduitTypes.Data.FLUID.get());
 
             final int transferRate = getScaledFluidRate(conduit, extract);
+            FluidStack testFluid = new FluidStack(fluidExtendedData.lockedFluid(), transferRate);
 
-            FluidStack extractedFluid = Optional
-                .ofNullable(fluidExtendedData.lockedFluid())
-                .map(fluid -> extractHandler.drain(new FluidStack(fluid, transferRate), IFluidHandler.FluidAction.SIMULATE))
-                .orElseGet(() -> extractHandler.drain(transferRate, IFluidHandler.FluidAction.SIMULATE));
+            if (extract.extractFilter() instanceof FluidStackFilter fluidStackFilter) {
+                if (!testFluid.isEmpty() && !fluidStackFilter.test(testFluid)) { //Locked fluid is invalid
+                    continue;
+                }
+                for (int i = 0; i < extractHandler.getTanks(); i++) {
+                    testFluid = new FluidStack(extractHandler.getFluidInTank(i).getFluid(), transferRate);
+                    if (fluidStackFilter.test(testFluid)) {
+                        break;
+                    }
+                }
+            }
+
+            FluidStack extractedFluid;
+
+            if (fluidExtendedData.lockedFluid().isSame(Fluids.EMPTY)) { //No locked fluid present
+                if (testFluid.isEmpty()) { //Filtered fluid is empty, get a random fluid
+                    extractedFluid = extractHandler.drain(transferRate, IFluidHandler.FluidAction.SIMULATE);
+                } else { //A filtered fluid is present, use that
+                    extractedFluid = extractHandler.drain(testFluid, IFluidHandler.FluidAction.SIMULATE);
+                }
+            } else { //Locked fluid is present, use that
+                extractedFluid = extractHandler.drain(new FluidStack(fluidExtendedData.lockedFluid(), transferRate), IFluidHandler.FluidAction.SIMULATE);
+            }
 
             if (extractedFluid.isEmpty()) {
                 continue;
             }
 
-            if (extract.extractFilter() instanceof FluidStackFilter fluidStackFilter) {
-                if (!fluidStackFilter.test(extractedFluid)) {
-                    continue;
-                }
-            }
 
             int transferred = 0;
             for (CapabilityConnection insert : inserts) {
@@ -95,7 +110,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
                     }
                 }
 
-                FluidStack transferredFluid = fluidExtendedData.lockedFluid() != null ?
+                FluidStack transferredFluid = !fluidExtendedData.lockedFluid().isSame(Fluids.EMPTY) ?
                     FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, new FluidStack(fluidExtendedData.lockedFluid(), transferRate - transferred),
                         true) :
                     FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, transferRate - transferred, true);
