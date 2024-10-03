@@ -132,10 +132,10 @@ public class MekanismModule implements ConduitModule {
     @Override
     public void bootstrapConduits(BootstrapContext<Conduit<?>> context) {
         context.register(HEAT, new HeatConduit(EnderIOBase.loc("block/conduit/heat"), LANG_HEAT_CONDUIT));
-        context.register(CHEMICAL, new ChemicalConduit(EnderIOBase.loc("block/conduit/chemical"), LANG_CHEMICAL_CONDUIT, 50, false));
+        context.register(CHEMICAL, new ChemicalConduit(EnderIOBase.loc("block/conduit/chemical"), LANG_CHEMICAL_CONDUIT, 750, false));
         context.register(PRESSURIZED_CHEMICAL,
-            new ChemicalConduit(EnderIOBase.loc("block/conduit/pressurized_chemical"), LANG_PRESSURIZED_CHEMICAL_CONDUIT, 100, false));
-        context.register(ENDER_CHEMICAL, new ChemicalConduit(EnderIOBase.loc("block/conduit/ender_chemical"), LANG_ENDER_CHEMICAL_CONDUIT, 200, true));
+            new ChemicalConduit(EnderIOBase.loc("block/conduit/pressurized_chemical"), LANG_PRESSURIZED_CHEMICAL_CONDUIT, 2_000, false));
+        context.register(ENDER_CHEMICAL, new ChemicalConduit(EnderIOBase.loc("block/conduit/ender_chemical"), LANG_ENDER_CHEMICAL_CONDUIT, 64_000, true));
     }
 
     @Override
