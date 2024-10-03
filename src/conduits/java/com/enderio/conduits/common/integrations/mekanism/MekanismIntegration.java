@@ -33,9 +33,9 @@ public class MekanismIntegration implements Integration {
     public final Capability<IPigmentHandler> PIGMENT_HANDLER = CapabilityManager.get(new CapabilityToken<>() {});
     public final Capability<IHeatHandler> HEAT_HANDLER = CapabilityManager.get(new CapabilityToken<>() {});
 
-    private static final RegistryObject<ChemicalConduitType> CHEMICAL = chemicalConduit("chemical", 100, false);
-    private static final RegistryObject<ChemicalConduitType> CHEMICAL2 = chemicalConduit("pressurized_chemical", 1000, true);
-    private static final RegistryObject<ChemicalConduitType> CHEMICAL3 = chemicalConduit("ender_chemical", 10_000, true);
+    private static final RegistryObject<ChemicalConduitType> CHEMICAL = chemicalConduit("chemical", 750, false);
+    private static final RegistryObject<ChemicalConduitType> CHEMICAL2 = chemicalConduit("pressurized_chemical", 2000, true);
+    private static final RegistryObject<ChemicalConduitType> CHEMICAL3 = chemicalConduit("ender_chemical", 64000, true);
 
     private static final RegistryObject<HeatConduitType> HEAT_TYPE = heatConduit("heat");
 
