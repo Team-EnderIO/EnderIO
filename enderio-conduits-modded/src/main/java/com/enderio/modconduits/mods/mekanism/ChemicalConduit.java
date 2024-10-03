@@ -6,8 +6,6 @@ import com.enderio.conduits.api.ConduitMenuData;
 import com.enderio.conduits.api.ConduitNode;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.SlotType;
-import com.enderio.conduits.api.upgrade.ConduitUpgrade;
-import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.serialization.Codec;
@@ -26,7 +24,7 @@ import java.util.function.Consumer;
 public record ChemicalConduit(
     ResourceLocation texture,
     Component description,
-    int transferAmountPerTick,
+    int transferRatePerTick,
     boolean isMultiChemical
 ) implements Conduit<ChemicalConduit> {
 
@@ -34,7 +32,7 @@ public record ChemicalConduit(
         builder -> builder.group(
             ResourceLocation.CODEC.fieldOf("texture").forGetter(ChemicalConduit::texture),
             ComponentSerialization.CODEC.fieldOf("description").forGetter(ChemicalConduit::description),
-            Codec.INT.fieldOf("transfer_rate").forGetter(ChemicalConduit::transferAmountPerTick),
+            Codec.INT.fieldOf("transfer_rate").forGetter(ChemicalConduit::transferRatePerTick),
             Codec.BOOL.fieldOf("is_multi_chemical").forGetter(ChemicalConduit::isMultiChemical)
         ).apply(builder, ChemicalConduit::new)
     );
@@ -80,7 +78,7 @@ public record ChemicalConduit(
                 return false;
             }
 
-            return transferAmountPerTick() <= otherChemicalConduit.transferAmountPerTick();
+            return transferRatePerTick() <= otherChemicalConduit.transferRatePerTick();
         }
 
         return false;
@@ -111,7 +109,7 @@ public record ChemicalConduit(
 
     @Override
     public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
-        String transferLimitFormatted = String.format("%,d", transferAmountPerTick());
+        String transferLimitFormatted = String.format("%,d", transferRatePerTick());
         pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, transferLimitFormatted));
 
         if (isMultiChemical()) {
@@ -119,7 +117,7 @@ public record ChemicalConduit(
         }
 
         if (pTooltipFlag.hasShiftDown()) {
-            String rawRateFormatted = String.format("%,d", transferAmountPerTick() * graphTickRate());
+            String rawRateFormatted = String.format("%,d", (int)Math.ceil(transferRatePerTick() / (20.0 / graphTickRate())));
             pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
         }
     }
@@ -140,9 +138,9 @@ public record ChemicalConduit(
             return 1;
         }
 
-        if (transferAmountPerTick() < o.transferAmountPerTick()) {
+        if (transferRatePerTick() < o.transferRatePerTick()) {
             return -1;
-        } else if (transferAmountPerTick() > o.transferAmountPerTick()) {
+        } else if (transferRatePerTick() > o.transferRatePerTick()) {
             return 1;
         }
 
