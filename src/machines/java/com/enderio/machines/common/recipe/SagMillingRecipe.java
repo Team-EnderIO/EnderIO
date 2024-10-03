@@ -257,12 +257,6 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                         TagKey<Item> tag = ItemTags.create(id);
                         int count = newItemJson.has("count") ? newItemJson.get("count").getAsInt() : 1;
 
-                        // Check tag has entries if its required (although the point of a tag is generally this will be optional, its just in case
-                        if (!optional && TagUtil.getOptionalItem(tag).isEmpty()) {
-                            EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output tag {}", recipeId, id);
-                            throw new RuntimeException("Sag milling recipe is missing a required output tag.");
-                        }
-
                         return OutputItem.of(tag, count, chance, optional);
                     } else {
                         ItemStack item = CraftingHelper.getItemStack(newItemJson.getAsJsonObject(), true, true);
