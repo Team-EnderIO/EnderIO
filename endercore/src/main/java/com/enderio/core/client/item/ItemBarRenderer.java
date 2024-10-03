@@ -5,7 +5,8 @@ import net.minecraft.client.gui.GuiGraphics;
 
 public class ItemBarRenderer {
 
-    public static void renderBar(GuiGraphics guiGraphics, float fillRatio, int xOffset, int yOffset, int blitOffset, int color) {
+    public static void renderBar(GuiGraphics guiGraphics, float fillRatio, int xOffset, int yOffset, int blitOffset,
+            int color) {
         RenderSystem.disableBlend();
 
         int i = Math.round(13.0F - fillRatio * 13.0F);

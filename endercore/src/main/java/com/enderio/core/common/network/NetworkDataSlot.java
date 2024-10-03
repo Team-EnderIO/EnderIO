@@ -3,6 +3,13 @@ package com.enderio.core.common.network;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -12,14 +19,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * The (3rd?) iteration of the data slot.
@@ -40,13 +39,12 @@ public final class NetworkDataSlot<T> {
     public static CodecType<Integer> INT = new CodecType<>(Codec.INT, ByteBufCodecs.INT.cast());
     public static CodecType<Long> LONG = new CodecType<>(Codec.LONG, ByteBufCodecs.VAR_LONG.cast());
     public static CodecType<Float> FLOAT = new CodecType<>(Codec.FLOAT, ByteBufCodecs.FLOAT.cast());
-    public static CodecType<ResourceLocation> RESOURCE_LOCATION = new CodecType<>(ResourceLocation.CODEC, ResourceLocation.STREAM_CODEC.cast());
-    public static CodecType<FluidStack> FLUID_STACK = new CodecType<>(FluidStack.OPTIONAL_CODEC, FluidStack.OPTIONAL_STREAM_CODEC, stack -> stack.hashCode() * 31 + stack.getAmount());
+    public static CodecType<ResourceLocation> RESOURCE_LOCATION = new CodecType<>(ResourceLocation.CODEC,
+            ResourceLocation.STREAM_CODEC.cast());
+    public static CodecType<FluidStack> FLUID_STACK = new CodecType<>(FluidStack.OPTIONAL_CODEC,
+            FluidStack.OPTIONAL_STREAM_CODEC, stack -> stack.hashCode() * 31 + stack.getAmount());
 
-    public NetworkDataSlot(
-        Type<T> type,
-        Supplier<T> getter,
-        Consumer<T> setter) {
+    public NetworkDataSlot(Type<T> type, Supplier<T> getter, Consumer<T> setter) {
 
         this.type = type;
         this.getter = getter;
@@ -94,7 +92,8 @@ public final class NetworkDataSlot<T> {
          * @param value The value to be hashed.
          * @return The value of the hash function, used for change detection.
          */
-        // TODO: 20.6: Ensure all change trackers work correctly (i.e. all hashCodes work as expected).
+        // TODO: 20.6: Ensure all change trackers work correctly (i.e. all hashCodes
+        // work as expected).
         int hash(T value);
 
         /**
@@ -131,11 +130,8 @@ public final class NetworkDataSlot<T> {
      * @param hashFunction Optional custom hash function.
      * @param <T> The type to be serialized.
      */
-    public record CodecType<T>(
-        Codec<T> codec,
-        StreamCodec<RegistryFriendlyByteBuf, T> streamCodec,
-        Function<T, Integer> hashFunction
-    ) implements Type<T> {
+    public record CodecType<T>(Codec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec,
+            Function<T, Integer> hashFunction) implements Type<T> {
 
         public CodecType(Codec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
             this(codec, streamCodec, Object::hashCode);
@@ -145,26 +141,22 @@ public final class NetworkDataSlot<T> {
             return new NetworkDataSlot<>(this, getter, setter);
         }
 
-        public static <T> CodecType<Set<T>> createSet(Codec<T> itemCodec, StreamCodec<RegistryFriendlyByteBuf, T> itemStreamCodec) {
-            return new CodecType<>(
-                itemCodec.listOf().xmap(ImmutableSet::copyOf, ImmutableList::copyOf),
-                itemStreamCodec.apply(ByteBufCodecs.list()).map(ImmutableSet::copyOf, ImmutableList::copyOf));
+        public static <T> CodecType<Set<T>> createSet(Codec<T> itemCodec,
+                StreamCodec<RegistryFriendlyByteBuf, T> itemStreamCodec) {
+            return new CodecType<>(itemCodec.listOf().xmap(ImmutableSet::copyOf, ImmutableList::copyOf),
+                    itemStreamCodec.apply(ByteBufCodecs.list()).map(ImmutableSet::copyOf, ImmutableList::copyOf));
         }
 
-        public static <T> CodecType<List<T>> createList(Codec<T> itemCodec, StreamCodec<RegistryFriendlyByteBuf, T> itemStreamCodec) {
-            return new CodecType<>(
-                itemCodec.listOf(),
-                itemStreamCodec.apply(ByteBufCodecs.list()));
+        public static <T> CodecType<List<T>> createList(Codec<T> itemCodec,
+                StreamCodec<RegistryFriendlyByteBuf, T> itemStreamCodec) {
+            return new CodecType<>(itemCodec.listOf(), itemStreamCodec.apply(ByteBufCodecs.list()));
         }
 
-        public static <T, U> CodecType<Map<T, U>> createMap(
-            Codec<T> keyCodec,
-            Codec<U> valueCodec,
-            StreamCodec<RegistryFriendlyByteBuf, T> keyStreamCodec,
-            StreamCodec<RegistryFriendlyByteBuf, U> valueStreamCodec) {
-            return new CodecType<>(
-                Codec.unboundedMap(keyCodec, valueCodec),
-                ByteBufCodecs.map(HashMap::new, keyStreamCodec, valueStreamCodec));
+        public static <T, U> CodecType<Map<T, U>> createMap(Codec<T> keyCodec, Codec<U> valueCodec,
+                StreamCodec<RegistryFriendlyByteBuf, T> keyStreamCodec,
+                StreamCodec<RegistryFriendlyByteBuf, U> valueStreamCodec) {
+            return new CodecType<>(Codec.unboundedMap(keyCodec, valueCodec),
+                    ByteBufCodecs.map(HashMap::new, keyStreamCodec, valueStreamCodec));
         }
 
         public int hash(T value) {
@@ -172,8 +164,7 @@ public final class NetworkDataSlot<T> {
         }
 
         public Tag save(HolderLookup.Provider lookupProvider, T value) {
-            return codec.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), value)
-                .getOrThrow();
+            return codec.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), value).getOrThrow();
         }
 
         public T parse(HolderLookup.Provider lookupProvider, Tag tag, Supplier<T> currentValueSupplier) {

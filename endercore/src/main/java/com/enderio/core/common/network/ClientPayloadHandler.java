@@ -20,21 +20,15 @@ public class ClientPayloadHandler {
 
     public void handleEmitParticles(final EmitParticlesPacket packet, final IPayloadContext context) {
         context.enqueueWork(() -> {
-                for (var particle : packet.particles()) {
-                    clientAddParticle(particle);
-                }
-            });
+            for (var particle : packet.particles()) {
+                clientAddParticle(particle);
+            }
+        });
     }
 
     private void clientAddParticle(EmitParticlePacket packet) {
-        Minecraft.getInstance().level.addParticle(
-            packet.particleOptions(),
-            packet.x(),
-            packet.y(),
-            packet.z(),
-            packet.xSpeed(),
-            packet.ySpeed(),
-            packet.zSpeed());
+        Minecraft.getInstance().level.addParticle(packet.particleOptions(), packet.x(), packet.y(), packet.z(),
+                packet.xSpeed(), packet.ySpeed(), packet.zSpeed());
     }
 
     public void handleDataSlotUpdate(ServerboundCDataSlotUpdate update, IPayloadContext context) {
@@ -42,7 +36,8 @@ public class ClientPayloadHandler {
             var level = context.player().level();
             BlockEntity be = level.getBlockEntity(update.pos());
             if (be instanceof EnderBlockEntity enderBlockEntity) {
-                var buf = new RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(update.slotData()), level.registryAccess());
+                var buf = new RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(update.slotData()),
+                        level.registryAccess());
                 enderBlockEntity.clientHandleBufferSync(buf);
             }
         });

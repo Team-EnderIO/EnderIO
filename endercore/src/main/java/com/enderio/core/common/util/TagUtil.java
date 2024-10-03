@@ -2,13 +2,12 @@ package com.enderio.core.common.util;
 
 import com.enderio.core.EnderCore;
 import com.enderio.core.common.integration.AlmostUnifiedIntegration;
+import java.util.Optional;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-
-import java.util.Optional;
 
 public class TagUtil {
     /**
@@ -34,10 +33,12 @@ public class TagUtil {
 
         // Search for an EnderIO item
         Optional<Item> enderItem = tag.get()
-            .stream()
-            .filter(itemHolder -> BuiltInRegistries.ITEM.getKey(itemHolder.value()).getNamespace().equals(EnderCore.MOD_ID))
-            .map(Holder::value)
-            .findFirst();
+                .stream()
+                .filter(itemHolder -> BuiltInRegistries.ITEM.getKey(itemHolder.value())
+                        .getNamespace()
+                        .equals(EnderCore.MOD_ID))
+                .map(Holder::value)
+                .findFirst();
 
         if (enderItem.isPresent()) {
             return enderItem;

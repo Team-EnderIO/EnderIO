@@ -7,6 +7,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public interface CustomMenuPacketPayload<Menu extends AbstractContainerMenu> extends CustomPacketPayload {
 
     int containerId();
+
     Class<Menu> menuClass();
 
     default boolean isValid(IPayloadContext context) {

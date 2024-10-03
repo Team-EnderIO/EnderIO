@@ -4,6 +4,12 @@ import com.enderio.core.common.network.ClientboundDataSlotChange;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.core.common.network.ServerboundCDataSlotUpdate;
 import io.netty.buffer.Unpooled;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,13 +29,6 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Base block entity class for EnderIO.
@@ -205,7 +204,7 @@ public class EnderBlockEntity extends BlockEntity {
         if (syncData != null && level instanceof ServerLevel serverLevel) {
             setChanged();
             PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(getBlockPos()),
-                new ServerboundCDataSlotUpdate(getBlockPos(), syncData));
+                    new ServerboundCDataSlotUpdate(getBlockPos(), syncData));
         }
     }
 
@@ -238,7 +237,8 @@ public class EnderBlockEntity extends BlockEntity {
     // region Neighboring Capabilities
 
     // TODO: NEO-PORT: We might want handling for Void contexts.
-    //                 However cannot have two methods with same method name and different context type params :(
+    // However cannot have two methods with same method name and different context
+    // type params :(
 
     @Nullable
     protected <T> T getSelfCapability(BlockCapability<T, Direction> capability, Direction side) {
@@ -259,13 +259,14 @@ public class EnderBlockEntity extends BlockEntity {
             return null;
         }
 
-        //noinspection unchecked
+        // noinspection unchecked
         return (T) selfCapabilities.get(capability).get(side).getCapability();
     }
 
     private void populateSelfCachesFor(Direction direction, BlockCapability<?, Direction> capability) {
         if (level instanceof ServerLevel serverLevel) {
-            selfCapabilities.get(capability).put(direction, BlockCapabilityCache.create(capability, serverLevel, getBlockPos(), direction));
+            selfCapabilities.get(capability)
+                    .put(direction, BlockCapabilityCache.create(capability, serverLevel, getBlockPos(), direction));
         }
     }
 
@@ -288,14 +289,16 @@ public class EnderBlockEntity extends BlockEntity {
             return null;
         }
 
-        //noinspection unchecked
+        // noinspection unchecked
         return (T) neighbourCapabilities.get(capability).get(side).getCapability();
     }
 
     private void populateNeighbourCachesFor(Direction direction, BlockCapability<?, Direction> capability) {
         if (level instanceof ServerLevel serverLevel) {
             BlockPos neighbourPos = getBlockPos().relative(direction);
-            neighbourCapabilities.get(capability).put(direction, BlockCapabilityCache.create(capability, serverLevel, neighbourPos, direction.getOpposite()));
+            neighbourCapabilities.get(capability)
+                    .put(direction, BlockCapabilityCache.create(capability, serverLevel, neighbourPos,
+                            direction.getOpposite()));
         }
     }
 

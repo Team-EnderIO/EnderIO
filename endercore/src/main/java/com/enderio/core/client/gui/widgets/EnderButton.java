@@ -10,10 +10,9 @@ import net.minecraft.resources.ResourceLocation;
 // The same as AbstractButton but does not show the white outline when focussed.
 public abstract class EnderButton extends AbstractWidget {
     protected static final WidgetSprites SPRITES = new WidgetSprites(
-        ResourceLocation.withDefaultNamespace("widget/button"),
-        ResourceLocation.withDefaultNamespace("widget/button_disabled"),
-        ResourceLocation.withDefaultNamespace("widget/button_highlighted")
-    );
+            ResourceLocation.withDefaultNamespace("widget/button"),
+            ResourceLocation.withDefaultNamespace("widget/button_disabled"),
+            ResourceLocation.withDefaultNamespace("widget/button_highlighted"));
 
     public EnderButton(int pX, int pY, int pWidth, int pHeight, Component pMessage) {
         super(pX, pY, pWidth, pHeight, pMessage);
@@ -26,7 +25,8 @@ public abstract class EnderButton extends AbstractWidget {
         pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
-        pGuiGraphics.blitSprite(SPRITES.get(this.active, this.isHovered()), this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        pGuiGraphics.blitSprite(SPRITES.get(this.active, this.isHovered()), this.getX(), this.getY(), this.getWidth(),
+                this.getHeight());
         pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         renderButtonFace(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }

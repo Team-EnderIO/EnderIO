@@ -11,12 +11,14 @@ public record ClientboundDataSlotChange(BlockPos pos, byte[] updateData) impleme
 
     public static final Type<ClientboundDataSlotChange> TYPE = new Type<>(EnderCore.loc("c2s_data_slot_update"));
 
+    // @formatter:off
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundDataSlotChange> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,
         ClientboundDataSlotChange::pos,
         ByteBufCodecs.BYTE_ARRAY,
         ClientboundDataSlotChange::updateData,
         ClientboundDataSlotChange::new);
+    // @formatter:on
 
     @Override
     public Type<? extends CustomPacketPayload> type() {

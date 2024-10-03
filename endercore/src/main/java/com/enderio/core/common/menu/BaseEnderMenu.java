@@ -13,7 +13,8 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
 
     protected static final int PLAYER_INVENTORY_SIZE = 36;
 
-    private static final EquipmentSlot[] EQUIPMENT_SLOTS = new EquipmentSlot[] { EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
+    private static final EquipmentSlot[] EQUIPMENT_SLOTS = new EquipmentSlot[] { EquipmentSlot.HEAD,
+            EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET };
 
     protected BaseEnderMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory) {
         super(menuType, containerId);

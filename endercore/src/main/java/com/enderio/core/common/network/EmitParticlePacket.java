@@ -10,11 +10,12 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
-public record EmitParticlePacket(ParticleOptions particleOptions, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
-    implements CustomPacketPayload {
+public record EmitParticlePacket(ParticleOptions particleOptions, double x, double y, double z, double xSpeed,
+        double ySpeed, double zSpeed) implements CustomPacketPayload {
 
     public static final Type<EmitParticlePacket> TYPE = new Type<>(EnderCore.loc("emit_particle"));
 
+    // @formatter:off
     public static final StreamCodec<RegistryFriendlyByteBuf, EmitParticlePacket> STREAM_CODEC = NeoForgeStreamCodecs.composite(
         ParticleTypes.STREAM_CODEC,
         EmitParticlePacket::particleOptions,
@@ -32,6 +33,7 @@ public record EmitParticlePacket(ParticleOptions particleOptions, double x, doub
         EmitParticlePacket::zSpeed,
         EmitParticlePacket::new
     );
+    // @formatter:on
 
     public EmitParticlePacket(ParticleOptions type, BlockPos pos) {
         this(type, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);

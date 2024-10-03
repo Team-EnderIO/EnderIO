@@ -10,12 +10,13 @@ import org.jetbrains.annotations.Nullable;
 public abstract class BaseBlockEntityMenu<T extends BlockEntity> extends BaseEnderMenu {
 
     // TODO: Should block entity even be nullable?
-    //       Why create the menu if we failed to attach correctly...
+    // Why create the menu if we failed to attach correctly...
 
     @Nullable
     private final T blockEntity;
 
-    protected BaseBlockEntityMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity, Inventory playerInventory) {
+    protected BaseBlockEntityMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity,
+            Inventory playerInventory) {
         super(menuType, containerId, playerInventory);
         this.blockEntity = blockEntity;
     }
