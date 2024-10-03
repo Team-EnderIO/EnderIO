@@ -7,10 +7,8 @@ import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.registry.EnderIORegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -18,7 +16,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public abstract class ConduitType<T extends ConduitData<T>> {
 
@@ -69,9 +66,6 @@ public abstract class ConduitType<T extends ConduitData<T>> {
     }
 
     public record ConduitConnectionData(boolean isInsert, boolean isExtract, RedstoneControl control) {}
-
-    public void addToTooltip(@Nullable Level level, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
-    }
 
     @Nullable
     public static ResourceLocation getKey(ConduitType<?> conduitType) {
