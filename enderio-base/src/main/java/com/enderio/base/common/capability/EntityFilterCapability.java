@@ -125,7 +125,7 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
     public record Component(List<StoredEntityData> entities, boolean nbt, boolean invert) {
         public static Codec<Component> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
             .group(Slot.CODEC.sizeLimitedListOf(256).fieldOf("entities").xmap(Component::fromList, Component::fromEntities).forGetter(Component::entities),
-                Codec.BOOL.fieldOf("nbt").forGetter(Component::nbt), Codec.BOOL.fieldOf("nbt").forGetter(Component::invert))
+                Codec.BOOL.fieldOf("nbt").forGetter(Component::nbt), Codec.BOOL.fieldOf("isInvert").forGetter(Component::invert))
             .apply(componentInstance, Component::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, Component> STREAM_CODEC = StreamCodec.composite(
