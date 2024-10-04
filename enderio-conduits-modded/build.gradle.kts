@@ -56,6 +56,13 @@ dependencies {
 
     //Laserio
     compileOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
+
+    //Pneumaticcraft
+    compileOnly("me.desht.pneumaticcraft:pneumaticcraft-repressurized:8.1.4+mc1.21.1") {
+        isTransitive = false
+    }
+    compileOnly("blusunrize.immersiveengineering:ImmersiveEngineering:1.21.1-11.6.1-181.62")
+    compileOnly("curse.maven:curios-continuation-1037991:5765721")
 }
 
 neoForge {
@@ -69,6 +76,13 @@ neoForge {
                 runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
                 runtimeOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}")
                 runtimeOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
+
+                //Pneumaticcraft
+                runtimeOnly("me.desht.pneumaticcraft:pneumaticcraft-repressurized:8.1.4+mc1.21.1") {
+                    isTransitive = false
+                }
+                runtimeOnly("curse.maven:curios-continuation-1037991:5765721")
+                runtimeOnly("blusunrize.immersiveengineering:ImmersiveEngineering:1.21.1-11.6.1-181.62")
             }
 
             programArguments.addAll(
