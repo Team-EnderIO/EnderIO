@@ -59,7 +59,7 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
 
     @Override
     public int size() {
-        return 0;
+        return getEntries().size();
     }
 
     @Override
