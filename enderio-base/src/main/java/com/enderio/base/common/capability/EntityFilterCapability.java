@@ -15,7 +15,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -123,10 +122,19 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
     }
 
     public record Component(List<StoredEntityData> entities, boolean nbt, boolean invert) {
-        public static Codec<Component> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
+        public static Codec<Component> NEW_CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
             .group(Slot.CODEC.sizeLimitedListOf(256).fieldOf("entities").xmap(Component::fromList, Component::fromEntities).forGetter(Component::entities),
                 Codec.BOOL.fieldOf("nbt").forGetter(Component::nbt), Codec.BOOL.fieldOf("isInvert").forGetter(Component::invert))
             .apply(componentInstance, Component::new));
+
+        // TODO: Remove in Ender IO 8
+        // The Codec used up to and including v7.0.7-alpha
+        public static Codec<Component> LEGACY_CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
+            .group(Slot.CODEC.sizeLimitedListOf(256).fieldOf("entities").xmap(Component::fromList, Component::fromEntities).forGetter(Component::entities),
+                Codec.BOOL.fieldOf("nbt").forGetter(Component::nbt), Codec.BOOL.fieldOf("nbt").forGetter(Component::invert))
+            .apply(componentInstance, Component::new));
+
+        public static final Codec<Component> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
 
         public static final StreamCodec<RegistryFriendlyByteBuf, Component> STREAM_CODEC = StreamCodec.composite(
             StoredEntityData.STREAM_CODEC.apply(ByteBufCodecs.list(256)),
