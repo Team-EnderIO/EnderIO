@@ -95,6 +95,9 @@ public record PressureConduitStorage(PressureTier tier, ConduitNode node) implem
 
     @Override
     public int getAir() {
+        if (node.getParentGraph() == null) { //TODO why null?
+            return 0;
+        }
         PressureConduitContext context = node.getParentGraph().getContext(PneumaticModule.NetworkContexts.PRESSURE_NETWORK.get());
         if (context != null) {
             return context.getAir();
@@ -110,6 +113,9 @@ public record PressureConduitStorage(PressureTier tier, ConduitNode node) implem
 
     @Override
     public int getBaseVolume() {
+        if (node.getParentGraph() == null) { //TODO why null?
+            return 0;
+        }
         return node.getParentGraph().getNodes().size() * 1000;
     }
 
