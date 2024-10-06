@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
+import java.util.Locale;
 
 public class EnumTranslationMap<T extends Enum<T>> {
     private final EnumMap<T, Component> translations;
@@ -41,7 +42,7 @@ public class EnumTranslationMap<T extends Enum<T>> {
         }
 
         public Builder<T> addTranslation(T value, String english) {
-            ResourceLocation key = ResourceLocation.fromNamespaceAndPath(modId, translationPrefix + "." + value.name().toLowerCase());
+            ResourceLocation key = ResourceLocation.fromNamespaceAndPath(modId, translationPrefix + "." + value.name().toLowerCase(Locale.ROOT));
             translations.put(value, translationRegistrar.createTranslation("gui", key, english));
 
             return this;
