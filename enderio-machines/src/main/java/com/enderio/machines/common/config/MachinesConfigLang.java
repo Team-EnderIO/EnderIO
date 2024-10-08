@@ -48,6 +48,12 @@ public class MachinesConfigLang {
         addTranslation("aversion", "Aversion Obelisk");
         addTranslation("relocator", "Relocator Obelisk");
 
+        // Fluid
+        addTranslation("fluid", "Fluid");
+        addTranslation("fluidTanks", "Fluid tanks");
+        addTranslation("pressurizedFluidTankCapacity", "Pressurised capacity");
+        addTranslation("fluidTankCapacity", "Capacity");
+
         // Enchanter
         addTranslation("enchanter", "Enchanter");
         addTranslation("lapisCostFactor", "Lapis Cost Multiplier");

@@ -5,6 +5,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class MachinesCommonConfig {
     public final EnergyConfig ENERGY;
+    public final FluidConfig FLUID;
     public final ModConfigSpec.ConfigValue<Double> ENCHANTER_LAPIS_COST_FACTOR;
     public final ModConfigSpec.ConfigValue<Double> ENCHANTER_LEVEL_COST_FACTOR;
     public final ModConfigSpec.ConfigValue<Integer> ENCHANTER_BASE_LEVEL_COST;
@@ -15,6 +16,7 @@ public class MachinesCommonConfig {
 
     public MachinesCommonConfig(ModConfigSpec.Builder builder) {
         ENERGY = new EnergyConfig(builder);
+        FLUID = new FluidConfig(builder);
 
         builder.push("enchanter");
             ENCHANTER_LAPIS_COST_FACTOR = builder.comment("The lapis cost is enchant level multiplied by this value.").define("lapisCostFactor", 3.0d);
