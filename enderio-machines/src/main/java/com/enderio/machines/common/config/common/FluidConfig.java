@@ -12,10 +12,10 @@ public class FluidConfig {
 
         builder.push("fluid");
 
-        builder.push("fluidTanks");
+        builder.push("fluidTankCapacity");
         FLUID_TANK_MAX_CAPACITY = builder
-            .comment("Maximum amount of fluid in buckets that the fluid tank can hold")
-            .defineInRange("fluidTankCapacity", 16, 1, Integer.MAX_VALUE / FluidType.BUCKET_VOLUME);
+            .comment("Maximum amount of fluid in buckets that the base fluid tank can hold")
+            .defineInRange("baseFluidTankCapacity", 16, 1, Integer.MAX_VALUE / FluidType.BUCKET_VOLUME);
         PRESSURIZED_FLUID_TANK_MAX_CAPACITY = builder
             .comment("Maximum amount of fluid in buckets that the pressurized fluid tank can hold")
             .defineInRange("pressurizedFluidTankCapacity", 32, 1, Integer.MAX_VALUE / FluidType.BUCKET_VOLUME);

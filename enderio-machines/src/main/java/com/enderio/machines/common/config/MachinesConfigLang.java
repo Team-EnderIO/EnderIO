@@ -50,9 +50,9 @@ public class MachinesConfigLang {
 
         // Fluid
         addTranslation("fluid", "Fluid");
-        addTranslation("fluidTanks", "Fluid tanks");
-        addTranslation("pressurizedFluidTankCapacity", "Pressurised capacity");
-        addTranslation("fluidTankCapacity", "Capacity");
+        addTranslation("fluidTankCapacity", "Fluid tank capacity");
+        addTranslation("baseFluidTankCapacity", "Base");
+        addTranslation("pressurizedFluidTankCapacity", "Pressurised");
 
         // Enchanter
         addTranslation("enchanter", "Enchanter");
