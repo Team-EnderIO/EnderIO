@@ -11,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -29,6 +30,40 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
             rate *= (int) Math.pow(2, speedUpgrade.tier());
         }
         return rate;
+    }
+
+    private int doFluidTransfer(FluidStack fluid, CapabilityConnection extract, List<CapabilityConnection> inserts) {
+        FluidStack extractedFluid = extract.capability().drain(fluid, IFluidHandler.FluidAction.SIMULATE);
+
+        if (extractedFluid.isEmpty()) {
+            return fluid.getAmount();
+        }
+
+        if (extract.extractFilter() instanceof FluidStackFilter fluidStackFilter) {
+            if (!fluidStackFilter.test(extractedFluid)) {
+                return fluid.getAmount();
+            }
+        }
+
+        for (CapabilityConnection insert : inserts) {
+            if (insert.insertFilter() instanceof FluidStackFilter fluidStackFilter) {
+                if (!fluidStackFilter.test(extractedFluid)) {
+                    continue;
+                }
+            }
+
+            FluidStack transferredFluid = FluidUtil.tryFluidTransfer(insert.capability(), extract.capability(), fluid, true);
+
+            if (!transferredFluid.isEmpty()) {
+                fluid.shrink(transferredFluid.getAmount());
+            }
+
+            if (fluid.getAmount() <= 0) {
+                break;
+            }
+        }
+
+        return fluid.getAmount();
     }
 
     @Override
@@ -70,51 +105,30 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
             IFluidHandler extractHandler = extract.capability();
             FluidConduitData fluidExtendedData = extract.node().getOrCreateData(ConduitTypes.Data.FLUID.get());
 
-            final int transferRate = getScaledFluidRate(conduit, extract);
+            final int fluidRate = getScaledFluidRate(conduit, extract);
 
-            FluidStack extractedFluid = Optional
-                .ofNullable(fluidExtendedData.lockedFluid())
-                .map(fluid -> extractHandler.drain(new FluidStack(fluid, transferRate), IFluidHandler.FluidAction.SIMULATE))
-                .orElseGet(() -> extractHandler.drain(transferRate, IFluidHandler.FluidAction.SIMULATE));
+            if (!fluidExtendedData.lockedFluid().isSame(Fluids.EMPTY)) {
+                doFluidTransfer(new FluidStack(fluidExtendedData.lockedFluid(), fluidRate), extract, inserts);
+            } else {
+                int remaining = fluidRate;
 
-            if (extractedFluid.isEmpty()) {
-                continue;
-            }
-
-            if (extract.extractFilter() instanceof FluidStackFilter fluidStackFilter) {
-                if (!fluidStackFilter.test(extractedFluid)) {
-                    continue;
-                }
-            }
-
-            int transferred = 0;
-            for (CapabilityConnection insert : inserts) {
-                if (insert.insertFilter() instanceof FluidStackFilter fluidStackFilter) {
-                    if (!fluidStackFilter.test(extractedFluid)) {
+                for (int i = 0; i < extractHandler.getTanks() && remaining > 0; i++) {
+                    if (extractHandler.getFluidInTank(i).isEmpty()) {
                         continue;
                     }
-                }
 
-                FluidStack transferredFluid = fluidExtendedData.lockedFluid() != null ?
-                    FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, new FluidStack(fluidExtendedData.lockedFluid(), transferRate - transferred),
-                        true) :
-                    FluidUtil.tryFluidTransfer(insert.capability(), extractHandler, transferRate - transferred, true);
+                    Fluid fluid = extractHandler.getFluidInTank(i).getFluid();
+                    remaining = doFluidTransfer(new FluidStack(fluid, remaining), extract, inserts);
 
-                if (!transferredFluid.isEmpty()) {
-                    transferred += transferredFluid.getAmount();
-                    if (!conduit.isMultiFluid()) {
+                    if (!conduit.isMultiFluid() && remaining < fluidRate) {
                         for (ConduitNode node : graph.getNodes()) {
-                            Fluid fluid = transferredFluid.getFluid();
                             if (fluid instanceof FlowingFluid flowing) {
                                 fluid = flowing.getSource();
                             }
 
-                            FluidConduitData nodeFluidData = node.getOrCreateData(ConduitTypes.Data.FLUID.get());
-                            nodeFluidData.setLockedFluid(fluid);
+                            node.getOrCreateData(ConduitTypes.Data.FLUID.get()).setLockedFluid(fluid);
                         }
-                    }
 
-                    if (transferred > transferRate) {
                         break;
                     }
                 }
