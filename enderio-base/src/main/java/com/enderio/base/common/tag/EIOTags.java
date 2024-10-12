@@ -34,8 +34,8 @@ public class EIOTags {
         private static void init() {}
 
         // TODO: use these for slot filtering again.
-        public static final TagKey<Item> ENTITY_STORAGE = commonTag("enderio/entity_storage");
-        public static final TagKey<Item> GRINDING_BALLS = commonTag("enderio/grinding_balls");
+        public static final TagKey<Item> ENTITY_STORAGE = tag("entity_storage");
+        public static final TagKey<Item> GRINDING_BALLS = tag("grinding_balls");
 
         public static final TagKey<Item> WRENCH = commonTag("tools/wrench");
         public static final TagKey<Item> GLIDER = tag("tools/glider");
@@ -108,7 +108,7 @@ public class EIOTags {
         public static final TagKey<Item> BLOCKS_CONDUCTIVE_ALLOY = commonTag("storage_blocks/conductive_alloy");
         public static final TagKey<Item> BLOCKS_COPPER_ALLOY = commonTag("storage_blocks/copper_alloy");
         public static final TagKey<Item> BLOCKS_DARK_STEEL = commonTag("storage_blocks/dark_steel");
-        public static final TagKey<Item> BLOCKS_END_STEEL = commonTag("storage_blocks/energetic_alloy");
+        public static final TagKey<Item> BLOCKS_END_STEEL = commonTag("storage_blocks/end_steel");
         public static final TagKey<Item> BLOCKS_ENERGETIC_ALLOY = commonTag("storage_blocks/energetic_alloy");
         public static final TagKey<Item> BLOCKS_PULSATING_ALLOY = commonTag("storage_blocks/pulsating_alloy");
         public static final TagKey<Item> BLOCKS_REDSTONE_ALLOY = commonTag("storage_blocks/redstone_alloy");
