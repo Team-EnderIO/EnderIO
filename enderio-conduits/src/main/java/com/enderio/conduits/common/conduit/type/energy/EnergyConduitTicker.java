@@ -26,7 +26,7 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
         ConduitNetwork graph, ColoredRedstoneProvider coloredRedstoneProvider) {
 
         // Adjust for tick rate. Always flow up so we are at minimum meeting the required rate.
-        int transferRate = (int)Math.ceil(conduit.transferRatePerTick() / (20.0 / conduit.graphTickRate()));
+        int transferRate = (int)Math.ceil(conduit.transferRatePerTick() * (20.0 / conduit.graphTickRate()));
 
         EnergyConduitNetworkContext context = graph.getContext(Conduits.ContextSerializers.ENERGY.get());
         if (context == null) {

@@ -18,7 +18,7 @@ public class ChemicalTicker extends CapabilityAwareConduitTicker<ChemicalConduit
 
     private int getScaledTransferRate(ChemicalConduit conduit, CapabilityConnection extractingConnection) {
         // Adjust for tick rate. Always flow up so we are at minimum meeting the required rate.
-        return  (int)Math.ceil(conduit.transferRatePerTick() / (20.0 / conduit.graphTickRate()));
+        return  (int)Math.ceil(conduit.transferRatePerTick() * (20.0 / conduit.graphTickRate()));
     }
 
     @Override

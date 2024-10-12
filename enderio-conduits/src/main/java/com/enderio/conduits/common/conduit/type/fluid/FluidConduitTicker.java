@@ -25,7 +25,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<FluidCondui
 
     private int getScaledFluidRate(FluidConduit conduit, CapabilityConnection extractingConnection) {
         // Adjust for tick rate. Always flow up so we are at minimum meeting the required rate.
-        int rate = (int)Math.ceil(conduit.transferRatePerTick() / (20.0 / conduit.graphTickRate()));
+        int rate = (int)Math.ceil(conduit.transferRatePerTick() * (20.0 / conduit.graphTickRate()));
 
         // Apply speed upgrade
         if (extractingConnection.upgrade() instanceof ExtractionSpeedUpgrade speedUpgrade) {
