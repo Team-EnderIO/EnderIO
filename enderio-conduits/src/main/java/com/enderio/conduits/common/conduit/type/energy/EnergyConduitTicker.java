@@ -2,7 +2,6 @@ package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.ConduitNetwork;
-import com.enderio.conduits.api.ConduitNode;
 import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.Conduits;
@@ -25,6 +24,9 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
     @Override
     public void tickColoredGraph(ServerLevel level, EnergyConduit conduit, List<Connection> inserts, List<Connection> extracts, DyeColor color,
         ConduitNetwork graph, ColoredRedstoneProvider coloredRedstoneProvider) {
+
+        // Adjust for tick rate. Always flow up so we are at minimum meeting the required rate.
+        int transferRate = (int)Math.ceil(conduit.transferRatePerTick() * (20.0 / conduit.graphTickRate()));
 
         EnergyConduitNetworkContext context = graph.getContext(Conduits.ContextSerializers.ENERGY.get());
         if (context == null) {
@@ -58,7 +60,7 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
                 continue;
             }
 
-            int energyToInsert = Math.min(conduit.transferRate(), Math.max(context.energyStored(), 0));
+            int energyToInsert = Math.min(transferRate, Math.max(context.energyStored(), 0));
             int energyInserted = insertHandler.receiveEnergy(energyToInsert, false);
             context.setEnergyStored(context.energyStored() - energyInserted);
             context.setRotatingIndex(insertIndex + 1);
@@ -68,15 +70,6 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
     @Override
     public boolean shouldSkipColor(List<Connection> extractList, List<Connection> insertList) {
         return insertList.isEmpty();
-    }
-
-    /**
-     * This ensures consistent behaviour for FE/t caps and more.
-     * @return how often the conduit should tick. 1 is every tick, 5 is every 5th tick, so 4 times a second
-     */
-    @Override
-    public int getTickRate() {
-        return 1;
     }
 
     @Override

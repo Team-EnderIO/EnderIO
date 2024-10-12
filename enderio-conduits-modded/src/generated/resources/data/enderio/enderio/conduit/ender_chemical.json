@@ -11,5 +11,5 @@
   },
   "is_multi_chemical": true,
   "texture": "enderio:block/conduit/ender_chemical",
-  "transfer_rate": 200
+  "transfer_rate": 64000
 }

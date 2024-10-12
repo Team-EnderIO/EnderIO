@@ -47,7 +47,7 @@ public record EnergyConduitStorage(
 
     @Override
     public int getMaxEnergyStored() {
-        // Capacity is transfer rate + nodeCount * transferRate / 2 (expanded).
+        // Capacity is transfer rate + nodeCount * transferRatePerTick / 2 (expanded).
         // This ensures at least the transfer rate of the cable is available, but capacity doesn't grow outrageously.
         int nodeCount = node.getParentGraph().getNodes().size();
 

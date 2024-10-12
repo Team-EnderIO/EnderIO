@@ -5,5 +5,5 @@
   },
   "is_multi_fluid": false,
   "texture": "enderio:block/conduit/fluid",
-  "transfer_rate": 100
+  "transfer_rate": 50
 }

@@ -46,6 +46,14 @@ public interface Conduit<TConduit extends Conduit<TConduit>> extends
     Component description();
 
     /**
+     * @implNote Must be >= 1 and <= 20
+     * @return the number of ticks that should pass before the conduit graph ticks.
+     */
+    default int graphTickRate() {
+        return 5;
+    }
+
+    /**
      * Gets the conduit type.
      * This is used to define serialization and exposing proxied capabilities.
      */
@@ -137,5 +145,19 @@ public interface Conduit<TConduit extends Conduit<TConduit>> extends
 
     @Override
     default void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
+    }
+
+    /**
+     * @return true if this conduit has more tooltips when shift is held.
+     */
+    default boolean hasAdvancedTooltip() {
+        return false;
+    }
+
+    /**
+     * @return true if this conduit should show graph debug tooltips (when shift is held).
+     */
+    default boolean showDebugTooltip() {
+        return false;
     }
 }

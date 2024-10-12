@@ -33,7 +33,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -323,7 +322,9 @@ public class ConduitSavedData extends SavedData {
     }
 
     private <T extends Conduit<T>> void tickConduitGraph(ServerLevel serverLevel, Holder<Conduit<?>> conduit, int conduitId, ConduitTicker<T> ticker, Graph<ConduitGraphContext> graph) {
-        if (serverLevel.getGameTime() % ticker.getTickRate() == conduitId % ticker.getTickRate()) {
+        int conduitTickRate = conduit.value().graphTickRate();
+
+        if (serverLevel.getGameTime() % conduitTickRate == conduitId % conduitTickRate) {
             //noinspection unchecked
             ticker.tickGraph(serverLevel, (T)conduit.value(), new WrappedConduitNetwork(graph), ConduitSavedData::isRedstoneActive);
         }

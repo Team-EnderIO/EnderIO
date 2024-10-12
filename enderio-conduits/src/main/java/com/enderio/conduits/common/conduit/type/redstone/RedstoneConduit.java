@@ -34,6 +34,11 @@ public record RedstoneConduit(
     private static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(true, true, false, true, true, false);
 
     @Override
+    public int graphTickRate() {
+        return 2;
+    }
+
+    @Override
     public ConduitType<RedstoneConduit> type() {
         return ConduitTypes.REDSTONE.get();
     }

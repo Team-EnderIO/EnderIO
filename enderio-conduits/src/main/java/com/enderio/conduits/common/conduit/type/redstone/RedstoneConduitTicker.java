@@ -84,9 +84,4 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
     public boolean shouldSkipColor(List<Connection> extractList, List<Connection> insertList) {
         return extractList.isEmpty() && insertList.isEmpty(); //Only skip if no one uses the channel
     }
-
-    @Override
-    public int getTickRate() {
-        return 2;
-    }
 }

@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 public record FluidConduit(
     ResourceLocation texture,
     Component description,
-    int transferRate,
+    int transferRatePerTick,
     boolean isMultiFluid
 ) implements Conduit<FluidConduit> {
 
@@ -38,7 +38,7 @@ public record FluidConduit(
             .group(
                 ResourceLocation.CODEC.fieldOf("texture").forGetter(FluidConduit::texture),
                 ComponentSerialization.CODEC.fieldOf("description").forGetter(FluidConduit::description),
-                Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduit::transferRate),
+                Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduit::transferRatePerTick),
                 Codec.BOOL.fieldOf("is_multi_fluid").forGetter(FluidConduit::isMultiFluid)
             ).apply(builder, FluidConduit::new)
     );
@@ -112,12 +112,27 @@ public record FluidConduit(
 
     @Override
     public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
-        String transferLimitFormatted = String.format("%,d", transferRate() * (20 / getTicker().getTickRate()));
-        pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RATE_TOOLTIP, transferLimitFormatted));
+        String transferLimitFormatted = String.format("%,d", transferRatePerTick());
+        pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, transferLimitFormatted));
 
         if (isMultiFluid()) {
             pTooltipAdder.accept(ConduitLang.MULTI_FLUID_TOOLTIP);
         }
+
+        if (pTooltipFlag.hasShiftDown()) {
+            String rawRateFormatted = String.format("%,d", (int)Math.ceil(transferRatePerTick() * (20.0 / graphTickRate())));
+            pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
+        }
+    }
+
+    @Override
+    public boolean hasAdvancedTooltip() {
+        return true;
+    }
+
+    @Override
+    public boolean showDebugTooltip() {
+        return true;
     }
 
     @Override
@@ -126,9 +141,9 @@ public record FluidConduit(
             return 1;
         }
 
-        if (transferRate() < o.transferRate()) {
+        if (transferRatePerTick() < o.transferRatePerTick()) {
             return -1;
-        } else if (transferRate() > o.transferRate()) {
+        } else if (transferRatePerTick() > o.transferRatePerTick()) {
             return 1;
         }
 
