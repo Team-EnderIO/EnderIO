@@ -37,6 +37,8 @@ public class EIOTags {
         public static final TagKey<Item> ENTITY_STORAGE = tag("entity_storage");
         public static final TagKey<Item> GRINDING_BALLS = tag("grinding_balls");
 
+        public static final TagKey<Item> HIDE_FACADES = tag("enderio/hide_facades");
+
         public static final TagKey<Item> WRENCH = commonTag("tools/wrench");
         public static final TagKey<Item> GLIDER = tag("tools/glider");
 

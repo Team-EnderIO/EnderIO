@@ -20,8 +20,8 @@ public class YetaChunkRebuildHandler {
             return;
         }
 
-        if (event.getTo().is(EIOTags.Items.WRENCH) ||
-            event.getFrom().is(EIOTags.Items.WRENCH)) {
+        if (event.getTo().is(EIOTags.Items.HIDE_FACADES) ||
+            event.getFrom().is(EIOTags.Items.HIDE_FACADES)) {
             FacadeHelper.rebuildChunkMeshes();
         }
     }

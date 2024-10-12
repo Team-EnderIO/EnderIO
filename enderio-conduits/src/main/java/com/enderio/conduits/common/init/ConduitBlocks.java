@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.init;
 
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlock;
@@ -31,7 +32,8 @@ public class ConduitBlocks {
         .createBlockItem(ITEM_REGISTRY, b -> new ConduitBlockItem(b, new Item.Properties()),
             item -> item
                 .setTranslation("<MISSING> Conduit")
-                .setModelProvider((prov, ctx) -> {}));
+                .setModelProvider((prov, ctx) -> {})
+                .addItemTags(EIOTags.Items.HIDE_FACADES));
 
     public static void register(IEventBus bus) {
         BLOCK_REGISTRY.register(bus);
