@@ -399,7 +399,7 @@ public class ConduitRecipes extends RecipeProvider {
     protected void paintingRecipe(ItemLike output, Ingredient input, RecipeOutput recipeOutput) {
         recipeOutput.accept(
             EnderIOBase.loc("painting/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
-            new PaintingRecipe(input, output.asItem()),
+            new PaintingRecipe(input, output.asItem().getDefaultInstance()),
             null,
             new ModLoadedCondition(EnderIOMachines.MODULE_MOD_ID));
     }

@@ -23,11 +23,10 @@ import com.enderio.conduits.common.conduit.SlotData;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
-import com.enderio.conduits.common.conduit.facades.ConduitFacade;
+import com.enderio.conduits.common.conduit.facades.ConduitFacadeProvider;
 import com.enderio.conduits.common.conduit.facades.FacadeType;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitCapabilities;
-import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import dev.gigaherz.graph3.Graph;
@@ -431,6 +430,10 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
             ConduitBreakParticle.addDestroyEffects(getBlockPos(), conduit.value());
         }
 
+        if (bundle.hasFacade() && shouldRemove) {
+            dropFacadeItem();
+        }
+
         return shouldRemove;
     }
 
@@ -455,23 +458,11 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
     }
 
     public void dropFacadeItem() {
-        if (!bundle.facade().isPresent()) {
+        if (!bundle.hasFacade()) {
             throw new IllegalStateException("Cannot drop facade item because no facade has been set");
         }
 
-        Block facadeBlock = bundle.facade().get();
-        FacadeType facadeType = bundle.facadeType().orElse(FacadeType.BASIC);
-
-        ItemStack item = new ItemStack(facadeType.facadeItem());
-        ConduitFacade facade = item.getCapability(ConduitCapabilities.ConduitFacade.ITEM);
-        if (facade == null) {
-            // TODO: Log.
-            return;
-        }
-
-        facade.block(facadeBlock);
-        facade.type(facadeType);
-        dropItem(item);
+        dropItem(bundle.facadeItem());
     }
 
     /**

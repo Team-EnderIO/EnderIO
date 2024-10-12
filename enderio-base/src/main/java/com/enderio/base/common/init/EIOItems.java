@@ -373,7 +373,7 @@ public class EIOItems {
     public static final RegiliteItem<YetaWrenchItem> YETA_WRENCH = ITEM_REGISTRY
         .registerItem("yeta_wrench", YetaWrenchItem::new, new Item.Properties().stacksTo(1))
         .setTab(EIOCreativeTabs.GEAR)
-        .addItemTags(EIOTags.Items.WRENCH);
+        .addItemTags(EIOTags.Items.WRENCH, EIOTags.Items.HIDE_FACADES);
 
     public static final RegiliteItem<LocationPrintoutItem> LOCATION_PRINTOUT = ITEM_REGISTRY
         .registerItem("location_printout", LocationPrintoutItem::new, new Item.Properties().stacksTo(1))

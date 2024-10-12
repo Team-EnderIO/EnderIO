@@ -6,6 +6,7 @@ import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
 import com.enderio.conduits.common.conduit.facades.FacadeType;
+import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -51,12 +52,9 @@ public final class ConduitBundle {
                 .fieldOf("conduits").forGetter(i -> i.conduits),
             Codec.unboundedMap(Direction.CODEC, ConduitConnection.CODEC)
                 .fieldOf("connections").forGetter(i -> i.connections),
-            BuiltInRegistries.BLOCK.byNameCodec()
-                .optionalFieldOf("facade")
-                .forGetter(i -> Optional.ofNullable(i.facade)),
-            FacadeType.CODEC
-                .optionalFieldOf("facade_type")
-                .forGetter(i -> Optional.ofNullable(i.facadeType)),
+            ItemStack.OPTIONAL_CODEC
+                .optionalFieldOf("facade", ItemStack.EMPTY)
+                .forGetter(i -> i.facadeItem),
             Codec.unboundedMap(Conduit.CODEC, ConduitGraphObject.CODEC)
                 .fieldOf("nodes").forGetter(i -> i.conduitNodes)
         ).apply(instance, ConduitBundle::new)
@@ -69,10 +67,8 @@ public final class ConduitBundle {
         i -> i.conduits,
         ByteBufCodecs.map(HashMap::new, Direction.STREAM_CODEC, ConduitConnection.STREAM_CODEC),
         i -> i.connections,
-        ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.BLOCK)),
-        i -> Optional.ofNullable(i.facade),
-        ByteBufCodecs.optional(FacadeType.STREAM_CODEC),
-        i -> Optional.ofNullable(i.facadeType),
+        ItemStack.OPTIONAL_STREAM_CODEC,
+        i -> i.facadeItem,
         ByteBufCodecs.map(HashMap::new, Conduit.STREAM_CODEC, ConduitGraphObject.STREAM_CODEC),
         i -> i.conduitNodes,
         ConduitBundle::new
@@ -87,11 +83,7 @@ public final class ConduitBundle {
     private final Map<Holder<Conduit<?>>, ConduitGraphObject> conduitNodes = new HashMap<>();
     private final BlockPos pos;
 
-    @Nullable
-    private Block facade;
-
-    @Nullable
-    private FacadeType facadeType;
+    private ItemStack facadeItem = ItemStack.EMPTY;
 
     @Nullable
     private Runnable onChangedRunnable;
@@ -108,16 +100,14 @@ public final class ConduitBundle {
         BlockPos pos,
         List<Holder<Conduit<?>>> conduits,
         Map<Direction, ConduitConnection> connections,
-        Optional<Block> facade,
-        Optional<FacadeType> facadeType,
+        ItemStack facadeItem,
         Map<Holder<Conduit<?>>, ConduitGraphObject> conduitNodes) {
 
         this.pos = pos;
         this.conduits.addAll(conduits);
         this.connections.putAll(connections);
         this.conduitNodes.putAll(conduitNodes);
-        this.facade = facade.orElse(null);
-        this.facadeType = facadeType.orElse(null);
+        this.facadeItem = facadeItem;
     }
 
     // TODO: I kind of want to get rid of this.
@@ -303,26 +293,36 @@ public final class ConduitBundle {
     // region Facades
 
     public boolean hasFacade() {
-        return facade != null;
+        return !facadeItem.isEmpty() && facadeItem.getCapability(ConduitCapabilities.ConduitFacade.ITEM) != null;
+    }
+
+    public ItemStack facadeItem() {
+        return facadeItem.copy();
     }
 
     public Optional<Block> facade() {
-        return Optional.ofNullable(facade);
+        if (!hasFacade()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(Objects.requireNonNull(facadeItem.getCapability(ConduitCapabilities.ConduitFacade.ITEM)).block());
     }
 
     public Optional<FacadeType> facadeType() {
-        return Optional.ofNullable(facadeType);
+        if (!hasFacade()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(Objects.requireNonNull(facadeItem.getCapability(ConduitCapabilities.ConduitFacade.ITEM)).type());
     }
 
-    public void facade(Block facade, FacadeType facadeType) {
-        this.facade = facade;
-        this.facadeType = facadeType;
+    public void facade(ItemStack facadeItem) {
+        this.facadeItem = facadeItem.copy();
         onChanged();
     }
 
     public void clearFacade() {
-        facade = null;
-        facadeType = null;
+        facadeItem = ItemStack.EMPTY;
         onChanged();
     }
 
@@ -403,7 +403,7 @@ public final class ConduitBundle {
 
     @Override
     public int hashCode() {
-        int hash = Objects.hash(connections, conduits, facade);
+        int hash = Objects.hash(connections, conduits, facadeItem);
 
         // Manually hash the map, using hashContents instead of hashCode to avoid breaking the graph.
         for (var entry : conduitNodes.entrySet()) {
@@ -428,8 +428,7 @@ public final class ConduitBundle {
         bundle.conduits.addAll(conduits);
         connections.forEach((dir, connection) -> bundle.connections.put(dir, connection.deepCopy()));
         conduitNodes.forEach((conduit, node) -> bundle.setNodeFor(conduit, node.deepCopy()));
-        bundle.facade = facade;
-        bundle.facadeType = facadeType;
+        bundle.facadeItem = facadeItem.copy();
         return bundle;
     }
 

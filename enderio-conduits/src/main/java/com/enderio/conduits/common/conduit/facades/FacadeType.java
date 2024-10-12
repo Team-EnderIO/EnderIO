@@ -17,10 +17,10 @@ import java.util.function.Supplier;
  * These are stored separately so that it can be an item component alongside the paint.
  */
 public enum FacadeType implements StringRepresentable {
-    BASIC(0, "basic", false, false, () -> Items.AIR),
-    HARDENED(1, "hardened", false, true, () -> Items.AIR),
-    TRANSPARENT(2, "transparent", true, false, () -> Items.AIR),
-    TRANSPARENT_HARDENED(3, "transparent_hardened", true, true, () -> Items.AIR);
+    BASIC(0, "basic", true, false),
+    HARDENED(1, "hardened", true, true),
+    TRANSPARENT(2, "transparent", false, false),
+    TRANSPARENT_HARDENED(3, "transparent_hardened", false, true);
 
     public static final Codec<FacadeType> CODEC = StringRepresentable.fromEnum(FacadeType::values);
     public static final IntFunction<FacadeType> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
@@ -31,14 +31,12 @@ public enum FacadeType implements StringRepresentable {
 
     private final boolean doesHideConduits;
     private final boolean isBlastResistant;
-    private final Supplier<Item> facadeItemSupplier;
 
-    FacadeType(int id, String serializedName, boolean doesHideConduits, boolean isBlastResistant, Supplier<Item> facadeItemSupplier) {
+    FacadeType(int id, String serializedName, boolean doesHideConduits, boolean isBlastResistant) {
         this.id = id;
         this.serializedName = serializedName;
         this.doesHideConduits = doesHideConduits;
         this.isBlastResistant = isBlastResistant;
-        this.facadeItemSupplier = facadeItemSupplier;
     }
 
     public boolean doesHideConduits() {
@@ -47,10 +45,6 @@ public enum FacadeType implements StringRepresentable {
 
     public boolean isBlastResistant() {
         return isBlastResistant;
-    }
-
-    public Item facadeItem() {
-        return facadeItemSupplier.get();
     }
 
     @Override

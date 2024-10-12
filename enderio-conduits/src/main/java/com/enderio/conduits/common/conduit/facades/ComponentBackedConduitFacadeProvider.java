@@ -9,14 +9,14 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
 import java.util.Objects;
 
-public class ComponentBackedConduitFacade implements ConduitFacade {
+public class ComponentBackedConduitFacadeProvider implements ConduitFacadeProvider {
 
-    public static final ICapabilityProvider<ItemStack, Void, ConduitFacade> PROVIDER
-        = (stack, v) -> new ComponentBackedConduitFacade(stack);
+    public static final ICapabilityProvider<ItemStack, Void, ConduitFacadeProvider> PROVIDER
+        = (stack, v) -> new ComponentBackedConduitFacadeProvider(stack);
 
     private final ItemStack itemStack;
 
-    public ComponentBackedConduitFacade(ItemStack itemStack) {
+    public ComponentBackedConduitFacadeProvider(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 
@@ -35,17 +35,7 @@ public class ComponentBackedConduitFacade implements ConduitFacade {
     }
 
     @Override
-    public void block(Block block) {
-        itemStack.set(EIODataComponents.BLOCK_PAINT, BlockPaintData.of(block));
-    }
-
-    @Override
     public FacadeType type() {
         return itemStack.getOrDefault(ConduitComponents.FACADE_TYPE, FacadeType.BASIC);
-    }
-
-    @Override
-    public void type(FacadeType type) {
-        itemStack.set(ConduitComponents.FACADE_TYPE, type);
     }
 }

@@ -338,10 +338,20 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             return Optional.of(ItemInteractionResult.FAIL);
         }
 
-        blockEntity.getBundle().facade(facade.block(), facade.type());
+        blockEntity.getBundle().facade(stack);
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);
         }
+
+        Level level = blockEntity.getLevel();
+        BlockPos blockpos = blockEntity.getBlockPos();
+
+        BlockState blockState = level.getBlockState(blockpos);
+
+        SoundType soundtype = blockState.getSoundType(level, blockpos, player);
+        level.playSound(player, blockpos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F,
+            soundtype.getPitch() * 0.8F);
+        level.gameEvent(GameEvent.BLOCK_PLACE, blockpos, GameEvent.Context.of(player, blockState));
 
         return Optional.of(ItemInteractionResult.sidedSuccess(isClientSide));
     }
@@ -501,11 +511,14 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity blockEntity) {
 
             if (blockEntity.getBundle().hasFacade() && FacadeHelper.areFacadesVisible()) {
-                blockEntity.getBundle().clearFacade();
+                SoundType soundtype = state.getSoundType(level, pos, player);
+                level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
                 if (!player.getAbilities().instabuild) {
                     blockEntity.dropFacadeItem();
                 }
+
+                blockEntity.getBundle().clearFacade();
             } else {
                 Holder<Conduit<?>> conduit = blockEntity.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
                 if (conduit == null) {

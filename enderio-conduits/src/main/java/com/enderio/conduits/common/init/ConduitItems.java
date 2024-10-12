@@ -4,7 +4,7 @@ import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.EnderIOConduits;
-import com.enderio.conduits.common.conduit.facades.ComponentBackedConduitFacade;
+import com.enderio.conduits.common.conduit.facades.ComponentBackedConduitFacadeProvider;
 import com.enderio.conduits.common.conduit.facades.FacadeType;
 import com.enderio.conduits.common.conduit.upgrade.SpeedUpgradeItem;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
@@ -31,22 +31,22 @@ public class ConduitItems {
     public static final RegiliteItem<Item> CONDUIT_FACADE = ITEM_REGISTRY.registerItem("conduit_facade",
             props -> new Item(props.component(ConduitComponents.FACADE_TYPE, FacadeType.BASIC)))
         .setTab(EIOCreativeTabs.CONDUITS)
-        .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacade.PROVIDER);
+        .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacadeProvider.PROVIDER);
 
     public static final RegiliteItem<Item> TRANSPARENT_CONDUIT_FACADE = ITEM_REGISTRY.registerItem("transparent_conduit_facade",
             props -> new Item(props.component(ConduitComponents.FACADE_TYPE, FacadeType.TRANSPARENT)))
         .setTab(EIOCreativeTabs.CONDUITS)
-        .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacade.PROVIDER);
+        .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacadeProvider.PROVIDER);
 
     public static final RegiliteItem<Item> HARDENED_CONDUIT_FACADE = ITEM_REGISTRY.registerItem("hardened_conduit_facade",
             props -> new Item(props.component(ConduitComponents.FACADE_TYPE, FacadeType.HARDENED)))
         .setTab(EIOCreativeTabs.CONDUITS)
-        .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacade.PROVIDER);
+        .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacadeProvider.PROVIDER);
 
     public static final RegiliteItem<Item> TRANSPARENT_HARDENED_CONDUIT_FACADE = ITEM_REGISTRY.registerItem("transparent_hardened_conduit_facade",
             props -> new Item(props.component(ConduitComponents.FACADE_TYPE, FacadeType.TRANSPARENT_HARDENED)))
         .setTab(EIOCreativeTabs.CONDUITS)
-        .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacade.PROVIDER);
+        .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacadeProvider.PROVIDER);
 
     public static final RegiliteItem<SpeedUpgradeItem> EXTRACTION_SPEED_UPGRADE_1 = ITEM_REGISTRY.registerItem("extraction_speed_upgrade_1", properties ->
             new SpeedUpgradeItem(properties.component(ConduitComponents.EXTRACTION_SPEED_UPGRADE_TIER, 1)))

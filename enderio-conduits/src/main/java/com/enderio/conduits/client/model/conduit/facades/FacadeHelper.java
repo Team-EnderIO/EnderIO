@@ -15,7 +15,7 @@ public class FacadeHelper {
         var mainHand = minecraft.player.getItemInHand(InteractionHand.MAIN_HAND);
         var offHand = minecraft.player.getItemInHand(InteractionHand.OFF_HAND);
 
-        return !mainHand.is(EIOTags.Items.WRENCH) && !offHand.is(EIOTags.Items.WRENCH);
+        return !mainHand.is(EIOTags.Items.HIDE_FACADES) && !offHand.is(EIOTags.Items.HIDE_FACADES);
     }
 
     public static void rebuildChunkMeshes() {

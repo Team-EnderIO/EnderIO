@@ -9,5 +9,8 @@
   "input": {
     "item": "enderio:hardened_conduit_facade"
   },
-  "output": "enderio:hardened_conduit_facade"
+  "output": {
+    "count": 1,
+    "id": "enderio:hardened_conduit_facade"
+  }
 }
