@@ -29,6 +29,10 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     private final boolean isSmelting;
 
     public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience, boolean isSmelting) {
+        if (isSmelting && inputs.size() > 1) {
+            throw new IllegalArgumentException("More than one smelting ingredient given");
+        }
+
         this.inputs = inputs;
         this.output = output;
         this.energy = energy;
@@ -76,6 +80,30 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
     @Override
     public boolean matches(Input recipeInput, Level level) {
+        if (inputs.isEmpty()) {
+            return false;
+        }
+
+        // Simpler smelting match logic
+        if (isSmelting) {
+            int emptyCount = 0;
+
+            for (int i = 0; i < 3; i++) {
+                var slotItem = recipeInput.getItem(i);
+
+                if (slotItem.isEmpty()) {
+                    emptyCount++;
+                    continue;
+                }
+
+                if (!inputs.getFirst().test(slotItem)) {
+                    return false;
+                }
+            }
+
+            return emptyCount < 3;
+        }
+
         boolean[] matched = new boolean[3];
 
         // Iterate over the slots
