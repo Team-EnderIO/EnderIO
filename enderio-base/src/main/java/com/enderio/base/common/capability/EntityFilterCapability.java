@@ -2,6 +2,7 @@ package com.enderio.base.common.capability;
 
 import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.filter.EntityFilter;
+import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
@@ -121,11 +122,16 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
         return isInvert();
     }
 
-    public record Component(List<StoredEntityData> entities, boolean nbt, boolean invert) {
-        public static Codec<Component> NEW_CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
-            .group(Slot.CODEC.sizeLimitedListOf(256).fieldOf("entities").xmap(Component::fromList, Component::fromEntities).forGetter(Component::entities),
-                Codec.BOOL.fieldOf("nbt").forGetter(Component::nbt), Codec.BOOL.fieldOf("isInvert").forGetter(Component::invert))
-            .apply(componentInstance, Component::new));
+    public record Component(int size, List<StoredEntityData> entities, boolean nbt, boolean invert) {
+        public static Codec<Component> NEW_CODEC = RecordCodecBuilder.create(
+            componentInstance -> componentInstance
+                .group(
+                    Codec.INT.fieldOf("size").forGetter(Component::size),
+                    OrderedListCodec.create(256, StoredEntityData.CODEC, StoredEntityData.EMPTY)
+                        .fieldOf("entities")
+                        .forGetter(Component::entities),
+                    Codec.BOOL.fieldOf("nbt").forGetter(Component::nbt), Codec.BOOL.fieldOf("isInvert").forGetter(Component::invert))
+                .apply(componentInstance, Component::new));
 
         // TODO: Remove in Ender IO 8
         // The Codec used up to and including v7.0.7-alpha
@@ -146,27 +152,7 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
             Component::new);
 
         public Component(int size) {
-            this(NonNullList.withSize(size, StoredEntityData.EMPTY), false, false);
-        }
-
-        private static List<Slot> fromEntities(List<StoredEntityData> fluids) {
-            List<Slot> slots = new ArrayList<>();
-            for (int i = 0; i < fluids.size(); i++) {
-                slots.add(new Slot(i, fluids.get(i)));
-            }
-            return slots;
-        }
-
-        private static List<StoredEntityData> fromList(List<Slot> slots) {
-            OptionalInt optionalint = slots.stream().mapToInt(Slot::index).max();
-            if (optionalint.isEmpty()) {
-                return List.of();
-            }
-            List<StoredEntityData> entities = NonNullList.withSize(optionalint.getAsInt() + 1, StoredEntityData.EMPTY);
-            for (Slot slot : slots) {
-                entities.set(slot.index, slot.entity);
-            }
-            return entities;
+            this(size, NonNullList.withSize(size, StoredEntityData.EMPTY), false, false);
         }
 
         public Component withNBT(Boolean nbt){
@@ -219,6 +205,35 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
             return i;
         }
 
+        // TODO: Remove in Ender IO 8
+        // region Legacy Serialization
+
+        // Used for legacy loading only.
+        @Deprecated(since = "7.0.8-alpha")
+        private Component(List<StoredEntityData> entities, boolean nbt, boolean invert) {
+            this(entities.size(), entities, nbt, invert);
+        }
+
+        private static List<Slot> fromEntities(List<StoredEntityData> fluids) {
+            List<Slot> slots = new ArrayList<>();
+            for (int i = 0; i < fluids.size(); i++) {
+                slots.add(new Slot(i, fluids.get(i)));
+            }
+            return slots;
+        }
+
+        private static List<StoredEntityData> fromList(List<Slot> slots) {
+            OptionalInt optionalint = slots.stream().mapToInt(Slot::index).max();
+            if (optionalint.isEmpty()) {
+                return List.of();
+            }
+            List<StoredEntityData> entities = NonNullList.withSize(optionalint.getAsInt() + 1, StoredEntityData.EMPTY);
+            for (Slot slot : slots) {
+                entities.set(slot.index, slot.entity);
+            }
+            return entities;
+        }
+
         public record Slot(int index, StoredEntityData entity) {
             public static final Codec<Slot> CODEC = RecordCodecBuilder.create(
                 p_331695_ -> p_331695_.group(
@@ -228,5 +243,7 @@ public class EntityFilterCapability implements IFilterCapability<StoredEntityDat
                     .apply(p_331695_, Slot::new)
             );
         }
+
+        // endregion
     }
 }
