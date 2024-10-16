@@ -1,0 +1,14 @@
+{
+  "type": "enderio:vat_fermenting",
+  "input": {
+    "amount": 1000,
+    "fluid": "enderio:fluid_hootch_still"
+  },
+  "left_reagent": "enderio:explosives",
+  "output": {
+    "amount": 1000,
+    "id": "enderio:fluid_rocket_fuel_still"
+  },
+  "right_reagent": "c:dusts/redstone",
+  "ticks": 400
+}

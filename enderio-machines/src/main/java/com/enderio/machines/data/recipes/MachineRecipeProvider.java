@@ -407,6 +407,20 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("A")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.AVERSION_OBELISK).build()))
             .save(recipeOutput);
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.VAT.get())
+            .define('B', Blocks.BARREL)
+            .define('C', EIOBlocks.VOID_CHASSIS)
+            .define('M', EIOTags.Items.GEARS_IRON)
+            .define('A', EIOTags.Items.INGOTS_COPPER_ALLOY)
+            .define('R', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
+            .define('S', EIOTags.Items.INGOTS_DARK_STEEL)
+            .pattern("SBS")
+            .pattern("ACA")
+            .pattern("MRM")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Blocks.BARREL).build()))
+            .save(recipeOutput);
             
         // TODO: Enable once the block detector has a model.
         /*ShapedRecipeBuilder
