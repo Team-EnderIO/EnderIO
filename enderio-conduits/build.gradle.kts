@@ -32,6 +32,10 @@ val graphlibVersionRange: String by project
 val cctMinecraftVersion: String by project
 val cctVersion: String by project
 
+configurations {
+    runtimeClasspath.get().extendsFrom(create("localRuntime"))
+}
+
 dependencies {
     api("com.enderio:Regilite:$regiliteVersion")
 
@@ -45,6 +49,11 @@ dependencies {
     //CC-Tweaked
     compileOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-core-api:$cctVersion")
     compileOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge-api:$cctVersion")
+
+    // For painting recipe.
+    // TODO: This isn't great.
+    compileOnly(project(":enderio-machines"))
+    add("localRuntime", project(":enderio-machines"))
 
     api("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
     jarJar("dev.gigaherz.graph:GraphLib3:$graphlibVersion") {
@@ -64,7 +73,8 @@ neoForge {
 
             programArguments.addAll(
                     "--mod", "enderio_conduits",
-                    "--all",
+                    //"--all",
+                    "--client", "--server",
                     "--output", file("src/generated/resources").absolutePath,
                     "--existing", file("src/main/resources").absolutePath,
             )

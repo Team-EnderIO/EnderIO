@@ -5,6 +5,8 @@ import com.enderio.conduits.api.SlotType;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
+import com.enderio.conduits.common.conduit.facades.FacadeType;
+import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -14,6 +16,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -22,7 +26,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import org.jetbrains.annotations.Nullable;
@@ -48,14 +52,14 @@ public final class ConduitBundle {
                 .fieldOf("conduits").forGetter(i -> i.conduits),
             Codec.unboundedMap(Direction.CODEC, ConduitConnection.CODEC)
                 .fieldOf("connections").forGetter(i -> i.connections),
-            Codec.unboundedMap(Direction.CODEC, BlockState.CODEC)
-                .fieldOf("facades").forGetter(i -> i.facadeTextures),
+            ItemStack.OPTIONAL_CODEC
+                .optionalFieldOf("facade", ItemStack.EMPTY)
+                .forGetter(i -> i.facadeItem),
             Codec.unboundedMap(Conduit.CODEC, ConduitGraphObject.CODEC)
                 .fieldOf("nodes").forGetter(i -> i.conduitNodes)
         ).apply(instance, ConduitBundle::new)
     );
 
-    // TODO: Facades.
     public static StreamCodec<RegistryFriendlyByteBuf, ConduitBundle> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,
         i -> i.pos,
@@ -63,8 +67,8 @@ public final class ConduitBundle {
         i -> i.conduits,
         ByteBufCodecs.map(HashMap::new, Direction.STREAM_CODEC, ConduitConnection.STREAM_CODEC),
         i -> i.connections,
-        //ByteBufCodecs.map(HashMap::new, Direction.STREAM_CODEC, BlockState.STREAM_CODEC),
-        //i -> i.facadeTextures,
+        ItemStack.OPTIONAL_STREAM_CODEC,
+        i -> i.facadeItem,
         ByteBufCodecs.map(HashMap::new, Conduit.STREAM_CODEC, ConduitGraphObject.STREAM_CODEC),
         i -> i.conduitNodes,
         ConduitBundle::new
@@ -79,7 +83,7 @@ public final class ConduitBundle {
     private final Map<Holder<Conduit<?>>, ConduitGraphObject> conduitNodes = new HashMap<>();
     private final BlockPos pos;
 
-    private final Map<Direction, BlockState> facadeTextures = new EnumMap<>(Direction.class);
+    private ItemStack facadeItem = ItemStack.EMPTY;
 
     @Nullable
     private Runnable onChangedRunnable;
@@ -92,23 +96,18 @@ public final class ConduitBundle {
         this.pos = pos;
     }
 
-    private ConduitBundle(BlockPos pos, List<Holder<Conduit<?>>> conduits, Map<Direction, ConduitConnection> connections,
-        Map<Holder<Conduit<?>>, ConduitGraphObject> conduitNodes) {
-        this(pos, conduits, connections, Map.of(), conduitNodes);
-    }
-
     private ConduitBundle(
         BlockPos pos,
         List<Holder<Conduit<?>>> conduits,
         Map<Direction, ConduitConnection> connections,
-        Map<Direction, BlockState> facadeTextures,
+        ItemStack facadeItem,
         Map<Holder<Conduit<?>>, ConduitGraphObject> conduitNodes) {
 
         this.pos = pos;
         this.conduits.addAll(conduits);
         this.connections.putAll(connections);
-        this.facadeTextures.putAll(facadeTextures);
         this.conduitNodes.putAll(conduitNodes);
+        this.facadeItem = facadeItem;
     }
 
     // TODO: I kind of want to get rid of this.
@@ -293,16 +292,37 @@ public final class ConduitBundle {
 
     // region Facades
 
-    public boolean hasFacade(Direction direction) {
-        return facadeTextures.containsKey(direction);
+    public boolean hasFacade() {
+        return !facadeItem.isEmpty() && facadeItem.getCapability(ConduitCapabilities.ConduitFacade.ITEM) != null;
     }
 
-    public Optional<BlockState> getFacade(Direction direction) {
-        return Optional.ofNullable(facadeTextures.get(direction));
+    public ItemStack facadeItem() {
+        return facadeItem.copy();
     }
 
-    public void setFacade(BlockState facade, Direction direction) {
-        facadeTextures.put(direction, facade);
+    public Optional<Block> facade() {
+        if (!hasFacade()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(Objects.requireNonNull(facadeItem.getCapability(ConduitCapabilities.ConduitFacade.ITEM)).block());
+    }
+
+    public Optional<FacadeType> facadeType() {
+        if (!hasFacade()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(Objects.requireNonNull(facadeItem.getCapability(ConduitCapabilities.ConduitFacade.ITEM)).type());
+    }
+
+    public void facade(ItemStack facadeItem) {
+        this.facadeItem = facadeItem.copy();
+        onChanged();
+    }
+
+    public void clearFacade() {
+        facadeItem = ItemStack.EMPTY;
         onChanged();
     }
 
@@ -383,7 +403,7 @@ public final class ConduitBundle {
 
     @Override
     public int hashCode() {
-        int hash = Objects.hash(connections, conduits, facadeTextures);
+        int hash = Objects.hash(connections, conduits, facadeItem);
 
         // Manually hash the map, using hashContents instead of hashCode to avoid breaking the graph.
         for (var entry : conduitNodes.entrySet()) {
@@ -407,8 +427,8 @@ public final class ConduitBundle {
         var bundle = new ConduitBundle(() -> {}, pos);
         bundle.conduits.addAll(conduits);
         connections.forEach((dir, connection) -> bundle.connections.put(dir, connection.deepCopy()));
-        bundle.facadeTextures.putAll(facadeTextures);
         conduitNodes.forEach((conduit, node) -> bundle.setNodeFor(conduit, node.deepCopy()));
+        bundle.facadeItem = facadeItem.copy();
         return bundle;
     }
 

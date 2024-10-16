@@ -23,6 +23,8 @@ import com.enderio.conduits.common.conduit.SlotData;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
+import com.enderio.conduits.common.conduit.facades.ConduitFacadeProvider;
+import com.enderio.conduits.common.conduit.facades.FacadeType;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.enderio.conduits.common.menu.ConduitMenu;
@@ -428,6 +430,10 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
             ConduitBreakParticle.addDestroyEffects(getBlockPos(), conduit.value());
         }
 
+        if (bundle.hasFacade() && shouldRemove) {
+            dropFacadeItem();
+        }
+
         return shouldRemove;
     }
 
@@ -449,6 +455,14 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
                 dropItem(item);
             }
         }
+    }
+
+    public void dropFacadeItem() {
+        if (!bundle.hasFacade()) {
+            throw new IllegalStateException("Cannot drop facade item because no facade has been set");
+        }
+
+        dropItem(bundle.facadeItem());
     }
 
     /**
