@@ -10,12 +10,11 @@ import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.DisplayMode;
 import com.enderio.machines.common.blockentity.multienergy.CapacityTier;
-import com.enderio.regilite.holder.RegiliteBlockEntity;
+import com.enderio.regilite.blockentities.DeferredBlockEntityType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -43,7 +42,7 @@ public class CapacitorBankBlock extends MachineBlock implements AdvancedTooltipP
 
     public static final ResourceLocation PLACE_ADVANCEMENT_ID = EnderIOBase.loc("place_capacitor_bank");
 
-    public CapacitorBankBlock(Properties properties, RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, CapacityTier tier) {
+    public CapacitorBankBlock(Properties properties, DeferredBlockEntityType<? extends MachineBlockEntity> blockEntityType, CapacityTier tier) {
         super(blockEntityType, properties);
         this.tier = tier;
     }

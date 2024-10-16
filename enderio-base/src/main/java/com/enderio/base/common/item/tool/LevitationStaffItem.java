@@ -69,7 +69,7 @@ public class LevitationStaffItem extends PoweredToggledItem {
         var fluidHandler = pStack.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler != null) {
             if (fluidHandler instanceof StrictFluidHandlerItemStack strictFluidHandlerItemStack) {
-                strictFluidHandlerItemStack.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.getSource(), fluidHandler.getTankCapacity(0)));
+                strictFluidHandlerItemStack.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.sourceFluid(), fluidHandler.getTankCapacity(0)));
             }
         }
     }

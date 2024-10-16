@@ -95,7 +95,7 @@ public class ExperienceRodItem extends Item {
             if (fluidHandler != null) {
                 long fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
                 int cappedVolume = (int) Math.min(Integer.MAX_VALUE, fluidVolume);
-                FluidStack fs = new FluidStack(EIOFluids.XP_JUICE.getSource(), cappedVolume);
+                FluidStack fs = new FluidStack(EIOFluids.XP_JUICE.sourceFluid(), cappedVolume);
                 int takenVolume = fluidHandler.fill(fs, IFluidHandler.FluidAction.EXECUTE);
                 if (takenVolume > 0) {
                     player.giveExperiencePoints(-takenVolume / ExperienceUtil.EXP_TO_FLUID);

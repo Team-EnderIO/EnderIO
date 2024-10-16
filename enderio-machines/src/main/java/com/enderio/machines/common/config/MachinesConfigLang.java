@@ -78,7 +78,6 @@ public class MachinesConfigLang {
     }
 
     private static void addTranslation(String key, String translation) {
-        // TODO: More translation options in Regilite
-        EnderIOMachines.REGILITE.addTranslation(() -> EnderIOMachines.MODULE_MOD_ID + "." + "configuration" + "." + key, translation);
+        EnderIOMachines.REGILITE.lang().add(EnderIOMachines.MODULE_MOD_ID + "." + "configuration" + "." + key, translation);
     }
 }

@@ -25,7 +25,7 @@ public class FermentingRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
-        build(new FluidStack(EIOFluids.HOOTCH.getSource(), 250), SizedFluidIngredient.of(FluidTags.WATER, 1000), Tags.Items.SEEDS, Tags.Items.CROPS, 100,
+        build(new FluidStack(EIOFluids.HOOTCH.sourceFluid(), 250), SizedFluidIngredient.of(FluidTags.WATER, 1000), Tags.Items.SEEDS, Tags.Items.CROPS, 100,
             recipeOutput);
     }
 

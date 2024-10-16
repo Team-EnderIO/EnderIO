@@ -45,7 +45,6 @@ public class BaseConfigLang {
     }
 
     private static void addTranslation(String key, String translation) {
-        // TODO: More translation options in Regilite
-        EnderIOBase.REGILITE.addTranslation(() -> EnderIOBase.MODULE_MOD_ID + "." + "configuration" + "." + key, translation);
+        EnderIOBase.REGILITE.lang().add(EnderIOBase.MODULE_MOD_ID + "." + "configuration" + "." + key, translation);
     }
 }

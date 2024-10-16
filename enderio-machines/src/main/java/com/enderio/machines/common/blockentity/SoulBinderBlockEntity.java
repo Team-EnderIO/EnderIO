@@ -74,7 +74,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
         // Sync fluid amount to client.
         addDataSlot(NetworkDataSlot.INT.create(
             () -> TANK.getFluidAmount(this),
-            i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))));
+            i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.sourceFluid(), i))));
 
         // Create the crafting task host
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SOUL_BINDING.type().get(),
@@ -145,7 +145,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
         return new SoulBindingRecipe.Input(
             INPUT_SOUL.getItemStack(getInventoryNN()),
             INPUT_OTHER.getItemStack(getInventoryNN()),
-            new FluidStack(EIOFluids.XP_JUICE.getSource(), Integer.MAX_VALUE)
+            new FluidStack(EIOFluids.XP_JUICE.sourceFluid(), Integer.MAX_VALUE)
         );
     }
 

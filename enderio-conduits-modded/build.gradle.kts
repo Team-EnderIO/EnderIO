@@ -38,7 +38,7 @@ val mekanismVersion: String by project
 val refinedstorageVersion: String by project
 
 dependencies {
-    api("com.enderio:Regilite:$regiliteVersion")
+    api("com.enderio:regilite:$regiliteVersion")
 
     api(project(":enderio-base"))
     accessTransformers(project(":enderio-base"))

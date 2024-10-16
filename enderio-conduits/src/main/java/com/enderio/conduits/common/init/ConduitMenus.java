@@ -9,26 +9,26 @@ import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.menu.RedstoneCountFilterMenu;
 import com.enderio.conduits.common.menu.RedstoneDoubleChannelFilterMenu;
 import com.enderio.conduits.common.menu.RedstoneTimerFilterMenu;
-import com.enderio.regilite.holder.RegiliteMenu;
-import com.enderio.regilite.registry.MenuRegistry;
-import net.neoforged.bus.api.IEventBus;
+import com.enderio.regilite.menus.RegiliteMenuTypes;
+import net.minecraft.world.inventory.MenuType;
+
+import java.util.function.Supplier;
 
 public class ConduitMenus {
-    private static final MenuRegistry MENU_REGISTRY = EnderIOConduits.REGILITE.menuRegistry();
+    private static final RegiliteMenuTypes MENU_TYPES = EnderIOConduits.REGILITE.menuTypes();
 
-    public static final RegiliteMenu<ConduitMenu> CONDUIT_MENU = MENU_REGISTRY
-        .registerMenu("conduit", ConduitMenu::factory, () -> ConduitScreen::new);
+    public static final Supplier<MenuType<ConduitMenu>> CONDUIT_MENU = MENU_TYPES
+        .createOnly("conduit", ConduitMenu::factory, () -> ConduitScreen::new);
 
-    public static final RegiliteMenu<RedstoneDoubleChannelFilterMenu> REDSTONE_DOUBLE_CHANNEL_FILTER = MENU_REGISTRY
-        .registerMenu("redstone_and_filter", RedstoneDoubleChannelFilterMenu::factory, () -> RedstoneDoubleChannelFilterScreen::new);
+    public static final Supplier<MenuType<RedstoneDoubleChannelFilterMenu>> REDSTONE_DOUBLE_CHANNEL_FILTER = MENU_TYPES
+        .createOnly("redstone_and_filter", RedstoneDoubleChannelFilterMenu::factory, () -> RedstoneDoubleChannelFilterScreen::new);
 
-    public static final RegiliteMenu<RedstoneTimerFilterMenu> REDSTONE_TIMER_FILTER = MENU_REGISTRY
-        .registerMenu("redstone_timer_filter", RedstoneTimerFilterMenu::factory, () -> RedstoneTimerFilterScreen::new);
+    public static final Supplier<MenuType<RedstoneTimerFilterMenu>> REDSTONE_TIMER_FILTER = MENU_TYPES
+        .createOnly("redstone_timer_filter", RedstoneTimerFilterMenu::factory, () -> RedstoneTimerFilterScreen::new);
 
-    public static final RegiliteMenu<RedstoneCountFilterMenu> REDSTONE_COUNT_FILTER = MENU_REGISTRY
-        .registerMenu("redstone_count_filter", RedstoneCountFilterMenu::factory, () -> RedstoneCountFilterScreen::new);
+    public static final Supplier<MenuType<RedstoneCountFilterMenu>> REDSTONE_COUNT_FILTER = MENU_TYPES
+        .createOnly("redstone_count_filter", RedstoneCountFilterMenu::factory, () -> RedstoneCountFilterScreen::new);
 
-    public static void register(IEventBus bus) {
-        MENU_REGISTRY.register(bus);
+    public static void register() {
     }
 }

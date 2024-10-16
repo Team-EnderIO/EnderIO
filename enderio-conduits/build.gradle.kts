@@ -33,7 +33,7 @@ val cctMinecraftVersion: String by project
 val cctVersion: String by project
 
 dependencies {
-    api("com.enderio:Regilite:$regiliteVersion")
+    api("com.enderio:regilite:$regiliteVersion")
 
     api(project(":enderio-base"))
     accessTransformers(project(":enderio-base"))

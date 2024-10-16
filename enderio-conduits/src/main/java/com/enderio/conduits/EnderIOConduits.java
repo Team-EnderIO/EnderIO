@@ -43,10 +43,10 @@ public class EnderIOConduits {
     public EnderIOConduits(IEventBus modEventBus, ModContainer modContainer) {
         Conduits.register(modEventBus);
         ConduitTypes.register(modEventBus);
-        ConduitBlockEntities.register(modEventBus);
-        ConduitMenus.register(modEventBus);
-        ConduitBlocks.register(modEventBus);
-        ConduitItems.register(modEventBus);
+        ConduitBlockEntities.register();
+        ConduitMenus.register();
+        ConduitBlocks.register();
+        ConduitItems.register();
         ConduitComponents.register(modEventBus);
         ConduitIngredientTypes.register(modEventBus);
         Integrations.register();

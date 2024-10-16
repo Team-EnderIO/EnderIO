@@ -102,21 +102,21 @@ public class EnderIOBase {
         BaseConfigLang.register();
 
         // Perform initialization and registration for everything so things are registered.
-        EIODataComponents.register(modEventBus);
+        EIODataComponents.register();
         EIOCreativeTabs.register(modEventBus);
-        EIOItems.register(modEventBus);
-        EIOBlocks.register(modEventBus);
-        EIOBlockEntities.register(modEventBus);
-        EIOFluids.register(modEventBus);
+        EIOItems.register();
+        EIOBlocks.register();
+        EIOBlockEntities.register();
+        EIOFluids.register();
         //EIOEnchantments.register(modEventBus);
         EIOTags.register();
-        EIOMenus.register(modEventBus);
+        EIOMenus.register();
         EIOLang.register();
         EIOEnumLang.register();
         EIORecipes.register(modEventBus);
         EIOLootModifiers.register(modEventBus);
         EIOParticles.register(modEventBus);
-        EIOEntities.register(modEventBus);
+        EIOEntities.register();
         EIOAttachments.register(modEventBus);
         EIOCriterions.register(modEventBus);
         REGILITE.register(modEventBus);

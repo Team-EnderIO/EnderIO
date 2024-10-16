@@ -141,7 +141,7 @@ public class FireCraftingCategory implements IRecipeCategory<RecipeHolder<FireCr
         output.addItemStack(new ItemStack(EIOItems.GRAINS_OF_INFINITY.get())); // TODO: Fetch the output from the loot table instead...
 
         IRecipeSlotBuilder catalyst = builder.addSlot(RecipeIngredientRole.CATALYST, 88, 8).setSlotName("catalyst");
-        catalyst.addIngredients(Ingredient.of(Items.FLINT_AND_STEEL, EIOFluids.FIRE_WATER.getBucket()));
+        catalyst.addIngredients(Ingredient.of(Items.FLINT_AND_STEEL, EIOFluids.FIRE_WATER.bucket()));
     }
 
     @Override
@@ -202,7 +202,7 @@ public class FireCraftingCategory implements IRecipeCategory<RecipeHolder<FireCr
 
         guiGraphics.pose().popPose();
         // TODO: Fire Water has no block. I think this is a registrate bug?
-        BlockState fireState = !alternateFire ? Blocks.FIRE.defaultBlockState() : EIOFluids.FIRE_WATER.getBlock().defaultBlockState();
+        BlockState fireState = !alternateFire ? Blocks.FIRE.defaultBlockState() : EIOFluids.FIRE_WATER.block().defaultBlockState();
 //        BlockState fireState = Blocks.FIRE.defaultBlockState();
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(0, -0.5, 0);

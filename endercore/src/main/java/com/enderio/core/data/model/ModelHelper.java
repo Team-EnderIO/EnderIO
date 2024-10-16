@@ -1,7 +1,7 @@
 package com.enderio.core.data.model;
 
 import com.enderio.regilite.data.DataGenContext;
-import com.enderio.regilite.data.RegiliteItemModelProvider;
+import com.enderio.regilite.items.RegiliteItemModelProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

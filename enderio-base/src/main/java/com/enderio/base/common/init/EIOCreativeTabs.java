@@ -43,7 +43,7 @@ public class EIOCreativeTabs {
     private static DeferredHolder<CreativeModeTab, CreativeModeTab> createTab(ResourceKey<CreativeModeTab> key, String name, String translation, Consumer<CreativeModeTab.Builder> builder) {
         return CREATIVE_MODE_TABS.register(name, () -> {
             CreativeModeTab.Builder config = CreativeModeTab.builder()
-                .title(EnderIOBase.REGILITE.addTranslation("itemGroup", key.location(), translation));
+                .title(EnderIOBase.REGILITE.lang().add("itemGroup", key.location(), translation));
             builder.accept(config);
             return config.build();
         });

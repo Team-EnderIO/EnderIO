@@ -2,7 +2,7 @@ package com.enderio.machines.common.block;
 
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.regilite.holder.RegiliteBlockEntity;
+import com.enderio.regilite.blockentities.DeferredBlockEntityType;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
@@ -58,7 +58,7 @@ public class MachineBlock extends BaseEntityBlock {
         this.registerDefaultState(any.hasProperty(FACING) ? any.setValue(FACING, Direction.NORTH) : any);
     }
 
-    public MachineBlock(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, Properties properties) {
+    public MachineBlock(DeferredBlockEntityType<? extends MachineBlockEntity> blockEntityType, Properties properties) {
         super(properties);
         this.blockEntityType = blockEntityType::get;
         BlockState any = this.getStateDefinition().any();

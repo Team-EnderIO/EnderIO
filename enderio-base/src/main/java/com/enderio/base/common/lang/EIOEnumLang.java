@@ -33,8 +33,7 @@ public class EIOEnumLang {
     }
 
     private static Component addTranslation(String prefix, ResourceLocation key, String english) {
-        // TODO: Regilite should support a plain string key
-        return REGILITE.addTranslation(prefix, key, english);
+        return REGILITE.lang().add(prefix, key, english);
     }
 
     public static void register() {

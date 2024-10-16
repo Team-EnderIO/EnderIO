@@ -14,7 +14,7 @@ val almostunifiedVersion: String by project
 
 dependencies {
     // Regilite
-    api("com.enderio:Regilite:${regiliteVersion}")
+    api("com.enderio:regilite:${regiliteVersion}")
 
     // Almost Unified
     compileOnly("com.almostreliable.mods:almostunified-neoforge:1.21.1-${almostunifiedVersion}:api")

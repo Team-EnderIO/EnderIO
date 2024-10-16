@@ -70,11 +70,11 @@ public class MachineLang {
 
     // TODO: NEO-PORT: Common lang base class?
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
-        return EnderIOMachines.REGILITE.addTranslation(prefix, id, translation);
+        return EnderIOMachines.REGILITE.lang().add(prefix, id, translation);
     }
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation path, String name, String translation) {
-        return EnderIOMachines.REGILITE.addTranslation(prefix, ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "/" + name), translation);
+        return EnderIOMachines.REGILITE.lang().add(prefix, ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "/" + name), translation);
     }
     
     public static void register() {}
