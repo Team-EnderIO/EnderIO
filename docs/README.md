@@ -149,7 +149,7 @@ Certain parts of the source code may be under a different license due to being p
 - HypherionSA
 - agnor99
 - ferriarnus
-- mystchonky
+- dphaldes
 - and our Contributors
 
 ### Sound Credits
