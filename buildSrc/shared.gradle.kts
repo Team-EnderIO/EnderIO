@@ -21,6 +21,8 @@ repositories {
                 includeGroup("mcjty.theoneprobe")
                 includeGroup("appeng")
                 includeGroup("mekanism")
+                includeGroup("me.desht.pneumaticcraft")
+                includeGroup("blusunrize.immersiveengineering")
             }
         }
 

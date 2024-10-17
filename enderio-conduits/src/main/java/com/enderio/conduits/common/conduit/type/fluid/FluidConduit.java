@@ -22,6 +22,7 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -81,7 +82,7 @@ public record FluidConduit(
         FluidConduitData selfData = selfNode.getOrCreateData(ConduitTypes.Data.FLUID.get());
         FluidConduitData otherData = otherNode.getOrCreateData(ConduitTypes.Data.FLUID.get());
 
-        return selfData.lockedFluid() == null || otherData.lockedFluid() == null || selfData.lockedFluid() == otherData.lockedFluid();
+        return selfData.lockedFluid().isSame(Fluids.EMPTY) || otherData.lockedFluid().isSame(Fluids.EMPTY) || selfData.lockedFluid() == otherData.lockedFluid();
     }
 
     @Override
@@ -89,13 +90,13 @@ public record FluidConduit(
         FluidConduitData selfData = selfNode.getOrCreateData(ConduitTypes.Data.FLUID.get());
         FluidConduitData otherData = otherNode.getOrCreateData(ConduitTypes.Data.FLUID.get());
 
-        if (selfData.lockedFluid() != null) {
-            if (otherData.lockedFluid() != null && selfData.lockedFluid() != otherData.lockedFluid()) {
+        if (!selfData.lockedFluid().isSame(Fluids.EMPTY)) {
+            if (!otherData.lockedFluid().isSame(Fluids.EMPTY) && selfData.lockedFluid() != otherData.lockedFluid()) {
                 EnderIOBase.LOGGER.warn("incompatible fluid conduits merged");
             }
 
             otherData.setLockedFluid(selfData.lockedFluid());
-        } else if (otherData.lockedFluid() != null) {
+        } else if (!otherData.lockedFluid().isSame(Fluids.EMPTY)) {
             selfData.setLockedFluid(otherData.lockedFluid());
         }
     }

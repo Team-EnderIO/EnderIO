@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "pneumaticcraft"
+    }
+  ],
+  "type": "enderio:pressure",
+  "description": {
+    "translate": "item.enderio.conduit.advanced_pressure"
+  },
+  "pressure_tier": {
+    "critical": 12.0,
+    "danger": 10.0
+  },
+  "texture": "enderio:block/conduit/reinforced_pressure"
+}
