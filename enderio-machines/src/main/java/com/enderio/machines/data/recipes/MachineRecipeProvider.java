@@ -275,10 +275,10 @@ public class MachineRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.XP_VACUUM)
             .pattern("III")
-            .pattern("IRI")
+            .pattern("ISI")
             .pattern("IPI")
             .define('I', Tags.Items.INGOTS_IRON)
-            .define('R', EIOItems.EXPERIENCE_ROD)
+            .define('S', EIOItems.VOID_SEED)
             .define('P', EIOTags.Items.GEMS_PULSATING_CRYSTAL)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))
             .save(recipeOutput);

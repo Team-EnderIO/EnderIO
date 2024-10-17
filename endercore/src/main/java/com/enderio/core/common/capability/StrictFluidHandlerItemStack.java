@@ -60,4 +60,13 @@ public class StrictFluidHandlerItemStack extends FluidHandlerItemStack {
     public boolean isFluidValid(int tank, FluidStack stack) {
         return fluidPredicate.test(stack.getFluid());
     }
+
+    //Convert to present fluid if needed
+    @Override
+    public int fill(FluidStack resource, FluidAction doFill) {
+        if (!getFluid().isEmpty() && fluidPredicate.test(resource.getFluid())) {
+            resource = new FluidStack(getFluid().getFluid(), resource.getAmount());
+        }
+        return super.fill(resource, doFill);
+    }
 }

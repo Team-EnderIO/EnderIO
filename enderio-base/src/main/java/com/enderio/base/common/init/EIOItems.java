@@ -17,6 +17,7 @@ import com.enderio.base.common.item.misc.EnderiosItem;
 import com.enderio.base.common.item.misc.HangGliderItem;
 import com.enderio.base.common.item.misc.LocationPrintoutItem;
 import com.enderio.base.common.item.misc.MaterialItem;
+import com.enderio.base.common.item.tool.VoidSeedItem;
 import com.enderio.base.common.item.tool.ColdFireIgniter;
 import com.enderio.base.common.item.tool.CoordinateSelectorItem;
 import com.enderio.base.common.item.tool.ElectromagnetItem;
@@ -408,6 +409,11 @@ public class EIOItems {
         .setTab(EIOCreativeTabs.GEAR,
             modifier -> EIOItems.COLD_FIRE_IGNITER.get().addAllVariants(modifier)) // TODO: Might PR this to ITEM_REGISTRY so its nicer, but I like the footprint.
         .addCapability(Capabilities.FluidHandler.ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER);
+
+    public static final RegiliteItem<VoidSeedItem> VOID_SEED = ITEM_REGISTRY
+        .register("void_seed", () -> new VoidSeedItem(new Item.Properties().stacksTo(1).craftRemainder(EIOItems.EMPTY_SOUL_VIAL.get())))
+        .setTab(EIOCreativeTabs.MAIN)
+        .addCapability(Capabilities.FluidHandler.ITEM, VoidSeedItem.FLUID_HANDLER_PROVIDER);
 
     // endregion
 

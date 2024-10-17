@@ -11,6 +11,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
 
@@ -124,6 +125,14 @@ public class ItemRecipeProvider extends RecipeProvider {
             .pattern(" I ")
             .pattern("I  ")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ENDER_CRYSTAL.get()))
+            .save(recipeOutput);
+
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.TOOLS, EIOItems.VOID_SEED.get())
+            .requires(EIOItems.EMPTY_SOUL_VIAL)
+            .requires(EIOItems.GRAINS_OF_INFINITY)
+            .requires(Tags.Items.SEEDS)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.EMPTY_SOUL_VIAL))
             .save(recipeOutput);
     }
 
