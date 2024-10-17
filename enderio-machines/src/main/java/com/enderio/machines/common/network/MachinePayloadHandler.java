@@ -3,6 +3,7 @@ package com.enderio.machines.common.network;
 import com.enderio.machines.common.blockentity.VatBlockEntity;
 import com.enderio.machines.common.menu.CrafterMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
+import com.enderio.machines.common.souldata.FarmSoul;
 import com.enderio.machines.common.souldata.SolarSoul;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -21,6 +22,10 @@ public class MachinePayloadHandler {
 
         public void handleSoulEngineSoul(SoulEngineSoulPacket packet, IPayloadContext context) {
             context.enqueueWork(() -> EngineSoul.ENGINE.map = packet.map());
+        }
+
+        public void handleFarmingStationSoul(FarmStationSoulPacket packet, IPayloadContext context) {
+            context.enqueueWork(() -> FarmSoul.FARM.map = packet.map());
         }
 
         public void handleSolarSoul(SolarSoulPacket packet, IPayloadContext context) {

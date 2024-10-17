@@ -7,6 +7,7 @@ import com.enderio.machines.client.gui.screen.CapacitorBankScreen;
 import com.enderio.machines.client.gui.screen.CrafterScreen;
 import com.enderio.machines.client.gui.screen.DrainScreen;
 import com.enderio.machines.client.gui.screen.EnchanterScreen;
+import com.enderio.machines.client.gui.screen.FarmScreen;
 import com.enderio.machines.client.gui.screen.FluidTankScreen;
 import com.enderio.machines.client.gui.screen.ImpulseHopperScreen;
 import com.enderio.machines.client.gui.screen.InhibitorObeliskScreen;
@@ -31,6 +32,7 @@ import com.enderio.machines.common.menu.CapacitorBankMenu;
 import com.enderio.machines.common.menu.CrafterMenu;
 import com.enderio.machines.common.menu.DrainMenu;
 import com.enderio.machines.common.menu.EnchanterMenu;
+import com.enderio.machines.common.menu.FarmMenu;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
 import com.enderio.machines.common.menu.InhibitorObeliskMenu;
@@ -98,6 +100,8 @@ public class MachineMenus {
         .registerMenu("travel_anchor", TravelAnchorMenu::factory, () -> TravelAnchorScreen::new);
     public static final RegiliteMenu<XPObeliskMenu> XP_OBELISK = MENU_REGISTRY
         .registerMenu("xp_obelisk", XPObeliskMenu::factory, () -> XPObeliskScreen::new);
+    public static final RegiliteMenu<FarmMenu> FARMING_STATION = MENU_REGISTRY
+        .registerMenu("farming_station", FarmMenu::factory, () -> FarmScreen::new);
     public static final RegiliteMenu<InhibitorObeliskMenu> INHIBITOR_OBELISK = MENU_REGISTRY
         .registerMenu("inhibitor_obelisk", InhibitorObeliskMenu::factory, () -> InhibitorObeliskScreen::new);
     public static final RegiliteMenu<AversionObeliskMenu> AVERSION_OBELISK = MENU_REGISTRY

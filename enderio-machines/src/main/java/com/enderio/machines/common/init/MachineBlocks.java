@@ -238,6 +238,14 @@ public class MachineBlocks {
         .setTranslation("XP Obelisk")
         .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
+    public static final RegiliteBlock<ProgressMachineBlock> FARMING_STATION = BLOCK_REGISTRY
+        .registerBlock("farming_station", properties -> new ProgressMachineBlock(MachineBlockEntities.FARMING_STATION, properties),
+            BlockBehaviour.Properties.of().strength(2.5f, 8))
+        .setLootTable((l,t) -> MachinesLootTable.copyStandardComponentsWith(l, t, EIODataComponents.STORED_ENTITY.get()))
+        .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
+        .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
+
     public static final RegiliteBlock<MachineBlock> INHIBITOR_OBELISK = BLOCK_REGISTRY
         .registerBlock("inhibitor_obelisk", props -> new MachineBlock(MachineBlockEntities.INHIBITOR_OBELISK, props),
             BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())

@@ -14,6 +14,7 @@ import com.enderio.machines.common.blockentity.CrafterBlockEntity;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
 import com.enderio.machines.common.blockentity.DrainBlockEntity;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
+import com.enderio.machines.common.blockentity.FarmingStationBlockEntity;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
 import com.enderio.machines.common.blockentity.InhibitorObeliskBlockEntity;
@@ -33,6 +34,12 @@ import com.enderio.machines.common.blockentity.VatBlockEntity;
 import com.enderio.machines.common.blockentity.WiredChargerBlockEntity;
 import com.enderio.machines.common.blockentity.XPObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.XPVacuumBlockEntity;
+import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
+import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
+import com.enderio.machines.client.rendering.blockentity.XPObeliskBER;
+import com.enderio.machines.common.attachment.FluidTankUser;
+import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
@@ -202,6 +209,11 @@ public class MachineBlockEntities {
         register("relocator_obelisk", RelocatorObeliskBlockEntity::new, MachineBlocks.RELOCATOR_OBELISK)
             .setRenderer(() -> ObeliskBER.factory(() -> Items.PRISMARINE))
             .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+
+    public static final RegiliteBlockEntity<FarmingStationBlockEntity> FARMING_STATION =
+        register("farming_station", FarmingStationBlockEntity::new, MachineBlocks.FARMING_STATION)
+            .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
 
     @SafeVarargs
     private static <B extends BlockEntity> RegiliteBlockEntity<B> register(String name, BlockEntityType.BlockEntitySupplier<B> beFactory,

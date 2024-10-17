@@ -1,9 +1,11 @@
 package com.enderio.base.api.integration;
 
+import com.enderio.base.api.farm.FarmTaskManager;
 import com.enderio.base.api.glider.GliderMovementInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -60,6 +62,10 @@ public interface Integration {
     default void createData(GatherDataEvent event) {
     }
 
+    default void onModConstruct() {
+
+    }
+
     /**
      * @param stack The ItemStack a conduit was rightclicked with
      * @return empty Optional if this stack is not a facade item. Or the BlockState this facade disguises as
@@ -75,4 +81,15 @@ public interface Integration {
     default boolean canBlockTeleport(Player player) {
         return false;
     }
+
+    /**
+     * Usage intended for kubejs io, tell us if you need it for something else
+     * @param recipe The smelting recipe that is tried to be used in the AlloySmelter.
+     * @return true if this recipe can be used
+     */
+    default boolean acceptSmeltingRecipe(SmeltingRecipe recipe) {
+        return true;
+    }
+
+    default void registerFarmTasks(FarmTaskManager manager) {}
 }

@@ -7,6 +7,7 @@ import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.recipe.SoulBindingRecipe;
 import com.enderio.machines.common.souldata.EngineSoul;
+import com.enderio.machines.common.souldata.FarmSoul;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -39,6 +40,7 @@ public class SoulBindingRecipeProvider extends RecipeProvider {
         build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 51200, 4, EntityType.WITCH, recipeOutput);
         build(EIOItems.BROKEN_SPAWNER, Ingredient.of(EIOItems.BROKEN_SPAWNER), 288000, 8, recipeOutput);
         build(MachineBlocks.SOUL_ENGINE, Ingredient.of(MachineBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME, recipeOutput);
+        build(MachineBlocks.FARMING_STATION, Ingredient.of(MachineBlocks.FARMING_STATION), 188000, 5, FarmSoul.NAME, recipeOutput);
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityType.VILLAGER, recipeOutput);
         build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.MONSTER, recipeOutput);
         build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.CREATURE, recipeOutput);

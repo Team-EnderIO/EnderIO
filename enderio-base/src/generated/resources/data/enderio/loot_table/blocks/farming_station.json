@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "enderio:stored_entity",
+                "enderio:energy",
+                "enderio:io_config",
+                "enderio:redstone_control",
+                "minecraft:container"
+              ],
+              "source": "block_entity"
+            }
+          ],
+          "name": "enderio:farming_station"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "enderio:blocks/farming_station"
+}
