@@ -2,8 +2,18 @@ package com.enderio.machines.common.integrations.jei;
 
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.integrations.jei.subtype.EntityStorageSubtypeInterpreter;
+import com.enderio.machines.client.gui.screen.AlloySmelterScreen;
+import com.enderio.machines.client.gui.screen.EnchanterScreen;
+import com.enderio.machines.client.gui.screen.FluidTankScreen;
+import com.enderio.machines.client.gui.screen.PrimitiveAlloySmelterScreen;
+import com.enderio.machines.client.gui.screen.SagMillScreen;
+import com.enderio.machines.client.gui.screen.SlicerScreen;
+import com.enderio.machines.client.gui.screen.SoulBinderScreen;
+import com.enderio.machines.client.gui.screen.VatScreen;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
+import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.jei.category.AlloySmeltingCategory;
 import com.enderio.machines.common.integrations.jei.category.EnchanterCategory;
 import com.enderio.machines.common.integrations.jei.category.PrimitiveAlloySmeltingCategory;
@@ -16,14 +26,18 @@ import com.enderio.machines.common.integrations.jei.category.VATCategory;
 import com.enderio.machines.common.integrations.jei.transfer.CrafterRecipeTransferHandler;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.menu.EnchanterMenu;
+import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.menu.SagMillMenu;
 import com.enderio.machines.common.menu.SlicerMenu;
 import com.enderio.machines.common.menu.SoulBinderMenu;
 import com.enderio.machines.common.menu.VatMenu;
+import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
@@ -31,6 +45,8 @@ import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 @JeiPlugin
 public class MachinesJEI implements IModPlugin {
@@ -118,5 +134,33 @@ public class MachinesJEI implements IModPlugin {
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         registration.registerSubtypeInterpreter(MachineBlocks.SOUL_ENGINE.asItem(), new EntityStorageSubtypeInterpreter());
 
+        for (var solarPanel : MachineBlocks.SOLAR_PANELS.values()) {
+            registration.registerSubtypeInterpreter(solarPanel.asItem(), new EntityStorageSubtypeInterpreter());
+        }
+    }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addRecipeClickArea(AlloySmelterScreen.class, 56, 56, 14, 14, AlloySmeltingCategory.TYPE);
+        registration.addRecipeClickArea(AlloySmelterScreen.class, 104, 56, 14, 14, AlloySmeltingCategory.TYPE);
+
+        // TODO: Where to put Crafter recipe area
+
+        registration.addRecipeClickArea(EnchanterScreen.class, 111, 35, 24, 17, EnchanterCategory.TYPE);
+
+        registration.addRecipeClickArea(FluidTankScreen.class, 62, 24, 15, 10, TankCategory.TYPE);
+        registration.addRecipeClickArea(FluidTankScreen.class, 47, 40, 10, 9, TankCategory.TYPE);
+        registration.addRecipeClickArea(FluidTankScreen.class, 98, 24, 15, 10, TankCategory.TYPE);
+        registration.addRecipeClickArea(FluidTankScreen.class, 119, 40, 10, 9, TankCategory.TYPE);
+
+        // TODO: Painting machine needs a viewer
+
+        registration.addRecipeClickArea(PrimitiveAlloySmelterScreen.class, 79, 35, 24, 17, PrimitiveAlloySmeltingCategory.TYPE);
+        registration.addRecipeClickArea(SagMillScreen.class, 80, 47, 16, 24, SagMillCategory.TYPE);
+        registration.addRecipeClickArea(SlicerScreen.class, 98, 61, 24, 16, SlicingRecipeCategory.TYPE);
+        registration.addRecipeClickArea(SoulBinderScreen.class, 80, 34, 24, 17, SoulBindingCategory.TYPE);
+        registration.addRecipeClickArea(VatScreen.class, 75, 33, 28, 30, VATCategory.TYPE);
+
+        registration.addGhostIngredientHandler(MachineScreen.class, new MachinesGhostSlotHandler());
     }
 }

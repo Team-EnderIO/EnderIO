@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
  */
 public class GhostMachineSlot extends MachineSlot {
 
-
     public GhostMachineSlot(MachineInventory itemHandler, int index, int xPosition, int yPosition) {
         super(itemHandler, index, xPosition, yPosition);
 

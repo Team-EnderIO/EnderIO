@@ -1,59 +1,29 @@
 package com.enderio.modconduits.mods.mekanism;
 
+import com.enderio.base.common.menu.FilterSlot;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
-public class ChemicalFilterSlot extends Slot {
-
-    private static final Container EMPTY_INVENTORY = new SimpleContainer(0);
-    private final Consumer<ChemicalStack> consumer;
+public class ChemicalFilterSlot extends FilterSlot<ChemicalStack> {
 
     public ChemicalFilterSlot(Consumer<ChemicalStack> consumer, int pSlot, int pX, int pY) {
-        super(EMPTY_INVENTORY, pSlot, pX, pY);
-        this.consumer = consumer;
+        super(consumer, pSlot, pX, pY);
     }
 
     @Override
-    public ItemStack getItem() {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void set(ItemStack pStack) {
-        setChanged();
-    }
-
-    @Override
-    public void setChanged() {
-
-    }
-
-    @Override
-    public ItemStack remove(int pAmount) {
-        set(ItemStack.EMPTY);
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public int getMaxStackSize() {
-        return getItem().getMaxStackSize();
-    }
-
-    @Override
-    public ItemStack safeInsert(ItemStack stack, int amount) {
-        // If this stack is valid, set the inventory slot value.
-        IChemicalHandler capability = stack.getCapability(MekanismModule.Capabilities.Item.CHEMICAL);
-        if (!stack.isEmpty() && mayPlace(stack) && capability != null) {
+    public Optional<ChemicalStack> getResourceFrom(ItemStack itemStack) {
+        IChemicalHandler capability = itemStack.getCapability(MekanismModule.Capabilities.Item.CHEMICAL);
+        if (capability != null) {
             var ghost = capability.getChemicalInTank(0).copy();
-            consumer.accept(ghost);
+            if (!ghost.isEmpty()) {
+                return Optional.of(ghost);
+            }
         }
 
-        return stack;
+        return Optional.empty();
     }
 }
