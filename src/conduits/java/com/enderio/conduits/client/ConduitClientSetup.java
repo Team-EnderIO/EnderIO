@@ -15,7 +15,7 @@ import com.enderio.conduits.client.model.conduit.modifier.RedstoneConduitCoreMod
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.init.EIOConduitTypes;
-import com.enderio.conduits.common.items.tool.ConduitProbeItem;
+import com.enderio.conduits.common.items.ConduitProbeItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -62,15 +62,15 @@ public class ConduitClientSetup {
     public static void clientSetup(FMLClientSetupEvent event) {
         ConduitScreenExtensions.init();
         
-        event.enqueueWork(() -> {
-            ItemProperties.register(ConduitItems.CONDUIT_PROBE.get(), EnderIO.loc("conduit_probe_state"),
+        event.enqueueWork(() -> 
+            ItemProperties.register(ConduitItems.CONDUIT_PROBE.get(), EnderIO.loc("conduit_probe_state"), 
                 ((itemStack, clientLevel, livingEntity, i) -> {
                     if (itemStack.getItem() instanceof ConduitProbeItem probe) {
                         return probe.getState().ordinal();
                     }
                     return 0;
-                }));
-        });
+                }))
+        );
     }
 
     @SubscribeEvent

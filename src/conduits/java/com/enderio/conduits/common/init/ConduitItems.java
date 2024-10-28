@@ -6,7 +6,7 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.common.conduit.upgrade.SpeedUpgradeItem;
-import com.enderio.conduits.common.items.tool.ConduitProbeItem;
+import com.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.conduits.common.redstone.RedstoneANDFilter;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneFilterItem;

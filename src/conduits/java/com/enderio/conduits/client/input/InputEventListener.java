@@ -2,7 +2,7 @@ package com.enderio.conduits.client.input;
 
 import com.enderio.EnderIO;
 import com.enderio.base.client.input.KeyBindings;
-import com.enderio.conduits.common.items.tool.ConduitProbeItem;
+import com.enderio.conduits.common.items.ConduitProbeItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +18,9 @@ public class InputEventListener {
     @SubscribeEvent
     public static void inputEvent(InputEvent.MouseScrollingEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) return;
+        if (player == null) {
+            return;
+        }
         
         ItemStack heldMainHand = player.getMainHandItem();
         ItemStack heldOffHand = player.getOffhandItem();
@@ -40,14 +42,20 @@ public class InputEventListener {
     @SubscribeEvent
     public static void inputEvent(InputEvent.Key event) {
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) return;
+        if (player == null) {
+            return;
+        }
 
         ItemStack heldMainHand = player.getMainHandItem();
         ItemStack heldOffHand = player.getOffhandItem();
         
         if (KeyBindings.MODE_CHANGE.consumeClick()) {
-            if (heldMainHand.getItem() instanceof ConduitProbeItem probeItem) probeItem.switchState();
-            if (heldOffHand.getItem() instanceof ConduitProbeItem probeItem) probeItem.switchState();
+            if (heldMainHand.getItem() instanceof ConduitProbeItem probeItem) {
+                probeItem.switchState();
+            }
+            if (heldOffHand.getItem() instanceof ConduitProbeItem probeItem) {
+                probeItem.switchState();
+            }
         }
     }
 }

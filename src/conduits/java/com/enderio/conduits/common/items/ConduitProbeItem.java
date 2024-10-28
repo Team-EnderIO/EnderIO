@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.items.tool;
+package com.enderio.conduits.common.items;
 
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.misc.ColorControl;
@@ -54,8 +54,7 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
                     handleCopy(conduit, 
                         InteractionUtil.fromClickLocation(context.getClickLocation(), context.getClickedPos().getCenter()), 
                         stack);
-                }
-                else {
+                } else {
                     handlePaste(conduit, 
                         InteractionUtil.fromClickLocation(context.getClickLocation(), context.getClickedPos().getCenter()), 
                         stack);
@@ -70,7 +69,9 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
         CompoundTag tag = itemStack.getOrCreateTag();
         tag.getAllKeys().clear();
         ConduitBundle bundle = conduitBlock.getBundle();
-        if (bundle.getConnectedTypes(face).isEmpty()) return;
+        if (bundle.getConnectedTypes(face).isEmpty()) {
+            return;
+        }
         bundle.getTypes().forEach(conduitType -> {
             ConnectionState connectionState = bundle.getConnectionState(face, conduitType);
             CompoundTag typeTag = new CompoundTag();
@@ -81,8 +82,7 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
                 typeTag.putInt(EXTRACT_CHANNEL, dynamic.extractChannel().ordinal());
                 typeTag.putInt(REDSTONE_CONTROL, dynamic.control().ordinal());
                 typeTag.putInt(REDSTONE_CHANNEL, dynamic.redstoneChannel().ordinal());
-            }
-            else {
+            } else {
                 typeTag.putBoolean(IS_INSERT, false);
                 typeTag.putBoolean(IS_EXTRACT, false);
             }
@@ -92,7 +92,9 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
     
     public void handlePaste(ConduitBlockEntity conduitBlock, Direction face, ItemStack itemStack) {
         CompoundTag tag = itemStack.getTag();
-        if (tag == null) return;
+        if (tag == null) {
+            return;
+        }
         ConduitBundle bundle = conduitBlock.getBundle();
         bundle.getTypes().forEach(conduitType -> {
             CompoundTag typeTag = tag.getCompound(Objects.requireNonNull(ConduitType.getKey(conduitType)).toString());

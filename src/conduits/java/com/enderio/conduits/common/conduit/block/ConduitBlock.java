@@ -14,7 +14,7 @@ import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.EIOConduitTypes;
-import com.enderio.conduits.common.items.tool.ConduitProbeItem;
+import com.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.conduits.common.redstone.RedstoneInsertFilter;
 import net.minecraft.core.BlockPos;
@@ -153,7 +153,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ConduitBlockEntity conduit) {
             if (!player.getItemInHand(hand).isEmpty()) {
-                Optional<InteractionResult> interactionResult = handleProbe(conduit, player, player.getItemInHand(hand), level.isClientSide());
+                Optional<InteractionResult> interactionResult = handleProbe(player.getItemInHand(hand));
                 if (interactionResult.isPresent()) {
                     return interactionResult.get();
                 }
@@ -187,8 +187,8 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         return super.use(state, level, pos, player, hand, hit);
     }
 
-    private Optional<InteractionResult> handleProbe(ConduitBlockEntity conduit, Player player, ItemStack stack, boolean clientSide) {
-        if (!(stack.getItem() instanceof ConduitProbeItem conduitProbeItem)) {
+    private Optional<InteractionResult> handleProbe(ItemStack stack) {
+        if (!(stack.getItem() instanceof ConduitProbeItem)) {
             return Optional.empty();
         }
 

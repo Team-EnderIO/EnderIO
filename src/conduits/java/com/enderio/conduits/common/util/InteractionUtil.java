@@ -10,16 +10,19 @@ public class InteractionUtil {
         double absY = Math.abs(offset.y);
         double absZ = Math.abs(offset.z);
         if (absX >= absY && absX >= absZ) {
-            if (offset.x >= 0)
+            if (offset.x >= 0) {
                 return Direction.EAST;
+            }
             return Direction.WEST;
         } else if (absY >= absZ) {
-            if (offset.y >= 0)
+            if (offset.y >= 0) {
                 return Direction.UP;
+            }
             return Direction.DOWN;
         } else {
-            if (offset.z >= 0)
+            if (offset.z >= 0) {
                 return Direction.SOUTH;
+            }
             return Direction.NORTH;
         }
     }
