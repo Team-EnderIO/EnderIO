@@ -96,7 +96,6 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
         ConduitBundle bundle = conduitBlock.getBundle();
         bundle.getTypes().forEach(conduitType -> {
             CompoundTag typeTag = tag.getCompound(Objects.requireNonNull(ConduitType.getKey(conduitType)).toString());
-            if (typeTag.getAllKeys().isEmpty()) return;
             ConnectionState prevConnectionState = bundle.getConnectionState(face, conduitType);
             DynamicConnectionState connectionState = null;
             if (prevConnectionState instanceof DynamicConnectionState) connectionState = (DynamicConnectionState) prevConnectionState;
@@ -111,6 +110,9 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
             );
             CoreNetwork.sendToServer(new C2SSetConduitConnectionState(conduitBlock.getBlockPos(), face, conduitType, newState));
         });
+        conduitBlock.updateEmptyDynConnection();
+        bundle.onChanged();
+        conduitBlock.setChanged();
         conduitBlock.updateShape();
         conduitBlock.updateClient();
     }
