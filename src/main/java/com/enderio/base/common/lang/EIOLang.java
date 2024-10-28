@@ -208,6 +208,12 @@ public class EIOLang {
         "Make others think you are richer");
 
     // endregion
+    
+    // region KeyBindings
+    public static final Component KEYBINDING_CATEGORY = REGISTRATE.addLang("keybinding", EnderIO.loc("category"), "EnderIO");
+    public static final Component KEYBINDING_MODE_SWITCH = REGISTRATE.addLang("keybinding", EnderIO.loc("mode_change"), "Mode Change Key");
+    
+    // endregion
 
     // region Misc Tooltips
 
