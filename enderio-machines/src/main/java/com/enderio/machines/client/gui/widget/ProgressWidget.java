@@ -1,5 +1,8 @@
 package com.enderio.machines.client.gui.widget;
 
+import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.machines.common.integrations.IntegrationUtility;
+import com.enderio.machines.common.lang.MachineLang;
 import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -108,14 +111,12 @@ public abstract class ProgressWidget extends AbstractWidget {
         // Update the contents of the tooltip whenever its hovered, don't waste any time
         // doing it when not hovered.
         // Should also mean when tooltip is false it never gets populated
-        if (this.isHovered() && showTooltip) {
+        if (this.isHovered() && showTooltip && !IntegrationUtility.hasRecipeViewer()) {
             Minecraft minecraft = Minecraft.getInstance();
 
-            /*
-             * guiGraphics.renderTooltip(minecraft.font,
-             * TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int)
-             * (progressSupplier.get() * 100)), mouseX, mouseY);
-             */
+            guiGraphics.renderTooltip(minecraft.font,
+                    TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int) (progressSupplier.get() * 100)), mouseX,
+                    mouseY);
         }
 
     }
