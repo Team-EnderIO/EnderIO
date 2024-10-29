@@ -124,13 +124,11 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
                 ColorControl.values()[typeTag.getInt(REDSTONE_CHANNEL)], wasConnected ? connectionState.filterInsert() : ItemStack.EMPTY,
                 wasConnected ? connectionState.filterExtract() : ItemStack.EMPTY, wasConnected ? connectionState.upgradeExtract() : ItemStack.EMPTY
             );
-            CoreNetwork.sendToServer(new C2SSetConduitConnectionState(conduitBlock.getBlockPos(), face, conduitType, newState));
+            conduitBlock.handleConnectionStateUpdate(face, conduitType, newState);
         });
-        conduitBlock.updateEmptyDynConnection();
-        bundle.onChanged();
         conduitBlock.setChanged();
-        conduitBlock.updateShape();
         conduitBlock.updateClient();
+        conduitBlock.updateEmptyDynConnection();
     }
 
     @Override
