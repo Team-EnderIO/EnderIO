@@ -50,8 +50,7 @@ public class ChemicalConduitType extends TieredConduit<ChemicalConduitData> {
 
     @Override
     public void addToTooltip(@Nullable Level level, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
-        // Get transfer rate, adjusted for the ticker rate.
-        String transferLimitFormatted = String.format("%,d", getTier() * (20 / getTicker().getTickRate()));
+        String transferLimitFormatted = String.format("%,d", getTier());
         tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RATE_TOOLTIP, transferLimitFormatted));
 
         if (multiFluid) {

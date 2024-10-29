@@ -25,15 +25,15 @@ public class FluidConduitType extends TieredConduit<FluidConduitData> {
     public static final ConduitMenuData ADVANCED_MENU_DATA = new ConduitMenuData.Simple(true, true, true, true, true, true);
 
     private final boolean isMultiFluid;
-    private final int transferRate;
+    private final int transferRatePerTick;
     private final ConduitTicker<FluidConduitData> ticker;
 
-    public FluidConduitType(ResourceLocation tierName, int tier, boolean isMultiFluid) {
-        super(new ResourceLocation("forge:fluid"), tierName, (isMultiFluid ? 100_000 : 0) + tier);
+    public FluidConduitType(ResourceLocation tierName, int transferRatePerTick, boolean isMultiFluid) {
+        super(new ResourceLocation("forge:fluid"), tierName, /*(isMultiFluid ? 100_000 : 0) + */transferRatePerTick);
         this.isMultiFluid = isMultiFluid;
-        this.transferRate = tier;
+        this.transferRatePerTick = transferRatePerTick;
 
-        ticker = new FluidConduitTicker(!isMultiFluid, transferRate);
+        ticker = new FluidConduitTicker(!isMultiFluid, this.transferRatePerTick);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class FluidConduitType extends TieredConduit<FluidConduitData> {
 
     @Override
     public void addToTooltip(@Nullable Level level, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
-        String transferLimitFormatted = String.format("%,d", transferRate * (20 / getTicker().getTickRate()));
+        String transferLimitFormatted = String.format("%,d", transferRatePerTick);
         tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RATE_TOOLTIP, transferLimitFormatted));
 
         if (isMultiFluid) {

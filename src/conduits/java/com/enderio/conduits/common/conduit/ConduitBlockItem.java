@@ -1,7 +1,10 @@
 package com.enderio.conduits.common.conduit;
 
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.base.client.tooltip.TooltipHandler;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
+import com.enderio.conduits.common.init.ConduitLang;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -74,8 +77,8 @@ public class ConduitBlockItem extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        type.get().addToTooltip(level, tooltip::add, flag);
-        super.appendHoverText(stack, level, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
+        type.get().addToTooltip(level, tooltip::add, tooltipFlag);
+        super.appendHoverText(stack, level, tooltip, tooltipFlag);
     }
 }
