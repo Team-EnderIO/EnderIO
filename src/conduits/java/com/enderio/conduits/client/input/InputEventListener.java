@@ -25,7 +25,7 @@ public class InputEventListener {
         ItemStack heldMainHand = player.getMainHandItem();
         ItemStack heldOffHand = player.getOffhandItem();
         
-        if (Math.abs(event.getScrollDelta()) > 0 && player.isCrouching()) {
+        if (Math.abs(event.getScrollDelta()) > 0 && player.isShiftKeyDown()) {
             boolean cancelScroll = false;
             if (heldMainHand.getItem() instanceof ConduitProbeItem probeItem) {
                 probeItem.switchState();

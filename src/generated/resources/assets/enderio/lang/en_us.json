@@ -531,6 +531,7 @@
   "tooltip.enderio.collision.mobs_pass": "Not solid to monsters",
   "tooltip.enderio.collision.players_block": "Only solid to players",
   "tooltip.enderio.collision.players_pass": "Not solid to players",
+  "tooltip.enderio.conduit_probe.mode": "Mode: %1$s",
   "tooltip.enderio.dark_steel_ladder.faster": "Faster than regular ladders",
   "tooltip.enderio.fluid_tank.tank_empty_tooltip": "Empty tank",
   "tooltip.enderio.fluid_tank.tank_tooltip": "%d/%d mb of %s",

@@ -10,15 +10,22 @@ import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.network.C2SSetConduitConnectionState;
 import com.enderio.conduits.common.util.InteractionUtil;
 import com.enderio.core.common.network.CoreNetwork;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.INBTSerializable;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 
 public class ConduitProbeItem extends Item implements INBTSerializable<CompoundTag> {
@@ -132,6 +139,22 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
         if (stateOrdinal >= 0 && stateOrdinal < State.values().length) {
             state = State.values()[stateOrdinal];
         }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
+        if (!(stack.getItem() instanceof ConduitProbeItem probeItem)) {
+            return;
+        }
+        StringBuilder builder = new StringBuilder();
+        for (String s : probeItem.getState().toString().toLowerCase().split("_")) {
+            builder.append(StringUtils.capitalize(s));
+            builder.append(" ");
+        }
+        builder.deleteCharAt(builder.length() - 1);
+        tooltipComponents.add(TooltipUtil.style(Component.translatable("tooltip.enderio.conduit_probe.mode", builder.toString())));
+        
+        super.appendHoverText(stack, level, tooltipComponents, isAdvanced);
     }
 
     public enum State {
