@@ -11,6 +11,7 @@ import com.enderio.conduits.common.network.C2SSetConduitConnectionState;
 import com.enderio.conduits.common.util.InteractionUtil;
 import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.util.TooltipUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -56,16 +57,22 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         BlockEntity block = context.getLevel().getBlockEntity(context.getClickedPos());
         if (block instanceof ConduitBlockEntity conduit) {
-            if (state.equals(State.COPY_PASTE)) {
+            if (context.getLevel().isClientSide()) return InteractionResult.SUCCESS;
+            switch (state) {
+            case COPY_PASTE -> {
                 if (context.isSecondaryUseActive()) {
-                    handleCopy(conduit, 
-                        InteractionUtil.fromClickLocation(context.getClickLocation(), context.getClickedPos().getCenter()), 
+                    handleCopy(conduit,
+                        InteractionUtil.fromClickLocation(context.getClickLocation(), context.getClickedPos().getCenter()),
                         stack);
                 } else {
-                    handlePaste(conduit, 
-                        InteractionUtil.fromClickLocation(context.getClickLocation(), context.getClickedPos().getCenter()), 
+                    handlePaste(conduit,
+                        InteractionUtil.fromClickLocation(context.getClickLocation(), context.getClickedPos().getCenter()),
                         stack);
                 }
+            }
+            case PROBE -> {
+                context.getPlayer().sendSystemMessage(Component.literal("This feature isn't implemented yet.").withStyle(ChatFormatting.RED));
+            }
             }
             return InteractionResult.SUCCESS;
         }
