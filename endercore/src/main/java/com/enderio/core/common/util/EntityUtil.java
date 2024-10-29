@@ -1,11 +1,10 @@
 package com.enderio.core.common.util;
 
+import java.util.Optional;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-
-import java.util.Optional;
 
 /**
  * Helper utilities for dealing with entities.

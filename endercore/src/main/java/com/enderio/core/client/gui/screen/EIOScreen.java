@@ -1,5 +1,9 @@
 package com.enderio.core.client.gui.screen;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -13,13 +17,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.joml.Vector2i;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @Deprecated(forRemoval = true, since = "7.0")
-public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements EnderScreen {
+public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T>
+        implements EnderScreen {
 
     private final boolean renderLabels;
     private final List<EditBox> editBoxList = new ArrayList<>();
@@ -51,9 +51,10 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
 
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
-        /*if (menu instanceof SyncedMenu<?> syncedMenu && syncedMenu.getBlockEntity() == null) {
-            return;
-        }*/
+        /*
+         * if (menu instanceof SyncedMenu<?> syncedMenu && syncedMenu.getBlockEntity()
+         * == null) { return; }
+         */
 
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         this.renderTooltip(guiGraphics, pMouseX, pMouseY);
@@ -66,7 +67,7 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
 
     @Override
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-        if (pKeyCode == 256) { //ESC has priority
+        if (pKeyCode == 256) { // ESC has priority
             Minecraft.getInstance().player.closeContainer();
         }
 

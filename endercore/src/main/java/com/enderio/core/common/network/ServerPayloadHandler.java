@@ -19,7 +19,8 @@ public class ServerPayloadHandler {
             var level = context.player().level();
             BlockEntity be = level.getBlockEntity(change.pos());
             if (be instanceof EnderBlockEntity enderBlockEntity) {
-                var buf = new RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(change.updateData()), level.registryAccess());
+                var buf = new RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(change.updateData()),
+                        level.registryAccess());
                 enderBlockEntity.serverHandleBufferChange(buf);
             }
         });

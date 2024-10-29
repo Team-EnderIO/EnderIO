@@ -1,15 +1,14 @@
 package com.enderio.core.common.network;
 
 import com.enderio.core.EnderCore;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-
-import java.util.ArrayList;
-import java.util.List;
 
 // TODO: Not a big fan of this..
 public record EmitParticlesPacket(List<EmitParticlePacket> particles) implements CustomPacketPayload {
