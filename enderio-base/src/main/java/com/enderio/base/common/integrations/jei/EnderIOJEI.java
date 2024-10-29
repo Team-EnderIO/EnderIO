@@ -8,10 +8,8 @@ import com.enderio.base.common.integrations.jei.category.FireCraftingCategory;
 import com.enderio.base.common.integrations.jei.extension.ShapedEntityStorageCategoryExtension;
 import com.enderio.base.common.integrations.jei.subtype.EntityStorageSubtypeInterpreter;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
-import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
 import com.enderio.core.client.gui.screen.EIOScreen;
-import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
@@ -27,8 +25,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +74,7 @@ public class EnderIOJEI implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        registration.addGhostIngredientHandler(EIOScreen.class, new BaseGhostSlotHandler());
+        registration.addGhostIngredientHandler(EIOScreen.class, new FilterGhostIngredientHandler());
     }
 
     // region Utilities

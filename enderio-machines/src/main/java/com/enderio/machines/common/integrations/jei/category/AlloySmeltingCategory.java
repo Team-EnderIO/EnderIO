@@ -27,7 +27,9 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import java.util.Arrays;
 import java.util.List;
 
-import static mezz.jei.api.recipe.RecipeIngredientRole.*;
+import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.RENDER_ONLY;
 
 public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<AlloySmeltingRecipe>> {
 

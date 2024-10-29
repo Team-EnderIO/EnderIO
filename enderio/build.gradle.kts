@@ -26,6 +26,8 @@ val refinedstorageVersion: String by project
 val jadeFileId: String by project
 val mekanismMinecraftVersion: String by project
 val mekanismVersion: String by project
+val curseforge_laserio_id: String by project
+val curseforge_laserio_file: String by project
 
 dependencies {
     // Include modules
@@ -80,6 +82,9 @@ dependencies {
 
     // Mekanism
     runtimeOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}")
+
+    //Laserio
+    runtimeOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
 }
 
 neoForge {

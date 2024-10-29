@@ -1,5 +1,6 @@
 package com.enderio.base.common.menu;
 
+import mezz.jei.api.ingredients.ITypedIngredient;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.inventory.Slot;

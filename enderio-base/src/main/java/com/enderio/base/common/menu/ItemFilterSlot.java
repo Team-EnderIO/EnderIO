@@ -1,5 +1,6 @@
 package com.enderio.base.common.menu;
 
+import mezz.jei.api.ingredients.ITypedIngredient;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;

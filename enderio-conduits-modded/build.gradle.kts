@@ -10,8 +10,6 @@ val minecraft_version_range: String by project
 val neoForgeVersion: String by project
 val neo_version_range: String by project
 val loader_version_range: String by project
-val curseforge_laserio_id: String by project
-val curseforge_laserio_file: String by project
 
 apply(from = rootProject.file("buildSrc/shared.gradle.kts"))
 
@@ -36,6 +34,8 @@ val ae2Version: String by project
 val mekanismMinecraftVersion: String by project
 val mekanismVersion: String by project
 val refinedstorageVersion: String by project
+val curseforge_laserio_id: String by project
+val curseforge_laserio_file: String by project
 
 dependencies {
     api("com.enderio:Regilite:$regiliteVersion")

@@ -15,7 +15,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseGhostSlotHandler implements IGhostIngredientHandler<EIOScreen> {
+public class FilterGhostIngredientHandler implements IGhostIngredientHandler<EIOScreen> {
 
     @Override
     public <I> List<Target<I>> getTargetsTyped(EIOScreen gui, ITypedIngredient<I> ingredient, boolean doStart) {
