@@ -2,14 +2,13 @@ package com.enderio.machines.common.integrations.jei;
 
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.common.menu.GhostMachineSlot;
+import java.util.ArrayList;
+import java.util.List;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MachinesGhostSlotHandler implements IGhostIngredientHandler<MachineScreen> {
 

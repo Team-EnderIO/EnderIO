@@ -22,9 +22,9 @@ public class EntityStorageSubtypeInterpreter implements ISubtypeInterpreter<Item
     public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
         if (ingredient.is(EIOTags.Items.ENTITY_STORAGE)) {
             return ingredient.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)
-                .entityType()
-                .map(ResourceLocation::toString)
-                .orElse("");
+                    .entityType()
+                    .map(ResourceLocation::toString)
+                    .orElse("");
         }
 
         return "";

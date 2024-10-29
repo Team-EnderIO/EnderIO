@@ -1,7 +1,6 @@
 package com.enderio.machines.client.gui.widget;
 
-import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.machines.common.lang.MachineLang;
+import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -9,8 +8,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.NotImplementedException;
-
-import java.util.function.Supplier;
 
 // TODO: Configurable tooltip text
 public class NewProgressWidget extends AbstractWidget {
@@ -25,8 +22,8 @@ public class NewProgressWidget extends AbstractWidget {
 
     private final boolean showTooltip;
 
-    private NewProgressWidget(int x, int y, int width, int height, ResourceLocation sprite, FlowDirection flowDirection, Supplier<Float> progressSupplier,
-        boolean showTooltip) {
+    private NewProgressWidget(int x, int y, int width, int height, ResourceLocation sprite, FlowDirection flowDirection,
+            Supplier<Float> progressSupplier, boolean showTooltip) {
         super(x, y, width, height, Component.empty());
         this.flowDirection = flowDirection;
         this.sprite = sprite;
@@ -34,19 +31,22 @@ public class NewProgressWidget extends AbstractWidget {
         this.showTooltip = showTooltip;
     }
 
-    public static NewProgressWidget bottomUp(int x, int y, int width, int height, ResourceLocation sprite, Supplier<Float> progressSupplier,
-        boolean showTooltip) {
-        return new NewProgressWidget(x, y, width, height, sprite, FlowDirection.BOTTOM_UP, progressSupplier, showTooltip);
+    public static NewProgressWidget bottomUp(int x, int y, int width, int height, ResourceLocation sprite,
+            Supplier<Float> progressSupplier, boolean showTooltip) {
+        return new NewProgressWidget(x, y, width, height, sprite, FlowDirection.BOTTOM_UP, progressSupplier,
+                showTooltip);
     }
 
-    public static NewProgressWidget topDown(int x, int y, int width, int height, ResourceLocation sprite, Supplier<Float> progressSupplier,
-        boolean showTooltip) {
-        return new NewProgressWidget(x, y, width, height, sprite, FlowDirection.TOP_DOWN, progressSupplier, showTooltip);
+    public static NewProgressWidget topDown(int x, int y, int width, int height, ResourceLocation sprite,
+            Supplier<Float> progressSupplier, boolean showTooltip) {
+        return new NewProgressWidget(x, y, width, height, sprite, FlowDirection.TOP_DOWN, progressSupplier,
+                showTooltip);
     }
 
-    public static NewProgressWidget leftRight(int x, int y, int width, int height, ResourceLocation sprite, Supplier<Float> progressSupplier,
-        boolean showTooltip) {
-        return new NewProgressWidget(x, y, width, height, sprite, FlowDirection.LEFT_RIGHT, progressSupplier, showTooltip);
+    public static NewProgressWidget leftRight(int x, int y, int width, int height, ResourceLocation sprite,
+            Supplier<Float> progressSupplier, boolean showTooltip) {
+        return new NewProgressWidget(x, y, width, height, sprite, FlowDirection.LEFT_RIGHT, progressSupplier,
+                showTooltip);
     }
 
     // Stop the click sound
@@ -56,7 +56,8 @@ public class NewProgressWidget extends AbstractWidget {
     }
 
     @Override
-    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+    }
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -95,12 +96,15 @@ public class NewProgressWidget extends AbstractWidget {
 
         guiGraphics.blitSprite(sprite, width, height, u, v, x, y, uWidth, vHeight);
 
-        // Update the contents of the tooltip whenever its hovered, don't waste any time doing it when not hovered.
+        // Update the contents of the tooltip whenever its hovered, don't waste any time
+        // doing it when not hovered.
         // Should also mean when tooltip is false it never gets populated
         if (this.isHovered() && showTooltip) {
             Minecraft minecraft = Minecraft.getInstance();
 
-            //guiGraphics.renderTooltip(minecraft.font, TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int) (progressSupplier.get() * 100)), mouseX, mouseY);
+            // guiGraphics.renderTooltip(minecraft.font,
+            // TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int)
+            // (progressSupplier.get() * 100)), mouseX, mouseY);
         }
     }
 }

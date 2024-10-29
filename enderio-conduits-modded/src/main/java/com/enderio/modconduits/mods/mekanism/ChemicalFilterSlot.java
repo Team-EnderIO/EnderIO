@@ -1,12 +1,11 @@
 package com.enderio.modconduits.mods.mekanism;
 
 import com.enderio.base.common.menu.FilterSlot;
+import java.util.Optional;
+import java.util.function.Consumer;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.Optional;
-import java.util.function.Consumer;
 
 public class ChemicalFilterSlot extends FilterSlot<ChemicalStack> {
 

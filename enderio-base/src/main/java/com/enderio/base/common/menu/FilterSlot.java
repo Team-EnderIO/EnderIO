@@ -1,13 +1,11 @@
 package com.enderio.base.common.menu;
 
-import mezz.jei.api.ingredients.ITypedIngredient;
+import java.util.Optional;
+import java.util.function.Consumer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.Optional;
-import java.util.function.Consumer;
 
 public abstract class FilterSlot<T> extends Slot {
     private static final Container EMPTY_INVENTORY = new SimpleContainer(0);

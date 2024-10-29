@@ -1,5 +1,9 @@
 package com.enderio.machines.common.integrations.jei.category;
 
+import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.RENDER_ONLY;
+
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.integrations.jei.JEIUtils;
 import com.enderio.machines.client.gui.screen.StirlingGeneratorScreen;
@@ -8,6 +12,8 @@ import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
+import java.util.Arrays;
+import java.util.List;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -24,20 +30,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
-import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
-import static mezz.jei.api.recipe.RecipeIngredientRole.RENDER_ONLY;
-
 public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<AlloySmeltingRecipe>> {
 
     public static final ResourceLocation BG_TEXTURE = EnderIOBase.loc("textures/gui/viewer/alloy_smelter.png");
     private static final int WIDTH = 67 + 40; // + 40 text space
     private static final int HEIGHT = 73;
 
-    public static final RecipeType<RecipeHolder<AlloySmeltingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "alloy_smelting", AlloySmeltingRecipe.class);
+    public static final RecipeType<RecipeHolder<AlloySmeltingRecipe>> TYPE = JEIUtils
+            .createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "alloy_smelting", AlloySmeltingRecipe.class);
 
     private final IDrawable background;
     private final IDrawable icon;
@@ -50,7 +50,8 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
 
         // TODO: Swap to our sprites.
         staticFlame = guiHelper.createDrawable(StirlingGeneratorScreen.BG_TEXTURE, 176, 0, 14, 14);
-        animatedFlame = guiHelper.createAnimatedDrawable(staticFlame, 300, IDrawableAnimated.StartDirection.BOTTOM, false);
+        animatedFlame = guiHelper.createAnimatedDrawable(staticFlame, 300, IDrawableAnimated.StartDirection.BOTTOM,
+                false);
     }
 
     @Override
@@ -78,39 +79,38 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
         List<SizedIngredient> inputs = recipe.value().inputs();
 
         if (!inputs.isEmpty()) {
-            builder.addSlot(INPUT, 1, 11)
-                .addItemStacks(Arrays.stream(inputs.get(0).getItems()).toList());
+            builder.addSlot(INPUT, 1, 11).addItemStacks(Arrays.stream(inputs.get(0).getItems()).toList());
         }
 
         if (inputs.size() > 1) {
-            builder.addSlot(INPUT, 26, 1)
-               .addItemStacks(Arrays.stream(inputs.get(1).getItems()).toList());
+            builder.addSlot(INPUT, 26, 1).addItemStacks(Arrays.stream(inputs.get(1).getItems()).toList());
         } else {
             builder.addSlot(RENDER_ONLY, 26, 1);
         }
 
         if (inputs.size() > 2) {
-            builder.addSlot(INPUT, 50, 11)
-                .addItemStacks(Arrays.stream(inputs.get(2).getItems()).toList());
+            builder.addSlot(INPUT, 50, 11).addItemStacks(Arrays.stream(inputs.get(2).getItems()).toList());
         } else {
             builder.addSlot(RENDER_ONLY, 50, 11);
         }
 
-        builder.addSlot(OUTPUT, 26, 52)
-            .addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).get(0).getItem()));
+        builder.addSlot(OUTPUT, 26, 52).addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).get(0).getItem()));
     }
 
     @Override
-    public void draw(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView,
+            GuiGraphics guiGraphics, double mouseX, double mouseY) {
         animatedFlame.draw(guiGraphics, 3, 29);
         animatedFlame.draw(guiGraphics, 51, 29);
         guiGraphics.drawString(Minecraft.getInstance().font, getBasicEnergyString(recipe), 60, 50, 0xff808080, false);
     }
 
     @Override
-    public List<Component> getTooltipStrings(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+    public List<Component> getTooltipStrings(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView,
+            double mouseX, double mouseY) {
         Minecraft mc = Minecraft.getInstance();
-        if (mouseX > 60 && mouseY > 50 && mouseX < 60 + mc.font.width(getBasicEnergyString(recipe)) && mouseY < 50 + mc.font.lineHeight) {
+        if (mouseX > 60 && mouseY > 50 && mouseX < 60 + mc.font.width(getBasicEnergyString(recipe))
+                && mouseY < 50 + mc.font.lineHeight) {
             return List.of(MachineLang.TOOLTIP_ENERGY_EQUIVALENCE);
         }
 

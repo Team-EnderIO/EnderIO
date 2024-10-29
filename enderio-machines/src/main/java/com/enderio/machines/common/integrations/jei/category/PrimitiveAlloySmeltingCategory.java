@@ -1,5 +1,9 @@
 package com.enderio.machines.common.integrations.jei.category;
 
+import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.RENDER_ONLY;
+
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.integrations.jei.JEIUtils;
 import com.enderio.machines.client.gui.screen.PrimitiveAlloySmelterScreen;
@@ -9,6 +13,8 @@ import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
+import java.util.Arrays;
+import java.util.List;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -25,17 +31,11 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
-import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
-import static mezz.jei.api.recipe.RecipeIngredientRole.RENDER_ONLY;
-
 // TODO: Not a massive fan of how the primitive alloy smelter has been implemented and the resulting complexity...
 public class PrimitiveAlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<AlloySmeltingRecipe>> {
 
-    public static final RecipeType<RecipeHolder<AlloySmeltingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "primitive_alloy_smelting", AlloySmeltingRecipe.class);
+    public static final RecipeType<RecipeHolder<AlloySmeltingRecipe>> TYPE = JEIUtils
+            .createRecipeType(EnderIOBase.REGISTRY_NAMESPACE, "primitive_alloy_smelting", AlloySmeltingRecipe.class);
 
     private final IDrawable background;
     private final IDrawable icon;
@@ -81,32 +81,29 @@ public class PrimitiveAlloySmeltingCategory extends MachineRecipeCategory<Recipe
         List<SizedIngredient> inputs = recipe.value().inputs();
 
         if (!inputs.isEmpty()) {
-            builder.addSlot(INPUT, 1, 1)
-                .addItemStacks(Arrays.stream(inputs.get(0).getItems()).toList());
+            builder.addSlot(INPUT, 1, 1).addItemStacks(Arrays.stream(inputs.get(0).getItems()).toList());
         }
 
         if (inputs.size() > 1) {
-            builder.addSlot(INPUT, 21, 1)
-                .addItemStacks(Arrays.stream(inputs.get(1).getItems()).toList());
+            builder.addSlot(INPUT, 21, 1).addItemStacks(Arrays.stream(inputs.get(1).getItems()).toList());
         } else {
             builder.addSlot(RENDER_ONLY, 21, 1);
         }
 
         if (inputs.size() > 2) {
-            builder.addSlot(INPUT, 41, 1)
-                .addItemStacks(Arrays.stream(inputs.get(2).getItems()).toList());
+            builder.addSlot(INPUT, 41, 1).addItemStacks(Arrays.stream(inputs.get(2).getItems()).toList());
         } else {
             builder.addSlot(RENDER_ONLY, 41, 1);
         }
 
-        builder.addSlot(OUTPUT, 97, 19)
-            .addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).get(0).getItem()));
+        builder.addSlot(OUTPUT, 97, 19).addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).get(0).getItem()));
 
         builder.addSlot(RENDER_ONLY, 21, 37);
     }
 
     @Override
-    public void draw(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView,
+            GuiGraphics guiGraphics, double mouseX, double mouseY) {
         animatedFlame.draw(guiGraphics, 22, 20);
 
         // TODO: Draw time to smelt

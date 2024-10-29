@@ -4,6 +4,8 @@ import com.enderio.base.common.menu.FilterSlot;
 import com.enderio.base.common.menu.FluidFilterSlot;
 import com.enderio.base.common.menu.ItemFilterSlot;
 import com.enderio.core.client.gui.screen.EIOScreen;
+import java.util.ArrayList;
+import java.util.List;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
@@ -11,9 +13,6 @@ import mezz.jei.api.neoforge.NeoForgeTypes;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FilterGhostIngredientHandler implements IGhostIngredientHandler<EIOScreen> {
 
@@ -28,7 +27,7 @@ public class FilterGhostIngredientHandler implements IGhostIngredientHandler<EIO
             Rect2i bounds = new Rect2i(gui.getGuiLeft() + slot.x, gui.getGuiTop() + slot.y, 17, 17);
 
             if (ingredient.getType() == VanillaTypes.ITEM_STACK) {
-                ItemStack currentIngredient = (ItemStack)ingredient.getIngredient();
+                ItemStack currentIngredient = (ItemStack) ingredient.getIngredient();
 
                 if (slot instanceof ItemFilterSlot itemFilterSlot) {
                     targets.add(new ItemStackTarget<>(bounds, itemFilterSlot));

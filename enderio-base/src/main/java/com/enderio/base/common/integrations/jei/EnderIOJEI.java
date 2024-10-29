@@ -10,6 +10,8 @@ import com.enderio.base.common.integrations.jei.subtype.EntityStorageSubtypeInte
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
 import com.enderio.core.client.gui.screen.EIOScreen;
+import java.util.ArrayList;
+import java.util.List;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
@@ -25,9 +27,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @JeiPlugin
 public class EnderIOJEI implements IModPlugin {
@@ -46,7 +45,8 @@ public class EnderIOJEI implements IModPlugin {
 
     @Override
     public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
-        registration.getCraftingCategory().addExtension(ShapedEntityStorageRecipe.class, new ShapedEntityStorageCategoryExtension());
+        registration.getCraftingCategory()
+                .addExtension(ShapedEntityStorageRecipe.class, new ShapedEntityStorageCategoryExtension());
     }
 
     @Override
