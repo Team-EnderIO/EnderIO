@@ -27,12 +27,12 @@ public class InputEventListener {
         
         if (Math.abs(event.getScrollDelta()) > 0 && player.isShiftKeyDown()) {
             boolean cancelScroll = false;
-            if (heldMainHand.getItem() instanceof ConduitProbeItem probeItem) {
-                probeItem.switchState();
+            if (heldMainHand.getItem() instanceof ConduitProbeItem) {
+                ConduitProbeItem.switchState(heldMainHand, true);
                 cancelScroll = true;
             }
-            if (heldOffHand.getItem() instanceof ConduitProbeItem probeItem) {
-                probeItem.switchState();
+            if (heldOffHand.getItem() instanceof ConduitProbeItem) {
+                ConduitProbeItem.switchState(heldOffHand, true);
                 cancelScroll = true;
             }
             event.setCanceled(cancelScroll);
@@ -50,11 +50,11 @@ public class InputEventListener {
         ItemStack heldOffHand = player.getOffhandItem();
         
         if (KeyBindings.MODE_CHANGE.consumeClick()) {
-            if (heldMainHand.getItem() instanceof ConduitProbeItem probeItem) {
-                probeItem.switchState();
+            if (heldMainHand.getItem() instanceof ConduitProbeItem) {
+                ConduitProbeItem.switchState(heldMainHand, true);
             }
-            if (heldOffHand.getItem() instanceof ConduitProbeItem probeItem) {
-                probeItem.switchState();
+            if (heldOffHand.getItem() instanceof ConduitProbeItem) {
+                ConduitProbeItem.switchState(heldOffHand, true);
             }
         }
     }

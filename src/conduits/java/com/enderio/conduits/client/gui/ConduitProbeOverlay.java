@@ -5,6 +5,7 @@ import com.enderio.conduits.common.items.ConduitProbeItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,19 +26,19 @@ public class ConduitProbeOverlay {
         }
 
         // find if he's holding a probe or not
-        ConduitProbeItem probeItem;
+        ItemStack probeStack;
         if (!player.isHolding(item -> item.getItem() instanceof ConduitProbeItem)) {
             return;
         } else if (player.getMainHandItem().getItem() instanceof ConduitProbeItem probeItem1) {
-            probeItem = probeItem1;
+            probeStack = player.getMainHandItem();
         } else {
-            probeItem = (ConduitProbeItem) player.getOffhandItem().getItem();
+            probeStack = player.getOffhandItem();
         }
 
         int x = (int) Math.min(event.getGuiGraphics().guiWidth() - 32, event.getGuiGraphics().guiWidth() * 0.99f);
         int y = (int) Math.min(event.getGuiGraphics().guiHeight() - 32, event.getGuiGraphics().guiHeight() * 0.99f);
 
-        ResourceLocation toRender = switch (probeItem.getState()) {
+        ResourceLocation toRender = switch (ConduitProbeItem.getState(probeStack)) {
             case PROBE -> MODE_PROBE;
             case COPY_PASTE -> MODE_COPY_PASTE;
         };

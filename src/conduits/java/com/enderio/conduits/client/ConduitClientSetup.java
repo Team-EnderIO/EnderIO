@@ -65,8 +65,8 @@ public class ConduitClientSetup {
         event.enqueueWork(() -> 
             ItemProperties.register(ConduitItems.CONDUIT_PROBE.get(), EnderIO.loc("conduit_probe_state"), 
                 ((itemStack, clientLevel, livingEntity, i) -> {
-                    if (itemStack.getItem() instanceof ConduitProbeItem probe) {
-                        return probe.getState().ordinal();
+                    if (itemStack.getItem() instanceof ConduitProbeItem) {
+                        return ConduitProbeItem.getState(itemStack).ordinal();
                     }
                     return 0;
                 }))

@@ -7,7 +7,7 @@ import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
-import com.enderio.conduits.common.network.C2SSetConduitConnectionState;
+import com.enderio.conduits.common.network.C2SSyncProbeState;
 import com.enderio.conduits.common.util.InteractionUtil;
 import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.util.TooltipUtil;
@@ -22,15 +22,15 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
 
-public class ConduitProbeItem extends Item implements INBTSerializable<CompoundTag> {
+public class ConduitProbeItem extends Item {
     public static final String STATE_FIELD = "STATE";
+    public static final String CONDUIT_DATA = "CONDUIT_DATA";
     public static final String IS_INSERT = "IS_INSERT";
     public static final String IS_EXTRACT = "IS_EXTRACT";
     public static final String INSERT_CHANNEL = "INSERT_CHANNEL";
@@ -38,19 +38,26 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
     public static final String REDSTONE_CONTROL = "REDSTONE_CONTROL";
     public static final String REDSTONE_CHANNEL = "REDSTONE_CHANNEL";
     
-    private State state;
-    
     public ConduitProbeItem(Properties properties) {
         super(properties);
-        state = State.PROBE;
     }
     
-    public State getState() {
-        return state;
+    public static State getState(ItemStack stack) {
+        return State.values()[stack.getOrCreateTag().getInt(STATE_FIELD)];
     }
     
-    public void switchState() {
-        this.state = State.values()[(this.state.ordinal() + 1) % State.values().length];
+    public static void setState(ItemStack stack, State state, boolean syncToServer) {
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.putInt(STATE_FIELD, state.ordinal());
+        if (syncToServer) {
+            CoreNetwork.sendToServer(new C2SSyncProbeState(state));
+        }
+    }
+    
+    public static void switchState(ItemStack stack, boolean syncToServer) {
+        CompoundTag tag = stack.getOrCreateTag();
+        int newState = (tag.getInt(STATE_FIELD) + 1) % State.values().length;
+        setState(stack, State.values()[newState], syncToServer);
     }
 
     @Override
@@ -58,7 +65,7 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
         BlockEntity block = context.getLevel().getBlockEntity(context.getClickedPos());
         if (block instanceof ConduitBlockEntity conduit) {
             if (context.getLevel().isClientSide()) return InteractionResult.SUCCESS;
-            switch (state) {
+            switch (getState(stack)) {
             case COPY_PASTE -> {
                 if (context.isSecondaryUseActive()) {
                     handleCopy(conduit,
@@ -81,7 +88,8 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
 
     private void handleCopy(ConduitBlockEntity conduitBlock, Direction face, ItemStack itemStack) {
         CompoundTag tag = itemStack.getOrCreateTag();
-        tag.getAllKeys().clear();
+        CompoundTag conduitData = new CompoundTag();
+        tag.put(CONDUIT_DATA, conduitData);
         ConduitBundle bundle = conduitBlock.getBundle();
         if (bundle.getConnectedTypes(face).isEmpty()) {
             return;
@@ -100,18 +108,18 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
                 typeTag.putBoolean(IS_INSERT, false);
                 typeTag.putBoolean(IS_EXTRACT, false);
             }
-            tag.put(Objects.requireNonNull(ConduitType.getKey(conduitType)).toString(), typeTag);
+            conduitData.put(Objects.requireNonNull(ConduitType.getKey(conduitType)).toString(), typeTag);
         });
     }
     
     public void handlePaste(ConduitBlockEntity conduitBlock, Direction face, ItemStack itemStack) {
         CompoundTag tag = itemStack.getTag();
-        if (tag == null) {
+        if (tag == null || !(tag.get(CONDUIT_DATA) instanceof CompoundTag conduitData)) {
             return;
         }
         ConduitBundle bundle = conduitBlock.getBundle();
         bundle.getTypes().forEach(conduitType -> {
-            CompoundTag typeTag = tag.getCompound(Objects.requireNonNull(ConduitType.getKey(conduitType)).toString());
+            CompoundTag typeTag = conduitData.getCompound(Objects.requireNonNull(ConduitType.getKey(conduitType)).toString());
             ConnectionState prevConnectionState = bundle.getConnectionState(face, conduitType);
             DynamicConnectionState connectionState = null;
             if (prevConnectionState instanceof DynamicConnectionState) connectionState = (DynamicConnectionState) prevConnectionState;
@@ -132,27 +140,12 @@ public class ConduitProbeItem extends Item implements INBTSerializable<CompoundT
     }
 
     @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-        tag.putInt(STATE_FIELD, state.ordinal());
-        return tag;
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag tag) {
-        int stateOrdinal = tag.getInt(STATE_FIELD);
-        if (stateOrdinal >= 0 && stateOrdinal < State.values().length) {
-            state = State.values()[stateOrdinal];
-        }
-    }
-
-    @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
-        if (!(stack.getItem() instanceof ConduitProbeItem probeItem)) {
+        if (!(stack.getItem() instanceof ConduitProbeItem)) {
             return;
         }
         StringBuilder builder = new StringBuilder();
-        for (String s : probeItem.getState().toString().toLowerCase().split("_")) {
+        for (String s : ConduitProbeItem.getState(stack).toString().toLowerCase().split("_")) {
             builder.append(StringUtils.capitalize(s));
             builder.append(" ");
         }
