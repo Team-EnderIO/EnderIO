@@ -363,17 +363,6 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return shouldRemove;
     }
 
-    public void updateEmptyDynConnection() {
-        for (Direction dir : Direction.values()) {
-            for (int i = 0; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
-                if (bundle.getConnectionState(dir, i) instanceof DynamicConnectionState dynState && dynState.isEmpty()) {
-                    dropConnection(dynState);
-                    bundle.disableType(dir, i);
-                }
-            }
-        }
-    }
-
     public void dropConnection(DynamicConnectionState dyn) {
         for (SlotType slotType : SlotType.values()) {
             ItemStack item = dyn.getItem(slotType);

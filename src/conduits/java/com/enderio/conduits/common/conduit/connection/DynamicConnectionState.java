@@ -34,7 +34,7 @@ public record DynamicConnectionState(
 
     @Override
     public boolean isConnection() {
-        return true;
+        return isInsert || isExtract;
     }
 
     public ItemStack getItem(SlotType slotType) {
@@ -47,6 +47,13 @@ public record DynamicConnectionState(
         }
 
         return upgradeExtract;
+    }
+
+    public DynamicConnectionState withoutConnection() {
+        return new DynamicConnectionState(false, insertChannel, false, extractChannel, control, redstoneChannel, filterInsert, filterExtract, upgradeExtract);
+    }
+    public DynamicConnectionState withItems(DynamicConnectionState other) {
+        return new DynamicConnectionState(isInsert, insertChannel, isExtract, extractChannel, control, redstoneChannel, other.filterInsert, other.filterExtract, other.upgradeExtract);
     }
 
     public DynamicConnectionState withItem(SlotType type, ItemStack stack) {
@@ -68,10 +75,6 @@ public record DynamicConnectionState(
     }
     public DynamicConnectionState withRedstoneChannel(ColorControl value) {
         return new DynamicConnectionState(isInsert, insertChannel, isExtract, extractChannel, control, value, filterInsert, filterExtract, upgradeExtract);
-    }
-
-    public boolean isEmpty() {
-        return !isInsert && !isExtract;
     }
 
     public void toNetwork(FriendlyByteBuf buf) {
