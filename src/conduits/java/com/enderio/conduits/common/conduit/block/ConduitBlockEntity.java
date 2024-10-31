@@ -135,7 +135,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             for (var entry: lazyNodes.entrySet()) {
                 ConduitGraphObject<?> node = entry.getValue();
                 for (Direction dir : Direction.values()) {
-                    tryConnectTo(dir, entry.getKey(), false, false).ifPresent(otherNode -> Graph.connect(node, otherNode));
+                    tryConnectTo(dir, entry.getKey(), false, false, false).ifPresent(otherNode -> Graph.connect(node, otherNode));
                 }
 
                 for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
@@ -192,7 +192,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
                     ConnectionState connectionState = bundle.getConnectionState(direction, type);
                     if (connectionState instanceof DynamicConnectionState dyn) {
-                        if (!type.getTicker().canConnectTo(level, pos, direction)) {
+                        if (!type.getTicker().canHaveConnection(level, pos, direction)) {
                             bundle.getNodeFor(type).clearState(direction);
                             dropConnection(dyn);
                             bundle.setConnectionState(direction, type, StaticConnectionStates.DISCONNECTED);
@@ -200,7 +200,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                             updateConnectionToData(type);
                         }
                     } else if (connectionState == StaticConnectionStates.DISCONNECTED) {
-                        tryConnectTo(direction, type, true, true);
+                        tryConnectTo(direction, type, true, true, false);
                     }
                 }
             }
@@ -250,7 +250,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         if (action.hasChanged()) {
             List<GraphObject<Mergeable.Dummy>> nodes = new ArrayList<>();
             for (Direction dir : Direction.values()) {
-                tryConnectTo(dir, type, false, false).ifPresent(nodes::add);
+                tryConnectTo(dir, type, false, false, false).ifPresent(nodes::add);
             }
             if (level instanceof ServerLevel serverLevel) {
                 ConduitGraphObject<?> thisNode = Objects.requireNonNull(bundle.getNodeForTypeExact(type), "no node found in conduit");
@@ -272,7 +272,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return action;
     }
 
-    public <T extends ConduitData<T>> Optional<GraphObject<Mergeable.Dummy>> tryConnectTo(Direction dir, ConduitType<T> type, boolean forceMerge, boolean shouldMergeGraph) {
+    public <T extends ConduitData<T>> Optional<GraphObject<Mergeable.Dummy>> tryConnectTo(Direction dir, ConduitType<T> type, boolean forceMerge, boolean shouldMergeGraph, boolean forceConnection) {
         if (level.getBlockEntity(getBlockPos().relative(dir)) instanceof ConduitBlockEntity conduit
             && conduit.connectTo(dir.getOpposite(), type, bundle.getNodeFor(type).getConduitData(), forceMerge)) {
             connect(dir, type);
@@ -305,8 +305,9 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             }
 
             return Optional.of(conduit.bundle.getNodeFor(type));
-        } else if (type.getTicker().canConnectTo(level, getBlockPos(), dir)) {
-            if (bundle.getConnectionState(dir, type) instanceof DynamicConnectionState) { //Already connected
+        } else if (type.getTicker().canConnectTo(level, getBlockPos(), dir)
+            || (forceConnection && type.getTicker().canHaveConnection(level, getBlockPos(), dir))) {
+            if (bundle.getConnectionState(dir, type) instanceof DynamicConnectionState dyn && dyn.isConnection()) {  // Already connected
                 updateConnectionToData(type);
                 return Optional.empty();
             }

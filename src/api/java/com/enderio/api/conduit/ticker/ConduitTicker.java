@@ -24,6 +24,10 @@ public interface ConduitTicker<T extends ConduitData<T>> {
     // TODO: I'd argue this goes into ConduitType, and then you can use getTicker() if you need additional context from it.
     boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction);
 
+    default boolean canHaveConnection(Level level, BlockPos conduitPos, Direction direction) {
+        return canConnectTo(level, conduitPos, direction);
+    }
+
     /**
      *
      * @return if this is not always able to determine connectivity to its neighbours at time of placement, but the tick later

@@ -263,7 +263,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             } else {
                 ConnectionState connectionState = conduit.getBundle().getConnectionState(hit.getDirection(), type);
                 if (connectionState == StaticConnectionStates.DISABLED) {
-                    conduit.tryConnectTo(hit.getDirection(), type, true, true);
+                    conduit.tryConnectTo(hit.getDirection(), type, true, true, true);
                 }
             }
 

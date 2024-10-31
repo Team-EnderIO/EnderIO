@@ -18,15 +18,15 @@ public class RedstoneTLatchFilter implements RedstoneInsertFilter {
 
     @Override
     public int getOutputSignal(RedstoneConduitData data, ColorControl control) {
-        boolean active1 = isActive();
+        boolean output = isActive();
         if (data.isActive(control) && isDeactivated()) {
-            active1 = !active1;
-            setState(active1, false);
+            output = !output;
+            setState(output, false);
         }
-        if (!data.isActive(control)) {
-            setState(active1, true);
+        if (!data.isActive(control) && !isDeactivated()) {
+            setState(output, true);
         }
-        return active1 ? 15 : 0;
+        return output ? 15 : 0;
     }
 
     public boolean isActive() {
@@ -36,7 +36,7 @@ public class RedstoneTLatchFilter implements RedstoneInsertFilter {
 
     public boolean isDeactivated() {
         CompoundTag tag = stack.getOrCreateTag();
-        return !tag.contains(KEY_DEACTIVATED) || tag.getBoolean(KEY_ACTIVE);
+        return !tag.contains(KEY_DEACTIVATED) || tag.getBoolean(KEY_DEACTIVATED);
     }
 
     public void setState(boolean active, boolean deactivated) {
