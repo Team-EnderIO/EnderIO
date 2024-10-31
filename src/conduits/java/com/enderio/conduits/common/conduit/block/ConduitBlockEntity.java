@@ -306,7 +306,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
             return Optional.of(conduit.bundle.getNodeFor(type));
         } else if (type.getTicker().canConnectTo(level, getBlockPos(), dir)) {
-            if (bundle.getConnectionState(dir, type) instanceof DynamicConnectionState) { //Already connected
+            if (bundle.getConnectionState(dir, type) instanceof DynamicConnectionState dyn && dyn.isConnection()) { // Already connected
                 updateConnectionToData(type);
                 return Optional.empty();
             }
