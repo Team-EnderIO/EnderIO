@@ -58,17 +58,21 @@ public class TankCategory implements IRecipeCategory<TankRecipe> {
             .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
 
         if (recipe.isEmptying()) {
-            builder.addSlot(RecipeIngredientRole.INPUT, 3, 3)
-                .addIngredients(recipe.getInput());
+            builder.addSlot(RecipeIngredientRole.INPUT, 3, 3).addIngredients(recipe.getInput());
 
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 3, 34)
-                .addItemStack(recipe.getOutput());
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 3, 34).addItemStack(recipe.getOutput().copy());
+
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 39, 3)
+                .addIngredients(ForgeTypes.FLUID_STACK, List.of(recipe.getFluid()))
+                .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
         } else {
-            builder.addSlot(RecipeIngredientRole.INPUT, 75, 3)
-                .addIngredients(recipe.getInput());
+            builder.addSlot(RecipeIngredientRole.INPUT, 75, 3).addIngredients(recipe.getInput());
 
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 34)
-                .addItemStack(recipe.getOutput());
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 34).addItemStack(recipe.getOutput().copy());
+
+            builder.addSlot(RecipeIngredientRole.INPUT, 39, 3)
+                .addIngredients(ForgeTypes.FLUID_STACK, List.of(recipe.getFluid()))
+                .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
         }
     }
 }

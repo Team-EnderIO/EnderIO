@@ -26,7 +26,7 @@ public class ConduitShape {
     private final Map<ConduitType<?>, VoxelShape> conduitShapes = new HashMap<>();
     private final Map<Direction, VoxelShape> directionShapes = new HashMap<>();
     private static final VoxelShape CONNECTOR = Block.box(2.5f, 2.5, 15f, 13.5f, 13.5f, 16f);
-    private static final VoxelShape CONNECTION = Block.box(6.5f, 6.5f, 9.5, 9.5f, 9.5f, 16);
+    public static final VoxelShape CONNECTION = Block.box(6.5f, 6.5f, 9.5, 9.5f, 9.5f, 16);
     private static final VoxelShape CORE = Block.box(6.5f, 6.5f, 6.5f, 9.5f, 9.5f, 9.5f);
     private VoxelShape totalShape = CORE;
 

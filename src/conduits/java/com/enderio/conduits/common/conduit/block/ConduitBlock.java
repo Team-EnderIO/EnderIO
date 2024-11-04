@@ -291,7 +291,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     public static void handleShiftYeta(PlayerInteractEvent.RightClickBlock event) {
         if (event.getItemStack().is(EIOTags.Items.WRENCH)
             && event.getLevel().getBlockEntity(event.getPos()) instanceof ConduitBlockEntity conduit
-            && event.getEntity().isCrouching()) {
+            && event.getEntity().isSteppingCarefully()) {
 
             @Nullable ConduitType<?> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
             if (type != null) {
@@ -299,7 +299,12 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 if (event.getLevel() instanceof ServerLevel serverLevel) {
                     Inventory inventory = event.getEntity().getInventory();
                     inventory.placeItemBackInInventory(new ItemStack(type.getConduitItem()));
+
+                    ServerPlayer player = (ServerPlayer) event.getEntity();
+                    event.getLevel().playSound(null, event.getPos(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2f,
+                        ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
                 }
+
                 event.setCanceled(true);
             }
         }
@@ -467,11 +472,14 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 }
                 return true;
             }
+
+            SoundType soundtype = state.getSoundType(level, pos, player);
+            level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+
             if (conduit.removeType(conduitType, !player.getAbilities().instabuild)) {
                 return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
             }
-            SoundType soundtype = state.getSoundType(level, pos, player);
-            level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+
             level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
             return false;
         }
@@ -514,4 +522,9 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     // endregion
 
     private record OpenInformation(Direction direction, ConduitType<?> type) {}
+
+    @Override
+    protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
+
+    }
 }

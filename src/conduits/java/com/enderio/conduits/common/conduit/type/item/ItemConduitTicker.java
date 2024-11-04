@@ -31,13 +31,16 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
         toNextExtract:
         for (CapabilityConnection extract: extracts) {
             IItemHandler extractHandler = extract.capability;
+            int extracted = 0;
+
+            nextItem:
             for (int i = 0; i < extractHandler.getSlots(); i++) {
                 int speed = 4;
                 if (extract.upgrade instanceof ExtractionSpeedUpgrade speedUpgrade) {
                     speed *= (int) Math.pow(2, speedUpgrade.tier());
                 }
 
-                ItemStack extractedItem = extractHandler.extractItem(i, speed, true);
+                ItemStack extractedItem = extractHandler.extractItem(i, speed - extracted, true);
                 if (extractedItem.isEmpty()) {
                     continue;
                 }
@@ -75,11 +78,16 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
 
                     ItemStack notInserted = ItemHandlerHelper.insertItem(insert.capability, extractedItem, false);
                     if (notInserted.getCount() < extractedItem.getCount()) {
-                        extractHandler.extractItem(i, extractedItem.getCount() - notInserted.getCount(), false);
-                        if (sidedExtractData.isRoundRobin) {
-                            sidedExtractData.rotatingIndex = insertIndex + 1;
+                        extracted += extractedItem.getCount() - notInserted.getCount();
+                        extractHandler.extractItem(i, extracted, false);
+                        if (extracted >= speed) {
+                            if (sidedExtractData.isRoundRobin) {
+                                sidedExtractData.rotatingIndex = insertIndex + 1;
+                            }
+                            continue toNextExtract;
+                        } else {
+                            continue nextItem;
                         }
-                        continue toNextExtract;
                     }
                 }
             }

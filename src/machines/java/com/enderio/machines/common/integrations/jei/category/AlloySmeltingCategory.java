@@ -26,6 +26,7 @@ import java.util.List;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.RENDER_ONLY;
 
 public class AlloySmeltingCategory extends MachineRecipeCategory<AlloySmeltingRecipe> {
 
@@ -71,16 +72,22 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<AlloySmeltingRe
         if (!inputs.isEmpty()) {
             builder.addSlot(INPUT, 1, 11)
                 .addItemStacks(inputs.get(0).getItems());
+        } else {
+            builder.addSlot(RENDER_ONLY, 1, 11);
         }
 
         if (inputs.size() > 1) {
             builder.addSlot(INPUT, 26, 1)
                .addItemStacks(inputs.get(1).getItems());
+        } else {
+            builder.addSlot(RENDER_ONLY, 26, 11);
         }
 
         if (inputs.size() > 2) {
             builder.addSlot(INPUT, 50, 11)
                 .addItemStacks(inputs.get(2).getItems());
+        } else {
+            builder.addSlot(RENDER_ONLY, 50, 11);
         }
 
         builder.addSlot(OUTPUT, 26, 52)

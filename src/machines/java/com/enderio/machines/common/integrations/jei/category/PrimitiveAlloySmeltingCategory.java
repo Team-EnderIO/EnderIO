@@ -23,8 +23,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
-import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 
 public class PrimitiveAlloySmeltingCategory extends MachineRecipeCategory<AlloySmeltingRecipe> {
 
@@ -70,16 +69,22 @@ public class PrimitiveAlloySmeltingCategory extends MachineRecipeCategory<AlloyS
         if (!inputs.isEmpty()) {
             builder.addSlot(INPUT, 1, 1)
                 .addItemStacks(inputs.get(0).getItems());
+        } else {
+            builder.addSlot(RENDER_ONLY, 1, 1);
         }
 
         if (inputs.size() > 1) {
             builder.addSlot(INPUT, 21, 1)
                 .addItemStacks(inputs.get(1).getItems());
+        } else {
+            builder.addSlot(RENDER_ONLY, 21, 1);
         }
 
         if (inputs.size() > 2) {
             builder.addSlot(INPUT, 41, 1)
                 .addItemStacks(inputs.get(2).getItems());
+        } else {
+            builder.addSlot(RENDER_ONLY, 41, 1);
         }
 
         builder.addSlot(OUTPUT, 97, 19)

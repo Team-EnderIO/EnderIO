@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
+import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 
@@ -41,22 +43,17 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     private CraftingRecipe recipe;
     private final Queue<ItemStack> outputBuffer = new ArrayDeque<>();
 
-    private static final CraftingContainer DUMMY_CRAFTING_CONTAINER = new TransientCraftingContainer(new AbstractContainerMenu(null, -1) {
-        @Override
-        public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
-            return ItemStack.EMPTY;
-        }
-
-        @Override
-        public boolean stillValid(Player pPlayer) {
-            return false;
-        }
-    }, 3, 3);
-
-
     public CrafterBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, type, worldPosition, blockState);
         getInventoryNN().addSlotChangedCallback(this::onSlotChanged);
+    }
+
+    private CrafterContainer getPopulatedCraftingContainer(MultiSlotAccess sourceSlots) {
+        var container = new CrafterContainer();
+        for (int i = 0; i < 9; i++) {
+            container.setItem(i, sourceSlots.get(i).getItemStack(this).copy());
+        }
+        return container;
     }
 
     private void onSlotChanged(int slot) {
@@ -66,12 +63,11 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private void updateRecipe() {
-        for (int i = 0; i < 9; i++) {
-            DUMMY_CRAFTING_CONTAINER.setItem(i, GHOST.get(i).getItemStack(this).copy());
-        }
+        var container = getPopulatedCraftingContainer(GHOST);
+
         recipe = getLevel()
             .getRecipeManager()
-            .getRecipeFor(RecipeType.CRAFTING, DUMMY_CRAFTING_CONTAINER, getLevel()).orElse(null);
+            .getRecipeFor(RecipeType.CRAFTING, container, getLevel()).orElse(null);
         PREVIEW.setStackInSlot(this, ItemStack.EMPTY);
 
         if (recipe != null) {
@@ -176,8 +172,9 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     private Optional<ItemStack> getRecipeResult() {
         // Ensures that the recipe still matches before attempting to assemble it.
-        if (recipe != null && recipe.matches(DUMMY_CRAFTING_CONTAINER, getLevel())) {
-            return Optional.of(recipe.assemble(DUMMY_CRAFTING_CONTAINER, getLevel().registryAccess()));
+        var container = getPopulatedCraftingContainer(INPUT);
+        if (recipe != null && recipe.matches(container, getLevel())) {
+            return Optional.of(recipe.assemble(container, getLevel().registryAccess()));
         }
         return Optional.empty();
     }
@@ -193,14 +190,12 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
                 return;
             }
         }
-        //copy input items
-        for (int i = 0; i < 9; i++) {
-            DUMMY_CRAFTING_CONTAINER.setItem(i, INPUT.get(i).getItemStack(this).copy());
-        }
+        //get populated container
+        var container = getPopulatedCraftingContainer(INPUT);
         //craft
         clearInput();
-        outputBuffer.add(recipe.assemble(DUMMY_CRAFTING_CONTAINER, getLevel().registryAccess()));
-        outputBuffer.addAll(recipe.getRemainingItems(DUMMY_CRAFTING_CONTAINER));
+        outputBuffer.add(recipe.assemble(container, getLevel().registryAccess()));
+        outputBuffer.addAll(recipe.getRemainingItems(container));
         // clean buffer
         outputBuffer.removeIf(ItemStack::isEmpty);
         // consume power
@@ -214,6 +209,22 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     private void clearInput() {
         for (int i = 0; i < 9; i++) {
             INPUT.get(i).setStackInSlot(this, ItemStack.EMPTY);
+        }
+    }
+
+    private static class CrafterContainer extends TransientCraftingContainer {
+        public CrafterContainer() {
+            super(new AbstractContainerMenu(null, -1) {
+                @Override
+                public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+                    return ItemStack.EMPTY;
+                }
+
+                @Override
+                public boolean stillValid(Player pPlayer) {
+                    return false;
+                }
+            }, 3, 3);
         }
     }
 }

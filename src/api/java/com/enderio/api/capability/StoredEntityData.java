@@ -27,6 +27,14 @@ public class StoredEntityData implements INBTSerializable<Tag> {
     private static final String KEY_HEALTH = "Health";
     private static final String KEY_MAX_HEALTH = "MaxHealth";
 
+    public StoredEntityData() {
+    }
+
+    public StoredEntityData(CompoundTag entityTag, float maxHealth) {
+        this.entityTag = entityTag;
+        this.maxHealth = maxHealth;
+    }
+
     public static StoredEntityData of(LivingEntity entity) {
         StoredEntityData data = new StoredEntityData();
         data.entityTag = entity.serializeNBT();

@@ -1,5 +1,6 @@
 package com.enderio.machines.client.gui.widget;
 
+import com.enderio.base.common.integrations.IntegrationUtility;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.lang.MachineLang;
@@ -102,7 +103,7 @@ public abstract class ProgressWidget extends AbstractWidget {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Update the contents of the tooltip whenever its hovered, don't waste any time doing it when not hovered.
         // Should also mean when tooltip is false it never gets populated
-        if (this.isHoveredOrFocused() && tooltip) {
+        if (this.isHoveredOrFocused() && tooltip&& !IntegrationUtility.hasRecipeViewer()) {
             setTooltip(Tooltip.create(TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int) (progressSupplier.get() * 100))));
         }
     }

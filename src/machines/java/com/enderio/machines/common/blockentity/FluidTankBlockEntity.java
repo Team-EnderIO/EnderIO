@@ -273,7 +273,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     private void tryTankRecipe() {
         currentRecipe.ifPresent(recipe -> {
-            ItemStack recipeOutput = recipe.getOutput();
+            ItemStack recipeOutput = recipe.getOutput().copy();
 
             if (recipe.isEmptying()) {
                 ItemStack outputStack = FLUID_FILL_OUTPUT.getItemStack(this);

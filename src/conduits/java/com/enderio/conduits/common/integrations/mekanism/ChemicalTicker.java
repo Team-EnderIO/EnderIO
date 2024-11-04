@@ -27,6 +27,11 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<ChemicalCo
         this.rate = rate;
     }
 
+    private int getScaledTransferRate() {
+        // Adjust for tick rate. Always flow up so we are at minimum meeting the required rate.
+        return (int)Math.ceil(rate * (20.0 / getTickRate()));
+    }
+
     @Override
     protected void tickCapabilityGraph(ConduitType<ChemicalConduitData> type,
         List<CapabilityConnection<ChemicalConduitData, IChemicalHandler<?, ?>>> insertCaps,
@@ -40,15 +45,18 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<ChemicalCo
 
     private <C extends Chemical<C>, S extends ChemicalStack<C>> void tickExtractCapability(IChemicalHandler<C, S> extractHandler,
         ChemicalConduitData chemicalExtendedData, List<CapabilityConnection<ChemicalConduitData, IChemicalHandler<?, ?>>> insertCaps) {
+
+        final int transferRate = getScaledTransferRate();
+
         ChemicalType extractType = getTypeFor(extractHandler);
         S result;
         if (!chemicalExtendedData.lockedChemical.isEmpty()) {
             if (chemicalExtendedData.lockedChemical.getChemicalType() != extractType) {
                 return;
             }
-            result = extractHandler.extractChemical((S) chemicalExtendedData.lockedChemical.getChemical().getStack(rate), Action.SIMULATE);
+            result = extractHandler.extractChemical((S) chemicalExtendedData.lockedChemical.getChemical().getStack(transferRate), Action.SIMULATE);
         } else {
-            result = extractHandler.extractChemical(rate, Action.SIMULATE);
+            result = extractHandler.extractChemical(transferRate, Action.SIMULATE);
         }
         if (result.isEmpty()) {
             return;
@@ -63,13 +71,13 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<ChemicalCo
             IChemicalHandler<C, S> destinationHandler = (IChemicalHandler<C, S>) insert.capability();
             S transferredChemical;
             if (!chemicalExtendedData.lockedChemical.isEmpty()) {
-                transferredChemical = tryChemicalTransfer(destinationHandler, extractHandler, (S) chemicalExtendedData.lockedChemical.getChemical().getStack(rate - transferred), true);
+                transferredChemical = tryChemicalTransfer(destinationHandler, extractHandler, (S) chemicalExtendedData.lockedChemical.getChemical().getStack(transferRate - transferred), true);
             } else {
-                transferredChemical = tryChemicalTransfer(destinationHandler, extractHandler, rate - transferred, true);
+                transferredChemical = tryChemicalTransfer(destinationHandler, extractHandler, transferRate - transferred, true);
             }
 
             transferred += transferredChemical.getAmount();
-            if (transferred >= rate) {
+            if (transferred >= transferRate) {
                 break;
             }
         }

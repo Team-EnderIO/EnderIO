@@ -6,6 +6,7 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.recipe.MachineRecipe;
+import com.mojang.logging.LogUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,8 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
     private List<OutputStack> outputs = List.of();
 
     private boolean isComplete;
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, C container, MultiSlotAccess outputSlots, @Nullable R recipe) {
         this.level = level;
@@ -243,8 +247,14 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
     @Nullable
     protected R loadRecipe(ResourceLocation id) {
-        //noinspection unchecked
-        return (R) level.getRecipeManager().byKey(id).orElse(null);
+        try {
+            //noinspection unchecked
+            return (R) level.getRecipeManager().byKey(id).orElse(null);
+        } catch (ClassCastException ex) {
+            // Can occur when loading a world with the old smelting recipe system.
+            LOGGER.warn("Failed to cast recipe '{}' to the correct type, not loading in-progress recipe.", id);
+            return null;
+        }
     }
 
     // endregion

@@ -12,6 +12,7 @@ import mekanism.api.chemical.infuse.IInfusionHandler;
 import mekanism.api.chemical.pigment.IPigmentHandler;
 import mekanism.api.chemical.slurry.ISlurryHandler;
 import mekanism.api.heat.IHeatHandler;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -33,8 +34,8 @@ public class MekanismIntegration implements Integration {
     public final Capability<IHeatHandler> HEAT_HANDLER = CapabilityManager.get(new CapabilityToken<>() {});
 
     private static final RegistryObject<ChemicalConduitType> CHEMICAL = chemicalConduit("chemical", 750, false);
-    private static final RegistryObject<ChemicalConduitType> CHEMICAL2 = chemicalConduit("pressurized_chemical", 2000, true);
-    private static final RegistryObject<ChemicalConduitType> CHEMICAL3 = chemicalConduit("ender_chemical", 64000, true);
+    private static final RegistryObject<ChemicalConduitType> CHEMICAL2 = chemicalConduit("pressurized_chemical", 2_000, true);
+    private static final RegistryObject<ChemicalConduitType> CHEMICAL3 = chemicalConduit("ender_chemical", 64_000, true);
 
     private static final RegistryObject<HeatConduitType> HEAT_TYPE = heatConduit("heat");
 
@@ -43,6 +44,9 @@ public class MekanismIntegration implements Integration {
     public static final ItemEntry<Item> ENDER_CHEMICAL_ITEM = createConduitItem(CHEMICAL3, "ender_chemical", "Ender Chemical Conduit");
 
     public static final ItemEntry<Item> HEAT_ITEM = createConduitItem(HEAT_TYPE, "heat", "Heat Conduit");
+
+    public static final Component LANG_MULTI_CHEMICAL_TOOLTIP = EnderIO.registrate().addLang("item", EnderIO.loc("conduit.chemical.multi"),
+        "Allows multiple chemical types to be transported on the same line");
 
     @Override
     public void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {
