@@ -50,7 +50,7 @@ public class ClientPayloadHandler {
             if (context.player().containerMenu.containerId == packet.containerId()) {
                 if (context.player().containerMenu instanceof BaseEnderMenu enderMenu) {
                     for (var pair : packet.payloads()) {
-                        enderMenu.handleIncomingPayload(pair.index(), pair.payload());
+                        enderMenu.clientHandleIncomingPayload(pair.index(), pair.payload());
                     }
                 }
             }

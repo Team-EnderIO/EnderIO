@@ -3,13 +3,11 @@ package com.enderio.core.common.network.menu;
 import com.enderio.core.common.network.menu.payload.FloatSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import net.minecraft.core.RegistryAccess;
+import net.neoforged.fml.LogicalSide;
 
-public abstract class FloatSyncSlot implements SyncSlot {
+public abstract class FloatSyncSlot implements SyncSlot<Float> {
 
     private float lastValue;
-
-    public abstract float get();
-    public abstract void set(float value);
 
     @Override
     public ChangeType detectChanges() {
@@ -20,14 +18,14 @@ public abstract class FloatSyncSlot implements SyncSlot {
     }
 
     @Override
-    public SlotPayload getPayload(RegistryAccess registryAccess, ChangeType changeType) {
+    public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
         return new FloatSlotPayload(get());
     }
 
     @Override
-    public void acceptPayload(SlotPayload payload) {
+    public void unpackPayload(SlotPayload payload, LogicalSide side) {
         if (payload instanceof FloatSlotPayload intSlotPayload) {
-            set(intSlotPayload.value());
+            set(intSlotPayload.value(), side);
         }
     }
 }

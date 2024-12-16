@@ -11,17 +11,15 @@ import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.blockentity.MachineStateType;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
+import net.neoforged.fml.LogicalSide;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class MachineStatesSyncSlot implements SyncSlot {
+public abstract class MachineStatesSyncSlot implements SyncSlot<Set<MachineState>> {
 
     private int previousHash;
-
-    public abstract Set<MachineState> get();
-    public abstract void set(Set<MachineState> values);
 
     @Override
     public ChangeType detectChanges() {
@@ -32,7 +30,7 @@ public abstract class MachineStatesSyncSlot implements SyncSlot {
     }
 
     @Override
-    public SlotPayload getPayload(RegistryAccess registryAccess, ChangeType changeType) {
+    public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
         return new ListSlotPayload(
             get().stream().map(s -> new PairSlotPayload(
                 new IntSlotPayload(s.type().ordinal()),
@@ -42,7 +40,7 @@ public abstract class MachineStatesSyncSlot implements SyncSlot {
     }
 
     @Override
-    public void acceptPayload(SlotPayload payload) {
+    public void unpackPayload(SlotPayload payload, LogicalSide side) {
         var states = new HashSet<MachineState>();
 
         // Gross... Maybe use a registry someday for these :)
@@ -64,6 +62,6 @@ public abstract class MachineStatesSyncSlot implements SyncSlot {
             }
         }
 
-        set(states);
+        set(states, side);
     }
 }

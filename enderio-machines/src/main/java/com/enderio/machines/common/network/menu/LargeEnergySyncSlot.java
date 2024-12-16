@@ -10,16 +10,14 @@ import com.enderio.core.common.network.menu.payload.SlotPayloadType;
 import com.enderio.machines.common.blockentity.sync.EnergySyncData;
 import com.enderio.machines.common.blockentity.sync.LargeEnergyData;
 import net.minecraft.core.RegistryAccess;
+import net.neoforged.fml.LogicalSide;
 
 import java.util.List;
 import java.util.Objects;
 
-public abstract class LargeEnergySyncSlot implements SyncSlot {
+public abstract class LargeEnergySyncSlot implements SyncSlot<LargeEnergyData> {
 
     private LargeEnergyData lastValue;
-
-    public abstract LargeEnergyData get();
-    public abstract void set(LargeEnergyData value);
 
     @Override
     public ChangeType detectChanges() {
@@ -30,7 +28,7 @@ public abstract class LargeEnergySyncSlot implements SyncSlot {
     }
 
     @Override
-    public SlotPayload getPayload(RegistryAccess registryAccess, ChangeType changeType) {
+    public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
         var value = get();
         return new PairSlotPayload(
             new LongSlotPayload(value.energyStored()),
@@ -39,7 +37,7 @@ public abstract class LargeEnergySyncSlot implements SyncSlot {
     }
 
     @Override
-    public void acceptPayload(SlotPayload payload) {
+    public void unpackPayload(SlotPayload payload, LogicalSide side) {
         if (payload instanceof PairSlotPayload pair) {
             if (pair.left().type() != SlotPayloadType.LONG || pair.right().type() != SlotPayloadType.LONG) {
                 return;
@@ -48,7 +46,7 @@ public abstract class LargeEnergySyncSlot implements SyncSlot {
             set(new LargeEnergyData(
                 ((LongSlotPayload)pair.left()).value(),
                 ((LongSlotPayload)pair.right()).value()
-            ));
+            ), side);
         }
     }
 }

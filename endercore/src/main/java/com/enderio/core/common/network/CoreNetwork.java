@@ -2,6 +2,7 @@ package com.enderio.core.common.network;
 
 import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.menu.ClientboundSyncSlotDataPacket;
+import com.enderio.core.common.network.menu.ServerboundSetSyncSlotDataPacket;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -29,5 +30,8 @@ public class CoreNetwork {
 
         registrar.playToClient(ClientboundSyncSlotDataPacket.TYPE, ClientboundSyncSlotDataPacket.STREAM_CODEC,
             ClientPayloadHandler.getInstance()::handleSyncSlotDataPacket);
+
+        registrar.playToServer(ServerboundSetSyncSlotDataPacket.TYPE, ServerboundSetSyncSlotDataPacket.STREAM_CODEC,
+            ServerPayloadHandler.getInstance()::handleSetSyncSlotDataPacket);
     }
 }

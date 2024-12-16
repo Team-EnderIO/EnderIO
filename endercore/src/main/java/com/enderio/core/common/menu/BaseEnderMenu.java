@@ -2,6 +2,8 @@ package com.enderio.core.common.menu;
 
 import com.enderio.core.common.network.menu.ClientboundSyncSlotDataPacket;
 import com.enderio.core.common.network.menu.ClientboundSyncSlotDataPacket.PayloadPair;
+import com.enderio.core.common.network.menu.ServerboundSetSyncSlotDataPacket;
+import com.enderio.core.common.network.menu.SyncSlot.ChangeType;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.SyncSlot;
 import net.minecraft.core.RegistryAccess;
@@ -11,6 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,17 +69,76 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
 
     // region Enhanced Data Sync
 
-    private List<SyncSlot> syncSlots = new ArrayList<>();
+    private final List<SyncSlot<?>> syncSlots = new ArrayList<>();
+    private final List<SyncSlot<?>> clientUpdateSyncSlots = new ArrayList<>();
 
-    protected <T extends SyncSlot> T addSyncSlot(T syncSlot) {
+    /**
+     * Add a sync slot which is only synced server -> client.
+     * @param syncSlot The slot to add.
+     * @return The added slot.
+     */
+    protected <T extends SyncSlot<?>> T addSyncSlot(T syncSlot) {
         syncSlots.add(syncSlot);
         return syncSlot;
     }
 
-    public void handleIncomingPayload(short slotIndex, SlotPayload payload) {
+    /**
+     * Add a sync slot which can accept updates from the client.
+     * @apiNote Expect {@link SyncSlot#set)} to be called on both sides when using this.
+     * @param syncSlot The slot to add.
+     * @return The added slot.
+     */
+    protected <T extends SyncSlot<?>> T addUpdatableSyncSlot(T syncSlot) {
+        syncSlots.add(syncSlot);
+        clientUpdateSyncSlots.add(syncSlot);
+        return syncSlot;
+    }
+
+    /**
+     * Send data back on a slot to the server.
+     * @param syncSlot The slot to send an update for.
+     * @param newValue The new value to set the slot to.
+     */
+    protected <T> void updateSyncSlot(SyncSlot<T> syncSlot, T newValue) {
+        if (!playerInventory.player.level().isClientSide) {
+            throw new IllegalStateException("updateSyncSlot can only be called on a client!");
+        }
+
+        if (!clientUpdateSyncSlots.contains(syncSlot)) {
+            throw new IllegalArgumentException("This sync slot is not configured for client updates.");
+        }
+
+        // Set value locally.
+        syncSlot.set(newValue, LogicalSide.CLIENT);
+
+        // Send to the server.
+        var payload = syncSlot.createPayload(playerInventory.player.registryAccess(), ChangeType.FULL);
+        PacketDistributor.sendToServer(new ServerboundSetSyncSlotDataPacket(containerId, (short)clientUpdateSyncSlots.indexOf(syncSlot), payload));
+    }
+
+    /**
+     * Handle a slot payload from the server.
+     * @param slotIndex Slot to update.
+     * @param payload Data payload.
+     */
+    public void clientHandleIncomingPayload(short slotIndex, SlotPayload payload) {
         if (slotIndex >= 0 && slotIndex < syncSlots.size()) {
             var slot = syncSlots.get(slotIndex);
-            slot.acceptPayload(payload);
+            slot.unpackPayload(payload, LogicalSide.CLIENT);
+        } else {
+            // TODO: Log this error.
+        }
+    }
+
+    /**
+     * Handle a slot payload from the client.
+     * @param slotIndex Slot to uodate.
+     * @param payload Data payload.
+     */
+    public void serverHandleIncomingPayload(short slotIndex, SlotPayload payload) {
+        if (slotIndex >= 0 && slotIndex < clientUpdateSyncSlots.size()) {
+            var slot = clientUpdateSyncSlots.get(slotIndex);
+            slot.unpackPayload(payload, LogicalSide.SERVER);
         } else {
             // TODO: Log this error.
         }
@@ -92,9 +154,9 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
 
             for (short i = 0; i < syncSlots.size(); i++) {
                 var slot = syncSlots.get(i);
-                SyncSlot.ChangeType changeType = slot.detectChanges();
-                if (changeType != SyncSlot.ChangeType.NONE) {
-                    var payload = slot.getPayload(registryAccess, SyncSlot.ChangeType.FULL);
+                ChangeType changeType = slot.detectChanges();
+                if (changeType != ChangeType.NONE) {
+                    var payload = slot.createPayload(registryAccess, ChangeType.FULL);
                     payloads.add(new PayloadPair(i, payload));
                 }
             }
@@ -119,7 +181,7 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
                 // Initialize the change detectors, we're sending all data no matter what.
                 slot.detectChanges();
 
-                var payload = slot.getPayload(registryAccess, SyncSlot.ChangeType.FULL);
+                var payload = slot.createPayload(registryAccess, ChangeType.FULL);
                 payloads.add(new PayloadPair(i, payload));
             }
 
@@ -130,4 +192,5 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
     }
 
     // endregion
+
 }
