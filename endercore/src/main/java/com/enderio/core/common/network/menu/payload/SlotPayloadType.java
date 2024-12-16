@@ -10,23 +10,30 @@ import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
 public enum SlotPayloadType {
-    INT(0, () -> IntSlotPayload.STREAM_CODEC),
-    FLOAT(1, () -> FloatSlotPayload.STREAM_CODEC),
+    // Basic data types
+    INT(() -> IntSlotPayload.STREAM_CODEC),
+    FLOAT(() -> FloatSlotPayload.STREAM_CODEC),
+    LONG(() -> LongSlotPayload.STREAM_CODEC),
+    STRING(() -> StringSlotPayload.STREAM_CODEC),
+
+    // MC data types
+    BLOCK_POS(() -> BlockPosSlotPayload.STREAM_CODEC),
+    ITEM_STACK(() -> ItemStackSlotPayload.STREAM_CODEC),
+    FLUID_STACK(() -> FluidStackSlotPayload.STREAM_CODEC),
+    RESOURCE_LOCATION(() -> ResourceLocationSlotPayload.STREAM_CODEC),
+
+    // Tools for combining payloads.
+    LIST(() -> ListSlotPayload.STREAM_CODEC),
+    PAIR(() -> PairSlotPayload.STREAM_CODEC),
     ;
 
-    public static final IntFunction<SlotPayloadType> BY_ID = ByIdMap.continuous(SlotPayloadType::id, values(), ByIdMap.OutOfBoundsStrategy.WRAP);
-    public static final StreamCodec<ByteBuf, SlotPayloadType> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, SlotPayloadType::id);
+    public static final IntFunction<SlotPayloadType> BY_ID = ByIdMap.continuous(SlotPayloadType::ordinal, values(), ByIdMap.OutOfBoundsStrategy.WRAP);
+    public static final StreamCodec<ByteBuf, SlotPayloadType> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, SlotPayloadType::ordinal);
 
-    private final int id;
     private final Supplier<StreamCodec<RegistryFriendlyByteBuf, ? extends SlotPayload>> streamCodecSupplier;
 
-    SlotPayloadType(int id, Supplier<StreamCodec<RegistryFriendlyByteBuf, ? extends SlotPayload>> streamCodecSupplier) {
-        this.id = id;
+    SlotPayloadType(Supplier<StreamCodec<RegistryFriendlyByteBuf, ? extends SlotPayload>> streamCodecSupplier) {
         this.streamCodecSupplier = streamCodecSupplier;
-    }
-
-    public int id() {
-        return id;
     }
 
     public StreamCodec<RegistryFriendlyByteBuf, ? extends SlotPayload> streamCodec() {
