@@ -63,7 +63,7 @@ public class PoweredMachineEnergyStorage implements IEnergyStorage, INBTSerializ
 
         int energyExtracted = Math.min(energyStored, energyToConsume);
 
-        if (simulate) {
+        if (!simulate) {
             setEnergyStored(energyStored - energyExtracted);
         }
 
