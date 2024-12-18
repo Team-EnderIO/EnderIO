@@ -107,6 +107,8 @@ public class EnderBlockEntity extends BlockEntity {
      */
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag data = super.getUpdateTag(registries);
+
         ListTag dataList = new ListTag();
         for (int i = 0; i < dataSlots.size(); i++) {
             var slot = dataSlots.get(i);
@@ -119,8 +121,11 @@ public class EnderBlockEntity extends BlockEntity {
             dataList.add(slotTag);
         }
 
-        CompoundTag data = new CompoundTag();
         data.put(DATA, dataList);
+
+        // NEW: Add synced data properties.
+        saveAdditionalSynced(data, registries);
+
         return data;
     }
 
@@ -130,6 +135,8 @@ public class EnderBlockEntity extends BlockEntity {
      */
     @Override
     public void handleUpdateTag(CompoundTag syncData, HolderLookup.Provider lookupProvider) {
+        super.handleUpdateTag(syncData, lookupProvider);
+
         if (syncData.contains(DATA, Tag.TAG_LIST)) {
             ListTag dataList = syncData.getList(DATA, Tag.TAG_COMPOUND);
 
@@ -236,6 +243,21 @@ public class EnderBlockEntity extends BlockEntity {
         }
 
         dataSlots.get(index).read(buf);
+    }
+
+    // New Sync
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        saveAdditionalSynced(tag, registries);
+    }
+
+    /**
+     * Override this to write data which should be synced over the network.
+     * Must be opted-in by overriding {@link BlockEntity#getUpdatePacket}.
+     */
+    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
     }
 
     // endregion

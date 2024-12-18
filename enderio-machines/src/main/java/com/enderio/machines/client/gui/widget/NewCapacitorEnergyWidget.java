@@ -39,7 +39,6 @@ public class NewCapacitorEnergyWidget extends NewEnergyWidget {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-
     public void renderCapacitorTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
         List<Component> list = new ArrayList<>();

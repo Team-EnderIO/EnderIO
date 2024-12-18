@@ -11,9 +11,12 @@ import net.neoforged.fml.LogicalSide;
 
 import java.util.List;
 
-public abstract class EnergySyncSlot implements SyncSlot<EnergySyncData> {
+public abstract class EnergySyncSlot implements SyncSlot {
 
     private EnergySyncData lastValue;
+
+    public abstract EnergySyncData get();
+    public abstract void set(EnergySyncData value);
 
     @Override
     public ChangeType detectChanges() {
@@ -34,7 +37,7 @@ public abstract class EnergySyncSlot implements SyncSlot<EnergySyncData> {
     }
 
     @Override
-    public void unpackPayload(SlotPayload payload, LogicalSide side) {
+    public void unpackPayload(SlotPayload payload) {
         if (payload instanceof ListSlotPayload listSlotPayload && listSlotPayload.contents().size() == 3) {
             for (int i = 0; i < 3; i++) {
                 if (listSlotPayload.contents().get(i).type() != SlotPayloadType.INT) {
@@ -42,12 +45,10 @@ public abstract class EnergySyncSlot implements SyncSlot<EnergySyncData> {
                 }
             }
 
-            set(
-                new EnergySyncData(
+            set(new EnergySyncData(
                     ((IntSlotPayload)listSlotPayload.contents().get(0)).value(),
                     ((IntSlotPayload)listSlotPayload.contents().get(1)).value(),
-                    ((IntSlotPayload)listSlotPayload.contents().get(2)).value()),
-                side);
+                    ((IntSlotPayload)listSlotPayload.contents().get(2)).value()));
         }
     }
 }

@@ -15,9 +15,12 @@ import net.neoforged.fml.LogicalSide;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class LargeEnergySyncSlot implements SyncSlot<LargeEnergyData> {
+public abstract class LargeEnergySyncSlot implements SyncSlot {
 
     private LargeEnergyData lastValue;
+
+    public abstract LargeEnergyData get();
+    public abstract void set(LargeEnergyData value);
 
     @Override
     public ChangeType detectChanges() {
@@ -37,7 +40,7 @@ public abstract class LargeEnergySyncSlot implements SyncSlot<LargeEnergyData> {
     }
 
     @Override
-    public void unpackPayload(SlotPayload payload, LogicalSide side) {
+    public void unpackPayload(SlotPayload payload) {
         if (payload instanceof PairSlotPayload pair) {
             if (pair.left().type() != SlotPayloadType.LONG || pair.right().type() != SlotPayloadType.LONG) {
                 return;
@@ -46,7 +49,7 @@ public abstract class LargeEnergySyncSlot implements SyncSlot<LargeEnergyData> {
             set(new LargeEnergyData(
                 ((LongSlotPayload)pair.left()).value(),
                 ((LongSlotPayload)pair.right()).value()
-            ), side);
+            ));
         }
     }
 }

@@ -5,9 +5,61 @@ import com.enderio.core.common.network.menu.payload.SlotPayload;
 import net.minecraft.core.RegistryAccess;
 import net.neoforged.fml.LogicalSide;
 
-public abstract class FloatSyncSlot implements SyncSlot<Float> {
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+public abstract class FloatSyncSlot implements SyncSlot {
+
+    public static FloatSyncSlot standalone() {
+        return new FloatSyncSlot() {
+            private float value;
+
+            @Override
+            public float get() {
+                return value;
+            }
+
+            @Override
+            public void set(float value) {
+                this.value = value;
+            }
+        };
+    }
+
+    public static FloatSyncSlot simple(Supplier<Float> getter, Consumer<Float> setter) {
+        return new FloatSyncSlot() {
+
+            @Override
+            public float get() {
+                return getter.get();
+            }
+
+            @Override
+            public void set(float value) {
+                setter.accept(value);
+            }
+        };
+    }
+
+    public static FloatSyncSlot readOnly(Supplier<Float> getter) {
+        return new FloatSyncSlot() {
+
+            @Override
+            public float get() {
+                return getter.get();
+            }
+
+            @Override
+            public void set(float value) {
+                throw new UnsupportedOperationException("Attempt to set a read-only sync slot.");
+            }
+        };
+    }
 
     private float lastValue;
+
+    public abstract float get();
+    public abstract void set(float value);
 
     @Override
     public ChangeType detectChanges() {
@@ -23,9 +75,9 @@ public abstract class FloatSyncSlot implements SyncSlot<Float> {
     }
 
     @Override
-    public void unpackPayload(SlotPayload payload, LogicalSide side) {
+    public void unpackPayload(SlotPayload payload) {
         if (payload instanceof FloatSlotPayload intSlotPayload) {
-            set(intSlotPayload.value(), side);
+            set(intSlotPayload.value());
         }
     }
 }

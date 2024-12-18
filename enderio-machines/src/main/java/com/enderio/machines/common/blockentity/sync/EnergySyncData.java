@@ -14,7 +14,7 @@ public record EnergySyncData(int energyStored, int maxEnergyStored, int maxEnerg
         instance -> instance.group(
             Codec.INT.fieldOf("EnergyStored").forGetter(EnergySyncData::energyStored),
             Codec.INT.fieldOf("MaxEnergyStored").forGetter(EnergySyncData::maxEnergyStored),
-            Codec.INT.fieldOf("MaxEnergyStored").forGetter(EnergySyncData::maxEnergyStored)
+            Codec.INT.fieldOf("MaxEnergyUse").forGetter(EnergySyncData::maxEnergyUse)
         ).apply(instance, EnergySyncData::new)
     );
 
@@ -24,7 +24,7 @@ public record EnergySyncData(int energyStored, int maxEnergyStored, int maxEnerg
         ByteBufCodecs.INT,
         EnergySyncData::maxEnergyStored,
         ByteBufCodecs.INT,
-        EnergySyncData::maxEnergyStored,
+        EnergySyncData::maxEnergyUse,
         EnergySyncData::new
     );
 

@@ -11,15 +11,65 @@ import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.blockentity.MachineStateType;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
-import net.neoforged.fml.LogicalSide;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public abstract class MachineStatesSyncSlot implements SyncSlot<Set<MachineState>> {
+public abstract class MachineStatesSyncSlot implements SyncSlot {
+
+    public static MachineStatesSyncSlot standalone() {
+        return new MachineStatesSyncSlot() {
+            private Set<MachineState> value = Set.of();
+
+            @Override
+            public Set<MachineState> get() {
+                return value;
+            }
+
+            @Override
+            public void set(Set<MachineState> value) {
+                this.value = value;
+            }
+        };
+    }
+
+    public static MachineStatesSyncSlot simple(Supplier<Set<MachineState>> getter, Consumer<Set<MachineState>> setter) {
+        return new MachineStatesSyncSlot() {
+
+            @Override
+            public Set<MachineState> get() {
+                return getter.get();
+            }
+
+            @Override
+            public void set(Set<MachineState> value) {
+                setter.accept(value);
+            }
+        };
+    }
+
+    public static MachineStatesSyncSlot readOnly(Supplier<Set<MachineState>> getter) {
+        return new MachineStatesSyncSlot() {
+
+            @Override
+            public Set<MachineState> get() {
+                return getter.get();
+            }
+
+            @Override
+            public void set(Set<MachineState> value) {
+                throw new UnsupportedOperationException("Attempt to set a read-only sync slot.");
+            }
+        };
+    }
 
     private int previousHash;
+
+    public abstract Set<MachineState> get();
+    public abstract void set(Set<MachineState> value);
 
     @Override
     public ChangeType detectChanges() {
@@ -40,7 +90,7 @@ public abstract class MachineStatesSyncSlot implements SyncSlot<Set<MachineState
     }
 
     @Override
-    public void unpackPayload(SlotPayload payload, LogicalSide side) {
+    public void unpackPayload(SlotPayload payload) {
         var states = new HashSet<MachineState>();
 
         // Gross... Maybe use a registry someday for these :)
@@ -62,6 +112,6 @@ public abstract class MachineStatesSyncSlot implements SyncSlot<Set<MachineState
             }
         }
 
-        set(states, side);
+        set(states);
     }
 }
