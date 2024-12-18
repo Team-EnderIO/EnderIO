@@ -15,7 +15,8 @@ public record EnergyStorageInfo(int energyStored, int maxEnergyStored) implement
         return new EnergyStorageInfo(energyStored, maxEnergyStored);
     }
 
-    // TODO: IMachineEnergyStorage is temporary to support the existing energy widgets.
+    // TODO: IMachineEnergyStorage is temporary to support the existing energy
+    // widgets.
 
     @Override
     public void setEnergyStored(int energy) {

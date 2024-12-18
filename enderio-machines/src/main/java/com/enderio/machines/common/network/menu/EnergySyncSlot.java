@@ -6,16 +6,15 @@ import com.enderio.core.common.network.menu.payload.ListSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayloadType;
 import com.enderio.machines.common.blockentity.sync.EnergySyncData;
-import net.minecraft.core.RegistryAccess;
-import net.neoforged.fml.LogicalSide;
-
 import java.util.List;
+import net.minecraft.core.RegistryAccess;
 
 public abstract class EnergySyncSlot implements SyncSlot {
 
     private EnergySyncData lastValue;
 
     public abstract EnergySyncData get();
+
     public abstract void set(EnergySyncData value);
 
     @Override
@@ -29,11 +28,8 @@ public abstract class EnergySyncSlot implements SyncSlot {
     @Override
     public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
         var value = get();
-        return new ListSlotPayload(List.of(
-            new IntSlotPayload(value.energyStored()),
-            new IntSlotPayload(value.maxEnergyStored()),
-            new IntSlotPayload(value.maxEnergyUse())
-        ));
+        return new ListSlotPayload(List.of(new IntSlotPayload(value.energyStored()),
+                new IntSlotPayload(value.maxEnergyStored()), new IntSlotPayload(value.maxEnergyUse())));
     }
 
     @Override
@@ -45,10 +41,9 @@ public abstract class EnergySyncSlot implements SyncSlot {
                 }
             }
 
-            set(new EnergySyncData(
-                    ((IntSlotPayload)listSlotPayload.contents().get(0)).value(),
-                    ((IntSlotPayload)listSlotPayload.contents().get(1)).value(),
-                    ((IntSlotPayload)listSlotPayload.contents().get(2)).value()));
+            set(new EnergySyncData(((IntSlotPayload) listSlotPayload.contents().get(0)).value(),
+                    ((IntSlotPayload) listSlotPayload.contents().get(1)).value(),
+                    ((IntSlotPayload) listSlotPayload.contents().get(2)).value()));
         }
     }
 }

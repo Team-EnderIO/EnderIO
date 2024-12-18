@@ -5,8 +5,9 @@ import net.minecraft.network.codec.StreamCodec;
 
 public interface SlotPayload {
 
-    StreamCodec<RegistryFriendlyByteBuf, SlotPayload> STREAM_CODEC = SlotPayloadType.STREAM_CODEC.<RegistryFriendlyByteBuf>cast()
-        .dispatch(SlotPayload::type, SlotPayloadType::streamCodec);
+    StreamCodec<RegistryFriendlyByteBuf, SlotPayload> STREAM_CODEC = SlotPayloadType.STREAM_CODEC
+            .<RegistryFriendlyByteBuf>cast()
+            .dispatch(SlotPayload::type, SlotPayloadType::streamCodec);
 
     SlotPayloadType type();
 }

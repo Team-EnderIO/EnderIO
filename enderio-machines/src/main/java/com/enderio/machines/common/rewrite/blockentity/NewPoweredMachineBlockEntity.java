@@ -32,8 +32,8 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public abstract class NewPoweredMachineBlockEntity extends NewMachineBlockEntity implements MachineInstallable {
 
-    public static final ICapabilityProvider<NewPoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
-        (be, side) -> side == null ? be.energyStorage : be.energyStorage.getSided(side);
+    public static final ICapabilityProvider<NewPoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (
+            be, side) -> side == null ? be.energyStorage : be.energyStorage.getSided(side);
 
     private final CapacitorSupport capacitorSupport;
     private CapacitorData capacitorData = CapacitorData.NONE;
@@ -45,8 +45,9 @@ public abstract class NewPoweredMachineBlockEntity extends NewMachineBlockEntity
 
     private final PoweredMachineEnergyStorage energyStorage;
 
-    public NewPoweredMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, boolean isIoConfigMutable, CapacitorSupport capacitorSupport,
-        EnergyIOMode energyIOMode, CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
+    public NewPoweredMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
+            boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
+            CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
         super(type, worldPosition, blockState, isIoConfigMutable);
         this.capacitorSupport = capacitorSupport;
         this.energyIOMode = energyIOMode;
@@ -55,7 +56,8 @@ public abstract class NewPoweredMachineBlockEntity extends NewMachineBlockEntity
 
         // Sanity check for capacitors.
         if (supportsCapacitor() && (!hasInventory() || !getInventory().layout().supportsCapacitor())) {
-            throw new IllegalStateException("A machine which accepts a capacitor must have an inventory with a capacitor slot!");
+            throw new IllegalStateException(
+                    "A machine which accepts a capacitor must have an inventory with a capacitor slot!");
         }
 
         energyStorage = new PoweredMachineEnergyStorage(this);
@@ -272,7 +274,7 @@ public abstract class NewPoweredMachineBlockEntity extends NewMachineBlockEntity
         super.loadAdditional(tag, registries);
 
         if (tag.contains(MachineNBTKeys.ENERGY_STORED, Tag.TAG_INT)) {
-            energyStorage.deserializeNBT(registries, (IntTag)tag.get(MachineNBTKeys.ENERGY_STORED));
+            energyStorage.deserializeNBT(registries, (IntTag) tag.get(MachineNBTKeys.ENERGY_STORED));
         } else if (tag.contains(MachineNBTKeys.ENERGY, Tag.TAG_COMPOUND)) {
             // SUPPORT LEGACY STORAGE FORMAT
             CompoundTag energyTag = tag.getCompound(MachineNBTKeys.ENERGY);

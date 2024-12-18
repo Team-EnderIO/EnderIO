@@ -4,10 +4,11 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-public class FloatSlotPayload implements SlotPayload{
+public class FloatSlotPayload implements SlotPayload {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, FloatSlotPayload> STREAM_CODEC =
-        ByteBufCodecs.FLOAT.map(FloatSlotPayload::new, FloatSlotPayload::value).cast();
+    public static final StreamCodec<RegistryFriendlyByteBuf, FloatSlotPayload> STREAM_CODEC = ByteBufCodecs.FLOAT
+            .map(FloatSlotPayload::new, FloatSlotPayload::value)
+            .cast();
 
     private float value;
 

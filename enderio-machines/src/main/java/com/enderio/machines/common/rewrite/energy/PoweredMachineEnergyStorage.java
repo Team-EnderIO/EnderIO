@@ -199,7 +199,8 @@ public class PoweredMachineEnergyStorage implements IEnergyStorage, INBTSerializ
                 return false;
             }
 
-            if (side != null && wrapped.machine.energyIOMode().respectIOConfig() && !wrapped.machine.getIOMode(side).canOutput()) {
+            if (side != null && wrapped.machine.energyIOMode().respectIOConfig()
+                    && !wrapped.machine.getIOMode(side).canOutput()) {
                 return false;
             }
 
@@ -212,7 +213,8 @@ public class PoweredMachineEnergyStorage implements IEnergyStorage, INBTSerializ
                 return false;
             }
 
-            if (side != null && wrapped.machine.energyIOMode().respectIOConfig() && !wrapped.machine.getIOMode(side).canInput()) {
+            if (side != null && wrapped.machine.energyIOMode().respectIOConfig()
+                    && !wrapped.machine.getIOMode(side).canInput()) {
                 return false;
             }
 

@@ -6,11 +6,10 @@ import com.enderio.core.common.network.menu.payload.PairSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayloadType;
 import com.enderio.machines.common.rewrite.energy.EnergyStorageInfo;
-import net.minecraft.core.RegistryAccess;
-
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import net.minecraft.core.RegistryAccess;
 
 public abstract class EnergyStorageSyncSlot implements SyncSlot {
 
@@ -63,6 +62,7 @@ public abstract class EnergyStorageSyncSlot implements SyncSlot {
     private EnergyStorageInfo lastValue;
 
     public abstract EnergyStorageInfo get();
+
     public abstract void set(EnergyStorageInfo value);
 
     @Override
@@ -72,7 +72,9 @@ public abstract class EnergyStorageSyncSlot implements SyncSlot {
             return ChangeType.NONE;
         }
 
-        var changeType = lastValue == null || currentValue.maxEnergyStored() != lastValue.maxEnergyStored() ? ChangeType.FULL : ChangeType.PARTIAL;
+        var changeType = lastValue == null || currentValue.maxEnergyStored() != lastValue.maxEnergyStored()
+                ? ChangeType.FULL
+                : ChangeType.PARTIAL;
         lastValue = currentValue;
         return changeType;
     }
@@ -85,10 +87,8 @@ public abstract class EnergyStorageSyncSlot implements SyncSlot {
             return new IntSlotPayload(value.energyStored());
         }
 
-        return new PairSlotPayload(
-            new IntSlotPayload(value.energyStored()),
-            new IntSlotPayload(value.maxEnergyStored())
-        );
+        return new PairSlotPayload(new IntSlotPayload(value.energyStored()),
+                new IntSlotPayload(value.maxEnergyStored()));
     }
 
     @Override
@@ -96,14 +96,13 @@ public abstract class EnergyStorageSyncSlot implements SyncSlot {
         if (payload instanceof IntSlotPayload intSlotPayload) {
             set(get().withEnergyStored(intSlotPayload.value()));
         } else if (payload instanceof PairSlotPayload pairSlotPayload) {
-            if (pairSlotPayload.left().type() != SlotPayloadType.INT || pairSlotPayload.right().type() != SlotPayloadType.INT) {
+            if (pairSlotPayload.left().type() != SlotPayloadType.INT
+                    || pairSlotPayload.right().type() != SlotPayloadType.INT) {
                 return;
             }
 
-            set(new EnergyStorageInfo(
-                ((IntSlotPayload) pairSlotPayload.left()).value(),
-                ((IntSlotPayload) pairSlotPayload.right()).value()
-            ));
+            set(new EnergyStorageInfo(((IntSlotPayload) pairSlotPayload.left()).value(),
+                    ((IntSlotPayload) pairSlotPayload.right()).value()));
         }
     }
 }

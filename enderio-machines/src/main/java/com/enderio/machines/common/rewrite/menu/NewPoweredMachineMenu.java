@@ -16,14 +16,16 @@ public class NewPoweredMachineMenu<T extends NewPoweredMachineBlockEntity> exten
 
     private final EnergyStorageSyncSlot energySyncSlot;
 
-    protected NewPoweredMachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory, T blockEntity) {
+    protected NewPoweredMachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
+            T blockEntity) {
         super(menuType, containerId, playerInventory, blockEntity);
 
-        energySyncSlot = addSyncSlot(EnergyStorageSyncSlot.readOnly(() -> EnergyStorageInfo.of(blockEntity.getEnergyStorage())));
+        energySyncSlot = addSyncSlot(
+                EnergyStorageSyncSlot.readOnly(() -> EnergyStorageInfo.of(blockEntity.getEnergyStorage())));
     }
 
-    protected NewPoweredMachineMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType, int containerId, Inventory playerInventory,
-        RegistryFriendlyByteBuf buf) {
+    protected NewPoweredMachineMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType,
+            int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(menuType, blockEntityType, containerId, playerInventory, buf);
 
         energySyncSlot = addSyncSlot(EnergyStorageSyncSlot.standalone());

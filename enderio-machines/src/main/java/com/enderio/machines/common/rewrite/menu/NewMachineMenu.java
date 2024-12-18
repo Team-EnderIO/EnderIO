@@ -1,18 +1,17 @@
 package com.enderio.machines.common.rewrite.menu;
 
 import com.enderio.base.api.misc.RedstoneControl;
-import com.enderio.core.common.menu.BaseBlockEntityMenu;
 import com.enderio.core.common.menu.NewBaseBlockEntityMenu;
 import com.enderio.core.common.network.menu.EnumSyncSlot;
 import com.enderio.machines.common.blockentity.MachineState;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.menu.GhostMachineSlot;
 import com.enderio.machines.common.menu.MachineSlot;
 import com.enderio.machines.common.network.menu.MachineStatesSyncSlot;
 import com.enderio.machines.common.rewrite.blockentity.NewMachineBlockEntity;
+import java.util.Objects;
+import java.util.Set;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -20,12 +19,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * Common machine helpers, such as ghost slots and accessing common properties.
@@ -37,12 +31,13 @@ public abstract class NewMachineMenu<T extends NewMachineBlockEntity> extends Ne
     private final EnumSyncSlot<RedstoneControl> redstoneControlSlot;
     private MachineStatesSyncSlot statesSyncSlot;
 
-    protected NewMachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory, T blockEntity) {
+    protected NewMachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
+            T blockEntity) {
         super(menuType, containerId, playerInventory, blockEntity);
 
         if (blockEntity.supportsRedstoneControl()) {
-            redstoneControlSlot = addUpdatableSyncSlot(
-                EnumSyncSlot.simple(RedstoneControl.class, blockEntity::getRedstoneControl, blockEntity::setRedstoneControl));
+            redstoneControlSlot = addUpdatableSyncSlot(EnumSyncSlot.simple(RedstoneControl.class,
+                    blockEntity::getRedstoneControl, blockEntity::setRedstoneControl));
         } else {
             redstoneControlSlot = null;
         }
@@ -50,8 +45,8 @@ public abstract class NewMachineMenu<T extends NewMachineBlockEntity> extends Ne
         statesSyncSlot = addSyncSlot(MachineStatesSyncSlot.readOnly(blockEntity::getMachineStates));
     }
 
-    protected NewMachineMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType, int containerId, Inventory playerInventory,
-        RegistryFriendlyByteBuf buf) {
+    protected NewMachineMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType,
+            int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(menuType, blockEntityType, containerId, playerInventory, buf);
 
         if (getBlockEntity().supportsRedstoneControl()) {
@@ -108,8 +103,11 @@ public abstract class NewMachineMenu<T extends NewMachineBlockEntity> extends Ne
         return super.canDragTo(slot);
     }
 
-    // TODO: This menu does not have the safety guarantee that the player inventory has been added.
-    //       While I'm pretty sure all menus using this will, maybe worth handling the case where this might not be handled (in other words, no-op if no player inv?)
+    // TODO: This menu does not have the safety guarantee that the player inventory
+    // has been added.
+    // While I'm pretty sure all menus using this will, maybe worth handling the
+    // case where this might not be handled (in other words, no-op if no player
+    // inv?)
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         ItemStack itemstack = ItemStack.EMPTY;
@@ -125,7 +123,8 @@ public abstract class NewMachineMenu<T extends NewMachineBlockEntity> extends Ne
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (pIndex < this.slots.size() - PLAYER_INVENTORY_SIZE) {
-                if (!this.moveItemStackTo(itemstack1, this.slots.size() - PLAYER_INVENTORY_SIZE, this.slots.size(), true)) {
+                if (!this.moveItemStackTo(itemstack1, this.slots.size() - PLAYER_INVENTORY_SIZE, this.slots.size(),
+                        true)) {
                     return ItemStack.EMPTY;
                 }
             } else if (!this.moveItemStackTo(itemstack1, 0, this.slots.size() - PLAYER_INVENTORY_SIZE, false)) {
@@ -154,7 +153,7 @@ public abstract class NewMachineMenu<T extends NewMachineBlockEntity> extends Ne
         }
 
         if (stack.isStackable()) {
-            while(!stack.isEmpty()) {
+            while (!stack.isEmpty()) {
                 if (reverseDirection) {
                     if (i < startIndex) {
                         break;
@@ -205,7 +204,7 @@ public abstract class NewMachineMenu<T extends NewMachineBlockEntity> extends Ne
                 i = startIndex;
             }
 
-            while(true) {
+            while (true) {
                 if (reverseDirection) {
                     if (i < startIndex) {
                         break;
@@ -244,12 +243,12 @@ public abstract class NewMachineMenu<T extends NewMachineBlockEntity> extends Ne
     // Overrides the swapping behaviour. Required for ghost slots to prevent duping
     @Override
     public void doClick(int slotId, int button, ClickType clickType, Player player) {
-        if(slotId >= 0 && this.slots.get(slotId) instanceof GhostMachineSlot ghostSlot) {
+        if (slotId >= 0 && this.slots.get(slotId) instanceof GhostMachineSlot ghostSlot) {
             if (clickType == ClickType.PICKUP) {
                 ItemStack slotItem = ghostSlot.getItem();
                 ItemStack carriedItem = this.getCarried();
-                if(!slotItem.isEmpty() && !carriedItem.isEmpty() && ghostSlot.mayPlace(carriedItem)){
-                    if(!ItemStack.isSameItemSameComponents(slotItem, carriedItem)){
+                if (!slotItem.isEmpty() && !carriedItem.isEmpty() && ghostSlot.mayPlace(carriedItem)) {
+                    if (!ItemStack.isSameItemSameComponents(slotItem, carriedItem)) {
                         int count = Math.min(carriedItem.getCount(), ghostSlot.getMaxStackSize(carriedItem));
                         ghostSlot.setByPlayer(carriedItem.copyWithCount(count));
                         ghostSlot.setChanged();

@@ -9,14 +9,13 @@ import com.enderio.core.common.network.menu.payload.SlotPayloadType;
 import com.enderio.core.common.network.menu.payload.StringSlotPayload;
 import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.blockentity.MachineStateType;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.chat.Component;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.network.chat.Component;
 
 public abstract class MachineStatesSyncSlot implements SyncSlot {
 
@@ -69,6 +68,7 @@ public abstract class MachineStatesSyncSlot implements SyncSlot {
     private int previousHash;
 
     public abstract Set<MachineState> get();
+
     public abstract void set(Set<MachineState> value);
 
     @Override
@@ -81,12 +81,10 @@ public abstract class MachineStatesSyncSlot implements SyncSlot {
 
     @Override
     public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
-        return new ListSlotPayload(
-            get().stream().map(s -> new PairSlotPayload(
-                new IntSlotPayload(s.type().ordinal()),
-                new StringSlotPayload(s.component().getString())
-            )).collect(Collectors.toUnmodifiableList())
-        );
+        return new ListSlotPayload(get().stream()
+                .map(s -> new PairSlotPayload(new IntSlotPayload(s.type().ordinal()),
+                        new StringSlotPayload(s.component().getString())))
+                .collect(Collectors.toUnmodifiableList()));
     }
 
     @Override
@@ -102,10 +100,8 @@ public abstract class MachineStatesSyncSlot implements SyncSlot {
                         int machineStateTypeOrdinal = ((IntSlotPayload) pair.left()).value();
 
                         if (machineStateTypeOrdinal >= 0 && machineStateTypeOrdinal < machineStateTypes.length) {
-                            states.add(new MachineState(
-                                machineStateTypes[machineStateTypeOrdinal],
-                                Component.translatable(((StringSlotPayload)pair.right()).value())
-                            ));
+                            states.add(new MachineState(machineStateTypes[machineStateTypeOrdinal],
+                                    Component.translatable(((StringSlotPayload) pair.right()).value())));
                         }
                     }
                 }

@@ -17,7 +17,8 @@ public abstract class NewBaseBlockEntityMenu<T extends BlockEntity> extends Base
     /**
      * Server menu constructor
      */
-    protected NewBaseBlockEntityMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory, T blockEntity) {
+    protected NewBaseBlockEntityMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
+            T blockEntity) {
         super(menuType, containerId, playerInventory);
         this.blockEntity = blockEntity;
     }
@@ -26,9 +27,11 @@ public abstract class NewBaseBlockEntityMenu<T extends BlockEntity> extends Base
      * Client menu constructor.
      * Loads the block entity from the buffer and ensures the block entity type matches
      */
-    protected NewBaseBlockEntityMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType, int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+    protected NewBaseBlockEntityMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType,
+            int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(menuType, containerId, playerInventory);
-        this.blockEntity = BlockEntityMenuHelper.getBlockEntityFrom(buf, playerInventory.player.level(), blockEntityType);
+        this.blockEntity = BlockEntityMenuHelper.getBlockEntityFrom(buf, playerInventory.player.level(),
+                blockEntityType);
     }
 
     public T getBlockEntity() {

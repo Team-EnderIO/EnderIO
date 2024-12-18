@@ -11,7 +11,6 @@ import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.MachineState;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.IOConfig;
@@ -19,6 +18,10 @@ import com.enderio.machines.common.io.SidedIOConfigurable;
 import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -46,22 +49,17 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-
 /**
  * Base block entity implementation for machines.
  * Implements Redstone Control and the Machine State system.
  */
 public abstract class NewMachineBlockEntity extends EIOBlockEntity implements MenuProvider, Wrenchable, IOConfigurable {
 
-    public static final ICapabilityProvider<NewMachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER =
-        (be, side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
+    public static final ICapabilityProvider<NewMachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = (be,
+            side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
 
-    public static final ICapabilityProvider<NewMachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER =
-        (be, side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
+    public static final ICapabilityProvider<NewMachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER = (be,
+            side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
 
     @Nullable
     private final MachineInventory inventory;
@@ -76,7 +74,8 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity implements Me
 
     private final boolean supportsActiveState;
 
-    public NewMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, boolean isIoConfigMutable) {
+    public NewMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
+            boolean isIoConfigMutable) {
         super(type, worldPosition, blockState);
 
         this.isIoConfigMutable = isIoConfigMutable;
@@ -110,11 +109,13 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity implements Me
         // Doing this every 5 ticks instead of every tick should reduce visual flicker.
         if (canAct(5)) {
             boolean isActive = isActive();
-            boolean needBlockStateUpdate = supportsActiveState && getBlockState().getValue(ProgressMachineBlock.POWERED) != isActive;
+            boolean needBlockStateUpdate = supportsActiveState
+                    && getBlockState().getValue(ProgressMachineBlock.POWERED) != isActive;
             boolean needStateUpdate = states.contains(MachineState.ACTIVE) != isActive;
 
             if (needBlockStateUpdate) {
-                level.setBlockAndUpdate(worldPosition, getBlockState().setValue(ProgressMachineBlock.POWERED, isActive));
+                level.setBlockAndUpdate(worldPosition,
+                        getBlockState().setValue(ProgressMachineBlock.POWERED, isActive));
             }
 
             if (needStateUpdate) {
@@ -204,7 +205,8 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity implements Me
     /**
      * @apiNote Must call this on custom MachineInventory handlers!
      */
-    protected void onInventoryContentsChanged(int slot) { }
+    protected void onInventoryContentsChanged(int slot) {
+    }
 
     // endregion
 
@@ -271,11 +273,11 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity implements Me
         // The block faces with its southern face. So the back of the machine.
         Direction south = getBlockFacing();
         return switch (side) {
-            case NORTH -> south.getOpposite();
-            case SOUTH -> south;
-            case WEST -> south.getCounterClockWise();
-            case EAST -> south.getClockWise();
-            default -> side;
+        case NORTH -> south.getOpposite();
+        case SOUTH -> south;
+        case WEST -> south.getCounterClockWise();
+        case EAST -> south.getClockWise();
+        default -> side;
         };
     }
 
@@ -468,7 +470,7 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity implements Me
             level.removeBlock(pos, false);
             block.destroy(level, pos, state);
 
-            //TODO: custom sound when sound manager is up and running??
+            // TODO: custom sound when sound manager is up and running??
 
             return ItemInteractionResult.sidedSuccess(level.isClientSide());
         }
@@ -527,7 +529,8 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity implements Me
         }
 
         // Supports old attachments.
-        // We've been misusing attachments, they're intended for 3rd party data additions
+        // We've been misusing attachments, they're intended for 3rd party data
+        // additions
         // Reverting this will take some time
 
         // Same for IO Config
@@ -544,7 +547,8 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity implements Me
             redstoneControl = getData(MachineAttachments.REDSTONE_CONTROL);
             removeData(MachineAttachments.REDSTONE_CONTROL);
         } else if (tag.contains(MachineNBTKeys.REDSTONE_CONTROL)) {
-            redstoneControl = RedstoneControl.parse(registries, Objects.requireNonNull(tag.get(MachineNBTKeys.REDSTONE_CONTROL)));
+            redstoneControl = RedstoneControl.parse(registries,
+                    Objects.requireNonNull(tag.get(MachineNBTKeys.REDSTONE_CONTROL)));
         }
     }
 
@@ -553,7 +557,8 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity implements Me
         super.applyImplicitComponents(componentInput);
 
         if (hasInventory()) {
-            this.inventory.copyFromItem(componentInput.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
+            this.inventory
+                    .copyFromItem(componentInput.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
         }
 
         if (isIOConfigMutable()) {

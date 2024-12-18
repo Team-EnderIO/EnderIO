@@ -6,8 +6,9 @@ import net.minecraft.network.codec.StreamCodec;
 
 public record StringSlotPayload(String value) implements SlotPayload {
 
-    public static StreamCodec<RegistryFriendlyByteBuf, StringSlotPayload> STREAM_CODEC =
-        ByteBufCodecs.STRING_UTF8.map(StringSlotPayload::new, StringSlotPayload::value).cast();
+    public static StreamCodec<RegistryFriendlyByteBuf, StringSlotPayload> STREAM_CODEC = ByteBufCodecs.STRING_UTF8
+            .map(StringSlotPayload::new, StringSlotPayload::value)
+            .cast();
 
     @Override
     public SlotPayloadType type() {

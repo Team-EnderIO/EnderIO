@@ -8,8 +8,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class BlockEntityMenuHelper {
 
-    public static <T extends BlockEntity> T getBlockEntityFrom(RegistryFriendlyByteBuf buf, Level level, BlockEntityType<? extends T> type) {
-        //noinspection ConstantValue
+    public static <T extends BlockEntity> T getBlockEntityFrom(RegistryFriendlyByteBuf buf, Level level,
+            BlockEntityType<? extends T> type) {
+        // noinspection ConstantValue
         if (buf == null) {
             throw new IllegalArgumentException("Null packet buffer when opening menu!");
         }
@@ -17,7 +18,8 @@ public class BlockEntityMenuHelper {
         BlockPos pos = buf.readBlockPos();
 
         if (!level.isLoaded(pos)) {
-            throw new IllegalStateException("Unable to open menu for block at " + pos + " as it is not loaded on the client!");
+            throw new IllegalStateException(
+                    "Unable to open menu for block at " + pos + " as it is not loaded on the client!");
         }
 
         T blockEntity = type.getBlockEntity(level, pos);

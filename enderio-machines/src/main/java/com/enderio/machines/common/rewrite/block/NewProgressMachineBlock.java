@@ -1,7 +1,5 @@
 package com.enderio.machines.common.rewrite.block;
 
-import com.enderio.machines.common.block.MachineBlock;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.rewrite.blockentity.NewMachineBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.Direction;
@@ -20,7 +18,8 @@ public class NewProgressMachineBlock<T extends NewMachineBlockEntity> extends Ne
 
     public NewProgressMachineBlock(RegiliteBlockEntity<? extends T> blockEntityType, Properties properties) {
         super(blockEntityType::get, properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
+        this.registerDefaultState(
+                this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
     }
 
     @Override

@@ -4,9 +4,11 @@ import com.enderio.core.common.network.menu.ClientboundSyncSlotDataPacket;
 import com.enderio.core.common.network.menu.ClientboundSyncSlotDataPacket.PayloadPair;
 import com.enderio.core.common.network.menu.ContainerSyncData;
 import com.enderio.core.common.network.menu.ServerboundSetSyncSlotDataPacket;
+import com.enderio.core.common.network.menu.SyncSlot;
 import com.enderio.core.common.network.menu.SyncSlot.ChangeType;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
-import com.enderio.core.common.network.menu.SyncSlot;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,12 +17,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
-import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class BaseEnderMenu extends AbstractContainerMenu {
 
@@ -111,7 +109,7 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
         }
 
         if (playerInventory.player instanceof LocalPlayer) {
-            short slotIndex = (short)clientUpdateSyncSlots.indexOf(syncSlot);
+            short slotIndex = (short) clientUpdateSyncSlots.indexOf(syncSlot);
             ChangeType changeType = syncSlot.detectChanges();
 
             if (changeType != ChangeType.NONE) {

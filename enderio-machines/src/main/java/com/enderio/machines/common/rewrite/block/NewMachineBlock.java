@@ -3,6 +3,7 @@ package com.enderio.machines.common.rewrite.block;
 import com.enderio.base.block.foundations.EIOEntityBlock;
 import com.enderio.machines.common.rewrite.blockentity.NewMachineBlockEntity;
 import com.mojang.serialization.MapCodec;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,8 +23,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
-
 public abstract class NewMachineBlock<T extends NewMachineBlockEntity> extends EIOEntityBlock<T> {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -31,9 +30,7 @@ public abstract class NewMachineBlock<T extends NewMachineBlockEntity> extends E
     protected NewMachineBlock(Supplier<BlockEntityType<? extends T>> typeSupplier, Properties properties) {
         super(typeSupplier, properties);
 
-        this.registerDefaultState(
-            this.stateDefinition.any().setValue(FACING, Direction.NORTH)
-        );
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
     @Override
@@ -65,7 +62,8 @@ public abstract class NewMachineBlock<T extends NewMachineBlockEntity> extends E
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+            BlockHitResult hitResult) {
         // Attempt to open machine menu.
         if (canOpenMenu()) {
             var menuProvider = this.getMenuProvider(state, level, pos);

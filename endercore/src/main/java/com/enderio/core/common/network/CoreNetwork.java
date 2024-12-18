@@ -29,9 +29,9 @@ public class CoreNetwork {
                 ServerPayloadHandler.getInstance()::handleDataSlotChange);
 
         registrar.playToClient(ClientboundSyncSlotDataPacket.TYPE, ClientboundSyncSlotDataPacket.STREAM_CODEC,
-            ClientPayloadHandler.getInstance()::handleSyncSlotDataPacket);
+                ClientPayloadHandler.getInstance()::handleSyncSlotDataPacket);
 
         registrar.playToServer(ServerboundSetSyncSlotDataPacket.TYPE, ServerboundSetSyncSlotDataPacket.STREAM_CODEC,
-            ServerPayloadHandler.getInstance()::handleSetSyncSlotDataPacket);
+                ServerPayloadHandler.getInstance()::handleSetSyncSlotDataPacket);
     }
 }

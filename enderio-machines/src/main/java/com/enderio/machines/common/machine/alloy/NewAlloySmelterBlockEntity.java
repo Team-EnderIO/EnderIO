@@ -1,13 +1,11 @@
 package com.enderio.machines.common.machine.alloy;
 
-import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.AlloySmelterMode;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -19,12 +17,14 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
-import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.rewrite.blockentity.NewPoweredMachineBlockEntity;
 import com.enderio.machines.common.rewrite.blockentity.flags.CapacitorSupport;
 import com.mojang.logging.LogUtils;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -38,16 +38,10 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 // TODO: Award XP
 

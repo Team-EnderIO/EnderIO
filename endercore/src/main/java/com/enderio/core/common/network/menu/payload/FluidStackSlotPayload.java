@@ -6,8 +6,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 public record FluidStackSlotPayload(FluidStack value) implements SlotPayload {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, FluidStackSlotPayload> STREAM_CODEC =
-        FluidStack.STREAM_CODEC.map(FluidStackSlotPayload::new, FluidStackSlotPayload::value);
+    public static final StreamCodec<RegistryFriendlyByteBuf, FluidStackSlotPayload> STREAM_CODEC = FluidStack.STREAM_CODEC
+            .map(FluidStackSlotPayload::new, FluidStackSlotPayload::value);
 
     @Override
     public SlotPayloadType type() {

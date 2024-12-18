@@ -1,5 +1,6 @@
 package com.enderio.base.block.foundations;
 
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -12,8 +13,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Supplier;
 
 public abstract class EIOEntityBlock<T extends EIOBlockEntity> extends BaseEntityBlock {
 
@@ -30,12 +29,14 @@ public abstract class EIOEntityBlock<T extends EIOBlockEntity> extends BaseEntit
     }
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
+            BlockEntityType<T> blockEntityType) {
         return createTickerHelper(blockEntityType, typeSupplier.get(), EIOBlockEntity::tick);
     }
 
     @Override
-    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
+    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos,
+            @Nullable Direction direction) {
         if (level.getBlockEntity(pos) instanceof EIOBlockEntity blockEntity) {
             return blockEntity.supportsRedstonePower();
         }
@@ -44,7 +45,8 @@ public abstract class EIOEntityBlock<T extends EIOBlockEntity> extends BaseEntit
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock,
+            BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
         if (level.getBlockEntity(pos) instanceof EIOBlockEntity blockEntity) {
             blockEntity.neighborChanged(neighborBlock, neighborPos);

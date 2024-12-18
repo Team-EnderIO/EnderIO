@@ -23,7 +23,6 @@ import com.enderio.machines.common.integrations.jei.category.SoulEngineCategory;
 import com.enderio.machines.common.integrations.jei.category.TankCategory;
 import com.enderio.machines.common.integrations.jei.category.VATCategory;
 import com.enderio.machines.common.integrations.jei.transfer.CrafterRecipeTransferHandler;
-import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.menu.SagMillMenu;

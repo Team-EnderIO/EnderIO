@@ -10,11 +10,10 @@ public interface SyncSlot {
     ChangeType detectChanges();
 
     SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType);
+
     void unpackPayload(SlotPayload payload);
 
     enum ChangeType {
-        NONE,
-        PARTIAL,
-        FULL
+        NONE, PARTIAL, FULL
     }
 }

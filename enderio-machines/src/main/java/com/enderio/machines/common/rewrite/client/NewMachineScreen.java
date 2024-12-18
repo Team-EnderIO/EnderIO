@@ -6,15 +6,13 @@ import com.enderio.machines.client.gui.widget.ioconfig.IOConfigOverlay;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.machines.common.menu.GhostMachineSlot;
 import com.enderio.machines.common.menu.PreviewMachineSlot;
-import com.enderio.machines.common.menu.base.MachineMenu;
 import com.enderio.machines.common.rewrite.menu.NewMachineMenu;
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
-
-import java.util.List;
 
 public abstract class NewMachineScreen<T extends NewMachineMenu<?>> extends EnderContainerScreen<T> {
     public static final int SLOT_COLOR = -2130706433;
@@ -25,9 +23,9 @@ public abstract class NewMachineScreen<T extends NewMachineMenu<?>> extends Ende
 
     protected IOConfigOverlay addIOConfigOverlay(int layer, int x, int y, int width, int height) {
         // TODO: getConfigurables on MachineMenu.
-        List<BlockPos> configurables = menu.getBlockEntity() instanceof MultiConfigurable multiConfigurable ?
-            multiConfigurable.getConfigurables() :
-            List.of(menu.getBlockEntity().getBlockPos());
+        List<BlockPos> configurables = menu.getBlockEntity() instanceof MultiConfigurable multiConfigurable
+                ? multiConfigurable.getConfigurables()
+                : List.of(menu.getBlockEntity().getBlockPos());
 
         var widget = addOverlayRenderable(layer, new IOConfigOverlay(x, y, width, height, configurables));
         addRestorableState("io_config", widget);

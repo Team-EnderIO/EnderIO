@@ -2,14 +2,13 @@ package com.enderio.machines.common.io.item;
 
 import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.machines.common.blockentity.MachineState;
+import java.util.function.IntConsumer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.IntConsumer;
 
 /**
  * A machine inventory.
@@ -18,7 +17,8 @@ import java.util.function.IntConsumer;
 public class MachineInventory extends ItemStackHandler {
     private final IOConfigurable ioConfigurable;
     private final MachineInventoryLayout layout;
-    private IntConsumer changeListener = i -> {};
+    private IntConsumer changeListener = i -> {
+    };
 
     /**
      * Create a new machine inventory.

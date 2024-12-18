@@ -6,8 +6,9 @@ import net.minecraft.resources.ResourceLocation;
 
 public record ResourceLocationSlotPayload(ResourceLocation value) implements SlotPayload {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ResourceLocationSlotPayload> STREAM_CODEC =
-        ResourceLocation.STREAM_CODEC.map(ResourceLocationSlotPayload::new, ResourceLocationSlotPayload::value).cast();
+    public static final StreamCodec<RegistryFriendlyByteBuf, ResourceLocationSlotPayload> STREAM_CODEC = ResourceLocation.STREAM_CODEC
+            .map(ResourceLocationSlotPayload::new, ResourceLocationSlotPayload::value)
+            .cast();
 
     @Override
     public SlotPayloadType type() {

@@ -2,12 +2,9 @@ package com.enderio.core.common.network.menu;
 
 import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
-import net.minecraft.core.RegistryAccess;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.fluids.FluidStack;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import net.minecraft.core.RegistryAccess;
 
 public abstract class EnumSyncSlot<T extends Enum<T>> implements SyncSlot {
 
@@ -27,7 +24,8 @@ public abstract class EnumSyncSlot<T extends Enum<T>> implements SyncSlot {
         };
     }
 
-    public static <T extends Enum<T>> EnumSyncSlot<T> simple(Class<T> enumClass, Supplier<T> getter, Consumer<T> setter) {
+    public static <T extends Enum<T>> EnumSyncSlot<T> simple(Class<T> enumClass, Supplier<T> getter,
+            Consumer<T> setter) {
         return new EnumSyncSlot<>(enumClass) {
 
             @Override
@@ -61,6 +59,7 @@ public abstract class EnumSyncSlot<T extends Enum<T>> implements SyncSlot {
     private T lastValue;
 
     public abstract T get();
+
     public abstract void set(T value);
 
     public EnumSyncSlot(Class<T> enumClass) {

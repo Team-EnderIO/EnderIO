@@ -2,11 +2,9 @@ package com.enderio.core.common.network.menu;
 
 import com.enderio.core.common.network.menu.payload.FloatSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
-import net.minecraft.core.RegistryAccess;
-import net.neoforged.fml.LogicalSide;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import net.minecraft.core.RegistryAccess;
 
 public abstract class FloatSyncSlot implements SyncSlot {
 
@@ -59,6 +57,7 @@ public abstract class FloatSyncSlot implements SyncSlot {
     private float lastValue;
 
     public abstract float get();
+
     public abstract void set(float value);
 
     @Override

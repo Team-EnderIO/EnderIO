@@ -6,8 +6,9 @@ import net.minecraft.network.codec.StreamCodec;
 
 public record BlockPosSlotPayload(BlockPos value) implements SlotPayload {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, BlockPosSlotPayload> STREAM_CODEC =
-        BlockPos.STREAM_CODEC.map(BlockPosSlotPayload::new, BlockPosSlotPayload::value).cast();
+    public static final StreamCodec<RegistryFriendlyByteBuf, BlockPosSlotPayload> STREAM_CODEC = BlockPos.STREAM_CODEC
+            .map(BlockPosSlotPayload::new, BlockPosSlotPayload::value)
+            .cast();
 
     @Override
     public SlotPayloadType type() {
