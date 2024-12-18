@@ -96,9 +96,9 @@ public class MachinesJEI implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        registration.addRecipeTransferHandler(AlloySmelterMenu.class, MachineMenus.ALLOY_SMELTER.get(),
-                AlloySmeltingCategory.TYPE, AlloySmelterMenu.INPUTS_INDEX, AlloySmelterMenu.INPUT_COUNT,
-                AlloySmelterMenu.LAST_INDEX + 1, 36);
+//        registration.addRecipeTransferHandler(AlloySmelterMenu.class, MachineMenus.ALLOY_SMELTER.get(),
+//                AlloySmeltingCategory.TYPE, AlloySmelterMenu.INPUTS_INDEX, AlloySmelterMenu.INPUT_COUNT,
+//                AlloySmelterMenu.LAST_INDEX + 1, 36);
 
         registration.addRecipeTransferHandler(EnchanterMenu.class, MachineMenus.ENCHANTER.get(), EnchanterCategory.TYPE,
                 EnchanterMenu.INPUTS_INDEX, EnchanterMenu.INPUT_COUNT, EnchanterMenu.LAST_INDEX + 1, 36);

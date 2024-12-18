@@ -24,7 +24,7 @@ public record DumbIOConfigurable(IOConfig config) implements IOConfigurable {
     }
 
     @Override
-    public void setIOMode(Direction side, IOMode state) {
+    public void setIOMode(Direction side, IOMode mode) {
         throw new IllegalStateException("Cannot edit dummy configurable.");
     }
 

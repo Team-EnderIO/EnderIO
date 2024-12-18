@@ -26,6 +26,9 @@ import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.item.CapacitorBankItem;
 import com.enderio.machines.common.item.FluidTankItem;
+import com.enderio.machines.common.rewrite.block.NewMachineBlock;
+import com.enderio.machines.common.rewrite.block.NewProgressMachineBlock;
+import com.enderio.machines.common.rewrite.blockentity.NewMachineBlockEntity;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.enderio.regilite.data.DataGenContext;
@@ -108,8 +111,8 @@ public class MachineBlocks {
     public static final RegiliteBlock<ProgressMachineBlock> PRIMITIVE_ALLOY_SMELTER =
         progressMachine("primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER);
 
-    public static final RegiliteBlock<ProgressMachineBlock> ALLOY_SMELTER =
-        progressMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER);
+    public static final RegiliteBlock<NewProgressMachineBlock<?>> ALLOY_SMELTER =
+        newProgressMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER);
 
     public static final RegiliteBlock<ProgressMachineBlock> PAINTING_MACHINE =
         progressMachine("painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE);
@@ -274,6 +277,17 @@ public class MachineBlocks {
             );
     }
 
+    private static <T extends NewMachineBlock<?>> RegiliteBlock<T> newBaseMachine(RegiliteBlock<T> machineBlock,
+        BiConsumer<BlockStateProvider, DataGenContext<Block, T>> blockStateProvider) {
+        return machineBlock
+            .setLootTable(MachinesLootTable::copyComponents)
+            .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+            .setBlockStateProvider(blockStateProvider)
+            .createBlockItem(ITEM_REGISTRY, item -> item
+                .setTab(EIOCreativeTabs.MACHINES)
+            );
+    }
+
     private static RegiliteBlock<MachineBlock> machine(String name,
         Supplier<RegiliteBlockEntity<? extends MachineBlockEntity>> RegiliteBlockEntity) {
         return baseMachine(
@@ -285,6 +299,14 @@ public class MachineBlocks {
         Supplier<RegiliteBlockEntity<? extends MachineBlockEntity>> RegiliteBlockEntity) {
         return baseMachine(
             BLOCK_REGISTRY.registerBlock(name, props -> new ProgressMachineBlock(RegiliteBlockEntity.get(), props),
+                BlockBehaviour.Properties.of().strength(2.5f, 8)),
+            MachineModelUtil::progressMachineBlock);
+    }
+
+    private static RegiliteBlock<NewProgressMachineBlock<?>> newProgressMachine(String name,
+        Supplier<RegiliteBlockEntity<? extends NewMachineBlockEntity>> RegiliteBlockEntity) {
+        return newBaseMachine(
+            BLOCK_REGISTRY.registerBlock(name, props -> new NewProgressMachineBlock<>(RegiliteBlockEntity.get(), props),
                 BlockBehaviour.Properties.of().strength(2.5f, 8)),
             MachineModelUtil::progressMachineBlock);
     }

@@ -41,6 +41,10 @@ public class MachineInventory extends ItemStackHandler {
         return layout;
     }
 
+    public final MachineInventoryLayout layout() {
+        return layout;
+    }
+
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
         return layout.isItemValid(slot, stack);
@@ -106,6 +110,7 @@ public class MachineInventory extends ItemStackHandler {
         return ItemContainerContents.fromItems(this.stacks);
     }
 
+    // TODO: not a fan of this pattern.
     public void updateMachineState(MachineState state, boolean add) {
 
     }

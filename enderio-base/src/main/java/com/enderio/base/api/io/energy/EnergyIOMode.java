@@ -44,6 +44,7 @@ public enum EnergyIOMode {
         return output;
     }
 
+    // TODO: Clarify - IOConfig canConnect has precedence over this.
     public boolean respectIOConfig() {
         return respectIOConfig;
     }

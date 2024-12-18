@@ -22,7 +22,7 @@ public interface IOConfigurable {
      * Set the IO mode for this side.
      * Must be supported mode, otherwise {@link IOMode#NONE} will be set.
      */
-    void setIOMode(Direction side, IOMode state);
+    void setIOMode(Direction side, IOMode mode);
 
     /**
      * Determine whether a certain side supports the provided mode.

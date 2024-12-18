@@ -24,6 +24,8 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     private final Supplier<T> getter;
     private final Consumer<T> setter;
 
+    private T previousValue;
+
     private final Map<T, SelectionWidget> icons = new HashMap<>();
 
     private final Vector2i expandTopLeft;
@@ -145,6 +147,12 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         T value = getValue();
         guiGraphics.blitSprite(getValueIcon(value), getX(), getY(), getWidth(), getHeight());
+
+        // TODO: Temp solution for the value changing externally (data sync)
+        if (previousValue != value) {
+            previousValue = value;
+            updateTooltip(value);
+        }
     }
 
     private void updateTooltip(T value) {

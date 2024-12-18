@@ -39,6 +39,9 @@ import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockE
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
+import com.enderio.machines.common.machine.alloy.NewAlloySmelterBlockEntity;
+import com.enderio.machines.common.rewrite.blockentity.NewMachineBlockEntity;
+import com.enderio.machines.common.rewrite.blockentity.NewPoweredMachineBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import com.google.common.collect.ImmutableMap;
@@ -77,9 +80,9 @@ public class MachineBlockEntities {
         register("primitive_alloy_smelter", PrimitiveAlloySmelterBlockEntity::new, MachineBlocks.PRIMITIVE_ALLOY_SMELTER)
             .apply(MachineBlockEntities::machineBlockEntityCapabilities);
 
-    public static final RegiliteBlockEntity<AlloySmelterBlockEntity> ALLOY_SMELTER =
-        register("alloy_smelter", AlloySmelterBlockEntity::factory, MachineBlocks.ALLOY_SMELTER)
-            .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+    public static final RegiliteBlockEntity<NewAlloySmelterBlockEntity> ALLOY_SMELTER =
+        register("alloy_smelter", NewAlloySmelterBlockEntity::factory, MachineBlocks.ALLOY_SMELTER)
+            .apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<CreativePowerBlockEntity> CREATIVE_POWER =
         register("creative_power", CreativePowerBlockEntity::new, MachineBlocks.CREATIVE_POWER)
@@ -215,9 +218,19 @@ public class MachineBlockEntities {
         blockEntity.addCapability(Capabilities.ItemHandler.BLOCK, MachineBlockEntity.ITEM_HANDLER_PROVIDER);
     }
 
+    private static void newMachineBlockEntityCapabilities(RegiliteBlockEntity<? extends NewMachineBlockEntity> blockEntity) {
+        blockEntity.addCapability(EIOCapabilities.SideConfig.BLOCK, NewMachineBlockEntity.SIDE_CONFIG_PROVIDER);
+        blockEntity.addCapability(Capabilities.ItemHandler.BLOCK, NewMachineBlockEntity.ITEM_HANDLER_PROVIDER);
+    }
+
     private static void poweredMachineBlockEntityCapabilities(RegiliteBlockEntity<? extends PoweredMachineBlockEntity> blockEntity) {
         machineBlockEntityCapabilities(blockEntity);
         blockEntity.addCapability(Capabilities.EnergyStorage.BLOCK, PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
+    }
+
+    private static void newPoweredMachineBlockEntityCapabilities(RegiliteBlockEntity<? extends NewPoweredMachineBlockEntity> blockEntity) {
+        newMachineBlockEntityCapabilities(blockEntity);
+        blockEntity.addCapability(Capabilities.EnergyStorage.BLOCK, NewPoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
     }
 
     private static void fluidHandlerCapability(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
