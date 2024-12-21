@@ -1,4 +1,4 @@
-package com.enderio.machines.common.rewrite.blockentity.flags;
+package com.enderio.machines.common.machine.base.blockentity.flags;
 
 public enum CapacitorSupport {
     NONE, REQUIRED,

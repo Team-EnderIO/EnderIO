@@ -1,6 +1,6 @@
-package com.enderio.machines.common.rewrite.block;
+package com.enderio.machines.common.machine.base.block;
 
-import com.enderio.machines.common.rewrite.blockentity.NewMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;

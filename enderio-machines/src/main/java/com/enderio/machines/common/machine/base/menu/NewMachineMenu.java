@@ -1,4 +1,4 @@
-package com.enderio.machines.common.rewrite.menu;
+package com.enderio.machines.common.machine.base.menu;
 
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.core.common.menu.NewBaseBlockEntityMenu;
@@ -8,7 +8,7 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.menu.GhostMachineSlot;
 import com.enderio.machines.common.menu.MachineSlot;
 import com.enderio.machines.common.network.menu.MachineStatesSyncSlot;
-import com.enderio.machines.common.rewrite.blockentity.NewMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
 import java.util.Objects;
 import java.util.Set;
 import net.minecraft.network.RegistryFriendlyByteBuf;

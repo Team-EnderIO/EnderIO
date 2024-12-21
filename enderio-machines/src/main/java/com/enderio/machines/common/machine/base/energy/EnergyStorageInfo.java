@@ -1,4 +1,4 @@
-package com.enderio.machines.common.rewrite.energy;
+package com.enderio.machines.common.machine.base.energy;
 
 import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.base.api.io.energy.EnergyIOMode;

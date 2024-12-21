@@ -9,7 +9,7 @@ import com.enderio.machines.client.gui.widget.NewCapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.NewProgressWidget;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.machine.alloy.AlloySmelterMenu;
-import com.enderio.machines.common.rewrite.client.NewMachineScreen;
+import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

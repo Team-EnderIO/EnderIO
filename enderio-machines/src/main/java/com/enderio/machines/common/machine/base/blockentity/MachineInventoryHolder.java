@@ -1,4 +1,4 @@
-package com.enderio.machines.common.rewrite.blockentity;
+package com.enderio.machines.common.machine.base.blockentity;
 
 import com.enderio.machines.common.io.item.MachineInventory;
 

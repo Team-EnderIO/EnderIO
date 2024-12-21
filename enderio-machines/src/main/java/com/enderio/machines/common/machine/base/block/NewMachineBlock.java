@@ -1,7 +1,7 @@
-package com.enderio.machines.common.rewrite.block;
+package com.enderio.machines.common.machine.base.block;
 
 import com.enderio.base.block.foundations.EIOEntityBlock;
-import com.enderio.machines.common.rewrite.blockentity.NewMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
 import com.mojang.serialization.MapCodec;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;

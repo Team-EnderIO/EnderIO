@@ -1,4 +1,4 @@
-package com.enderio.machines.common.rewrite.blockentity;
+package com.enderio.machines.common.machine.base.blockentity;
 
 import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.capacitor.CapacitorData;
@@ -10,8 +10,8 @@ import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.io.item.MachineInventory;
-import com.enderio.machines.common.rewrite.blockentity.flags.CapacitorSupport;
-import com.enderio.machines.common.rewrite.energy.PoweredMachineEnergyStorage;
+import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
+import com.enderio.machines.common.machine.base.energy.PoweredMachineEnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;

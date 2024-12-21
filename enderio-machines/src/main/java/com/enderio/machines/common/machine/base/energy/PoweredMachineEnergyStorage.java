@@ -1,10 +1,10 @@
-package com.enderio.machines.common.rewrite.energy;
+package com.enderio.machines.common.machine.base.energy;
 
 import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
-import com.enderio.machines.common.rewrite.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.IntTag;

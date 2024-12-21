@@ -1,4 +1,4 @@
-package com.enderio.machines.common.rewrite.client;
+package com.enderio.machines.client.gui.screen.base;
 
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
@@ -6,7 +6,7 @@ import com.enderio.machines.client.gui.widget.ioconfig.IOConfigOverlay;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.machines.common.menu.GhostMachineSlot;
 import com.enderio.machines.common.menu.PreviewMachineSlot;
-import com.enderio.machines.common.rewrite.menu.NewMachineMenu;
+import com.enderio.machines.common.machine.base.menu.NewMachineMenu;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;

@@ -1,7 +1,6 @@
 package com.enderio.machines.common.io.item;
 
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.rewrite.blockentity.MachineInventoryHolder;
+import com.enderio.machines.common.machine.base.blockentity.MachineInventoryHolder;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 

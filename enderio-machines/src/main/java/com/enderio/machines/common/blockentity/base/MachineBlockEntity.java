@@ -17,7 +17,7 @@ import com.enderio.machines.common.io.SidedIOConfigurable;
 import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
-import com.enderio.machines.common.rewrite.blockentity.MachineInventoryHolder;
+import com.enderio.machines.common.machine.base.blockentity.MachineInventoryHolder;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

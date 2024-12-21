@@ -1,4 +1,4 @@
-package com.enderio.machines.common.rewrite.block;
+package com.enderio.machines.common.machine.base.block;
 
 import com.enderio.base.common.blockentity.Wrenchable;
 import com.enderio.base.common.tag.EIOTags;

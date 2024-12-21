@@ -1,10 +1,9 @@
 package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIOBase;
-import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterMenu;
-import com.enderio.machines.common.rewrite.client.NewMachineScreen;
+import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

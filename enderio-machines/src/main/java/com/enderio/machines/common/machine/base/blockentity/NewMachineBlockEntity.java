@@ -1,4 +1,4 @@
-package com.enderio.machines.common.rewrite.blockentity;
+package com.enderio.machines.common.machine.base.blockentity;
 
 import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.capability.SideConfig;
