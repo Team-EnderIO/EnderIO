@@ -2,16 +2,14 @@ package com.enderio.machines.common.machine.alloy;
 
 import com.enderio.core.common.network.menu.EnumSyncSlot;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
-import com.enderio.machines.common.blockentity.AlloySmelterMode;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.menu.MachineSlot;
 import com.enderio.machines.common.rewrite.menu.NewPoweredMachineMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.InventoryMenu;
 
-public class NewAlloySmelterMenu extends NewPoweredMachineMenu<NewAlloySmelterBlockEntity> {
+public class AlloySmelterMenu extends NewPoweredMachineMenu<AlloySmelterBlockEntity> {
     public static int INPUTS_INDEX = 1;
     public static int INPUT_COUNT = 3;
     public static int LAST_INDEX = 4;
@@ -20,7 +18,7 @@ public class NewAlloySmelterMenu extends NewPoweredMachineMenu<NewAlloySmelterBl
     private final EnumSyncSlot<AlloySmelterMode> modeSlot;
 
     // Server constructor
-    public NewAlloySmelterMenu(int pContainerId, Inventory inventory, NewAlloySmelterBlockEntity blockEntity) {
+    public AlloySmelterMenu(int pContainerId, Inventory inventory, AlloySmelterBlockEntity blockEntity) {
         super(MachineMenus.ALLOY_SMELTER.get(), pContainerId, inventory, blockEntity);
         addSlots();
 
@@ -30,7 +28,7 @@ public class NewAlloySmelterMenu extends NewPoweredMachineMenu<NewAlloySmelterBl
     }
 
     // Client constructor
-    public NewAlloySmelterMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+    public AlloySmelterMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(MachineMenus.ALLOY_SMELTER.get(), MachineBlockEntities.ALLOY_SMELTER.get(), containerId, playerInventory,
                 buf);
         addSlots();
@@ -41,13 +39,12 @@ public class NewAlloySmelterMenu extends NewPoweredMachineMenu<NewAlloySmelterBl
 
     private void addSlots() {
         // Capacitor slot
-        addSlot(new MachineSlot(getMachineInventory(), getCapacitorSlotIndex(), 8, 89))
-                .setBackground(InventoryMenu.BLOCK_ATLAS, EMPTY_CAPACITOR_SLOT);
+        addCapacitorSlot(8, 89);
 
-        addSlot(new MachineSlot(getMachineInventory(), NewAlloySmelterBlockEntity.INPUTS.get(0), 55, 38));
-        addSlot(new MachineSlot(getMachineInventory(), NewAlloySmelterBlockEntity.INPUTS.get(1), 80, 28));
-        addSlot(new MachineSlot(getMachineInventory(), NewAlloySmelterBlockEntity.INPUTS.get(2), 104, 38));
-        addSlot(new MachineSlot(getMachineInventory(), NewAlloySmelterBlockEntity.OUTPUT, 80, 79));
+        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(0), 55, 38));
+        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(1), 80, 28));
+        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(2), 104, 38));
+        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.OUTPUT, 80, 79));
 
         addPlayerInventorySlots(8, 126);
     }

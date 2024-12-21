@@ -1,7 +1,7 @@
 package com.enderio.machines.common.recipe;
 
 import com.enderio.machines.EnderIOMachines;
-import com.enderio.machines.common.blockentity.AlloySmelterMode;
+import com.enderio.machines.common.machine.alloy.AlloySmelterMode;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.utility.RecipeInputCache;
 import net.minecraft.world.item.crafting.RecipeType;

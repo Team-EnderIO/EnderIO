@@ -25,7 +25,7 @@ import com.enderio.machines.client.gui.screen.VatScreen;
 import com.enderio.machines.client.gui.screen.WiredChargerScreen;
 import com.enderio.machines.client.gui.screen.XPObeliskScreen;
 import com.enderio.machines.client.gui.screen.XPVacuumScreen;
-import com.enderio.machines.common.machine.alloy.NewAlloySmelterMenu;
+import com.enderio.machines.common.machine.alloy.AlloySmelterMenu;
 import com.enderio.machines.common.menu.AversionObeliskMenu;
 import com.enderio.machines.common.menu.CapacitorBankMenu;
 import com.enderio.machines.common.menu.CrafterMenu;
@@ -36,7 +36,7 @@ import com.enderio.machines.common.menu.ImpulseHopperMenu;
 import com.enderio.machines.common.menu.InhibitorObeliskMenu;
 import com.enderio.machines.common.menu.PaintingMachineMenu;
 import com.enderio.machines.common.menu.PoweredSpawnerMenu;
-import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
+import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.menu.RelocatorObeliskMenu;
 import com.enderio.machines.common.menu.SagMillMenu;
 import com.enderio.machines.common.menu.SlicerMenu;
@@ -64,9 +64,9 @@ public class MachineMenus {
     public static final RegiliteMenu<EnchanterMenu> ENCHANTER = MENU_REGISTRY.registerMenu("enchanter",
             EnchanterMenu::factory, () -> EnchanterScreen::new);
     public static final RegiliteMenu<PrimitiveAlloySmelterMenu> PRIMITIVE_ALLOY_SMELTER = MENU_REGISTRY.registerMenu(
-            "primitive_alloy_smelter", PrimitiveAlloySmelterMenu::factory, () -> PrimitiveAlloySmelterScreen::new);
-    public static final RegiliteMenu<NewAlloySmelterMenu> ALLOY_SMELTER = MENU_REGISTRY.registerMenu("alloy_smelter",
-            NewAlloySmelterMenu::new, () -> AlloySmelterScreen::new);
+            "primitive_alloy_smelter", PrimitiveAlloySmelterMenu::new, () -> PrimitiveAlloySmelterScreen::new);
+    public static final RegiliteMenu<AlloySmelterMenu> ALLOY_SMELTER = MENU_REGISTRY.registerMenu("alloy_smelter",
+            AlloySmelterMenu::new, () -> AlloySmelterScreen::new);
     public static final RegiliteMenu<SagMillMenu> SAG_MILL = MENU_REGISTRY.registerMenu("sag_mill",
             SagMillMenu::factory, () -> SagMillScreen::new);
     public static final RegiliteMenu<StirlingGeneratorMenu> STIRLING_GENERATOR = MENU_REGISTRY

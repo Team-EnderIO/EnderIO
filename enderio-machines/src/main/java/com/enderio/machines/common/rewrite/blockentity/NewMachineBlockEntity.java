@@ -53,7 +53,7 @@ import org.jetbrains.annotations.Nullable;
  * Base block entity implementation for machines.
  * Implements Redstone Control and the Machine State system.
  */
-public abstract class NewMachineBlockEntity extends EIOBlockEntity implements MenuProvider, Wrenchable, IOConfigurable {
+public abstract class NewMachineBlockEntity extends EIOBlockEntity implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
 
     public static final ICapabilityProvider<NewMachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = (be,
             side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
@@ -69,7 +69,7 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity implements Me
 
     private Set<MachineState> states = new HashSet<>();
 
-    private RedstoneControl redstoneControl;
+    private RedstoneControl redstoneControl = RedstoneControl.ALWAYS_ACTIVE;
     private boolean isRedstoneBlocked;
 
     private final boolean supportsActiveState;
@@ -497,7 +497,10 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity implements Me
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.put(MachineNBTKeys.REDSTONE_CONTROL, redstoneControl.save(registries));
+
+        if (supportsRedstoneControl()) {
+            tag.put(MachineNBTKeys.REDSTONE_CONTROL, redstoneControl.save(registries));
+        }
 
         if (hasInventory()) {
             tag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT(registries));
@@ -542,13 +545,15 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity implements Me
             ioConfig = IOConfig.parseOptional(registries, tag.getCompound(MachineNBTKeys.IO_CONFIG));
         }
 
-        // TODO: Ender IO 8 - remove.
-        if (hasData(MachineAttachments.REDSTONE_CONTROL)) {
-            redstoneControl = getData(MachineAttachments.REDSTONE_CONTROL);
-            removeData(MachineAttachments.REDSTONE_CONTROL);
-        } else if (tag.contains(MachineNBTKeys.REDSTONE_CONTROL)) {
-            redstoneControl = RedstoneControl.parse(registries,
+        if (supportsRedstoneControl()) {
+            // TODO: Ender IO 8 - remove.
+            if (hasData(MachineAttachments.REDSTONE_CONTROL)) {
+                redstoneControl = getData(MachineAttachments.REDSTONE_CONTROL);
+                removeData(MachineAttachments.REDSTONE_CONTROL);
+            } else if (tag.contains(MachineNBTKeys.REDSTONE_CONTROL)) {
+                redstoneControl = RedstoneControl.parse(registries,
                     Objects.requireNonNull(tag.get(MachineNBTKeys.REDSTONE_CONTROL)));
+            }
         }
     }
 

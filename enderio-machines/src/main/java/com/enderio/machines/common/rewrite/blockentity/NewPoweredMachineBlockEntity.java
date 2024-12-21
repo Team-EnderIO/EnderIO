@@ -49,6 +49,7 @@ public abstract class NewPoweredMachineBlockEntity extends NewMachineBlockEntity
             boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
             CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
         super(type, worldPosition, blockState, isIoConfigMutable);
+
         this.capacitorSupport = capacitorSupport;
         this.energyIOMode = energyIOMode;
         this.scalableEnergyCapacity = scalableEnergyCapacity;
@@ -60,7 +61,13 @@ public abstract class NewPoweredMachineBlockEntity extends NewMachineBlockEntity
                     "A machine which accepts a capacitor must have an inventory with a capacitor slot!");
         }
 
-        energyStorage = new PoweredMachineEnergyStorage(this);
+        energyStorage = createEnergyStorage();
+    }
+
+    // TODO: Temporary to support the primitive alloy smelter in its current form.
+    @Deprecated(forRemoval = true)
+    protected PoweredMachineEnergyStorage createEnergyStorage() {
+        return new PoweredMachineEnergyStorage(this);
     }
 
     @Override

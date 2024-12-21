@@ -2,7 +2,7 @@ package com.enderio.machines.client.gui.widget;
 
 import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import com.enderio.machines.client.gui.icon.MachineEnumIcons;
-import com.enderio.machines.common.blockentity.AlloySmelterMode;
+import com.enderio.machines.common.machine.alloy.AlloySmelterMode;
 import com.enderio.machines.common.lang.MachineEnumLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

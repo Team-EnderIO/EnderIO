@@ -5,7 +5,6 @@ import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.blockentity.AlloySmelterMode;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -45,7 +44,7 @@ import org.slf4j.Logger;
 
 // TODO: Award XP
 
-public class NewAlloySmelterBlockEntity extends NewPoweredMachineBlockEntity {
+public class AlloySmelterBlockEntity extends NewPoweredMachineBlockEntity {
 
     public static final MultiSlotAccess INPUTS = new MultiSlotAccess();
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
@@ -65,12 +64,12 @@ public class NewAlloySmelterBlockEntity extends NewPoweredMachineBlockEntity {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static NewAlloySmelterBlockEntity factory(BlockPos pWorldPosition, BlockState pBlockState) {
-        return new NewAlloySmelterBlockEntity(MachineBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState);
+    public static AlloySmelterBlockEntity factory(BlockPos pWorldPosition, BlockState pBlockState) {
+        return new AlloySmelterBlockEntity(MachineBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState, CapacitorSupport.REQUIRED);
     }
 
-    protected NewAlloySmelterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(pType, pWorldPosition, pBlockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, CAPACITY, USAGE);
+    protected AlloySmelterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, CapacitorSupport capacitorSupport) {
+        super(pType, pWorldPosition, pBlockState, true, capacitorSupport, EnergyIOMode.Input, CAPACITY, USAGE);
 
         // Crafting task host
         craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::canAcceptTask,
@@ -99,7 +98,7 @@ public class NewAlloySmelterBlockEntity extends NewPoweredMachineBlockEntity {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new NewAlloySmelterMenu(containerId, inventory, this);
+        return new AlloySmelterMenu(containerId, inventory, this);
     }
 
     @Override

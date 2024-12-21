@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.alloy;
 
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.mojang.serialization.Codec;

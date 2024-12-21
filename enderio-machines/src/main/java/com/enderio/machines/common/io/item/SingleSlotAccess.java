@@ -1,15 +1,21 @@
 package com.enderio.machines.common.io.item;
 
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.rewrite.blockentity.MachineInventoryHolder;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
 public class SingleSlotAccess {
     private int index = Integer.MIN_VALUE;
 
-    public ItemStack getItemStack(MachineBlockEntity blockEntity) {
+    public ItemStack getItemStack(MachineInventoryHolder blockEntity) {
+        if (!blockEntity.hasInventory()) {
+            throw new IllegalArgumentException("BlockEntity does not have an inventory");
+        }
+
         return getItemStack(blockEntity.getInventory());
     }
+
     public ItemStack getItemStack(MachineInventory inventory) {
         return inventory.getStackInSlot(index);
     }
@@ -21,13 +27,23 @@ public class SingleSlotAccess {
     public ItemStack insertItem(MachineInventory inventory, ItemStack itemStack, boolean simulate) {
         return inventory.insertItem(index, itemStack, simulate);
     }
-    public ItemStack insertItem(MachineBlockEntity machine, ItemStack itemStack, boolean simulate) {
+
+    public ItemStack insertItem(MachineInventoryHolder machine, ItemStack itemStack, boolean simulate) {
+        if (!machine.hasInventory()) {
+            throw new IllegalArgumentException("BlockEntity does not have an inventory");
+        }
+
         return insertItem(machine.getInventory(), itemStack, simulate);
     }
     public void setStackInSlot(MachineInventory inventory, ItemStack itemStack) {
         inventory.setStackInSlot(index, itemStack);
     }
-    public void setStackInSlot(MachineBlockEntity machine, ItemStack itemStack) {
+
+    public void setStackInSlot(MachineInventoryHolder machine, ItemStack itemStack) {
+        if (!machine.hasInventory()) {
+            throw new IllegalArgumentException("BlockEntity does not have an inventory");
+        }
+
         setStackInSlot(machine.getInventory(), itemStack);
     }
 
@@ -46,6 +62,7 @@ public class SingleSlotAccess {
             throw new IllegalArgumentException("InventoryLayout changed dynamically from " + index + " to " + i + ", don't do that");
         }
     }
+
     public MultiSlotAccess wrapToMulti() {
         return MultiSlotAccess.wrap(this);
     }

@@ -8,7 +8,7 @@ import com.enderio.machines.client.gui.widget.AlloySmelterModeWidget;
 import com.enderio.machines.client.gui.widget.NewCapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.NewProgressWidget;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.machine.alloy.NewAlloySmelterMenu;
+import com.enderio.machines.common.machine.alloy.AlloySmelterMenu;
 import com.enderio.machines.common.rewrite.client.NewMachineScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.apache.commons.lang3.NotImplementedException;
 
-public class AlloySmelterScreen extends NewMachineScreen<NewAlloySmelterMenu> {
+public class AlloySmelterScreen extends NewMachineScreen<AlloySmelterMenu> {
 
     public static final ResourceLocation BG_TEXTURE_AUTO = EnderIOBase
             .loc("textures/gui/screen/alloy_smelter_auto.png");
@@ -30,7 +30,7 @@ public class AlloySmelterScreen extends NewMachineScreen<NewAlloySmelterMenu> {
 
     private static final ResourceLocation PROGRESS_SPRITE = EnderIOBase.loc("screen/alloy_smelter/lit_progress");
 
-    public AlloySmelterScreen(NewAlloySmelterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public AlloySmelterScreen(AlloySmelterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;

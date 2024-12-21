@@ -17,6 +17,7 @@ import com.enderio.machines.common.io.SidedIOConfigurable;
 import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.rewrite.blockentity.MachineInventoryHolder;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -52,7 +53,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider, Wrenchable, IOConfigurable {
+public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = SidedIOConfigurable::new;
 
@@ -327,6 +328,11 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     @Nullable
     public final MachineInventory getInventory() {
         return inventory;
+    }
+
+    @Override
+    public boolean hasInventory() {
+        return inventory != null;
     }
 
     /**

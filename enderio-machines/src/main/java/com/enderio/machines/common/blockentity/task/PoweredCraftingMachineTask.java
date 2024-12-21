@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class PoweredCraftingMachineTask<R extends MachineRecipe<C>, C extends RecipeInput>
+public abstract class  PoweredCraftingMachineTask<R extends MachineRecipe<C>, C extends RecipeInput>
     extends CraftingMachineTask<R, C> implements PoweredMachineTask {
 
     private final IMachineEnergyStorage energyStorage;

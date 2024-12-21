@@ -3,13 +3,14 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIOBase;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
-import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
+import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterMenu;
+import com.enderio.machines.common.rewrite.client.NewMachineScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class PrimitiveAlloySmelterScreen extends MachineScreen<PrimitiveAlloySmelterMenu> {
+public class PrimitiveAlloySmelterScreen extends NewMachineScreen<PrimitiveAlloySmelterMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIOBase.loc("textures/gui/screen/primitive_alloy_smelter.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;

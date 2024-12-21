@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.alloy;
 
 import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.io.energy.EnergyIOMode;
@@ -11,7 +11,8 @@ import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
-import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
+import com.enderio.machines.common.rewrite.blockentity.flags.CapacitorSupport;
+import com.enderio.machines.common.rewrite.energy.PoweredMachineEnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -39,16 +40,13 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     public static final SingleSlotAccess FUEL = new SingleSlotAccess();
     public static final MultiSlotAccess INPUTS = new MultiSlotAccess();
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
-    @UseOnly(LogicalSide.CLIENT)
-    private float clientBurnProgress;
 
     public PrimitiveAlloySmelterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER.get(), pWorldPosition, pBlockState);
-        addDataSlot(NetworkDataSlot.FLOAT.create(this::getBurnProgress, p -> clientBurnProgress = p));
+        super(MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER.get(), pWorldPosition, pBlockState, CapacitorSupport.NONE);
     }
 
     @Override
-    protected boolean isPrimitiveSmelter() {
+    public boolean isPrimitiveSmelter() {
         return true;
     }
 
@@ -82,7 +80,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new PrimitiveAlloySmelterMenu(inventory, containerId, this);
+        return new PrimitiveAlloySmelterMenu(containerId, inventory, this);
     }
 
     @Override
@@ -109,7 +107,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
 
                     // Remove the fuel
                     if (fuel.hasCraftingRemainingItem()) {
-                        FUEL.setStackInSlot(this, fuel.getCraftingRemainingItem());
+                        FUEL.setStackInSlot(getInventory(), fuel.getCraftingRemainingItem());
                     } else {
                         fuel.shrink(1);
                     }
@@ -123,19 +121,22 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
         return super.canAcceptTask() || !FUEL.getItemStack(this).isEmpty();
     }
 
+    // Deprecated because this BE is implemented in a gross way :)
+    @SuppressWarnings("removal")
     @Override
-    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
-        return new MachineEnergyStorage(this, energyIOMode, this::getBurnToFE, () -> 0) {
+    protected PoweredMachineEnergyStorage createEnergyStorage() {
+        return new PoweredMachineEnergyStorage(this) {
             @Override
             public int getEnergyStored() {
                 if (isBurning()) {
                     return getBurnToFE();
                 }
+
                 return 0;
             }
 
             @Override
-            public int consumeEnergy(int energy, boolean simulate) {
+            public int consumeEnergy(int energyToConsume, boolean simulate) {
                 // We burn fuel, this energy storage is merely a wrapper now.
                 if (isBurning()) {
                     return getBurnToFE();
@@ -145,21 +146,12 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
         };
     }
 
-    @Override
-    public @Nullable MachineEnergyStorage createExposedEnergyStorage() {
-        // Hide the power cap from other machines and TOP and such.
-        return null;
-    }
 
     public boolean isBurning() {
         return burnTime > 0;
     }
 
     public float getBurnProgress() {
-        if (level.isClientSide) {
-            return clientBurnProgress;
-        }
-
         if (burnDuration == 0) {
             return 0;
         }
@@ -172,7 +164,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     }
 
     @Override
-    protected boolean isActive() {
+    public boolean isActive() {
         // Ignores power.
         return canAct() && isBurning();
     }

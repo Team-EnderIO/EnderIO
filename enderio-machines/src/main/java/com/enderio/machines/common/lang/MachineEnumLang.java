@@ -3,7 +3,7 @@ package com.enderio.machines.common.lang;
 import com.enderio.EnderIOBase;
 import com.enderio.core.common.lang.EnumTranslationMap;
 import com.enderio.machines.EnderIOMachines;
-import com.enderio.machines.common.blockentity.AlloySmelterMode;
+import com.enderio.machines.common.machine.alloy.AlloySmelterMode;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 

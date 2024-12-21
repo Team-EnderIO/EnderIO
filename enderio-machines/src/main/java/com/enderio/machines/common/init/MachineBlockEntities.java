@@ -19,7 +19,7 @@ import com.enderio.machines.common.blockentity.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.PaintingMachineBlockEntity;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
-import com.enderio.machines.common.blockentity.PrimitiveAlloySmelterBlockEntity;
+import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterBlockEntity;
 import com.enderio.machines.common.blockentity.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.blockentity.SlicerBlockEntity;
@@ -38,7 +38,7 @@ import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockE
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
-import com.enderio.machines.common.machine.alloy.NewAlloySmelterBlockEntity;
+import com.enderio.machines.common.machine.alloy.AlloySmelterBlockEntity;
 import com.enderio.machines.common.rewrite.blockentity.NewMachineBlockEntity;
 import com.enderio.machines.common.rewrite.blockentity.NewPoweredMachineBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
@@ -75,10 +75,10 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<PrimitiveAlloySmelterBlockEntity> PRIMITIVE_ALLOY_SMELTER = register(
             "primitive_alloy_smelter", PrimitiveAlloySmelterBlockEntity::new, MachineBlocks.PRIMITIVE_ALLOY_SMELTER)
-                    .apply(MachineBlockEntities::machineBlockEntityCapabilities);
+                    .apply(MachineBlockEntities::newMachineBlockEntityCapabilities);
 
-    public static final RegiliteBlockEntity<NewAlloySmelterBlockEntity> ALLOY_SMELTER = register("alloy_smelter",
-            NewAlloySmelterBlockEntity::factory, MachineBlocks.ALLOY_SMELTER)
+    public static final RegiliteBlockEntity<AlloySmelterBlockEntity> ALLOY_SMELTER = register("alloy_smelter",
+            AlloySmelterBlockEntity::factory, MachineBlocks.ALLOY_SMELTER)
                     .apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<CreativePowerBlockEntity> CREATIVE_POWER = register("creative_power",

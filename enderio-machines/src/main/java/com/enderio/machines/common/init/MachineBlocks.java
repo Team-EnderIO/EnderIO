@@ -118,7 +118,7 @@ public class MachineBlocks {
             .setBlockStateProvider(MachineModelUtil::machineBlock)
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
-    public static final RegiliteBlock<ProgressMachineBlock> PRIMITIVE_ALLOY_SMELTER = progressMachine(
+    public static final RegiliteBlock<NewProgressMachineBlock<?>> PRIMITIVE_ALLOY_SMELTER = newProgressMachine(
             "primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER);
 
     public static final RegiliteBlock<NewProgressMachineBlock<?>> ALLOY_SMELTER = newProgressMachine("alloy_smelter",
