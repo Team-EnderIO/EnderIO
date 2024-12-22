@@ -1,12 +1,10 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.sag_mill;
 
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -17,14 +15,14 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
-import com.enderio.machines.common.menu.SagMillMenu;
+import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -36,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SagMillBlockEntity extends PoweredMachineBlockEntity {
+public class SagMillBlockEntity extends NewPoweredMachineBlockEntity {
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SAG_MILL_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.SAG_MILL_USAGE);
 
@@ -45,20 +43,12 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
 
     private GrindingBallData grindingBallData = GrindingBallData.IDENTITY;
-    @Nullable
-    private ResourceLocation pendingGrindingBallId;
     private int grindingBallDamage;
 
     private final CraftingMachineTaskHost<SagMillingRecipe, SagMillingRecipe.Input> craftingTaskHost;
 
-    public static final NetworkDataSlot.CodecType<GrindingBallData> GRINDING_BALL_DATA_SLOT_TYPE
-        = new NetworkDataSlot.CodecType<>(GrindingBallData.CODEC, GrindingBallData.STREAM_CODEC.cast());
-
     public SagMillBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.SAG_MILL.get(), worldPosition, blockState);
-
-        addDataSlot(NetworkDataSlot.INT.create(() -> grindingBallDamage, i -> grindingBallDamage = i));
-        addDataSlot(GRINDING_BALL_DATA_SLOT_TYPE.create(() -> grindingBallData, v -> grindingBallData = v));
+        super(MachineBlockEntities.SAG_MILL.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, CAPACITY, USAGE);
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SAG_MILLING.type().get(),
             this::createTask, this::createRecipeInput);
@@ -84,7 +74,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new SagMillMenu(containerId, this, inventory);
+        return new SagMillMenu(containerId, inventory, this);
     }
 
     @Override
@@ -126,7 +116,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private SagMillingRecipe.Input createRecipeInput() {
-        return new SagMillingRecipe.Input(INPUT.getItemStack(getInventoryNN()), getGrindingBallData());
+        return new SagMillingRecipe.Input(INPUT.getItemStack(getInventory()), getGrindingBallData());
     }
 
     // region Crafting Task
@@ -136,12 +126,12 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    protected boolean isActive() {
+    public boolean isActive() {
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
     protected PoweredCraftingMachineTask<SagMillingRecipe, SagMillingRecipe.Input> createTask(Level level, SagMillingRecipe.Input container, @Nullable RecipeHolder<SagMillingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, getInventoryNN(), getEnergyStorage(), container, OUTPUT, recipe) {
+        return new PoweredCraftingMachineTask<>(level, getInventory(), getEnergyStorage(), container, OUTPUT, recipe) {
             @Override
             protected void consumeInputs(SagMillingRecipe recipe) {
                 MachineInventory inv = getInventory();

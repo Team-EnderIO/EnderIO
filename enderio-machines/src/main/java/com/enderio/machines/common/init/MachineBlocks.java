@@ -138,7 +138,7 @@ public class MachineBlocks {
     public static final RegiliteBlock<ProgressMachineBlock> STIRLING_GENERATOR = progressMachine("stirling_generator",
             () -> MachineBlockEntities.STIRLING_GENERATOR);
 
-    public static final RegiliteBlock<ProgressMachineBlock> SAG_MILL = progressMachine("sag_mill",
+    public static final RegiliteBlock<NewProgressMachineBlock<?>> SAG_MILL = newProgressMachine("sag_mill",
             () -> MachineBlockEntities.SAG_MILL).setTranslation("SAG Mill");
 
     public static final RegiliteBlock<ProgressMachineBlock> SLICE_AND_SPLICE = progressMachine("slice_and_splice",

@@ -21,7 +21,7 @@ import com.enderio.machines.common.blockentity.PaintingMachineBlockEntity;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterBlockEntity;
 import com.enderio.machines.common.blockentity.RelocatorObeliskBlockEntity;
-import com.enderio.machines.common.blockentity.SagMillBlockEntity;
+import com.enderio.machines.common.machine.sag_mill.SagMillBlockEntity;
 import com.enderio.machines.common.blockentity.SlicerBlockEntity;
 import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
 import com.enderio.machines.common.blockentity.SoulEngineBlockEntity;
@@ -90,7 +90,7 @@ public class MachineBlockEntities {
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<SagMillBlockEntity> SAG_MILL = register("sag_mill", SagMillBlockEntity::new,
-            MachineBlocks.SAG_MILL).apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            MachineBlocks.SAG_MILL).apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<SlicerBlockEntity> SLICE_AND_SPLICE = register("slice_and_splice",
             SlicerBlockEntity::new, MachineBlocks.SLICE_AND_SPLICE)

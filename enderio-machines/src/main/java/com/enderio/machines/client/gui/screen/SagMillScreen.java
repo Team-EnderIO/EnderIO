@@ -5,15 +5,12 @@ import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.machines.client.gui.screen.base.MachineScreen;
+import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
-import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.NewCapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.NewProgressWidget;
-import com.enderio.machines.client.gui.widget.ProgressWidget;
-import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.menu.SagMillMenu;
+import com.enderio.machines.common.machine.sag_mill.SagMillMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
@@ -26,7 +23,7 @@ import net.minecraft.world.entity.player.Inventory;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class SagMillScreen extends MachineScreen<SagMillMenu> {
+public class SagMillScreen extends NewMachineScreen<SagMillMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIOBase.loc("textures/gui/screen/sag_mill.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 208;
@@ -95,13 +92,8 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
 
         @Override
         public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-            SagMillBlockEntity be = SagMillScreen.this.getMenu().getBlockEntity();
-            if (be == null) {
-                return;
-            }
-
-            float durability = be.getGrindingBallDamage();
-            var data = be.getGrindingBallData();
+            float durability = menu.getGrindingBallDamage();
+            var data = menu.getGrindingBallData();
 
             int yOffset = (int) Math.ceil(this.height * (1.0f - durability));
 
@@ -111,22 +103,25 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
                 tooltipDataCache = data;
                 tooltipDuraCache = durability;
 
-                // Gather all parts of the tooltip
-                List<Component> tooltipComponents = List.of(
-                    TooltipUtil.styledWithArgs(MachineLang.SAG_MILL_GRINDINGBALL_REMAINING, (int) (durability * 100)),
-                    MachineLang.SAG_MILL_GRINDINGBALL_TITLE,
-                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.outputMultiplier() * 100)),
-                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.bonusMultiplier() * 100)),
-                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100))
-                );
-
-                // Build single component
                 MutableComponent tooltip = Component.empty().copy();
-                for (int i = 0; i < tooltipComponents.size(); i++) {
-                    tooltip.append(tooltipComponents.get(i));
 
-                    if (i + 1 < tooltipComponents.size()) {
-                        tooltip.append("\n");
+                if (durability > 0) {
+                    // Build tooltip pieces
+                    List<Component> tooltipComponents = List.of(
+                        TooltipUtil.styledWithArgs(MachineLang.SAG_MILL_GRINDINGBALL_REMAINING, (int) (durability * 100)),
+                        MachineLang.SAG_MILL_GRINDINGBALL_TITLE,
+                        TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.outputMultiplier() * 100)),
+                        TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.bonusMultiplier() * 100)),
+                        TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100))
+                    );
+
+                    // Combine together.
+                    for (int i = 0; i < tooltipComponents.size(); i++) {
+                        tooltip.append(tooltipComponents.get(i));
+
+                        if (i + 1 < tooltipComponents.size()) {
+                            tooltip.append("\n");
+                        }
                     }
                 }
 
