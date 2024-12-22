@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.function.Supplier;
 
@@ -15,9 +16,9 @@ public class ExperienceWidget extends EIOWidget {
     protected static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_background");
     protected static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_progress");
 
-    private final Supplier<MachineFluidTank> getFluid;
+    private final Supplier<FluidStack> getFluid;
 
-    public ExperienceWidget(int x, int y, int width, int height, Supplier<MachineFluidTank> getFluid) {
+    public ExperienceWidget(int x, int y, int width, int height, Supplier<FluidStack> getFluid) {
         super(x, y, width, height);
         this.getFluid = getFluid;
     }
@@ -27,7 +28,7 @@ public class ExperienceWidget extends EIOWidget {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
 
-        ExperienceUtil.ExperienceLevel expLevel = ExperienceUtil.getLevelFromFluidWithLeftover(getFluid.get().getFluidAmount());
+        ExperienceUtil.ExperienceLevel expLevel = ExperienceUtil.getLevelFromFluidWithLeftover(getFluid.get().getAmount());
         int fill = (int) ((((float) expLevel.experience()) / ExperienceUtil.getXpNeededForNextLevel(expLevel.level())) * this.width) - 1;
 
         guiGraphics.blitSprite(EXPERIENCE_BAR_BACKGROUND_SPRITE, this.x, this.y, this.width, this.height);

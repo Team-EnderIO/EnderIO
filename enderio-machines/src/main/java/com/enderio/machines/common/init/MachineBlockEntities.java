@@ -17,7 +17,7 @@ import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
 import com.enderio.machines.common.blockentity.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
-import com.enderio.machines.common.blockentity.PaintingMachineBlockEntity;
+import com.enderio.machines.common.machine.painting.PaintingMachineBlockEntity;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterBlockEntity;
 import com.enderio.machines.common.blockentity.RelocatorObeliskBlockEntity;
@@ -30,7 +30,7 @@ import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.VacuumChestBlockEntity;
 import com.enderio.machines.common.blockentity.VatBlockEntity;
 import com.enderio.machines.common.blockentity.WiredChargerBlockEntity;
-import com.enderio.machines.common.blockentity.XPObeliskBlockEntity;
+import com.enderio.machines.common.machine.obelisk.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.XPVacuumBlockEntity;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
@@ -135,7 +135,7 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<PaintingMachineBlockEntity> PAINTING_MACHINE = register("painting_machine",
             PaintingMachineBlockEntity::new, MachineBlocks.PAINTING_MACHINE)
-                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+                    .apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<PoweredSpawnerBlockEntity> POWERED_SPAWNER = register("powered_spawner",
             PoweredSpawnerBlockEntity::new, MachineBlocks.POWERED_SPAWNER)
@@ -176,8 +176,8 @@ public class MachineBlockEntities {
             XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK).setRenderer(() -> XPObeliskBER::new)
                     // TODO: Make XP Obelisk use the common base class :)
                     // .setRenderer(() -> ObeliskBER.factory(EIOItems.EXPERIENCE_ROD::get))
-                    .apply(MachineBlockEntities::machineBlockEntityCapabilities)
-                    .apply(MachineBlockEntities::fluidHandlerCapability);
+                    .apply(MachineBlockEntities::newMachineBlockEntityCapabilities)
+                    .apply(MachineBlockEntities::newFluidHandlerCapability);
 
     public static final RegiliteBlockEntity<VatBlockEntity> VAT = register("vat", VatBlockEntity::new,
             MachineBlocks.VAT).apply(MachineBlockEntities::machineBlockEntityCapabilities)
@@ -229,6 +229,10 @@ public class MachineBlockEntities {
     }
 
     private static void fluidHandlerCapability(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
+        blockEntity.addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
+    }
+
+    private static void newFluidHandlerCapability(RegiliteBlockEntity<? extends NewMachineBlockEntity> blockEntity) {
         blockEntity.addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
     }
 

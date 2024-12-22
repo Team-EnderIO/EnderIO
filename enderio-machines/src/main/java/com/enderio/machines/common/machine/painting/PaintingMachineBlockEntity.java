@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.painting;
 
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
@@ -16,7 +16,8 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
-import com.enderio.machines.common.menu.PaintingMachineMenu;
+import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.recipe.PaintingRecipe;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import net.minecraft.core.BlockPos;
@@ -39,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
+public class PaintingMachineBlockEntity extends NewPoweredMachineBlockEntity {
 
     public static final SingleSlotAccess INPUT = new SingleSlotAccess();
     public static final SingleSlotAccess PAINT = new SingleSlotAccess();
@@ -52,7 +53,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     private final CraftingMachineTaskHost<PaintingRecipe, PaintingRecipe.Input> craftingTaskHost;
 
     public PaintingMachineBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.PAINTING_MACHINE.get(), worldPosition, blockState);
+        super(MachineBlockEntities.PAINTING_MACHINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, CAPACITY, USAGE);
 
         area = AABB.ofSize(worldPosition.getCenter(), 10, 10, 10);
 
@@ -63,7 +64,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new PaintingMachineMenu(this, pInventory, pContainerId);
+        return new PaintingMachineMenu(pInventory, pContainerId, this);
     }
 
     @Override
@@ -120,8 +121,8 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 
     private PaintingRecipe.Input createRecipeInput() {
         return new PaintingRecipe.Input(
-            INPUT.getItemStack(getInventoryNN()),
-            PAINT.getItemStack(getInventoryNN()));
+            INPUT.getItemStack(getInventory()),
+            PAINT.getItemStack(getInventory()));
     }
 
     // endregion
@@ -133,12 +134,12 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    protected boolean isActive() {
+    public boolean isActive() {
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
     protected PoweredCraftingMachineTask<PaintingRecipe, PaintingRecipe.Input> createTask(Level level, PaintingRecipe.Input recipeInput, @Nullable RecipeHolder<PaintingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, getInventoryNN(), getEnergyStorage(), recipeInput, OUTPUT, recipe) {
+        return new PoweredCraftingMachineTask<>(level, getInventory(), getEnergyStorage(), recipeInput, OUTPUT, recipe) {
             @Override
             protected void consumeInputs(PaintingRecipe recipe) {
                 INPUT.getItemStack(getInventory()).shrink(1);

@@ -29,6 +29,7 @@ import com.enderio.machines.common.item.FluidTankItem;
 import com.enderio.machines.common.machine.base.block.NewMachineBlock;
 import com.enderio.machines.common.machine.base.block.NewProgressMachineBlock;
 import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
+import com.enderio.machines.common.machine.obelisk.xp.XPObeliskBlockEntity;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.enderio.regilite.data.DataGenContext;
@@ -124,7 +125,7 @@ public class MachineBlocks {
     public static final RegiliteBlock<NewProgressMachineBlock<?>> ALLOY_SMELTER = newProgressMachine("alloy_smelter",
             () -> MachineBlockEntities.ALLOY_SMELTER);
 
-    public static final RegiliteBlock<ProgressMachineBlock> PAINTING_MACHINE = progressMachine("painting_machine",
+    public static final RegiliteBlock<NewProgressMachineBlock<?>> PAINTING_MACHINE = newProgressMachine("painting_machine",
             () -> MachineBlockEntities.PAINTING_MACHINE);
 
     public static final RegiliteBlock<MachineBlock> WIRED_CHARGER = machine("wired_charger",
@@ -248,8 +249,8 @@ public class MachineBlocks {
                     (prov, ctx) -> prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName())))
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
-    public static final RegiliteBlock<MachineBlock> XP_OBELISK = BLOCK_REGISTRY
-            .registerBlock("xp_obelisk", props -> new MachineBlock(MachineBlockEntities.XP_OBELISK, props),
+    public static final RegiliteBlock<NewMachineBlock<XPObeliskBlockEntity>> XP_OBELISK = BLOCK_REGISTRY
+            .registerBlock("xp_obelisk", props -> new NewMachineBlock<>(MachineBlockEntities.XP_OBELISK::get, props),
                     BlockBehaviour.Properties.of()
                             .strength(2.5f, 8)
                             .isViewBlocking((pState, pLevel, pPos) -> false)

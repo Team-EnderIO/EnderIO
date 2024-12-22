@@ -34,7 +34,7 @@ import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
 import com.enderio.machines.common.menu.InhibitorObeliskMenu;
-import com.enderio.machines.common.menu.PaintingMachineMenu;
+import com.enderio.machines.common.machine.painting.PaintingMachineMenu;
 import com.enderio.machines.common.menu.PoweredSpawnerMenu;
 import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.menu.RelocatorObeliskMenu;
@@ -47,7 +47,7 @@ import com.enderio.machines.common.menu.TravelAnchorMenu;
 import com.enderio.machines.common.menu.VacuumChestMenu;
 import com.enderio.machines.common.menu.VatMenu;
 import com.enderio.machines.common.menu.WiredChargerMenu;
-import com.enderio.machines.common.menu.XPObeliskMenu;
+import com.enderio.machines.common.machine.obelisk.xp.XPObeliskMenu;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import com.enderio.regilite.holder.RegiliteMenu;
 import com.enderio.regilite.registry.MenuRegistry;
@@ -90,7 +90,7 @@ public class MachineMenus {
     public static final RegiliteMenu<WiredChargerMenu> WIRED_CHARGER = MENU_REGISTRY.registerMenu("wired_charger",
             WiredChargerMenu::factory, () -> WiredChargerScreen::new);
     public static final RegiliteMenu<PaintingMachineMenu> PAINTING_MACHINE = MENU_REGISTRY
-            .registerMenu("painting_machine", PaintingMachineMenu::factory, () -> PaintingMachineScreen::new);
+            .registerMenu("painting_machine", PaintingMachineMenu::new, () -> PaintingMachineScreen::new);
     public static final RegiliteMenu<CapacitorBankMenu> CAPACITOR_BANK = MENU_REGISTRY.registerMenu("capacitor_bank",
             CapacitorBankMenu::factory, () -> CapacitorBankScreen::new);
     public static final RegiliteMenu<SoulEngineMenu> SOUL_ENGINE = MENU_REGISTRY.registerMenu("soul_engine",
@@ -98,7 +98,7 @@ public class MachineMenus {
     public static final RegiliteMenu<TravelAnchorMenu> TRAVEL_ANCHOR = MENU_REGISTRY.registerMenu("travel_anchor",
             TravelAnchorMenu::factory, () -> TravelAnchorScreen::new);
     public static final RegiliteMenu<XPObeliskMenu> XP_OBELISK = MENU_REGISTRY.registerMenu("xp_obelisk",
-            XPObeliskMenu::factory, () -> XPObeliskScreen::new);
+            XPObeliskMenu::new, () -> XPObeliskScreen::new);
     public static final RegiliteMenu<InhibitorObeliskMenu> INHIBITOR_OBELISK = MENU_REGISTRY
             .registerMenu("inhibitor_obelisk", InhibitorObeliskMenu::factory, () -> InhibitorObeliskScreen::new);
     public static final RegiliteMenu<AversionObeliskMenu> AVERSION_OBELISK = MENU_REGISTRY

@@ -4,9 +4,10 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
+import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
 import com.enderio.machines.client.gui.widget.ExperienceWidget;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.menu.XPObeliskMenu;
+import com.enderio.machines.common.machine.obelisk.xp.XPObeliskMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -19,7 +20,7 @@ import org.joml.Vector2i;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
+public class XPObeliskScreen extends NewMachineScreen<XPObeliskMenu> {
     private static final ResourceLocation BG = EnderIOBase.loc("textures/gui/screen/xp_obelisk.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 116;
@@ -45,7 +46,7 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 8 - 14, topPos + 6, menu::getRedstoneControl,
             menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
-        addRenderableOnly(new ExperienceWidget(leftPos + (imageWidth / 2) - 55, topPos + 55, 110, 5, menu::getFluidTank));
+        addRenderableOnly(new ExperienceWidget(leftPos + (imageWidth / 2) - 55, topPos + 55, 110, 5, menu::getFluid));
 
         int size = 16;
         int padding = 16;

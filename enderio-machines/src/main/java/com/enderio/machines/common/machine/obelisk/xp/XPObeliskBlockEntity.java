@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.obelisk.xp;
 
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOFluids;
@@ -12,7 +12,7 @@ import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
-import com.enderio.machines.common.menu.XPObeliskMenu;
+import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -30,27 +30,27 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTankUser {
+public class XPObeliskBlockEntity extends NewMachineBlockEntity implements FluidTankUser {
 
-    private final NetworkDataSlot<Integer> xpTankDataSlot;
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public XPObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.XP_OBELISK.get(), worldPosition, blockState);
+        super(MachineBlockEntities.XP_OBELISK.get(), worldPosition, blockState, true);
         fluidHandler = createFluidHandler();
+    }
 
-        this.xpTankDataSlot = NetworkDataSlot.INT.create(() -> TANK.getFluidAmount(this),
-                amount -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), amount)));
-        addDataSlot(xpTankDataSlot);
+    @Override
+    public boolean isActive() {
+        return false;
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-        return new XPObeliskMenu(containerId, this, playerInventory);
+        return new XPObeliskMenu(containerId, playerInventory, this);
     }
 
     @Override

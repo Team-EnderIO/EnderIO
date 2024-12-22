@@ -23,11 +23,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class NewMachineBlock<T extends NewMachineBlockEntity> extends EIOEntityBlock<T> {
+public class NewMachineBlock<T extends NewMachineBlockEntity> extends EIOEntityBlock<T> {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    protected NewMachineBlock(Supplier<BlockEntityType<? extends T>> typeSupplier, Properties properties) {
+    public NewMachineBlock(Supplier<BlockEntityType<? extends T>> typeSupplier, Properties properties) {
         super(typeSupplier, properties);
 
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));

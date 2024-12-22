@@ -71,7 +71,7 @@ public abstract class FluidStackSyncSlot implements SyncSlot {
         }
 
         var changeType = currentValue.getFluid().isSame(lastValue.getFluid()) ? ChangeType.PARTIAL : ChangeType.FULL;
-        lastValue = currentValue;
+        lastValue = currentValue.copy();
         return changeType;
     }
 
