@@ -4,15 +4,18 @@ import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class RegistrySyncSlot<T> implements SyncSlot {
 
-    public static <T> RegistrySyncSlot<T> standalone(Registry<T> registry) {
-        return new RegistrySyncSlot<>(registry) {
+    public static <T> RegistrySyncSlot<T> standalone(ResourceKey<Registry<T>> registryKey) {
+        return new RegistrySyncSlot<>(registryKey) {
             @Nullable
             private T value;
 
@@ -29,8 +32,8 @@ public abstract class RegistrySyncSlot<T> implements SyncSlot {
         };
     }
 
-    public static <T> RegistrySyncSlot<T> simple(Registry<T> registry, Supplier<T> getter, Consumer<T> setter) {
-        return new RegistrySyncSlot<>(registry) {
+    public static <T> RegistrySyncSlot<T> simple(ResourceKey<Registry<T>> registryKey, Supplier<T> getter, Consumer<T> setter) {
+        return new RegistrySyncSlot<>(registryKey) {
 
             @Override
             @Nullable
@@ -45,8 +48,8 @@ public abstract class RegistrySyncSlot<T> implements SyncSlot {
         };
     }
 
-    public static <T> RegistrySyncSlot<T> readOnly(Registry<T> registry, Supplier<T> getter) {
-        return new RegistrySyncSlot<>(registry) {
+    public static <T> RegistrySyncSlot<T> readOnly(ResourceKey<Registry<T>> registryKey, Supplier<T> getter) {
+        return new RegistrySyncSlot<>(registryKey) {
 
             @Override
             @Nullable
@@ -61,11 +64,11 @@ public abstract class RegistrySyncSlot<T> implements SyncSlot {
         };
     }
 
-    private final Registry<T> registry;
+    private final ResourceKey<Registry<T>> registryKey;
     private T lastValue;
 
-    protected RegistrySyncSlot(Registry<T> registry) {
-        this.registry = registry;
+    protected RegistrySyncSlot(ResourceKey<Registry<T>> registryKey) {
+        this.registryKey = registryKey;
     }
 
     @Nullable
@@ -76,20 +79,20 @@ public abstract class RegistrySyncSlot<T> implements SyncSlot {
     @Override
     public ChangeType detectChanges() {
         var currentValue = get();
-        var changeType = registry.getId(currentValue) != registry.getId(lastValue) ? ChangeType.FULL : ChangeType.NONE;
+        var changeType = Objects.equals(currentValue, lastValue) ? ChangeType.FULL : ChangeType.NONE;
         lastValue = currentValue;
         return changeType;
     }
 
     @Override
-    public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
-        return new IntSlotPayload(registry.getId(get()));
+    public SlotPayload createPayload(Level level, ChangeType changeType) {
+        return new IntSlotPayload(level.registryAccess().registryOrThrow(registryKey).getId(get()));
     }
 
     @Override
-    public void unpackPayload(SlotPayload payload) {
+    public void unpackPayload(Level level, SlotPayload payload) {
         if (payload instanceof IntSlotPayload intSlotPayload) {
-            set(registry.byId(intSlotPayload.value()));
+            set(level.registryAccess().registryOrThrow(registryKey).byId(intSlotPayload.value()));
         }
     }
 }

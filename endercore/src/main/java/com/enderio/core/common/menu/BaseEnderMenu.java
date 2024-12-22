@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
@@ -113,7 +114,7 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
             ChangeType changeType = syncSlot.detectChanges();
 
             if (changeType != ChangeType.NONE) {
-                var payload = syncSlot.createPayload(playerInventory.player.registryAccess(), ChangeType.FULL);
+                var payload = syncSlot.createPayload(playerInventory.player.level(), ChangeType.FULL);
                 PacketDistributor.sendToServer(new ServerboundSetSyncSlotDataPacket(containerId, slotIndex, payload));
             }
         }
@@ -127,7 +128,7 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
     public void clientHandleIncomingPayload(short slotIndex, SlotPayload payload) {
         if (slotIndex >= 0 && slotIndex < syncSlots.size()) {
             var slot = syncSlots.get(slotIndex);
-            slot.unpackPayload(payload);
+            slot.unpackPayload(playerInventory.player.level(), payload);
         } else {
             // TODO: Log this error.
         }
@@ -141,7 +142,7 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
     public void serverHandleIncomingPayload(short slotIndex, SlotPayload payload) {
         if (slotIndex >= 0 && slotIndex < clientUpdateSyncSlots.size()) {
             var slot = clientUpdateSyncSlots.get(slotIndex);
-            slot.unpackPayload(payload);
+            slot.unpackPayload(playerInventory.player.level(), payload);
         } else {
             // TODO: Log this error.
         }
@@ -153,13 +154,13 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
 
         if (playerInventory.player instanceof ServerPlayer player) {
             List<PayloadPair> payloads = new ArrayList<>();
-            RegistryAccess registryAccess = player.registryAccess();
+            Level level = player.level();
 
             for (short i = 0; i < syncSlots.size(); i++) {
                 var slot = syncSlots.get(i);
                 ChangeType changeType = slot.detectChanges();
                 if (changeType != ChangeType.NONE) {
-                    var payload = slot.createPayload(registryAccess, ChangeType.FULL);
+                    var payload = slot.createPayload(level, ChangeType.FULL);
                     payloads.add(new PayloadPair(i, payload));
                 }
             }
@@ -176,7 +177,7 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
 
         if (playerInventory.player instanceof ServerPlayer player) {
             List<PayloadPair> payloads = new ArrayList<>();
-            RegistryAccess registryAccess = player.registryAccess();
+            Level level = player.level();
 
             for (short i = 0; i < syncSlots.size(); i++) {
                 var slot = syncSlots.get(i);
@@ -184,7 +185,7 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
                 // Initialize the change detectors, we're sending all data no matter what.
                 slot.detectChanges();
 
-                var payload = slot.createPayload(registryAccess, ChangeType.FULL);
+                var payload = slot.createPayload(level, ChangeType.FULL);
                 payloads.add(new PayloadPair(i, payload));
             }
 

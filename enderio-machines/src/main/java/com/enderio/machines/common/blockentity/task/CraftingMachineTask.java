@@ -76,6 +76,11 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         return inventory;
     }
 
+    @Nullable
+    public RecipeHolder<R> getRecipeHolder() {
+        return recipe;
+    }
+
     // TODO: NEO-PORT: Should this return the holder?
     @Nullable
     public R getRecipe() {

@@ -7,6 +7,7 @@ import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
@@ -39,6 +40,14 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
 
     public EnderContainerScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+    }
+
+    /**
+     * Utility for server-side button presses
+     * @param id The button ID that was pressed.
+     */
+    protected void handleButtonPress(int id) {
+        Objects.requireNonNull(this.getMinecraft().gameMode).handleInventoryButtonClick(getMenu().containerId, id);
     }
 
     protected void centerAlignTitleLabelX() {

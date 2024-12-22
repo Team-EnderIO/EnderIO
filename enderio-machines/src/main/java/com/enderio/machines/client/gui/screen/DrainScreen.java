@@ -50,19 +50,14 @@ public class DrainScreen extends NewMachineScreen<DrainMenu> {
             EIOLang.HIDE_RANGE,
             EIOLang.SHOW_RANGE,
             menu::isRangeVisible,
-            (ignore) -> handlePress(DrainMenu.VISIBILITY_BUTTON_ID)));
+            (ignore) -> handleButtonPress(DrainMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2, 8, 8, PLUS_SPRITES,
-            (b) -> handlePress(DrainMenu.INCREASE_BUTTON_ID)));
+            (b) -> handleButtonPress(DrainMenu.INCREASE_BUTTON_ID)));
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2 + 8, 8, 8, MINUS_SPRITES,
-            (b) -> handlePress(DrainMenu.DECREASE_BUTTON_ID)));
+            (b) -> handleButtonPress(DrainMenu.DECREASE_BUTTON_ID)));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
-    }
-
-    // TODO: Should probably be a utility method higher up...
-    private void handlePress(int id) {
-        this.minecraft.gameMode.handleInventoryButtonClick(getMenu().containerId, id);
     }
 
     @Override

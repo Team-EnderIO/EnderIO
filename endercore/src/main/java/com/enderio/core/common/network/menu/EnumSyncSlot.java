@@ -5,6 +5,7 @@ import com.enderio.core.common.network.menu.payload.SlotPayload;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.level.Level;
 
 public abstract class EnumSyncSlot<T extends Enum<T>> implements SyncSlot {
 
@@ -79,12 +80,12 @@ public abstract class EnumSyncSlot<T extends Enum<T>> implements SyncSlot {
     }
 
     @Override
-    public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
+    public SlotPayload createPayload(Level level, ChangeType changeType) {
         return new IntSlotPayload(get().ordinal());
     }
 
     @Override
-    public void unpackPayload(SlotPayload payload) {
+    public void unpackPayload(Level level, SlotPayload payload) {
         if (payload instanceof IntSlotPayload intSlotPayload) {
             var values = enumClass.getEnumConstants();
             if (intSlotPayload.value() >= 0 && intSlotPayload.value() < values.length) {

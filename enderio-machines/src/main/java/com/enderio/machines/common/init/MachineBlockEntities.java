@@ -28,7 +28,7 @@ import com.enderio.machines.common.blockentity.SoulEngineBlockEntity;
 import com.enderio.machines.common.machine.stirling_generator.StirlingGeneratorBlockEntity;
 import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.VacuumChestBlockEntity;
-import com.enderio.machines.common.blockentity.VatBlockEntity;
+import com.enderio.machines.common.machine.vat.VatBlockEntity;
 import com.enderio.machines.common.blockentity.WiredChargerBlockEntity;
 import com.enderio.machines.common.machine.obelisk.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.XPVacuumBlockEntity;
@@ -180,8 +180,8 @@ public class MachineBlockEntities {
                     .apply(MachineBlockEntities::newFluidHandlerCapability);
 
     public static final RegiliteBlockEntity<VatBlockEntity> VAT = register("vat", VatBlockEntity::new,
-            MachineBlocks.VAT).apply(MachineBlockEntities::machineBlockEntityCapabilities)
-                    .apply(MachineBlockEntities::fluidHandlerCapability);
+            MachineBlocks.VAT).apply(MachineBlockEntities::newMachineBlockEntityCapabilities)
+                    .apply(MachineBlockEntities::newFluidHandlerCapability);
 
     public static final RegiliteBlockEntity<InhibitorObeliskBlockEntity> INHIBITOR_OBELISK = register(
             "inhibitor_obelisk", InhibitorObeliskBlockEntity::new, MachineBlocks.INHIBITOR_OBELISK)

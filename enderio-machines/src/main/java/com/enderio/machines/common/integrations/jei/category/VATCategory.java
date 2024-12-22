@@ -3,7 +3,7 @@ package com.enderio.machines.common.integrations.jei.category;
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.integrations.jei.JEIUtils;
 import com.enderio.machines.client.gui.screen.VatScreen;
-import com.enderio.machines.common.blockentity.VatBlockEntity;
+import com.enderio.machines.common.machine.vat.VatBlockEntity;
 import com.enderio.machines.common.datamap.VatReagent;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;

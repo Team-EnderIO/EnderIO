@@ -31,6 +31,8 @@ import com.enderio.machines.common.machine.base.block.NewProgressMachineBlock;
 import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
 import com.enderio.machines.common.machine.obelisk.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity;
+import com.enderio.machines.common.machine.vat.VatBlock;
+import com.enderio.machines.common.machine.vat.VatBlockEntity;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.enderio.regilite.data.DataGenContext;
@@ -239,8 +241,11 @@ public class MachineBlocks {
     public static final RegiliteBlock<NewProgressMachineBlock<?>> DRAIN = newProgressMachine("drain",
             () -> MachineBlockEntities.DRAIN);
 
-    public static final RegiliteBlock<MachineBlock> VAT = machine("vat", () -> MachineBlockEntities.VAT)
-            .setTranslation("VAT");
+    public static final RegiliteBlock<VatBlock> VAT = newBaseMachine(
+        BLOCK_REGISTRY.registerBlock("vat", props -> new VatBlock(MachineBlockEntities.VAT, props),
+            BlockBehaviour.Properties.of().strength(2.5f, 8)),
+        MachineModelUtil::machineBlock)
+        .setTranslation("VAT");
 
     public static final RegiliteBlock<BlockDetectorBlock> BLOCK_DETECTOR = BLOCK_REGISTRY
             .registerBlock("block_detector", BlockDetectorBlock::new,

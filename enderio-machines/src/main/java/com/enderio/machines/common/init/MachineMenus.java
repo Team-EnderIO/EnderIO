@@ -45,7 +45,7 @@ import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.machine.stirling_generator.StirlingGeneratorMenu;
 import com.enderio.machines.common.menu.TravelAnchorMenu;
 import com.enderio.machines.common.menu.VacuumChestMenu;
-import com.enderio.machines.common.menu.VatMenu;
+import com.enderio.machines.common.machine.vat.VatMenu;
 import com.enderio.machines.common.menu.WiredChargerMenu;
 import com.enderio.machines.common.machine.obelisk.xp.XPObeliskMenu;
 import com.enderio.machines.common.menu.XPVacuumMenu;
@@ -105,7 +105,7 @@ public class MachineMenus {
             .registerMenu("aversion_obelisk", AversionObeliskMenu::factory, () -> AversionObeliskScreen::new);
     public static final RegiliteMenu<RelocatorObeliskMenu> RELOCATOR_OBELISK = MENU_REGISTRY
             .registerMenu("relocator_obelisk", RelocatorObeliskMenu::factory, () -> RelocatorObeliskScreen::new);
-    public static final RegiliteMenu<VatMenu> VAT = MENU_REGISTRY.registerMenu("vat", VatMenu::factory,
+    public static final RegiliteMenu<VatMenu> VAT = MENU_REGISTRY.registerMenu("vat", VatMenu::new,
             () -> VatScreen::new);
 
     public static void register(IEventBus bus) {

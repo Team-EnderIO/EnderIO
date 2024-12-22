@@ -8,6 +8,7 @@ import com.enderio.core.common.network.menu.payload.SlotPayloadType;
 import com.enderio.machines.common.blockentity.sync.EnergySyncData;
 import java.util.List;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.level.Level;
 
 public abstract class EnergySyncSlot implements SyncSlot {
 
@@ -26,14 +27,14 @@ public abstract class EnergySyncSlot implements SyncSlot {
     }
 
     @Override
-    public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
+    public SlotPayload createPayload(Level level, ChangeType changeType) {
         var value = get();
         return new ListSlotPayload(List.of(new IntSlotPayload(value.energyStored()),
                 new IntSlotPayload(value.maxEnergyStored()), new IntSlotPayload(value.maxEnergyUse())));
     }
 
     @Override
-    public void unpackPayload(SlotPayload payload) {
+    public void unpackPayload(Level level, SlotPayload payload) {
         if (payload instanceof ListSlotPayload listSlotPayload && listSlotPayload.contents().size() == 3) {
             for (int i = 0; i < 3; i++) {
                 if (listSlotPayload.contents().get(i).type() != SlotPayloadType.INT) {

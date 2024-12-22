@@ -8,6 +8,7 @@ import com.enderio.core.common.network.menu.payload.ListSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayloadType;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.Objects;
@@ -78,7 +79,7 @@ public abstract class GrindingBallDataSyncSlot implements SyncSlot {
     }
 
     @Override
-    public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
+    public SlotPayload createPayload(Level level, ChangeType changeType) {
         var value = get();
 
         return new ListSlotPayload(List.of(
@@ -90,7 +91,7 @@ public abstract class GrindingBallDataSyncSlot implements SyncSlot {
     }
 
     @Override
-    public void unpackPayload(SlotPayload payload) {
+    public void unpackPayload(Level level, SlotPayload payload) {
         if (payload instanceof ListSlotPayload list && list.contents().size() == 4) {
             for (int i = 0; i < 4; i++) {
                 if (i < 3 && list.contents().get(i).type() != SlotPayloadType.FLOAT) {

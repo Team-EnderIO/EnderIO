@@ -3,7 +3,6 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
 import com.enderio.machines.client.gui.widget.ExperienceWidget;
 import com.enderio.machines.common.lang.MachineLang;
@@ -70,12 +69,8 @@ public class XPObeliskScreen extends NewMachineScreen<XPObeliskMenu> {
         pGuiGraphics.blit(BG, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 
-    private void handlePress(int id) {
-        this.minecraft.gameMode.handleInventoryButtonClick(getMenu().containerId, id);
-    }
-
     private ImageButton makeButton(int x, int y, int size, int id, ResourceLocation SPRITE, Component tooltip) {
-        ImageButton button = new ImageButton(x, y, size, size, new WidgetSprites(SPRITE, SPRITE), (press) -> handlePress(id));
+        ImageButton button = new ImageButton(x, y, size, size, new WidgetSprites(SPRITE, SPRITE), (press) -> handleButtonPress(id));
         button.setTooltip(Tooltip.create(tooltip));
         xpButtons.add(button);
         return button;

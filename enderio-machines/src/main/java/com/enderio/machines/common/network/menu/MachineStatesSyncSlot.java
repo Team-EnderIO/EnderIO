@@ -16,6 +16,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 
 public abstract class MachineStatesSyncSlot implements SyncSlot {
 
@@ -80,7 +81,7 @@ public abstract class MachineStatesSyncSlot implements SyncSlot {
     }
 
     @Override
-    public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
+    public SlotPayload createPayload(Level level, ChangeType changeType) {
         return new ListSlotPayload(get().stream()
                 .map(s -> new PairSlotPayload(new IntSlotPayload(s.type().ordinal()),
                         new StringSlotPayload(s.component().getString())))
@@ -88,7 +89,7 @@ public abstract class MachineStatesSyncSlot implements SyncSlot {
     }
 
     @Override
-    public void unpackPayload(SlotPayload payload) {
+    public void unpackPayload(Level level, SlotPayload payload) {
         var states = new HashSet<MachineState>();
 
         // Gross... Maybe use a registry someday for these :)

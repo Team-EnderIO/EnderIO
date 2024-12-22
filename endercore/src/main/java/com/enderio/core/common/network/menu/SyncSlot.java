@@ -2,6 +2,7 @@ package com.enderio.core.common.network.menu;
 
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.level.Level;
 
 /**
  * Inspired by Mekanism's SyncableData system.
@@ -9,9 +10,9 @@ import net.minecraft.core.RegistryAccess;
 public interface SyncSlot {
     ChangeType detectChanges();
 
-    SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType);
+    SlotPayload createPayload(Level level, ChangeType changeType);
 
-    void unpackPayload(SlotPayload payload);
+    void unpackPayload(Level level, SlotPayload payload);
 
     enum ChangeType {
         NONE, PARTIAL, FULL

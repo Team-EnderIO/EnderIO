@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public abstract class FluidStackSyncSlot implements SyncSlot {
@@ -76,7 +77,7 @@ public abstract class FluidStackSyncSlot implements SyncSlot {
     }
 
     @Override
-    public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
+    public SlotPayload createPayload(Level level, ChangeType changeType) {
         if (changeType == ChangeType.PARTIAL) {
             return new IntSlotPayload(get().getAmount());
         }
@@ -85,7 +86,7 @@ public abstract class FluidStackSyncSlot implements SyncSlot {
     }
 
     @Override
-    public void unpackPayload(SlotPayload payload) {
+    public void unpackPayload(Level level, SlotPayload payload) {
         if (payload instanceof IntSlotPayload intSlotPayload) {
             set(get().copyWithAmount(intSlotPayload.value()));
         } else if (payload instanceof FluidStackSlotPayload fluidStackSlotPayload) {

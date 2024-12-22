@@ -4,7 +4,6 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.EIOCommonWidgets;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
@@ -47,16 +46,11 @@ public class PoweredSpawnerScreen extends NewMachineScreen<PoweredSpawnerMenu> {
             EIOLang.HIDE_RANGE,
             EIOLang.SHOW_RANGE,
             menu::isRangeVisible,
-            (ignored) -> handlePress(PoweredSpawnerMenu.VISIBILITY_BUTTON_ID)));
+            (ignored) -> handleButtonPress(PoweredSpawnerMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
         addRenderableOnly(new ProgressWidget.BottomUp(BG_TEXTURE, () -> menu.getBlockEntity().getSpawnProgress(), getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
-    }
-
-    // TODO: Should probably be a utility method higher up...
-    private void handlePress(int id) {
-        this.minecraft.gameMode.handleInventoryButtonClick(getMenu().containerId, id);
     }
 
     @Override

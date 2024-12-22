@@ -6,7 +6,7 @@ import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.PairSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayloadType;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.Objects;
@@ -74,7 +74,7 @@ public abstract class FluidStorageSyncSlot implements SyncSlot {
         }
 
         boolean isSameCapacity = lastValue != null && currentValue.capacity() == lastValue.capacity();
-        boolean isSameFluid = lastValue != null && currentValue.contents().getFluid().isSame(lastValue.contents().getFluid());
+        boolean isSameFluid = lastValue != null && FluidStack.isSameFluid(currentValue.contents(), lastValue.contents());
 
         var changeType = isSameFluid && isSameCapacity ? ChangeType.PARTIAL : ChangeType.FULL;
 
@@ -83,7 +83,7 @@ public abstract class FluidStorageSyncSlot implements SyncSlot {
     }
 
     @Override
-    public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
+    public SlotPayload createPayload(Level level, ChangeType changeType) {
         var value = get();
         if (changeType == ChangeType.PARTIAL) {
             return new IntSlotPayload(value.contents().getAmount());
@@ -96,7 +96,7 @@ public abstract class FluidStorageSyncSlot implements SyncSlot {
     }
 
     @Override
-    public void unpackPayload(SlotPayload payload) {
+    public void unpackPayload(Level level, SlotPayload payload) {
         if (payload instanceof IntSlotPayload intSlotPayload) {
             set(get().withContents(get().contents().copyWithAmount(intSlotPayload.value())));
         } else if (payload instanceof PairSlotPayload pair) {

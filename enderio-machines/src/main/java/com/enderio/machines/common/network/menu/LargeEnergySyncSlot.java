@@ -8,6 +8,7 @@ import com.enderio.core.common.network.menu.payload.SlotPayloadType;
 import com.enderio.machines.common.blockentity.sync.LargeEnergyData;
 import java.util.Objects;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.level.Level;
 
 public abstract class LargeEnergySyncSlot implements SyncSlot {
 
@@ -26,14 +27,14 @@ public abstract class LargeEnergySyncSlot implements SyncSlot {
     }
 
     @Override
-    public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
+    public SlotPayload createPayload(Level level, ChangeType changeType) {
         var value = get();
         return new PairSlotPayload(new LongSlotPayload(value.energyStored()),
                 new LongSlotPayload(value.maxEnergyStored()));
     }
 
     @Override
-    public void unpackPayload(SlotPayload payload) {
+    public void unpackPayload(Level level, SlotPayload payload) {
         if (payload instanceof PairSlotPayload pair) {
             if (pair.left().type() != SlotPayloadType.LONG || pair.right().type() != SlotPayloadType.LONG) {
                 return;

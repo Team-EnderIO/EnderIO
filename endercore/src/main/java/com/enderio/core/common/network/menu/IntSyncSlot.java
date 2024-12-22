@@ -5,6 +5,7 @@ import com.enderio.core.common.network.menu.payload.SlotPayload;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.level.Level;
 
 public abstract class IntSyncSlot implements SyncSlot {
 
@@ -69,12 +70,12 @@ public abstract class IntSyncSlot implements SyncSlot {
     }
 
     @Override
-    public SlotPayload createPayload(RegistryAccess registryAccess, ChangeType changeType) {
+    public SlotPayload createPayload(Level level, ChangeType changeType) {
         return new IntSlotPayload(get());
     }
 
     @Override
-    public void unpackPayload(SlotPayload payload) {
+    public void unpackPayload(Level level, SlotPayload payload) {
         if (payload instanceof IntSlotPayload intSlotPayload) {
             set(intSlotPayload.value());
         }

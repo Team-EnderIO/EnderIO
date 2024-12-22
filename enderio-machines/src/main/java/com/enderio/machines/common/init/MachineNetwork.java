@@ -7,8 +7,6 @@ import com.enderio.machines.common.network.PoweredSpawnerSoulPacket;
 import com.enderio.machines.common.network.SolarSoulPacket;
 import com.enderio.machines.common.network.SoulEngineSoulPacket;
 import com.enderio.machines.common.network.UpdateCrafterTemplatePacket;
-import com.enderio.machines.common.network.VatDumpTankPacket;
-import com.enderio.machines.common.network.VatMoveTankPacket;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.SolarSoul;
 import com.enderio.machines.common.souldata.SpawnerSoul;
@@ -23,9 +21,7 @@ public class MachineNetwork {
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event
-            .registrar(EnderCore.MOD_ID)
-            .versioned(PROTOCOL_VERSION);
+        final PayloadRegistrar registrar = event.registrar(EnderCore.MOD_ID).versioned(PROTOCOL_VERSION);
 
         //Sync soul data (optional)
         SpawnerSoul.SPAWNER.subscribeAsSyncable(PoweredSpawnerSoulPacket::new);
@@ -35,16 +31,11 @@ public class MachineNetwork {
         registrar.playToClient(PoweredSpawnerSoulPacket.TYPE, PoweredSpawnerSoulPacket.STREAM_CODEC,
             MachinePayloadHandler.Client.getInstance()::handlePoweredSpawnerSoul);
 
-        registrar.playToClient(SoulEngineSoulPacket.TYPE, SoulEngineSoulPacket.STREAM_CODEC,
-            MachinePayloadHandler.Client.getInstance()::handleSoulEngineSoul);
+        registrar.playToClient(SoulEngineSoulPacket.TYPE, SoulEngineSoulPacket.STREAM_CODEC, MachinePayloadHandler.Client.getInstance()::handleSoulEngineSoul);
 
-        registrar.playToClient(SolarSoulPacket.TYPE, SolarSoulPacket.STREAM_CODEC,
-            MachinePayloadHandler.Client.getInstance()::handleSolarSoul);
+        registrar.playToClient(SolarSoulPacket.TYPE, SolarSoulPacket.STREAM_CODEC, MachinePayloadHandler.Client.getInstance()::handleSolarSoul);
 
         registrar.playToServer(UpdateCrafterTemplatePacket.TYPE, UpdateCrafterTemplatePacket.STREAM_CODEC,
             MachinePayloadHandler.Server.getInstance()::updateCrafterTemplate);
-
-        registrar.playToServer(VatMoveTankPacket.TYPE, VatMoveTankPacket.STREAM_CODEC, MachinePayloadHandler.Server.getInstance()::vatMoveTank);
-        registrar.playToServer(VatDumpTankPacket.TYPE, VatDumpTankPacket.STREAM_CODEC, MachinePayloadHandler.Server.getInstance()::vatDumpTank);
     }
 }
