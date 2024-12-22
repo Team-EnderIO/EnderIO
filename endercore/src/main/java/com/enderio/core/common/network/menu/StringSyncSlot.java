@@ -29,25 +29,6 @@ public abstract class StringSyncSlot implements SyncSlot {
         };
     }
 
-    public static StringSyncSlot standaloneWithNotify(Consumer<String> onChanged) {
-        return new StringSyncSlot() {
-            @Nullable
-            private String value;
-
-            @Override
-            @Nullable
-            public String get() {
-                return value;
-            }
-
-            @Override
-            public void set(@Nullable String value) {
-                this.value = value;
-                onChanged.accept(value);
-            }
-        };
-    }
-
     public static StringSyncSlot simple(Supplier<String> getter, Consumer<String> setter) {
         return new StringSyncSlot() {
 
