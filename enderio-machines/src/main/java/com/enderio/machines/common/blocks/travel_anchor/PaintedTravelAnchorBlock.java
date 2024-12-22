@@ -1,7 +1,6 @@
-package com.enderio.machines.common.block;
+package com.enderio.machines.common.blocks.travel_anchor;
 
 import com.enderio.base.common.paint.block.PaintedBlock;
-import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,7 +10,6 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
@@ -19,10 +17,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class PaintedTravelAnchorBlock extends TravelAnchorBlock implements PaintedBlock {
+public class PaintedTravelAnchorBlock extends TravelAnchorBlock<PaintedTravelAnchorBlockEntity> implements PaintedBlock {
 
     public PaintedTravelAnchorBlock(Properties props) {
-        super(MachineBlockEntities.PAINTED_TRAVEL_ANCHOR, props);
+        super(MachineBlockEntities.PAINTED_TRAVEL_ANCHOR::get, props);
     }
 
     @Nullable

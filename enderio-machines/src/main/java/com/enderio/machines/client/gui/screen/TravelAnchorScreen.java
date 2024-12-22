@@ -3,15 +3,15 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
-import com.enderio.machines.client.gui.screen.base.LegacyMachineScreen;
-import com.enderio.machines.common.menu.TravelAnchorMenu;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
+import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class TravelAnchorScreen extends LegacyMachineScreen<TravelAnchorMenu> {
+public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
 
     private static final ResourceLocation TRAVEL_ANCHOR_BG = EnderIOBase.loc("textures/gui/screen/travel_anchor.png");
     private static final int WIDTH = 176;

@@ -45,7 +45,7 @@ import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskMen
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskMenu;
 import com.enderio.machines.common.blocks.soul_binder.SoulBinderMenu;
 import com.enderio.machines.common.blocks.soul_engine.SoulEngineMenu;
-import com.enderio.machines.common.menu.TravelAnchorMenu;
+import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorMenu;
 import com.enderio.machines.common.menu.VacuumChestMenu;
 import com.enderio.machines.common.menu.WiredChargerMenu;
 import com.enderio.machines.common.menu.XPVacuumMenu;
@@ -96,7 +96,7 @@ public class MachineMenus {
     public static final RegiliteMenu<SoulEngineMenu> SOUL_ENGINE = MENU_REGISTRY.registerMenu("soul_engine",
             SoulEngineMenu::new, () -> SoulEngineScreen::new);
     public static final RegiliteMenu<TravelAnchorMenu> TRAVEL_ANCHOR = MENU_REGISTRY.registerMenu("travel_anchor",
-            TravelAnchorMenu::factory, () -> TravelAnchorScreen::new);
+            TravelAnchorMenu::new, () -> TravelAnchorScreen::new);
     public static final RegiliteMenu<XPObeliskMenu> XP_OBELISK = MENU_REGISTRY.registerMenu("xp_obelisk",
             XPObeliskMenu::new, () -> XPObeliskScreen::new);
     public static final RegiliteMenu<InhibitorObeliskMenu> INHIBITOR_OBELISK = MENU_REGISTRY

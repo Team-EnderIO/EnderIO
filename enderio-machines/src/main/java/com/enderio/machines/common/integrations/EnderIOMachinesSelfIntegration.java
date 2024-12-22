@@ -1,7 +1,7 @@
 package com.enderio.machines.common.integrations;
 
 import com.enderio.base.api.integration.Integration;
-import com.enderio.machines.common.block.TravelAnchorBlock;
+import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlock;
 import net.minecraft.world.entity.player.Player;
 
 public class EnderIOMachinesSelfIntegration implements Integration {

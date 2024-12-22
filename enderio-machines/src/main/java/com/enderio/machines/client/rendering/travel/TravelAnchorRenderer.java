@@ -1,7 +1,7 @@
 package com.enderio.machines.client.rendering.travel;
 
 import com.enderio.base.api.travel.TravelRenderer;
-import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
+import com.enderio.machines.common.blocks.travel_anchor.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

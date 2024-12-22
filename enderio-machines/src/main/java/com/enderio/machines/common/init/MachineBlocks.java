@@ -15,16 +15,17 @@ import com.enderio.machines.common.block.BlockDetectorBlock;
 import com.enderio.machines.common.block.CapacitorBankBlock;
 import com.enderio.machines.common.blocks.enchanter.EnchanterBlock;
 import com.enderio.machines.common.block.LegacyMachineBlock;
-import com.enderio.machines.common.block.PaintedTravelAnchorBlock;
+import com.enderio.machines.common.blocks.travel_anchor.PaintedTravelAnchorBlock;
 import com.enderio.machines.common.block.LegacyProgressMachineBlock;
 import com.enderio.machines.common.block.SolarPanelBlock;
-import com.enderio.machines.common.block.TravelAnchorBlock;
+import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlock;
 import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlock;
+import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlockEntity;
 import com.enderio.machines.common.item.CapacitorBankItem;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockItem;
 import com.enderio.machines.common.blocks.base.block.MachineBlock;
@@ -190,8 +191,8 @@ public class MachineBlocks {
             .setTranslation("XP Vacuum")
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
-    public static final RegiliteBlock<TravelAnchorBlock> TRAVEL_ANCHOR = BLOCK_REGISTRY
-            .registerBlock("travel_anchor", TravelAnchorBlock::new,
+    public static final RegiliteBlock<TravelAnchorBlock<TravelAnchorBlockEntity>> TRAVEL_ANCHOR = BLOCK_REGISTRY
+            .registerBlock("travel_anchor", props -> new TravelAnchorBlock<>(MachineBlockEntities.TRAVEL_ANCHOR::get, props),
                     BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setLootTable(MachinesLootTable::copyComponents)

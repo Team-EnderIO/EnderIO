@@ -15,11 +15,11 @@ import com.enderio.machines.common.blocks.enchanter.EnchanterBlockEntity;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
 import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
-import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
+import com.enderio.machines.common.blocks.travel_anchor.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.soul_binder.SoulBinderBlockEntity;
 import com.enderio.machines.common.blocks.soul_engine.SoulEngineBlockEntity;
-import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
+import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.VacuumChestBlockEntity;
 import com.enderio.machines.common.blockentity.WiredChargerBlockEntity;
 import com.enderio.machines.common.blockentity.XPVacuumBlockEntity;
@@ -111,11 +111,11 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<TravelAnchorBlockEntity> TRAVEL_ANCHOR = register("travel_anchor",
             TravelAnchorBlockEntity::new, MachineBlocks.TRAVEL_ANCHOR)
-                    .apply(MachineBlockEntities::machineBlockEntityCapabilities);
+                    .apply(MachineBlockEntities::newMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<PaintedTravelAnchorBlockEntity> PAINTED_TRAVEL_ANCHOR = register(
             "painted_travel_anchor", PaintedTravelAnchorBlockEntity::new, MachineBlocks.PAINTED_TRAVEL_ANCHOR)
-                    .apply(MachineBlockEntities::machineBlockEntityCapabilities);
+                    .apply(MachineBlockEntities::newMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<CrafterBlockEntity> CRAFTER = register("crafter", CrafterBlockEntity::new,
             MachineBlocks.CRAFTER).apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities);

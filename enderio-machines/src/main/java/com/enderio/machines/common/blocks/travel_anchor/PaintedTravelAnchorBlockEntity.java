@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.blocks.travel_anchor;
 
 import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.paint.blockentity.PaintedBlockEntity;

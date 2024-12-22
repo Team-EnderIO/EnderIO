@@ -1,13 +1,13 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.blocks.travel_anchor;
 
 import com.enderio.base.api.travel.TravelTarget;
 import com.enderio.base.api.travel.TravelTargetApi;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
+import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.menu.TravelAnchorMenu;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,7 +22,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class TravelAnchorBlockEntity extends LegacyMachineBlockEntity {
+// TODO: Shouldn't be a machine block entity...
+public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     public static final SingleSlotAccess GHOST = new SingleSlotAccess();
 
@@ -33,15 +34,20 @@ public class TravelAnchorBlockEntity extends LegacyMachineBlockEntity {
     }
 
     public TravelAnchorBlockEntity(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(type, pWorldPosition, pBlockState);
+        super(type, pWorldPosition, pBlockState, false);
 
         travelTargetDataSlot = addDataSlot(AnchorTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
+    }
+
+    @Override
+    public boolean isActive() {
+        return false;
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new TravelAnchorMenu(containerId, this, inventory);
+        return new TravelAnchorMenu(containerId, inventory, this);
     }
 
     @Override
@@ -52,7 +58,7 @@ public class TravelAnchorBlockEntity extends LegacyMachineBlockEntity {
     @Override
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
-        ItemStack stack = GHOST.getItemStack(getInventoryNN());
+        ItemStack stack = GHOST.getItemStack(getInventory());
         setIcon(stack.getItem());
     }
 
