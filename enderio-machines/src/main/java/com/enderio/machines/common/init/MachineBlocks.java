@@ -34,6 +34,7 @@ import com.enderio.machines.common.machine.obelisks.inhibitor.InhibitorObeliskBl
 import com.enderio.machines.common.machine.obelisks.relocator.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.machine.obelisks.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity;
+import com.enderio.machines.common.machine.soul_engine.SoulEngineBlockEntity;
 import com.enderio.machines.common.machine.vat.VatBlock;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
@@ -229,8 +230,8 @@ public class MachineBlocks {
     public static final RegiliteBlock<NewProgressMachineBlock<?>> CRAFTER = newProgressMachine("crafter",
             () -> MachineBlockEntities.CRAFTER);
 
-    public static final RegiliteBlock<ProgressMachineBlock> SOUL_ENGINE = BLOCK_REGISTRY
-            .registerBlock("soul_engine", p -> new ProgressMachineBlock(MachineBlockEntities.SOUL_ENGINE, p),
+    public static final RegiliteBlock<NewProgressMachineBlock<SoulEngineBlockEntity>> SOUL_ENGINE = BLOCK_REGISTRY
+            .registerBlock("soul_engine", p -> new NewProgressMachineBlock<>(MachineBlockEntities.SOUL_ENGINE, p),
                     BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
             .setLootTable(MachinesLootTable::copyComponents)
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)

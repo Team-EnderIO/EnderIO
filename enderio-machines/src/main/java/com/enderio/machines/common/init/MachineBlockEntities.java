@@ -18,7 +18,7 @@ import com.enderio.machines.common.machine.obelisks.inhibitor.InhibitorObeliskBl
 import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.machine.obelisks.relocator.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.machine.soul_binder.SoulBinderBlockEntity;
-import com.enderio.machines.common.blockentity.SoulEngineBlockEntity;
+import com.enderio.machines.common.machine.soul_engine.SoulEngineBlockEntity;
 import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.VacuumChestBlockEntity;
 import com.enderio.machines.common.blockentity.WiredChargerBlockEntity;
@@ -169,8 +169,8 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<SoulEngineBlockEntity> SOUL_ENGINE = register("soul_engine",
             SoulEngineBlockEntity::new, MachineBlocks.SOUL_ENGINE)
-                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
-                    .apply(MachineBlockEntities::fluidHandlerCapability);
+                    .apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities)
+                    .apply(MachineBlockEntities::newFluidHandlerCapability);
 
     public static final RegiliteBlockEntity<XPObeliskBlockEntity> XP_OBELISK = register("xp_obelisk",
             XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK).setRenderer(() -> XPObeliskBER::new)

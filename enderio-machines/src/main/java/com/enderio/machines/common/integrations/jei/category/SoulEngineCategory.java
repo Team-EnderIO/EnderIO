@@ -6,7 +6,7 @@ import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.client.gui.screen.SoulEngineScreen;
-import com.enderio.machines.common.blockentity.SoulEngineBlockEntity;
+import com.enderio.machines.common.machine.soul_engine.SoulEngineBlockEntity;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.souldata.EngineSoul;

@@ -44,7 +44,7 @@ import com.enderio.machines.common.menu.ImpulseHopperMenu;
 import com.enderio.machines.common.machine.obelisks.inhibitor.InhibitorObeliskMenu;
 import com.enderio.machines.common.machine.obelisks.relocator.RelocatorObeliskMenu;
 import com.enderio.machines.common.machine.soul_binder.SoulBinderMenu;
-import com.enderio.machines.common.menu.SoulEngineMenu;
+import com.enderio.machines.common.machine.soul_engine.SoulEngineMenu;
 import com.enderio.machines.common.menu.TravelAnchorMenu;
 import com.enderio.machines.common.menu.VacuumChestMenu;
 import com.enderio.machines.common.menu.WiredChargerMenu;
@@ -94,7 +94,7 @@ public class MachineMenus {
     public static final RegiliteMenu<CapacitorBankMenu> CAPACITOR_BANK = MENU_REGISTRY.registerMenu("capacitor_bank",
             CapacitorBankMenu::factory, () -> CapacitorBankScreen::new);
     public static final RegiliteMenu<SoulEngineMenu> SOUL_ENGINE = MENU_REGISTRY.registerMenu("soul_engine",
-            SoulEngineMenu::factory, () -> SoulEngineScreen::new);
+            SoulEngineMenu::new, () -> SoulEngineScreen::new);
     public static final RegiliteMenu<TravelAnchorMenu> TRAVEL_ANCHOR = MENU_REGISTRY.registerMenu("travel_anchor",
             TravelAnchorMenu::factory, () -> TravelAnchorScreen::new);
     public static final RegiliteMenu<XPObeliskMenu> XP_OBELISK = MENU_REGISTRY.registerMenu("xp_obelisk",

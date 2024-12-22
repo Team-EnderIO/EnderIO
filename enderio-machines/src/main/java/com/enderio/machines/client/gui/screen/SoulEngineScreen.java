@@ -4,10 +4,11 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
+import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;
-import com.enderio.machines.common.menu.SoulEngineMenu;
+import com.enderio.machines.common.machine.soul_engine.SoulEngineMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,7 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 
-public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
+public class SoulEngineScreen extends NewMachineScreen<SoulEngineMenu> {
 
     public static final ResourceLocation BG_TEXTURE = EnderIOBase.loc("textures/gui/screen/soul_engine.png");
     private static final int WIDTH = 176;
@@ -39,7 +40,7 @@ public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
                 menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
-        addRenderableOnly(FluidStackWidget.legacy(80 + leftPos, 21 + topPos, 16, 47, menu::getFluidTank));
+        addRenderableOnly(new FluidStackWidget(80 + leftPos, 21 + topPos, 16, 47, menu::getFluidTank));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
