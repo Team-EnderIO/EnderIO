@@ -4,10 +4,8 @@ import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.recipe.FluidRecipeInput;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.souldata.SoulDataReloadListener;
 import com.mojang.serialization.Codec;
@@ -16,28 +14,22 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public record SoulBindingRecipe(
     ItemStack output,

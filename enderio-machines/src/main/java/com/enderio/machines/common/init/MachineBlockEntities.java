@@ -17,7 +17,7 @@ import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
 import com.enderio.machines.common.blockentity.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.RelocatorObeliskBlockEntity;
-import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
+import com.enderio.machines.common.machine.soul_binder.SoulBinderBlockEntity;
 import com.enderio.machines.common.blockentity.SoulEngineBlockEntity;
 import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.VacuumChestBlockEntity;
@@ -126,8 +126,8 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<SoulBinderBlockEntity> SOUL_BINDER = register("soul_binder",
             SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER)
-                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
-                    .apply(MachineBlockEntities::fluidHandlerCapability);
+                    .apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities)
+                    .apply(MachineBlockEntities::newFluidHandlerCapability);
 
     public static final RegiliteBlockEntity<WiredChargerBlockEntity> WIRED_CHARGER = register("wired_charger",
             WiredChargerBlockEntity::new, MachineBlocks.WIRED_CHARGER)

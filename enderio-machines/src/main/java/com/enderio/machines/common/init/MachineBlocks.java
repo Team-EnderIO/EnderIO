@@ -150,7 +150,7 @@ public class MachineBlocks {
     public static final RegiliteBlock<ProgressMachineBlock> IMPULSE_HOPPER = progressMachine("impulse_hopper",
             () -> MachineBlockEntities.IMPULSE_HOPPER).setTranslation("Impulse Hopper");
 
-    public static final RegiliteBlock<ProgressMachineBlock> SOUL_BINDER = progressMachine("soul_binder",
+    public static final RegiliteBlock<NewProgressMachineBlock<?>> SOUL_BINDER = newProgressMachine("soul_binder",
             () -> MachineBlockEntities.SOUL_BINDER).setTranslation("Soul Binder");
 
     public static final RegiliteBlock<NewProgressMachineBlock<PoweredSpawnerBlockEntity>> POWERED_SPAWNER = BLOCK_REGISTRY

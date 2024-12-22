@@ -43,7 +43,7 @@ import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
 import com.enderio.machines.common.menu.InhibitorObeliskMenu;
 import com.enderio.machines.common.menu.RelocatorObeliskMenu;
-import com.enderio.machines.common.menu.SoulBinderMenu;
+import com.enderio.machines.common.machine.soul_binder.SoulBinderMenu;
 import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.menu.TravelAnchorMenu;
 import com.enderio.machines.common.menu.VacuumChestMenu;
@@ -76,7 +76,7 @@ public class MachineMenus {
     public static final RegiliteMenu<ImpulseHopperMenu> IMPULSE_HOPPER = MENU_REGISTRY.registerMenu("impulse_hopper",
             ImpulseHopperMenu::factory, () -> ImpulseHopperScreen::new);
     public static final RegiliteMenu<SoulBinderMenu> SOUL_BINDER = MENU_REGISTRY.registerMenu("soul_binder",
-            SoulBinderMenu::factory, () -> SoulBinderScreen::new);
+            SoulBinderMenu::new, () -> SoulBinderScreen::new);
     public static final RegiliteMenu<PoweredSpawnerMenu> POWERED_SPAWNER = MENU_REGISTRY.registerMenu("powered_spawner",
             PoweredSpawnerMenu::new, () -> PoweredSpawnerScreen::new);
     public static final RegiliteMenu<VacuumChestMenu> VACUUM_CHEST = MENU_REGISTRY.registerMenu("vacuum_chest",

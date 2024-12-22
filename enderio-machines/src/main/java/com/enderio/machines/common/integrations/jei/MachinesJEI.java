@@ -28,7 +28,7 @@ import com.enderio.machines.common.machine.sag_mill.SagMillMenu;
 import com.enderio.machines.common.machine.slicer.SlicerMenu;
 import com.enderio.machines.common.machine.vat.VatMenu;
 import com.enderio.machines.common.menu.EnchanterMenu;
-import com.enderio.machines.common.menu.SoulBinderMenu;
+import com.enderio.machines.common.machine.soul_binder.SoulBinderMenu;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;

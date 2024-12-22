@@ -3,6 +3,7 @@ package com.enderio.machines.client.gui.widget;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
+import com.enderio.machines.common.machine.base.fluid.FluidStorageInfo;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -15,12 +16,12 @@ import java.util.function.Supplier;
 public class ExperienceCraftingWidget extends EIOWidget {
     protected static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_background");
     protected static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_progress");
-    private final Supplier<MachineFluidTank> getFluid;
+    private final Supplier<FluidStorageInfo> fluidStorageSupplier;
     private final Supplier<Integer> maxXP;
 
-    public ExperienceCraftingWidget(int pX, int pY, int pWidth, int pHeight, Supplier<MachineFluidTank> getFluid, Supplier<Integer> maxXP) {
+    public ExperienceCraftingWidget(int pX, int pY, int pWidth, int pHeight, Supplier<FluidStorageInfo> fluidStorageSupplier, Supplier<Integer> maxXP) {
         super(pX, pY, pWidth, pHeight);
-        this.getFluid = getFluid;
+        this.fluidStorageSupplier = fluidStorageSupplier;
         this.maxXP = maxXP;
     }
 
@@ -31,7 +32,7 @@ public class ExperienceCraftingWidget extends EIOWidget {
 
         int k = 1;
         if (maxXP.get() > 0) {
-            k = (int) (((getFluid.get().getFluidAmount() / ((float) ExperienceUtil.getFluidFromLevel(maxXP.get()))) * this.width)-1);
+            k = (int) (((fluidStorageSupplier.get().contents().getAmount() / ((float) ExperienceUtil.getFluidFromLevel(maxXP.get()))) * this.width)-1);
             if (k > this.width-1) {
                 k = this.width-1;
             }
@@ -51,7 +52,7 @@ public class ExperienceCraftingWidget extends EIOWidget {
         if (isHovered(pMouseX, pMouseY)) {
             Minecraft minecraft = Minecraft.getInstance();
             guiGraphics.renderTooltip(minecraft.font,
-                Component.literal(getFluid.get().getFluidAmount() + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb"), pMouseX, pMouseY);
+                Component.literal(fluidStorageSupplier.get().contents().getAmount() + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb"), pMouseX, pMouseY);
         }
     }
 
