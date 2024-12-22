@@ -26,28 +26,28 @@ import com.enderio.machines.client.gui.screen.WiredChargerScreen;
 import com.enderio.machines.client.gui.screen.XPObeliskScreen;
 import com.enderio.machines.client.gui.screen.XPVacuumScreen;
 import com.enderio.machines.common.machine.alloy.AlloySmelterMenu;
+import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterMenu;
+import com.enderio.machines.common.machine.drain.DrainMenu;
+import com.enderio.machines.common.machine.obelisk.xp.XPObeliskMenu;
+import com.enderio.machines.common.machine.painting.PaintingMachineMenu;
+import com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerMenu;
+import com.enderio.machines.common.machine.sag_mill.SagMillMenu;
+import com.enderio.machines.common.machine.slicer.SlicerMenu;
+import com.enderio.machines.common.machine.stirling_generator.StirlingGeneratorMenu;
+import com.enderio.machines.common.machine.vat.VatMenu;
 import com.enderio.machines.common.menu.AversionObeliskMenu;
 import com.enderio.machines.common.menu.CapacitorBankMenu;
 import com.enderio.machines.common.menu.CrafterMenu;
-import com.enderio.machines.common.machine.drain.DrainMenu;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
 import com.enderio.machines.common.menu.InhibitorObeliskMenu;
-import com.enderio.machines.common.machine.painting.PaintingMachineMenu;
-import com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerMenu;
-import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.menu.RelocatorObeliskMenu;
-import com.enderio.machines.common.machine.sag_mill.SagMillMenu;
-import com.enderio.machines.common.machine.slicer.SlicerMenu;
 import com.enderio.machines.common.menu.SoulBinderMenu;
 import com.enderio.machines.common.menu.SoulEngineMenu;
-import com.enderio.machines.common.machine.stirling_generator.StirlingGeneratorMenu;
 import com.enderio.machines.common.menu.TravelAnchorMenu;
 import com.enderio.machines.common.menu.VacuumChestMenu;
-import com.enderio.machines.common.machine.vat.VatMenu;
 import com.enderio.machines.common.menu.WiredChargerMenu;
-import com.enderio.machines.common.machine.obelisk.xp.XPObeliskMenu;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import com.enderio.regilite.holder.RegiliteMenu;
 import com.enderio.regilite.registry.MenuRegistry;
@@ -67,8 +67,8 @@ public class MachineMenus {
             "primitive_alloy_smelter", PrimitiveAlloySmelterMenu::new, () -> PrimitiveAlloySmelterScreen::new);
     public static final RegiliteMenu<AlloySmelterMenu> ALLOY_SMELTER = MENU_REGISTRY.registerMenu("alloy_smelter",
             AlloySmelterMenu::new, () -> AlloySmelterScreen::new);
-    public static final RegiliteMenu<SagMillMenu> SAG_MILL = MENU_REGISTRY.registerMenu("sag_mill",
-            SagMillMenu::new, () -> SagMillScreen::new);
+    public static final RegiliteMenu<SagMillMenu> SAG_MILL = MENU_REGISTRY.registerMenu("sag_mill", SagMillMenu::new,
+            () -> SagMillScreen::new);
     public static final RegiliteMenu<StirlingGeneratorMenu> STIRLING_GENERATOR = MENU_REGISTRY
             .registerMenu("stirling_generator", StirlingGeneratorMenu::new, () -> StirlingGeneratorScreen::new);
     public static final RegiliteMenu<SlicerMenu> SLICE_N_SPLICE = MENU_REGISTRY.registerMenu("slice_n_splice",

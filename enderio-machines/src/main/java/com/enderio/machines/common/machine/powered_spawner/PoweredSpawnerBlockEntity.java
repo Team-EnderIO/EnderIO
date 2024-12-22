@@ -22,6 +22,7 @@ import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import com.mojang.datafixers.util.Either;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -40,14 +41,14 @@ import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.extensions.IOwnedSpawner;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 // TODO: I want to revisit the powered spawner and task
 //       But there's not enough time before alpha, so just porting as-is.
 public class PoweredSpawnerBlockEntity extends NewPoweredMachineBlockEntity implements IOwnedSpawner {
 
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
-    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+            MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
+    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
+            MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
     public static final ResourceLocation NO_MOB = EnderIOBase.loc("no_mob");
 
     // TODO: Config value?
@@ -60,7 +61,8 @@ public class PoweredSpawnerBlockEntity extends NewPoweredMachineBlockEntity impl
     private boolean isRangeVisible = false;
 
     public PoweredSpawnerBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, CAPACITY, USAGE);
+        super(MachineBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+                EnergyIOMode.Input, CAPACITY, USAGE);
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
             @Override
@@ -116,7 +118,9 @@ public class PoweredSpawnerBlockEntity extends NewPoweredMachineBlockEntity impl
     public void clientTick() {
         if (level != null && isRangeVisible()) {
             var pos = getBlockPos();
-            level.addAlwaysVisibleParticle(new RangeParticleData(ACTION_RANGE, MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get()), true, pos.getX(), pos.getY(), pos.getZ(), 0, 0, 0);
+            level.addAlwaysVisibleParticle(
+                    new RangeParticleData(ACTION_RANGE, MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get()),
+                    true, pos.getX(), pos.getY(), pos.getZ(), 0, 0, 0);
         }
 
         super.clientTick();
@@ -195,7 +199,8 @@ public class PoweredSpawnerBlockEntity extends NewPoweredMachineBlockEntity impl
     protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditionalSynced(tag, registries);
 
-        // Sync entity storage in case we want to render the entity or something in future :)
+        // Sync entity storage in case we want to render the entity or something in
+        // future :)
         tag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(registries));
 
         if (isRangeVisible) {
@@ -260,11 +265,8 @@ public class PoweredSpawnerBlockEntity extends NewPoweredMachineBlockEntity impl
     // endregion
 
     public enum SpawnerBlockedReason {
-        TOO_MANY_MOB(MachineLang.TOO_MANY_MOB),
-        TOO_MANY_SPAWNER(MachineLang.TOO_MANY_SPAWNER),
-        UNKNOWN_MOB(MachineLang.UNKNOWN),
-        OTHER_MOD(MachineLang.OTHER_MOD),
-        DISABLED(MachineLang.DISABLED),
+        TOO_MANY_MOB(MachineLang.TOO_MANY_MOB), TOO_MANY_SPAWNER(MachineLang.TOO_MANY_SPAWNER),
+        UNKNOWN_MOB(MachineLang.UNKNOWN), OTHER_MOD(MachineLang.OTHER_MOD), DISABLED(MachineLang.DISABLED),
         NONE(Component.literal("NONE"));
 
         private final MutableComponent component;

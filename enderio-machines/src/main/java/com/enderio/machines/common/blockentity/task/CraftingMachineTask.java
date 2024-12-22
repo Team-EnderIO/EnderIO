@@ -8,6 +8,8 @@ import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import com.mojang.logging.LogUtils;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -21,16 +23,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-
 // TODO: A recipe interface that doesn't require power :)
-public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends RecipeInput>
-    implements MachineTask {
+public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends RecipeInput> implements MachineTask {
 
     protected final Level level;
     protected final MachineInventory inventory;
-    @Nullable protected final MachineFluidHandler fluidHandler;
+    @Nullable
+    protected final MachineFluidHandler fluidHandler;
     @Nullable
     protected final MultiSlotAccess outputSlots;
     protected final T recipeInput;
@@ -50,18 +49,19 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, T recipeInput, @Nullable MultiSlotAccess outputSlots,
-        @Nullable RecipeHolder<R> recipe) {
+    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, T recipeInput,
+            @Nullable MultiSlotAccess outputSlots, @Nullable RecipeHolder<R> recipe) {
         this(level, inventory, null, recipeInput, outputSlots, recipe);
     }
 
-    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, @Nullable MachineFluidHandler fluidHandler, T recipeInput,
-        @Nullable RecipeHolder<R> recipe) {
+    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory,
+            @Nullable MachineFluidHandler fluidHandler, T recipeInput, @Nullable RecipeHolder<R> recipe) {
         this(level, inventory, fluidHandler, recipeInput, null, recipe);
     }
 
-    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, @Nullable MachineFluidHandler fluidHandler, T recipeInput,
-        @Nullable MultiSlotAccess outputSlots, @Nullable RecipeHolder<R> recipe) {
+    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory,
+            @Nullable MachineFluidHandler fluidHandler, T recipeInput, @Nullable MultiSlotAccess outputSlots,
+            @Nullable RecipeHolder<R> recipe) {
         this.level = level;
         this.inventory = inventory;
         this.fluidHandler = fluidHandler;
@@ -189,7 +189,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
         // TODO: Handle fluids too.
 
-        //return early if there are no output slots
+        // return early if there are no output slots
         if (outputSlots == null) {
             return false;
         }
@@ -198,7 +198,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         for (OutputStack output : outputs) {
             ItemStack item = output.getItem();
 
-            for (SingleSlotAccess outputAccess: outputSlots.getAccesses()) {
+            for (SingleSlotAccess outputAccess : outputSlots.getAccesses()) {
                 item = outputAccess.insertItem(inventory, item, true);
             }
 
@@ -213,7 +213,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
             for (OutputStack output : outputs) {
                 ItemStack item = output.getItem();
 
-                for (SingleSlotAccess outputAccess: outputSlots.getAccesses()) {
+                for (SingleSlotAccess outputAccess : outputSlots.getAccesses()) {
                     item = outputAccess.insertItem(inventory, item, false);
                 }
             }
@@ -284,7 +284,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     @Nullable
     protected RecipeHolder<R> loadRecipe(ResourceLocation id) {
         try {
-            //noinspection unchecked
+            // noinspection unchecked
             return (RecipeHolder<R>) level.getRecipeManager().byKey(id).orElse(null);
         } catch (ClassCastException ex) {
             // Can occur when loading a world with the old smelting recipe system.

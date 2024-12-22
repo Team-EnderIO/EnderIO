@@ -2,15 +2,13 @@ package com.enderio.core.common.network.menu;
 
 import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class RegistrySyncSlot<T> implements SyncSlot {
 
@@ -32,7 +30,8 @@ public abstract class RegistrySyncSlot<T> implements SyncSlot {
         };
     }
 
-    public static <T> RegistrySyncSlot<T> simple(ResourceKey<Registry<T>> registryKey, Supplier<T> getter, Consumer<T> setter) {
+    public static <T> RegistrySyncSlot<T> simple(ResourceKey<Registry<T>> registryKey, Supplier<T> getter,
+            Consumer<T> setter) {
         return new RegistrySyncSlot<>(registryKey) {
 
             @Override

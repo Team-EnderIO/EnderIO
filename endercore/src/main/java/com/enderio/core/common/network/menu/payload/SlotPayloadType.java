@@ -10,10 +10,9 @@ import net.minecraft.util.ByIdMap;
 
 public enum SlotPayloadType {
     // Basic data types
-    NULL(() -> NullSlotPayload.STREAM_CODEC),
-    INT(() -> IntSlotPayload.STREAM_CODEC), FLOAT(() -> FloatSlotPayload.STREAM_CODEC),
-    LONG(() -> LongSlotPayload.STREAM_CODEC), STRING(() -> StringSlotPayload.STREAM_CODEC),
-    BOOL(() -> BoolSlotPayload.STREAM_CODEC),
+    NULL(() -> NullSlotPayload.STREAM_CODEC), INT(() -> IntSlotPayload.STREAM_CODEC),
+    FLOAT(() -> FloatSlotPayload.STREAM_CODEC), LONG(() -> LongSlotPayload.STREAM_CODEC),
+    STRING(() -> StringSlotPayload.STREAM_CODEC), BOOL(() -> BoolSlotPayload.STREAM_CODEC),
 
     // MC data types
     BLOCK_POS(() -> BlockPosSlotPayload.STREAM_CODEC), ITEM_STACK(() -> ItemStackSlotPayload.STREAM_CODEC),

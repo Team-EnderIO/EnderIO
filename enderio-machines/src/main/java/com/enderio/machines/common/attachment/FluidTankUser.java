@@ -13,7 +13,9 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 public interface FluidTankUser {
 
     MachineTankLayout getTankLayout();
+
     MachineFluidHandler getFluidHandler();
+
     MachineFluidHandler createFluidHandler();
 
     default void saveTank(HolderLookup.Provider lookupProvider, CompoundTag pTag) {
@@ -24,11 +26,10 @@ public interface FluidTankUser {
         getFluidHandler().deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.FLUIDS));
     }
 
-    ICapabilityProvider<BlockEntity, Direction, IFluidHandler> FLUID_HANDLER_PROVIDER =
-        (be, side) ->{
-            if (be instanceof FluidTankUser user) {
-                return user.getFluidHandler().getForSide(side);
-            }
-            return null;
-        };
+    ICapabilityProvider<BlockEntity, Direction, IFluidHandler> FLUID_HANDLER_PROVIDER = (be, side) -> {
+        if (be instanceof FluidTankUser user) {
+            return user.getFluidHandler().getForSide(side);
+        }
+        return null;
+    };
 }

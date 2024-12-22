@@ -47,7 +47,7 @@ public class DrainMenu extends NewPoweredMachineMenu<DrainBlockEntity> {
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
-        //noinspection DuplicatedCode
+        // noinspection DuplicatedCode
         var blockEntity = getBlockEntity();
         switch (id) {
         case INCREASE_BUTTON_ID:

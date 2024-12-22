@@ -3,12 +3,11 @@ package com.enderio.machines.common.machine.painting;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
-import com.enderio.base.common.paint.block.PaintedBlock;
-import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.base.common.init.EIOCriterions;
 import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.common.paint.BlockPaintData;
+import com.enderio.base.common.paint.block.PaintedBlock;
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -20,6 +19,8 @@ import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlo
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.recipe.PaintingRecipe;
 import com.enderio.machines.common.recipe.RecipeCaches;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -37,28 +38,28 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Optional;
-
 public class PaintingMachineBlockEntity extends NewPoweredMachineBlockEntity {
 
     public static final SingleSlotAccess INPUT = new SingleSlotAccess();
     public static final SingleSlotAccess PAINT = new SingleSlotAccess();
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.PAINTING_MACHINE_CAPACITY);
-    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.PAINTING_MACHINE_USAGE);
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+            MachinesConfig.COMMON.ENERGY.PAINTING_MACHINE_CAPACITY);
+    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
+            MachinesConfig.COMMON.ENERGY.PAINTING_MACHINE_USAGE);
 
     private final AABB area;
 
     private final CraftingMachineTaskHost<PaintingRecipe, PaintingRecipe.Input> craftingTaskHost;
 
     public PaintingMachineBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.PAINTING_MACHINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, CAPACITY, USAGE);
+        super(MachineBlockEntities.PAINTING_MACHINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+                EnergyIOMode.Input, CAPACITY, USAGE);
 
         area = AABB.ofSize(worldPosition.getCenter(), 10, 10, 10);
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.PAINTING.type().get(),
-            this::createTask, this::createRecipeInput);
+                this::createTask, this::createRecipeInput);
     }
 
     @Nullable
@@ -87,14 +88,14 @@ public class PaintingMachineBlockEntity extends NewPoweredMachineBlockEntity {
     @Override
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .capacitor()
-            .inputSlot(this::isValidInput)
-            .slotAccess(INPUT)
-            .inputSlot(this::isValidPaint)
-            .slotAccess(PAINT)
-            .outputSlot()
-            .slotAccess(OUTPUT)
-            .build();
+                .capacitor()
+                .inputSlot(this::isValidInput)
+                .slotAccess(INPUT)
+                .inputSlot(this::isValidPaint)
+                .slotAccess(PAINT)
+                .outputSlot()
+                .slotAccess(OUTPUT)
+                .build();
     }
 
     private boolean isValidInput(int index, ItemStack stack) {
@@ -120,9 +121,7 @@ public class PaintingMachineBlockEntity extends NewPoweredMachineBlockEntity {
     }
 
     private PaintingRecipe.Input createRecipeInput() {
-        return new PaintingRecipe.Input(
-            INPUT.getItemStack(getInventory()),
-            PAINT.getItemStack(getInventory()));
+        return new PaintingRecipe.Input(INPUT.getItemStack(getInventory()), PAINT.getItemStack(getInventory()));
     }
 
     // endregion
@@ -138,8 +137,10 @@ public class PaintingMachineBlockEntity extends NewPoweredMachineBlockEntity {
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
-    protected PoweredCraftingMachineTask<PaintingRecipe, PaintingRecipe.Input> createTask(Level level, PaintingRecipe.Input recipeInput, @Nullable RecipeHolder<PaintingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, getInventory(), getEnergyStorage(), recipeInput, OUTPUT, recipe) {
+    protected PoweredCraftingMachineTask<PaintingRecipe, PaintingRecipe.Input> createTask(Level level,
+            PaintingRecipe.Input recipeInput, @Nullable RecipeHolder<PaintingRecipe> recipe) {
+        return new PoweredCraftingMachineTask<>(level, getInventory(), getEnergyStorage(), recipeInput, OUTPUT,
+                recipe) {
             @Override
             protected void consumeInputs(PaintingRecipe recipe) {
                 INPUT.getItemStack(getInventory()).shrink(1);
@@ -151,15 +152,15 @@ public class PaintingMachineBlockEntity extends NewPoweredMachineBlockEntity {
                     return super.placeOutputs(outputs, simulate);
                 }
 
-                Optional<BlockPaintData> s = outputs
-                    .stream()
-                    .findFirst()
-                    .map(OutputStack::getItem)
-                    .flatMap(item -> Optional.ofNullable(item.get(EIODataComponents.BLOCK_PAINT)));
+                Optional<BlockPaintData> s = outputs.stream()
+                        .findFirst()
+                        .map(OutputStack::getItem)
+                        .flatMap(item -> Optional.ofNullable(item.get(EIODataComponents.BLOCK_PAINT)));
 
                 s.ifPresent(paintData -> {
                     for (Player player : getLevel().players()) {
-                        if (player instanceof ServerPlayer serverPlayer && area.contains(player.getX(), player.getY(), player.getZ())) {
+                        if (player instanceof ServerPlayer serverPlayer
+                                && area.contains(player.getX(), player.getY(), player.getZ())) {
                             EIOCriterions.PAINTING_TRIGGER.get().trigger(serverPlayer, paintData.paint());
                         }
                     }

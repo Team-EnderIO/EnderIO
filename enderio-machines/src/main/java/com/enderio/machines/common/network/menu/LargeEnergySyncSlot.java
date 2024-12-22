@@ -7,7 +7,6 @@ import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayloadType;
 import com.enderio.machines.common.blockentity.sync.LargeEnergyData;
 import java.util.Objects;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.Level;
 
 public abstract class LargeEnergySyncSlot implements SyncSlot {

@@ -5,15 +5,8 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.machine.base.menu.NewPoweredMachineMenu;
 import com.enderio.machines.common.menu.MachineSlot;
-import com.enderio.machines.common.menu.base.PoweredMachineMenu;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import org.apache.logging.log4j.LogManager;
-import org.jetbrains.annotations.Nullable;
 
 public class PaintingMachineMenu extends NewPoweredMachineMenu<PaintingMachineBlockEntity> {
 
@@ -27,7 +20,8 @@ public class PaintingMachineMenu extends NewPoweredMachineMenu<PaintingMachineBl
     }
 
     public PaintingMachineMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.PAINTING_MACHINE.get(), MachineBlockEntities.PAINTING_MACHINE.get(), containerId, playerInventory, buf);
+        super(MachineMenus.PAINTING_MACHINE.get(), MachineBlockEntities.PAINTING_MACHINE.get(), containerId,
+                playerInventory, buf);
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.standalone());

@@ -23,7 +23,8 @@ public class SlicerMenu extends NewPoweredMachineMenu<SlicerBlockEntity> {
     }
 
     public SlicerMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.SLICE_N_SPLICE.get(), MachineBlockEntities.SLICE_AND_SPLICE.get(), containerId, playerInventory, buf);
+        super(MachineMenus.SLICE_N_SPLICE.get(), MachineBlockEntities.SLICE_AND_SPLICE.get(), containerId,
+                playerInventory, buf);
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.standalone());
@@ -37,11 +38,12 @@ public class SlicerMenu extends NewPoweredMachineMenu<SlicerBlockEntity> {
         addSlot(new MachineSlot(getMachineInventory(), SlicerBlockEntity.SHEARS, 66, 28));
 
         for (int i = 0; i < 6; i++) {
-            addSlot(new MachineSlot(getMachineInventory(), SlicerBlockEntity.INPUTS.get(i), 38 + 18 * (i % 3), i < 3 ? 52 : 70));
+            addSlot(new MachineSlot(getMachineInventory(), SlicerBlockEntity.INPUTS.get(i), 38 + 18 * (i % 3),
+                    i < 3 ? 52 : 70));
         }
         addSlot(new MachineSlot(getMachineInventory(), SlicerBlockEntity.OUTPUT, 128, 61));
 
-        addPlayerInventorySlots(8,126);
+        addPlayerInventorySlots(8, 126);
     }
 
     public float getCraftingProgress() {

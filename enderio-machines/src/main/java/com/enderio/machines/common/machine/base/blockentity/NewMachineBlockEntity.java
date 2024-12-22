@@ -53,7 +53,8 @@ import org.jetbrains.annotations.Nullable;
  * Base block entity implementation for machines.
  * Implements Redstone Control and the Machine State system.
  */
-public abstract class NewMachineBlockEntity extends EIOBlockEntity implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
+public abstract class NewMachineBlockEntity extends EIOBlockEntity
+        implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
 
     public static final ICapabilityProvider<NewMachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = (be,
             side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
@@ -552,7 +553,7 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity implements Me
                 removeData(MachineAttachments.REDSTONE_CONTROL);
             } else if (tag.contains(MachineNBTKeys.REDSTONE_CONTROL)) {
                 redstoneControl = RedstoneControl.parse(registries,
-                    Objects.requireNonNull(tag.get(MachineNBTKeys.REDSTONE_CONTROL)));
+                        Objects.requireNonNull(tag.get(MachineNBTKeys.REDSTONE_CONTROL)));
             }
         }
     }

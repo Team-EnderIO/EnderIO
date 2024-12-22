@@ -3,17 +3,9 @@ package com.enderio.machines.common.machine.powered_spawner;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.machine.base.menu.NewPoweredMachineMenu;
-import com.enderio.machines.common.menu.MachineSlot;
-import com.enderio.machines.common.menu.base.PoweredMachineMenu;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import org.apache.logging.log4j.LogManager;
-import org.jetbrains.annotations.Nullable;
 
 public class PoweredSpawnerMenu extends NewPoweredMachineMenu<PoweredSpawnerBlockEntity> {
 
@@ -25,7 +17,8 @@ public class PoweredSpawnerMenu extends NewPoweredMachineMenu<PoweredSpawnerBloc
     }
 
     public PoweredSpawnerMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.POWERED_SPAWNER.get(), MachineBlockEntities.POWERED_SPAWNER.get(), containerId, playerInventory, buf);
+        super(MachineMenus.POWERED_SPAWNER.get(), MachineBlockEntities.POWERED_SPAWNER.get(), containerId,
+                playerInventory, buf);
         addSlots();
     }
 
@@ -41,7 +34,7 @@ public class PoweredSpawnerMenu extends NewPoweredMachineMenu<PoweredSpawnerBloc
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
-        //noinspection DuplicatedCode
+        // noinspection DuplicatedCode
         var blockEntity = getBlockEntity();
         switch (id) {
         case VISIBILITY_BUTTON_ID:

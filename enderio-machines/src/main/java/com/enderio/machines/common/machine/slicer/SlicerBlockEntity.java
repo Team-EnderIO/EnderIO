@@ -3,7 +3,6 @@ package com.enderio.machines.common.machine.slicer;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
@@ -35,8 +34,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class SlicerBlockEntity extends NewPoweredMachineBlockEntity {
 
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SLICER_CAPACITY);
-    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.SLICER_USAGE);
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+            MachinesConfig.COMMON.ENERGY.SLICER_CAPACITY);
+    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
+            MachinesConfig.COMMON.ENERGY.SLICER_USAGE);
 
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
     public static final MultiSlotAccess INPUTS = new MultiSlotAccess();
@@ -46,13 +47,15 @@ public class SlicerBlockEntity extends NewPoweredMachineBlockEntity {
     private final CraftingMachineTaskHost<SlicingRecipe, SlicingRecipe.Input> craftingTaskHost;
 
     public SlicerBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.SLICE_AND_SPLICE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, CAPACITY, USAGE);
+        super(MachineBlockEntities.SLICE_AND_SPLICE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+                EnergyIOMode.Input, CAPACITY, USAGE);
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SLICING.type().get(),
-            this::createTask, this::createRecipeInput) {
+                this::createTask, this::createRecipeInput) {
             @Override
             protected @Nullable CraftingMachineTask<SlicingRecipe, SlicingRecipe.Input> getNewTask() {
-                if (AXE.getItemStack(SlicerBlockEntity.this).isEmpty() || SHEARS.getItemStack(SlicerBlockEntity.this).isEmpty()) {
+                if (AXE.getItemStack(SlicerBlockEntity.this).isEmpty()
+                        || SHEARS.getItemStack(SlicerBlockEntity.this).isEmpty()) {
                     return null;
                 }
 
@@ -87,18 +90,18 @@ public class SlicerBlockEntity extends NewPoweredMachineBlockEntity {
     @Override
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .setStackLimit(1) // Force all input slots to have 1 output
-            .inputSlot(6, this::isValidInput)
-            .slotAccess(INPUTS)
-            .inputSlot(this::validAxe)
-            .slotAccess(AXE)
-            .inputSlot((slot, stack) -> stack.getItem() instanceof ShearsItem)
-            .slotAccess(SHEARS)
-            .setStackLimit(64) // Reset stack limit
-            .outputSlot()
-            .slotAccess(OUTPUT)
-            .capacitor()
-            .build();
+                .setStackLimit(1) // Force all input slots to have 1 output
+                .inputSlot(6, this::isValidInput)
+                .slotAccess(INPUTS)
+                .inputSlot(this::validAxe)
+                .slotAccess(AXE)
+                .inputSlot((slot, stack) -> stack.getItem() instanceof ShearsItem)
+                .slotAccess(SHEARS)
+                .setStackLimit(64) // Reset stack limit
+                .outputSlot()
+                .slotAccess(OUTPUT)
+                .capacitor()
+                .build();
     }
 
     private boolean isValidInput(int index, ItemStack stack) {
@@ -108,7 +111,8 @@ public class SlicerBlockEntity extends NewPoweredMachineBlockEntity {
     private boolean validAxe(int slot, ItemStack stack) {
         if (stack.getItem() instanceof AxeItem axeItem) {
             // TODO: 20.6: Need a better alternative.
-            //return TierSortingRegistry.getSortedTiers().indexOf(axeItem.getTier()) > TierSortingRegistry.getSortedTiers().indexOf(Tiers.WOOD);
+            // return TierSortingRegistry.getSortedTiers().indexOf(axeItem.getTier()) >
+            // TierSortingRegistry.getSortedTiers().indexOf(Tiers.WOOD);
             return axeItem.getTier() != Tiers.WOOD;
         }
         return false;
@@ -137,8 +141,10 @@ public class SlicerBlockEntity extends NewPoweredMachineBlockEntity {
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
-    protected PoweredCraftingMachineTask<SlicingRecipe, SlicingRecipe.Input> createTask(Level level, SlicingRecipe.Input recipeInput, @Nullable RecipeHolder<SlicingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, getInventory(), getEnergyStorage(), recipeInput, OUTPUT, recipe) {
+    protected PoweredCraftingMachineTask<SlicingRecipe, SlicingRecipe.Input> createTask(Level level,
+            SlicingRecipe.Input recipeInput, @Nullable RecipeHolder<SlicingRecipe> recipe) {
+        return new PoweredCraftingMachineTask<>(level, getInventory(), getEnergyStorage(), recipeInput, OUTPUT,
+                recipe) {
             @Override
             protected void consumeInputs(SlicingRecipe recipe) {
                 // Deduct ingredients
@@ -148,8 +154,10 @@ public class SlicerBlockEntity extends NewPoweredMachineBlockEntity {
                 }
 
                 if (level instanceof ServerLevel serverLevel) {
-                    AXE.getItemStack(inv).hurtAndBreak(1, serverLevel, null, item -> {});
-                    SHEARS.getItemStack(inv).hurtAndBreak(1, serverLevel, null, item -> {});
+                    AXE.getItemStack(inv).hurtAndBreak(1, serverLevel, null, item -> {
+                    });
+                    SHEARS.getItemStack(inv).hurtAndBreak(1, serverLevel, null, item -> {
+                    });
                 }
             }
         };

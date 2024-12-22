@@ -18,6 +18,10 @@ import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.machine.base.blockentity.MachineInventoryHolder;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -48,17 +52,13 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-
-public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
+public abstract class MachineBlockEntity extends EnderBlockEntity
+        implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = SidedIOConfigurable::new;
 
-    public static final ICapabilityProvider<MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER =
-        (be, side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
+    public static final ICapabilityProvider<MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER = (be,
+            side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
 
     // region IO Configuration
 
@@ -83,8 +83,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // region Common Dataslots
 
-    public static final NetworkDataSlot.CodecType<RedstoneControl> REDSTONE_CONTROL_DATA_SLOT_TYPE
-        = new NetworkDataSlot.CodecType<>(RedstoneControl.CODEC, RedstoneControl.STREAM_CODEC.cast());
+    public static final NetworkDataSlot.CodecType<RedstoneControl> REDSTONE_CONTROL_DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(
+            RedstoneControl.CODEC, RedstoneControl.STREAM_CODEC.cast());
 
     private final NetworkDataSlot<RedstoneControl> redstoneControlDataSlot;
     private final @Nullable NetworkDataSlot<IOConfig> ioConfigDataSlot;
@@ -112,9 +112,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         if (supportsRedstoneControl()) {
-            redstoneControlDataSlot = addDataSlot(REDSTONE_CONTROL_DATA_SLOT_TYPE.create(
-                this::getRedstoneControl,
-                this::internalSetRedstoneControl));
+            redstoneControlDataSlot = addDataSlot(
+                    REDSTONE_CONTROL_DATA_SLOT_TYPE.create(this::getRedstoneControl, this::internalSetRedstoneControl));
         } else {
             redstoneControlDataSlot = null;
         }
@@ -229,11 +228,11 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         // The block faces with its southern face. So the back of the machine.
         Direction south = getBlockFacing();
         return switch (side) {
-            case NORTH -> south.getOpposite();
-            case SOUTH -> south;
-            case WEST -> south.getCounterClockWise();
-            case EAST -> south.getClockWise();
-            default -> side;
+        case NORTH -> south.getOpposite();
+        case SOUTH -> south;
+        case WEST -> south.getCounterClockWise();
+        case EAST -> south.getClockWise();
+        default -> side;
         };
     }
 
@@ -363,7 +362,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     /**
      * @apiNote Must call this on custom MachineInventory handlers!
      */
-    protected void onInventoryContentsChanged(int slot) { }
+    protected void onInventoryContentsChanged(int slot) {
+    }
 
     // endregion
 
@@ -404,7 +404,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     private void forceResources() {
         for (Direction direction : Direction.values()) {
             if (getIOMode(direction).canForce()) {
-                // TODO: Maybe some kind of resource distributor so that items are transmitted evenly around? rather than taking the order of Direction.values()
+                // TODO: Maybe some kind of resource distributor so that items are transmitted
+                // evenly around? rather than taking the order of Direction.values()
                 moveItems(direction);
                 moveFluids(direction);
             }
@@ -479,7 +480,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         if (isIOConfigMutable()) {
-            setData(MachineAttachments.IO_CONFIG, components.getOrDefault(MachineDataComponents.IO_CONFIG, IOConfig.empty()));
+            setData(MachineAttachments.IO_CONFIG,
+                    components.getOrDefault(MachineDataComponents.IO_CONFIG, IOConfig.empty()));
         }
     }
 
@@ -512,8 +514,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     // TODO: Rename to onBlockEntityItemUsed?
-    //called when a player uses the block entity, before menu is may open.
-    public ItemInteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    // called when a player uses the block entity, before menu is may open.
+    public ItemInteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player,
+            InteractionHand hand, BlockHitResult hit) {
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
@@ -529,7 +532,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return pPlayer.canInteractWithBlock(this.worldPosition, 1.5);
     }
 
-
     @EnsureSide(EnsureSide.Side.CLIENT)
     @Override
     public ItemInteractionResult onWrenched(@Nullable Player player, @Nullable Direction side) {
@@ -537,7 +539,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             return ItemInteractionResult.SUCCESS;
         }
 
-        if (player.isSecondaryUseActive()) {//aka break block
+        if (player.isSecondaryUseActive()) {// aka break block
             BlockPos pos = getBlockPos();
             BlockState state = getBlockState();
             Block block = state.getBlock();
@@ -554,7 +556,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             level.removeBlock(pos, false);
             block.destroy(level, pos, state);
 
-            //TODO: custom sound when sound manager is up and running??
+            // TODO: custom sound when sound manager is up and running??
         } else {
             // Cycle side config
             if (level.isClientSide()) {

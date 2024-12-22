@@ -7,13 +7,11 @@ import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.ListSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayloadType;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.world.level.Level;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import net.minecraft.world.level.Level;
 
 public abstract class GrindingBallDataSyncSlot implements SyncSlot {
 
@@ -33,7 +31,8 @@ public abstract class GrindingBallDataSyncSlot implements SyncSlot {
         };
     }
 
-    public static GrindingBallDataSyncSlot simple(Supplier<GrindingBallData> getter, Consumer<GrindingBallData> setter) {
+    public static GrindingBallDataSyncSlot simple(Supplier<GrindingBallData> getter,
+            Consumer<GrindingBallData> setter) {
         return new GrindingBallDataSyncSlot() {
 
             @Override
@@ -82,12 +81,9 @@ public abstract class GrindingBallDataSyncSlot implements SyncSlot {
     public SlotPayload createPayload(Level level, ChangeType changeType) {
         var value = get();
 
-        return new ListSlotPayload(List.of(
-            new FloatSlotPayload(value.outputMultiplier()),
-            new FloatSlotPayload(value.bonusMultiplier()),
-            new FloatSlotPayload(value.powerUse()),
-            new IntSlotPayload(value.durability())
-        ));
+        return new ListSlotPayload(
+                List.of(new FloatSlotPayload(value.outputMultiplier()), new FloatSlotPayload(value.bonusMultiplier()),
+                        new FloatSlotPayload(value.powerUse()), new IntSlotPayload(value.durability())));
     }
 
     @Override
@@ -103,12 +99,10 @@ public abstract class GrindingBallDataSyncSlot implements SyncSlot {
                 }
             }
 
-            set(new GrindingBallData(
-                ((FloatSlotPayload) list.contents().get(0)).value(),
-                ((FloatSlotPayload) list.contents().get(1)).value(),
-                ((FloatSlotPayload) list.contents().get(2)).value(),
-                ((IntSlotPayload) list.contents().get(3)).value()
-            ));
+            set(new GrindingBallData(((FloatSlotPayload) list.contents().get(0)).value(),
+                    ((FloatSlotPayload) list.contents().get(1)).value(),
+                    ((FloatSlotPayload) list.contents().get(2)).value(),
+                    ((IntSlotPayload) list.contents().get(3)).value()));
         }
     }
 }

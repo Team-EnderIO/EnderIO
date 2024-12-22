@@ -6,7 +6,6 @@ import com.enderio.core.common.network.menu.payload.SlotPayload;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 

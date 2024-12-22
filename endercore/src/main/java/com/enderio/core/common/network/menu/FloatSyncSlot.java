@@ -4,7 +4,6 @@ import com.enderio.core.common.network.menu.payload.FloatSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.Level;
 
 public abstract class FloatSyncSlot implements SyncSlot {

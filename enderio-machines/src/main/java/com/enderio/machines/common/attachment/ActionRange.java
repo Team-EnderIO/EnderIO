@@ -16,21 +16,16 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Mth;
 
 public record ActionRange(int range, boolean isVisible) {
-    public static final Codec<ActionRange> CODEC = RecordCodecBuilder.create(instance ->
-        instance.group(
-            Codec.INT.fieldOf("range").forGetter(ActionRange::range),
-            Codec.BOOL.fieldOf("isVisible").forGetter(ActionRange::isVisible)
-        ).apply(instance, ActionRange::new));
+    public static final Codec<ActionRange> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(Codec.INT.fieldOf("range").forGetter(ActionRange::range),
+                    Codec.BOOL.fieldOf("isVisible").forGetter(ActionRange::isVisible))
+            .apply(instance, ActionRange::new));
 
-    public static final StreamCodec<ByteBuf, ActionRange> STREAM_CODEC = StreamCodec.composite(
-        ByteBufCodecs.INT,
-        ActionRange::range,
-        ByteBufCodecs.BOOL,
-        ActionRange::isVisible,
-        ActionRange::new
-    );
+    public static final StreamCodec<ByteBuf, ActionRange> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.INT,
+            ActionRange::range, ByteBufCodecs.BOOL, ActionRange::isVisible, ActionRange::new);
 
-    public static NetworkDataSlot.CodecType<ActionRange> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(CODEC, STREAM_CODEC.cast());
+    public static NetworkDataSlot.CodecType<ActionRange> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(CODEC,
+            STREAM_CODEC.cast());
 
     public ActionRange visible() {
         return new ActionRange(range, true);
@@ -59,7 +54,8 @@ public record ActionRange(int range, boolean isVisible) {
         }
 
         if (level.isClientSide()) {
-            level.addAlwaysVisibleParticle(new RangeParticleData(range, color), true, pos.getX(), pos.getY(), pos.getZ(), 0, 0, 0);
+            level.addAlwaysVisibleParticle(new RangeParticleData(range, color), true, pos.getX(), pos.getY(),
+                    pos.getZ(), 0, 0, 0);
         }
     }
 

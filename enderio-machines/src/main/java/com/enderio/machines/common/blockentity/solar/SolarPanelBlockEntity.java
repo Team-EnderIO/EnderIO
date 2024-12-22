@@ -1,5 +1,7 @@
 package com.enderio.machines.common.blockentity.solar;
 
+import static com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
+
 import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.capacitor.FixedScalable;
 import com.enderio.base.api.io.IOMode;
@@ -18,6 +20,8 @@ import com.enderio.machines.common.souldata.SolarSoul;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -32,11 +36,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Optional;
-
-import static com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
-
 public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
 
     private final ISolarPanelTier tier;
@@ -49,12 +48,15 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
     private boolean reloadCache = !reload;
 
     public SolarPanelBlockEntity(BlockPos worldPosition, BlockState blockState, SolarPanelTier tier) {
-        super(EnergyIOMode.Output, new FixedScalable(tier::getStorageCapacity), new FixedScalable(tier::getStorageCapacity),
-            MachineBlockEntities.SOLAR_PANELS.get(tier).get(), worldPosition, blockState);
+        super(EnergyIOMode.Output, new FixedScalable(tier::getStorageCapacity),
+                new FixedScalable(tier::getStorageCapacity), MachineBlockEntities.SOLAR_PANELS.get(tier).get(),
+                worldPosition, blockState);
 
         this.tier = tier;
-        this.node = new MultiEnergyNode(() -> energyStorage, () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
-        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
+        this.node = new MultiEnergyNode(() -> energyStorage,
+                () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
+        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityType().orElse(NO_MOB),
+                this::setEntityType));
     }
 
     @Nullable
@@ -92,7 +94,8 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
             return false;
         }
         if (!this.level.dimensionType().hasSkyLight()) {
-            return soulData == null || (soulData.level().isPresent() && !soulData.level().get().equals(this.level.dimension()));
+            return soulData == null
+                    || (soulData.level().isPresent() && !soulData.level().get().equals(this.level.dimension()));
         }
 
         return getGenerationRate() > 0;
@@ -133,7 +136,7 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
             if (dayTime > minuteInTicks * 18) {
                 return 0;
             }
-            progress = dayTime > minuteInTicks * 15 ? 20 * minuteInTicks - dayTime :  minuteInTicks * 15 - dayTime;
+            progress = dayTime > minuteInTicks * 15 ? 20 * minuteInTicks - dayTime : minuteInTicks * 15 - dayTime;
             progress = (progress - minuteInTicks) / (4 * minuteInTicks);
         }
 
@@ -197,17 +200,19 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
             Graph.integrate(node, List.of());
         }
 
-        for (Direction direction: new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {
-            if (level.getBlockEntity(worldPosition.relative(direction)) instanceof SolarPanelBlockEntity panel && panel.tier == tier) {
+        for (Direction direction : new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH,
+                Direction.WEST }) {
+            if (level.getBlockEntity(worldPosition.relative(direction)) instanceof SolarPanelBlockEntity panel
+                    && panel.tier == tier) {
                 Graph.connect(node, panel.node);
             }
         }
     }
 
-    //Reference: EaseInOutQuad Function
+    // Reference: EaseInOutQuad Function
     private static double easing(float progress) {
         if (progress > 0.5f) {
-            return 1 - Math.pow(-2*progress + 2, 2)/2;
+            return 1 - Math.pow(-2 * progress + 2, 2) / 2;
         }
 
         return 2 * progress * progress;

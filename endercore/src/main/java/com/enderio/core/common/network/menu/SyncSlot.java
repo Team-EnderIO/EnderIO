@@ -1,7 +1,6 @@
 package com.enderio.core.common.network.menu;
 
 import com.enderio.core.common.network.menu.payload.SlotPayload;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.Level;
 
 /**

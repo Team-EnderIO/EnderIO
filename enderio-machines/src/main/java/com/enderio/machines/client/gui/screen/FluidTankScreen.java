@@ -27,8 +27,8 @@ public class FluidTankScreen extends MachineScreen<FluidTankMenu> {
     protected void init() {
         super.init();
         addRenderableOnly(FluidStackWidget.legacy(80 + leftPos, 21 + topPos, 16, 47, menu::getFluidTank));
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl,
-            EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 83, 162, 76);

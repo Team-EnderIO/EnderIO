@@ -21,6 +21,8 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
 import com.enderio.machines.common.recipe.FermentingRecipe;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -40,9 +42,6 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Map;
-
 public class VatBlockEntity extends NewMachineBlockEntity implements FluidTankUser, FluidItemInteractive {
 
     public static final int TANK_CAPACITY = 8 * FluidType.BUCKET_VOLUME;
@@ -59,8 +58,8 @@ public class VatBlockEntity extends NewMachineBlockEntity implements FluidTankUs
         super(MachineBlockEntities.VAT.get(), worldPosition, blockState, true);
         fluidHandler = createFluidHandler();
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, MachineRecipes.VAT_FERMENTING.type().get(), this::createTask,
-            this::createRecipeInput);
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, MachineRecipes.VAT_FERMENTING.type().get(),
+                this::createTask, this::createRecipeInput);
     }
 
     @Nullable
@@ -90,7 +89,7 @@ public class VatBlockEntity extends NewMachineBlockEntity implements FluidTankUs
     }
 
     protected VatCraftingMachineTask createTask(Level level, FermentingRecipe.Input input,
-        @Nullable RecipeHolder<FermentingRecipe> recipe) {
+            @Nullable RecipeHolder<FermentingRecipe> recipe) {
         return new VatCraftingMachineTask(level, getInventory(), getFluidHandler(), input, recipe);
     }
 
@@ -112,11 +111,10 @@ public class VatBlockEntity extends NewMachineBlockEntity implements FluidTankUs
 
     @Override
     public MachineTankLayout getTankLayout() {
-        return MachineTankLayout
-            .builder()
-            .tank(INPUT_TANK, TANK_CAPACITY, true, false, (stack) -> true)
-            .tank(OUTPUT_TANK, TANK_CAPACITY, false, true, (stack) -> true)
-            .build();
+        return MachineTankLayout.builder()
+                .tank(INPUT_TANK, TANK_CAPACITY, true, false, (stack) -> true)
+                .tank(OUTPUT_TANK, TANK_CAPACITY, false, true, (stack) -> true)
+                .build();
     }
 
     @Override
@@ -170,10 +168,12 @@ public class VatBlockEntity extends NewMachineBlockEntity implements FluidTankUs
         OUTPUT_TANK.setFluid(this, FluidStack.EMPTY);
     }
 
-    protected static class VatCraftingMachineTask extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Input> {
+    protected static class VatCraftingMachineTask
+            extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Input> {
 
-        public VatCraftingMachineTask(@NotNull Level level, MachineInventory inventory, MachineFluidHandler fluidHandler, FermentingRecipe.Input input,
-            @Nullable RecipeHolder<FermentingRecipe> recipe) {
+        public VatCraftingMachineTask(@NotNull Level level, MachineInventory inventory,
+                MachineFluidHandler fluidHandler, FermentingRecipe.Input input,
+                @Nullable RecipeHolder<FermentingRecipe> recipe) {
             super(level, inventory, fluidHandler, input, recipe);
         }
 
@@ -223,10 +223,8 @@ public class VatBlockEntity extends NewMachineBlockEntity implements FluidTankUs
         var inputTank = INPUT_TANK.getTank(this);
         var outputTank = OUTPUT_TANK.getTank(this);
         if (!inputTank.isEmpty() || !outputTank.isEmpty()) {
-            components.set(EIODataComponents.NAMED_FLUID_CONTENTS, NamedFluidContents.copyOf(Map.of(
-                "input_tank", inputTank.getFluid(),
-                "output_tank", outputTank.getFluid()
-            )));
+            components.set(EIODataComponents.NAMED_FLUID_CONTENTS, NamedFluidContents
+                    .copyOf(Map.of("input_tank", inputTank.getFluid(), "output_tank", outputTank.getFluid())));
         }
     }
 

@@ -32,7 +32,6 @@ import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntit
 import com.enderio.machines.common.machine.obelisk.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.machine.vat.VatBlock;
-import com.enderio.machines.common.machine.vat.VatBlockEntity;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.enderio.regilite.data.DataGenContext;
@@ -128,8 +127,8 @@ public class MachineBlocks {
     public static final RegiliteBlock<NewProgressMachineBlock<?>> ALLOY_SMELTER = newProgressMachine("alloy_smelter",
             () -> MachineBlockEntities.ALLOY_SMELTER);
 
-    public static final RegiliteBlock<NewProgressMachineBlock<?>> PAINTING_MACHINE = newProgressMachine("painting_machine",
-            () -> MachineBlockEntities.PAINTING_MACHINE);
+    public static final RegiliteBlock<NewProgressMachineBlock<?>> PAINTING_MACHINE = newProgressMachine(
+            "painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE);
 
     public static final RegiliteBlock<MachineBlock> WIRED_CHARGER = machine("wired_charger",
             () -> MachineBlockEntities.WIRED_CHARGER);
@@ -139,14 +138,14 @@ public class MachineBlocks {
                     BlockBehaviour.Properties.of())
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
-    public static final RegiliteBlock<NewProgressMachineBlock<?>> STIRLING_GENERATOR = newProgressMachine("stirling_generator",
-            () -> MachineBlockEntities.STIRLING_GENERATOR);
+    public static final RegiliteBlock<NewProgressMachineBlock<?>> STIRLING_GENERATOR = newProgressMachine(
+            "stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR);
 
     public static final RegiliteBlock<NewProgressMachineBlock<?>> SAG_MILL = newProgressMachine("sag_mill",
             () -> MachineBlockEntities.SAG_MILL).setTranslation("SAG Mill");
 
-    public static final RegiliteBlock<NewProgressMachineBlock<?>> SLICE_AND_SPLICE = newProgressMachine("slice_and_splice",
-            () -> MachineBlockEntities.SLICE_AND_SPLICE).setTranslation("Slice'N'Splice");
+    public static final RegiliteBlock<NewProgressMachineBlock<?>> SLICE_AND_SPLICE = newProgressMachine(
+            "slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE).setTranslation("Slice'N'Splice");
 
     public static final RegiliteBlock<ProgressMachineBlock> IMPULSE_HOPPER = progressMachine("impulse_hopper",
             () -> MachineBlockEntities.IMPULSE_HOPPER).setTranslation("Impulse Hopper");
@@ -241,11 +240,9 @@ public class MachineBlocks {
     public static final RegiliteBlock<NewProgressMachineBlock<?>> DRAIN = newProgressMachine("drain",
             () -> MachineBlockEntities.DRAIN);
 
-    public static final RegiliteBlock<VatBlock> VAT = newBaseMachine(
-        BLOCK_REGISTRY.registerBlock("vat", props -> new VatBlock(MachineBlockEntities.VAT, props),
-            BlockBehaviour.Properties.of().strength(2.5f, 8)),
-        MachineModelUtil::machineBlock)
-        .setTranslation("VAT");
+    public static final RegiliteBlock<VatBlock> VAT = newBaseMachine(BLOCK_REGISTRY.registerBlock("vat",
+            props -> new VatBlock(MachineBlockEntities.VAT, props), BlockBehaviour.Properties.of().strength(2.5f, 8)),
+            MachineModelUtil::machineBlock).setTranslation("VAT");
 
     public static final RegiliteBlock<BlockDetectorBlock> BLOCK_DETECTOR = BLOCK_REGISTRY
             .registerBlock("block_detector", BlockDetectorBlock::new,

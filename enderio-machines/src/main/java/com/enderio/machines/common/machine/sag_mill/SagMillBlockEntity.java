@@ -19,6 +19,7 @@ import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlo
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -32,11 +33,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public class SagMillBlockEntity extends NewPoweredMachineBlockEntity {
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SAG_MILL_CAPACITY);
-    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.SAG_MILL_USAGE);
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+            MachinesConfig.COMMON.ENERGY.SAG_MILL_CAPACITY);
+    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
+            MachinesConfig.COMMON.ENERGY.SAG_MILL_USAGE);
 
     public static final SingleSlotAccess INPUT = new SingleSlotAccess();
     public static final SingleSlotAccess GRINDING_BALL = new SingleSlotAccess();
@@ -48,10 +49,11 @@ public class SagMillBlockEntity extends NewPoweredMachineBlockEntity {
     private final CraftingMachineTaskHost<SagMillingRecipe, SagMillingRecipe.Input> craftingTaskHost;
 
     public SagMillBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.SAG_MILL.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, CAPACITY, USAGE);
+        super(MachineBlockEntities.SAG_MILL.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+                EnergyIOMode.Input, CAPACITY, USAGE);
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SAG_MILLING.type().get(),
-            this::createTask, this::createRecipeInput);
+                this::createTask, this::createRecipeInput);
     }
 
     public GrindingBallData getGrindingBallData() {
@@ -95,14 +97,14 @@ public class SagMillBlockEntity extends NewPoweredMachineBlockEntity {
     @Override
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot(this::isValidInput)
-            .slotAccess(INPUT)
-            .outputSlot(4)
-            .slotAccess(OUTPUT)
-            .inputSlot((slot, stack) -> stack.has(EIODataComponents.GRINDING_BALL))
-            .slotAccess(GRINDING_BALL)
-            .capacitor()
-            .build();
+                .inputSlot(this::isValidInput)
+                .slotAccess(INPUT)
+                .outputSlot(4)
+                .slotAccess(OUTPUT)
+                .inputSlot((slot, stack) -> stack.has(EIODataComponents.GRINDING_BALL))
+                .slotAccess(GRINDING_BALL)
+                .capacitor()
+                .build();
     }
 
     private boolean isValidInput(int index, ItemStack stack) {
@@ -130,7 +132,8 @@ public class SagMillBlockEntity extends NewPoweredMachineBlockEntity {
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
-    protected PoweredCraftingMachineTask<SagMillingRecipe, SagMillingRecipe.Input> createTask(Level level, SagMillingRecipe.Input container, @Nullable RecipeHolder<SagMillingRecipe> recipe) {
+    protected PoweredCraftingMachineTask<SagMillingRecipe, SagMillingRecipe.Input> createTask(Level level,
+            SagMillingRecipe.Input container, @Nullable RecipeHolder<SagMillingRecipe> recipe) {
         return new PoweredCraftingMachineTask<>(level, getInventory(), getEnergyStorage(), container, OUTPUT, recipe) {
             @Override
             protected void consumeInputs(SagMillingRecipe recipe) {
@@ -207,7 +210,8 @@ public class SagMillBlockEntity extends NewPoweredMachineBlockEntity {
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
 
-        grindingBallData = components.getOrDefault(MachineDataComponents.SAG_MILL_GRINDING_BALL, GrindingBallData.IDENTITY);
+        grindingBallData = components.getOrDefault(MachineDataComponents.SAG_MILL_GRINDING_BALL,
+                GrindingBallData.IDENTITY);
         grindingBallDamage = components.getOrDefault(MachineDataComponents.SAG_MILL_GRINDING_BALL_DAMAGE, 0);
     }
 

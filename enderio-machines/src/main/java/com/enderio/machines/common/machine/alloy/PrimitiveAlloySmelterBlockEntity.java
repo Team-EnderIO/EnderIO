@@ -27,7 +27,8 @@ import org.jetbrains.annotations.Nullable;
  * This buffer cannot be accessed via external means, however.
  */
 public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
-    // TODO: Currently smelts really slowly. Needs addressed when we deal with burn -> FE rates.
+    // TODO: Currently smelts really slowly. Needs addressed when we deal with burn
+    // -> FE rates.
     private int burnTime;
     private int burnDuration;
     public static final SingleSlotAccess FUEL = new SingleSlotAccess();
@@ -56,13 +57,13 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     @Override
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot((s, i) -> i.getBurnTime(RecipeType.SMELTING) > 0)
-            .slotAccess(FUEL)
-            .inputSlot(3, this::acceptSlotInput)
-            .slotAccess(INPUTS)
-            .outputSlot()
-            .slotAccess(OUTPUT)
-            .build();
+                .inputSlot((s, i) -> i.getBurnTime(RecipeType.SMELTING) > 0)
+                .slotAccess(FUEL)
+                .inputSlot(3, this::acceptSlotInput)
+                .slotAccess(INPUTS)
+                .outputSlot()
+                .slotAccess(OUTPUT)
+                .build();
     }
 
     @Override
@@ -86,7 +87,8 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
         }
 
         // Only continue burning if redstone is enabled
-        if (canAct() && !isBurning() && craftingTaskHost.hasTask() && !craftingTaskHost.getCurrentTask().isCompleted()) {
+        if (canAct() && !isBurning() && craftingTaskHost.hasTask()
+                && !craftingTaskHost.getCurrentTask().isCompleted()) {
             // Get the fuel
             ItemStack fuel = FUEL.getItemStack(this);
             if (!fuel.isEmpty()) {
@@ -138,7 +140,6 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
             }
         };
     }
-
 
     public boolean isBurning() {
         return burnTime > 0;

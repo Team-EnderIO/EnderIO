@@ -7,6 +7,8 @@ import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
 import com.enderio.machines.client.gui.widget.ExperienceWidget;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.machine.obelisk.xp.XPObeliskMenu;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -15,9 +17,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.joml.Vector2i;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class XPObeliskScreen extends NewMachineScreen<XPObeliskMenu> {
     private static final ResourceLocation BG = EnderIOBase.loc("textures/gui/screen/xp_obelisk.png");
@@ -42,8 +41,8 @@ public class XPObeliskScreen extends NewMachineScreen<XPObeliskMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 8 - 14, topPos + 6, menu::getRedstoneControl,
-            menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 8 - 14, topPos + 6,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
         addRenderableOnly(new ExperienceWidget(leftPos + (imageWidth / 2) - 55, topPos + 55, 110, 5, menu::getFluid));
 
@@ -51,14 +50,20 @@ public class XPObeliskScreen extends NewMachineScreen<XPObeliskMenu> {
         int padding = 16;
         int offset = size + padding;
         Vector2i midLeft = new Vector2i(leftPos + imageWidth / 2 - size / 2 - offset, topPos + 58);
-        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, XPObeliskMenu.ADD_1_LEVEL_BUTTON_ID, XP_ADD_ONE, MachineLang.RETRIEVE_1));
-        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, XPObeliskMenu.REMOVE_1_LEVEL_BUTTON_ID, XP_REMOVE_ONE, MachineLang.STORE_1));
+        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, XPObeliskMenu.ADD_1_LEVEL_BUTTON_ID,
+                XP_ADD_ONE, MachineLang.RETRIEVE_1));
+        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, XPObeliskMenu.REMOVE_1_LEVEL_BUTTON_ID,
+                XP_REMOVE_ONE, MachineLang.STORE_1));
         midLeft = midLeft.add(offset, 0);
-        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, XPObeliskMenu.ADD_10_LEVELS_BUTTON_ID, XP_ADD_MULTI, MachineLang.RETRIEVE_10));
-        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, XPObeliskMenu.REMOVE_10_LEVELS_BUTTON_ID, XP_REMOVE_MULTI, MachineLang.STORE_10));
+        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, XPObeliskMenu.ADD_10_LEVELS_BUTTON_ID,
+                XP_ADD_MULTI, MachineLang.RETRIEVE_10));
+        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size,
+                XPObeliskMenu.REMOVE_10_LEVELS_BUTTON_ID, XP_REMOVE_MULTI, MachineLang.STORE_10));
         midLeft = midLeft.add(offset, 0);
-        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, XPObeliskMenu.ADD_ALL_XP_BUTTON_ID, XP_ADD_ALL, MachineLang.RETRIEVE_ALL));
-        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, XPObeliskMenu.REMOVE_ALL_XP_BUTTON_ID, XP_REMOVE_ALL, MachineLang.STORE_ALL));
+        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, XPObeliskMenu.ADD_ALL_XP_BUTTON_ID,
+                XP_ADD_ALL, MachineLang.RETRIEVE_ALL));
+        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, XPObeliskMenu.REMOVE_ALL_XP_BUTTON_ID,
+                XP_REMOVE_ALL, MachineLang.STORE_ALL));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 7, 136, 102);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);
@@ -70,7 +75,8 @@ public class XPObeliskScreen extends NewMachineScreen<XPObeliskMenu> {
     }
 
     private ImageButton makeButton(int x, int y, int size, int id, ResourceLocation SPRITE, Component tooltip) {
-        ImageButton button = new ImageButton(x, y, size, size, new WidgetSprites(SPRITE, SPRITE), (press) -> handleButtonPress(id));
+        ImageButton button = new ImageButton(x, y, size, size, new WidgetSprites(SPRITE, SPRITE),
+                (press) -> handleButtonPress(id));
         button.setTooltip(Tooltip.create(tooltip));
         xpButtons.add(button);
         return button;

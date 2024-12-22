@@ -9,6 +9,9 @@ import com.enderio.machines.common.tag.MachineTags;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import io.netty.buffer.ByteBuf;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.IntFunction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -37,10 +40,6 @@ import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.IntFunction;
-
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
 public class SpawnerMachineTask implements PoweredMachineTask {
 
@@ -61,7 +60,8 @@ public class SpawnerMachineTask implements PoweredMachineTask {
      *
      * @param energyStorage The energy storage used to power the task.
      */
-    public SpawnerMachineTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage, @Nullable ResourceLocation rl) {
+    public SpawnerMachineTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage,
+            @Nullable ResourceLocation rl) {
         this.blockEntity = blockEntity;
         this.energyStorage = energyStorage;
         loadSoulData(rl);
@@ -83,7 +83,11 @@ public class SpawnerMachineTask implements PoweredMachineTask {
         }
         if (energyConsumed >= energyCost) {
             if (isAreaClear()) {
-                complete = trySpawnEntity(blockEntity.getBlockPos(), (ServerLevel) blockEntity.getLevel()); //ready to spawn but blocked for a reason.
+                complete = trySpawnEntity(blockEntity.getBlockPos(), (ServerLevel) blockEntity.getLevel()); // ready to
+                                                                                                            // spawn but
+                                                                                                            // blocked
+                                                                                                            // for a
+                                                                                                            // reason.
             }
         } else {
             energyConsumed += energyStorage.consumeEnergy(energyCost - energyConsumed, false);
@@ -93,7 +97,7 @@ public class SpawnerMachineTask implements PoweredMachineTask {
 
     @Override
     public float getProgress() {
-        return energyConsumed / ((float)energyCost);
+        return energyConsumed / ((float) energyCost);
     }
 
     @Override
@@ -117,26 +121,31 @@ public class SpawnerMachineTask implements PoweredMachineTask {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
             return false;
         }
-        List<? extends Entity> entities = blockEntity.getLevel().getEntities(entity, range, p -> p instanceof LivingEntity);
+        List<? extends Entity> entities = blockEntity.getLevel()
+                .getEntities(entity, range, p -> p instanceof LivingEntity);
         if (entities.size() >= MachinesConfig.COMMON.MAX_SPAWNER_ENTITIES.get()) {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.TOO_MANY_MOB);
             return false;
         }
-        long count = BlockPos.betweenClosedStream(range).filter(pos -> blockEntity.getLevel().getBlockEntity(pos) instanceof PoweredSpawnerBlockEntity).count();
+        long count = BlockPos.betweenClosedStream(range)
+                .filter(pos -> blockEntity.getLevel().getBlockEntity(pos) instanceof PoweredSpawnerBlockEntity)
+                .count();
         if (count >= MachinesConfig.COMMON.MAX_SPAWNERS.get()) {
-            this.efficiency = MachinesConfig.COMMON.MAX_SPAWNERS.get()/(float)count;
+            this.efficiency = MachinesConfig.COMMON.MAX_SPAWNERS.get() / (float) count;
         }
         return true;
     }
-    
+
     private void loadSoulData(@Nullable ResourceLocation rl) {
         if (rl == null) {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
             return;
         }
 
-        Optional<Holder.Reference<EntityType<?>>> optionalEntity = BuiltInRegistries.ENTITY_TYPE.getHolder(ResourceKey.create(Registries.ENTITY_TYPE, rl));
-        if (optionalEntity.isEmpty() || ! BuiltInRegistries.ENTITY_TYPE.getKey(optionalEntity.get().value()).equals(rl)) {
+        Optional<Holder.Reference<EntityType<?>>> optionalEntity = BuiltInRegistries.ENTITY_TYPE
+                .getHolder(ResourceKey.create(Registries.ENTITY_TYPE, rl));
+        if (optionalEntity.isEmpty()
+                || !BuiltInRegistries.ENTITY_TYPE.getKey(optionalEntity.get().value()).equals(rl)) {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
             return;
         }
@@ -147,11 +156,13 @@ public class SpawnerMachineTask implements PoweredMachineTask {
         }
 
         Optional<SpawnerSoul.SoulData> opData = SpawnerSoul.SPAWNER.matches(rl);
-        if (opData.isEmpty()) { //Fallback
+        if (opData.isEmpty()) { // Fallback
             this.entityType = optionalEntity.get().value();
             this.energyCost = 50000;
-            if (entityType.create(this.blockEntity.getLevel()) instanceof LivingEntity entity) { //Are we 100% guaranteed this is a living entity?
-                this.energyCost += (int)entity.getMaxHealth() * 50; //TODO actually balance based on health
+            if (entityType.create(this.blockEntity.getLevel()) instanceof LivingEntity entity) { // Are we 100%
+                                                                                                 // guaranteed this is a
+                                                                                                 // living entity?
+                this.energyCost += (int) entity.getMaxHealth() * 50; // TODO actually balance based on health
             }
             return;
         }
@@ -170,9 +181,13 @@ public class SpawnerMachineTask implements PoweredMachineTask {
         }
         for (int i = 0; i < MachinesConfig.COMMON.SPAWN_AMOUNT.get(); i++) {
             RandomSource randomsource = level.getRandom();
-            double x = pos.getX() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
+            double x = pos.getX()
+                    + (randomsource.nextDouble() - randomsource.nextDouble()) * (double) this.blockEntity.getRange()
+                    + 0.5D;
             double y = pos.getY() + randomsource.nextInt(3) - 1;
-            double z = pos.getZ() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
+            double z = pos.getZ()
+                    + (randomsource.nextDouble() - randomsource.nextDouble()) * (double) this.blockEntity.getRange()
+                    + 0.5D;
 
             Optional<ResourceLocation> rl = blockEntity.getEntityType();
             if (rl.isEmpty()) {
@@ -180,7 +195,8 @@ public class SpawnerMachineTask implements PoweredMachineTask {
                 return false;
             }
             EntityType<?> optionalEntity = BuiltInRegistries.ENTITY_TYPE.get(rl.get());
-            if (!BuiltInRegistries.ENTITY_TYPE.getKey(optionalEntity).equals(rl.get())) { // check we don't get the default pig
+            if (!BuiltInRegistries.ENTITY_TYPE.getKey(optionalEntity).equals(rl.get())) { // check we don't get the
+                                                                                          // default pig
                 blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
                 return false;
             }
@@ -188,20 +204,22 @@ public class SpawnerMachineTask implements PoweredMachineTask {
 
                 Entity entity = null;
                 switch (spawnType) {
-                    case COPY -> {
-                        entity = EntityType.loadEntityRecursive(blockEntity.getEntityData().getEntityTag(), level, entity1 -> {
-                            entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
-                            return entity1;
-                        });
+                case COPY -> {
+                    entity = EntityType.loadEntityRecursive(blockEntity.getEntityData().getEntityTag(), level,
+                            entity1 -> {
+                                entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
+                                return entity1;
+                            });
+                }
+                case ENTITY_TYPE -> {
+                    EntityType<?> id = BuiltInRegistries.ENTITY_TYPE
+                            .get(ResourceLocation.parse(blockEntity.getEntityData().getEntityTag().getString("id")));
+                    if (id != null) {
+                        entity = id.create(level);
+                        entity.moveTo(x, y, z);
                     }
-                    case ENTITY_TYPE -> {
-                        EntityType<?> id = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(blockEntity.getEntityData().getEntityTag().getString("id")));
-                        if (id != null) {
-                            entity = id.create(level);
-                            entity.moveTo(x, y, z);
-                        }
-                    }
-                    default -> throw new IllegalStateException("Unexpected value: " + spawnType);
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + spawnType);
                 }
 
                 if (entity == null) {
@@ -210,12 +228,14 @@ public class SpawnerMachineTask implements PoweredMachineTask {
                 }
 
                 if (entity instanceof Mob mob) { // based on vanilla spawner
-                    FinalizeSpawnEvent event = EventHooks.finalizeMobSpawnSpawner(mob, level, level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, blockEntity, false);
+                    FinalizeSpawnEvent event = EventHooks.finalizeMobSpawnSpawner(mob, level,
+                            level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, blockEntity, false);
                     if (event.isSpawnCancelled()) {
                         blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
                         continue;
                     } else {
-                        EventHooks.finalizeMobSpawn(mob, level, event.getDifficulty(), event.getSpawnType(), event.getSpawnData());
+                        EventHooks.finalizeMobSpawn(mob, level, event.getDifficulty(), event.getSpawnType(),
+                                event.getSpawnData());
                     }
                 }
 
@@ -236,10 +256,12 @@ public class SpawnerMachineTask implements PoweredMachineTask {
         }
 
         if (spawned) {
-            //Clear energy after spawn
-            energyConsumed -= energyCost; //The same amount of energy is used for 1 or MachinesConfig.COMMON.SPAWN_AMOUNT.get() spawns, so make sure your spawner has enough valid spaces!
+            // Clear energy after spawn
+            energyConsumed -= energyCost; // The same amount of energy is used for 1 or
+                                          // MachinesConfig.COMMON.SPAWN_AMOUNT.get() spawns, so make sure your spawner
+                                          // has enough valid spaces!
         }
-        
+
         return spawned;
     }
 
@@ -268,11 +290,11 @@ public class SpawnerMachineTask implements PoweredMachineTask {
 
     // TODO: Might want to move this to its own file in future.
     public enum SpawnType implements StringRepresentable {
-        ENTITY_TYPE(0, "entity_type"),
-        COPY(1, "copy");
+        ENTITY_TYPE(0, "entity_type"), COPY(1, "copy");
 
         public static final Codec<SpawnType> CODEC = StringRepresentable.fromEnum(SpawnType::values);
-        public static final IntFunction<SpawnType> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final IntFunction<SpawnType> BY_ID = ByIdMap.continuous(key -> key.id, values(),
+                ByIdMap.OutOfBoundsStrategy.ZERO);
         public static final StreamCodec<ByteBuf, SpawnType> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
 
         private final int id;
@@ -288,12 +310,12 @@ public class SpawnerMachineTask implements PoweredMachineTask {
         }
 
         public static DataResult<SpawnType> byName(String pTranslationKey) {
-            for(SpawnType type : values()) {
+            for (SpawnType type : values()) {
                 if (type.name.equals(pTranslationKey)) {
                     return DataResult.success(type);
                 }
             }
-            return DataResult.error(()->"unkown type");
+            return DataResult.error(() -> "unkown type");
         }
 
         @Override

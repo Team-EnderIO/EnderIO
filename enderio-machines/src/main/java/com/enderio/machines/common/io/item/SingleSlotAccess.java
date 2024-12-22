@@ -34,6 +34,7 @@ public class SingleSlotAccess {
 
         return insertItem(machine.getInventory(), itemStack, simulate);
     }
+
     public void setStackInSlot(MachineInventory inventory, ItemStack itemStack) {
         inventory.setStackInSlot(index, itemStack);
     }
@@ -58,7 +59,8 @@ public class SingleSlotAccess {
         if (index == Integer.MIN_VALUE) {
             index = i;
         } else if (index != i) {
-            throw new IllegalArgumentException("InventoryLayout changed dynamically from " + index + " to " + i + ", don't do that");
+            throw new IllegalArgumentException(
+                    "InventoryLayout changed dynamically from " + index + " to " + i + ", don't do that");
         }
     }
 

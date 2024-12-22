@@ -17,8 +17,8 @@ public class VatBlock extends NewProgressMachineBlock<VatBlockEntity> {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-        BlockHitResult hitResult) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+            Player player, InteractionHand hand, BlockHitResult hitResult) {
 
         if (!stack.isEmpty()) {
             if (level.getBlockEntity(pos) instanceof VatBlockEntity vat) {
@@ -26,8 +26,8 @@ public class VatBlock extends NewProgressMachineBlock<VatBlockEntity> {
                     return ItemInteractionResult.SUCCESS;
                 }
 
-                if (vat.handleFluidItemInteraction(player, hand, stack, vat, VatBlockEntity.INPUT_TANK) ||
-                    vat.handleFluidItemInteraction(player, hand, stack, vat, VatBlockEntity.OUTPUT_TANK)) {
+                if (vat.handleFluidItemInteraction(player, hand, stack, vat, VatBlockEntity.INPUT_TANK)
+                        || vat.handleFluidItemInteraction(player, hand, stack, vat, VatBlockEntity.OUTPUT_TANK)) {
                     player.getInventory().setChanged();
                     return ItemInteractionResult.CONSUME;
                 }
@@ -37,4 +37,3 @@ public class VatBlock extends NewProgressMachineBlock<VatBlockEntity> {
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 }
-

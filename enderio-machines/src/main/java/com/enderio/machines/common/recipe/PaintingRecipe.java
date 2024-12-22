@@ -1,12 +1,14 @@
 package com.enderio.machines.common.recipe;
 
-import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
@@ -20,13 +22,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public record PaintingRecipe(
-    Ingredient input,
-    ItemStack output
-) implements MachineRecipe<PaintingRecipe.Input> {
+public record PaintingRecipe(Ingredient input, ItemStack output) implements MachineRecipe<PaintingRecipe.Input> {
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
@@ -90,9 +86,9 @@ public record PaintingRecipe(
         @Override
         public ItemStack getItem(int slotIndex) {
             return switch (slotIndex) {
-                case 0 -> template;
-                case 1 -> paint;
-                default -> throw new IllegalArgumentException("No item for index " + slotIndex);
+            case 0 -> template;
+            case 1 -> paint;
+            default -> throw new IllegalArgumentException("No item for index " + slotIndex);
             };
         }
 
@@ -104,18 +100,14 @@ public record PaintingRecipe(
 
     public static class Serializer implements RecipeSerializer<PaintingRecipe> {
 
-        public static final MapCodec<PaintingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Ingredient.CODEC.fieldOf("input").forGetter(PaintingRecipe::input),
-            ItemStack.CODEC.fieldOf("output").forGetter(PaintingRecipe::output)
-        ).apply(instance, PaintingRecipe::new));
+        public static final MapCodec<PaintingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+                .group(Ingredient.CODEC.fieldOf("input").forGetter(PaintingRecipe::input),
+                        ItemStack.CODEC.fieldOf("output").forGetter(PaintingRecipe::output))
+                .apply(instance, PaintingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, PaintingRecipe> STREAM_CODEC = StreamCodec.composite(
-            Ingredient.CONTENTS_STREAM_CODEC,
-            PaintingRecipe::input,
-            ItemStack.STREAM_CODEC,
-            PaintingRecipe::output,
-            PaintingRecipe::new
-        );
+                Ingredient.CONTENTS_STREAM_CODEC, PaintingRecipe::input, ItemStack.STREAM_CODEC, PaintingRecipe::output,
+                PaintingRecipe::new);
 
         @Override
         public MapCodec<PaintingRecipe> codec() {

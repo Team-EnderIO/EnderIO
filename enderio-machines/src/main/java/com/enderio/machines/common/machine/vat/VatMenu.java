@@ -5,22 +5,15 @@ import com.enderio.core.common.network.menu.RecipeSyncSlot;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.machine.base.fluid.FluidStorageInfo;
 import com.enderio.machines.common.machine.base.fluid.FluidStorageSyncSlot;
 import com.enderio.machines.common.machine.base.menu.NewMachineMenu;
 import com.enderio.machines.common.menu.MachineSlot;
-import com.enderio.machines.common.menu.base.MachineMenu;
 import com.enderio.machines.common.recipe.FermentingRecipe;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 public class VatMenu extends NewMachineMenu<VatBlockEntity> {
@@ -41,9 +34,12 @@ public class VatMenu extends NewMachineMenu<VatBlockEntity> {
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));
-        inputTankSlot = addSyncSlot(FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getInputTank())));
-        outputTankSlot = addSyncSlot(FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getOutputTank())));
-        recipeSlot = addSyncSlot(RecipeSyncSlot.readOnly(MachineRecipes.VAT_FERMENTING.type().get(), blockEntity::getRecipe));
+        inputTankSlot = addSyncSlot(
+                FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getInputTank())));
+        outputTankSlot = addSyncSlot(
+                FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getOutputTank())));
+        recipeSlot = addSyncSlot(
+                RecipeSyncSlot.readOnly(MachineRecipes.VAT_FERMENTING.type().get(), blockEntity::getRecipe));
     }
 
     public VatMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {

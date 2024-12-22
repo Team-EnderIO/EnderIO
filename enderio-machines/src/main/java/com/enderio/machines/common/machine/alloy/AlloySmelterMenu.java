@@ -4,8 +4,8 @@ import com.enderio.core.common.network.menu.EnumSyncSlot;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.menu.MachineSlot;
 import com.enderio.machines.common.machine.base.menu.NewPoweredMachineMenu;
+import com.enderio.machines.common.menu.MachineSlot;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 

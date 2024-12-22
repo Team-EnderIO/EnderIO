@@ -10,7 +10,6 @@ import com.enderio.core.common.network.menu.payload.SlotPayload;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;

@@ -15,6 +15,7 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -27,20 +28,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
-
 public class StirlingGeneratorBlockEntity extends NewPoweredMachineBlockEntity {
 
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_CAPACITY);
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+            MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_CAPACITY);
 
-    public static final SteppedScalable FUEL_EFFICIENCY = new SteppedScalable(
-        CapacitorModifier.FUEL_EFFICIENCY,
-        MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_FUEL_EFFICIENCY_BASE,
-        MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_FUEL_EFFICIENCY_STEP);
+    public static final SteppedScalable FUEL_EFFICIENCY = new SteppedScalable(CapacitorModifier.FUEL_EFFICIENCY,
+            MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_FUEL_EFFICIENCY_BASE,
+            MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_FUEL_EFFICIENCY_STEP);
 
     public static final LinearScalable GENERATION_SPEED = new LinearScalable(
-        CapacitorModifier.BURNING_ENERGY_GENERATION,
-        MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_PRODUCTION);
+            CapacitorModifier.BURNING_ENERGY_GENERATION, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_PRODUCTION);
 
     public static final SingleSlotAccess FUEL = new SingleSlotAccess();
 
@@ -48,7 +46,8 @@ public class StirlingGeneratorBlockEntity extends NewPoweredMachineBlockEntity {
     private int burnDuration;
 
     public StirlingGeneratorBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.STIRLING_GENERATOR.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
+        super(MachineBlockEntities.STIRLING_GENERATOR.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+                EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
     }
 
     public int getGenerationRate() {
@@ -58,10 +57,11 @@ public class StirlingGeneratorBlockEntity extends NewPoweredMachineBlockEntity {
     @Override
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot((slot, stack) -> stack.getBurnTime(RecipeType.SMELTING) > 0 && stack.getCraftingRemainingItem().isEmpty())
-            .slotAccess(FUEL)
-            .capacitor()
-            .build();
+                .inputSlot((slot, stack) -> stack.getBurnTime(RecipeType.SMELTING) > 0
+                        && stack.getCraftingRemainingItem().isEmpty())
+                .slotAccess(FUEL)
+                .capacitor()
+                .build();
     }
 
     @Override
@@ -136,12 +136,15 @@ public class StirlingGeneratorBlockEntity extends NewPoweredMachineBlockEntity {
         }
     }
 
-    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
+    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity,
+            Supplier<Integer> usageRate) {
         return new MachineEnergyStorage(this, energyIOMode, capacity, usageRate) {
             @Override
             protected void onContentsChanged() {
                 setChanged();
-                updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
+                updateMachineState(MachineState.FULL_POWER,
+                        (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
+                                && isCapacitorInstalled());
             }
         };
     }
@@ -159,7 +162,9 @@ public class StirlingGeneratorBlockEntity extends NewPoweredMachineBlockEntity {
         }
 
         updateMachineState(MachineState.NO_POWER, false);
-        updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
+        updateMachineState(MachineState.FULL_POWER,
+                (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
+                        && isCapacitorInstalled());
         updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(this).isEmpty());
     }
 
@@ -176,7 +181,9 @@ public class StirlingGeneratorBlockEntity extends NewPoweredMachineBlockEntity {
         super.setLevel(level);
 
         updateMachineState(MachineState.NO_POWER, false);
-        updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
+        updateMachineState(MachineState.FULL_POWER,
+                (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
+                        && isCapacitorInstalled());
         updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(this).isEmpty());
     }
 }

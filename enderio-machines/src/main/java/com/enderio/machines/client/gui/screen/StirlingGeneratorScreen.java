@@ -28,11 +28,14 @@ public class StirlingGeneratorScreen extends NewMachineScreen<StirlingGeneratorM
     protected void init() {
         super.init();
 
-        addRenderableOnly(new ProgressWidget.BottomUp(BG_TEXTURE, menu::getBurnProgress, getGuiLeft() + 81, getGuiTop() + 53, 14, 14, 176, 0));
+        addRenderableOnly(new ProgressWidget.BottomUp(BG_TEXTURE, menu::getBurnProgress, getGuiLeft() + 81,
+                getGuiTop() + 53, 14, 14, 176, 0));
 
-        addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage, menu::isCapacitorInstalled));
+        addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage,
+                menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 

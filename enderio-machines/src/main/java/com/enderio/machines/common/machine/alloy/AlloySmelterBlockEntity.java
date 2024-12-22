@@ -16,10 +16,10 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
-import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
-import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
+import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
+import com.enderio.machines.common.recipe.RecipeCaches;
 import com.mojang.logging.LogUtils;
 import java.util.List;
 import java.util.Optional;
@@ -65,10 +65,12 @@ public class AlloySmelterBlockEntity extends NewPoweredMachineBlockEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public static AlloySmelterBlockEntity factory(BlockPos pWorldPosition, BlockState pBlockState) {
-        return new AlloySmelterBlockEntity(MachineBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState, CapacitorSupport.REQUIRED);
+        return new AlloySmelterBlockEntity(MachineBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState,
+                CapacitorSupport.REQUIRED);
     }
 
-    protected AlloySmelterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, CapacitorSupport capacitorSupport) {
+    protected AlloySmelterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState,
+            CapacitorSupport capacitorSupport) {
         super(pType, pWorldPosition, pBlockState, true, capacitorSupport, EnergyIOMode.Input, CAPACITY, USAGE);
 
         // Crafting task host

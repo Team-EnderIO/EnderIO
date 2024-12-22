@@ -9,14 +9,13 @@ import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerMenu;
+import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
-
-import java.util.Optional;
 
 public class PoweredSpawnerScreen extends NewMachineScreen<PoweredSpawnerMenu> {
 
@@ -35,22 +34,20 @@ public class PoweredSpawnerScreen extends NewMachineScreen<PoweredSpawnerMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage, menu::isCapacitorInstalled));
+        addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage,
+                menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl,
-            menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(EIOCommonWidgets.createRange(
-            leftPos + imageWidth - 6 - 16,
-            topPos + 24,
-            EIOLang.HIDE_RANGE,
-            EIOLang.SHOW_RANGE,
-            menu::isRangeVisible,
-            (ignored) -> handleButtonPress(PoweredSpawnerMenu.VISIBILITY_BUTTON_ID)));
+        addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 24, EIOLang.HIDE_RANGE,
+                EIOLang.SHOW_RANGE, menu::isRangeVisible,
+                (ignored) -> handleButtonPress(PoweredSpawnerMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
-        addRenderableOnly(new ProgressWidget.BottomUp(BG_TEXTURE, () -> menu.getBlockEntity().getSpawnProgress(), getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
+        addRenderableOnly(new ProgressWidget.BottomUp(BG_TEXTURE, () -> menu.getBlockEntity().getSpawnProgress(),
+                getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
     }
 
     @Override
@@ -67,7 +64,8 @@ public class PoweredSpawnerScreen extends NewMachineScreen<PoweredSpawnerMenu> {
                 String name = type.getDescription().getString();
                 guiGraphics.drawString(font, name, imageWidth / 2f - font.width(name) / 2f, 15, 4210752, false);
             } else {
-                guiGraphics.drawString(font, rl.get().toString(), imageWidth / 2f - font.width(rl.get().toString()) / 2f, 15, 4210752, false);
+                guiGraphics.drawString(font, rl.get().toString(),
+                        imageWidth / 2f - font.width(rl.get().toString()) / 2f, 15, 4210752, false);
             }
         }
 

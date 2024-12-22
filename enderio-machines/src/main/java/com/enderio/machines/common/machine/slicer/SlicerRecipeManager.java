@@ -3,6 +3,11 @@ package com.enderio.machines.common.machine.slicer;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.recipe.SlicingRecipe;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import net.minecraft.Util;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -15,12 +20,6 @@ import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
 public class SlicerRecipeManager {
@@ -58,9 +57,10 @@ public class SlicerRecipeManager {
 
     @SubscribeEvent
     public static void registerReloadListener(AddReloadListenerEvent event) {
-        //Fired on datapack reload
+        // Fired on datapack reload
         clearCache = true;
     }
+
     @SubscribeEvent
     public static void onRecipesUpdated(RecipesUpdatedEvent event) {
         rebuildCache(event.getRecipeManager());
@@ -83,7 +83,8 @@ public class SlicerRecipeManager {
             nonoptimizableingredient.clear();
         }
 
-        for (RecipeHolder<SlicingRecipe> slicingRecipe : manager.getAllRecipesFor(MachineRecipes.SLICING.type().get())) {
+        for (RecipeHolder<SlicingRecipe> slicingRecipe : manager
+                .getAllRecipesFor(MachineRecipes.SLICING.type().get())) {
             for (int i = 0; i < 6; i++) {
                 Ingredient ingredient = slicingRecipe.value().inputs().get(i);
                 if (ingredient.isSimple()) {

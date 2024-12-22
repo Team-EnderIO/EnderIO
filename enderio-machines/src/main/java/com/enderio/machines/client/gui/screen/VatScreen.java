@@ -34,7 +34,6 @@ public class VatScreen extends NewMachineScreen<VatMenu> {
     private static final WidgetSprites MOVE_SPRITES = new WidgetSprites(MOVE_FLUID, MOVE_FLUID);
     private static final WidgetSprites VOID_SPRITES = new WidgetSprites(VOID_FLUID, VOID_FLUID);
 
-
     public VatScreen(VatMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
 
@@ -48,19 +47,21 @@ public class VatScreen extends NewMachineScreen<VatMenu> {
         addRenderableOnly(FluidStackWidget.legacy(30 + leftPos, 12 + topPos, 15, 47, this::wrappedInputTank));
         addRenderableOnly(new FluidStackWidget(132 + leftPos, 12 + topPos, 15, 47, menu::getOutputTank));
 
-        addRenderableOnly(
-            new FermentationWidget(this::isCrafting, this::inputFluidStack, this::outputFluidStack, menu::getCraftingProgress, 76 + leftPos, 34 + topPos, 26, 28));
+        addRenderableOnly(new FermentationWidget(this::isCrafting, this::inputFluidStack, this::outputFluidStack,
+                menu::getCraftingProgress, 76 + leftPos, 34 + topPos, 26, 28));
 
-        addRenderableOnly(new ProgressWidget.BottomUp(VAT_BG, menu::getCraftingProgress, 82 + leftPos, 64 + topPos, 14, 14, 176, 0));
+        addRenderableOnly(new ProgressWidget.BottomUp(VAT_BG, menu::getCraftingProgress, 82 + leftPos, 64 + topPos, 14,
+                14, 176, 0));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
         addRenderableWidget(new ImageButton(leftPos + 29, topPos + 62, 16, 16, MOVE_SPRITES,
-            (b) -> handleButtonPress(VatMenu.MOVE_TO_OUTPUT_TANK_BUTTON_ID)));
+                (b) -> handleButtonPress(VatMenu.MOVE_TO_OUTPUT_TANK_BUTTON_ID)));
         addRenderableWidget(new ImageButton(leftPos + 131, topPos + 62, 16, 16, VOID_SPRITES,
-            (b) -> handleButtonPress(VatMenu.DUMP_OUTPUT_TANK_BUTTON_ID)));
+                (b) -> handleButtonPress(VatMenu.DUMP_OUTPUT_TANK_BUTTON_ID)));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 83, 162, 76);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);

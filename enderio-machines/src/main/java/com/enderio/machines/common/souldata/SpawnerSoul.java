@@ -24,34 +24,34 @@ public class SpawnerSoul {
      * @param power powercost of the spawner
      * @param spawnType way to spawn the mob
      */
-    public record SoulData(ResourceLocation entityType, int power, SpawnerMachineTask.SpawnType spawnType) implements
-        com.enderio.machines.common.souldata.SoulData {
+    public record SoulData(ResourceLocation entityType, int power, SpawnerMachineTask.SpawnType spawnType)
+            implements com.enderio.machines.common.souldata.SoulData {
         @Override
         public ResourceLocation getKey() {
             return entityType();
         }
     }
 
-    public static final Codec<SoulData> CODEC = RecordCodecBuilder.create(soulDataInstance ->
-        soulDataInstance.group(ResourceLocation.CODEC.fieldOf("entity").forGetter(SoulData::entityType),
-            Codec.INT.fieldOf("power").forGetter(SoulData::power),
-            Codec.STRING.comapFlatMap(SpawnerMachineTask.SpawnType::byName, SpawnerMachineTask.SpawnType::getName).stable().fieldOf("type").forGetter(
-                SoulData::spawnType))
-            .apply(soulDataInstance, SoulData::new));
+    public static final Codec<SoulData> CODEC = RecordCodecBuilder
+            .create(soulDataInstance -> soulDataInstance
+                    .group(ResourceLocation.CODEC.fieldOf("entity").forGetter(SoulData::entityType), Codec.INT
+                            .fieldOf("power")
+                            .forGetter(SoulData::power),
+                            Codec.STRING
+                                    .comapFlatMap(SpawnerMachineTask.SpawnType::byName,
+                                            SpawnerMachineTask.SpawnType::getName)
+                                    .stable()
+                                    .fieldOf("type")
+                                    .forGetter(SoulData::spawnType))
+                    .apply(soulDataInstance, SoulData::new));
 
-    public static StreamCodec<ByteBuf, SoulData> STREAM_CODEC = StreamCodec.composite(
-        ResourceLocation.STREAM_CODEC,
-        SoulData::entityType,
-        ByteBufCodecs.INT,
-        SoulData::power,
-        SpawnerMachineTask.SpawnType.STREAM_CODEC,
-        SoulData::spawnType,
-        SoulData::new
-    );
+    public static StreamCodec<ByteBuf, SoulData> STREAM_CODEC = StreamCodec.composite(ResourceLocation.STREAM_CODEC,
+            SoulData::entityType, ByteBufCodecs.INT, SoulData::power, SpawnerMachineTask.SpawnType.STREAM_CODEC,
+            SoulData::spawnType, SoulData::new);
 
     public static final String NAME = "spawner";
 
-    //SoulData Manger for the spawner data
+    // SoulData Manger for the spawner data
     public static final SoulDataReloadListener<SoulData> SPAWNER = new SoulDataReloadListener<>(NAME, CODEC);
 
     @SubscribeEvent

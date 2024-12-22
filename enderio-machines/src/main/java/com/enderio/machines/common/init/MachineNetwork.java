@@ -23,19 +23,21 @@ public class MachineNetwork {
     public static void register(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(EnderCore.MOD_ID).versioned(PROTOCOL_VERSION);
 
-        //Sync soul data (optional)
+        // Sync soul data (optional)
         SpawnerSoul.SPAWNER.subscribeAsSyncable(PoweredSpawnerSoulPacket::new);
         EngineSoul.ENGINE.subscribeAsSyncable(SoulEngineSoulPacket::new);
         SolarSoul.SOLAR.subscribeAsSyncable(SolarSoulPacket::new);
 
         registrar.playToClient(PoweredSpawnerSoulPacket.TYPE, PoweredSpawnerSoulPacket.STREAM_CODEC,
-            MachinePayloadHandler.Client.getInstance()::handlePoweredSpawnerSoul);
+                MachinePayloadHandler.Client.getInstance()::handlePoweredSpawnerSoul);
 
-        registrar.playToClient(SoulEngineSoulPacket.TYPE, SoulEngineSoulPacket.STREAM_CODEC, MachinePayloadHandler.Client.getInstance()::handleSoulEngineSoul);
+        registrar.playToClient(SoulEngineSoulPacket.TYPE, SoulEngineSoulPacket.STREAM_CODEC,
+                MachinePayloadHandler.Client.getInstance()::handleSoulEngineSoul);
 
-        registrar.playToClient(SolarSoulPacket.TYPE, SolarSoulPacket.STREAM_CODEC, MachinePayloadHandler.Client.getInstance()::handleSolarSoul);
+        registrar.playToClient(SolarSoulPacket.TYPE, SolarSoulPacket.STREAM_CODEC,
+                MachinePayloadHandler.Client.getInstance()::handleSolarSoul);
 
         registrar.playToServer(UpdateCrafterTemplatePacket.TYPE, UpdateCrafterTemplatePacket.STREAM_CODEC,
-            MachinePayloadHandler.Server.getInstance()::updateCrafterTemplate);
+                MachinePayloadHandler.Server.getInstance()::updateCrafterTemplate);
     }
 }

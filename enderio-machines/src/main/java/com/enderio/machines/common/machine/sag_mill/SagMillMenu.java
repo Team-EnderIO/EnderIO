@@ -2,21 +2,12 @@ package com.enderio.machines.common.machine.sag_mill;
 
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
-import com.enderio.core.common.network.menu.IntSyncSlot;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.machine.base.menu.NewPoweredMachineMenu;
 import com.enderio.machines.common.menu.MachineSlot;
-import com.enderio.machines.common.menu.base.PoweredMachineMenu;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import org.apache.logging.log4j.LogManager;
-import org.jetbrains.annotations.Nullable;
 
 public class SagMillMenu extends NewPoweredMachineMenu<SagMillBlockEntity> {
     public static int INPUTS_INDEX = 1;
@@ -57,7 +48,7 @@ public class SagMillMenu extends NewPoweredMachineMenu<SagMillBlockEntity> {
 
         addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.GRINDING_BALL, 122, 39));
 
-        addPlayerInventorySlots(8,126);
+        addPlayerInventorySlots(8, 126);
     }
 
     public float getCraftingProgress() {

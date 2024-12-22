@@ -1,21 +1,17 @@
 package com.enderio.core.common.network.menu;
 
-import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.NullSlotPayload;
 import com.enderio.core.common.network.menu.payload.ResourceLocationSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.Registries;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public abstract class RecipeSyncSlot<T extends Recipe<?>> implements SyncSlot {
 
@@ -37,7 +33,8 @@ public abstract class RecipeSyncSlot<T extends Recipe<?>> implements SyncSlot {
         };
     }
 
-    public static <T extends Recipe<?>> RecipeSyncSlot<T> simple(RecipeType<T> recipeType, Supplier<RecipeHolder<T>> getter, Consumer<RecipeHolder<T>> setter) {
+    public static <T extends Recipe<?>> RecipeSyncSlot<T> simple(RecipeType<T> recipeType,
+            Supplier<RecipeHolder<T>> getter, Consumer<RecipeHolder<T>> setter) {
         return new RecipeSyncSlot<>(recipeType) {
 
             @Override
@@ -53,7 +50,8 @@ public abstract class RecipeSyncSlot<T extends Recipe<?>> implements SyncSlot {
         };
     }
 
-    public static <T extends Recipe<?>> RecipeSyncSlot<T> readOnly(RecipeType<T> recipeType, Supplier<RecipeHolder<T>> getter) {
+    public static <T extends Recipe<?>> RecipeSyncSlot<T> readOnly(RecipeType<T> recipeType,
+            Supplier<RecipeHolder<T>> getter) {
         return new RecipeSyncSlot<>(recipeType) {
 
             @Override
@@ -78,6 +76,7 @@ public abstract class RecipeSyncSlot<T extends Recipe<?>> implements SyncSlot {
 
     @Nullable
     public abstract RecipeHolder<T> get();
+
     public abstract void set(@Nullable RecipeHolder<T> value);
 
     @Override
@@ -103,16 +102,14 @@ public abstract class RecipeSyncSlot<T extends Recipe<?>> implements SyncSlot {
         if (payload instanceof ResourceLocationSlotPayload resourceLocationSlotPayload) {
             Optional<RecipeHolder<?>> recipe = level.getRecipeManager().byKey(resourceLocationSlotPayload.value());
 
-            set(recipe.map(
-                holder -> {
-                    if (holder.value().getType() == recipeType) {
-                        //noinspection unchecked
-                        return (RecipeHolder<T>) holder;
-                    } else {
-                        return null;
-                    }
+            set(recipe.map(holder -> {
+                if (holder.value().getType() == recipeType) {
+                    // noinspection unchecked
+                    return (RecipeHolder<T>) holder;
+                } else {
+                    return null;
                 }
-            ).orElse(null));
+            }).orElse(null));
         } else if (payload instanceof NullSlotPayload) {
             set(null);
         }

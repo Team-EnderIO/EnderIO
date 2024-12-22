@@ -9,7 +9,6 @@ import com.enderio.machines.common.machine.base.energy.EnergyStorageInfo;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.Level;
 
 public abstract class EnergyStorageSyncSlot implements SyncSlot {

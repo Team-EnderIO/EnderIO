@@ -1,10 +1,10 @@
 package com.enderio.machines.common.machine.base.menu;
 
 import com.enderio.EnderIOBase;
-import com.enderio.machines.common.menu.MachineSlot;
-import com.enderio.machines.common.network.menu.EnergyStorageSyncSlot;
 import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.energy.EnergyStorageInfo;
+import com.enderio.machines.common.menu.MachineSlot;
+import com.enderio.machines.common.network.menu.EnergyStorageSyncSlot;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -53,7 +53,7 @@ public class NewPoweredMachineMenu<T extends NewPoweredMachineBlockEntity> exten
             throw new IllegalStateException("Unable to get capacitor slot index, inventory has no capacitor slot.");
         }
 
-        addSlot(new MachineSlot(inventory, layout.getCapacitorSlot(), x, y))
-            .setBackground(InventoryMenu.BLOCK_ATLAS, EMPTY_CAPACITOR_SLOT);
+        addSlot(new MachineSlot(inventory, layout.getCapacitorSlot(), x, y)).setBackground(InventoryMenu.BLOCK_ATLAS,
+                EMPTY_CAPACITOR_SLOT);
     }
 }

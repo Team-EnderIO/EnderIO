@@ -1,6 +1,5 @@
 package com.enderio.machines.common.network;
 
-import com.enderio.machines.common.machine.vat.VatBlockEntity;
 import com.enderio.machines.common.menu.CrafterMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.SolarSoul;

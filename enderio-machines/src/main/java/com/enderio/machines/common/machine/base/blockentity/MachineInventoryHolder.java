@@ -4,5 +4,6 @@ import com.enderio.machines.common.io.item.MachineInventory;
 
 public interface MachineInventoryHolder {
     boolean hasInventory();
+
     MachineInventory getInventory();
 }

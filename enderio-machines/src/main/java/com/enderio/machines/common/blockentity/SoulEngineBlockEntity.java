@@ -1,5 +1,7 @@
 package com.enderio.machines.common.blockentity;
 
+import static com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
+
 import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.FixedScalable;
@@ -22,6 +24,9 @@ import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -48,18 +53,14 @@ import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
-import static com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
-
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
 public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser {
 
-    private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
-    public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED);
-    //TODO capacitor increase efficiency
+    private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+            MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
+    public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED,
+            MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED);
+    // TODO capacitor increase efficiency
     public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> 1);
 
     private static final String BURNED_TICKS = "BurnedTicks";
@@ -74,19 +75,19 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     private boolean reloadCache = !reload;
 
     public SoulEngineBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, MachineBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState);
+        super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, MachineBlockEntities.SOUL_ENGINE.get(), worldPosition,
+                blockState);
         fluidHandler = createFluidHandler();
 
-        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
+        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityType().orElse(NO_MOB),
+                this::setEntityType));
         addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
 
     }
 
     @Override
     public MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-            .capacitor()
-            .build();
+        return MachineInventoryLayout.builder().capacitor().build();
     }
 
     @Override
@@ -135,7 +136,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     public float getGenerationRate() {
-        //TODO return GENERATION_SPEED.scaleF(this::getCapacitorData).get();
+        // TODO return GENERATION_SPEED.scaleF(this::getCapacitorData).get();
         return MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED.get();
     }
 
@@ -182,15 +183,16 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
     private Predicate<FluidStack> isFluidValid() {
         return fluidStack -> {
-            if (soulData == null)  {
+            if (soulData == null) {
                 return false;
             }
             String fluid = soulData.fluid();
-            if (fluid.startsWith("#")) { //We have a fluid tag instead
+            if (fluid.startsWith("#")) { // We have a fluid tag instead
                 TagKey<Fluid> tag = TagKey.create(Registries.FLUID, ResourceLocation.parse(fluid.substring(1)));
                 return fluidStack.is(tag);
             } else {
-                Optional<Holder.Reference<Fluid>> delegate = BuiltInRegistries.FLUID.getHolder(ResourceKey.create(Registries.FLUID, ResourceLocation.parse(fluid)));
+                Optional<Holder.Reference<Fluid>> delegate = BuiltInRegistries.FLUID
+                        .getHolder(ResourceKey.create(Registries.FLUID, ResourceLocation.parse(fluid)));
                 if (delegate.isPresent()) {
                     return fluidStack.getFluid().isSame(delegate.get().value());
                 }
@@ -206,16 +208,19 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         return new SoulEngineMenu(containerId, this, playerInventory);
     }
 
-    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
+    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity,
+            Supplier<Integer> usageRate) {
         return new MachineEnergyStorage(this, energyIOMode, capacity, usageRate) {
             @Override
             protected void onContentsChanged() {
                 setChanged();
                 updateMachineState(MachineState.FULL_POWER,
-                    (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
+                        (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
+                                && isCapacitorInstalled());
             }
         };
     }
+
     @Override
     public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         super.saveAdditional(pTag, lookupProvider);
@@ -232,7 +237,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER,
-            (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
+                (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
+                        && isCapacitorInstalled());
         loadTank(lookupProvider, pTag);
     }
 
@@ -268,7 +274,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER,
-            (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
+                (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
+                        && isCapacitorInstalled());
     }
 
     @SubscribeEvent

@@ -9,14 +9,13 @@ import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;
 import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
+import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
-
-import java.util.Optional;
 
 public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
 
@@ -34,10 +33,11 @@ public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage, menu::isCapacitorInstalled));
+        addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage,
+                menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl,
-            EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
         addRenderableOnly(FluidStackWidget.legacy(80 + leftPos, 21 + topPos, 16, 47, menu::getFluidTank));
 
@@ -61,14 +61,17 @@ public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
                 String name = type.getDescription().getString();
                 guiGraphics.drawString(font, name, imageWidth / 2f - font.width(name) / 2f, 10, 4210752, false);
             } else {
-                guiGraphics.drawString(font, rl.get().toString(), imageWidth / 2f - font.width(rl.get().toString()) / 2f, 10, 4210752, false);
+                guiGraphics.drawString(font, rl.get().toString(),
+                        imageWidth / 2f - font.width(rl.get().toString()) / 2f, 10, 4210752, false);
             }
             EngineSoul.SoulData data = EngineSoul.ENGINE.map.get(rl.get());
             if (data != null) {
                 double burnRate = menu.getBlockEntity().getBurnRate();
                 float genRate = menu.getBlockEntity().getGenerationRate();
-                guiGraphics.drawString(font, data.tickpermb()/ burnRate + " t/mb", imageWidth / 2f + 12 , 40, 4210752, false);
-                guiGraphics.drawString(font, (int) (data.powerpermb() * genRate) + " µI/mb", imageWidth / 2f + 12 , 50, 4210752, false);
+                guiGraphics.drawString(font, data.tickpermb() / burnRate + " t/mb", imageWidth / 2f + 12, 40, 4210752,
+                        false);
+                guiGraphics.drawString(font, (int) (data.powerpermb() * genRate) + " µI/mb", imageWidth / 2f + 12, 50,
+                        4210752, false);
 
             }
         }

@@ -6,12 +6,11 @@ import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.PairSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayloadType;
-import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
-
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public abstract class FluidStorageSyncSlot implements SyncSlot {
 
@@ -64,6 +63,7 @@ public abstract class FluidStorageSyncSlot implements SyncSlot {
     private FluidStorageInfo lastValue;
 
     public abstract FluidStorageInfo get();
+
     public abstract void set(FluidStorageInfo value);
 
     @Override
@@ -74,7 +74,8 @@ public abstract class FluidStorageSyncSlot implements SyncSlot {
         }
 
         boolean isSameCapacity = lastValue != null && currentValue.capacity() == lastValue.capacity();
-        boolean isSameFluid = lastValue != null && FluidStack.isSameFluid(currentValue.contents(), lastValue.contents());
+        boolean isSameFluid = lastValue != null
+                && FluidStack.isSameFluid(currentValue.contents(), lastValue.contents());
 
         var changeType = isSameFluid && isSameCapacity ? ChangeType.PARTIAL : ChangeType.FULL;
 
@@ -89,10 +90,7 @@ public abstract class FluidStorageSyncSlot implements SyncSlot {
             return new IntSlotPayload(value.contents().getAmount());
         }
 
-        return new PairSlotPayload(
-            new FluidStackSlotPayload(value.contents()),
-            new IntSlotPayload(value.capacity())
-        );
+        return new PairSlotPayload(new FluidStackSlotPayload(value.contents()), new IntSlotPayload(value.capacity()));
     }
 
     @Override
@@ -104,10 +102,8 @@ public abstract class FluidStorageSyncSlot implements SyncSlot {
                 return;
             }
 
-            set(new FluidStorageInfo(
-                ((FluidStackSlotPayload) pair.left()).value(),
-                ((IntSlotPayload) pair.right()).value()
-            ));
+            set(new FluidStorageInfo(((FluidStackSlotPayload) pair.left()).value(),
+                    ((IntSlotPayload) pair.right()).value()));
         }
     }
 }
