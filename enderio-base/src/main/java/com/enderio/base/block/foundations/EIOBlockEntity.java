@@ -34,8 +34,8 @@ public class EIOBlockEntity extends EnderBlockEntity {
     }
 
     @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
+    public void onLoad() {
+        super.onLoad();
 
         if (supportsRedstonePower()) {
             updateRedstonePower();
