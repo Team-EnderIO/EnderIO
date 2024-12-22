@@ -3,7 +3,7 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.FermentationWidget;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;
@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
-public class VatScreen extends NewMachineScreen<VatMenu> {
+public class VatScreen extends MachineScreen<VatMenu> {
 
     public static final ResourceLocation VAT_BG = EnderIOBase.loc("textures/gui/screen/vat.png");
     private static final int WIDTH = 176;

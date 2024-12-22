@@ -3,7 +3,7 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.AlloySmelterModeWidget;
 import com.enderio.machines.client.gui.widget.NewCapacitorEnergyWidget;
@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.apache.commons.lang3.NotImplementedException;
 
-public class AlloySmelterScreen extends NewMachineScreen<AlloySmelterMenu> {
+public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
 
     public static final ResourceLocation BG_TEXTURE_AUTO = EnderIOBase
             .loc("textures/gui/screen/alloy_smelter_auto.png");

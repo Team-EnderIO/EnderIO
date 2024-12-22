@@ -4,7 +4,7 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.EIOCommonWidgets;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;
@@ -16,7 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class DrainScreen extends NewMachineScreen<DrainMenu> {
+public class DrainScreen extends MachineScreen<DrainMenu> {
 
     public static final ResourceLocation BG_TEXTURE = EnderIOBase.loc("textures/gui/screen/drain.png");
     private static final int WIDTH = 176;

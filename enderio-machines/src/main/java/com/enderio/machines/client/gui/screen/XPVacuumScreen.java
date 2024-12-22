@@ -4,7 +4,7 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.EIOCommonWidgets;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.machines.client.gui.screen.base.MachineScreen;
+import com.enderio.machines.client.gui.screen.base.LegacyMachineScreen;
 import com.enderio.machines.client.gui.widget.FluidStackStaticWidget;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
+public class XPVacuumScreen extends LegacyMachineScreen<XPVacuumMenu> {
 
     private static final ResourceLocation XP_VACUUM_BG = EnderIOBase.loc("textures/gui/screen/xp_vacuum.png");
     private static final int WIDTH = 176;

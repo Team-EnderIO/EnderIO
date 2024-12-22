@@ -39,7 +39,7 @@ import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskMenu;
 import com.enderio.machines.common.menu.CapacitorBankMenu;
 import com.enderio.machines.common.blocks.crafter.CrafterMenu;
 import com.enderio.machines.common.menu.EnchanterMenu;
-import com.enderio.machines.common.menu.FluidTankMenu;
+import com.enderio.machines.common.blocks.fluid_tank.FluidTankMenu;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskMenu;
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskMenu;
@@ -60,7 +60,7 @@ public class MachineMenus {
     private static final MenuRegistry MENU_REGISTRY = EnderIOMachines.REGILITE.menuRegistry();
 
     public static final RegiliteMenu<FluidTankMenu> FLUID_TANK = MENU_REGISTRY.registerMenu("fluid_tank",
-            FluidTankMenu::factory, () -> FluidTankScreen::new);
+            FluidTankMenu::new, () -> FluidTankScreen::new);
     public static final RegiliteMenu<EnchanterMenu> ENCHANTER = MENU_REGISTRY.registerMenu("enchanter",
             EnchanterMenu::factory, () -> EnchanterScreen::new);
     public static final RegiliteMenu<PrimitiveAlloySmelterMenu> PRIMITIVE_ALLOY_SMELTER = MENU_REGISTRY.registerMenu(

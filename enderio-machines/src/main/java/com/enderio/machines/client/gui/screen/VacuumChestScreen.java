@@ -4,7 +4,7 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.EIOCommonWidgets;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.machines.client.gui.screen.base.MachineScreen;
+import com.enderio.machines.client.gui.screen.base.LegacyMachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.common.menu.VacuumChestMenu;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
+public class VacuumChestScreen extends LegacyMachineScreen<VacuumChestMenu> {
 
     private static final ResourceLocation VACUUM_CHEST_BG = EnderIOBase.loc("textures/gui/screen/vacuum_chest.png");
     private static final int WIDTH = 176;

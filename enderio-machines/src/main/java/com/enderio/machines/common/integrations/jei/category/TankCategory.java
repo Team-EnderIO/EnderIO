@@ -3,7 +3,7 @@ package com.enderio.machines.common.integrations.jei.category;
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.integrations.jei.JEIUtils;
 import com.enderio.machines.client.gui.screen.FluidTankScreen;
-import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
+import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.TankRecipe;

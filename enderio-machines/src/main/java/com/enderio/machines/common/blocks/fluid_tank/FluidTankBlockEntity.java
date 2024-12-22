@@ -1,11 +1,10 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.blocks.fluid_tank;
 
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.FluidTankUser;
-import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
+import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.FluidItemInteractive;
@@ -16,15 +15,12 @@ import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
 import com.enderio.machines.common.blocks.base.state.MachineState;
-import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.recipe.TankRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -33,10 +29,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -52,7 +46,7 @@ import java.util.Optional;
 
 // TODO: Rewrite this with tasks?
 //       Could implement a task for each thing it currently has in the If's
-public abstract class FluidTankBlockEntity extends LegacyMachineBlockEntity implements FluidItemInteractive, FluidTankUser {
+public abstract class FluidTankBlockEntity extends MachineBlockEntity implements FluidItemInteractive, FluidTankUser {
 
     public static class Standard extends FluidTankBlockEntity {
         public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;
@@ -82,7 +76,7 @@ public abstract class FluidTankBlockEntity extends LegacyMachineBlockEntity impl
     }
 
     private final MachineFluidHandler fluidHandler;
-    private static final TankAccess TANK = new TankAccess();
+    public static final TankAccess TANK = new TankAccess();
 
     // TODO: Swap from optional to nullable?
     private Optional<RecipeHolder<TankRecipe>> currentRecipe = Optional.empty();
@@ -93,17 +87,20 @@ public abstract class FluidTankBlockEntity extends LegacyMachineBlockEntity impl
     public static final SingleSlotAccess FLUID_DRAIN_OUTPUT = new SingleSlotAccess();
 
     public FluidTankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(type, worldPosition, blockState);
+        super(type, worldPosition, blockState, true);
         fluidHandler = createFluidHandler();
+    }
 
-        // Sync fluid for model
-        addDataSlot(NetworkDataSlot.FLUID_STACK.create(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
+    @Override
+    public boolean isActive() {
+        // No active state on tanks
+        return false;
     }
 
     private TankRecipe.Input createRecipeInput() {
         return new TankRecipe.Input(
-            FLUID_DRAIN_INPUT.getItemStack(getInventoryNN()),
-            FLUID_FILL_INPUT.getItemStack(getInventoryNN()),
+            FLUID_DRAIN_INPUT.getItemStack(getInventory()),
+            FLUID_FILL_INPUT.getItemStack(getInventory()),
             TANK.getTank(this));
     }
 
@@ -245,16 +242,6 @@ public abstract class FluidTankBlockEntity extends LegacyMachineBlockEntity impl
 
     // endregion
 
-    @Override
-    public ItemInteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        ItemStack stack = player.getItemInHand(hand);
-        if (!stack.isEmpty() && handleFluidItemInteraction(player, hand, stack, this, TANK)) {
-            player.getInventory().setChanged();
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
-        }
-        return super.onBlockEntityUsed(state, level, pos, player, hand, hit);
-    }
-
     //TODO: enable fluid tanks to receive stackable fluid containers
     private void drainInternal() {
         ItemStack inputItem = FLUID_DRAIN_INPUT.getItemStack(this);
@@ -365,13 +352,8 @@ public abstract class FluidTankBlockEntity extends LegacyMachineBlockEntity impl
     }
 
     @Nullable
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new FluidTankMenu(pContainerId, this, pInventory);
-    }
-
-    @Override
-    public int getLightEmission() {
-        return TANK.getFluid(this).getFluid().getFluidType().getLightLevel();
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player pPlayer) {
+        return new FluidTankMenu(containerId, playerInventory, this);
     }
 
     // region Serialization

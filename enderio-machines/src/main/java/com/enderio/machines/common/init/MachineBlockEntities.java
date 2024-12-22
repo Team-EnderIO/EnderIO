@@ -12,7 +12,7 @@ import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlock
 import com.enderio.machines.common.blocks.crafter.CrafterBlockEntity;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
-import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
+import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
 import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
@@ -61,14 +61,14 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<FluidTankBlockEntity.Standard> FLUID_TANK = register("fluid_tank",
             FluidTankBlockEntity.Standard::new, MachineBlocks.FLUID_TANK).setRenderer(() -> FluidTankBER::new)
-                    .apply(MachineBlockEntities::machineBlockEntityCapabilities)
-                    .apply(MachineBlockEntities::fluidHandlerCapability);
+                    .apply(MachineBlockEntities::newMachineBlockEntityCapabilities)
+                    .apply(MachineBlockEntities::newFluidHandlerCapability);
 
     public static final RegiliteBlockEntity<FluidTankBlockEntity.Enhanced> PRESSURIZED_FLUID_TANK = register(
             "pressurized_fluid_tank", FluidTankBlockEntity.Enhanced::new, MachineBlocks.PRESSURIZED_FLUID_TANK)
                     .setRenderer(() -> FluidTankBER::new)
-                    .apply(MachineBlockEntities::machineBlockEntityCapabilities)
-                    .apply(MachineBlockEntities::fluidHandlerCapability);
+                    .apply(MachineBlockEntities::newMachineBlockEntityCapabilities)
+                    .apply(MachineBlockEntities::newFluidHandlerCapability);
 
     public static final RegiliteBlockEntity<EnchanterBlockEntity> ENCHANTER = register("enchanter",
             EnchanterBlockEntity::new, MachineBlocks.ENCHANTER);

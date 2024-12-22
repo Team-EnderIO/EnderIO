@@ -1,8 +1,8 @@
 package com.enderio.machines.client.rendering.item;
 
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
-import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
-import com.enderio.machines.common.item.FluidTankItem;
+import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
+import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -47,7 +47,7 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
                 VertexConsumer fluidBuffer = buffer.getBuffer(Sheets.translucentCullBlockSheet());
 
                 int capacity = FluidTankBlockEntity.Standard.CAPACITY;
-                if (stack.getItem() instanceof FluidTankItem tank) {
+                if (stack.getItem() instanceof FluidTankBlockItem tank) {
                     capacity = tank.getCapacity();
                 }
 

@@ -3,7 +3,7 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class PaintingMachineScreen extends NewMachineScreen<PaintingMachineMenu> {
+public class PaintingMachineScreen extends MachineScreen<PaintingMachineMenu> {
 
     private static final ResourceLocation PAINTING_MACHINE_BG = EnderIOBase
             .loc("textures/gui/screen/painting_machine.png");

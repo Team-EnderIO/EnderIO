@@ -1,4 +1,4 @@
-package com.enderio.machines.common.item;
+package com.enderio.machines.common.blocks.fluid_tank;
 
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
@@ -17,14 +17,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FluidTankItem extends BlockItem implements AdvancedTooltipProvider {
+public class FluidTankBlockItem extends BlockItem implements AdvancedTooltipProvider {
 
     public static final ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER =
-        (stack, v) -> new FluidHandlerItemStack(EIODataComponents.ITEM_FLUID_CONTENT, stack, ((FluidTankItem)stack.getItem()).capacity);
+        (stack, v) -> new FluidHandlerItemStack(EIODataComponents.ITEM_FLUID_CONTENT, stack, ((FluidTankBlockItem)stack.getItem()).capacity);
 
     protected final int capacity;
 
-    public FluidTankItem(LegacyMachineBlock block, Properties properties, int capacity) {
+    public FluidTankBlockItem(FluidTankBlock block, Properties properties, int capacity) {
         super(block, properties);
         this.capacity = capacity;
     }

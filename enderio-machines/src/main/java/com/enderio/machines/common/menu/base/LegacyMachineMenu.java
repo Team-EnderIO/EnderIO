@@ -22,6 +22,7 @@ import java.util.Set;
  * Common machine helpers, such as ghost slots and accessing common properties.
  * @param <T>
  */
+@Deprecated(forRemoval = true)
 public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> extends BaseBlockEntityMenu<T> {
 
     protected LegacyMachineMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity, Inventory playerInventory) {

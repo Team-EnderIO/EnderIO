@@ -42,6 +42,7 @@ import java.util.function.Supplier;
 /**
  * A machine that stores energy.
  */
+@Deprecated(forRemoval = true)
 public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlockEntity implements MachineInstallable {
 
     public static final ICapabilityProvider<LegacyPoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER =

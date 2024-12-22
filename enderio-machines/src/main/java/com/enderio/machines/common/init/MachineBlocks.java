@@ -24,8 +24,9 @@ import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockE
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
+import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlock;
 import com.enderio.machines.common.item.CapacitorBankItem;
-import com.enderio.machines.common.item.FluidTankItem;
+import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockItem;
 import com.enderio.machines.common.blocks.base.block.MachineBlock;
 import com.enderio.machines.common.blocks.base.block.ProgressMachineBlock;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
@@ -65,8 +66,8 @@ public class MachineBlocks {
     private static final BlockRegistry BLOCK_REGISTRY = EnderIOMachines.REGILITE.blockRegistry();
     private static final ItemRegistry ITEM_REGISTRY = EnderIOMachines.REGILITE.itemRegistry();
 
-    public static final RegiliteBlock<LegacyMachineBlock> FLUID_TANK = BLOCK_REGISTRY
-            .registerBlock("fluid_tank", props -> new LegacyMachineBlock(MachineBlockEntities.FLUID_TANK, props),
+    public static final RegiliteBlock<FluidTankBlock> FLUID_TANK = BLOCK_REGISTRY
+            .registerBlock("fluid_tank", props -> new FluidTankBlock(MachineBlockEntities.FLUID_TANK::get, props),
                     BlockBehaviour.Properties.of()
                             .strength(2.5f, 8)
                             .isViewBlocking((pState, pLevel, pPos) -> false)
@@ -83,15 +84,15 @@ public class MachineBlocks {
                             ModelHelper.getExistingAsBuilder(prov.models(), EnderIOBase.loc("block/io_overlay")))
                     .end()
                     .texture("particle", EnderIOBase.loc("block/machine_side"))))
-            .createBlockItem(ITEM_REGISTRY, block -> new FluidTankItem(block, new Item.Properties(), 16000),
+            .createBlockItem(ITEM_REGISTRY, block -> new FluidTankBlockItem(block, new Item.Properties(), 16000),
                     item -> item.setModelProvider((prov, ctx) -> {
                     })
                             .setTab(EIOCreativeTabs.MACHINES)
-                            .addCapability(Capabilities.FluidHandler.ITEM, FluidTankItem.FLUID_HANDLER_PROVIDER));
+                            .addCapability(Capabilities.FluidHandler.ITEM, FluidTankBlockItem.FLUID_HANDLER_PROVIDER));
 
-    public static final RegiliteBlock<LegacyMachineBlock> PRESSURIZED_FLUID_TANK = BLOCK_REGISTRY
+    public static final RegiliteBlock<FluidTankBlock> PRESSURIZED_FLUID_TANK = BLOCK_REGISTRY
             .registerBlock("pressurized_fluid_tank",
-                    props -> new LegacyMachineBlock(MachineBlockEntities.PRESSURIZED_FLUID_TANK, props),
+                    props -> new FluidTankBlock(MachineBlockEntities.PRESSURIZED_FLUID_TANK::get, props),
                     BlockBehaviour.Properties.of()
                             .strength(2.5f, 8)
                             .isViewBlocking((pState, pLevel, pPos) -> false)
@@ -108,11 +109,11 @@ public class MachineBlocks {
                             ModelHelper.getExistingAsBuilder(prov.models(), EnderIOBase.loc("block/io_overlay")))
                     .end()
                     .texture("particle", EnderIOBase.loc("block/machine_side"))))
-            .createBlockItem(ITEM_REGISTRY, (block) -> new FluidTankItem(block, new Item.Properties(), 32000),
+            .createBlockItem(ITEM_REGISTRY, (block) -> new FluidTankBlockItem(block, new Item.Properties(), 32000),
                     item -> item.setModelProvider((prov, ctx) -> {
                     })
                             .setTab(EIOCreativeTabs.MACHINES)
-                            .addCapability(Capabilities.FluidHandler.ITEM, FluidTankItem.FLUID_HANDLER_PROVIDER));
+                            .addCapability(Capabilities.FluidHandler.ITEM, FluidTankBlockItem.FLUID_HANDLER_PROVIDER));
 
     public static final RegiliteBlock<EnchanterBlock> ENCHANTER = BLOCK_REGISTRY
             .registerBlock("enchanter", EnchanterBlock::new,

@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.Nullable;
 
+@Deprecated(forRemoval = true)
 public class LegacyPoweredMachineMenu<T extends LegacyPoweredMachineBlockEntity> extends LegacyMachineMenu<T> {
     protected static final ResourceLocation EMPTY_CAPACITOR_SLOT = EnderIOBase.loc("item/empty_capacitor_slot");
 

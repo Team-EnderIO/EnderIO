@@ -3,7 +3,7 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ExperienceWidget;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.blocks.obelisks.xp.XPObeliskMenu;
@@ -18,7 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.joml.Vector2i;
 
-public class XPObeliskScreen extends NewMachineScreen<XPObeliskMenu> {
+public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
     private static final ResourceLocation BG = EnderIOBase.loc("textures/gui/screen/xp_obelisk.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 116;

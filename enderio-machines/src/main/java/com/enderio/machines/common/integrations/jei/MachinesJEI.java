@@ -10,7 +10,7 @@ import com.enderio.machines.client.gui.screen.SagMillScreen;
 import com.enderio.machines.client.gui.screen.SlicerScreen;
 import com.enderio.machines.client.gui.screen.SoulBinderScreen;
 import com.enderio.machines.client.gui.screen.VatScreen;
-import com.enderio.machines.client.gui.screen.base.MachineScreen;
+import com.enderio.machines.client.gui.screen.base.LegacyMachineScreen;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.integrations.jei.category.AlloySmeltingCategory;
@@ -161,6 +161,6 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipeClickArea(SoulBinderScreen.class, 80, 34, 24, 17, SoulBindingCategory.TYPE);
         registration.addRecipeClickArea(VatScreen.class, 75, 33, 28, 30, VATCategory.TYPE);
 
-        registration.addGhostIngredientHandler(MachineScreen.class, new MachinesGhostSlotHandler());
+        registration.addGhostIngredientHandler(LegacyMachineScreen.class, new MachinesGhostSlotHandler());
     }
 }
