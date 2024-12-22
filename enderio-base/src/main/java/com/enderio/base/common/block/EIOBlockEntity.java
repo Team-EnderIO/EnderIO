@@ -1,4 +1,4 @@
-package com.enderio.base.block.foundations;
+package com.enderio.base.common.block;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import net.minecraft.core.BlockPos;

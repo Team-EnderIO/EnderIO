@@ -5,7 +5,7 @@ import com.enderio.base.api.capability.SideConfig;
 import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.base.api.io.IOMode;
 import com.enderio.base.api.misc.RedstoneControl;
-import com.enderio.base.block.foundations.EIOBlockEntity;
+import com.enderio.base.common.block.EIOBlockEntity;
 import com.enderio.base.common.blockentity.Wrenchable;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.LegacyMachineBlock;

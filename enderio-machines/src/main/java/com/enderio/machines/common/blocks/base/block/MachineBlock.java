@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blocks.base.block;
 
-import com.enderio.base.block.foundations.EIOEntityBlock;
+import com.enderio.base.common.block.EIOEntityBlock;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.mojang.serialization.MapCodec;
 import java.util.function.Supplier;
