@@ -4,7 +4,7 @@ import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigOverlay;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
-import com.enderio.machines.common.machine.base.menu.NewMachineMenu;
+import com.enderio.machines.common.machine.base.menu.MachineMenu;
 import com.enderio.machines.common.machine.base.menu.GhostMachineSlot;
 import com.enderio.machines.common.machine.base.menu.PreviewMachineSlot;
 import java.util.List;
@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 
-public abstract class NewMachineScreen<T extends NewMachineMenu<?>> extends EnderContainerScreen<T> {
+public abstract class NewMachineScreen<T extends MachineMenu<?>> extends EnderContainerScreen<T> {
     public static final int SLOT_COLOR = -2130706433;
 
     protected NewMachineScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {

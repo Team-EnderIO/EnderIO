@@ -5,7 +5,7 @@ import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigOverlay;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.machines.common.machine.base.menu.GhostMachineSlot;
-import com.enderio.machines.common.menu.base.MachineMenu;
+import com.enderio.machines.common.menu.base.LegacyMachineMenu;
 import com.enderio.machines.common.machine.base.menu.PreviewMachineSlot;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
@@ -15,7 +15,7 @@ import net.minecraft.world.inventory.Slot;
 
 import java.util.List;
 
-public abstract class MachineScreen<T extends MachineMenu<?>> extends EnderContainerScreen<T> {
+public abstract class MachineScreen<T extends LegacyMachineMenu<?>> extends EnderContainerScreen<T> {
     public static final int SLOT_COLOR = -2130706433;
 
     protected MachineScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {

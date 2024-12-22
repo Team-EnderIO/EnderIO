@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 // TODO: I want to review the vacuum stuff too.
-public abstract class VacuumMachineBlockEntity<T extends Entity> extends MachineBlockEntity implements RangedActor {
+public abstract class VacuumMachineBlockEntity<T extends Entity> extends LegacyMachineBlockEntity implements RangedActor {
     private static final double COLLISION_DISTANCE_SQ = 1 * 1;
     protected static final double SPEED = 0.025;
     protected static final double SPEED_4 = SPEED * 4;

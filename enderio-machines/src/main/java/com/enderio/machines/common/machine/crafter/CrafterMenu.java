@@ -2,14 +2,14 @@ package com.enderio.machines.common.machine.crafter;
 
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.machine.base.menu.NewPoweredMachineMenu;
+import com.enderio.machines.common.machine.base.menu.PoweredMachineMenu;
 import com.enderio.machines.common.machine.base.menu.GhostMachineSlot;
 import com.enderio.machines.common.machine.base.menu.MachineSlot;
 import com.enderio.machines.common.machine.base.menu.PreviewMachineSlot;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
-public class CrafterMenu extends NewPoweredMachineMenu<CrafterBlockEntity> {
+public class CrafterMenu extends PoweredMachineMenu<CrafterBlockEntity> {
 
     public static int INPUTS_INDEX = 11;
     public static int INPUT_COUNT = 9;

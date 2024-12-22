@@ -4,7 +4,7 @@ import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
@@ -20,7 +20,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
+public class WiredChargerBlockEntity extends LegacyPoweredMachineBlockEntity {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.WIRED_CHARGER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.WIRED_CHARGER_USAGE);

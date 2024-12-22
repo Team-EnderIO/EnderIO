@@ -3,13 +3,13 @@ package com.enderio.machines.common.menu;
 import com.enderio.machines.common.blockentity.XPVacuumBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
-import com.enderio.machines.common.menu.base.MachineMenu;
+import com.enderio.machines.common.menu.base.LegacyMachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
 
-public class XPVacuumMenu extends MachineMenu<XPVacuumBlockEntity> {
+public class XPVacuumMenu extends LegacyMachineMenu<XPVacuumBlockEntity> {
 
     public XPVacuumMenu(int pContainerId, XPVacuumBlockEntity blockEntity, Inventory inventory) {
         super(MachineMenus.XP_VACUUM.get(), pContainerId, blockEntity, inventory);

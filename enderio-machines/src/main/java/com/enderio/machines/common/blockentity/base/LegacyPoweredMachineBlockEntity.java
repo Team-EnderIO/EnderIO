@@ -9,7 +9,7 @@ import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.block.ProgressMachineBlock;
+import com.enderio.machines.common.block.LegacyProgressMachineBlock;
 import com.enderio.machines.common.machine.base.state.MachineState;
 import com.enderio.machines.common.blockentity.sync.EnergySyncData;
 import com.enderio.machines.common.init.MachineAttachments;
@@ -42,9 +42,9 @@ import java.util.function.Supplier;
 /**
  * A machine that stores energy.
  */
-public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements MachineInstallable {
+public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlockEntity implements MachineInstallable {
 
-    public static final ICapabilityProvider<PoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
+    public static final ICapabilityProvider<LegacyPoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
         (be, side) -> be.exposedEnergyStorage != null ? be.exposedEnergyStorage.getForSide(side) : null;
 
     /**
@@ -65,7 +65,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     private boolean updateModel = false;
     private final boolean hasActiveState;
 
-    public PoweredMachineBlockEntity(EnergyIOMode energyIOMode, CapacitorScalable capacity, CapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+    public LegacyPoweredMachineBlockEntity(EnergyIOMode energyIOMode, CapacitorScalable capacity, CapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
         // Create energy storage
@@ -83,7 +83,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         // new new new new way of syncing energy storage.
         addDataSlot(createEnergyDataSlot());
 
-        this.hasActiveState = blockState.hasProperty(ProgressMachineBlock.POWERED);
+        this.hasActiveState = blockState.hasProperty(LegacyProgressMachineBlock.POWERED);
     }
 
     public NetworkDataSlot<?> createEnergyDataSlot() {
@@ -100,12 +100,12 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         if (level != null) {
             BlockState blockState = getBlockState();
-            boolean isBlockStateOutdated = hasActiveState && blockState.getValue(ProgressMachineBlock.POWERED) != isActive();
+            boolean isBlockStateOutdated = hasActiveState && blockState.getValue(LegacyProgressMachineBlock.POWERED) != isActive();
             boolean isMachineStateOutdated = getMachineStates().contains(MachineState.ACTIVE) != isActive();
             if (isBlockStateOutdated || isMachineStateOutdated) {
                 if (updateModel) {
                     if (isBlockStateOutdated) {
-                        level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+                        level.setBlock(getBlockPos(), blockState.setValue(LegacyProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
                     }
 
                     if (isMachineStateOutdated) {

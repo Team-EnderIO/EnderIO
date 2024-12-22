@@ -2,22 +2,13 @@ package com.enderio.machines.common.machine.soul_engine;
 
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.machine.base.fluid.FluidStorageInfo;
 import com.enderio.machines.common.machine.base.fluid.FluidStorageSyncSlot;
-import com.enderio.machines.common.machine.base.menu.MachineSlot;
-import com.enderio.machines.common.machine.base.menu.NewPoweredMachineMenu;
-import com.enderio.machines.common.menu.base.PoweredMachineMenu;
-import net.minecraft.network.FriendlyByteBuf;
+import com.enderio.machines.common.machine.base.menu.PoweredMachineMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import org.apache.logging.log4j.LogManager;
-import org.jetbrains.annotations.Nullable;
 
-public class SoulEngineMenu extends NewPoweredMachineMenu<SoulEngineBlockEntity> {
+public class SoulEngineMenu extends PoweredMachineMenu<SoulEngineBlockEntity> {
 
     private final FluidStorageSyncSlot fluidTankSlot;
 

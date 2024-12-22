@@ -1,7 +1,7 @@
 package com.enderio.machines.common.machine.base.block;
 
 import com.enderio.base.block.foundations.EIOEntityBlock;
-import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.MachineBlockEntity;
 import com.mojang.serialization.MapCodec;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
@@ -23,11 +23,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
-public class NewMachineBlock<T extends NewMachineBlockEntity> extends EIOEntityBlock<T> {
+public class MachineBlock<T extends MachineBlockEntity> extends EIOEntityBlock<T> {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    public NewMachineBlock(Supplier<BlockEntityType<? extends T>> typeSupplier, Properties properties) {
+    public MachineBlock(Supplier<BlockEntityType<? extends T>> typeSupplier, Properties properties) {
         super(typeSupplier, properties);
 
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));

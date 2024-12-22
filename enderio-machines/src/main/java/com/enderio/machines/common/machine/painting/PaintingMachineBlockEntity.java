@@ -15,7 +15,7 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import java.util.List;
@@ -37,7 +37,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Nullable;
 
-public class PaintingMachineBlockEntity extends NewPoweredMachineBlockEntity {
+public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 
     public static final SingleSlotAccess INPUT = new SingleSlotAccess();
     public static final SingleSlotAccess PAINT = new SingleSlotAccess();

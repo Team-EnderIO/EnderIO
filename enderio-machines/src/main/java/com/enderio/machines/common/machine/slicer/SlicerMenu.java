@@ -3,12 +3,12 @@ package com.enderio.machines.common.machine.slicer;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.machine.base.menu.NewPoweredMachineMenu;
+import com.enderio.machines.common.machine.base.menu.PoweredMachineMenu;
 import com.enderio.machines.common.machine.base.menu.MachineSlot;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
-public class SlicerMenu extends NewPoweredMachineMenu<SlicerBlockEntity> {
+public class SlicerMenu extends PoweredMachineMenu<SlicerBlockEntity> {
     public static int INPUTS_INDEX = 3;
     public static int INPUT_COUNT = 6;
     public static int LAST_INDEX = 9;

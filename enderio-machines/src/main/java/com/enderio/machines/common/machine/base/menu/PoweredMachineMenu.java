@@ -1,7 +1,7 @@
 package com.enderio.machines.common.machine.base.menu;
 
 import com.enderio.EnderIOBase;
-import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.energy.EnergyStorageInfo;
 import com.enderio.machines.common.network.menu.EnergyStorageSyncSlot;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -12,21 +12,21 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
 
-public class NewPoweredMachineMenu<T extends NewPoweredMachineBlockEntity> extends NewMachineMenu<T> {
+public class PoweredMachineMenu<T extends PoweredMachineBlockEntity> extends MachineMenu<T> {
     protected static final ResourceLocation EMPTY_CAPACITOR_SLOT = EnderIOBase.loc("item/empty_capacitor_slot");
 
     private final EnergyStorageSyncSlot energySyncSlot;
 
-    protected NewPoweredMachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
-            T blockEntity) {
+    protected PoweredMachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
+                                 T blockEntity) {
         super(menuType, containerId, playerInventory, blockEntity);
 
         energySyncSlot = addSyncSlot(
                 EnergyStorageSyncSlot.readOnly(() -> EnergyStorageInfo.of(blockEntity.getEnergyStorage())));
     }
 
-    protected NewPoweredMachineMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType,
-            int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+    protected PoweredMachineMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType,
+                                 int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(menuType, blockEntityType, containerId, playerInventory, buf);
 
         energySyncSlot = addSyncSlot(EnergyStorageSyncSlot.standalone());

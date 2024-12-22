@@ -7,7 +7,7 @@ import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.machine.base.fluid.FluidStorageInfo;
 import com.enderio.machines.common.machine.base.fluid.FluidStorageSyncSlot;
-import com.enderio.machines.common.machine.base.menu.NewMachineMenu;
+import com.enderio.machines.common.machine.base.menu.MachineMenu;
 import com.enderio.machines.common.machine.base.menu.MachineSlot;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
-public class VatMenu extends NewMachineMenu<VatBlockEntity> {
+public class VatMenu extends MachineMenu<VatBlockEntity> {
     public static final int INPUTS_INDEX = 0;
     public static final int INPUT_COUNT = 2;
     public static final int LAST_INDEX = 1;

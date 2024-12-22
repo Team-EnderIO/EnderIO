@@ -4,14 +4,14 @@ import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.machine.base.menu.GhostMachineSlot;
 import com.enderio.machines.common.machine.base.menu.MachineSlot;
-import com.enderio.machines.common.menu.base.PoweredMachineMenu;
+import com.enderio.machines.common.menu.base.LegacyPoweredMachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
-public class ImpulseHopperMenu extends PoweredMachineMenu<ImpulseHopperBlockEntity> {
+public class ImpulseHopperMenu extends LegacyPoweredMachineMenu<ImpulseHopperBlockEntity> {
 
     public ImpulseHopperMenu(@Nullable ImpulseHopperBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(MachineMenus.IMPULSE_HOPPER.get(), pContainerId, blockEntity, inventory);

@@ -4,7 +4,7 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.BaseOverlay;
 import com.enderio.machines.client.rendering.model.ModelRenderUtil;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -218,7 +218,7 @@ public class IOConfigOverlay extends BaseOverlay {
                 if (selection.isPresent()) {
                     var selectedFace = selection.get();
                     BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
-                    if (entity instanceof MachineBlockEntity machine) {
+                    if (entity instanceof LegacyMachineBlockEntity machine) {
                         machine.cycleIOMode(selectedFace.side);
                         this.playDownSound(MINECRAFT.getSoundManager());
                         return true;
@@ -415,7 +415,7 @@ public class IOConfigOverlay extends BaseOverlay {
         if (selection.isPresent()) {
             var selectedFace = selection.get();
             BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
-            if (entity instanceof MachineBlockEntity machine) {
+            if (entity instanceof LegacyMachineBlockEntity machine) {
                 var ioMode = machine.getIOMode(selectedFace.side);
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();

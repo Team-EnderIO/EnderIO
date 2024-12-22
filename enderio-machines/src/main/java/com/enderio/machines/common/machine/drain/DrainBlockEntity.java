@@ -21,7 +21,7 @@ import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
-import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class DrainBlockEntity extends NewPoweredMachineBlockEntity implements RangedActor, FluidTankUser {
+public class DrainBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FluidTankUser {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);

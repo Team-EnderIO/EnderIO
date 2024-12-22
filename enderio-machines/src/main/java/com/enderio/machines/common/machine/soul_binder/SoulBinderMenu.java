@@ -1,25 +1,16 @@
 package com.enderio.machines.common.machine.soul_binder;
 
 import com.enderio.core.common.network.menu.FloatSyncSlot;
-import com.enderio.core.common.network.menu.FluidStackSyncSlot;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.machine.base.fluid.FluidStorageInfo;
 import com.enderio.machines.common.machine.base.fluid.FluidStorageSyncSlot;
 import com.enderio.machines.common.machine.base.menu.MachineSlot;
-import com.enderio.machines.common.machine.base.menu.NewPoweredMachineMenu;
-import com.enderio.machines.common.menu.base.PoweredMachineMenu;
-import net.minecraft.network.FriendlyByteBuf;
+import com.enderio.machines.common.machine.base.menu.PoweredMachineMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import org.apache.logging.log4j.LogManager;
-import org.jetbrains.annotations.Nullable;
 
-public class SoulBinderMenu extends NewPoweredMachineMenu<SoulBinderBlockEntity> {
+public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
     public static int INPUTS_INDEX = 1;
     public static int INPUT_COUNT = 2;
     public static int LAST_INDEX = 4;

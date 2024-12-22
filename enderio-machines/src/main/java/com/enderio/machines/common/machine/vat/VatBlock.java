@@ -1,6 +1,6 @@
 package com.enderio.machines.common.machine.vat;
 
-import com.enderio.machines.common.machine.base.block.NewProgressMachineBlock;
+import com.enderio.machines.common.machine.base.block.ProgressMachineBlock;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class VatBlock extends NewProgressMachineBlock<VatBlockEntity> {
+public class VatBlock extends ProgressMachineBlock<VatBlockEntity> {
     public VatBlock(RegiliteBlockEntity<? extends VatBlockEntity> blockEntityType, Properties properties) {
         super(blockEntityType, properties);
     }

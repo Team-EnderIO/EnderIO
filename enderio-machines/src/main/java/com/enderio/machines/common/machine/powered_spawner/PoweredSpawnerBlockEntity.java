@@ -19,7 +19,7 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import com.mojang.datafixers.util.Either;
 import java.util.Optional;
@@ -43,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
 
 // TODO: I want to revisit the powered spawner and task
 //       But there's not enough time before alpha, so just porting as-is.
-public class PoweredSpawnerBlockEntity extends NewPoweredMachineBlockEntity implements IOwnedSpawner {
+public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IOwnedSpawner {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);

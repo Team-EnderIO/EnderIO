@@ -4,23 +4,18 @@ import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.machines.client.rendering.item.FluidTankBEWLR;
-import com.enderio.machines.common.block.MachineBlock;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import com.enderio.machines.common.block.LegacyMachineBlock;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 public class FluidTankItem extends BlockItem implements AdvancedTooltipProvider {
 
@@ -29,7 +24,7 @@ public class FluidTankItem extends BlockItem implements AdvancedTooltipProvider 
 
     protected final int capacity;
 
-    public FluidTankItem(MachineBlock block, Properties properties, int capacity) {
+    public FluidTankItem(LegacyMachineBlock block, Properties properties, int capacity) {
         super(block, properties);
         this.capacity = capacity;
     }

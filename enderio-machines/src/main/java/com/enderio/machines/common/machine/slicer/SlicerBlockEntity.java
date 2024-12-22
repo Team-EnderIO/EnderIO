@@ -13,7 +13,7 @@ import com.enderio.machines.common.machine.base.inventory.MachineInventory;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.machine.base.inventory.MultiSlotAccess;
 import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -31,7 +31,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class SlicerBlockEntity extends NewPoweredMachineBlockEntity {
+public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.SLICER_CAPACITY);

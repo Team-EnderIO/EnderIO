@@ -19,7 +19,7 @@ import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.machine.base.inventory.MachineInventory;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.machine.base.inventory.MultiSlotAccess;
-import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.MachineBlockEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -42,7 +42,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class VatBlockEntity extends NewMachineBlockEntity implements FluidTankUser, FluidItemInteractive {
+public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser, FluidItemInteractive {
 
     public static final int TANK_CAPACITY = 8 * FluidType.BUCKET_VOLUME;
     public static final TankAccess INPUT_TANK = new TankAccess();

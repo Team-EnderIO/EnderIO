@@ -3,12 +3,12 @@ package com.enderio.machines.common.machine.alloy;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.machine.base.menu.NewMachineMenu;
+import com.enderio.machines.common.machine.base.menu.MachineMenu;
 import com.enderio.machines.common.machine.base.menu.MachineSlot;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
-public class PrimitiveAlloySmelterMenu extends NewMachineMenu<PrimitiveAlloySmelterBlockEntity> {
+public class PrimitiveAlloySmelterMenu extends MachineMenu<PrimitiveAlloySmelterBlockEntity> {
     public static int INPUTS_INDEX = 0;
     public static int INPUT_COUNT = 3;
     public static int LAST_INDEX = 4;

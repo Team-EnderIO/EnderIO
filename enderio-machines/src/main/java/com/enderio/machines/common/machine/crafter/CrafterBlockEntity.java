@@ -8,7 +8,7 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.machine.base.inventory.MultiSlotAccess;
 import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.Queue;
 
 // TODO: Might want to see if we can adapt this into a crafting task.
-public class CrafterBlockEntity extends NewPoweredMachineBlockEntity {
+public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.CRAFTER_CAPACITY);
     public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.CRAFTER_USAGE);

@@ -3,13 +3,13 @@ package com.enderio.machines.common.machine.obelisks.xp;
 import com.enderio.core.common.network.menu.FluidStackSyncSlot;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.machine.base.menu.NewMachineMenu;
+import com.enderio.machines.common.machine.base.menu.MachineMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-public class XPObeliskMenu extends NewMachineMenu<XPObeliskBlockEntity> {
+public class XPObeliskMenu extends MachineMenu<XPObeliskBlockEntity> {
 
     public static final int ADD_1_LEVEL_BUTTON_ID = 0;
     public static final int REMOVE_1_LEVEL_BUTTON_ID = 1;

@@ -10,7 +10,7 @@ import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyNode;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyStorageWrapper;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -36,7 +36,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import org.jetbrains.annotations.Nullable;
 
-public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
+public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
 
     private final ISolarPanelTier tier;
 

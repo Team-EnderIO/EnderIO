@@ -3,7 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.base.api.travel.TravelTarget;
 import com.enderio.base.api.travel.TravelTargetApi;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class TravelAnchorBlockEntity extends MachineBlockEntity {
+public class TravelAnchorBlockEntity extends LegacyMachineBlockEntity {
 
     public static final SingleSlotAccess GHOST = new SingleSlotAccess();
 

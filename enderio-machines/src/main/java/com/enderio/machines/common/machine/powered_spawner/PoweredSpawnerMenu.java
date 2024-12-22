@@ -2,12 +2,12 @@ package com.enderio.machines.common.machine.powered_spawner;
 
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.machine.base.menu.NewPoweredMachineMenu;
+import com.enderio.machines.common.machine.base.menu.PoweredMachineMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 
-public class PoweredSpawnerMenu extends NewPoweredMachineMenu<PoweredSpawnerBlockEntity> {
+public class PoweredSpawnerMenu extends PoweredMachineMenu<PoweredSpawnerBlockEntity> {
 
     public static final int VISIBILITY_BUTTON_ID = 0;
 

@@ -1,17 +1,17 @@
 package com.enderio.machines.common.menu.base;
 
 import com.enderio.EnderIOBase;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.Nullable;
 
-public class PoweredMachineMenu<T extends PoweredMachineBlockEntity> extends MachineMenu<T> {
+public class LegacyPoweredMachineMenu<T extends LegacyPoweredMachineBlockEntity> extends LegacyMachineMenu<T> {
     protected static final ResourceLocation EMPTY_CAPACITOR_SLOT = EnderIOBase.loc("item/empty_capacitor_slot");
 
-    protected PoweredMachineMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity, Inventory playerInventory) {
+    protected LegacyPoweredMachineMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity, Inventory playerInventory) {
         super(menuType, containerId, blockEntity, playerInventory);
     }
 

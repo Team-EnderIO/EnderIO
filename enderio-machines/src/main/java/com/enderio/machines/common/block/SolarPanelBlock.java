@@ -3,7 +3,7 @@ package com.enderio.machines.common.block;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.machines.common.blockentity.solar.ISolarPanelTier;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SolarPanelBlock extends MachineBlock implements AdvancedTooltipProvider {
+public class SolarPanelBlock extends LegacyMachineBlock implements AdvancedTooltipProvider {
 
     public static final BooleanProperty NORTH = BooleanProperty.create("north");
     public static final BooleanProperty NORTH_EAST = BooleanProperty.create("north_east");
@@ -38,7 +38,7 @@ public class SolarPanelBlock extends MachineBlock implements AdvancedTooltipProv
     private static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 3, 16);
     private final ISolarPanelTier tier;
 
-    public SolarPanelBlock(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, Properties properties, ISolarPanelTier tier) {
+    public SolarPanelBlock(RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntityType, Properties properties, ISolarPanelTier tier) {
         super(blockEntityType, properties);
         registerDefaultState(getStateDefinition().any().setValue(NORTH, true).setValue(NORTH_WEST, true).setValue(NORTH_EAST, true).setValue(WEST, true).setValue(EAST, true).setValue(SOUTH_WEST, true).setValue(SOUTH, true).setValue(SOUTH_EAST, true));
         this.tier = tier;

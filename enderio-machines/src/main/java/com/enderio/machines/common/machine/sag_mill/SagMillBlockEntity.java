@@ -15,7 +15,7 @@ import com.enderio.machines.common.machine.base.inventory.MachineInventory;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.machine.base.inventory.MultiSlotAccess;
 import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.recipe.RecipeCaches;
 
@@ -33,7 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class SagMillBlockEntity extends NewPoweredMachineBlockEntity {
+public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.SAG_MILL_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,

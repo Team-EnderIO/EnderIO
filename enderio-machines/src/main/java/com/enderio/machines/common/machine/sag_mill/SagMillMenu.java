@@ -4,12 +4,12 @@ import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.machine.base.menu.NewPoweredMachineMenu;
+import com.enderio.machines.common.machine.base.menu.PoweredMachineMenu;
 import com.enderio.machines.common.machine.base.menu.MachineSlot;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
-public class SagMillMenu extends NewPoweredMachineMenu<SagMillBlockEntity> {
+public class SagMillMenu extends PoweredMachineMenu<SagMillBlockEntity> {
     public static int INPUTS_INDEX = 1;
     public static int INPUT_COUNT = 1;
     public static int LAST_INDEX = 6;

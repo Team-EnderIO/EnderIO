@@ -1,6 +1,6 @@
 package com.enderio.machines.common.machine.obelisks;
 
-import com.enderio.machines.common.machine.base.menu.NewPoweredMachineMenu;
+import com.enderio.machines.common.machine.base.menu.PoweredMachineMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -8,7 +8,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
 
-public class ObeliskMenu<T extends ObeliskBlockEntity<T>> extends NewPoweredMachineMenu<T> {
+public class ObeliskMenu<T extends ObeliskBlockEntity<T>> extends PoweredMachineMenu<T> {
     public static final int INCREASE_BUTTON_ID = 0;
     public static final int DECREASE_BUTTON_ID = 1;
     public static final int VISIBILITY_BUTTON_ID = 2;

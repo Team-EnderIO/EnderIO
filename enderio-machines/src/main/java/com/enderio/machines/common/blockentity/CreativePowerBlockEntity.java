@@ -2,7 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.api.capacitor.FixedScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import net.minecraft.core.BlockPos;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 // TODO: This should be replaced with creative power bank and buffer in the future, this is temporary :)
-public class CreativePowerBlockEntity extends PoweredMachineBlockEntity {
+public class CreativePowerBlockEntity extends LegacyPoweredMachineBlockEntity {
 
     public static final FixedScalable CAPACITY = new FixedScalable(() -> Integer.MAX_VALUE);
 

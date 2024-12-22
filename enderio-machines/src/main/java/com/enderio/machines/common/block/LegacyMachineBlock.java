@@ -1,7 +1,7 @@
 package com.enderio.machines.common.block;
 
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -36,21 +36,21 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class MachineBlock extends BaseEntityBlock {
-    public static final Codec<Supplier<BlockEntityType<? extends MachineBlockEntity>>> BLOCK_ENTITY_TYPE_CODEC = BuiltInRegistries.BLOCK_ENTITY_TYPE
+public class LegacyMachineBlock extends BaseEntityBlock {
+    public static final Codec<Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>>> BLOCK_ENTITY_TYPE_CODEC = BuiltInRegistries.BLOCK_ENTITY_TYPE
         .holderByNameCodec()
-        .flatXmap(blockEntityTypeHolder -> DataResult.success(() -> (BlockEntityType<? extends MachineBlockEntity>) blockEntityTypeHolder.value()),
+        .flatXmap(blockEntityTypeHolder -> DataResult.success(() -> (BlockEntityType<? extends LegacyMachineBlockEntity>) blockEntityTypeHolder.value()),
             sup -> DataResult.success(sup.get().builtInRegistryHolder()));
 
-    private static final MapCodec<MachineBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    private static final MapCodec<LegacyMachineBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
         BLOCK_ENTITY_TYPE_CODEC.fieldOf("block_entity_type").forGetter(output -> output.blockEntityType),
         propertiesCodec()
-    ).apply(instance, MachineBlock::new));
+    ).apply(instance, LegacyMachineBlock::new));
 
-    private final Supplier<BlockEntityType<? extends MachineBlockEntity>> blockEntityType;
+    private final Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    private MachineBlock(Supplier<BlockEntityType<? extends MachineBlockEntity>> blockEntityType, Properties properties) {
+    private LegacyMachineBlock(Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType, Properties properties) {
         super(properties);
 
         this.blockEntityType = blockEntityType;
@@ -58,7 +58,7 @@ public class MachineBlock extends BaseEntityBlock {
         this.registerDefaultState(any.hasProperty(FACING) ? any.setValue(FACING, Direction.NORTH) : any);
     }
 
-    public MachineBlock(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, Properties properties) {
+    public LegacyMachineBlock(RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntityType, Properties properties) {
         super(properties);
         this.blockEntityType = blockEntityType::get;
         BlockState any = this.getStateDefinition().any();
@@ -77,7 +77,7 @@ public class MachineBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected MapCodec<? extends MachineBlock> codec() {
+    protected MapCodec<? extends LegacyMachineBlock> codec() {
         return CODEC;
     }
 
@@ -90,7 +90,7 @@ public class MachineBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, blockEntityType.get(), MachineBlockEntity::tick);
+        return createTickerHelper(pBlockEntityType, blockEntityType.get(), LegacyMachineBlockEntity::tick);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class MachineBlock extends BaseEntityBlock {
         InteractionHand interactionHand, BlockHitResult hit) {
 
         BlockEntity entity = level.getBlockEntity(pos);
-        if (!(entity instanceof MachineBlockEntity machineBlockEntity)) { // This also covers nulls
+        if (!(entity instanceof LegacyMachineBlockEntity machineBlockEntity)) { // This also covers nulls
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
@@ -124,7 +124,7 @@ public class MachineBlock extends BaseEntityBlock {
         }
 
         BlockEntity entity = level.getBlockEntity(pos);
-        if (!(entity instanceof MachineBlockEntity machineBlockEntity)) { // This also covers nulls
+        if (!(entity instanceof LegacyMachineBlockEntity machineBlockEntity)) { // This also covers nulls
             return InteractionResult.PASS;
         }
 
@@ -148,7 +148,7 @@ public class MachineBlock extends BaseEntityBlock {
 
     @Override
     public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
-        if (level.getBlockEntity(pos) instanceof MachineBlockEntity machineBlock) {
+        if (level.getBlockEntity(pos) instanceof LegacyMachineBlockEntity machineBlock) {
             return machineBlock.supportsRedstoneControl();
         }
         return super.canConnectRedstone(state, level, pos, direction);
@@ -157,7 +157,7 @@ public class MachineBlock extends BaseEntityBlock {
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         var blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof MachineBlockEntity machineBlock) {
+        if (blockEntity instanceof LegacyMachineBlockEntity machineBlock) {
             return machineBlock.getLightEmission();
         }
         return super.getLightEmission(state, level, pos);
@@ -166,7 +166,7 @@ public class MachineBlock extends BaseEntityBlock {
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
-        if (level.getBlockEntity(pos) instanceof MachineBlockEntity machineBlock) {
+        if (level.getBlockEntity(pos) instanceof LegacyMachineBlockEntity machineBlock) {
             machineBlock.neighborChanged(state, level, pos, neighborPos);
         }
     }
@@ -174,7 +174,7 @@ public class MachineBlock extends BaseEntityBlock {
     @Override
     public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
         super.onNeighborChange(state, level, pos, neighbor);
-        if (level.getBlockEntity(pos) instanceof MachineBlockEntity machineBlock) {
+        if (level.getBlockEntity(pos) instanceof LegacyMachineBlockEntity machineBlock) {
             machineBlock.neighborChanged(state, level, pos, neighbor);
         }
     }

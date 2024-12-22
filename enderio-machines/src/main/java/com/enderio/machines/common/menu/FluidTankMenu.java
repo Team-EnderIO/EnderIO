@@ -4,14 +4,14 @@ import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.machine.base.menu.MachineSlot;
-import com.enderio.machines.common.menu.base.MachineMenu;
+import com.enderio.machines.common.menu.base.LegacyMachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
-public class FluidTankMenu extends MachineMenu<FluidTankBlockEntity> {
+public class FluidTankMenu extends LegacyMachineMenu<FluidTankBlockEntity> {
 
     public FluidTankMenu(int pContainerId, @Nullable FluidTankBlockEntity blockEntity, Inventory inventory) {
         super(MachineMenus.FLUID_TANK.get(), pContainerId, blockEntity, inventory);

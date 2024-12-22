@@ -4,14 +4,14 @@ import com.enderio.machines.common.blockentity.VacuumChestBlockEntity;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.machine.base.menu.MachineSlot;
-import com.enderio.machines.common.menu.base.MachineMenu;
+import com.enderio.machines.common.menu.base.LegacyMachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
-public class VacuumChestMenu extends MachineMenu<VacuumChestBlockEntity> {
+public class VacuumChestMenu extends LegacyMachineMenu<VacuumChestBlockEntity> {
 
     public VacuumChestMenu(int pContainerId, @Nullable VacuumChestBlockEntity blockEntity, Inventory inventory) {
         super(MachineMenus.VACUUM_CHEST.get(), pContainerId, blockEntity, inventory);

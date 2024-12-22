@@ -3,7 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
@@ -16,7 +16,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
+public class ImpulseHopperBlockEntity extends LegacyPoweredMachineBlockEntity {
     public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.IMPULSE_HOPPER_CAPACITY);
     public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.IMPULSE_HOPPER_USAGE);
     private static final int ENERGY_USAGE_PER_ITEM = 10; // TODO: What is? surely should use the ENERGY_USAGE key

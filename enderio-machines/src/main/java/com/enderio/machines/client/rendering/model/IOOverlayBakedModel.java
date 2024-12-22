@@ -3,7 +3,7 @@ package com.enderio.machines.client.rendering.model;
 import com.enderio.EnderIOBase;
 import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.base.api.io.IOMode;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
@@ -70,9 +70,9 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, @Nullable RenderType renderType) {
-        if (extraData.has(MachineBlockEntity.IO_CONFIG_PROPERTY)) {
+        if (extraData.has(LegacyMachineBlockEntity.IO_CONFIG_PROPERTY)) {
             // Get io config from the block entity.
-            IOConfigurable config = extraData.get(MachineBlockEntity.IO_CONFIG_PROPERTY);
+            IOConfigurable config = extraData.get(LegacyMachineBlockEntity.IO_CONFIG_PROPERTY);
             if (config != null && config.shouldRenderIOConfigOverlay()) {
                 // Build a list of quads
                 List<BakedQuad> quads = new ArrayList<>();

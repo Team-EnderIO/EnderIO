@@ -30,9 +30,9 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-public abstract class NewPoweredMachineBlockEntity extends NewMachineBlockEntity implements MachineInstallable {
+public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements MachineInstallable {
 
-    public static final ICapabilityProvider<NewPoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (
+    public static final ICapabilityProvider<PoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (
             be, side) -> side == null ? be.energyStorage : be.energyStorage.getSided(side);
 
     private final CapacitorSupport capacitorSupport;
@@ -45,9 +45,9 @@ public abstract class NewPoweredMachineBlockEntity extends NewMachineBlockEntity
 
     private final PoweredMachineEnergyStorage energyStorage;
 
-    public NewPoweredMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
-            boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
-            CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
+    public PoweredMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
+                                     boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
+                                     CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
         super(type, worldPosition, blockState, isIoConfigMutable);
 
         this.capacitorSupport = capacitorSupport;

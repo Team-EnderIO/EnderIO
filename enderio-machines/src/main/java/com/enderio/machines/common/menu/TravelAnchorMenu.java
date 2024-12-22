@@ -3,14 +3,14 @@ package com.enderio.machines.common.menu;
 import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.machine.base.menu.GhostMachineSlot;
-import com.enderio.machines.common.menu.base.MachineMenu;
+import com.enderio.machines.common.menu.base.LegacyMachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
-public class TravelAnchorMenu extends MachineMenu<TravelAnchorBlockEntity> {
+public class TravelAnchorMenu extends LegacyMachineMenu<TravelAnchorBlockEntity> {
     public TravelAnchorMenu(int pContainerId, @Nullable TravelAnchorBlockEntity blockEntity, Inventory inventory) {
         super(MachineMenus.TRAVEL_ANCHOR.get(), pContainerId, blockEntity, inventory);
 

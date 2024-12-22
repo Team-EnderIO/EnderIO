@@ -23,16 +23,16 @@ import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.VacuumChestBlockEntity;
 import com.enderio.machines.common.blockentity.WiredChargerBlockEntity;
 import com.enderio.machines.common.blockentity.XPVacuumBlockEntity;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.machine.alloy.AlloySmelterBlockEntity;
 import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterBlockEntity;
-import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
-import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.MachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.drain.DrainBlockEntity;
 import com.enderio.machines.common.machine.obelisks.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.machine.painting.PaintingMachineBlockEntity;
@@ -204,35 +204,35 @@ public class MachineBlockEntities {
         return BLOCK_ENTITY_REGISTRY.registerBlockEntity(name, beFactory, blocks);
     }
 
-    private static void machineBlockEntityCapabilities(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
+    private static void machineBlockEntityCapabilities(RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntity) {
+        blockEntity.addCapability(EIOCapabilities.SideConfig.BLOCK, LegacyMachineBlockEntity.SIDE_CONFIG_PROVIDER);
+        blockEntity.addCapability(Capabilities.ItemHandler.BLOCK, LegacyMachineBlockEntity.ITEM_HANDLER_PROVIDER);
+    }
+
+    private static void newMachineBlockEntityCapabilities(
+            RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
         blockEntity.addCapability(EIOCapabilities.SideConfig.BLOCK, MachineBlockEntity.SIDE_CONFIG_PROVIDER);
         blockEntity.addCapability(Capabilities.ItemHandler.BLOCK, MachineBlockEntity.ITEM_HANDLER_PROVIDER);
     }
 
-    private static void newMachineBlockEntityCapabilities(
-            RegiliteBlockEntity<? extends NewMachineBlockEntity> blockEntity) {
-        blockEntity.addCapability(EIOCapabilities.SideConfig.BLOCK, NewMachineBlockEntity.SIDE_CONFIG_PROVIDER);
-        blockEntity.addCapability(Capabilities.ItemHandler.BLOCK, NewMachineBlockEntity.ITEM_HANDLER_PROVIDER);
-    }
-
     private static void poweredMachineBlockEntityCapabilities(
-            RegiliteBlockEntity<? extends PoweredMachineBlockEntity> blockEntity) {
+            RegiliteBlockEntity<? extends LegacyPoweredMachineBlockEntity> blockEntity) {
         machineBlockEntityCapabilities(blockEntity);
-        blockEntity.addCapability(Capabilities.EnergyStorage.BLOCK, PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
+        blockEntity.addCapability(Capabilities.EnergyStorage.BLOCK, LegacyPoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
     }
 
     private static void newPoweredMachineBlockEntityCapabilities(
-            RegiliteBlockEntity<? extends NewPoweredMachineBlockEntity> blockEntity) {
+            RegiliteBlockEntity<? extends PoweredMachineBlockEntity> blockEntity) {
         newMachineBlockEntityCapabilities(blockEntity);
         blockEntity.addCapability(Capabilities.EnergyStorage.BLOCK,
-                NewPoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
+                PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
     }
 
-    private static void fluidHandlerCapability(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
+    private static void fluidHandlerCapability(RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntity) {
         blockEntity.addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
     }
 
-    private static void newFluidHandlerCapability(RegiliteBlockEntity<? extends NewMachineBlockEntity> blockEntity) {
+    private static void newFluidHandlerCapability(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
         blockEntity.addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
     }
 

@@ -16,7 +16,7 @@ import com.enderio.machines.common.machine.base.inventory.MachineInventory;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.machine.base.inventory.MultiSlotAccess;
 import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import com.mojang.logging.LogUtils;
@@ -43,7 +43,7 @@ import org.slf4j.Logger;
 
 // TODO: Award XP
 
-public class AlloySmelterBlockEntity extends NewPoweredMachineBlockEntity {
+public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     public static final MultiSlotAccess INPUTS = new MultiSlotAccess();
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();

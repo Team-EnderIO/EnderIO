@@ -8,7 +8,7 @@ import com.enderio.base.common.blockentity.Wrenchable;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.block.MachineBlock;
+import com.enderio.machines.common.block.LegacyMachineBlock;
 import com.enderio.machines.common.machine.base.state.MachineState;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineDataComponents;
@@ -52,13 +52,13 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class MachineBlockEntity extends EnderBlockEntity
+public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
 
-    public static final ICapabilityProvider<MachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = SidedIOConfigurable::new;
+    public static final ICapabilityProvider<LegacyMachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = SidedIOConfigurable::new;
 
-    public static final ICapabilityProvider<MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER = (be,
-            side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
+    public static final ICapabilityProvider<LegacyMachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER = (be,
+                                                                                                                        side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
 
     // region IO Configuration
 
@@ -93,7 +93,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity
 
     private Set<MachineState> states = new HashSet<>();
 
-    public MachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+    public LegacyMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
         // Create IO Config.
@@ -238,8 +238,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity
 
     protected Direction getBlockFacing() {
         BlockState state = getBlockState();
-        if (state.hasProperty(MachineBlock.FACING)) {
-            return getBlockState().getValue(MachineBlock.FACING);
+        if (state.hasProperty(LegacyMachineBlock.FACING)) {
+            return getBlockState().getValue(LegacyMachineBlock.FACING);
         }
 
         return Direction.SOUTH;
@@ -354,7 +354,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity
 
             @Override
             public void updateMachineState(MachineState state, boolean add) {
-                MachineBlockEntity.this.updateMachineState(state, add);
+                LegacyMachineBlockEntity.this.updateMachineState(state, add);
             }
         };
     }

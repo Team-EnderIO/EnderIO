@@ -2,7 +2,7 @@ package com.enderio.machines.data.model;
 
 import com.enderio.EnderIOBase;
 import com.enderio.core.data.model.ModelHelper;
-import com.enderio.machines.common.block.ProgressMachineBlock;
+import com.enderio.machines.common.block.LegacyProgressMachineBlock;
 import com.enderio.machines.common.block.SolarPanelBlock;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.regilite.data.DataGenContext;
@@ -79,7 +79,7 @@ public class MachineModelUtil {
             .getVariantBuilder(ctx.get())
             .forAllStates(state -> ConfiguredModel
                 .builder()
-                .modelFile(state.getValue(ProgressMachineBlock.POWERED) ? powered : unpowered)
+                .modelFile(state.getValue(LegacyProgressMachineBlock.POWERED) ? powered : unpowered)
                 .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
                 .build());
     }

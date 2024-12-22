@@ -1,7 +1,5 @@
 package com.enderio.machines.common.machine.soul_engine;
 
-import static com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
-
 import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.FixedScalable;
@@ -13,23 +11,20 @@ import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.attachment.FluidTankUser;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
-import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
-import com.enderio.machines.common.machine.base.energy.PoweredMachineEnergyStorage;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.machine.base.state.MachineState;
 import com.enderio.machines.common.souldata.EngineSoul;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -57,7 +52,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
-public class SoulEngineBlockEntity extends NewPoweredMachineBlockEntity implements FluidTankUser {
+public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser {
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);

@@ -3,7 +3,7 @@ package com.enderio.machines.common.menu;
 import com.enderio.machines.common.blockentity.WiredChargerBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.machine.base.menu.MachineSlot;
-import com.enderio.machines.common.menu.base.PoweredMachineMenu;
+import com.enderio.machines.common.menu.base.LegacyPoweredMachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
-public class WiredChargerMenu extends PoweredMachineMenu<WiredChargerBlockEntity> {
+public class WiredChargerMenu extends LegacyPoweredMachineMenu<WiredChargerBlockEntity> {
 
     public WiredChargerMenu(@Nullable WiredChargerBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(MachineMenus.WIRED_CHARGER.get(), pContainerId, blockEntity, inventory);

@@ -5,7 +5,7 @@ import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.FluidTankUser;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.FluidItemInteractive;
@@ -52,7 +52,7 @@ import java.util.Optional;
 
 // TODO: Rewrite this with tasks?
 //       Could implement a task for each thing it currently has in the If's
-public abstract class FluidTankBlockEntity extends MachineBlockEntity implements FluidItemInteractive, FluidTankUser {
+public abstract class FluidTankBlockEntity extends LegacyMachineBlockEntity implements FluidItemInteractive, FluidTankUser {
 
     public static class Standard extends FluidTankBlockEntity {
         public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;

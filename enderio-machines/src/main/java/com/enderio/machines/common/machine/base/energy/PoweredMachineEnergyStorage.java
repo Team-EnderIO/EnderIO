@@ -4,7 +4,7 @@ import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
-import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.PoweredMachineBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.IntTag;
@@ -15,11 +15,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class PoweredMachineEnergyStorage implements IEnergyStorage, INBTSerializable<IntTag>, IMachineEnergyStorage {
 
-    private final NewPoweredMachineBlockEntity machine;
+    private final PoweredMachineBlockEntity machine;
 
     private int energyStored;
 
-    public PoweredMachineEnergyStorage(NewPoweredMachineBlockEntity machine) {
+    public PoweredMachineEnergyStorage(PoweredMachineBlockEntity machine) {
         this.machine = machine;
     }
 

@@ -4,12 +4,12 @@ import com.enderio.core.common.network.menu.EnumSyncSlot;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.machine.base.menu.NewPoweredMachineMenu;
+import com.enderio.machines.common.machine.base.menu.PoweredMachineMenu;
 import com.enderio.machines.common.machine.base.menu.MachineSlot;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
-public class AlloySmelterMenu extends NewPoweredMachineMenu<AlloySmelterBlockEntity> {
+public class AlloySmelterMenu extends PoweredMachineMenu<AlloySmelterBlockEntity> {
     public static int INPUTS_INDEX = 1;
     public static int INPUT_COUNT = 3;
     public static int LAST_INDEX = 4;

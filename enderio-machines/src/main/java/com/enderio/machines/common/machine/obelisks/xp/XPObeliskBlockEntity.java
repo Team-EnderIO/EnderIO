@@ -10,7 +10,7 @@ import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
-import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.MachineBlockEntity;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -28,7 +28,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-public class XPObeliskBlockEntity extends NewMachineBlockEntity implements FluidTankUser {
+public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTankUser {
 
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();

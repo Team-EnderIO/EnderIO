@@ -8,8 +8,8 @@ import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.block.foundations.EIOBlockEntity;
 import com.enderio.base.common.blockentity.Wrenchable;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.block.MachineBlock;
-import com.enderio.machines.common.block.ProgressMachineBlock;
+import com.enderio.machines.common.block.LegacyMachineBlock;
+import com.enderio.machines.common.block.LegacyProgressMachineBlock;
 import com.enderio.machines.common.machine.base.state.MachineState;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineDataComponents;
@@ -53,14 +53,14 @@ import org.jetbrains.annotations.Nullable;
  * Base block entity implementation for machines.
  * Implements Redstone Control and the Machine State system.
  */
-public abstract class NewMachineBlockEntity extends EIOBlockEntity
+public abstract class MachineBlockEntity extends EIOBlockEntity
         implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
 
-    public static final ICapabilityProvider<NewMachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = (be,
-            side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
+    public static final ICapabilityProvider<MachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = (be,
+                                                                                                               side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
 
-    public static final ICapabilityProvider<NewMachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER = (be,
-            side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
+    public static final ICapabilityProvider<MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER = (be,
+                                                                                                                  side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
 
     @Nullable
     private final MachineInventory inventory;
@@ -75,8 +75,8 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity
 
     private final boolean supportsActiveState;
 
-    public NewMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
-            boolean isIoConfigMutable) {
+    public MachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
+                              boolean isIoConfigMutable) {
         super(type, worldPosition, blockState);
 
         this.isIoConfigMutable = isIoConfigMutable;
@@ -90,7 +90,7 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity
             inventory = null;
         }
 
-        this.supportsActiveState = blockState.hasProperty(ProgressMachineBlock.POWERED);
+        this.supportsActiveState = blockState.hasProperty(LegacyProgressMachineBlock.POWERED);
     }
 
     /**
@@ -111,12 +111,12 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity
         if (canAct(5)) {
             boolean isActive = isActive();
             boolean needBlockStateUpdate = supportsActiveState
-                    && getBlockState().getValue(ProgressMachineBlock.POWERED) != isActive;
+                    && getBlockState().getValue(LegacyProgressMachineBlock.POWERED) != isActive;
             boolean needStateUpdate = states.contains(MachineState.ACTIVE) != isActive;
 
             if (needBlockStateUpdate) {
                 level.setBlockAndUpdate(worldPosition,
-                        getBlockState().setValue(ProgressMachineBlock.POWERED, isActive));
+                        getBlockState().setValue(LegacyProgressMachineBlock.POWERED, isActive));
             }
 
             if (needStateUpdate) {
@@ -130,8 +130,8 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity
      */
     protected final Direction getBlockFacing() {
         BlockState state = getBlockState();
-        if (state.hasProperty(MachineBlock.FACING)) {
-            return getBlockState().getValue(MachineBlock.FACING);
+        if (state.hasProperty(LegacyMachineBlock.FACING)) {
+            return getBlockState().getValue(LegacyMachineBlock.FACING);
         }
 
         return Direction.SOUTH;
@@ -149,7 +149,7 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity
 
     /**
      * Utility for acting once every 5 ticks.
-     * @deprecated Use {@link NewMachineBlockEntity#canAct(int)} instead.
+     * @deprecated Use {@link MachineBlockEntity#canAct(int)} instead.
      */
     @Deprecated
     public boolean canActSlow() {
@@ -174,7 +174,7 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity
     }
 
     /**
-     * @apiNote inventories should call {@link NewMachineBlockEntity#onInventoryContentsChanged}!
+     * @apiNote inventories should call {@link MachineBlockEntity#onInventoryContentsChanged}!
      */
     protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
         return new MachineInventory(this, layout) {
@@ -186,7 +186,7 @@ public abstract class NewMachineBlockEntity extends EIOBlockEntity
 
             @Override
             public void updateMachineState(MachineState state, boolean add) {
-                NewMachineBlockEntity.this.updateMachineState(state, add);
+                MachineBlockEntity.this.updateMachineState(state, add);
             }
         };
     }

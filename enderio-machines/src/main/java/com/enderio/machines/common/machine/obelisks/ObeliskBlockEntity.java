@@ -8,7 +8,7 @@ import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.attachment.RangedActor;
 import com.enderio.machines.common.init.MachineAttachments;
-import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.machine.base.state.MachineState;
 import com.enderio.machines.common.init.MachineDataComponents;
@@ -31,7 +31,7 @@ import net.neoforged.fml.LogicalSide;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extends NewPoweredMachineBlockEntity implements RangedActor {
+public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extends PoweredMachineBlockEntity implements RangedActor {
 
     private @Nullable AABB aabb;
     public static SingleSlotAccess FILTER = new SingleSlotAccess();

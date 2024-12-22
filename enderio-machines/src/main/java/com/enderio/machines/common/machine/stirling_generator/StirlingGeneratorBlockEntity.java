@@ -13,7 +13,7 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
@@ -28,7 +28,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class StirlingGeneratorBlockEntity extends NewPoweredMachineBlockEntity {
+public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_CAPACITY);
