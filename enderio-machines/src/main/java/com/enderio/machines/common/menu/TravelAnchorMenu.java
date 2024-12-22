@@ -2,6 +2,7 @@ package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
+import com.enderio.machines.common.machine.base.menu.GhostMachineSlot;
 import com.enderio.machines.common.menu.base.MachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

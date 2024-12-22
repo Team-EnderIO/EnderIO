@@ -1,7 +1,7 @@
-package com.enderio.machines.common.io.item;
+package com.enderio.machines.common.machine.base.inventory;
 
 import com.enderio.base.api.io.IOConfigurable;
-import com.enderio.machines.common.blockentity.MachineState;
+import com.enderio.machines.common.machine.base.state.MachineState;
 import java.util.function.IntConsumer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;

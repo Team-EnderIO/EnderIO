@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.base.state;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;

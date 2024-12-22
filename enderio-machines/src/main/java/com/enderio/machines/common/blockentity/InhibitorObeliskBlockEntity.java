@@ -6,7 +6,7 @@ import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.blockentity.base.ObeliskBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.menu.InhibitorObeliskMenu;
 import com.enderio.machines.common.obelisk.InhibitorObeliskManager;
 import net.minecraft.core.BlockPos;

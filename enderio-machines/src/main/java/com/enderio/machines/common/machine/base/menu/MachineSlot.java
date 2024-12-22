@@ -1,8 +1,8 @@
-package com.enderio.machines.common.menu;
+package com.enderio.machines.common.machine.base.menu;
 
 import com.enderio.core.common.menu.SlotWithOverlay;
-import com.enderio.machines.common.io.item.MachineInventory;
-import com.enderio.machines.common.io.item.SingleSlotAccess;
+import com.enderio.machines.common.machine.base.inventory.MachineInventory;
+import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

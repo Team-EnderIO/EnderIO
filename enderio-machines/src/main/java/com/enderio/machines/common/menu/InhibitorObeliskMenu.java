@@ -2,6 +2,7 @@ package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.blockentity.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
+import com.enderio.machines.common.machine.base.menu.MachineSlot;
 import com.enderio.machines.common.menu.base.PoweredMachineMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

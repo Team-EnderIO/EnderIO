@@ -1,11 +1,11 @@
-package com.enderio.machines.common.blockentity.task;
+package com.enderio.machines.common.machine.base.task;
 
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.machines.common.blockentity.MachineState;
+import com.enderio.machines.common.machine.base.state.MachineState;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
-import com.enderio.machines.common.io.item.MachineInventory;
-import com.enderio.machines.common.io.item.MultiSlotAccess;
-import com.enderio.machines.common.io.item.SingleSlotAccess;
+import com.enderio.machines.common.machine.base.inventory.MachineInventory;
+import com.enderio.machines.common.machine.base.inventory.MultiSlotAccess;
+import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import com.mojang.logging.LogUtils;
 import java.util.ArrayList;

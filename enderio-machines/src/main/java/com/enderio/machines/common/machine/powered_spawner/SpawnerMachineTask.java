@@ -1,7 +1,7 @@
 package com.enderio.machines.common.machine.powered_spawner;
 
 import com.enderio.machines.EnderIOMachines;
-import com.enderio.machines.common.blockentity.task.PoweredMachineTask;
+import com.enderio.machines.common.machine.base.task.PoweredMachineTask;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.souldata.SpawnerSoul;

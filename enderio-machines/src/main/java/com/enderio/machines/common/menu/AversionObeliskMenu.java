@@ -2,8 +2,7 @@ package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.blockentity.AversionObeliskBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.io.fluid.MachineFluidTank;
-import com.enderio.machines.common.menu.base.MachineMenu;
+import com.enderio.machines.common.machine.base.menu.MachineSlot;
 import com.enderio.machines.common.menu.base.PoweredMachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

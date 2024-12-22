@@ -1,7 +1,7 @@
-package com.enderio.machines.common.blockentity.task.host;
+package com.enderio.machines.common.machine.base.task.host;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
+import com.enderio.machines.common.machine.base.task.CraftingMachineTask;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

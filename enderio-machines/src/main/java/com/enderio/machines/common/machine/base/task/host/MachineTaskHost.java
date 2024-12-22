@@ -1,9 +1,9 @@
-package com.enderio.machines.common.blockentity.task.host;
+package com.enderio.machines.common.machine.base.task.host;
 
 import com.enderio.base.api.UseOnly;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.machines.common.blockentity.task.MachineTask;
+import com.enderio.machines.common.machine.base.task.MachineTask;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;

@@ -1,4 +1,4 @@
-package com.enderio.machines.common.io.item;
+package com.enderio.machines.common.machine.base.inventory;
 
 import com.enderio.machines.common.machine.base.blockentity.MachineInventoryHolder;
 import net.minecraft.world.Container;

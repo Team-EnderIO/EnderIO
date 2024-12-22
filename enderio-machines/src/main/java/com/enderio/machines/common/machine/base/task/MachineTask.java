@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity.task;
+package com.enderio.machines.common.machine.base.task;
 
 import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.common.util.INBTSerializable;

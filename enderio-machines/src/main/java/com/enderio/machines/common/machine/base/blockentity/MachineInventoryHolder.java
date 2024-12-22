@@ -1,6 +1,6 @@
 package com.enderio.machines.common.machine.base.blockentity;
 
-import com.enderio.machines.common.io.item.MachineInventory;
+import com.enderio.machines.common.machine.base.inventory.MachineInventory;
 
 public interface MachineInventoryHolder {
     boolean hasInventory();

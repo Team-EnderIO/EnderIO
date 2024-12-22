@@ -7,7 +7,7 @@ import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.attachment.RangedActor;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.io.IOConfig;
-import com.enderio.machines.common.io.item.SingleSlotAccess;
+import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;

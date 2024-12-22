@@ -1,7 +1,7 @@
 package com.enderio.machines.common.utility;
 
-import com.enderio.machines.common.io.item.MachineInventory;
-import com.enderio.machines.common.io.item.MultiSlotAccess;
+import com.enderio.machines.common.machine.base.inventory.MachineInventory;
+import com.enderio.machines.common.machine.base.inventory.MultiSlotAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;

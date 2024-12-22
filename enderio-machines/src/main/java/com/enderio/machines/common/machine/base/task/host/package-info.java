@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @net.minecraft.MethodsReturnNonnullByDefault
 
-package com.enderio.machines.common.blockentity.task.host;
+package com.enderio.machines.common.machine.base.task.host;

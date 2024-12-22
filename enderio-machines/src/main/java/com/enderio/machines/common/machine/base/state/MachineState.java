@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.base.state;
 
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.common.network.NetworkDataSlot;

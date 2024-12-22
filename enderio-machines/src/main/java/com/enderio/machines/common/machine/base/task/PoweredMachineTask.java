@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity.task;
+package com.enderio.machines.common.machine.base.task;
 
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 
