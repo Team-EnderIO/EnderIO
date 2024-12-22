@@ -3,7 +3,7 @@ package com.enderio.machines.data.recipes;
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.machines.common.recipe.TankRecipe;
+import com.enderio.machines.common.blocks.fluid_tank.TankRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;

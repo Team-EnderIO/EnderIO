@@ -7,7 +7,7 @@ import com.enderio.machines.common.blocks.vat.FermentingRecipe;
 import com.enderio.machines.common.blocks.sag_mill.SagMillingRecipe;
 import com.enderio.machines.common.blocks.slicer.SlicingRecipe;
 import com.enderio.machines.common.blocks.soul_binder.SoulBindingRecipe;
-import com.enderio.machines.common.recipe.TankRecipe;
+import com.enderio.machines.common.blocks.fluid_tank.TankRecipe;
 import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

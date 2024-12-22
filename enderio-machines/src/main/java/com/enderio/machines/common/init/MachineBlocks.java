@@ -11,7 +11,7 @@ import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.machines.EnderIOMachines;
-import com.enderio.machines.common.block.BlockDetectorBlock;
+import com.enderio.machines.common.blocks.block_detector.BlockDetectorBlock;
 import com.enderio.machines.common.block.CapacitorBankBlock;
 import com.enderio.machines.common.blocks.enchanter.EnchanterBlock;
 import com.enderio.machines.common.block.LegacyMachineBlock;
@@ -26,6 +26,8 @@ import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlock;
 import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlockEntity;
+import com.enderio.machines.common.blocks.vacuum.chest.VacuumChestBlockEntity;
+import com.enderio.machines.common.blocks.vacuum.xp.XPVacuumBlockEntity;
 import com.enderio.machines.common.item.CapacitorBankItem;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockItem;
 import com.enderio.machines.common.blocks.base.block.MachineBlock;
@@ -136,7 +138,7 @@ public class MachineBlocks {
     public static final RegiliteBlock<ProgressMachineBlock<?>> PAINTING_MACHINE = newProgressMachine(
             "painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE);
 
-    public static final RegiliteBlock<LegacyMachineBlock> WIRED_CHARGER = machine("wired_charger",
+    public static final RegiliteBlock<MachineBlock<?>> WIRED_CHARGER = newMachine("wired_charger",
             () -> MachineBlockEntities.WIRED_CHARGER);
 
     public static final RegiliteBlock<LegacyMachineBlock> CREATIVE_POWER = BLOCK_REGISTRY
@@ -153,7 +155,7 @@ public class MachineBlocks {
     public static final RegiliteBlock<ProgressMachineBlock<?>> SLICE_AND_SPLICE = newProgressMachine(
             "slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE).setTranslation("Slice'N'Splice");
 
-    public static final RegiliteBlock<LegacyProgressMachineBlock> IMPULSE_HOPPER = progressMachine("impulse_hopper",
+    public static final RegiliteBlock<ProgressMachineBlock<?>> IMPULSE_HOPPER = newProgressMachine("impulse_hopper",
             () -> MachineBlockEntities.IMPULSE_HOPPER).setTranslation("Impulse Hopper");
 
     public static final RegiliteBlock<ProgressMachineBlock<?>> SOUL_BINDER = newProgressMachine("soul_binder",
@@ -172,8 +174,8 @@ public class MachineBlocks {
                             new Item.Properties().component(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)),
                     item -> item.setTab(EIOCreativeTabs.MACHINES).addItemTags(EIOTags.Items.ENTITY_STORAGE));
 
-    public static final RegiliteBlock<LegacyMachineBlock> VACUUM_CHEST = BLOCK_REGISTRY
-            .registerBlock("vacuum_chest", p -> new LegacyMachineBlock(MachineBlockEntities.VACUUM_CHEST, p),
+    public static final RegiliteBlock<MachineBlock<VacuumChestBlockEntity>> VACUUM_CHEST = BLOCK_REGISTRY
+            .registerBlock("vacuum_chest", p -> new MachineBlock<>(MachineBlockEntities.VACUUM_CHEST::get, p),
                     BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setLootTable(MachinesLootTable::copyComponents)
@@ -181,8 +183,8 @@ public class MachineBlocks {
                     prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
-    public static final RegiliteBlock<LegacyMachineBlock> XP_VACUUM = BLOCK_REGISTRY
-            .registerBlock("xp_vacuum", p -> new LegacyMachineBlock(MachineBlockEntities.XP_VACUUM, p),
+    public static final RegiliteBlock<MachineBlock<XPVacuumBlockEntity>> XP_VACUUM = BLOCK_REGISTRY
+            .registerBlock("xp_vacuum", p -> new MachineBlock<>(MachineBlockEntities.XP_VACUUM::get, p),
                     BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setLootTable(MachinesLootTable::copyComponents)
@@ -334,6 +336,14 @@ public class MachineBlocks {
                 MachineModelUtil::machineBlock);
     }
 
+    private static RegiliteBlock<MachineBlock<?>> newMachine(String name,
+            Supplier<RegiliteBlockEntity<? extends MachineBlockEntity>> regiliteBlockEntity) {
+        return newBaseMachine(
+                BLOCK_REGISTRY.registerBlock(name, props -> new MachineBlock<>(regiliteBlockEntity.get()::get, props),
+                        BlockBehaviour.Properties.of().strength(2.5f, 8)),
+                MachineModelUtil::machineBlock);
+    }
+
     private static RegiliteBlock<LegacyProgressMachineBlock> progressMachine(String name,
             Supplier<RegiliteBlockEntity<? extends LegacyMachineBlockEntity>> RegiliteBlockEntity) {
         return baseMachine(
@@ -343,9 +353,9 @@ public class MachineBlocks {
     }
 
     private static RegiliteBlock<ProgressMachineBlock<?>> newProgressMachine(String name,
-            Supplier<RegiliteBlockEntity<? extends MachineBlockEntity>> RegiliteBlockEntity) {
+            Supplier<RegiliteBlockEntity<? extends MachineBlockEntity>> regiliteBlockEntity) {
         return newBaseMachine(BLOCK_REGISTRY.registerBlock(name,
-                props -> new ProgressMachineBlock<>(RegiliteBlockEntity.get(), props),
+                props -> new ProgressMachineBlock<>(regiliteBlockEntity.get(), props),
                 BlockBehaviour.Properties.of().strength(2.5f, 8)), MachineModelUtil::progressMachineBlock);
     }
 

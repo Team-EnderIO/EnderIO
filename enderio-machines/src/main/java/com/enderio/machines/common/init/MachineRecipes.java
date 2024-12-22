@@ -9,7 +9,7 @@ import com.enderio.machines.common.blocks.painting.PaintingRecipe;
 import com.enderio.machines.common.blocks.sag_mill.SagMillingRecipe;
 import com.enderio.machines.common.blocks.slicer.SlicingRecipe;
 import com.enderio.machines.common.blocks.soul_binder.SoulBindingRecipe;
-import com.enderio.machines.common.recipe.TankRecipe;
+import com.enderio.machines.common.blocks.fluid_tank.TankRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;

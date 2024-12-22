@@ -1,4 +1,4 @@
-package com.enderio.machines.common.block;
+package com.enderio.machines.common.blocks.block_detector;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;

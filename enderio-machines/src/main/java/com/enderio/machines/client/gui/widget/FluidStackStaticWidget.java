@@ -1,6 +1,7 @@
 package com.enderio.machines.client.gui.widget;
 
 import com.enderio.core.client.gui.widgets.EIOWidget;
+import com.enderio.machines.common.blocks.base.fluid.FluidStorageInfo;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -20,11 +21,11 @@ import java.util.function.Supplier;
 
 public class FluidStackStaticWidget extends EIOWidget {
 
-    private final Supplier<MachineFluidTank> getFluid;
+    private final Supplier<FluidStorageInfo> fluidStorageSupplier;
 
-    public FluidStackStaticWidget(int pX, int pY, int pWidth, int pHeight, Supplier<MachineFluidTank> getFluid) {
+    public FluidStackStaticWidget(int pX, int pY, int pWidth, int pHeight, Supplier<FluidStorageInfo> fluidStorageSupplier) {
         super(pX, pY, pWidth, pHeight);
-        this.getFluid = getFluid;
+        this.fluidStorageSupplier = fluidStorageSupplier;
     }
 
     @Override
@@ -32,9 +33,9 @@ public class FluidStackStaticWidget extends EIOWidget {
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        MachineFluidTank fluidTank = getFluid.get();
-        if (!fluidTank.getFluid().isEmpty()) {
-            FluidStack fluidStack = fluidTank.getFluid();
+        FluidStorageInfo fluidTank = fluidStorageSupplier.get();
+        if (!fluidTank.contents().isEmpty()) {
+            FluidStack fluidStack = fluidTank.contents();
             IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
             ResourceLocation still = props.getStillTexture(fluidStack);
             if (still != null) {
@@ -69,8 +70,8 @@ public class FluidStackStaticWidget extends EIOWidget {
     public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
             Minecraft minecraft = Minecraft.getInstance();
-            guiGraphics.renderTooltip(minecraft.font, Arrays.asList(getFluid.get().getFluid().getDisplayName().getVisualOrderText(),
-                Component.literal(getFluid.get().getFluidAmount() + "mB").getVisualOrderText()), mouseX, mouseY);
+            guiGraphics.renderTooltip(minecraft.font, Arrays.asList(fluidStorageSupplier.get().contents().getDisplayName().getVisualOrderText(),
+                Component.literal(fluidStorageSupplier.get().contents().getAmount() + "mB").getVisualOrderText()), mouseX, mouseY);
         }
     }
 }

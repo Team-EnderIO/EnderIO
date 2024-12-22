@@ -5,8 +5,9 @@ import com.enderio.base.client.gui.widget.EIOCommonWidgets;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.machines.client.gui.screen.base.LegacyMachineScreen;
+import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
-import com.enderio.machines.common.menu.VacuumChestMenu;
+import com.enderio.machines.common.blocks.vacuum.chest.VacuumChestMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -14,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class VacuumChestScreen extends LegacyMachineScreen<VacuumChestMenu> {
+public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
 
     private static final ResourceLocation VACUUM_CHEST_BG = EnderIOBase.loc("textures/gui/screen/vacuum_chest.png");
     private static final int WIDTH = 176;
@@ -46,12 +47,12 @@ public class VacuumChestScreen extends LegacyMachineScreen<VacuumChestMenu> {
             EIOLang.HIDE_RANGE,
             EIOLang.SHOW_RANGE,
             menu::isRangeVisible,
-            menu::setRangeVisible));
+            (ignored) -> handleButtonPress(VacuumChestMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 86, 8, 8, PLUS_SPRITES,
-            (b) -> menu.increaseRange()));
+            (b) -> handleButtonPress(VacuumChestMenu.INCREASE_BUTTON_ID)));
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 94, 8, 8, MINUS_SPRITES,
-            (b) -> menu.decreaseRange()));
+            (b) -> handleButtonPress(VacuumChestMenu.DECREASE_BUTTON_ID)));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 8 - 16 * 3 - 4, topPos + 105, menu::getMachineStates));
     }

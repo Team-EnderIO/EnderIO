@@ -6,7 +6,7 @@ import com.enderio.machines.client.gui.screen.FluidTankScreen;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.recipe.TankRecipe;
+import com.enderio.machines.common.blocks.fluid_tank.TankRecipe;
 import java.util.List;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

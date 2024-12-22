@@ -40,15 +40,15 @@ import com.enderio.machines.common.menu.CapacitorBankMenu;
 import com.enderio.machines.common.blocks.crafter.CrafterMenu;
 import com.enderio.machines.common.blocks.enchanter.EnchanterMenu;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankMenu;
-import com.enderio.machines.common.menu.ImpulseHopperMenu;
+import com.enderio.machines.common.blocks.impulse_hopper.ImpulseHopperMenu;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskMenu;
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskMenu;
 import com.enderio.machines.common.blocks.soul_binder.SoulBinderMenu;
 import com.enderio.machines.common.blocks.soul_engine.SoulEngineMenu;
 import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorMenu;
-import com.enderio.machines.common.menu.VacuumChestMenu;
-import com.enderio.machines.common.menu.WiredChargerMenu;
-import com.enderio.machines.common.menu.XPVacuumMenu;
+import com.enderio.machines.common.blocks.vacuum.chest.VacuumChestMenu;
+import com.enderio.machines.common.blocks.wired_charger.WiredChargerMenu;
+import com.enderio.machines.common.blocks.vacuum.xp.XPVacuumMenu;
 import com.enderio.regilite.holder.RegiliteMenu;
 import com.enderio.regilite.registry.MenuRegistry;
 import net.neoforged.bus.api.IEventBus;
@@ -74,21 +74,21 @@ public class MachineMenus {
     public static final RegiliteMenu<SlicerMenu> SLICE_N_SPLICE = MENU_REGISTRY.registerMenu("slice_n_splice",
             SlicerMenu::new, () -> SlicerScreen::new);
     public static final RegiliteMenu<ImpulseHopperMenu> IMPULSE_HOPPER = MENU_REGISTRY.registerMenu("impulse_hopper",
-            ImpulseHopperMenu::factory, () -> ImpulseHopperScreen::new);
+            ImpulseHopperMenu::new, () -> ImpulseHopperScreen::new);
     public static final RegiliteMenu<SoulBinderMenu> SOUL_BINDER = MENU_REGISTRY.registerMenu("soul_binder",
             SoulBinderMenu::new, () -> SoulBinderScreen::new);
     public static final RegiliteMenu<PoweredSpawnerMenu> POWERED_SPAWNER = MENU_REGISTRY.registerMenu("powered_spawner",
             PoweredSpawnerMenu::new, () -> PoweredSpawnerScreen::new);
     public static final RegiliteMenu<VacuumChestMenu> VACUUM_CHEST = MENU_REGISTRY.registerMenu("vacuum_chest",
-            VacuumChestMenu::factory, () -> VacuumChestScreen::new);
+            VacuumChestMenu::new, () -> VacuumChestScreen::new);
     public static final RegiliteMenu<XPVacuumMenu> XP_VACUUM = MENU_REGISTRY.registerMenu("xp_vacuum",
-            XPVacuumMenu::factory, () -> XPVacuumScreen::new);
+            XPVacuumMenu::new, () -> XPVacuumScreen::new);
     public static final RegiliteMenu<CrafterMenu> CRAFTER = MENU_REGISTRY.registerMenu("crafter", CrafterMenu::new,
             () -> CrafterScreen::new);
     public static final RegiliteMenu<DrainMenu> DRAIN = MENU_REGISTRY.registerMenu("drain", DrainMenu::new,
             () -> DrainScreen::new);
     public static final RegiliteMenu<WiredChargerMenu> WIRED_CHARGER = MENU_REGISTRY.registerMenu("wired_charger",
-            WiredChargerMenu::factory, () -> WiredChargerScreen::new);
+            WiredChargerMenu::new, () -> WiredChargerScreen::new);
     public static final RegiliteMenu<PaintingMachineMenu> PAINTING_MACHINE = MENU_REGISTRY
             .registerMenu("painting_machine", PaintingMachineMenu::new, () -> PaintingMachineScreen::new);
     public static final RegiliteMenu<CapacitorBankMenu> CAPACITOR_BANK = MENU_REGISTRY.registerMenu("capacitor_bank",

@@ -1,13 +1,12 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.blocks.vacuum.chest;
 
 import com.enderio.base.api.filter.ItemStackFilter;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
+import com.enderio.machines.common.blocks.vacuum.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout.Builder;
-import com.enderio.machines.common.menu.VacuumChestMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,7 +25,7 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
 
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new VacuumChestMenu(containerId, this, inventory);
+        return new VacuumChestMenu(containerId, inventory, this);
     }
 
     @Override

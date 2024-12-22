@@ -253,7 +253,10 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
     @Override
     protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditionalSynced(tag, registries);
-        tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save(registries));
+
+        if (!actionRange.equals(DEFAULT_RANGE)) {
+            tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save(registries));
+        }
     }
 
     @Override

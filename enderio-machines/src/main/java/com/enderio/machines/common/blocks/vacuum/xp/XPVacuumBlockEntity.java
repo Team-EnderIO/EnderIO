@@ -1,17 +1,16 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.blocks.vacuum.xp;
 
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.FluidTankUser;
-import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
+import com.enderio.machines.common.blocks.vacuum.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
-import com.enderio.machines.common.menu.XPVacuumMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -48,7 +47,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new XPVacuumMenu(containerId, this, inventory);
+        return new XPVacuumMenu(containerId, inventory, this);
     }
 
 

@@ -1,15 +1,14 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.blocks.wired_charger;
 
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
+import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.menu.WiredChargerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +19,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-public class WiredChargerBlockEntity extends LegacyPoweredMachineBlockEntity {
+public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.WIRED_CHARGER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.WIRED_CHARGER_USAGE);
@@ -31,8 +30,7 @@ public class WiredChargerBlockEntity extends LegacyPoweredMachineBlockEntity {
     private float progress = 0;
 
     public WiredChargerBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.WIRED_CHARGER.get(), worldPosition, blockState);
-        addDataSlot(NetworkDataSlot.FLOAT.create(this::getProgress, p -> progress = p));
+        super(MachineBlockEntities.WIRED_CHARGER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, CAPACITY, USAGE);
     }
 
     @Override
@@ -49,8 +47,8 @@ public class WiredChargerBlockEntity extends LegacyPoweredMachineBlockEntity {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new WiredChargerMenu(this, pPlayerInventory, pContainerId);
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player pPlayer) {
+        return new WiredChargerMenu(containerId, playerInventory, this);
     }
 
     @Override
@@ -64,7 +62,7 @@ public class WiredChargerBlockEntity extends LegacyPoweredMachineBlockEntity {
     }
 
     @Override
-    protected boolean isActive() {
+    public boolean isActive() {
         return canAct();
     }
 
@@ -90,18 +88,18 @@ public class WiredChargerBlockEntity extends LegacyPoweredMachineBlockEntity {
             } else {
                 int energyToInsert = Math.min(
                     itemEnergyHandler.getMaxEnergyStored() - itemEnergyHandler.getEnergyStored(),
-                    Math.max(this.energyStorage.getEnergyStored(), this.energyStorage.getMaxEnergyUse()));
+                    Math.max(getEnergyStorage().getEnergyStored(), getEnergyStorage().getMaxEnergyUse()));
 
                 if (energyToInsert > 0) {
                     itemEnergyHandler.receiveEnergy(energyToInsert, false);
-                    this.energyStorage.takeEnergy(energyToInsert);
+                    getEnergyStorage().takeEnergy(energyToInsert);
                     this.progress = (float)itemEnergyHandler.getEnergyStored() / itemEnergyHandler.getMaxEnergyStored();
                 }
             }
         }
     }
 
-    public float getProgress() {
+    public float getChargeProgress() {
         return this.progress;
     }
 }

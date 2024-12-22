@@ -1,4 +1,4 @@
-package com.enderio.machines.common.recipe;
+package com.enderio.machines.common.blocks.fluid_tank;
 
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;

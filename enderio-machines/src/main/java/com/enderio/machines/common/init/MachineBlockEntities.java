@@ -13,16 +13,16 @@ import com.enderio.machines.common.blocks.crafter.CrafterBlockEntity;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
 import com.enderio.machines.common.blocks.enchanter.EnchanterBlockEntity;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
-import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
+import com.enderio.machines.common.blocks.impulse_hopper.ImpulseHopperBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.travel_anchor.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.soul_binder.SoulBinderBlockEntity;
 import com.enderio.machines.common.blocks.soul_engine.SoulEngineBlockEntity;
 import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlockEntity;
-import com.enderio.machines.common.blockentity.VacuumChestBlockEntity;
-import com.enderio.machines.common.blockentity.WiredChargerBlockEntity;
-import com.enderio.machines.common.blockentity.XPVacuumBlockEntity;
+import com.enderio.machines.common.blocks.vacuum.chest.VacuumChestBlockEntity;
+import com.enderio.machines.common.blocks.wired_charger.WiredChargerBlockEntity;
+import com.enderio.machines.common.blocks.vacuum.xp.XPVacuumBlockEntity;
 import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
@@ -98,16 +98,16 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<ImpulseHopperBlockEntity> IMPULSE_HOPPER = register("impulse_hopper",
             ImpulseHopperBlockEntity::new, MachineBlocks.IMPULSE_HOPPER)
-                    .apply(MachineBlockEntities::legacyPoweredMachineBlockEntityCapabilities);
+                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<VacuumChestBlockEntity> VACUUM_CHEST = register("vacuum_chest",
             VacuumChestBlockEntity::new, MachineBlocks.VACUUM_CHEST)
-                    .apply(MachineBlockEntities::legacyMachineBlockEntityCapabilities);
+                    .apply(MachineBlockEntities::machineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<XPVacuumBlockEntity> XP_VACUUM = register("xp_vacuum",
             XPVacuumBlockEntity::new, MachineBlocks.XP_VACUUM)
-                    .apply(MachineBlockEntities::legacyMachineBlockEntityCapabilities)
-                    .apply(MachineBlockEntities::legacyFluidHandlerCapability);
+                    .apply(MachineBlockEntities::machineBlockEntityCapabilities)
+                    .apply(MachineBlockEntities::fluidHandlerCapability);
 
     public static final RegiliteBlockEntity<TravelAnchorBlockEntity> TRAVEL_ANCHOR = register("travel_anchor",
             TravelAnchorBlockEntity::new, MachineBlocks.TRAVEL_ANCHOR)
@@ -131,7 +131,7 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<WiredChargerBlockEntity> WIRED_CHARGER = register("wired_charger",
             WiredChargerBlockEntity::new, MachineBlocks.WIRED_CHARGER)
-                    .apply(MachineBlockEntities::legacyPoweredMachineBlockEntityCapabilities);
+                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<PaintingMachineBlockEntity> PAINTING_MACHINE = register("painting_machine",
             PaintingMachineBlockEntity::new, MachineBlocks.PAINTING_MACHINE)

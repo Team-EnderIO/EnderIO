@@ -1,29 +1,38 @@
-package com.enderio.machines.common.blockentity.base;
+package com.enderio.machines.common.blocks.vacuum;
 
+import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.io.IOMode;
 import com.enderio.base.common.util.AttractionUtil;
-import com.enderio.core.common.network.NetworkDataSlot;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.attachment.RangedActor;
+import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineAttachments;
+import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.fml.LogicalSide;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 // TODO: I want to review the vacuum stuff too.
-public abstract class VacuumMachineBlockEntity<T extends Entity> extends LegacyMachineBlockEntity implements RangedActor {
+public abstract class VacuumMachineBlockEntity<T extends Entity> extends MachineBlockEntity implements RangedActor {
     private static final double COLLISION_DISTANCE_SQ = 1 * 1;
     protected static final double SPEED = 0.025;
     protected static final double SPEED_4 = SPEED * 4;
@@ -31,13 +40,19 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends LegacyM
     private Class<T> targetClass;
     public static SingleSlotAccess FILTER = new SingleSlotAccess();
 
-    private NetworkDataSlot<ActionRange> actionRangeDataSlot;
+    private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);
+
+    private ActionRange actionRange = DEFAULT_RANGE;
 
     public VacuumMachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> targetClass) {
-        super(pType, pWorldPosition, pBlockState);
+        super(pType, pWorldPosition, pBlockState, false);
         this.targetClass = targetClass;
+    }
 
-        actionRangeDataSlot = addDataSlot(ActionRange.DATA_SLOT_TYPE.create(this::getActionRange, this::internalSetActionRange));
+    @Override
+    public boolean isActive() {
+        // No active state.
+        return false;
     }
 
     public abstract String getColor();
@@ -67,11 +82,6 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends LegacyM
     @Override
     public IOConfig getDefaultIOConfig() {
         return IOConfig.of(IOMode.PUSH);
-    }
-
-    @Override
-    public boolean isIOConfigMutable() {
-        return false;
     }
 
     public Predicate<T> getFilter() {
@@ -117,21 +127,18 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends LegacyM
 
     @Override
     public ActionRange getActionRange() {
-        return getData(MachineAttachments.ACTION_RANGE);
+        return actionRange;
     }
 
     @Override
+    @UseOnly(LogicalSide.SERVER)
     public void setActionRange(ActionRange actionRange) {
-        if (level != null && level.isClientSide) {
-            clientUpdateSlot(actionRangeDataSlot, actionRange);
-        } else {
-            internalSetActionRange(actionRange);
-        }
-    }
-
-    private void internalSetActionRange(ActionRange actionRange) {
-        setData(MachineAttachments.ACTION_RANGE, actionRange);
+        this.actionRange = actionRange;
         setChanged();
+
+        if (level != null) {
+            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        }
     }
 
     @Override
@@ -139,6 +146,58 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends LegacyM
         if (this.entities.isEmpty()) {
             getEntities(getLevel(), getBlockPos(), getRange(), getFilter());
         }
+
         super.onLoad();
+    }
+
+    @Override
+    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditionalSynced(tag, registries);
+
+        if (!actionRange.equals(DEFAULT_RANGE)) {
+            tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save(registries));
+        }
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+
+        // TODO: Ender IO 8 - remove support for old attachment loading
+        if (hasData(MachineAttachments.ACTION_RANGE)) {
+            actionRange = getData(MachineAttachments.ACTION_RANGE);
+            removeData(MachineAttachments.ACTION_RANGE);
+        } else if (tag.contains(MachineNBTKeys.ACTION_RANGE)) {
+            actionRange = ActionRange.parse(registries,
+                Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
+        } else {
+            actionRange = DEFAULT_RANGE;
+        }
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+
+        var actionRange = componentInput.get(MachineDataComponents.ACTION_RANGE);
+        if (actionRange != null) {
+            this.actionRange = actionRange;
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        // Only if unchanged.
+        if (!actionRange.equals(DEFAULT_RANGE)) {
+            components.set(MachineDataComponents.ACTION_RANGE, actionRange);
+        }
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove(MachineNBTKeys.ACTION_RANGE);
     }
 }
