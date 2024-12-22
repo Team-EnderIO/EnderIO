@@ -1,7 +1,7 @@
 package com.enderio.machines.common.menu.base;
 
 import com.enderio.base.api.misc.RedstoneControl;
-import com.enderio.core.common.menu.BaseBlockEntityMenu;
+import com.enderio.core.common.menu.LegacyBaseBlockEntityMenu;
 import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
@@ -23,7 +23,7 @@ import java.util.Set;
  * @param <T>
  */
 @Deprecated(forRemoval = true)
-public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> extends BaseBlockEntityMenu<T> {
+public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> extends LegacyBaseBlockEntityMenu<T> {
 
     protected LegacyMachineMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity, Inventory playerInventory) {
         super(menuType, containerId, blockEntity, playerInventory);

@@ -1,6 +1,6 @@
 package com.enderio.core.client.gui.screen;
 
-import com.enderio.core.common.menu.BaseBlockEntityMenu;
+import com.enderio.core.common.menu.LegacyBaseBlockEntityMenu;
 import com.enderio.core.common.menu.SlotWithOverlay;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -56,7 +56,7 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
 
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        if (menu instanceof BaseBlockEntityMenu<?> baseBlockEntityMenu
+        if (menu instanceof LegacyBaseBlockEntityMenu<?> baseBlockEntityMenu
                 && baseBlockEntityMenu.getBlockEntity() == null) {
             return;
         }

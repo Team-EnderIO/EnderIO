@@ -1,4 +1,4 @@
-package com.enderio.machines.common.block;
+package com.enderio.machines.common.blocks.enchanter;
 
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.mojang.serialization.MapCodec;

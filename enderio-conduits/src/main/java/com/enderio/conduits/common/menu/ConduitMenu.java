@@ -7,7 +7,7 @@ import com.enderio.conduits.common.conduit.block.ConduitBundleBlock;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.conduits.common.network.ConduitMenuSelectionPacket;
-import com.enderio.core.common.menu.BaseBlockEntityMenu;
+import com.enderio.core.common.menu.LegacyBaseBlockEntityMenu;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -22,7 +22,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
-public class ConduitMenu extends BaseBlockEntityMenu<ConduitBundleBlockEntity> {
+public class ConduitMenu extends LegacyBaseBlockEntityMenu<ConduitBundleBlockEntity> {
     private Direction direction;
     private Holder<Conduit<?>> conduit;
 

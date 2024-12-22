@@ -15,7 +15,7 @@ import com.enderio.machines.common.init.MachineTravelTargets;
 import com.enderio.machines.common.integrations.EnderIOMachinesSelfIntegration;
 import com.enderio.machines.common.lang.MachineEnumLang;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.menu.EnchanterMenu;
+import com.enderio.machines.common.blocks.enchanter.EnchanterMenu;
 import com.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
 import com.enderio.machines.common.blocks.base.menu.MachineSlot;
 import com.enderio.machines.common.blocks.base.menu.PreviewMachineSlot;

@@ -3,7 +3,7 @@ package com.enderio.machines.common.init;
 import com.enderio.EnderIOBase;
 import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
 import com.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
-import com.enderio.machines.common.recipe.EnchanterRecipe;
+import com.enderio.machines.common.blocks.enchanter.EnchanterRecipe;
 import com.enderio.machines.common.blocks.vat.FermentingRecipe;
 import com.enderio.machines.common.blocks.painting.PaintingRecipe;
 import com.enderio.machines.common.blocks.sag_mill.SagMillingRecipe;

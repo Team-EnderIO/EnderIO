@@ -1,34 +1,45 @@
 package com.enderio.core.common.menu;
 
+import com.enderio.core.common.network.menu.BlockEntityMenuHelper;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseBlockEntityMenu<T extends BlockEntity> extends BaseEnderMenu {
 
-    // TODO: Should block entity even be nullable?
-    // Why create the menu if we failed to attach correctly...
-
-    @Nullable
     private final T blockEntity;
 
-    protected BaseBlockEntityMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity,
-            Inventory playerInventory) {
+    /**
+     * Server menu constructor
+     */
+    protected BaseBlockEntityMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
+            T blockEntity) {
         super(menuType, containerId, playerInventory);
         this.blockEntity = blockEntity;
     }
 
-    // TODO: This will become protected once all menus are driving screens directly.
-    @Nullable
+    /**
+     * Client menu constructor.
+     * Loads the block entity from the buffer and ensures the block entity type matches
+     */
+    protected BaseBlockEntityMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType,
+            int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+        super(menuType, containerId, playerInventory);
+        this.blockEntity = BlockEntityMenuHelper.getBlockEntityFrom(buf, playerInventory.player.level(),
+                blockEntityType);
+    }
+
     public T getBlockEntity() {
         return blockEntity;
     }
 
     @Override
     public boolean stillValid(Player pPlayer) {
-        return getBlockEntity() != null && Container.stillValidBlockEntity(getBlockEntity(), pPlayer);
+        return Container.stillValidBlockEntity(getBlockEntity(), pPlayer);
     }
 }

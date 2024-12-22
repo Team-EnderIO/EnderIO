@@ -13,7 +13,7 @@ import com.enderio.core.data.model.ModelHelper;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.block.BlockDetectorBlock;
 import com.enderio.machines.common.block.CapacitorBankBlock;
-import com.enderio.machines.common.block.EnchanterBlock;
+import com.enderio.machines.common.blocks.enchanter.EnchanterBlock;
 import com.enderio.machines.common.block.LegacyMachineBlock;
 import com.enderio.machines.common.block.PaintedTravelAnchorBlock;
 import com.enderio.machines.common.block.LegacyProgressMachineBlock;

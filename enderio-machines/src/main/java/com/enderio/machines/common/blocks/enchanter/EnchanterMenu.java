@@ -1,19 +1,16 @@
-package com.enderio.machines.common.menu;
+package com.enderio.machines.common.blocks.enchanter;
 
 import com.enderio.core.common.menu.BaseBlockEntityMenu;
-import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
 import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
 import com.enderio.machines.common.blocks.base.menu.MachineSlot;
-import com.enderio.machines.common.recipe.EnchanterRecipe;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
@@ -21,35 +18,27 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
     public static int INPUT_COUNT = 3;
     public static int LAST_INDEX = 3;
 
-    public EnchanterMenu(Inventory inventory, int pContainerId, @Nullable EnchanterBlockEntity blockEntity) {
-        super(MachineMenus.ENCHANTER.get(), pContainerId, blockEntity, inventory);
+    public EnchanterMenu(int containerId, Inventory inventory, EnchanterBlockEntity blockEntity) {
+        super(MachineMenus.ENCHANTER.get(), containerId, inventory, blockEntity);
+        addSlots();
+    }
 
-        if (blockEntity != null) {
-            addSlot(new MachineSlot(getMachineInventory(), EnchanterBlockEntity.BOOK, 16, 35));
-            addSlot(new MachineSlot(getMachineInventory(), EnchanterBlockEntity.CATALYST, 65, 35));
-            addSlot(new MachineSlot(getMachineInventory(), EnchanterBlockEntity.LAPIS, 85, 35));
-            addSlot(new EnchanterOutputMachineSlot(blockEntity, EnchanterBlockEntity.OUTPUT, 144, 35));
-        }
+    public EnchanterMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+        super(MachineMenus.ENCHANTER.get(), MachineBlockEntities.ENCHANTER.get(), containerId, playerInventory, buf);
+        addSlots();
+    }
+
+    private void addSlots() {
+        addSlot(new MachineSlot(getMachineInventory(), EnchanterBlockEntity.BOOK, 16, 35));
+        addSlot(new MachineSlot(getMachineInventory(), EnchanterBlockEntity.CATALYST, 65, 35));
+        addSlot(new MachineSlot(getMachineInventory(), EnchanterBlockEntity.LAPIS, 85, 35));
+        addSlot(new EnchanterOutputMachineSlot(getBlockEntity(), EnchanterBlockEntity.OUTPUT, 144, 35));
 
         addPlayerInventorySlots(8,84);
     }
 
     public MachineInventory getMachineInventory() {
-        if (getBlockEntity() == null) {
-            throw new IllegalStateException("BlockEntity is null");
-        }
-
         return getBlockEntity().getInventory();
-    }
-
-    public static EnchanterMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
-        BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
-        if (entity instanceof EnchanterBlockEntity castBlockEntity) {
-            return new EnchanterMenu(inventory, pContainerId, castBlockEntity);
-        }
-
-        LogManager.getLogger().warn("couldn't find BlockEntity");
-        return new EnchanterMenu(inventory, pContainerId, null);
     }
 
     public int getCurrentCost() {

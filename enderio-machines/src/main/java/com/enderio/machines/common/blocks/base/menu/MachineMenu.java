@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blocks.base.menu;
 
 import com.enderio.base.api.misc.RedstoneControl;
-import com.enderio.core.common.menu.NewBaseBlockEntityMenu;
+import com.enderio.core.common.menu.BaseBlockEntityMenu;
 import com.enderio.core.common.network.menu.EnumSyncSlot;
 import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * Common machine helpers, such as ghost slots and accessing common properties.
  * @param <T>
  */
-public abstract class MachineMenu<T extends MachineBlockEntity> extends NewBaseBlockEntityMenu<T> {
+public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBlockEntityMenu<T> {
 
     @Nullable
     private final EnumSyncSlot<RedstoneControl> redstoneControlSlot;
