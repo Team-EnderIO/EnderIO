@@ -71,7 +71,7 @@ public class XPObeliskScreen extends NewMachineScreen<XPObeliskMenu> {
     }
 
     private void handlePress(int id) {
-        this.getMinecraft().gameMode.handleInventoryButtonClick(getMenu().containerId, id);
+        this.minecraft.gameMode.handleInventoryButtonClick(getMenu().containerId, id);
     }
 
     private ImageButton makeButton(int x, int y, int size, int id, ResourceLocation SPRITE, Component tooltip) {

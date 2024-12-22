@@ -29,7 +29,7 @@ import com.enderio.machines.common.machine.alloy.AlloySmelterMenu;
 import com.enderio.machines.common.menu.AversionObeliskMenu;
 import com.enderio.machines.common.menu.CapacitorBankMenu;
 import com.enderio.machines.common.menu.CrafterMenu;
-import com.enderio.machines.common.menu.DrainMenu;
+import com.enderio.machines.common.machine.drain.DrainMenu;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
@@ -85,7 +85,7 @@ public class MachineMenus {
             XPVacuumMenu::factory, () -> XPVacuumScreen::new);
     public static final RegiliteMenu<CrafterMenu> CRAFTER = MENU_REGISTRY.registerMenu("crafter", CrafterMenu::factory,
             () -> CrafterScreen::new);
-    public static final RegiliteMenu<DrainMenu> DRAIN = MENU_REGISTRY.registerMenu("drain", DrainMenu::factory,
+    public static final RegiliteMenu<DrainMenu> DRAIN = MENU_REGISTRY.registerMenu("drain", DrainMenu::new,
             () -> DrainScreen::new);
     public static final RegiliteMenu<WiredChargerMenu> WIRED_CHARGER = MENU_REGISTRY.registerMenu("wired_charger",
             WiredChargerMenu::factory, () -> WiredChargerScreen::new);

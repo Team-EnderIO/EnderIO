@@ -2,6 +2,7 @@ package com.enderio.machines.client.gui.widget;
 
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
+import com.enderio.machines.common.machine.base.fluid.FluidStorageInfo;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -20,11 +21,15 @@ import java.util.function.Supplier;
 
 public class FluidStackWidget extends EIOWidget {
 
-    private final Supplier<MachineFluidTank> getFluid;
+    private final Supplier<FluidStorageInfo> fluidStorageSupplier;
 
-    public FluidStackWidget(int x, int y, int width, int height, Supplier<MachineFluidTank> getFluid) {
+    public static FluidStackWidget legacy(int x, int y, int width, int height, Supplier<MachineFluidTank> fluidTankSupplier) {
+        return new FluidStackWidget(x, y, width, height, () -> FluidStorageInfo.of(fluidTankSupplier.get()));
+    }
+
+    public FluidStackWidget(int x, int y, int width, int height, Supplier<FluidStorageInfo> fluidStorageSupplier) {
         super(x, y, width, height);
-        this.getFluid = getFluid;
+        this.fluidStorageSupplier = fluidStorageSupplier;
     }
 
     @Override
@@ -32,9 +37,9 @@ public class FluidStackWidget extends EIOWidget {
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        MachineFluidTank fluidTank = getFluid.get();
-        if (!fluidTank.getFluid().isEmpty()) {
-            FluidStack fluidStack = fluidTank.getFluid();
+        FluidStorageInfo fluidTank = fluidStorageSupplier.get();
+        if (!fluidTank.contents().isEmpty()) {
+            FluidStack fluidStack = fluidTank.contents();
             IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
             ResourceLocation still = props.getStillTexture(fluidStack);
             if (still != null) {
@@ -50,8 +55,8 @@ public class FluidStackWidget extends EIOWidget {
                         FastColor.ARGB32.alpha(color) / 255.0F);
                     RenderSystem.enableBlend();
 
-                    int stored = fluidTank.getFluidAmount();
-                    float capacity = fluidTank.getCapacity();
+                    int stored = fluidStack.getAmount();
+                    float capacity = fluidTank.capacity();
                     float filledVolume = stored / capacity;
                     int renderableHeight = (int)(filledVolume * height);
 
@@ -86,8 +91,11 @@ public class FluidStackWidget extends EIOWidget {
     public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
             Minecraft minecraft = Minecraft.getInstance();
-            guiGraphics.renderTooltip(minecraft.font, Arrays.asList(getFluid.get().getFluid().getDisplayName().getVisualOrderText(),
-                Component.literal(getFluid.get().getFluidAmount() + "mB").getVisualOrderText()), mouseX, mouseY);
+
+            var storage = fluidStorageSupplier.get();
+
+            guiGraphics.renderTooltip(minecraft.font, Arrays.asList(storage.contents().getDisplayName().getVisualOrderText(),
+                Component.literal(storage.contents().getAmount() + "mB").getVisualOrderText()), mouseX, mouseY);
         }
     }
 }

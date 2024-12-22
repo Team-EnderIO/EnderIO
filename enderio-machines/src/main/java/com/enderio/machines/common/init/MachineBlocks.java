@@ -235,7 +235,7 @@ public class MachineBlocks {
                             new Item.Properties().component(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)),
                     item -> item.setTab(EIOCreativeTabs.MACHINES).addItemTags(EIOTags.Items.ENTITY_STORAGE));
 
-    public static final RegiliteBlock<ProgressMachineBlock> DRAIN = progressMachine("drain",
+    public static final RegiliteBlock<NewProgressMachineBlock<?>> DRAIN = newProgressMachine("drain",
             () -> MachineBlockEntities.DRAIN);
 
     public static final RegiliteBlock<MachineBlock> VAT = machine("vat", () -> MachineBlockEntities.VAT)

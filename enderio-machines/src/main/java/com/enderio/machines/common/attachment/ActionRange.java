@@ -8,8 +8,12 @@ import io.netty.buffer.ByteBuf;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.Mth;
 
 public record ActionRange(int range, boolean isVisible) {
     public static final Codec<ActionRange> CODEC = RecordCodecBuilder.create(instance ->
@@ -44,6 +48,9 @@ public record ActionRange(int range, boolean isVisible) {
         return new ActionRange(range - 1, isVisible);
     }
 
+    public ActionRange clamp(int min, int max) {
+        return new ActionRange(Mth.clamp(range(), min, max), isVisible);
+    }
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     public void addClientParticle(ClientLevel level, BlockPos pos, String color) {
@@ -54,5 +61,13 @@ public record ActionRange(int range, boolean isVisible) {
         if (level.isClientSide()) {
             level.addAlwaysVisibleParticle(new RangeParticleData(range, color), true, pos.getX(), pos.getY(), pos.getZ(), 0, 0, 0);
         }
+    }
+
+    public Tag save(HolderLookup.Provider lookupProvider) {
+        return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
+    }
+
+    public static ActionRange parse(HolderLookup.Provider lookupProvider, Tag tag) {
+        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
     }
 }

@@ -53,8 +53,8 @@ public class VatScreen extends MachineScreen<VatMenu> {
     protected void init() {
         super.init();
         updateRecipeCache();
-        addRenderableOnly(new FluidStackWidget(30 + leftPos, 12 + topPos, 15, 47, this::wrappedInputTank));
-        addRenderableOnly(new FluidStackWidget(132 + leftPos, 12 + topPos, 15, 47, menu::getOutputTank));
+        addRenderableOnly(FluidStackWidget.legacy(30 + leftPos, 12 + topPos, 15, 47, this::wrappedInputTank));
+        addRenderableOnly(FluidStackWidget.legacy(132 + leftPos, 12 + topPos, 15, 47, menu::getOutputTank));
 
         addRenderableOnly(
             new FermentationWidget(this::isCrafting, this::inputFluidStack, this::outputFluidStack, this::getProgress, 76 + leftPos, 34 + topPos, 26, 28));

@@ -11,7 +11,7 @@ import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.CrafterBlockEntity;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
-import com.enderio.machines.common.blockentity.DrainBlockEntity;
+import com.enderio.machines.common.machine.drain.DrainBlockEntity;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
@@ -121,8 +121,8 @@ public class MachineBlockEntities {
             MachineBlocks.CRAFTER).apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<DrainBlockEntity> DRAIN = register("drain", DrainBlockEntity::new,
-            MachineBlocks.DRAIN).apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
-                    .apply(MachineBlockEntities::fluidHandlerCapability);
+            MachineBlocks.DRAIN).apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities)
+                    .apply(MachineBlockEntities::newFluidHandlerCapability);
 
     public static final RegiliteBlockEntity<SoulBinderBlockEntity> SOUL_BINDER = register("soul_binder",
             SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER)

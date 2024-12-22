@@ -39,7 +39,7 @@ public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl,
             EIOLang.REDSTONE_MODE));
 
-        addRenderableOnly(new FluidStackWidget(80 + leftPos, 21 + topPos, 16, 47, menu::getFluidTank));
+        addRenderableOnly(FluidStackWidget.legacy(80 + leftPos, 21 + topPos, 16, 47, menu::getFluidTank));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 

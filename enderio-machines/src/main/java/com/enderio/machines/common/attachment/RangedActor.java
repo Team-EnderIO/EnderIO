@@ -1,11 +1,15 @@
 package com.enderio.machines.common.attachment;
 
+import com.enderio.base.api.UseOnly;
+import net.neoforged.fml.LogicalSide;
+
 public interface RangedActor {
 
     int getMaxRange();
 
     ActionRange getActionRange();
 
+    @UseOnly(LogicalSide.SERVER)
     void setActionRange(ActionRange actionRange);
 
     default int getRange() {
@@ -16,6 +20,7 @@ public interface RangedActor {
         return getActionRange().isVisible();
     }
 
+    @UseOnly(LogicalSide.SERVER)
     default void setRangeVisible(boolean isRangeVisible) {
         if (isRangeVisible) {
             setActionRange(getActionRange().visible());
@@ -24,6 +29,7 @@ public interface RangedActor {
         }
     }
 
+    @UseOnly(LogicalSide.SERVER)
     default void increaseRange() {
         var actionRange = getActionRange();
         if (actionRange.range() < getMaxRange()) {
@@ -31,6 +37,7 @@ public interface RangedActor {
         }
     }
 
+    @UseOnly(LogicalSide.SERVER)
     default void decreaseRange() {
         var actionRange = getActionRange();
         if (actionRange.range() > 0) {
