@@ -2,11 +2,11 @@ package com.enderio.machines.common.menu.base;
 
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.core.common.menu.BaseBlockEntityMenu;
-import com.enderio.machines.common.machine.base.state.MachineState;
+import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
-import com.enderio.machines.common.machine.base.inventory.MachineInventory;
-import com.enderio.machines.common.machine.base.menu.GhostMachineSlot;
-import com.enderio.machines.common.machine.base.menu.MachineSlot;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
+import com.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
+import com.enderio.machines.common.blocks.base.menu.MachineSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

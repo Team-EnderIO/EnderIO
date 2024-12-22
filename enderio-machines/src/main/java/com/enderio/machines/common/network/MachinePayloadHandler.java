@@ -1,6 +1,6 @@
 package com.enderio.machines.common.network;
 
-import com.enderio.machines.common.machine.crafter.CrafterMenu;
+import com.enderio.machines.common.blocks.crafter.CrafterMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.SolarSoul;
 import com.enderio.machines.common.souldata.SpawnerSoul;

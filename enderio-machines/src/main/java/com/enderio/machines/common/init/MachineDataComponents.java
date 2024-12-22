@@ -5,7 +5,7 @@ import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.io.IOConfig;
-import com.enderio.machines.common.machine.alloy.AlloySmelterMode;
+import com.enderio.machines.common.blocks.alloy.AlloySmelterMode;
 import com.mojang.serialization.Codec;
 import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponentType;

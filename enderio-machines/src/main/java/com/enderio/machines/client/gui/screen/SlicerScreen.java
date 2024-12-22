@@ -7,7 +7,7 @@ import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.NewCapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.NewProgressWidget;
-import com.enderio.machines.common.machine.slicer.SlicerMenu;
+import com.enderio.machines.common.blocks.slicer.SlicerMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

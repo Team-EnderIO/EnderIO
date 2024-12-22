@@ -9,7 +9,7 @@ import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.machines.common.machine.alloy.AlloySmeltingRecipe;
+import com.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;

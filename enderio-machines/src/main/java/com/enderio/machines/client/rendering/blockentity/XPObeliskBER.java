@@ -1,7 +1,7 @@
 package com.enderio.machines.client.rendering.blockentity;
 
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.machines.common.machine.obelisks.xp.XPObeliskBlockEntity;
+import com.enderio.machines.common.blocks.obelisks.xp.XPObeliskBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;

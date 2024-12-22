@@ -12,7 +12,7 @@ import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.machine.soul_binder.SoulBindingRecipe;
+import com.enderio.machines.common.blocks.soul_binder.SoulBindingRecipe;
 import com.enderio.machines.common.souldata.SoulData;
 import com.enderio.machines.common.souldata.SoulDataReloadListener;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;

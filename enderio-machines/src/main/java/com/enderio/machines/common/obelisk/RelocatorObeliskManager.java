@@ -1,7 +1,7 @@
 package com.enderio.machines.common.obelisk;
 
 import com.enderio.machines.EnderIOMachines;
-import com.enderio.machines.common.machine.obelisks.relocator.RelocatorObeliskBlockEntity;
+import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.init.MachineAttachments;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

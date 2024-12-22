@@ -8,7 +8,7 @@ import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
-import com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerMenu;
+import com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerMenu;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;

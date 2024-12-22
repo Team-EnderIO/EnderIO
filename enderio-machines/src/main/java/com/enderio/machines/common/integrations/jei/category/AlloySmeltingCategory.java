@@ -11,7 +11,7 @@ import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.machine.alloy.AlloySmeltingRecipe;
+import com.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
 import java.util.Arrays;
 import java.util.List;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;

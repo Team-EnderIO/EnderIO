@@ -1,7 +1,7 @@
 package com.enderio.machines.common.integrations.jei;
 
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
-import com.enderio.machines.common.machine.base.menu.GhostMachineSlot;
+import com.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
 import java.util.ArrayList;
 import java.util.List;
 import mezz.jei.api.constants.VanillaTypes;

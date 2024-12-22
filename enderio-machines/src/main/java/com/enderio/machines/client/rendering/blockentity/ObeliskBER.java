@@ -1,6 +1,6 @@
 package com.enderio.machines.client.rendering.blockentity;
 
-import com.enderio.machines.common.machine.obelisks.ObeliskBlockEntity;
+import com.enderio.machines.common.blocks.obelisks.ObeliskBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;

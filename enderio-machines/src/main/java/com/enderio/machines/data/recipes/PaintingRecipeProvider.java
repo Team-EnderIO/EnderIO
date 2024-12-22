@@ -3,7 +3,7 @@ package com.enderio.machines.data.recipes;
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.machines.common.init.MachineBlocks;
-import com.enderio.machines.common.machine.painting.PaintingRecipe;
+import com.enderio.machines.common.blocks.painting.PaintingRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;

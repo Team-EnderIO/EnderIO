@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blockentity.solar;
 
-import static com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
+import static com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
 
 import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.capacitor.FixedScalable;

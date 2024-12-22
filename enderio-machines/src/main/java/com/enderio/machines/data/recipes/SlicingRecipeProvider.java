@@ -4,7 +4,7 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.machines.common.machine.slicer.SlicingRecipe;
+import com.enderio.machines.common.blocks.slicer.SlicingRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;

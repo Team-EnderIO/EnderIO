@@ -10,7 +10,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.machine.sag_mill.SagMillingRecipe;
+import com.enderio.machines.common.blocks.sag_mill.SagMillingRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;

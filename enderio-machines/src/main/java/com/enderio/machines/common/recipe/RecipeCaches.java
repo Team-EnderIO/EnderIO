@@ -2,12 +2,12 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.machine.alloy.AlloySmelterMode;
-import com.enderio.machines.common.machine.alloy.AlloySmeltingRecipe;
-import com.enderio.machines.common.machine.painting.PaintingRecipe;
-import com.enderio.machines.common.machine.sag_mill.SagMillingRecipe;
-import com.enderio.machines.common.machine.soul_binder.SoulBindingRecipe;
-import com.enderio.machines.common.machine.vat.FermentingRecipe;
+import com.enderio.machines.common.blocks.alloy.AlloySmelterMode;
+import com.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
+import com.enderio.machines.common.blocks.painting.PaintingRecipe;
+import com.enderio.machines.common.blocks.sag_mill.SagMillingRecipe;
+import com.enderio.machines.common.blocks.soul_binder.SoulBindingRecipe;
+import com.enderio.machines.common.blocks.vat.FermentingRecipe;
 import com.enderio.machines.common.utility.RecipeInputCache;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;

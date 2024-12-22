@@ -2,8 +2,8 @@ package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.machine.base.menu.GhostMachineSlot;
-import com.enderio.machines.common.machine.base.menu.MachineSlot;
+import com.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
+import com.enderio.machines.common.blocks.base.menu.MachineSlot;
 import com.enderio.machines.common.menu.base.LegacyPoweredMachineMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

@@ -5,7 +5,7 @@ import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.PairSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayloadType;
-import com.enderio.machines.common.machine.base.energy.EnergyStorageInfo;
+import com.enderio.machines.common.blocks.base.energy.EnergyStorageInfo;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;

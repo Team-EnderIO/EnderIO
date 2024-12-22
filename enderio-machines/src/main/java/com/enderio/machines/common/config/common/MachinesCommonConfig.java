@@ -1,6 +1,6 @@
 package com.enderio.machines.common.config.common;
 
-import com.enderio.machines.common.machine.powered_spawner.SpawnerMachineTask;
+import com.enderio.machines.common.blocks.powered_spawner.SpawnerMachineTask;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class MachinesCommonConfig {

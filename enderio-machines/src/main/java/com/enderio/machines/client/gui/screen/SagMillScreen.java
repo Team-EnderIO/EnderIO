@@ -10,7 +10,7 @@ import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.NewCapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.NewProgressWidget;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.machine.sag_mill.SagMillMenu;
+import com.enderio.machines.common.blocks.sag_mill.SagMillMenu;
 import java.util.List;
 import javax.annotation.Nullable;
 import net.minecraft.client.gui.GuiGraphics;
