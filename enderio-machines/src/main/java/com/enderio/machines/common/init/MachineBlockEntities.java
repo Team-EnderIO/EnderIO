@@ -18,7 +18,7 @@ import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
 import com.enderio.machines.common.blockentity.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.machine.painting.PaintingMachineBlockEntity;
-import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
+import com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterBlockEntity;
 import com.enderio.machines.common.blockentity.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.machine.sag_mill.SagMillBlockEntity;
@@ -139,7 +139,7 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<PoweredSpawnerBlockEntity> POWERED_SPAWNER = register("powered_spawner",
             PoweredSpawnerBlockEntity::new, MachineBlocks.POWERED_SPAWNER)
-                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+                    .apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities);
 
     public static final Map<SolarPanelTier, RegiliteBlockEntity<SolarPanelBlockEntity>> SOLAR_PANELS = Util.make(() -> {
         Map<SolarPanelTier, RegiliteBlockEntity<SolarPanelBlockEntity>> map = new HashMap<>();

@@ -35,7 +35,7 @@ import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
 import com.enderio.machines.common.menu.InhibitorObeliskMenu;
 import com.enderio.machines.common.machine.painting.PaintingMachineMenu;
-import com.enderio.machines.common.menu.PoweredSpawnerMenu;
+import com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerMenu;
 import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.menu.RelocatorObeliskMenu;
 import com.enderio.machines.common.machine.sag_mill.SagMillMenu;
@@ -78,7 +78,7 @@ public class MachineMenus {
     public static final RegiliteMenu<SoulBinderMenu> SOUL_BINDER = MENU_REGISTRY.registerMenu("soul_binder",
             SoulBinderMenu::factory, () -> SoulBinderScreen::new);
     public static final RegiliteMenu<PoweredSpawnerMenu> POWERED_SPAWNER = MENU_REGISTRY.registerMenu("powered_spawner",
-            PoweredSpawnerMenu::factory, () -> PoweredSpawnerScreen::new);
+            PoweredSpawnerMenu::new, () -> PoweredSpawnerScreen::new);
     public static final RegiliteMenu<VacuumChestMenu> VACUUM_CHEST = MENU_REGISTRY.registerMenu("vacuum_chest",
             VacuumChestMenu::factory, () -> VacuumChestScreen::new);
     public static final RegiliteMenu<XPVacuumMenu> XP_VACUUM = MENU_REGISTRY.registerMenu("xp_vacuum",

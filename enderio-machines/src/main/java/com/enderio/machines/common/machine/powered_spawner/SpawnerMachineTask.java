@@ -1,7 +1,7 @@
-package com.enderio.machines.common.blockentity.task;
+package com.enderio.machines.common.machine.powered_spawner;
 
 import com.enderio.machines.EnderIOMachines;
-import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
+import com.enderio.machines.common.blockentity.task.PoweredMachineTask;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.souldata.SpawnerSoul;
@@ -43,6 +43,7 @@ import java.util.function.IntFunction;
 
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
 public class SpawnerMachineTask implements PoweredMachineTask {
+
     private boolean complete;
     private int energyCost;
     private int energyConsumed = 0;

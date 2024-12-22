@@ -54,6 +54,9 @@ public class DrainBlockEntity extends NewPoweredMachineBlockEntity implements Ra
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.DRAIN_USAGE);
+
+    private static final int DEFAULT_RANGE = 5;
+
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
     private static final int CAPACITY = 3 * FluidType.BUCKET_VOLUME;
@@ -64,7 +67,7 @@ public class DrainBlockEntity extends NewPoweredMachineBlockEntity implements Ra
     private int consumed = 0;
     private Fluid type = Fluids.EMPTY;
 
-    private ActionRange actionRange = new ActionRange(5, false);
+    private ActionRange actionRange = new ActionRange(DEFAULT_RANGE, false);
 
     public DrainBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.DRAIN.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED, EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
@@ -246,7 +249,6 @@ public class DrainBlockEntity extends NewPoweredMachineBlockEntity implements Ra
     @Override
     protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditionalSynced(tag, registries);
-
         tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save(registries));
     }
 
@@ -284,7 +286,11 @@ public class DrainBlockEntity extends NewPoweredMachineBlockEntity implements Ra
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
-        components.set(MachineDataComponents.ACTION_RANGE, actionRange);
+
+        // Only if unchanged.
+        if (actionRange.range() != DEFAULT_RANGE || actionRange.isVisible()) {
+            components.set(MachineDataComponents.ACTION_RANGE, actionRange);
+        }
 
         var tank = TANK.getTank(this);
         if (!tank.isEmpty()) {
@@ -296,5 +302,6 @@ public class DrainBlockEntity extends NewPoweredMachineBlockEntity implements Ra
     public void removeComponentsFromTag(CompoundTag tag) {
         super.removeComponentsFromTag(tag);
         tag.remove(MachineNBTKeys.ACTION_RANGE);
+        tag.remove(CONSUMED);
     }
 }

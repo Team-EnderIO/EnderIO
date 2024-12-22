@@ -1,7 +1,7 @@
 package com.enderio.machines.common.network;
 
 import com.enderio.EnderIOBase;
-import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
+import com.enderio.machines.common.machine.powered_spawner.SpawnerMachineTask;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;

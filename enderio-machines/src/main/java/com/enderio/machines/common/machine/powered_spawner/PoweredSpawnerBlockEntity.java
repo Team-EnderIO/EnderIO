@@ -1,27 +1,27 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.powered_spawner;
 
 import com.enderio.EnderIOBase;
+import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.core.common.network.NetworkDataSlot;
+import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.attachment.ActionRange;
-import com.enderio.machines.common.attachment.RangedActor;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.MachineState;
+import com.enderio.machines.common.blockentity.MachineStateType;
 import com.enderio.machines.common.blockentity.task.MachineTask;
-import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
 import com.enderio.machines.common.blockentity.task.host.MachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.menu.PoweredSpawnerMenu;
+import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import com.mojang.datafixers.util.Either;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -33,35 +33,34 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.extensions.IOwnedSpawner;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+
 // TODO: I want to revisit the powered spawner and task
 //       But there's not enough time before alpha, so just porting as-is.
-public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements RangedActor, IOwnedSpawner {
+public class PoweredSpawnerBlockEntity extends NewPoweredMachineBlockEntity implements IOwnedSpawner {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
     public static final ResourceLocation NO_MOB = EnderIOBase.loc("no_mob");
+
+    // TODO: Config value?
+    public static final int ACTION_RANGE = 4;
+
     private StoredEntityData entityData = StoredEntityData.EMPTY;
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
     private final MachineTaskHost taskHost;
 
-    private final NetworkDataSlot<ActionRange> actionRangeDataSlot;
+    private boolean isRangeVisible = false;
 
     public PoweredSpawnerBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState);
-
-        // TODO: rubbish way of having a default. use an interface instead?
-        if (!hasData(MachineAttachments.ACTION_RANGE)) {
-            setData(MachineAttachments.ACTION_RANGE, new ActionRange(4, false));
-        }
-
-        actionRangeDataSlot = addDataSlot(ActionRange.DATA_SLOT_TYPE.create(this::getActionRange, this::internalSetActionRange));
-        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityType().orElse(NO_MOB), this::setEntityType));
+        super(MachineBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, CAPACITY, USAGE);
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
             @Override
@@ -83,30 +82,25 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new PoweredSpawnerMenu(pContainerId, this, pPlayerInventory);
+        return new PoweredSpawnerMenu(pContainerId, pPlayerInventory, this);
     }
 
-    public int getMaxRange() {
-        return 3;
+    public int getRange() {
+        return ACTION_RANGE;
     }
 
-    @Override
-    public ActionRange getActionRange() {
-        return getData(MachineAttachments.ACTION_RANGE);
+    public boolean isRangeVisible() {
+        return isRangeVisible;
     }
 
-    @Override
-    public void setActionRange(ActionRange actionRange) {
-        if (level != null && level.isClientSide) {
-            clientUpdateSlot(actionRangeDataSlot, actionRange);
-        } else {
-            internalSetActionRange(actionRange);
-        }
-    }
-
-    private void internalSetActionRange(ActionRange actionRange) {
-        setData(MachineAttachments.ACTION_RANGE, actionRange);
+    @UseOnly(LogicalSide.SERVER)
+    public void setIsRangeVisible(boolean isRangeVisible) {
+        this.isRangeVisible = isRangeVisible;
         setChanged();
+
+        if (level != null) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        }
     }
 
     @Override
@@ -120,8 +114,9 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public void clientTick() {
-        if (level.isClientSide && level instanceof ClientLevel clientLevel) {
-            getActionRange().addClientParticle(clientLevel, getBlockPos(), MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get());
+        if (level != null && isRangeVisible()) {
+            var pos = getBlockPos();
+            level.addAlwaysVisibleParticle(new RangeParticleData(ACTION_RANGE, MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get()), true, pos.getX(), pos.getY(), pos.getZ(), 0, 0, 0);
         }
 
         super.clientTick();
@@ -160,7 +155,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    protected boolean isActive() {
+    public boolean isActive() {
         return canAct() && hasEnergy() && taskHost.hasTask();
     }
 
@@ -193,8 +188,19 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         super.saveAdditional(pTag, lookupProvider);
-        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(lookupProvider));
         taskHost.save(lookupProvider, pTag);
+    }
+
+    @Override
+    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditionalSynced(tag, registries);
+
+        // Sync entity storage in case we want to render the entity or something in future :)
+        tag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(registries));
+
+        if (isRangeVisible) {
+            tag.putBoolean(MachineNBTKeys.IS_RANGE_VISIBLE, isRangeVisible);
+        }
     }
 
     @Override
@@ -202,17 +208,42 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         super.loadAdditional(pTag, lookupProvider);
         entityData = StoredEntityData.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
         taskHost.load(lookupProvider, pTag);
+
+        // TODO: Ender IO 8 - remove support for old attachment loading
+        if (hasData(MachineAttachments.ACTION_RANGE)) {
+            var actionRange = getData(MachineAttachments.ACTION_RANGE);
+            isRangeVisible = actionRange.isVisible();
+            removeData(MachineAttachments.ACTION_RANGE);
+        } else if (pTag.contains(MachineNBTKeys.IS_RANGE_VISIBLE)) {
+            isRangeVisible = pTag.getBoolean(MachineNBTKeys.IS_RANGE_VISIBLE);
+        }
     }
 
     @Override
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
         entityData = components.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+
+        // TODO: Ender IO 8 - remove.
+        var actionRange = components.get(MachineDataComponents.ACTION_RANGE);
+        if (actionRange != null) {
+            this.isRangeVisible = actionRange.isVisible();
+        }
+
+        Boolean isVisible = components.get(MachineDataComponents.IS_RANGE_VISIBLE);
+        if (isVisible != null) {
+            this.isRangeVisible = isVisible;
+        }
     }
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
+
+        // Only if unchanged.
+        if (isRangeVisible) {
+            components.set(MachineDataComponents.IS_RANGE_VISIBLE, true);
+        }
 
         if (entityData.hasEntity()) {
             components.set(EIODataComponents.STORED_ENTITY, entityData);
@@ -222,6 +253,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public void removeComponentsFromTag(CompoundTag tag) {
         super.removeComponentsFromTag(tag);
+        tag.remove(MachineNBTKeys.IS_RANGE_VISIBLE);
         tag.remove(MachineNBTKeys.ENTITY_STORAGE);
     }
 

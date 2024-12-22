@@ -10,6 +10,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -27,6 +28,9 @@ public class MachineDataComponents {
 
     public static Supplier<DataComponentType<ActionRange>> ACTION_RANGE =
         savedAndSynced("action_range", ActionRange.CODEC, ActionRange.STREAM_CODEC);
+
+    public static Supplier<DataComponentType<Boolean>> IS_RANGE_VISIBLE =
+        savedAndSynced("is_range_visible", Codec.BOOL, ByteBufCodecs.BOOL);
 
     // region Machine-Specific
 

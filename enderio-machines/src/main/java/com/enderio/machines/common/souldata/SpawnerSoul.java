@@ -1,7 +1,7 @@
 package com.enderio.machines.common.souldata;
 
 import com.enderio.machines.EnderIOMachines;
-import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
+import com.enderio.machines.common.machine.powered_spawner.SpawnerMachineTask;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;

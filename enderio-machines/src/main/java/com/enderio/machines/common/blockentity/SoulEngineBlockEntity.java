@@ -52,7 +52,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
+import static com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
 
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
 public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser {

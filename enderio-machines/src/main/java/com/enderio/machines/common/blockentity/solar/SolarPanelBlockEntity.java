@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
+import static com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
 
 public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
 

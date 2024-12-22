@@ -2,7 +2,7 @@ package com.enderio.machines.data.souldata;
 
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.init.EIOFluids;
-import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
+import com.enderio.machines.common.machine.powered_spawner.SpawnerMachineTask;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.SolarSoul;
 import com.enderio.machines.common.souldata.SoulData;

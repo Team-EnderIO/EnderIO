@@ -30,6 +30,7 @@ import com.enderio.machines.common.machine.base.block.NewMachineBlock;
 import com.enderio.machines.common.machine.base.block.NewProgressMachineBlock;
 import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
 import com.enderio.machines.common.machine.obelisk.xp.XPObeliskBlockEntity;
+import com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.enderio.regilite.data.DataGenContext;
@@ -151,9 +152,9 @@ public class MachineBlocks {
     public static final RegiliteBlock<ProgressMachineBlock> SOUL_BINDER = progressMachine("soul_binder",
             () -> MachineBlockEntities.SOUL_BINDER).setTranslation("Soul Binder");
 
-    public static final RegiliteBlock<ProgressMachineBlock> POWERED_SPAWNER = BLOCK_REGISTRY
+    public static final RegiliteBlock<NewProgressMachineBlock<PoweredSpawnerBlockEntity>> POWERED_SPAWNER = BLOCK_REGISTRY
             .registerBlock("powered_spawner",
-                    properties -> new ProgressMachineBlock(MachineBlockEntities.POWERED_SPAWNER, properties),
+                    properties -> new NewProgressMachineBlock<>(MachineBlockEntities.POWERED_SPAWNER, properties),
                     BlockBehaviour.Properties.of().strength(2.5f, 8))
             .setLootTable(
                     (l, t) -> MachinesLootTable.copyStandardComponentsWith(l, t, EIODataComponents.STORED_ENTITY.get()))
