@@ -5,7 +5,7 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.init.MachineBlocks;
-import com.enderio.machines.common.recipe.SoulBindingRecipe;
+import com.enderio.machines.common.machine.soul_binder.SoulBindingRecipe;
 import com.enderio.machines.common.souldata.EngineSoul;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;

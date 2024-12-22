@@ -1,4 +1,4 @@
-package com.enderio.machines.common.recipe;
+package com.enderio.machines.common.machine.base;
 
 import com.enderio.core.common.recipes.OutputStack;
 import net.minecraft.core.HolderLookup;

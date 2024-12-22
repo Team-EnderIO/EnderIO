@@ -10,7 +10,7 @@ import com.enderio.machines.client.gui.widget.FluidStackWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.machine.vat.VatMenu;
-import com.enderio.machines.common.recipe.FermentingRecipe;
+import com.enderio.machines.common.machine.vat.FermentingRecipe;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;

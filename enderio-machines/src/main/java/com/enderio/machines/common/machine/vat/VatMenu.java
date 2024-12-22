@@ -9,7 +9,6 @@ import com.enderio.machines.common.machine.base.fluid.FluidStorageInfo;
 import com.enderio.machines.common.machine.base.fluid.FluidStorageSyncSlot;
 import com.enderio.machines.common.machine.base.menu.NewMachineMenu;
 import com.enderio.machines.common.machine.base.menu.MachineSlot;
-import com.enderio.machines.common.recipe.FermentingRecipe;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

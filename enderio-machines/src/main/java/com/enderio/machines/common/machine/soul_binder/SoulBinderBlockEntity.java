@@ -26,7 +26,6 @@ import com.enderio.machines.common.machine.base.inventory.MultiSlotAccess;
 import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
 import com.enderio.machines.common.machine.base.state.MachineState;
 import com.enderio.machines.common.recipe.RecipeCaches;
-import com.enderio.machines.common.recipe.SoulBindingRecipe;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;

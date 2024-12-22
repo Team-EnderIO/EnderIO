@@ -1,9 +1,10 @@
-package com.enderio.machines.common.recipe;
+package com.enderio.machines.common.machine.vat;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.datamap.VatReagent;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
+import com.enderio.machines.common.machine.base.MachineRecipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

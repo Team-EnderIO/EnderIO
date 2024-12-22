@@ -2,11 +2,11 @@ package com.enderio.machines.common.integrations.jei;
 
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.jei.util.WrappedEnchanterRecipe;
-import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
-import com.enderio.machines.common.recipe.FermentingRecipe;
-import com.enderio.machines.common.recipe.SagMillingRecipe;
-import com.enderio.machines.common.recipe.SlicingRecipe;
-import com.enderio.machines.common.recipe.SoulBindingRecipe;
+import com.enderio.machines.common.machine.alloy.AlloySmeltingRecipe;
+import com.enderio.machines.common.machine.vat.FermentingRecipe;
+import com.enderio.machines.common.machine.sag_mill.SagMillingRecipe;
+import com.enderio.machines.common.machine.slicer.SlicingRecipe;
+import com.enderio.machines.common.machine.soul_binder.SoulBindingRecipe;
 import com.enderio.machines.common.recipe.TankRecipe;
 import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.client.Minecraft;

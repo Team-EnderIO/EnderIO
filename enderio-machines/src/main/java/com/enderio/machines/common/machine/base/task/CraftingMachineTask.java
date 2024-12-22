@@ -6,7 +6,7 @@ import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.machine.base.inventory.MachineInventory;
 import com.enderio.machines.common.machine.base.inventory.MultiSlotAccess;
 import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.recipe.MachineRecipe;
+import com.enderio.machines.common.machine.base.MachineRecipe;
 import com.mojang.logging.LogUtils;
 import java.util.ArrayList;
 import java.util.List;

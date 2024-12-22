@@ -1,9 +1,10 @@
-package com.enderio.machines.common.recipe;
+package com.enderio.machines.common.machine.sag_mill;
 
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.util.TagUtil;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.machine.base.MachineRecipe;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;

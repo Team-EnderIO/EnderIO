@@ -17,7 +17,6 @@ import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout
 import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
 import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
-import com.enderio.machines.common.recipe.PaintingRecipe;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import java.util.List;
 import java.util.Optional;

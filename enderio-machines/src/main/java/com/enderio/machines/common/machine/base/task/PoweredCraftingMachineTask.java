@@ -4,7 +4,7 @@ import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.machine.base.inventory.MachineInventory;
 import com.enderio.machines.common.machine.base.inventory.MultiSlotAccess;
 import com.enderio.machines.common.machine.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.recipe.MachineRecipe;
+import com.enderio.machines.common.machine.base.MachineRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;

@@ -1,4 +1,4 @@
-package com.enderio.machines.common.recipe;
+package com.enderio.machines.common.machine.soul_binder;
 
 import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.common.init.EIODataComponents;
@@ -7,6 +7,7 @@ import com.enderio.base.common.recipe.FluidRecipeInput;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.machine.base.MachineRecipe;
 import com.enderio.machines.common.souldata.SoulDataReloadListener;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;

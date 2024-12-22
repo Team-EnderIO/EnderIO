@@ -1,10 +1,11 @@
-package com.enderio.machines.common.recipe;
+package com.enderio.machines.common.machine.painting;
 
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.machine.base.MachineRecipe;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;

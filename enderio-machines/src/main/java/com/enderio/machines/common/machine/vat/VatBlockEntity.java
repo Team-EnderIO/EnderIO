@@ -20,7 +20,7 @@ import com.enderio.machines.common.machine.base.inventory.MachineInventory;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.machine.base.inventory.MultiSlotAccess;
 import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
-import com.enderio.machines.common.recipe.FermentingRecipe;
+
 import java.util.List;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
