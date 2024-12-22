@@ -3,7 +3,6 @@ package com.enderio.machines.common.blocks.travel_anchor;
 import com.enderio.base.api.travel.TravelTarget;
 import com.enderio.base.api.travel.TravelTargetApi;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;

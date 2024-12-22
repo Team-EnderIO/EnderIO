@@ -33,11 +33,6 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
     public XPVacuumBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(MachineBlockEntities.XP_VACUUM.get(), pWorldPosition, pBlockState, ExperienceOrb.class);
         fluidHandler = createFluidHandler();
-
-        // Sync fluid level.
-        addDataSlot(NetworkDataSlot.INT.create(
-            () -> TANK.getFluidAmount(this),
-            i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))));
     }
 
     @Override
@@ -49,7 +44,6 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
         return new XPVacuumMenu(containerId, inventory, this);
     }
-
 
     @Override
     public void handleEntity(ExperienceOrb xpe) {
