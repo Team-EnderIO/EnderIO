@@ -11,6 +11,13 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 public class XPObeliskMenu extends NewMachineMenu<XPObeliskBlockEntity> {
 
+    public static final int ADD_1_LEVEL_BUTTON_ID = 0;
+    public static final int REMOVE_1_LEVEL_BUTTON_ID = 1;
+    public static final int ADD_10_LEVELS_BUTTON_ID = 2;
+    public static final int REMOVE_10_LEVELS_BUTTON_ID = 3;
+    public static final int ADD_ALL_XP_BUTTON_ID = 4;
+    public static final int REMOVE_ALL_XP_BUTTON_ID = 5;
+
     private final FluidStackSyncSlot tankSyncSlot;
 
     public XPObeliskMenu(int pContainerId, Inventory inventory, XPObeliskBlockEntity blockEntity) {
@@ -34,12 +41,12 @@ public class XPObeliskMenu extends NewMachineMenu<XPObeliskBlockEntity> {
         XPObeliskBlockEntity blockEntity = getBlockEntity();
 
         switch (id) {
-        case 0 -> blockEntity.addLevelsToPlayer(player, 1);
-        case 1 -> blockEntity.removeLevelsFromPlayer(player, 1);
-        case 2 -> blockEntity.addLevelsToPlayer(player, 10);
-        case 3 -> blockEntity.removeLevelsFromPlayer(player, 10);
-        case 4 -> blockEntity.addAllXpToPlayer(player);
-        case 5 -> blockEntity.removeAllXpFromPlayer(player);
+        case ADD_1_LEVEL_BUTTON_ID -> blockEntity.addLevelsToPlayer(player, 1);
+        case REMOVE_1_LEVEL_BUTTON_ID -> blockEntity.removeLevelsFromPlayer(player, 1);
+        case ADD_10_LEVELS_BUTTON_ID -> blockEntity.addLevelsToPlayer(player, 10);
+        case REMOVE_10_LEVELS_BUTTON_ID -> blockEntity.removeLevelsFromPlayer(player, 10);
+        case ADD_ALL_XP_BUTTON_ID -> blockEntity.addAllXpToPlayer(player);
+        case REMOVE_ALL_XP_BUTTON_ID -> blockEntity.removeAllXpFromPlayer(player);
         default -> throw new IllegalStateException("Unexpected value: " + id);
         }
         return true;

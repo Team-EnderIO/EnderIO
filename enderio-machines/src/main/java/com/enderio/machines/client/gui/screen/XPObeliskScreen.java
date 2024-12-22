@@ -52,14 +52,14 @@ public class XPObeliskScreen extends NewMachineScreen<XPObeliskMenu> {
         int padding = 16;
         int offset = size + padding;
         Vector2i midLeft = new Vector2i(leftPos + imageWidth / 2 - size / 2 - offset, topPos + 58);
-        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, 0, XP_ADD_ONE, MachineLang.RETRIEVE_1));
-        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, 1, XP_REMOVE_ONE, MachineLang.STORE_1));
+        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, XPObeliskMenu.ADD_1_LEVEL_BUTTON_ID, XP_ADD_ONE, MachineLang.RETRIEVE_1));
+        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, XPObeliskMenu.REMOVE_1_LEVEL_BUTTON_ID, XP_REMOVE_ONE, MachineLang.STORE_1));
         midLeft = midLeft.add(offset, 0);
-        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, 2, XP_ADD_MULTI, MachineLang.RETRIEVE_10));
-        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, 3, XP_REMOVE_MULTI, MachineLang.STORE_10));
+        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, XPObeliskMenu.ADD_10_LEVELS_BUTTON_ID, XP_ADD_MULTI, MachineLang.RETRIEVE_10));
+        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, XPObeliskMenu.REMOVE_10_LEVELS_BUTTON_ID, XP_REMOVE_MULTI, MachineLang.STORE_10));
         midLeft = midLeft.add(offset, 0);
-        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, 4, XP_ADD_ALL, MachineLang.RETRIEVE_ALL));
-        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, 5, XP_REMOVE_ALL, MachineLang.STORE_ALL));
+        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, XPObeliskMenu.ADD_ALL_XP_BUTTON_ID, XP_ADD_ALL, MachineLang.RETRIEVE_ALL));
+        addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, XPObeliskMenu.REMOVE_ALL_XP_BUTTON_ID, XP_REMOVE_ALL, MachineLang.STORE_ALL));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 7, 136, 102);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);
