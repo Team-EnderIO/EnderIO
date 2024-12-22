@@ -52,7 +52,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-@Deprecated(forRemoval = true)
+@Deprecated(forRemoval = true, since = "7.1")
 public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
 

@@ -102,7 +102,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     @Override
     public void serverTick() {
-        if (canActSlow()) {
+        if (canAct(5)) {
             fillInternal();
             drainInternal();
             tryTankRecipe();

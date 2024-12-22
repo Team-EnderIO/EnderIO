@@ -7,7 +7,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
-@Deprecated(forRemoval = true)
+@Deprecated(forRemoval = true, since = "7.1")
 public abstract class LegacyBaseBlockEntityMenu<T extends BlockEntity> extends BaseEnderMenu {
 
     // TODO: Should block entity even be nullable?

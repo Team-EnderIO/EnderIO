@@ -147,15 +147,6 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
         return !isRedstoneBlocked();
     }
 
-    /**
-     * Utility for acting once every 5 ticks.
-     * @deprecated Use {@link MachineBlockEntity#canAct(int)} instead.
-     */
-    @Deprecated
-    public boolean canActSlow() {
-        return canAct(5);
-    }
-
     public boolean canAct(int interval) {
         return level != null && canAct() && level.getGameTime() % interval == 0;
     }
@@ -405,14 +396,6 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
         }
 
         return redstoneControl;
-    }
-
-    /**
-     * Receive redstone control mode from server
-     */
-    @Deprecated
-    public void clientSetRedstoneControl(RedstoneControl control) {
-        redstoneControl = control;
     }
 
     public void setRedstoneControl(RedstoneControl control) {

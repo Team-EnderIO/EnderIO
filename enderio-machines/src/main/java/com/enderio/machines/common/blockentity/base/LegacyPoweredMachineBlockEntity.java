@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A machine that stores energy.
  */
-@Deprecated(forRemoval = true)
+@Deprecated(forRemoval = true, since = "7.1")
 public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlockEntity implements MachineInstallable {
 
     public static final ICapabilityProvider<LegacyPoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (

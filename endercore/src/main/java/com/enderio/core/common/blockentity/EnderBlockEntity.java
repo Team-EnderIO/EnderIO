@@ -175,13 +175,13 @@ public class EnderBlockEntity extends BlockEntity {
         return buf.array();
     }
 
-    @Deprecated(forRemoval = true)
+    @Deprecated(forRemoval = true, since = "7.1")
     public <T extends NetworkDataSlot<?>> T addDataSlot(T slot) {
         dataSlots.add(slot);
         return slot;
     }
 
-    @Deprecated(forRemoval = true)
+    @Deprecated(forRemoval = true, since = "7.1")
     public void addAfterSyncRunnable(Runnable runnable) {
         afterDataSync.add(runnable);
     }
@@ -189,7 +189,7 @@ public class EnderBlockEntity extends BlockEntity {
     /**
      * Fire this when you change the value of a {@link NetworkDataSlot} on the client side.
      */
-    @Deprecated(forRemoval = true)
+    @Deprecated(forRemoval = true, since = "7.1")
     @EnsureSide(EnsureSide.Side.CLIENT)
     public <T> void clientUpdateSlot(@Nullable NetworkDataSlot<T> slot, T value) {
         if (slot == null) {
@@ -208,7 +208,7 @@ public class EnderBlockEntity extends BlockEntity {
     /**
      * Sync the BlockEntity to all tracking players. Don't call this if you don't know what you do
      */
-    @Deprecated(forRemoval = true)
+    @Deprecated(forRemoval = true, since = "7.1")
     @EnsureSide(EnsureSide.Side.SERVER)
     public void sync() {
         var syncData = createBufferSlotUpdate();
@@ -219,7 +219,7 @@ public class EnderBlockEntity extends BlockEntity {
         }
     }
 
-    @Deprecated(forRemoval = true)
+    @Deprecated(forRemoval = true, since = "7.1")
     @EnsureSide(EnsureSide.Side.CLIENT)
     public void clientHandleBufferSync(RegistryFriendlyByteBuf buf) {
         for (int amount = buf.readInt(); amount > 0; amount--) {
@@ -232,7 +232,7 @@ public class EnderBlockEntity extends BlockEntity {
         }
     }
 
-    @Deprecated(forRemoval = true)
+    @Deprecated(forRemoval = true, since = "7.1")
     @EnsureSide(EnsureSide.Side.SERVER)
     public void serverHandleBufferChange(RegistryFriendlyByteBuf buf) {
         int index;

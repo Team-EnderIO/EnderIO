@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 
-@Deprecated(forRemoval = true)
+@Deprecated(forRemoval = true, since = "7.1")
 public abstract class LegacyMachineScreen<T extends LegacyMachineMenu<?>> extends EnderContainerScreen<T> {
     public static final int SLOT_COLOR = -2130706433;
 

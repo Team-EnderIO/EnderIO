@@ -65,7 +65,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     }
 
     // TODO: Temporary to support the primitive alloy smelter in its current form.
-    @Deprecated(forRemoval = true)
+    @Deprecated(forRemoval = true, since = "7.1")
     protected PoweredMachineEnergyStorage createEnergyStorage() {
         return new PoweredMachineEnergyStorage(this);
     }

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
  * Common machine helpers, such as ghost slots and accessing common properties.
  * @param <T>
  */
-@Deprecated(forRemoval = true)
+@Deprecated(forRemoval = true, since = "7.1")
 public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> extends LegacyBaseBlockEntityMenu<T> {
 
     protected LegacyMachineMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity,
