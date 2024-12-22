@@ -12,7 +12,8 @@ import org.jetbrains.annotations.Nullable;
 public class LegacyPoweredMachineMenu<T extends LegacyPoweredMachineBlockEntity> extends LegacyMachineMenu<T> {
     protected static final ResourceLocation EMPTY_CAPACITOR_SLOT = EnderIOBase.loc("item/empty_capacitor_slot");
 
-    protected LegacyPoweredMachineMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity, Inventory playerInventory) {
+    protected LegacyPoweredMachineMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity,
+            Inventory playerInventory) {
         super(menuType, containerId, blockEntity, playerInventory);
     }
 

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 public class CapacitorBankMenu extends LegacyPoweredMachineMenu<CapacitorBankBlockEntity> {
     public CapacitorBankMenu(int pContainerId, @Nullable CapacitorBankBlockEntity blockEntity, Inventory inventory) {
         super(MachineMenus.CAPACITOR_BANK.get(), pContainerId, blockEntity, inventory);
-        addPlayerInventorySlots(8,84);
+        addPlayerInventorySlots(8, 84);
     }
 
     public static CapacitorBankMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {

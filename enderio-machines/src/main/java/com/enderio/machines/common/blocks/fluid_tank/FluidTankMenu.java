@@ -3,9 +3,9 @@ package com.enderio.machines.common.blocks.fluid_tank;
 import com.enderio.machines.common.blocks.base.fluid.FluidStorageInfo;
 import com.enderio.machines.common.blocks.base.fluid.FluidStorageSyncSlot;
 import com.enderio.machines.common.blocks.base.menu.MachineMenu;
+import com.enderio.machines.common.blocks.base.menu.MachineSlot;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.blocks.base.menu.MachineSlot;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -17,7 +17,8 @@ public class FluidTankMenu extends MachineMenu<FluidTankBlockEntity> {
         super(MachineMenus.FLUID_TANK.get(), containerId, inventory, blockEntity);
         addSlots();
 
-        fluidTankSlot = addSyncSlot(FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getFluidTank())));
+        fluidTankSlot = addSyncSlot(
+                FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getFluidTank())));
     }
 
     public FluidTankMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
@@ -33,7 +34,7 @@ public class FluidTankMenu extends MachineMenu<FluidTankBlockEntity> {
         addSlot(new MachineSlot(getMachineInventory(), FluidTankBlockEntity.FLUID_DRAIN_INPUT, 116, 21));
         addSlot(new MachineSlot(getMachineInventory(), FluidTankBlockEntity.FLUID_DRAIN_OUTPUT, 116, 52));
 
-        addPlayerInventorySlots(8,84);
+        addPlayerInventorySlots(8, 84);
     }
 
     public FluidStorageInfo getFluidTank() {

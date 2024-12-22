@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -34,23 +35,25 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
-
 public class LegacyMachineBlock extends BaseEntityBlock {
     public static final Codec<Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>>> BLOCK_ENTITY_TYPE_CODEC = BuiltInRegistries.BLOCK_ENTITY_TYPE
-        .holderByNameCodec()
-        .flatXmap(blockEntityTypeHolder -> DataResult.success(() -> (BlockEntityType<? extends LegacyMachineBlockEntity>) blockEntityTypeHolder.value()),
-            sup -> DataResult.success(sup.get().builtInRegistryHolder()));
+            .holderByNameCodec()
+            .flatXmap(
+                    blockEntityTypeHolder -> DataResult.success(
+                            () -> (BlockEntityType<? extends LegacyMachineBlockEntity>) blockEntityTypeHolder.value()),
+                    sup -> DataResult.success(sup.get().builtInRegistryHolder()));
 
-    private static final MapCodec<LegacyMachineBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-        BLOCK_ENTITY_TYPE_CODEC.fieldOf("block_entity_type").forGetter(output -> output.blockEntityType),
-        propertiesCodec()
-    ).apply(instance, LegacyMachineBlock::new));
+    private static final MapCodec<LegacyMachineBlock> CODEC = RecordCodecBuilder
+            .mapCodec(instance -> instance
+                    .group(BLOCK_ENTITY_TYPE_CODEC.fieldOf("block_entity_type")
+                            .forGetter(output -> output.blockEntityType), propertiesCodec())
+                    .apply(instance, LegacyMachineBlock::new));
 
     private final Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    private LegacyMachineBlock(Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType, Properties properties) {
+    private LegacyMachineBlock(Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType,
+            Properties properties) {
         super(properties);
 
         this.blockEntityType = blockEntityType;
@@ -58,7 +61,8 @@ public class LegacyMachineBlock extends BaseEntityBlock {
         this.registerDefaultState(any.hasProperty(FACING) ? any.setValue(FACING, Direction.NORTH) : any);
     }
 
-    public LegacyMachineBlock(RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntityType, Properties properties) {
+    public LegacyMachineBlock(RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntityType,
+            Properties properties) {
         super(properties);
         this.blockEntityType = blockEntityType::get;
         BlockState any = this.getStateDefinition().any();
@@ -89,13 +93,14 @@ public class LegacyMachineBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState,
+            BlockEntityType<T> pBlockEntityType) {
         return createTickerHelper(pBlockEntityType, blockEntityType.get(), LegacyMachineBlockEntity::tick);
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
-        InteractionHand interactionHand, BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+            Player player, InteractionHand interactionHand, BlockHitResult hit) {
 
         BlockEntity entity = level.getBlockEntity(pos);
         if (!(entity instanceof LegacyMachineBlockEntity machineBlockEntity)) { // This also covers nulls
@@ -118,8 +123,9 @@ public class LegacyMachineBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult blockHitResult) {
-        if (level.isClientSide()){
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+            BlockHitResult blockHitResult) {
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }
 
@@ -147,7 +153,8 @@ public class LegacyMachineBlock extends BaseEntityBlock {
     }
 
     @Override
-    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
+    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos,
+            @Nullable Direction direction) {
         if (level.getBlockEntity(pos) instanceof LegacyMachineBlockEntity machineBlock) {
             return machineBlock.supportsRedstoneControl();
         }
@@ -164,7 +171,8 @@ public class LegacyMachineBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock,
+            BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
         if (level.getBlockEntity(pos) instanceof LegacyMachineBlockEntity machineBlock) {
             machineBlock.neighborChanged(state, level, pos, neighborPos);

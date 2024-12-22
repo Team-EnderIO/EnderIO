@@ -26,10 +26,11 @@ public class ImpulseHopperScreen extends MachineScreen<ImpulseHopperMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableOnly(new CapacitorEnergyWidget(15 + leftPos, 9 + topPos, 9, 47, menu::getEnergyStorage, menu::isCapacitorInstalled));
+        addRenderableOnly(new CapacitorEnergyWidget(15 + leftPos, 9 + topPos, 9, 47, menu::getEnergyStorage,
+                menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl,
-            EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
@@ -41,7 +42,7 @@ public class ImpulseHopperScreen extends MachineScreen<ImpulseHopperMenu> {
     protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         guiGraphics.blit(BG_TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
 
-        //for all ghost slots
+        // for all ghost slots
         for (int i = 0; i < 6; i++) {
             if (getMenu().getBlockEntity().ghostSlotHasItem(i)) {
                 if (getMenu().getBlockEntity().canPass(i)) {

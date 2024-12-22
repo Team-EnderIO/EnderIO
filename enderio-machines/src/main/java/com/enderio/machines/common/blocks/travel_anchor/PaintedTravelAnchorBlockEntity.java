@@ -1,10 +1,12 @@
 package com.enderio.machines.common.blocks.travel_anchor;
 
 import com.enderio.base.EIONBTKeys;
+import com.enderio.base.common.paint.PaintUtils;
 import com.enderio.base.common.paint.blockentity.PaintedBlockEntity;
 import com.enderio.base.common.paint.blockentity.SinglePaintedBlockEntity;
-import com.enderio.base.common.paint.PaintUtils;
 import com.enderio.machines.common.init.MachineBlockEntities;
+import java.util.Objects;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,9 +17,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
-import java.util.Optional;
 
 public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity implements PaintedBlockEntity {
 
@@ -42,9 +41,7 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
     @SuppressWarnings("DataFlowIssue")
     @Override
     public ModelData getModelData() {
-        return ModelData.builder()
-            .with(SinglePaintedBlockEntity.PAINT, paint)
-            .build();
+        return ModelData.builder().with(SinglePaintedBlockEntity.PAINT, paint).build();
     }
 
     @Nullable
@@ -54,7 +51,8 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt,
+            HolderLookup.Provider lookupProvider) {
         super.onDataPacket(net, pkt, lookupProvider);
         Block oldPaint = paint;
         CompoundTag tag = pkt.getTag();
@@ -95,7 +93,7 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
                 if (level.isClientSide) {
                     requestModelDataUpdate();
                     level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(),
-                        Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
+                            Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
                 }
             }
         }

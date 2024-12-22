@@ -8,21 +8,7 @@ import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
 import com.enderio.machines.client.rendering.blockentity.ObeliskBER;
 import com.enderio.machines.client.rendering.blockentity.XPObeliskBER;
 import com.enderio.machines.common.attachment.FluidTankUser;
-import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlockEntity;
-import com.enderio.machines.common.blocks.crafter.CrafterBlockEntity;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
-import com.enderio.machines.common.blocks.enchanter.EnchanterBlockEntity;
-import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
-import com.enderio.machines.common.blocks.impulse_hopper.ImpulseHopperBlockEntity;
-import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
-import com.enderio.machines.common.blocks.travel_anchor.PaintedTravelAnchorBlockEntity;
-import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlockEntity;
-import com.enderio.machines.common.blocks.soul_binder.SoulBinderBlockEntity;
-import com.enderio.machines.common.blocks.soul_engine.SoulEngineBlockEntity;
-import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlockEntity;
-import com.enderio.machines.common.blocks.vacuum.chest.VacuumChestBlockEntity;
-import com.enderio.machines.common.blocks.wired_charger.WiredChargerBlockEntity;
-import com.enderio.machines.common.blocks.vacuum.xp.XPVacuumBlockEntity;
 import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
@@ -33,14 +19,28 @@ import com.enderio.machines.common.blocks.alloy.AlloySmelterBlockEntity;
 import com.enderio.machines.common.blocks.alloy.PrimitiveAlloySmelterBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blocks.crafter.CrafterBlockEntity;
 import com.enderio.machines.common.blocks.drain.DrainBlockEntity;
+import com.enderio.machines.common.blocks.enchanter.EnchanterBlockEntity;
+import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
+import com.enderio.machines.common.blocks.impulse_hopper.ImpulseHopperBlockEntity;
+import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlockEntity;
+import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
+import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.blocks.painting.PaintingMachineBlockEntity;
 import com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.blocks.sag_mill.SagMillBlockEntity;
 import com.enderio.machines.common.blocks.slicer.SlicerBlockEntity;
+import com.enderio.machines.common.blocks.soul_binder.SoulBinderBlockEntity;
+import com.enderio.machines.common.blocks.soul_engine.SoulEngineBlockEntity;
 import com.enderio.machines.common.blocks.stirling_generator.StirlingGeneratorBlockEntity;
+import com.enderio.machines.common.blocks.travel_anchor.PaintedTravelAnchorBlockEntity;
+import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlockEntity;
+import com.enderio.machines.common.blocks.vacuum.chest.VacuumChestBlockEntity;
+import com.enderio.machines.common.blocks.vacuum.xp.XPVacuumBlockEntity;
 import com.enderio.machines.common.blocks.vat.VatBlockEntity;
+import com.enderio.machines.common.blocks.wired_charger.WiredChargerBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import com.google.common.collect.ImmutableMap;
@@ -204,13 +204,13 @@ public class MachineBlockEntities {
         return BLOCK_ENTITY_REGISTRY.registerBlockEntity(name, beFactory, blocks);
     }
 
-    private static void legacyMachineBlockEntityCapabilities(RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntity) {
+    private static void legacyMachineBlockEntityCapabilities(
+            RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntity) {
         blockEntity.addCapability(EIOCapabilities.SideConfig.BLOCK, LegacyMachineBlockEntity.SIDE_CONFIG_PROVIDER);
         blockEntity.addCapability(Capabilities.ItemHandler.BLOCK, LegacyMachineBlockEntity.ITEM_HANDLER_PROVIDER);
     }
 
-    private static void machineBlockEntityCapabilities(
-            RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
+    private static void machineBlockEntityCapabilities(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
         blockEntity.addCapability(EIOCapabilities.SideConfig.BLOCK, MachineBlockEntity.SIDE_CONFIG_PROVIDER);
         blockEntity.addCapability(Capabilities.ItemHandler.BLOCK, MachineBlockEntity.ITEM_HANDLER_PROVIDER);
     }
@@ -218,17 +218,18 @@ public class MachineBlockEntities {
     private static void legacyPoweredMachineBlockEntityCapabilities(
             RegiliteBlockEntity<? extends LegacyPoweredMachineBlockEntity> blockEntity) {
         legacyMachineBlockEntityCapabilities(blockEntity);
-        blockEntity.addCapability(Capabilities.EnergyStorage.BLOCK, LegacyPoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
+        blockEntity.addCapability(Capabilities.EnergyStorage.BLOCK,
+                LegacyPoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
     }
 
     private static void poweredMachineBlockEntityCapabilities(
             RegiliteBlockEntity<? extends PoweredMachineBlockEntity> blockEntity) {
         machineBlockEntityCapabilities(blockEntity);
-        blockEntity.addCapability(Capabilities.EnergyStorage.BLOCK,
-                PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
+        blockEntity.addCapability(Capabilities.EnergyStorage.BLOCK, PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
     }
 
-    private static void legacyFluidHandlerCapability(RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntity) {
+    private static void legacyFluidHandlerCapability(
+            RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntity) {
         blockEntity.addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
     }
 

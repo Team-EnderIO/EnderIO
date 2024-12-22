@@ -9,15 +9,15 @@ import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.LegacyMachineBlock;
+import com.enderio.machines.common.blocks.base.blockentity.MachineInventoryHolder;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.SidedIOConfigurable;
 import com.enderio.machines.common.io.TransferUtil;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
-import com.enderio.machines.common.blocks.base.blockentity.MachineInventoryHolder;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -58,8 +58,8 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
 
     public static final ICapabilityProvider<LegacyMachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = SidedIOConfigurable::new;
 
-    public static final ICapabilityProvider<LegacyMachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER = (be,
-                                                                                                                        side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
+    public static final ICapabilityProvider<LegacyMachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER = (
+            be, side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
 
     // region IO Configuration
 

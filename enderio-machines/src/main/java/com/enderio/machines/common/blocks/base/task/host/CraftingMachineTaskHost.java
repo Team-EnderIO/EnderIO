@@ -1,8 +1,10 @@
 package com.enderio.machines.common.blocks.base.task.host;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.machines.common.blocks.base.task.CraftingMachineTask;
 import com.enderio.machines.common.blocks.base.MachineRecipe;
+import com.enderio.machines.common.blocks.base.task.CraftingMachineTask;
+import java.util.Optional;
+import java.util.function.Supplier;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -10,9 +12,6 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
-import java.util.function.Supplier;
 
 public class CraftingMachineTaskHost<R extends MachineRecipe<T>, T extends RecipeInput> extends MachineTaskHost {
 
@@ -27,8 +26,9 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<T>, T extends Recip
     /**
      * This should be constructed in the constructor of your block entity.
      */
-    public CraftingMachineTaskHost(EnderBlockEntity blockEntity, Supplier<Boolean> canAcceptNewTask, RecipeType<R> recipeType,
-        CraftingMachineTaskFactory<? extends CraftingMachineTask<R, T>, R, T> taskFactory, Supplier<T> recipeInputSupplier) {
+    public CraftingMachineTaskHost(EnderBlockEntity blockEntity, Supplier<Boolean> canAcceptNewTask,
+            RecipeType<R> recipeType, CraftingMachineTaskFactory<? extends CraftingMachineTask<R, T>, R, T> taskFactory,
+            Supplier<T> recipeInputSupplier) {
         super(blockEntity, canAcceptNewTask);
         this.recipeType = recipeType;
         this.taskFactory = taskFactory;
@@ -37,8 +37,8 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<T>, T extends Recip
 
     @Nullable
     public CraftingMachineTask<R, T> getCurrentTask() {
-        //noinspection unchecked
-        return (CraftingMachineTask<R, T>)super.getCurrentTask();
+        // noinspection unchecked
+        return (CraftingMachineTask<R, T>) super.getCurrentTask();
     }
 
     // region MachineTaskHost Implementation

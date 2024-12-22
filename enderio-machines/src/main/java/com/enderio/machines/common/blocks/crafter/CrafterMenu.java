@@ -1,11 +1,11 @@
 package com.enderio.machines.common.blocks.crafter;
 
-import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
 import com.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
 import com.enderio.machines.common.blocks.base.menu.MachineSlot;
+import com.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
 import com.enderio.machines.common.blocks.base.menu.PreviewMachineSlot;
+import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -26,14 +26,15 @@ public class CrafterMenu extends PoweredMachineMenu<CrafterBlockEntity> {
     }
 
     private void addSlots() {
-        //Total slots = 21
-        //Capacitor slot [0]
+        // Total slots = 21
+        // Capacitor slot [0]
         addCapacitorSlot(6, 60);
 
         // Main storage slots [1-9]
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                this.addSlot(new MachineSlot(getMachineInventory(), CrafterBlockEntity.INPUT.get((3 * i) + j), 113 + (j * 18), 16 + (i * 18)));
+                this.addSlot(new MachineSlot(getMachineInventory(), CrafterBlockEntity.INPUT.get((3 * i) + j),
+                        113 + (j * 18), 16 + (i * 18)));
             }
         }
 
@@ -43,7 +44,8 @@ public class CrafterMenu extends PoweredMachineMenu<CrafterBlockEntity> {
         // Recipe Display slots [11-19]
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                this.addSlot(new GhostMachineSlot(getMachineInventory(), CrafterBlockEntity.GHOST.get((3 * i) + j), 31 + (j * 18), 16 + (i * 18)));
+                this.addSlot(new GhostMachineSlot(getMachineInventory(), CrafterBlockEntity.GHOST.get((3 * i) + j),
+                        31 + (j * 18), 16 + (i * 18)));
             }
         }
 
@@ -53,4 +55,3 @@ public class CrafterMenu extends PoweredMachineMenu<CrafterBlockEntity> {
         addPlayerInventorySlots(30, 84);
     }
 }
-

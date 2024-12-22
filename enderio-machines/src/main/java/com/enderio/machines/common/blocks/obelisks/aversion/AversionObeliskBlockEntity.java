@@ -6,10 +6,10 @@ import com.enderio.base.api.filter.EntityFilter;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.blocks.obelisks.ObeliskBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.obelisk.AversionObeliskManager;
 import com.enderio.machines.common.obelisk.ObeliskAreaManager;
 import net.minecraft.core.BlockPos;
@@ -23,11 +23,14 @@ import org.jetbrains.annotations.Nullable;
 
 public class AversionObeliskBlockEntity extends ObeliskBlockEntity<AversionObeliskBlockEntity> {
 
-    private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.AVERSION_CAPACITY);
-    private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.AVERSION_USAGE);
+    private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+            MachinesConfig.COMMON.ENERGY.AVERSION_CAPACITY);
+    private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
+            MachinesConfig.COMMON.ENERGY.AVERSION_USAGE);
 
     public AversionObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.AVERSION_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED, EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
+        super(MachineBlockEntities.AVERSION_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
+                EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 
     @Override
@@ -38,10 +41,11 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity<AversionObeli
     @Override
     public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot((integer, itemStack) -> itemStack.getCapability(EIOCapabilities.Filter.ITEM) instanceof EntityFilter)
-            .slotAccess(FILTER)
-            .capacitor()
-            .build();
+                .inputSlot((integer,
+                        itemStack) -> itemStack.getCapability(EIOCapabilities.Filter.ITEM) instanceof EntityFilter)
+                .slotAccess(FILTER)
+                .capacitor()
+                .build();
     }
 
     @Nullable
@@ -72,7 +76,8 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity<AversionObeli
         }
 
         if (isActive() && getAABB().contains(event.getX(), event.getY(), event.getZ())) {
-            int cost = ENERGY_USAGE.base().get(); //TODO scale on entity and range? The issue is that it needs the energy "now" and can't wait for it like other machines
+            int cost = ENERGY_USAGE.base().get(); // TODO scale on entity and range? The issue is that it needs the
+                                                  // energy "now" and can't wait for it like other machines
             int energy = getEnergyStorage().consumeEnergy(cost, true);
             if (energy == cost) {
                 event.setSpawnCancelled(true);

@@ -27,10 +27,11 @@ public class CrafterScreen extends MachineScreen<CrafterMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableOnly(new CapacitorEnergyWidget(10 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage, menu::isCapacitorInstalled));
+        addRenderableOnly(new CapacitorEnergyWidget(10 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage,
+                menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl,
-            EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
         var overlay = addIOConfigOverlay(1, leftPos + 6, topPos + 83, 208, 76);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);
@@ -43,4 +44,3 @@ public class CrafterScreen extends MachineScreen<CrafterMenu> {
         pGuiGraphics.blit(BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 }
-

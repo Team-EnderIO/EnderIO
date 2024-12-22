@@ -24,7 +24,8 @@ public class CapacitorBankScreen extends LegacyMachineScreen<CapacitorBankMenu> 
         super.init();
         addRenderableOnly(new EnergyWidget(8 + leftPos, 9 + topPos, 9, 68, menu::getEnergyStorage));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 83, 162, 76);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);

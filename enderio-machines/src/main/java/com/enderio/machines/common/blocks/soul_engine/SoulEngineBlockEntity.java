@@ -10,20 +10,19 @@ import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.attachment.FluidTankUser;
+import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
+import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
-import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
-import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
-import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.souldata.EngineSoul;
 import java.util.Optional;
 import java.util.function.Predicate;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -72,7 +71,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     private boolean reloadCache = !reload;
 
     public SoulEngineBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
+        super(MachineBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+                EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
         fluidHandler = createFluidHandler();
     }
 
@@ -94,8 +94,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
         if (canAct(20)) {
             updateMachineState(MachineState.FULL_POWER,
-                (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
-                    && isCapacitorInstalled());
+                    (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
+                            && isCapacitorInstalled());
         }
 
         updateMachineState(MachineState.NOT_SOULBOUND, soulData == null || entityData.entityType().isEmpty());

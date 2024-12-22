@@ -1,8 +1,8 @@
 package com.enderio.machines.common.blocks.obelisks.inhibitor;
 
+import com.enderio.machines.common.blocks.obelisks.ObeliskMenu;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.blocks.obelisks.ObeliskMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -13,7 +13,8 @@ public class InhibitorObeliskMenu extends ObeliskMenu<InhibitorObeliskBlockEntit
     }
 
     public InhibitorObeliskMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.INHIBITOR_OBELISK.get(), MachineBlockEntities.INHIBITOR_OBELISK.get(), containerId, playerInventory, buf);
+        super(MachineMenus.INHIBITOR_OBELISK.get(), MachineBlockEntities.INHIBITOR_OBELISK.get(), containerId,
+                playerInventory, buf);
     }
 
     private void addSlots() {

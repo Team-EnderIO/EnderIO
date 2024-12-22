@@ -1,8 +1,8 @@
 package com.enderio.machines.client.gui.widget;
 
 import com.enderio.core.client.gui.widgets.EIOWidget;
-import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.blocks.base.fluid.FluidStorageInfo;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.Arrays;
 import java.util.function.Supplier;

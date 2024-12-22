@@ -24,7 +24,7 @@ public class EnchanterBlock extends Block implements EntityBlock {
 
     private static final MapCodec<EnchanterBlock> CODEC = simpleCodec(EnchanterBlock::new);
 
-    private  static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    private static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public EnchanterBlock(Properties pProperties) {
         super(pProperties);
@@ -49,7 +49,8 @@ public class EnchanterBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+            BlockHitResult hit) {
         if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }

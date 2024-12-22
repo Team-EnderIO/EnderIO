@@ -4,7 +4,6 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.EIOCommonWidgets;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.machines.client.gui.screen.base.LegacyMachineScreen;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.common.blocks.vacuum.chest.VacuumChestMenu;
@@ -38,23 +37,20 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
     protected void init() {
         super.init();
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 8 - 16, topPos + 105 , menu::getRedstoneControl,
-            menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 8 - 16, topPos + 105,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(EIOCommonWidgets.createRange(
-            leftPos + imageWidth - 8 - 16 * 2 - 2,
-            topPos + 105,
-            EIOLang.HIDE_RANGE,
-            EIOLang.SHOW_RANGE,
-            menu::isRangeVisible,
-            (ignored) -> handleButtonPress(VacuumChestMenu.VISIBILITY_BUTTON_ID)));
+        addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 8 - 16 * 2 - 2, topPos + 105,
+                EIOLang.HIDE_RANGE, EIOLang.SHOW_RANGE, menu::isRangeVisible,
+                (ignored) -> handleButtonPress(VacuumChestMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 86, 8, 8, PLUS_SPRITES,
-            (b) -> handleButtonPress(VacuumChestMenu.INCREASE_BUTTON_ID)));
+                (b) -> handleButtonPress(VacuumChestMenu.INCREASE_BUTTON_ID)));
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 94, 8, 8, MINUS_SPRITES,
-            (b) -> handleButtonPress(VacuumChestMenu.DECREASE_BUTTON_ID)));
+                (b) -> handleButtonPress(VacuumChestMenu.DECREASE_BUTTON_ID)));
 
-        addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 8 - 16 * 3 - 4, topPos + 105, menu::getMachineStates));
+        addRenderableWidget(
+                new ActivityWidget(leftPos + imageWidth - 8 - 16 * 3 - 4, topPos + 105, menu::getMachineStates));
     }
 
     @Override

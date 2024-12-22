@@ -17,8 +17,8 @@ public class ObeliskMenu<T extends ObeliskBlockEntity<T>> extends PoweredMachine
         super(menuType, containerId, playerInventory, blockEntity);
     }
 
-    protected ObeliskMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType, int containerId, Inventory playerInventory,
-        RegistryFriendlyByteBuf buf) {
+    protected ObeliskMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType, int containerId,
+            Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(menuType, blockEntityType, containerId, playerInventory, buf);
     }
 

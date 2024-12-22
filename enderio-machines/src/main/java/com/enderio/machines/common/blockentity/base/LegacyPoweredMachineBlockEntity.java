@@ -10,15 +10,17 @@ import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.LegacyProgressMachineBlock;
-import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.blockentity.sync.EnergySyncData;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
+import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
+import java.util.Objects;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -36,24 +38,22 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-import java.util.function.Supplier;
-
 /**
  * A machine that stores energy.
  */
 @Deprecated(forRemoval = true)
 public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlockEntity implements MachineInstallable {
 
-    public static final ICapabilityProvider<LegacyPoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
-        (be, side) -> be.exposedEnergyStorage != null ? be.exposedEnergyStorage.getForSide(side) : null;
+    public static final ICapabilityProvider<LegacyPoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (
+            be, side) -> be.exposedEnergyStorage != null ? be.exposedEnergyStorage.getForSide(side) : null;
 
     /**
      * The energy storage medium for the block entity.
      * This will be a mutable energy storage.
      */
     protected final MachineEnergyStorage energyStorage;
-    @Nullable protected final MachineEnergyStorage exposedEnergyStorage;
+    @Nullable
+    protected final MachineEnergyStorage exposedEnergyStorage;
 
     /**
      * The client value of the energy storage.
@@ -66,16 +66,17 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
     private boolean updateModel = false;
     private final boolean hasActiveState;
 
-    public LegacyPoweredMachineBlockEntity(EnergyIOMode energyIOMode, CapacitorScalable capacity, CapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+    public LegacyPoweredMachineBlockEntity(EnergyIOMode energyIOMode, CapacitorScalable capacity,
+            CapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
         // Create energy storage
-        this.energyStorage = createEnergyStorage(energyIOMode,
-            capacity.scaleI(this::getCapacitorData),
-            usageRate.scaleI(this::getCapacitorData));
+        this.energyStorage = createEnergyStorage(energyIOMode, capacity.scaleI(this::getCapacitorData),
+                usageRate.scaleI(this::getCapacitorData));
 
         // Create exposed energy storage.
-        // Default is that createExposedEnergyStorage returns the existing energy storage.
+        // Default is that createExposedEnergyStorage returns the existing energy
+        // storage.
         this.exposedEnergyStorage = createExposedEnergyStorage();
 
         // Mark capacitor cache as dirty
@@ -88,7 +89,8 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
     }
 
     public NetworkDataSlot<?> createEnergyDataSlot() {
-        return EnergySyncData.DATA_SLOT_TYPE.create(() -> EnergySyncData.from(getExposedEnergyStorage()), v -> clientEnergyStorage = v.toImmutableStorage());
+        return EnergySyncData.DATA_SLOT_TYPE.create(() -> EnergySyncData.from(getExposedEnergyStorage()),
+                v -> clientEnergyStorage = v.toImmutableStorage());
     }
 
     @Override
@@ -101,12 +103,14 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
 
         if (level != null) {
             BlockState blockState = getBlockState();
-            boolean isBlockStateOutdated = hasActiveState && blockState.getValue(LegacyProgressMachineBlock.POWERED) != isActive();
+            boolean isBlockStateOutdated = hasActiveState
+                    && blockState.getValue(LegacyProgressMachineBlock.POWERED) != isActive();
             boolean isMachineStateOutdated = getMachineStates().contains(MachineState.ACTIVE) != isActive();
             if (isBlockStateOutdated || isMachineStateOutdated) {
                 if (updateModel) {
                     if (isBlockStateOutdated) {
-                        level.setBlock(getBlockPos(), blockState.setValue(LegacyProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+                        level.setBlock(getBlockPos(),
+                                blockState.setValue(LegacyProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
                     }
 
                     if (isMachineStateOutdated) {
@@ -218,7 +222,8 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
      * Create the energy storage medium
      * Override this to customise the behaviour of the energy storage.
      */
-    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
+    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity,
+            Supplier<Integer> usageRate) {
         return new MachineEnergyStorage(this, energyIOMode, capacity, usageRate) {
             @Override
             protected void onContentsChanged() {
@@ -368,7 +373,8 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
         energyStorage.setEnergyStored(components.getOrDefault(EIODataComponents.ENERGY, 0));
-        setData(MachineAttachments.REDSTONE_CONTROL, components.getOrDefault(MachineDataComponents.REDSTONE_CONTROL, RedstoneControl.ALWAYS_ACTIVE));
+        setData(MachineAttachments.REDSTONE_CONTROL,
+                components.getOrDefault(MachineDataComponents.REDSTONE_CONTROL, RedstoneControl.ALWAYS_ACTIVE));
     }
 
     @Override
@@ -392,8 +398,10 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
     public void setLevel(Level level) {
         super.setLevel(level);
 
-        //These are the values before Load is called. In case the machine is placed down without nbt, Load isn't called, so it will use these values.
-        //Ideally I would want to use onLoad, but when placing a block this is called before load is done.
+        // These are the values before Load is called. In case the machine is placed
+        // down without nbt, Load isn't called, so it will use these values.
+        // Ideally I would want to use onLoad, but when placing a block this is called
+        // before load is done.
         updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
         updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
     }

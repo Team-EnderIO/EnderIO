@@ -1,10 +1,10 @@
 package com.enderio.machines.common.blocks.drain;
 
-import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.blocks.base.fluid.FluidStorageInfo;
 import com.enderio.machines.common.blocks.base.fluid.FluidStorageSyncSlot;
 import com.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
+import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

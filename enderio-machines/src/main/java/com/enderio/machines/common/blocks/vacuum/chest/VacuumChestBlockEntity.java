@@ -2,11 +2,12 @@ package com.enderio.machines.common.blocks.vacuum.chest;
 
 import com.enderio.base.api.filter.ItemStackFilter;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout.Builder;
 import com.enderio.machines.common.blocks.vacuum.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout.Builder;
+import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -14,8 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-
-import java.util.function.Predicate;
 
 public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity> {
 
@@ -31,9 +30,11 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
     @Override
     public MachineInventoryLayout createInventoryLayout() {
         return extractableGUISlot(MachineInventoryLayout.builder(), 27)
-            .slot(slot -> slot.guiInsert().guiExtract().filter((i, s) -> s.getCapability(EIOCapabilities.Filter.ITEM) instanceof ItemStackFilter))
-            .slotAccess(FILTER)
-            .build();
+                .slot(slot -> slot.guiInsert()
+                        .guiExtract()
+                        .filter((i, s) -> s.getCapability(EIOCapabilities.Filter.ITEM) instanceof ItemStackFilter))
+                .slotAccess(FILTER)
+                .build();
     }
 
     @Override

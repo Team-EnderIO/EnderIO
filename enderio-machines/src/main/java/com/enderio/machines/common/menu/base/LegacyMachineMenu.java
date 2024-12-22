@@ -2,11 +2,12 @@ package com.enderio.machines.common.menu.base;
 
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.core.common.menu.LegacyBaseBlockEntityMenu;
-import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
 import com.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
 import com.enderio.machines.common.blocks.base.menu.MachineSlot;
+import com.enderio.machines.common.blocks.base.state.MachineState;
+import java.util.Set;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -16,8 +17,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
-
 /**
  * Common machine helpers, such as ghost slots and accessing common properties.
  * @param <T>
@@ -25,7 +24,8 @@ import java.util.Set;
 @Deprecated(forRemoval = true)
 public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> extends LegacyBaseBlockEntityMenu<T> {
 
-    protected LegacyMachineMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity, Inventory playerInventory) {
+    protected LegacyMachineMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity,
+            Inventory playerInventory) {
         super(menuType, containerId, blockEntity, playerInventory);
     }
 
@@ -94,8 +94,11 @@ public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> exte
         return super.canDragTo(slot);
     }
 
-    // TODO: This menu does not have the safety guarantee that the player inventory has been added.
-    //       While I'm pretty sure all menus using this will, maybe worth handling the case where this might not be handled (in other words, no-op if no player inv?)
+    // TODO: This menu does not have the safety guarantee that the player inventory
+    // has been added.
+    // While I'm pretty sure all menus using this will, maybe worth handling the
+    // case where this might not be handled (in other words, no-op if no player
+    // inv?)
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         ItemStack itemstack = ItemStack.EMPTY;
@@ -111,7 +114,8 @@ public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> exte
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (pIndex < this.slots.size() - PLAYER_INVENTORY_SIZE) {
-                if (!this.moveItemStackTo(itemstack1, this.slots.size() - PLAYER_INVENTORY_SIZE, this.slots.size(), true)) {
+                if (!this.moveItemStackTo(itemstack1, this.slots.size() - PLAYER_INVENTORY_SIZE, this.slots.size(),
+                        true)) {
                     return ItemStack.EMPTY;
                 }
             } else if (!this.moveItemStackTo(itemstack1, 0, this.slots.size() - PLAYER_INVENTORY_SIZE, false)) {
@@ -140,7 +144,7 @@ public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> exte
         }
 
         if (stack.isStackable()) {
-            while(!stack.isEmpty()) {
+            while (!stack.isEmpty()) {
                 if (reverseDirection) {
                     if (i < startIndex) {
                         break;
@@ -191,7 +195,7 @@ public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> exte
                 i = startIndex;
             }
 
-            while(true) {
+            while (true) {
                 if (reverseDirection) {
                     if (i < startIndex) {
                         break;
@@ -230,12 +234,12 @@ public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> exte
     // Overrides the swapping behaviour. Required for ghost slots to prevent duping
     @Override
     public void doClick(int slotId, int button, ClickType clickType, Player player) {
-        if(slotId >= 0 && this.slots.get(slotId) instanceof GhostMachineSlot ghostSlot) {
+        if (slotId >= 0 && this.slots.get(slotId) instanceof GhostMachineSlot ghostSlot) {
             if (clickType == ClickType.PICKUP) {
                 ItemStack slotItem = ghostSlot.getItem();
                 ItemStack carriedItem = this.getCarried();
-                if(!slotItem.isEmpty() && !carriedItem.isEmpty() && ghostSlot.mayPlace(carriedItem)){
-                    if(!ItemStack.isSameItemSameComponents(slotItem, carriedItem)){
+                if (!slotItem.isEmpty() && !carriedItem.isEmpty() && ghostSlot.mayPlace(carriedItem)) {
+                    if (!ItemStack.isSameItemSameComponents(slotItem, carriedItem)) {
                         int count = Math.min(carriedItem.getCount(), ghostSlot.getMaxStackSize(carriedItem));
                         ghostSlot.setByPlayer(carriedItem.copyWithCount(count));
                         ghostSlot.setChanged();

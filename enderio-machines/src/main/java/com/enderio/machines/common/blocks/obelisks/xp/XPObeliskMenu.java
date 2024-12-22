@@ -1,9 +1,9 @@
 package com.enderio.machines.common.blocks.obelisks.xp;
 
 import com.enderio.core.common.network.menu.FluidStackSyncSlot;
+import com.enderio.machines.common.blocks.base.menu.MachineMenu;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.blocks.base.menu.MachineMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

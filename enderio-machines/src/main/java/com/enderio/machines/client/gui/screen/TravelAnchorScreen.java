@@ -19,7 +19,8 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
 
     private EditBox nameInput;
 
-    private static final ResourceLocation VISIBILITY_BTNS = EnderIOBase.loc("textures/gui/icons/visibility_buttons.png");
+    private static final ResourceLocation VISIBILITY_BTNS = EnderIOBase
+            .loc("textures/gui/icons/visibility_buttons.png");
 
     private static final ResourceLocation VISIBLE_BUTTON = EnderIOBase.loc("screen/travel_anchor/visible");
     private static final ResourceLocation NOT_VISIBLE_BUTTON = EnderIOBase.loc("screen/travel_anchor/not_visible");
@@ -47,7 +48,7 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
         nameInput.setEditable(true);
 
         addRenderableWidget(ToggleIconButton.of(leftPos + 150, topPos + 10, 16, 16, VISIBLE_BUTTON, NOT_VISIBLE_BUTTON,
-            EIOLang.VISIBLE, EIOLang.NOT_VISIBLE, menu::isVisible, menu::setVisible));
+                EIOLang.VISIBLE, EIOLang.NOT_VISIBLE, menu::isVisible, menu::setVisible));
     }
 
     @Override

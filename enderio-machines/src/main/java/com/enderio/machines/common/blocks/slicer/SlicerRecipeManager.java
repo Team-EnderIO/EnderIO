@@ -2,7 +2,6 @@ package com.enderio.machines.common.blocks.slicer;
 
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;

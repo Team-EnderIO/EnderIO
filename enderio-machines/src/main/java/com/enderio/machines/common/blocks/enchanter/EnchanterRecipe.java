@@ -27,11 +27,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A recipe for the enchanter.
  */
-public record EnchanterRecipe(
-    Holder<Enchantment> enchantment,
-    int costMultiplier,
-    SizedIngredient input
-) implements Recipe<EnchanterRecipe.Input> {
+public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplier, SizedIngredient input)
+        implements Recipe<EnchanterRecipe.Input> {
 
     // region Calculations
 
@@ -116,7 +113,8 @@ public record EnchanterRecipe(
         }
 
         ItemStack lapis = recipeInput.getItem(2);
-        return lapis.is(Tags.Items.GEMS_LAPIS) && lapis.getCount() >= getLapisForLevel(getEnchantmentLevel(catalyst.getCount()));
+        return lapis.is(Tags.Items.GEMS_LAPIS)
+                && lapis.getCount() >= getLapisForLevel(getEnchantmentLevel(catalyst.getCount()));
     }
 
     @Override
@@ -154,10 +152,10 @@ public record EnchanterRecipe(
         @Override
         public ItemStack getItem(int slotIndex) {
             return switch (slotIndex) {
-                case 0 -> bookItem;
-                case 1 -> catalyst;
-                case 2 -> lapis;
-                default -> throw new IllegalArgumentException("No item for index " + slotIndex);
+            case 0 -> bookItem;
+            case 1 -> catalyst;
+            case 2 -> lapis;
+            default -> throw new IllegalArgumentException("No item for index " + slotIndex);
             };
         }
 
@@ -168,22 +166,18 @@ public record EnchanterRecipe(
     }
 
     public static class Serializer implements RecipeSerializer<EnchanterRecipe> {
-        public static final MapCodec<EnchanterRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-            .group(
-                Enchantment.CODEC.fieldOf("enchantment").forGetter(EnchanterRecipe::enchantment),
-                ExtraCodecs.POSITIVE_INT.fieldOf("cost_multiplier").forGetter(EnchanterRecipe::costMultiplier),
-                SizedIngredient.FLAT_CODEC.fieldOf("input").forGetter(EnchanterRecipe::input))
-            .apply(inst, EnchanterRecipe::new));
+        public static final MapCodec<EnchanterRecipe> CODEC = RecordCodecBuilder
+                .mapCodec(inst -> inst
+                        .group(Enchantment.CODEC.fieldOf("enchantment").forGetter(EnchanterRecipe::enchantment),
+                                ExtraCodecs.POSITIVE_INT.fieldOf("cost_multiplier")
+                                        .forGetter(EnchanterRecipe::costMultiplier),
+                                SizedIngredient.FLAT_CODEC.fieldOf("input").forGetter(EnchanterRecipe::input))
+                        .apply(inst, EnchanterRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, EnchanterRecipe> STREAM_CODEC = StreamCodec.composite(
-            Enchantment.STREAM_CODEC,
-            EnchanterRecipe::enchantment,
-            ByteBufCodecs.INT,
-            EnchanterRecipe::costMultiplier,
-            SizedIngredient.STREAM_CODEC,
-            EnchanterRecipe::input,
-            EnchanterRecipe::new
-        );
+                Enchantment.STREAM_CODEC, EnchanterRecipe::enchantment, ByteBufCodecs.INT,
+                EnchanterRecipe::costMultiplier, SizedIngredient.STREAM_CODEC, EnchanterRecipe::input,
+                EnchanterRecipe::new);
 
         @Override
         public MapCodec<EnchanterRecipe> codec() {

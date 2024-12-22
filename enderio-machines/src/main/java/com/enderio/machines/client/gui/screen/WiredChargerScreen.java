@@ -3,7 +3,6 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.machines.client.gui.screen.base.LegacyMachineScreen;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
@@ -30,12 +29,14 @@ public class WiredChargerScreen extends MachineScreen<WiredChargerMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(new ProgressWidget.BottomUp(BG_TEXTURE, menu::getChargeProgress, leftPos + 103, topPos + 18, 12, 36, 242, 1));
+        addRenderableOnly(new ProgressWidget.BottomUp(BG_TEXTURE, menu::getChargeProgress, leftPos + 103, topPos + 18,
+                12, 36, 242, 1));
 
-        addRenderableOnly(new CapacitorEnergyWidget(37 + leftPos, 14 + topPos, 9, 42,
-            menu::getEnergyStorage, menu::isCapacitorInstalled));
+        addRenderableOnly(new CapacitorEnergyWidget(37 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage,
+                menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 

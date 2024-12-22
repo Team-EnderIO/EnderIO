@@ -3,14 +3,13 @@ package com.enderio.machines.common.integrations.jei.util;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.blocks.base.MachineRecipe;
+import java.text.NumberFormat;
+import java.util.Locale;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
-
-import java.text.NumberFormat;
-import java.util.Locale;
 
 /**
  * Common machine recipe category utilities.
@@ -29,10 +28,12 @@ public abstract class MachineRecipeCategory<T> implements IRecipeCategory<T> {
     }
 
     protected static <T extends MachineRecipe<?>> Component getBasicEnergyString(RecipeHolder<T> recipe) {
-        return TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, NumberFormat.getIntegerInstance(Locale.ENGLISH).format(recipe.value().getBaseEnergyCost()));
+        return TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT,
+                NumberFormat.getIntegerInstance(Locale.ENGLISH).format(recipe.value().getBaseEnergyCost()));
     }
 
     protected static <T extends MachineRecipe<?>> Component getBasicEnergyString(T recipe) {
-        return TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, NumberFormat.getIntegerInstance(Locale.ENGLISH).format(recipe.getBaseEnergyCost()));
+        return TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT,
+                NumberFormat.getIntegerInstance(Locale.ENGLISH).format(recipe.getBaseEnergyCost()));
     }
 }

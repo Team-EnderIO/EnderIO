@@ -18,7 +18,7 @@ public class PoweredMachineMenu<T extends PoweredMachineBlockEntity> extends Mac
     private final EnergyStorageSyncSlot energySyncSlot;
 
     protected PoweredMachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
-                                 T blockEntity) {
+            T blockEntity) {
         super(menuType, containerId, playerInventory, blockEntity);
 
         energySyncSlot = addSyncSlot(
@@ -26,7 +26,7 @@ public class PoweredMachineMenu<T extends PoweredMachineBlockEntity> extends Mac
     }
 
     protected PoweredMachineMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType,
-                                 int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+            int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(menuType, blockEntityType, containerId, playerInventory, buf);
 
         energySyncSlot = addSyncSlot(EnergyStorageSyncSlot.standalone());

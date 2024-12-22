@@ -13,7 +13,8 @@ import net.minecraft.world.item.ItemStack;
 public class MachinesGhostSlotHandler implements IGhostIngredientHandler<LegacyMachineScreen> {
 
     @Override
-    public <I> List<Target<I>> getTargetsTyped(LegacyMachineScreen gui, ITypedIngredient<I> ingredient, boolean doStart) {
+    public <I> List<Target<I>> getTargetsTyped(LegacyMachineScreen gui, ITypedIngredient<I> ingredient,
+            boolean doStart) {
 
         if (ingredient.getType() == VanillaTypes.ITEM_STACK) {
             List<Target<I>> targets = new ArrayList<>();

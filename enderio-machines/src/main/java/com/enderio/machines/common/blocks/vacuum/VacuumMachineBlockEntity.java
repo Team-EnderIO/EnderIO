@@ -7,10 +7,16 @@ import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.attachment.RangedActor;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
+import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.IOConfig;
-import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -23,13 +29,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.LogicalSide;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Predicate;
 
 // TODO: I want to review the vacuum stuff too.
 public abstract class VacuumMachineBlockEntity<T extends Entity> extends MachineBlockEntity implements RangedActor {
@@ -44,7 +43,8 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
 
     private ActionRange actionRange = DEFAULT_RANGE;
 
-    public VacuumMachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> targetClass) {
+    public VacuumMachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState,
+            Class<T> targetClass) {
         super(pType, pWorldPosition, pBlockState, false);
         this.targetClass = targetClass;
     }
@@ -95,12 +95,12 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
         Iterator<WeakReference<T>> iterator = entities.iterator();
         while (iterator.hasNext()) {
             WeakReference<T> ref = iterator.next();
-            if (ref.get() == null) { //If the entity no longer exists, remove from the list
+            if (ref.get() == null) { // If the entity no longer exists, remove from the list
                 iterator.remove();
                 continue;
             }
             T entity = ref.get();
-            if (entity.isRemoved()) { //If the entity no longer exists, remove from the list
+            if (entity.isRemoved()) { // If the entity no longer exists, remove from the list
                 iterator.remove();
                 continue;
             }
@@ -168,8 +168,7 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
             actionRange = getData(MachineAttachments.ACTION_RANGE);
             removeData(MachineAttachments.ACTION_RANGE);
         } else if (tag.contains(MachineNBTKeys.ACTION_RANGE)) {
-            actionRange = ActionRange.parse(registries,
-                Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
+            actionRange = ActionRange.parse(registries, Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
         } else {
             actionRange = DEFAULT_RANGE;
         }

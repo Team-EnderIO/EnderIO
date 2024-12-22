@@ -10,14 +10,14 @@ import com.enderio.base.common.blockentity.Wrenchable;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.LegacyMachineBlock;
 import com.enderio.machines.common.block.LegacyProgressMachineBlock;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.SidedIOConfigurable;
 import com.enderio.machines.common.io.TransferUtil;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -57,10 +57,10 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
         implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = (be,
-                                                                                                               side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
+            side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER = (be,
-                                                                                                                  side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
+            side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
 
     @Nullable
     private final MachineInventory inventory;
@@ -76,7 +76,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     private final boolean supportsActiveState;
 
     public MachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
-                              boolean isIoConfigMutable) {
+            boolean isIoConfigMutable) {
         super(type, worldPosition, blockState);
 
         this.isIoConfigMutable = isIoConfigMutable;

@@ -4,10 +4,11 @@ import com.enderio.base.api.travel.TravelTarget;
 import com.enderio.base.api.travel.TravelTargetApi;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
-import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -18,8 +19,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 // TODO: Shouldn't be a machine block entity...
 public class TravelAnchorBlockEntity extends MachineBlockEntity {
@@ -35,7 +34,8 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     public TravelAnchorBlockEntity(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState) {
         super(type, pWorldPosition, pBlockState, false);
 
-        travelTargetDataSlot = addDataSlot(AnchorTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
+        travelTargetDataSlot = addDataSlot(
+                AnchorTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
     }
 
     @Override

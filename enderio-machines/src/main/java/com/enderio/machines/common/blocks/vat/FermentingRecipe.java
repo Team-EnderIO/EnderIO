@@ -1,14 +1,15 @@
 package com.enderio.machines.common.blocks.vat;
 
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.machines.common.blocks.base.MachineRecipe;
 import com.enderio.machines.common.datamap.VatReagent;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
-import com.enderio.machines.common.blocks.base.MachineRecipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import java.util.List;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -25,10 +26,8 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
-import java.util.List;
-
-public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReagent, TagKey<Item> rightReagent, FluidStack output, int ticks)
-    implements MachineRecipe<FermentingRecipe.Input> {
+public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReagent, TagKey<Item> rightReagent,
+        FluidStack output, int ticks) implements MachineRecipe<FermentingRecipe.Input> {
 
     @Override
     public int getBaseEnergyCost() {
@@ -77,14 +76,15 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
         return MachineRecipes.VAT_FERMENTING.type().get();
     }
 
-    public record Input(ItemStack leftReagent, ItemStack rightStack, MachineFluidTank inputTank) implements RecipeInput {
+    public record Input(ItemStack leftReagent, ItemStack rightStack, MachineFluidTank inputTank)
+            implements RecipeInput {
 
         @Override
         public ItemStack getItem(int slotIndex) {
             return switch (slotIndex) {
-                case 0 -> leftReagent;
-                case 1 -> rightStack;
-                default -> throw new IllegalArgumentException("No item for index " + slotIndex);
+            case 0 -> leftReagent;
+            case 1 -> rightStack;
+            default -> throw new IllegalArgumentException("No item for index " + slotIndex);
             };
         }
 
@@ -100,19 +100,21 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
     }
 
     public static class Serializer implements RecipeSerializer<FermentingRecipe> {
-        private static final StreamCodec<ByteBuf, TagKey<Item>> ITEM_TAG_STREAM_CODEC = ResourceLocation.STREAM_CODEC.map(
-            loc -> TagKey.create(Registries.ITEM, loc), TagKey::location);
+        private static final StreamCodec<ByteBuf, TagKey<Item>> ITEM_TAG_STREAM_CODEC = ResourceLocation.STREAM_CODEC
+                .map(loc -> TagKey.create(Registries.ITEM, loc), TagKey::location);
 
         public static final MapCodec<FermentingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            SizedFluidIngredient.FLAT_CODEC.fieldOf("input").forGetter(FermentingRecipe::input),
-            TagKey.codec(Registries.ITEM).fieldOf("left_reagent").forGetter(FermentingRecipe::leftReagent),
-            TagKey.codec(Registries.ITEM).fieldOf("right_reagent").forGetter(FermentingRecipe::rightReagent),
-            FluidStack.CODEC.fieldOf("output").forGetter(FermentingRecipe::output), Codec.INT.fieldOf("ticks").forGetter(FermentingRecipe::ticks))
-        .apply(instance, FermentingRecipe::new));
+                SizedFluidIngredient.FLAT_CODEC.fieldOf("input").forGetter(FermentingRecipe::input),
+                TagKey.codec(Registries.ITEM).fieldOf("left_reagent").forGetter(FermentingRecipe::leftReagent),
+                TagKey.codec(Registries.ITEM).fieldOf("right_reagent").forGetter(FermentingRecipe::rightReagent),
+                FluidStack.CODEC.fieldOf("output").forGetter(FermentingRecipe::output),
+                Codec.INT.fieldOf("ticks").forGetter(FermentingRecipe::ticks)).apply(instance, FermentingRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, FermentingRecipe> STREAM_CODEC = StreamCodec.composite(SizedFluidIngredient.STREAM_CODEC,
-            FermentingRecipe::input, ITEM_TAG_STREAM_CODEC, FermentingRecipe::leftReagent, ITEM_TAG_STREAM_CODEC, FermentingRecipe::rightReagent,
-            FluidStack.STREAM_CODEC, FermentingRecipe::output, ByteBufCodecs.INT, FermentingRecipe::ticks, FermentingRecipe::new);
+        public static final StreamCodec<RegistryFriendlyByteBuf, FermentingRecipe> STREAM_CODEC = StreamCodec.composite(
+                SizedFluidIngredient.STREAM_CODEC, FermentingRecipe::input, ITEM_TAG_STREAM_CODEC,
+                FermentingRecipe::leftReagent, ITEM_TAG_STREAM_CODEC, FermentingRecipe::rightReagent,
+                FluidStack.STREAM_CODEC, FermentingRecipe::output, ByteBufCodecs.INT, FermentingRecipe::ticks,
+                FermentingRecipe::new);
 
         @Override
         public MapCodec<FermentingRecipe> codec() {

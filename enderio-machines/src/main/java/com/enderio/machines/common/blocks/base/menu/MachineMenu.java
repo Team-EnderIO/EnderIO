@@ -3,9 +3,9 @@ package com.enderio.machines.common.blocks.base.menu;
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.core.common.menu.BaseBlockEntityMenu;
 import com.enderio.core.common.network.menu.EnumSyncSlot;
-import com.enderio.machines.common.blocks.base.state.MachineState;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
+import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.network.menu.MachineStatesSyncSlot;
 import java.util.Objects;
 import java.util.Set;
@@ -29,8 +29,7 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
     private final EnumSyncSlot<RedstoneControl> redstoneControlSlot;
     private MachineStatesSyncSlot statesSyncSlot;
 
-    protected MachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
-                          T blockEntity) {
+    protected MachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory, T blockEntity) {
         super(menuType, containerId, playerInventory, blockEntity);
 
         if (blockEntity.supportsRedstoneControl()) {
@@ -43,8 +42,8 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
         statesSyncSlot = addSyncSlot(MachineStatesSyncSlot.readOnly(blockEntity::getMachineStates));
     }
 
-    protected MachineMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType,
-                          int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+    protected MachineMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType, int containerId,
+            Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(menuType, blockEntityType, containerId, playerInventory, buf);
 
         if (getBlockEntity().supportsRedstoneControl()) {

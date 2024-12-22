@@ -25,7 +25,8 @@ public class AversionObeliskScreen extends MachineScreen<AversionObeliskMenu> {
     private static final ResourceLocation MINUS = EnderIOBase.loc("buttons/minus_small");
     private static final WidgetSprites PLUS_SPRITES = new WidgetSprites(PLUS, PLUS);
     private static final WidgetSprites MINUS_SPRITES = new WidgetSprites(MINUS, MINUS);
-    private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIOBase.loc("textures/gui/icons/range_buttons.png");
+    private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIOBase
+            .loc("textures/gui/icons/range_buttons.png");
 
     public AversionObeliskScreen(AversionObeliskMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -38,22 +39,20 @@ public class AversionObeliskScreen extends MachineScreen<AversionObeliskMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage, menu::isCapacitorInstalled));
+        addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage,
+                menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(EIOCommonWidgets.createRange(
-            leftPos + imageWidth - 6 - 16,
-            topPos + 34,
-            EIOLang.HIDE_RANGE,
-            EIOLang.SHOW_RANGE,
-            menu::isRangeVisible,
-            (ignored) -> handleButtonPress(AversionObeliskMenu.VISIBILITY_BUTTON_ID)));
+        addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 34, EIOLang.HIDE_RANGE,
+                EIOLang.SHOW_RANGE, menu::isRangeVisible,
+                (ignored) -> handleButtonPress(AversionObeliskMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2, 8, 8, PLUS_SPRITES,
-            (b) -> handleButtonPress(AversionObeliskMenu.INCREASE_BUTTON_ID)));
+                (b) -> handleButtonPress(AversionObeliskMenu.INCREASE_BUTTON_ID)));
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2 + 8, 8, 8, MINUS_SPRITES,
-            (b) -> handleButtonPress(AversionObeliskMenu.DECREASE_BUTTON_ID)));
+                (b) -> handleButtonPress(AversionObeliskMenu.DECREASE_BUTTON_ID)));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
     }
@@ -61,7 +60,9 @@ public class AversionObeliskScreen extends MachineScreen<AversionObeliskMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
-        guiGraphics.drawString(font, getMenu().getBlockEntity().getRange() + "", leftPos + imageWidth - 8 - 16 - font.width(getMenu().getBlockEntity().getRange() + "") - 10, topPos + 16*2 + 6, 0, false);
+        guiGraphics.drawString(font, getMenu().getBlockEntity().getRange() + "",
+                leftPos + imageWidth - 8 - 16 - font.width(getMenu().getBlockEntity().getRange() + "") - 10,
+                topPos + 16 * 2 + 6, 0, false);
     }
 
     @Override

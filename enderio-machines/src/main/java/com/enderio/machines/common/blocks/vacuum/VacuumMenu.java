@@ -1,8 +1,6 @@
 package com.enderio.machines.common.blocks.vacuum;
 
 import com.enderio.machines.common.blocks.base.menu.MachineMenu;
-import com.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
-import com.enderio.machines.common.blocks.obelisks.ObeliskBlockEntity;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -19,8 +17,8 @@ public class VacuumMenu<T extends VacuumMachineBlockEntity<?>> extends MachineMe
         super(menuType, containerId, playerInventory, blockEntity);
     }
 
-    protected VacuumMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType, int containerId, Inventory playerInventory,
-                         RegistryFriendlyByteBuf buf) {
+    protected VacuumMenu(@Nullable MenuType<?> menuType, BlockEntityType<? extends T> blockEntityType, int containerId,
+            Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(menuType, blockEntityType, containerId, playerInventory, buf);
     }
 

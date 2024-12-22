@@ -2,12 +2,12 @@ package com.enderio.machines.common.blocks.enchanter;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.io.DumbIOConfigurable;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
+import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.io.DumbIOConfigurable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -44,10 +44,8 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
     }
 
     public EnchanterRecipe.Input createRecipeInput() {
-        return new EnchanterRecipe.Input(
-            BOOK.getItemStack(getInventory()),
-            CATALYST.getItemStack(getInventory()),
-            LAPIS.getItemStack(getInventory()));
+        return new EnchanterRecipe.Input(BOOK.getItemStack(getInventory()), CATALYST.getItemStack(getInventory()),
+                LAPIS.getItemStack(getInventory()));
     }
 
     // region MenuProvider
@@ -72,15 +70,15 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
     private MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
-            .slotAccess(BOOK)
-            .inputSlot()
-            .slotAccess(CATALYST)
-            .inputSlot((slot, stack) -> stack.is(Tags.Items.GEMS_LAPIS))
-            .slotAccess(LAPIS)
-            .outputSlot()
-            .slotAccess(OUTPUT)
-            .build();
+                .inputSlot((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
+                .slotAccess(BOOK)
+                .inputSlot()
+                .slotAccess(CATALYST)
+                .inputSlot((slot, stack) -> stack.is(Tags.Items.GEMS_LAPIS))
+                .slotAccess(LAPIS)
+                .outputSlot()
+                .slotAccess(OUTPUT)
+                .build();
     }
 
     private MachineInventory createInventory() {
@@ -94,10 +92,13 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
                 EnchanterRecipe.Input recipeInput = createRecipeInput();
 
-                currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), recipeInput, level).orElse(null);
+                currentRecipe = level.getRecipeManager()
+                        .getRecipeFor(MachineRecipes.ENCHANTING.type().get(), recipeInput, level)
+                        .orElse(null);
                 if (!OUTPUT.isSlot(slot)) {
                     if (currentRecipe != null) {
-                        OUTPUT.setStackInSlot(this, currentRecipe.value().assemble(recipeInput, level.registryAccess()));
+                        OUTPUT.setStackInSlot(this,
+                                currentRecipe.value().assemble(recipeInput, level.registryAccess()));
                     } else {
                         OUTPUT.setStackInSlot(this, ItemStack.EMPTY);
                     }

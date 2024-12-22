@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import java.util.function.IntFunction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -23,21 +24,15 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.NotImplementedException;
 
-import java.util.function.IntFunction;
-
-public record TankRecipe(
-    Ingredient input,
-    ItemStack output,
-    FluidStack fluid,
-    Mode mode
-) implements Recipe<TankRecipe.Input> {
+public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, Mode mode)
+        implements Recipe<TankRecipe.Input> {
 
     public enum Mode implements StringRepresentable {
-        FILL(0, "fill"),
-        EMPTY(1, "empty");
+        FILL(0, "fill"), EMPTY(1, "empty");
 
         public static final Codec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
-        public static final IntFunction<Mode> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final IntFunction<Mode> BY_ID = ByIdMap.continuous(key -> key.id, values(),
+                ByIdMap.OutOfBoundsStrategy.ZERO);
         public static final StreamCodec<ByteBuf, Mode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
 
         private final int id;
@@ -57,21 +52,21 @@ public record TankRecipe(
     @Override
     public boolean matches(Input recipeInput, Level pLevel) {
         switch (mode) {
-            case FILL -> {
-                if (recipeInput.fluidTank().drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
-                    return false;
-                }
-
-                return input.test(recipeInput.fillItem);
+        case FILL -> {
+            if (recipeInput.fluidTank().drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
+                return false;
             }
-            case EMPTY -> {
-                if (recipeInput.fluidTank().fill(fluid, IFluidHandler.FluidAction.SIMULATE) <= 0) {
-                    return false;
-                }
 
-                return input.test(recipeInput.emptyItem);
+            return input.test(recipeInput.fillItem);
+        }
+        case EMPTY -> {
+            if (recipeInput.fluidTank().fill(fluid, IFluidHandler.FluidAction.SIMULATE) <= 0) {
+                return false;
             }
-            default -> throw new NotImplementedException();
+
+            return input.test(recipeInput.emptyItem);
+        }
+        default -> throw new NotImplementedException();
         }
     }
 
@@ -110,9 +105,9 @@ public record TankRecipe(
         @Override
         public ItemStack getItem(int slotIndex) {
             return switch (slotIndex) {
-                case 0 -> fillItem;
-                case 1 -> emptyItem;
-                default -> throw new IllegalArgumentException("No item for index " + slotIndex);
+            case 0 -> fillItem;
+            case 1 -> emptyItem;
+            default -> throw new IllegalArgumentException("No item for index " + slotIndex);
             };
         }
 
@@ -124,24 +119,17 @@ public record TankRecipe(
 
     public static class Serializer implements RecipeSerializer<TankRecipe> {
 
-        private static final MapCodec<TankRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(TankRecipe::input),
-            ItemStack.CODEC.fieldOf("output").forGetter(TankRecipe::output),
-            FluidStack.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid),
-            Mode.CODEC.fieldOf("mode").forGetter(TankRecipe::mode)
-        ).apply(instance, TankRecipe::new));
+        private static final MapCodec<TankRecipe> CODEC = RecordCodecBuilder
+                .mapCodec(instance -> instance
+                        .group(Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(TankRecipe::input),
+                                ItemStack.CODEC.fieldOf("output").forGetter(TankRecipe::output),
+                                FluidStack.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid),
+                                Mode.CODEC.fieldOf("mode").forGetter(TankRecipe::mode))
+                        .apply(instance, TankRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, TankRecipe> STREAM_CODEC = StreamCodec.composite(
-            Ingredient.CONTENTS_STREAM_CODEC,
-            TankRecipe::input,
-            ItemStack.STREAM_CODEC,
-            TankRecipe::output,
-            FluidStack.STREAM_CODEC,
-            TankRecipe::fluid,
-            Mode.STREAM_CODEC,
-            TankRecipe::mode,
-            TankRecipe::new
-        );
+                Ingredient.CONTENTS_STREAM_CODEC, TankRecipe::input, ItemStack.STREAM_CODEC, TankRecipe::output,
+                FluidStack.STREAM_CODEC, TankRecipe::fluid, Mode.STREAM_CODEC, TankRecipe::mode, TankRecipe::new);
 
         @Override
         public MapCodec<TankRecipe> codec() {

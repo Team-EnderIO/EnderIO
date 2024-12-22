@@ -1,11 +1,13 @@
 package com.enderio.machines.common.blocks.alloy;
 
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.blocks.base.MachineRecipe;
+import com.enderio.machines.common.init.MachineRecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,9 +21,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
-import java.util.List;
-import java.util.Optional;
-
 public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Input> {
     private final List<SizedIngredient> inputs;
     private final ItemStack output;
@@ -29,7 +28,8 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     private final float experience;
     private final boolean isSmelting;
 
-    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience, boolean isSmelting) {
+    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience,
+            boolean isSmelting) {
         if (isSmelting && inputs.size() > 1) {
             throw new IllegalArgumentException("More than one smelting ingredient given");
         }
@@ -45,7 +45,8 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         this(inputs, output, energy, experience, false);
     }
 
-    private AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience, Optional<Boolean> isSmelting) {
+    private AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience,
+            Optional<Boolean> isSmelting) {
         this(inputs, output, energy, experience, isSmelting.orElse(false));
     }
 
@@ -76,7 +77,8 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY, inputs.stream().map(SizedIngredient::ingredient).toArray(Ingredient[]::new));
+        return NonNullList.of(Ingredient.EMPTY,
+                inputs.stream().map(SizedIngredient::ingredient).toArray(Ingredient[]::new));
     }
 
     @Override
@@ -199,16 +201,19 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     public static class Serializer implements RecipeSerializer<AlloySmeltingRecipe> {
         // Uses Optional for isSmelting to avoid polluting recipe generation.
         public static final MapCodec<AlloySmeltingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-            .group(SizedIngredient.FLAT_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs),
-                ItemStack.CODEC.fieldOf("output").forGetter(AlloySmeltingRecipe::output), Codec.INT.fieldOf("energy").forGetter(AlloySmeltingRecipe::energy),
-                Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience),
-                Codec.BOOL.optionalFieldOf("is_smelting").forGetter(r -> r.isSmelting() ? Optional.of(r.isSmelting()) : Optional.empty()))
-            .apply(inst, AlloySmeltingRecipe::new));
+                .group(SizedIngredient.FLAT_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs),
+                        ItemStack.CODEC.fieldOf("output").forGetter(AlloySmeltingRecipe::output),
+                        Codec.INT.fieldOf("energy").forGetter(AlloySmeltingRecipe::energy),
+                        Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience),
+                        Codec.BOOL.optionalFieldOf("is_smelting")
+                                .forGetter(r -> r.isSmelting() ? Optional.of(r.isSmelting()) : Optional.empty()))
+                .apply(inst, AlloySmeltingRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmeltingRecipe> STREAM_CODEC = StreamCodec.composite(
-            SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AlloySmeltingRecipe::inputs, ItemStack.STREAM_CODEC, AlloySmeltingRecipe::output,
-            ByteBufCodecs.INT, AlloySmeltingRecipe::energy, ByteBufCodecs.FLOAT, AlloySmeltingRecipe::experience, ByteBufCodecs.BOOL,
-            AlloySmeltingRecipe::isSmelting, AlloySmeltingRecipe::new);
+        public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmeltingRecipe> STREAM_CODEC = StreamCodec
+                .composite(SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AlloySmeltingRecipe::inputs,
+                        ItemStack.STREAM_CODEC, AlloySmeltingRecipe::output, ByteBufCodecs.INT,
+                        AlloySmeltingRecipe::energy, ByteBufCodecs.FLOAT, AlloySmeltingRecipe::experience,
+                        ByteBufCodecs.BOOL, AlloySmeltingRecipe::isSmelting, AlloySmeltingRecipe::new);
 
         @Override
         public MapCodec<AlloySmeltingRecipe> codec() {

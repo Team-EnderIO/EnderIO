@@ -5,15 +5,14 @@ import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigOverlay;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
-import com.enderio.machines.common.menu.base.LegacyMachineMenu;
 import com.enderio.machines.common.blocks.base.menu.PreviewMachineSlot;
+import com.enderio.machines.common.menu.base.LegacyMachineMenu;
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
-
-import java.util.List;
 
 @Deprecated(forRemoval = true)
 public abstract class LegacyMachineScreen<T extends LegacyMachineMenu<?>> extends EnderContainerScreen<T> {
@@ -25,9 +24,9 @@ public abstract class LegacyMachineScreen<T extends LegacyMachineMenu<?>> extend
 
     protected IOConfigOverlay addIOConfigOverlay(int layer, int x, int y, int width, int height) {
         // TODO: getConfigurables on MachineMenu.
-        List<BlockPos> configurables = menu.getBlockEntity() instanceof MultiConfigurable multiConfigurable ?
-            multiConfigurable.getConfigurables() :
-            List.of(menu.getBlockEntity().getBlockPos());
+        List<BlockPos> configurables = menu.getBlockEntity() instanceof MultiConfigurable multiConfigurable
+                ? multiConfigurable.getConfigurables()
+                : List.of(menu.getBlockEntity().getBlockPos());
 
         var widget = addOverlayRenderable(layer, new IOConfigOverlay(x, y, width, height, configurables));
         addRestorableState("io_config", widget);

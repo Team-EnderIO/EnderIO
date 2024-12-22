@@ -24,25 +24,32 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 // TODO: No longer lights in the inventory/hand like other machines...
 public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
-    public static final FluidTankBEWLR INSTANCE = new FluidTankBEWLR(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
+    public static final FluidTankBEWLR INSTANCE = new FluidTankBEWLR(
+            Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
 
     public FluidTankBEWLR(BlockEntityRenderDispatcher blockEntityRenderDispatcher, EntityModelSet entityModelSet) {
         super(blockEntityRenderDispatcher, entityModelSet);
     }
 
     @Override
-    public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+    public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack,
+            MultiBufferSource buffer, int packedLight, int packedOverlay) {
         // Get the model for the fluid tank block
-        BakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(BuiltInRegistries.ITEM.getKey(stack.getItem()), "facing=north"));
+        BakedModel model = Minecraft.getInstance()
+                .getModelManager()
+                .getModel(new ModelResourceLocation(BuiltInRegistries.ITEM.getKey(stack.getItem()), "facing=north"));
         poseStack.pushPose();
 
         // Render the main model
-        Minecraft.getInstance().getItemRenderer().renderModelLists(model, stack, packedLight, packedOverlay, poseStack, buffer.getBuffer(RenderType.cutout()));
+        Minecraft.getInstance()
+                .getItemRenderer()
+                .renderModelLists(model, stack, packedLight, packedOverlay, poseStack,
+                        buffer.getBuffer(RenderType.cutout()));
 
         // Read the fluid from the NBT, if it has fluid, then we render it.
         IFluidHandlerItem fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler != null) {
-            FluidStack fluid = fluidHandler.getFluidInTank(0); //Only one tank present
+            FluidStack fluid = fluidHandler.getFluidInTank(0); // Only one tank present
             if (!fluid.isEmpty()) {
                 VertexConsumer fluidBuffer = buffer.getBuffer(Sheets.translucentCullBlockSheet());
 
@@ -53,7 +60,8 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
 
                 PoseStack.Pose pose = poseStack.last();
                 IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid.getFluid());
-                FluidTankBER.renderFluid(pose, fluidBuffer, fluid.getFluid(), fluid.getAmount() / (float) capacity, props.getTintColor(), packedLight);
+                FluidTankBER.renderFluid(pose, fluidBuffer, fluid.getFluid(), fluid.getAmount() / (float) capacity,
+                        props.getTintColor(), packedLight);
             }
         }
 

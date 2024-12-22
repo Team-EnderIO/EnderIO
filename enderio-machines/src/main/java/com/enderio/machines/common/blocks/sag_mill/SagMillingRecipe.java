@@ -3,13 +3,18 @@ package com.enderio.machines.common.blocks.sag_mill;
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.util.TagUtil;
-import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.blocks.base.MachineRecipe;
+import com.enderio.machines.common.init.MachineRecipes;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.function.IntFunction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -28,18 +33,9 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.function.IntFunction;
+public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int energy, BonusType bonusType)
+        implements MachineRecipe<SagMillingRecipe.Input> {
 
-public record SagMillingRecipe(
-    Ingredient input,
-    List<OutputItem> outputs,
-    int energy,
-    BonusType bonusType
-) implements MachineRecipe<SagMillingRecipe.Input> {
     private static final Random RANDOM = new Random();
 
     /**
@@ -137,12 +133,11 @@ public record SagMillingRecipe(
     }
 
     public enum BonusType implements StringRepresentable {
-        NONE(0, false, false),
-        MULTIPLY_OUTPUT(1, true, true),
-        CHANCE_ONLY(2, false, true);
+        NONE(0, false, false), MULTIPLY_OUTPUT(1, true, true), CHANCE_ONLY(2, false, true);
 
         public static final Codec<BonusType> CODEC = StringRepresentable.fromEnum(BonusType::values);
-        public static final IntFunction<BonusType> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final IntFunction<BonusType> BY_ID = ByIdMap.continuous(key -> key.id, values(),
+                ByIdMap.OutOfBoundsStrategy.ZERO);
         public static final StreamCodec<ByteBuf, BonusType> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
 
         private final int id;
@@ -173,26 +168,17 @@ public record SagMillingRecipe(
         }
     }
 
-    public record OutputItem(
-        Either<ItemStack, SizedTagOutput> output,
-        float chance,
-        boolean isOptional
-    ) {
+    public record OutputItem(Either<ItemStack, SizedTagOutput> output, float chance, boolean isOptional) {
+
         private static final Codec<OutputItem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.either(ItemStack.CODEC, SizedTagOutput.CODEC).fieldOf("item").forGetter(OutputItem::output),
-            Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter(OutputItem::chance),
-            Codec.BOOL.optionalFieldOf("optional", false).forGetter(OutputItem::isOptional)
-        ).apply(instance, OutputItem::new));
+                Codec.either(ItemStack.CODEC, SizedTagOutput.CODEC).fieldOf("item").forGetter(OutputItem::output),
+                Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter(OutputItem::chance),
+                Codec.BOOL.optionalFieldOf("optional", false).forGetter(OutputItem::isOptional))
+                .apply(instance, OutputItem::new));
 
         private static final StreamCodec<RegistryFriendlyByteBuf, OutputItem> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.either(ItemStack.STREAM_CODEC, SizedTagOutput.STREAM_CODEC),
-            OutputItem::output,
-            ByteBufCodecs.FLOAT,
-            OutputItem::chance,
-            ByteBufCodecs.BOOL,
-            OutputItem::isOptional,
-            OutputItem::new
-        );
+                ByteBufCodecs.either(ItemStack.STREAM_CODEC, SizedTagOutput.STREAM_CODEC), OutputItem::output,
+                ByteBufCodecs.FLOAT, OutputItem::chance, ByteBufCodecs.BOOL, OutputItem::isOptional, OutputItem::new);
 
         public static OutputItem of(Item item, int count, float chance, boolean optional) {
             return of(new ItemStack(item, count), chance, optional);
@@ -215,24 +201,19 @@ public record SagMillingRecipe(
         }
 
         public record SizedTagOutput(TagKey<Item> itemTag, int count) {
-            private static final Codec<SizedTagOutput> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                TagKey.codec(Registries.ITEM).fieldOf("tag").forGetter(SizedTagOutput::itemTag),
-                Codec.intRange(0, Integer.MAX_VALUE).fieldOf("count").forGetter(SizedTagOutput::count)
-            ).apply(instance, SizedTagOutput::new));
+            private static final Codec<SizedTagOutput> CODEC = RecordCodecBuilder.create(instance -> instance
+                    .group(TagKey.codec(Registries.ITEM).fieldOf("tag").forGetter(SizedTagOutput::itemTag),
+                            Codec.intRange(0, Integer.MAX_VALUE).fieldOf("count").forGetter(SizedTagOutput::count))
+                    .apply(instance, SizedTagOutput::new));
 
-            private static final StreamCodec<RegistryFriendlyByteBuf, SizedTagOutput> STREAM_CODEC = StreamCodec.composite(
-                ResourceLocation.STREAM_CODEC
-                    .map(loc -> TagKey.create(Registries.ITEM, loc), TagKey::location),
-                SizedTagOutput::itemTag,
-                ByteBufCodecs.INT,
-                SizedTagOutput::count,
-                SizedTagOutput::new
-            );
+            private static final StreamCodec<RegistryFriendlyByteBuf, SizedTagOutput> STREAM_CODEC = StreamCodec
+                    .composite(
+                            ResourceLocation.STREAM_CODEC.map(loc -> TagKey.create(Registries.ITEM, loc),
+                                    TagKey::location),
+                            SizedTagOutput::itemTag, ByteBufCodecs.INT, SizedTagOutput::count, SizedTagOutput::new);
 
             public ItemStack getItemStack() {
-                return TagUtil.getOptionalItem(itemTag)
-                    .map(ItemStack::new)
-                    .orElse(ItemStack.EMPTY);
+                return TagUtil.getOptionalItem(itemTag).map(ItemStack::new).orElse(ItemStack.EMPTY);
             }
         }
     }
@@ -256,24 +237,19 @@ public record SagMillingRecipe(
 
     public static class Serializer implements RecipeSerializer<SagMillingRecipe> {
 
-        public static final MapCodec<SagMillingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(SagMillingRecipe::input),
-            OutputItem.CODEC.listOf().fieldOf("outputs").forGetter(SagMillingRecipe::outputs),
-            Codec.INT.fieldOf("energy").forGetter(SagMillingRecipe::energy),
-            BonusType.CODEC.optionalFieldOf("bonus", BonusType.MULTIPLY_OUTPUT).forGetter(SagMillingRecipe::bonusType)
-        ).apply(instance, SagMillingRecipe::new));
+        public static final MapCodec<SagMillingRecipe> CODEC = RecordCodecBuilder
+                .mapCodec(instance -> instance
+                        .group(Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(SagMillingRecipe::input),
+                                OutputItem.CODEC.listOf().fieldOf("outputs").forGetter(SagMillingRecipe::outputs),
+                                Codec.INT.fieldOf("energy").forGetter(SagMillingRecipe::energy),
+                                BonusType.CODEC.optionalFieldOf("bonus", BonusType.MULTIPLY_OUTPUT)
+                                        .forGetter(SagMillingRecipe::bonusType))
+                        .apply(instance, SagMillingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, SagMillingRecipe> STREAM_CODEC = StreamCodec.composite(
-            Ingredient.CONTENTS_STREAM_CODEC,
-            SagMillingRecipe::input,
-            OutputItem.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            SagMillingRecipe::outputs,
-            ByteBufCodecs.INT,
-            SagMillingRecipe::energy,
-            BonusType.STREAM_CODEC,
-            SagMillingRecipe::bonusType,
-            SagMillingRecipe::new
-        );
+                Ingredient.CONTENTS_STREAM_CODEC, SagMillingRecipe::input,
+                OutputItem.STREAM_CODEC.apply(ByteBufCodecs.list()), SagMillingRecipe::outputs, ByteBufCodecs.INT,
+                SagMillingRecipe::energy, BonusType.STREAM_CODEC, SagMillingRecipe::bonusType, SagMillingRecipe::new);
 
         @Override
         public MapCodec<SagMillingRecipe> codec() {

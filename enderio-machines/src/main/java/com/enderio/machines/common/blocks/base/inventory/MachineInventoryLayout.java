@@ -1,12 +1,11 @@
 package com.enderio.machines.common.blocks.base.inventory;
 
 import com.enderio.base.common.init.EIODataComponents;
-import net.minecraft.world.item.ItemStack;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.UnaryOperator;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Describes the slot configuration of an inventory.
@@ -135,7 +134,7 @@ public class MachineInventoryLayout {
          * This slot can be inserted and extracted via gui but only inserted to externally.
          */
         public Builder inputSlot() {
-            return inputSlot(1, (i,s) -> true);
+            return inputSlot(1, (i, s) -> true);
         }
 
         /**
@@ -145,7 +144,7 @@ public class MachineInventoryLayout {
          * @param count The number of slots to add.
          */
         public Builder inputSlot(int count) {
-            return inputSlot(count, (i,s) -> true);
+            return inputSlot(count, (i, s) -> true);
         }
 
         /**
@@ -179,7 +178,7 @@ public class MachineInventoryLayout {
          * This slot can only be extracted from via gui and externally.
          */
         public Builder outputSlot() {
-            return outputSlot(1, (i,s) -> true);
+            return outputSlot(1, (i, s) -> true);
         }
 
         /**
@@ -189,7 +188,7 @@ public class MachineInventoryLayout {
          * @param count The number of slots to add.
          */
         public Builder outputSlot(int count) {
-            return outputSlot(count, (i,s) -> true);
+            return outputSlot(count, (i, s) -> true);
         }
 
         /**
@@ -223,7 +222,7 @@ public class MachineInventoryLayout {
          * This slot can be inserted to or extracted from via gui and externally.
          */
         public Builder storageSlot() {
-            return storageSlot(1, (i,s) -> true);
+            return storageSlot(1, (i, s) -> true);
         }
 
         /**
@@ -233,7 +232,7 @@ public class MachineInventoryLayout {
          * @param count The number of slots to add.
          */
         public Builder storageSlot(int count) {
-            return storageSlot(count, (i,s) -> true);
+            return storageSlot(count, (i, s) -> true);
         }
 
         /**
@@ -256,7 +255,12 @@ public class MachineInventoryLayout {
         public Builder storageSlot(int count, BiPredicate<Integer, ItemStack> filter) {
             SlotAdditionInfo info = new SlotAdditionInfo(slots.size(), count);
             for (int i = 0; i < count; i++) {
-                slot(slot -> slot.guiInsert().guiExtract().insert().extract().filter(filter).stackLimit(currentStackLimit));
+                slot(slot -> slot.guiInsert()
+                        .guiExtract()
+                        .insert()
+                        .extract()
+                        .filter(filter)
+                        .stackLimit(currentStackLimit));
             }
             additionInfo = info;
             return this;
@@ -267,7 +271,7 @@ public class MachineInventoryLayout {
          * This slot can only be interacted with via gui.
          */
         public Builder ghostSlot() {
-            return ghostSlot(1, (i,s) -> true);
+            return ghostSlot(1, (i, s) -> true);
         }
 
         /**
@@ -277,7 +281,7 @@ public class MachineInventoryLayout {
          * @param count The number of slots to add.
          */
         public Builder ghostSlot(int count) {
-            return ghostSlot(count, (i,s) -> true);
+            return ghostSlot(count, (i, s) -> true);
         }
 
         /**
@@ -335,7 +339,10 @@ public class MachineInventoryLayout {
                 throw new IllegalStateException("A machine inventory may not have more than one capacitor slot!");
             }
 
-            slot(slot -> slot.guiInsert().guiExtract().filter((i, s) -> s.has(EIODataComponents.CAPACITOR_DATA)).stackLimit(1));
+            slot(slot -> slot.guiInsert()
+                    .guiExtract()
+                    .filter((i, s) -> s.has(EIODataComponents.CAPACITOR_DATA))
+                    .stackLimit(1));
             capacitorSlot = slots.size() - 1;
             return this;
         }
@@ -374,9 +381,10 @@ public class MachineInventoryLayout {
             private boolean guiExtract;
             private int stackLimit = 64;
 
-            private BiPredicate<Integer, ItemStack> filter = (i,s) -> true;
+            private BiPredicate<Integer, ItemStack> filter = (i, s) -> true;
 
-            private SlotBuilder() {}
+            private SlotBuilder() {
+            }
 
             /**
              * Enable external insertion.
@@ -432,6 +440,10 @@ public class MachineInventoryLayout {
         }
     }
 
-    private record SlotAdditionInfo(int index, int size) {}
-    private record SlotConfig(boolean insert, boolean extract, boolean guiInsert, boolean guiExtract, int stackLimit, BiPredicate<Integer, ItemStack> filter) {}
+    private record SlotAdditionInfo(int index, int size) {
+    }
+
+    private record SlotConfig(boolean insert, boolean extract, boolean guiInsert, boolean guiExtract, int stackLimit,
+            BiPredicate<Integer, ItemStack> filter) {
+    }
 }

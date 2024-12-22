@@ -1,8 +1,8 @@
 package com.enderio.machines.mixin;
 
 import com.enderio.EnderIOBase;
-import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

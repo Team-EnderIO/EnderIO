@@ -2,8 +2,8 @@ package com.enderio.machines.client.gui.widget;
 
 import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import com.enderio.machines.client.gui.icon.MachineEnumIcons;
-import com.enderio.machines.common.lang.MachineEnumLang;
 import com.enderio.machines.common.blocks.alloy.AlloySmelterMode;
+import com.enderio.machines.common.lang.MachineEnumLang;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;

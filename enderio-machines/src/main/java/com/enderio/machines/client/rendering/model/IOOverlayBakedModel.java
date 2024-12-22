@@ -6,6 +6,11 @@ import com.enderio.base.api.io.IOMode;
 import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.function.Function;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -30,12 +35,6 @@ import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.function.Function;
-
 public class IOOverlayBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEX_DISABLED = EnderIOBase.loc("block/overlay/disabled");
     public static final ResourceLocation TEX_PULL = EnderIOBase.loc("block/overlay/pull");
@@ -52,11 +51,11 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
 
     private TextureAtlasSprite getTexture(IOMode state) {
         ResourceLocation tex = switch (state) {
-            case NONE -> MissingTextureAtlasSprite.getLocation();
-            case PUSH -> TEX_PUSH;
-            case PULL -> TEX_PULL;
-            case BOTH -> TEX_PUSH_PULL;
-            case DISABLED -> TEX_DISABLED;
+        case NONE -> MissingTextureAtlasSprite.getLocation();
+        case PUSH -> TEX_PUSH;
+        case PULL -> TEX_PULL;
+        case BOTH -> TEX_PUSH_PULL;
+        case DISABLED -> TEX_DISABLED;
         };
 
         return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(tex);
@@ -69,7 +68,8 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, @Nullable RenderType renderType) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand,
+            ModelData extraData, @Nullable RenderType renderType) {
         if (extraData.has(LegacyMachineBlockEntity.IO_CONFIG_PROPERTY)) {
             // Get io config from the block entity.
             IOConfigurable config = extraData.get(LegacyMachineBlockEntity.IO_CONFIG_PROPERTY);
@@ -77,7 +77,8 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
                 // Build a list of quads
                 List<BakedQuad> quads = new ArrayList<>();
 
-                // Get all states for each direction. If its not "None" then we render an overlay quad.
+                // Get all states for each direction. If its not "None" then we render an
+                // overlay quad.
                 for (Direction dir : Direction.values()) {
                     IOMode mode = config.getIOMode(dir);
                     if (mode != IOMode.NONE) {
@@ -130,8 +131,8 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
 
     public static class Geometry implements IUnbakedGeometry<Geometry> {
         @Override
-        public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState,
-            ItemOverrides overrides) {
+        public BakedModel bake(IGeometryBakingContext context, ModelBaker baker,
+                Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides) {
             return new IOOverlayBakedModel(modelState);
         }
     }

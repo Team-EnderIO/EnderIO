@@ -1,12 +1,13 @@
 package com.enderio.machines.common.blocks.slicer;
 
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.blocks.base.MachineRecipe;
+import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.utility.ValidatingListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.List;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,13 +20,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
-
-public record SlicingRecipe(
-    ItemStack output,
-    List<Ingredient> inputs,
-    int energy
-) implements MachineRecipe<SlicingRecipe.Input> {
+public record SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energy)
+        implements MachineRecipe<SlicingRecipe.Input> {
 
     @Override
     public int getBaseEnergyCost() {
@@ -85,21 +81,17 @@ public record SlicingRecipe(
     }
 
     public static class Serializer implements RecipeSerializer<SlicingRecipe> {
-        public static final MapCodec<SlicingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemStack.CODEC.fieldOf("output").forGetter(SlicingRecipe::output),
-            new ValidatingListCodec<>(Ingredient.LIST_CODEC, 6).fieldOf("inputs").forGetter(SlicingRecipe::inputs),
-            Codec.INT.fieldOf("energy").forGetter(SlicingRecipe::energy)
-	    ).apply(instance, SlicingRecipe::new));
+        public static final MapCodec<SlicingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+                .group(ItemStack.CODEC.fieldOf("output").forGetter(SlicingRecipe::output),
+                        new ValidatingListCodec<>(Ingredient.LIST_CODEC, 6).fieldOf("inputs")
+                                .forGetter(SlicingRecipe::inputs),
+                        Codec.INT.fieldOf("energy").forGetter(SlicingRecipe::energy))
+                .apply(instance, SlicingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, SlicingRecipe> STREAM_CODEC = StreamCodec.composite(
-            ItemStack.STREAM_CODEC,
-            SlicingRecipe::output,
-            Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()),
-            SlicingRecipe::inputs,
-            ByteBufCodecs.INT,
-            SlicingRecipe::energy,
-            SlicingRecipe::new
-        );
+                ItemStack.STREAM_CODEC, SlicingRecipe::output,
+                Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), SlicingRecipe::inputs, ByteBufCodecs.INT,
+                SlicingRecipe::energy, SlicingRecipe::new);
 
         @Override
         public MapCodec<SlicingRecipe> codec() {

@@ -1,10 +1,10 @@
 package com.enderio.machines.common.blocks.base.task;
 
-import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
+import com.enderio.machines.common.blocks.base.MachineRecipe;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
 import com.enderio.machines.common.blocks.base.inventory.MultiSlotAccess;
 import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.blocks.base.MachineRecipe;
+import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;

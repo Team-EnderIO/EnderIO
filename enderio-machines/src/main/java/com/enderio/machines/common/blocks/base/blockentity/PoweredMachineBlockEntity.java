@@ -8,10 +8,10 @@ import com.enderio.base.common.blockentity.MachineInstallable;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.blocks.base.state.MachineState;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.blocks.base.energy.PoweredMachineEnergyStorage;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
+import com.enderio.machines.common.blocks.base.state.MachineState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -46,8 +46,8 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     private final PoweredMachineEnergyStorage energyStorage;
 
     public PoweredMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
-                                     boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
-                                     CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
+            boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
+            CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
         super(type, worldPosition, blockState, isIoConfigMutable);
 
         this.capacitorSupport = capacitorSupport;

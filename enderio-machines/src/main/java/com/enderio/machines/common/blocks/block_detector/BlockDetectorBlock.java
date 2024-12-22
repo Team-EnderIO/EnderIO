@@ -22,7 +22,8 @@ public class BlockDetectorBlock extends DirectionalBlock {
 
     public BlockDetectorBlock(Properties p_55926_) {
         super(p_55926_);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(POWERED, Boolean.valueOf(false)));
+        this.registerDefaultState(
+                this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(POWERED, Boolean.valueOf(false)));
     }
 
     @Override
@@ -37,7 +38,8 @@ public class BlockDetectorBlock extends DirectionalBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        return this.defaultBlockState().setValue(FACING, pContext.getNearestLookingDirection().getOpposite().getOpposite());
+        return this.defaultBlockState()
+                .setValue(FACING, pContext.getNearestLookingDirection().getOpposite().getOpposite());
     }
 
     @Override
@@ -51,7 +53,8 @@ public class BlockDetectorBlock extends DirectionalBlock {
     }
 
     @Override
-    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
+    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos,
+            @Nullable Direction direction) {
         return state.getValue(FACING) == direction;
     }
 
@@ -80,8 +83,8 @@ public class BlockDetectorBlock extends DirectionalBlock {
     }
 
     @Override
-    protected BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos,
-        BlockPos pNeighborPos) {
+    protected BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
+            LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
         if (pState.getValue(FACING) == pDirection) {
             pLevel.blockUpdated(pPos, pState.getBlock());
         }

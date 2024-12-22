@@ -1,12 +1,12 @@
 package com.enderio.machines.common.blocks.soul_binder;
 
 import com.enderio.core.common.network.menu.FloatSyncSlot;
-import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.blocks.base.fluid.FluidStorageInfo;
 import com.enderio.machines.common.blocks.base.fluid.FluidStorageSyncSlot;
 import com.enderio.machines.common.blocks.base.menu.MachineSlot;
 import com.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
+import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -23,11 +23,13 @@ public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));
-        tankSyncSlot = addSyncSlot(FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getFluidTank())));
+        tankSyncSlot = addSyncSlot(
+                FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getFluidTank())));
     }
 
     public SoulBinderMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.SOUL_BINDER.get(), MachineBlockEntities.SOUL_BINDER.get(), containerId, playerInventory, buf);
+        super(MachineMenus.SOUL_BINDER.get(), MachineBlockEntities.SOUL_BINDER.get(), containerId, playerInventory,
+                buf);
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.standalone());
@@ -42,7 +44,7 @@ public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
         addSlot(new MachineSlot(getMachineInventory(), SoulBinderBlockEntity.OUTPUT.get(0), 112, 34));
         addSlot(new MachineSlot(getMachineInventory(), SoulBinderBlockEntity.OUTPUT.get(1), 134, 34));
 
-        addPlayerInventorySlots(8,84);
+        addPlayerInventorySlots(8, 84);
     }
 
     public float getCraftingProgress() {
@@ -55,7 +57,7 @@ public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
 
     public int getExperience() {
         // TODO: This should be done in the menu probably?
-        //       We can sync the recipe info over a sync slot if we must.
+        // We can sync the recipe info over a sync slot if we must.
         return getBlockEntity().getClientExp();
     }
 }

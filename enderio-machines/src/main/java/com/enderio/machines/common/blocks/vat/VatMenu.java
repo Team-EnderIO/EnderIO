@@ -2,13 +2,13 @@ package com.enderio.machines.common.blocks.vat;
 
 import com.enderio.core.common.network.menu.FloatSyncSlot;
 import com.enderio.core.common.network.menu.RecipeSyncSlot;
-import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.blocks.base.fluid.FluidStorageInfo;
 import com.enderio.machines.common.blocks.base.fluid.FluidStorageSyncSlot;
 import com.enderio.machines.common.blocks.base.menu.MachineMenu;
 import com.enderio.machines.common.blocks.base.menu.MachineSlot;
+import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineMenus;
+import com.enderio.machines.common.init.MachineRecipes;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

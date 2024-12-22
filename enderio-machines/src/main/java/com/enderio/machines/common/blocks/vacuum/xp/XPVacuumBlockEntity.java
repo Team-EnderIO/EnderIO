@@ -1,8 +1,9 @@
 package com.enderio.machines.common.blocks.vacuum.xp;
 
+import static com.enderio.base.common.util.ExperienceUtil.EXP_TO_FLUID;
+
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOFluids;
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blocks.vacuum.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -24,12 +25,11 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
-import static com.enderio.base.common.util.ExperienceUtil.EXP_TO_FLUID;
-
 public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb> implements FluidTankUser {
 
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
+
     public XPVacuumBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(MachineBlockEntities.XP_VACUUM.get(), pWorldPosition, pBlockState, ExperienceOrb.class);
         fluidHandler = createFluidHandler();
@@ -47,7 +47,8 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
     @Override
     public void handleEntity(ExperienceOrb xpe) {
-        int filled = TANK.fill(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), xpe.getValue() * EXP_TO_FLUID), FluidAction.EXECUTE);
+        int filled = TANK.fill(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), xpe.getValue() * EXP_TO_FLUID),
+                FluidAction.EXECUTE);
         if (filled == xpe.getValue() * EXP_TO_FLUID) {
             xpe.discard();
         } else {

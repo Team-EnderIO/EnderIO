@@ -4,7 +4,6 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.EIOCommonWidgets;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.machines.client.gui.screen.base.LegacyMachineScreen;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.FluidStackStaticWidget;
 import com.enderio.machines.common.blocks.vacuum.xp.XPVacuumMenu;
@@ -40,20 +39,17 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
 
         addRenderableOnly(new FluidStackStaticWidget(leftPos + 27, topPos + 22, 32, 32, menu::getFluidTank));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6, menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(EIOCommonWidgets.createRange(
-            leftPos + imageWidth - 6 - 16,
-            topPos + 34,
-            EIOLang.HIDE_RANGE,
-            EIOLang.SHOW_RANGE,
-            menu::isRangeVisible,
-            (ignored) -> handleButtonPress(XPVacuumMenu.VISIBILITY_BUTTON_ID)));
+        addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 34, EIOLang.HIDE_RANGE,
+                EIOLang.SHOW_RANGE, menu::isRangeVisible,
+                (ignored) -> handleButtonPress(XPVacuumMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 34, 8, 8, PLUS_SPRITES,
-            (b) -> handleButtonPress(XPVacuumMenu.INCREASE_BUTTON_ID)));
+                (b) -> handleButtonPress(XPVacuumMenu.INCREASE_BUTTON_ID)));
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 42, 8, 8, MINUS_SPRITES,
-            (b) -> handleButtonPress(XPVacuumMenu.DECREASE_BUTTON_ID)));
+                (b) -> handleButtonPress(XPVacuumMenu.DECREASE_BUTTON_ID)));
     }
 
     @Override
@@ -63,8 +59,10 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        guiGraphics.drawString(font, EIOLang.RANGE, this.imageWidth - 6 - this.font.width(EIOLang.RANGE), 24, 4210752, false);
-        guiGraphics.drawString(font, menu.getRange() + "", leftPos + imageWidth - 6 - 16 - 2 - 8 - 10, topPos + 38, 0, false);
+        guiGraphics.drawString(font, EIOLang.RANGE, this.imageWidth - 6 - this.font.width(EIOLang.RANGE), 24, 4210752,
+                false);
+        guiGraphics.drawString(font, menu.getRange() + "", leftPos + imageWidth - 6 - 16 - 2 - 8 - 10, topPos + 38, 0,
+                false);
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }
 

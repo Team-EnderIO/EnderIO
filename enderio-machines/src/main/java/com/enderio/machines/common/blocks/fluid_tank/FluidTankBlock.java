@@ -1,9 +1,7 @@
 package com.enderio.machines.common.blocks.fluid_tank;
 
 import com.enderio.machines.common.blocks.base.block.MachineBlock;
-import com.enderio.machines.common.blocks.base.block.ProgressMachineBlock;
-import com.enderio.machines.common.blocks.vat.VatBlockEntity;
-import com.enderio.regilite.holder.RegiliteBlockEntity;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -15,10 +13,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-import java.util.function.Supplier;
-
 public class FluidTankBlock extends MachineBlock<FluidTankBlockEntity> {
-    public FluidTankBlock(Supplier<BlockEntityType<? extends FluidTankBlockEntity>> blockEntityType, Properties properties) {
+    public FluidTankBlock(Supplier<BlockEntityType<? extends FluidTankBlockEntity>> blockEntityType,
+            Properties properties) {
         super(blockEntityType, properties);
     }
 

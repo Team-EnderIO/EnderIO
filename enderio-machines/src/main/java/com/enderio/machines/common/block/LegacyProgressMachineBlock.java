@@ -16,9 +16,11 @@ public class LegacyProgressMachineBlock extends LegacyMachineBlock {
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public LegacyProgressMachineBlock(RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntityType, Properties properties) {
+    public LegacyProgressMachineBlock(RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntityType,
+            Properties properties) {
         super(blockEntityType, properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
+        this.registerDefaultState(
+                this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
     }
 
     @Override

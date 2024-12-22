@@ -1,8 +1,8 @@
 package com.enderio.machines.common.blocks.powered_spawner;
 
+import com.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

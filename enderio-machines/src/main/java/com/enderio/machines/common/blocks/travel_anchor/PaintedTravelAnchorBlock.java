@@ -2,6 +2,7 @@ package com.enderio.machines.common.blocks.travel_anchor;
 
 import com.enderio.base.common.paint.block.PaintedBlock;
 import com.enderio.machines.common.init.MachineBlockEntities;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -15,9 +16,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
-public class PaintedTravelAnchorBlock extends TravelAnchorBlock<PaintedTravelAnchorBlockEntity> implements PaintedBlock {
+public class PaintedTravelAnchorBlock extends TravelAnchorBlock<PaintedTravelAnchorBlockEntity>
+        implements PaintedBlock {
 
     public PaintedTravelAnchorBlock(Properties props) {
         super(MachineBlockEntities.PAINTED_TRAVEL_ANCHOR::get, props);
@@ -30,13 +30,14 @@ public class PaintedTravelAnchorBlock extends TravelAnchorBlock<PaintedTravelAnc
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos,
+            Player player) {
         return getPaintedStack(level, pos, this);
     }
 
     @Override
-    public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side, @Nullable BlockState queryState,
-        @Nullable BlockPos queryPos) {
+    public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side,
+            @Nullable BlockState queryState, @Nullable BlockPos queryPos) {
 
         if (level.getBlockEntity(pos) instanceof PaintedTravelAnchorBlockEntity painted) {
             Optional<Block> paint = painted.getPrimaryPaint();

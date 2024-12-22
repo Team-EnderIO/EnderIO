@@ -1,5 +1,7 @@
 package com.enderio.machines.common.blocks.soul_binder;
 
+import static com.enderio.base.common.util.ExperienceUtil.EXP_TO_FLUID;
+
 import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
@@ -12,6 +14,10 @@ import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
+import com.enderio.machines.common.blocks.base.inventory.MultiSlotAccess;
+import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
+import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.blocks.base.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blocks.base.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -21,11 +27,8 @@ import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
-import com.enderio.machines.common.blocks.base.inventory.MultiSlotAccess;
-import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.recipe.RecipeCaches;
+import java.util.List;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -45,14 +48,12 @@ import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-import static com.enderio.base.common.util.ExperienceUtil.EXP_TO_FLUID;
-
 public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser {
 
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_BINDER_CAPACITY);
-    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.SOUL_BINDER_USAGE);
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+            MachinesConfig.COMMON.ENERGY.SOUL_BINDER_CAPACITY);
+    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
+            MachinesConfig.COMMON.ENERGY.SOUL_BINDER_USAGE);
 
     public static final SingleSlotAccess INPUT_SOUL = new SingleSlotAccess();
     public static final SingleSlotAccess INPUT_OTHER = new SingleSlotAccess();
@@ -67,12 +68,13 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Input> craftingTaskHost;
 
     public SoulBinderBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.SOUL_BINDER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, CAPACITY, USAGE);
+        super(MachineBlockEntities.SOUL_BINDER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+                EnergyIOMode.Input, CAPACITY, USAGE);
         fluidHandler = createFluidHandler();
 
         // Create the crafting task host
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SOUL_BINDING.type().get(),
-            this::createTask, this::createRecipeInput);
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy,
+                MachineRecipes.SOUL_BINDING.type().get(), this::createTask, this::createRecipeInput);
     }
 
     @Override
@@ -100,16 +102,16 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     @Override
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .setStackLimit(1)
-            .inputSlot((slot, stack) -> stack.is(EIOItems.FILLED_SOUL_VIAL.get()))
-            .slotAccess(INPUT_SOUL)
-            .inputSlot(this::isValidInput)
-            .slotAccess(INPUT_OTHER)
-            .setStackLimit(64)
-            .outputSlot(2)
-            .slotAccess(OUTPUT)
-            .capacitor()
-            .build();
+                .setStackLimit(1)
+                .inputSlot((slot, stack) -> stack.is(EIOItems.FILLED_SOUL_VIAL.get()))
+                .slotAccess(INPUT_SOUL)
+                .inputSlot(this::isValidInput)
+                .slotAccess(INPUT_OTHER)
+                .setStackLimit(64)
+                .outputSlot(2)
+                .slotAccess(OUTPUT)
+                .capacitor()
+                .build();
     }
 
     private boolean isValidInput(int index, ItemStack stack) {
@@ -122,25 +124,22 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
         craftingTaskHost.newTaskAvailable();
 
         if (level != null && level.isClientSide) {
-            clientRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level).orElse(null);
+            clientRecipe = level.getRecipeManager()
+                    .getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
+                    .orElse(null);
         }
     }
 
     private SoulBindingRecipe.Input createRecipeInput() {
-        return new SoulBindingRecipe.Input(
-            INPUT_SOUL.getItemStack(getInventory()),
-            INPUT_OTHER.getItemStack(getInventory()),
-            TANK.getFluid(getFluidHandler())
-        );
+        return new SoulBindingRecipe.Input(INPUT_SOUL.getItemStack(getInventory()),
+                INPUT_OTHER.getItemStack(getInventory()), TANK.getFluid(getFluidHandler()));
     }
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     private SoulBindingRecipe.Input createFakeRecipeInput() {
-        return new SoulBindingRecipe.Input(
-            INPUT_SOUL.getItemStack(getInventory()),
-            INPUT_OTHER.getItemStack(getInventory()),
-            new FluidStack(EIOFluids.XP_JUICE.getSource(), Integer.MAX_VALUE)
-        );
+        return new SoulBindingRecipe.Input(INPUT_SOUL.getItemStack(getInventory()),
+                INPUT_OTHER.getItemStack(getInventory()),
+                new FluidStack(EIOFluids.XP_JUICE.getSource(), Integer.MAX_VALUE));
     }
 
     // endregion
@@ -149,16 +148,17 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     public int getClientExp() {
         // This should always set a valid recipe.
         if (level != null && clientRecipe == null && hasValidRecipe()) {
-            clientRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level).orElse(null);
+            clientRecipe = level.getRecipeManager()
+                    .getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
+                    .orElse(null);
         }
 
         return clientRecipe != null ? clientRecipe.value().experience() : 0;
     }
 
     private boolean hasValidRecipe() {
-        return RecipeCaches.SOUL_BINDING.hasRecipe(List.of(
-            INPUT_SOUL.getItemStack(getInventory()),
-            INPUT_OTHER.getItemStack(getInventory())));
+        return RecipeCaches.SOUL_BINDING
+                .hasRecipe(List.of(INPUT_SOUL.getItemStack(getInventory()), INPUT_OTHER.getItemStack(getInventory())));
     }
 
     // region Fluid Storage
@@ -217,8 +217,8 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
-    protected PoweredCraftingMachineTask<SoulBindingRecipe, SoulBindingRecipe.Input> createTask(Level level, SoulBindingRecipe.Input container,
-        @Nullable RecipeHolder<SoulBindingRecipe> recipe) {
+    protected PoweredCraftingMachineTask<SoulBindingRecipe, SoulBindingRecipe.Input> createTask(Level level,
+            SoulBindingRecipe.Input container, @Nullable RecipeHolder<SoulBindingRecipe> recipe) {
         return new PoweredCraftingMachineTask<>(level, getInventory(), getEnergyStorage(), container, OUTPUT, recipe) {
 
             @Override
@@ -227,8 +227,11 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
                 INPUT_OTHER.getItemStack(getInventory()).shrink(1);
 
                 MachineFluidHandler handler = getFluidHandler();
-                int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(TANK.getFluidAmount(handler), 0, recipe.experience()).experience();
-                TANK.drain(handler, TANK.getFluidAmount(handler) - leftover * EXP_TO_FLUID, IFluidHandler.FluidAction.EXECUTE);
+                int leftover = ExperienceUtil
+                        .getLevelFromFluidWithLeftover(TANK.getFluidAmount(handler), 0, recipe.experience())
+                        .experience();
+                TANK.drain(handler, TANK.getFluidAmount(handler) - leftover * EXP_TO_FLUID,
+                        IFluidHandler.FluidAction.EXECUTE);
             }
 
         };

@@ -5,10 +5,10 @@ import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
-import com.enderio.machines.common.config.MachinesConfig;
-import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
+import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,8 +21,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
 
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.WIRED_CHARGER_CAPACITY);
-    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.WIRED_CHARGER_USAGE);
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+            MachinesConfig.COMMON.ENERGY.WIRED_CHARGER_CAPACITY);
+    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
+            MachinesConfig.COMMON.ENERGY.WIRED_CHARGER_USAGE);
 
     public static final SingleSlotAccess ITEM_TO_CHARGE = new SingleSlotAccess();
     public static final SingleSlotAccess ITEM_CHARGED = new SingleSlotAccess();
@@ -30,19 +32,19 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
     private float progress = 0;
 
     public WiredChargerBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.WIRED_CHARGER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, CAPACITY, USAGE);
+        super(MachineBlockEntities.WIRED_CHARGER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+                EnergyIOMode.Input, CAPACITY, USAGE);
     }
 
     @Override
     public MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout
-            .builder()
-            .capacitor()
-            .inputSlot((slot, stack) -> acceptItem(stack))
-            .slotAccess(ITEM_TO_CHARGE)
-            .outputSlot()
-            .slotAccess(ITEM_CHARGED)
-            .build();
+        return MachineInventoryLayout.builder()
+                .capacitor()
+                .inputSlot((slot, stack) -> acceptItem(stack))
+                .slotAccess(ITEM_TO_CHARGE)
+                .outputSlot()
+                .slotAccess(ITEM_CHARGED)
+                .build();
     }
 
     @Nullable
@@ -69,8 +71,8 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
     public boolean acceptItem(ItemStack item) {
         return item.getCapability(Capabilities.EnergyStorage.ITEM) != null;
     }
-	
-	@Override
+
+    @Override
     public boolean canAct() {
         ItemStack inputItem = ITEM_TO_CHARGE.getItemStack(this);
         ItemStack outputItem = ITEM_CHARGED.getItemStack(this);
@@ -87,13 +89,14 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
                 ITEM_TO_CHARGE.setStackInSlot(this, ItemStack.EMPTY);
             } else {
                 int energyToInsert = Math.min(
-                    itemEnergyHandler.getMaxEnergyStored() - itemEnergyHandler.getEnergyStored(),
-                    Math.max(getEnergyStorage().getEnergyStored(), getEnergyStorage().getMaxEnergyUse()));
+                        itemEnergyHandler.getMaxEnergyStored() - itemEnergyHandler.getEnergyStored(),
+                        Math.max(getEnergyStorage().getEnergyStored(), getEnergyStorage().getMaxEnergyUse()));
 
                 if (energyToInsert > 0) {
                     itemEnergyHandler.receiveEnergy(energyToInsert, false);
                     getEnergyStorage().takeEnergy(energyToInsert);
-                    this.progress = (float)itemEnergyHandler.getEnergyStored() / itemEnergyHandler.getMaxEnergyStored();
+                    this.progress = (float) itemEnergyHandler.getEnergyStored()
+                            / itemEnergyHandler.getMaxEnergyStored();
                 }
             }
         }

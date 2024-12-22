@@ -3,6 +3,10 @@ package com.enderio.machines;
 import com.enderio.EnderIOBase;
 import com.enderio.base.api.integration.IntegrationManager;
 import com.enderio.base.data.EIODataProvider;
+import com.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
+import com.enderio.machines.common.blocks.base.menu.MachineSlot;
+import com.enderio.machines.common.blocks.base.menu.PreviewMachineSlot;
+import com.enderio.machines.common.blocks.enchanter.EnchanterMenu;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.config.MachinesConfigLang;
 import com.enderio.machines.common.init.MachineAttachments;
@@ -15,10 +19,6 @@ import com.enderio.machines.common.init.MachineTravelTargets;
 import com.enderio.machines.common.integrations.EnderIOMachinesSelfIntegration;
 import com.enderio.machines.common.lang.MachineEnumLang;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.blocks.enchanter.EnchanterMenu;
-import com.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
-import com.enderio.machines.common.blocks.base.menu.MachineSlot;
-import com.enderio.machines.common.blocks.base.menu.PreviewMachineSlot;
 import com.enderio.machines.common.tag.MachineTags;
 import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
 import com.enderio.machines.data.reagentdata.ReagentDataProvider;
@@ -34,6 +34,8 @@ import com.enderio.machines.data.recipes.TankRecipeProvider;
 import com.enderio.machines.data.souldata.SoulDataProvider;
 import com.enderio.machines.data.tag.MachineEntityTypeTagsProvider;
 import com.enderio.regilite.Regilite;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -49,9 +51,6 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 @Mod(EnderIOMachines.MODULE_MOD_ID)
@@ -89,14 +88,16 @@ public class EnderIOMachines {
         InterModComms.sendTo("inventorysorter", "slotblacklist", MachineSlot.class::getName);
         InterModComms.sendTo("inventorysorter", "slotblacklist", GhostMachineSlot.class::getName);
         InterModComms.sendTo("inventorysorter", "slotblacklist", PreviewMachineSlot.class::getName);
-        InterModComms.sendTo("inventorysorter", "slotblacklist", EnchanterMenu.EnchanterOutputMachineSlot.class::getName);
+        InterModComms.sendTo("inventorysorter", "slotblacklist",
+                EnchanterMenu.EnchanterOutputMachineSlot.class::getName);
     }
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
+        CompletableFuture<HolderLookup.Provider> lookupProvider = CompletableFuture
+                .supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
 
         EIODataProvider provider = new EIODataProvider("machines");
 
@@ -110,11 +111,13 @@ public class EnderIOMachines {
         provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(), new ReagentDataProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(),
+                new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(),
+                new ReagentDataProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
 
         generator.addProvider(true, provider);
-        provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),
-            List.of(new MachinesAdvancementGenerator())));
+        provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, event.getLookupProvider(),
+                event.getExistingFileHelper(), List.of(new MachinesAdvancementGenerator())));
     }
 }

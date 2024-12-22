@@ -2,6 +2,15 @@ package com.enderio.machines.common.utility;
 
 import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
 import com.enderio.machines.common.blocks.base.inventory.MultiSlotAccess;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -12,16 +21,6 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
     private final Supplier<RecipeType<R>> recipeType;
@@ -78,9 +77,7 @@ public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
             if (possibleMatches == null) {
                 possibleMatches = matches;
             } else {
-                possibleMatches = possibleMatches.stream()
-                    .filter(matches::contains)
-                    .collect(Collectors.toSet());
+                possibleMatches = possibleMatches.stream().filter(matches::contains).collect(Collectors.toSet());
             }
 
             if (possibleMatches.isEmpty()) {
@@ -135,19 +132,20 @@ public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
         itemToRecipesCache.clear();
         recipeToIngredientCache.clear();
         recipeManager.getAllRecipesFor(recipeType.get())
-            .stream()
-            .filter(recipeHolder -> filter.test(recipeHolder.value()))
-            .forEach(recipe -> {
-                var items = recipe.value().getIngredients().stream()
-                    .flatMap(ingredient -> Arrays.stream(ingredient.getItems()))
-                    .map(ItemStack::getItem)
-                    .toList();
+                .stream()
+                .filter(recipeHolder -> filter.test(recipeHolder.value()))
+                .forEach(recipe -> {
+                    var items = recipe.value()
+                            .getIngredients()
+                            .stream()
+                            .flatMap(ingredient -> Arrays.stream(ingredient.getItems()))
+                            .map(ItemStack::getItem)
+                            .toList();
 
-                recipeToIngredientCache.put(recipe, recipe.value().getIngredients());
-                for (Item item : items) {
-                    itemToRecipesCache.computeIfAbsent(item, i -> new HashSet<>())
-                        .add(recipe);
-                }
-            });
+                    recipeToIngredientCache.put(recipe, recipe.value().getIngredients());
+                    for (Item item : items) {
+                        itemToRecipesCache.computeIfAbsent(item, i -> new HashSet<>()).add(recipe);
+                    }
+                });
     }
 }

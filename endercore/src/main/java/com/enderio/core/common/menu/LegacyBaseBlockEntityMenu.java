@@ -17,7 +17,7 @@ public abstract class LegacyBaseBlockEntityMenu<T extends BlockEntity> extends B
     private final T blockEntity;
 
     protected LegacyBaseBlockEntityMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity,
-                                        Inventory playerInventory) {
+            Inventory playerInventory) {
         super(menuType, containerId, playerInventory);
         this.blockEntity = blockEntity;
     }

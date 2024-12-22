@@ -34,13 +34,15 @@ public class EnchanterScreen extends EnderContainerScreen<EnchanterMenu> {
             return;
         }
 
-        int colour = 8453920; //green
+        int colour = 8453920; // green
         MutableComponent component = Component.translatable("container.repair.cost", this.getMenu().getCurrentCost());
-        if (Minecraft.getInstance().player.experienceLevel < this.getMenu().getCurrentCost() && !Minecraft.getInstance().player.isCreative()) {
-            colour = 16736352; //red
+        if (Minecraft.getInstance().player.experienceLevel < this.getMenu().getCurrentCost()
+                && !Minecraft.getInstance().player.isCreative()) {
+            colour = 16736352; // red
         }
 
-        guiGraphics.drawCenteredString(this.font, component, (width-getXSize())/2 + getXSize()/2, (height-getYSize())/2 + 57, colour);
+        guiGraphics.drawCenteredString(this.font, component, (width - getXSize()) / 2 + getXSize() / 2,
+                (height - getYSize()) / 2 + 57, colour);
     }
 
     @Override

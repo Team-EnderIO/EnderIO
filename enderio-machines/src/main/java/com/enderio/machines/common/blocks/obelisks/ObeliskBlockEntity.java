@@ -7,14 +7,16 @@ import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.attachment.RangedActor;
-import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
+import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
 import com.enderio.machines.common.blocks.base.state.MachineState;
+import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.IOConfig;
-import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
 import com.enderio.machines.common.obelisk.ObeliskAreaManager;
+import java.util.Objects;
+import javax.annotation.Nullable;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -28,10 +30,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.LogicalSide;
 
-import javax.annotation.Nullable;
-import java.util.Objects;
-
-public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extends PoweredMachineBlockEntity implements RangedActor {
+public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extends PoweredMachineBlockEntity
+        implements RangedActor {
 
     private @Nullable AABB aabb;
     public static SingleSlotAccess FILTER = new SingleSlotAccess();
@@ -40,9 +40,11 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
 
     private ActionRange actionRange = DEFAULT_RANGE;
 
-    public ObeliskBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, boolean isIoConfigMutable,
-        CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode, CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
-        super(type, worldPosition, blockState, isIoConfigMutable, capacitorSupport, energyIOMode, scalableEnergyCapacity, scalableMaxEnergyUse);
+    public ObeliskBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
+            boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
+            CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
+        super(type, worldPosition, blockState, isIoConfigMutable, capacitorSupport, energyIOMode,
+                scalableEnergyCapacity, scalableMaxEnergyUse);
     }
 
     @Nullable
@@ -55,8 +57,8 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
         if (level instanceof ServerLevel serverLevel) {
             var manager = getAreaManager(serverLevel);
             if (manager != null) {
-                //noinspection unchecked
-                manager.register((T)this);
+                // noinspection unchecked
+                manager.register((T) this);
             }
         }
     }
@@ -68,8 +70,8 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
         if (level instanceof ServerLevel serverLevel) {
             var manager = getAreaManager(serverLevel);
             if (manager != null) {
-                //noinspection unchecked
-                manager.unregister((T)this);
+                // noinspection unchecked
+                manager.unregister((T) this);
             }
         }
     }
@@ -80,8 +82,8 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
         if (level instanceof ServerLevel serverLevel) {
             var manager = getAreaManager(serverLevel);
             if (manager != null) {
-                //noinspection unchecked
-                manager.update((T)this);
+                // noinspection unchecked
+                manager.update((T) this);
             }
         }
     }
@@ -110,7 +112,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
 
     @Override
     public void serverTick() {
-        updateMachineState(MachineState.ACTIVE, isActive()); //No powered model state, so it needs to be done manually
+        updateMachineState(MachineState.ACTIVE, isActive()); // No powered model state, so it needs to be done manually
         super.serverTick();
     }
 

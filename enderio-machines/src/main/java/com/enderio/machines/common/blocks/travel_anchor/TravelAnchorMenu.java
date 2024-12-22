@@ -1,9 +1,9 @@
 package com.enderio.machines.common.blocks.travel_anchor;
 
+import com.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
 import com.enderio.machines.common.blocks.base.menu.MachineMenu;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -14,7 +14,8 @@ public class TravelAnchorMenu extends MachineMenu<TravelAnchorBlockEntity> {
     }
 
     public TravelAnchorMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.TRAVEL_ANCHOR.get(), MachineBlockEntities.TRAVEL_ANCHOR.get(), containerId, playerInventory, buf);
+        super(MachineMenus.TRAVEL_ANCHOR.get(), MachineBlockEntities.TRAVEL_ANCHOR.get(), containerId, playerInventory,
+                buf);
         addSlots();
     }
 

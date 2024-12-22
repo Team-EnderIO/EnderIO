@@ -1,14 +1,13 @@
 package com.enderio.machines.common.blocks.base;
 
 import com.enderio.core.common.recipes.OutputStack;
+import java.util.List;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
-
-import java.util.List;
 
 public interface MachineRecipe<T extends RecipeInput> extends Recipe<T> {
     /**

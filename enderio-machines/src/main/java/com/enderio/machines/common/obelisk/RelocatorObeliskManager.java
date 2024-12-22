@@ -3,6 +3,7 @@ package com.enderio.machines.common.obelisk;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.init.MachineAttachments;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobSpawnType;
@@ -10,8 +11,6 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
-
-import java.util.Set;
 
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class RelocatorObeliskManager extends ObeliskAreaManager<RelocatorObeliskBlockEntity> {
@@ -35,7 +34,7 @@ public class RelocatorObeliskManager extends ObeliskAreaManager<RelocatorObelisk
             return;
         }
 
-        var pos = new BlockPos((int)event.getX(), (int)event.getY(), (int)event.getZ());
+        var pos = new BlockPos((int) event.getX(), (int) event.getY(), (int) event.getZ());
 
         var obeliskManager = getManager(level);
 

@@ -11,33 +11,33 @@ import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.machines.EnderIOMachines;
-import com.enderio.machines.common.blocks.block_detector.BlockDetectorBlock;
 import com.enderio.machines.common.block.CapacitorBankBlock;
-import com.enderio.machines.common.blocks.enchanter.EnchanterBlock;
 import com.enderio.machines.common.block.LegacyMachineBlock;
-import com.enderio.machines.common.blocks.travel_anchor.PaintedTravelAnchorBlock;
 import com.enderio.machines.common.block.SolarPanelBlock;
-import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlock;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
-import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlock;
-import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlockEntity;
-import com.enderio.machines.common.blocks.vacuum.chest.VacuumChestBlockEntity;
-import com.enderio.machines.common.blocks.vacuum.xp.XPVacuumBlockEntity;
-import com.enderio.machines.common.item.CapacitorBankItem;
-import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockItem;
 import com.enderio.machines.common.blocks.base.block.MachineBlock;
 import com.enderio.machines.common.blocks.base.block.ProgressMachineBlock;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
+import com.enderio.machines.common.blocks.block_detector.BlockDetectorBlock;
+import com.enderio.machines.common.blocks.enchanter.EnchanterBlock;
+import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlock;
+import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockItem;
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.blocks.soul_engine.SoulEngineBlockEntity;
+import com.enderio.machines.common.blocks.travel_anchor.PaintedTravelAnchorBlock;
+import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlock;
+import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlockEntity;
+import com.enderio.machines.common.blocks.vacuum.chest.VacuumChestBlockEntity;
+import com.enderio.machines.common.blocks.vacuum.xp.XPVacuumBlockEntity;
 import com.enderio.machines.common.blocks.vat.VatBlock;
+import com.enderio.machines.common.item.CapacitorBankItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.enderio.regilite.data.DataGenContext;
@@ -133,14 +133,15 @@ public class MachineBlocks {
     public static final RegiliteBlock<ProgressMachineBlock<?>> ALLOY_SMELTER = progressMachine("alloy_smelter",
             () -> MachineBlockEntities.ALLOY_SMELTER);
 
-    public static final RegiliteBlock<ProgressMachineBlock<?>> PAINTING_MACHINE = progressMachine(
-            "painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE);
+    public static final RegiliteBlock<ProgressMachineBlock<?>> PAINTING_MACHINE = progressMachine("painting_machine",
+            () -> MachineBlockEntities.PAINTING_MACHINE);
 
     public static final RegiliteBlock<MachineBlock<?>> WIRED_CHARGER = machine("wired_charger",
             () -> MachineBlockEntities.WIRED_CHARGER);
 
     public static final RegiliteBlock<LegacyMachineBlock> CREATIVE_POWER = BLOCK_REGISTRY
-            .registerBlock("creative_power", props -> new LegacyMachineBlock(MachineBlockEntities.CREATIVE_POWER, props),
+            .registerBlock("creative_power",
+                    props -> new LegacyMachineBlock(MachineBlockEntities.CREATIVE_POWER, props),
                     BlockBehaviour.Properties.of())
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
@@ -150,8 +151,8 @@ public class MachineBlocks {
     public static final RegiliteBlock<ProgressMachineBlock<?>> SAG_MILL = progressMachine("sag_mill",
             () -> MachineBlockEntities.SAG_MILL).setTranslation("SAG Mill");
 
-    public static final RegiliteBlock<ProgressMachineBlock<?>> SLICE_AND_SPLICE = progressMachine(
-            "slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE).setTranslation("Slice'N'Splice");
+    public static final RegiliteBlock<ProgressMachineBlock<?>> SLICE_AND_SPLICE = progressMachine("slice_and_splice",
+            () -> MachineBlockEntities.SLICE_AND_SPLICE).setTranslation("Slice'N'Splice");
 
     public static final RegiliteBlock<ProgressMachineBlock<?>> IMPULSE_HOPPER = progressMachine("impulse_hopper",
             () -> MachineBlockEntities.IMPULSE_HOPPER).setTranslation("Impulse Hopper");
@@ -192,7 +193,8 @@ public class MachineBlocks {
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
     public static final RegiliteBlock<TravelAnchorBlock<TravelAnchorBlockEntity>> TRAVEL_ANCHOR = BLOCK_REGISTRY
-            .registerBlock("travel_anchor", props -> new TravelAnchorBlock<>(MachineBlockEntities.TRAVEL_ANCHOR::get, props),
+            .registerBlock("travel_anchor",
+                    props -> new TravelAnchorBlock<>(MachineBlockEntities.TRAVEL_ANCHOR::get, props),
                     BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setLootTable(MachinesLootTable::copyComponents)
@@ -285,7 +287,8 @@ public class MachineBlocks {
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
     public static final RegiliteBlock<MachineBlock<AversionObeliskBlockEntity>> AVERSION_OBELISK = BLOCK_REGISTRY
-            .registerBlock("aversion_obelisk", props -> new MachineBlock<>(MachineBlockEntities.AVERSION_OBELISK::get, props),
+            .registerBlock("aversion_obelisk",
+                    props -> new MachineBlock<>(MachineBlockEntities.AVERSION_OBELISK::get, props),
                     BlockBehaviour.Properties.of()
                             .strength(2.5f, 8)
                             .isViewBlocking((pState, pLevel, pPos) -> false)

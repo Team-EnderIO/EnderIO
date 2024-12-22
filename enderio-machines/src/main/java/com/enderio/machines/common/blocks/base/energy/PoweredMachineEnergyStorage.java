@@ -2,9 +2,9 @@ package com.enderio.machines.common.blocks.base.energy;
 
 import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
+import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
-import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.IntTag;

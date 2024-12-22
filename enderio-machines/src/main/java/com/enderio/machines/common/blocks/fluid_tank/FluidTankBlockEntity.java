@@ -5,6 +5,9 @@ import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
+import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
+import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
+import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.FluidItemInteractive;
@@ -12,9 +15,8 @@ import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
-import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
-import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.blocks.base.state.MachineState;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -39,9 +41,6 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.Optional;
 
 // TODO: Rewrite this with tasks?
 //       Could implement a task for each thing it currently has in the If's
@@ -97,10 +96,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     }
 
     private TankRecipe.Input createRecipeInput() {
-        return new TankRecipe.Input(
-            FLUID_DRAIN_INPUT.getItemStack(getInventory()),
-            FLUID_FILL_INPUT.getItemStack(getInventory()),
-            TANK.getTank(this));
+        return new TankRecipe.Input(FLUID_DRAIN_INPUT.getItemStack(getInventory()),
+                FLUID_FILL_INPUT.getItemStack(getInventory()), TANK.getTank(this));
     }
 
     @Override
@@ -126,8 +123,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
         // fill recipes
         if (level != null) {
-            List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
-            return allRecipes.stream().anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.EMPTY && recipe.value().input().test(item));
+            List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager()
+                    .getAllRecipesFor(MachineRecipes.TANK.type().get());
+            return allRecipes.stream()
+                    .anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.EMPTY
+                            && recipe.value().input().test(item));
         }
 
         return false;
@@ -154,8 +154,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
         // drain recipes
         if (level != null) {
-            List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
-            return allRecipes.stream().anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.FILL && recipe.value().input().test(item));
+            List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager()
+                    .getAllRecipesFor(MachineRecipes.TANK.type().get());
+            return allRecipes.stream()
+                    .anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.FILL
+                            && recipe.value().input().test(item));
         }
 
         return false;
@@ -163,17 +166,16 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     @Override
     public MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout
-            .builder()
-            .inputSlot((slot, stack) -> acceptItemFill(stack))
-            .slotAccess(FLUID_FILL_INPUT)
-            .outputSlot()
-            .slotAccess(FLUID_FILL_OUTPUT)
-            .inputSlot((slot, stack) -> acceptItemDrain(stack))
-            .slotAccess(FLUID_DRAIN_INPUT)
-            .outputSlot()
-            .slotAccess(FLUID_DRAIN_OUTPUT)
-            .build();
+        return MachineInventoryLayout.builder()
+                .inputSlot((slot, stack) -> acceptItemFill(stack))
+                .slotAccess(FLUID_FILL_INPUT)
+                .outputSlot()
+                .slotAccess(FLUID_FILL_OUTPUT)
+                .inputSlot((slot, stack) -> acceptItemDrain(stack))
+                .slotAccess(FLUID_DRAIN_INPUT)
+                .outputSlot()
+                .slotAccess(FLUID_DRAIN_OUTPUT)
+                .build();
     }
 
     @Override
@@ -182,7 +184,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
         if (level != null) {
             if (!level.isClientSide()) {
-                currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.TANK.type().get(), createRecipeInput(), level);
+                currentRecipe = level.getRecipeManager()
+                        .getRecipeFor(MachineRecipes.TANK.type().get(), createRecipeInput(), level);
             }
         }
     }
@@ -211,17 +214,20 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         return TANK.getTank(this);
     }
 
-    //TODO: enable fluid tanks to receive stackable fluid containers
+    // TODO: enable fluid tanks to receive stackable fluid containers
     private void fillInternal() {
         ItemStack inputItem = FLUID_FILL_INPUT.getItemStack(this);
         ItemStack outputItem = FLUID_FILL_OUTPUT.getItemStack(this);
 
         if (!inputItem.isEmpty()) {
             if (inputItem.getItem() instanceof BucketItem filledBucket) {
-                if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET && outputItem.getCount() < outputItem.getMaxStackSize())) {
-                    int filled = TANK.fill(this, new FluidStack(filledBucket.content, FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE);
+                if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET
+                        && outputItem.getCount() < outputItem.getMaxStackSize())) {
+                    int filled = TANK.fill(this, new FluidStack(filledBucket.content, FluidType.BUCKET_VOLUME),
+                            IFluidHandler.FluidAction.SIMULATE);
                     if (filled == FluidType.BUCKET_VOLUME) {
-                        TANK.fill(this, new FluidStack(filledBucket.content, FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
+                        TANK.fill(this, new FluidStack(filledBucket.content, FluidType.BUCKET_VOLUME),
+                                IFluidHandler.FluidAction.EXECUTE);
                         inputItem.shrink(1);
                         FLUID_FILL_OUTPUT.insertItem(this, Items.BUCKET.getDefaultInstance(), false);
                     }
@@ -229,7 +235,9 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
             } else {
                 IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.FluidHandler.ITEM);
                 if (fluidHandlerItem != null && outputItem.isEmpty()) {
-                    int filled = FluidUtil.tryFluidTransfer(getFluidHandler(), fluidHandlerItem, TANK.getFluidAmount(this), true).getAmount();
+                    int filled = FluidUtil
+                            .tryFluidTransfer(getFluidHandler(), fluidHandlerItem, TANK.getFluidAmount(this), true)
+                            .getAmount();
                     if (filled > 0) {
                         FLUID_FILL_OUTPUT.setStackInSlot(this, fluidHandlerItem.getContainer());
                         FLUID_FILL_INPUT.setStackInSlot(this, ItemStack.EMPTY);
@@ -241,7 +249,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     // endregion
 
-    //TODO: enable fluid tanks to receive stackable fluid containers
+    // TODO: enable fluid tanks to receive stackable fluid containers
     private void drainInternal() {
         ItemStack inputItem = FLUID_DRAIN_INPUT.getItemStack(this);
         ItemStack outputItem = FLUID_DRAIN_OUTPUT.getItemStack(this);
@@ -249,8 +257,9 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
             if (inputItem.getItem() == Items.BUCKET) {
                 if (!TANK.getFluid(this).isEmpty()) {
                     FluidStack stack = TANK.drain(this, FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
-                    if (stack.getAmount() == FluidType.BUCKET_VOLUME && (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket()
-                        && outputItem.getCount() < outputItem.getMaxStackSize()))) {
+                    if (stack.getAmount() == FluidType.BUCKET_VOLUME
+                            && (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket()
+                                    && outputItem.getCount() < outputItem.getMaxStackSize()))) {
                         TANK.drain(this, FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
                         inputItem.shrink(1);
                         if (outputItem.isEmpty()) {
@@ -263,7 +272,9 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
             } else {
                 IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.FluidHandler.ITEM);
                 if (fluidHandlerItem != null && outputItem.isEmpty()) {
-                    int filled = FluidUtil.tryFluidTransfer(fluidHandlerItem, getFluidHandler(), TANK.getFluidAmount(this), true).getAmount();
+                    int filled = FluidUtil
+                            .tryFluidTransfer(fluidHandlerItem, getFluidHandler(), TANK.getFluidAmount(this), true)
+                            .getAmount();
                     if (filled > 0) {
                         FLUID_DRAIN_OUTPUT.setStackInSlot(this, fluidHandlerItem.getContainer());
                         FLUID_DRAIN_INPUT.setStackInSlot(this, ItemStack.EMPTY);
@@ -281,7 +292,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
             case EMPTY -> {
                 ItemStack outputStack = FLUID_FILL_OUTPUT.getItemStack(this);
 
-                if (outputStack.isEmpty() || (outputStack.is(recipeResultStack.getItem()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
+                if (outputStack.isEmpty() || (outputStack.is(recipeResultStack.getItem())
+                        && outputStack.getCount() < outputStack.getMaxStackSize())) {
                     FLUID_FILL_INPUT.getItemStack(this).shrink(1);
 
                     TANK.fill(this, recipe.value().fluid(), IFluidHandler.FluidAction.EXECUTE);
@@ -296,7 +308,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
             case FILL -> {
                 ItemStack outputStack = FLUID_DRAIN_OUTPUT.getItemStack(this);
 
-                if (outputStack.isEmpty() || (outputStack.is(recipeResultStack.getItem()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
+                if (outputStack.isEmpty() || (outputStack.is(recipeResultStack.getItem())
+                        && outputStack.getCount() < outputStack.getMaxStackSize())) {
                     FLUID_DRAIN_INPUT.getItemStack(this).shrink(1);
 
                     TANK.drain(this, recipe.value().fluid(), IFluidHandler.FluidAction.EXECUTE);
@@ -331,7 +344,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                 int fluidAmount = xpAmount * ExperienceUtil.EXP_TO_FLUID;
 
                 FluidStack drainedXp = TANK.drain(this, fluidAmount, IFluidHandler.FluidAction.EXECUTE);
-                int repairAmount = (int) Math.floor(drainedXp.getAmount() * tool.getXpRepairRatio() / ExperienceUtil.EXP_TO_FLUID);
+                int repairAmount = (int) Math
+                        .floor(drainedXp.getAmount() * tool.getXpRepairRatio() / ExperienceUtil.EXP_TO_FLUID);
                 repairedTool.setDamageValue(Math.max(0, damage - repairAmount));
 
                 FLUID_DRAIN_INPUT.setStackInSlot(this, ItemStack.EMPTY);
@@ -343,7 +357,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     private void onTankContentsChanged() {
         if (level != null) {
             if (!level.isClientSide()) {
-                currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.TANK.type().get(), createRecipeInput(), level);
+                currentRecipe = level.getRecipeManager()
+                        .getRecipeFor(MachineRecipes.TANK.type().get(), createRecipeInput(), level);
             }
 
             level.getLightEngine().checkBlock(worldPosition);

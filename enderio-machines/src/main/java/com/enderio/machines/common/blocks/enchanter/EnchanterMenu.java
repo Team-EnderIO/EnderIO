@@ -1,11 +1,11 @@
 package com.enderio.machines.common.blocks.enchanter;
 
 import com.enderio.core.common.menu.BaseBlockEntityMenu;
-import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventory;
 import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
 import com.enderio.machines.common.blocks.base.menu.MachineSlot;
+import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -34,7 +34,7 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
         addSlot(new MachineSlot(getMachineInventory(), EnchanterBlockEntity.LAPIS, 85, 35));
         addSlot(new EnchanterOutputMachineSlot(getBlockEntity(), EnchanterBlockEntity.OUTPUT, 144, 35));
 
-        addPlayerInventorySlots(8,84);
+        addPlayerInventorySlots(8, 84);
     }
 
     public MachineInventory getMachineInventory() {
@@ -58,7 +58,8 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (pIndex < this.slots.size() - PLAYER_INVENTORY_SIZE) {
-                if (!this.moveItemStackTo(itemstack1, this.slots.size() - PLAYER_INVENTORY_SIZE, this.slots.size(), true)) {
+                if (!this.moveItemStackTo(itemstack1, this.slots.size() - PLAYER_INVENTORY_SIZE, this.slots.size(),
+                        true)) {
                     return ItemStack.EMPTY;
                 }
             } else if (!this.moveItemStackTo(itemstack1, 0, this.slots.size() - PLAYER_INVENTORY_SIZE, false)) {
@@ -81,7 +82,8 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
         @Nullable
         private final EnchanterBlockEntity blockEntity;
 
-        public EnchanterOutputMachineSlot(@Nullable EnchanterBlockEntity blockEntity, SingleSlotAccess access, int xPosition, int yPosition) {
+        public EnchanterOutputMachineSlot(@Nullable EnchanterBlockEntity blockEntity, SingleSlotAccess access,
+                int xPosition, int yPosition) {
             super(blockEntity.getInventory(), access, xPosition, yPosition);
             this.blockEntity = blockEntity;
         }
@@ -94,7 +96,8 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
 
             if (recipe != null && (pPlayer.experienceLevel >= recipe.getXPCost(recipeInput) || pPlayer.isCreative())) {
                 int amount = recipe.getInputAmountConsumed(recipeInput);
-                int lapizForLevel = recipe.getLapisForLevel(recipe.getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(inventory).getCount()));
+                int lapizForLevel = recipe.getLapisForLevel(
+                        recipe.getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(inventory).getCount()));
                 pPlayer.giveExperienceLevels(-recipe.getXPCost(recipeInput));
                 EnchanterBlockEntity.BOOK.getItemStack(inventory).shrink(1);
                 EnchanterBlockEntity.CATALYST.getItemStack(inventory).shrink(amount);
@@ -108,7 +111,8 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
             EnchanterRecipe recipe = blockEntity.getCurrentRecipe();
             EnchanterRecipe.Input recipeInput = blockEntity.createRecipeInput();
 
-            if (recipe != null && (playerIn.experienceLevel >= recipe.getXPCost(recipeInput) || playerIn.isCreative())) {
+            if (recipe != null
+                    && (playerIn.experienceLevel >= recipe.getXPCost(recipeInput) || playerIn.isCreative())) {
                 return super.mayPickup(playerIn);
             }
 

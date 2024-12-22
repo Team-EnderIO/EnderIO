@@ -1,14 +1,14 @@
 package com.enderio.machines.common.blocks.alloy;
 
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.config.MachinesConfig;
-import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.init.MachineDataComponents;
+import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
+import com.enderio.machines.common.blocks.base.energy.PoweredMachineEnergyStorage;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.blocks.base.inventory.MultiSlotAccess;
 import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
-import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
-import com.enderio.machines.common.blocks.base.energy.PoweredMachineEnergyStorage;
+import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineDataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;

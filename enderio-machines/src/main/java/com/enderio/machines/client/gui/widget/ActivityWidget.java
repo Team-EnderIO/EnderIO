@@ -5,17 +5,16 @@ import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.blocks.base.state.MachineStateType;
 import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.Component;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
 
 public class ActivityWidget extends AbstractWidget {
     private final Supplier<Set<MachineState>> state;
@@ -38,7 +37,7 @@ public class ActivityWidget extends AbstractWidget {
         RenderSystem.enableDepthTest();
 
         MachineState prio = null;
-        for (MachineState machineState: state.get()) {
+        for (MachineState machineState : state.get()) {
             if (prio == null || machineState.type().getPriority() > prio.type().getPriority()) {
                 prio = machineState;
             }
@@ -49,9 +48,11 @@ public class ActivityWidget extends AbstractWidget {
         }
 
         if (useNewIcons) {
-            guiGraphics.blitSprite(Objects.requireNonNull(MachineEnumIcons.NEW_MACHINE_STATE_TYPE.get(prio.type())), getX(), getY(), 16, 16);
+            guiGraphics.blitSprite(Objects.requireNonNull(MachineEnumIcons.NEW_MACHINE_STATE_TYPE.get(prio.type())),
+                    getX(), getY(), 16, 16);
         } else {
-            guiGraphics.blitSprite(Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), getX(), getY(), 16, 16);
+            guiGraphics.blitSprite(Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), getX(),
+                    getY(), 16, 16);
         }
 
         RenderSystem.disableBlend();
@@ -63,8 +64,12 @@ public class ActivityWidget extends AbstractWidget {
         if (isHovered()) {
             Minecraft minecraft = Minecraft.getInstance();
 
-            List<Component> list = state.get().stream().filter(s -> state.get().size() <= 1 || s.type() != MachineStateType.ACTIVE).map(s -> (Component) s.component()).toList();
-            if (list.isEmpty()){
+            List<Component> list = state.get()
+                    .stream()
+                    .filter(s -> state.get().size() <= 1 || s.type() != MachineStateType.ACTIVE)
+                    .map(s -> (Component) s.component())
+                    .toList();
+            if (list.isEmpty()) {
                 list = List.of(MachineLang.TOOLTIP_IDLE);
             }
 

@@ -6,12 +6,14 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.recipe.FluidRecipeInput;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.blocks.base.MachineRecipe;
+import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.souldata.SoulDataReloadListener;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -29,18 +31,9 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
-import java.util.List;
-import java.util.Optional;
-
-public record SoulBindingRecipe(
-    ItemStack output,
-    Ingredient input,
-    int energy,
-    int experience,
-    Optional<ResourceLocation> entityType,
-    Optional<MobCategory> mobCategory,
-    Optional<String> soulData
-) implements MachineRecipe<SoulBindingRecipe.Input> {
+public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int experience,
+        Optional<ResourceLocation> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData)
+        implements MachineRecipe<SoulBindingRecipe.Input> {
 
     public SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int exp, ResourceLocation entityType) {
         this(output, input, energy, exp, Optional.of(entityType), Optional.empty(), Optional.empty());
@@ -77,7 +70,8 @@ public record SoulBindingRecipe(
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.copy()), OutputStack.of(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance()));
+        return List.of(OutputStack.of(output.copy()),
+                OutputStack.of(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance()));
     }
 
     @Override
@@ -106,9 +100,10 @@ public record SoulBindingRecipe(
 
         var storedEntityType = storedEntityData.entityType().get();
 
-        if (soulData.isPresent()) { //is in the selected souldata
-            if (SoulDataReloadListener.fromString(soulData.get()).matches(
-                storedEntityData.entityType().get()).isEmpty()) {
+        if (soulData.isPresent()) { // is in the selected souldata
+            if (SoulDataReloadListener.fromString(soulData.get())
+                    .matches(storedEntityData.entityType().get())
+                    .isEmpty()) {
                 return false;
             }
 
@@ -148,14 +143,15 @@ public record SoulBindingRecipe(
         return MachineRecipes.SOUL_BINDING.type().get();
     }
 
-    public record Input(ItemStack boundSoulItem, ItemStack itemToBind, FluidStack experience) implements FluidRecipeInput {
+    public record Input(ItemStack boundSoulItem, ItemStack itemToBind, FluidStack experience)
+            implements FluidRecipeInput {
         @Override
         public ItemStack getItem(int slotIndex) {
-            return switch (slotIndex){
-                case 0 -> boundSoulItem;
-                case 1 -> itemToBind;
-                case 2 -> ItemStack.EMPTY;
-                default -> throw new IllegalArgumentException("No item for index " + slotIndex);
+            return switch (slotIndex) {
+            case 0 -> boundSoulItem;
+            case 1 -> itemToBind;
+            case 2 -> ItemStack.EMPTY;
+            default -> throw new IllegalArgumentException("No item for index " + slotIndex);
             };
         }
 
@@ -176,36 +172,27 @@ public record SoulBindingRecipe(
 
     public static class Serializer implements RecipeSerializer<SoulBindingRecipe> {
 
-        private static final MapCodec<SoulBindingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemStack.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output),
-            Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(SoulBindingRecipe::input),
-            Codec.INT.fieldOf("energy").forGetter(SoulBindingRecipe::energy),
-            Codec.INT.fieldOf("experience").forGetter(SoulBindingRecipe::experience),
-            ResourceLocation.CODEC.optionalFieldOf("entity_type").forGetter(SoulBindingRecipe::entityType),
-            MobCategory.CODEC.optionalFieldOf("mob_category").forGetter(SoulBindingRecipe::mobCategory),
-            Codec.STRING.optionalFieldOf("soul_data").forGetter(SoulBindingRecipe::soulData)
-        ).apply(instance, SoulBindingRecipe::new));
+        private static final MapCodec<SoulBindingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+                .group(ItemStack.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output),
+                        Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(SoulBindingRecipe::input),
+                        Codec.INT.fieldOf("energy").forGetter(SoulBindingRecipe::energy),
+                        Codec.INT.fieldOf("experience").forGetter(SoulBindingRecipe::experience),
+                        ResourceLocation.CODEC.optionalFieldOf("entity_type").forGetter(SoulBindingRecipe::entityType),
+                        MobCategory.CODEC.optionalFieldOf("mob_category").forGetter(SoulBindingRecipe::mobCategory),
+                        Codec.STRING.optionalFieldOf("soul_data").forGetter(SoulBindingRecipe::soulData))
+                .apply(instance, SoulBindingRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> STREAM_CODEC = NeoForgeStreamCodecs.composite(
-            ItemStack.STREAM_CODEC,
-            SoulBindingRecipe::output,
-            Ingredient.CONTENTS_STREAM_CODEC,
-            SoulBindingRecipe::input,
-            ByteBufCodecs.INT,
-            SoulBindingRecipe::energy,
-            ByteBufCodecs.INT,
-            SoulBindingRecipe::experience,
-            ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional),
-            SoulBindingRecipe::entityType,
-            // TODO: 1.21: This is a very gross, could do better.
-            ByteBufCodecs.STRING_UTF8
-                .map(name -> ((StringRepresentable.EnumCodec<MobCategory>)MobCategory.CODEC).byName(name), MobCategory::getName)
-                .apply(ByteBufCodecs::optional),
-            SoulBindingRecipe::mobCategory,
-            ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs::optional),
-            SoulBindingRecipe::soulData,
-            SoulBindingRecipe::new
-        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> STREAM_CODEC = NeoForgeStreamCodecs
+                .composite(ItemStack.STREAM_CODEC, SoulBindingRecipe::output, Ingredient.CONTENTS_STREAM_CODEC,
+                        SoulBindingRecipe::input, ByteBufCodecs.INT, SoulBindingRecipe::energy, ByteBufCodecs.INT,
+                        SoulBindingRecipe::experience, ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional),
+                        SoulBindingRecipe::entityType,
+                        // TODO: 1.21: This is a very gross, could do better.
+                        ByteBufCodecs.STRING_UTF8.map(
+                                name -> ((StringRepresentable.EnumCodec<MobCategory>) MobCategory.CODEC).byName(name),
+                                MobCategory::getName).apply(ByteBufCodecs::optional),
+                        SoulBindingRecipe::mobCategory, ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs::optional),
+                        SoulBindingRecipe::soulData, SoulBindingRecipe::new);
 
         @Override
         public MapCodec<SoulBindingRecipe> codec() {

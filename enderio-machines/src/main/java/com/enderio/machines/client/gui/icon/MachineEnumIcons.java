@@ -2,8 +2,8 @@ package com.enderio.machines.client.gui.icon;
 
 import com.enderio.EnderIOBase;
 import com.enderio.core.client.icon.EnumIconMap;
-import com.enderio.machines.common.blocks.base.state.MachineStateType;
 import com.enderio.machines.common.blocks.alloy.AlloySmelterMode;
+import com.enderio.machines.common.blocks.base.state.MachineStateType;
 
 public class MachineEnumIcons {
 

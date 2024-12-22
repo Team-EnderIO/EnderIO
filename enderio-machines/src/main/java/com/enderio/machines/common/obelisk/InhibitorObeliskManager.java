@@ -3,13 +3,12 @@ package com.enderio.machines.common.obelisk;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.init.MachineAttachments;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
-
-import java.util.Set;
 
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class InhibitorObeliskManager extends ObeliskAreaManager<InhibitorObeliskBlockEntity> {
@@ -25,8 +24,9 @@ public class InhibitorObeliskManager extends ObeliskAreaManager<InhibitorObelisk
             return;
         }
 
-        //don't work on server commands
-        if (event instanceof EntityTeleportEvent.TeleportCommand || event instanceof EntityTeleportEvent.SpreadPlayersCommand){
+        // don't work on server commands
+        if (event instanceof EntityTeleportEvent.TeleportCommand
+                || event instanceof EntityTeleportEvent.SpreadPlayersCommand) {
             return;
         }
 
@@ -35,7 +35,7 @@ public class InhibitorObeliskManager extends ObeliskAreaManager<InhibitorObelisk
             return;
         }
 
-        var target = new BlockPos((int)event.getTargetX(), (int)event.getTargetY(), (int)event.getTargetZ());
+        var target = new BlockPos((int) event.getTargetX(), (int) event.getTargetY(), (int) event.getTargetZ());
 
         var obeliskManager = getManager(serverLevel);
 
