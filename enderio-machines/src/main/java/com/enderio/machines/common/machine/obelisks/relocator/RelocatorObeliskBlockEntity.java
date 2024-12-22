@@ -1,15 +1,16 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.obelisks.relocator;
 
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.filter.EntityFilter;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.machines.common.blockentity.base.ObeliskBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
+import com.enderio.machines.common.machine.obelisks.ObeliskBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
-import com.enderio.machines.common.menu.RelocatorObeliskMenu;
+import com.enderio.machines.common.obelisk.ObeliskAreaManager;
 import com.enderio.machines.common.obelisk.RelocatorObeliskManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -17,48 +18,24 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import org.jetbrains.annotations.Nullable;
 
-public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity {
+public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity<RelocatorObeliskBlockEntity> {
 
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.RELOCATOR_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.RELOCATOR_USAGE);
 
     public RelocatorObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.RELOCATOR_OBELISK.get(), worldPosition, blockState);
+        super(MachineBlockEntities.RELOCATOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED, EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 
     @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-
-        if (level instanceof ServerLevel serverLevel) {
-            RelocatorObeliskManager.getManager(serverLevel).register(this);
-        }
-    }
-
-    @Override
-    public void setRemoved() {
-        if (level instanceof ServerLevel serverLevel) {
-            RelocatorObeliskManager.getManager(serverLevel).unregister(this);
-        }
-
-        super.setRemoved();
-    }
-
-    @Override
-    protected void updateLocations() {
-        super.updateLocations();
-
-        // Update range in obelisk manager
-        if (level instanceof ServerLevel serverLevel) {
-            RelocatorObeliskManager.getManager(serverLevel).update(this);
-        }
+    protected @Nullable ObeliskAreaManager<RelocatorObeliskBlockEntity> getAreaManager(ServerLevel level) {
+        return RelocatorObeliskManager.getManager(level);
     }
 
     @Override
@@ -72,8 +49,8 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new RelocatorObeliskMenu(pContainerId, this, pPlayerInventory);
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player pPlayer) {
+        return new RelocatorObeliskMenu(containerId, playerInventory, this);
     }
 
     @Override

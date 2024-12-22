@@ -29,7 +29,10 @@ import com.enderio.machines.common.item.FluidTankItem;
 import com.enderio.machines.common.machine.base.block.NewMachineBlock;
 import com.enderio.machines.common.machine.base.block.NewProgressMachineBlock;
 import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
-import com.enderio.machines.common.machine.obelisk.xp.XPObeliskBlockEntity;
+import com.enderio.machines.common.machine.obelisks.aversion.AversionObeliskBlockEntity;
+import com.enderio.machines.common.machine.obelisks.inhibitor.InhibitorObeliskBlockEntity;
+import com.enderio.machines.common.machine.obelisks.relocator.RelocatorObeliskBlockEntity;
+import com.enderio.machines.common.machine.obelisks.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.machine.vat.VatBlock;
 import com.enderio.machines.data.loot.MachinesLootTable;
@@ -265,9 +268,9 @@ public class MachineBlocks {
             .setTranslation("XP Obelisk")
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
-    public static final RegiliteBlock<MachineBlock> INHIBITOR_OBELISK = BLOCK_REGISTRY
+    public static final RegiliteBlock<NewMachineBlock<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK = BLOCK_REGISTRY
             .registerBlock("inhibitor_obelisk",
-                    props -> new MachineBlock(MachineBlockEntities.INHIBITOR_OBELISK, props),
+                    props -> new NewMachineBlock<>(MachineBlockEntities.INHIBITOR_OBELISK::get, props),
                     BlockBehaviour.Properties.of()
                             .strength(2.5f, 8)
                             .isViewBlocking((pState, pLevel, pPos) -> false)
@@ -278,8 +281,8 @@ public class MachineBlocks {
                     prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
-    public static final RegiliteBlock<MachineBlock> AVERSION_OBELISK = BLOCK_REGISTRY
-            .registerBlock("aversion_obelisk", props -> new MachineBlock(MachineBlockEntities.AVERSION_OBELISK, props),
+    public static final RegiliteBlock<NewMachineBlock<AversionObeliskBlockEntity>> AVERSION_OBELISK = BLOCK_REGISTRY
+            .registerBlock("aversion_obelisk", props -> new NewMachineBlock<>(MachineBlockEntities.AVERSION_OBELISK::get, props),
                     BlockBehaviour.Properties.of()
                             .strength(2.5f, 8)
                             .isViewBlocking((pState, pLevel, pPos) -> false)
@@ -290,9 +293,9 @@ public class MachineBlocks {
                     prov.models().getExistingFile(EnderIOBase.loc("block/" + ctx.getName()))))
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
-    public static final RegiliteBlock<MachineBlock> RELOCATOR_OBELISK = BLOCK_REGISTRY
+    public static final RegiliteBlock<NewMachineBlock<RelocatorObeliskBlockEntity>> RELOCATOR_OBELISK = BLOCK_REGISTRY
             .registerBlock("relocator_obelisk",
-                    props -> new MachineBlock(MachineBlockEntities.RELOCATOR_OBELISK, props),
+                    props -> new NewMachineBlock<>(MachineBlockEntities.RELOCATOR_OBELISK::get, props),
                     BlockBehaviour.Properties.of()
                             .strength(2.5f, 8)
                             .isViewBlocking((pState, pLevel, pPos) -> false)

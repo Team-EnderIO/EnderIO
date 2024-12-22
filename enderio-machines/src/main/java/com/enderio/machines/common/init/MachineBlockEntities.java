@@ -8,15 +8,15 @@ import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
 import com.enderio.machines.client.rendering.blockentity.ObeliskBER;
 import com.enderio.machines.client.rendering.blockentity.XPObeliskBER;
 import com.enderio.machines.common.attachment.FluidTankUser;
-import com.enderio.machines.common.blockentity.AversionObeliskBlockEntity;
+import com.enderio.machines.common.machine.obelisks.aversion.AversionObeliskBlockEntity;
 import com.enderio.machines.common.machine.crafter.CrafterBlockEntity;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
-import com.enderio.machines.common.blockentity.InhibitorObeliskBlockEntity;
+import com.enderio.machines.common.machine.obelisks.inhibitor.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
-import com.enderio.machines.common.blockentity.RelocatorObeliskBlockEntity;
+import com.enderio.machines.common.machine.obelisks.relocator.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.machine.soul_binder.SoulBinderBlockEntity;
 import com.enderio.machines.common.blockentity.SoulEngineBlockEntity;
 import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
@@ -34,7 +34,7 @@ import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterBlockEntit
 import com.enderio.machines.common.machine.base.blockentity.NewMachineBlockEntity;
 import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
 import com.enderio.machines.common.machine.drain.DrainBlockEntity;
-import com.enderio.machines.common.machine.obelisk.xp.XPObeliskBlockEntity;
+import com.enderio.machines.common.machine.obelisks.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.machine.painting.PaintingMachineBlockEntity;
 import com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.machine.sag_mill.SagMillBlockEntity;
@@ -186,17 +186,17 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<InhibitorObeliskBlockEntity> INHIBITOR_OBELISK = register(
             "inhibitor_obelisk", InhibitorObeliskBlockEntity::new, MachineBlocks.INHIBITOR_OBELISK)
                     .setRenderer(() -> ObeliskBER.factory(() -> Items.ENDER_PEARL))
-                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+                    .apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<AversionObeliskBlockEntity> AVERSION_OBELISK = register("aversion_obelisk",
             AversionObeliskBlockEntity::new, MachineBlocks.AVERSION_OBELISK)
                     .setRenderer(() -> ObeliskBER.factory(EIOBlocks.ENDERMAN_HEAD::asItem))
-                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+                    .apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<RelocatorObeliskBlockEntity> RELOCATOR_OBELISK = register(
             "relocator_obelisk", RelocatorObeliskBlockEntity::new, MachineBlocks.RELOCATOR_OBELISK)
                     .setRenderer(() -> ObeliskBER.factory(() -> Items.PRISMARINE))
-                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+                    .apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities);
 
     @SafeVarargs
     private static <B extends BlockEntity> RegiliteBlockEntity<B> register(String name,

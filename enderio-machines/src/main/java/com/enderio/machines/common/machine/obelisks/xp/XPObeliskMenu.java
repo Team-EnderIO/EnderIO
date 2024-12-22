@@ -1,4 +1,4 @@
-package com.enderio.machines.common.machine.obelisk.xp;
+package com.enderio.machines.common.machine.obelisks.xp;
 
 import com.enderio.core.common.network.menu.FluidStackSyncSlot;
 import com.enderio.machines.common.init.MachineBlockEntities;

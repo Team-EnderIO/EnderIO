@@ -54,7 +54,7 @@ public class DrainBlockEntity extends NewPoweredMachineBlockEntity implements Ra
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.DRAIN_USAGE);
 
-    private static final int DEFAULT_RANGE = 5;
+    private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);
 
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
@@ -66,7 +66,7 @@ public class DrainBlockEntity extends NewPoweredMachineBlockEntity implements Ra
     private int consumed = 0;
     private Fluid type = Fluids.EMPTY;
 
-    private ActionRange actionRange = new ActionRange(DEFAULT_RANGE, false);
+    private ActionRange actionRange = DEFAULT_RANGE;
 
     public DrainBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.DRAIN.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
@@ -269,6 +269,8 @@ public class DrainBlockEntity extends NewPoweredMachineBlockEntity implements Ra
         } else if (pTag.contains(MachineNBTKeys.ACTION_RANGE)) {
             actionRange = ActionRange.parse(lookupProvider,
                     Objects.requireNonNull(pTag.get(MachineNBTKeys.ACTION_RANGE)));
+        } else {
+            actionRange = DEFAULT_RANGE;
         }
     }
 
@@ -293,7 +295,7 @@ public class DrainBlockEntity extends NewPoweredMachineBlockEntity implements Ra
         super.collectImplicitComponents(components);
 
         // Only if unchanged.
-        if (actionRange.range() != DEFAULT_RANGE || actionRange.isVisible()) {
+        if (!actionRange.equals(DEFAULT_RANGE)) {
             components.set(MachineDataComponents.ACTION_RANGE, actionRange);
         }
 

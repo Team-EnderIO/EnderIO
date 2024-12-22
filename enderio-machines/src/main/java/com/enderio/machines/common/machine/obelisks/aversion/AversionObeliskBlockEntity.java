@@ -1,61 +1,38 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.obelisks.aversion;
 
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.filter.EntityFilter;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.machines.common.blockentity.base.ObeliskBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
+import com.enderio.machines.common.machine.obelisks.ObeliskBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
-import com.enderio.machines.common.menu.AversionObeliskMenu;
 import com.enderio.machines.common.obelisk.AversionObeliskManager;
+import com.enderio.machines.common.obelisk.ObeliskAreaManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import org.jetbrains.annotations.Nullable;
 
-public class AversionObeliskBlockEntity extends ObeliskBlockEntity {
+public class AversionObeliskBlockEntity extends ObeliskBlockEntity<AversionObeliskBlockEntity> {
 
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.AVERSION_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.AVERSION_USAGE);
 
     public AversionObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.AVERSION_OBELISK.get(), worldPosition, blockState);
+        super(MachineBlockEntities.AVERSION_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED, EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 
     @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-
-        if (level instanceof ServerLevel serverLevel) {
-            AversionObeliskManager.getManager(serverLevel).register(this);
-        }
-    }
-
-    @Override
-    public void setRemoved() {
-        if (level instanceof ServerLevel serverLevel) {
-            AversionObeliskManager.getManager(serverLevel).unregister(this);
-        }
-
-        super.setRemoved();
-    }
-
-    @Override
-    protected void updateLocations() {
-        super.updateLocations();
-
-        // Update range in obelisk manager
-        if (level instanceof ServerLevel serverLevel) {
-            AversionObeliskManager.getManager(serverLevel).update(this);
-        }
+    protected @Nullable ObeliskAreaManager<AversionObeliskBlockEntity> getAreaManager(ServerLevel level) {
+        return AversionObeliskManager.getManager(level);
     }
 
     @Override
@@ -69,8 +46,8 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new AversionObeliskMenu(pContainerId, this, pPlayerInventory);
+    public AbstractContainerMenu createMenu(int containerId, Inventory pPlayerInventory, Player pPlayer) {
+        return new AversionObeliskMenu(containerId, pPlayerInventory, this);
     }
 
     @Override

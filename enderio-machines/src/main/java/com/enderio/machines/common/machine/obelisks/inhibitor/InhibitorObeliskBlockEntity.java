@@ -1,59 +1,36 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.obelisks.inhibitor;
 
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
-import com.enderio.machines.common.blockentity.base.ObeliskBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
+import com.enderio.machines.common.machine.obelisks.ObeliskBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.machine.base.inventory.MachineInventoryLayout;
-import com.enderio.machines.common.menu.InhibitorObeliskMenu;
 import com.enderio.machines.common.obelisk.InhibitorObeliskManager;
+import com.enderio.machines.common.obelisk.ObeliskAreaManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import org.jetbrains.annotations.Nullable;
 
-public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity {
+public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity<InhibitorObeliskBlockEntity> {
 
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.INHIBITOR_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.INHIBITOR_USAGE);
 
     public InhibitorObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.INHIBITOR_OBELISK.get(), worldPosition, blockState);
+        super(MachineBlockEntities.INHIBITOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED, EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 
     @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-
-        if (level instanceof ServerLevel serverLevel) {
-            InhibitorObeliskManager.getManager(serverLevel).register(this);
-        }
-    }
-
-    @Override
-    public void setRemoved() {
-        if (level instanceof ServerLevel serverLevel) {
-            InhibitorObeliskManager.getManager(serverLevel).unregister(this);
-        }
-
-        super.setRemoved();
-    }
-
-    @Override
-    protected void updateLocations() {
-        super.updateLocations();
-
-        // Update range in obelisk manager
-        if (level instanceof ServerLevel serverLevel) {
-            InhibitorObeliskManager.getManager(serverLevel).update(this);
-        }
+    protected @Nullable ObeliskAreaManager<InhibitorObeliskBlockEntity> getAreaManager(ServerLevel level) {
+        return InhibitorObeliskManager.getManager(level);
     }
 
     @Override
@@ -65,8 +42,8 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new InhibitorObeliskMenu(pContainerId, this, pPlayerInventory);
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player pPlayer) {
+        return new InhibitorObeliskMenu(containerId, playerInventory, this);
     }
 
     @Override

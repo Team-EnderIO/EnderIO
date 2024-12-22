@@ -28,21 +28,21 @@ import com.enderio.machines.client.gui.screen.XPVacuumScreen;
 import com.enderio.machines.common.machine.alloy.AlloySmelterMenu;
 import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.machine.drain.DrainMenu;
-import com.enderio.machines.common.machine.obelisk.xp.XPObeliskMenu;
+import com.enderio.machines.common.machine.obelisks.xp.XPObeliskMenu;
 import com.enderio.machines.common.machine.painting.PaintingMachineMenu;
 import com.enderio.machines.common.machine.powered_spawner.PoweredSpawnerMenu;
 import com.enderio.machines.common.machine.sag_mill.SagMillMenu;
 import com.enderio.machines.common.machine.slicer.SlicerMenu;
 import com.enderio.machines.common.machine.stirling_generator.StirlingGeneratorMenu;
 import com.enderio.machines.common.machine.vat.VatMenu;
-import com.enderio.machines.common.menu.AversionObeliskMenu;
+import com.enderio.machines.common.machine.obelisks.aversion.AversionObeliskMenu;
 import com.enderio.machines.common.menu.CapacitorBankMenu;
 import com.enderio.machines.common.machine.crafter.CrafterMenu;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
-import com.enderio.machines.common.menu.InhibitorObeliskMenu;
-import com.enderio.machines.common.menu.RelocatorObeliskMenu;
+import com.enderio.machines.common.machine.obelisks.inhibitor.InhibitorObeliskMenu;
+import com.enderio.machines.common.machine.obelisks.relocator.RelocatorObeliskMenu;
 import com.enderio.machines.common.machine.soul_binder.SoulBinderMenu;
 import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.menu.TravelAnchorMenu;
@@ -100,11 +100,11 @@ public class MachineMenus {
     public static final RegiliteMenu<XPObeliskMenu> XP_OBELISK = MENU_REGISTRY.registerMenu("xp_obelisk",
             XPObeliskMenu::new, () -> XPObeliskScreen::new);
     public static final RegiliteMenu<InhibitorObeliskMenu> INHIBITOR_OBELISK = MENU_REGISTRY
-            .registerMenu("inhibitor_obelisk", InhibitorObeliskMenu::factory, () -> InhibitorObeliskScreen::new);
+            .registerMenu("inhibitor_obelisk", InhibitorObeliskMenu::new, () -> InhibitorObeliskScreen::new);
     public static final RegiliteMenu<AversionObeliskMenu> AVERSION_OBELISK = MENU_REGISTRY
-            .registerMenu("aversion_obelisk", AversionObeliskMenu::factory, () -> AversionObeliskScreen::new);
+            .registerMenu("aversion_obelisk", AversionObeliskMenu::new, () -> AversionObeliskScreen::new);
     public static final RegiliteMenu<RelocatorObeliskMenu> RELOCATOR_OBELISK = MENU_REGISTRY
-            .registerMenu("relocator_obelisk", RelocatorObeliskMenu::factory, () -> RelocatorObeliskScreen::new);
+            .registerMenu("relocator_obelisk", RelocatorObeliskMenu::new, () -> RelocatorObeliskScreen::new);
     public static final RegiliteMenu<VatMenu> VAT = MENU_REGISTRY.registerMenu("vat", VatMenu::new,
             () -> VatScreen::new);
 

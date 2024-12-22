@@ -1,4 +1,4 @@
-package com.enderio.machines.common.machine.obelisk.xp;
+package com.enderio.machines.common.machine.obelisks.xp;
 
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOFluids;

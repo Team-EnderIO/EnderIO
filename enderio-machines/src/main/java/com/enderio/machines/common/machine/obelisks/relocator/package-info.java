@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @net.minecraft.MethodsReturnNonnullByDefault
 
-package com.enderio.machines.common.machine.obelisk;
+package com.enderio.machines.common.machine.obelisks.relocator;

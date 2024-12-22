@@ -6,7 +6,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
 import com.enderio.machines.client.gui.widget.ExperienceWidget;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.machine.obelisk.xp.XPObeliskMenu;
+import com.enderio.machines.common.machine.obelisks.xp.XPObeliskMenu;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;

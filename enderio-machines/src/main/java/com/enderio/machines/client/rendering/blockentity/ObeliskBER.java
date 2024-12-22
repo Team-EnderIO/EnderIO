@@ -1,6 +1,6 @@
 package com.enderio.machines.client.rendering.blockentity;
 
-import com.enderio.machines.common.blockentity.base.ObeliskBlockEntity;
+import com.enderio.machines.common.machine.obelisks.ObeliskBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -12,7 +12,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Function;

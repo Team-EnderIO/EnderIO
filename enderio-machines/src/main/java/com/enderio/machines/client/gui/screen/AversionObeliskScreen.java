@@ -4,10 +4,10 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.client.gui.widget.EIOCommonWidgets;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.machines.client.gui.screen.base.MachineScreen;
+import com.enderio.machines.client.gui.screen.base.NewMachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
-import com.enderio.machines.common.menu.AversionObeliskMenu;
+import com.enderio.machines.common.machine.obelisks.aversion.AversionObeliskMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class AversionObeliskScreen extends MachineScreen<AversionObeliskMenu> {
+public class AversionObeliskScreen extends NewMachineScreen<AversionObeliskMenu> {
 
     public static final ResourceLocation BG_TEXTURE = EnderIOBase.loc("textures/gui/screen/inhibitor.png");
     private static final int WIDTH = 176;
@@ -48,12 +48,12 @@ public class AversionObeliskScreen extends MachineScreen<AversionObeliskMenu> {
             EIOLang.HIDE_RANGE,
             EIOLang.SHOW_RANGE,
             menu::isRangeVisible,
-            menu::setRangeVisible));
+            (ignored) -> handleButtonPress(AversionObeliskMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2, 8, 8, PLUS_SPRITES,
-            (b) -> menu.increaseRange()));
+            (b) -> handleButtonPress(AversionObeliskMenu.INCREASE_BUTTON_ID)));
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2 + 8, 8, 8, MINUS_SPRITES,
-            (b) -> menu.decreaseRange()));
+            (b) -> handleButtonPress(AversionObeliskMenu.DECREASE_BUTTON_ID)));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
     }
