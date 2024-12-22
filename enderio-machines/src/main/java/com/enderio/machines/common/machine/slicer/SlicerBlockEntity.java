@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.slicer;
 
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
@@ -14,7 +14,8 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
-import com.enderio.machines.common.menu.SlicerMenu;
+import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.recipe.SlicingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -32,7 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class SlicerBlockEntity extends PoweredMachineBlockEntity {
+public class SlicerBlockEntity extends NewPoweredMachineBlockEntity {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SLICER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.SLICER_USAGE);
@@ -45,14 +46,13 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     private final CraftingMachineTaskHost<SlicingRecipe, SlicingRecipe.Input> craftingTaskHost;
 
     public SlicerBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.SLICE_AND_SPLICE.get(), worldPosition, blockState);
+        super(MachineBlockEntities.SLICE_AND_SPLICE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, CAPACITY, USAGE);
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SLICING.type().get(),
             this::createTask, this::createRecipeInput) {
             @Override
             protected @Nullable CraftingMachineTask<SlicingRecipe, SlicingRecipe.Input> getNewTask() {
-                MachineInventory inv = getInventoryNN();
-                if (AXE.getItemStack(inv).isEmpty() || SHEARS.getItemStack(inv).isEmpty()) {
+                if (AXE.getItemStack(SlicerBlockEntity.this).isEmpty() || SHEARS.getItemStack(SlicerBlockEntity.this).isEmpty()) {
                     return null;
                 }
 
@@ -64,7 +64,7 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new SlicerMenu(containerId, this, inventory);
+        return new SlicerMenu(containerId, inventory, this);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private SlicingRecipe.Input createRecipeInput() {
-        return new SlicingRecipe.Input(INPUTS.getItemStacks(getInventoryNN()));
+        return new SlicingRecipe.Input(INPUTS.getItemStacks(getInventory()));
     }
 
     // endregion
@@ -133,12 +133,12 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    protected boolean isActive() {
+    public boolean isActive() {
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
     protected PoweredCraftingMachineTask<SlicingRecipe, SlicingRecipe.Input> createTask(Level level, SlicingRecipe.Input recipeInput, @Nullable RecipeHolder<SlicingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, getInventoryNN(), getEnergyStorage(), recipeInput, OUTPUT, recipe) {
+        return new PoweredCraftingMachineTask<>(level, getInventory(), getEnergyStorage(), recipeInput, OUTPUT, recipe) {
             @Override
             protected void consumeInputs(SlicingRecipe recipe) {
                 // Deduct ingredients

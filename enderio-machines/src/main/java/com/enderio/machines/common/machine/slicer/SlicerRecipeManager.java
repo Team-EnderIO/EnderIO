@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.slicer;
 
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;

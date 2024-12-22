@@ -141,7 +141,7 @@ public class MachineBlocks {
     public static final RegiliteBlock<NewProgressMachineBlock<?>> SAG_MILL = newProgressMachine("sag_mill",
             () -> MachineBlockEntities.SAG_MILL).setTranslation("SAG Mill");
 
-    public static final RegiliteBlock<ProgressMachineBlock> SLICE_AND_SPLICE = progressMachine("slice_and_splice",
+    public static final RegiliteBlock<NewProgressMachineBlock<?>> SLICE_AND_SPLICE = newProgressMachine("slice_and_splice",
             () -> MachineBlockEntities.SLICE_AND_SPLICE).setTranslation("Slice'N'Splice");
 
     public static final RegiliteBlock<ProgressMachineBlock> IMPULSE_HOPPER = progressMachine("impulse_hopper",

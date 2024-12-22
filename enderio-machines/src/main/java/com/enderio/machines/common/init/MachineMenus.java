@@ -39,7 +39,7 @@ import com.enderio.machines.common.menu.PoweredSpawnerMenu;
 import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.menu.RelocatorObeliskMenu;
 import com.enderio.machines.common.machine.sag_mill.SagMillMenu;
-import com.enderio.machines.common.menu.SlicerMenu;
+import com.enderio.machines.common.machine.slicer.SlicerMenu;
 import com.enderio.machines.common.menu.SoulBinderMenu;
 import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
@@ -72,7 +72,7 @@ public class MachineMenus {
     public static final RegiliteMenu<StirlingGeneratorMenu> STIRLING_GENERATOR = MENU_REGISTRY
             .registerMenu("stirling_generator", StirlingGeneratorMenu::factory, () -> StirlingGeneratorScreen::new);
     public static final RegiliteMenu<SlicerMenu> SLICE_N_SPLICE = MENU_REGISTRY.registerMenu("slice_n_splice",
-            SlicerMenu::factory, () -> SlicerScreen::new);
+            SlicerMenu::new, () -> SlicerScreen::new);
     public static final RegiliteMenu<ImpulseHopperMenu> IMPULSE_HOPPER = MENU_REGISTRY.registerMenu("impulse_hopper",
             ImpulseHopperMenu::factory, () -> ImpulseHopperScreen::new);
     public static final RegiliteMenu<SoulBinderMenu> SOUL_BINDER = MENU_REGISTRY.registerMenu("soul_binder",

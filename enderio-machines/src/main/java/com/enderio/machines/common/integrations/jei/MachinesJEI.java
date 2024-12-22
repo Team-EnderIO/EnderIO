@@ -26,7 +26,7 @@ import com.enderio.machines.common.integrations.jei.transfer.CrafterRecipeTransf
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.machine.alloy.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.machine.sag_mill.SagMillMenu;
-import com.enderio.machines.common.menu.SlicerMenu;
+import com.enderio.machines.common.machine.slicer.SlicerMenu;
 import com.enderio.machines.common.menu.SoulBinderMenu;
 import com.enderio.machines.common.menu.VatMenu;
 import mezz.jei.api.IModPlugin;
