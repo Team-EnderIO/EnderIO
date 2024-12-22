@@ -9,7 +9,7 @@ import com.enderio.machines.client.rendering.blockentity.ObeliskBER;
 import com.enderio.machines.client.rendering.blockentity.XPObeliskBER;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.AversionObeliskBlockEntity;
-import com.enderio.machines.common.blockentity.CrafterBlockEntity;
+import com.enderio.machines.common.machine.crafter.CrafterBlockEntity;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
@@ -118,7 +118,7 @@ public class MachineBlockEntities {
                     .apply(MachineBlockEntities::machineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<CrafterBlockEntity> CRAFTER = register("crafter", CrafterBlockEntity::new,
-            MachineBlocks.CRAFTER).apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+            MachineBlocks.CRAFTER).apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<DrainBlockEntity> DRAIN = register("drain", DrainBlockEntity::new,
             MachineBlocks.DRAIN).apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities)

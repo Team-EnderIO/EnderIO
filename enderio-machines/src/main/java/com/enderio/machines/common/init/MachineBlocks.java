@@ -223,7 +223,7 @@ public class MachineBlocks {
         return ImmutableMap.copyOf(banks);
     });
 
-    public static final RegiliteBlock<ProgressMachineBlock> CRAFTER = progressMachine("crafter",
+    public static final RegiliteBlock<NewProgressMachineBlock<?>> CRAFTER = newProgressMachine("crafter",
             () -> MachineBlockEntities.CRAFTER);
 
     public static final RegiliteBlock<ProgressMachineBlock> SOUL_ENGINE = BLOCK_REGISTRY

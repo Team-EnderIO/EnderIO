@@ -1,7 +1,7 @@
 package com.enderio.machines.common.integrations.jei.transfer;
 
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.menu.CrafterMenu;
+import com.enderio.machines.common.machine.crafter.CrafterMenu;
 import com.enderio.machines.common.network.UpdateCrafterTemplatePacket;
 import com.mojang.logging.LogUtils;
 import java.util.ArrayList;

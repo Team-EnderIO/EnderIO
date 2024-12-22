@@ -37,7 +37,7 @@ import com.enderio.machines.common.machine.stirling_generator.StirlingGeneratorM
 import com.enderio.machines.common.machine.vat.VatMenu;
 import com.enderio.machines.common.menu.AversionObeliskMenu;
 import com.enderio.machines.common.menu.CapacitorBankMenu;
-import com.enderio.machines.common.menu.CrafterMenu;
+import com.enderio.machines.common.machine.crafter.CrafterMenu;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
@@ -83,7 +83,7 @@ public class MachineMenus {
             VacuumChestMenu::factory, () -> VacuumChestScreen::new);
     public static final RegiliteMenu<XPVacuumMenu> XP_VACUUM = MENU_REGISTRY.registerMenu("xp_vacuum",
             XPVacuumMenu::factory, () -> XPVacuumScreen::new);
-    public static final RegiliteMenu<CrafterMenu> CRAFTER = MENU_REGISTRY.registerMenu("crafter", CrafterMenu::factory,
+    public static final RegiliteMenu<CrafterMenu> CRAFTER = MENU_REGISTRY.registerMenu("crafter", CrafterMenu::new,
             () -> CrafterScreen::new);
     public static final RegiliteMenu<DrainMenu> DRAIN = MENU_REGISTRY.registerMenu("drain", DrainMenu::new,
             () -> DrainScreen::new);

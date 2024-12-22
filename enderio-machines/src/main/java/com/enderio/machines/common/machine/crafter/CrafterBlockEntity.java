@@ -1,23 +1,21 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.crafter;
 
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
-import com.enderio.machines.common.menu.CrafterMenu;
+import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -31,7 +29,7 @@ import java.util.Optional;
 import java.util.Queue;
 
 // TODO: Might want to see if we can adapt this into a crafting task.
-public class CrafterBlockEntity extends PoweredMachineBlockEntity {
+public class CrafterBlockEntity extends NewPoweredMachineBlockEntity {
 
     public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.CRAFTER_CAPACITY);
     public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.CRAFTER_USAGE);
@@ -45,15 +43,15 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     private final Queue<ItemStack> outputBuffer = new ArrayDeque<>();
 
     public CrafterBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.CRAFTER.get(), worldPosition, blockState);
-        getInventoryNN().addSlotChangedCallback(this::onSlotChanged);
+        super(MachineBlockEntities.CRAFTER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 
     private CraftingInput getCraftingInput(MultiSlotAccess sourceSlots) {
-        return CraftingInput.of(3, 3, sourceSlots.getItemStacks(getInventoryNN()));
+        return CraftingInput.of(3, 3, sourceSlots.getItemStacks(getInventory()));
     }
 
-    private void onSlotChanged(int slot) {
+    @Override
+    protected void onInventoryContentsChanged(int slot) {
         if (GHOST.contains(slot)) {
             updateRecipe();
         }
@@ -74,7 +72,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new CrafterMenu(this, inventory, containerId);
+        return new CrafterMenu(containerId, inventory, this);
     }
 
     @Override
@@ -97,7 +95,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private boolean acceptSlotInput(int slot, ItemStack stack) {
-        return ItemStack.isSameItem(this.getInventoryNN().getStackInSlot(slot + 10), stack);
+        return ItemStack.isSameItem(this.getInventory().getStackInSlot(slot + 10), stack);
     }
 
     @Override
@@ -125,7 +123,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    protected boolean isActive() {
+    public boolean isActive() {
         return canAct() && hasEnergy();
     }
 
@@ -146,7 +144,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private boolean hasPowerToCraft() {
-        return this.energyStorage.consumeEnergy(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(), true) >=
+        return getEnergyStorage().consumeEnergy(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(), true) >=
             MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get();
     }
 
@@ -195,7 +193,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         // clean buffer
         outputBuffer.removeIf(ItemStack::isEmpty);
         // consume power
-        this.energyStorage.consumeEnergy(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(), false);
+        getEnergyStorage().consumeEnergy(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(), false);
         //check resource reload
         if (level.getRecipeManager().byKey(recipe.id()).orElse(null) != recipe) {
             recipe = null;
