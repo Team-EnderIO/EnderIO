@@ -136,7 +136,7 @@ public class MachineBlocks {
                     BlockBehaviour.Properties.of())
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
-    public static final RegiliteBlock<ProgressMachineBlock> STIRLING_GENERATOR = progressMachine("stirling_generator",
+    public static final RegiliteBlock<NewProgressMachineBlock<?>> STIRLING_GENERATOR = newProgressMachine("stirling_generator",
             () -> MachineBlockEntities.STIRLING_GENERATOR);
 
     public static final RegiliteBlock<NewProgressMachineBlock<?>> SAG_MILL = newProgressMachine("sag_mill",

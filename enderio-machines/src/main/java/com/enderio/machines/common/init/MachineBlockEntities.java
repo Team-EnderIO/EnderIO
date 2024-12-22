@@ -25,7 +25,7 @@ import com.enderio.machines.common.machine.sag_mill.SagMillBlockEntity;
 import com.enderio.machines.common.machine.slicer.SlicerBlockEntity;
 import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
 import com.enderio.machines.common.blockentity.SoulEngineBlockEntity;
-import com.enderio.machines.common.blockentity.StirlingGeneratorBlockEntity;
+import com.enderio.machines.common.machine.stirling_generator.StirlingGeneratorBlockEntity;
 import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.VacuumChestBlockEntity;
 import com.enderio.machines.common.blockentity.VatBlockEntity;
@@ -87,7 +87,7 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<StirlingGeneratorBlockEntity> STIRLING_GENERATOR = register(
             "stirling_generator", StirlingGeneratorBlockEntity::new, MachineBlocks.STIRLING_GENERATOR)
-                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+                    .apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<SagMillBlockEntity> SAG_MILL = register("sag_mill", SagMillBlockEntity::new,
             MachineBlocks.SAG_MILL).apply(MachineBlockEntities::newPoweredMachineBlockEntityCapabilities);

@@ -1,21 +1,20 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.machine.stirling_generator;
 
-import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.FixedScalable;
 import com.enderio.base.api.capacitor.LinearScalable;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.capacitor.SteppedScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
-import com.enderio.machines.common.menu.StirlingGeneratorMenu;
+import com.enderio.machines.common.machine.base.blockentity.NewPoweredMachineBlockEntity;
+import com.enderio.machines.common.machine.base.blockentity.flags.CapacitorSupport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -26,12 +25,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
+public class StirlingGeneratorBlockEntity extends NewPoweredMachineBlockEntity {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_CAPACITY);
 
@@ -49,12 +47,8 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     private int burnTime;
     private int burnDuration;
 
-    @UseOnly(LogicalSide.CLIENT)
-    private float clientBurnProgress;
-
     public StirlingGeneratorBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, MachineBlockEntities.STIRLING_GENERATOR.get(), worldPosition, blockState);
-        addDataSlot(NetworkDataSlot.FLOAT.create(this::getBurnProgress, p -> clientBurnProgress = p));
+        super(MachineBlockEntities.STIRLING_GENERATOR.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
     }
 
     public int getGenerationRate() {
@@ -77,7 +71,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
             burnTime--;
 
             if (!requiresCapacitor() || isCapacitorInstalled()) {
-                energyStorage.addEnergy(getGenerationRate());
+                getEnergyStorage().addEnergy(getGenerationRate());
             }
         }
 
@@ -108,7 +102,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    protected boolean isActive() {
+    public boolean isActive() {
         return canAct() && hasEnergy() && isGenerating();
     }
 
@@ -121,10 +115,6 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public float getBurnProgress() {
-        if (level != null && level.isClientSide) {
-            return clientBurnProgress;
-        }
-
         if (burnDuration != 0) {
             return burnTime / (float) burnDuration;
         }
@@ -135,14 +125,14 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new StirlingGeneratorMenu(pContainerId, this, pInventory);
+        return new StirlingGeneratorMenu(pContainerId, pInventory, this);
     }
 
     @Override
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
         if (FUEL.isSlot(slot)) {
-            updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(getInventoryNN()).isEmpty());
+            updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(this).isEmpty());
         }
     }
 
@@ -170,7 +160,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
-        updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(getInventoryNN()).isEmpty());
+        updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(this).isEmpty());
     }
 
     @Override
@@ -187,6 +177,6 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
-        updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(getInventoryNN()).isEmpty());
+        updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(this).isEmpty());
     }
 }
