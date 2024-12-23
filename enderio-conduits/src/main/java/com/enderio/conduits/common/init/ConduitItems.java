@@ -3,6 +3,7 @@ package com.enderio.conduits.common.init;
 import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
+import com.enderio.base.data.model.block.PaintedBlockModelBuilder;
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.common.conduit.facades.ComponentBackedConduitFacadeProvider;
 import com.enderio.conduits.common.conduit.facades.FacadeType;
@@ -19,6 +20,7 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -28,25 +30,22 @@ import java.util.function.Supplier;
 public class ConduitItems {
     private static final ItemRegistry ITEM_REGISTRY = EnderIOConduits.REGILITE.itemRegistry();
 
-    public static final RegiliteItem<Item> CONDUIT_FACADE = ITEM_REGISTRY.registerItem("conduit_facade",
-            props -> new Item(props.component(ConduitComponents.FACADE_TYPE, FacadeType.BASIC)))
-        .setTab(EIOCreativeTabs.CONDUITS)
-        .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacadeProvider.PROVIDER);
+    public static final RegiliteItem<Item> CONDUIT_FACADE = conduitFacade("conduit_facade", FacadeType.BASIC);
+    public static final RegiliteItem<Item> TRANSPARENT_CONDUIT_FACADE = conduitFacade("transparent_conduit_facade", FacadeType.TRANSPARENT);
+    public static final RegiliteItem<Item> HARDENED_CONDUIT_FACADE = conduitFacade("hardened_conduit_facade", FacadeType.HARDENED);
+    public static final RegiliteItem<Item> TRANSPARENT_HARDENED_CONDUIT_FACADE = conduitFacade("transparent_hardened_conduit_facade", FacadeType.TRANSPARENT_HARDENED);
 
-    public static final RegiliteItem<Item> TRANSPARENT_CONDUIT_FACADE = ITEM_REGISTRY.registerItem("transparent_conduit_facade",
-            props -> new Item(props.component(ConduitComponents.FACADE_TYPE, FacadeType.TRANSPARENT)))
-        .setTab(EIOCreativeTabs.CONDUITS)
-        .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacadeProvider.PROVIDER);
-
-    public static final RegiliteItem<Item> HARDENED_CONDUIT_FACADE = ITEM_REGISTRY.registerItem("hardened_conduit_facade",
-            props -> new Item(props.component(ConduitComponents.FACADE_TYPE, FacadeType.HARDENED)))
-        .setTab(EIOCreativeTabs.CONDUITS)
-        .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacadeProvider.PROVIDER);
-
-    public static final RegiliteItem<Item> TRANSPARENT_HARDENED_CONDUIT_FACADE = ITEM_REGISTRY.registerItem("transparent_hardened_conduit_facade",
-            props -> new Item(props.component(ConduitComponents.FACADE_TYPE, FacadeType.TRANSPARENT_HARDENED)))
-        .setTab(EIOCreativeTabs.CONDUITS)
-        .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacadeProvider.PROVIDER);
+    private static RegiliteItem<Item> conduitFacade(String name, FacadeType type) {
+        return ITEM_REGISTRY.registerItem(name,
+                props -> new Item(props.component(ConduitComponents.FACADE_TYPE, type)))
+            // TODO: Model for when there is no "paint"
+            .setModelProvider((prov, ctx) -> prov.getBuilder(name)
+                .customLoader(PaintedBlockModelBuilder::begin)
+                .reference(Blocks.STONE)
+                .end())
+            .setTab(EIOCreativeTabs.CONDUITS)
+            .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacadeProvider.PROVIDER);
+    }
 
     public static final RegiliteItem<SpeedUpgradeItem> EXTRACTION_SPEED_UPGRADE_1 = ITEM_REGISTRY.registerItem("extraction_speed_upgrade_1", properties ->
             new SpeedUpgradeItem(properties.component(ConduitComponents.EXTRACTION_SPEED_UPGRADE_TIER, 1)))
