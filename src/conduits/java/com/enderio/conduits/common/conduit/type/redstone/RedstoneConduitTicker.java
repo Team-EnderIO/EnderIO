@@ -33,7 +33,9 @@ public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneCondu
 
     @Override
     public boolean canHaveConnection(Level level, BlockPos conduitPos, Direction direction) {
-        return true;
+        BlockPos neighbor = conduitPos.relative(direction);
+        BlockState blockState = level.getBlockState(neighbor);
+        return !blockState.isAir();
     }
 
     @Override
