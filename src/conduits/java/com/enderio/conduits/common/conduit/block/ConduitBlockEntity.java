@@ -192,7 +192,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
                     ConnectionState connectionState = bundle.getConnectionState(direction, type);
                     if (connectionState instanceof DynamicConnectionState dyn) {
-                        if (!type.getTicker().canHaveConnection(level, pos, direction)) {
+                        if (!type.getTicker().canForceConnect(level, pos, direction)) {
                             bundle.getNodeFor(type).clearState(direction);
                             dropConnection(dyn);
                             bundle.setConnectionState(direction, type, StaticConnectionStates.DISCONNECTED);
@@ -306,7 +306,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
             return Optional.of(conduit.bundle.getNodeFor(type));
         } else if (type.getTicker().canConnectTo(level, getBlockPos(), dir)
-            || (forceConnection && type.getTicker().canHaveConnection(level, getBlockPos(), dir))) {
+            || (forceConnection && type.getTicker().canForceConnect(level, getBlockPos(), dir))) {
             if (bundle.getConnectionState(dir, type) instanceof DynamicConnectionState dyn && dyn.isConnection()) {  // Already connected
                 updateConnectionToData(type);
                 return Optional.empty();
