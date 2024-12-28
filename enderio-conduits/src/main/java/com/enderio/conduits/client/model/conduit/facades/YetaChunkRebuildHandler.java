@@ -1,6 +1,5 @@
 package com.enderio.conduits.client.model.conduit.facades;
 
-import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.EnderIOConduits;
 import net.minecraft.client.player.LocalPlayer;
@@ -22,6 +21,7 @@ public class YetaChunkRebuildHandler {
 
         if (event.getTo().is(EIOTags.Items.HIDE_FACADES) ||
             event.getFrom().is(EIOTags.Items.HIDE_FACADES)) {
+            FacadeHelper.setFacadesVisible(!event.getTo().is(EIOTags.Items.HIDE_FACADES));
             FacadeHelper.rebuildChunkMeshes();
         }
     }

@@ -9,26 +9,17 @@ import com.enderio.conduits.client.gui.conduit.FluidConduitScreenExtension;
 import com.enderio.conduits.client.gui.conduit.ItemConduitScreenExtension;
 import com.enderio.conduits.client.model.ConduitGeometry;
 import com.enderio.conduits.client.model.ConduitItemModelLoader;
+import com.enderio.conduits.client.model.FacadeItemGeometry;
 import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
 import com.enderio.conduits.client.model.conduit.modifier.FluidConduitCoreModelModifier;
-import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitTypes;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,8 +33,7 @@ public class ConduitClientSetup {
     private static final Map<ModelResourceLocation, BakedModel> MODELS = new HashMap<>();
 
     public static final ModelResourceLocation CONDUIT_CONNECTOR = loc("block/conduit_connector");
-    public static final ModelResourceLocation CONDUIT_FACADE = loc("block/cube_all");
-//    public static final ModelResourceLocation CONDUIT_FACADE = loc("block/conduit_facade");
+    public static final ModelResourceLocation CONDUIT_FACADE_OVERLAY = loc("block/conduit_facade_overlay");
     public static final ModelResourceLocation CONDUIT_CONNECTION = loc("block/conduit_connection");
     public static final ModelResourceLocation CONDUIT_CORE = loc("block/conduit_core");
     public static final ModelResourceLocation BOX = loc("block/box/1x1x1");
@@ -52,6 +42,12 @@ public class ConduitClientSetup {
     public static final ModelResourceLocation CONDUIT_IO_IN_OUT = loc("block/io/in_out");
     public static final ModelResourceLocation CONDUIT_IO_OUT = loc("block/io/output");
     public static final ModelResourceLocation CONDUIT_IO_REDSTONE = loc("block/io/redstone");
+
+    public static final ModelResourceLocation CONDUIT_FACADE = loc("block/conduit_facade");
+    public static final ModelResourceLocation CONDUIT_FACADE_HARDENED = loc("block/conduit_facade_hardened");
+    public static final ModelResourceLocation CONDUIT_FACADE_TRANSLUCENT = loc("block/conduit_facade_translucent");
+    public static final ModelResourceLocation CONDUIT_FACADE_TRANSLUCENT_HARDENED = loc("block/conduit_facade_translucent_hardened");
+
 
     private ConduitClientSetup() {}
 
@@ -75,6 +71,7 @@ public class ConduitClientSetup {
     public static void modelLoader(ModelEvent.RegisterGeometryLoaders event) {
         event.register(EnderIOBase.loc("conduit"), new ConduitGeometry.Loader());
         event.register(EnderIOBase.loc("conduit_item"), new ConduitItemModelLoader());
+        event.register(EnderIOBase.loc("facades_item"), new FacadeItemGeometry.Loader());
     }
 
     @SubscribeEvent
@@ -95,19 +92,6 @@ public class ConduitClientSetup {
         }
     }
 
-    @SubscribeEvent
-    public static void blockColors(RegisterColorHandlersEvent.Block block) {
-        block.register(new ConduitBlockColor(), ConduitBlocks.CONDUIT.get());
-    }
-
-    public static class ConduitBlockColor implements BlockColor {
-
-        @Override
-        public int getColor(BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tintIndex) {
-            return DyeColor.values()[tintIndex].getTextureDiffuseColor();
-        }
-    }
-
     private static ModelResourceLocation loc(String modelName) {
         ModelResourceLocation loc = ModelResourceLocation.standalone(EnderIOBase.loc(modelName));
         MODEL_LOCATIONS.add(loc);
@@ -116,9 +100,5 @@ public class ConduitClientSetup {
 
     public static BakedModel modelOf(ModelResourceLocation location) {
         return MODELS.get(location);
-    }
-
-    public static Level getClientLevel() {
-        return Minecraft.getInstance().level;
     }
 }

@@ -474,7 +474,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity blockEntity) {
             Optional<Block> facade = blockEntity.getBundle().facade();
-            if (facade.isPresent()) {
+            if (facade.isPresent() && FacadeHelper.areFacadesVisible()) {
                 return facade.get().asItem().getDefaultInstance();
             }
 

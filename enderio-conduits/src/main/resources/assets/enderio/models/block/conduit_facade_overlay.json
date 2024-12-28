@@ -1,0 +1,21 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "0": "enderio:block/conduit_facade_overlay",
+        "particle": "enderio:block/conduit_facade_overlay"
+    },
+	"elements": [
+		{
+			"from": [-0.01, -0.01, -0.01],
+			"to": [16.01, 16.01, 16.01],
+			"faces": {
+				"north": {"texture": "#0"},
+				"east": {"texture": "#0"},
+				"south": {"texture": "#0"},
+				"west": {"texture": "#0"},
+				"up": {"texture": "#0"},
+				"down": {"texture": "#0"}
+			}
+		}
+	]
+}

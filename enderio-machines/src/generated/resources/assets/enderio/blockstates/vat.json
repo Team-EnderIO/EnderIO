@@ -1,17 +1,32 @@
 {
   "variants": {
-    "facing=east": {
+    "facing=east,powered=false": {
       "model": "enderio:block/vat_combined",
       "y": 90
     },
-    "facing=north": {
+    "facing=east,powered=true": {
+      "model": "enderio:block/vat_combined",
+      "y": 90
+    },
+    "facing=north,powered=false": {
       "model": "enderio:block/vat_combined"
     },
-    "facing=south": {
+    "facing=north,powered=true": {
+      "model": "enderio:block/vat_combined"
+    },
+    "facing=south,powered=false": {
       "model": "enderio:block/vat_combined",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,powered=true": {
+      "model": "enderio:block/vat_combined",
+      "y": 180
+    },
+    "facing=west,powered=false": {
+      "model": "enderio:block/vat_combined",
+      "y": 270
+    },
+    "facing=west,powered=true": {
       "model": "enderio:block/vat_combined",
       "y": 270
     }

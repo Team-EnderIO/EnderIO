@@ -1,21 +1,18 @@
 package com.enderio.conduits.client.model.conduit.facades;
 
-import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.InteractionHand;
 
 // TODO: In future, support hiding specific conduit types too.
 public class FacadeHelper {
+
+    private static boolean FACADES_VISIBLE = true;
+
+    public static void setFacadesVisible(boolean visible) {
+        FACADES_VISIBLE = visible;
+    }
+
     public static boolean areFacadesVisible() {
-        var minecraft = Minecraft.getInstance();
-        if (minecraft.player == null) {
-            return true;
-        }
-
-        var mainHand = minecraft.player.getItemInHand(InteractionHand.MAIN_HAND);
-        var offHand = minecraft.player.getItemInHand(InteractionHand.OFF_HAND);
-
-        return !mainHand.is(EIOTags.Items.HIDE_FACADES) && !offHand.is(EIOTags.Items.HIDE_FACADES);
+        return FACADES_VISIBLE;
     }
 
     public static void rebuildChunkMeshes() {

@@ -23,8 +23,6 @@ import com.enderio.conduits.common.conduit.SlotData;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
-import com.enderio.conduits.common.conduit.facades.ConduitFacadeProvider;
-import com.enderio.conduits.common.conduit.facades.FacadeType;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.enderio.conduits.common.menu.ConduitMenu;
@@ -64,6 +62,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import net.neoforged.neoforge.common.util.INBTSerializable;
@@ -75,8 +74,12 @@ import org.jetbrains.annotations.Nullable;
 public class ConduitBundleBlockEntity extends EnderBlockEntity {
 
     public static final ModelProperty<ConduitBundle> BUNDLE_MODEL_PROPERTY = new ModelProperty<>();
-    public static final ModelProperty<BlockPos> POS = new ModelProperty<>();
+    public static final ModelProperty<ModelData> FACADE_MODEL_DATA = new ModelProperty<>();
+    public static final ModelProperty<ChunkRenderTypeSet> FACADE_RENDERTYPE = new ModelProperty<>();
     public static final String CONDUIT_INV_KEY = "ConduitInv";
+
+    @UseOnly(LogicalSide.CLIENT)
+    public static final Map<BlockPos, BlockState> FACADES = new HashMap<>();
 
     private final ConduitShape shape = new ConduitShape();
 
@@ -116,6 +119,11 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
             updateShape();
             requestModelDataUpdate();
             level.setBlocksDirty(getBlockPos(), Blocks.AIR.defaultBlockState(), getBlockState());
+            if (bundle.hasFacade()) {
+                FACADES.put(worldPosition, bundle.facade().get().defaultBlockState());
+            } else {
+                FACADES.remove(worldPosition);
+            }
         }
     }
 
@@ -203,6 +211,12 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
         if (level instanceof ServerLevel serverLevel) {
             ConduitSavedData savedData = ConduitSavedData.get(serverLevel);
             bundle.getConduits().forEach(type -> onChunkUnloaded(savedData, type));
+        } else {
+            if (bundle.hasFacade()) {
+                FACADES.put(worldPosition, bundle.facade().get().defaultBlockState());
+            } else {
+                FACADES.remove(worldPosition);
+            }
         }
     }
 
@@ -300,7 +314,9 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
 
     @Override
     public ModelData getModelData() {
-        return ModelData.builder().with(BUNDLE_MODEL_PROPERTY, clientBundle).with(POS, worldPosition).build();
+        return ModelData.builder()
+            .with(BUNDLE_MODEL_PROPERTY, clientBundle)
+            .build();
     }
 
     public boolean hasType(Holder<Conduit<?>> conduit) {

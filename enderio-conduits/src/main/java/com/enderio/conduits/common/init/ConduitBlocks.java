@@ -2,6 +2,7 @@ package com.enderio.conduits.common.init;
 
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.EnderIOConduits;
+import com.enderio.conduits.client.ConduitFacadeColor;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlock;
 import com.enderio.conduits.data.model.ConduitBlockState;
@@ -26,6 +27,7 @@ public class ConduitBlocks {
                 .noOcclusion()
                 .dynamicShape()
                 .mapColor(MapColor.STONE))
+        .setColorSupplier(() -> ConduitFacadeColor::new)
         .setTranslation("Conduit Bundle")
         .setBlockStateProvider(ConduitBlockState::conduit)
         .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)

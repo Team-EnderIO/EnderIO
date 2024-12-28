@@ -5,6 +5,8 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.data.model.block.PaintedBlockModelBuilder;
 import com.enderio.conduits.EnderIOConduits;
+import com.enderio.conduits.client.ConduitClientSetup;
+import com.enderio.conduits.client.ConduitFacadeColor;
 import com.enderio.conduits.common.conduit.facades.ComponentBackedConduitFacadeProvider;
 import com.enderio.conduits.common.conduit.facades.FacadeType;
 import com.enderio.conduits.common.conduit.upgrade.SpeedUpgradeItem;
@@ -13,6 +15,8 @@ import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneFilterItem;
 import com.enderio.conduits.common.redstone.RedstoneTLatchFilter;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
+import com.enderio.conduits.data.model.FacadeItemModelBuilder;
+import com.enderio.core.client.ClientModEvents;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
 import net.minecraft.core.component.DataComponentType;
@@ -40,10 +44,11 @@ public class ConduitItems {
                 props -> new Item(props.component(ConduitComponents.FACADE_TYPE, type)))
             // TODO: Model for when there is no "paint"
             .setModelProvider((prov, ctx) -> prov.getBuilder(name)
-                .customLoader(PaintedBlockModelBuilder::begin)
-                .reference(Blocks.STONE)
+                .customLoader(FacadeItemModelBuilder::begin)
+                .model(name)
                 .end())
             .setTab(EIOCreativeTabs.CONDUITS)
+            .setColorSupplier(() -> ConduitFacadeColor::new)
             .addCapability(ConduitCapabilities.ConduitFacade.ITEM, ComponentBackedConduitFacadeProvider.PROVIDER);
     }
 
