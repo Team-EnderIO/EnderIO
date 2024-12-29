@@ -17,10 +17,10 @@ import java.util.function.Supplier;
  * These are stored separately so that it can be an item component alongside the paint.
  */
 public enum FacadeType implements StringRepresentable {
-    BASIC(0, "basic", true, false),
-    HARDENED(1, "hardened", true, true),
-    TRANSPARENT(2, "transparent", false, false),
-    TRANSPARENT_HARDENED(3, "transparent_hardened", false, true);
+    BASIC(0, "basic", false, false),
+    HARDENED(1, "hardened", false, true),
+    TRANSPARENT(2, "transparent", true, false),
+    TRANSPARENT_HARDENED(3, "transparent_hardened", true, true);
 
     public static final Codec<FacadeType> CODEC = StringRepresentable.fromEnum(FacadeType::values);
     public static final IntFunction<FacadeType> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
