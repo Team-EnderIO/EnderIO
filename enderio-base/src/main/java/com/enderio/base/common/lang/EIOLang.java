@@ -4,6 +4,7 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.core.common.util.TooltipUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -202,7 +203,7 @@ public class EIOLang {
 
     // region Misc Tooltips
 
-    public static final MutableComponent SHOW_DETAIL_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("gui.show_advanced_tooltip"), "<Hold Shift>");
+    public static final Component SHOW_DETAIL_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("gui.show_advanced_tooltip"), "<Hold Shift>").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
 
     // endregion
     

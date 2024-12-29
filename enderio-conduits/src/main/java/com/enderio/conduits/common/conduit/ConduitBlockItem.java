@@ -2,6 +2,7 @@ package com.enderio.conduits.common.conduit;
 
 import com.enderio.base.client.tooltip.TooltipHandler;
 import com.enderio.base.common.init.EIOCreativeTabs;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
@@ -99,7 +100,7 @@ public class ConduitBlockItem extends BlockItem {
             }
 
             if (showDetailTooltip) {
-                tooltipComponents.add(TooltipHandler.DETAIL_TOOLTIP);
+                tooltipComponents.add(EIOLang.SHOW_DETAIL_TOOLTIP);
             }
         }
 

@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.client.ConduitFacadeColor;
 import com.enderio.conduits.common.conduit.facades.ComponentBackedConduitFacadeProvider;
+import com.enderio.conduits.common.conduit.facades.ConduitFacadeItem;
 import com.enderio.conduits.common.conduit.facades.FacadeType;
 import com.enderio.conduits.common.conduit.upgrade.SpeedUpgradeItem;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
@@ -29,16 +30,16 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 public class ConduitItems {
     private static final ItemRegistry ITEM_REGISTRY = EnderIOConduits.REGILITE.itemRegistry();
 
-    public static final RegiliteItem<Item> CONDUIT_FACADE = conduitFacade("conduit_facade", FacadeType.BASIC);
-    public static final RegiliteItem<Item> TRANSPARENT_CONDUIT_FACADE = conduitFacade("transparent_conduit_facade",
+    public static final RegiliteItem<ConduitFacadeItem> CONDUIT_FACADE = conduitFacade("conduit_facade", FacadeType.BASIC);
+    public static final RegiliteItem<ConduitFacadeItem> TRANSPARENT_CONDUIT_FACADE = conduitFacade("transparent_conduit_facade",
             FacadeType.TRANSPARENT);
-    public static final RegiliteItem<Item> HARDENED_CONDUIT_FACADE = conduitFacade("hardened_conduit_facade",
+    public static final RegiliteItem<ConduitFacadeItem> HARDENED_CONDUIT_FACADE = conduitFacade("hardened_conduit_facade",
             FacadeType.HARDENED);
-    public static final RegiliteItem<Item> TRANSPARENT_HARDENED_CONDUIT_FACADE = conduitFacade(
+    public static final RegiliteItem<ConduitFacadeItem> TRANSPARENT_HARDENED_CONDUIT_FACADE = conduitFacade(
             "transparent_hardened_conduit_facade", FacadeType.TRANSPARENT_HARDENED);
 
-    private static RegiliteItem<Item> conduitFacade(String name, FacadeType type) {
-        return ITEM_REGISTRY.registerItem(name, props -> new Item(props.component(ConduitComponents.FACADE_TYPE, type)))
+    private static RegiliteItem<ConduitFacadeItem> conduitFacade(String name, FacadeType type) {
+        return ITEM_REGISTRY.registerItem(name, props -> new ConduitFacadeItem(props.component(ConduitComponents.FACADE_TYPE, type)))
                 // TODO: Model for when there is no "paint"
                 .setModelProvider((prov,
                         ctx) -> prov.getBuilder(name).customLoader(FacadeItemModelBuilder::begin).model(name).end())

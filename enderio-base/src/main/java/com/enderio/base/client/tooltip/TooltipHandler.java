@@ -34,8 +34,6 @@ import java.util.Optional;
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 public class TooltipHandler {
 
-    public static final Component DETAIL_TOOLTIP = EIOLang.SHOW_DETAIL_TOOLTIP.copy().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
-
     @SubscribeEvent
     public static void addAdvancedTooltips(ItemTooltipEvent evt) {
         ItemStack forItem = evt.getItemStack();
@@ -127,8 +125,8 @@ public class TooltipHandler {
     // endregion
 
     private static void addShowDetailsTooltip(List<Component> components) {
-        if (!components.contains(DETAIL_TOOLTIP)) {
-            components.add(DETAIL_TOOLTIP);
+        if (!components.contains(EIOLang.SHOW_DETAIL_TOOLTIP)) {
+            components.add(EIOLang.SHOW_DETAIL_TOOLTIP);
         }
     }
 
