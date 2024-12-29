@@ -14,20 +14,18 @@ import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 public class FacadeVisibilityHandler {
     @SubscribeEvent
     public static void onEquipmentChanged(LivingEquipmentChangeEvent event) {
-        if (event.getSlot() != EquipmentSlot.MAINHAND &&
-            event.getSlot() != EquipmentSlot.OFFHAND &&
-            !(event.getEntity() instanceof LocalPlayer)) {
+        if (event.getSlot() != EquipmentSlot.MAINHAND && event.getSlot() != EquipmentSlot.OFFHAND
+                && !(event.getEntity() instanceof LocalPlayer)) {
             return;
         }
 
-        if (event.getTo().is(EIOTags.Items.HIDE_FACADES) ||
-            event.getFrom().is(EIOTags.Items.HIDE_FACADES)) {
+        if (event.getTo().is(EIOTags.Items.HIDE_FACADES) || event.getFrom().is(EIOTags.Items.HIDE_FACADES)) {
 
             // Check both hands directly in case of an offhand swap.
             ItemStack mainHand = event.getEntity().getItemBySlot(EquipmentSlot.MAINHAND);
             ItemStack offHand = event.getEntity().getItemBySlot(EquipmentSlot.OFFHAND);
-            FacadeHelper.setFacadesVisible(!mainHand.is(EIOTags.Items.HIDE_FACADES) &&
-                !offHand.is(EIOTags.Items.HIDE_FACADES));
+            FacadeHelper.setFacadesVisible(
+                    !mainHand.is(EIOTags.Items.HIDE_FACADES) && !offHand.is(EIOTags.Items.HIDE_FACADES));
 
             FacadeHelper.rebuildChunkMeshes();
         }

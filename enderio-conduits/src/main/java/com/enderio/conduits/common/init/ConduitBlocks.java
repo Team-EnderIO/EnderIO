@@ -20,22 +20,20 @@ public class ConduitBlocks {
     private static final BlockRegistry BLOCK_REGISTRY = EnderIOConduits.REGILITE.blockRegistry();
 
     public static final RegiliteBlock<ConduitBundleBlock> CONDUIT = BLOCK_REGISTRY
-        .registerBlock("conduit", ConduitBundleBlock::new,
-            BlockBehaviour.Properties.of()
-                .strength(1.5f, 10)
-                .noLootTable()
-                .noOcclusion()
-                .dynamicShape()
-                .mapColor(MapColor.STONE))
-        .setColorSupplier(() -> ConduitFacadeColor::new)
-        .setTranslation("Conduit Bundle")
-        .setBlockStateProvider(ConduitBlockState::conduit)
-        .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)
-        .createBlockItem(ITEM_REGISTRY, b -> new ConduitBlockItem(b, new Item.Properties()),
-            item -> item
-                .setTranslation("<MISSING> Conduit")
-                .setModelProvider((prov, ctx) -> {})
-                .addItemTags(EIOTags.Items.HIDE_FACADES));
+            .registerBlock("conduit", ConduitBundleBlock::new,
+                    BlockBehaviour.Properties.of()
+                            .strength(1.5f, 10)
+                            .noLootTable()
+                            .noOcclusion()
+                            .dynamicShape()
+                            .mapColor(MapColor.STONE))
+            .setColorSupplier(() -> ConduitFacadeColor::new)
+            .setTranslation("Conduit Bundle")
+            .setBlockStateProvider(ConduitBlockState::conduit)
+            .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)
+            .createBlockItem(ITEM_REGISTRY, b -> new ConduitBlockItem(b, new Item.Properties()),
+                    item -> item.setTranslation("<MISSING> Conduit").setModelProvider((prov, ctx) -> {
+                    }).addItemTags(EIOTags.Items.HIDE_FACADES));
 
     public static void register(IEventBus bus) {
         BLOCK_REGISTRY.register(bus);

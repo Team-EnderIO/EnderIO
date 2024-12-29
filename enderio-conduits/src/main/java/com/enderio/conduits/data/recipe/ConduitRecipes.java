@@ -11,6 +11,7 @@ import com.enderio.conduits.common.init.Conduits;
 import com.enderio.conduits.common.recipe.ConduitIngredient;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.blocks.painting.PaintingRecipe;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
@@ -26,8 +27,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
-
-import java.util.concurrent.CompletableFuture;
 
 public class ConduitRecipes extends RecipeProvider {
 
@@ -342,17 +341,18 @@ public class ConduitRecipes extends RecipeProvider {
 
     private void buildFacadePaintingRecipes(RecipeOutput recipeOutput) {
         paintingRecipe(ConduitItems.CONDUIT_FACADE, Ingredient.of(ConduitItems.CONDUIT_FACADE), recipeOutput);
-        paintingRecipe(ConduitItems.HARDENED_CONDUIT_FACADE, Ingredient.of(ConduitItems.HARDENED_CONDUIT_FACADE), recipeOutput);
-        paintingRecipe(ConduitItems.TRANSPARENT_CONDUIT_FACADE, Ingredient.of(ConduitItems.TRANSPARENT_CONDUIT_FACADE), recipeOutput);
-        paintingRecipe(ConduitItems.TRANSPARENT_HARDENED_CONDUIT_FACADE, Ingredient.of(ConduitItems.TRANSPARENT_HARDENED_CONDUIT_FACADE), recipeOutput);
+        paintingRecipe(ConduitItems.HARDENED_CONDUIT_FACADE, Ingredient.of(ConduitItems.HARDENED_CONDUIT_FACADE),
+                recipeOutput);
+        paintingRecipe(ConduitItems.TRANSPARENT_CONDUIT_FACADE, Ingredient.of(ConduitItems.TRANSPARENT_CONDUIT_FACADE),
+                recipeOutput);
+        paintingRecipe(ConduitItems.TRANSPARENT_HARDENED_CONDUIT_FACADE,
+                Ingredient.of(ConduitItems.TRANSPARENT_HARDENED_CONDUIT_FACADE), recipeOutput);
     }
 
     // TODO: I want to have a builder for all EIO recipes in the API.
     protected void paintingRecipe(ItemLike output, Ingredient input, RecipeOutput recipeOutput) {
-        recipeOutput.accept(
-            EnderIOBase.loc("painting/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
-            new PaintingRecipe(input, output.asItem().getDefaultInstance()),
-            null,
-            new ModLoadedCondition(EnderIOMachines.MODULE_MOD_ID));
+        recipeOutput.accept(EnderIOBase.loc("painting/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
+                new PaintingRecipe(input, output.asItem().getDefaultInstance()), null,
+                new ModLoadedCondition(EnderIOMachines.MODULE_MOD_ID));
     }
 }

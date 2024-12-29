@@ -3,6 +3,7 @@ package com.enderio.conduits.client;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
+import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
@@ -14,8 +15,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public class ConduitFacadeColor implements BlockColor, ItemColor {
     @Override
@@ -31,7 +30,9 @@ public class ConduitFacadeColor implements BlockColor, ItemColor {
                 Optional<Block> facade = conduitBundleBlock.getBundle().facade();
 
                 if (facade.isPresent() && FacadeHelper.areFacadesVisible()) {
-                    int color = Minecraft.getInstance().getBlockColors().getColor(facade.get().defaultBlockState(), level, pos, tintIndex);
+                    int color = Minecraft.getInstance()
+                            .getBlockColors()
+                            .getColor(facade.get().defaultBlockState(), level, pos, tintIndex);
                     if (color != -1) {
                         return color;
                     }

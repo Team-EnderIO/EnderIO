@@ -1,12 +1,17 @@
 package com.enderio.conduits.client.model;
 
+import static com.enderio.conduits.client.ConduitClientSetup.modelOf;
+
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.conduits.client.ConduitClientSetup;
 import com.enderio.core.data.model.ModelHelper;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -19,13 +24,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.IDynamicBakedModel;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.enderio.conduits.client.ConduitClientSetup.modelOf;
 
 public class FacadeItemModel implements IDynamicBakedModel {
 
@@ -44,12 +42,13 @@ public class FacadeItemModel implements IDynamicBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData,
-        @Nullable RenderType renderType) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand,
+            ModelData extraData, @Nullable RenderType renderType) {
         List<BakedQuad> bakedQuads = new ArrayList<>();
         if (facade != null) {
             bakedQuads.addAll(getItemModel().getQuads(facade.defaultBlockState(), side, rand, extraData, renderType));
-            bakedQuads.addAll(modelOf(ConduitClientSetup.CONDUIT_FACADE_OVERLAY).getQuads(null, side, rand, extraData, renderType));
+            bakedQuads.addAll(modelOf(ConduitClientSetup.CONDUIT_FACADE_OVERLAY).getQuads(null, side, rand, extraData,
+                    renderType));
         } else {
             bakedQuads.addAll(facadeModel.getQuads(null, side, rand, extraData, renderType));
         }
@@ -101,7 +100,10 @@ public class FacadeItemModel implements IDynamicBakedModel {
         if (paintData == null) {
             return List.of(RenderType.cutout());
         }
-        return Minecraft.getInstance().getItemRenderer().getModel(paintData.paint().asItem().getDefaultInstance(), null, null, 0).getRenderTypes(itemStack, fabulous);
+        return Minecraft.getInstance()
+                .getItemRenderer()
+                .getModel(paintData.paint().asItem().getDefaultInstance(), null, null, 0)
+                .getRenderTypes(itemStack, fabulous);
     }
 
     @Override
@@ -112,8 +114,7 @@ public class FacadeItemModel implements IDynamicBakedModel {
 
         var paintData = itemStack.get(EIODataComponents.BLOCK_PAINT);
         return itemRenderCache.computeIfAbsent(paintData.paint(),
-            paintKey -> List.of(new FacadeItemModel(facadeModel, paintData.paint()))
-        );
+                paintKey -> List.of(new FacadeItemModel(facadeModel, paintData.paint())));
     }
 
     /**

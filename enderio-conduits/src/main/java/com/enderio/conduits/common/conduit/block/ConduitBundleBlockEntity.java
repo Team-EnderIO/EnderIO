@@ -314,9 +314,7 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
 
     @Override
     public ModelData getModelData() {
-        return ModelData.builder()
-            .with(BUNDLE_MODEL_PROPERTY, clientBundle)
-            .build();
+        return ModelData.builder().with(BUNDLE_MODEL_PROPERTY, clientBundle).build();
     }
 
     public boolean hasType(Holder<Conduit<?>> conduit) {

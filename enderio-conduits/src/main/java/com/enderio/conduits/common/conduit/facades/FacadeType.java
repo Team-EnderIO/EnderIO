@@ -2,28 +2,23 @@ package com.enderio.conduits.common.conduit.facades;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import java.util.function.IntFunction;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-
-import java.util.function.IntFunction;
-import java.util.function.Supplier;
 
 /**
  * Additional options for a conduit facade.
  * These are stored separately so that it can be an item component alongside the paint.
  */
 public enum FacadeType implements StringRepresentable {
-    BASIC(0, "basic", false, false),
-    HARDENED(1, "hardened", false, true),
-    TRANSPARENT(2, "transparent", true, false),
+    BASIC(0, "basic", false, false), HARDENED(1, "hardened", false, true), TRANSPARENT(2, "transparent", true, false),
     TRANSPARENT_HARDENED(3, "transparent_hardened", true, true);
 
     public static final Codec<FacadeType> CODEC = StringRepresentable.fromEnum(FacadeType::values);
-    public static final IntFunction<FacadeType> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+    public static final IntFunction<FacadeType> BY_ID = ByIdMap.continuous(key -> key.id, values(),
+            ByIdMap.OutOfBoundsStrategy.ZERO);
     public static final StreamCodec<ByteBuf, FacadeType> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
 
     private final int id;

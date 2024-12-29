@@ -11,7 +11,8 @@ public class FacadeItemModelBuilder<T extends ModelBuilder<T>> extends CustomLoa
 
     private ResourceLocation model;
 
-    public static <T extends ModelBuilder<T>> FacadeItemModelBuilder<T> begin(T parent, ExistingFileHelper existingFileHelper) {
+    public static <T extends ModelBuilder<T>> FacadeItemModelBuilder<T> begin(T parent,
+            ExistingFileHelper existingFileHelper) {
         return new FacadeItemModelBuilder<>(parent, existingFileHelper);
     }
 

@@ -4,6 +4,8 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassIdentifier;
 import com.enderio.base.common.block.glass.GlassLighting;
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -14,9 +16,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class EIOTags {
 
@@ -31,7 +30,8 @@ public class EIOTags {
 
     public static class Items {
 
-        private static void init() {}
+        private static void init() {
+        }
 
         // TODO: use these for slot filtering again.
         public static final TagKey<Item> ENTITY_STORAGE = tag("entity_storage");
@@ -89,7 +89,7 @@ public class EIOTags {
         public static final TagKey<Item> NUGGETS_VIBRANT_ALLOY = commonTag("nuggets/vibrant_alloy");
 
         public static final TagKey<Item> INSULATION_METAL = tag("insulation_metals");
-        
+
         public static final TagKey<Item> SILICON = commonTag("silicon");
         public static final TagKey<Item> GEARS = commonTag("gears");
         public static final TagKey<Item> GEARS_WOOD = commonTag("gears/wood");
@@ -124,9 +124,9 @@ public class EIOTags {
 
         public static Map<GlassIdentifier, TagKey<Item>> createGlassTags() {
             Map<GlassIdentifier, TagKey<Item>> map = new HashMap<>();
-            for (GlassLighting lighting: GlassLighting.values()) {
-                for (GlassCollisionPredicate collisionPredicate: GlassCollisionPredicate.values()) {
-                    for (Boolean isFused: new boolean[]{false, true}) {
+            for (GlassLighting lighting : GlassLighting.values()) {
+                for (GlassCollisionPredicate collisionPredicate : GlassCollisionPredicate.values()) {
+                    for (Boolean isFused : new boolean[] { false, true }) {
                         GlassIdentifier identifier = new GlassIdentifier(lighting, collisionPredicate, isFused);
                         map.put(identifier, tag(identifier.glassName()));
                     }
@@ -134,11 +134,11 @@ public class EIOTags {
             }
             return map;
         }
-        
+
         private static TagKey<Item> commonTag(String name) {
             return ItemTags.create(ResourceLocation.fromNamespaceAndPath(COMMON, name));
         }
-        
+
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(EnderIOBase.loc(name));
         }
@@ -146,11 +146,12 @@ public class EIOTags {
 
     public static class Blocks {
 
-        private static void init() {}
+        private static void init() {
+        }
 
         public static final TagKey<Block> FUSED_QUARTZ = commonTag("glass_blocks/fused_quartz");
         public static final TagKey<Block> CLEAR_GLASS = tag("glass_blocks/clear_glass");
-        
+
         public static final TagKey<Block> BLOCKS_CONDUCTIVE_ALLOY = commonTag("storage_blocks/conductive_alloy");
         public static final TagKey<Block> BLOCKS_COPPER_ALLOY = commonTag("storage_blocks/copper_alloy");
         public static final TagKey<Block> BLOCKS_DARK_STEEL = commonTag("storage_blocks/dark_steel");
@@ -169,9 +170,10 @@ public class EIOTags {
             return BlockTags.create(EnderIOBase.loc(name));
         }
     }
-    
+
     public static class Fluids {
-        private static void init() {}
+        private static void init() {
+        }
 
         public static final TagKey<Fluid> COLD_FIRE_IGNITER_FUEL = tag("fluid_fuel/cold_fire_igniter");
         public static final TagKey<Fluid> STAFF_OF_LEVITY_FUEL = tag("fluid_fuel/staff_of_levity");
@@ -188,7 +190,8 @@ public class EIOTags {
     }
 
     public static class EntityTypes {
-        private static void init() {}
+        private static void init() {
+        }
 
         public static TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = tag("soul_vial_blacklist");
 

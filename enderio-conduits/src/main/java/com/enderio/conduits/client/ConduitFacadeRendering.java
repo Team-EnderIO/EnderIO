@@ -4,6 +4,7 @@ import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlock;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LightTexture;
@@ -20,8 +21,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
-
-import java.util.Map;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class ConduitFacadeRendering {
@@ -41,7 +40,10 @@ public class ConduitFacadeRendering {
                     continue;
                 }
 
-                var baseConsumer = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(Sheets.translucentCullBlockSheet());
+                var baseConsumer = Minecraft.getInstance()
+                        .renderBuffers()
+                        .bufferSource()
+                        .getBuffer(Sheets.translucentCullBlockSheet());
                 var wrappedConsumer = new VertexConsumerWrapper(baseConsumer) {
                     @Override
                     public VertexConsumer setColor(int r, int g, int b, int a) {
@@ -52,16 +54,27 @@ public class ConduitFacadeRendering {
 
                 var cameraPos = event.getCamera().getPosition();
                 event.getPoseStack().pushPose();
-                event.getPoseStack().translate(entry.getKey().getX()-cameraPos.x, entry.getKey().getY()-cameraPos.y, entry.getKey().getZ()-cameraPos.z);
+                event.getPoseStack()
+                        .translate(entry.getKey().getX() - cameraPos.x, entry.getKey().getY() - cameraPos.y,
+                                entry.getKey().getZ() - cameraPos.z);
 
-                var model = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(entry.getValue());
+                var model = Minecraft.getInstance()
+                        .getModelManager()
+                        .getBlockModelShaper()
+                        .getBlockModel(entry.getValue());
                 int color = Minecraft.getInstance().getBlockColors().getColor(entry.getValue(), level, entry.getKey());
                 for (var renderType : model.getRenderTypes(entry.getValue(), RandomSource.create(), ModelData.EMPTY)) {
-                    Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(event.getPoseStack().last(), wrappedConsumer, entry.getValue(),
-                        model, FastColor.ARGB32.red(color) / 255.0F, FastColor.ARGB32.green(color) / 255.0F, FastColor.ARGB32.blue(color) / 255.0F,
-                        LightTexture.pack(level.getBrightness(LightLayer.BLOCK, entry.getKey()), level.getBrightness(LightLayer.SKY, entry.getKey())),
-                        OverlayTexture.NO_OVERLAY, model.getModelData(level, entry.getKey(), entry.getValue(), ModelData.EMPTY), renderType
-                    );
+                    Minecraft.getInstance()
+                            .getBlockRenderer()
+                            .getModelRenderer()
+                            .renderModel(event.getPoseStack().last(), wrappedConsumer, entry.getValue(), model,
+                                    FastColor.ARGB32.red(color) / 255.0F, FastColor.ARGB32.green(color) / 255.0F,
+                                    FastColor.ARGB32.blue(color) / 255.0F,
+                                    LightTexture.pack(level.getBrightness(LightLayer.BLOCK, entry.getKey()),
+                                            level.getBrightness(LightLayer.SKY, entry.getKey())),
+                                    OverlayTexture.NO_OVERLAY,
+                                    model.getModelData(level, entry.getKey(), entry.getValue(), ModelData.EMPTY),
+                                    renderType);
                 }
                 Minecraft.getInstance().renderBuffers().bufferSource().endBatch(Sheets.translucentCullBlockSheet());
                 event.getPoseStack().popPose();

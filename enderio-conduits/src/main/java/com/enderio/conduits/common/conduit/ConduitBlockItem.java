@@ -1,19 +1,19 @@
 package com.enderio.conduits.common.conduit;
 
 import com.enderio.base.client.tooltip.TooltipHandler;
-import com.enderio.conduits.api.EnderIOConduitsRegistries;
-import com.enderio.conduits.api.Conduit;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.EnderIOConduits;
-import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
+import com.enderio.conduits.api.Conduit;
+import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.core.common.util.TooltipUtil;
+import java.util.Comparator;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -23,17 +23,12 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Comparator;
-import java.util.List;
 
 @EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class ConduitBlockItem extends BlockItem {
@@ -78,23 +73,29 @@ public class ConduitBlockItem extends BlockItem {
         // Pass through to existing block.
         BlockState blockState = level.getBlockState(blockpos);
         if (!blockState.isAir()) {
-            //noinspection DataFlowIssue
-            return blockState.useItemOn(context.getItemInHand(), level, player, context.getHand(), context.getHitResult().withPosition(blockpos)).result();
+            // noinspection DataFlowIssue
+            return blockState
+                    .useItemOn(context.getItemInHand(), level, player, context.getHand(),
+                            context.getHitResult().withPosition(blockpos))
+                    .result();
         }
 
         return super.place(context);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents,
+            TooltipFlag tooltipFlag) {
         Holder<Conduit<?>> conduit = stack.get(ConduitComponents.CONDUIT);
         if (conduit != null) {
             conduit.value().addToTooltip(context, tooltipComponents::add, tooltipFlag);
 
-            boolean showDetailTooltip = !tooltipFlag.hasShiftDown() && (conduit.value().hasAdvancedTooltip() || conduit.value().showDebugTooltip());
+            boolean showDetailTooltip = !tooltipFlag.hasShiftDown()
+                    && (conduit.value().hasAdvancedTooltip() || conduit.value().showDebugTooltip());
 
             if (conduit.value().showDebugTooltip() && tooltipFlag.hasShiftDown()) {
-                tooltipComponents.add(TooltipUtil.styledWithArgs(ConduitLang.GRAPH_TICK_RATE_TOOLTIP, 20 / conduit.value().graphTickRate()));
+                tooltipComponents.add(TooltipUtil.styledWithArgs(ConduitLang.GRAPH_TICK_RATE_TOOLTIP,
+                        20 / conduit.value().graphTickRate()));
             }
 
             if (showDetailTooltip) {
@@ -113,17 +114,17 @@ public class ConduitBlockItem extends BlockItem {
             var conduitTypes = registry.listElements().toList();
 
             var conduitClassTypes = conduitTypes.stream()
-                .map(e -> e.value().getClass())
-                .sorted(Comparator.comparing(Class::getName))
-                .distinct()
-                .toList();
+                    .map(e -> e.value().getClass())
+                    .sorted(Comparator.comparing(Class::getName))
+                    .distinct()
+                    .toList();
 
             for (var conduitClass : conduitClassTypes) {
                 var matchingConduitTypes = conduitTypes.stream()
-                    .filter(e -> e.value().getClass() == conduitClass)
-                    // GRIM...
-                    .sorted((o1, o2) -> compareConduitTo(o1.value(), o2.value()))
-                    .toList();
+                        .filter(e -> e.value().getClass() == conduitClass)
+                        // GRIM...
+                        .sorted((o1, o2) -> compareConduitTo(o1.value(), o2.value()))
+                        .toList();
 
                 for (var conduitType : matchingConduitTypes) {
                     event.accept(getStackFor(conduitType, 1), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
@@ -133,6 +134,6 @@ public class ConduitBlockItem extends BlockItem {
     }
 
     private static <T extends Conduit<T>> int compareConduitTo(Conduit<T> o1, Conduit<?> o2) {
-        return o1.compareTo((T)o2);
+        return o1.compareTo((T) o2);
     }
 }
