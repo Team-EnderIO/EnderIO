@@ -212,11 +212,7 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
             ConduitSavedData savedData = ConduitSavedData.get(serverLevel);
             bundle.getConduits().forEach(type -> onChunkUnloaded(savedData, type));
         } else {
-            if (bundle.hasFacade()) {
-                FACADES.put(worldPosition, bundle.facade().get().defaultBlockState());
-            } else {
-                FACADES.remove(worldPosition);
-            }
+            FACADES.remove(worldPosition);
         }
     }
 
