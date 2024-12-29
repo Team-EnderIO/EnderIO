@@ -3,14 +3,11 @@ package com.enderio.conduits.common.conduit.facades;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.common.init.ConduitCapabilities;
 import com.enderio.conduits.common.init.ConduitLang;
-import com.enderio.core.common.util.TooltipUtil;
-import net.minecraft.ChatFormatting;
+import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-
-import java.util.List;
 
 public class ConduitFacadeItem extends Item {
     public ConduitFacadeItem(Properties properties) {
@@ -18,11 +15,13 @@ public class ConduitFacadeItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents,
+            TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
 
         var facade = stack.getCapability(ConduitCapabilities.ConduitFacade.ITEM);
-        boolean hasFacadeTooltip = facade != null && (facade.type().isBlastResistant() || facade.type().doesHideConduits());
+        boolean hasFacadeTooltip = facade != null
+                && (facade.type().isBlastResistant() || facade.type().doesHideConduits());
 
         if (hasFacadeTooltip) {
             if (tooltipFlag.hasShiftDown()) {

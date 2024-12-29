@@ -21,7 +21,6 @@ import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.util.Unit;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
@@ -30,16 +29,19 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 public class ConduitItems {
     private static final ItemRegistry ITEM_REGISTRY = EnderIOConduits.REGILITE.itemRegistry();
 
-    public static final RegiliteItem<ConduitFacadeItem> CONDUIT_FACADE = conduitFacade("conduit_facade", FacadeType.BASIC);
-    public static final RegiliteItem<ConduitFacadeItem> TRANSPARENT_CONDUIT_FACADE = conduitFacade("transparent_conduit_facade",
-            FacadeType.TRANSPARENT);
-    public static final RegiliteItem<ConduitFacadeItem> HARDENED_CONDUIT_FACADE = conduitFacade("hardened_conduit_facade",
-            FacadeType.HARDENED);
+    public static final RegiliteItem<ConduitFacadeItem> CONDUIT_FACADE = conduitFacade("conduit_facade",
+            FacadeType.BASIC);
+    public static final RegiliteItem<ConduitFacadeItem> TRANSPARENT_CONDUIT_FACADE = conduitFacade(
+            "transparent_conduit_facade", FacadeType.TRANSPARENT);
+    public static final RegiliteItem<ConduitFacadeItem> HARDENED_CONDUIT_FACADE = conduitFacade(
+            "hardened_conduit_facade", FacadeType.HARDENED);
     public static final RegiliteItem<ConduitFacadeItem> TRANSPARENT_HARDENED_CONDUIT_FACADE = conduitFacade(
             "transparent_hardened_conduit_facade", FacadeType.TRANSPARENT_HARDENED);
 
     private static RegiliteItem<ConduitFacadeItem> conduitFacade(String name, FacadeType type) {
-        return ITEM_REGISTRY.registerItem(name, props -> new ConduitFacadeItem(props.component(ConduitComponents.FACADE_TYPE, type)))
+        return ITEM_REGISTRY
+                .registerItem(name,
+                        props -> new ConduitFacadeItem(props.component(ConduitComponents.FACADE_TYPE, type)))
                 // TODO: Model for when there is no "paint"
                 .setModelProvider((prov,
                         ctx) -> prov.getBuilder(name).customLoader(FacadeItemModelBuilder::begin).model(name).end())

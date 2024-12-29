@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.conduit;
 
-import com.enderio.base.client.tooltip.TooltipHandler;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.EnderIOConduits;
