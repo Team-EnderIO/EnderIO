@@ -5,7 +5,6 @@ import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
@@ -57,14 +56,6 @@ public interface Integration {
     }
 
     default void createData(GatherDataEvent event) {
-    }
-
-    /**
-     * @param stack The ItemStack a conduit was rightclicked with
-     * @return empty Optional if this stack is not a facade item. Or the BlockState this facade disguises as
-     */
-    default Optional<Block> getFacadeOf(ItemStack stack) {
-        return Optional.empty();
     }
 
     /**
