@@ -38,5 +38,7 @@
   "tooltip.enderio.conduit.fluid.multi": "Allows multiple fluids to be transported on the same line",
   "tooltip.enderio.conduit.fluid.raw_rate": "Rate: %s mB/graph tick",
   "tooltip.enderio.conduit.item.effective_rate": "Effective Rate: %s Items/sec",
-  "tooltip.enderio.conduit.item.raw_rate": "Rate: %s Items/graph tick"
+  "tooltip.enderio.conduit.item.raw_rate": "Rate: %s Items/graph tick",
+  "tooltip.enderio.conduit_facade.blast_resist": "Hardened: Resists breaking and explosions",
+  "tooltip.enderio.conduit_facade.transparent": "Transparent: Hides conduits when painted with a translucent block"
 }

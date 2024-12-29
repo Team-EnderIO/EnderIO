@@ -41,6 +41,9 @@ public class ConduitLang {
     public static final Component CONDUIT_INSERT = addTranslation("gui", EnderIOBase.loc("conduit.insert"), "Insert");
     public static final Component CONDUIT_EXTRACT = addTranslation("gui", EnderIOBase.loc("conduit.extract"), "Extract");
 
+    public static final MutableComponent TRANSPARENT_FACADE_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit_facade.transparent"), "Transparent: Hides conduits when painted with a translucent block");
+    public static final MutableComponent BLAST_RESIST_FACADE_TOOLTIP = addTranslation("tooltip", EnderIOBase.loc("conduit_facade.blast_resist"), "Hardened: Resists breaking and explosions");
+
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
         return EnderIOConduits.REGILITE.addTranslation(prefix, id, translation);
     }
