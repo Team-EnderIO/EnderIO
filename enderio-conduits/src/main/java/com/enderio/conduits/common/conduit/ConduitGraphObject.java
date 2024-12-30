@@ -2,18 +2,22 @@ package com.enderio.conduits.common.conduit;
 
 import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.filter.ResourceFilter;
+import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.ConduitData;
 import com.enderio.conduits.api.ConduitDataType;
 import com.enderio.conduits.api.ConduitNetwork;
 import com.enderio.conduits.api.ConduitNode;
 import com.enderio.conduits.api.upgrade.ConduitUpgrade;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
-import com.enderio.conduits.api.ConduitCapabilities;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -21,30 +25,23 @@ import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
 public class ConduitGraphObject implements GraphObject<ConduitGraphContext>, ConduitNode {
 
-    public static final Codec<ConduitGraphObject> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        BlockPos.CODEC.fieldOf("pos").forGetter(ConduitGraphObject::getPos),
-        ConduitDataContainer.CODEC.fieldOf("data").forGetter(i -> i.conduitDataContainer)
-    ).apply(instance, ConduitGraphObject::new));
+    public static final Codec<ConduitGraphObject> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitGraphObject::getPos),
+                    ConduitDataContainer.CODEC.fieldOf("data").forGetter(i -> i.conduitDataContainer))
+            .apply(instance, ConduitGraphObject::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ConduitGraphObject> STREAM_CODEC = StreamCodec.composite(
-        BlockPos.STREAM_CODEC,
-        ConduitGraphObject::getPos,
-        ConduitDataContainer.STREAM_CODEC,
-        i -> i.conduitDataContainer,
-        ConduitGraphObject::new
-    );
+            BlockPos.STREAM_CODEC, ConduitGraphObject::getPos, ConduitDataContainer.STREAM_CODEC,
+            i -> i.conduitDataContainer, ConduitGraphObject::new);
 
     private final BlockPos pos;
 
-    @Nullable private Graph<ConduitGraphContext> graph = null;
-    @Nullable private WrappedConduitNetwork wrappedGraph = null;
+    @Nullable
+    private Graph<ConduitGraphContext> graph = null;
+    @Nullable
+    private WrappedConduitNetwork wrappedGraph = null;
 
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
     private final ConduitDataContainer conduitDataContainer;
@@ -69,7 +66,7 @@ public class ConduitGraphObject implements GraphObject<ConduitGraphContext>, Con
     @Override
     public void setGraph(@Nullable Graph<ConduitGraphContext> graph) {
         this.graph = graph;
-        this.wrappedGraph = graph == null ? null:  new WrappedConduitNetwork(graph);
+        this.wrappedGraph = graph == null ? null : new WrappedConduitNetwork(graph);
     }
 
     @Nullable
@@ -80,14 +77,15 @@ public class ConduitGraphObject implements GraphObject<ConduitGraphContext>, Con
 
     public void pushState(Direction direction, DynamicConnectionState connectionState) {
         this.connectionStates.put(direction, connectionState);
-        ioStates.put(direction, IOState.of(connectionState.isInsert() ? connectionState.insertChannel() : null,
-            connectionState.isExtract() ? connectionState.extractChannel() : null, connectionState.control(), connectionState.redstoneChannel()));
+        ioStates.put(direction,
+                IOState.of(connectionState.isInsert() ? connectionState.insertChannel() : null,
+                        connectionState.isExtract() ? connectionState.extractChannel() : null,
+                        connectionState.control(), connectionState.redstoneChannel()));
     }
 
     public Optional<IOState> getIOState(Direction direction) {
         return Optional.ofNullable(ioStates.get(direction));
     }
-
 
     public void clearState(Direction direction) {
         ioStates.remove(direction);
@@ -99,7 +97,8 @@ public class ConduitGraphObject implements GraphObject<ConduitGraphContext>, Con
 
     // region Conduit Data
 
-    // We're implementing ConduitDataAccessor for ease here, but we just pass through to the container.
+    // We're implementing ConduitDataAccessor for ease here, but we just pass
+    // through to the container.
 
     @Override
     public boolean hasData(ConduitDataType<?> type) {

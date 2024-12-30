@@ -5,10 +5,10 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.api.ConduitCapabilities;
+import com.enderio.conduits.api.facade.FacadeType;
 import com.enderio.conduits.client.ConduitFacadeColor;
 import com.enderio.conduits.common.conduit.facades.ComponentBackedConduitFacadeProvider;
 import com.enderio.conduits.common.conduit.facades.ConduitFacadeItem;
-import com.enderio.conduits.api.facade.FacadeType;
 import com.enderio.conduits.common.conduit.upgrade.SpeedUpgradeItem;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
@@ -48,7 +48,8 @@ public class ConduitItems {
                         ctx) -> prov.getBuilder(name).customLoader(FacadeItemModelBuilder::begin).model(name).end())
                 .setTab(EIOCreativeTabs.CONDUITS)
                 .setColorSupplier(() -> ConduitFacadeColor::new)
-                .addCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER, ComponentBackedConduitFacadeProvider.PROVIDER);
+                .addCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER,
+                        ComponentBackedConduitFacadeProvider.PROVIDER);
     }
 
     public static final RegiliteItem<SpeedUpgradeItem> EXTRACTION_SPEED_UPGRADE_1 = ITEM_REGISTRY
