@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.conduit.facades;
+package com.enderio.conduits.api.facade;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
@@ -34,10 +34,16 @@ public enum FacadeType implements StringRepresentable {
         this.isBlastResistant = isBlastResistant;
     }
 
+    /**
+     * @return Whether conduits should be rendered behind the facade.
+     */
     public boolean doesHideConduits() {
         return doesHideConduits;
     }
 
+    /**
+     * @return Whether the conduit block should have increased resistance.
+     */
     public boolean isBlastResistant() {
         return isBlastResistant;
     }

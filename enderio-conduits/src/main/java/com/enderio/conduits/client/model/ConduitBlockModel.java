@@ -25,7 +25,7 @@ import com.enderio.conduits.common.conduit.OffsetHelper;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
-import com.enderio.conduits.common.conduit.facades.FacadeType;
+import com.enderio.conduits.api.facade.FacadeType;
 import com.enderio.core.data.model.ModelHelper;
 import com.mojang.math.Axis;
 import com.mojang.math.Transformation;

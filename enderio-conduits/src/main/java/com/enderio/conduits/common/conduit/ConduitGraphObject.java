@@ -9,7 +9,7 @@ import com.enderio.conduits.api.ConduitNode;
 import com.enderio.conduits.api.upgrade.ConduitUpgrade;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
-import com.enderio.conduits.common.init.ConduitCapabilities;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.gigaherz.graph3.Graph;
@@ -128,7 +128,7 @@ public class ConduitGraphObject implements GraphObject<ConduitGraphContext>, Con
 
     @Override
     public @Nullable ConduitUpgrade getUpgrade(Direction direction) {
-        return connectionStates.get(direction).upgradeExtract().getCapability(ConduitCapabilities.ConduitUpgrade.ITEM);
+        return connectionStates.get(direction).upgradeExtract().getCapability(ConduitCapabilities.CONDUIT_UPGRADE);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit.facades;
 
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.conduits.common.init.ConduitCapabilities;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.common.init.ConduitLang;
 import java.util.List;
 import net.minecraft.network.chat.Component;
@@ -19,7 +19,7 @@ public class ConduitFacadeItem extends Item {
             TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
 
-        var facade = stack.getCapability(ConduitCapabilities.ConduitFacade.ITEM);
+        var facade = stack.getCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER);
         boolean hasFacadeTooltip = facade != null
                 && (facade.type().isBlastResistant() || facade.type().doesHideConduits());
 

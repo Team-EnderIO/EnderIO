@@ -9,7 +9,7 @@ import com.enderio.conduits.api.ConduitApi;
 import com.enderio.conduits.api.ConduitDataType;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
-import com.enderio.conduits.common.init.ConduitCapabilities;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.modconduits.ConduitModule;
 import com.enderio.modconduits.ModdedConduits;
 import java.util.function.BiConsumer;
@@ -92,7 +92,7 @@ public class AE2ConduitsModule implements ConduitModule {
 
     private void registerFacadeCapability(RegisterCapabilitiesEvent event) {
         Item facadeItem = BuiltInRegistries.ITEM.get(AEItemIds.FACADE);
-        event.registerItem(ConduitCapabilities.ConduitFacade.ITEM, AE2ConduitFacadeProvider.PROVIDER, facadeItem);
+        event.registerItem(ConduitCapabilities.CONDUIT_FACADE_PROVIDER, AE2ConduitFacadeProvider.PROVIDER, facadeItem);
     }
 
     @Override

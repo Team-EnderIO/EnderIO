@@ -15,7 +15,7 @@ import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
-import com.enderio.conduits.common.init.ConduitCapabilities;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.init.Conduits;
@@ -335,7 +335,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     private Optional<ItemInteractionResult> handleFacade(ConduitBundleBlockEntity blockEntity, Player player,
             ItemStack stack, BlockHitResult hit, boolean isClientSide) {
-        var facade = stack.getCapability(ConduitCapabilities.ConduitFacade.ITEM);
+        var facade = stack.getCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER);
         if (facade == null || !facade.isValid()) {
             return Optional.empty();
         }

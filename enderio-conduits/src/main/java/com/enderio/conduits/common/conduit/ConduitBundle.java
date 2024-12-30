@@ -5,8 +5,8 @@ import com.enderio.conduits.api.SlotType;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
-import com.enderio.conduits.common.conduit.facades.FacadeType;
-import com.enderio.conduits.common.init.ConduitCapabilities;
+import com.enderio.conduits.api.facade.FacadeType;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -283,7 +283,7 @@ public final class ConduitBundle {
     // region Facades
 
     public boolean hasFacade() {
-        return !facadeItem.isEmpty() && facadeItem.getCapability(ConduitCapabilities.ConduitFacade.ITEM) != null;
+        return !facadeItem.isEmpty() && facadeItem.getCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER) != null;
     }
 
     public ItemStack facadeItem() {
@@ -296,7 +296,7 @@ public final class ConduitBundle {
         }
 
         return Optional
-                .of(Objects.requireNonNull(facadeItem.getCapability(ConduitCapabilities.ConduitFacade.ITEM)).block());
+                .of(Objects.requireNonNull(facadeItem.getCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER)).block());
     }
 
     public Optional<FacadeType> facadeType() {
@@ -305,7 +305,7 @@ public final class ConduitBundle {
         }
 
         return Optional
-                .of(Objects.requireNonNull(facadeItem.getCapability(ConduitCapabilities.ConduitFacade.ITEM)).type());
+                .of(Objects.requireNonNull(facadeItem.getCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER)).type());
     }
 
     public void facade(ItemStack facadeItem) {

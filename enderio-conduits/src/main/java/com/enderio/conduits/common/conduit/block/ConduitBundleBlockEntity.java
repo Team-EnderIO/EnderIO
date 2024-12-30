@@ -24,7 +24,7 @@ import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
-import com.enderio.conduits.common.init.ConduitCapabilities;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import dev.gigaherz.graph3.Graph;
@@ -802,7 +802,7 @@ public class ConduitBundleBlockEntity extends EnderBlockEntity {
 
                 return conduit.value().canApplyFilter(slotData.slotType(), resourceFilter);
             case UPGRADE_EXTRACT:
-                ConduitUpgrade conduitUpgrade = stack.getCapability(ConduitCapabilities.ConduitUpgrade.ITEM);
+                ConduitUpgrade conduitUpgrade = stack.getCapability(ConduitCapabilities.CONDUIT_UPGRADE);
                 if (conduitUpgrade == null) {
                     return false;
                 }
