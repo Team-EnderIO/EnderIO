@@ -102,6 +102,14 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
         return getGenerationRate() > 0;
     }
 
+    /**
+     * Calculates the generation rate for this solar panel.
+     * Only generates energy during day before 12_000 ticks (10 minute aka half a minecraft day), or
+     * if its day and either night or if it hasLiquidSunshine.
+     * @see SolarPanelBlockEntity#hasLiquidSunshine()
+     *
+     * @return this solar panels generation rate.
+     */
     public int getGenerationRate() {
         if (level == null) {
             return 0;
@@ -122,7 +130,7 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
         }
 
         float progress = 0;
-        if ((day && night) || (day && hasLiquidSunshine())) {
+        if (day && (night || hasLiquidSunshine())) {
             progress = 1;
         } else if (day) {
             int dayTime = (int) (level.getDayTime() % dayInTicks);
