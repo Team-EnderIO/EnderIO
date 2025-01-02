@@ -115,10 +115,6 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
             return 0;
         }
 
-        int minuteInTicks = 20 * 60;
-        int minutesPerDay = 20;
-        int dayInTicks = minuteInTicks * minutesPerDay;
-
         boolean day;
         boolean night;
         if (soulData != null) {
@@ -133,12 +129,12 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
         if (day && (night || hasLiquidSunshine())) {
             progress = 1;
         } else if (day) {
-            int dayTime = (int) (level.getDayTime() % dayInTicks);
-            if (dayTime > minuteInTicks * 12) {
+            int dayTime = (int) (level.getDayTime() % GameTicks.DAY_IN_TICKS);
+            if (dayTime > GameTicks.minutesToTicks(12)) {
                 return 0;
             }
-            progress = dayTime > minuteInTicks * 5 ? 10 * minuteInTicks - dayTime : dayTime;
-            progress = (progress - minuteInTicks) / (4 * minuteInTicks);
+            progress = dayTime > GameTicks.minutesToTicks(5) ? GameTicks.minutesToTicks(10) - dayTime : dayTime;
+            progress = (progress - GameTicks.MINUTE_IN_TICKS) / GameTicks.minutesToTicks(4);
         } else if (night) {
             return 0;
         }
@@ -274,5 +270,23 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
     @SubscribeEvent
     static void onReload(RecipesUpdatedEvent event) {
         reload = !reload;
+    }
+
+    private static final class GameTicks {
+        static final int TICKS_PER_SECOND = 20;
+        static final int MINUTE_IN_TICKS = TICKS_PER_SECOND * 60;
+        static final int DAY_DURATION_MIN = 20;
+        static final int DAY_IN_TICKS = DAY_DURATION_MIN * MINUTE_IN_TICKS;
+
+        /**
+         * Converts minutes to game ticks.
+         * @see GameTicks#TICKS_PER_SECOND
+         *
+         * @param minutes to convert.
+         * @return corresponding minutes in game ticks.
+         */
+        static int minutesToTicks(int minutes) {
+            return minutes * 60 * TICKS_PER_SECOND;
+        }
     }
 }
