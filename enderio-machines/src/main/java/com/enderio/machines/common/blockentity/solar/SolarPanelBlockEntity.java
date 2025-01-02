@@ -1,7 +1,5 @@
 package com.enderio.machines.common.blockentity.solar;
 
-import static com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
-
 import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.capacitor.FixedScalable;
 import com.enderio.base.api.io.IOMode;
@@ -20,8 +18,6 @@ import com.enderio.machines.common.souldata.SolarSoul;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -35,6 +31,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
+
+import static com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
 
 public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
 
@@ -102,52 +103,44 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
     }
 
     public int getGenerationRate() {
-        int minuteInTicks = 20 * 60;
         if (level == null) {
             return 0;
         }
-        boolean day = true;
-        boolean night = false;
+
+        int minuteInTicks = 20 * 60;
+        int minutesPerDay = 20;
+        int dayInTicks = minuteInTicks * minutesPerDay;
+
+        boolean day;
+        boolean night;
         if (soulData != null) {
             day = soulData.daytime();
             night = soulData.nighttime();
+        } else {
+            day = level.isDay();
+            night = level.isNight();
         }
 
-        int dayTime = (int) (level.getDayTime() % (minuteInTicks * 20));
         float progress = 0;
         if ((day && night) || (day && hasLiquidSunshine())) {
             progress = 1;
         } else if (day) {
-            if (dayTime > minuteInTicks * 9) {
+            int dayTime = (int) (level.getDayTime() % dayInTicks);
+            if (dayTime > minuteInTicks * 12) {
                 return 0;
             }
-
-            if (dayTime < minuteInTicks) {
-                return 0;
-            }
-
             progress = dayTime > minuteInTicks * 5 ? 10 * minuteInTicks - dayTime : dayTime;
             progress = (progress - minuteInTicks) / (4 * minuteInTicks);
         } else if (night) {
-            if (dayTime < minuteInTicks * 11) {
-                return 0;
-            }
-
-            if (dayTime > minuteInTicks * 18) {
-                return 0;
-            }
-            progress = dayTime > minuteInTicks * 15 ? 20 * minuteInTicks - dayTime : minuteInTicks * 15 - dayTime;
-            progress = (progress - minuteInTicks) / (4 * minuteInTicks);
+            return 0;
         }
 
         double easing = easing(progress);
 
-        if (level.isRaining() && !level.isThundering()) {
-            easing -= 0.3f;
-        }
-
         if (level.isThundering()) {
             easing -= 0.7f;
+        } else if (level.isRaining()) {
+            easing -= 0.3f;
         }
 
         if (easing < 0) {
