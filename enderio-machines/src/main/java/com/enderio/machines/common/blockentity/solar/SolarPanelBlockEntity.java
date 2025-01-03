@@ -1,5 +1,7 @@
 package com.enderio.machines.common.blockentity.solar;
 
+import static com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
+
 import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.capacitor.FixedScalable;
 import com.enderio.base.api.io.IOMode;
@@ -18,6 +20,8 @@ import com.enderio.machines.common.souldata.SolarSoul;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -31,11 +35,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.Optional;
-
-import static com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
 
 public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
 
