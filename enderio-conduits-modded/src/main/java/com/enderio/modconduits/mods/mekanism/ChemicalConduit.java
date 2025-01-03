@@ -3,9 +3,9 @@ package com.enderio.modconduits.mods.mekanism;
 import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitMenuData;
-import com.enderio.conduits.api.ConduitNode;
+import com.enderio.conduits.api.network.node.ConduitNode;
 import com.enderio.conduits.api.ConduitType;
-import com.enderio.conduits.api.SlotType;
+import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.serialization.Codec;
@@ -58,7 +58,7 @@ public record ChemicalConduit(
     }
 
     @Override
-    public boolean canBeInSameBundle(Holder<Conduit<?>> otherConduit) {
+    public boolean canBeInSameBundle(Holder<Conduit<?, ?>> otherConduit) {
         if (otherConduit.value().type() != type()) {
             return true;
         }
@@ -67,7 +67,7 @@ public record ChemicalConduit(
     }
 
     @Override
-    public boolean canBeReplacedBy(Holder<Conduit<?>> otherConduit) {
+    public boolean canBeReplacedBy(Holder<Conduit<?, ?>> otherConduit) {
         if (otherConduit.value().type() != type()) {
             return false;
         }

@@ -13,27 +13,28 @@ public class ConduitNetwork {
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event
-            .registrar(EnderCore.MOD_ID)
-            .versioned(PROTOCOL_VERSION);
-
-        registrar.playToServer(C2SSetConduitConnectionState.TYPE, C2SSetConduitConnectionState.STREAM_CODEC,
-            ConduitServerPayloadHandler.getInstance()::handleConduitConnectionState);
-
-        registrar.playToServer(C2SSetConduitExtendedData.TYPE, C2SSetConduitExtendedData.STREAM_CODEC,
-            ConduitServerPayloadHandler.getInstance()::handleConduitExtendedData);
-
-        registrar.playToServer(ConduitMenuSelectionPacket.TYPE, ConduitMenuSelectionPacket.STREAM_CODEC,
-            ConduitServerPayloadHandler.getInstance()::handleConduitMenuSelection);
+        final PayloadRegistrar registrar = event.registrar(EnderCore.MOD_ID).versioned(PROTOCOL_VERSION);
 
         registrar.playToServer(DoubleChannelPacket.TYPE, DoubleChannelPacket.STREAM_CODEC,
-            ConduitServerPayloadHandler.getInstance()::handleDoubleChannelFilter);
+                ConduitServerPayloadHandler.getInstance()::handleDoubleChannelFilter);
 
         registrar.playToServer(TimerFilterPacket.TYPE, TimerFilterPacket.STREAM_CODEC,
-            ConduitServerPayloadHandler.getInstance()::handleTimerFilter);
+                ConduitServerPayloadHandler.getInstance()::handleTimerFilter);
 
         registrar.playToServer(CountFilterPacket.TYPE, CountFilterPacket.STREAM_CODEC,
-            ConduitServerPayloadHandler.getInstance()::handleCountFilter);
+                ConduitServerPayloadHandler.getInstance()::handleCountFilter);
+
+        registrar.playToServer(C2SClearLockedFluidPacket.TYPE, C2SClearLockedFluidPacket.STREAM_CODEC,
+                ConduitServerPayloadHandler.getInstance()::handle);
+
+        registrar.playToClient(S2CConduitExtraGuiDataPacket.TYPE, S2CConduitExtraGuiDataPacket.STREAM_CODEC,
+                ConduitClientPayloadHandler.getInstance()::handle);
+
+        registrar.playToClient(S2CConduitListPacket.TYPE, S2CConduitListPacket.STREAM_CODEC,
+                ConduitClientPayloadHandler.getInstance()::handle);
+
+        registrar.playBidirectional(SetConduitConnectionConfigPacket.TYPE,
+                SetConduitConnectionConfigPacket.STREAM_CODEC, ConduitCommonPayloadHandler.getInstance()::handle);
     }
 
 }

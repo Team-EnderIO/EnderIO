@@ -7,8 +7,8 @@ import appeng.api.networking.IManagedGridNode;
 import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitMenuData;
-import com.enderio.conduits.api.ConduitNetwork;
-import com.enderio.conduits.api.ConduitNode;
+import com.enderio.conduits.api.network.ConduitNetwork;
+import com.enderio.conduits.api.network.node.ConduitNode;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.conduits.api.ticker.ConduitTicker;
@@ -66,7 +66,7 @@ public record MEConduit(
     }
 
     @Override
-    public boolean canConnectTo(Holder<Conduit<?>> other) {
+    public boolean canConnectTo(Holder<Conduit<?, ?>> other) {
         return other.value().type() == type();
     }
 
@@ -110,7 +110,7 @@ public record MEConduit(
             throw new UnsupportedOperationException("mainNode is already initialized");
         }
 
-        Holder<Conduit<?>> asHolder = level.registryAccess().registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT).wrapAsHolder(this);
+        Holder<Conduit<?, ?>> asHolder = level.registryAccess().registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT).wrapAsHolder(this);
 
         mainNode = GridHelper.createManagedNode(nodeHost, GridNodeListener.INSTANCE)
             .setVisualRepresentation(ConduitBlockItem.getStackFor(asHolder, 1))

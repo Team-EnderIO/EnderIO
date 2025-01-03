@@ -5,7 +5,7 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.conduits.api.Conduit;
-import com.enderio.conduits.api.ConduitDataType;
+import com.enderio.conduits.api.network.node.legacy.ConduitDataType;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.conduits.api.screen.RegisterConduitScreenExtensionsEvent;
@@ -106,13 +106,13 @@ public class MekanismModule implements ConduitModule {
         }
     }
 
-    public static final ResourceKey<Conduit<?>> CHEMICAL = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static final ResourceKey<Conduit<?, ?>> CHEMICAL = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
         EnderIO.loc("chemical"));
-    public static final ResourceKey<Conduit<?>> PRESSURIZED_CHEMICAL = ResourceKey
+    public static final ResourceKey<Conduit<?, ?>> PRESSURIZED_CHEMICAL = ResourceKey
             .create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIO.loc("pressurized_chemical"));
-    public static final ResourceKey<Conduit<?>> ENDER_CHEMICAL = ResourceKey
+    public static final ResourceKey<Conduit<?, ?>> ENDER_CHEMICAL = ResourceKey
             .create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIO.loc("ender_chemical"));
-    public static final ResourceKey<Conduit<?>> HEAT = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static final ResourceKey<Conduit<?, ?>> HEAT = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
         EnderIO.loc("heat"));
 
     public static final Supplier<ConduitDataType<ChemicalConduitData>> CHEMICAL_DATA_TYPE = CONDUIT_DATA_TYPES
@@ -161,7 +161,7 @@ public class MekanismModule implements ConduitModule {
     }
 
     @Override
-    public void bootstrapConduits(BootstrapContext<Conduit<?>> context) {
+    public void bootstrapConduits(BootstrapContext<Conduit<?, ?>> context) {
         context.register(HEAT, new HeatConduit(EnderIO.loc("block/conduit/heat"), LANG_HEAT_CONDUIT));
         context.register(CHEMICAL,
                 new ChemicalConduit(EnderIO.loc("block/conduit/chemical"), LANG_CHEMICAL_CONDUIT, 750, false));

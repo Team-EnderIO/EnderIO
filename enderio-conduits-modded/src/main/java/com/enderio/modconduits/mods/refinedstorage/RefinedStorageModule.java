@@ -4,7 +4,7 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitApi;
-import com.enderio.conduits.api.ConduitDataType;
+import com.enderio.conduits.api.network.node.legacy.ConduitDataType;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.modconduits.ConduitModule;
@@ -45,7 +45,7 @@ public class RefinedStorageModule implements ConduitModule {
                             RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability())
                     .build());
 
-    public static ResourceKey<Conduit<?>> RS = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static ResourceKey<Conduit<?, ?>> RS = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
         EnderIO.loc("rs"));
 
     public static final Supplier<ConduitDataType<RSNetworkHost>> DATA = CONDUIT_DATA_TYPES.register("rs",
@@ -65,7 +65,7 @@ public class RefinedStorageModule implements ConduitModule {
     }
 
     @Override
-    public void bootstrapConduits(BootstrapContext<Conduit<?>> context) {
+    public void bootstrapConduits(BootstrapContext<Conduit<?, ?>> context) {
         context.register(RS, new RSConduit(EnderIO.loc("block/conduit/rs"), LANG_RS_CONDUIT));
     }
 
