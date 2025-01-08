@@ -2,28 +2,28 @@ package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.network.ConduitNetwork;
+import com.enderio.conduits.api.network.node.ConduitNode;
 import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
-import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
-import com.enderio.conduits.common.init.Conduits;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
-public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class EnergyConduitTicker extends IOAwareConduitTicker<EnergyConduit, EnergyConduitTicker.Connection> {
 
     public EnergyConduitTicker() {
     }
 
+    // TODO: Need a way to prevent the extracts list from being built as it is unused.
+
     @Override
-    public void tickColoredGraph(ServerLevel level, EnergyConduit conduit, List<Connection> inserts,
-            List<Connection> extracts, DyeColor color, ConduitNetwork graph,
-            ColoredRedstoneProvider coloredRedstoneProvider) {
+    protected void tickGraph(ServerLevel level, EnergyConduit conduit, List<Connection> inserts, List<Connection> extracts, ConduitNetwork graph,
+        ColoredRedstoneProvider coloredRedstoneProvider) {
 
         // Adjust for tick rate. Always flow up so we are at minimum meeting the
         // required rate.
@@ -40,8 +40,7 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
 
         List<IEnergyStorage> storagesForInsert = new ArrayList<>();
         for (var insert : inserts) {
-            IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, insert.move(),
-                    insert.direction().getOpposite());
+            IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, insert.neighborPos(), insert.neighborSide());
             if (capability != null) {
                 storagesForInsert.add(capability);
             }
@@ -75,7 +74,30 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
     }
 
     @Override
-    public boolean shouldSkipColor(List<Connection> extractList, List<Connection> insertList) {
+    protected boolean shouldSkip(List<Connection> extractList, List<Connection> insertList) {
         return insertList.isEmpty();
+    }
+
+    @Override
+    protected @Nullable EnergyConduitTicker.Connection createConnection(Level level, ConduitNode node, Direction side) {
+        IEnergyStorage energyStorage = level.getCapability(Capabilities.EnergyStorage.BLOCK, node.getPos().relative(side), side.getOpposite());
+        if (energyStorage != null) {
+            return new Connection(node, side, energyStorage);
+        }
+
+        return null;
+    }
+
+    protected static class Connection extends IOAwareConduitTicker.SimpleConnection {
+        private final IEnergyStorage energyStorage;
+
+        public Connection(ConduitNode node, Direction side, IEnergyStorage energyStorage) {
+            super(node, side);
+            this.energyStorage = energyStorage;
+        }
+
+        public IEnergyStorage energyStorage() {
+            return energyStorage;
+        }
     }
 }
