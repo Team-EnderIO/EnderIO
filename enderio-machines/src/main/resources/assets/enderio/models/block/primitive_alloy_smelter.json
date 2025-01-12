@@ -1,6 +1,0 @@
-{
-    "parent": "minecraft:block/furnace",
-    "textures": {
-        "front": "enderio:block/primitive_alloy_smelter_front"
-    }
-}

@@ -16,7 +16,6 @@ import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.blocks.alloy.AlloySmelterBlockEntity;
-import com.enderio.machines.common.blocks.alloy.PrimitiveAlloySmelterBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blocks.crafter.CrafterBlockEntity;
@@ -73,12 +72,8 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<EnchanterBlockEntity> ENCHANTER = register("enchanter",
             EnchanterBlockEntity::new, MachineBlocks.ENCHANTER);
 
-    public static final RegiliteBlockEntity<PrimitiveAlloySmelterBlockEntity> PRIMITIVE_ALLOY_SMELTER = register(
-            "primitive_alloy_smelter", PrimitiveAlloySmelterBlockEntity::new, MachineBlocks.PRIMITIVE_ALLOY_SMELTER)
-                    .apply(MachineBlockEntities::machineBlockEntityCapabilities);
-
     public static final RegiliteBlockEntity<AlloySmelterBlockEntity> ALLOY_SMELTER = register("alloy_smelter",
-            AlloySmelterBlockEntity::factory, MachineBlocks.ALLOY_SMELTER)
+            AlloySmelterBlockEntity::new, MachineBlocks.ALLOY_SMELTER)
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<CreativePowerBlockEntity> CREATIVE_POWER = register("creative_power",
@@ -226,11 +221,6 @@ public class MachineBlockEntities {
             RegiliteBlockEntity<? extends PoweredMachineBlockEntity> blockEntity) {
         machineBlockEntityCapabilities(blockEntity);
         blockEntity.addCapability(Capabilities.EnergyStorage.BLOCK, PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
-    }
-
-    private static void legacyFluidHandlerCapability(
-            RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntity) {
-        blockEntity.addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
     }
 
     private static void fluidHandlerCapability(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {

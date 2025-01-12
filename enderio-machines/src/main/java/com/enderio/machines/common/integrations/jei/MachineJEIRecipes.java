@@ -28,15 +28,6 @@ public class MachineJEIRecipes {
     }
 
     public List<RecipeHolder<AlloySmeltingRecipe>> getAlloySmeltingRecipes() {
-        var recipes = recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get())
-                .stream()
-                .filter(recipe -> !recipe.value().isSmelting())
-                .toList();
-
-        return recipes;
-    }
-
-    public List<RecipeHolder<AlloySmeltingRecipe>> getAlloySmeltingRecipesWithSmelting() {
         List<RecipeHolder<AlloySmeltingRecipe>> recipes = new ArrayList<>();
         recipes.addAll(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()));
         return recipes;

@@ -122,17 +122,6 @@ public class MachineRecipeProvider extends RecipeProvider {
             .save(recipeOutput);
 
         ShapedRecipeBuilder
-            .shaped(RecipeCategory.MISC, MachineBlocks.PRIMITIVE_ALLOY_SMELTER.get())
-            .define('F', Blocks.FURNACE)
-            .define('D', Blocks.DEEPSLATE)
-            .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
-            .pattern("FFF")
-            .pattern("DGD")
-            .pattern("DDD")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
-            .save(recipeOutput);
-
-        ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.ALLOY_SMELTER.get())
             .define('F', Blocks.FURNACE)
             .define('I', EIOTags.Items.INGOTS_DARK_STEEL)

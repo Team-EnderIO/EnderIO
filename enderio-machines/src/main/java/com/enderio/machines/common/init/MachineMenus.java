@@ -12,7 +12,6 @@ import com.enderio.machines.client.gui.screen.ImpulseHopperScreen;
 import com.enderio.machines.client.gui.screen.InhibitorObeliskScreen;
 import com.enderio.machines.client.gui.screen.PaintingMachineScreen;
 import com.enderio.machines.client.gui.screen.PoweredSpawnerScreen;
-import com.enderio.machines.client.gui.screen.PrimitiveAlloySmelterScreen;
 import com.enderio.machines.client.gui.screen.RelocatorObeliskScreen;
 import com.enderio.machines.client.gui.screen.SagMillScreen;
 import com.enderio.machines.client.gui.screen.SlicerScreen;
@@ -26,7 +25,6 @@ import com.enderio.machines.client.gui.screen.WiredChargerScreen;
 import com.enderio.machines.client.gui.screen.XPObeliskScreen;
 import com.enderio.machines.client.gui.screen.XPVacuumScreen;
 import com.enderio.machines.common.blocks.alloy.AlloySmelterMenu;
-import com.enderio.machines.common.blocks.alloy.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.blocks.crafter.CrafterMenu;
 import com.enderio.machines.common.blocks.drain.DrainMenu;
 import com.enderio.machines.common.blocks.enchanter.EnchanterMenu;
@@ -63,8 +61,6 @@ public class MachineMenus {
             FluidTankMenu::new, () -> FluidTankScreen::new);
     public static final RegiliteMenu<EnchanterMenu> ENCHANTER = MENU_REGISTRY.registerMenu("enchanter",
             EnchanterMenu::new, () -> EnchanterScreen::new);
-    public static final RegiliteMenu<PrimitiveAlloySmelterMenu> PRIMITIVE_ALLOY_SMELTER = MENU_REGISTRY.registerMenu(
-            "primitive_alloy_smelter", PrimitiveAlloySmelterMenu::new, () -> PrimitiveAlloySmelterScreen::new);
     public static final RegiliteMenu<AlloySmelterMenu> ALLOY_SMELTER = MENU_REGISTRY.registerMenu("alloy_smelter",
             AlloySmelterMenu::new, () -> AlloySmelterScreen::new);
     public static final RegiliteMenu<SagMillMenu> SAG_MILL = MENU_REGISTRY.registerMenu("sag_mill", SagMillMenu::new,
