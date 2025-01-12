@@ -9,14 +9,13 @@ import com.enderio.machines.common.blocks.vat.FermentingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.jei.util.WrappedEnchanterRecipe;
 import com.enderio.machines.common.souldata.EngineSoul;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class MachineJEIRecipes {
     private final RecipeManager recipeManager;

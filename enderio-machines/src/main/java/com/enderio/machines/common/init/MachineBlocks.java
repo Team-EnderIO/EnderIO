@@ -80,9 +80,8 @@ public class MachineBlocks {
                     .customLoader(CompositeModelBuilder::begin)
                     .child("tank",
                             ModelHelper.getExistingAsBuilder(prov.models(),
-                                EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
-                    .child("overlay",
-                            ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
+                                    EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
+                    .child("overlay", ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
                     .end()
                     .texture("particle", EnderIO.loc("block/machine_side"))))
             .createBlockItem(ITEM_REGISTRY, block -> new FluidTankBlockItem(block, new Item.Properties(), 16000),
@@ -105,9 +104,8 @@ public class MachineBlocks {
                     .customLoader(CompositeModelBuilder::begin)
                     .child("tank",
                             ModelHelper.getExistingAsBuilder(prov.models(),
-                                EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
-                    .child("overlay",
-                            ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
+                                    EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
+                    .child("overlay", ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
                     .end()
                     .texture("particle", EnderIO.loc("block/machine_side"))))
             .createBlockItem(ITEM_REGISTRY, (block) -> new FluidTankBlockItem(block, new Item.Properties(), 32000),
@@ -253,8 +251,7 @@ public class MachineBlocks {
             .registerBlock("block_detector", BlockDetectorBlock::new,
                     BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER))
             .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)
-            .setBlockStateProvider(
-                    (prov, ctx) -> prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName())))
+            .setBlockStateProvider((prov, ctx) -> prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName())))
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
     public static final RegiliteBlock<MachineBlock<XPObeliskBlockEntity>> XP_OBELISK = BLOCK_REGISTRY
