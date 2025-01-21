@@ -64,6 +64,11 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
             int energyInserted = insertHandler.receiveEnergy(energyToInsert, false);
             context.setEnergyStored(context.energyStored() - energyInserted);
             context.setRotatingIndex(insertIndex + 1);
+            if (context.energyStored() <= 0) {
+                // If we are out of energy then stop the loop so we start at the next
+                // index next time around to spread out any new energy
+                break;
+            }
         }
     }
 
