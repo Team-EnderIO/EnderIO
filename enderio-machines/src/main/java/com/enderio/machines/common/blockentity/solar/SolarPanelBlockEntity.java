@@ -137,7 +137,7 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
             float rampTimeTicks = GameTicks.MINUTE_IN_TICKS * rampTimeMinutes;
 
             if (dayTime < rampTimeTicks) {
-                // If in the ramp up  period of the day, do a linear scale up
+                // If in the ramp up period of the day, do a linear scale up
                 outputScale = dayTime / rampTimeTicks;
             } else if (dayTime > (GameTicks.MINUTE_IN_TICKS * 10) - (GameTicks.MINUTE_IN_TICKS * rampTimeMinutes)) {
                 // If in the ramp down period of the day, do a linear scale down
