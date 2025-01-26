@@ -1,19 +1,20 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
+import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.lang.ArmoryLang;
-import net.minecraft.network.chat.Component;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.Tool;
 
 public class SpoonUpgrade implements IDarkSteelUpgrade {
 
     public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "spoon";
-
-    public static SpoonUpgrade create() {
-        return new SpoonUpgrade();
-    }
 
     @Override
     public String getName() {
@@ -29,4 +30,50 @@ public class SpoonUpgrade implements IDarkSteelUpgrade {
     public Collection<Component> getDescription() {
         return List.of(ArmoryLang.DS_UPGRADE_SPOON_DESCRIPTION);
     }
+
+    public void onAddedToItem(ItemStack stack) {
+        Tool tool = stack.get(DataComponents.TOOL);
+        if (tool == null) {
+            tool = ArmoryItems.DARK_STEEL_TIER.createToolProperties(BlockTags.MINEABLE_WITH_SHOVEL);
+            stack.set(DataComponents.TOOL, tool);
+        } else {
+            List<Tool.Rule> newRules = new ArrayList<>(tool.rules());
+            newRules.add(
+                    Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL, ArmoryItems.DARK_STEEL_TIER.getSpeed()));
+            stack.set(DataComponents.TOOL, new Tool(newRules, tool.defaultMiningSpeed(), tool.damagePerBlock()));
+        }
+    }
+
+    public void onRemovedFromItem(ItemStack stack) {
+        Tool tool = stack.get(DataComponents.TOOL);
+        if (tool == null) {
+            return;
+        }
+
+        Tool.Rule toRemove = Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL,
+                ArmoryItems.DARK_STEEL_TIER.getSpeed());
+        List<Tool.Rule> newRules = new ArrayList<>(tool.rules());
+        boolean removed = newRules.remove(toRemove);
+        System.out.println("SpoonUpgrade.onRemovedFromItem: removed rule = " + removed);
+
+        // HolderSet.Named<Block> shovelBlocks =
+        // BuiltInRegistries.BLOCK.getOrCreateTag(BlockTags.MINEABLE_WITH_SHOVEL);
+//        for(Tool.Rule rule: tool.rules()) {
+//            HolderSet<Block> ruleBlocks = rule.blocks();
+//            if(doesAContainAllOfB(ruleBlocks, shovelBlocks)) {
+//                newRules.remove(rule);
+//            }
+//        }
+        stack.set(DataComponents.TOOL, new Tool(newRules, tool.defaultMiningSpeed(), tool.damagePerBlock()));
+    }
+
+//    private boolean doesAContainAllOfB(HolderSet<Block> a, HolderSet.Named<Block> b) {
+//        for(Holder<Block> h : b) {
+//            if(!a.contains(h)) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+
 }

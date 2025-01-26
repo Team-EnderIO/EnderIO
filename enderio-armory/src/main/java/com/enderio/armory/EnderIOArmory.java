@@ -1,6 +1,7 @@
 package com.enderio.armory;
 
 import com.enderio.armory.common.config.ArmoryConfig;
+import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.init.ArmoryLootModifiers;
 import com.enderio.armory.common.init.ArmoryRecipes;
@@ -43,6 +44,7 @@ public class EnderIOArmory {
         ArmoryItems.register(modEventBus);
         ArmoryRecipes.register(modEventBus);
         ArmoryLootModifiers.register(modEventBus);
+        ArmoryDataComponents.register(modEventBus);
         ArmoryTags.register();
         ArmoryLang.register();
 

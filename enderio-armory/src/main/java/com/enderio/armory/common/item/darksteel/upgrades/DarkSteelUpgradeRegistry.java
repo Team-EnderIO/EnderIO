@@ -1,6 +1,7 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
+import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
@@ -13,7 +14,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public final class DarkSteelUpgradeRegistry {
@@ -21,15 +23,14 @@ public final class DarkSteelUpgradeRegistry {
     public static final String UPGRADE_PREFIX = EnderIO.NAMESPACE + ".darksteel.upgrade.";
 
     private static final DarkSteelUpgradeRegistry INST = new DarkSteelUpgradeRegistry();
-    private static final String UPGRADE_IN_STACK_KEY = "dark_steel_upgrade";
 
     static {
-        INST.registerUpgrade(EmpoweredUpgrade.NAME, EmpoweredUpgrade::new);
-        INST.registerUpgrade(SpoonUpgrade.NAME, SpoonUpgrade::new);
-        INST.registerUpgrade(ForkUpgrade.NAME, ForkUpgrade::new);
-        INST.registerUpgrade(DirectUpgrade.NAME, DirectUpgrade::new);
-        INST.registerUpgrade(ExplosiveUpgrade.NAME, ExplosiveUpgrade::new);
-        INST.registerUpgrade(ExplosivePenetrationUpgrade.NAME, ExplosivePenetrationUpgrade::new);
+        INST.registerUpgrade(EmpoweredUpgrade::new);
+        INST.registerUpgrade(SpoonUpgrade::new);
+        INST.registerUpgrade(ForkUpgrade::new);
+        INST.registerUpgrade(DirectUpgrade::new);
+        INST.registerUpgrade(ExplosiveUpgrade::new);
+        INST.registerUpgrade(ExplosivePenetrationUpgrade::new);
     }
 
     public static DarkSteelUpgradeRegistry instance() {
@@ -38,15 +39,13 @@ public final class DarkSteelUpgradeRegistry {
 
     private final Map<String, Supplier<IDarkSteelUpgrade>> registeredUpgrades = new HashMap<>();
 
-    private final Map<ResourceLocation, Set<String>> possibleUpgrades = new HashMap<>();
+    private final Map<TagKey<Item>, Set<String>> possibleUpgrades = new HashMap<>();
 
     private DarkSteelUpgradeRegistry() {
     }
 
-    // region Upgrade register
-
-    public void registerUpgrade(String upgradeName, Supplier<IDarkSteelUpgrade> upgrade) {
-        registeredUpgrades.put(upgradeName, upgrade);
+    public void registerUpgrade(Supplier<IDarkSteelUpgrade> upgrade) {
+        registeredUpgrades.put(upgrade.get().getName(), upgrade);
     }
 
     public Optional<IDarkSteelUpgrade> createUpgrade(String name) {
@@ -56,57 +55,35 @@ public final class DarkSteelUpgradeRegistry {
         }
         return Optional.of(val.get());
     }
-    // endregion
 
-    // region Read / Write of Upgrades to ItemStacks
-
-    // TODO: NEO-PORT: Rewrite upgrades.
-
-    public void writeUpgradeToItemStack(ItemStack stack, IDarkSteelUpgrade upgrade) {
-        CompoundTag rootTag = new CompoundTag();
-        rootTag.putString("name", upgrade.getName());
-        // rootTag.put("data", upgrade.serializeNBT(lookupProvider));
-        // stack.getOrCreateTag().put(UPGRADE_IN_STACK_KEY, rootTag);
+    @javax.annotation.Nullable
+    public IDarkSteelUpgrade loadUpgrade(String name, CompoundTag data) {
+        Optional<IDarkSteelUpgrade> upgrade = createUpgrade(name);
+        if (upgrade.isPresent()) {
+            upgrade.get().deserializeNBT(data);
+            return upgrade.get();
+        }
+        return null;
     }
 
     public boolean hasUpgrade(ItemStack stack) {
-//        if(stack.isEmpty() || !stack.hasTag()) {
-//            return false;
-//        }
-//        return stack.getOrCreateTag().contains(UPGRADE_IN_STACK_KEY);
-        return false;
+        return !stack.isEmpty() && stack.has(ArmoryDataComponents.DARK_STEEL_UPGRADE);
     }
 
-    public Optional<IDarkSteelUpgrade> readUpgradeFromStack(ItemStack stack) {
-//        if(stack.isEmpty() || !stack.hasTag()) {
-//            return Optional.empty();
-//        }
-//        Tag upTag = stack.getOrCreateTag().get(UPGRADE_IN_STACK_KEY);
-//        if(upTag instanceof CompoundTag rootTag) {
-//            String serName = rootTag.getString("name");
-//            final Optional<IDarkSteelUpgrade> upgrade = createUpgrade(serName);
-//            return upgrade.map(up -> {
-//                up.deserializeNBT(Objects.requireNonNull(rootTag.get("data")));
-//                return upgrade;
-//            }).orElse(Optional.empty());
-//        }
-        return Optional.empty();
-    }
-
-    // endregion
-
-    // region Upgrade Sets (the set of upgrades that can be applied to an upgradable
-    // item
-
-    public void addUpgradesForItem(ResourceLocation forItem, String... upgrades) {
+    public void registerUpgradesForItem(TagKey<Item> forItem, String... upgrades) {
         Set<String> currentValues = possibleUpgrades.getOrDefault(forItem, new HashSet<>());
         Collections.addAll(currentValues, upgrades);
         possibleUpgrades.put(forItem, currentValues);
     }
 
-    public Set<String> getUpgradesForItem(ResourceLocation forItem) {
-        return Collections.unmodifiableSet(possibleUpgrades.getOrDefault(forItem, Collections.emptySet()));
+    public Set<String> getUpgradesForItem(ItemStack stack) {
+        Set<String> result = new HashSet<>();
+        possibleUpgrades.forEach((tag, value) -> {
+            if (stack.is(tag)) {
+                result.addAll(value);
+            }
+        });
+        return Collections.unmodifiableSet(result);
     }
 
-    // endregion
 }
