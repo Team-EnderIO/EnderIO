@@ -37,8 +37,8 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
 
     static {
         DarkSteelUpgradeRegistry.instance()
-                .registerUpgradesForItem(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_PICKAXE, EmpoweredUpgrade.NAME, SpoonUpgrade.NAME,
-                        DirectUpgrade.NAME, ExplosiveUpgrade.NAME, ExplosivePenetrationUpgrade.NAME);
+                .registerUpgradesForItem(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_PICKAXE, EmpoweredUpgrade.NAME,
+                        SpoonUpgrade.NAME, DirectUpgrade.NAME, ExplosiveUpgrade.NAME, ExplosivePenetrationUpgrade.NAME);
     }
 
     private final ModConfigSpec.ConfigValue<Integer> obsidianBreakPowerUse = ArmoryConfig.COMMON.DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
@@ -151,7 +151,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        //TODO: Need to show both energy and power?
+        // TODO: Need to show both energy and power?
         var energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
         if (energyStorage != null && energyStorage.getMaxEnergyStored() > 0) {
             return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());

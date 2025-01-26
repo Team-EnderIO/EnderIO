@@ -9,17 +9,16 @@ import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 
 public interface IDarkSteelItem extends AdvancedTooltipProvider, CreativeTabVariants {
 

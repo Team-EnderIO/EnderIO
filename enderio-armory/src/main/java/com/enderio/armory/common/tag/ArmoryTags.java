@@ -19,8 +19,12 @@ public class ArmoryTags {
         private static void init() {
         }
 
-        public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_PICKAXE = ItemTags.create(EnderIO.loc("dark_steel_upgradeable_pickaxe"));
-        public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_SWORD = ItemTags.create(EnderIO.loc("dark_steel_upgradeable_sword"));
+        public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_PICKAXE = ItemTags
+                .create(EnderIO.loc("dark_steel_upgradeable_pickaxe"));
+        public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_AXE = ItemTags
+                .create(EnderIO.loc("dark_steel_upgradeable_axe"));
+        public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_SWORD = ItemTags
+                .create(EnderIO.loc("dark_steel_upgradeable_sword"));
 
     }
 

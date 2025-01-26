@@ -3,9 +3,12 @@ package com.enderio.armory.common.item.darksteel;
 import com.enderio.armory.common.capability.DarkSteelCapability;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryItems;
+import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.ForkUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
+import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.BlockUtil;
@@ -29,10 +32,17 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 
 public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, CreativeTabVariants {
+
+    static {
+        DarkSteelUpgradeRegistry.instance()
+                .registerUpgradesForItem(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_AXE, EmpoweredUpgrade.NAME,
+                        ForkUpgrade.NAME, DirectUpgrade.NAME);
+    }
 
     public DarkSteelAxeItem(Properties pProperties) {
         super(ArmoryItems.DARK_STEEL_TIER,
@@ -98,11 +108,6 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
     }
 
     @Override
-    public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return canHarvest(stack, state)/* && TierSortingRegistry.isCorrectTierForDrops(getTier(), state) */;
-    }
-
-    @Override
     public InteractionResult useOn(UseOnContext pContext) {
         if (hasFork(pContext.getItemInHand())) {
             return Items.DIAMOND_HOE.useOn(pContext);
@@ -116,12 +121,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
                 || (hasFork(stack) && ItemAbilities.DEFAULT_HOE_ACTIONS.contains(itemAbility));
     }
 
-    private boolean canHarvest(ItemStack stack, BlockState state) {
-        return state.is(BlockTags.MINEABLE_WITH_AXE) || (state.is(BlockTags.MINEABLE_WITH_HOE) && hasFork(stack));
-    }
-
     private boolean hasFork(ItemStack stack) {
-//        return DarkSteelUpgradeable.hasUpgrade(stack, ForkUpgrade.NAME);
         return DarkSteelCapability.hasUpgrade(stack, ForkUpgrade.NAME);
     }
 
@@ -169,7 +169,6 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
             tooltips.add(TooltipUtil.withArgs(ArmoryLang.DS_UPGRADE_EMPOWERED_EFFICIENCY,
                     ArmoryConfig.COMMON.EMPOWERED_EFFICIENCY_BOOST.get()));
         }
-
         IDarkSteelItem.super.addCurrentUpgradeTooltips(itemStack, tooltips, isDetailed);
     }
 
@@ -191,5 +190,15 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
     @Override
     public boolean isBarVisible(ItemStack pStack) {
         return isDurabilityBarVisible(pStack);
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        // TODO: Need to show both energy and power?
+        var energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (energyStorage != null && energyStorage.getMaxEnergyStored() > 0) {
+            return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
+        }
+        return super.getBarWidth(stack);
     }
 }

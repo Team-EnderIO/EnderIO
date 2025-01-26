@@ -2,10 +2,12 @@ package com.enderio.armory.common.init;
 
 import com.enderio.armory.EnderIOArmory;
 import com.enderio.armory.common.config.ArmoryConfig;
+import com.enderio.armory.common.item.darksteel.DarkSteelAxeItem;
 import com.enderio.armory.common.item.darksteel.DarkSteelPickaxeItem;
 import com.enderio.armory.common.item.darksteel.DarkSteelSwordItem;
 import com.enderio.armory.common.item.darksteel.DarkSteelUpgradeItem;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgradeTier;
+import com.enderio.armory.common.item.darksteel.upgrades.ForkUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.SpoonUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgradeTier;
@@ -48,23 +50,15 @@ public class ArmoryItems {
             .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
-    // public static final RegiliteItem<TravelStaffItem> TRAVEL_STAFF =
-    // ITEM_REGISTRY
-    // .registerItem("staff_of_travelling", TravelStaffItem::new, new
-    // Item.Properties().stacksTo(1))
-    // .setTab(EIOCreativeTabs.GEAR, modifier ->
-    // EIOItems.TRAVEL_STAFF.get().addAllVariants(modifier))
-    // .addCapability(Capabilities.EnergyStorage.ITEM,
-    // TravelStaffItem.ENERGY_STORAGE_PROVIDER);
+    public static final RegiliteItem<DarkSteelAxeItem> DARK_STEEL_AXE = ITEM_REGISTRY
+            .registerItem("dark_steel_axe", DarkSteelAxeItem::new, new Item.Properties().durability(2000))
+            .setTab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_AXE.get().addAllVariants(modifier))
+            .setTranslation("Darksteel Axe")
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
+            .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_AXE)
+            .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
+            .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
-//    public static final ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
-//        .item("dark_steel_axe", DarkSteelAxeItem::new)
-//        .tab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_AXE.get().addAllVariants(modifier))
-//        .onRegister(item -> DarkSteelUpgradeRegistry
-//            .instance()
-//            .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, ForkUpgrade.NAME, DirectUpgrade.NAME))
-//        .register();
-//
     private static final String UPGRADE_TEXT = " Upgrade";
 
     public static final RegiliteItem<MaterialItem> DARK_STEEL_UPGRADE_BLANK = ITEM_REGISTRY
@@ -111,6 +105,14 @@ public class ArmoryItems {
                             SpoonUpgrade::new))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Spoon" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_FORK = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_fork",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.FORK_ACTIVATION_COST,
+                            ForkUpgrade::new))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Fork" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
 
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = ITEM_REGISTRY

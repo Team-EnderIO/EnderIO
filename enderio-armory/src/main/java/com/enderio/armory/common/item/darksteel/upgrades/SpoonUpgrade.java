@@ -49,31 +49,11 @@ public class SpoonUpgrade implements IDarkSteelUpgrade {
         if (tool == null) {
             return;
         }
-
         Tool.Rule toRemove = Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL,
                 ArmoryItems.DARK_STEEL_TIER.getSpeed());
         List<Tool.Rule> newRules = new ArrayList<>(tool.rules());
-        boolean removed = newRules.remove(toRemove);
-        System.out.println("SpoonUpgrade.onRemovedFromItem: removed rule = " + removed);
-
-        // HolderSet.Named<Block> shovelBlocks =
-        // BuiltInRegistries.BLOCK.getOrCreateTag(BlockTags.MINEABLE_WITH_SHOVEL);
-//        for(Tool.Rule rule: tool.rules()) {
-//            HolderSet<Block> ruleBlocks = rule.blocks();
-//            if(doesAContainAllOfB(ruleBlocks, shovelBlocks)) {
-//                newRules.remove(rule);
-//            }
-//        }
+        newRules.remove(toRemove);
         stack.set(DataComponents.TOOL, new Tool(newRules, tool.defaultMiningSpeed(), tool.damagePerBlock()));
     }
-
-//    private boolean doesAContainAllOfB(HolderSet<Block> a, HolderSet.Named<Block> b) {
-//        for(Holder<Block> h : b) {
-//            if(!a.contains(h)) {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
 
 }

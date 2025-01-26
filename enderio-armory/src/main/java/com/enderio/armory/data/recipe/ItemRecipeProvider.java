@@ -50,15 +50,15 @@ public class ItemRecipeProvider extends RecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT))
                 .save(recipeOutput);
 
-//        ShapedRecipeBuilder
-//            .shaped(RecipeCategory.TOOLS, ArmoryItems.DARK_STEEL_AXE.get())
-//            .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
-//            .define('S', Tags.Items.RODS_WOODEN)
-//            .pattern("II")
-//            .pattern("IS")
-//            .pattern(" S")
-//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT))
-//            .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ArmoryItems.DARK_STEEL_AXE.get())
+                .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
+                .define('S', Tags.Items.RODS_WOODEN)
+                .pattern("II")
+                .pattern("IS")
+                .pattern(" S")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT))
+                .save(recipeOutput);
     }
 
     private void addDarkSteelUpgrades(RecipeOutput recipeOutput) {
@@ -68,7 +68,7 @@ public class ItemRecipeProvider extends RecipeProvider {
                 Ingredient.of(EIOItems.DOUBLE_LAYER_CAPACITOR));
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EMPOWERED_4, Ingredient.of(EIOItems.OCTADIC_CAPACITOR));
 
-//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_FORK, Ingredient.of(Items.DIAMOND_HOE));
+        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_FORK, Ingredient.of(Items.DIAMOND_HOE));
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPOON, Ingredient.of(Items.DIAMOND_SHOVEL));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ArmoryItems.DARK_STEEL_UPGRADE_DIRECT.get())
