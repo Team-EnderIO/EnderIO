@@ -5,6 +5,7 @@ import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.init.ArmoryLootModifiers;
 import com.enderio.armory.common.init.ArmoryRecipes;
+import com.enderio.armory.common.item.darksteel.DarkSteelSwordItem;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.armory.data.loot.ArmoryLootModifiersProvider;
@@ -23,6 +24,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
@@ -39,6 +41,8 @@ public class EnderIOArmory {
         modContainer.registerConfig(ModConfig.Type.COMMON, ArmoryConfig.COMMON_SPEC, "enderio/armory-common.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, ArmoryConfig.CLIENT_SPEC, "enderio/armory-client.toml");
 
+        NeoForge.EVENT_BUS.addListener(DarkSteelSwordItem::addUpgradeModifiers);
+
         // Perform initialization and registration for everything so things are
         // registered.
         ArmoryItems.register(modEventBus);
@@ -49,6 +53,9 @@ public class EnderIOArmory {
         ArmoryLang.register();
 
         REGILITE.register(modEventBus);
+
+
+
     }
 
     @SubscribeEvent

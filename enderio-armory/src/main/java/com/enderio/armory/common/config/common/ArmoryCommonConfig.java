@@ -11,18 +11,31 @@ public class ArmoryCommonConfig {
 
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_EFFICIENCY_BOOST;
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ENERGY_PER_DAMAGE;
-    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_I;
-    public final ModConfigSpec.ConfigValue<Double> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I;
+
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_I;
+    public final ModConfigSpec.ConfigValue<Double> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ATTACK_DAMAGE_INCREASE_I;
+    public final ModConfigSpec.ConfigValue<Double> EMPOWERED_ATTACK_SPEED_INCREASE_I;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_I;
+
+
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_II;
     public final ModConfigSpec.ConfigValue<Double> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II;
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_II;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ATTACK_DAMAGE_INCREASE_II;
+    public final ModConfigSpec.ConfigValue<Double> EMPOWERED_ATTACK_SPEED_INCREASE_II;
+
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_III;
     public final ModConfigSpec.ConfigValue<Double> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III;
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_III;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ATTACK_DAMAGE_INCREASE_III;
+    public final ModConfigSpec.ConfigValue<Double> EMPOWERED_ATTACK_SPEED_INCREASE_III;
+
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_IV;
     public final ModConfigSpec.ConfigValue<Double> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV;
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_IV;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ATTACK_DAMAGE_INCREASE_IV;
+    public final ModConfigSpec.ConfigValue<Double> EMPOWERED_ATTACK_SPEED_INCREASE_IV;
 
     public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_RADIUS_ACTIVATION_COST_I;
     public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_I;
@@ -58,15 +71,26 @@ public class ArmoryCommonConfig {
         EMPOWERED_ACTIVATION_COST_I = builder.define("activationCost_l1", 4);
         EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I = builder.define("damageAbsorptionChance_l1", 0.5d);
         EMPOWERED_MAX_ENERGY_I = builder.define("maxEnergy_l1", 100000);
+        EMPOWERED_ATTACK_DAMAGE_INCREASE_I = builder.define("attackDamageIncrease_l1", 1);
+        EMPOWERED_ATTACK_SPEED_INCREASE_I = builder.define("attackSpeedIncrease_l1", 0.4);
+
         EMPOWERED_ACTIVATION_COST_II = builder.define("activationCost_l2", 8);
         EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II = builder.define("damageAbsorptionChance_l2", 0.6d);
         EMPOWERED_MAX_ENERGY_II = builder.define("maxEnergy_l2", 150000);
+        EMPOWERED_ATTACK_DAMAGE_INCREASE_II = builder.define("attackDamageIncrease_l2", 2);
+        EMPOWERED_ATTACK_SPEED_INCREASE_II = builder.define("attackSpeedIncrease_l2", 0.45);
+
         EMPOWERED_ACTIVATION_COST_III = builder.define("activationCost_l3", 12);
         EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III = builder.define("damageAbsorptionChance_l3", 0.7d);
         EMPOWERED_MAX_ENERGY_III = builder.define("maxEnergy_l3", 250000);
+        EMPOWERED_ATTACK_DAMAGE_INCREASE_III = builder.define("attackDamageIncrease_l3", 3);
+        EMPOWERED_ATTACK_SPEED_INCREASE_III = builder.define("attackSpeedIncrease_l3", 0.5);
+
         EMPOWERED_ACTIVATION_COST_IV = builder.define("activationCost_l4", 16);
         EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV = builder.define("damageAbsorptionChance_l4", 0.85d);
         EMPOWERED_MAX_ENERGY_IV = builder.define("maxEnergy_l4", 1000000);
+        EMPOWERED_ATTACK_DAMAGE_INCREASE_IV = builder.define("attackDamageIncrease_l4", 4);
+        EMPOWERED_ATTACK_SPEED_INCREASE_IV = builder.define("attackSpeedIncrease_l4", 0.5);
         builder.pop();
 
         builder.push("explosive");

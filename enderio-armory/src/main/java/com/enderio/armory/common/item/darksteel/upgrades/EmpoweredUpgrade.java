@@ -4,14 +4,15 @@ import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.util.TooltipUtil;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.ModConfigSpec;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
 
@@ -30,6 +31,9 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
     public EmpoweredUpgrade(EmpoweredUpgradeTier tier) {
         super(tier, NAME);
     }
+
+    public  EmpoweredUpgradeTier getEmpoweredTier() {
+        return tier;    }
 
     public float adjustDestroySpeed(float speed, ItemStack pStack) {
         if (ItemStackEnergy.getEnergyStored(pStack) > 0) {
@@ -55,6 +59,46 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
     public int getMaxEnergyTransfer() {
         return tier.getMaxStorage();
     }
+
+//    @Override
+//    public void onAddedToItem(ItemStack stack) {
+//
+//        if(true) {
+//            return;
+//        }
+//
+//        //This works but doesn't take into account having power
+//        if(stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD)) {
+//            ItemAttributeModifiers curMOds = stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
+//            ItemAttributeModifiers adjusted = curMOds.withModifierAdded(Attributes.ATTACK_DAMAGE,
+//                new AttributeModifier(BASE_ATTACK_DAMAGE_ID, 420, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+//            adjusted = adjusted.withModifierAdded(Attributes.ATTACK_SPEED,
+//                new AttributeModifier(BASE_ATTACK_SPEED_ID, 99, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+//            stack.set(DataComponents.ATTRIBUTE_MODIFIERS, adjusted);
+//        }
+//    }
+
+//    @Override
+//    public void onRemovedFromItem(ItemStack stack) {
+//
+//        if(true) {
+//            return;
+//        }
+//
+//        //This works but doesn't take into account having power
+//        if(stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD)) {
+//            ItemStack defaultStack = new ItemStack(stack.getItem());
+//            ItemAttributeModifiers defaultMods = defaultStack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
+////            defaultMods.forEach(MAINHAND, (att, mod) -> {
+////
+////                AttributeModifier toRemove = new AttributeModifier(BASE_ATTACK_DAMAGE_ID, 420, AttributeModifier.Operation.ADD_VALUE);
+////                if(toRemove.equals(mod)) {
+////                    System.out.println("Found mod to remove");
+////                }
+////            });
+//            stack.set(DataComponents.ATTRIBUTE_MODIFIERS, defaultMods);
+//        }
+//    }
 
     @Override
     public Collection<Component> getDescription() {

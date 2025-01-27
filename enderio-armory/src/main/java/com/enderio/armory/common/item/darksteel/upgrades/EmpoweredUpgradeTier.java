@@ -12,18 +12,26 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
 
     ONE(ArmoryConfig.COMMON.EMPOWERED_MAX_ENERGY_I,
         ArmoryConfig.COMMON.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I,
+        ArmoryConfig.COMMON.EMPOWERED_ATTACK_DAMAGE_INCREASE_I,
+        ArmoryConfig.COMMON.EMPOWERED_ATTACK_SPEED_INCREASE_I,
         ArmoryConfig.COMMON.EMPOWERED_ACTIVATION_COST_I,
         ArmoryLang.DS_UPGRADE_EMPOWERED_I),
     TWO(ArmoryConfig.COMMON.EMPOWERED_MAX_ENERGY_II,
         ArmoryConfig.COMMON.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II,
+        ArmoryConfig.COMMON.EMPOWERED_ATTACK_DAMAGE_INCREASE_II,
+        ArmoryConfig.COMMON.EMPOWERED_ATTACK_SPEED_INCREASE_II,
         ArmoryConfig.COMMON.EMPOWERED_ACTIVATION_COST_II,
         ArmoryLang.DS_UPGRADE_EMPOWERED_II),
     THREE(ArmoryConfig.COMMON.EMPOWERED_MAX_ENERGY_III,
         ArmoryConfig.COMMON.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III,
+        ArmoryConfig.COMMON.EMPOWERED_ATTACK_DAMAGE_INCREASE_III,
+        ArmoryConfig.COMMON.EMPOWERED_ATTACK_SPEED_INCREASE_III,
         ArmoryConfig.COMMON.EMPOWERED_ACTIVATION_COST_III,
         ArmoryLang.DS_UPGRADE_EMPOWERED_III),
     FOUR(ArmoryConfig.COMMON.EMPOWERED_MAX_ENERGY_IV,
         ArmoryConfig.COMMON.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV,
+        ArmoryConfig.COMMON.EMPOWERED_ATTACK_DAMAGE_INCREASE_IV,
+        ArmoryConfig.COMMON.EMPOWERED_ATTACK_SPEED_INCREASE_IV,
         ArmoryConfig.COMMON.EMPOWERED_ACTIVATION_COST_IV,
         ArmoryLang.DS_UPGRADE_EMPOWERED_IV);
 
@@ -31,13 +39,17 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
     private final ModConfigSpec.ConfigValue<Integer> maxStorage;
     private final ModConfigSpec.ConfigValue<Double> damageAbsorptionChance;
     private final ModConfigSpec.ConfigValue<Integer> activationCost;
+    private final ModConfigSpec.ConfigValue<Integer> attackDamageIncrease;
+    private final ModConfigSpec.ConfigValue<Double> attackSpeedIncrease;
     private final Component displayName;
 
     EmpoweredUpgradeTier(ModConfigSpec.ConfigValue<Integer> maxStorage, ModConfigSpec.ConfigValue<Double> damageAbsorptionChance,
-        ModConfigSpec.ConfigValue<Integer> activationCost, Component displayName) {
+        ModConfigSpec.ConfigValue<Integer> attackDamageIncrease, ModConfigSpec.ConfigValue<Double> attackSpeedIncrease, ModConfigSpec.ConfigValue<Integer> activationCost, Component displayName) {
         this.maxStorage = maxStorage;
         this.damageAbsorptionChance = damageAbsorptionChance;
         this.activationCost = activationCost;
+        this.attackDamageIncrease = attackDamageIncrease;
+        this.attackSpeedIncrease = attackSpeedIncrease;
         this.displayName = displayName;
         factory = () -> new EmpoweredUpgrade(this);
     }
@@ -48,6 +60,14 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
 
     public float getDamageAbsorptionChance() {
         return damageAbsorptionChance.get().floatValue();
+    }
+
+    public int getAttackDamageIncrease() {
+        return attackDamageIncrease.get();
+    }
+
+    public double getAttackSpeedIncrease() {
+        return attackSpeedIncrease.get();
     }
 
     public Supplier<IDarkSteelUpgrade> getFactory() {

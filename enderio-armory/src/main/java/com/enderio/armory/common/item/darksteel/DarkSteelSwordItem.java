@@ -1,28 +1,37 @@
 package com.enderio.armory.common.item.darksteel;
 
+import com.enderio.armory.common.capability.DarkSteelCapability;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgradeTier;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
+import com.enderio.base.api.EnderIO;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.util.TooltipUtil;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.component.ResolvableProfile;
+import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProvider, IDarkSteelItem {
 
@@ -45,6 +54,37 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         }
         return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
+
+    //Could use this instead and only add damage if we have power
+//    public float getAttackDamageBonus(Entity target, float damage, DamageSource damageSource) {
+//        ItemStack stack = damageSource.getWeaponItem();
+//        if(stack == null) {
+//            return 0;
+//        }
+//        return getEmpoweredUpgrade(stack)
+//            .map(empoweredUpgrade -> empoweredUpgrade.getEmpoweredTier().getAttackDamageIncrease())
+//            .orElse(0);
+//    }
+
+    public static void addUpgradeModifiers(ItemAttributeModifierEvent e) {
+        ItemStack stack = e.getItemStack();
+        Optional<EmpoweredUpgrade> empUp = DarkSteelCapability.getEmpoweredUpgrade(stack);
+        if(empUp.isEmpty()) {
+            return;
+        }
+        EmpoweredUpgradeTier tier = empUp.get().getEmpoweredTier();
+        e.addModifier(Attributes.ATTACK_DAMAGE,
+            new AttributeModifier(ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE, "the_ender_attack_boost_" + tier.getLevel()),
+                tier.getAttackDamageIncrease(), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+        e.addModifier(Attributes.ATTACK_SPEED,
+            new AttributeModifier(ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE, "the_ender_attack_speed_boost_" + tier.getLevel()),
+                tier.getAttackSpeedIncrease(), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+        //private static final AttributeModifier MOVEMENT_EFFICIENCY = new AttributeModifier(Mekanism.rl("free_runners"), 1, AttributeModifier.Operation.ADD_VALUE);
+        //            AttributeModifier MOVEMENT_EFFICIENCY = new AttributeModifier(ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE, "free_runners"), 10, AttributeModifier.Operation.ADD_VALUE);
+        //            e.addModifier(Attributes.MOVEMENT_EFFICIENCY, MOVEMENT_EFFICIENCY, EquipmentSlotGroup.FEET);
+    }
+
+
 
     // TODO Quick and dirty. Not using instanceof cause of possible mod oddities
     public static Optional<ItemStack> getSkull(LivingEntity pTarget) {
@@ -85,6 +125,14 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public void setDamage(final ItemStack stack, final int newDamage) {
+        int finalDamage = getEmpoweredUpgrade(stack)
+            .map(empoweredUpgrade -> empoweredUpgrade.adjustDamage(getDamage(stack), newDamage, stack))
+            .orElse(newDamage);
+        super.setDamage(stack, finalDamage);
     }
 
     // TODO remove when doing tools
