@@ -4,15 +4,14 @@ import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.util.TooltipUtil;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.ModConfigSpec;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
 
@@ -32,8 +31,9 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
         super(tier, NAME);
     }
 
-    public  EmpoweredUpgradeTier getEmpoweredTier() {
-        return tier;    }
+    public EmpoweredUpgradeTier getEmpoweredTier() {
+        return tier;
+    }
 
     public float adjustDestroySpeed(float speed, ItemStack pStack) {
         if (ItemStackEnergy.getEnergyStored(pStack) > 0) {

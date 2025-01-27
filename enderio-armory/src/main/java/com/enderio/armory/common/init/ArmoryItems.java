@@ -18,6 +18,7 @@ import com.enderio.base.common.item.misc.MaterialItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -38,6 +39,7 @@ public class ArmoryItems {
             .setTranslation("The Ender")
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
             .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD)
+            .addItemTags(ItemTags.SWORDS)
             .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
@@ -47,6 +49,7 @@ public class ArmoryItems {
             .setTranslation("Darksteel Pickaxe")
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
             .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_PICKAXE)
+            .addItemTags(ItemTags.PICKAXES)
             .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
@@ -56,6 +59,7 @@ public class ArmoryItems {
             .setTranslation("Darksteel Axe")
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
             .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_AXE)
+            .addItemTags(ItemTags.AXES)
             .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 

@@ -54,8 +54,6 @@ public class EnderIOArmory {
 
         REGILITE.register(modEventBus);
 
-
-
     }
 
     @SubscribeEvent

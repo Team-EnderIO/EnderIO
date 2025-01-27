@@ -13,6 +13,8 @@ public class ArmoryLang {
 
     public static final MutableComponent HEAD_DROP_CHANCE = addTranslation("info", EnderIO.loc("headchance"),
             "%s%% chance to drop a mob head");
+    public static final MutableComponent HEAD_DROP_INFO = addTranslation("info", EnderIO.loc("headinfo"),
+            "Cuts off mob heads once Empowered");
     public static final MutableComponent DURABILITY_AMOUNT = addTranslation("info", EnderIO.loc("durability.amount"),
             "Durability %s");
 
