@@ -4,7 +4,6 @@ import com.enderio.armory.common.capability.DarkSteelCapability;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
-import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgradeTier;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.base.api.EnderIO;
@@ -23,6 +22,7 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +30,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
+import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProvider, IDarkSteelItem {
@@ -51,8 +52,8 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         if (empUp.isEmpty()) {
             return super.hurtEnemy(pStack, pTarget, pAttacker);
         }
-        EmpoweredUpgradeTier tier = empUp.get().getEmpoweredTier();
-        if (pTarget.isDeadOrDying() && Math.random() < tier.getMobHeadChance()) {
+
+        if (pTarget.isDeadOrDying() && Math.random() < empUp.get().getMobHeadChance()) {
             Optional<ItemStack> skull = getSkull(pTarget);
             skull.ifPresent(itemStack -> Containers.dropItemStack(pAttacker.level(), pAttacker.position().x,
                     pAttacker.position().y, pAttacker.position().z, itemStack));
@@ -71,24 +72,35 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
 //            .orElse(0);
 //    }
 
+    public static void onEntityTeleport(EntityTeleportEvent event) {
+        if (event.getEntity() instanceof EnderMan em) {
+            if (em.getLastDamageSource() == null || em.getLastDamageSource().getWeaponItem() == null) {
+                return;
+            }
+            if (em.getLastDamageSource().getWeaponItem().is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD)) {
+                event.setCanceled(true);
+            }
+        }
+    }
+
     public static void addUpgradeModifiers(ItemAttributeModifierEvent e) {
         ItemStack stack = e.getItemStack();
-        Optional<EmpoweredUpgrade> empUp = DarkSteelCapability.getEmpoweredUpgrade(stack);
-        if (empUp.isEmpty()) {
+        Optional<EmpoweredUpgrade> empUpOpt = DarkSteelCapability.getEmpoweredUpgrade(stack);
+        if (empUpOpt.isEmpty()) {
             return;
         }
-        EmpoweredUpgradeTier tier = empUp.get().getEmpoweredTier();
+        EmpoweredUpgrade empUp = empUpOpt.get();
         e.addModifier(Attributes.ATTACK_DAMAGE,
                 new AttributeModifier(
                         ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE,
-                                "the_ender_attack_boost_" + tier.getLevel()),
-                        tier.getAttackDamageIncrease(), AttributeModifier.Operation.ADD_VALUE),
+                                "the_ender_attack_boost_" + empUp.getLevel()),
+                        empUp.getAttackDamageIncrease(), AttributeModifier.Operation.ADD_VALUE),
                 EquipmentSlotGroup.MAINHAND);
         e.addModifier(Attributes.ATTACK_SPEED,
                 new AttributeModifier(
                         ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE,
-                                "the_ender_attack_speed_boost_" + tier.getLevel()),
-                        tier.getAttackSpeedIncrease(), AttributeModifier.Operation.ADD_VALUE),
+                                "the_ender_attack_speed_boost_" + empUp.getLevel()),
+                        empUp.getAttackSpeedIncrease(), AttributeModifier.Operation.ADD_VALUE),
                 EquipmentSlotGroup.MAINHAND);
     }
 
@@ -103,19 +115,16 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         if (DarkSteelCapability.getEmpoweredUpgrade(itemStack).isEmpty()) {
-//            tooltips.add(Component.literal("Cuts off mob heads once Empowered"));
-            tooltips.add(TooltipUtil.style(ArmoryLang.HEAD_DROP_INFO));
+            tooltips.add(TooltipUtil.style(ArmoryLang.ENDER_HEAD_DROP_INFO));
         }
     }
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         Optional<EmpoweredUpgrade> empUp = DarkSteelCapability.getEmpoweredUpgrade(itemStack);
-        if (empUp.isPresent()) {
-            EmpoweredUpgradeTier tier = empUp.get().getEmpoweredTier();
-            tooltips.add(
-                    TooltipUtil.withArgs(ArmoryLang.HEAD_DROP_CHANCE, (int) Math.round(tier.getMobHeadChance() * 100)));
-        }
+        empUp.ifPresent(empoweredUpgrade -> tooltips.add(TooltipUtil.withArgs(ArmoryLang.ENDER_HEAD_DROP_CHANCE,
+                (int) Math.round(empoweredUpgrade.getMobHeadChance() * 100))));
+        empUp.ifPresent(empoweredUpgrade -> tooltips.add(TooltipUtil.style(ArmoryLang.ENDER_BLOCK_TELEPORT)));
         addDurabilityTooltips(itemStack, tooltips);
         addCurrentUpgradeTooltips(itemStack, tooltips, true);
         addAvailableUpgradesTooltips(itemStack, tooltips);

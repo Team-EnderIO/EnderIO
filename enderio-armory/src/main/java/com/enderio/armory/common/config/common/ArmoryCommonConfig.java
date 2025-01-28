@@ -96,7 +96,7 @@ public class ArmoryCommonConfig {
         EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV = builder.define("damageAbsorptionChance_l4", 0.85d);
         EMPOWERED_MAX_ENERGY_IV = builder.define("maxEnergy_l4", 1000000);
         EMPOWERED_ATTACK_DAMAGE_INCREASE_IV = builder.define("attackDamageIncrease_l4", 4);
-        EMPOWERED_ATTACK_SPEED_INCREASE_IV = builder.define("attackSpeedIncrease_l4", 0.5);
+        EMPOWERED_ATTACK_SPEED_INCREASE_IV = builder.define("attackSpeedIncrease_l4", 0.55);
         EMPOWERED_MOB_HEAD_CHANCE_IV = builder.define("modHeadChance_l4", 0.13);
         builder.pop();
 

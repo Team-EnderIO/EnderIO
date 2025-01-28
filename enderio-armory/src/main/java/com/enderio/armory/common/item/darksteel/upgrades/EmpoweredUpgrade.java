@@ -31,10 +31,6 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
         super(tier, NAME);
     }
 
-    public EmpoweredUpgradeTier getEmpoweredTier() {
-        return tier;
-    }
-
     public float adjustDestroySpeed(float speed, ItemStack pStack) {
         if (ItemStackEnergy.getEnergyStored(pStack) > 0) {
             speed += speedBoostWhenPowered.get();
@@ -58,6 +54,22 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
 
     public int getMaxEnergyTransfer() {
         return tier.getMaxStorage();
+    }
+
+    public int getAttackDamageIncrease() {
+        return tier.getAttackDamageIncrease();
+    }
+
+    public double getAttackSpeedIncrease() {
+        return tier.getAttackSpeedIncrease();
+    }
+
+    public int getLevel() {
+        return tier.getLevel();
+    }
+
+    public double getMobHeadChance() {
+        return tier.getMobHeadChance();
     }
 
 //    @Override

@@ -16,7 +16,6 @@ import com.enderio.base.data.EIODataProvider;
 import com.enderio.regilite.Regilite;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -41,8 +40,6 @@ public class EnderIOArmory {
         modContainer.registerConfig(ModConfig.Type.COMMON, ArmoryConfig.COMMON_SPEC, "enderio/armory-common.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, ArmoryConfig.CLIENT_SPEC, "enderio/armory-client.toml");
 
-        NeoForge.EVENT_BUS.addListener(DarkSteelSwordItem::addUpgradeModifiers);
-
         // Perform initialization and registration for everything so things are
         // registered.
         ArmoryItems.register(modEventBus);
@@ -54,11 +51,13 @@ public class EnderIOArmory {
 
         REGILITE.register(modEventBus);
 
+        // Specific event listeners
+        NeoForge.EVENT_BUS.addListener(DarkSteelSwordItem::addUpgradeModifiers);
+        NeoForge.EVENT_BUS.addListener(DarkSteelSwordItem::onEntityTeleport);
     }
 
     @SubscribeEvent
     public static void onGatherData(GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
         PackOutput packOutput = event.getGenerator().getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
