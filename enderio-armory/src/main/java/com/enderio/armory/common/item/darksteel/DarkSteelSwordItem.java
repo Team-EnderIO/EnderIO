@@ -4,6 +4,7 @@ import com.enderio.armory.common.capability.DarkSteelCapability;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.base.api.EnderIO;
@@ -37,7 +38,8 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
 
     static {
         DarkSteelUpgradeRegistry.instance()
-                .registerUpgradesForItem(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD, EmpoweredUpgrade.NAME);
+                .registerUpgradesForItem(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD, EmpoweredUpgrade.NAME,
+                        DirectUpgrade.NAME);
     }
 
     public DarkSteelSwordItem(Properties pProperties) {
@@ -111,6 +113,22 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
                 .orElse(newDamage);
         super.setDamage(stack, finalDamage);
     }
+
+//    public static void  onArmorHurt(ArmorHurtEvent evt) {
+//        System.out.println("DarkSteelSwordItem.onArmorHurt");
+//        for(Map.Entry<EquipmentSlot, ArmorHurtEvent.ArmorEntry> entry : evt.getArmorMap().entrySet())  {
+//            float origDam = evt.getOriginalDamage(entry.getKey());
+//            System.out.println("origDam = " + origDam + " for entry = " + entry);
+//            if(origDam > 0) {
+//                ItemStack stack = evt.getArmorItemStack(entry.getKey());
+//                Optional<EmpoweredUpgrade> up = DarkSteelCapability.getEmpoweredUpgrade(stack);
+//                if(up.isPresent()) {
+//                    int newDam = up.get().adjustDamage(stack.getDamageValue(), (int) origDam, stack);
+//                    System.out.println("Would set new newDam = " + newDam + " from old dam " + origDam);
+//                }
+//            }
+//        }
+//    }
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
