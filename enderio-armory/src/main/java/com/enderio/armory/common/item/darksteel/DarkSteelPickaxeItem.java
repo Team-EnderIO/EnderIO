@@ -13,7 +13,6 @@ import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgr
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
-import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
@@ -33,7 +32,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -169,21 +167,6 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     @Override
     public boolean isBarVisible(ItemStack pStack) {
         return isDurabilityBarVisible(pStack);
-    }
-
-    @Override
-    public int getBarWidth(ItemStack stack) {
-        // TODO: Need to show both energy and power?
-        var energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (energyStorage != null && energyStorage.getMaxEnergyStored() > 0) {
-            return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
-        }
-        return super.getBarWidth(stack);
-    }
-
-    @Override
-    public int getBarColor(ItemStack pStack) {
-        return EnergyBarDecorator.BAR_COLOR;
     }
 
     // endregion
