@@ -161,12 +161,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return DarkSteelCapability.hasUpgrade(pStack, EmpoweredUpgrade.NAME);
-    }
-
-    @Override
-    public boolean isBarVisible(ItemStack pStack) {
-        return isDurabilityBarVisible(pStack);
+        return DarkSteelCapability.hasUpgrade(pStack, EmpoweredUpgrade.NAME) || super.isFoil(pStack);
     }
 
     // endregion

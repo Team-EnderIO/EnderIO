@@ -32,7 +32,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 
@@ -172,33 +171,18 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
         IDarkSteelItem.super.addCurrentUpgradeTooltips(itemStack, tooltips, isDetailed);
     }
 
-    // region Common for all tools
-
-    @Override
-    public boolean isFoil(ItemStack pStack) {
-        return DarkSteelCapability.hasUpgrade(pStack, EmpoweredUpgrade.NAME);
-    }
-
     @Override
     public void addAllVariants(CreativeModeTab.Output modifier) {
         modifier.accept(this);
         modifier.accept(createFullyUpgradedStack(this));
     }
 
+    // region Common for all tools
+
+    public boolean isFoil(ItemStack pStack) {
+        return DarkSteelCapability.hasUpgrade(pStack, EmpoweredUpgrade.NAME) || super.isFoil(pStack);
+    }
+
     // endregion
 
-    @Override
-    public boolean isBarVisible(ItemStack pStack) {
-        return isDurabilityBarVisible(pStack);
-    }
-
-    @Override
-    public int getBarWidth(ItemStack stack) {
-        // TODO: Need to show both energy and power?
-        var energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (energyStorage != null && energyStorage.getMaxEnergyStored() > 0) {
-            return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
-        }
-        return super.getBarWidth(stack);
-    }
 }

@@ -142,33 +142,6 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         return super.useOn(context);
     }
 
-    @Override
-    public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        if (DarkSteelCapability.getEmpoweredUpgrade(itemStack).isEmpty()) {
-            tooltips.add(TooltipUtil.style(ArmoryLang.ENDER_HEAD_DROP_INFO));
-        }
-    }
-
-    @Override
-    public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        Optional<EmpoweredUpgrade> empUp = DarkSteelCapability.getEmpoweredUpgrade(itemStack);
-        empUp.ifPresent(empoweredUpgrade -> tooltips.add(TooltipUtil.withArgs(ArmoryLang.ENDER_HEAD_DROP_CHANCE,
-                (int) Math.round(empoweredUpgrade.getMobHeadChance() * 100))));
-        empUp.ifPresent(empoweredUpgrade -> tooltips.add(TooltipUtil.style(ArmoryLang.ENDER_BLOCK_TELEPORT)));
-        addDurabilityTooltips(itemStack, tooltips);
-        addCurrentUpgradeTooltips(itemStack, tooltips, true);
-        addAvailableUpgradesTooltips(itemStack, tooltips);
-    }
-
-    @Override
-    public void addAllVariants(CreativeModeTab.Output modifier) {
-        modifier.accept(this);
-
-        ItemStack fullyUpgraded = createFullyUpgradedStack(this);
-        ItemStackEnergy.setFull(fullyUpgraded);
-        modifier.accept(fullyUpgraded);
-    }
-
     private static Optional<ItemStack> getSkull(LivingEntity pTarget) {
         if (pTarget.getType() == EntityType.SKELETON || pTarget.getType() == EntityType.STRAY) {
             return Optional.of(new ItemStack(Items.SKELETON_SKULL));
@@ -199,6 +172,38 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
             return Optional.of(stack);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
+        if (DarkSteelCapability.getEmpoweredUpgrade(itemStack).isEmpty()) {
+            tooltips.add(TooltipUtil.style(ArmoryLang.ENDER_HEAD_DROP_INFO));
+        }
+    }
+
+    @Override
+    public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
+        Optional<EmpoweredUpgrade> empUp = DarkSteelCapability.getEmpoweredUpgrade(itemStack);
+        empUp.ifPresent(empoweredUpgrade -> tooltips.add(TooltipUtil.withArgs(ArmoryLang.ENDER_HEAD_DROP_CHANCE,
+                (int) Math.round(empoweredUpgrade.getMobHeadChance() * 100))));
+        empUp.ifPresent(empoweredUpgrade -> tooltips.add(TooltipUtil.style(ArmoryLang.ENDER_BLOCK_TELEPORT)));
+        addDurabilityTooltips(itemStack, tooltips);
+        addCurrentUpgradeTooltips(itemStack, tooltips, true);
+        addAvailableUpgradesTooltips(itemStack, tooltips);
+    }
+
+    @Override
+    public void addAllVariants(CreativeModeTab.Output modifier) {
+        modifier.accept(this);
+
+        ItemStack fullyUpgraded = createFullyUpgradedStack(this);
+        ItemStackEnergy.setFull(fullyUpgraded);
+        modifier.accept(fullyUpgraded);
+    }
+
+    @Override
+    public boolean isFoil(ItemStack pStack) {
+        return DarkSteelCapability.hasUpgrade(pStack, EmpoweredUpgrade.NAME) || super.isFoil(pStack);
     }
 
 }
