@@ -10,16 +10,21 @@ import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeHandler;
+import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
+import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -32,13 +37,15 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import org.jetbrains.annotations.Nullable;
 
 public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem, CreativeTabVariants {
 
     static {
         DarkSteelUpgradeRegistry.instance()
                 .registerUpgradesForItem(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_PICKAXE, EmpoweredUpgrade.NAME,
-                        SpoonUpgrade.NAME, DirectUpgrade.NAME, ExplosiveUpgrade.NAME, ExplosivePenetrationUpgrade.NAME);
+                        SpoonUpgrade.NAME, DirectUpgrade.NAME, ExplosiveUpgrade.NAME, ExplosivePenetrationUpgrade.NAME,
+                        TravelUpgrade.NAME);
     }
 
     private final ModConfigSpec.ConfigValue<Integer> obsidianBreakPowerUse = ArmoryConfig.COMMON.DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
@@ -85,10 +92,25 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
 
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
+        @Nullable
+        InteractionResult res = TravelUpgrade.onUse(pContext, this);
+        if (res != null) {
+            return res;
+        }
         if (hasSpoon(pContext.getItemInHand())) {
             return Items.DIAMOND_SHOVEL.useOn(pContext);
         }
         return super.useOn(pContext);
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+        @Nullable
+        InteractionResultHolder<ItemStack> res = TravelUpgrade.onUse(level, player, usedHand, this);
+        if (res != null) {
+            return res;
+        }
+        return super.use(level, player, usedHand);
     }
 
     @Override
@@ -157,6 +179,11 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
             return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
         }
         return super.getBarWidth(stack);
+    }
+
+    @Override
+    public int getBarColor(ItemStack pStack) {
+        return EnergyBarDecorator.BAR_COLOR;
     }
 
     // endregion

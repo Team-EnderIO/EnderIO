@@ -26,6 +26,8 @@
   "info.enderio.darksteel.upgrade.no_xp": "Not enough XP",
   "info.enderio.darksteel.upgrade.spoon": "Spoon",
   "info.enderio.darksteel.upgrade.spoon.description": "Who needs a shovel when you have a spoon?",
+  "info.enderio.darksteel.upgrade.travel": "Travel",
+  "info.enderio.darksteel.upgrade.travel.description": "Teleports, and Travel Anchors Too!",
   "info.enderio.durability.amount": "Durability %s",
   "info.enderio.ender.blockteleport": "Stops Enderman teleporting",
   "info.enderio.ender.headchance": "%s%% chance to drop a mob head",
@@ -44,5 +46,6 @@
   "item.enderio.dark_steel_upgrade_penetration_2": "EExplosive Penetration II Upgrade",
   "item.enderio.dark_steel_upgrade_spoon": "Spoon Upgrade",
   "item.enderio.dark_steel_upgrade_tnt": "Explosive I Upgrade",
-  "item.enderio.dark_steel_upgrade_tnt2": "Explosive II Upgrade"
+  "item.enderio.dark_steel_upgrade_tnt2": "Explosive II Upgrade",
+  "item.enderio.dark_steel_upgrade_travel": "Travel Upgrade"
 }

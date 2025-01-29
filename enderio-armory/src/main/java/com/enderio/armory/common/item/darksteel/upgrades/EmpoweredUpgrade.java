@@ -72,13 +72,28 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
         return tier.getMobHeadChance();
     }
 
+    // public static void onArmorHurt(ArmorHurtEvent evt) {
+    // System.out.println("DarkSteelSwordItem.onArmorHurt");
+    // for(Map.Entry<EquipmentSlot, ArmorHurtEvent.ArmorEntry> entry :
+    // evt.getArmorMap().entrySet()) {
+    // float origDam = evt.getOriginalDamage(entry.getKey());
+    // System.out.println("origDam = " + origDam + " for entry = " + entry);
+    // if(origDam > 0) {
+    // ItemStack stack = evt.getArmorItemStack(entry.getKey());
+    // Optional<EmpoweredUpgrade> up =
+    // DarkSteelCapability.getEmpoweredUpgrade(stack);
+    // if(up.isPresent()) {
+    // int newDam = up.get().adjustDamage(stack.getDamageValue(), (int) origDam,
+    // stack);
+    // System.out.println("Would set new newDam = " + newDam + " from old dam " +
+    // origDam);
+    // }
+    // }
+    // }
+    // }
+
 //    @Override
 //    public void onAddedToItem(ItemStack stack) {
-//
-//        if(true) {
-//            return;
-//        }
-//
 //        //This works but doesn't take into account having power
 //        if(stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD)) {
 //            ItemAttributeModifiers curMOds = stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
@@ -101,13 +116,6 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
 //        if(stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD)) {
 //            ItemStack defaultStack = new ItemStack(stack.getItem());
 //            ItemAttributeModifiers defaultMods = defaultStack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
-////            defaultMods.forEach(MAINHAND, (att, mod) -> {
-////
-////                AttributeModifier toRemove = new AttributeModifier(BASE_ATTACK_DAMAGE_ID, 420, AttributeModifier.Operation.ADD_VALUE);
-////                if(toRemove.equals(mod)) {
-////                    System.out.println("Found mod to remove");
-////                }
-////            });
 //            stack.set(DataComponents.ATTRIBUTE_MODIFIERS, defaultMods);
 //        }
 //    }

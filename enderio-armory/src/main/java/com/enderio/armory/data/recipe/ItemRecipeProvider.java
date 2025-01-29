@@ -70,6 +70,7 @@ public class ItemRecipeProvider extends RecipeProvider {
 
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_FORK, Ingredient.of(Items.DIAMOND_HOE));
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPOON, Ingredient.of(Items.DIAMOND_SHOVEL));
+        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_TRAVEL, Ingredient.of(EIOItems.TRAVEL_STAFF));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ArmoryItems.DARK_STEEL_UPGRADE_DIRECT.get())
                 .define('I', EIOItems.VIBRANT_ALLOY_INGOT.get())

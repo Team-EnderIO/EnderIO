@@ -12,6 +12,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.SpoonUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeTier;
+import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.item.misc.MaterialItem;
@@ -125,6 +126,14 @@ public class ArmoryItems {
                             DirectUpgrade::new))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Direct" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_TRAVEL = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_travel",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.TRAVEL_ACTIVATION_COST,
+                            TravelUpgrade::new))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Travel" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
 
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = ITEM_REGISTRY

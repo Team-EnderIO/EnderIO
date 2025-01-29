@@ -28,9 +28,7 @@ public class DirectUpgradeLootCondition implements LootItemCondition {
                 && context.getParam(LootContextParams.ATTACKING_ENTITY) instanceof Player) {
             DamageSource damageSource = context.getParam(LootContextParams.DAMAGE_SOURCE);
             ItemStack weapon = damageSource.getWeaponItem();
-            if (weapon != null && DarkSteelCapability.hasUpgrade(weapon, DirectUpgrade.NAME)) {
-                return true;
-            }
+            return weapon != null && DarkSteelCapability.hasUpgrade(weapon, DirectUpgrade.NAME);
         } else if (!context.hasParam(LootContextParams.TOOL) || !context.hasParam(LootContextParams.THIS_ENTITY)) {
             return false;
         }

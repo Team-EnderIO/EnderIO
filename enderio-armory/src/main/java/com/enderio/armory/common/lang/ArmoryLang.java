@@ -61,6 +61,10 @@ public class ArmoryLang {
     public static final Component DS_UPGRADE_FORK_DESCRIPTION = addTranslation(
             EnderIO.loc("darksteel.upgrade.fork.description"), "Who needs a hoe when you have a fork?");
 
+    public static final Component DS_UPGRADE_TRAVEL = addTranslation(EnderIO.loc("darksteel.upgrade.travel"), "Travel");
+    public static final Component DS_UPGRADE_TRAVEL_DESCRIPTION = addTranslation(
+            EnderIO.loc("darksteel.upgrade.travel.description"), "Integrated Travel Staff");
+
     public static final Component DS_UPGRADE_DIRECT = addTranslation(EnderIO.loc("darksteel.upgrade.direct"), "Direct");
     public static final Component DS_UPGRADE_DIRECT_DESCRIPTION = addTranslation(
             EnderIO.loc("darksteel.upgrade.direct.description"),

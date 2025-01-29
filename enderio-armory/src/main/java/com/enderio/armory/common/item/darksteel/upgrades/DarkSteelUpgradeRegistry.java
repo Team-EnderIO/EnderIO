@@ -5,6 +5,7 @@ import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.base.api.EnderIO;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ public final class DarkSteelUpgradeRegistry {
         INST.registerUpgrade(DirectUpgrade::new);
         INST.registerUpgrade(ExplosiveUpgrade::new);
         INST.registerUpgrade(ExplosivePenetrationUpgrade::new);
+        INST.registerUpgrade(TravelUpgrade::new);
     }
 
     public static DarkSteelUpgradeRegistry instance() {

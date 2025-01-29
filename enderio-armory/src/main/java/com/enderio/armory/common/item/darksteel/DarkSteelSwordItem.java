@@ -5,10 +5,12 @@ import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.common.init.EIOBlocks;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.util.TooltipUtil;
@@ -18,6 +20,9 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,6 +35,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import org.jetbrains.annotations.Nullable;
@@ -39,41 +46,13 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
     static {
         DarkSteelUpgradeRegistry.instance()
                 .registerUpgradesForItem(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD, EmpoweredUpgrade.NAME,
-                        DirectUpgrade.NAME);
+                        DirectUpgrade.NAME, TravelUpgrade.NAME);
     }
 
-    public DarkSteelSwordItem(Properties pProperties) {
-        super(ArmoryItems.DARK_STEEL_TIER,
-                pProperties.attributes(createAttributes(ArmoryItems.DARK_STEEL_TIER, 3, -2.4F)));
-    }
-
-    @Override
-    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-
-        Optional<EmpoweredUpgrade> empUp = DarkSteelCapability.getEmpoweredUpgrade(pStack);
-        if (empUp.isEmpty()) {
-            return super.hurtEnemy(pStack, pTarget, pAttacker);
-        }
-
-        if (pTarget.isDeadOrDying() && Math.random() < empUp.get().getMobHeadChance()) {
-            Optional<ItemStack> skull = getSkull(pTarget);
-            skull.ifPresent(itemStack -> Containers.dropItemStack(pAttacker.level(), pAttacker.position().x,
-                    pAttacker.position().y, pAttacker.position().z, itemStack));
-        }
-        return super.hurtEnemy(pStack, pTarget, pAttacker);
-    }
-
-    // Could use this instead and only add damage if we have power
-//    public float getAttackDamageBonus(Entity target, float damage, DamageSource damageSource) {
-//        ItemStack stack = damageSource.getWeaponItem();
-//        if(stack == null) {
-//            return 0;
-//        }
-//        return getEmpoweredUpgrade(stack)
-//            .map(empoweredUpgrade -> empoweredUpgrade.getEmpoweredTier().getAttackDamageIncrease())
-//            .orElse(0);
-//    }
-
+    /**
+     * Stops an Enderman from teleporting is its last damage is from a DarkSteelSword
+     * @param event may be canceled
+     */
     public static void onEntityTeleport(EntityTeleportEvent event) {
         if (event.getEntity() instanceof EnderMan em) {
             if (em.getLastDamageSource() == null || em.getLastDamageSource().getWeaponItem() == null) {
@@ -85,8 +64,15 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         }
     }
 
+    /**
+     * Applies the damage and speed bonuses from Empowered Upgrades for a DarkSteelSword
+     * @param e event
+     */
     public static void addUpgradeModifiers(ItemAttributeModifierEvent e) {
         ItemStack stack = e.getItemStack();
+        if (!stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD)) {
+            return;
+        }
         Optional<EmpoweredUpgrade> empUpOpt = DarkSteelCapability.getEmpoweredUpgrade(stack);
         if (empUpOpt.isEmpty()) {
             return;
@@ -106,6 +92,28 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
                 EquipmentSlotGroup.MAINHAND);
     }
 
+    public DarkSteelSwordItem(Properties pProperties) {
+        super(ArmoryItems.DARK_STEEL_TIER,
+                pProperties.attributes(createAttributes(ArmoryItems.DARK_STEEL_TIER, 3, -2.4F))
+                        .component(EIODataComponents.TRAVEL_ITEM, false));
+    }
+
+    @Override
+    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
+
+        Optional<EmpoweredUpgrade> empUp = DarkSteelCapability.getEmpoweredUpgrade(pStack);
+        if (empUp.isEmpty()) {
+            return super.hurtEnemy(pStack, pTarget, pAttacker);
+        }
+
+        if (pTarget.isDeadOrDying() && Math.random() < empUp.get().getMobHeadChance()) {
+            Optional<ItemStack> skull = getSkull(pTarget);
+            skull.ifPresent(itemStack -> Containers.dropItemStack(pAttacker.level(), pAttacker.position().x,
+                    pAttacker.position().y, pAttacker.position().z, itemStack));
+        }
+        return super.hurtEnemy(pStack, pTarget, pAttacker);
+    }
+
     @Override
     public void setDamage(final ItemStack stack, final int newDamage) {
         int finalDamage = getEmpoweredUpgrade(stack)
@@ -114,21 +122,25 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         super.setDamage(stack, finalDamage);
     }
 
-//    public static void  onArmorHurt(ArmorHurtEvent evt) {
-//        System.out.println("DarkSteelSwordItem.onArmorHurt");
-//        for(Map.Entry<EquipmentSlot, ArmorHurtEvent.ArmorEntry> entry : evt.getArmorMap().entrySet())  {
-//            float origDam = evt.getOriginalDamage(entry.getKey());
-//            System.out.println("origDam = " + origDam + " for entry = " + entry);
-//            if(origDam > 0) {
-//                ItemStack stack = evt.getArmorItemStack(entry.getKey());
-//                Optional<EmpoweredUpgrade> up = DarkSteelCapability.getEmpoweredUpgrade(stack);
-//                if(up.isPresent()) {
-//                    int newDam = up.get().adjustDamage(stack.getDamageValue(), (int) origDam, stack);
-//                    System.out.println("Would set new newDam = " + newDam + " from old dam " + origDam);
-//                }
-//            }
-//        }
-//    }
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+        @Nullable
+        InteractionResultHolder<ItemStack> res = TravelUpgrade.onUse(level, player, usedHand, this);
+        if (res != null) {
+            return res;
+        }
+        return super.use(level, player, usedHand);
+    }
+
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        @Nullable
+        InteractionResult res = TravelUpgrade.onUse(context, this);
+        if (res != null) {
+            return res;
+        }
+        return super.useOn(context);
+    }
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
