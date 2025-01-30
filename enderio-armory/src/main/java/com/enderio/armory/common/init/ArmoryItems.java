@@ -17,6 +17,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.StepAssistUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeTier;
+import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.base.common.init.EIOCreativeTabs;
@@ -155,6 +156,30 @@ public class ArmoryItems {
                             StepAssistUpgrade::new))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Step Assist" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPEED_I = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_speedboost1",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.SPEED_ACTIVATION_COST_I,
+                            SpeedUpgradeTier.ONE.getFactory()))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Speed" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPEED_II = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_speedboost2",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.SPEED_ACTIVATION_COST_II,
+                            SpeedUpgradeTier.TWO.getFactory()))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Speed II" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPEED_III = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_speedboost3",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.SPEED_ACTIVATION_COST_III,
+                            SpeedUpgradeTier.THREE.getFactory()))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Speed III" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
 
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = ITEM_REGISTRY

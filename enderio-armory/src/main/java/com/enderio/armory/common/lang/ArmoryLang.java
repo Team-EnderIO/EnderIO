@@ -90,6 +90,18 @@ public class ArmoryLang {
             EnderIO.loc("darksteel.upgrade.explosive_penetration.description"),
             "Makes dirt and rock behind the mined block go splodey");
 
+    public static final Component DS_UPGRADE_SPEED_I = addTranslation(EnderIO.loc("darksteel.upgrade.speed_l1"),
+            "Speed I");
+    public static final Component DS_UPGRADE_SPEED_II = addTranslation(EnderIO.loc("darksteel.upgrade.speed_l2"),
+            "Speed II");
+    public static final Component DS_UPGRADE_SPEED_III = addTranslation(EnderIO.loc("darksteel.upgrade.speed_l3"),
+            "Speed III");
+    public static final Component DS_UPGRADE_SPEED_DESCRIPTION = addTranslation(
+            EnderIO.loc("darksteel.upgrade.speed.description"), "Increases movement speed");
+
+    public static final MutableComponent DS_UPGRADE_BOOTS_SNOW_DESCRIPTION = addTranslation(
+            EnderIO.loc("darksteel.upgrade.boots_snow"), "Can walk on powdered snow");
+
     // endregion
 
     private static MutableComponent addTranslation(ResourceLocation id, String translation) {

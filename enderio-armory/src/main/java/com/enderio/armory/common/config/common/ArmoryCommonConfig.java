@@ -57,6 +57,13 @@ public class ArmoryCommonConfig {
 
     public final ModConfigSpec.ConfigValue<Integer> STEP_ASSIST_ACTIVATION_COST;
 
+    public final ModConfigSpec.ConfigValue<Integer> SPEED_ACTIVATION_COST_I;
+    public final ModConfigSpec.ConfigValue<Double> SPEED_I_BOOST;
+    public final ModConfigSpec.ConfigValue<Integer> SPEED_ACTIVATION_COST_II;
+    public final ModConfigSpec.ConfigValue<Double> SPEED_II_BOOST;
+    public final ModConfigSpec.ConfigValue<Integer> SPEED_ACTIVATION_COST_III;
+    public final ModConfigSpec.ConfigValue<Double> SPEED_III_BOOST;
+
     public ArmoryCommonConfig(ModConfigSpec.Builder builder) {
         builder.push("darksteel");
 
@@ -123,6 +130,13 @@ public class ArmoryCommonConfig {
         TRAVEL_ACTIVATION_COST = builder.define("travelActivationCost", 12);
 
         STEP_ASSIST_ACTIVATION_COST = builder.define("stepAssistActivationCost", 4);
+
+        SPEED_ACTIVATION_COST_I = builder.define("speedActivationCost_l1", 4);
+        SPEED_I_BOOST = builder.define("speedBoost_l1", 0.15);
+        SPEED_ACTIVATION_COST_II = builder.define("speedActivationCost_l2", 6);
+        SPEED_II_BOOST = builder.define("speedBoost_l2", 0.3);
+        SPEED_ACTIVATION_COST_III = builder.define("speedActivationCost_l3", 8);
+        SPEED_III_BOOST = builder.define("speedBoost_l3", 0.45);
 
         builder.pop();
         builder.pop();

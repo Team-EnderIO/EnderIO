@@ -15,7 +15,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
 
 public class ArmoryArmorMaterials {
 
@@ -26,8 +25,7 @@ public class ArmoryArmorMaterials {
                 map.put(ArmorItem.Type.CHESTPLATE, 8);
                 map.put(ArmorItem.Type.HELMET, 3);
                 map.put(ArmorItem.Type.BODY, 11);
-            }), 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.0F, 0.0F,
-            () -> Ingredient.of(EIOItems.DARK_STEEL_INGOT));
+            }), 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 2.0F, 0.0F, () -> Ingredient.of(EIOItems.DARK_STEEL_INGOT));
 
     private static Holder<ArmorMaterial> register(String name, EnumMap<ArmorItem.Type, Integer> defense,
             int enchantmentValue, Holder<SoundEvent> equipSound, float toughness, float knockbackResistance,
