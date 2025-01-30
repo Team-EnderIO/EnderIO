@@ -24,7 +24,7 @@ public class DirectUpgradeLootCondition implements LootItemCondition {
 
     @Override
     public boolean test(LootContext context) {
-        if (context.hasParam(LootContextParams.DAMAGE_SOURCE)
+        if (context.hasParam(LootContextParams.DAMAGE_SOURCE) && context.hasParam(LootContextParams.ATTACKING_ENTITY)
                 && context.getParam(LootContextParams.ATTACKING_ENTITY) instanceof Player) {
             DamageSource damageSource = context.getParam(LootContextParams.DAMAGE_SOURCE);
             ItemStack weapon = damageSource.getWeaponItem();

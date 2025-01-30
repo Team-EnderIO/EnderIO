@@ -3,12 +3,17 @@ package com.enderio.armory.common.init;
 import com.enderio.armory.EnderIOArmory;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.item.darksteel.DarkSteelAxeItem;
+import com.enderio.armory.common.item.darksteel.DarkSteelBootsItem;
+import com.enderio.armory.common.item.darksteel.DarkSteelChestplateItem;
+import com.enderio.armory.common.item.darksteel.DarkSteelHelmetItem;
+import com.enderio.armory.common.item.darksteel.DarkSteelLeggingsItem;
 import com.enderio.armory.common.item.darksteel.DarkSteelPickaxeItem;
 import com.enderio.armory.common.item.darksteel.DarkSteelSwordItem;
 import com.enderio.armory.common.item.darksteel.DarkSteelUpgradeItem;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.ForkUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.SpoonUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.StepAssistUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeTier;
@@ -47,7 +52,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = ITEM_REGISTRY
             .registerItem("dark_steel_pickaxe", DarkSteelPickaxeItem::new, new Item.Properties().durability(2000))
             .setTab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_PICKAXE.get().addAllVariants(modifier))
-            .setTranslation("Darksteel Pickaxe")
+            .setTranslation("Dark Pickaxe")
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
             .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_PICKAXE)
             .addItemTags(ItemTags.PICKAXES)
@@ -57,10 +62,50 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelAxeItem> DARK_STEEL_AXE = ITEM_REGISTRY
             .registerItem("dark_steel_axe", DarkSteelAxeItem::new, new Item.Properties().durability(2000))
             .setTab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_AXE.get().addAllVariants(modifier))
-            .setTranslation("Darksteel Axe")
+            .setTranslation("Dark Axe")
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
             .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_AXE)
             .addItemTags(ItemTags.AXES)
+            .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
+            .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
+
+    public static final RegiliteItem<DarkSteelHelmetItem> DARK_STEEL_HELMET = ITEM_REGISTRY
+            .registerItem("dark_steel_helmet", DarkSteelHelmetItem::new, new Item.Properties().durability(2000))
+            .setTab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_HELMET.get().addAllVariants(modifier))
+            .setTranslation("Dark Helmet")
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
+            .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_HELMET)
+            .addItemTags(ItemTags.HEAD_ARMOR_ENCHANTABLE)
+            .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
+            .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
+
+    public static final RegiliteItem<DarkSteelChestplateItem> DARK_STEEL_CHESTPLATE = ITEM_REGISTRY
+            .registerItem("dark_steel_chestplate", DarkSteelChestplateItem::new, new Item.Properties().durability(2000))
+            .setTab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_CHESTPLATE.get().addAllVariants(modifier))
+            .setTranslation("Dark Chestplate")
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
+            .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_CHESTPLATE)
+            .addItemTags(ItemTags.CHEST_ARMOR_ENCHANTABLE)
+            .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
+            .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
+
+    public static final RegiliteItem<DarkSteelLeggingsItem> DARK_STEEL_LEGGINGS = ITEM_REGISTRY
+            .registerItem("dark_steel_leggings", DarkSteelLeggingsItem::new, new Item.Properties().durability(2000))
+            .setTab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_LEGGINGS.get().addAllVariants(modifier))
+            .setTranslation("Dark Leggings")
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
+            .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_LEGGINGS)
+            .addItemTags(ItemTags.LEG_ARMOR_ENCHANTABLE)
+            .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
+            .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
+
+    public static final RegiliteItem<DarkSteelBootsItem> DARK_STEEL_BOOTS = ITEM_REGISTRY
+            .registerItem("dark_steel_boots", DarkSteelBootsItem::new, new Item.Properties().durability(2000))
+            .setTab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_BOOTS.get().addAllVariants(modifier))
+            .setTranslation("Dark Boots")
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
+            .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_BOOTS)
+            .addItemTags(ItemTags.FOOT_ARMOR_ENCHANTABLE)
             .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
@@ -102,6 +147,14 @@ public class ArmoryItems {
                             EmpoweredUpgradeTier.FOUR.getFactory()))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Empowered IV" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_STEP_ASSIST = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_step_assist",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.STEP_ASSIST_ACTIVATION_COST,
+                            StepAssistUpgrade::new))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Step Assist" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
 
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = ITEM_REGISTRY

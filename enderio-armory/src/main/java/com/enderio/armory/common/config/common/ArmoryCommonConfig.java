@@ -55,6 +55,8 @@ public class ArmoryCommonConfig {
     public final ModConfigSpec.ConfigValue<Integer> DIRECT_ACTIVATION_COST;
     public final ModConfigSpec.ConfigValue<Integer> TRAVEL_ACTIVATION_COST;
 
+    public final ModConfigSpec.ConfigValue<Integer> STEP_ASSIST_ACTIVATION_COST;
+
     public ArmoryCommonConfig(ModConfigSpec.Builder builder) {
         builder.push("darksteel");
 
@@ -117,8 +119,11 @@ public class ArmoryCommonConfig {
 
         SPOON_ACTIVATION_COST = builder.define("spoonActivationCost", 4);
         FORK_ACTIVATION_COST = builder.define("forkActivationCost", 4);
-        DIRECT_ACTIVATION_COST = builder.define("directActivationCost", 4);
+        DIRECT_ACTIVATION_COST = builder.define("directActivationCost", 8);
         TRAVEL_ACTIVATION_COST = builder.define("travelActivationCost", 12);
+
+        STEP_ASSIST_ACTIVATION_COST = builder.define("stepAssistActivationCost", 4);
+
         builder.pop();
         builder.pop();
     }

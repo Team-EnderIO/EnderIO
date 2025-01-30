@@ -33,6 +33,7 @@ public final class DarkSteelUpgradeRegistry {
         INST.registerUpgrade(ExplosiveUpgrade::new);
         INST.registerUpgrade(ExplosivePenetrationUpgrade::new);
         INST.registerUpgrade(TravelUpgrade::new);
+        INST.registerUpgrade(StepAssistUpgrade::new);
     }
 
     public static DarkSteelUpgradeRegistry instance() {

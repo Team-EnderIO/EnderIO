@@ -1,5 +1,6 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
+import com.enderio.armory.common.capability.DarkSteelCapability;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.core.common.energy.ItemStackEnergy;
@@ -14,6 +15,13 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
+
+    public static int getAdjustedDamage(ItemStack stack, int newDamage) {
+        return DarkSteelCapability.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class)
+                .map(empoweredUpgrade -> empoweredUpgrade.adjustDamage(stack.getItem().getDamage(stack), newDamage,
+                        stack))
+                .orElse(newDamage);
+    }
 
     public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "empowered";
 
@@ -71,54 +79,6 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
     public double getMobHeadChance() {
         return tier.getMobHeadChance();
     }
-
-    // public static void onArmorHurt(ArmorHurtEvent evt) {
-    // System.out.println("DarkSteelSwordItem.onArmorHurt");
-    // for(Map.Entry<EquipmentSlot, ArmorHurtEvent.ArmorEntry> entry :
-    // evt.getArmorMap().entrySet()) {
-    // float origDam = evt.getOriginalDamage(entry.getKey());
-    // System.out.println("origDam = " + origDam + " for entry = " + entry);
-    // if(origDam > 0) {
-    // ItemStack stack = evt.getArmorItemStack(entry.getKey());
-    // Optional<EmpoweredUpgrade> up =
-    // DarkSteelCapability.getEmpoweredUpgrade(stack);
-    // if(up.isPresent()) {
-    // int newDam = up.get().adjustDamage(stack.getDamageValue(), (int) origDam,
-    // stack);
-    // System.out.println("Would set new newDam = " + newDam + " from old dam " +
-    // origDam);
-    // }
-    // }
-    // }
-    // }
-
-//    @Override
-//    public void onAddedToItem(ItemStack stack) {
-//        //This works but doesn't take into account having power
-//        if(stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD)) {
-//            ItemAttributeModifiers curMOds = stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
-//            ItemAttributeModifiers adjusted = curMOds.withModifierAdded(Attributes.ATTACK_DAMAGE,
-//                new AttributeModifier(BASE_ATTACK_DAMAGE_ID, 420, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
-//            adjusted = adjusted.withModifierAdded(Attributes.ATTACK_SPEED,
-//                new AttributeModifier(BASE_ATTACK_SPEED_ID, 99, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
-//            stack.set(DataComponents.ATTRIBUTE_MODIFIERS, adjusted);
-//        }
-//    }
-
-//    @Override
-//    public void onRemovedFromItem(ItemStack stack) {
-//
-//        if(true) {
-//            return;
-//        }
-//
-//        //This works but doesn't take into account having power
-//        if(stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD)) {
-//            ItemStack defaultStack = new ItemStack(stack.getItem());
-//            ItemAttributeModifiers defaultMods = defaultStack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
-//            stack.set(DataComponents.ATTRIBUTE_MODIFIERS, defaultMods);
-//        }
-//    }
 
     @Override
     public Collection<Component> getDescription() {

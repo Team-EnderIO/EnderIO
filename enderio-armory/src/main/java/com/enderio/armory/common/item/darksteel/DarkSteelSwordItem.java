@@ -116,10 +116,7 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
 
     @Override
     public void setDamage(final ItemStack stack, final int newDamage) {
-        int finalDamage = getEmpoweredUpgrade(stack)
-                .map(empoweredUpgrade -> empoweredUpgrade.adjustDamage(getDamage(stack), newDamage, stack))
-                .orElse(newDamage);
-        super.setDamage(stack, finalDamage);
+        super.setDamage(stack, EmpoweredUpgrade.getAdjustedDamage(stack, newDamage));
     }
 
     @Override

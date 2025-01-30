@@ -25,12 +25,49 @@ public class ItemRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
+        addDarkSteelArmor(recipeOutput);
         addDarkSteelTools(recipeOutput);
         addDarkSteelUpgrades(recipeOutput);
     }
 
+    private void addDarkSteelArmor(RecipeOutput recipeOutput) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ArmoryItems.DARK_STEEL_HELMET.get())
+                .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
+                .pattern("III")
+                .pattern("I I")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ArmoryItems.DARK_STEEL_CHESTPLATE.get())
+                .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
+                .pattern("I I")
+                .pattern("III")
+                .pattern("III")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ArmoryItems.DARK_STEEL_LEGGINGS.get())
+                .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
+                .pattern("III")
+                .pattern("I I")
+                .pattern("I I")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ArmoryItems.DARK_STEEL_BOOTS.get())
+                .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
+                .pattern("I I")
+                .pattern("I I")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT))
+                .save(recipeOutput);
+    }
+
     private void addDarkSteelTools(RecipeOutput recipeOutput) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ArmoryItems.DARK_STEEL_SWORD.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ArmoryItems.DARK_STEEL_SWORD.get())
                 .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
                 .define('S', Tags.Items.RODS_WOODEN)
                 .pattern(" I ")
@@ -92,6 +129,17 @@ public class ItemRecipeProvider extends RecipeProvider {
                 Ingredient.of(Items.GUNPOWDER));
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2,
                 Ingredient.of(Items.CREEPER_HEAD));
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ArmoryItems.DARK_STEEL_UPGRADE_STEP_ASSIST.get())
+                .define('I', Items.BRICK)
+                .define('B', ArmoryItems.DARK_STEEL_UPGRADE_BLANK.get())
+                .pattern("  I")
+                .pattern(" II")
+                .pattern("IIB")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(ArmoryItems.DARK_STEEL_UPGRADE_BLANK.get()))
+                .save(recipeOutput);
+
     }
 
     private void addUpgrade(RecipeOutput recipeOutput, ItemLike result, Ingredient... upgradeItems) {

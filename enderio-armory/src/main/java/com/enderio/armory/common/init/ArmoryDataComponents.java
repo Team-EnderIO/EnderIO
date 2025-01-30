@@ -21,7 +21,7 @@ public class ArmoryDataComponents {
             CustomData.CODEC);
 
     public static Supplier<DataComponentType<DarkSteelCapability.DarkSteelItemUpgrades>> DARK_STEEL_ITEM_UPGRADES = saved(
-            "dark_steel_upgrafes", ITEM_UPGRADES_CODEC);
+            "dark_steel_upgrades", ITEM_UPGRADES_CODEC);
 
     private static <T> Supplier<DataComponentType<T>> saved(String name, Codec<T> codec) {
         return DATA_COMPONENT_TYPES.register(name, () -> DataComponentType.<T>builder().persistent(codec).build());

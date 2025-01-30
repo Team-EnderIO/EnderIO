@@ -26,6 +26,15 @@ public class ArmoryTags {
         public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_SWORD = ItemTags
                 .create(EnderIO.loc("dark_steel_upgradeable_sword"));
 
+        public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_CHESTPLATE = ItemTags
+                .create(EnderIO.loc("dark_steel_upgradeable_chestplate"));
+        public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_LEGGINGS = ItemTags
+                .create(EnderIO.loc("dark_steel_upgradeable_leggings"));
+        public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_HELMET = ItemTags
+                .create(EnderIO.loc("dark_steel_upgradeable_helmet"));
+        public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_BOOTS = ItemTags
+                .create(EnderIO.loc("dark_steel_upgradeable_boots"));
+
     }
 
     public static class Blocks {

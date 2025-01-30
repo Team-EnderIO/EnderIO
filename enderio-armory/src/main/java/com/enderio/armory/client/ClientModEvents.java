@@ -15,6 +15,10 @@ public class ClientModEvents {
         event.register(ArmoryItems.DARK_STEEL_SWORD, MultiEnergyBarDecorator.INSTANCE);
         event.register(ArmoryItems.DARK_STEEL_AXE, MultiEnergyBarDecorator.INSTANCE);
         event.register(ArmoryItems.DARK_STEEL_PICKAXE, MultiEnergyBarDecorator.INSTANCE);
+        event.register(ArmoryItems.DARK_STEEL_HELMET, MultiEnergyBarDecorator.INSTANCE);
+        event.register(ArmoryItems.DARK_STEEL_CHESTPLATE, MultiEnergyBarDecorator.INSTANCE);
+        event.register(ArmoryItems.DARK_STEEL_LEGGINGS, MultiEnergyBarDecorator.INSTANCE);
+        event.register(ArmoryItems.DARK_STEEL_BOOTS, MultiEnergyBarDecorator.INSTANCE);
     }
 
 }
