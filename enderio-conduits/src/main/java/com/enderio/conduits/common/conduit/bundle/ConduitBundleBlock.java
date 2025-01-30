@@ -266,10 +266,6 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
 
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle) {
             if (conduitBundle.hasFacade() && FacadeHelper.areFacadesVisible()) {
-                SoundType soundtype = state.getSoundType(level, pos, player);
-                level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS,
-                        (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-
                 if (!level.isClientSide()) {
                     if (!player.getAbilities().instabuild) {
                         conduitBundle.dropFacadeItem();
@@ -288,6 +284,10 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
                 if (conduitBundle.isEmpty()) {
                     return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
                 } else {
+                    SoundType soundtype = state.getSoundType(level, pos, player);
+                    level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS,
+                        (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+
                     level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
                     return false;
                 }
@@ -323,10 +323,6 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
                     return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
                 }
 
-                SoundType soundtype = state.getSoundType(level, pos, player);
-                level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS,
-                        (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-
                 if (level.isClientSide) {
                     ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
                 }
@@ -336,6 +332,10 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
                 if (conduitBundle.isEmpty()) {
                     return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
                 } else {
+                    SoundType soundtype = state.getSoundType(level, pos, player);
+                    level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS,
+                        (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+
                     level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
                     return false;
                 }
