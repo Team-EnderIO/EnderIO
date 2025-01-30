@@ -15,15 +15,6 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Experimental
 public interface ConduitScreenHelper {
 
-    // Positions
-    int getAreaLeft();
-
-    int getAreaTop();
-
-    int getUsableWidth();
-
-    int getUsableHeight();
-
     // Built-in widget support
     AbstractWidget addCheckbox(int x, int y, Supplier<Boolean> getter, Consumer<Boolean> setter);
 

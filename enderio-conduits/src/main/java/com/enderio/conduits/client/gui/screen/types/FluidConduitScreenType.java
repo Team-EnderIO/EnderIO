@@ -39,23 +39,23 @@ public class FluidConduitScreenType extends ConduitScreenType<FluidConduitConnec
     private static final ResourceLocation ICON_SELF_FEED_DISABLED = EnderIO.loc("icon/self_feed_disabled");
 
     @Override
-    public void createWidgets(ConduitScreenHelper screen,
+    public void createWidgets(ConduitScreenHelper screen, int guiLeft, int guiTop,
             ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess) {
 
         int currentY = 0;
 
         // Add insert/extract checkboxes.
-        screen.addCheckbox(0, 0, () -> dataAccess.getConnectionConfig().isSend(),
+        screen.addCheckbox(guiLeft + 0, guiTop + 0, () -> dataAccess.getConnectionConfig().isSend(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withIsSend(value)));
 
-        screen.addCheckbox(90, 0, () -> dataAccess.getConnectionConfig().isReceive(),
+        screen.addCheckbox(guiLeft + 90, guiTop + 0, () -> dataAccess.getConnectionConfig().isReceive(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withIsReceive(value)));
 
         currentY += 20;
 
         // Locked fluid widget
         if (dataAccess.conduit() instanceof FluidConduit fluidConduit && !fluidConduit.isMultiFluid()) {
-            screen.addRenderableWidget(new FluidWidget(screen.getAreaLeft(), screen.getAreaTop() + currentY,
+            screen.addRenderableWidget(new FluidWidget(guiLeft, guiTop + currentY,
                     () -> getLockedFluid(dataAccess),
                     () -> PacketDistributor.sendToServer(new C2SClearLockedFluidPacket(dataAccess.getBlockPos()))));
         } else {
@@ -87,7 +87,7 @@ public class FluidConduitScreenType extends ConduitScreenType<FluidConduitConnec
          */
 
         // Redstone control
-        var redstoneChannelWidget = screen.addColorPicker(90 + 16 + 4, currentY, ConduitLang.REDSTONE_CHANNEL,
+        var redstoneChannelWidget = screen.addColorPicker(guiLeft + 90 + 16 + 4, guiTop + currentY, ConduitLang.REDSTONE_CHANNEL,
                 () -> dataAccess.getConnectionConfig().receiveRedstoneChannel(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneChannel(value)));
 
@@ -96,7 +96,7 @@ public class FluidConduitScreenType extends ConduitScreenType<FluidConduitConnec
                 .receiveRedstoneControl()
                 .isRedstoneSensitive());
 
-        screen.addRedstoneControlPicker(90, currentY, EIOLang.REDSTONE_MODE,
+        screen.addRedstoneControlPicker(guiLeft + 90, guiTop + currentY, EIOLang.REDSTONE_MODE,
                 () -> dataAccess.getConnectionConfig().receiveRedstoneControl(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
 
@@ -117,11 +117,11 @@ public class FluidConduitScreenType extends ConduitScreenType<FluidConduitConnec
     }
 
     @Override
-    public void renderLabels(GuiGraphics guiGraphics, Font font, int mouseX, int mouseY) {
-        super.renderLabels(guiGraphics, font, mouseX, mouseY);
+    public void renderLabels(GuiGraphics guiGraphics, int startX, int startY, Font font, int mouseX, int mouseY) {
+        super.renderLabels(guiGraphics, startX, startY, font, mouseX, mouseY);
 
-        guiGraphics.drawString(font, ConduitLang.CONDUIT_INSERT, 16 + 2, 4, 4210752, false);
-        guiGraphics.drawString(font, ConduitLang.CONDUIT_EXTRACT, 90 + 16 + 2, 4, 4210752, false);
+        guiGraphics.drawString(font, ConduitLang.CONDUIT_INSERT, startX + 16 + 2, startY + 4, 4210752, false);
+        guiGraphics.drawString(font, ConduitLang.CONDUIT_EXTRACT, startX + 90 + 16 + 2, startY + 4, 4210752, false);
     }
 
     private static class FluidWidget extends AbstractWidget {

@@ -125,16 +125,13 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
         public void addWidgets(ScreenHelper screenHelper) {
             if (screenType != null) {
-                screenType.createWidgets(screenHelper, dataAccess);
+                screenType.createScreenWidgets(screenHelper, getGuiLeft(), getGuiTop(), dataAccess);
             }
         }
 
         public void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
             if (screenType != null) {
-                guiGraphics.pose().pushPose();
-                guiGraphics.pose().translate(22, 7, 0);
-                screenType.renderLabels(guiGraphics, font, mouseX, mouseY);
-                guiGraphics.pose().popPose();
+                screenType.renderScreenLabels(guiGraphics, font, mouseX, mouseY);
             }
         }
 
@@ -177,30 +174,8 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
     private class ScreenHelper implements ConduitScreenHelper {
 
         @Override
-        public int getAreaLeft() {
-            return getGuiLeft() + 22;
-        }
-
-        @Override
-        public int getAreaTop() {
-            return getGuiTop() + 7;
-        }
-
-        @Override
-        public int getUsableWidth() {
-            // TODO
-            return 0;
-        }
-
-        @Override
-        public int getUsableHeight() {
-            // TODO
-            return 0;
-        }
-
-        @Override
         public AbstractWidget addCheckbox(int x, int y, Supplier<Boolean> getter, Consumer<Boolean> setter) {
-            var widget = ToggleIconButton.createCheckbox(getAreaLeft() + x, getAreaTop() + y, getter, setter);
+            var widget = ToggleIconButton.createCheckbox(x, y, getter, setter);
             addRenderableWidget(widget);
             return widget;
         }
@@ -208,7 +183,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         @Override
         public AbstractWidget addColorPicker(int x, int y, Component title, Supplier<DyeColor> getter,
                 Consumer<DyeColor> setter) {
-            var widget = new DyeColorPickerWidget(getAreaLeft() + x, getAreaTop() + y, getter, setter, title);
+            var widget = new DyeColorPickerWidget(x, y, getter, setter, title);
             addRenderableWidget(widget);
             return widget;
         }
@@ -216,7 +191,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         @Override
         public AbstractWidget addRedstoneControlPicker(int x, int y, Component title, Supplier<RedstoneControl> getter,
                 Consumer<RedstoneControl> setter) {
-            var widget = new RedstoneControlPickerWidget(getAreaLeft() + x, getAreaTop() + y, getter, setter, title);
+            var widget = new RedstoneControlPickerWidget(x, y, getter, setter, title);
             addRenderableWidget(widget);
             return widget;
         }
@@ -226,7 +201,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
                 Component disabledTitle, ResourceLocation enabledSprite, ResourceLocation disabledSprite,
                 Supplier<Boolean> getter, Consumer<Boolean> setter) {
 
-            var widget = ToggleIconButton.of(getAreaLeft() + x, getAreaTop() + y, width, height, enabledSprite,
+            var widget = ToggleIconButton.of(x, y, width, height, enabledSprite,
                     disabledSprite, enabledTitle, disabledTitle, getter, setter);
             addRenderableWidget(widget);
             return widget;
