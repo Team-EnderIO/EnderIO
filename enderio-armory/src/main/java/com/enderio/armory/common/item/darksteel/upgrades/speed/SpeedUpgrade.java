@@ -1,12 +1,18 @@
 package com.enderio.armory.common.item.darksteel.upgrades.speed;
 
+import com.enderio.armory.common.capability.DarkSteelCapability;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.TieredUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
+import com.enderio.armory.common.tag.ArmoryTags;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 
 public class SpeedUpgrade extends TieredUpgrade<SpeedUpgradeTier> {
 
@@ -40,6 +46,17 @@ public class SpeedUpgrade extends TieredUpgrade<SpeedUpgradeTier> {
             return Optional.empty();
         }
         return Optional.of(SpeedUpgradeTier.values()[tier]);
+    }
+
+    public static void applySpeed(ItemAttributeModifierEvent e) {
+        ItemStack stack = e.getItemStack();
+        if (!stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_LEGGINGS)
+                || !DarkSteelCapability.hasUpgrade(stack, SpeedUpgrade.NAME)) {
+            return;
+        }
+        Optional<SpeedUpgrade> upgrade = DarkSteelCapability.getUpgradeAs(stack, SpeedUpgrade.NAME, SpeedUpgrade.class);
+        upgrade.ifPresent(speedUpgrade -> e.addModifier(Attributes.MOVEMENT_SPEED,
+                speedUpgrade.tier.getAttributeModifier(), EquipmentSlotGroup.LEGS));
     }
 
 }

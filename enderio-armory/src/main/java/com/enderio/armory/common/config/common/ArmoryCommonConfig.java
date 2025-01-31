@@ -131,12 +131,14 @@ public class ArmoryCommonConfig {
 
         STEP_ASSIST_ACTIVATION_COST = builder.define("stepAssistActivationCost", 4);
 
+        builder.push("speed");
         SPEED_ACTIVATION_COST_I = builder.define("speedActivationCost_l1", 4);
         SPEED_I_BOOST = builder.define("speedBoost_l1", 0.15);
         SPEED_ACTIVATION_COST_II = builder.define("speedActivationCost_l2", 6);
         SPEED_II_BOOST = builder.define("speedBoost_l2", 0.3);
         SPEED_ACTIVATION_COST_III = builder.define("speedActivationCost_l3", 8);
         SPEED_III_BOOST = builder.define("speedBoost_l3", 0.45);
+        builder.pop();
 
         builder.pop();
         builder.pop();
