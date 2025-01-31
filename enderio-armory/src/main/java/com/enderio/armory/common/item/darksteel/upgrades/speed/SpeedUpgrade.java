@@ -1,22 +1,33 @@
 package com.enderio.armory.common.item.darksteel.upgrades.speed;
 
 import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.config.ArmoryConfig;
+import com.enderio.armory.common.init.ArmoryCapabilities;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.TieredUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
+import com.enderio.core.common.energy.ItemStackEnergy;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jetbrains.annotations.Nullable;
 
 public class SpeedUpgrade extends TieredUpgrade<SpeedUpgradeTier> {
 
     public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "explosive";
+
+    private final ModConfigSpec.ConfigValue<Integer> energyUse = ArmoryConfig.COMMON.SPEED_ENERGY_USE;
 
     public SpeedUpgrade() {
         this(SpeedUpgradeTier.ONE);
@@ -24,10 +35,11 @@ public class SpeedUpgrade extends TieredUpgrade<SpeedUpgradeTier> {
 
     public SpeedUpgrade(SpeedUpgradeTier tier) {
         super(tier, NAME);
+
     }
 
-    public double getMagnitude() {
-        return tier.getMagnitude().get();
+    public int getEnergyUse() {
+        return energyUse.get();
     }
 
     @Override
@@ -48,15 +60,65 @@ public class SpeedUpgrade extends TieredUpgrade<SpeedUpgradeTier> {
         return Optional.of(SpeedUpgradeTier.values()[tier]);
     }
 
-    public static void applySpeed(ItemAttributeModifierEvent e) {
+    public static void applySpeedModifiers(ItemAttributeModifierEvent e) {
         ItemStack stack = e.getItemStack();
         if (!stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_LEGGINGS)
                 || !DarkSteelCapability.hasUpgrade(stack, SpeedUpgrade.NAME)) {
             return;
         }
-        Optional<SpeedUpgrade> upgrade = DarkSteelCapability.getUpgradeAs(stack, SpeedUpgrade.NAME, SpeedUpgrade.class);
-        upgrade.ifPresent(speedUpgrade -> e.addModifier(Attributes.MOVEMENT_SPEED,
-                speedUpgrade.tier.getAttributeModifier(), EquipmentSlotGroup.LEGS));
+        if (ItemStackEnergy.getEnergyStored(stack) > 0) {
+            Optional<SpeedUpgrade> upgrade = DarkSteelCapability.getUpgradeAs(stack, SpeedUpgrade.NAME,
+                    SpeedUpgrade.class);
+            upgrade.ifPresent(speedUpgrade -> e.addModifier(Attributes.MOVEMENT_SPEED,
+                    speedUpgrade.tier.getAttributeModifier(), EquipmentSlotGroup.LEGS));
+        }
     }
+
+    public static void onPlayerTick(PlayerTickEvent.Pre playerTickEvent) {
+
+        Player player = playerTickEvent.getEntity();
+        if (!player.level().isClientSide()) {
+            // Movement delta only tracked client side
+            return;
+        }
+        if (!player.onGround()) {
+            return;
+        }
+        ItemStack legs = player.getInventory().getArmor(1);
+        if (!legs.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_LEGGINGS)) {
+            return;
+        }
+        @Nullable
+        DarkSteelCapability cap = legs.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+        if (cap == null) {
+            return;
+        }
+        Optional<SpeedUpgrade> speedUpgradeOpt = cap.getUpgradeAs(SpeedUpgrade.NAME, SpeedUpgrade.class);
+        if (speedUpgradeOpt.isEmpty()) {
+            return;
+        }
+        SpeedUpgrade speedUpgrade = speedUpgradeOpt.get();
+        double costPerUnit = speedUpgrade.getEnergyUse();
+        double distanceMoved = player.getDeltaMovement().horizontalDistance();
+        int extracted = ItemStackEnergy.extractEnergy(legs, (int) (costPerUnit * distanceMoved), false);
+        if (extracted > 0) {
+            PacketDistributor.sendToServer(new SpeedUsePowerPacket(extracted));
+        }
+    }
+
+    public static void handleEnergyUsePacket(SpeedUsePowerPacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var player = context.player();
+
+            // Check in case of desync
+            ItemStack legs = player.getInventory().getArmor(1);
+            if (!legs.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_LEGGINGS)) {
+                return;
+            }
+            ItemStackEnergy.extractEnergy(legs, packet.energyUse(), false);
+        });
+    }
+
+    // LivingJumpEvent
 
 }

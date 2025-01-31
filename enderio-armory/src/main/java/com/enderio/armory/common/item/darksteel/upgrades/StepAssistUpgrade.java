@@ -5,6 +5,7 @@ import com.enderio.armory.common.capability.DarkSteelCapability;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.base.api.EnderIO;
+import com.enderio.core.common.energy.ItemStackEnergy;
 import java.util.Collection;
 import java.util.List;
 import net.minecraft.network.chat.Component;
@@ -38,13 +39,15 @@ public class StepAssistUpgrade implements IDarkSteelUpgrade {
         return List.of(ArmoryLang.DS_UPGRADE_STEP_ASSIST_DESCRIPTION);
     }
 
-    public static void applyStepHeight(ItemAttributeModifierEvent e) {
+    public static void applyStepHeightModifiers(ItemAttributeModifierEvent e) {
         ItemStack stack = e.getItemStack();
         if (!stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_BOOTS)
                 || !DarkSteelCapability.hasUpgrade(stack, StepAssistUpgrade.NAME)) {
             return;
         }
-        e.addModifier(Attributes.STEP_HEIGHT, ATTRIBUTE_MODIFIER, EquipmentSlotGroup.FEET);
+        if (ItemStackEnergy.getEnergyStored(stack) > 0) {
+            e.addModifier(Attributes.STEP_HEIGHT, ATTRIBUTE_MODIFIER, EquipmentSlotGroup.FEET);
+        }
     }
 
 }

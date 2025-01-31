@@ -57,6 +57,7 @@ public class ArmoryCommonConfig {
 
     public final ModConfigSpec.ConfigValue<Integer> STEP_ASSIST_ACTIVATION_COST;
 
+    public final ModConfigSpec.ConfigValue<Integer> SPEED_ENERGY_USE;
     public final ModConfigSpec.ConfigValue<Integer> SPEED_ACTIVATION_COST_I;
     public final ModConfigSpec.ConfigValue<Double> SPEED_I_BOOST;
     public final ModConfigSpec.ConfigValue<Integer> SPEED_ACTIVATION_COST_II;
@@ -132,6 +133,7 @@ public class ArmoryCommonConfig {
         STEP_ASSIST_ACTIVATION_COST = builder.define("stepAssistActivationCost", 4);
 
         builder.push("speed");
+        SPEED_ENERGY_USE = builder.define("speedEnergyUsePerUnitMoved", 80);
         SPEED_ACTIVATION_COST_I = builder.define("speedActivationCost_l1", 4);
         SPEED_I_BOOST = builder.define("speedBoost_l1", 0.15);
         SPEED_ACTIVATION_COST_II = builder.define("speedActivationCost_l2", 6);

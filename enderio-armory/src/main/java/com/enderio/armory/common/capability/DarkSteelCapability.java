@@ -149,7 +149,7 @@ public class DarkSteelCapability {
         return DarkSteelUpgradeRegistry.instance().getUpgradesForItem(onStack).contains(upgrade.getName());
     }
 
-    <T extends IDarkSteelUpgrade> Optional<T> getUpgradeAs(String upgradeName, Class<T> as) {
+    public <T extends IDarkSteelUpgrade> Optional<T> getUpgradeAs(String upgradeName, Class<T> as) {
         return getUpgrade(upgradeName).filter(as::isInstance).map(as::cast);
     }
 

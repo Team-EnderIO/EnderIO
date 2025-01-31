@@ -55,11 +55,12 @@ public class EnderIOArmory {
         REGILITE.register(modEventBus);
 
         // Specific event listeners
-        NeoForge.EVENT_BUS.addListener(DarkSteelSwordItem::addUpgradeModifiers);
         NeoForge.EVENT_BUS.addListener(DarkSteelSwordItem::onEntityTeleport);
         NeoForge.EVENT_BUS.addListener(TravelUpgrade::checkShiftStatus);
-        NeoForge.EVENT_BUS.addListener(StepAssistUpgrade::applyStepHeight);
-        NeoForge.EVENT_BUS.addListener(SpeedUpgrade::applySpeed);
+        NeoForge.EVENT_BUS.addListener(DarkSteelSwordItem::applyAttackModifiers);
+        NeoForge.EVENT_BUS.addListener(StepAssistUpgrade::applyStepHeightModifiers);
+        NeoForge.EVENT_BUS.addListener(SpeedUpgrade::applySpeedModifiers);
+        NeoForge.EVENT_BUS.addListener(SpeedUpgrade::onPlayerTick);
     }
 
     @SubscribeEvent

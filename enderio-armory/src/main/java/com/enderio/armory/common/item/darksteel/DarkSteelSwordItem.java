@@ -68,7 +68,7 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
      * Applies the damage and speed bonuses from Empowered Upgrades for a DarkSteelSword
      * @param e event
      */
-    public static void addUpgradeModifiers(ItemAttributeModifierEvent e) {
+    public static void applyAttackModifiers(ItemAttributeModifierEvent e) {
         ItemStack stack = e.getItemStack();
         if (!stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD)) {
             return;
@@ -77,19 +77,21 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         if (empUpOpt.isEmpty()) {
             return;
         }
-        EmpoweredUpgrade empUp = empUpOpt.get();
-        e.addModifier(Attributes.ATTACK_DAMAGE,
-                new AttributeModifier(
-                        ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE,
-                                "the_ender_attack_boost_" + empUp.getLevel()),
-                        empUp.getAttackDamageIncrease(), AttributeModifier.Operation.ADD_VALUE),
-                EquipmentSlotGroup.MAINHAND);
-        e.addModifier(Attributes.ATTACK_SPEED,
-                new AttributeModifier(
-                        ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE,
-                                "the_ender_attack_speed_boost_" + empUp.getLevel()),
-                        empUp.getAttackSpeedIncrease(), AttributeModifier.Operation.ADD_VALUE),
-                EquipmentSlotGroup.MAINHAND);
+        if (ItemStackEnergy.getEnergyStored(stack) > 0) {
+            EmpoweredUpgrade empUp = empUpOpt.get();
+            e.addModifier(Attributes.ATTACK_DAMAGE,
+                    new AttributeModifier(
+                            ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE,
+                                    "the_ender_attack_boost_" + empUp.getLevel()),
+                            empUp.getAttackDamageIncrease(), AttributeModifier.Operation.ADD_VALUE),
+                    EquipmentSlotGroup.MAINHAND);
+            e.addModifier(Attributes.ATTACK_SPEED,
+                    new AttributeModifier(
+                            ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE,
+                                    "the_ender_attack_speed_boost_" + empUp.getLevel()),
+                            empUp.getAttackSpeedIncrease(), AttributeModifier.Operation.ADD_VALUE),
+                    EquipmentSlotGroup.MAINHAND);
+        }
     }
 
     public DarkSteelSwordItem(Properties pProperties) {
@@ -102,7 +104,7 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
 
         Optional<EmpoweredUpgrade> empUp = DarkSteelCapability.getEmpoweredUpgrade(pStack);
-        if (empUp.isEmpty()) {
+        if (empUp.isEmpty() || ItemStackEnergy.getEnergyStored(pStack) <= 0) {
             return super.hurtEnemy(pStack, pTarget, pAttacker);
         }
 

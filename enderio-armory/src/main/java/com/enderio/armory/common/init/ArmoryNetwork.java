@@ -1,9 +1,11 @@
 package com.enderio.armory.common.init;
 
 import com.enderio.armory.EnderIOArmory;
+import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUsePowerPacket;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelEndabledUpdatePacket;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
-import com.enderio.core.EnderCore;
+import com.enderio.base.api.EnderIO;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -17,10 +19,13 @@ public class ArmoryNetwork {
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
 
-        final PayloadRegistrar registrar = event.registrar(EnderCore.MOD_ID).versioned(PROTOCOL_VERSION);
+        final PayloadRegistrar registrar = event.registrar(EnderIO.NAMESPACE).versioned(PROTOCOL_VERSION);
 
         registrar.playToServer(TravelEndabledUpdatePacket.TYPE, TravelEndabledUpdatePacket.STREAM_CODEC,
                 TravelUpgrade::handleTravelEnabledPacket);
+
+        registrar.playToServer(SpeedUsePowerPacket.TYPE, SpeedUsePowerPacket.STREAM_CODEC,
+                SpeedUpgrade::handleEnergyUsePacket);
     }
 
 }

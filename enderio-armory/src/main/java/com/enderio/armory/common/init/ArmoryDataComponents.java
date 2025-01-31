@@ -23,6 +23,13 @@ public class ArmoryDataComponents {
     public static Supplier<DataComponentType<DarkSteelCapability.DarkSteelItemUpgrades>> DARK_STEEL_ITEM_UPGRADES = saved(
             "dark_steel_upgrades", ITEM_UPGRADES_CODEC);
 
+    /**
+     * Used to ensure any equipped dark steel items have their ItemAttributeModifierEvent event fired so they can update
+     * any attribute modifiers when energy is lost or regained
+     */
+    public static Supplier<DataComponentType<Boolean>> DARK_STEEL_ITEM_HAS_ENERGY = saved("dark_steel_item_has_energy",
+            Codec.BOOL);
+
     private static <T> Supplier<DataComponentType<T>> saved(String name, Codec<T> codec) {
         return DATA_COMPONENT_TYPES.register(name, () -> DataComponentType.<T>builder().persistent(codec).build());
     }
