@@ -102,6 +102,15 @@ public class ArmoryLang {
     public static final MutableComponent DS_UPGRADE_BOOTS_SNOW_DESCRIPTION = addTranslation(
             EnderIO.loc("darksteel.upgrade.boots_snow"), "Can walk on powdered snow");
 
+    public static final Component DS_UPGRADE_JUMP_I = addTranslation(EnderIO.loc("darksteel.upgrade.jump_l1"),
+            "Jump I");
+    public static final MutableComponent DS_UPGRADE_JUMP_I_DESCRIPTION = addTranslation(
+            EnderIO.loc("darksteel.upgrade.jump.description_l1"), "Enables double jump");
+    public static final Component DS_UPGRADE_JUMP_II = addTranslation(EnderIO.loc("darksteel.upgrade.jump_l2"),
+            "Jump II");
+    public static final MutableComponent DS_UPGRADE_JUMP_II_DESCRIPTION = addTranslation(
+            EnderIO.loc("darksteel.upgrade.jump.description_l2"), "Enables triple jump");
+
     // endregion
 
     private static MutableComponent addTranslation(ResourceLocation id, String translation) {

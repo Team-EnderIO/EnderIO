@@ -65,6 +65,12 @@ public class ArmoryCommonConfig {
     public final ModConfigSpec.ConfigValue<Integer> SPEED_ACTIVATION_COST_III;
     public final ModConfigSpec.ConfigValue<Double> SPEED_III_BOOST;
 
+    public final ModConfigSpec.ConfigValue<Integer> JUMP_ENERGY_USE;
+    public final ModConfigSpec.ConfigValue<Integer> JUMP_COUNT_I;
+    public final ModConfigSpec.ConfigValue<Integer> JUMP_ACTIVATION_COST_I;
+    public final ModConfigSpec.ConfigValue<Integer> JUMP_COUNT_II;
+    public final ModConfigSpec.ConfigValue<Integer> JUMP_ACTIVATION_COST_II;
+
     public ArmoryCommonConfig(ModConfigSpec.Builder builder) {
         builder.push("darksteel");
 
@@ -140,6 +146,14 @@ public class ArmoryCommonConfig {
         SPEED_II_BOOST = builder.define("speedBoost_l2", 0.3);
         SPEED_ACTIVATION_COST_III = builder.define("speedActivationCost_l3", 8);
         SPEED_III_BOOST = builder.define("speedBoost_l3", 0.45);
+        builder.pop();
+
+        builder.push("jump");
+        JUMP_ENERGY_USE = builder.define("jumpEnergyUsePerUnitMoved", 200);
+        JUMP_COUNT_I = builder.define("jumpCount_l1", 2);
+        JUMP_ACTIVATION_COST_I = builder.define("jumpActivationCost_l1", 6);
+        JUMP_COUNT_II = builder.define("jumpCount_l2", 3);
+        JUMP_ACTIVATION_COST_II = builder.define("jumpActivationCost_l2", 8);
         builder.pop();
 
         builder.pop();

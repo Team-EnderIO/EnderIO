@@ -12,6 +12,7 @@ import com.enderio.armory.common.item.darksteel.DarkSteelSwordItem;
 import com.enderio.armory.common.item.darksteel.DarkSteelUpgradeItem;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.ForkUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.JumpUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.SpoonUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.StepAssistUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
@@ -180,6 +181,22 @@ public class ArmoryItems {
                             SpeedUpgradeTier.THREE.getFactory()))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Speed III" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_JUMP_I = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_jump_1",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.JUMP_ACTIVATION_COST_I,
+                            JumpUpgradeTier.ONE.getFactory()))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Jump" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_JUMP_II = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_jump_2",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.JUMP_ACTIVATION_COST_II,
+                            JumpUpgradeTier.TWO.getFactory()))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Jump II" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
 
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = ITEM_REGISTRY

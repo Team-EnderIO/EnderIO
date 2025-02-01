@@ -119,6 +119,4 @@ public class SpeedUpgrade extends TieredUpgrade<SpeedUpgradeTier> {
         });
     }
 
-    // LivingJumpEvent
-
 }

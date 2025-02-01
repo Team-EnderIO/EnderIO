@@ -36,6 +36,7 @@ public final class DarkSteelUpgradeRegistry {
         INST.registerUpgrade(TravelUpgrade::new);
         INST.registerUpgrade(StepAssistUpgrade::new);
         INST.registerUpgrade(SpeedUpgrade::new);
+        INST.registerUpgrade(JumpUpgrade::new);
     }
 
     public static DarkSteelUpgradeRegistry instance() {

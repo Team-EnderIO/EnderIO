@@ -154,6 +154,11 @@ public class ItemRecipeProvider extends RecipeProvider {
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPEED_II, Ingredient.of(EIOItems.GEAR_ENERGIZED));
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPEED_III, Ingredient.of(EIOItems.GEAR_VIBRANT));
 
+        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_JUMP_I, Ingredient.of(EIOItems.GEAR_IRON),
+                Ingredient.of(Items.PISTON));
+        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_JUMP_II, Ingredient.of(EIOItems.GEAR_ENERGIZED),
+                Ingredient.of(Items.PISTON));
+
     }
 
     private void addUpgrade(RecipeOutput recipeOutput, ItemLike result, Ingredient... upgradeItems) {

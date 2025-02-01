@@ -6,6 +6,7 @@ import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.init.ArmoryLootModifiers;
 import com.enderio.armory.common.init.ArmoryRecipes;
 import com.enderio.armory.common.item.darksteel.DarkSteelSwordItem;
+import com.enderio.armory.common.item.darksteel.upgrades.JumpUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.StepAssistUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
@@ -61,6 +62,7 @@ public class EnderIOArmory {
         NeoForge.EVENT_BUS.addListener(StepAssistUpgrade::applyStepHeightModifiers);
         NeoForge.EVENT_BUS.addListener(SpeedUpgrade::applySpeedModifiers);
         NeoForge.EVENT_BUS.addListener(SpeedUpgrade::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(JumpUpgrade::doExtraJumps);
     }
 
     @SubscribeEvent
