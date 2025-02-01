@@ -5,6 +5,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.api.screen.ConduitMenuDataAccess;
 import com.enderio.conduits.api.screen.ConduitScreenHelper;
 import com.enderio.conduits.api.screen.ConduitScreenType;
+import com.enderio.conduits.api.screen.IOConduitScreenType;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduit;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitConnectionConfig;
 import com.enderio.conduits.common.init.ConduitLang;
@@ -31,7 +32,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-public class FluidConduitScreenType extends ConduitScreenType<FluidConduitConnectionConfig> {
+public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConnectionConfig> {
 
     private static final ResourceLocation ICON_ROUND_ROBIN_ENABLED = EnderIO.loc("icon/round_robin_enabled");
     private static final ResourceLocation ICON_ROUND_ROBIN_DISABLED = EnderIO.loc("icon/round_robin_disabled");
@@ -39,36 +40,31 @@ public class FluidConduitScreenType extends ConduitScreenType<FluidConduitConnec
     private static final ResourceLocation ICON_SELF_FEED_DISABLED = EnderIO.loc("icon/self_feed_disabled");
 
     @Override
-    public void createWidgets(ConduitScreenHelper screen, int guiLeft, int guiTop,
-            ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess) {
-
-        int currentY = 0;
-
-        // Add insert/extract checkboxes.
-        screen.addCheckbox(guiLeft + 0, guiTop + 0, () -> dataAccess.getConnectionConfig().isSend(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withIsSend(value)));
-
-        screen.addCheckbox(guiLeft + 90, guiTop + 0, () -> dataAccess.getConnectionConfig().isReceive(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withIsReceive(value)));
-
-        currentY += 20;
+    public void createLeftWidgets(ConduitScreenHelper screen, int startX, int startY, ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess) {
+        super.createLeftWidgets(screen, startX, startY, dataAccess);
 
         // Locked fluid widget
         if (dataAccess.conduit() instanceof FluidConduit fluidConduit && !fluidConduit.isMultiFluid()) {
-            screen.addRenderableWidget(new FluidWidget(guiLeft, guiTop + currentY,
-                    () -> getLockedFluid(dataAccess),
-                    () -> PacketDistributor.sendToServer(new C2SClearLockedFluidPacket(dataAccess.getBlockPos()))));
+            screen.addRenderableWidget(new FluidWidget(startX, startY + 20,
+                () -> getLockedFluid(dataAccess),
+                () -> PacketDistributor.sendToServer(new C2SClearLockedFluidPacket(dataAccess.getBlockPos()))));
         } else {
             // Channel colors
-            screen.addColorPicker(0, currentY, ConduitLang.CONDUIT_CHANNEL,
-                    () -> dataAccess.getConnectionConfig().sendColor(),
-                    value -> dataAccess.updateConnectionConfig(config -> config.withSendColor(value)));
+            screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
+                () -> dataAccess.getConnectionConfig().sendColor(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withSendColor(value)));
+        }
+    }
 
-            screen.addColorPicker(90, currentY, ConduitLang.CONDUIT_CHANNEL,
-                    () -> dataAccess.getConnectionConfig().receiveColor(),
-                    value -> dataAccess.updateConnectionConfig(config -> config.withReceiveColor(value)));
+    @Override
+    public void createRightWidgets(ConduitScreenHelper screen, int startX, int startY, ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess) {
+        super.createRightWidgets(screen, startX, startY, dataAccess);
 
-            currentY += 20;
+        if (dataAccess.conduit() instanceof FluidConduit fluidConduit && fluidConduit.isMultiFluid()) {
+            // Channel colors
+            screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
+                () -> dataAccess.getConnectionConfig().receiveColor(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveColor(value)));
         }
 
         // TODO: Could be good fluid conduit features?
@@ -87,20 +83,30 @@ public class FluidConduitScreenType extends ConduitScreenType<FluidConduitConnec
          */
 
         // Redstone control
-        var redstoneChannelWidget = screen.addColorPicker(guiLeft + 90 + 16 + 4, guiTop + currentY, ConduitLang.REDSTONE_CHANNEL,
-                () -> dataAccess.getConnectionConfig().receiveRedstoneChannel(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneChannel(value)));
+        var redstoneChannelWidget = screen.addColorPicker(startX + 16 + 4, startY + 40, ConduitLang.REDSTONE_CHANNEL,
+            () -> dataAccess.getConnectionConfig().receiveRedstoneChannel(),
+            value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneChannel(value)));
 
         // Only show the redstone widget when redstone control is sensitive to signals.
         screen.addPreRenderAction(() -> redstoneChannelWidget.visible = dataAccess.getConnectionConfig()
-                .receiveRedstoneControl()
-                .isRedstoneSensitive());
+            .receiveRedstoneControl()
+            .isRedstoneSensitive());
 
-        screen.addRedstoneControlPicker(guiLeft + 90, guiTop + currentY, EIOLang.REDSTONE_MODE,
-                () -> dataAccess.getConnectionConfig().receiveRedstoneControl(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
+        screen.addRedstoneControlPicker(startX, startY + 40, EIOLang.REDSTONE_MODE,
+            () -> dataAccess.getConnectionConfig().receiveRedstoneControl(),
+            value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
 
         // TODO: Show redstone signal indicators using the extra NBT payload.
+    }
+
+    @Override
+    protected FluidConduitConnectionConfig setLeftEnabled(FluidConduitConnectionConfig config, boolean isEnabled) {
+        return config.withIsSend(isEnabled);
+    }
+
+    @Override
+    protected FluidConduitConnectionConfig setRightEnabled(FluidConduitConnectionConfig config, boolean isEnabled) {
+        return config.withIsReceive(isEnabled);
     }
 
     private Fluid getLockedFluid(ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess) {
@@ -114,14 +120,6 @@ public class FluidConduitScreenType extends ConduitScreenType<FluidConduitConnec
         }
 
         return BuiltInRegistries.FLUID.get(ResourceLocation.parse(tag.getString("LockedFluid")));
-    }
-
-    @Override
-    public void renderLabels(GuiGraphics guiGraphics, int startX, int startY, Font font, int mouseX, int mouseY) {
-        super.renderLabels(guiGraphics, startX, startY, font, mouseX, mouseY);
-
-        guiGraphics.drawString(font, ConduitLang.CONDUIT_INSERT, startX + 16 + 2, startY + 4, 4210752, false);
-        guiGraphics.drawString(font, ConduitLang.CONDUIT_EXTRACT, startX + 90 + 16 + 2, startY + 4, 4210752, false);
     }
 
     private static class FluidWidget extends AbstractWidget {

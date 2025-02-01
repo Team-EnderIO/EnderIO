@@ -2,13 +2,13 @@ package com.enderio.conduits.client.gui.screen.types;
 
 import com.enderio.conduits.api.screen.ConduitMenuDataAccess;
 import com.enderio.conduits.api.screen.ConduitScreenHelper;
-import com.enderio.conduits.api.screen.TwoSideConduitScreenType;
+import com.enderio.conduits.api.screen.IOConduitScreenType;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.conduits.common.init.ConduitLang;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 
-public class RedstoneConduitScreenType extends TwoSideConduitScreenType<RedstoneConduitConnectionConfig> {
+public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneConduitConnectionConfig> {
 
     public RedstoneConduitScreenType() {
         // TODO: Should be ctor params.
@@ -19,10 +19,7 @@ public class RedstoneConduitScreenType extends TwoSideConduitScreenType<Redstone
     @Override
     public void createLeftWidgets(ConduitScreenHelper screen, int startX, int startY,
         ConduitMenuDataAccess<RedstoneConduitConnectionConfig> dataAccess) {
-
-        // Send checkbox
-        screen.addCheckbox(startX, startY, () -> dataAccess.getConnectionConfig().isReceive(),
-            value -> dataAccess.updateConnectionConfig(config -> config.withIsReceive(value)));
+        super.createLeftWidgets(screen, startX, startY, dataAccess);
 
         // Send channel
         screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL, () -> dataAccess.getConnectionConfig().receiveColor(),
@@ -32,10 +29,7 @@ public class RedstoneConduitScreenType extends TwoSideConduitScreenType<Redstone
     @Override
     public void createRightWidgets(ConduitScreenHelper screen, int startX, int startY,
         ConduitMenuDataAccess<RedstoneConduitConnectionConfig> dataAccess) {
-
-        // Send checkbox
-        screen.addCheckbox(startX, startY, () -> dataAccess.getConnectionConfig().isSend(),
-            value -> dataAccess.updateConnectionConfig(config -> config.withIsSend(value)));
+        super.createRightWidgets(screen, startX, startY, dataAccess);
 
         // Send channel
         screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL, () -> dataAccess.getConnectionConfig().sendColor(),
@@ -44,6 +38,26 @@ public class RedstoneConduitScreenType extends TwoSideConduitScreenType<Redstone
         // Strong signal
         screen.addCheckbox(startX, startY + 40, () -> dataAccess.getConnectionConfig().isStrongOutputSignal(),
             value -> dataAccess.updateConnectionConfig(config -> config.withIsStrongOutputSignal(value)));
+    }
+
+    @Override
+    public boolean getLeftEnabled(RedstoneConduitConnectionConfig config) {
+        return config.isReceive();
+    }
+
+    @Override
+    public boolean getRightEnabled(RedstoneConduitConnectionConfig config) {
+        return config.isSend();
+    }
+
+    @Override
+    protected RedstoneConduitConnectionConfig setLeftEnabled(RedstoneConduitConnectionConfig config, boolean isEnabled) {
+        return config.withIsReceive(isEnabled);
+    }
+
+    @Override
+    protected RedstoneConduitConnectionConfig setRightEnabled(RedstoneConduitConnectionConfig config, boolean isEnabled) {
+        return config.withIsSend(isEnabled);
     }
 
     @Override
