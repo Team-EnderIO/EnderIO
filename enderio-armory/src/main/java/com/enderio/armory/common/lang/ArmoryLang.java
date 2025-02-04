@@ -53,11 +53,6 @@ public class ArmoryLang {
     public static final MutableComponent DS_UPGRADE_EMPOWERED_OBSIDIAM_EFFICIENCY = addTranslation(
             EnderIO.loc("darksteel.upgrade.empowered.obsidian.efficiency"), "Efficiency +%s when breaking obsidian");
 
-    public static final Component DS_UPGRADE_STEP_ASSIST = addTranslation(EnderIO.loc("darksteel.upgrade.step_assist"),
-            "Step Assist");
-    public static final Component DS_UPGRADE_STEP_ASSIST_DESCRIPTION = addTranslation(
-            EnderIO.loc("darksteel.upgrade.step_assist.description"), "Step just a little higher");
-
     public static final Component DS_UPGRADE_SPOON = addTranslation(EnderIO.loc("darksteel.upgrade.spoon"), "Spoon");
     public static final Component DS_UPGRADE_SPOON_DESCRIPTION = addTranslation(
             EnderIO.loc("darksteel.upgrade.spoon.description"), "Who needs a shovel when you have a spoon?");
@@ -110,6 +105,15 @@ public class ArmoryLang {
             "Jump II");
     public static final MutableComponent DS_UPGRADE_JUMP_II_DESCRIPTION = addTranslation(
             EnderIO.loc("darksteel.upgrade.jump.description_l2"), "Enables triple jump");
+
+    public static final Component DS_UPGRADE_STEP_ASSIST = addTranslation(EnderIO.loc("darksteel.upgrade.step_assist"),
+            "Step Assist");
+    public static final Component DS_UPGRADE_STEP_ASSIST_DESCRIPTION = addTranslation(
+            EnderIO.loc("darksteel.upgrade.step_assist.description"), "Step just a little higher");
+
+    public static final Component DS_UPGRADE_GLIDER = addTranslation(EnderIO.loc("darksteel.upgrade.glider"), "Glider");
+    public static final Component DS_UPGRADE_GLIDER_DESCRIPTION = addTranslation(
+            EnderIO.loc("darksteel.upgrade.glider.description"), "Wings anyone?");
 
     // endregion
 

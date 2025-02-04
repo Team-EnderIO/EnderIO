@@ -6,6 +6,11 @@ import com.enderio.base.api.glider.GliderMovementInfo;
 import com.enderio.base.api.integration.IntegrationManager;
 import com.enderio.base.common.init.EIOCriterions;
 import com.enderio.base.common.lang.EIOLang;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.WeakHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
@@ -22,17 +27,13 @@ import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.WeakHashMap;
-
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID)
 public class PlayerMovementHandler {
 
     /**
      * {@linkplain net.minecraft.world.entity.LivingEntity#travel} 0.91 multiplicator
      */
-    private static final double AIR_FRICTION_COEFFICIENT = 1/0.91D;
+    private static final double AIR_FRICTION_COEFFICIENT = 1 / 0.91D;
 
     private static final double MOVEMENT_CHANGE_EFFECT = 0.05d;
 
@@ -44,17 +45,14 @@ public class PlayerMovementHandler {
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Pre playerTickEvent) {
         Player player = playerTickEvent.getEntity();
-        Map<Player, Integer> ticksFallingMap = player instanceof ServerPlayer ? TICKS_FALLING_SERVER : TICKS_FALLING_CLIENT;
+        Map<Player, Integer> ticksFallingMap = player instanceof ServerPlayer ? TICKS_FALLING_SERVER
+                : TICKS_FALLING_CLIENT;
 
         int ticksFalling = ticksFallingMap.getOrDefault(player, 0);
         if (player.onGround() != player.getDeltaMovement().y() < 0) {
             ticksFallingMap.put(player, ticksFalling + 1);
         } else {
             ticksFallingMap.put(player, 0);
-        }
-
-        if (player.isSpectator()) {
-            return;
         }
 
         Optional<GliderMovementInfo> gliderMovementInfoOpt = calculateGliderMovementInfo(player, true, ticksFallingMap);
@@ -69,11 +67,13 @@ public class PlayerMovementHandler {
         }
 
         double oldHorizontalSpeed = player.getDeltaMovement().horizontalDistance();
-        double x = Math.cos(Math.toRadians(player.yHeadRot + 90)) * (gliderMovementInfo.acceleration() + oldHorizontalSpeed * MOVEMENT_CHANGE_EFFECT);
-        double z = Math.sin(Math.toRadians(player.yHeadRot + 90)) * (gliderMovementInfo.acceleration() + oldHorizontalSpeed * MOVEMENT_CHANGE_EFFECT);
+        double x = Math.cos(Math.toRadians(player.yHeadRot + 90))
+                * (gliderMovementInfo.acceleration() + oldHorizontalSpeed * MOVEMENT_CHANGE_EFFECT);
+        double z = Math.sin(Math.toRadians(player.yHeadRot + 90))
+                * (gliderMovementInfo.acceleration() + oldHorizontalSpeed * MOVEMENT_CHANGE_EFFECT);
 
-
-        Vec3 newDeltaMovement = new Vec3(player.getDeltaMovement().x() * (1 - MOVEMENT_CHANGE_EFFECT) + x, verticalSpeed, player.getDeltaMovement().z() * (1 - MOVEMENT_CHANGE_EFFECT) + z);
+        Vec3 newDeltaMovement = new Vec3(player.getDeltaMovement().x() * (1 - MOVEMENT_CHANGE_EFFECT) + x,
+                verticalSpeed, player.getDeltaMovement().z() * (1 - MOVEMENT_CHANGE_EFFECT) + z);
         double speed = newDeltaMovement.length();
         if (speed > gliderMovementInfo.maxSpeed()) {
             newDeltaMovement = newDeltaMovement.scale(gliderMovementInfo.maxSpeed() / newDeltaMovement.length());
@@ -92,22 +92,41 @@ public class PlayerMovementHandler {
         gliderMovementInfo.cause().onHangGliderTick(player);
     }
 
-    public static Optional<GliderMovementInfo> calculateGliderMovementInfo(Player player, boolean displayDisabledMessage, Map<Player, Integer> ticksFallingMap) {
-        if (!player.onGround()
-            && player.getDeltaMovement().y() < 0
-            && !player.isShiftKeyDown()
-            && !player.isInWater()
-            && !player.isPassenger()
-            && ticksFallingMap.getOrDefault(player, 0) > 12) {
-            Optional<Component> disabledReason = IntegrationManager.getFirst(integration -> integration.hangGliderDisabledReason(player));
-            Optional<GliderMovementInfo> gliderMovementInfo = IntegrationManager.getFirst(integration -> integration.getGliderMovementInfo(player));
-            if (displayDisabledMessage && disabledReason.isPresent() && gliderMovementInfo.isPresent()) {
+    public static Optional<GliderMovementInfo> calculateGliderMovementInfo(Player player,
+            boolean displayDisabledMessage, Map<Player, Integer> ticksFallingMap) {
+        if (areGlideConditionsMet(player, ticksFallingMap)) {
+
+            List<GliderMovementInfo> infos = new ArrayList<>();
+            IntegrationManager.forAll(integration -> integration.getGliderMovementInfo(player).ifPresent(infos::add));
+
+            Optional<Component> disabledReason = Optional.empty();
+            Optional<GliderMovementInfo> gliderMovementInfo = Optional.empty();
+            if (!infos.isEmpty()) {
+                disabledReason = infos.getFirst().cause().hangGliderDisabledReason(player);
+                // Don't enable flight if a disabled reason is present
+                if (disabledReason.isEmpty()) {
+                    gliderMovementInfo = Optional.of(infos.getFirst());
+                }
+            }
+            if (displayDisabledMessage && disabledReason.isPresent()) {
                 player.displayClientMessage(EIOLang.GLIDER_DISABLED.copy().append(disabledReason.get()), true);
             }
             return gliderMovementInfo;
         }
 
         return Optional.empty();
+    }
+
+    public static boolean isGliding(Player player) {
+        Map<Player, Integer> ticksFallingMap = player instanceof ServerPlayer ? TICKS_FALLING_SERVER
+                : TICKS_FALLING_CLIENT;
+        return calculateGliderMovementInfo(player, false, ticksFallingMap).isPresent();
+    }
+
+    private static boolean areGlideConditionsMet(Player player, Map<Player, Integer> ticksFallingMap) {
+        return !player.isSpectator() && !player.onGround() && player.getDeltaMovement().y() < 0
+                && !player.isShiftKeyDown() && !player.isInWater() && !player.isPassenger()
+                && ticksFallingMap.getOrDefault(player, 0) > 12;
     }
 
     private static class ClientClassLoadingProtection {
@@ -118,7 +137,8 @@ public class PlayerMovementHandler {
         }
 
         private static boolean isGliderPlaying() {
-            for (SoundInstance soundInstance : Minecraft.getInstance().getSoundManager().soundEngine.instanceBySource.get(SoundSource.PLAYERS)) {
+            for (SoundInstance soundInstance : Minecraft.getInstance().getSoundManager().soundEngine.instanceBySource
+                    .get(SoundSource.PLAYERS)) {
                 if (soundInstance instanceof WindSoundInstance) {
                     return true;
                 }
@@ -131,6 +151,7 @@ public class PlayerMovementHandler {
     private static class WindSoundInstance extends AbstractTickableSoundInstance {
         private final LocalPlayer player;
         private int time;
+
         WindSoundInstance(LocalPlayer player) {
             super(SoundEvents.ELYTRA_FLYING, SoundSource.PLAYERS, SoundInstance.createUnseededRandom());
             this.player = player;
@@ -143,11 +164,13 @@ public class PlayerMovementHandler {
         public void tick() {
 
             ++this.time;
-            if (!this.player.isRemoved() && (this.time <= 20 || PlayerMovementHandler.calculateGliderMovementInfo(player, false, TICKS_FALLING_CLIENT).isPresent())) {
+            if (!this.player.isRemoved() && (this.time <= 20
+                    || PlayerMovementHandler.calculateGliderMovementInfo(player, false, TICKS_FALLING_CLIENT)
+                            .isPresent())) {
                 this.x = this.player.getX();
                 this.y = this.player.getY();
                 this.z = this.player.getZ();
-                float f = (float)this.player.getDeltaMovement().lengthSqr();
+                float f = (float) this.player.getDeltaMovement().lengthSqr();
                 if (f >= 1.0E-7D) {
                     this.volume = Mth.clamp(f / 4.0F, 0.0F, 1.0F);
                 } else {

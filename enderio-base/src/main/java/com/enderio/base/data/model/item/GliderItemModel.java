@@ -11,8 +11,8 @@ public class GliderItemModel {
     public static void create(Item item, ItemModelProvider prov) {
         ResourceLocation registryName = BuiltInRegistries.ITEM.getKey(item);
         prov.getBuilder(registryName.getNamespace() + ":enderio_glider/" + registryName.getPath())
-            .parent(prov.getExistingFile(EnderIO.loc("glider/glider3d")))
-            .texture("0", registryName.getNamespace() + ":models/glider/" + registryName.getPath());
+                .parent(prov.getExistingFile(EnderIO.loc("glider/glider3d")))
+                .texture("0", registryName.getNamespace() + ":block/glider/" + registryName.getPath());
         prov.basicItem(item);
     }
 }

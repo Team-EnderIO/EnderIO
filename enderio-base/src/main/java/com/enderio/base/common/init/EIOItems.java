@@ -334,8 +334,7 @@ public class EIOItems {
     // return tempMap;
     // });
 
-    // public static final RegiliteItem<HangGliderItem> GLIDER =
-    // gliderItem("glider");
+    public static final RegiliteItem<HangGliderItem> GLIDER = gliderItem("glider");
 
     private static RegiliteItem<MaterialItem> grindingBall(String name, GrindingBallData grindingBallData) {
         return ITEM_REGISTRY

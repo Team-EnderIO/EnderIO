@@ -14,6 +14,10 @@ import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.init.EIOParticles;
 import com.enderio.core.client.item.FluidBarDecorator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -35,11 +39,6 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 @Mod(value = EnderIOBase.MODULE_MOD_ID, dist = Dist.CLIENT)
 public class EnderIOBaseClient {
@@ -58,17 +57,17 @@ public class EnderIOBaseClient {
 
     @SubscribeEvent
     public static void additionalModels(ModelEvent.RegisterAdditional event) {
-        Set<ResourceLocation> gliderModels = Minecraft
-            .getInstance()
-            .getResourceManager()
-            .listResources("models/enderio_glider", rl -> rl.getPath().endsWith(".json"))
-            .keySet();
+        Set<ResourceLocation> gliderModels = Minecraft.getInstance()
+                .getResourceManager()
+                .listResources("models/enderio_glider", rl -> rl.getPath().endsWith(".json"))
+                .keySet();
 
         for (ResourceLocation gliderModelPath : gliderModels) {
             Optional<Item> gliderItem = findGliderForModelRL(gliderModelPath);
             if (gliderItem.isPresent()) {
-                ResourceLocation modelLookupLocation = ResourceLocation.fromNamespaceAndPath(gliderModelPath.getNamespace(),
-                    gliderModelPath.getPath().substring("models/".length(), gliderModelPath.getPath().length() - 5));
+                ResourceLocation modelLookupLocation = ResourceLocation
+                        .fromNamespaceAndPath(gliderModelPath.getNamespace(), gliderModelPath.getPath()
+                                .substring("models/".length(), gliderModelPath.getPath().length() - 5));
 
                 ModelResourceLocation modelLocation = ModelResourceLocation.standalone(modelLookupLocation);
                 event.register(modelLocation);
@@ -81,11 +80,11 @@ public class EnderIOBaseClient {
     public static void itemDecorators(RegisterItemDecorationsEvent event) {
         // Register tools
         event.register(EIOItems.LEVITATION_STAFF.get(), FluidBarDecorator.INSTANCE);
-//        event.register(EIOItems.DARK_STEEL_AXE.get(), EnergyBarDecorator.INSTANCE);
-//        event.register(EIOItems.DARK_STEEL_PICKAXE.get(), EnergyBarDecorator.INSTANCE);
 
         // Register all glass blocks
-        EIOBlocks.GLASS_BLOCKS.values().forEach(blocks -> blocks.getAllBlocks().forEach(block -> event.register(block.get(), GlassIconDecorator.INSTANCE)));
+        EIOBlocks.GLASS_BLOCKS.values()
+                .forEach(blocks -> blocks.getAllBlocks()
+                        .forEach(block -> event.register(block.get(), GlassIconDecorator.INSTANCE)));
     }
 
     @SubscribeEvent
@@ -132,12 +131,15 @@ public class EnderIOBaseClient {
 
     @SubscribeEvent
     public static void registerModelLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(EnderSkullRenderer.ENDER_SKULL, EnderSkullRenderer.EnderSkullModel::createMobHeadLayer);
+        event.registerLayerDefinition(EnderSkullRenderer.ENDER_SKULL,
+                EnderSkullRenderer.EnderSkullModel::createMobHeadLayer);
     }
 
     @SubscribeEvent
     public static void registerEnderSkulls(EntityRenderersEvent.CreateSkullModels event) {
-        event.registerSkullModel(EnderSkullBlock.EIOSkulls.ENDERMAN, new EnderSkullRenderer.EnderSkullModel(event.getEntityModelSet().bakeLayer(EnderSkullRenderer.ENDER_SKULL)));
-        SkullBlockRenderer.SKIN_BY_TYPE.put(EnderSkullBlock.EIOSkulls.ENDERMAN, ResourceLocation.withDefaultNamespace("textures/entity/enderman/enderman.png"));
+        event.registerSkullModel(EnderSkullBlock.EIOSkulls.ENDERMAN, new EnderSkullRenderer.EnderSkullModel(
+                event.getEntityModelSet().bakeLayer(EnderSkullRenderer.ENDER_SKULL)));
+        SkullBlockRenderer.SKIN_BY_TYPE.put(EnderSkullBlock.EIOSkulls.ENDERMAN,
+                ResourceLocation.withDefaultNamespace("textures/entity/enderman/enderman.png"));
     }
 }
