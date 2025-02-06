@@ -1,11 +1,8 @@
 package com.enderio.armory.common.item.darksteel;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.armory.common.capability.DarkSteelCapability;
-import com.enderio.armory.common.init.ArmoryCapabilities;
 import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
-import com.enderio.armory.common.item.darksteel.upgrades.IUpgradeTier;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.item.CreativeTabVariants;
@@ -14,23 +11,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Random;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class DarkSteelUpgradeItem extends Item implements AdvancedTooltipProvider, CreativeTabVariants {
@@ -64,6 +54,14 @@ public class DarkSteelUpgradeItem extends Item implements AdvancedTooltipProvide
 
     private final ModConfigSpec.ConfigValue<Integer> levelsRequired;
 
+    public Supplier<? extends IDarkSteelUpgrade> getUpgrade() {
+        return upgrade;
+    }
+
+    public ModConfigSpec.ConfigValue<Integer> getLevelsRequired() {
+        return levelsRequired;
+    }
+
     private final Supplier<? extends IDarkSteelUpgrade> upgrade;
 
     public DarkSteelUpgradeItem(Properties pProperties, ModConfigSpec.ConfigValue<Integer> levelsRequired,
@@ -87,47 +85,47 @@ public class DarkSteelUpgradeItem extends Item implements AdvancedTooltipProvide
         modifier.accept(is);
     }
 
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        @Nullable
-        DarkSteelCapability cap = pPlayer.getItemInHand(InteractionHand.OFF_HAND)
-                .getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
-        if (cap != null) {
-            if (isAlreadyInstalled(cap)) {
-                // TODO: Just for testing
-                cap.removeUpgrade(upgrade.get().getName());
-            } else if (cap.canApplyUpgrade(upgrade.get())) {
-                if (pPlayer.experienceLevel >= levelsRequired.get() || pPlayer.isCreative()) {
-                    if (!pPlayer.isCreative()) {
-                        pPlayer.giveExperienceLevels(-levelsRequired.get());
-                    }
-                    cap.addUpgrade(upgrade.get());
-                    stack.setCount(0);
-                    pLevel.playSound(pPlayer, pPlayer.getOnPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS,
-                            1.0F, new Random().nextFloat() * 0.1F + 0.9F);
-                    return InteractionResultHolder.consume(stack);
-                } else if (pLevel.isClientSide) {
-                    pPlayer.sendSystemMessage(ArmoryLang.DS_UPGRADE_ITEM_NO_XP);
-                }
-            } else if (pLevel.isClientSide) {
-                pPlayer.sendSystemMessage(ArmoryLang.DS_UPGRADE_ITEM_INVALID_UPGRADE);
-            }
-        } else if (pLevel.isClientSide) {
-            pPlayer.sendSystemMessage(ArmoryLang.DS_UPGRADE_ITEM_NO_TARGET);
-        }
-        return super.use(pLevel, pPlayer, pUsedHand);
-    }
-
-    private boolean isAlreadyInstalled(@NotNull DarkSteelCapability cap) {
-        Optional<IDarkSteelUpgrade> opt = cap.getUpgrade(upgrade.get().getName());
-        if (opt.isEmpty()) {
-            return false;
-        }
-        int installedTier = opt.map(up -> up.getTier().map(IUpgradeTier::getLevel).orElse(0)).orElse(0);
-        int myTier = upgrade.get().getTier().map(IUpgradeTier::getLevel).orElse(0);
-        return myTier == installedTier;
-    }
+//    @Override
+//    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+//        ItemStack stack = pPlayer.getItemInHand(pUsedHand);
+//        @Nullable
+//        DarkSteelCapability cap = pPlayer.getItemInHand(InteractionHand.OFF_HAND)
+//                .getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+//        if (cap != null) {
+//            if (isAlreadyInstalled(cap)) {
+//                // TODO: Just for testing
+//                cap.removeUpgrade(upgrade.get().getName());
+//            } else if (cap.canApplyUpgrade(upgrade.get())) {
+//                if (pPlayer.experienceLevel >= levelsRequired.get() || pPlayer.isCreative()) {
+//                    if (!pPlayer.isCreative()) {
+//                        pPlayer.giveExperienceLevels(-levelsRequired.get());
+//                    }
+//                    cap.addUpgrade(upgrade.get());
+//                    stack.setCount(0);
+//                    pLevel.playSound(pPlayer, pPlayer.getOnPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS,
+//                            1.0F, new Random().nextFloat() * 0.1F + 0.9F);
+//                    return InteractionResultHolder.consume(stack);
+//                } else if (pLevel.isClientSide) {
+//                    pPlayer.sendSystemMessage(ArmoryLang.DS_UPGRADE_ITEM_NO_XP);
+//                }
+//            } else if (pLevel.isClientSide) {
+//                pPlayer.sendSystemMessage(ArmoryLang.DS_UPGRADE_ITEM_INVALID_UPGRADE);
+//            }
+//        } else if (pLevel.isClientSide) {
+//            pPlayer.sendSystemMessage(ArmoryLang.DS_UPGRADE_ITEM_NO_TARGET);
+//        }
+//        return super.use(pLevel, pPlayer, pUsedHand);
+//    }
+//
+//    private boolean isAlreadyInstalled(@NotNull DarkSteelCapability cap) {
+//        Optional<IDarkSteelUpgrade> opt = cap.getUpgrade(upgrade.get().getName());
+//        if (opt.isEmpty()) {
+//            return false;
+//        }
+//        int installedTier = opt.map(up -> up.getTier().map(IUpgradeTier::getLevel).orElse(0)).orElse(0);
+//        int myTier = upgrade.get().getTier().map(IUpgradeTier::getLevel).orElse(0);
+//        return myTier == installedTier;
+//    }
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
