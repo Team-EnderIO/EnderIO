@@ -21,7 +21,6 @@ public class GliderIntegration implements Integration {
 
     @Override
     public Optional<Component> hangGliderDisabledReason(Player player) {
-        // TODO: No power
         return player.isFallFlying() ? Optional.of(EIOLang.GLIDER_DISABLED_FALL_FLYING) : Optional.empty();
     }
 
@@ -38,10 +37,6 @@ public class GliderIntegration implements Integration {
     @Override
     public ClientIntegration getClientIntegration() {
         return GliderIntegrationClient.INSTANCE;
-    }
-
-    @Override
-    public void onHangGliderTick(Player player) {
     }
 
 }

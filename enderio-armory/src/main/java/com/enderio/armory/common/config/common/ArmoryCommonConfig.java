@@ -71,6 +71,8 @@ public class ArmoryCommonConfig {
     public final ModConfigSpec.ConfigValue<Integer> JUMP_COUNT_II;
     public final ModConfigSpec.ConfigValue<Integer> JUMP_ACTIVATION_COST_II;
 
+    public final ModConfigSpec.ConfigValue<Integer> GLIDER_ACTIVATION_COST;
+
     public ArmoryCommonConfig(ModConfigSpec.Builder builder) {
         builder.push("darksteel");
 
@@ -137,6 +139,8 @@ public class ArmoryCommonConfig {
         TRAVEL_ACTIVATION_COST = builder.define("travelActivationCost", 12);
 
         STEP_ASSIST_ACTIVATION_COST = builder.define("stepAssistActivationCost", 4);
+
+        GLIDER_ACTIVATION_COST = builder.define("stepAssistActivationCost", 4);
 
         builder.push("speed");
         SPEED_ENERGY_USE = builder.define("speedEnergyUsePerUnitMoved", 80);

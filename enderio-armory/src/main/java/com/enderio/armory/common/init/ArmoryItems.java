@@ -18,6 +18,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.StepAssistUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeTier;
+import com.enderio.armory.common.item.darksteel.upgrades.glider.GliderUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.armory.common.tag.ArmoryTags;
@@ -197,6 +198,14 @@ public class ArmoryItems {
                             JumpUpgradeTier.TWO.getFactory()))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Jump II" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_GLIDER = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_glider",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.GLIDER_ACTIVATION_COST,
+                            GliderUpgrade::new))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Glider" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
 
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = ITEM_REGISTRY

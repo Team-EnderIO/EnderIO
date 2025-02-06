@@ -18,7 +18,6 @@ import com.enderio.armory.data.recipe.ItemRecipeProvider;
 import com.enderio.armory.data.tags.ArmoryBlockTagsProvider;
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.integration.IntegrationManager;
-import com.enderio.base.common.hangglider.PlayerMovementHandler;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.regilite.Regilite;
 import java.util.concurrent.CompletableFuture;
@@ -68,7 +67,7 @@ public class EnderIOArmory {
         NeoForge.EVENT_BUS.addListener(JumpUpgrade::doExtraJumps);
 
         // TODO: This should be handled by base when glider re-added
-        NeoForge.EVENT_BUS.addListener(PlayerMovementHandler::onPlayerTick);
+//        NeoForge.EVENT_BUS.addListener(PlayerMovementHandler::onPlayerTick);
         IntegrationManager.addIntegration(GliderIntegration.INSTANCE);
     }
 

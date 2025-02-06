@@ -3,14 +3,11 @@ package com.enderio.armory.client;
 import com.enderio.base.api.integration.ClientIntegration;
 import com.enderio.base.client.EnderIOBaseClient;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.integrations.EnderIOSelfIntegration;
 import com.mojang.blaze3d.vertex.PoseStack;
-import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 
 public class GliderIntegrationClient implements ClientIntegration {
@@ -21,10 +18,6 @@ public class GliderIntegrationClient implements ClientIntegration {
     public void renderHangGlider(PoseStack posestack, MultiBufferSource buffer, int light, int overlay,
             AbstractClientPlayer player, float pPartialTick) {
 
-        Optional<Item> activeGliderItem = EnderIOSelfIntegration.INSTANCE.getActiveGliderItem(player);
-        if (activeGliderItem.isEmpty()) {
-            return;
-        }
         BakedModel bakedModel = EnderIOBaseClient.GLIDER_MODELS.get(EIOItems.GLIDER.asItem());
         if (bakedModel == null) {
             return;

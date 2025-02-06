@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SpeedUpgrade extends TieredUpgrade<SpeedUpgradeTier> {
 
-    public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "explosive";
+    public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "speed";
 
     private final ModConfigSpec.ConfigValue<Integer> energyUse = ArmoryConfig.COMMON.SPEED_ENERGY_USE;
 

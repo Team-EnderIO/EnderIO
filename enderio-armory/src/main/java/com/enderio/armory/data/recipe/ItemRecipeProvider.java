@@ -140,24 +140,19 @@ public class ItemRecipeProvider extends RecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(ArmoryItems.DARK_STEEL_UPGRADE_BLANK.get()))
                 .save(recipeOutput);
 
-        // TODO: potion not working
-//        ItemStack potion = new ItemStack(Items.LINGERING_POTION);
-//        potion.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.LONG_SWIFTNESS));
-//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPEED_I, Ingredient.of(EIOItems.GEAR_IRON),
-//                Ingredient.of(potion));
-//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPEED_II, Ingredient.of(EIOItems.GEAR_ENERGIZED),
-//                Ingredient.of(potion));
-//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPEED_III, Ingredient.of(EIOItems.GEAR_VIBRANT),
-//                Ingredient.of(potion));
-
-        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPEED_I, Ingredient.of(EIOItems.GEAR_IRON));
-        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPEED_II, Ingredient.of(EIOItems.GEAR_ENERGIZED));
-        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPEED_III, Ingredient.of(EIOItems.GEAR_VIBRANT));
+        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPEED_I, Ingredient.of(EIOItems.GEAR_IRON),
+                Ingredient.of(Items.SUGAR));
+        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPEED_II, Ingredient.of(EIOItems.GEAR_ENERGIZED),
+                Ingredient.of(Items.SUGAR));
+        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPEED_III, Ingredient.of(EIOItems.GEAR_VIBRANT),
+                Ingredient.of(Items.SUGAR));
 
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_JUMP_I, Ingredient.of(EIOItems.GEAR_IRON),
                 Ingredient.of(Items.PISTON));
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_JUMP_II, Ingredient.of(EIOItems.GEAR_ENERGIZED),
                 Ingredient.of(Items.PISTON));
+
+        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_GLIDER, Ingredient.of(EIOItems.GLIDER));
 
     }
 
