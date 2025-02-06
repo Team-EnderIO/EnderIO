@@ -8,7 +8,7 @@ import com.enderio.armory.common.init.ArmoryRecipes;
 import com.enderio.armory.common.item.darksteel.DarkSteelSwordItem;
 import com.enderio.armory.common.item.darksteel.upgrades.JumpUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.StepAssistUpgrade;
-import com.enderio.armory.common.item.darksteel.upgrades.glider.GliderIntegration;
+import com.enderio.armory.common.item.darksteel.upgrades.flight.GliderIntegration;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
@@ -66,8 +66,6 @@ public class EnderIOArmory {
         NeoForge.EVENT_BUS.addListener(SpeedUpgrade::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(JumpUpgrade::doExtraJumps);
 
-        // TODO: This should be handled by base when glider re-added
-//        NeoForge.EVENT_BUS.addListener(PlayerMovementHandler::onPlayerTick);
         IntegrationManager.addIntegration(GliderIntegration.INSTANCE);
     }
 

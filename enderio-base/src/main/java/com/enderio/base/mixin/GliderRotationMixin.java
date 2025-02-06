@@ -13,22 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntityRenderer.class)
 public class GliderRotationMixin {
 
-//    // TODO: NEO-PORT: Glider mixin
-//    @Inject(method = "setupRotations",
-//            at = @At(
-//                value = "INVOKE",
-//                target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lcom/mojang/math/Quaternion;)V",
-//                ordinal = 0, shift = At.Shift.AFTER),
-//            remap = false)
-//    public void enderio$rotatePlayerInGlider(LivingEntity pEntityLiving, PoseStack pMatrixStack, float pAgeInTicks, float pRotationYaw, float pPartialTicks, CallbackInfo ci) {
-//        //if (pEntityLiving instanceof Player player && PlayerMovementHandler.calculateGliderMovementInfo(player, false).isPresent()) {
-//        if (pEntityLiving instanceof Player player) {
-//            ActiveGliderRenderLayer.setupAnim(player, pMatrixStack);
-//        }
-//    }
-
-    // @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"),
-    // cancellable = true, remap = false)
     @Inject(method = "setupRotations", at = @At(value = "RETURN"), cancellable = true, remap = false)
     public void test(LivingEntity entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick,
             float scale, CallbackInfo ci) {
@@ -36,7 +20,4 @@ public class GliderRotationMixin {
             ActiveGliderRenderLayer.setupAnim(player, poseStack);
         }
     }
-
-    // T entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick,
-    // float scale
 }

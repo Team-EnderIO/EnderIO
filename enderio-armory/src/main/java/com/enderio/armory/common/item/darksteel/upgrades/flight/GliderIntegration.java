@@ -1,4 +1,4 @@
-package com.enderio.armory.common.item.darksteel.upgrades.glider;
+package com.enderio.armory.common.item.darksteel.upgrades.flight;
 
 import com.enderio.armory.client.GliderIntegrationClient;
 import com.enderio.armory.common.capability.DarkSteelCapability;
@@ -30,7 +30,7 @@ public class GliderIntegration implements Integration {
         ItemStack equipped = player.getItemBySlot(EquipmentSlot.CHEST);
         if (equipped.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_CHESTPLATE)
                 && DarkSteelCapability.hasUpgrade(equipped, GliderUpgrade.NAME)
-                && equipped.getOrDefault(ArmoryDataComponents.DARK_STEEL_GLIDER_ACTIVE, false)) {
+                && equipped.getOrDefault(ArmoryDataComponents.DARK_STEEL_FLIGHT_ACTIVE, false)) {
             return Optional.of(info);
         }
         return Optional.empty();

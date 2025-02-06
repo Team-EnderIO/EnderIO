@@ -153,6 +153,7 @@ public class ItemRecipeProvider extends RecipeProvider {
                 Ingredient.of(Items.PISTON));
 
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_GLIDER, Ingredient.of(EIOItems.GLIDER));
+        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_ELYTRA, Ingredient.of(Items.ELYTRA));
 
     }
 

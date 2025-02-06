@@ -1,17 +1,18 @@
 package com.enderio.base.common.item.misc;
 
+import javax.annotation.Nullable;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
-
-public class HangGliderItem extends Item {
+public class HangGliderItem extends Item implements Equipable {
 
     public HangGliderItem(Properties pProperties) {
         super(pProperties);
@@ -32,6 +33,11 @@ public class HangGliderItem extends Item {
 //            return InteractionResult.sidedSuccess(pContext.getLevel().isClientSide());
 //        }
         return super.useOn(pContext);
+    }
+
+    @Override
+    public EquipmentSlot getEquipmentSlot() {
+        return EquipmentSlot.CHEST;
     }
 
     @Nullable

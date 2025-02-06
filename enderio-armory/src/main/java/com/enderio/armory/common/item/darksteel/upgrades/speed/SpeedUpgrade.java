@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -84,7 +85,7 @@ public class SpeedUpgrade extends TieredUpgrade<SpeedUpgradeTier> {
         if (!player.onGround()) {
             return;
         }
-        ItemStack legs = player.getInventory().getArmor(1);
+        ItemStack legs = player.getItemBySlot(EquipmentSlot.LEGS);
         if (!legs.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_LEGGINGS)) {
             return;
         }
@@ -111,7 +112,7 @@ public class SpeedUpgrade extends TieredUpgrade<SpeedUpgradeTier> {
             var player = context.player();
 
             // Check in case of desync
-            ItemStack legs = player.getInventory().getArmor(1);
+            ItemStack legs = player.getItemBySlot(EquipmentSlot.LEGS);
             if (!legs.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_LEGGINGS)) {
                 return;
             }

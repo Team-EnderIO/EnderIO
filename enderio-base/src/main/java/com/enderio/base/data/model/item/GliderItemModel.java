@@ -13,8 +13,10 @@ public class GliderItemModel {
         prov.getBuilder(registryName.getNamespace() + ":enderio_glider/" + registryName.getPath())
                 .parent(prov.getExistingFile(EnderIO.loc("glider/glider3d")))
                 .texture("0", registryName.getNamespace() + ":block/glider/" + registryName.getPath());
-        //TODO: Couln't get the texture loaded from the models directory so moved it to blocks
-        //TODO: This seems wrong but textures could only be found under either items or blocks
+        // TODO: Couln't get the texture loaded from the models directory so moved it to
+        // blocks
+        // TODO: This seems wrong but textures could only be found under either items or
+        // blocks
 //                .texture("0", registryName.getNamespace() + ":models/glider/" + registryName.getPath());
         prov.basicItem(item);
     }

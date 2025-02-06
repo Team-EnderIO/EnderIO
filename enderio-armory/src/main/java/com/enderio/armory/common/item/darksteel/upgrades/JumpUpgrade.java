@@ -3,12 +3,15 @@ package com.enderio.armory.common.item.darksteel.upgrades;
 import com.enderio.armory.common.capability.DarkSteelCapability;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryCapabilities;
+import com.enderio.armory.common.init.ArmoryDataComponents;
+import com.enderio.armory.common.item.darksteel.upgrades.flight.ElytraUpgrade;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
@@ -60,7 +63,7 @@ public class JumpUpgrade extends TieredUpgrade<JumpUpgradeTier> {
 
     public static void doExtraJumps(MovementInputUpdateEvent evt) {
         Player player = evt.getEntity();
-        ItemStack boots = player.getInventory().getArmor(0);
+        ItemStack boots = player.getItemBySlot(EquipmentSlot.FEET);
         if (!boots.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_BOOTS)) {
             return;
         }
@@ -71,6 +74,12 @@ public class JumpUpgrade extends TieredUpgrade<JumpUpgradeTier> {
         }
         Optional<JumpUpgrade> jumpUp = cap.getUpgradeAs(JumpUpgrade.NAME, JumpUpgrade.class);
         if (jumpUp.isEmpty()) {
+            return;
+        }
+        // disable when elytra upgrade is enabled or the elytra won't work
+        ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
+        if (DarkSteelCapability.hasUpgrade(chest, ElytraUpgrade.NAME)
+                && chest.getOrDefault(ArmoryDataComponents.DARK_STEEL_FLIGHT_ACTIVE, false)) {
             return;
         }
 

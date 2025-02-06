@@ -18,7 +18,8 @@ import com.enderio.armory.common.item.darksteel.upgrades.StepAssistUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeTier;
-import com.enderio.armory.common.item.darksteel.upgrades.glider.GliderUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.flight.ElytraUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.flight.GliderUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.armory.common.tag.ArmoryTags;
@@ -206,6 +207,14 @@ public class ArmoryItems {
                             GliderUpgrade::new))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Glider" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_ELYTRA = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_elytra",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.ELYTRA_ACTIVATION_COST,
+                            ElytraUpgrade::new))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Elytra" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
 
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = ITEM_REGISTRY

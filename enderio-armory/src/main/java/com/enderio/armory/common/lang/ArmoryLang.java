@@ -116,10 +116,20 @@ public class ArmoryLang {
             EnderIO.loc("darksteel.upgrade.glider.description"), "Wings anyone?");
 
     public static final String DS_UPGRADE_KEYBIND_CATEGORY = "darksteel.keybind.category";
-    public static final String DS_UPGRADE_GLIDER_KEYBIND = "darksteel.upgrade.glider.keybind";
+    public static final String DS_UPGRADE_FLIGHT_KEYBIND = "darksteel.upgrade.flight.keybind";
+
+    public static final Component FLIGHT_ENABLED = addTranslation(EnderIO.loc("darksteel.upgrade.flight.enabled"),
+            "Flight Enabled");
+    public static final Component FLIGHT_DISABLED = addTranslation(EnderIO.loc("darksteel.upgrade.flight.disabled"),
+            "Flight Disabled");
+
+    public static final Component DS_UPGRADE_ELYTRA = addTranslation(EnderIO.loc("darksteel.upgrade.elytra"), "Elytra");
+    public static final Component DS_UPGRADE_ELYTRA_DESCRIPTION = addTranslation(
+            EnderIO.loc("darksteel.upgrade.elytra.description"), "Wings anyone?");
+
     static {
         EnderIOArmory.REGILITE.addTranslation(() -> DS_UPGRADE_KEYBIND_CATEGORY, "Ender IO Dark Steel");
-        EnderIOArmory.REGILITE.addTranslation(() -> DS_UPGRADE_GLIDER_KEYBIND, "Toggles Glider Upgrade");
+        EnderIOArmory.REGILITE.addTranslation(() -> DS_UPGRADE_FLIGHT_KEYBIND, "Toggles Glider/Elytra Upgrade");
     }
 
     // endregion
