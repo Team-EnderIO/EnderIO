@@ -1,6 +1,8 @@
 package com.enderio.armory.common.init;
 
 import com.enderio.armory.EnderIOArmory;
+import com.enderio.armory.common.item.darksteel.upgrades.glider.GliderEnabledPacket;
+import com.enderio.armory.common.item.darksteel.upgrades.glider.GliderUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUsePowerPacket;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelEndabledUpdatePacket;
@@ -26,6 +28,9 @@ public class ArmoryNetwork {
 
         registrar.playToServer(SpeedUsePowerPacket.TYPE, SpeedUsePowerPacket.STREAM_CODEC,
                 SpeedUpgrade::handleEnergyUsePacket);
+
+        registrar.playToServer(GliderEnabledPacket.TYPE, GliderEnabledPacket.STREAM_CODEC,
+                GliderUpgrade::handleActivePacket);
     }
 
 }

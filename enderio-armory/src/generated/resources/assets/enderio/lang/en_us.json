@@ -1,4 +1,6 @@
 {
+  "darksteel.keybind.category": "Ender IO Dark Steel",
+  "darksteel.upgrade.glider.keybind": "Toggles Glider Upgrade",
   "info.enderio.darksteel.upgrade.activate": "Right Click to Activate",
   "info.enderio.darksteel.upgrade.available": "Available Upgrades",
   "info.enderio.darksteel.upgrade.boots_snow": "Can walk on powdered snow",

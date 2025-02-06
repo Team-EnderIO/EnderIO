@@ -115,6 +115,13 @@ public class ArmoryLang {
     public static final Component DS_UPGRADE_GLIDER_DESCRIPTION = addTranslation(
             EnderIO.loc("darksteel.upgrade.glider.description"), "Wings anyone?");
 
+    public static final String DS_UPGRADE_KEYBIND_CATEGORY = "darksteel.keybind.category";
+    public static final String DS_UPGRADE_GLIDER_KEYBIND = "darksteel.upgrade.glider.keybind";
+    static {
+        EnderIOArmory.REGILITE.addTranslation(() -> DS_UPGRADE_KEYBIND_CATEGORY, "Ender IO Dark Steel");
+        EnderIOArmory.REGILITE.addTranslation(() -> DS_UPGRADE_GLIDER_KEYBIND, "Toggles Glider Upgrade");
+    }
+
     // endregion
 
     private static MutableComponent addTranslation(ResourceLocation id, String translation) {
