@@ -80,6 +80,7 @@ public class ArmoryItems {
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
             .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_HELMET)
             .addItemTags(ItemTags.HEAD_ARMOR_ENCHANTABLE)
+            .addItemTags(ItemTags.HEAD_ARMOR)
             .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
@@ -90,6 +91,7 @@ public class ArmoryItems {
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
             .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_CHESTPLATE)
             .addItemTags(ItemTags.CHEST_ARMOR_ENCHANTABLE)
+            .addItemTags(ItemTags.CHEST_ARMOR)
             .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
@@ -100,6 +102,7 @@ public class ArmoryItems {
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
             .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_LEGGINGS)
             .addItemTags(ItemTags.LEG_ARMOR_ENCHANTABLE)
+            .addItemTags(ItemTags.LEG_ARMOR)
             .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
@@ -110,6 +113,7 @@ public class ArmoryItems {
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
             .addItemTags(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_BOOTS)
             .addItemTags(ItemTags.FOOT_ARMOR_ENCHANTABLE)
+            .addItemTags(ItemTags.FOOT_ARMOR)
             .addCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY, ArmoryCapabilities.DARK_STEEL_PROVIDER)
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
