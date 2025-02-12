@@ -6,7 +6,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
-import com.enderio.machines.client.gui.widget.ProgressWidget;
+import com.enderio.machines.client.gui.widget.NewProgressWidget;
 import com.enderio.machines.common.blocks.painting.PaintingMachineMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -15,10 +15,11 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class PaintingMachineScreen extends MachineScreen<PaintingMachineMenu> {
 
-    private static final ResourceLocation PAINTING_MACHINE_BG = EnderIO
-            .loc("textures/gui/screen/painting_machine.png");
+    private static final ResourceLocation PAINTING_MACHINE_BG = EnderIO.loc("textures/gui/screen/painting_machine.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
+
+    private static final ResourceLocation PROGRESS_SPRITE = EnderIO.loc("screen/painting_machine/progress");
 
     public PaintingMachineScreen(PaintingMachineMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -31,9 +32,8 @@ public class PaintingMachineScreen extends MachineScreen<PaintingMachineMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(
-                new ProgressWidget.LeftRight(PAINTING_MACHINE_BG, () -> menu.getBlockEntity().getCraftingProgress(),
-                        getGuiLeft() + 89, getGuiTop() + 35, 22, 16, 177, 14));
+        addRenderableOnly(NewProgressWidget.leftRight(leftPos + 89, topPos + 35, 22, 16, PROGRESS_SPRITE,
+                menu::getCraftingProgress, true));
 
         addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage,
                 menu::isCapacitorInstalled));

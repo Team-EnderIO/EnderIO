@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blocks.powered_spawner;
 
+import com.enderio.core.common.network.menu.FloatSyncSlot;
 import com.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
@@ -11,15 +12,21 @@ public class PoweredSpawnerMenu extends PoweredMachineMenu<PoweredSpawnerBlockEn
 
     public static final int VISIBILITY_BUTTON_ID = 0;
 
+    private final FloatSyncSlot spawnProgressSlot;
+
     public PoweredSpawnerMenu(int pContainerId, Inventory inventory, PoweredSpawnerBlockEntity blockEntity) {
         super(MachineMenus.POWERED_SPAWNER.get(), pContainerId, inventory, blockEntity);
         addSlots();
+
+        spawnProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getSpawnProgress));
     }
 
     public PoweredSpawnerMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(MachineMenus.POWERED_SPAWNER.get(), containerId, playerInventory, buf,
                 MachineBlockEntities.POWERED_SPAWNER.get());
         addSlots();
+
+        spawnProgressSlot = addSyncSlot(FloatSyncSlot.standalone());
     }
 
     private void addSlots() {
@@ -43,5 +50,9 @@ public class PoweredSpawnerMenu extends PoweredMachineMenu<PoweredSpawnerBlockEn
         default:
             return false;
         }
+    }
+
+    public float getSpawnProgress() {
+        return spawnProgressSlot.get();
     }
 }
