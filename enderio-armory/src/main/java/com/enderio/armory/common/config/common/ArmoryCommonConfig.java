@@ -78,7 +78,7 @@ public class ArmoryCommonConfig {
         builder.push("darksteel");
 
         builder.push("darksteelaxe");
-        DARK_STEEL_AXE_ENERGY_PER_FELLED_LOG = builder.define("energyUsePerFelledLog", 1500);
+        DARK_STEEL_AXE_ENERGY_PER_FELLED_LOG = builder.define("energyUsePerFelledLog", 500);
         builder.pop();
 
         builder.push("darksteelpickaxe");
@@ -145,7 +145,7 @@ public class ArmoryCommonConfig {
         ELYTRA_ACTIVATION_COST = builder.define("elytraActivationCost", 10);
 
         builder.push("speed");
-        SPEED_ENERGY_USE = builder.define("speedEnergyUsePerUnitMoved", 80);
+        SPEED_ENERGY_USE = builder.define("speedEnergyUsePerUnitMoved", 20);
         SPEED_ACTIVATION_COST_I = builder.define("speedActivationCost_l1", 4);
         SPEED_I_BOOST = builder.define("speedBoost_l1", 0.15);
         SPEED_ACTIVATION_COST_II = builder.define("speedActivationCost_l2", 6);
@@ -155,7 +155,7 @@ public class ArmoryCommonConfig {
         builder.pop();
 
         builder.push("jump");
-        JUMP_ENERGY_USE = builder.define("jumpEnergyUsePerUnitMoved", 200);
+        JUMP_ENERGY_USE = builder.define("jumpEnergyUsePerUnitMoved", 100);
         JUMP_COUNT_I = builder.define("jumpCount_l1", 2);
         JUMP_ACTIVATION_COST_I = builder.define("jumpActivationCost_l1", 6);
         JUMP_COUNT_II = builder.define("jumpCount_l2", 3);
