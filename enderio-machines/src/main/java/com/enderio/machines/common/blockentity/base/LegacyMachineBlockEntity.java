@@ -22,7 +22,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -533,7 +532,6 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         return pPlayer.canInteractWithBlock(this.worldPosition, 1.5);
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
     @Override
     public ItemInteractionResult onWrenched(@Nullable Player player, @Nullable Direction side) {
         if (player == null || level == null) {
