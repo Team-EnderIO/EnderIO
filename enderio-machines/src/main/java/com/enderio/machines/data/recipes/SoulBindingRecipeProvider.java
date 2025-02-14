@@ -42,7 +42,8 @@ public class SoulBindingRecipeProvider extends RecipeProvider {
         build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 51200, 4, EntityType.WITCH,
                 recipeOutput);
         build(EIOItems.BROKEN_SPAWNER, Ingredient.of(EIOItems.BROKEN_SPAWNER), 288000, 8, recipeOutput);
-        build(MachineBlocks.POWERED_SPAWNER, Ingredient.of(MachineBlocks.POWERED_SPAWNER), 288000, 8, recipeOutput);
+        build(MachineBlocks.POWERED_SPAWNER, Ingredient.of(MachineBlocks.POWERED_SPAWNER), 288000, 8, true,
+                recipeOutput);
         build(MachineBlocks.SOUL_ENGINE, Ingredient.of(MachineBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME,
                 recipeOutput);
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityType.VILLAGER,
@@ -66,27 +67,37 @@ public class SoulBindingRecipeProvider extends RecipeProvider {
     protected void build(ItemLike output, Ingredient input, int energy, int exp,
             EntityType<? extends Entity> entityType, RecipeOutput recipeOutput) {
         build(output, input, energy, exp, Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(entityType)),
-                Optional.empty(), Optional.empty(), recipeOutput);
+                Optional.empty(), Optional.empty(), false, recipeOutput);
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, MobCategory mobCategory,
             RecipeOutput recipeOutput) {
-        build(output, input, energy, exp, Optional.empty(), Optional.of(mobCategory), Optional.empty(), recipeOutput);
+        build(output, input, energy, exp, Optional.empty(), Optional.of(mobCategory), Optional.empty(), false,
+                recipeOutput);
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, String souldata,
             RecipeOutput recipeOutput) {
-        build(output, input, energy, exp, Optional.empty(), Optional.empty(), Optional.of(souldata), recipeOutput);
+        build(output, input, energy, exp, Optional.empty(), Optional.empty(), Optional.of(souldata), false,
+                recipeOutput);
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, RecipeOutput recipeOutput) {
-        build(output, input, energy, exp, Optional.empty(), Optional.empty(), Optional.empty(), recipeOutput);
+        build(output, input, energy, exp, Optional.empty(), Optional.empty(), Optional.empty(), false, recipeOutput);
+    }
+
+    protected void build(ItemLike output, Ingredient input, int energy, int exp, boolean copyInputData,
+            RecipeOutput recipeOutput) {
+        build(output, input, energy, exp, Optional.empty(), Optional.empty(), Optional.empty(), copyInputData,
+                recipeOutput);
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, Optional<ResourceLocation> entityType,
-            Optional<MobCategory> mobCategory, Optional<String> souldata, RecipeOutput recipeOutput) {
+            Optional<MobCategory> mobCategory, Optional<String> souldata, boolean copyInputData,
+            RecipeOutput recipeOutput) {
         recipeOutput.accept(EnderIO.loc("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
-                new SoulBindingRecipe(new ItemStack(output), input, energy, exp, entityType, mobCategory, souldata),
+                new SoulBindingRecipe(new ItemStack(output), input, energy, exp, entityType, mobCategory, souldata,
+                        copyInputData),
                 null);
     }
 

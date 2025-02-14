@@ -1,6 +1,7 @@
 package com.enderio.machines.common.blocks.soul_binder;
 
 import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.network.MassiveStreamCodec;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.recipe.FluidRecipeInput;
@@ -8,7 +9,6 @@ import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blocks.base.MachineRecipe;
-import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.souldata.SoulDataReloadListener;
 import com.mojang.serialization.Codec;
@@ -31,23 +31,10 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int experience,
-        Optional<ResourceLocation> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData)
-        implements MachineRecipe<SoulBindingRecipe.Input> {
-
-    public SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int exp, ResourceLocation entityType) {
-        this(output, input, energy, exp, Optional.of(entityType), Optional.empty(), Optional.empty());
-    }
-
-    public SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int exp, MobCategory mobCategory) {
-        this(output, input, energy, exp, Optional.empty(), Optional.of(mobCategory), Optional.empty());
-    }
-
-    public SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int exp, String souldata) {
-        this(output, input, energy, exp, Optional.empty(), Optional.empty(), Optional.of(souldata));
-    }
+        Optional<ResourceLocation> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData,
+        boolean copyInputComponents) implements MachineRecipe<SoulBindingRecipe.Input> {
 
     public Ingredient getInput() {
         return input;
@@ -63,12 +50,10 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
         ItemStack vial = input.getItem(0);
         List<OutputStack> results = getResultStacks(registryAccess);
         ItemStack result = results.getFirst().getItem();
-        if (MachineBlocks.POWERED_SPAWNER.getRegisteredName()
-                .equals(BuiltInRegistries.ITEM.wrapAsHolder(input.itemToBind.getItem()).getRegisteredName())) {
-            // Copy the input stack instead of the output defined in the recipe so extra
-            // data stored in the input is not lost.
-            // If not done the powered spawner loses all its settings, capacitor etc
-            result = input.itemToBind.copy();
+
+        if (copyInputComponents) {
+            result = new ItemStack(result.getItem().builtInRegistryHolder(), result.getCount(),
+                    input.itemToBind.getComponentsPatch());
             results = List.of(OutputStack.of(result),
                     OutputStack.of(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance()));
         }
@@ -192,10 +177,11 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
                         Codec.INT.fieldOf("experience").forGetter(SoulBindingRecipe::experience),
                         ResourceLocation.CODEC.optionalFieldOf("entity_type").forGetter(SoulBindingRecipe::entityType),
                         MobCategory.CODEC.optionalFieldOf("mob_category").forGetter(SoulBindingRecipe::mobCategory),
-                        Codec.STRING.optionalFieldOf("soul_data").forGetter(SoulBindingRecipe::soulData))
+                        Codec.STRING.optionalFieldOf("soul_data").forGetter(SoulBindingRecipe::soulData),
+                        Codec.BOOL.fieldOf("copyInputComponents").forGetter(SoulBindingRecipe::copyInputComponents))
                 .apply(instance, SoulBindingRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> STREAM_CODEC = NeoForgeStreamCodecs
+        public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> STREAM_CODEC = MassiveStreamCodec
                 .composite(ItemStack.STREAM_CODEC, SoulBindingRecipe::output, Ingredient.CONTENTS_STREAM_CODEC,
                         SoulBindingRecipe::input, ByteBufCodecs.INT, SoulBindingRecipe::energy, ByteBufCodecs.INT,
                         SoulBindingRecipe::experience, ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional),
@@ -205,7 +191,8 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
                                 name -> ((StringRepresentable.EnumCodec<MobCategory>) MobCategory.CODEC).byName(name),
                                 MobCategory::getName).apply(ByteBufCodecs::optional),
                         SoulBindingRecipe::mobCategory, ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs::optional),
-                        SoulBindingRecipe::soulData, SoulBindingRecipe::new);
+                        SoulBindingRecipe::soulData, ByteBufCodecs.BOOL, SoulBindingRecipe::copyInputComponents,
+                        SoulBindingRecipe::new);
 
         @Override
         public MapCodec<SoulBindingRecipe> codec() {
