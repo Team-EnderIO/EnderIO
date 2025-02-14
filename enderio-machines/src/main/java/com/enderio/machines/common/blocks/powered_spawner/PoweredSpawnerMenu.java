@@ -39,6 +39,10 @@ public class PoweredSpawnerMenu extends PoweredMachineMenu<PoweredSpawnerBlockEn
         return getBlockEntity().isRangeVisible();
     }
 
+    public void setRangeVisible(boolean visible) {
+        getBlockEntity().setIsRangeVisible(visible);
+    }
+
     @Override
     public boolean clickMenuButton(Player player, int id) {
         // noinspection DuplicatedCode

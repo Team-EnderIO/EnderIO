@@ -43,8 +43,7 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
                 menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
         addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 24, EIOLang.HIDE_RANGE,
-                EIOLang.SHOW_RANGE, menu::isRangeVisible,
-                (ignored) -> handleButtonPress(PoweredSpawnerMenu.VISIBILITY_BUTTON_ID)));
+                EIOLang.SHOW_RANGE, menu::isRangeVisible, menu::setRangeVisible));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
