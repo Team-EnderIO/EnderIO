@@ -34,7 +34,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int experience,
         Optional<ResourceLocation> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData,
-        Optional<Boolean> copyInputComponents) implements MachineRecipe<SoulBindingRecipe.Input> {
+        boolean copyInputComponents) implements MachineRecipe<SoulBindingRecipe.Input> {
 
     public Ingredient getInput() {
         return input;
@@ -51,7 +51,7 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
         List<OutputStack> results = getResultStacks(registryAccess);
         ItemStack result = results.getFirst().getItem();
 
-        if (copyInputComponents.isPresent() && copyInputComponents.get()) {
+        if (copyInputComponents) {
             result = new ItemStack(result.getItem().builtInRegistryHolder(), result.getCount(),
                     input.itemToBind.getComponentsPatch());
             results = List.of(OutputStack.of(result),
@@ -178,7 +178,7 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
                         ResourceLocation.CODEC.optionalFieldOf("entity_type").forGetter(SoulBindingRecipe::entityType),
                         MobCategory.CODEC.optionalFieldOf("mob_category").forGetter(SoulBindingRecipe::mobCategory),
                         Codec.STRING.optionalFieldOf("soul_data").forGetter(SoulBindingRecipe::soulData),
-                        Codec.BOOL.optionalFieldOf("copyInputComponents")
+                        Codec.BOOL.optionalFieldOf("copyInputComponents", false)
                                 .forGetter(SoulBindingRecipe::copyInputComponents))
                 .apply(instance, SoulBindingRecipe::new));
 
@@ -192,8 +192,8 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
                                 name -> ((StringRepresentable.EnumCodec<MobCategory>) MobCategory.CODEC).byName(name),
                                 MobCategory::getName).apply(ByteBufCodecs::optional),
                         SoulBindingRecipe::mobCategory, ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs::optional),
-                        SoulBindingRecipe::soulData, ByteBufCodecs.BOOL.apply(ByteBufCodecs::optional),
-                        SoulBindingRecipe::copyInputComponents, SoulBindingRecipe::new);
+                        SoulBindingRecipe::soulData, ByteBufCodecs.BOOL, SoulBindingRecipe::copyInputComponents,
+                        SoulBindingRecipe::new);
 
         @Override
         public MapCodec<SoulBindingRecipe> codec() {
