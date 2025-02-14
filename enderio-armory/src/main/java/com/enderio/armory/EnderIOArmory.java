@@ -1,6 +1,7 @@
 package com.enderio.armory;
 
 import com.enderio.armory.common.config.ArmoryConfig;
+import com.enderio.armory.common.config.ArmoryConfigLang;
 import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.init.ArmoryLootModifiers;
@@ -46,6 +47,7 @@ public class EnderIOArmory {
         // Register config files
         modContainer.registerConfig(ModConfig.Type.COMMON, ArmoryConfig.COMMON_SPEC, "enderio/armory-common.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, ArmoryConfig.CLIENT_SPEC, "enderio/armory-client.toml");
+        ArmoryConfigLang.register();
 
         // Perform initialization and registration for everything so things are
         // registered.

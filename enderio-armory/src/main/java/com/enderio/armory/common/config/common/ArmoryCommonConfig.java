@@ -41,9 +41,9 @@ public class ArmoryCommonConfig {
     public final ModConfigSpec.ConfigValue<Double> EMPOWERED_MOB_HEAD_CHANCE_IV;
 
     public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_RADIUS_ACTIVATION_COST_I;
-    public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_I;
+    public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_I_RANGE;
     public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_ACTIVATION_COST_II;
-    public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_II;
+    public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_II_RANGE;
     public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_ACTIVATION_COST_I;
     public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_I;
     public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_ACTIVATION_COST_II;
@@ -87,6 +87,21 @@ public class ArmoryCommonConfig {
         DARK_STEEL_PICKAXE_AS_OBSIDIAN_AT_HARDNESS = builder.define("useObsidianBreakSpeedAtHardness", 30);
         builder.pop();
 
+        builder.push("darksteelsword");
+        EMPOWERED_MOB_HEAD_CHANCE_I = builder.define("modHeadChance_l1", 0.07);
+        EMPOWERED_MOB_HEAD_CHANCE_II = builder.define("modHeadChance_l2", 0.09);
+        EMPOWERED_MOB_HEAD_CHANCE_III = builder.define("modHeadChance_l3", 0.11);
+        EMPOWERED_MOB_HEAD_CHANCE_IV = builder.define("modHeadChance_l4", 0.13);
+        EMPOWERED_ATTACK_DAMAGE_INCREASE_I = builder.define("attackDamageIncrease_l1", 1);
+        EMPOWERED_ATTACK_DAMAGE_INCREASE_II = builder.define("attackDamageIncrease_l2", 2);
+        EMPOWERED_ATTACK_DAMAGE_INCREASE_III = builder.define("attackDamageIncrease_l3", 3);
+        EMPOWERED_ATTACK_DAMAGE_INCREASE_IV = builder.define("attackDamageIncrease_l4", 4);
+        EMPOWERED_ATTACK_SPEED_INCREASE_I = builder.define("attackSpeedIncrease_l1", 0.4);
+        EMPOWERED_ATTACK_SPEED_INCREASE_II = builder.define("attackSpeedIncrease_l2", 0.45);
+        EMPOWERED_ATTACK_SPEED_INCREASE_III = builder.define("attackSpeedIncrease_l3", 0.5);
+        EMPOWERED_ATTACK_SPEED_INCREASE_IV = builder.define("attackSpeedIncrease_l4", 0.55);
+        builder.pop();
+
         builder.push("upgrades");
         builder.push("empowered");
         EMPOWERED_EFFICIENCY_BOOST = builder.define("efficiencyBoost", 2);
@@ -94,44 +109,34 @@ public class ArmoryCommonConfig {
         EMPOWERED_ACTIVATION_COST_I = builder.define("activationCost_l1", 4);
         EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I = builder.define("damageAbsorptionChance_l1", 0.5d);
         EMPOWERED_MAX_ENERGY_I = builder.define("maxEnergy_l1", 100000);
-        EMPOWERED_ATTACK_DAMAGE_INCREASE_I = builder.define("attackDamageIncrease_l1", 1);
-        EMPOWERED_ATTACK_SPEED_INCREASE_I = builder.define("attackSpeedIncrease_l1", 0.4);
-        EMPOWERED_MOB_HEAD_CHANCE_I = builder.define("modHeadChance_l1", 0.07);
 
         EMPOWERED_ACTIVATION_COST_II = builder.define("activationCost_l2", 8);
         EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II = builder.define("damageAbsorptionChance_l2", 0.6d);
         EMPOWERED_MAX_ENERGY_II = builder.define("maxEnergy_l2", 150000);
-        EMPOWERED_ATTACK_DAMAGE_INCREASE_II = builder.define("attackDamageIncrease_l2", 2);
-        EMPOWERED_ATTACK_SPEED_INCREASE_II = builder.define("attackSpeedIncrease_l2", 0.45);
-        EMPOWERED_MOB_HEAD_CHANCE_II = builder.define("modHeadChance_l2", 0.09);
 
         EMPOWERED_ACTIVATION_COST_III = builder.define("activationCost_l3", 12);
         EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III = builder.define("damageAbsorptionChance_l3", 0.7d);
         EMPOWERED_MAX_ENERGY_III = builder.define("maxEnergy_l3", 250000);
-        EMPOWERED_ATTACK_DAMAGE_INCREASE_III = builder.define("attackDamageIncrease_l3", 3);
-        EMPOWERED_ATTACK_SPEED_INCREASE_III = builder.define("attackSpeedIncrease_l3", 0.5);
-        EMPOWERED_MOB_HEAD_CHANCE_III = builder.define("modHeadChance_l3", 0.11);
 
         EMPOWERED_ACTIVATION_COST_IV = builder.define("activationCost_l4", 16);
         EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV = builder.define("damageAbsorptionChance_l4", 0.85d);
         EMPOWERED_MAX_ENERGY_IV = builder.define("maxEnergy_l4", 1000000);
-        EMPOWERED_ATTACK_DAMAGE_INCREASE_IV = builder.define("attackDamageIncrease_l4", 4);
-        EMPOWERED_ATTACK_SPEED_INCREASE_IV = builder.define("attackSpeedIncrease_l4", 0.55);
-        EMPOWERED_MOB_HEAD_CHANCE_IV = builder.define("modHeadChance_l4", 0.13);
         builder.pop();
 
         builder.push("explosive");
         EXPLOSIVE_ENERGY_PER_EXPLODED_BLOCK = builder.define("explosiveEnergyPerBlock", 30);
 
-        EXPLOSIVE_RADIUS_ACTIVATION_COST_I = builder.define("explosiveActivationCostI", 8);
-        EXPLOSIVE_I = builder.define("explosiveI", 1);
-        EXPLOSIVE_ACTIVATION_COST_II = builder.define("explosiveActivationCostII", 12);
-        EXPLOSIVE_II = builder.define("explosiveII", 2);
+        EXPLOSIVE_RADIUS_ACTIVATION_COST_I = builder.define("explosiveActivationCost_l1", 8);
+        EXPLOSIVE_I_RANGE = builder.define("explosive_range_l1", 1);
+        EXPLOSIVE_ACTIVATION_COST_II = builder.define("explosiveActivationCost_l2", 12);
+        EXPLOSIVE_II_RANGE = builder.define("explosive_range_l2", 2);
+        builder.pop();
 
-        EXPLOSIVE_PENETRATION_ACTIVATION_COST_I = builder.define("explosivePenetrationActivationCostI", 8);
-        EXPLOSIVE_PENETRATION_I = builder.define("explosivePenetrationI", 1);
-        EXPLOSIVE_PENETRATION_ACTIVATION_COST_II = builder.define("explosivePenetrationActivationCostII", 12);
-        EXPLOSIVE_PENETRATION_II = builder.define("explosivePenetrationII", 2);
+        builder.push("explosivePenetration");
+        EXPLOSIVE_PENETRATION_ACTIVATION_COST_I = builder.define("explosivePenetrationActivationCost_l1", 8);
+        EXPLOSIVE_PENETRATION_I = builder.define("explosivePenetration_l1", 1);
+        EXPLOSIVE_PENETRATION_ACTIVATION_COST_II = builder.define("explosivePenetrationActivationCost_l2", 12);
+        EXPLOSIVE_PENETRATION_II = builder.define("explosivePenetration_l2", 2);
         builder.pop();
 
         SPOON_ACTIVATION_COST = builder.define("spoonActivationCost", 4);
