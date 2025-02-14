@@ -97,7 +97,7 @@ public class SoulBindingRecipeProvider extends RecipeProvider {
             RecipeOutput recipeOutput) {
         recipeOutput.accept(EnderIO.loc("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
                 new SoulBindingRecipe(new ItemStack(output), input, energy, exp, entityType, mobCategory, souldata,
-                        copyInputData),
+                        Optional.of(copyInputData)),
                 null);
     }
 
