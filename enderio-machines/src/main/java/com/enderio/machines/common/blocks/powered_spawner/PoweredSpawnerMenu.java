@@ -45,7 +45,7 @@ public class PoweredSpawnerMenu extends PoweredMachineMenu<PoweredSpawnerBlockEn
         var blockEntity = getBlockEntity();
         switch (id) {
         case VISIBILITY_BUTTON_ID:
-            blockEntity.setIsRangeVisible(!isRangeVisible());
+            blockEntity.setRangeVisible(!isRangeVisible());
             return true;
         default:
             return false;

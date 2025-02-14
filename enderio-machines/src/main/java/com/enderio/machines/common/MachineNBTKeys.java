@@ -15,7 +15,6 @@ public class MachineNBTKeys extends EIONBTKeys {
     public static final String REDSTONE_CONTROL = "RedstoneControl";
     public static final String IO_CONFIG = "IOConfig";
     public static final String ACTION_RANGE = "ActionRange";
-    public static final String IS_RANGE_VISIBLE = "IsRangeVisible";
 
     public static final String BURN_TIME = "BurnTime";
     public static final String BURN_DURATION = "BurnDuration";
