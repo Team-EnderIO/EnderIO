@@ -1,8 +1,10 @@
 package com.enderio.armory.data.recipe;
 
 import com.enderio.armory.common.init.ArmoryItems;
+import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgradeTier;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.machines.common.init.MachineBlocks;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
@@ -154,6 +156,15 @@ public class ItemRecipeProvider extends RecipeProvider {
 
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_GLIDER, Ingredient.of(EIOItems.GLIDER));
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_ELYTRA, Ingredient.of(Items.ELYTRA));
+
+        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_NIGHT_VISION, Ingredient.of(Items.GOLDEN_CARROT));
+
+        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SOLAR_I,
+                Ingredient.of(MachineBlocks.SOLAR_PANELS.get(SolarUpgradeTier.ONE.getPanelTier())));
+        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SOLAR_II,
+                Ingredient.of(MachineBlocks.SOLAR_PANELS.get(SolarUpgradeTier.TWO.getPanelTier())));
+        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SOLAR_III,
+                Ingredient.of(MachineBlocks.SOLAR_PANELS.get(SolarUpgradeTier.THREE.getPanelTier())));
 
     }
 

@@ -1,4 +1,4 @@
-package com.enderio.armory.client;
+package com.enderio.armory.client.renderer;
 
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.common.energy.ItemStackEnergy;

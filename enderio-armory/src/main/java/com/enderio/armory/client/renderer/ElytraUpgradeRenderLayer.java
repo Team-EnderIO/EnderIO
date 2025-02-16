@@ -1,4 +1,4 @@
-package com.enderio.armory.client;
+package com.enderio.armory.client.renderer;
 
 import com.enderio.armory.common.capability.DarkSteelCapability;
 import com.enderio.armory.common.init.ArmoryDataComponents;

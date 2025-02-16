@@ -8,6 +8,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgr
 import com.enderio.armory.common.item.darksteel.upgrades.flight.ElytraUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.GliderUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisisionUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.base.api.EnderIO;
@@ -51,6 +52,7 @@ public final class DarkSteelUpgradeRegistry {
         registerUpgrade(GliderUpgrade::new);
         registerUpgrade(ElytraUpgrade::new);
         registerUpgrade(NightVisisionUpgrade::new);
+        registerUpgrade(SolarUpgrade::new);
     }
 
     public void registerUpgrade(Supplier<IDarkSteelUpgrade> upgrade) {

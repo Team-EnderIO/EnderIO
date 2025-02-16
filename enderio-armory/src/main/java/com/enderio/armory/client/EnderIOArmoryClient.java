@@ -1,6 +1,8 @@
 package com.enderio.armory.client;
 
 import com.enderio.armory.EnderIOArmory;
+import com.enderio.armory.client.renderer.ElytraUpgradeRenderLayer;
+import com.enderio.armory.client.renderer.SolarUpgradeRenderLayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -25,9 +27,9 @@ public class EnderIOArmoryClient {
             if (event.getSkin(skin) instanceof PlayerRenderer playerRenderer) {
                 playerRenderer
                         .addLayer(new ElytraUpgradeRenderLayer<>(playerRenderer, event.getContext().getModelSet()));
+                playerRenderer.addLayer(new SolarUpgradeRenderLayer(playerRenderer));
             }
         }
-
     }
 
 }

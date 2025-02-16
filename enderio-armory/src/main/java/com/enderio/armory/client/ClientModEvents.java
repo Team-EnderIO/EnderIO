@@ -1,6 +1,7 @@
 package com.enderio.armory.client;
 
 import com.enderio.armory.EnderIOArmory;
+import com.enderio.armory.client.renderer.MultiEnergyBarDecorator;
 import com.enderio.armory.common.init.ArmoryItems;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;

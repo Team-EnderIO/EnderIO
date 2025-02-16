@@ -63,6 +63,15 @@ public class ArmoryLang {
             EnderIO.loc("darksteel.upgrade.nightvision.description"), "You can stop eating carrots now");
     public static final String DS_UPGRADE_NIGHT_VISION_KEYBIND = "darksteel.upgrade.nightvision.keybind";
 
+    public static final Component DS_UPGRADE_SOLAR_I = addTranslation(EnderIO.loc("darksteel.upgrade.solar_l1"),
+            "Solar I");
+    public static final Component DS_UPGRADE_SOLAR_II = addTranslation(EnderIO.loc("darksteel.upgrade.solar_l2"),
+            "Solar II");
+    public static final Component DS_UPGRADE_SOLAR_III = addTranslation(EnderIO.loc("darksteel.upgrade.solar_l3"),
+            "Solar III");
+    public static final Component DS_UPGRADE_SOLAR_DESCRIPTION = addTranslation(
+            EnderIO.loc("darksteel.upgrade.solar.description"), "Charges gear with a panel on your head");
+
     public static final Component DS_UPGRADE_FORK = addTranslation(EnderIO.loc("darksteel.upgrade.fork"), "Fork");
     public static final Component DS_UPGRADE_FORK_DESCRIPTION = addTranslation(
             EnderIO.loc("darksteel.upgrade.fork.description"), "Who needs a hoe when you have a fork?");

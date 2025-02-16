@@ -77,6 +77,10 @@ public class ArmoryCommonConfig {
     public final ModConfigSpec.ConfigValue<Integer> NIGHT_VISION_ACTIVATION_COST;
     public final ModConfigSpec.ConfigValue<Integer> NIGHT_VISION_ENERGY_USE;
 
+    public final ModConfigSpec.ConfigValue<Integer> SOLAR_ACTIVATION_COST_I;
+    public final ModConfigSpec.ConfigValue<Integer> SOLAR_ACTIVATION_COST_II;
+    public final ModConfigSpec.ConfigValue<Integer> SOLAR_ACTIVATION_COST_III;
+
     public ArmoryCommonConfig(ModConfigSpec.Builder builder) {
         builder.push("darksteel");
 
@@ -152,6 +156,12 @@ public class ArmoryCommonConfig {
         builder.push("nightVision");
         NIGHT_VISION_ACTIVATION_COST = builder.define("nightVisionActivationCost", 4);
         NIGHT_VISION_ENERGY_USE = builder.define("nightVisionEnergyUse", 2);
+        builder.pop();
+
+        builder.push("solar");
+        SOLAR_ACTIVATION_COST_I = builder.define("solarActivationCost_l1", 4);
+        SOLAR_ACTIVATION_COST_II = builder.define("solarActivationCost_l2", 8);
+        SOLAR_ACTIVATION_COST_III = builder.define("solarActivationCost_l3", 16);
         builder.pop();
 
         GLIDER_ACTIVATION_COST = builder.define("gliderActivationCost", 4);

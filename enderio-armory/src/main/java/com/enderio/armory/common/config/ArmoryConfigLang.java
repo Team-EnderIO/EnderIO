@@ -72,6 +72,11 @@ public class ArmoryConfigLang {
         addTranslation("nightVisionActivationCost", "Night Vision XP Cost");
         addTranslation("nightVisionEnergyUse", "Night Vision Energy Per Tick");
 
+        addTranslation("solar", "Solar");
+        addTranslation("solarActivationCost_l1", "Level I XP Cost");
+        addTranslation("solarActivationCost_l2", "Level II XP Cost");
+        addTranslation("solarActivationCost_l3", "Level III XP Cost");
+
         addTranslation("speed", "Speed");
         addTranslation("speedEnergyUsePerUnitMoved", "Energy use per block");
         addTranslation("speedActivationCost_l1", "Level I XP Cost");

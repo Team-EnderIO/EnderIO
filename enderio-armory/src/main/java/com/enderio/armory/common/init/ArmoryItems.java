@@ -21,6 +21,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgr
 import com.enderio.armory.common.item.darksteel.upgrades.flight.ElytraUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.GliderUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisisionUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.armory.common.tag.ArmoryTags;
@@ -294,6 +295,30 @@ public class ArmoryItems {
                             NightVisisionUpgrade::new))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Night Vision" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SOLAR_I = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_solar_1",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.SOLAR_ACTIVATION_COST_I,
+                            SolarUpgradeTier.ONE.getFactory()))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Solar" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SOLAR_II = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_solar_2",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.SOLAR_ACTIVATION_COST_II,
+                            SolarUpgradeTier.TWO.getFactory()))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Solar II" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SOLAR_III = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_solar_3",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.SOLAR_ACTIVATION_COST_III,
+                            SolarUpgradeTier.THREE.getFactory()))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Solar III" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
 
     public static void register(IEventBus bus) {
