@@ -7,6 +7,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePene
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.ElytraUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.GliderUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisisionUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.base.api.EnderIO;
@@ -28,21 +29,6 @@ public final class DarkSteelUpgradeRegistry {
 
     private static final DarkSteelUpgradeRegistry INST = new DarkSteelUpgradeRegistry();
 
-    static {
-        INST.registerUpgrade(EmpoweredUpgrade::new);
-        INST.registerUpgrade(SpoonUpgrade::new);
-        INST.registerUpgrade(ForkUpgrade::new);
-        INST.registerUpgrade(DirectUpgrade::new);
-        INST.registerUpgrade(ExplosiveUpgrade::new);
-        INST.registerUpgrade(ExplosivePenetrationUpgrade::new);
-        INST.registerUpgrade(TravelUpgrade::new);
-        INST.registerUpgrade(StepAssistUpgrade::new);
-        INST.registerUpgrade(SpeedUpgrade::new);
-        INST.registerUpgrade(JumpUpgrade::new);
-        INST.registerUpgrade(GliderUpgrade::new);
-        INST.registerUpgrade(ElytraUpgrade::new);
-    }
-
     public static DarkSteelUpgradeRegistry instance() {
         return INST;
     }
@@ -52,6 +38,19 @@ public final class DarkSteelUpgradeRegistry {
     private final Map<TagKey<Item>, Set<String>> possibleUpgrades = new HashMap<>();
 
     private DarkSteelUpgradeRegistry() {
+        registerUpgrade(EmpoweredUpgrade::new);
+        registerUpgrade(SpoonUpgrade::new);
+        registerUpgrade(ForkUpgrade::new);
+        registerUpgrade(DirectUpgrade::new);
+        registerUpgrade(ExplosiveUpgrade::new);
+        registerUpgrade(ExplosivePenetrationUpgrade::new);
+        registerUpgrade(TravelUpgrade::new);
+        registerUpgrade(StepAssistUpgrade::new);
+        registerUpgrade(SpeedUpgrade::new);
+        registerUpgrade(JumpUpgrade::new);
+        registerUpgrade(GliderUpgrade::new);
+        registerUpgrade(ElytraUpgrade::new);
+        registerUpgrade(NightVisisionUpgrade::new);
     }
 
     public void registerUpgrade(Supplier<IDarkSteelUpgrade> upgrade) {

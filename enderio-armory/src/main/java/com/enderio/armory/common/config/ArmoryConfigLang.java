@@ -68,6 +68,10 @@ public class ArmoryConfigLang {
         addTranslation("gliderActivationCost", "Glider Assist XP Cost");
         addTranslation("elytraActivationCost", "Elytra Assist XP Cost");
 
+        addTranslation("nightVision", "Night Vision");
+        addTranslation("nightVisionActivationCost", "Night Vision XP Cost");
+        addTranslation("nightVisionEnergyUse", "Night Vision Energy Per Tick");
+
         addTranslation("speed", "Speed");
         addTranslation("speedEnergyUsePerUnitMoved", "Energy use per block");
         addTranslation("speedActivationCost_l1", "Level I XP Cost");

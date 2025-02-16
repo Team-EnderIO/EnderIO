@@ -2,6 +2,7 @@ package com.enderio.armory.client;
 
 import com.enderio.armory.EnderIOArmory;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.FlightToggleHandler;
+import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisionHandler;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
@@ -21,10 +22,16 @@ public class KeyBinds {
             .of(() -> new KeyMapping(ArmoryLang.DS_UPGRADE_FLIGHT_KEYBIND, KeyConflictContext.IN_GAME,
                     InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, ArmoryLang.DS_UPGRADE_KEYBIND_CATEGORY));
 
+    public static final Lazy<KeyMapping> NIGHT_VISION_MAPPING = Lazy
+            .of(() -> new KeyMapping(ArmoryLang.DS_UPGRADE_NIGHT_VISION_KEYBIND, KeyConflictContext.IN_GAME,
+                    InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, ArmoryLang.DS_UPGRADE_KEYBIND_CATEGORY));
+
     @SubscribeEvent
     public static void registerBindings(RegisterKeyMappingsEvent event) {
         event.register(FLIGHT_MAPPING.get());
+        event.register(NIGHT_VISION_MAPPING.get());
         NeoForge.EVENT_BUS.addListener(FlightToggleHandler::toggleFlightUpgrade);
+        NeoForge.EVENT_BUS.addListener(NightVisionHandler.INST::toggleNightVision);
     }
 
 }

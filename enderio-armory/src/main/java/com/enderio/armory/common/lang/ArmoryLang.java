@@ -22,14 +22,14 @@ public class ArmoryLang {
 
     public static final MutableComponent DS_UPGRADE_XP_COST = addTranslation(EnderIO.loc("darksteel.upgrade.cost"),
             "Costs %s Levels");
-    public static final Component DS_UPGRADE_ACTIVATE = addTranslation(EnderIO.loc("darksteel.upgrade.activate"),
-            "Right Click to Activate");
-    public static final Component DS_UPGRADE_ITEM_NO_XP = addTranslation(EnderIO.loc("darksteel.upgrade.no_xp"),
-            "Not enough XP");
-    public static final Component DS_UPGRADE_ITEM_INVALID_UPGRADE = addTranslation(
-            EnderIO.loc("darksteel.upgrade.invalid_upgrade"), "Invalid upgrade for equipped item");
-    public static final Component DS_UPGRADE_ITEM_NO_TARGET = addTranslation(EnderIO.loc("darksteel.upgrade.no_target"),
-            "No Dark Steel Item in Off-Hand");
+//    public static final Component DS_UPGRADE_ACTIVATE = addTranslation(EnderIO.loc("darksteel.upgrade.activate"),
+//            "Right Click to Activate");
+//    public static final Component DS_UPGRADE_ITEM_NO_XP = addTranslation(EnderIO.loc("darksteel.upgrade.no_xp"),
+//            "Not enough XP");
+//    public static final Component DS_UPGRADE_ITEM_INVALID_UPGRADE = addTranslation(
+//            EnderIO.loc("darksteel.upgrade.invalid_upgrade"), "Invalid upgrade for equipped item");
+//    public static final Component DS_UPGRADE_ITEM_NO_TARGET = addTranslation(EnderIO.loc("darksteel.upgrade.no_target"),
+//            "No Dark Steel Item in Off-Hand");
     public static final Component DS_UPGRADE_AVAILABLE = addTranslation(EnderIO.loc("darksteel.upgrade.available"),
             "Available Upgrades").withStyle(ChatFormatting.YELLOW);
 
@@ -56,6 +56,12 @@ public class ArmoryLang {
     public static final Component DS_UPGRADE_SPOON = addTranslation(EnderIO.loc("darksteel.upgrade.spoon"), "Spoon");
     public static final Component DS_UPGRADE_SPOON_DESCRIPTION = addTranslation(
             EnderIO.loc("darksteel.upgrade.spoon.description"), "Who needs a shovel when you have a spoon?");
+
+    public static final Component DS_UPGRADE_NIGHT_VISION = addTranslation(EnderIO.loc("darksteel.upgrade.nightvision"),
+            "Night Vision");
+    public static final Component DS_UPGRADE_NIGHT_VISION_DESCRIPTION = addTranslation(
+            EnderIO.loc("darksteel.upgrade.nightvision.description"), "You can stop eating carrots now");
+    public static final String DS_UPGRADE_NIGHT_VISION_KEYBIND = "darksteel.upgrade.nightvision.keybind";
 
     public static final Component DS_UPGRADE_FORK = addTranslation(EnderIO.loc("darksteel.upgrade.fork"), "Fork");
     public static final Component DS_UPGRADE_FORK_DESCRIPTION = addTranslation(
@@ -142,11 +148,11 @@ public class ArmoryLang {
         return EnderIOArmory.REGILITE.addTranslation(prefix, id, translation);
     }
 
-    private static MutableComponent addTranslation(String prefix, ResourceLocation path, String name,
-            String translation) {
-        return EnderIOArmory.REGILITE.addTranslation(prefix,
-                ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "/" + name), translation);
-    }
+//    private static MutableComponent addTranslation(String prefix, ResourceLocation path, String name,
+//            String translation) {
+//        return EnderIOArmory.REGILITE.addTranslation(prefix,
+//                ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "/" + name), translation);
+//    }
 
     public static void register() {
     }

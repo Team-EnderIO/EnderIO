@@ -33,6 +33,9 @@ public class ArmoryDataComponents {
     public static Supplier<DataComponentType<Boolean>> DARK_STEEL_FLIGHT_ACTIVE = saved("dark_steel_flight_active",
             Codec.BOOL);
 
+    public static Supplier<DataComponentType<Boolean>> DARK_STEEL_NIGHT_VISION_ACTIVE = saved(
+            "dark_steel_nightvision_active", Codec.BOOL);
+
     private static <T> Supplier<DataComponentType<T>> saved(String name, Codec<T> codec) {
         return DATA_COMPONENT_TYPES.register(name, () -> DataComponentType.<T>builder().persistent(codec).build());
     }

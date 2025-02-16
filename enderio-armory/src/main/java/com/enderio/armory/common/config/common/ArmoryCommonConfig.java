@@ -74,6 +74,9 @@ public class ArmoryCommonConfig {
     public final ModConfigSpec.ConfigValue<Integer> GLIDER_ACTIVATION_COST;
     public final ModConfigSpec.ConfigValue<Integer> ELYTRA_ACTIVATION_COST;
 
+    public final ModConfigSpec.ConfigValue<Integer> NIGHT_VISION_ACTIVATION_COST;
+    public final ModConfigSpec.ConfigValue<Integer> NIGHT_VISION_ENERGY_USE;
+
     public ArmoryCommonConfig(ModConfigSpec.Builder builder) {
         builder.push("darksteel");
 
@@ -145,6 +148,11 @@ public class ArmoryCommonConfig {
         TRAVEL_ACTIVATION_COST = builder.define("travelActivationCost", 12);
 
         STEP_ASSIST_ACTIVATION_COST = builder.define("stepAssistActivationCost", 4);
+
+        builder.push("nightVision");
+        NIGHT_VISION_ACTIVATION_COST = builder.define("nightVisionActivationCost", 4);
+        NIGHT_VISION_ENERGY_USE = builder.define("nightVisionEnergyUse", 2);
+        builder.pop();
 
         GLIDER_ACTIVATION_COST = builder.define("gliderActivationCost", 4);
         ELYTRA_ACTIVATION_COST = builder.define("elytraActivationCost", 10);

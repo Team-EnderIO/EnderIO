@@ -11,6 +11,7 @@ import com.enderio.armory.common.item.darksteel.DarkSteelSwordItem;
 import com.enderio.armory.common.item.darksteel.upgrades.JumpUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.StepAssistUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.GliderIntegration;
+import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisionHandler;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
@@ -69,6 +70,7 @@ public class EnderIOArmory {
         NeoForge.EVENT_BUS.addListener(SpeedUpgrade::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(JumpUpgrade::doExtraJumps);
         NeoForge.EVENT_BUS.addListener(AnvilRecipeHandler::handleAnvilRecipe);
+        NeoForge.EVENT_BUS.addListener(NightVisionHandler.INST::updateEffect);
 
         IntegrationManager.addIntegration(GliderIntegration.INSTANCE);
     }

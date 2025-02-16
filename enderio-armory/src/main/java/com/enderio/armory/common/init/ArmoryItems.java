@@ -20,6 +20,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePene
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.ElytraUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.GliderUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisisionUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgradeTier;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.armory.common.tag.ArmoryTags;
@@ -285,6 +286,14 @@ public class ArmoryItems {
                             ExplosivePenetrationUpgradeTier.TWO.getFactory()))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("EExplosive Penetration II" + UPGRADE_TEXT)
+            .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
+
+    public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_NIGHT_VISION = ITEM_REGISTRY
+            .registerItem("dark_steel_upgrade_nightvision",
+                    properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.NIGHT_VISION_ACTIVATION_COST,
+                            NightVisisionUpgrade::new))
+            .setTab(EIOCreativeTabs.GEAR)
+            .setTranslation("Night Vision" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
 
     public static void register(IEventBus bus) {
