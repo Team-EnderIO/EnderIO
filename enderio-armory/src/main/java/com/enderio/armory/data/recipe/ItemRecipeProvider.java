@@ -2,22 +2,31 @@ package com.enderio.armory.data.recipe;
 
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgradeTier;
+import com.enderio.base.api.EnderIO;
+import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineBlocks;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemRecipeProvider extends RecipeProvider {
 
@@ -101,6 +110,14 @@ public class ItemRecipeProvider extends RecipeProvider {
     }
 
     private void addDarkSteelUpgrades(RecipeOutput recipeOutput) {
+
+        ItemStack output = ArmoryItems.DARK_STEEL_UPGRADE_BLANK.toStack();
+        ResourceLocation id = EnderIO
+                .loc("alloy_smelting/" + BuiltInRegistries.ITEM.getKey(output.getItem()).getPath());
+        List<@NotNull SizedIngredient> inputs = List.of(SizedIngredient.of(EIOBlocks.DARK_STEEL_BARS, 1),
+                SizedIngredient.of(Items.CLAY_BALL, 1), SizedIngredient.of(Items.STRING, 4));
+        recipeOutput.accept(id, new AlloySmeltingRecipe(inputs, output, 6400, 0.3f), null);
+
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EMPOWERED_1, Ingredient.of(EIOItems.VIBRANT_CRYSTAL));
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EMPOWERED_2, Ingredient.of(EIOItems.BASIC_CAPACITOR));
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EMPOWERED_3,
