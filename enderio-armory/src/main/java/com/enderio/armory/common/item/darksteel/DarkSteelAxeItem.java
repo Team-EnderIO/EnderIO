@@ -1,6 +1,6 @@
 package com.enderio.armory.common.item.darksteel;
 
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
@@ -118,7 +118,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
     }
 
     private boolean hasFork(ItemStack stack) {
-        return DarkSteelCapability.hasUpgrade(stack, ForkUpgrade.NAME);
+        return DarkSteelHelper.hasUpgrade(stack, ForkUpgrade.NAME);
     }
 
     /**
@@ -177,7 +177,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
     // region Common for all tools
 
     public boolean isFoil(ItemStack pStack) {
-        return DarkSteelCapability.hasUpgrade(pStack, EmpoweredUpgrade.NAME) || super.isFoil(pStack);
+        return DarkSteelHelper.hasUpgrade(pStack, EmpoweredUpgrade.NAME) || super.isFoil(pStack);
     }
 
     // endregion

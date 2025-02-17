@@ -12,9 +12,12 @@ import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.base.api.EnderIO;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -95,6 +98,13 @@ public final class DarkSteelUpgradeRegistry {
             }
         });
         return Collections.unmodifiableSet(result);
+    }
+
+    public Collection<IDarkSteelUpgrade> createAllUpgradesForItem(ItemStack stack) {
+        Set<String> upgradeNames = getUpgradesForItem(stack);
+        final List<IDarkSteelUpgrade> result = new ArrayList<>();
+        upgradeNames.forEach(s -> createUpgrade(s).ifPresent(result::add));
+        return result;
     }
 
 }

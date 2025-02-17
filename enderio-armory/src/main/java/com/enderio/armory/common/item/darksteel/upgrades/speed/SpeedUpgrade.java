@@ -1,6 +1,7 @@
 package com.enderio.armory.common.item.darksteel.upgrades.speed;
 
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.api.capability.IDarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryCapabilities;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
@@ -64,12 +65,11 @@ public class SpeedUpgrade extends TieredUpgrade<SpeedUpgradeTier> {
     public static void applySpeedModifiers(ItemAttributeModifierEvent e) {
         ItemStack stack = e.getItemStack();
         if (!stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_LEGGINGS)
-                || !DarkSteelCapability.hasUpgrade(stack, SpeedUpgrade.NAME)) {
+                || !DarkSteelHelper.hasUpgrade(stack, SpeedUpgrade.NAME)) {
             return;
         }
         if (ItemStackEnergy.getEnergyStored(stack) > 0) {
-            Optional<SpeedUpgrade> upgrade = DarkSteelCapability.getUpgradeAs(stack, SpeedUpgrade.NAME,
-                    SpeedUpgrade.class);
+            Optional<SpeedUpgrade> upgrade = DarkSteelHelper.getUpgradeAs(stack, SpeedUpgrade.NAME, SpeedUpgrade.class);
             upgrade.ifPresent(speedUpgrade -> e.addModifier(Attributes.MOVEMENT_SPEED,
                     speedUpgrade.tier.getAttributeModifier(), EquipmentSlotGroup.LEGS));
         }
@@ -90,7 +90,7 @@ public class SpeedUpgrade extends TieredUpgrade<SpeedUpgradeTier> {
             return;
         }
         @Nullable
-        DarkSteelCapability cap = legs.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+        IDarkSteelCapability cap = legs.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
         if (cap == null) {
             return;
         }

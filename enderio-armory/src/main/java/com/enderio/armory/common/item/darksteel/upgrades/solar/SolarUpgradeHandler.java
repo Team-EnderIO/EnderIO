@@ -1,6 +1,6 @@
 package com.enderio.armory.common.item.darksteel.upgrades.solar;
 
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.api.capability.IDarkSteelCapability;
 import com.enderio.armory.common.init.ArmoryCapabilities;
 import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.tag.ArmoryTags;
@@ -73,7 +73,7 @@ public class SolarUpgradeHandler {
             return Optional.empty();
         }
         @Nullable
-        DarkSteelCapability cap = equipped.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+        IDarkSteelCapability cap = equipped.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
         if (cap == null) {
             return Optional.empty();
         }

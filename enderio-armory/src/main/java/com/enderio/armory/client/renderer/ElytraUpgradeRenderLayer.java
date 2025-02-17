@@ -1,6 +1,6 @@
 package com.enderio.armory.client.renderer;
 
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.ElytraUpgrade;
 import net.minecraft.client.model.EntityModel;
@@ -19,7 +19,7 @@ public class ElytraUpgradeRenderLayer<ENTITY extends LivingEntity, MODEL extends
 
     @Override
     public boolean shouldRender(ItemStack stack, LivingEntity entity) {
-        return DarkSteelCapability.hasUpgrade(stack, ElytraUpgrade.NAME)
+        return DarkSteelHelper.hasUpgrade(stack, ElytraUpgrade.NAME)
                 && stack.getOrDefault(ArmoryDataComponents.DARK_STEEL_FLIGHT_ACTIVE, false);
     }
 

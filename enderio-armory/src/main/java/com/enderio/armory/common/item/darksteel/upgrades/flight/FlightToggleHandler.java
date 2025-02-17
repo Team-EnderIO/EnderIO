@@ -1,7 +1,7 @@
 package com.enderio.armory.common.item.darksteel.upgrades.flight;
 
 import com.enderio.armory.client.KeyBinds;
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
@@ -52,8 +52,8 @@ public class FlightToggleHandler {
     public static Optional<ItemStack> getEquippedChestplate(Player player) {
         ItemStack equipped = player.getItemBySlot(EquipmentSlot.CHEST);
         if (equipped.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_CHESTPLATE)
-                && (DarkSteelCapability.hasUpgrade(equipped, GliderUpgrade.NAME)
-                        || DarkSteelCapability.hasUpgrade(equipped, ElytraUpgrade.NAME))) {
+                && (DarkSteelHelper.hasUpgrade(equipped, GliderUpgrade.NAME)
+                        || DarkSteelHelper.hasUpgrade(equipped, ElytraUpgrade.NAME))) {
             return Optional.of(equipped);
         }
         return Optional.empty();

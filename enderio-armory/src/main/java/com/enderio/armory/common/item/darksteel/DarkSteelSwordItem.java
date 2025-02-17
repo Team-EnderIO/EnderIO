@@ -1,6 +1,6 @@
 package com.enderio.armory.common.item.darksteel;
 
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
@@ -73,7 +73,7 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         if (!stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_SWORD)) {
             return;
         }
-        Optional<EmpoweredUpgrade> empUpOpt = DarkSteelCapability.getEmpoweredUpgrade(stack);
+        Optional<EmpoweredUpgrade> empUpOpt = DarkSteelHelper.getEmpoweredUpgrade(stack);
         if (empUpOpt.isEmpty()) {
             return;
         }
@@ -103,7 +103,7 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
 
-        Optional<EmpoweredUpgrade> empUp = DarkSteelCapability.getEmpoweredUpgrade(pStack);
+        Optional<EmpoweredUpgrade> empUp = DarkSteelHelper.getEmpoweredUpgrade(pStack);
         if (empUp.isEmpty() || ItemStackEnergy.getEnergyStored(pStack) <= 0) {
             return super.hurtEnemy(pStack, pTarget, pAttacker);
         }
@@ -175,14 +175,14 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        if (DarkSteelCapability.getEmpoweredUpgrade(itemStack).isEmpty()) {
+        if (DarkSteelHelper.getEmpoweredUpgrade(itemStack).isEmpty()) {
             tooltips.add(TooltipUtil.style(ArmoryLang.ENDER_HEAD_DROP_INFO));
         }
     }
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        Optional<EmpoweredUpgrade> empUp = DarkSteelCapability.getEmpoweredUpgrade(itemStack);
+        Optional<EmpoweredUpgrade> empUp = DarkSteelHelper.getEmpoweredUpgrade(itemStack);
         empUp.ifPresent(empoweredUpgrade -> tooltips.add(TooltipUtil.withArgs(ArmoryLang.ENDER_HEAD_DROP_CHANCE,
                 (int) Math.round(empoweredUpgrade.getMobHeadChance() * 100))));
         empUp.ifPresent(empoweredUpgrade -> tooltips.add(TooltipUtil.style(ArmoryLang.ENDER_BLOCK_TELEPORT)));
@@ -202,7 +202,7 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return DarkSteelCapability.hasUpgrade(pStack, EmpoweredUpgrade.NAME) || super.isFoil(pStack);
+        return DarkSteelHelper.hasUpgrade(pStack, EmpoweredUpgrade.NAME) || super.isFoil(pStack);
     }
 
 }

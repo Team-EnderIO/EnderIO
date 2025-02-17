@@ -1,7 +1,7 @@
 package com.enderio.armory.common.item.darksteel.upgrades.nightvision;
 
 import com.enderio.armory.client.KeyBinds;
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.tag.ArmoryTags;
@@ -90,7 +90,7 @@ public class NightVisionHandler {
     private Optional<ItemStack> getEquippedHelmet(Player player) {
         ItemStack equipped = player.getItemBySlot(EquipmentSlot.HEAD);
         if (equipped.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_HELMET)
-                && (DarkSteelCapability.hasUpgrade(equipped, NightVisisionUpgrade.NAME))) {
+                && (DarkSteelHelper.hasUpgrade(equipped, NightVisisionUpgrade.NAME))) {
             return Optional.of(equipped);
         }
         return Optional.empty();

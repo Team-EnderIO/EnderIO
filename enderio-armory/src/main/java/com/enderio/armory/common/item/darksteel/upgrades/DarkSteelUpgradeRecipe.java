@@ -1,7 +1,8 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
+import com.enderio.armory.api.capability.IDarkSteelCapability;
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.init.ArmoryCapabilities;
 import com.enderio.armory.common.init.ArmoryRecipes;
 import com.enderio.armory.common.item.darksteel.DarkSteelUpgradeItem;
@@ -55,7 +56,7 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
         // Check the upgrade can be applied to this item.
         Optional<IDarkSteelUpgrade> upgrade = getUpgradeFromItem(recipeInput.getItem(0));
         @Nullable
-        DarkSteelCapability target = getUpgradableFromItem(recipeInput.getItem(1));
+        IDarkSteelCapability target = getUpgradableFromItem(recipeInput.getItem(1));
         if (target != null) {
             return upgrade.map(target::canApplyUpgrade).orElse(false);
         }
@@ -68,15 +69,15 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
 
         ItemStack resultItem = recipeInput.getItem(1).copy();
         @Nullable
-        DarkSteelCapability target = getUpgradableFromItem(resultItem);
+        IDarkSteelCapability target = getUpgradableFromItem(resultItem);
         if (target != null) {
-            return upgrade.map(up -> DarkSteelCapability.addUpgrade(resultItem, up)).orElse(ItemStack.EMPTY);
+            return upgrade.map(up -> DarkSteelHelper.addUpgrade(resultItem, up)).orElse(ItemStack.EMPTY);
         }
         return ItemStack.EMPTY;
     }
 
     @Nullable
-    private DarkSteelCapability getUpgradableFromItem(ItemStack item) {
+    private IDarkSteelCapability getUpgradableFromItem(ItemStack item) {
         return item.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
     }
 

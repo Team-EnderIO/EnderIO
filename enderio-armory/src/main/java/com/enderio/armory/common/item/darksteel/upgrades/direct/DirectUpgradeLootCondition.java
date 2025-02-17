@@ -1,6 +1,6 @@
 package com.enderio.armory.common.item.darksteel.upgrades.direct;
 
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.base.api.integration.IntegrationManager;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.world.damagesource.DamageSource;
@@ -28,11 +28,11 @@ public class DirectUpgradeLootCondition implements LootItemCondition {
                 && context.getParam(LootContextParams.ATTACKING_ENTITY) instanceof Player) {
             DamageSource damageSource = context.getParam(LootContextParams.DAMAGE_SOURCE);
             ItemStack weapon = damageSource.getWeaponItem();
-            return weapon != null && DarkSteelCapability.hasUpgrade(weapon, DirectUpgrade.NAME);
+            return weapon != null && DarkSteelHelper.hasUpgrade(weapon, DirectUpgrade.NAME);
         } else if (!context.hasParam(LootContextParams.TOOL) || !context.hasParam(LootContextParams.THIS_ENTITY)) {
             return false;
         }
-        return (DarkSteelCapability.hasUpgrade(context.getParam(LootContextParams.TOOL), DirectUpgrade.NAME)
+        return (DarkSteelHelper.hasUpgrade(context.getParam(LootContextParams.TOOL), DirectUpgrade.NAME)
                 || IntegrationManager.anyMatch(
                         integration -> integration.canMineWithDirect(context.getParam(LootContextParams.TOOL))))
                 && context.getParam(LootContextParams.THIS_ENTITY) instanceof Player;

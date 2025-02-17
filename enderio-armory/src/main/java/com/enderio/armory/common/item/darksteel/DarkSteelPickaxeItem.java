@@ -1,6 +1,6 @@
 package com.enderio.armory.common.item.darksteel;
 
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
@@ -121,8 +121,8 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
         // Include a fully upgraded version without explosive upgrades
         ItemStack itemStack = createFullyUpgradedStack(this);
         ItemStackEnergy.setFull(itemStack);
-        DarkSteelCapability.removeUpgrade(itemStack, ExplosiveUpgrade.NAME);
-        DarkSteelCapability.removeUpgrade(itemStack, ExplosivePenetrationUpgrade.NAME);
+        DarkSteelHelper.removeUpgrade(itemStack, ExplosiveUpgrade.NAME);
+        DarkSteelHelper.removeUpgrade(itemStack, ExplosivePenetrationUpgrade.NAME);
         modifier.accept(itemStack);
 
         ItemStack fullyUpgraded = createFullyUpgradedStack(this);
@@ -131,7 +131,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     }
 
     private boolean hasSpoon(ItemStack stack) {
-        return DarkSteelCapability.hasUpgrade(stack, SpoonUpgrade.NAME);
+        return DarkSteelHelper.hasUpgrade(stack, SpoonUpgrade.NAME);
     }
 
     private boolean useObsidianMining(BlockState pState, ItemStack stack) {
@@ -158,7 +158,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return DarkSteelCapability.hasUpgrade(pStack, EmpoweredUpgrade.NAME) || super.isFoil(pStack);
+        return DarkSteelHelper.hasUpgrade(pStack, EmpoweredUpgrade.NAME) || super.isFoil(pStack);
     }
 
     // endregion

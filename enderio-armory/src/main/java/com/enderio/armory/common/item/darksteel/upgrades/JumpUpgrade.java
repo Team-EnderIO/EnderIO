@@ -1,6 +1,7 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.api.capability.IDarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryCapabilities;
 import com.enderio.armory.common.init.ArmoryDataComponents;
@@ -68,7 +69,7 @@ public class JumpUpgrade extends TieredUpgrade<JumpUpgradeTier> {
             return;
         }
         @Nullable
-        DarkSteelCapability cap = boots.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+        IDarkSteelCapability cap = boots.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
         if (cap == null) {
             return;
         }
@@ -78,7 +79,7 @@ public class JumpUpgrade extends TieredUpgrade<JumpUpgradeTier> {
         }
         // disable when elytra upgrade is enabled or the elytra won't work
         ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
-        if (DarkSteelCapability.hasUpgrade(chest, ElytraUpgrade.NAME)
+        if (DarkSteelHelper.hasUpgrade(chest, ElytraUpgrade.NAME)
                 && chest.getOrDefault(ArmoryDataComponents.DARK_STEEL_FLIGHT_ACTIVE, false)) {
             return;
         }

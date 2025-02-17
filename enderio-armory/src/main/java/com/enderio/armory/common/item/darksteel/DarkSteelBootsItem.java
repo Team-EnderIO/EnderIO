@@ -1,6 +1,6 @@
 package com.enderio.armory.common.item.darksteel;
 
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.JumpUpgrade;
@@ -28,7 +28,7 @@ public class DarkSteelBootsItem extends DarkSteelArmor {
 
     @Override
     public boolean canWalkOnPowderedSnow(ItemStack stack, LivingEntity wearer) {
-        return DarkSteelCapability.hasUpgrade(stack, EmpoweredUpgrade.NAME);
+        return DarkSteelHelper.hasUpgrade(stack, EmpoweredUpgrade.NAME);
     }
 
     @Override

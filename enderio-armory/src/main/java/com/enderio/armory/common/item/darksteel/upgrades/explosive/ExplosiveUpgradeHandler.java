@@ -1,6 +1,6 @@
 package com.enderio.armory.common.item.darksteel.upgrades.explosive;
 
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.item.darksteel.upgrades.SpoonUpgrade;
 import com.enderio.armory.common.tag.ArmoryTags;
@@ -56,8 +56,8 @@ public class ExplosiveUpgradeHandler {
     private static final Random RAND = new Random();
 
     public static boolean hasExplosiveUpgrades(ItemStack stack) {
-        return DarkSteelCapability.hasUpgrade(stack, ExplosiveUpgrade.NAME)
-                || DarkSteelCapability.hasUpgrade(stack, ExplosivePenetrationUpgrade.NAME);
+        return DarkSteelHelper.hasUpgrade(stack, ExplosiveUpgrade.NAME)
+                || DarkSteelHelper.hasUpgrade(stack, ExplosivePenetrationUpgrade.NAME);
     }
 
     public static void onMineBlock(ItemStack pStack, Level pLevel, BlockPos pPos, LivingEntity pEntityLiving) {
@@ -119,7 +119,7 @@ public class ExplosiveUpgradeHandler {
             return false;
         }
         return Items.STONE_PICKAXE.isCorrectToolForDrops(new ItemStack(Items.STONE_PICKAXE), blockState)
-                || ((DarkSteelCapability.hasUpgrade(itemStack, SpoonUpgrade.NAME)
+                || ((DarkSteelHelper.hasUpgrade(itemStack, SpoonUpgrade.NAME)
                         && Items.STONE_SHOVEL.isCorrectToolForDrops(new ItemStack(Items.STONE_SHOVEL), blockState)));
     }
 
@@ -141,7 +141,7 @@ public class ExplosiveUpgradeHandler {
     private static AABB calculateMiningArea(ItemStack tool, Direction targetDir) {
         AABB miningBounds = new AABB(0, 0, 0, 1, 1, 1);
 
-        int radius = DarkSteelCapability.getUpgradeAs(tool, ExplosiveUpgrade.NAME, ExplosiveUpgrade.class)
+        int radius = DarkSteelHelper.getUpgradeAs(tool, ExplosiveUpgrade.NAME, ExplosiveUpgrade.class)
                 .map(ExplosiveUpgrade::getMagnitude)
                 .orElse(0);
 
@@ -152,7 +152,7 @@ public class ExplosiveUpgradeHandler {
             miningBounds = miningBounds.expandTowards(-mask.x, -mask.y, -mask.z);
         }
 
-        int penetration = DarkSteelCapability
+        int penetration = DarkSteelHelper
                 .getUpgradeAs(tool, ExplosivePenetrationUpgrade.NAME, ExplosivePenetrationUpgrade.class)
                 .map(ExplosivePenetrationUpgrade::getMagnitude)
                 .orElse(0);

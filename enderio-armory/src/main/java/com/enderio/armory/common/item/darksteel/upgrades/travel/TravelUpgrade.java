@@ -1,7 +1,7 @@
 package com.enderio.armory.common.item.darksteel.upgrades.travel;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.base.api.travel.TravelTarget;
@@ -49,7 +49,7 @@ public class TravelUpgrade implements IDarkSteelUpgrade {
 
     public static void checkShiftStatus(MovementInputUpdateEvent evt) {
         ItemStack equipped = evt.getEntity().getItemInHand(InteractionHand.MAIN_HAND);
-        if (!DarkSteelCapability.hasUpgrade(equipped, TravelUpgrade.NAME)) {
+        if (!DarkSteelHelper.hasUpgrade(equipped, TravelUpgrade.NAME)) {
             return;
         }
         equipped.set(EIODataComponents.TRAVEL_ITEM, evt.getInput().shiftKeyDown);
@@ -61,7 +61,7 @@ public class TravelUpgrade implements IDarkSteelUpgrade {
             var player = context.player();
             // Just check there is no desync
             ItemStack equipped = player.getItemInHand(InteractionHand.MAIN_HAND);
-            if (!DarkSteelCapability.hasUpgrade(equipped, TravelUpgrade.NAME)) {
+            if (!DarkSteelHelper.hasUpgrade(equipped, TravelUpgrade.NAME)) {
                 return;
             }
             equipped.set(EIODataComponents.TRAVEL_ITEM, packet.enabled());

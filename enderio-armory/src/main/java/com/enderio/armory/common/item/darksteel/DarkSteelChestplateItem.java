@@ -1,6 +1,6 @@
 package com.enderio.armory.common.item.darksteel;
 
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
@@ -25,7 +25,7 @@ public class DarkSteelChestplateItem extends DarkSteelArmor {
     }
 
     public boolean canElytraFly(ItemStack stack, LivingEntity entity) {
-        return DarkSteelCapability.hasUpgrade(stack, ElytraUpgrade.NAME)
+        return DarkSteelHelper.hasUpgrade(stack, ElytraUpgrade.NAME)
                 && stack.getOrDefault(ArmoryDataComponents.DARK_STEEL_FLIGHT_ACTIVE, false);
     }
 

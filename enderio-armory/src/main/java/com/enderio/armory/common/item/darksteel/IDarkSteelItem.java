@@ -1,7 +1,8 @@
 package com.enderio.armory.common.item.darksteel;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
+import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.base.common.lang.EIOLang;
@@ -23,12 +24,12 @@ import org.jetbrains.annotations.Nullable;
 public interface IDarkSteelItem extends AdvancedTooltipProvider, CreativeTabVariants {
 
     default Optional<EmpoweredUpgrade> getEmpoweredUpgrade(ItemStack stack) {
-        return DarkSteelCapability.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class);
+        return DarkSteelHelper.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class);
     }
 
     default ItemStack createFullyUpgradedStack(Item item) {
         ItemStack is = new ItemStack(item);
-        Collection<? extends IDarkSteelUpgrade> ups = DarkSteelCapability.getAllPossibleUpgrades(is);
+        Collection<? extends IDarkSteelUpgrade> ups = DarkSteelUpgradeRegistry.instance().createAllUpgradesForItem(is);
         for (IDarkSteelUpgrade upgrade : ups) {
             IDarkSteelUpgrade maxTier = upgrade;
             Optional<? extends IDarkSteelUpgrade> nextTier = maxTier.getNextTier();
@@ -36,7 +37,7 @@ public interface IDarkSteelItem extends AdvancedTooltipProvider, CreativeTabVari
                 maxTier = nextTier.get();
                 nextTier = maxTier.getNextTier();
             }
-            DarkSteelCapability.addUpgrade(is, maxTier);
+            DarkSteelHelper.addUpgrade(is, maxTier);
         }
         ItemStackEnergy.setFull(is);
         return is;
@@ -60,7 +61,7 @@ public interface IDarkSteelItem extends AdvancedTooltipProvider, CreativeTabVari
                     + itemStack.getMaxDamage();
             tooltips.add(TooltipUtil.withArgs(ArmoryLang.DURABILITY_AMOUNT, durability).withStyle(ChatFormatting.GRAY));
         }
-        if (DarkSteelCapability.hasUpgrade(itemStack, EmpoweredUpgrade.NAME)) {
+        if (DarkSteelHelper.hasUpgrade(itemStack, EmpoweredUpgrade.NAME)) {
             String energy = String.format("%,d", ItemStackEnergy.getEnergyStored(itemStack)) + "/"
                     + String.format("%,d", ItemStackEnergy.getMaxEnergyStored(itemStack));
             tooltips.add(TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, energy).withStyle(ChatFormatting.GRAY));
@@ -68,7 +69,7 @@ public interface IDarkSteelItem extends AdvancedTooltipProvider, CreativeTabVari
     }
 
     default void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips, boolean isDetailed) {
-        var upgrades = DarkSteelCapability.getUpgrades(itemStack);
+        var upgrades = DarkSteelHelper.getUpgrades(itemStack);
         upgrades.stream()
                 .sorted(Comparator.comparing(IDarkSteelUpgrade::getName))
                 .forEach(upgrade -> tooltips.add(1,
@@ -76,7 +77,7 @@ public interface IDarkSteelItem extends AdvancedTooltipProvider, CreativeTabVari
     }
 
     default void addAvailableUpgradesTooltips(ItemStack itemStack, List<Component> tooltips) {
-        var availUpgrades = DarkSteelCapability.getUpgradesApplicable(itemStack);
+        var availUpgrades = DarkSteelHelper.getUpgradesApplicable(itemStack);
         if (!availUpgrades.isEmpty()) {
             tooltips.add(ArmoryLang.DS_UPGRADE_AVAILABLE.copy().withStyle(ChatFormatting.YELLOW));
             availUpgrades.stream()

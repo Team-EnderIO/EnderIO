@@ -1,7 +1,7 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.base.api.EnderIO;
@@ -42,7 +42,7 @@ public class StepAssistUpgrade implements IDarkSteelUpgrade {
     public static void applyStepHeightModifiers(ItemAttributeModifierEvent e) {
         ItemStack stack = e.getItemStack();
         if (!stack.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_BOOTS)
-                || !DarkSteelCapability.hasUpgrade(stack, StepAssistUpgrade.NAME)) {
+                || !DarkSteelHelper.hasUpgrade(stack, StepAssistUpgrade.NAME)) {
             return;
         }
         if (ItemStackEnergy.getEnergyStored(stack) > 0) {

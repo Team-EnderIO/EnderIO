@@ -1,6 +1,6 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.core.common.energy.ItemStackEnergy;
@@ -17,7 +17,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
 
     public static int getAdjustedDamage(ItemStack stack, int newDamage) {
-        return DarkSteelCapability.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class)
+        return DarkSteelHelper.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class)
                 .map(empoweredUpgrade -> empoweredUpgrade.adjustDamage(stack.getItem().getDamage(stack), newDamage,
                         stack))
                 .orElse(newDamage);

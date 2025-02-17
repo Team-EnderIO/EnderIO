@@ -1,6 +1,6 @@
 package com.enderio.armory.common.item.darksteel;
 
-import com.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.init.ArmoryArmorMaterials;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import net.minecraft.world.item.ArmorItem;
@@ -26,7 +26,7 @@ public abstract class DarkSteelArmor extends ArmorItem implements IDarkSteelItem
     }
 
     public boolean isFoil(ItemStack pStack) {
-        return DarkSteelCapability.hasUpgrade(pStack, EmpoweredUpgrade.NAME) || super.isFoil(pStack);
+        return DarkSteelHelper.hasUpgrade(pStack, EmpoweredUpgrade.NAME) || super.isFoil(pStack);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.enderio.armory.common.item.darksteel;
 
+import com.enderio.armory.api.capability.IDarkSteelCapability;
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.armory.common.capability.DarkSteelCapability;
 import com.enderio.armory.common.init.ArmoryCapabilities;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -12,7 +12,7 @@ public class AnvilRecipeHandler {
     public static void handleAnvilRecipe(AnvilUpdateEvent event) {
         ItemStack left = event.getLeft();
         ItemStack right = event.getRight();
-        DarkSteelCapability cap = left.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+        IDarkSteelCapability cap = left.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
         if (cap == null) {
             return;
         }
