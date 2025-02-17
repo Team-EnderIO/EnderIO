@@ -14,8 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
-import net.minecraft.core.component.DataComponentType;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import org.jetbrains.annotations.Nullable;
@@ -24,20 +23,15 @@ public class DarkSteelCapability implements IDarkSteelCapability {
 
     private final ItemStack onStack;
 
-    private final Supplier<DataComponentType<DarkSteelItemUpgrades>> componentType;
-
     private final Map<String, IDarkSteelUpgrade> upgrades = new HashMap<>();
 
-    public DarkSteelCapability(Supplier<DataComponentType<DarkSteelCapability.DarkSteelItemUpgrades>> componentType,
-            ItemStack onStack) {
-        this.componentType = componentType;
+    public DarkSteelCapability(ItemStack onStack) {
         this.onStack = onStack;
         @Nullable
         DarkSteelItemUpgrades tmp = onStack.get(ArmoryDataComponents.DARK_STEEL_ITEM_UPGRADES);
         if (tmp != null) {
             for (UpgradeData data : tmp.upgradesData) {
-                IDarkSteelUpgrade up = DarkSteelUpgradeRegistry.instance()
-                        .loadUpgrade(data.upgradeName, data.data.copyTag());
+                IDarkSteelUpgrade up = createUpgrade(data.upgradeName, data.data.copyTag());
                 if (up != null) {
                     upgrades.put(up.getName(), up);
                 }
@@ -50,32 +44,14 @@ public class DarkSteelCapability implements IDarkSteelCapability {
         removeUpgradeInSlot(upgrade.getSlot());
         upgrades.put(upgrade.getName(), upgrade);
         upgrade.onAddedToItem(onStack);
-        updateData();
+        updateComponent();
     }
 
     @Override
     public void removeUpgrade(String name) {
         IDarkSteelUpgrade upgrade = upgrades.remove(name);
         upgrade.onRemovedFromItem(onStack);
-        updateData();
-    }
-
-    private void updateData() {
-        List<UpgradeData> newData = new ArrayList<>();
-        for (IDarkSteelUpgrade up : upgrades.values()) {
-            UpgradeData d = new UpgradeData(up.getName(), CustomData.of(up.serializeNBT()));
-            newData.add(d);
-        }
-        onStack.set(componentType, new DarkSteelItemUpgrades(newData));
-    }
-
-    private void removeUpgradeInSlot(String slot) {
-        for (var entry : upgrades.entrySet()) {
-            if (entry.getValue().getSlot().equals(slot)) {
-                upgrades.remove(entry.getKey());
-                break;
-            }
-        }
+        updateComponent();
     }
 
     @Override
@@ -127,6 +103,34 @@ public class DarkSteelCapability implements IDarkSteelCapability {
             }
         });
         return result;
+    }
+
+    private void updateComponent() {
+        List<UpgradeData> newData = new ArrayList<>();
+        for (IDarkSteelUpgrade up : upgrades.values()) {
+            UpgradeData d = new UpgradeData(up.getName(), CustomData.of(up.serializeNBT()));
+            newData.add(d);
+        }
+        onStack.set(ArmoryDataComponents.DARK_STEEL_ITEM_UPGRADES, new DarkSteelItemUpgrades(newData));
+    }
+
+    @javax.annotation.Nullable
+    private IDarkSteelUpgrade createUpgrade(String name, CompoundTag data) {
+        Optional<IDarkSteelUpgrade> upgrade = DarkSteelUpgradeRegistry.instance().createUpgrade(name);
+        if (upgrade.isPresent()) {
+            upgrade.get().deserializeNBT(data);
+            return upgrade.get();
+        }
+        return null;
+    }
+
+    private void removeUpgradeInSlot(String slot) {
+        for (var entry : upgrades.entrySet()) {
+            if (entry.getValue().getSlot().equals(slot)) {
+                upgrades.remove(entry.getKey());
+                break;
+            }
+        }
     }
 
     public record UpgradeData(String upgradeName, CustomData data) {

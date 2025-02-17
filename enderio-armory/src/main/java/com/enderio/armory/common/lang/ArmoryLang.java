@@ -22,14 +22,7 @@ public class ArmoryLang {
 
     public static final MutableComponent DS_UPGRADE_XP_COST = addTranslation(EnderIO.loc("darksteel.upgrade.cost"),
             "Costs %s Levels");
-//    public static final Component DS_UPGRADE_ACTIVATE = addTranslation(EnderIO.loc("darksteel.upgrade.activate"),
-//            "Right Click to Activate");
-//    public static final Component DS_UPGRADE_ITEM_NO_XP = addTranslation(EnderIO.loc("darksteel.upgrade.no_xp"),
-//            "Not enough XP");
-//    public static final Component DS_UPGRADE_ITEM_INVALID_UPGRADE = addTranslation(
-//            EnderIO.loc("darksteel.upgrade.invalid_upgrade"), "Invalid upgrade for equipped item");
-//    public static final Component DS_UPGRADE_ITEM_NO_TARGET = addTranslation(EnderIO.loc("darksteel.upgrade.no_target"),
-//            "No Dark Steel Item in Off-Hand");
+
     public static final Component DS_UPGRADE_AVAILABLE = addTranslation(EnderIO.loc("darksteel.upgrade.available"),
             "Available Upgrades").withStyle(ChatFormatting.YELLOW);
 
@@ -156,12 +149,6 @@ public class ArmoryLang {
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
         return EnderIOArmory.REGILITE.addTranslation(prefix, id, translation);
     }
-
-//    private static MutableComponent addTranslation(String prefix, ResourceLocation path, String name,
-//            String translation) {
-//        return EnderIOArmory.REGILITE.addTranslation(prefix,
-//                ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "/" + name), translation);
-//    }
 
     public static void register() {
     }

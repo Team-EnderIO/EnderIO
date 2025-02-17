@@ -1,7 +1,6 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
@@ -22,7 +21,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +37,7 @@ public final class DarkSteelUpgradeRegistry {
 
     private final Map<String, Supplier<IDarkSteelUpgrade>> registeredUpgrades = new HashMap<>();
 
-    private final Map<TagKey<Item>, Set<String>> possibleUpgrades = new HashMap<>();
+    private final Map<TagKey<Item>, Set<String>> upgradeSupport = new HashMap<>();
 
     private DarkSteelUpgradeRegistry() {
         registerUpgrade(EmpoweredUpgrade::new);
@@ -70,29 +68,15 @@ public final class DarkSteelUpgradeRegistry {
         return Optional.of(val.get());
     }
 
-    @javax.annotation.Nullable
-    public IDarkSteelUpgrade loadUpgrade(String name, CompoundTag data) {
-        Optional<IDarkSteelUpgrade> upgrade = createUpgrade(name);
-        if (upgrade.isPresent()) {
-            upgrade.get().deserializeNBT(data);
-            return upgrade.get();
-        }
-        return null;
-    }
-
-    public boolean hasUpgrade(ItemStack stack) {
-        return !stack.isEmpty() && stack.has(ArmoryDataComponents.DARK_STEEL_UPGRADE);
-    }
-
     public void registerUpgradesForItem(TagKey<Item> forItem, String... upgrades) {
-        Set<String> currentValues = possibleUpgrades.getOrDefault(forItem, new HashSet<>());
+        Set<String> currentValues = upgradeSupport.getOrDefault(forItem, new HashSet<>());
         Collections.addAll(currentValues, upgrades);
-        possibleUpgrades.put(forItem, currentValues);
+        upgradeSupport.put(forItem, currentValues);
     }
 
     public Set<String> getUpgradesForItem(ItemStack stack) {
         Set<String> result = new HashSet<>();
-        possibleUpgrades.forEach((tag, value) -> {
+        upgradeSupport.forEach((tag, value) -> {
             if (stack.is(tag)) {
                 result.addAll(value);
             }

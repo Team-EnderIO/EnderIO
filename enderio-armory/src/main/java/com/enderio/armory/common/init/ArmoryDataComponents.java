@@ -8,7 +8,6 @@ import com.mojang.serialization.Codec;
 import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.component.CustomData;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -16,9 +15,6 @@ public class ArmoryDataComponents {
 
     private static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPES = DeferredRegister
             .create(Registries.DATA_COMPONENT_TYPE, EnderIO.NAMESPACE);
-
-    public static Supplier<DataComponentType<CustomData>> DARK_STEEL_UPGRADE = saved("dark_steel_upgrade",
-            CustomData.CODEC);
 
     public static Supplier<DataComponentType<DarkSteelCapability.DarkSteelItemUpgrades>> DARK_STEEL_ITEM_UPGRADES = saved(
             "dark_steel_upgrades", ITEM_UPGRADES_CODEC);

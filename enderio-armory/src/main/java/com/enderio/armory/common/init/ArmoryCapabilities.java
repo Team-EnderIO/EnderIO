@@ -1,7 +1,5 @@
 package com.enderio.armory.common.init;
 
-import static com.enderio.armory.common.init.ArmoryDataComponents.DARK_STEEL_ITEM_UPGRADES;
-
 import com.enderio.armory.api.capability.IDarkSteelCapability;
 import com.enderio.armory.common.capability.DarkSteelCapability;
 import com.enderio.armory.common.capability.DarkSteelEnergyStorage;
@@ -20,7 +18,7 @@ public class ArmoryCapabilities {
             .createVoid(EnderIO.loc("dark_steel_capability"), IDarkSteelCapability.class);
 
     public static ICapabilityProvider<ItemStack, Void, IDarkSteelCapability> DARK_STEEL_PROVIDER = (stack,
-            v) -> new DarkSteelCapability(DARK_STEEL_ITEM_UPGRADES, stack);
+            v) -> new DarkSteelCapability(stack);
 
     public static ICapabilityProvider<ItemStack, Void, IEnergyStorage> DARK_STEEL_ENERGY_STORAGE_PROVIDER = (stack,
             v) -> new DarkSteelEnergyStorage(stack, EIODataComponents.ENERGY.get(),
