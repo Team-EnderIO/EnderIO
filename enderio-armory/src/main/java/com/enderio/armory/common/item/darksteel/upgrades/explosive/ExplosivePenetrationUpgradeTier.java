@@ -2,7 +2,7 @@ package com.enderio.armory.common.item.darksteel.upgrades.explosive;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
 import com.enderio.armory.common.config.ArmoryConfig;
-import com.enderio.armory.common.item.darksteel.upgrades.IUpgradeTier;
+import com.enderio.armory.api.capability.IUpgradeTier;
 import com.enderio.armory.common.lang.ArmoryLang;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.common.ModConfigSpec;

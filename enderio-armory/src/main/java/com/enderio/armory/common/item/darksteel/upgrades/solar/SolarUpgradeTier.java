@@ -2,7 +2,7 @@ package com.enderio.armory.common.item.darksteel.upgrades.solar;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
 import com.enderio.armory.common.config.ArmoryConfig;
-import com.enderio.armory.common.item.darksteel.upgrades.IUpgradeTier;
+import com.enderio.armory.api.capability.IUpgradeTier;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import java.util.function.Supplier;

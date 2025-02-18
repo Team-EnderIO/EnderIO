@@ -1,6 +1,5 @@
 package com.enderio.armory.api.capability;
 
-import com.enderio.armory.common.item.darksteel.upgrades.IUpgradeTier;
 import java.util.Collection;
 import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;

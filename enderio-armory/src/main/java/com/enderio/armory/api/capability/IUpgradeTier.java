@@ -1,6 +1,5 @@
-package com.enderio.armory.common.item.darksteel.upgrades;
+package com.enderio.armory.api.capability;
 
-import com.enderio.armory.api.capability.IDarkSteelUpgrade;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.common.ModConfigSpec;
 

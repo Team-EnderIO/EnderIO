@@ -2,7 +2,7 @@ package com.enderio.armory.common.item.darksteel;
 
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.init.ArmoryArmorMaterials;
-import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;

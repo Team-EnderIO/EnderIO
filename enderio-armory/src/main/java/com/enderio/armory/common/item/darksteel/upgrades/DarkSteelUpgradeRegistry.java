@@ -2,10 +2,12 @@ package com.enderio.armory.common.item.darksteel.upgrades;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.ElytraUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.GliderUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.jump.JumpUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisisionUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;

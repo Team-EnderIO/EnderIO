@@ -1,10 +1,12 @@
-package com.enderio.armory.common.item.darksteel.upgrades;
+package com.enderio.armory.common.item.darksteel.upgrades.jump;
 
 import com.enderio.armory.api.capability.IDarkSteelCapability;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryCapabilities;
 import com.enderio.armory.common.init.ArmoryDataComponents;
+import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
+import com.enderio.armory.common.item.darksteel.upgrades.TieredUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.ElytraUpgrade;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.core.common.energy.ItemStackEnergy;

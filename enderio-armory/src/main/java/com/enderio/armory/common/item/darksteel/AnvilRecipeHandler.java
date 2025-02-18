@@ -33,9 +33,7 @@ public class AnvilRecipeHandler {
             event.setOutput(result);
             event.setCost(cost);
             event.setMaterialCost(1);
-
         }
-
     }
 
 }

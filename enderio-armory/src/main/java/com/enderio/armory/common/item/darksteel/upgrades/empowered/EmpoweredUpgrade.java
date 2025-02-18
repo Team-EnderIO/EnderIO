@@ -1,7 +1,9 @@
-package com.enderio.armory.common.item.darksteel.upgrades;
+package com.enderio.armory.common.item.darksteel.upgrades.empowered;
 
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
+import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
+import com.enderio.armory.common.item.darksteel.upgrades.TieredUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.util.TooltipUtil;

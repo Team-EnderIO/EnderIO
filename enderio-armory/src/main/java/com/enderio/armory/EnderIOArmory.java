@@ -8,7 +8,7 @@ import com.enderio.armory.common.init.ArmoryLootModifiers;
 import com.enderio.armory.common.init.ArmoryRecipes;
 import com.enderio.armory.common.item.darksteel.AnvilRecipeHandler;
 import com.enderio.armory.common.item.darksteel.DarkSteelSwordItem;
-import com.enderio.armory.common.item.darksteel.upgrades.JumpUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.jump.JumpUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.StepAssistUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.GliderIntegration;
 import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisionHandler;

@@ -2,6 +2,8 @@ package com.enderio.armory.common.item.darksteel.upgrades;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
 import java.util.Optional;
+
+import com.enderio.armory.api.capability.IUpgradeTier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;

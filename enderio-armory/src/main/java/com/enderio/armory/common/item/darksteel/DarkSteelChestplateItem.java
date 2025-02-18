@@ -3,7 +3,7 @@ package com.enderio.armory.common.item.darksteel;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
-import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.ElytraUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.GliderUpgrade;
 import com.enderio.armory.common.tag.ArmoryTags;

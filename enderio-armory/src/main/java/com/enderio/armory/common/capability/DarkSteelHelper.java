@@ -3,7 +3,7 @@ package com.enderio.armory.common.capability;
 import com.enderio.armory.api.capability.IDarkSteelCapability;
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
 import com.enderio.armory.common.init.ArmoryCapabilities;
-import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;

@@ -2,8 +2,8 @@ package com.enderio.armory.common.item.darksteel;
 
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
-import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
-import com.enderio.armory.common.item.darksteel.upgrades.JumpUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.jump.JumpUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.StepAssistUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
