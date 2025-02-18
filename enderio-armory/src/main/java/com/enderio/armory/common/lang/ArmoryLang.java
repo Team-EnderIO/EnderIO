@@ -143,11 +143,7 @@ public class ArmoryLang {
     // endregion
 
     private static MutableComponent addTranslation(ResourceLocation id, String translation) {
-        return addTranslation("info", id, translation);
-    }
-
-    private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
-        return EnderIOArmory.REGILITE.addTranslation(prefix, id, translation);
+        return EnderIOArmory.REGILITE.addTranslation("info", id, translation);
     }
 
     public static void register() {

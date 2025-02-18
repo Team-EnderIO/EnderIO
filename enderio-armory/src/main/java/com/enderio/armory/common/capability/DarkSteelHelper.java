@@ -15,12 +15,11 @@ public class DarkSteelHelper {
         return DarkSteelHelper.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class);
     }
 
-    public static ItemStack addUpgrade(ItemStack itemStack, IDarkSteelUpgrade upgrade) {
+    public static void addUpgrade(ItemStack itemStack, IDarkSteelUpgrade upgrade) {
         IDarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
         if (capability != null) {
             capability.addUpgrade(upgrade);
         }
-        return itemStack;
     }
 
     public static void removeUpgrade(ItemStack itemStack, String upgrade) {
@@ -32,18 +31,12 @@ public class DarkSteelHelper {
 
     public static Collection<IDarkSteelUpgrade> getUpgrades(ItemStack itemStack) {
         IDarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
-        if (capability != null) {
-            return capability.getUpgrades();
-        }
-        return Collections.emptyList();
+        return capability != null ? capability.getUpgrades() : Collections.emptyList();
     }
 
     public static boolean hasUpgrade(ItemStack itemStack, String name) {
         IDarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
-        if (capability != null) {
-            return capability.hasUpgrade(name);
-        }
-        return false;
+        return capability != null && capability.hasUpgrade(name);
     }
 
     public static <T extends IDarkSteelUpgrade> Optional<T> getUpgradeAs(ItemStack itemStack, String upgrade,
@@ -54,10 +47,7 @@ public class DarkSteelHelper {
 
     public static Collection<IDarkSteelUpgrade> getUpgradesApplicable(ItemStack itemStack) {
         IDarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
-        if (capability != null) {
-            return capability.getUpgradesApplicable();
-        }
-        return Collections.emptyList();
+        return capability != null ? capability.getUpgradesApplicable() : Collections.emptyList();
     }
 
 }

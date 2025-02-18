@@ -13,41 +13,11 @@ public class DarkSteelEnergyStorage extends ComponentEnergyStorage {
     }
 
     @Override
-    public int receiveEnergy(int toReceive, boolean simulate) {
-        return super.receiveEnergy(toReceive, simulate);
-    }
-
-    @Override
-    public int extractEnergy(int toExtract, boolean simulate) {
-        return super.extractEnergy(toExtract, simulate);
-    }
-
-    @Override
-    public int getEnergyStored() {
-        return super.getEnergyStored();
-    }
-
-    @Override
-    public int getMaxEnergyStored() {
-        return super.getMaxEnergyStored();
-    }
-
-    @Override
-    public boolean canExtract() {
-        return super.canExtract();
-    }
-
-    @Override
-    public boolean canReceive() {
-        return super.canReceive();
-    }
-
-    @Override
     protected void setEnergy(int energy) {
         super.setEnergy(energy);
         // Do this to ensure any equipped items have their ItemAttributeModifierEvent
         // event fired so they can update
-        // any attribute modifiers energy is lost or regained
+        // any attribute modifiers when energy is lost or regained
         parent.set(ArmoryDataComponents.DARK_STEEL_ITEM_HAS_ENERGY, energy > 0);
     }
 }
