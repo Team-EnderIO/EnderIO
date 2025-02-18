@@ -1,4 +1,4 @@
-package com.enderio.armory.client;
+package com.enderio.armory.client.renderer;
 
 import com.enderio.base.api.integration.ClientIntegration;
 import com.enderio.base.client.EnderIOBaseClient;

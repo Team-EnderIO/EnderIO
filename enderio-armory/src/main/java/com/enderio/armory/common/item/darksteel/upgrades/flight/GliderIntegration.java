@@ -1,6 +1,6 @@
 package com.enderio.armory.common.item.darksteel.upgrades.flight;
 
-import com.enderio.armory.client.GliderIntegrationClient;
+import com.enderio.armory.client.renderer.GliderIntegrationClient;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.tag.ArmoryTags;

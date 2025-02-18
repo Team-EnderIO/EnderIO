@@ -117,6 +117,16 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
                 || (hasFork(stack) && ItemAbilities.DEFAULT_HOE_ACTIONS.contains(itemAbility));
     }
 
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return slotChanged || oldStack.getItem() != newStack.getItem();
+    }
+
+    @Override
+    public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
+        return oldStack.getItem() != newStack.getItem();
+    }
+
     private boolean hasFork(ItemStack stack) {
         return DarkSteelHelper.hasUpgrade(stack, ForkUpgrade.NAME);
     }

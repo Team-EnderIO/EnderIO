@@ -35,7 +35,7 @@ public class SolarUpgradeRenderLayer extends RenderLayer<AbstractClientPlayer, P
 
         poseStack.pushPose();
         getParentModel().getHead().translateAndRotate(poseStack);
-        translateToHead(poseStack);
+        translateToTopOfHead(poseStack);
         Minecraft.getInstance()
                 .getEntityRenderDispatcher()
                 .getItemInHandRenderer()
@@ -43,11 +43,10 @@ public class SolarUpgradeRenderLayer extends RenderLayer<AbstractClientPlayer, P
         poseStack.popPose();
     }
 
-    private void translateToHead(PoseStack poseStack) {
+    private void translateToTopOfHead(PoseStack poseStack) {
         poseStack.translate(0.0F, -0.25F, 0.0F);
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
         poseStack.scale(0.625F, -0.625F, -0.625F);
-        float yOffset = 1f;
-        poseStack.translate(0.0F, 0.0F + yOffset, 0.0F);
+        poseStack.translate(0.0F, 1, 0.0F);
     }
 }

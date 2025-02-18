@@ -130,6 +130,16 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
         modifier.accept(fullyUpgraded);
     }
 
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return slotChanged || oldStack.getItem() != newStack.getItem();
+    }
+
+    @Override
+    public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
+        return oldStack.getItem() != newStack.getItem();
+    }
+
     private boolean hasSpoon(ItemStack stack) {
         return DarkSteelHelper.hasUpgrade(stack, SpoonUpgrade.NAME);
     }

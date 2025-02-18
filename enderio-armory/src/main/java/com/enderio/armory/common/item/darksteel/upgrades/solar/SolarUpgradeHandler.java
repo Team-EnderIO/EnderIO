@@ -19,8 +19,11 @@ import org.jetbrains.annotations.Nullable;
 public class SolarUpgradeHandler {
 
     public static void onPlayerTick(PlayerTickEvent.Pre evt) {
-        Player player = evt.getEntity();
 
+        Player player = evt.getEntity();
+        if (player.level().isClientSide()) {
+            return;
+        }
         Optional<SolarUpgrade> upOp = getUpgrade(player);
         if (upOp.isEmpty()) {
             return;
@@ -53,7 +56,9 @@ public class SolarUpgradeHandler {
     private static int chargeInv(int startIndex, int endIndex, Player player, int energy) {
         Inventory inv = player.getInventory();
         for (int i = startIndex; i < endIndex; i++) {
-            energy -= ItemStackEnergy.receiveEnergy(inv.getItem(i), energy, false);
+
+            ItemStack chargeItem = inv.getItem(i);
+            energy -= ItemStackEnergy.receiveEnergy(chargeItem, energy, false);
             if (energy <= 0) {
                 int nextIndex = i + 1;
                 if (nextIndex >= inv.getContainerSize()) {
