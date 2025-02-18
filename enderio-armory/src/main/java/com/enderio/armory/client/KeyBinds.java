@@ -1,8 +1,6 @@
 package com.enderio.armory.client;
 
 import com.enderio.armory.EnderIOArmory;
-import com.enderio.armory.common.item.darksteel.upgrades.flight.FlightToggleHandler;
-import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisionHandler;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
@@ -31,7 +29,7 @@ public class KeyBinds {
         event.register(FLIGHT_MAPPING.get());
         event.register(NIGHT_VISION_MAPPING.get());
         NeoForge.EVENT_BUS.addListener(FlightToggleHandler::toggleFlightUpgrade);
-        NeoForge.EVENT_BUS.addListener(NightVisionHandler.INST::toggleNightVision);
+        NeoForge.EVENT_BUS.addListener(NightVisionToggleHandler::toggleNightVision);
     }
 
 }

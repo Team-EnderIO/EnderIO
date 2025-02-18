@@ -2,7 +2,7 @@ package com.enderio.armory.common.init;
 
 import com.enderio.armory.EnderIOArmory;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.FlightEnabledPacket;
-import com.enderio.armory.common.item.darksteel.upgrades.flight.FlightToggleHandler;
+import com.enderio.armory.common.item.darksteel.upgrades.flight.FlightUpgradeUtil;
 import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisionEnabledPacket;
 import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisionHandler;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
@@ -32,7 +32,7 @@ public class ArmoryNetwork {
                 SpeedUpgrade::handleEnergyUsePacket);
 
         registrar.playToServer(FlightEnabledPacket.TYPE, FlightEnabledPacket.STREAM_CODEC,
-                FlightToggleHandler::handleActivePacket);
+                FlightUpgradeUtil::handleActivePacket);
 
         registrar.playToServer(NightVisionEnabledPacket.TYPE, NightVisionEnabledPacket.STREAM_CODEC,
                 NightVisionHandler.INST::handleActivePacket);
