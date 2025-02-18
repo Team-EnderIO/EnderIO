@@ -22,6 +22,7 @@ public class SolarUpgradeHandler {
 
         Player player = evt.getEntity();
         if (player.level().isClientSide()) {
+            // Only need to do charge on the server
             return;
         }
         Optional<SolarUpgrade> upOp = getUpgrade(player);

@@ -14,7 +14,6 @@ import com.enderio.armory.common.item.darksteel.upgrades.jump.JumpUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisionHandler;
 import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgradeHandler;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
-import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.armory.data.loot.ArmoryLootModifiersProvider;
@@ -64,7 +63,6 @@ public class EnderIOArmory {
 
         // Specific event listeners
         NeoForge.EVENT_BUS.addListener(DarkSteelSwordItem::onEntityTeleport);
-        NeoForge.EVENT_BUS.addListener(TravelUpgrade::checkShiftStatus);
         NeoForge.EVENT_BUS.addListener(DarkSteelSwordItem::applyAttackModifiers);
         NeoForge.EVENT_BUS.addListener(StepAssistUpgrade::applyStepHeightModifiers);
         NeoForge.EVENT_BUS.addListener(SpeedUpgrade::applySpeedModifiers);

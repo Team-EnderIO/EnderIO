@@ -141,6 +141,16 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         return super.useOn(context);
     }
 
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return slotChanged || oldStack.getItem() != newStack.getItem();
+    }
+
+    @Override
+    public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
+        return oldStack.getItem() != newStack.getItem();
+    }
+
     private static Optional<ItemStack> getSkull(LivingEntity pTarget) {
         if (pTarget.getType() == EntityType.SKELETON || pTarget.getType() == EntityType.STRAY) {
             return Optional.of(new ItemStack(Items.SKELETON_SKULL));

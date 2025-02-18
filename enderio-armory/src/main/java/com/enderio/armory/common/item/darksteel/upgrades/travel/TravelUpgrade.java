@@ -20,8 +20,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,15 +43,6 @@ public class TravelUpgrade implements IDarkSteelUpgrade {
     @Override
     public Collection<Component> getDescription() {
         return List.of(ArmoryLang.DS_UPGRADE_TRAVEL_DESCRIPTION);
-    }
-
-    public static void checkShiftStatus(MovementInputUpdateEvent evt) {
-        ItemStack equipped = evt.getEntity().getItemInHand(InteractionHand.MAIN_HAND);
-        if (!DarkSteelHelper.hasUpgrade(equipped, TravelUpgrade.NAME)) {
-            return;
-        }
-        equipped.set(EIODataComponents.TRAVEL_ITEM, evt.getInput().shiftKeyDown);
-        PacketDistributor.sendToServer(new TravelEndabledUpdatePacket(evt.getInput().shiftKeyDown));
     }
 
     public static void handleTravelEnabledPacket(TravelEndabledUpdatePacket packet, IPayloadContext context) {

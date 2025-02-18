@@ -21,7 +21,7 @@ public class NightVisionHandler {
 
     public static final NightVisionHandler INST = new NightVisionHandler();
 
-    private final Set<UUID> appliedPlayers = new HashSet<>();
+    private final Set<UUID> appliedToPlayers = new HashSet<>();
 
     public void updateEffect(PlayerTickEvent.Pre evt) {
         Player player = evt.getEntity();
@@ -44,7 +44,7 @@ public class NightVisionHandler {
         }
         MobEffectInstance instance = new MobEffectInstance(MobEffects.NIGHT_VISION, 500, 0, false, false, false);
         player.addEffect(instance);
-        appliedPlayers.add(player.getUUID());
+        appliedToPlayers.add(player.getUUID());
     }
 
     public void handleActivePacket(NightVisionEnabledPacket packet, IPayloadContext context) {
@@ -59,11 +59,11 @@ public class NightVisionHandler {
     }
 
     private void removeEffect(Player player) {
-        if (!appliedPlayers.contains(player.getUUID())) {
+        if (!appliedToPlayers.contains(player.getUUID())) {
             return;
         }
         player.removeEffect(MobEffects.NIGHT_VISION);
-        appliedPlayers.remove(player.getUUID());
+        appliedToPlayers.remove(player.getUUID());
     }
 
     public static Optional<ItemStack> getEquippedHelmet(Player player) {
