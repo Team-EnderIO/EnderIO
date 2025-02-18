@@ -1,8 +1,8 @@
 package com.enderio.armory.common.item.darksteel.upgrades.empowered;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.api.capability.IUpgradeTier;
+import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.lang.ArmoryLang;
 import java.util.function.Supplier;
 import net.minecraft.network.chat.Component;

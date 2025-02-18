@@ -185,7 +185,7 @@ public class ArmoryCommonConfig {
         JUMP_ACTIVATION_COST_II = builder.define("jumpActivationCost_l2", 8);
         builder.pop();
 
-        builder.pop(); //upgrades
-        builder.pop(); //dark steel
+        builder.pop(); // upgrades
+        builder.pop(); // dark steel
     }
 }

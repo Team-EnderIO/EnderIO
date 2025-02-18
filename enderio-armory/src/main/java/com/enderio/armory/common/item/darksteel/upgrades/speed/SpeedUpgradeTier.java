@@ -1,8 +1,8 @@
 package com.enderio.armory.common.item.darksteel.upgrades.speed;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.api.capability.IUpgradeTier;
+import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.base.api.EnderIO;
 import java.util.function.Supplier;
@@ -31,10 +31,6 @@ public enum SpeedUpgradeTier implements IUpgradeTier {
         this.activationCost = activationCost;
         this.displayName = displayName;
         factory = () -> new SpeedUpgrade(this);
-    }
-
-    public ModConfigSpec.ConfigValue<Double> getMagnitude() {
-        return magnitude;
     }
 
     @Override
