@@ -52,10 +52,7 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
         ItemStack result = results.getFirst().getItem();
 
         if (copyInputComponents) {
-            result = new ItemStack(result.getItem().builtInRegistryHolder(), result.getCount(),
-                    input.itemToBind.getComponentsPatch());
-            results = List.of(OutputStack.of(result),
-                    OutputStack.of(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance()));
+            result.applyComponents(input.itemToBind.getComponents());
         }
 
         var storedEntityData = vial.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
