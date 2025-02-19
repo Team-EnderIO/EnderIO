@@ -331,14 +331,14 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     private void tryMendTool() {
         FluidStack fluid = TANK.getFluid(this);
 
-        if (!fluid.isEmpty() && fluid.is(EIOTags.Fluids.EXPERIENCE)) {
+        if (!fluid.isEmpty() && fluid.is(EIOTags.Fluids.EXPERIENCE)
+                && FLUID_DRAIN_OUTPUT.getItemStack(this).isEmpty()) {
             ItemStack tool = FLUID_DRAIN_INPUT.getItemStack(this);
 
             var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
             var mendingEnchantment = enchantmentsRecipe.getOrThrow(Enchantments.MENDING);
 
-            if (tool.isDamageableItem() && tool.getEnchantmentLevel(mendingEnchantment) > 0
-                    && FLUID_DRAIN_OUTPUT.getItemStack(this).isEmpty()) {
+            if (tool.isDamageableItem() && tool.getEnchantmentLevel(mendingEnchantment) > 0) {
 
                 ItemStack repairedTool = tool.copy();
 
