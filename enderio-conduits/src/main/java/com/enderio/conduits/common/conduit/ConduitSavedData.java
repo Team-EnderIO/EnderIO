@@ -94,7 +94,8 @@ public class ConduitSavedData extends SavedData {
             ListTag graphObjectsTag = graphTag.getList(KEY_GRAPH_OBJECTS, Tag.TAG_COMPOUND);
             ListTag graphConnectionsTag = graphTag.getList(KEY_GRAPH_CONNECTIONS, Tag.TAG_COMPOUND);
 
-            // Skip any graphs which have no objects in them, they should not have been saved.
+            // Skip any graphs which have no objects in them, they should not have been
+            // saved.
             if (graphObjectsTag.isEmpty()) {
                 // TODO: Warning or something?
                 continue;
@@ -123,14 +124,14 @@ public class ConduitSavedData extends SavedData {
             // Links all graph objects back together by unpacking the connection pairs.
             for (var graphObject : graphObjects) {
                 // Find neighbors
-                // TODO: Currently requires a grim cast in this stream code to convert the type to GraphObject.
-                var neighbors = connections
-                    .stream()
-                    .filter(pair -> (pair.getFirst() == graphObject || pair.getSecond() == graphObject))
-                    .map(pair -> pair.getFirst() == graphObject ? pair.getSecond() : pair.getFirst())
-                    .map(obj -> (GraphObject<ConduitGraphContext>)obj)
-                    .distinct()
-                    .toList();
+                // TODO: Currently requires a grim cast in this stream code to convert the type
+                // to GraphObject.
+                var neighbors = connections.stream()
+                        .filter(pair -> (pair.getFirst() == graphObject || pair.getSecond() == graphObject))
+                        .map(pair -> pair.getFirst() == graphObject ? pair.getSecond() : pair.getFirst())
+                        .map(obj -> (GraphObject<ConduitGraphContext>) obj)
+                        .distinct()
+                        .toList();
 
                 for (var neighbor : neighbors) {
                     ConduitGraphUtility.connect(conduit, graphObject, neighbor);
@@ -140,19 +141,25 @@ public class ConduitSavedData extends SavedData {
             var firstGraphObject = graphObjects.getFirst();
             var graph = firstGraphObject.getGraph();
 
-            // If the graph is null after linking all the objects together, something has gone really wrong.
-            // While we *should* maybe check that there isn't a graph in all places (in case of corruption and try to recover)
-            //  it is likely best that we throw this as an error and deal with it once we have context for why this could happen (it shouldn't).
+            // If the graph is null after linking all the objects together, something has
+            // gone really wrong.
+            // While we *should* maybe check that there isn't a graph in all places (in case
+            // of corruption and try to recover)
+            // it is likely best that we throw this as an error and deal with it once we
+            // have context for why this could happen (it shouldn't).
             if (graph == null) {
-                LOGGER.error("Graph is null after loading a network. Please report this issue to Ender IO, loading cannot continue.");
+                LOGGER.error(
+                        "Graph is null after loading a network. Please report this issue to Ender IO, loading cannot continue.");
                 throw new IllegalStateException("Graph was null after loading the conduit network");
             }
 
             networks.computeIfAbsent(conduit, ignored -> new ArrayList<>()).add(graph);
 
-            // Now load the context into the newly formed graph, overwriting any context that may have been formed during construction.
+            // Now load the context into the newly formed graph, overwriting any context
+            // that may have been formed during construction.
             if (graphTag.contains(KEY_GRAPH_CONTEXT)) {
-                graph.setContextData(ConduitGraphContext.loadNetworkContext(conduit, lookupProvider, graphTag.getCompound(KEY_GRAPH_CONTEXT)));
+                graph.setContextData(ConduitGraphContext.loadNetworkContext(conduit, lookupProvider,
+                        graphTag.getCompound(KEY_GRAPH_CONTEXT)));
             }
         }
     }
