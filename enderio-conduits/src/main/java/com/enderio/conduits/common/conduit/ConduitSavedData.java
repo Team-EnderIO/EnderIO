@@ -82,7 +82,7 @@ public class ConduitSavedData extends SavedData {
                 ListTag graphsForTypeTag = typedGraphTag.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
                 deserializeGraphs(lookupProvider, conduit.get(), graphsForTypeTag);
             } else {
-                LOGGER.warn("Skipping graph for missing conduit: " + conduitKey);
+                LOGGER.warn("Skipping graph for missing conduit: {}", conduitKey);
             }
         }
     }
@@ -93,6 +93,12 @@ public class ConduitSavedData extends SavedData {
 
             ListTag graphObjectsTag = graphTag.getList(KEY_GRAPH_OBJECTS, Tag.TAG_COMPOUND);
             ListTag graphConnectionsTag = graphTag.getList(KEY_GRAPH_CONNECTIONS, Tag.TAG_COMPOUND);
+
+            // Skip any graphs which have no objects in them, they should not have been saved.
+            if (graphObjectsTag.isEmpty()) {
+                // TODO: Warning or something?
+                continue;
+            }
 
             List<ConduitGraphObject> graphObjects = new ArrayList<>();
             List<Pair<ConduitGraphObject, ConduitGraphObject>> connections = new ArrayList<>();
@@ -114,17 +120,40 @@ public class ConduitSavedData extends SavedData {
                         graphObjects.get(connectionTag.getInt("1"))));
             }
 
-            ConduitGraphObject graphObject = graphObjects.get(0);
-            if (graphTag.contains(KEY_GRAPH_CONTEXT)) {
-                ConduitGraphUtility.integrateWithLoad(conduit, graphObject, List.of(), lookupProvider,
-                        graphTag.getCompound(KEY_GRAPH_CONTEXT));
-            } else {
-                ConduitGraphUtility.integrate(conduit, graphObject, List.of());
+            // Links all graph objects back together by unpacking the connection pairs.
+            for (var graphObject : graphObjects) {
+                // Find neighbors
+                // TODO: Currently requires a grim cast in this stream code to convert the type to GraphObject.
+                var neighbors = connections
+                    .stream()
+                    .filter(pair -> (pair.getFirst() == graphObject || pair.getSecond() == graphObject))
+                    .map(pair -> pair.getFirst() == graphObject ? pair.getSecond() : pair.getFirst())
+                    .map(obj -> (GraphObject<ConduitGraphContext>)obj)
+                    .distinct()
+                    .toList();
+
+                for (var neighbor : neighbors) {
+                    ConduitGraphUtility.connect(conduit, graphObject, neighbor);
+                }
             }
 
-            merge(conduit, graphObject, connections);
+            var firstGraphObject = graphObjects.getFirst();
+            var graph = firstGraphObject.getGraph();
 
-            networks.computeIfAbsent(conduit, t -> new ArrayList<>()).add(graphObject.getGraph());
+            // If the graph is null after linking all the objects together, something has gone really wrong.
+            // While we *should* maybe check that there isn't a graph in all places (in case of corruption and try to recover)
+            //  it is likely best that we throw this as an error and deal with it once we have context for why this could happen (it shouldn't).
+            if (graph == null) {
+                LOGGER.error("Graph is null after loading a network. Please report this issue to Ender IO, loading cannot continue.");
+                throw new IllegalStateException("Graph was null after loading the conduit network");
+            }
+
+            networks.computeIfAbsent(conduit, ignored -> new ArrayList<>()).add(graph);
+
+            // Now load the context into the newly formed graph, overwriting any context that may have been formed during construction.
+            if (graphTag.contains(KEY_GRAPH_CONTEXT)) {
+                graph.setContextData(ConduitGraphContext.loadNetworkContext(conduit, lookupProvider, graphTag.getCompound(KEY_GRAPH_CONTEXT)));
+            }
         }
     }
 
@@ -243,26 +272,6 @@ public class ConduitSavedData extends SavedData {
     }
 
     // endregion
-
-    private void merge(Holder<Conduit<?>> conduit, GraphObject<ConduitGraphContext> object,
-            List<Pair<ConduitGraphObject, ConduitGraphObject>> connections) {
-        var filteredConnections = connections.stream()
-                .filter(pair -> (pair.getFirst() == object || pair.getSecond() == object))
-                .toList();
-
-        List<? extends ConduitGraphObject> neighbors = filteredConnections.stream()
-                .map(pair -> pair.getFirst() == object ? pair.getSecond() : pair.getFirst())
-                .toList();
-
-        for (var neighbor : neighbors) {
-            ConduitGraphUtility.connect(conduit, object, neighbor);
-        }
-
-        connections = connections.stream().filter(v -> !filteredConnections.contains(v)).toList();
-        if (!connections.isEmpty()) {
-            merge(conduit, connections.get(0).getFirst(), connections);
-        }
-    }
 
     @Nullable
     public ConduitGraphObject takeUnloadedNodeIdentifier(Holder<Conduit<?>> conduit, BlockPos pos) {
