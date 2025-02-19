@@ -219,9 +219,9 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             var actionRange = getData(MachineAttachments.ACTION_RANGE);
             isRangeVisible = actionRange.isVisible();
             removeData(MachineAttachments.ACTION_RANGE);
-        } else if (pTag.contains(MachineNBTKeys.IS_RANGE_VISIBLE)) {
-            isRangeVisible = pTag.getBoolean(MachineNBTKeys.IS_RANGE_VISIBLE);
         }
+
+        isRangeVisible = pTag.contains(MachineNBTKeys.IS_RANGE_VISIBLE) && pTag.getBoolean(MachineNBTKeys.IS_RANGE_VISIBLE);
     }
 
     @Override
