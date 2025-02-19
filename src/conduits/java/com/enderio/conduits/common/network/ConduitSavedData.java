@@ -103,7 +103,9 @@ public class ConduitSavedData extends SavedData {
                             .distinct()
                             .toList();
 
-                        Graph.integrate(graphObject, neighbors);
+                        for (var neighbor : neighbors) {
+                            Graph.connect(graphObject, neighbor);
+                        }
                     }
 
                     // Get the graph from the loaded data
