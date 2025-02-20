@@ -532,6 +532,9 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         return pPlayer.canInteractWithBlock(this.worldPosition, 1.5);
     }
 
+    // TODO: should be enabled once the client side call in WrenchableBlockHandler
+    // is removed
+    // @EnsureSide(EnsureSide.Side.SERVER)
     @Override
     public ItemInteractionResult onWrenched(@Nullable Player player, @Nullable Direction side) {
         if (player == null || level == null) {
