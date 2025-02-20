@@ -121,6 +121,10 @@ public class ConduitSavedData extends SavedData {
                         graphObjects.get(connectionTag.getInt("1"))));
             }
 
+            // Create a graph for the first object, in case it is a single-node graph
+            var firstGraphObject = graphObjects.getFirst();
+            ConduitGraphUtility.integrate(conduit, firstGraphObject, List.of());
+
             // Links all graph objects back together by unpacking the connection pairs.
             for (var graphObject : graphObjects) {
                 // Find neighbors
@@ -138,15 +142,13 @@ public class ConduitSavedData extends SavedData {
                 }
             }
 
-            var firstGraphObject = graphObjects.getFirst();
-            var graph = firstGraphObject.getGraph();
-
             // If the graph is null after linking all the objects together, something has
             // gone really wrong.
             // While we *should* maybe check that there isn't a graph in all places (in case
             // of corruption and try to recover)
             // it is likely best that we throw this as an error and deal with it once we
             // have context for why this could happen (it shouldn't).
+            var graph = firstGraphObject.getGraph();
             if (graph == null) {
                 LOGGER.error(
                         "Graph is null after loading a network. Please report this issue to Ender IO, loading cannot continue.");
