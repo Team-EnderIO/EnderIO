@@ -27,7 +27,7 @@ public class EIOBlockEntity extends EnderBlockEntity {
 
         if (level != null && !level.isClientSide()) {
             if (isRedstoneDirty) {
-                updateRedstonePower(false);
+                updateRedstonePower();
             }
         }
     }
@@ -37,7 +37,7 @@ public class EIOBlockEntity extends EnderBlockEntity {
         super.onLoad();
 
         if (supportsRedstonePower()) {
-            updateRedstonePower(true);
+            onRedstonePowerChanged();
         }
     }
 
@@ -60,13 +60,13 @@ public class EIOBlockEntity extends EnderBlockEntity {
         return isRedstonePowered;
     }
 
-    private void updateRedstonePower(boolean forceUpdate) {
+    private void updateRedstonePower() {
         boolean hasPower = level.hasNeighborSignal(worldPosition);
         boolean didChange = isRedstonePowered != hasPower;
         isRedstonePowered = hasPower;
         isRedstoneDirty = false;
 
-        if (didChange || forceUpdate) {
+        if (didChange) {
             onRedstonePowerChanged();
         }
     }
