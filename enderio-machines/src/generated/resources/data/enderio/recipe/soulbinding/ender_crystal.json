@@ -1,5 +1,6 @@
 {
   "type": "enderio:soul_binding",
+  "copyInputComponents": false,
   "energy": 76800,
   "entity_type": "minecraft:enderman",
   "experience": 6,
