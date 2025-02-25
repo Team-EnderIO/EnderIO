@@ -428,11 +428,12 @@ public class MachineRecipeProvider extends RecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.VAT.get())
                 .define('B', EIOTags.Items.INGOTS_COPPER_ALLOY)
-                .define('F', Blocks.FURNACE)
+                .define('C', Blocks.CAULDRON)
                 .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
                 .define('T', MachineBlocks.FLUID_TANK)
                 .define('V', EIOBlocks.VOID_CHASSIS.get())
-                .pattern("BFB")
+                .define('F', Blocks.FURNACE)
+                .pattern("BCB")
                 .pattern("TVT")
                 .pattern("IFI")
                 .unlockedBy("has_ingredient",

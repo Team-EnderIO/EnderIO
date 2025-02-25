@@ -5,6 +5,9 @@
     "B": {
       "tag": "c:ingots/copper_alloy"
     },
+    "C": {
+      "item": "minecraft:cauldron"
+    },
     "F": {
       "item": "minecraft:furnace"
     },
@@ -19,7 +22,7 @@
     }
   },
   "pattern": [
-    "BFB",
+    "BCB",
     "TVT",
     "IFI"
   ],
