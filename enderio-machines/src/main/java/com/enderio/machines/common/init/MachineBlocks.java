@@ -37,6 +37,8 @@ import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlockEntity;
 import com.enderio.machines.common.blocks.vacuum.chest.VacuumChestBlockEntity;
 import com.enderio.machines.common.blocks.vacuum.xp.XPVacuumBlockEntity;
 import com.enderio.machines.common.blocks.vat.VatBlock;
+import com.enderio.machines.common.blocks.wireless_charger.WirelessAntennaBlock;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.item.CapacitorBankItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
@@ -62,6 +64,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class MachineBlocks {
     private static final BlockRegistry BLOCK_REGISTRY = EnderIOMachines.REGILITE.blockRegistry();
@@ -80,9 +83,8 @@ public class MachineBlocks {
                     .customLoader(CompositeModelBuilder::begin)
                     .child("tank",
                             ModelHelper.getExistingAsBuilder(prov.models(),
-                                EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
-                    .child("overlay",
-                            ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
+                                    EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
+                    .child("overlay", ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
                     .end()
                     .texture("particle", EnderIO.loc("block/machine_side"))))
             .createBlockItem(ITEM_REGISTRY, block -> new FluidTankBlockItem(block, new Item.Properties(), 16000),
@@ -105,9 +107,8 @@ public class MachineBlocks {
                     .customLoader(CompositeModelBuilder::begin)
                     .child("tank",
                             ModelHelper.getExistingAsBuilder(prov.models(),
-                                EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
-                    .child("overlay",
-                            ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
+                                    EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
+                    .child("overlay", ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
                     .end()
                     .texture("particle", EnderIO.loc("block/machine_side"))))
             .createBlockItem(ITEM_REGISTRY, (block) -> new FluidTankBlockItem(block, new Item.Properties(), 32000),
@@ -138,6 +139,17 @@ public class MachineBlocks {
 
     public static final RegiliteBlock<MachineBlock<?>> WIRED_CHARGER = machine("wired_charger",
             () -> MachineBlockEntities.WIRED_CHARGER);
+
+    public static final RegiliteBlock<ProgressMachineBlock<?>> WIRELESS_CHARGER = progressMachine("wireless_charger",
+            () -> MachineBlockEntities.WIRELESS_CHARGER);
+
+    public static final RegiliteBlock<WirelessAntennaBlock> WIRELESS_CHARGER_ANTENNA = wirelessAntenna(
+            "wireless_charger_antenna", "Pulsating Wireless Antenna",
+            MachinesConfig.COMMON.WIRELESS_CHARGER_ANTENNA_RANGE);
+
+    public static final RegiliteBlock<WirelessAntennaBlock> WIRELESS_CHARGER_ANTENNA_ADVANCED = wirelessAntenna(
+            "wireless_charger_antenna_advanced", "Vibrant Wireless Antenna",
+            MachinesConfig.COMMON.WIRELESS_CHARGER_ANTENNA_RANGE_2);
 
     public static final RegiliteBlock<LegacyMachineBlock> CREATIVE_POWER = BLOCK_REGISTRY
             .registerBlock("creative_power",
@@ -256,8 +268,7 @@ public class MachineBlocks {
             .registerBlock("block_detector", BlockDetectorBlock::new,
                     BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER))
             .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)
-            .setBlockStateProvider(
-                    (prov, ctx) -> prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName())))
+            .setBlockStateProvider((prov, ctx) -> prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName())))
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
     public static final RegiliteBlock<MachineBlock<XPObeliskBlockEntity>> XP_OBELISK = BLOCK_REGISTRY
@@ -365,6 +376,22 @@ public class MachineBlocks {
                                 .setTab(EIOCreativeTabs.MACHINES)
                                 .addCapability(Capabilities.EnergyStorage.ITEM,
                                         CapacitorBankItem.ENERGY_STORAGE_PROVIDER));
+    }
+
+    private static RegiliteBlock<WirelessAntennaBlock> wirelessAntenna(String name, String translation,
+            ModConfigSpec.ConfigValue<Integer> range) {
+        return BLOCK_REGISTRY
+                .registerBlock(name, props -> (new WirelessAntennaBlock(props, range)),
+                        BlockBehaviour.Properties.of()
+                                .strength(2.5f, 8)
+                                .isViewBlocking((pState, pLevel, pPos) -> false)
+                                .noOcclusion())
+                .setLootTable(MachinesLootTable::copyComponents)
+                .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+                .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+                        prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+                .setTranslation(translation)
+                .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
     }
 
     public static void register(IEventBus bus) {

@@ -9,8 +9,6 @@ import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskMenu;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,13 +18,6 @@ public class AversionObeliskScreen extends MachineScreen<AversionObeliskMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/screen/inhibitor.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
-
-    private static final ResourceLocation PLUS = EnderIO.loc("buttons/plus_small");
-    private static final ResourceLocation MINUS = EnderIO.loc("buttons/minus_small");
-    private static final WidgetSprites PLUS_SPRITES = new WidgetSprites(PLUS, PLUS);
-    private static final WidgetSprites MINUS_SPRITES = new WidgetSprites(MINUS, MINUS);
-    private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIO
-            .loc("textures/gui/icons/range_buttons.png");
 
     public AversionObeliskScreen(AversionObeliskMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -49,9 +40,9 @@ public class AversionObeliskScreen extends MachineScreen<AversionObeliskMenu> {
                 EIOLang.SHOW_RANGE, menu::isRangeVisible,
                 (ignored) -> handleButtonPress(AversionObeliskMenu.VISIBILITY_BUTTON_ID)));
 
-        addRenderableWidget(new ImageButton(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2, 8, 8, PLUS_SPRITES,
+        addRenderableWidget(EIOCommonWidgets.createRangeIncrease(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2,
                 (b) -> handleButtonPress(AversionObeliskMenu.INCREASE_BUTTON_ID)));
-        addRenderableWidget(new ImageButton(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2 + 8, 8, 8, MINUS_SPRITES,
+        addRenderableWidget(EIOCommonWidgets.createRangeDecrease(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2 + 8,
                 (b) -> handleButtonPress(AversionObeliskMenu.DECREASE_BUTTON_ID)));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
