@@ -76,7 +76,7 @@ public record ItemConduitConnectionConfig(boolean isSend, DyeColor sendColor, bo
         if (receiveRedstoneControl.isRedstoneSensitive()) {
             return receiveRedstoneControl.isActive(signalAware.hasRedstoneSignal(receiveRedstoneChannel));
         } else {
-            return true;
+            return receiveRedstoneControl == RedstoneControl.ALWAYS_ACTIVE;
         }
     }
 

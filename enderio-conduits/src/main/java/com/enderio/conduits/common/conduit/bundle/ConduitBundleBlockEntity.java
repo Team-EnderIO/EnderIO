@@ -8,7 +8,6 @@ import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.bundle.AddConduitResult;
 import com.enderio.conduits.api.bundle.ConduitBundleAccessor;
-import com.enderio.conduits.api.bundle.ConduitInventory;
 import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.ConnectionStatus;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
@@ -78,7 +77,6 @@ import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
@@ -96,8 +94,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     private List<Holder<Conduit<?, ?>>> conduits = new ArrayList<>();
 
     private Map<Holder<Conduit<?, ?>>, ConnectionContainer> conduitConnections = new HashMap<>();
-
-    private final NewConduitBundleInventory newInventory;
 
     // Map of all conduit nodes for this bundle.
     private final Map<Holder<Conduit<?, ?>>, ConduitGraphObject> conduitNodes = new HashMap<>();
@@ -122,20 +118,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     private static final String FACADE_PROVIDER_KEY = "FacadeProvider";
     private static final String CONDUITS_KEY = "Conduits";
     private static final String CONNECTIONS_KEY = "Connections";
-    private static final String CONDUIT_INV_KEY = "ConduitInv";
     private static final String NODE_DATA_KEY = "NodeData";
 
     private static final String CONDUIT_CLIENT_WORLD_DATA_KEY = "ConduitWorldData";
 
     public ConduitBundleBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(ConduitBlockEntities.CONDUIT.get(), worldPosition, blockState);
-
-        newInventory = new NewConduitBundleInventory(this) {
-            @Override
-            public void onChanged() {
-                setChanged();
-            }
-        };
     }
 
     @Override
@@ -681,9 +669,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             }
         }
 
-        // Remove from the inventory's storage.
-        newInventory.removeConduit(conduit);
-
         // Remove from the bundle
         conduits.remove(conduit);
         conduitConnections.remove(conduit);
@@ -740,16 +725,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    @Override
-    @Nullable
-    public IItemHandlerModifiable getConnectionInventory(Direction side, Holder<Conduit<?, ?>> conduit) {
-        if (!hasConduitStrict(conduit)) {
-            throw new IllegalStateException("Conduit not found in bundle.");
-        }
-
-        return newInventory.getInventory(conduit, side);
-    }
-
     @EnsureSide(EnsureSide.Side.SERVER)
     public ConduitGraphObject getConduitNode(Holder<Conduit<?, ?>> conduit) {
         if (!hasConduitByType(conduit)) {
@@ -797,6 +772,17 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 .map(Map.Entry::getKey)
                 .sorted(Comparator.comparingInt(ConduitSorter::getSortIndex))
                 .toList();
+    }
+
+    @Override
+    @Nullable
+    public IItemHandlerModifiable getConnectionInventory(Direction side, Holder<Conduit<?, ?>> conduit) {
+        if (!hasConduitStrict(conduit)) {
+            throw new IllegalStateException("Conduit not found in bundle.");
+        }
+
+        return conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new)
+            .getInventory(side);
     }
 
     @Override
@@ -984,7 +970,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     private void dropConnectionItems(Direction side, Holder<Conduit<?, ?>> conduit) {
-        var inventory = newInventory.getInventory(conduit, side);
+        var inventory = getConnectionInventory(side, conduit);
         if (inventory == null) {
             return;
         }
@@ -1238,7 +1224,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.put(CONDUIT_INV_KEY, newInventory.serializeNBT(registries));
 
         var serializationContext = registries.createSerializationContext(NbtOps.INSTANCE);
 
@@ -1288,11 +1273,28 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                                         .getOrThrow());
                     }
 
+                    var inventory = conduitConnections.get(conduit).inventories.get(side);
+                    if (inventory != null) {
+                        ListTag inventoryListTag = new ListTag();
+
+                        boolean shouldSave = false;
+                        for (int i = 0; i < inventory.getSlots(); i++) {
+                            ItemStack stack = inventory.getStackInSlot(i);
+                            shouldSave |= !stack.isEmpty();
+                            inventoryListTag.add(stack.saveOptional(registries));
+                        }
+
+                        if (shouldSave) {
+                            connectionTag.put("Inventory", inventoryListTag);
+                        }
+                    }
+
                     connectionsList.add(connectionTag);
                 }
 
                 conduitConnectionsList.add(connectionsList);
             }
+
             tag.put(CONNECTIONS_KEY, conduitConnectionsList);
         }
 
@@ -1336,7 +1338,11 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                         Direction side = Direction.byName(connectionTag.getString("Side"));
                         ConnectionStatus status = ConnectionStatus.byName(connectionTag.getString("Status"));
 
-                        if (side != null && status != null) {
+                        if (status == null) {
+                            status = ConnectionStatus.DISCONNECTED;
+                        }
+
+                        if (side != null) {
                             connections.setStatus(side, status);
 
                             if (connectionTag.contains("Config")) {
@@ -1345,6 +1351,22 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                                                 connectionTag.get("Config"))
                                         .getOrThrow();
                                 connections.setConfig(side, config);
+                            }
+
+                            if (connectionTag.contains("Inventory")) {
+                                ListTag inventoryListTag = connectionTag.getList("Inventory", Tag.TAG_COMPOUND);
+                                var inventory = connections.getInventory(side);
+
+                                if (inventory != null) {
+                                    if (inventory.getSlots() < inventoryListTag.size()) {
+                                        // TODO: Log a warning
+                                    }
+
+                                    for (int k = 0; k < inventoryListTag.size() && k < inventory.getSlots(); k++) {
+                                        ItemStack stack = ItemStack.parseOptional(registries, inventoryListTag.getCompound(k));
+                                        inventory.setStackInSlot(k, stack);
+                                    }
+                                }
                             }
                         }
                     }
@@ -1356,11 +1378,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             if (tag.contains(FACADE_PROVIDER_KEY)) {
                 facadeProvider = ItemStack.parseOptional(registries, tag.getCompound(FACADE_PROVIDER_KEY));
             }
-        }
-
-        // Load inventory
-        if (tag.contains(CONDUIT_INV_KEY)) {
-            newInventory.deserializeNBT(registries, tag.getCompound(CONDUIT_INV_KEY));
         }
 
         // Load node data used for recovery
@@ -1419,6 +1436,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         private final Holder<Conduit<?, ?>> conduit;
         private final Map<Direction, ConnectionStatus> statuses = new EnumMap<>(Direction.class);
         private final Map<Direction, ConnectionConfig> configs = new EnumMap<>(Direction.class);
+        private final Map<Direction, ConnectionInventory> inventories = new EnumMap<>(Direction.class);
 
         public ConnectionContainer(Holder<Conduit<?, ?>> conduit) {
             this.conduit = conduit;
@@ -1438,7 +1456,29 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             if (this.conduit.value().connectionConfigType() == conduit.value().connectionConfigType()) {
                 copy.configs.putAll(configs);
             }
+
+            if (this.conduit.value().getInventorySize() > 0 && conduit.value().getInventorySize() > 0) {
+                for (Direction side : Direction.values()) {
+                    if (inventories.containsKey(side)) {
+                        var inventory = inventories.get(side);
+                        var inventoryCopy = Objects.requireNonNull(copy.getInventory(side));
+                        for (int i = 0; i < Math.max(inventory.getSlots(), inventoryCopy.getSlots()); i++) {
+                            inventoryCopy.setStackInSlot(i, inventory.getStackInSlot(i));
+                        }
+                    }
+                }
+            }
+
             return copy;
+        }
+
+        @Nullable
+        public IItemHandlerModifiable getInventory(Direction side) {
+            if (conduit.value().getInventorySize() <= 0) {
+                return null;
+            }
+
+            return inventories.computeIfAbsent(side, s -> new ConnectionInventory());
         }
 
         public ConnectionStatus getStatus(Direction side) {
@@ -1493,6 +1533,24 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
         public boolean hasEndpoint(Direction side) {
             return getStatus(side) == ConnectionStatus.CONNECTED_BLOCK;
+        }
+
+        private class ConnectionInventory extends ItemStackHandler {
+            public ConnectionInventory() {
+                super(conduit.value().getInventorySize());
+            }
+
+            @Override
+            public boolean isItemValid(int slot, ItemStack stack) {
+                return conduit.value().isItemValid(slot, stack);
+            }
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                if (level != null) {
+                    bundleChanged();
+                }
+            }
         }
     }
 
@@ -1655,7 +1713,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                                             dynamicState.control(), dynamicState.redstoneChannel()));
 
                     // TODO: Technically should be saved in the inventory on the BE already, is it worth skipping this import step?
-                    var inventory = newInventory.getInventory(conduit, side);
+                    var inventory = getConnectionInventory(side, conduit);
                     if (inventory == null) {
                         continue;
                     }
