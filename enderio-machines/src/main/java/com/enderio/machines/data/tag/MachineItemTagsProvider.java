@@ -2,20 +2,22 @@ package com.enderio.machines.data.tag;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.machines.common.tag.MachineTags;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 //TODO remove when regilite support
 public class MachineItemTagsProvider extends ItemTagsProvider {
@@ -32,6 +34,7 @@ public class MachineItemTagsProvider extends ItemTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         tag(MachineTags.ItemTags.CROPS, Tags.Items.CROPS);
         tag(MachineTags.ItemTags.SEEDS, Tags.Items.SEEDS);
+        tag(MachineTags.ItemTags.MEAT, ItemTags.MEAT);
         tag(MachineTags.ItemTags.EXPLOSIVES, Items.TNT, Items.FIREWORK_STAR, Items.FIREWORK_ROCKET, Items.FIRE_CHARGE);
         tag(MachineTags.ItemTags.NATURAL_LIGHTS, Items.GLOWSTONE_DUST, Items.GLOWSTONE, Items.SEA_LANTERN,
                 Items.SEA_PICKLE, Items.GLOW_LICHEN, Items.GLOW_BERRIES, Items.GLOW_INK_SAC);

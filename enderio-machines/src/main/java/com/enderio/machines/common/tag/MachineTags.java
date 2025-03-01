@@ -20,6 +20,7 @@ public class MachineTags {
 
         public static TagKey<Item> SEEDS = create("seeds");
         public static TagKey<Item> CROPS = create("crops");
+        public static TagKey<Item> MEAT = create("meat");
         public static TagKey<Item> EXPLOSIVES = create("explosives");
         public static TagKey<Item> BLAZE_POWDER = create("blaze_powder");
         public static final TagKey<Item> NATURAL_LIGHTS = create("natural_lights");

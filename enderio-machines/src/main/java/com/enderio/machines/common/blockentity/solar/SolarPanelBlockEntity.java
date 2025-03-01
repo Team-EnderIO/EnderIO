@@ -118,14 +118,12 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
             return 0;
         }
 
-        boolean day;
-        boolean night;
+        //When should the panel make power
+        boolean day = true;
+        boolean night = false;
         if (soulData != null) {
             day = soulData.daytime();
             night = soulData.nighttime();
-        } else {
-            day = level.isDay();
-            night = level.isNight();
         }
 
         float outputScale = 0;
@@ -159,15 +157,18 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
             float rampTimeMinutes = 1.5f;
             float rampTimeTicks = GameTicks.MINUTE_IN_TICKS * rampTimeMinutes + GameTicks.MINUTE_IN_TICKS * 10;
 
-            if (dayTime < rampTimeTicks) {
-                // If in the ramp up period of the day, do a linear scale up
+            if (GameTicks.MINUTE_IN_TICKS * 10 > dayTime) {
+                // During the day, no power
+                outputScale = 0;
+            } else if (GameTicks.MINUTE_IN_TICKS * 10 < dayTime && dayTime < rampTimeTicks) {
+                // If in the ramp up period of the night, do a linear scale up
                 outputScale = dayTime / rampTimeTicks;
             } else if (dayTime > (GameTicks.MINUTE_IN_TICKS * 20) - (GameTicks.MINUTE_IN_TICKS * rampTimeMinutes)) {
-                // If in the ramp down period of the day, do a linear scale down
+                // If in the ramp down period of the night, do a linear scale down
                 int timeLeft = (GameTicks.MINUTE_IN_TICKS * 20) - dayTime;
                 outputScale = timeLeft / rampTimeTicks;
             } else {
-                // Rest of the day, full power
+                // Rest of the night, full power
                 outputScale = 1;
             }
         }

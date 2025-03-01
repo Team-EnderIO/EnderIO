@@ -5,19 +5,19 @@ import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.common.blocks.vat.FermentingRecipe;
 import com.enderio.machines.common.tag.MachineTags;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+
+import java.util.concurrent.CompletableFuture;
 
 public class FermentingRecipeProvider extends RecipeProvider {
 
@@ -33,7 +33,7 @@ public class FermentingRecipeProvider extends RecipeProvider {
                 SizedFluidIngredient.of(EIOFluids.HOOTCH.getSource(), 1000), MachineTags.ItemTags.EXPLOSIVES,
                 Tags.Items.DUSTS_REDSTONE, 400, recipeOutput);
         build(new FluidStack(EIOFluids.NUTRIENT_DISTILLATION.getSource(), 250),
-                SizedFluidIngredient.of(FluidTags.WATER, 1000), ItemTags.MEAT, MachineTags.ItemTags.CROPS, 200,
+                SizedFluidIngredient.of(FluidTags.WATER, 1000), MachineTags.ItemTags.MEAT, MachineTags.ItemTags.CROPS, 200,
                 recipeOutput);
         build(new FluidStack(EIOFluids.FIRE_WATER.getSource(), 1000),
                 SizedFluidIngredient.of(EIOFluids.HOOTCH.getSource(), 1000), MachineTags.ItemTags.BLAZE_POWDER,
