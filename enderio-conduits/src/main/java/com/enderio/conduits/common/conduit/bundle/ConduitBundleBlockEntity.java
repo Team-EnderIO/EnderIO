@@ -740,8 +740,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
+    @Override
     @Nullable
-    public IItemHandlerModifiable getConnectionInventory(Holder<Conduit<?, ?>> conduit, Direction side) {
+    public IItemHandlerModifiable getConnectionInventory(Direction side, Holder<Conduit<?, ?>> conduit) {
         if (!hasConduitStrict(conduit)) {
             throw new IllegalStateException("Conduit not found in bundle.");
         }
@@ -1521,7 +1522,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         @Override
         @Nullable
         public IItemHandlerModifiable getInventory(Direction side) {
-            return conduitBundle.getConnectionInventory(conduit, side);
+            return conduitBundle.getConnectionInventory(side, conduit);
         }
 
         @Override

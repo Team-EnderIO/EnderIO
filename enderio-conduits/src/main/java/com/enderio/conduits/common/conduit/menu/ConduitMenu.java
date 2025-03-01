@@ -76,7 +76,7 @@ public class ConduitMenu extends BaseEnderMenu {
 
         // Set to sensible defaults to allow a sync after the menu opens
         this.remoteConnectionConfig = conduit.value().connectionConfigType().getDefault();
-        this.conduitInventory = conduitBundle.getConnectionInventory(conduit, side);
+        this.conduitInventory = conduitBundle.getConnectionInventory(side, conduit);
 
         addSlots();
     }

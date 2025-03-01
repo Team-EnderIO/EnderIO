@@ -1,11 +1,14 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.base.api.filter.FluidStackFilter;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.network.ConduitNetwork;
 import com.enderio.conduits.api.network.node.ConduitNode;
 import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
 import java.util.List;
+
+import com.enderio.conduits.common.conduit.type.item.ItemConduit;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.DyeColor;
@@ -35,14 +38,22 @@ public class FluidConduitTicker
             return fluid.getAmount();
         }
 
-        if (receiver.extractFilter() instanceof FluidStackFilter fluidStackFilter) {
+        var extractFilter = receiver.inventory()
+            .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
+            .getCapability(EIOCapabilities.Filter.ITEM);
+
+        if (extractFilter instanceof FluidStackFilter fluidStackFilter) {
             if (!fluidStackFilter.test(extractedFluid)) {
                 return fluid.getAmount();
             }
         }
 
         for (Connection insert : senders) {
-            if (insert.insertFilter() instanceof FluidStackFilter fluidStackFilter) {
+            var insertFilter = insert.inventory()
+                .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
+                .getCapability(EIOCapabilities.Filter.ITEM);
+
+            if (insertFilter instanceof FluidStackFilter fluidStackFilter) {
                 if (!fluidStackFilter.test(extractedFluid)) {
                     continue;
                 }

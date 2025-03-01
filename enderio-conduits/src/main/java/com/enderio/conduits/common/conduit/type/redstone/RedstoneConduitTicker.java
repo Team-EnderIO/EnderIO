@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.conduit.type.redstone;
 
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.network.ConduitNetwork;
 import com.enderio.conduits.api.network.node.ConduitNode;
@@ -46,9 +47,11 @@ public class RedstoneConduitTicker extends
         for (Connection receiver : receivers) {
             int signal;
 
-            var inventory = receiver.inventory()
+            var inventory = receiver.inventory();
+            var extractFilter = inventory.getStackInSlot(RedstoneConduit.EXTRACT_FILTER_SLOT)
+                .getCapability(EIOCapabilities.Filter.ITEM);
 
-            if (receiver.extractFilter() instanceof RedstoneExtractFilter filter) {
+            if (extractFilter instanceof RedstoneExtractFilter filter) {
                 signal = filter.getInputSignal(level, receiver.neighborPos(), receiver.neighborSide());
             } else {
                 signal = level.getSignal(receiver.neighborPos(), receiver.neighborSide());

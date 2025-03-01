@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,6 +43,9 @@ public interface ConduitBundleAccessor extends ConduitBundleReader {
     ConduitNode getConduitNode(Holder<Conduit<?, ?>> conduit);
 
     // region Connections
+
+    @Nullable
+    IItemHandlerModifiable getConnectionInventory(Direction side, Holder<Conduit<?, ?>> conduit);
 
     /**
      * @throws IllegalStateException if {@link #getConnectionStatus} is not {@link ConnectionStatus#CONNECTED_BLOCK}.

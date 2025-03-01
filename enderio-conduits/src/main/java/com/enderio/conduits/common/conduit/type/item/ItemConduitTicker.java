@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.conduit.type.item;
 
 import com.enderio.base.api.filter.ItemStackFilter;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.network.ConduitNetwork;
 import com.enderio.conduits.api.network.node.ConduitNode;
@@ -29,6 +30,11 @@ public class ItemConduitTicker
         toNextExtract: for (Connection extract : receivers) {
             ItemConduitNodeData nodeData = extract.node().getOrCreateNodeData(ConduitTypes.NodeData.ITEM.get());
 
+            // TODO: Filters could be handled better...
+            var extractFilter = extract.inventory()
+                .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
+                .getCapability(EIOCapabilities.Filter.ITEM);
+
             IItemHandler extractHandler = extract.itemHandler();
             int extracted = 0;
 
@@ -40,7 +46,7 @@ public class ItemConduitTicker
                     continue;
                 }
 
-                if (extract.extractFilter() instanceof ItemStackFilter itemFilter) {
+                if (extractFilter instanceof ItemStackFilter itemFilter) {
                     if (!itemFilter.test(extractedItem)) {
                         continue;
                     }
@@ -66,7 +72,11 @@ public class ItemConduitTicker
                         continue;
                     }
 
-                    if (insert.insertFilter() instanceof ItemStackFilter itemFilter) {
+                    var insertFilter = insert.inventory()
+                        .getStackInSlot(ItemConduit.INSERT_FILTER_SLOT)
+                        .getCapability(EIOCapabilities.Filter.ITEM);
+
+                    if (insertFilter instanceof ItemStackFilter itemFilter) {
                         if (!itemFilter.test(extractedItem)) {
                             continue;
                         }
