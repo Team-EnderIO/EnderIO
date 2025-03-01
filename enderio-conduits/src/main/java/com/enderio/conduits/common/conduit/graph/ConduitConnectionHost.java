@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
 // TODO: Did the interface for now but honestly maybe this should just be an object because its not API public.
@@ -21,7 +22,8 @@ public interface ConduitConnectionHost {
 
     void setConnectionConfig(Direction side, ConnectionConfig connectionConfig);
 
-    ConduitInventory inventory();
+    @Nullable
+    IItemHandlerModifiable getInventory(Direction side);
 
     void onNodeDirty();
 

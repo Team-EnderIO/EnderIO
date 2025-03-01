@@ -3,6 +3,7 @@ package com.enderio.conduits.common.conduit.type.item;
 import com.enderio.base.api.filter.ItemStackFilter;
 import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.api.misc.RedstoneControl;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.bundle.ConduitBundleReader;
@@ -25,15 +26,20 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2i;
 
 public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle, int graphTickRate)
         implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
+
+    public static final int EXTRACT_FILTER_SLOT = 0;
+    public static final int INSERT_FILTER_SLOT = 1;
 
     public static final MapCodec<ItemConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
             .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ItemConduit::texture),
@@ -128,6 +134,34 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
                                 .withPriority(oldSideConfig.priority));
             }
         }
+    }
+
+    @Override
+    public int getInventorySize() {
+        return 2;
+    }
+
+    @Override
+    public boolean isItemValid(int slot, ItemStack stack) {
+        return stack.getCapability(EIOCapabilities.Filter.ITEM) instanceof ItemStackFilter;
+    }
+
+    @Override
+    public Vector2i getInventorySlotPosition(int slot) {
+        return switch (slot) {
+            case EXTRACT_FILTER_SLOT -> new Vector2i(113, 71);
+            case INSERT_FILTER_SLOT -> new Vector2i(23, 71);
+            default -> throw new IndexOutOfBoundsException();
+        };
+    }
+
+    @Override
+    public int getIndexForLegacySlot(SlotType slotType) {
+        return switch (slotType) {
+            case FILTER_EXTRACT -> EXTRACT_FILTER_SLOT;
+            case FILTER_INSERT -> INSERT_FILTER_SLOT;
+            default -> -1;
+        };
     }
 
     @Override

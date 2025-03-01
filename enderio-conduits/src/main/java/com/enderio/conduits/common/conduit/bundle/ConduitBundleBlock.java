@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.conduit.bundle;
 
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.ConduitRedstoneSignalAware;
@@ -9,6 +10,7 @@ import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
 import com.enderio.conduits.client.particle.ConduitBreakParticle;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.menu.ConduitMenu;
+import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduit;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkContext;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
@@ -560,7 +562,11 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
                 return 0;
             }
 
-            if (node.getInsertFilter(direction) instanceof RedstoneInsertFilter redstoneInsertFilter) {
+            var filter = node.getInventory(direction)
+                .getStackInSlot(RedstoneConduit.INSERT_FILTER_SLOT)
+                .getCapability(EIOCapabilities.Filter.ITEM);
+
+            if (filter instanceof RedstoneInsertFilter redstoneInsertFilter) {
                 return redstoneInsertFilter.getOutputSignal(context, config.sendColor());
             }
 

@@ -35,12 +35,6 @@ public interface ConduitBundleAccessor extends ConduitBundleReader {
     void removeConduit(Holder<Conduit<?, ?>> conduit, @Nullable Player player);
 
     /**
-     * @param conduit the conduit to get the inventory for.
-     * @return the inventory for this conduit.
-     */
-    ConduitInventory getInventory(Holder<Conduit<?, ?>> conduit);
-
-    /**
      * @throws IllegalArgumentException if the conduit is not present.
      * @param conduit the conduit to get a node for.
      * @return the conduit node.

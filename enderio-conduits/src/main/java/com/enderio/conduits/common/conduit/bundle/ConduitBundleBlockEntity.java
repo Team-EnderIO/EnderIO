@@ -78,6 +78,9 @@ import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class ConduitBundleBlockEntity extends EnderBlockEntity
@@ -94,7 +97,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     private Map<Holder<Conduit<?, ?>>, ConnectionContainer> conduitConnections = new HashMap<>();
 
-    private final ConduitBundleInventory inventory;
+    private final NewConduitBundleInventory newInventory;
 
     // Map of all conduit nodes for this bundle.
     private final Map<Holder<Conduit<?, ?>>, ConduitGraphObject> conduitNodes = new HashMap<>();
@@ -127,9 +130,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     public ConduitBundleBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(ConduitBlockEntities.CONDUIT.get(), worldPosition, blockState);
 
-        inventory = new ConduitBundleInventory(this) {
+        newInventory = new NewConduitBundleInventory(this) {
             @Override
-            protected void onChanged() {
+            public void onChanged() {
                 setChanged();
             }
         };
@@ -679,7 +682,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         // Remove from the inventory's storage.
-        inventory.removeConduit(conduit);
+        newInventory.removeConduit(conduit);
 
         // Remove from the bundle
         conduits.remove(conduit);
@@ -737,13 +740,13 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    @Override
-    public ConduitInventory getInventory(Holder<Conduit<?, ?>> conduit) {
+    @Nullable
+    public IItemHandlerModifiable getConnectionInventory(Holder<Conduit<?, ?>> conduit, Direction side) {
         if (!hasConduitStrict(conduit)) {
             throw new IllegalStateException("Conduit not found in bundle.");
         }
 
-        return inventory.getInventoryFor(conduit);
+        return newInventory.getInventory(conduit, side);
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)
@@ -980,11 +983,16 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     private void dropConnectionItems(Direction side, Holder<Conduit<?, ?>> conduit) {
-        for (SlotType slotType : SlotType.values()) {
-            ItemStack stack = inventory.getStackInSlot(conduit, side, slotType);
+        var inventory = newInventory.getInventory(conduit, side);
+        if (inventory == null) {
+            return;
+        }
+
+        for (int i = 0; i < inventory.getSlots(); i++) {
+            ItemStack stack = inventory.getStackInSlot(i);
             if (!stack.isEmpty()) {
                 dropItem(stack);
-                inventory.setStackInSlot(conduit, side, slotType, ItemStack.EMPTY);
+                inventory.setStackInSlot(i, ItemStack.EMPTY);
             }
         }
     }
@@ -1229,7 +1237,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.put(CONDUIT_INV_KEY, inventory.serializeNBT(registries));
+        tag.put(CONDUIT_INV_KEY, newInventory.serializeNBT(registries));
 
         var serializationContext = registries.createSerializationContext(NbtOps.INSTANCE);
 
@@ -1351,7 +1359,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
         // Load inventory
         if (tag.contains(CONDUIT_INV_KEY)) {
-            inventory.deserializeNBT(registries, tag.getCompound(CONDUIT_INV_KEY));
+            newInventory.deserializeNBT(registries, tag.getCompound(CONDUIT_INV_KEY));
         }
 
         // Load node data used for recovery
@@ -1511,8 +1519,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         @Override
-        public ConduitInventory inventory() {
-            return conduitBundle.getInventory(conduit);
+        @Nullable
+        public IItemHandlerModifiable getInventory(Direction side) {
+            return conduitBundle.getConnectionInventory(conduit, side);
         }
 
         @Override
@@ -1644,8 +1653,17 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                                             dynamicState.insertChannel(), dynamicState.extractChannel(),
                                             dynamicState.control(), dynamicState.redstoneChannel()));
 
-                    inventory.setStackInSlot(conduit, side, SlotType.FILTER_INSERT, dynamicState.filterInsert());
-                    inventory.setStackInSlot(conduit, side, SlotType.FILTER_EXTRACT, dynamicState.filterExtract());
+                    // TODO: Technically should be saved in the inventory on the BE already, is it worth skipping this import step?
+                    var inventory = newInventory.getInventory(conduit, side);
+                    if (inventory == null) {
+                        continue;
+                    }
+
+                    int insertFilterSlot = conduit.value().getIndexForLegacySlot(SlotType.FILTER_INSERT);
+                    int extractFilterSlot = conduit.value().getIndexForLegacySlot(SlotType.FILTER_EXTRACT);
+
+                    inventory.setStackInSlot(insertFilterSlot, dynamicState.filterInsert());
+                    inventory.setStackInSlot(extractFilterSlot, dynamicState.filterExtract());
                 }
             }
         }

@@ -45,6 +45,9 @@ public class RedstoneConduitTicker extends
 
         for (Connection receiver : receivers) {
             int signal;
+
+            var inventory = receiver.inventory()
+
             if (receiver.extractFilter() instanceof RedstoneExtractFilter filter) {
                 signal = filter.getInputSignal(level, receiver.neighborPos(), receiver.neighborSide());
             } else {

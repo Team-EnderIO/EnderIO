@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -128,14 +129,8 @@ public abstract class IOAwareConduitTicker<T extends Conduit<T, U>, U extends IO
             return side.getOpposite();
         }
 
-        @Nullable
-        public ResourceFilter insertFilter() {
-            return node.getInsertFilter(side);
-        }
-
-        @Nullable
-        public ResourceFilter extractFilter() {
-            return node.getExtractFilter(side);
+        public IItemHandlerModifiable inventory() {
+            return node.getInventory(side);
         }
     }
 }

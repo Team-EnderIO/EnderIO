@@ -54,7 +54,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         this.imageHeight = HEIGHT;
 
         // Get the screen type for this conduit, if available.
-        this.screenTypeContainer = new ConduitScreenTypeContainer<>(menu.getSelectedConduit().value());
+        this.screenTypeContainer = new ConduitScreenTypeContainer<>(menu.getConduit().value());
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
         for (int i = 0; i < 9; i++) {
             addRenderableWidget(new NewConduitSelectionButton(getGuiLeft() + 206, getGuiTop() + 4 + 24 * i, i,
-                    menu::getSelectedConduit, menu::getConnectedConduits,
+                    menu::getConduit, menu::getConnectedConduits,
                     idx -> handleButtonPress(ConduitMenu.BUTTON_CHANGE_CONDUIT_START_ID + idx)));
         }
     }
@@ -83,15 +83,10 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
         guiGraphics.blit(TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
 
-//        if (menu.connectionConfigType().supportsIO()) {
-//            guiGraphics.blit(TEXTURE, getGuiLeft() + 102, getGuiTop() + 7, 255, 0, 1, 97);
-//        }
-
-        // TODO
-        for (SlotType type : SlotType.values()) {
-//            if (type.isAvailableFor(data)) {
-//                guiGraphics.blit(TEXTURE, type.getX() - 1, type.getY() - 1, 206, 0, 18, 18);
-//            }
+        var conduit = menu.getConduit();
+        for (int slot = 0; slot < conduit.value().getInventorySize(); slot++) {
+            var pos = conduit.value().getInventorySlotPosition(slot);
+            guiGraphics.blit(TEXTURE, getGuiLeft() + pos.x()-1, getGuiTop() + pos.y()-1, 206, 0, 18, 18);
         }
     }
 

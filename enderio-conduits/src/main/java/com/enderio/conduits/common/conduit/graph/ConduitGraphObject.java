@@ -20,6 +20,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.DyeColor;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
 public class ConduitGraphObject implements GraphObject<ConduitGraphContext>, ConduitNode {
@@ -229,25 +230,19 @@ public class ConduitGraphObject implements GraphObject<ConduitGraphContext>, Con
     // endregion
 
     @Override
-    public @Nullable ResourceFilter getExtractFilter(Direction direction) {
+    public IItemHandlerModifiable getInventory(Direction side) {
         if (connectionHost == null) {
             throw new IllegalStateException("No connection host!");
         }
 
-        return connectionHost.inventory()
-                .getStackInSlot(direction, SlotType.FILTER_EXTRACT)
-                .getCapability(EIOCapabilities.Filter.ITEM);
-    }
-
-    @Override
-    public @Nullable ResourceFilter getInsertFilter(Direction direction) {
-        if (connectionHost == null) {
-            throw new IllegalStateException("No connection host!");
+        // We don't have to do this, but it saves null checks in the tickers.
+        // Only tickers that know they have inventories should use this anyway.
+        var inventory = connectionHost.getInventory(side);
+        if (inventory == null) {
+            throw new IllegalStateException("This conduit does not have an inventory!");
         }
 
-        return connectionHost.inventory()
-                .getStackInSlot(direction, SlotType.FILTER_INSERT)
-                .getCapability(EIOCapabilities.Filter.ITEM);
+        return inventory;
     }
 
     @Override

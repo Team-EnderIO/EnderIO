@@ -25,11 +25,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2i;
 
 public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, TConnectionConfig extends ConnectionConfig>
         extends Comparable<TConduit>, TooltipProvider {
@@ -133,6 +136,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
         return false;
     }
 
+    // TODO: REMOVE
     default boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
         return false;
     }
@@ -193,8 +197,38 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @param node the node.
      * @param legacyDataAccessor the legacy data.
      */
+    @SuppressWarnings("removal")
     @Deprecated(since = "7.2")
     default void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor) {
+    }
+
+    // endregion
+
+    // region Connection Inventory
+
+    default int getInventorySize() {
+        return 0;
+    }
+
+    default boolean isItemValid(int slot, ItemStack stack) {
+        return true;
+    }
+
+    default Vector2i getInventorySlotPosition(int slot) {
+        if (getInventorySize() > 0) {
+            throw new NotImplementedException("This conduit has an inventory, but getSlotPosition has not been implemented!");
+        }
+
+        throw new UnsupportedOperationException("This conduit does not have an inventory.");
+    }
+
+    /**
+     * @param slotType The legacy slot type being queried.
+     * @return The index of this slot in the new layout, or <0 for not available.
+     */
+    @Deprecated(since = "7.2")
+    default int getIndexForLegacySlot(SlotType slotType) {
+        return -1;
     }
 
     // endregion

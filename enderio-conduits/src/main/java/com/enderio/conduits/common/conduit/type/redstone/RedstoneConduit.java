@@ -30,6 +30,9 @@ import org.jetbrains.annotations.Nullable;
 public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeTexture, Component description)
         implements Conduit<RedstoneConduit, RedstoneConduitConnectionConfig> {
 
+    public static final int EXTRACT_FILTER_SLOT = 0;
+    public static final int INSERT_FILTER_SLOT = 1;
+
     public static MapCodec<RedstoneConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
             .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(RedstoneConduit::texture),
                     ResourceLocation.CODEC.fieldOf("active_texture").forGetter(RedstoneConduit::activeTexture),

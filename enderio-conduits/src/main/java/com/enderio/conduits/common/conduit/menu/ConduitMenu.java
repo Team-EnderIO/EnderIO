@@ -27,13 +27,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-// TODO: Make this not connect to the block entity at all, that way when the screen desyncs, the client world isn't desynced too.
-// This means server menu should get/set connections direct from the BE but the client should have a standalone config store.
-// Need to work out what this means for the client sync tag - it might need to be synced separately to the client from this GUI too.
-// Possibly create an NBT sync slot and then use it for that?
 public class ConduitMenu extends BaseEnderMenu {
 
     public static void openConduitMenu(ServerPlayer serverPlayer, ConduitBundleBlockEntity conduitBundle,
@@ -49,10 +48,13 @@ public class ConduitMenu extends BaseEnderMenu {
     public static final int BUTTON_CHANGE_CONDUIT_START_ID = 0;
     public static final int BUTTON_CHANGE_CONDUIT_ID_COUNT = ConduitBundleBlockEntity.MAX_CONDUITS;
 
+    private final BlockPos pos;
     private final Direction side;
-    private final Holder<Conduit<?, ?>> selectedConduit;
-
+    private final Holder<Conduit<?, ?>> conduit;
     private final ConnectionAccessor connectionAccessor;
+
+    @Nullable
+    private final IItemHandler conduitInventory;
 
     @UseOnly(LogicalSide.SERVER)
     private ConnectionConfig remoteConnectionConfig;
@@ -63,23 +65,20 @@ public class ConduitMenu extends BaseEnderMenu {
     @UseOnly(LogicalSide.SERVER)
     private int conduitListHashCode;
 
-    private BlockPos pos;
-
     public ConduitMenu(int containerId, Inventory playerInventory, ConduitBundleBlockEntity conduitBundle,
-            Direction side, Holder<Conduit<?, ?>> selectedConduit) {
+            Direction side, Holder<Conduit<?, ?>> conduit) {
         super(ConduitMenus.CONDUIT_MENU.get(), containerId, playerInventory);
 
         this.pos = conduitBundle.getBlockPos();
         this.side = side;
-        this.selectedConduit = selectedConduit;
+        this.conduit = conduit;
         this.connectionAccessor = conduitBundle;
 
         // Set to sensible defaults to allow a sync after the menu opens
-        this.remoteConnectionConfig = selectedConduit.value().connectionConfigType().getDefault();
+        this.remoteConnectionConfig = conduit.value().connectionConfigType().getDefault();
+        this.conduitInventory = conduitBundle.getConnectionInventory(conduit, side);
 
-        // TODO: Add conduit slots.
-
-        addPlayerInventorySlots(23, 113);
+        addSlots();
     }
 
     public ConduitMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
@@ -87,13 +86,28 @@ public class ConduitMenu extends BaseEnderMenu {
 
         pos = buf.readBlockPos();
         side = buf.readEnum(Direction.class);
-        selectedConduit = Conduit.STREAM_CODEC.decode(buf);
+        conduit = Conduit.STREAM_CODEC.decode(buf);
 
-        // Use default config until synced by broadcastChanges.
-        var clientConnectionAccessor = new ClientConnectionAccessor(buf);
-        this.connectionAccessor = clientConnectionAccessor;
+        // Uses initially transmitted state to immediately show an up-to-date UI.
+        this.connectionAccessor = new ClientConnectionAccessor(buf);
 
-        // TODO: Add conduit slots.
+        // If this conduit has an inventory, create its client representation.
+        if (conduit.value().getInventorySize() > 0) {
+            this.conduitInventory = new ClientConduitInventory();
+        } else {
+            this.conduitInventory = null;
+        }
+
+        addSlots();
+    }
+
+    private void addSlots() {
+        if (conduitInventory != null) {
+            for (int i = 0; i < conduit.value().getInventorySize(); i++) {
+                var pos = conduit.value().getInventorySlotPosition(i);
+                addSlot(new SlotItemHandler(conduitInventory, i, pos.x, pos.y));
+            }
+        }
 
         addPlayerInventorySlots(23, 113);
     }
@@ -106,8 +120,8 @@ public class ConduitMenu extends BaseEnderMenu {
         return side;
     }
 
-    public Holder<Conduit<?, ?>> getSelectedConduit() {
-        return selectedConduit;
+    public Holder<Conduit<?, ?>> getConduit() {
+        return conduit;
     }
 
     public List<Holder<Conduit<?, ?>>> getConnectedConduits() {
@@ -122,11 +136,11 @@ public class ConduitMenu extends BaseEnderMenu {
     }
 
     public ConnectionConfigType<?> connectionConfigType() {
-        return selectedConduit.value().connectionConfigType();
+        return conduit.value().connectionConfigType();
     }
 
     public ConnectionConfig connectionConfig() {
-        return connectionAccessor.getConnectionConfig(side, selectedConduit);
+        return connectionAccessor.getConnectionConfig(side, conduit);
     }
 
     public <T extends ConnectionConfig> T connectionConfig(ConnectionConfigType<T> type) {
@@ -140,12 +154,12 @@ public class ConduitMenu extends BaseEnderMenu {
     }
 
     public void setConnectionConfig(ConnectionConfig config) {
-        connectionAccessor.setConnectionConfig(side, selectedConduit, config);
+        connectionAccessor.setConnectionConfig(side, conduit, config);
     }
 
     @Nullable
     public CompoundTag extraGuiData() {
-        return connectionAccessor.getConduitExtraGuiData(side, selectedConduit);
+        return connectionAccessor.getConduitExtraGuiData(side, conduit);
     }
 
     @EnsureSide(EnsureSide.Side.CLIENT)
@@ -157,7 +171,7 @@ public class ConduitMenu extends BaseEnderMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return connectionAccessor.stillValid(player) && connectionAccessor.canOpenScreen(side, selectedConduit);
+        return connectionAccessor.stillValid(player) && connectionAccessor.canOpenScreen(side, conduit);
     }
 
     @Override
@@ -294,6 +308,17 @@ public class ConduitMenu extends BaseEnderMenu {
         @Override
         public boolean stillValid(Player player) {
             return true;
+        }
+    }
+
+    private class ClientConduitInventory extends ItemStackHandler {
+        private ClientConduitInventory() {
+            super(conduit.value().getInventorySize());
+        }
+
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            return conduit.value().isItemValid(slot, stack);
         }
     }
 

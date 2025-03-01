@@ -1,11 +1,11 @@
 package com.enderio.conduits.api.network.node;
 
-import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.conduits.api.connection.config.ConnectionConfigAccessor;
 import com.enderio.conduits.api.network.ConduitNetwork;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
 public interface ConduitNode extends NodeDataAccessor, ConnectionConfigAccessor {
@@ -17,11 +17,12 @@ public interface ConduitNode extends NodeDataAccessor, ConnectionConfigAccessor 
      */
     BlockPos getPos();
 
-    @Nullable
-    ResourceFilter getExtractFilter(Direction direction);
-
-    @Nullable
-    ResourceFilter getInsertFilter(Direction direction);
+    /**
+     * @throws IllegalStateException if the node is not loaded in the world, or if the conduit has no inventory.
+     * @param side
+     * @return
+     */
+    IItemHandlerModifiable getInventory(Direction side);
 
     // TODO: investigate nullability for this interface?
     @Nullable
