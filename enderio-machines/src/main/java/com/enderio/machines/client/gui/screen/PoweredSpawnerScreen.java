@@ -7,7 +7,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
-import com.enderio.machines.client.gui.widget.ProgressWidget;
+import com.enderio.machines.client.gui.widget.NewProgressWidget;
 import com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerMenu;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,6 +22,8 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/screen/powered_spawner_spawn.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
+
+    private static final ResourceLocation PROGRESS_SPRITE = EnderIO.loc("screen/powered_spawner/progress");
 
     public PoweredSpawnerScreen(PoweredSpawnerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -46,8 +48,8 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
-        addRenderableOnly(new ProgressWidget.BottomUp(BG_TEXTURE, () -> menu.getBlockEntity().getSpawnProgress(),
-                getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
+        addRenderableOnly(NewProgressWidget.bottomUp(leftPos + 82, topPos + 38, 14, 14, PROGRESS_SPRITE,
+                menu::getSpawnProgress, true));
     }
 
     @Override

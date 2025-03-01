@@ -152,8 +152,8 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     protected boolean acceptSlotInput(int slot, ItemStack stack) {
         if (getMode().canAlloy()) {
-            if (RecipeCaches.getAlloySmeltingCache(getMode())
-                    .hasValidRecipeIf(getInventory(), getInputsSlotAccess(), slot, stack)) {
+            if (RecipeCaches.ALLOY_SMELTING_ONLY_ALLOY.hasValidRecipeIf(getInventory(), getInputsSlotAccess(), slot,
+                    stack)) {
                 return true;
             }
         }
@@ -167,7 +167,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                     .toList();
 
             if (currentStacks.stream().allMatch(i -> i.is(stack.getItem())) || currentStacks.size() == 1) {
-                return RecipeCaches.SMELTING.hasRecipe(List.of(stack));
+                return RecipeCaches.ALLOY_SMELTING_ONLY_SMELTING.hasRecipe(List.of(stack));
             }
         }
 

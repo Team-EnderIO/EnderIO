@@ -27,13 +27,19 @@ public class TransferUtil {
 
     private static void moveItems(IItemHandler from, IItemHandler to) {
         for (int i = 0; i < from.getSlots(); i++) {
-            ItemStack extracted = from.extractItem(i, 1, true);
+            ItemStack extracted = from.extractItem(i, from.getSlotLimit(i), true);
             if (!extracted.isEmpty()) {
                 for (int j = 0; j < to.getSlots(); j++) {
-                    ItemStack inserted = to.insertItem(j, extracted, false);
-                    if (inserted.isEmpty()) {
-                        from.extractItem(i, 1, false);
-                        return;
+                    ItemStack remainder = to.insertItem(j, extracted, false);
+
+                    int successfullyMoved = extracted.getCount() - remainder.getCount();
+                    if (successfullyMoved > 0) {
+                        from.extractItem(i, extracted.getCount() - remainder.getCount(), false);
+                    }
+
+                    // If there is no remainder, take from the next "from" slot.
+                    if (remainder.getCount() <= 0) {
+                        break;
                     }
                 }
             }
@@ -44,6 +50,7 @@ public class TransferUtil {
 
     // region Fluids
 
+    // TODO: Possibly raise this too?
     public static final int DEFAULT_FLUID_DRAIN = 100;
 
     public static void distributeFluids(IOMode mode, IFluidHandler selfItemHandler, IFluidHandler otherItemHandler) {

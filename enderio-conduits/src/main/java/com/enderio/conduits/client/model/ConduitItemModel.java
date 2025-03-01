@@ -3,6 +3,9 @@ package com.enderio.conduits.client.model;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.core.client.RenderUtil;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -16,16 +19,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.neoforged.neoforge.client.RenderTypeGroup;
 import net.neoforged.neoforge.client.model.BakedModelWrapper;
 import net.neoforged.neoforge.client.model.IModelBuilder;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ConduitItemModel extends BakedModelWrapper<BakedModel> {
 
@@ -46,31 +46,38 @@ public class ConduitItemModel extends BakedModelWrapper<BakedModel> {
 
         @Nullable
         @Override
-        public BakedModel resolve(BakedModel pModel, ItemStack pStack, @Nullable ClientLevel pLevel, @Nullable LivingEntity pEntity, int pSeed) {
+        public BakedModel resolve(BakedModel pModel, ItemStack pStack, @Nullable ClientLevel pLevel,
+                @Nullable LivingEntity pEntity, int pSeed) {
             Holder<Conduit<?>> conduit = pStack.get(ConduitComponents.CONDUIT);
-            return CACHE.computeIfAbsent(conduit, t -> createBakedModel(t, pModel, pLevel));
+            return CACHE.computeIfAbsent(conduit, t -> createBakedModel(t, pModel));
         }
 
-        private BakedModel createBakedModel(@Nullable Holder<Conduit<?>> conduit, BakedModel model, @Nullable ClientLevel level) {
+        private BakedModel createBakedModel(@Nullable Holder<Conduit<?>> conduit, BakedModel model) {
             ResourceLocation conduitTexture = MissingTextureAtlasSprite.getLocation();
             if (conduit != null) {
                 conduitTexture = conduit.value().texture();
             }
 
             // Get the replacement texture.
-            TextureAtlasSprite newTexture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(conduitTexture);
+            TextureAtlasSprite newTexture = Minecraft.getInstance()
+                    .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+                    .apply(conduitTexture);
 
-            // Construct a new baked model, replacing the texture of each quad with the new texture.
-            IModelBuilder<?> builder = IModelBuilder.of(model.useAmbientOcclusion(), model.usesBlockLight(), model.isGui3d(),
-                model.getTransforms(), model.getOverrides(), newTexture, RenderTypeGroup.EMPTY);
+            // Construct a new baked model, replacing the texture of each quad with the new
+            // texture.
+            IModelBuilder<?> builder = IModelBuilder.of(model.useAmbientOcclusion(), model.usesBlockLight(),
+                    model.isGui3d(), model.getTransforms(), model.getOverrides(), newTexture, RenderTypeGroup.EMPTY);
 
-            var unculledQuads = model.getQuads(null, null, level.random, ModelData.EMPTY, null);
+            var random = new SingleThreadedRandomSource(42L);
+
+            var unculledQuads = model.getQuads(null, null, random, ModelData.EMPTY, null);
             for (BakedQuad quad : unculledQuads) {
                 builder.addUnculledFace(paintQuad(quad, newTexture));
             }
 
             for (Direction side : Direction.values()) {
-                var culledQuads = model.getQuads(null, side, level.random, ModelData.EMPTY, null);
+                random.setSeed(42L);
+                var culledQuads = model.getQuads(null, side, random, ModelData.EMPTY, null);
                 for (BakedQuad quad : culledQuads) {
                     builder.addCulledFace(side, paintQuad(quad, newTexture));
                 }
@@ -80,14 +87,17 @@ public class ConduitItemModel extends BakedModelWrapper<BakedModel> {
         }
 
         // TODO: This is stolen from painted blocks.
-        //       This should be moved into a common utility.
+        // This should be moved into a common utility.
         protected BakedQuad paintQuad(BakedQuad toCopy, TextureAtlasSprite sprite) {
-            BakedQuad copied = new BakedQuad(Arrays.copyOf(toCopy.getVertices(), 32), -1, toCopy.getDirection(), sprite, toCopy.isShade());
+            BakedQuad copied = new BakedQuad(Arrays.copyOf(toCopy.getVertices(), 32), -1, toCopy.getDirection(), sprite,
+                    toCopy.isShade());
 
             for (int i = 0; i < 4; i++) {
                 float[] uv0 = RenderUtil.unpackVertices(copied.getVertices(), i, IQuadTransformer.UV0, 2);
-                uv0[0] = (uv0[0] - toCopy.getSprite().getU0()) * sprite.contents().width() / toCopy.getSprite().contents().width() + sprite.getU0();
-                uv0[1] = (uv0[1] - toCopy.getSprite().getV0()) * sprite.contents().height() / toCopy.getSprite().contents().height() + sprite.getV0();
+                uv0[0] = (uv0[0] - toCopy.getSprite().getU0()) * sprite.contents().width()
+                        / toCopy.getSprite().contents().width() + sprite.getU0();
+                uv0[1] = (uv0[1] - toCopy.getSprite().getV0()) * sprite.contents().height()
+                        / toCopy.getSprite().contents().height() + sprite.getV0();
                 int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
                 copied.getVertices()[IQuadTransformer.UV0 + i * IQuadTransformer.STRIDE] = packedTextureData[0];
                 copied.getVertices()[IQuadTransformer.UV0 + 1 + i * IQuadTransformer.STRIDE] = packedTextureData[1];

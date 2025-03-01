@@ -5,6 +5,8 @@ import com.enderio.conduits.api.ConduitNetwork;
 import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.Conduits;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -13,20 +15,19 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> {
 
     public EnergyConduitTicker() {
     }
 
     @Override
-    public void tickColoredGraph(ServerLevel level, EnergyConduit conduit, List<Connection> inserts, List<Connection> extracts, DyeColor color,
-        ConduitNetwork graph, ColoredRedstoneProvider coloredRedstoneProvider) {
+    public void tickColoredGraph(ServerLevel level, EnergyConduit conduit, List<Connection> inserts,
+            List<Connection> extracts, DyeColor color, ConduitNetwork graph,
+            ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        // Adjust for tick rate. Always flow up so we are at minimum meeting the required rate.
-        int transferRate = (int)Math.ceil(conduit.transferRatePerTick() * (20.0 / conduit.graphTickRate()));
+        // Adjust for tick rate. Always flow up so we are at minimum meeting the
+        // required rate.
+        int transferRate = (int) Math.ceil(conduit.transferRatePerTick() * (20.0 / conduit.graphTickRate()));
 
         EnergyConduitNetworkContext context = graph.getContext(Conduits.ContextSerializers.ENERGY.get());
         if (context == null) {
@@ -39,7 +40,8 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
 
         List<IEnergyStorage> storagesForInsert = new ArrayList<>();
         for (var insert : inserts) {
-            IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, insert.move(), insert.direction().getOpposite());
+            IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, insert.move(),
+                    insert.direction().getOpposite());
             if (capability != null) {
                 storagesForInsert.add(capability);
             }
@@ -64,6 +66,11 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
             int energyInserted = insertHandler.receiveEnergy(energyToInsert, false);
             context.setEnergyStored(context.energyStored() - energyInserted);
             context.setRotatingIndex(insertIndex + 1);
+            if (context.energyStored() <= 0) {
+                // If we are out of energy then stop the loop so we start at the next
+                // index next time around to spread out any new energy
+                break;
+            }
         }
     }
 
@@ -78,7 +85,8 @@ public class EnergyConduitTicker implements IOAwareConduitTicker<EnergyConduit> 
             return false;
         }
 
-        IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, conduitPos.relative(direction), direction.getOpposite());
+        IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK,
+                conduitPos.relative(direction), direction.getOpposite());
         return capability != null;
     }
 }

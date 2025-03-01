@@ -15,6 +15,8 @@ import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -40,9 +42,6 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.Optional;
 
 // TODO: Rewrite this with tasks?
 //       Could implement a task for each thing it currently has in the If's
@@ -332,7 +331,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     private void tryMendTool() {
         FluidStack fluid = TANK.getFluid(this);
 
-        if (!fluid.isEmpty() && fluid.is(EIOTags.Fluids.EXPERIENCE)) {
+        if (!fluid.isEmpty() && fluid.is(EIOTags.Fluids.EXPERIENCE)
+                && FLUID_DRAIN_OUTPUT.getItemStack(this).isEmpty()) {
             ItemStack tool = FLUID_DRAIN_INPUT.getItemStack(this);
 
             var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);

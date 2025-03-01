@@ -103,11 +103,12 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
 
     /**
      * Calculates the generation rate for this solar panel.
-     * Only generates energy during day before 12_000 ticks (10 minute aka half a minecraft day), or
+     * Only generates energy during day from 0 to  12_000 ticks (10 minute aka half a minecraft day), or
      * if its day and either night or if it hasLiquidSunshine.
-     * @see SolarPanelBlockEntity#hasLiquidSunshine()
+     * Generation is scaled at the start and end of the day.
      *
      * @return this solar panels generation rate.
+     * @see SolarPanelBlockEntity#hasLiquidSunshine()
      */
     public int getGenerationRate() {
         if (level == null) {
@@ -124,33 +125,41 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
             night = level.isNight();
         }
 
-        float progress = 0;
+        float outputScale = 0;
         if (day && (night || hasLiquidSunshine())) {
-            progress = 1;
+            outputScale = 1;
         } else if (day) {
+            // A Day night cycle is 20 minutes, daytime is 10 minutes
             int dayTime = (int) (level.getDayTime() % GameTicks.DAY_IN_TICKS);
-            if (dayTime > GameTicks.minutesToTicks(12)) {
-                return 0;
+
+            // Over how long should generation scale up/down and the start/end of the day
+            float rampTimeMinutes = 1.5f;
+            float rampTimeTicks = GameTicks.MINUTE_IN_TICKS * rampTimeMinutes;
+
+            if (dayTime < rampTimeTicks) {
+                // If in the ramp up period of the day, do a linear scale up
+                outputScale = dayTime / rampTimeTicks;
+            } else if (dayTime > (GameTicks.MINUTE_IN_TICKS * 10) - (GameTicks.MINUTE_IN_TICKS * rampTimeMinutes)) {
+                // If in the ramp down period of the day, do a linear scale down
+                int timeLeft = (GameTicks.MINUTE_IN_TICKS * 10) - dayTime;
+                outputScale = timeLeft / rampTimeTicks;
+            } else {
+                // Rest of the day, full power
+                outputScale = 1;
             }
-            progress = dayTime > GameTicks.minutesToTicks(5) ? GameTicks.minutesToTicks(10) - dayTime : dayTime;
-            progress = (progress - GameTicks.MINUTE_IN_TICKS) / GameTicks.minutesToTicks(4);
+
         } else if (night) {
             return 0;
         }
 
-        double easing = easing(progress);
-
         if (level.isThundering()) {
-            easing -= 0.7f;
+            outputScale -= 0.7f;
         } else if (level.isRaining()) {
-            easing -= 0.3f;
+            outputScale -= 0.3f;
         }
+        outputScale = Math.clamp(outputScale, 0, 1);
 
-        if (easing < 0) {
-            return 0;
-        }
-
-        return (int) (easing * tier.getProductionRate());
+        return (int) Math.ceil(outputScale * tier.getProductionRate());
     }
 
     private boolean hasLiquidSunshine() {
@@ -203,15 +212,6 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
                 Graph.connect(node, panel.node);
             }
         }
-    }
-
-    // Reference: EaseInOutQuad Function
-    private static double easing(float progress) {
-        if (progress > 0.5f) {
-            return 1 - Math.pow(-2 * progress + 2, 2) / 2;
-        }
-
-        return 2 * progress * progress;
     }
 
     @Override

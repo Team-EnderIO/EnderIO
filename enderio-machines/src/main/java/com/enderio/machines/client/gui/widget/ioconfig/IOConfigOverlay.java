@@ -444,8 +444,8 @@ public class IOConfigOverlay extends BaseOverlay {
         if (selection.isPresent()) {
             var selectedFace = selection.get();
             BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
-            if (entity instanceof LegacyMachineBlockEntity machine) {
-                var ioMode = machine.getIOMode(selectedFace.side);
+            if (entity instanceof IOConfigurable ioConfigurable) {
+                var ioMode = ioConfigurable.getIOMode(selectedFace.side);
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();
                 guiGraphics.blitSprite(IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,

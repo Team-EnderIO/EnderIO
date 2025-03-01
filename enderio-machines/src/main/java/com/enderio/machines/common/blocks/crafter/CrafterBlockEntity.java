@@ -54,6 +54,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     @Override
     protected void onInventoryContentsChanged(int slot) {
+        super.onInventoryContentsChanged(slot);
         if (GHOST.contains(slot)) {
             updateRecipe();
         }

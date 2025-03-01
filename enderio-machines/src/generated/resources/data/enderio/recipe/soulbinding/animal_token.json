@@ -1,5 +1,6 @@
 {
   "type": "enderio:soul_binding",
+  "copyInputComponents": false,
   "energy": 12800,
   "experience": 1,
   "input": {

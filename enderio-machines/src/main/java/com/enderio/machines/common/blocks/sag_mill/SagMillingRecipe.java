@@ -213,7 +213,7 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
                             SizedTagOutput::itemTag, ByteBufCodecs.INT, SizedTagOutput::count, SizedTagOutput::new);
 
             public ItemStack getItemStack() {
-                return TagUtil.getOptionalItem(itemTag).map(ItemStack::new).orElse(ItemStack.EMPTY);
+                return TagUtil.getOptionalItem(itemTag).map(item -> new ItemStack(item, count)).orElse(ItemStack.EMPTY);
             }
         }
     }

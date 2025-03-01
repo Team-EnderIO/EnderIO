@@ -340,13 +340,13 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     }
 
     private void distributeItems(Direction side) {
-        IFluidHandler selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
-        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
+        IItemHandler selfHandler = getSelfCapability(Capabilities.ItemHandler.BLOCK, side);
+        IItemHandler otherHandler = getNeighbouringCapability(Capabilities.ItemHandler.BLOCK, side);
         if (selfHandler == null || otherHandler == null) {
             return;
         }
 
-        TransferUtil.distributeFluids(getIOMode(side), selfHandler, otherHandler);
+        TransferUtil.distributeItems(getIOMode(side), selfHandler, otherHandler);
     }
 
     private void distributeFluids(Direction side) {
@@ -391,6 +391,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
         }
 
         states.add(state);
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     @UseOnly(LogicalSide.SERVER)
@@ -400,6 +401,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
         }
 
         states.remove(state);
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     // endregion
@@ -447,7 +449,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     private void checkIsRedstoneBlocked() {
         if (supportsRedstoneControl()) {
             isRedstoneBlocked = !redstoneControl.isActive(isRedstonePowered());
-            updateMachineState(MachineState.REDSTONE, !isRedstoneBlocked);
+            updateMachineState(MachineState.REDSTONE, isRedstoneBlocked);
         }
     }
 

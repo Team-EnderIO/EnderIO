@@ -72,7 +72,7 @@ public class ConduitBlockItem extends BlockItem {
 
         // Pass through to existing block.
         BlockState blockState = level.getBlockState(blockpos);
-        if (!blockState.isAir()) {
+        if (!blockState.canBeReplaced()) {
             // noinspection DataFlowIssue
             return blockState
                     .useItemOn(context.getItemInHand(), level, player, context.getHand(),

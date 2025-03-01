@@ -1,6 +1,7 @@
 package com.enderio.base.common.hangglider;
 
 import com.enderio.EnderIOBase;
+import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.glider.GliderMovementInfo;
 import com.enderio.base.api.integration.IntegrationManager;
 import com.enderio.base.common.init.EIOCriterions;
@@ -17,6 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -34,24 +36,28 @@ public class PlayerMovementHandler {
 
     private static final double MOVEMENT_CHANGE_EFFECT = 0.05d;
 
-    private static final Map<Player, Integer> TICKS_FALLING = new WeakHashMap<>();
+    @UseOnly(LogicalSide.CLIENT)
+    private static final Map<Player, Integer> TICKS_FALLING_CLIENT = new WeakHashMap<>();
+    @UseOnly(LogicalSide.SERVER)
+    private static final Map<Player, Integer> TICKS_FALLING_SERVER = new WeakHashMap<>();
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Pre playerTickEvent) {
         Player player = playerTickEvent.getEntity();
+        Map<Player, Integer> ticksFallingMap = player instanceof ServerPlayer ? TICKS_FALLING_SERVER : TICKS_FALLING_CLIENT;
 
-        int ticksFalling = TICKS_FALLING.getOrDefault(player, 0);
+        int ticksFalling = ticksFallingMap.getOrDefault(player, 0);
         if (player.onGround() != player.getDeltaMovement().y() < 0) {
-            TICKS_FALLING.put(player, ticksFalling + 1);
+            ticksFallingMap.put(player, ticksFalling + 1);
         } else {
-            TICKS_FALLING.put(player, 0);
+            ticksFallingMap.put(player, 0);
         }
 
         if (player.isSpectator()) {
             return;
         }
 
-        Optional<GliderMovementInfo> gliderMovementInfoOpt = calculateGliderMovementInfo(player, true);
+        Optional<GliderMovementInfo> gliderMovementInfoOpt = calculateGliderMovementInfo(player, true, ticksFallingMap);
         if (gliderMovementInfoOpt.isEmpty()) {
             return;
         }
@@ -85,13 +91,14 @@ public class PlayerMovementHandler {
 
         gliderMovementInfo.cause().onHangGliderTick(player);
     }
-    public static Optional<GliderMovementInfo> calculateGliderMovementInfo(Player player, boolean displayDisabledMessage) {
+
+    public static Optional<GliderMovementInfo> calculateGliderMovementInfo(Player player, boolean displayDisabledMessage, Map<Player, Integer> ticksFallingMap) {
         if (!player.onGround()
             && player.getDeltaMovement().y() < 0
             && !player.isShiftKeyDown()
             && !player.isInWater()
             && !player.isPassenger()
-            && TICKS_FALLING.getOrDefault(player, 0) > 12) {
+            && ticksFallingMap.getOrDefault(player, 0) > 12) {
             Optional<Component> disabledReason = IntegrationManager.getFirst(integration -> integration.hangGliderDisabledReason(player));
             Optional<GliderMovementInfo> gliderMovementInfo = IntegrationManager.getFirst(integration -> integration.getGliderMovementInfo(player));
             if (displayDisabledMessage && disabledReason.isPresent() && gliderMovementInfo.isPresent()) {
@@ -136,7 +143,7 @@ public class PlayerMovementHandler {
         public void tick() {
 
             ++this.time;
-            if (!this.player.isRemoved() && (this.time <= 20 || PlayerMovementHandler.calculateGliderMovementInfo(player, false).isPresent())) {
+            if (!this.player.isRemoved() && (this.time <= 20 || PlayerMovementHandler.calculateGliderMovementInfo(player, false, TICKS_FALLING_CLIENT).isPresent())) {
                 this.x = this.player.getX();
                 this.y = this.player.getY();
                 this.z = this.player.getZ();

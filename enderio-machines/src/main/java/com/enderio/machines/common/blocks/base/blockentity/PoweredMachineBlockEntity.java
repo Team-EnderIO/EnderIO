@@ -137,7 +137,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     @Override
     protected int distributeResourcesInterval() {
-        return energyIOMode.canOutput() ? super.distributeResourcesInterval() : 1;
+        return energyIOMode.canOutput() ? 1 : super.distributeResourcesInterval();
     }
 
     @Override
