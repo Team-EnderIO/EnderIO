@@ -36,6 +36,8 @@ import com.enderio.machines.data.tag.MachineBlockTagsProvider;
 import com.enderio.machines.data.tag.MachineEntityTypeTagsProvider;
 import com.enderio.machines.data.tag.MachineItemTagsProvider;
 import com.enderio.regilite.Regilite;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -51,9 +53,6 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 @Mod(EnderIOMachines.MODULE_MOD_ID)
@@ -113,11 +112,16 @@ public class EnderIOMachines {
         provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(),
+                new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
         var b = new MachineBlockTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper());
         provider.addSubProvider(event.includeServer(), b);
-        provider.addSubProvider(event.includeServer(), new ReagentProvider(packOutput, lookupProvider)); // Reagent Data needs to be before ItemTags
-        provider.addSubProvider(event.includeServer(), new MachineItemTagsProvider(packOutput, lookupProvider, b.contentsGetter(), event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(), new ReagentProvider(packOutput, lookupProvider)); // Reagent Data
+                                                                                                         // needs to be
+                                                                                                         // before
+                                                                                                         // ItemTags
+        provider.addSubProvider(event.includeServer(), new MachineItemTagsProvider(packOutput, lookupProvider,
+                b.contentsGetter(), event.getExistingFileHelper()));
 
         generator.addProvider(true, provider);
         provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, event.getLookupProvider(),

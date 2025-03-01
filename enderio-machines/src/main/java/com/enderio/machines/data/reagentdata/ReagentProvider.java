@@ -3,17 +3,15 @@ package com.enderio.machines.data.reagentdata;
 import com.enderio.machines.common.datamap.VatReagent;
 import com.enderio.machines.common.tag.MachineTags;
 import com.enderio.machines.data.tag.MachineItemTagsProvider;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.DataMapProvider;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class ReagentProvider extends DataMapProvider {
 
@@ -24,7 +22,7 @@ public class ReagentProvider extends DataMapProvider {
     }
 
     protected void gather() {
-        reagent(Items.SUGAR_CANE, Tags.Items.CROPS, 0.5D);
+        reagent(Items.SUGAR_CANE, MachineTags.ItemTags.CROPS, 0.5D);
 
         reagent(Items.GLOWSTONE_DUST, MachineTags.ItemTags.NATURAL_LIGHTS, 0.25D);
         reagent(Items.SEA_PICKLE, MachineTags.ItemTags.NATURAL_LIGHTS, 0.25D);

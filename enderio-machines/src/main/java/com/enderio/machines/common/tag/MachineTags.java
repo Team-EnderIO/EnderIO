@@ -15,8 +15,11 @@ public class MachineTags {
 
     public static class ItemTags {
 
-        private static void init() {}
+        private static void init() {
+        }
 
+        public static TagKey<Item> SEEDS = create("seeds");
+        public static TagKey<Item> CROPS = create("crops");
         public static TagKey<Item> EXPLOSIVES = create("explosives");
         public static TagKey<Item> BLAZE_POWDER = create("blaze_powder");
         public static final TagKey<Item> NATURAL_LIGHTS = create("natural_lights");
@@ -34,7 +37,8 @@ public class MachineTags {
 
     public static class EntityTypes {
 
-        private static void init() {}
+        private static void init() {
+        }
 
         public static TagKey<EntityType<?>> SPAWNER_BLACKLIST = create("spawner_blacklist");
 
