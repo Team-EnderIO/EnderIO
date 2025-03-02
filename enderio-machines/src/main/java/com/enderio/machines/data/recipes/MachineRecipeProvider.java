@@ -17,6 +17,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -43,6 +44,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.BASIC_CAPACITOR).build()))
             .save(recipeOutput);
 
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC).get())
+            .requires(MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC)).build()))
+            .save(recipeOutput, EnderIO.loc("erase_basic_capacitor_bank"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED).get())
             .define('A', EIOTags.Items.INGOTS_COPPER_ALLOY)
@@ -64,6 +71,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("EEE")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.DOUBLE_LAYER_CAPACITOR).build()))
             .save(recipeOutput, EnderIO.loc("advanced_capacitor_bank_upgrade"));
+
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED).get())
+            .requires(MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED)).build()))
+            .save(recipeOutput, EnderIO.loc("erase_advanced_capacitor_bank"));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.VIBRANT).get())
@@ -88,6 +101,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.BASIC_CAPACITOR).build()))
             .save(recipeOutput, EnderIO.loc("vibrant_capacitor_bank_upgrade"));
 
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.VIBRANT).get())
+            .requires(MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.VIBRANT))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.VIBRANT)).build()))
+            .save(recipeOutput, EnderIO.loc("erase_vibrant_capacitor_bank"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.FLUID_TANK.get())
             .define('I', Tags.Items.INGOTS_IRON)
@@ -99,6 +118,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.INGOTS_IRON).build()))
             .save(recipeOutput);
 
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.FLUID_TANK.get())
+            .requires(MachineBlocks.FLUID_TANK)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.FLUID_TANK).build()))
+            .save(recipeOutput, EnderIO.loc("erase_fluid_tank"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.PRESSURIZED_FLUID_TANK.get())
             .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
@@ -109,6 +134,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("IBI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.INGOTS_IRON).build()))
             .save(recipeOutput);
+
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.PRESSURIZED_FLUID_TANK.get())
+            .requires(MachineBlocks.PRESSURIZED_FLUID_TANK)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.PRESSURIZED_FLUID_TANK).build()))
+            .save(recipeOutput, EnderIO.loc("erase_pressurised_fluid_tank"));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.ENCHANTER.get())
@@ -145,6 +176,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
             .save(recipeOutput);
 
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.ALLOY_SMELTER.get())
+            .requires(MachineBlocks.ALLOY_SMELTER)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.ALLOY_SMELTER).build()))
+            .save(recipeOutput, EnderIO.loc("erase_alloy_smelter"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.STIRLING_GENERATOR.get())
             .define('B', Blocks.STONE_BRICKS)
@@ -159,6 +196,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
             .save(recipeOutput);
 
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.STIRLING_GENERATOR.get())
+            .requires(MachineBlocks.STIRLING_GENERATOR)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.STIRLING_GENERATOR).build()))
+            .save(recipeOutput, EnderIO.loc("erase_sterling_generator"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SAG_MILL.get())
             .define('F', Items.FLINT)
@@ -171,6 +214,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("GPG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
             .save(recipeOutput);
+
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.SAG_MILL.get())
+            .requires(MachineBlocks.SAG_MILL)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.SAG_MILL).build()))
+            .save(recipeOutput, EnderIO.loc("erase_sag_mill"));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SLICE_AND_SPLICE.get())
@@ -185,6 +234,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS.get()))
             .save(recipeOutput);
 
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.SLICE_AND_SPLICE.get())
+            .requires(MachineBlocks.SLICE_AND_SPLICE)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.SLICE_AND_SPLICE).build()))
+            .save(recipeOutput, EnderIO.loc("erase_slice_and_splice"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.IMPULSE_HOPPER.get())
             .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
@@ -197,6 +252,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("IRI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
             .save(recipeOutput);
+
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.IMPULSE_HOPPER.get())
+            .requires(MachineBlocks.IMPULSE_HOPPER)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.IMPULSE_HOPPER).build()))
+            .save(recipeOutput, EnderIO.loc("erase_impulse_hopper"));
 
         // TODO: Not a fan, at all...
         ShapedRecipeBuilder
@@ -212,6 +273,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS.get()))
             .save(recipeOutput);
 
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.SOUL_BINDER.get())
+            .requires(MachineBlocks.SOUL_BINDER)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.SOUL_BINDER).build()))
+            .save(recipeOutput, EnderIO.loc("erase_soul_binder"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.WIRED_CHARGER.get())
             .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
@@ -221,6 +288,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CCC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
             .save(recipeOutput);
+
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.WIRED_CHARGER.get())
+            .requires(MachineBlocks.WIRED_CHARGER)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.WIRED_CHARGER).build()))
+            .save(recipeOutput, EnderIO.loc("erase_wired_charger"));
 
         ShapedEntityStorageRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.POWERED_SPAWNER)
@@ -235,6 +308,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS))
             .save(recipeOutput);
 
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.POWERED_SPAWNER.get())
+            .requires(MachineBlocks.POWERED_SPAWNER)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.POWERED_SPAWNER).build()))
+            .save(recipeOutput, EnderIO.loc("erase_powered_spawner"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOUL_ENGINE)
             .define('I', EIOTags.Items.INGOTS_SOULARIUM) //TODO Maybe also soulchains?
@@ -247,6 +326,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("IZI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS))
             .save(recipeOutput);
+
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.SOUL_ENGINE.get())
+            .requires(MachineBlocks.SOUL_ENGINE)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.SOUL_ENGINE).build()))
+            .save(recipeOutput, EnderIO.loc("erase_soul_engine"));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.VACUUM_CHEST.get())
@@ -272,6 +357,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOBlocks.VOID_CHASSIS).build()))
             .save(recipeOutput);
 
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.DRAIN.get())
+            .requires(MachineBlocks.DRAIN)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.DRAIN).build()))
+            .save(recipeOutput, EnderIO.loc("erase_drain"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.XP_VACUUM)
             .pattern("III")
@@ -296,6 +387,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
             .save(recipeOutput);
 
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.CRAFTER.get())
+            .requires(MachineBlocks.CRAFTER)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.CRAFTER).build()))
+            .save(recipeOutput, EnderIO.loc("erase_crafter"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC))
             .define('E', Tags.Items.INGOTS_GOLD)
@@ -308,6 +405,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CDC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PHOTOVOLTAIC_PLATE.get()))
             .save(recipeOutput);
+
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC))
+            .requires(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)).build()))
+            .save(recipeOutput, EnderIO.loc("erase_energetic_solar_panels"));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING))
@@ -323,6 +426,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)))
             .save(recipeOutput, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)).getPath()));
 
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING))
+            .requires(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)).build()))
+            .save(recipeOutput, EnderIO.loc("erase_pulsating_solar_panels"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT))
             .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
@@ -336,6 +445,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CSC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)))
             .save(recipeOutput, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)).getPath()));
+
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT))
+            .requires(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)).build()))
+            .save(recipeOutput, EnderIO.loc("erase_vibrant_solar_panels"));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.PAINTING_MACHINE.get())
@@ -374,6 +489,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.EXPERIENCE_ROD).build()))
             .save(recipeOutput);
 
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.XP_OBELISK.get())
+            .requires(MachineBlocks.XP_OBELISK)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.XP_OBELISK).build()))
+            .save(recipeOutput, EnderIO.loc("erase_xp_obelisk"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.AVERSION_OBELISK.get())
             .define('H', EIOBlocks.ENDERMAN_HEAD) //TODO Tormented Ender
@@ -385,6 +506,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("ICI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOBlocks.ENDERMAN_HEAD).build()))
             .save(recipeOutput);
+
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.AVERSION_OBELISK.get())
+            .requires(MachineBlocks.AVERSION_OBELISK)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.AVERSION_OBELISK).build()))
+            .save(recipeOutput, EnderIO.loc("erase_aversion_obelisk"));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.INHIBITOR_OBELISK.get())
@@ -399,6 +526,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.ENDER_CRYSTAL).build()))
             .save(recipeOutput);
 
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.INHIBITOR_OBELISK.get())
+            .requires(MachineBlocks.INHIBITOR_OBELISK)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.INHIBITOR_OBELISK).build()))
+            .save(recipeOutput, EnderIO.loc("erase_inhibitor_obelisk"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.RELOCATOR_OBELISK.get())
             .define('P', Items.PRISMARINE)
@@ -407,6 +540,12 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("A")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.AVERSION_OBELISK).build()))
             .save(recipeOutput);
+
+        ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.MISC, MachineBlocks.RELOCATOR_OBELISK.get())
+            .requires(MachineBlocks.RELOCATOR_OBELISK)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(MachineBlocks.RELOCATOR_OBELISK).build()))
+            .save(recipeOutput, EnderIO.loc("erase_relocator_obelisk"));
             
         // TODO: Enable once the block detector has a model.
         /*ShapedRecipeBuilder

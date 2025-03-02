@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:impulse_hopper"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:impulse_hopper"
+  }
+}

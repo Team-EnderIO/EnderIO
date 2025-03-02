@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:sag_mill"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:sag_mill"
+  }
+}
