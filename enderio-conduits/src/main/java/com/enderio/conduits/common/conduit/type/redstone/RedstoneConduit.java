@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit.type.redstone;
 
-import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.api.misc.RedstoneControl;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.bundle.ConduitBundleReader;
@@ -22,10 +22,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2i;
 
 public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeTexture, Component description)
         implements Conduit<RedstoneConduit, RedstoneConduitConnectionConfig> {
@@ -62,25 +63,6 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     }
 
     @Override
-    public boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
-        return switch (slotType) {
-        case FILTER_EXTRACT -> resourceFilter instanceof RedstoneExtractFilter;
-        case FILTER_INSERT -> resourceFilter instanceof RedstoneInsertFilter;
-        default -> false;
-        };
-    }
-
-    @Override
-    public ResourceLocation getTexture(@Nullable CompoundTag extraWorldData) {
-        if (extraWorldData != null) {
-            return extraWorldData.contains("IsActive") && extraWorldData.getBoolean("IsActive") ? activeTexture()
-                    : texture();
-        }
-
-        return texture();
-    }
-
-    @Override
     public void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
         node.markDirty();
     }
@@ -109,6 +91,40 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     public RedstoneConduitConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
             DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
         return new RedstoneConduitConnectionConfig(isInsert, inputChannel, isExtract, outputChannel, false);
+    }
+
+    @Override
+    public int getInventorySize() {
+        return 2;
+    }
+
+    @Override
+    public boolean isItemValid(int slot, ItemStack stack) {
+        if (slot == EXTRACT_FILTER_SLOT) {
+            return stack.getCapability(EIOCapabilities.Filter.ITEM) instanceof RedstoneExtractFilter;
+        } else if (slot == INSERT_FILTER_SLOT) {
+            return stack.getCapability(EIOCapabilities.Filter.ITEM) instanceof RedstoneInsertFilter;
+        }
+
+        return false;
+    }
+
+    @Override
+    public Vector2i getInventorySlotPosition(int slot) {
+        return switch (slot) {
+            case EXTRACT_FILTER_SLOT -> new Vector2i(113, 71);
+            case INSERT_FILTER_SLOT -> new Vector2i(23, 71);
+            default -> throw new IndexOutOfBoundsException();
+        };
+    }
+
+    @Override
+    public int getIndexForLegacySlot(SlotType slotType) {
+        return switch (slotType) {
+            case FILTER_EXTRACT -> EXTRACT_FILTER_SLOT;
+            case FILTER_INSERT -> INSERT_FILTER_SLOT;
+            default -> -1;
+        };
     }
 
     @Override

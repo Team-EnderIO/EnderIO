@@ -1,7 +1,6 @@
 package com.enderio.conduits.common.conduit.graph;
 
 import com.enderio.conduits.api.Conduit;
-import com.enderio.conduits.api.bundle.ConduitInventory;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

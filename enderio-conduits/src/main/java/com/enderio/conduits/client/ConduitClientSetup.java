@@ -14,6 +14,7 @@ import com.enderio.conduits.client.model.conduit.bundle.ConduitBundleGeometry;
 import com.enderio.conduits.client.model.conduit.facades.FacadeItemGeometry;
 import com.enderio.conduits.client.model.conduit.modifier.ConduitModelModifiers;
 import com.enderio.conduits.client.model.conduit.modifier.FluidConduitModelModifier;
+import com.enderio.conduits.client.model.conduit.modifier.RedstoneConduitModelModifier;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitTypes;
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class ConduitClientSetup {
 
     @SubscribeEvent
     public static void registerConduitCoreModelModifiers(RegisterConduitModelModifiersEvent event) {
+        event.register(ConduitTypes.REDSTONE.get(), RedstoneConduitModelModifier::new);
         event.register(ConduitTypes.FLUID.get(), FluidConduitModelModifier::new);
     }
 

@@ -3,6 +3,7 @@ package com.enderio.conduits.client.model.conduit.bundle;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.bundle.ConduitBundleReader;
 import com.enderio.conduits.api.connection.ConnectionStatus;
+import com.enderio.conduits.client.model.conduit.modifier.ConduitModelModifiers;
 import com.enderio.conduits.common.conduit.OffsetHelper;
 import java.util.HashMap;
 import java.util.List;
@@ -102,7 +103,12 @@ public class ConduitBundleRenderState {
     }
 
     public ResourceLocation getTexture(Holder<Conduit<?, ?>> conduit) {
-        return conduit.value().getTexture(getExtraWorldData(conduit));
+        var modifier = ConduitModelModifiers.getModifier(conduit.value().type());
+        if (modifier != null) {
+            return modifier.getTexture(conduit, getExtraWorldData(conduit));
+        } else {
+            return conduit.value().texture();
+        }
     }
 
     public boolean hasFacade() {

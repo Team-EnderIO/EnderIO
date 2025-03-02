@@ -76,10 +76,22 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     ConduitTicker<TConduit> getTicker();
 
     /**
+     * @return the expected conduit connection config type.
+     */
+    ConnectionConfigType<TConnectionConfig> connectionConfigType();
+
+    /**
      * @implNote if a conduit has a menu, you must also register a {@link com.enderio.conduits.api.screen.ConduitScreenType} for it.
      * @return whether this conduit has a menu.
      */
     boolean hasMenu();
+
+    @Nullable
+    default <TCapability, TContext> TCapability proxyCapability(Level level,
+        ColoredRedstoneProvider coloredRedstoneProvider, ConduitNode node,
+        BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
+        return null;
+    }
 
     // region Conduit Checks
 
@@ -119,15 +131,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     // endregion
 
-    // region Connection Checks
-
-    boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction);
-
-    default boolean canForceConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        return canConnectToBlock(level, conduitPos, direction);
-    }
-
-    // endregion
+    // region Connections
 
     /**
      * @return if this is not always able to determine connectivity to its neighbours at time of placement, but the tick later
@@ -136,18 +140,13 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
         return false;
     }
 
-    // TODO: REMOVE
-    default boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
-        return false;
+    boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction);
+
+    default boolean canForceConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
+        return canConnectToBlock(level, conduitPos, direction);
     }
 
-    /**
-     * Gets the conduit texture to display, given the data.
-     * @param extraWorldData client data from {@link #getExtraWorldData(ConduitBundleReader, ConduitNode)}.
-     */
-    default ResourceLocation getTexture(@Nullable CompoundTag extraWorldData) {
-        return texture();
-    }
+    // endregion
 
     // region Events
 
@@ -165,19 +164,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     // endregion
 
-    @Nullable
-    default <TCapability, TContext> TCapability proxyCapability(Level level,
-            ColoredRedstoneProvider coloredRedstoneProvider, ConduitNode node,
-            BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
-        return null;
-    }
-
-    // region Conduit Data
-
-    /**
-     * @return the expected conduit connection config type.
-     */
-    ConnectionConfigType<TConnectionConfig> connectionConfigType();
+    // region Legacy Conduit Data
 
     /**
      * Convert old conduit connection data into the new connection config.
@@ -206,6 +193,8 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     // region Connection Inventory
 
+    // TODO: Document that item loss will occur if a conduit is upgraded to another type with smaller inventory...
+
     default int getInventorySize() {
         return 0;
     }
@@ -233,7 +222,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     // endregion
 
-    // region Custom Sync
+    // region Custom Data Sync
 
     @Nullable
     default CompoundTag getExtraGuiData(ConduitBundleReader conduitBundle, ConduitNode node, Direction side) {
@@ -251,9 +240,11 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     // endregion
 
+    // region Tooltips
+
     @Override
     default void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
-            TooltipFlag pTooltipFlag) {
+        TooltipFlag pTooltipFlag) {
     }
 
     /**
@@ -269,4 +260,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     default boolean showDebugTooltip() {
         return false;
     }
+
+    // endregion
 }

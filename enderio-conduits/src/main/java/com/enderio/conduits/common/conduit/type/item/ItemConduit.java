@@ -67,11 +67,6 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
-    public boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
-        return resourceFilter instanceof ItemStackFilter;
-    }
-
-    @Override
     public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
             TooltipFlag pTooltipFlag) {
         String calculatedTransferLimitFormatted = String.format("%,d",

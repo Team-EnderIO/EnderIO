@@ -1,8 +1,10 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.base.api.filter.FluidStackFilter;
+import com.enderio.base.api.filter.ItemStackFilter;
 import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.api.misc.RedstoneControl;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.bundle.ConduitBundleReader;
@@ -28,6 +30,7 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
@@ -35,9 +38,13 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2i;
 
 public record FluidConduit(ResourceLocation texture, Component description, int transferRatePerTick,
         boolean isMultiFluid) implements Conduit<FluidConduit, FluidConduitConnectionConfig> {
+
+    public static final int EXTRACT_FILTER_SLOT = 0;
+    public static final int INSERT_FILTER_SLOT = 1;
 
     public static final MapCodec<FluidConduit> CODEC = RecordCodecBuilder
             .mapCodec(
@@ -122,11 +129,6 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
-        return resourceFilter instanceof FluidStackFilter;
-    }
-
-    @Override
     public ConnectionConfigType<FluidConduitConnectionConfig> connectionConfigType() {
         return FluidConduitConnectionConfig.TYPE;
     }
@@ -153,6 +155,34 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
 
         // Copy locked fluid from old data.
         context.setLockedFluid(legacyData.lockedFluid());
+    }
+
+    @Override
+    public int getInventorySize() {
+        return 2;
+    }
+
+    @Override
+    public boolean isItemValid(int slot, ItemStack stack) {
+        return stack.getCapability(EIOCapabilities.Filter.ITEM) instanceof FluidStackFilter;
+    }
+
+    @Override
+    public Vector2i getInventorySlotPosition(int slot) {
+        return switch (slot) {
+            case EXTRACT_FILTER_SLOT -> new Vector2i(113, 71);
+            case INSERT_FILTER_SLOT -> new Vector2i(23, 71);
+            default -> throw new IndexOutOfBoundsException();
+        };
+    }
+
+    @Override
+    public int getIndexForLegacySlot(SlotType slotType) {
+        return switch (slotType) {
+            case FILTER_EXTRACT -> EXTRACT_FILTER_SLOT;
+            case FILTER_INSERT -> INSERT_FILTER_SLOT;
+            default -> -1;
+        };
     }
 
     @Override

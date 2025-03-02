@@ -39,7 +39,7 @@ public class FluidConduitTicker
         }
 
         var extractFilter = receiver.inventory()
-            .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
+            .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
             .getCapability(EIOCapabilities.Filter.ITEM);
 
         if (extractFilter instanceof FluidStackFilter fluidStackFilter) {
@@ -50,7 +50,7 @@ public class FluidConduitTicker
 
         for (Connection insert : senders) {
             var insertFilter = insert.inventory()
-                .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
+                .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
                 .getCapability(EIOCapabilities.Filter.ITEM);
 
             if (insertFilter instanceof FluidStackFilter fluidStackFilter) {
