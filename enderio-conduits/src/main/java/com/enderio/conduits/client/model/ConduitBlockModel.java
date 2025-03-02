@@ -16,7 +16,6 @@ import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitNode;
 import com.enderio.conduits.api.facade.FacadeType;
 import com.enderio.conduits.api.model.ConduitCoreModelModifier;
-import com.enderio.conduits.client.ConduitFacadeColor;
 import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
 import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
 import com.enderio.conduits.common.Area;
@@ -34,7 +33,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -50,7 +48,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
@@ -65,29 +62,17 @@ import org.joml.Vector3f;
 
 public class ConduitBlockModel implements IDynamicBakedModel {
 
+    private static final ChunkRenderTypeSet CUTOUT_SET = ChunkRenderTypeSet.of(RenderType.cutout());
+
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand,
             ModelData extraData, @Nullable RenderType renderType) {
 
         List<BakedQuad> quads = new ArrayList<>();
         ConduitBundle conduitBundle = extraData.get(ConduitBundleBlockEntity.BUNDLE_MODEL_PROPERTY);
-        ModelData data = extraData.get(ConduitBundleBlockEntity.FACADE_MODEL_DATA);
 
         if (conduitBundle != null) {
             if (FacadeHelper.areFacadesVisible()) {
-                IQuadTransformer transformer = quad -> quad.tintIndex = ConduitFacadeColor
-                        .moveTintIndex(quad.getTintIndex());
-                Optional<Block> facadeOpt = conduitBundle.facade();
-                if (facadeOpt.isPresent()) {
-                    BlockState facade = facadeOpt.get().defaultBlockState();
-                    var model = Minecraft.getInstance().getBlockRenderer().getBlockModel(facade);
-                    var facadeQuads = model.getQuads(facade, side, rand, data, renderType);
-
-                    if (renderType != null && model.getRenderTypes(facade, rand, data).contains(renderType)) {
-                        quads.addAll(transformer.process(facadeQuads));
-                    }
-                }
-
                 // If the facade should hide the conduits, escape early.
                 if (conduitBundle.hasFacade()) {
                     boolean areConduitsHidden = conduitBundle.facadeType()
@@ -340,12 +325,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
     @Override
     public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand,
             @NotNull ModelData data) {
-        ChunkRenderTypeSet facadeRenderTypes = data.get(ConduitBundleBlockEntity.FACADE_RENDERTYPE);
-        ChunkRenderTypeSet renderTypes = ChunkRenderTypeSet.of(RenderType.cutout());
-        if (facadeRenderTypes != null) {
-            renderTypes = ChunkRenderTypeSet.union(renderTypes, facadeRenderTypes);
-        }
-        return renderTypes;
+        return CUTOUT_SET;
     }
 
     @Override

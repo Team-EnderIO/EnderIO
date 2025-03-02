@@ -1,0 +1,9 @@
+{
+    "required" : true,
+    "package" : "com.enderio.conduits.mixin",
+    "compatibilityLevel" : "JAVA_17",
+    "client" : [
+        "BlockRenderDispatcherMixin"
+    ],
+    "minVersion" : "0.8"
+}
