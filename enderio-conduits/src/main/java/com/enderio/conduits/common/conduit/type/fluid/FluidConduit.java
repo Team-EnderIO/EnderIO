@@ -1,13 +1,11 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.base.api.filter.FluidStackFilter;
-import com.enderio.base.api.filter.ItemStackFilter;
-import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitType;
-import com.enderio.conduits.api.bundle.ConduitBundleReader;
+import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.network.node.ConduitNode;
@@ -186,13 +184,13 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public @Nullable CompoundTag getExtraGuiData(ConduitBundleReader conduitBundle, ConduitNode node, Direction side) {
+    public @Nullable CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
         return getExtraWorldData(conduitBundle, node);
     }
 
     @Override
     @Nullable
-    public CompoundTag getExtraWorldData(ConduitBundleReader conduitBundle, ConduitNode node) {
+    public CompoundTag getExtraWorldData(ConduitBundle conduitBundle, ConduitNode node) {
         if (node.getNetwork() == null) {
             return null;
         }

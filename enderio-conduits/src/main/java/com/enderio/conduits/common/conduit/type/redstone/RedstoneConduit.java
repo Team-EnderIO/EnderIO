@@ -4,7 +4,7 @@ import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitType;
-import com.enderio.conduits.api.bundle.ConduitBundleReader;
+import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.network.node.ConduitNode;
@@ -128,7 +128,7 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     }
 
     @Override
-    public CompoundTag getExtraWorldData(ConduitBundleReader conduitBundle, ConduitNode node) {
+    public CompoundTag getExtraWorldData(ConduitBundle conduitBundle, ConduitNode node) {
         var tag = new CompoundTag();
 
         if (node.getNetwork() == null) {

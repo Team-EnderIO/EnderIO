@@ -1,6 +1,6 @@
 package com.enderio.conduits.client;
 
-import com.enderio.conduits.api.bundle.ConduitBundleReader;
+import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
 import com.enderio.conduits.client.particle.ConduitBreakParticle;
 import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
@@ -48,7 +48,7 @@ public class ConduitBundleExtension implements IClientBlockExtensions {
     public boolean addDestroyEffects(BlockState state, Level level, BlockPos pos, ParticleEngine manager) {
         // Use vanilla particles if we have a visible facade.
         // Conduit break particles are handled by the BE.
-        if (level.getBlockEntity(pos) instanceof ConduitBundleReader conduitBundle) {
+        if (level.getBlockEntity(pos) instanceof ConduitBundle conduitBundle) {
             return !(conduitBundle.hasFacade() && FacadeHelper.areFacadesVisible());
         }
 

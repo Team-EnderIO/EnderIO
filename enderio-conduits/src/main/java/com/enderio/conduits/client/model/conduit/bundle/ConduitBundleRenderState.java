@@ -1,7 +1,7 @@
 package com.enderio.conduits.client.model.conduit.bundle;
 
 import com.enderio.conduits.api.Conduit;
-import com.enderio.conduits.api.bundle.ConduitBundleReader;
+import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.connection.ConnectionStatus;
 import com.enderio.conduits.client.model.conduit.modifier.ConduitModelModifiers;
 import com.enderio.conduits.common.conduit.OffsetHelper;
@@ -32,7 +32,7 @@ public class ConduitBundleRenderState {
     private boolean doesFacadeHideConduits;
 
     @EnsureSide(EnsureSide.Side.CLIENT)
-    public static ConduitBundleRenderState of(ConduitBundleReader bundle) {
+    public static ConduitBundleRenderState of(ConduitBundle bundle) {
         var renderState = new ConduitBundleRenderState();
 
         renderState.mainAxis = OffsetHelper.findMainAxis(bundle);

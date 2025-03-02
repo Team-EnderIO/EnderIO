@@ -101,11 +101,6 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        return super.getInteractionShape(state, level, pos);
-    }
-
-    @Override
     protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos,
             CollisionContext context) {
         return getBundleShape(level, pos, false);
@@ -276,22 +271,11 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
 
                 int lightLevelBefore = level.getLightEmission(pos);
 
-                conduitBundle.clearFacade();
+                conduitBundle.setFacadeProvider(ItemStack.EMPTY);
 
                 // Handle light update
                 if (lightLevelBefore != level.getLightEmission(pos)) {
                     level.getLightEngine().checkBlock(pos);
-                }
-
-                if (conduitBundle.isEmpty()) {
-                    return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-                } else {
-                    SoundType soundtype = state.getSoundType(level, pos, player);
-                    level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS,
-                        (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-
-                    level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
-                    return false;
                 }
             } else {
                 // TODO: accessibility feature flag
@@ -330,19 +314,18 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
                 }
 
                 conduitBundle.removeConduit(conduit, player);
-
-                if (conduitBundle.isEmpty()) {
-                    return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-                } else {
-                    SoundType soundtype = state.getSoundType(level, pos, player);
-                    level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS,
-                        (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-
-                    level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
-                    return false;
-                }
             }
 
+            if (conduitBundle.isEmpty()) {
+                return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+            } else {
+                SoundType soundtype = state.getSoundType(level, pos, player);
+                level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS,
+                    (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+
+                level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
+                return false;
+            }
         }
 
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);

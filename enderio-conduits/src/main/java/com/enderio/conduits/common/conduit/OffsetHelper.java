@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit;
 
 import com.enderio.base.common.util.ThrowableUtil;
-import com.enderio.conduits.api.bundle.ConduitBundleReader;
+import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.mojang.logging.LogUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,7 +113,7 @@ public class OffsetHelper {
         };
     }
 
-    public static Direction.Axis findMainAxis(ConduitBundleReader bundle) {
+    public static Direction.Axis findMainAxis(ConduitBundle bundle) {
         List<Direction> connectedDirs = new ArrayList<>();
         for (Direction dir : Direction.values()) {
             if (!bundle.getConnectedConduits(dir).isEmpty()) {

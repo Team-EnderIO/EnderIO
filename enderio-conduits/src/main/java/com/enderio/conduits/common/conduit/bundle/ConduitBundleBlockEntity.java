@@ -7,7 +7,7 @@ import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.bundle.AddConduitResult;
-import com.enderio.conduits.api.bundle.ConduitBundleAccessor;
+import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.ConnectionStatus;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
@@ -81,8 +81,7 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
-public final class ConduitBundleBlockEntity extends EnderBlockEntity
-        implements ConduitBundleAccessor, Clearable, Wrenchable, ConduitMenu.ConnectionAccessor {
+public final class ConduitBundleBlockEntity extends EnderBlockEntity implements ConduitBundle, Clearable, Wrenchable, ConduitMenu.ConnectionAccessor {
 
     public static final int MAX_CONDUITS = 9;
 
@@ -133,7 +132,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             removeConduit(conduit, null);
         }
 
-        clearFacade();
+        setFacadeProvider(ItemStack.EMPTY);
     }
 
     @Override
@@ -832,11 +831,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         bundleChanged();
     }
 
-    @Override
-    public boolean isEndpoint(Direction side) {
-        return conduitConnections.values().stream().anyMatch(c -> c.hasEndpoint(side));
-    }
-
     // TODO: This needs a better name or to handle blocks as well as conduits before
     // it can be exposed via the interface.
     public boolean canConnectTo(Direction side, Holder<Conduit<?, ?>> conduit, ConduitGraphObject otherNode,
@@ -1062,12 +1056,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         bundleChanged();
     }
 
-    @Override
-    public void clearFacade() {
-        this.facadeProvider = ItemStack.EMPTY;
-        bundleChanged();
-    }
-
     public void dropFacadeItem() {
         dropItem(facadeProvider);
     }
@@ -1084,6 +1072,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag updateTag = super.getUpdateTag(registries);
+
+        // TODO: Do not use saveAdditional, sync less data than it does...
 
         // Send conduit sync data
         ListTag nodeDataList = new ListTag();
@@ -1531,10 +1521,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             }
         }
 
-        public boolean hasEndpoint(Direction side) {
-            return getStatus(side) == ConnectionStatus.CONNECTED_BLOCK;
-        }
-
         private class ConnectionInventory extends ItemStackHandler {
             public ConnectionInventory() {
                 super(conduit.value().getInventorySize());
@@ -1712,7 +1698,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                                             dynamicState.insertChannel(), dynamicState.extractChannel(),
                                             dynamicState.control(), dynamicState.redstoneChannel()));
 
-                    // TODO: Technically should be saved in the inventory on the BE already, is it worth skipping this import step?
+                    // Import the inventory.
                     var inventory = getConnectionInventory(side, conduit);
                     if (inventory == null) {
                         continue;

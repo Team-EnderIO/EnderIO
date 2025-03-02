@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.conduit.bundle;
 
 import com.enderio.conduits.api.Conduit;
-import com.enderio.conduits.api.bundle.ConduitBundleReader;
+import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.connection.ConnectionStatus;
 import com.enderio.conduits.common.Area;
 import com.enderio.conduits.common.conduit.OffsetHelper;
@@ -36,7 +36,7 @@ public class ConduitShape {
 
     }
 
-    public void updateConduit(ConduitBundleReader bundle) {
+    public void updateConduit(ConduitBundle bundle) {
         this.conduitShapes.clear();
         this.conduitConnections.clear();
         this.individualShapes.clear();
@@ -109,7 +109,7 @@ public class ConduitShape {
         return this.totalShape;
     }
 
-    private void updateShapeForConduit(ConduitBundleReader conduitBundle, Holder<Conduit<?, ?>> conduit) {
+    private void updateShapeForConduit(ConduitBundle conduitBundle, Holder<Conduit<?, ?>> conduit) {
         List<VoxelShape> individualShapeList = individualShapes.computeIfAbsent(conduit, ignored -> new ArrayList<>());
 
         VoxelShape conduitShape = Shapes.empty();

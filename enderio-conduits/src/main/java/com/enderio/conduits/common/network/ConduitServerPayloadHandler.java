@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.network;
 
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.conduits.api.bundle.ConduitBundleAccessor;
+import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitNetworkContext;
 import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
@@ -60,7 +60,7 @@ public class ConduitServerPayloadHandler {
         context.enqueueWork(() -> {
             var level = context.player().level();
             var be = level.getBlockEntity(packet.pos());
-            if (be instanceof ConduitBundleAccessor conduitBundle) {
+            if (be instanceof ConduitBundle conduitBundle) {
                 var fluidConduit = conduitBundle.getConduitByType(ConduitTypes.FLUID.get());
                 if (fluidConduit != null) {
                     var node = conduitBundle.getConduitNode(fluidConduit);

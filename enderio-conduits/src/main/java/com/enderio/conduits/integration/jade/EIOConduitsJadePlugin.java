@@ -1,6 +1,6 @@
 package com.enderio.conduits.integration.jade;
 
-import com.enderio.conduits.api.bundle.ConduitBundleReader;
+import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import snownee.jade.api.BlockAccessor;
@@ -21,7 +21,7 @@ public class EIOConduitsJadePlugin implements IWailaPlugin {
         // Completely replace the block accessor with the facade block if it exists
         registration.addRayTraceCallback((hitResult, accessor, originalAccessor) -> {
             if (accessor instanceof BlockAccessor blockAccessor) {
-                if (blockAccessor.getBlockEntity() instanceof ConduitBundleReader conduitBundle
+                if (blockAccessor.getBlockEntity() instanceof ConduitBundle conduitBundle
                         && conduitBundle.hasFacade() && FacadeHelper.areFacadesVisible()) {
                     return registration.blockAccessor()
                             .from(blockAccessor)

@@ -1,8 +1,7 @@
 package com.enderio.conduits.api;
 
-import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.api.misc.RedstoneControl;
-import com.enderio.conduits.api.bundle.ConduitBundleReader;
+import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
@@ -225,7 +224,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     // region Custom Data Sync
 
     @Nullable
-    default CompoundTag getExtraGuiData(ConduitBundleReader conduitBundle, ConduitNode node, Direction side) {
+    default CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
         return null;
     }
 
@@ -234,7 +233,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @return custom sync data.
      */
     @Nullable
-    default CompoundTag getExtraWorldData(ConduitBundleReader conduitBundle, ConduitNode node) {
+    default CompoundTag getExtraWorldData(ConduitBundle conduitBundle, ConduitNode node) {
         return null;
     }
 
