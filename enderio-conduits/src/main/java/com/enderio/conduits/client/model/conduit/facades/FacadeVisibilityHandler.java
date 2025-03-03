@@ -26,8 +26,6 @@ public class FacadeVisibilityHandler {
             ItemStack offHand = event.getEntity().getItemBySlot(EquipmentSlot.OFFHAND);
             FacadeHelper.setFacadesVisible(
                     !mainHand.is(EIOTags.Items.HIDE_FACADES) && !offHand.is(EIOTags.Items.HIDE_FACADES));
-
-            FacadeHelper.rebuildChunkMeshes();
         }
     }
 }
