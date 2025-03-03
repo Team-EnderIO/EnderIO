@@ -49,3 +49,10 @@ modId="kubejs_enderio"
 mandatory=false
 versionRange="[1.20.1-0.6.0,)"
 side="BOTH"
+
+# Flywheel breaking changes
+[[dependencies.enderio]]
+modId="create"
+mandatory=false
+versionRange="[6.0.0,)"
+side="BOTH"
