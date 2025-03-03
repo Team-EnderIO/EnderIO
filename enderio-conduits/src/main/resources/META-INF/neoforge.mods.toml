@@ -12,6 +12,9 @@ description="The conduits module for Ender IO"
 displayURL="https://enderio.com/"
 logoFile="logo.png"
 
+[[mixins]]
+config="enderioconduits.mixins.json"
+
 [[dependencies.enderio_conduits]]
 modId="minecraft"
 type="required"

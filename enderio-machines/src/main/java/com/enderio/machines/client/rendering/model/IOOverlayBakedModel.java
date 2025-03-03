@@ -42,6 +42,7 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEX_PUSH_PULL = EnderIO.loc("block/overlay/push_pull");
 
     private static final EnumMap<Direction, Vector3f[]> QUADS = new EnumMap<>(Direction.class);
+    private static final ChunkRenderTypeSet CUTOUT_SET = ChunkRenderTypeSet.of(RenderType.cutout());
 
     static {
         for (Direction dir : Direction.values()) {
@@ -96,7 +97,7 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
 
     @Override
     public ChunkRenderTypeSet getRenderTypes(BlockState state, RandomSource rand, ModelData data) {
-        return ChunkRenderTypeSet.of(RenderType.cutout());
+        return CUTOUT_SET;
     }
 
     @Override
