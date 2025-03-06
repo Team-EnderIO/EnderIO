@@ -87,8 +87,8 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     @Nullable
     default <TCapability, TContext> TCapability proxyCapability(Level level,
-        ColoredRedstoneProvider coloredRedstoneProvider, ConduitNode node,
-        BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
+            ColoredRedstoneProvider coloredRedstoneProvider, ConduitNode node,
+            BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
         return null;
     }
 
@@ -193,7 +193,8 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     // region Connection Inventory
 
-    // TODO: Document that item loss will occur if a conduit is upgraded to another type with smaller inventory...
+    // TODO: Document that item loss will occur if a conduit is upgraded to another
+    // type with smaller inventory...
 
     default int getInventorySize() {
         return 0;
@@ -205,7 +206,8 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     default Vector2i getInventorySlotPosition(int slot) {
         if (getInventorySize() > 0) {
-            throw new NotImplementedException("This conduit has an inventory, but getSlotPosition has not been implemented!");
+            throw new NotImplementedException(
+                    "This conduit has an inventory, but getSlotPosition has not been implemented!");
         }
 
         throw new UnsupportedOperationException("This conduit does not have an inventory.");
@@ -244,7 +246,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     @Override
     default void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
-        TooltipFlag pTooltipFlag) {
+            TooltipFlag pTooltipFlag) {
     }
 
     /**

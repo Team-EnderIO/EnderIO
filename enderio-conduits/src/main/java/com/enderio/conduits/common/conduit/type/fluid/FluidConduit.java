@@ -166,18 +166,18 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     @Override
     public Vector2i getInventorySlotPosition(int slot) {
         return switch (slot) {
-            case EXTRACT_FILTER_SLOT -> new Vector2i(113, 71);
-            case INSERT_FILTER_SLOT -> new Vector2i(23, 71);
-            default -> throw new IndexOutOfBoundsException();
+        case EXTRACT_FILTER_SLOT -> new Vector2i(113, 71);
+        case INSERT_FILTER_SLOT -> new Vector2i(23, 71);
+        default -> throw new IndexOutOfBoundsException();
         };
     }
 
     @Override
     public int getIndexForLegacySlot(SlotType slotType) {
         return switch (slotType) {
-            case FILTER_EXTRACT -> EXTRACT_FILTER_SLOT;
-            case FILTER_INSERT -> INSERT_FILTER_SLOT;
-            default -> -1;
+        case FILTER_EXTRACT -> EXTRACT_FILTER_SLOT;
+        case FILTER_INSERT -> INSERT_FILTER_SLOT;
+        default -> -1;
         };
     }
 

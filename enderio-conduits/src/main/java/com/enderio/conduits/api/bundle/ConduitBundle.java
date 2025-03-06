@@ -6,9 +6,8 @@ import com.enderio.conduits.api.connection.ConnectionStatus;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.facade.FacadeType;
-import java.util.List;
-
 import com.enderio.conduits.api.network.node.ConduitNode;
+import java.util.List;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -47,7 +46,7 @@ public interface ConduitBundle {
      * @return the result of the add operation.
      */
     AddConduitResult addConduit(Holder<Conduit<?, ?>> conduit, @Nullable Direction primaryConnectionSide,
-        @Nullable Player player);
+            @Nullable Player player);
 
     /**
      * Remove a conduit from the bundle.
@@ -142,7 +141,8 @@ public interface ConduitBundle {
     void setConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side, ConnectionConfig config);
 
     // TODO
-    <T extends ConnectionConfig> T getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side, ConnectionConfigType<T> type);
+    <T extends ConnectionConfig> T getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side,
+            ConnectionConfigType<T> type);
 
     // TODO
     @Nullable

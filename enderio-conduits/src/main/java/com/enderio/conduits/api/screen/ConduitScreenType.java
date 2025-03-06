@@ -20,7 +20,8 @@ public abstract class ConduitScreenType<U extends ConnectionConfig> {
     protected static final int HEIGHT = 100;
 
     @ApiStatus.Internal
-    public void createScreenWidgets(ConduitScreenHelper screen, int guiLeft, int guiTop, ConduitMenuDataAccess<U> dataAccess) {
+    public void createScreenWidgets(ConduitScreenHelper screen, int guiLeft, int guiTop,
+            ConduitMenuDataAccess<U> dataAccess) {
         createWidgets(screen, guiLeft + USABLE_START_X, guiTop + USABLE_START_Y, dataAccess);
     }
 
@@ -29,7 +30,8 @@ public abstract class ConduitScreenType<U extends ConnectionConfig> {
         renderLabels(guiGraphics, USABLE_START_X, USABLE_START_Y, font, mouseX, mouseY);
     }
 
-    protected abstract void createWidgets(ConduitScreenHelper screen, int startX, int startY, ConduitMenuDataAccess<U> dataAccess);
+    protected abstract void createWidgets(ConduitScreenHelper screen, int startX, int startY,
+            ConduitMenuDataAccess<U> dataAccess);
 
     /**
      * Already projected into gui space (guiLeft & guiRight in Screen), so only local transformations required.

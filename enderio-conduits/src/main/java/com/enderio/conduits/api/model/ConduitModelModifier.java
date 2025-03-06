@@ -1,10 +1,9 @@
 package com.enderio.conduits.api.model;
 
 import com.enderio.conduits.api.Conduit;
-import java.util.List;
-
 import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.network.node.ConduitNode;
+import java.util.List;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelResourceLocation;

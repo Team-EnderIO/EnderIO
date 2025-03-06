@@ -29,21 +29,25 @@ public abstract class IOConduitScreenType<U extends IOConnectionConfig> extends 
     protected Component rightTitle = ConduitLang.CONDUIT_EXTRACT;
 
     @Override
-    protected void createWidgets(ConduitScreenHelper screen, int startX, int startY, ConduitMenuDataAccess<U> dataAccess) {
+    protected void createWidgets(ConduitScreenHelper screen, int startX, int startY,
+            ConduitMenuDataAccess<U> dataAccess) {
         createLeftWidgets(screen, startX, startY, dataAccess);
         createRightWidgets(screen, startX + RIGHT_START_X, startY, dataAccess);
 
-        // TODO: *could* implement sanity checks to ensure widgets are not outside their bounds? Might be nice static-time check, even if we only do it in dev envs?
+        // TODO: *could* implement sanity checks to ensure widgets are not outside their
+        // bounds? Might be nice static-time check, even if we only do it in dev envs?
     }
 
-    public void createLeftWidgets(ConduitScreenHelper screen, int startX, int startY, ConduitMenuDataAccess<U> dataAccess) {
+    public void createLeftWidgets(ConduitScreenHelper screen, int startX, int startY,
+            ConduitMenuDataAccess<U> dataAccess) {
         screen.addCheckbox(startX, startY, () -> getLeftEnabled(dataAccess.getConnectionConfig()),
-            value -> dataAccess.updateConnectionConfig(config -> setLeftEnabled(config, value)));
+                value -> dataAccess.updateConnectionConfig(config -> setLeftEnabled(config, value)));
     }
 
-    public void createRightWidgets(ConduitScreenHelper screen, int startX, int startY, ConduitMenuDataAccess<U> dataAccess) {
+    public void createRightWidgets(ConduitScreenHelper screen, int startX, int startY,
+            ConduitMenuDataAccess<U> dataAccess) {
         screen.addCheckbox(startX, startY, () -> getRightEnabled(dataAccess.getConnectionConfig()),
-            value -> dataAccess.updateConnectionConfig(config -> setRightEnabled(config, value)));
+                value -> dataAccess.updateConnectionConfig(config -> setRightEnabled(config, value)));
     }
 
     public boolean getLeftEnabled(U config) {

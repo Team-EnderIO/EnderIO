@@ -85,7 +85,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         var conduit = menu.getConduit();
         for (int slot = 0; slot < conduit.value().getInventorySize(); slot++) {
             var pos = conduit.value().getInventorySlotPosition(slot);
-            guiGraphics.blit(TEXTURE, getGuiLeft() + pos.x()-1, getGuiTop() + pos.y()-1, 206, 0, 18, 18);
+            guiGraphics.blit(TEXTURE, getGuiLeft() + pos.x() - 1, getGuiTop() + pos.y() - 1, 206, 0, 18, 18);
         }
     }
 
@@ -195,8 +195,8 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
                 Component disabledTitle, ResourceLocation enabledSprite, ResourceLocation disabledSprite,
                 Supplier<Boolean> getter, Consumer<Boolean> setter) {
 
-            var widget = ToggleIconButton.of(x, y, width, height, enabledSprite,
-                    disabledSprite, enabledTitle, disabledTitle, getter, setter);
+            var widget = ToggleIconButton.of(x, y, width, height, enabledSprite, disabledSprite, enabledTitle,
+                    disabledTitle, getter, setter);
             addRenderableWidget(widget);
             return widget;
         }

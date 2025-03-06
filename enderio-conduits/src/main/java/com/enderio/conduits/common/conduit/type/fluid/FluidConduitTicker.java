@@ -7,8 +7,6 @@ import com.enderio.conduits.api.network.ConduitNetwork;
 import com.enderio.conduits.api.network.node.ConduitNode;
 import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
 import java.util.List;
-
-import com.enderio.conduits.common.conduit.type.item.ItemConduit;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.DyeColor;
@@ -41,8 +39,8 @@ public class FluidConduitTicker
         }
 
         var extractFilter = receiver.inventory()
-            .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
-            .getCapability(EIOCapabilities.Filter.ITEM);
+                .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
+                .getCapability(EIOCapabilities.Filter.ITEM);
 
         if (extractFilter instanceof FluidStackFilter fluidStackFilter) {
             if (!fluidStackFilter.test(extractedFluid)) {
@@ -52,8 +50,8 @@ public class FluidConduitTicker
 
         for (Connection insert : senders) {
             var insertFilter = insert.inventory()
-                .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
-                .getCapability(EIOCapabilities.Filter.ITEM);
+                    .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
+                    .getCapability(EIOCapabilities.Filter.ITEM);
 
             if (insertFilter instanceof FluidStackFilter fluidStackFilter) {
                 if (!fluidStackFilter.test(extractedFluid)) {

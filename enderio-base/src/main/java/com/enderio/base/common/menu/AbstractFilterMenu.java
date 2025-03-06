@@ -18,7 +18,8 @@ public abstract class AbstractFilterMenu extends BaseEnderMenu {
     /**
      * Server menu constructor
      */
-    protected AbstractFilterMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory, FilterAccess filterAccess) {
+    protected AbstractFilterMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
+            FilterAccess filterAccess) {
         super(menuType, containerId, playerInventory);
         this.filterAccess = filterAccess;
     }
@@ -28,7 +29,7 @@ public abstract class AbstractFilterMenu extends BaseEnderMenu {
      * Filter access should be created from the network buffer available in the client constructors.
      */
     protected AbstractFilterMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
-        ClientFilterAccess filterAccess) {
+            ClientFilterAccess filterAccess) {
         super(menuType, containerId, playerInventory);
         this.filterAccess = filterAccess;
     }
@@ -59,8 +60,11 @@ public abstract class AbstractFilterMenu extends BaseEnderMenu {
 
     public sealed interface FilterAccess {
         ItemStack getFilterItem();
+
         boolean stillValid(Player player);
+
         boolean hasCustomBackDestination();
+
         void goBack();
     }
 
@@ -111,7 +115,8 @@ public abstract class AbstractFilterMenu extends BaseEnderMenu {
         }
     }
 
-    public record InventoryFilterAccess(ItemStack stack, IItemHandler itemHandler, int slot, Runnable goBackRunnable) implements FilterAccess {
+    public record InventoryFilterAccess(ItemStack stack, IItemHandler itemHandler, int slot, Runnable goBackRunnable)
+            implements FilterAccess {
 
         @Override
         public ItemStack getFilterItem() {
@@ -120,8 +125,9 @@ public abstract class AbstractFilterMenu extends BaseEnderMenu {
 
         @Override
         public boolean stillValid(Player player) {
-            // TODO: Maybe check the position of the container too so we can determine if its in range?
-            //       Assumption is that we are though because we've been opened from another gui.
+            // TODO: Maybe check the position of the container too so we can determine if
+            // its in range?
+            // Assumption is that we are though because we've been opened from another gui.
             return itemHandler.getStackInSlot(slot).equals(stack);
         }
 

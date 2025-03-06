@@ -1,8 +1,5 @@
 package com.enderio.conduits.common.conduit.graph;
 
-import com.enderio.base.api.filter.ResourceFilter;
-import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.network.ConduitNetwork;

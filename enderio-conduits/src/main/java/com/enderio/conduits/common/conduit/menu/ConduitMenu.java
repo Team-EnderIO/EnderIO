@@ -65,7 +65,8 @@ public class ConduitMenu extends BaseEnderMenu {
     @UseOnly(LogicalSide.SERVER)
     private int conduitListHashCode;
 
-    public ConduitMenu(int containerId, Inventory playerInventory, ConduitBundleBlockEntity conduitBundle, Holder<Conduit<?, ?>> conduit, Direction side) {
+    public ConduitMenu(int containerId, Inventory playerInventory, ConduitBundleBlockEntity conduitBundle,
+            Holder<Conduit<?, ?>> conduit, Direction side) {
         super(ConduitMenus.CONDUIT_MENU.get(), containerId, playerInventory);
 
         this.pos = conduitBundle.getBlockPos();
@@ -266,7 +267,8 @@ public class ConduitMenu extends BaseEnderMenu {
                     .decode(buf);
         }
 
-        private static void writeStartingSyncData(ConduitBundleBlockEntity conduitBundle, Holder<Conduit<?, ?>> conduit, Direction side, RegistryFriendlyByteBuf buf) {
+        private static void writeStartingSyncData(ConduitBundleBlockEntity conduitBundle, Holder<Conduit<?, ?>> conduit,
+                Direction side, RegistryFriendlyByteBuf buf) {
             Conduit.STREAM_CODEC.apply(ByteBufCodecs.list(ConduitBundleBlockEntity.MAX_CONDUITS))
                     .encode(buf, conduitBundle.getAllOpenableConduits(side));
 

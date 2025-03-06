@@ -51,7 +51,7 @@ public class RedstoneConduitTicker extends
 
             var inventory = receiver.inventory();
             var extractFilter = inventory.getStackInSlot(RedstoneConduit.EXTRACT_FILTER_SLOT)
-                .getCapability(EIOCapabilities.Filter.ITEM);
+                    .getCapability(EIOCapabilities.Filter.ITEM);
 
             if (extractFilter instanceof RedstoneExtractFilter filter) {
                 signal = filter.getInputSignal(level, receiver.neighborPos(), receiver.neighborSide());

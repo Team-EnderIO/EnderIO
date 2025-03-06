@@ -1,7 +1,6 @@
 package com.enderio.conduits.common.integrations.cctweaked;
 
 import com.enderio.conduits.api.ConduitRedstoneSignalAware;
-import com.enderio.conduits.api.connection.ConnectionStatus;
 import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkContext;

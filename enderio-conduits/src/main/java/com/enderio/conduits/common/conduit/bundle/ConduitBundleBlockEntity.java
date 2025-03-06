@@ -81,7 +81,8 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
-public final class ConduitBundleBlockEntity extends EnderBlockEntity implements ConduitBundle, Clearable, Wrenchable, ConduitMenu.ConnectionAccessor {
+public final class ConduitBundleBlockEntity extends EnderBlockEntity
+        implements ConduitBundle, Clearable, Wrenchable, ConduitMenu.ConnectionAccessor {
 
     public static final int MAX_CONDUITS = 9;
 
@@ -306,7 +307,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity implements 
             // If we were connected to another bundle, we need to sever the graph
             if (level.getBlockEntity(getBlockPos()
                     .relative(conduitConnection.getFirst())) instanceof ConduitBundleBlockEntity neighborBundle) {
-                neighborBundle.setConnectionStatus(conduitConnection.getSecond(), conduitConnection.getFirst().getOpposite(), ConnectionStatus.DISABLED);
+                neighborBundle.setConnectionStatus(conduitConnection.getSecond(),
+                        conduitConnection.getFirst().getOpposite(), ConnectionStatus.DISABLED);
                 neighborBundle.onConnectionsUpdated(conduitConnection.getSecond());
 
                 if (level instanceof ServerLevel serverLevel) {
@@ -779,8 +781,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity implements 
             throw new IllegalStateException("Conduit not found in bundle.");
         }
 
-        return conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new)
-            .getInventory(side);
+        return conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).getInventory(side);
     }
 
     @Override
@@ -794,7 +795,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity implements 
     }
 
     @Override
-    public <T extends ConnectionConfig> T getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side, ConnectionConfigType<T> type) {
+    public <T extends ConnectionConfig> T getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side,
+            ConnectionConfigType<T> type) {
         var config = conduitConnections.get(conduit).getConfig(side);
         if (config.type() != type) {
             throw new IllegalStateException("Connection config type mismatch.");
@@ -1115,7 +1117,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity implements 
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt,
+            HolderLookup.Provider lookupProvider) {
         CompoundTag compoundtag = pkt.getTag();
         if (!compoundtag.isEmpty()) {
             handleUpdateTag(compoundtag, lookupProvider);
@@ -1363,7 +1366,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity implements 
                                     }
 
                                     for (int k = 0; k < inventoryListTag.size() && k < inventory.getSlots(); k++) {
-                                        ItemStack stack = ItemStack.parseOptional(registries, inventoryListTag.getCompound(k));
+                                        ItemStack stack = ItemStack.parseOptional(registries,
+                                                inventoryListTag.getCompound(k));
                                         inventory.setStackInSlot(k, stack);
                                     }
                                 }

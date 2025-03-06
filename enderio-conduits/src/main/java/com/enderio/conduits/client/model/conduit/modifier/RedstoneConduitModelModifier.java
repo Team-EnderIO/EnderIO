@@ -15,8 +15,8 @@ public class RedstoneConduitModelModifier implements ConduitModelModifier {
 
         if (extraWorldData != null) {
             return extraWorldData.contains("IsActive") && extraWorldData.getBoolean("IsActive")
-                ? redstoneConduit.activeTexture()
-                : redstoneConduit.texture();
+                    ? redstoneConduit.activeTexture()
+                    : redstoneConduit.texture();
         }
 
         return redstoneConduit.texture();

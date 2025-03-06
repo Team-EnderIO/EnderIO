@@ -321,7 +321,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
             } else {
                 SoundType soundtype = state.getSoundType(level, pos, player);
                 level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS,
-                    (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                        (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
                 level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
                 return false;
@@ -488,7 +488,8 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
                 return false;
             }
 
-            var config = conduitBundle.getConnectionConfig(redstoneConduit, direction, RedstoneConduitConnectionConfig.TYPE);
+            var config = conduitBundle.getConnectionConfig(redstoneConduit, direction,
+                    RedstoneConduitConnectionConfig.TYPE);
             return config.canSend(ConduitRedstoneSignalAware.NONE);
         }
 
@@ -523,7 +524,8 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
                 return 0;
             }
 
-            var config = conduitBundle.getConnectionConfig(redstoneConduit, direction.getOpposite(), RedstoneConduitConnectionConfig.TYPE);
+            var config = conduitBundle.getConnectionConfig(redstoneConduit, direction.getOpposite(),
+                    RedstoneConduitConnectionConfig.TYPE);
             if (!config.canSend(ConduitRedstoneSignalAware.NONE)) {
                 return 0;
             }
@@ -544,8 +546,8 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
             }
 
             var filter = node.getInventory(direction)
-                .getStackInSlot(RedstoneConduit.INSERT_FILTER_SLOT)
-                .getCapability(EIOCapabilities.Filter.ITEM);
+                    .getStackInSlot(RedstoneConduit.INSERT_FILTER_SLOT)
+                    .getCapability(EIOCapabilities.Filter.ITEM);
 
             if (filter instanceof RedstoneInsertFilter redstoneInsertFilter) {
                 return redstoneInsertFilter.getOutputSignal(context, config.sendColor());

@@ -21,8 +21,8 @@ public class EIOConduitsJadePlugin implements IWailaPlugin {
         // Completely replace the block accessor with the facade block if it exists
         registration.addRayTraceCallback((hitResult, accessor, originalAccessor) -> {
             if (accessor instanceof BlockAccessor blockAccessor) {
-                if (blockAccessor.getBlockEntity() instanceof ConduitBundle conduitBundle
-                        && conduitBundle.hasFacade() && FacadeHelper.areFacadesVisible()) {
+                if (blockAccessor.getBlockEntity() instanceof ConduitBundle conduitBundle && conduitBundle.hasFacade()
+                        && FacadeHelper.areFacadesVisible()) {
                     return registration.blockAccessor()
                             .from(blockAccessor)
                             .blockState(conduitBundle.getFacadeBlock().defaultBlockState())
