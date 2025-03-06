@@ -40,8 +40,6 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(RedstoneConduit::description))
             .apply(builder, RedstoneConduit::new));
 
-    private static final RedstoneConduitTicker TICKER = new RedstoneConduitTicker();
-
     @Override
     public int graphTickRate() {
         return 2;
@@ -53,8 +51,8 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     }
 
     @Override
-    public RedstoneConduitTicker getTicker() {
-        return TICKER;
+    public RedstoneConduitTicker ticker() {
+        return RedstoneConduitTicker.INSTANCE;
     }
 
     @Override

@@ -48,16 +48,14 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
                     Codec.intRange(1, 20).optionalFieldOf("ticks_per_cycle", 20).forGetter(ItemConduit::graphTickRate))
             .apply(builder, ItemConduit::new));
 
-    private static final ItemConduitTicker TICKER = new ItemConduitTicker();
-
     @Override
     public ConduitType<ItemConduit> type() {
         return ConduitTypes.ITEM.get();
     }
 
     @Override
-    public ItemConduitTicker getTicker() {
-        return TICKER;
+    public ItemConduitTicker ticker() {
+        return ItemConduitTicker.INSTANCE;
     }
 
     @Override

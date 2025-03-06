@@ -5,12 +5,11 @@ import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.client.gui.widget.DyeColorPickerWidget;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.conduits.api.Conduit;
-import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.screen.ConduitMenuDataAccess;
 import com.enderio.conduits.api.screen.ConduitScreenHelper;
 import com.enderio.conduits.api.screen.ConduitScreenType;
-import com.enderio.conduits.client.gui.NewConduitSelectionButton;
+import com.enderio.conduits.client.gui.ConduitSelectionButton;
 import com.enderio.conduits.client.gui.screen.types.ConduitScreenTypes;
 import com.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.conduits.common.init.ConduitLang;
@@ -67,7 +66,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         }
 
         for (int i = 0; i < 9; i++) {
-            addRenderableWidget(new NewConduitSelectionButton(getGuiLeft() + 206, getGuiTop() + 4 + 24 * i, i,
+            addRenderableWidget(new ConduitSelectionButton(getGuiLeft() + 206, getGuiTop() + 4 + 24 * i, i,
                     menu::getConduit, menu::getConnectedConduits,
                     idx -> handleButtonPress(ConduitMenu.BUTTON_CHANGE_CONDUIT_START_ID + idx)));
         }

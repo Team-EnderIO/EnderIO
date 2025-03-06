@@ -24,9 +24,6 @@ public class ConduitNetwork {
         registrar.playToServer(CountFilterPacket.TYPE, CountFilterPacket.STREAM_CODEC,
                 ConduitServerPayloadHandler.getInstance()::handleCountFilter);
 
-        registrar.playToServer(ConduitMenuSelectionPacket.TYPE, ConduitMenuSelectionPacket.STREAM_CODEC,
-                ConduitServerPayloadHandler.getInstance()::handleConduitMenuSelection);
-
         registrar.playToServer(C2SClearLockedFluidPacket.TYPE, C2SClearLockedFluidPacket.STREAM_CODEC,
                 ConduitServerPayloadHandler.getInstance()::handle);
 

@@ -27,11 +27,11 @@ public class EIOBundledRedstoneProvider implements BundledRedstoneProvider {
                 return -1;
             }
 
-            if (conduit.getConnectionStatus(side, redstoneConduit) != ConnectionStatus.CONNECTED_BLOCK) {
+            if (!conduit.getConnectionStatus(redstoneConduit, side).isEndpoint()) {
                 return -1;
             }
 
-            var config = conduit.getConnectionConfig(side, redstoneConduit, RedstoneConduitConnectionConfig.TYPE);
+            var config = conduit.getConnectionConfig(redstoneConduit, side, RedstoneConduitConnectionConfig.TYPE);
             if (!config.canSend(ConduitRedstoneSignalAware.NONE)) {
                 return -1;
             }

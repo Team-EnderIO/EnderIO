@@ -20,9 +20,10 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Immutable access to a conduit bundle.
+ * Access into a conduit bundle.
  */
 @ApiStatus.Experimental
+@ApiStatus.AvailableSince("7.2")
 public interface ConduitBundle {
 
     // region High-level Bundle Access
@@ -33,6 +34,10 @@ public interface ConduitBundle {
      */
     List<Holder<Conduit<?, ?>>> getConduits();
 
+    /**
+     * @param conduit The conduit to check for.
+     * @return whether this conduit can be added into the bundle.
+     */
     boolean canAddConduit(Holder<Conduit<?, ?>> conduit);
 
     /**
@@ -66,9 +71,13 @@ public interface ConduitBundle {
     @Nullable
     CompoundTag getConduitExtraWorldData(Holder<Conduit<?, ?>> conduit);
 
-    // TODO: Docs
+    /**
+     * @param conduit the conduit to get data for.
+     * @param side    the side to get data for.
+     * @return the gui data tag, or null if the conduit does not have custom data.
+     */
     @Nullable
-    CompoundTag getConduitExtraGuiData(Direction side, Holder<Conduit<?, ?>> conduit);
+    CompoundTag getConduitExtraGuiData(Holder<Conduit<?, ?>> conduit, Direction side);
 
     /**
      * @implNote compare conduits using {@link Conduit#canConnectToConduit(Holder)}
@@ -103,12 +112,13 @@ public interface ConduitBundle {
 
     /**
      * Attempt to connect this conduit something in the given direction.
-     * @param side the direction to be connected to.
-     * @param conduit the conduit type that is being connected.
+     *
+     * @param conduit            the conduit type that is being connected.
+     * @param side               the direction to be connected to.
      * @param isForcedConnection whether this is a forced connection or automated connection. (Wrench)
      * @return whether a new connection was made.
      */
-    boolean tryConnectTo(Direction side, Holder<Conduit<?, ?>> conduit, boolean isForcedConnection);
+    boolean tryConnectTo(Holder<Conduit<?, ?>> conduit, Direction side, boolean isForcedConnection);
 
     /**
      * @implNote Must be sorted according to {@link com.enderio.conduits.api.ConduitApi#getConduitSortIndex(Holder)}
@@ -117,46 +127,26 @@ public interface ConduitBundle {
      */
     List<Holder<Conduit<?, ?>>> getConnectedConduits(Direction side);
 
-    /**
-     * TODO
-     * @param side
-     * @param conduit
-     * @return
-     */
-    ConnectionStatus getConnectionStatus(Direction side, Holder<Conduit<?, ?>> conduit);
+    // TODO
+    ConnectionStatus getConnectionStatus(Holder<Conduit<?, ?>> conduit, Direction side);
+
+    // TODO
+    ConnectionConfig getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side);
 
     /**
-     * TODO
-     * @param side
-     * @param conduit
-     * @return
-     */
-    ConnectionConfig getConnectionConfig(Direction side, Holder<Conduit<?, ?>> conduit);
-
-    /**
-     * @throws IllegalStateException if {@link #getConnectionStatus} is not {@link ConnectionStatus#CONNECTED_BLOCK}.
-     * @throws IllegalArgumentException if the connection config is not the right type for this conduit.
      * @param side
      * @param config
+     * @throws IllegalStateException    if {@link #getConnectionStatus} is not {@link ConnectionStatus#CONNECTED_BLOCK}.
+     * @throws IllegalArgumentException if the connection config is not the right type for this conduit.
      */
-    void setConnectionConfig(Direction side, Holder<Conduit<?, ?>> conduit, ConnectionConfig config);
+    void setConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side, ConnectionConfig config);
 
-    /**
-     * TODO
-     * @param side
-     * @param conduit
-     * @return
-     */
-    <T extends ConnectionConfig> T getConnectionConfig(Direction side, Holder<Conduit<?, ?>> conduit,
-            ConnectionConfigType<T> type);
+    // TODO
+    <T extends ConnectionConfig> T getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side, ConnectionConfigType<T> type);
 
-    /**
-     * TODO
-     * @param side
-     * @param conduit
-     * @return
-     */
-    @Nullable IItemHandlerModifiable getConnectionInventory(Direction side, Holder<Conduit<?, ?>> conduit);
+    // TODO
+    @Nullable
+    IItemHandlerModifiable getConnectionInventory(Holder<Conduit<?, ?>> conduit, Direction side);
 
     // endregion
 

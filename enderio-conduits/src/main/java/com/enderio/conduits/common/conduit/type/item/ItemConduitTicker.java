@@ -22,6 +22,8 @@ import org.jetbrains.annotations.Nullable;
 public class ItemConduitTicker
         extends IOAwareConduitTicker<ItemConduit, ItemConduitConnectionConfig, ItemConduitTicker.Connection> {
 
+    public static final ItemConduitTicker INSTANCE = new ItemConduitTicker();
+
     @Override
     protected void tickColoredGraph(ServerLevel level, ItemConduit conduit, List<Connection> senders,
             List<Connection> receivers, DyeColor color, ConduitNetwork graph,

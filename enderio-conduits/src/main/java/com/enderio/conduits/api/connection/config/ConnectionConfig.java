@@ -1,17 +1,16 @@
 package com.enderio.conduits.api.connection.config;
 
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
-import com.enderio.conduits.api.network.node.legacy.ConduitData;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
- * Replacement for {@link ConduitData} that is purely focussed on sided connection context.
- * Any data stored in the entire node should now be stored in the network, an individual node should not have connectionless context.
+ * Replacement for ConduitData that is purely focussed on sided connection context.
+ * Any data for an entire node should use {@link com.enderio.conduits.api.network.node.NodeData}.
+ * Any data for an entire network should use {@link com.enderio.conduits.api.network.ConduitNetworkContext}.
  */
 @ApiStatus.Experimental
 public interface ConnectionConfig {
@@ -24,35 +23,22 @@ public interface ConnectionConfig {
             .dispatch(ConnectionConfig::type, ConnectionConfigType::streamCodec);
 
     /**
+     * @return the connection type, containing serialization information.
+     */
+    ConnectionConfigType<?> type();
+
+    /**
      * @return whether the conduit should still be connected with this configuration.
      */
-    default boolean isConnected() {
-        return true;
-    }
+    boolean isConnected();
 
     /**
-     * Modify the config such that isConnected() is true again.
-     * This will ensure that when the connection is revived, it isn't invalid.
+     * @return a copy of this config, but with {@link #isConnected()} returning true.
      */
-    default ConnectionConfig reconnected() {
-        if (this.isConnected()) {
-            return this;
-        }
-
-        throw new NotImplementedException("This connection config type needs to implement reconnected().");
-    }
+    ConnectionConfig reconnected();
 
     /**
-     * Modify the config such that isConnected() is true again.
-     * This will ensure that when the connection is revived, it isn't invalid.
+     * @return a copy of this config, but with {@link #isConnected()} returning false.
      */
-    default ConnectionConfig disconnected() {
-        if (this.isConnected()) {
-            return this;
-        }
-
-        throw new NotImplementedException("This connection config type needs to implement reconnected().");
-    }
-
-    ConnectionConfigType<?> type();
+    ConnectionConfig disconnected();
 }

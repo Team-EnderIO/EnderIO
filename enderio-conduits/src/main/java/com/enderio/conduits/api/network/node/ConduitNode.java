@@ -9,8 +9,6 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
 public interface ConduitNode extends NodeDataAccessor, ConnectionConfigAccessor {
-    // TODO: A better way to determine if a node's bundle is loaded.
-
     /**
      * @throws IllegalStateException if the node is not loaded in the world.
      * @return the world position of the node.

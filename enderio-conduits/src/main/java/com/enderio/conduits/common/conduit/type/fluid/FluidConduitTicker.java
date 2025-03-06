@@ -25,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
 public class FluidConduitTicker
         extends IOAwareConduitTicker<FluidConduit, FluidConduitConnectionConfig, FluidConduitTicker.Connection> {
 
+    public static final FluidConduitTicker INSTANCE = new FluidConduitTicker();
+
     private int getScaledFluidRate(FluidConduit conduit) {
         // Adjust for tick rate. Always flow up so we are at minimum meeting the
         // required rate.

@@ -7,6 +7,7 @@ import com.enderio.conduits.api.network.node.ConduitNode;
 import java.util.List;
 import net.minecraft.server.level.ServerLevel;
 
+// TODO: Can probably remove this?
 public interface LoadedAwareConduitTicker<TConduit extends Conduit<TConduit, ?>> extends ConduitTicker<TConduit> {
 
     @Override

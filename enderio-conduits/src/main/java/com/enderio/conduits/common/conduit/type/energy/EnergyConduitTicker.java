@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 public class EnergyConduitTicker
         extends IOAwareConduitTicker<EnergyConduit, EnergyConduitConnectionConfig, EnergyConduitTicker.Connection> {
 
+    public static final EnergyConduitTicker INSTANCE = new EnergyConduitTicker();
+
     public EnergyConduitTicker() {
     }
 

@@ -1,6 +1,5 @@
 package com.enderio.conduits.api.ticker;
 
-import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.connection.config.IOConnectionConfig;
@@ -19,9 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * A channel IO-aware ticker.
- *
- * This will check {@link ConduitNode#isActive(Direction)} for extraction connections to ensure it has a redstone signal.
- *
+ * This will check {@link ConduitNode#hasRedstoneSignal(DyeColor)}} for each connection to determine if it should send or receive.
  * @param <T> The conduit type
  * @param <V> The type of connection for the ticker implementation
  */

@@ -54,16 +54,14 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
                                     Codec.BOOL.fieldOf("is_multi_fluid").forGetter(FluidConduit::isMultiFluid))
                             .apply(builder, FluidConduit::new));
 
-    private static final FluidConduitTicker TICKER = new FluidConduitTicker();
-
     @Override
     public ConduitType<FluidConduit> type() {
         return ConduitTypes.FLUID.get();
     }
 
     @Override
-    public FluidConduitTicker getTicker() {
-        return TICKER;
+    public FluidConduitTicker ticker() {
+        return FluidConduitTicker.INSTANCE;
     }
 
     @Override

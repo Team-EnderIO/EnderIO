@@ -16,13 +16,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-public class NewConduitSelectionButton extends AbstractButton {
+public class ConduitSelectionButton extends AbstractButton {
     private final int conduitButtonIndex;
     private final Supplier<Holder<Conduit<?, ?>>> currentConduit;
     private final Supplier<List<Holder<Conduit<?, ?>>>> conduitListGetter;
     private final Consumer<Integer> onPressed;
 
-    public NewConduitSelectionButton(int pX, int pY, int conduitButtonIndex,
+    public ConduitSelectionButton(int pX, int pY, int conduitButtonIndex,
             Supplier<Holder<Conduit<?, ?>>> currentConduit, Supplier<List<Holder<Conduit<?, ?>>>> conduitListGetter,
             Consumer<Integer> onPressed) {
         super(pX, pY, 21, 24, Component.empty());

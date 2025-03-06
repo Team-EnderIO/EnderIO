@@ -26,8 +26,6 @@ public class ConduitBundleExtension implements IClientBlockExtensions {
         }
 
         if (level.getBlockEntity(blockHitResult.getBlockPos()) instanceof ConduitBundleBlockEntity conduitBundle) {
-            // TODO: Get the conduit texture and add it to the particle manager.
-
             if (conduitBundle.hasFacade() && FacadeHelper.areFacadesVisible()) {
                 return false;
             }

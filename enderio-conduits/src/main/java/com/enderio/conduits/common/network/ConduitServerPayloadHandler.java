@@ -18,14 +18,6 @@ public class ConduitServerPayloadHandler {
         return INSTANCE;
     }
 
-    public void handleConduitMenuSelection(final ConduitMenuSelectionPacket packet, final IPayloadContext context) {
-        context.enqueueWork(() -> {
-//            if (context.player().containerMenu instanceof ConduitMenu menu) {
-//                menu.setConduit(packet.conduit());
-//            }
-        });
-    }
-
     public void handleDoubleChannelFilter(DoubleChannelPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             ItemStack mainHandItem = context.player().getMainHandItem();

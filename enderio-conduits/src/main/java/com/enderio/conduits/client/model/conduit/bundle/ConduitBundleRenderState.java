@@ -55,8 +55,8 @@ public class ConduitBundleRenderState {
         for (var side : Direction.values()) {
             HashMap<Holder<Conduit<?, ?>>, ConduitConnectionRenderState> conduits = new HashMap<>();
             for (var conduit : renderState.conduits) {
-                if (bundle.getConnectionStatus(side, conduit) == ConnectionStatus.CONNECTED_BLOCK) {
-                    var connectionConfig = bundle.getConnectionConfig(side, conduit);
+                if (bundle.getConnectionStatus(conduit, side).isEndpoint()) {
+                    var connectionConfig = bundle.getConnectionConfig(conduit, side);
                     var connectionRenderState = ConduitConnectionRenderState.of(conduit, connectionConfig);
                     conduits.put(conduit, connectionRenderState);
                 }

@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 public class RedstoneConduitTicker extends
         IOAwareConduitTicker<RedstoneConduit, RedstoneConduitConnectionConfig, RedstoneConduitTicker.Connection> {
 
+    public static final RedstoneConduitTicker INSTANCE = new RedstoneConduitTicker();
+
     @Override
     public void tickGraph(ServerLevel level, RedstoneConduit conduit, ConduitNetwork graph,
             ColoredRedstoneProvider coloredRedstoneProvider) {

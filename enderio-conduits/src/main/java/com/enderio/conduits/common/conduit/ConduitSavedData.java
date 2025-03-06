@@ -332,7 +332,7 @@ public class ConduitSavedData extends SavedData {
         for (var entry : networks.entrySet()) {
             var conduit = entry.getKey();
             int conduitId = conduitRegistry.getId(conduit.value());
-            var conduitTicker = conduit.value().getTicker();
+            var conduitTicker = conduit.value().ticker();
 
             for (var graph : entry.getValue()) {
                 tickConduitGraph(serverLevel, entry.getKey(), conduitId, conduitTicker, graph);

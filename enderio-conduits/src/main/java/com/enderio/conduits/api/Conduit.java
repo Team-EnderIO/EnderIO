@@ -72,7 +72,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * Get the ticker for this conduit graph type.
      * @apiNote The ticker should never change, it can use the options to determine behaviour in its implementation.
      */
-    ConduitTicker<TConduit> getTicker();
+    ConduitTicker<TConduit> ticker();
 
     /**
      * @return the expected conduit connection config type.
@@ -163,7 +163,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     // endregion
 
-    // region Legacy Conduit Data
+    // region Legacy Conduit Connections
 
     /**
      * Convert old conduit connection data into the new connection config.
@@ -182,6 +182,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @implNote The node is guaranteed to have a network at this point, so the context can be accessed.
      * @param node the node.
      * @param legacyDataAccessor the legacy data.
+     * @deprecated Only for conversion of <7.1 conduit data. Will be removed in Ender IO 8.
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "7.2")

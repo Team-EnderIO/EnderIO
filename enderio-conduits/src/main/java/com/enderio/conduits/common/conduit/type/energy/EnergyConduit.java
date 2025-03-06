@@ -44,8 +44,6 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
         return new EnergyConduit(texture, description, transferRate);
     }
 
-    private static final EnergyConduitTicker TICKER = new EnergyConduitTicker();
-
     // Not configurable - energy is instantaneous
     @Override
     public int graphTickRate() {
@@ -58,8 +56,8 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
-    public EnergyConduitTicker getTicker() {
-        return TICKER;
+    public EnergyConduitTicker ticker() {
+        return EnergyConduitTicker.INSTANCE;
     }
 
     @Override

@@ -119,7 +119,7 @@ public class ConduitShape {
             VoxelShape conduitConnectionShape = Shapes.empty();
 
             // TODO: Lift the connector plate out of updateShapeForConduit?
-            if (conduitBundle.getConnectionStatus(direction, conduit) == ConnectionStatus.CONNECTED_BLOCK) {
+            if (conduitBundle.getConnectionStatus(conduit, direction) == ConnectionStatus.CONNECTED_BLOCK) {
                 VoxelShape connectorShape = rotateVoxelShape(CONNECTOR, direction);
                 conduitShape = Shapes.joinUnoptimized(conduitShape, connectorShape, BooleanOp.OR);
                 conduitConnectionShape = Shapes.joinUnoptimized(connectorShape, connectorShape, BooleanOp.OR);

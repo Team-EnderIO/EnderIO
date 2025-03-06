@@ -345,7 +345,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
             var conduitConnection = conduitBundle.getShape().getConnectionFromHit(pos, hitResult);
 
             if (conduitConnection != null) {
-                if (conduitBundle.canOpenScreen(conduitConnection.getFirst(), conduitConnection.getSecond())) {
+                if (conduitBundle.canOpenScreen(conduitConnection.getSecond(), conduitConnection.getFirst())) {
                     if (player instanceof ServerPlayer serverPlayer) {
                         ConduitMenu.openConduitMenu(serverPlayer, conduitBundle, conduitConnection.getFirst(),
                                 conduitConnection.getSecond());
@@ -483,13 +483,12 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
                 return false;
             }
 
-            var status = conduitBundle.getConnectionStatus(direction, redstoneConduit);
+            var status = conduitBundle.getConnectionStatus(redstoneConduit, direction);
             if (status != ConnectionStatus.CONNECTED_BLOCK) {
                 return false;
             }
 
-            var config = conduitBundle.getConnectionConfig(direction, redstoneConduit,
-                    RedstoneConduitConnectionConfig.TYPE);
+            var config = conduitBundle.getConnectionConfig(redstoneConduit, direction, RedstoneConduitConnectionConfig.TYPE);
             return config.canSend(ConduitRedstoneSignalAware.NONE);
         }
 
@@ -519,13 +518,12 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
                 return 0;
             }
 
-            var status = conduitBundle.getConnectionStatus(direction.getOpposite(), redstoneConduit);
+            var status = conduitBundle.getConnectionStatus(redstoneConduit, direction.getOpposite());
             if (status != ConnectionStatus.CONNECTED_BLOCK) {
                 return 0;
             }
 
-            var config = conduitBundle.getConnectionConfig(direction.getOpposite(), redstoneConduit,
-                    RedstoneConduitConnectionConfig.TYPE);
+            var config = conduitBundle.getConnectionConfig(redstoneConduit, direction.getOpposite(), RedstoneConduitConnectionConfig.TYPE);
             if (!config.canSend(ConduitRedstoneSignalAware.NONE)) {
                 return 0;
             }
