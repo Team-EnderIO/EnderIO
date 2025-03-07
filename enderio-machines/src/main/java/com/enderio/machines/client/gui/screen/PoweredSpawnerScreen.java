@@ -34,18 +34,28 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     private static final int WIDTH = 176;
     private static final int HEIGHT = 187;
 
-    private static final ResourceLocation PROGRESS_SPRITE = EnderIO.loc("screen/powered_spawner/progress");
+    private static final ResourceLocation SPAWN_PROGRESS_SPRITE = EnderIO.loc("screen/powered_spawner/spawn_progress");
+    private static final ResourceLocation CAPTURE_PROGRESS_SPRITE = EnderIO.loc("screen/powered_spawner/capture_progress");
+
+    private NewProgressWidget spawnProgress;
+    private NewProgressWidget captureProgress;
 
     public PoweredSpawnerScreen(PoweredSpawnerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
 
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
+
+        shouldRenderLabels = true;
+
+        titleLabelY = 6 + 2;
+        inventoryLabelY = 94;
     }
 
     @Override
     protected void init() {
         super.init();
+        centerAlignTitleLabelX();
 
         addRenderableOnly(new NewCapacitorEnergyWidget(7 + leftPos, 6 + topPos, menu::getEnergyStorage, menu::isCapacitorInstalled));
 
@@ -64,8 +74,27 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 93, 162, 87);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 6 + (16 + 2) * 2, overlay);
 
-        addRenderableOnly(NewProgressWidget.bottomUp(leftPos + 82, topPos + 38, 14, 14, PROGRESS_SPRITE,
+        spawnProgress = addRenderableOnly(NewProgressWidget.bottomUp(leftPos + 82, topPos + 38, 14, 14, SPAWN_PROGRESS_SPRITE,
             menu::getSpawnProgress, true));
+
+        captureProgress = addRenderableOnly(NewProgressWidget.leftRight(leftPos + 75, topPos + 43, 24, 16, CAPTURE_PROGRESS_SPRITE,
+            menu::getSpawnProgress, true));
+    }
+
+    @Override
+    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        switch (menu.getMode()) {
+        case SPAWN -> {
+            spawnProgress.visible = true;
+            captureProgress.visible = false;
+        }
+        case CAPTURE -> {
+            spawnProgress.visible = false;
+            captureProgress.visible = true;
+        }
+        }
+
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
 
     @Override
@@ -83,7 +112,7 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         String modeLabel = Objects.requireNonNull(MachineEnumLang.POWERED_SPAWNER_MODE.get(menu.getMode())).getString();
-        guiGraphics.drawString(font, modeLabel, imageWidth / 2f - font.width(modeLabel) / 2f, 20, 0xFFFFFFFF, true);
+        guiGraphics.drawString(font, modeLabel, imageWidth / 2f - font.width(modeLabel) / 2f, 25, 0xFFFFFFFF, true);
 
         Optional<ResourceLocation> rl = getMenu().getBlockEntity().getEntityType();
         if (rl.isPresent()) {
