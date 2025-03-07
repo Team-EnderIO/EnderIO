@@ -55,11 +55,11 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
         addRenderableOnly(new NewCapacitorEnergyWidget(leftPos + 7, topPos + 27, menu::getEnergyStorage,
                 menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55 - 16 - 2,
-                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
-
         addRenderableWidget(new AlloySmelterModeWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55, menu::getMode,
-                menu::setMode, MachineLang.ALLOY_SMELTER_MODE));
+            menu::setMode, MachineLang.ALLOY_SMELTER_MODE));
+
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55 - (16 + 2),
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 114, 162, 87);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 6 + 55 - (16 + 2) * 2, overlay);

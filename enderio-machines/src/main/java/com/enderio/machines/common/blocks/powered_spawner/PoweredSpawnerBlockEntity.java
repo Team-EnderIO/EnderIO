@@ -7,11 +7,13 @@ import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
+import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
 import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.blocks.base.state.MachineStateType;
 import com.enderio.machines.common.blocks.base.task.MachineTask;
@@ -22,6 +24,8 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.datafixers.util.Either;
+
+import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -45,11 +49,17 @@ import org.jetbrains.annotations.Nullable;
 //       But there's not enough time before alpha, so just porting as-is.
 public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IOwnedSpawner {
 
+    public static final SingleSlotAccess INPUT = new SingleSlotAccess();
+    public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
+
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
     public static final ResourceLocation NO_MOB = EnderIO.loc("no_mob");
+
+    private static final PoweredSpawnerMode DEFAULT_MODE = PoweredSpawnerMode.SPAWN;
+    private PoweredSpawnerMode mode = DEFAULT_MODE;
 
     // TODO: Config value?
     public static final int ACTION_RANGE = 4;
@@ -79,6 +89,18 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         };
 
         updateMachineState(new MachineState(MachineStateType.ERROR, this.reason.component), false);
+    }
+
+    public PoweredSpawnerMode getMode() {
+        return mode;
+    }
+
+    public void setMode(PoweredSpawnerMode mode) {
+        this.mode = mode;
+
+        if (level != null && !level.isClientSide()) {
+            taskHost.newTaskAvailable();
+        }
     }
 
     @Nullable
@@ -139,9 +161,17 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     // region Inventory
 
+    // TODO: Need to change MachineInventory to support loading older inventories.
+    //       We did not account for changing inventory sizes...
     @Override
     public MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder().capacitor().build();
+        return MachineInventoryLayout.builder()
+            .capacitor()
+            .inputSlot((i, stack) -> stack.is(EIOItems.EMPTY_SOUL_VIAL)) // TODO: Check for empty entity storage instead?
+            .slotAccess(INPUT)
+            .outputSlot()
+            .slotAccess(OUTPUT)
+            .build();
     }
 
     @Override
@@ -203,6 +233,10 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         // future :)
         tag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(registries));
 
+        if (mode == DEFAULT_MODE) {
+            tag.put(MachineNBTKeys.MACHINE_MODE, mode.save(registries));
+        }
+
         if (isRangeVisible) {
             tag.putBoolean(MachineNBTKeys.IS_RANGE_VISIBLE, isRangeVisible);
         }
@@ -213,6 +247,10 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         super.loadAdditional(pTag, lookupProvider);
         entityData = StoredEntityData.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
         taskHost.load(lookupProvider, pTag);
+
+        if (pTag.contains(MachineNBTKeys.MACHINE_MODE)) {
+            this.mode = PoweredSpawnerMode.parse(lookupProvider, Objects.requireNonNull(pTag.get(MachineNBTKeys.MACHINE_MODE)));
+        }
 
         // TODO: Ender IO 8 - remove support for old attachment loading
         if (hasData(MachineAttachments.ACTION_RANGE)) {

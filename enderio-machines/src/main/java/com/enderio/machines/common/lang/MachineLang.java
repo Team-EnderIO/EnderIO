@@ -10,6 +10,7 @@ public class MachineLang {
     public static final MutableComponent PROGRESS_TOOLTIP = addTranslation("gui", EnderIO.loc("progress"), "Progress %s%%");
 
     public static final Component ALLOY_SMELTER_MODE = addTranslation("gui", EnderIO.loc("alloy_smelter.mode"), "Smelting Mode");
+    public static final Component POWERED_SPAWNER_MODE = addTranslation("gui", EnderIO.loc("powered_spawner.mode"), "Spawner Mode");
     public static final MutableComponent SAG_MILL_GRINDINGBALL_REMAINING = addTranslation("tooltip", EnderIO.loc("grinding_ball_remaining"), "Remaining: %s%%");
     public static final MutableComponent SAG_MILL_GRINDINGBALL_TITLE = addTranslation("tooltip", EnderIO.loc("grinding_ball_title"), "SAG Mill Grinding Ball");
 
