@@ -27,6 +27,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -329,34 +330,6 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
         }
 
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-    }
-
-    // endregion
-
-    // region Open Menu
-
-    @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
-            BlockHitResult hitResult) {
-
-        if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle) {
-            // TODO: The connection shouldn't include the plate.. if we hit the plate open
-            // the first conduit?
-            var conduitConnection = conduitBundle.getShape().getConnectionFromHit(pos, hitResult);
-
-            if (conduitConnection != null) {
-                if (conduitBundle.canOpenScreen(conduitConnection.getSecond(), conduitConnection.getFirst())) {
-                    if (player instanceof ServerPlayer serverPlayer) {
-                        ConduitMenu.openConduitMenu(serverPlayer, conduitBundle, conduitConnection.getFirst(),
-                                conduitConnection.getSecond());
-                    }
-
-                    return InteractionResult.sidedSuccess(level.isClientSide());
-                }
-            }
-        }
-
-        return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 
     // endregion

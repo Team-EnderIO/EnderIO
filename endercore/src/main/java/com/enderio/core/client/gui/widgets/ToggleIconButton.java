@@ -57,7 +57,7 @@ public class ToggleIconButton extends EnderButton {
         boolean newValue = !getter.get();
         setter.accept(newValue);
         if (tooltipFunction != null) {
-            setTooltip(Tooltip.create(tooltipFunction.apply(newValue)));
+            setTooltip(Tooltip.create(tooltipFunction.apply(getter.get())));
         }
     }
 

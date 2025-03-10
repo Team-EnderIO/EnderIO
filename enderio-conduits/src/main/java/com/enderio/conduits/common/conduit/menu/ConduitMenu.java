@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import me.liliandev.ensure.ensures.EnsureSide;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -154,7 +155,15 @@ public class ConduitMenu extends BaseEnderMenu {
     }
 
     public void setConnectionConfig(ConnectionConfig config) {
-        connectionAccessor.setConnectionConfig(conduit, side, config);
+        if (getPlayerInventory().player instanceof LocalPlayer localPlayer) {
+            // Prevent editing while player is in spectator mode.
+            if (!localPlayer.isSpectator()) {
+                connectionAccessor.setConnectionConfig(conduit, side, config);
+                PacketDistributor.sendToServer(new SetConduitConnectionConfigPacket(containerId, config));
+            }
+        } else {
+            connectionAccessor.setConnectionConfig(conduit, side, config);
+        }
     }
 
     @Nullable
@@ -176,17 +185,9 @@ public class ConduitMenu extends BaseEnderMenu {
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
-        // var bundle = getBlockEntity();
-        // var currentConfig = connectionConfig();
-
         if (player instanceof ServerPlayer serverPlayer) {
             if (id >= BUTTON_CHANGE_CONDUIT_START_ID
                     && id <= BUTTON_CHANGE_CONDUIT_ID_COUNT + BUTTON_CHANGE_CONDUIT_ID_COUNT) {
-                // TODO: attempt to change to a different conduit on the same face.
-                // var conduitList = getBlockEntity().getConduits();
-
-                // TODO Find and switch to conduit and tell the client.
-
                 int conduitIndex = id - BUTTON_CHANGE_CONDUIT_START_ID;
                 var connectedConduits = getConnectedConduits();
                 if (conduitIndex < connectedConduits.size()) {

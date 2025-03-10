@@ -151,8 +151,6 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
                 public void updateConnectionConfig(java.util.function.Function<U, U> configModifier) {
                     var newConfig = configModifier.apply(menu.connectionConfig(conduit.connectionConfigType()));
 
-                    PacketDistributor.sendToServer(new SetConduitConnectionConfigPacket(menu.containerId, newConfig));
-
                     // Update on the client so UI is immediately in sync
                     menu.setConnectionConfig(newConfig);
                 }
