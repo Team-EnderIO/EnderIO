@@ -16,11 +16,6 @@ import java.util.List;
 
 public class ChemicalTicker extends CapabilityAwareConduitTicker<ChemicalConduit, IChemicalHandler> {
 
-    private int getScaledTransferRate(ChemicalConduit conduit, CapabilityConnection extractingConnection) {
-        // Adjust for tick rate. Always flow up so we are at minimum meeting the required rate.
-        return  (int)Math.ceil(conduit.transferRatePerTick() * (20.0 / conduit.graphTickRate()));
-    }
-
     @Override
     public void tickGraph(ServerLevel level, ChemicalConduit conduit, List<ConduitNode> loadedNodes, ConduitNetwork graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
@@ -56,7 +51,7 @@ public class ChemicalTicker extends CapabilityAwareConduitTicker<ChemicalConduit
     }
 
     private void tickExtractCapability(ChemicalConduit conduit, CapabilityConnection extract, List<CapabilityConnection> insertCaps) {
-        final int transferRate = getScaledTransferRate(conduit, extract);
+        final int transferRate = conduit.transferRatePerTick() * conduit.graphTickRate();
 
         IChemicalHandler extractHandler = extract.capability();
         ConduitNode node = extract.node();

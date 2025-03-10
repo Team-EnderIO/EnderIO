@@ -25,12 +25,6 @@ public class FluidConduitTicker
 
     public static final FluidConduitTicker INSTANCE = new FluidConduitTicker();
 
-    private int getScaledFluidRate(FluidConduit conduit) {
-        // Adjust for tick rate. Always flow up so we are at minimum meeting the
-        // required rate.
-        return (int) Math.ceil(conduit.transferRatePerTick() * (20.0 / conduit.graphTickRate()));
-    }
-
     private int doFluidTransfer(FluidStack fluid, Connection receiver, List<Connection> senders) {
         FluidStack extractedFluid = receiver.fluidHandler().drain(fluid, IFluidHandler.FluidAction.SIMULATE);
 
@@ -96,7 +90,7 @@ public class FluidConduitTicker
             List<Connection> receivers, DyeColor color, ConduitNetwork graph,
             ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        final int fluidRate = getScaledFluidRate(conduit);
+        final int fluidRate = conduit.transferRatePerTick() * conduit.graphTickRate();
         var context = graph.getOrCreateContext(FluidConduitNetworkContext.TYPE);
 
         for (Connection receiver : receivers) {

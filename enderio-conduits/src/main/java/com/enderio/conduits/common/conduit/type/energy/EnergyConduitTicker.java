@@ -27,9 +27,7 @@ public class EnergyConduitTicker
             List<Connection> receivers, DyeColor color, ConduitNetwork graph,
             ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        // Adjust for tick rate. Always flow up so we are at minimum meeting the
-        // required rate.
-        int transferRate = (int) Math.ceil(conduit.transferRatePerTick() * (20.0 / conduit.graphTickRate()));
+        int transferRate = conduit.transferRatePerTick() * conduit.graphTickRate();
 
         EnergyConduitNetworkContext context = graph.getContext(EnergyConduitNetworkContext.TYPE);
         if (context == null) {
