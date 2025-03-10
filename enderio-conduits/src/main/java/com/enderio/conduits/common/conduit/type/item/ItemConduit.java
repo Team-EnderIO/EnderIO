@@ -99,7 +99,6 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
         return ConduitTypes.ConnectionTypes.ITEM.get();
     }
 
-    // TODO: Move conversions into the connection config type?
     @Override
     public ItemConduitConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
             DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
