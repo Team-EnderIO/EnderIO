@@ -1,8 +1,8 @@
 {
   "type": "enderio:item",
   "description": {
-    "translate": "item.enderio.conduit.item"
+    "translate": "item.enderio.conduit.enhanced_item"
   },
   "texture": "enderio:block/conduit/item",
-  "transfer_rate": 32
+  "transfer_rate": 64
 }
