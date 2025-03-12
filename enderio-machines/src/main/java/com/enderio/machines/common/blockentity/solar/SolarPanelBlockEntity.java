@@ -103,10 +103,9 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
 
     /**
      * Calculates the generation rate for this solar panel.
-     * Only generates energy during day from 0 to  12_000 ticks (10 minute aka half a minecraft day), or
-     * if its day and either night or if it hasLiquidSunshine.
+     + Only generates energy during day from 0 to 12_000 ticks (10 minute aka half a minecraft day), or
+     + if the bound soul has nighttime properties or if the panel hasLiquidSunshine.
      * Generation is scaled at the start and end of the day.
-     *
      * @return this solar panels generation rate.
      * @see SolarPanelBlockEntity#hasLiquidSunshine()
      */
