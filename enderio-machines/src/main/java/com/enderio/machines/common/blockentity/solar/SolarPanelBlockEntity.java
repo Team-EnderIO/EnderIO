@@ -115,18 +115,12 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
             return 0;
         }
 
-        boolean day;
-        boolean night;
-        if (soulData != null) {
-            day = soulData.daytime();
-            night = soulData.nighttime();
-        } else {
-            day = level.isDay();
-            night = level.isNight();
-        }
+        boolean day = level.isDay();
+        boolean night = level.isNight();
+        boolean soulHasNight = soulData != null && soulData.nighttime();
 
         float outputScale = 0;
-        if (day && (night || hasLiquidSunshine())) {
+        if (soulHasNight || hasLiquidSunshine()) {
             outputScale = 1;
         } else if (day) {
             // A Day night cycle is 20 minutes, daytime is 10 minutes
