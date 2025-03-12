@@ -47,6 +47,7 @@ public class MachinesConfigLang {
         addTranslation("inhibitor", "Inhibitor Obelisk");
         addTranslation("aversion", "Aversion Obelisk");
         addTranslation("relocator", "Relocator Obelisk");
+        addTranslation("attractor", "Attractor Obelisk");
 
         // Enchanter
         addTranslation("enchanter", "Enchanter");
@@ -59,6 +60,17 @@ public class MachinesConfigLang {
         addTranslation("maxEntities", "Max Entities");
         addTranslation("spawnType", "Spawn Type");
         addTranslation("maxSpawners", "Max Spawners");
+
+        // Wireless Charger
+        addTranslation("wirelessCharger", "Wireless Charger");
+        addTranslation("baseRange", "Base Range");
+        addTranslation("energyUpkeep", "Upkeep Cost (\u00B5I/t)");
+        addTranslation("chargeRate", "Charge Speed (\u00B5I/t)");
+        addTranslation("pulsatingRangeExtension", "Pulsating Antenna range extension");
+        addTranslation("vibrantRangeExtension", "Vibrant Antenna range extension");
+
+        // Obelisks
+        addTranslation("obelisks", "Obelisks");
 
         // -- Client --
 
@@ -79,6 +91,7 @@ public class MachinesConfigLang {
 
     private static void addTranslation(String key, String translation) {
         // TODO: More translation options in Regilite
-        EnderIOMachines.REGILITE.addTranslation(() -> EnderIOMachines.MODULE_MOD_ID + "." + "configuration" + "." + key, translation);
+        EnderIOMachines.REGILITE.addTranslation(() -> EnderIOMachines.MODULE_MOD_ID + "." + "configuration" + "." + key,
+                translation);
     }
 }

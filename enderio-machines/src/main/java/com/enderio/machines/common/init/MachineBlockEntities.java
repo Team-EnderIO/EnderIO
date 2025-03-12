@@ -2,6 +2,7 @@ package com.enderio.machines.common.init;
 
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
@@ -24,6 +25,7 @@ import com.enderio.machines.common.blocks.drain.DrainBlockEntity;
 import com.enderio.machines.common.blocks.enchanter.EnchanterBlockEntity;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
 import com.enderio.machines.common.blocks.impulse_hopper.ImpulseHopperBlockEntity;
+import com.enderio.machines.common.blocks.obelisks.attractor.AttractorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlockEntity;
@@ -41,6 +43,7 @@ import com.enderio.machines.common.blocks.vacuum.chest.VacuumChestBlockEntity;
 import com.enderio.machines.common.blocks.vacuum.xp.XPVacuumBlockEntity;
 import com.enderio.machines.common.blocks.vat.VatBlockEntity;
 import com.enderio.machines.common.blocks.wired_charger.WiredChargerBlockEntity;
+import com.enderio.machines.common.blocks.wireless_charger.WirelessChargerBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import com.google.common.collect.ImmutableMap;
@@ -133,6 +136,10 @@ public class MachineBlockEntities {
             WiredChargerBlockEntity::new, MachineBlocks.WIRED_CHARGER)
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
+    public static final RegiliteBlockEntity<WirelessChargerBlockEntity> WIRELESS_CHARGER = register("wireless_charger",
+            WirelessChargerBlockEntity::new, MachineBlocks.WIRELESS_CHARGER)
+                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+
     public static final RegiliteBlockEntity<PaintingMachineBlockEntity> PAINTING_MACHINE = register("painting_machine",
             PaintingMachineBlockEntity::new, MachineBlocks.PAINTING_MACHINE)
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
@@ -196,6 +203,11 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<RelocatorObeliskBlockEntity> RELOCATOR_OBELISK = register(
             "relocator_obelisk", RelocatorObeliskBlockEntity::new, MachineBlocks.RELOCATOR_OBELISK)
                     .setRenderer(() -> ObeliskBER.factory(() -> Items.PRISMARINE))
+                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+
+    public static final RegiliteBlockEntity<AttractorObeliskBlockEntity> ATTRACTOR_OBELISK = register(
+            "attractor_obelisk", AttractorObeliskBlockEntity::new, MachineBlocks.ATTRACTOR_OBELISK)
+                    .setRenderer(() -> ObeliskBER.factory(EIOItems.ELECTROMAGNET::asItem))
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
     @SafeVarargs
