@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:soul_binder"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:soul_binder"
+  }
+}

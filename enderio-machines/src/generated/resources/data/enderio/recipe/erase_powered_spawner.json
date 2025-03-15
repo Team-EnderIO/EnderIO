@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:powered_spawner"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:powered_spawner"
+  }
+}

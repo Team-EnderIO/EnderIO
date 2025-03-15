@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:pulsating_photovoltaic_module"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:pulsating_photovoltaic_module"
+  }
+}
