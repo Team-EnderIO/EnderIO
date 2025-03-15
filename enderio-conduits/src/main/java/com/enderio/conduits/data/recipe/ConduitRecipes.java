@@ -166,7 +166,7 @@ public class ConduitRecipes extends RecipeProvider {
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.NOR_FILTER)
             .requires(ConduitItems.NOR_FILTER)
-            .unlockedBy("has_ingredient", has(ConduitItems.OR_FILTER))
+            .unlockedBy("has_ingredient", has(ConduitItems.NOR_FILTER))
             .save(recipeOutput, EnderIO.loc("nor_filter_erasure"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.AND_FILTER)
@@ -183,6 +183,11 @@ public class ConduitRecipes extends RecipeProvider {
             .requires(ConduitItems.XOR_FILTER)
             .unlockedBy("has_ingredient", has(ConduitItems.XOR_FILTER))
             .save(recipeOutput, EnderIO.loc("xor_filter_erasure"));
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.XNOR_FILTER)
+            .requires(ConduitItems.XNOR_FILTER)
+            .unlockedBy("has_ingredient", has(ConduitItems.XNOR_FILTER))
+            .save(recipeOutput, EnderIO.loc("xnor_filter_erasure"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.COUNT_FILTER)
             .requires(ConduitItems.COUNT_FILTER)

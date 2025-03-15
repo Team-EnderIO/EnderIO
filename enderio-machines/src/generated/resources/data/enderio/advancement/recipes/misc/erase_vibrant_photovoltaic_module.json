@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:erase_vibrant_solar_panels"
+        "recipe": "enderio:erase_vibrant_photovoltaic_module"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:erase_vibrant_solar_panels"
+      "enderio:erase_vibrant_photovoltaic_module"
     ]
   }
 }
