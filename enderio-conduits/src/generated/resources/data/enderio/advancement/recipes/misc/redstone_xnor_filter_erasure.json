@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:redstone_or_filter"
+            "items": "enderio:redstone_xnor_filter"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:or_filter_erasure"
+        "recipe": "enderio:redstone_xnor_filter_erasure"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:or_filter_erasure"
+      "enderio:redstone_xnor_filter_erasure"
     ]
   }
 }

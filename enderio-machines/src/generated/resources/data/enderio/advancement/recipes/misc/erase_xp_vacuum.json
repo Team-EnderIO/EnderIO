@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:redstone_nand_filter"
+            "items": "enderio:xp_vacuum"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:nand_filter_erasure"
+        "recipe": "enderio:erase_xp_vacuum"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:nand_filter_erasure"
+      "enderio:erase_xp_vacuum"
     ]
   }
 }

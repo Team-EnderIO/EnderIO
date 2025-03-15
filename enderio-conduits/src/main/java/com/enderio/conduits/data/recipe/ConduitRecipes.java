@@ -159,45 +159,26 @@ public class ConduitRecipes extends RecipeProvider {
     }
 
     private void buildFilterErasureRecipes(RecipeOutput recipeOutput) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.OR_FILTER)
-            .requires(ConduitItems.OR_FILTER)
-            .unlockedBy("has_ingredient", has(ConduitItems.OR_FILTER))
-            .save(recipeOutput, EnderIO.loc("or_filter_erasure"));
+        // List of all filter items to create erasure recipes for
+        ItemLike[] filterItems = {
+            ConduitItems.OR_FILTER,
+            ConduitItems.NOR_FILTER,
+            ConduitItems.AND_FILTER,
+            ConduitItems.NAND_FILTER,
+            ConduitItems.XOR_FILTER,
+            ConduitItems.XNOR_FILTER,
+            ConduitItems.COUNT_FILTER,
+            ConduitItems.TIMER_FILTER
+        };
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.NOR_FILTER)
-            .requires(ConduitItems.NOR_FILTER)
-            .unlockedBy("has_ingredient", has(ConduitItems.NOR_FILTER))
-            .save(recipeOutput, EnderIO.loc("nor_filter_erasure"));
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.AND_FILTER)
-            .requires(ConduitItems.AND_FILTER)
-            .unlockedBy("has_ingredient", has(ConduitItems.AND_FILTER))
-            .save(recipeOutput, EnderIO.loc("and_filter_erasure"));
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.NAND_FILTER)
-            .requires(ConduitItems.NAND_FILTER)
-            .unlockedBy("has_ingredient", has(ConduitItems.NAND_FILTER))
-            .save(recipeOutput, EnderIO.loc("nand_filter_erasure"));
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.XOR_FILTER)
-            .requires(ConduitItems.XOR_FILTER)
-            .unlockedBy("has_ingredient", has(ConduitItems.XOR_FILTER))
-            .save(recipeOutput, EnderIO.loc("xor_filter_erasure"));
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.XNOR_FILTER)
-            .requires(ConduitItems.XNOR_FILTER)
-            .unlockedBy("has_ingredient", has(ConduitItems.XNOR_FILTER))
-            .save(recipeOutput, EnderIO.loc("xnor_filter_erasure"));
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.COUNT_FILTER)
-            .requires(ConduitItems.COUNT_FILTER)
-            .unlockedBy("has_ingredient", has(ConduitItems.COUNT_FILTER))
-            .save(recipeOutput, EnderIO.loc("count_filter_erasure"));
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.TIMER_FILTER)
-            .requires(ConduitItems.TIMER_FILTER)
-            .unlockedBy("has_ingredient", has(ConduitItems.TIMER_FILTER))
-            .save(recipeOutput, EnderIO.loc("timer_filter_erasure"));
+        // Create erasure recipe for each filter
+        for (ItemLike filter : filterItems) {
+            String path = BuiltInRegistries.ITEM.getKey(filter.asItem()).getPath();
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, filter)
+                .requires(filter)
+                .unlockedBy("has_ingredient", has(filter))
+                .save(recipeOutput, EnderIO.loc(path + "_erasure"));
+        }
     }
 
     private void buildUpgradeRecipes(RecipeOutput recipeOutput) {

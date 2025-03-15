@@ -454,6 +454,9 @@ public class MachineRecipeProvider extends RecipeProvider {
         list.add(MachineBlocks.AVERSION_OBELISK);
         list.add(MachineBlocks.INHIBITOR_OBELISK);
         list.add(MachineBlocks.RELOCATOR_OBELISK);
+        list.add(MachineBlocks.XP_VACUUM);
+        list.add(MachineBlocks.VACUUM_CHEST);
+        list.add(MachineBlocks.TRAVEL_ANCHOR);
         return list;
     });
 
