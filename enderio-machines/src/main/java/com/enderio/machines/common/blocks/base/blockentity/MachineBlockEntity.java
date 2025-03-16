@@ -443,7 +443,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     }
 
     @Override
-    protected void onRedstonePowerChanged() {
+    protected void updateRedstonePower() {
+        super.updateRedstonePower();
         checkIsRedstoneBlocked();
     }
 

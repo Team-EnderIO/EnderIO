@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -92,7 +93,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
         if (noData){
             var allCapturableEntities = EntityCaptureUtils.getCapturableEntities();
 
-            results = allCapturableEntities.stream().map(e -> {
+            results = new ArrayList<>(allCapturableEntities.stream().map(e -> {
                 ItemStack result = resultItem.copy();
 
                 if (result.is(EIOTags.Items.ENTITY_STORAGE)) {
@@ -100,7 +101,13 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
                 }
 
                 return result;
-            }).toList();
+            }).toList());
+
+            ItemStack result = resultItem.copy();
+            if (result.is(EIOTags.Items.ENTITY_STORAGE)) {
+                result.set(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+            }
+            results.add(result);
 
             inputs = recipe.getIngredients().stream()
                 .map(ingredient ->

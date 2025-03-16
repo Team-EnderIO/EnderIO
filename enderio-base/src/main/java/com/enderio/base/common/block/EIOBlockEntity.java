@@ -60,18 +60,11 @@ public class EIOBlockEntity extends EnderBlockEntity {
         return isRedstonePowered;
     }
 
-    private void updateRedstonePower() {
+    protected void updateRedstonePower() {
         boolean hasPower = level.hasNeighborSignal(worldPosition);
         boolean didChange = isRedstonePowered != hasPower;
         isRedstonePowered = hasPower;
         isRedstoneDirty = false;
-
-        if (didChange) {
-            onRedstonePowerChanged();
-        }
-    }
-
-    protected void onRedstonePowerChanged() {
     }
 
     // endregion
