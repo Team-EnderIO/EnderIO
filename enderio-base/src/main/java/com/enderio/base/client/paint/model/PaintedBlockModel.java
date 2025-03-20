@@ -319,7 +319,6 @@ public class PaintedBlockModel implements IDynamicBakedModel {
         return quads.isEmpty() ? Pair.of(ModelHelper.getMissingTexture(), false) : Pair.of(quads.get(0).getSprite(), quads.get(0).isTinted());
     }
 
-    // TODO: @agnor99 Update this comment.
     /**
      * This method copies a quad from the shape and modifies it to create one, that display the new texture.
      * First it copies the quad with the values of the shape quad. The new Sprite and tintValues are added to the quad.

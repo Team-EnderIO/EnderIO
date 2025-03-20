@@ -147,7 +147,7 @@ Certain parts of the source code may be under a different license due to being p
 - EpicSquid
 - Rover656
 - HypherionSA
-- agnor99
+- liliandev
 - ferriarnus
 - dphaldes
 - and our Contributors

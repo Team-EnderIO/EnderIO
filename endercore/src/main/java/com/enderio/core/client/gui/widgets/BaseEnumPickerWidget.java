@@ -3,6 +3,8 @@ package com.enderio.core.client.gui.widgets;
 import com.enderio.core.client.gui.screen.EnderScreen;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -91,6 +93,17 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         return clazz.getEnumConstants();
     }
 
+    public int getValueIndex(T value) {
+        int i = 0;
+        for (T t : getValues()) {
+            if (t == value) {
+                return i;
+            }
+            i++;
+        }
+        return i;
+    }
+
     private T getValue() {
         return getter.get();
     }
@@ -122,13 +135,28 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         if (isExpanded()) {
             selectNext(mouseButton != InputConstants.MOUSE_BUTTON_RIGHT);
         } else {
+            selectNext(mouseButton != InputConstants.MOUSE_BUTTON_RIGHT);
             Minecraft.getInstance().pushGuiLayer(selection);
         }
     }
 
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (scrollY > 0) {
+            selectNext(false);
+            return true;
+        }
+        if (scrollY < 0) {
+            selectNext(true);
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
+
     private void selectNext(boolean isForward) {
         T[] values = getValues();
-        int index = getValue().ordinal() + (isForward ? 1 : -1) + values.length;
+        int index = getValueIndex(getValue()) + (isForward ? 1 : -1) + values.length;
+
         setValue(values[index % values.length]);
     }
 
