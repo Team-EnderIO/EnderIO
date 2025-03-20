@@ -3,8 +3,6 @@ package com.enderio.core.client.gui.widgets;
 import com.enderio.core.client.gui.screen.EnderScreen;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
-
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
