@@ -9,7 +9,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.apache.logging.log4j.LogManager;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -55,7 +54,6 @@ public class MultiIconButton extends AbstractButton {
         else if (type == MultiIconButtonType.MINUS_BUTTON) {
             setter.accept(getter.get() - increment);
         }
-        LogManager.getLogger().info("Priority value: {}", getter.get());
     }
 
     @Override
