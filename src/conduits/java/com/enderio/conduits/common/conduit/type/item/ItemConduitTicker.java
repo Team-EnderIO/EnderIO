@@ -13,6 +13,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitData, IItemHandler> {
@@ -27,6 +28,8 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
         List<CapabilityConnection> extracts,
         ConduitGraph<ItemConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
+
+        inserts.sort(Comparator.comparingInt((CapabilityConnection conn) -> conn.data.compute(conn.direction).priority).reversed());
 
         toNextExtract:
         for (CapabilityConnection extract: extracts) {

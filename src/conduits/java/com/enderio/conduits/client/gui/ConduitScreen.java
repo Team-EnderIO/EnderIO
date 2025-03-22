@@ -14,6 +14,8 @@ import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitType;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.menu.ConduitSlot;
@@ -76,6 +78,10 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
         ConduitMenuData data = menu.getConduitType().getMenuData();
 
         guiGraphics.drawString(this.font, ConduitLang.CONDUIT_INSERT,  22 + 16,  7 + 4, 4210752, false);
+
+        if (menu.getConduitType() instanceof ItemConduitType) {
+            guiGraphics.drawString(this.font, ConduitLang.CONDUIT_PRIORITY, 22,  7 + 4 + 4 + 8 + 16 + 12, 4210752, false);
+        }
 
         if (data.showBothEnable()) {
             guiGraphics.drawString(this.font, ConduitLang.CONDUIT_EXTRACT, 112 + 16, 7 + 4, 4210752, false);
