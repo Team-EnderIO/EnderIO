@@ -14,7 +14,6 @@ import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.api.conduit.SlotType;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
-import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
 import com.enderio.conduits.common.conduit.type.item.ItemConduitType;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.menu.ConduitMenu;

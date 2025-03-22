@@ -1,10 +1,8 @@
 package com.enderio.core.client.gui.widgets;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
-import org.apache.logging.log4j.LogManager;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
