@@ -6,7 +6,6 @@ import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
 import com.enderio.core.client.gui.widgets.CheckBox;
-import com.enderio.core.client.gui.widgets.NumericalInputBox;
 import com.enderio.core.client.gui.widgets.MultiIconButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
@@ -27,43 +26,24 @@ public class ItemConduitScreenExtension implements ConduitScreenExtension<ItemCo
         UpdateExtendedData<ItemConduitData> updateConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         List<AbstractWidget> widgets = new ArrayList<>();
 
-        Vector2i pos = widgetsStart.add(39, 4 + 4 + 8 + 16 + 12);
-        var inputBox = new NumericalInputBox(
-            screen.getMinecraft().font,
-            pos.x(),
-            pos.y(),
-            24, 4,
-            () -> conduitDataSupplier.get().get(direction.get()).priority,
-            integer -> {
-                updateConduitData.update(data -> {
-                    var sideData = data.compute(direction.get());
-                    sideData.priority = integer;
-                    return data;
-                });
-            });
-
-        widgets.add(inputBox);
-
         widgets.add(MultiIconButton.createAddButton(
             widgetsStart.add(70, 4 + 4 + 8 + 16 + 8),
-            () -> conduitDataSupplier.get().get(direction.get()).priority,
+            () -> conduitDataSupplier.get().get(direction.get()).getPriority(),
             integer -> {
                 updateConduitData.update(data -> {
                     var sideData = data.compute(direction.get());
-                    sideData.priority = integer;
-                    inputBox.setValue(String.valueOf(sideData.priority));
+                    sideData.setPriority(integer);
                     return data;
                 });
             }));
 
         widgets.add(MultiIconButton.createMinusButton(
             widgetsStart.add(70, 4 + 4 + 8 + 16 + 16),
-            () -> conduitDataSupplier.get().get(direction.get()).priority,
+            () -> conduitDataSupplier.get().get(direction.get()).getPriority(),
             integer -> {
                 updateConduitData.update(data -> {
                     var sideData = data.compute(direction.get());
-                    sideData.priority = integer;
-                    inputBox.setValue(String.valueOf(sideData.priority));
+                    sideData.setPriority(integer);
                     return data;
                 });
             }));

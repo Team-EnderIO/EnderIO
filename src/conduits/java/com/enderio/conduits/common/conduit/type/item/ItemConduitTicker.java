@@ -29,7 +29,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
         ConduitGraph<ItemConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        inserts.sort(Comparator.comparingInt((CapabilityConnection conn) -> conn.data.compute(conn.direction).priority).reversed());
+        inserts.sort(Comparator.comparingInt((CapabilityConnection conn) -> conn.data.compute(conn.direction).getPriority()).reversed());
 
         toNextExtract:
         for (CapabilityConnection extract: extracts) {

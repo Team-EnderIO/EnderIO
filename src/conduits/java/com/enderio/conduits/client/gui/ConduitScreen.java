@@ -78,8 +78,15 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
 
         guiGraphics.drawString(this.font, ConduitLang.CONDUIT_INSERT,  22 + 16,  7 + 4, 4210752, false);
 
-        if (menu.getConduitType() instanceof ItemConduitType) {
+        if (menu.getConduitType() instanceof ItemConduitType itemConduitType) {
+            String priority = String.valueOf(getBundle().getNodeFor(itemConduitType).getConduitData().get(menu.getDirection()).getPriority());
             guiGraphics.drawString(this.font, ConduitLang.CONDUIT_PRIORITY, 22,  7 + 4 + 4 + 8 + 16 + 12, 4210752, false);
+            guiGraphics.drawString(
+                this.font,
+                priority,
+                90 - this.font.width(priority), 7 + 4 + 4 + 8 + 16 + 12,
+                0,
+                false);
         }
 
         if (data.showBothEnable()) {

@@ -64,7 +64,18 @@ public class ItemConduitData implements ConduitData<ItemConduitData> {
         public boolean isRoundRobin = false;
         public int rotatingIndex = 0;
         public boolean isSelfFeed = false;
-        public int priority = 0;
+
+        public int getPriority() {
+            return priority;
+        }
+
+        public void setPriority(int priority) {
+            if (priority >= -9999 && priority <= 9999) {
+                this.priority = priority;
+            }
+        }
+
+        private int priority = 0;
 
         @Override
         public int hashCode() {
