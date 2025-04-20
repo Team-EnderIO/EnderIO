@@ -24,6 +24,7 @@ public class ServerPayloadHandler {
                 var buf = new RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(change.updateData()),
                         level.registryAccess());
                 enderBlockEntity.serverHandleBufferChange(buf);
+                buf.release();
             }
         });
     }

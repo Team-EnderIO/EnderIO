@@ -172,7 +172,9 @@ public class EnderBlockEntity extends BlockEntity {
             buf.writeInt(i);
             dataSlots.get(i).write(buf);
         });
-        return buf.array();
+        byte[] arr = buf.array();
+        buf.release();
+        return arr;
     }
 
     @Deprecated(forRemoval = true, since = "7.1")
@@ -201,6 +203,7 @@ public class EnderBlockEntity extends BlockEntity {
             buf.writeInt(dataSlots.indexOf(slot));
             slot.write(buf, value);
             PacketDistributor.sendToServer(new ClientboundDataSlotChange(getBlockPos(), buf.array()));
+            buf.release();
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_NEIGHBORS);
         }
     }
