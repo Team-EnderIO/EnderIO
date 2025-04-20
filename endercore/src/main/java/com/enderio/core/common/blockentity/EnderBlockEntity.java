@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,8 +39,8 @@ public class EnderBlockEntity extends BlockEntity {
 
     public static final String DATA = "Data";
     public static final String INDEX = "Index";
-    private final List<NetworkDataSlot<?>> dataSlots = new ArrayList<>();
-    private final List<Runnable> afterDataSync = new ArrayList<>();
+    private final List<NetworkDataSlot<?>> dataSlots = new CopyOnWriteArrayList<>();
+    private final List<Runnable> afterDataSync = new CopyOnWriteArrayList<>();
     private boolean isChangedDeferred = true;
 
     private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> selfCapabilities = new HashMap<>();
