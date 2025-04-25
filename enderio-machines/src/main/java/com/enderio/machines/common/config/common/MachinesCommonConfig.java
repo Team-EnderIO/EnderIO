@@ -10,6 +10,7 @@ public class MachinesCommonConfig {
     public final ModConfigSpec.ConfigValue<Integer> ENCHANTER_BASE_LEVEL_COST;
     public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNER_ENTITIES;
     public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNERS;
+    public final ModConfigSpec.ConfigValue<Integer> DEFAULT_SPAWN_ENERGY_COST;
     public final ModConfigSpec.ConfigValue<MobSpawnMode> SPAWN_TYPE;
     public final ModConfigSpec.IntValue SPAWN_AMOUNT;
 
@@ -37,6 +38,9 @@ public class MachinesCommonConfig {
         MAX_SPAWNERS = builder
                 .comment("The maximum amount of spawners before the spawners suffers a loss of efficiency")
                 .defineInRange("maxSpawners", 10, 0, Integer.MAX_VALUE);
+        DEFAULT_SPAWN_ENERGY_COST = builder
+                .comment("The amount of energy used to spawn mobs that do not have custom spawner soul data.")
+                .defineInRange("defaultSpawnEnergyCost", 50000, 0, Integer.MAX_VALUE);
         builder.pop();
     }
 }

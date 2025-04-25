@@ -143,7 +143,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         }
 
         // Gather spawn data
-        int energyCost = 50000;
+        int energyCost = MachinesConfig.COMMON.DEFAULT_SPAWN_ENERGY_COST.get();
         MobSpawnMode spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
 
         var spawnDataOpt = SpawnerSoul.SPAWNER.matches(getEntityType().get());
@@ -224,8 +224,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     // region Inventory
 
-    // TODO: Need to change MachineInventory to support loading older inventories.
-    //       We did not account for changing inventory sizes...
     @Override
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
