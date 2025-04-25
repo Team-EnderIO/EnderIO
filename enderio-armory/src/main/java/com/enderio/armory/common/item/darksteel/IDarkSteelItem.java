@@ -2,6 +2,7 @@ package com.enderio.armory.common.item.darksteel;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
 import com.enderio.armory.common.capability.DarkSteelHelper;
+import com.enderio.armory.common.init.ArmoryFeatureFlags;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
@@ -45,7 +46,11 @@ public interface IDarkSteelItem extends AdvancedTooltipProvider, CreativeTabVari
 
     @Override
     default void addBasicTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        addCurrentUpgradeTooltips(itemStack, tooltips, false);
+        if (player != null) {
+            if (player.level().enabledFeatures().contains(ArmoryFeatureFlags.ARMORY_REWRITE)) {
+                addCurrentUpgradeTooltips(itemStack, tooltips, false);
+            }
+        }
     }
 
     @Override

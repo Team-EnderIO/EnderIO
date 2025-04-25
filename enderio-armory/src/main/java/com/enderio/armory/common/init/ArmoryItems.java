@@ -56,7 +56,7 @@ public class ArmoryItems {
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
     public static final RegiliteItem<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = ITEM_REGISTRY
-            .registerItem("dark_steel_pickaxe", DarkSteelPickaxeItem::new, new Item.Properties().durability(2000))
+            .registerItem("dark_steel_pickaxe", DarkSteelPickaxeItem::new, new Item.Properties().durability(2000).requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_PICKAXE.get().addAllVariants(modifier))
             .setTranslation("Dark Pickaxe")
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
@@ -66,7 +66,7 @@ public class ArmoryItems {
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
     public static final RegiliteItem<DarkSteelAxeItem> DARK_STEEL_AXE = ITEM_REGISTRY
-            .registerItem("dark_steel_axe", DarkSteelAxeItem::new, new Item.Properties().durability(2000))
+            .registerItem("dark_steel_axe", DarkSteelAxeItem::new, new Item.Properties().durability(2000).requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_AXE.get().addAllVariants(modifier))
             .setTranslation("Dark Axe")
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
@@ -76,7 +76,7 @@ public class ArmoryItems {
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
     public static final RegiliteItem<DarkSteelHelmetItem> DARK_STEEL_HELMET = ITEM_REGISTRY
-            .registerItem("dark_steel_helmet", DarkSteelHelmetItem::new, new Item.Properties().durability(2000))
+            .registerItem("dark_steel_helmet", DarkSteelHelmetItem::new, new Item.Properties().durability(2000).requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_HELMET.get().addAllVariants(modifier))
             .setTranslation("Dark Helmet")
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
@@ -87,7 +87,7 @@ public class ArmoryItems {
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
     public static final RegiliteItem<DarkSteelChestplateItem> DARK_STEEL_CHESTPLATE = ITEM_REGISTRY
-            .registerItem("dark_steel_chestplate", DarkSteelChestplateItem::new, new Item.Properties().durability(2000))
+            .registerItem("dark_steel_chestplate", DarkSteelChestplateItem::new, new Item.Properties().durability(2000).requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_CHESTPLATE.get().addAllVariants(modifier))
             .setTranslation("Dark Chestplate")
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
@@ -98,7 +98,7 @@ public class ArmoryItems {
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
     public static final RegiliteItem<DarkSteelLeggingsItem> DARK_STEEL_LEGGINGS = ITEM_REGISTRY
-            .registerItem("dark_steel_leggings", DarkSteelLeggingsItem::new, new Item.Properties().durability(2000))
+            .registerItem("dark_steel_leggings", DarkSteelLeggingsItem::new, new Item.Properties().durability(2000).requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_LEGGINGS.get().addAllVariants(modifier))
             .setTranslation("Dark Leggings")
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
@@ -109,7 +109,7 @@ public class ArmoryItems {
             .addCapability(Capabilities.EnergyStorage.ITEM, ArmoryCapabilities.DARK_STEEL_ENERGY_STORAGE_PROVIDER);
 
     public static final RegiliteItem<DarkSteelBootsItem> DARK_STEEL_BOOTS = ITEM_REGISTRY
-            .registerItem("dark_steel_boots", DarkSteelBootsItem::new, new Item.Properties().durability(2000))
+            .registerItem("dark_steel_boots", DarkSteelBootsItem::new, new Item.Properties().durability(2000).requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR, modifier -> ArmoryItems.DARK_STEEL_BOOTS.get().addAllVariants(modifier))
             .setTranslation("Dark Boots")
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()))
@@ -122,7 +122,7 @@ public class ArmoryItems {
     private static final String UPGRADE_TEXT = " Upgrade";
 
     public static final RegiliteItem<MaterialItem> DARK_STEEL_UPGRADE_BLANK = ITEM_REGISTRY
-            .registerItem("dark_steel_upgrade_blank", props -> new MaterialItem(props, false))
+            .registerItem("dark_steel_upgrade_blank", props -> new MaterialItem(props, false), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Blank" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -130,7 +130,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_1 = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_empowered_1",
                     properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.ONE.getActivationCost(),
-                            EmpoweredUpgradeTier.ONE.getFactory()))
+                            EmpoweredUpgradeTier.ONE.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Empowered" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -138,7 +138,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_2 = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_empowered_2",
                     properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.TWO.getActivationCost(),
-                            EmpoweredUpgradeTier.TWO.getFactory()))
+                            EmpoweredUpgradeTier.TWO.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Empowered II" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -146,7 +146,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_3 = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_empowered_3",
                     properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.THREE.getActivationCost(),
-                            EmpoweredUpgradeTier.THREE.getFactory()))
+                            EmpoweredUpgradeTier.THREE.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Empowered III" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -154,7 +154,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_4 = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_empowered_4",
                     properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.FOUR.getActivationCost(),
-                            EmpoweredUpgradeTier.FOUR.getFactory()))
+                            EmpoweredUpgradeTier.FOUR.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Empowered IV" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -162,7 +162,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_STEP_ASSIST = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_step_assist",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.STEP_ASSIST_ACTIVATION_COST,
-                            StepAssistUpgrade::new))
+                            StepAssistUpgrade::new), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Step Assist" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -170,7 +170,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPEED_I = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_speedboost1",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.SPEED_ACTIVATION_COST_I,
-                            SpeedUpgradeTier.ONE.getFactory()))
+                            SpeedUpgradeTier.ONE.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Speed" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -178,7 +178,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPEED_II = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_speedboost2",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.SPEED_ACTIVATION_COST_II,
-                            SpeedUpgradeTier.TWO.getFactory()))
+                            SpeedUpgradeTier.TWO.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Speed II" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -186,7 +186,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPEED_III = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_speedboost3",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.SPEED_ACTIVATION_COST_III,
-                            SpeedUpgradeTier.THREE.getFactory()))
+                            SpeedUpgradeTier.THREE.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Speed III" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -194,7 +194,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_JUMP_I = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_jump_1",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.JUMP_ACTIVATION_COST_I,
-                            JumpUpgradeTier.ONE.getFactory()))
+                            JumpUpgradeTier.ONE.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Jump" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -202,7 +202,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_JUMP_II = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_jump_2",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.JUMP_ACTIVATION_COST_II,
-                            JumpUpgradeTier.TWO.getFactory()))
+                            JumpUpgradeTier.TWO.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Jump II" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -210,7 +210,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_GLIDER = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_glider",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.GLIDER_ACTIVATION_COST,
-                            GliderUpgrade::new))
+                            GliderUpgrade::new), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Glider" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -218,7 +218,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_ELYTRA = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_elytra",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.ELYTRA_ACTIVATION_COST,
-                            ElytraUpgrade::new))
+                            ElytraUpgrade::new), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Elytra" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -226,7 +226,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_spoon",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.SPOON_ACTIVATION_COST,
-                            SpoonUpgrade::new))
+                            SpoonUpgrade::new), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Spoon" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -234,7 +234,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_FORK = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_fork",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.FORK_ACTIVATION_COST,
-                            ForkUpgrade::new))
+                            ForkUpgrade::new), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Fork" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -242,7 +242,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_direct",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.DIRECT_ACTIVATION_COST,
-                            DirectUpgrade::new))
+                            DirectUpgrade::new), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Direct" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -250,7 +250,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_TRAVEL = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_travel",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.TRAVEL_ACTIVATION_COST,
-                            TravelUpgrade::new))
+                            TravelUpgrade::new), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Travel" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -258,7 +258,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_tnt",
                     properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.ONE.getActivationCost(),
-                            ExplosiveUpgradeTier.ONE.getFactory()))
+                            ExplosiveUpgradeTier.ONE.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Explosive I" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -266,7 +266,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_2 = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_tnt2",
                     properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.TWO.getActivationCost(),
-                            ExplosiveUpgradeTier.TWO.getFactory()))
+                            ExplosiveUpgradeTier.TWO.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Explosive II" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -275,7 +275,7 @@ public class ArmoryItems {
             .registerItem("dark_steel_upgrade_penetration_1",
                     properties -> new DarkSteelUpgradeItem(properties,
                             ExplosivePenetrationUpgradeTier.ONE.getActivationCost(),
-                            ExplosivePenetrationUpgradeTier.ONE.getFactory()))
+                            ExplosivePenetrationUpgradeTier.ONE.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("EExplosive Penetration I" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -284,7 +284,7 @@ public class ArmoryItems {
             .registerItem("dark_steel_upgrade_penetration_2",
                     properties -> new DarkSteelUpgradeItem(properties,
                             ExplosivePenetrationUpgradeTier.TWO.getActivationCost(),
-                            ExplosivePenetrationUpgradeTier.TWO.getFactory()))
+                            ExplosivePenetrationUpgradeTier.TWO.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("EExplosive Penetration II" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -292,7 +292,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_NIGHT_VISION = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_nightvision",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.NIGHT_VISION_ACTIVATION_COST,
-                            NightVisisionUpgrade::new))
+                            NightVisisionUpgrade::new), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Night Vision" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -300,7 +300,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SOLAR_I = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_solar_1",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.SOLAR_ACTIVATION_COST_I,
-                            SolarUpgradeTier.ONE.getFactory()))
+                            SolarUpgradeTier.ONE.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Solar" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -308,7 +308,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SOLAR_II = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_solar_2",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.SOLAR_ACTIVATION_COST_II,
-                            SolarUpgradeTier.TWO.getFactory()))
+                            SolarUpgradeTier.TWO.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Solar II" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
@@ -316,7 +316,7 @@ public class ArmoryItems {
     public static final RegiliteItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SOLAR_III = ITEM_REGISTRY
             .registerItem("dark_steel_upgrade_solar_3",
                     properties -> new DarkSteelUpgradeItem(properties, ArmoryConfig.COMMON.SOLAR_ACTIVATION_COST_III,
-                            SolarUpgradeTier.THREE.getFactory()))
+                            SolarUpgradeTier.THREE.getFactory()), new Item.Properties().requiredFeatures(ArmoryFeatureFlags.ARMORY_REWRITE))
             .setTab(EIOCreativeTabs.GEAR)
             .setTranslation("Solar III" + UPGRADE_TEXT)
             .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));

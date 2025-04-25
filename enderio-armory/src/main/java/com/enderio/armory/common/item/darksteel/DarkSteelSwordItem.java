@@ -1,6 +1,7 @@
 package com.enderio.armory.common.item.darksteel;
 
 import com.enderio.armory.common.capability.DarkSteelHelper;
+import com.enderio.armory.common.init.ArmoryFeatureFlags;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
@@ -102,17 +103,26 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
 
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
+        if (pTarget.level().enabledFeatures().contains(ArmoryFeatureFlags.ARMORY_REWRITE)) {
+            Optional<EmpoweredUpgrade> empUp = DarkSteelHelper.getEmpoweredUpgrade(pStack);
+            if (empUp.isEmpty() || ItemStackEnergy.getEnergyStored(pStack) <= 0) {
+                return super.hurtEnemy(pStack, pTarget, pAttacker);
+            }
 
-        Optional<EmpoweredUpgrade> empUp = DarkSteelHelper.getEmpoweredUpgrade(pStack);
-        if (empUp.isEmpty() || ItemStackEnergy.getEnergyStored(pStack) <= 0) {
-            return super.hurtEnemy(pStack, pTarget, pAttacker);
-        }
-
-        if (pTarget.isDeadOrDying() && Math.random() < empUp.get().getMobHeadChance()) {
-            Optional<ItemStack> skull = getSkull(pTarget);
-            skull.ifPresent(itemStack -> Containers.dropItemStack(pAttacker.level(), pAttacker.position().x,
+            if (pTarget.isDeadOrDying() && Math.random() < empUp.get().getMobHeadChance()) {
+                Optional<ItemStack> skull = getSkull(pTarget);
+                skull.ifPresent(itemStack -> Containers.dropItemStack(pAttacker.level(), pAttacker.position().x,
                     pAttacker.position().y, pAttacker.position().z, itemStack));
+            }
+        } else {
+            // Temporary head drop logic
+            if (pTarget.isDeadOrDying() && pTarget.level().random.nextFloat() < 0.07) {
+                Optional<ItemStack> skull = getSkull(pTarget);
+                skull.ifPresent(
+                    itemStack -> Containers.dropItemStack(pAttacker.level(), pAttacker.position().x, pAttacker.position().y, pAttacker.position().z, itemStack));
+            }
         }
+
         return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 
@@ -185,29 +195,44 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        if (DarkSteelHelper.getEmpoweredUpgrade(itemStack).isEmpty()) {
-            tooltips.add(TooltipUtil.style(ArmoryLang.ENDER_HEAD_DROP_INFO));
+        // TODO: Remove null checks when feature checks are removed
+        if (player != null) {
+            if (player.level().enabledFeatures().contains(ArmoryFeatureFlags.ARMORY_REWRITE)) {
+                if (DarkSteelHelper.getEmpoweredUpgrade(itemStack).isEmpty()) {
+                    tooltips.add(TooltipUtil.style(ArmoryLang.ENDER_HEAD_DROP_INFO));
+                }
+            } else {
+                tooltips.add(Component.literal("This item is currently only used to get mob heads"));
+            }
         }
     }
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        Optional<EmpoweredUpgrade> empUp = DarkSteelHelper.getEmpoweredUpgrade(itemStack);
-        empUp.ifPresent(empoweredUpgrade -> tooltips.add(TooltipUtil.withArgs(ArmoryLang.ENDER_HEAD_DROP_CHANCE,
-                (int) Math.round(empoweredUpgrade.getMobHeadChance() * 100))));
-        empUp.ifPresent(empoweredUpgrade -> tooltips.add(TooltipUtil.style(ArmoryLang.ENDER_BLOCK_TELEPORT)));
-        addDurabilityTooltips(itemStack, tooltips);
-        addCurrentUpgradeTooltips(itemStack, tooltips, true);
-        addAvailableUpgradesTooltips(itemStack, tooltips);
+        // TODO: Remove null checks when feature checks are removed
+        if (player != null) {
+            if (player.level().enabledFeatures().contains(ArmoryFeatureFlags.ARMORY_REWRITE)) {
+                Optional<EmpoweredUpgrade> empUp = DarkSteelHelper.getEmpoweredUpgrade(itemStack);
+                empUp.ifPresent(empoweredUpgrade -> tooltips.add(
+                    TooltipUtil.withArgs(ArmoryLang.ENDER_HEAD_DROP_CHANCE, (int) Math.round(empoweredUpgrade.getMobHeadChance() * 100))));
+                empUp.ifPresent(empoweredUpgrade -> tooltips.add(TooltipUtil.style(ArmoryLang.ENDER_BLOCK_TELEPORT)));
+                addDurabilityTooltips(itemStack, tooltips);
+                addCurrentUpgradeTooltips(itemStack, tooltips, true);
+                addAvailableUpgradesTooltips(itemStack, tooltips);
+            } else {
+                tooltips.add(TooltipUtil.withArgs(ArmoryLang.ENDER_HEAD_DROP_CHANCE, 7));
+            }
+        }
     }
 
     @Override
     public void addAllVariants(CreativeModeTab.Output modifier) {
         modifier.accept(this);
 
-        ItemStack fullyUpgraded = createFullyUpgradedStack(this);
-        ItemStackEnergy.setFull(fullyUpgraded);
-        modifier.accept(fullyUpgraded);
+        // TODO: Temporarily disabled to avoid confusion while locked behind an experiment.
+//        ItemStack fullyUpgraded = createFullyUpgradedStack(this);
+//        ItemStackEnergy.setFull(fullyUpgraded);
+//        modifier.accept(fullyUpgraded);
     }
 
     @Override
