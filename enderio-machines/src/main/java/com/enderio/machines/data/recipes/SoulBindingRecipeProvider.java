@@ -9,6 +9,7 @@ import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.souldata.EngineSoul;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import com.enderio.machines.common.souldata.FarmSoul;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -46,6 +47,7 @@ public class SoulBindingRecipeProvider extends RecipeProvider {
                 recipeOutput);
         build(MachineBlocks.SOUL_ENGINE, Ingredient.of(MachineBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME,
                 recipeOutput);
+        build(MachineBlocks.FARMING_STATION, Ingredient.of(MachineBlocks.FARMING_STATION), 188000, 5, FarmSoul.NAME, recipeOutput);
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityType.VILLAGER,
                 recipeOutput);
         build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.MONSTER,

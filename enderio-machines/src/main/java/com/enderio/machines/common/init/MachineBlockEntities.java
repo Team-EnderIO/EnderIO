@@ -9,6 +9,7 @@ import com.enderio.machines.client.rendering.blockentity.ObeliskBER;
 import com.enderio.machines.client.rendering.blockentity.XPObeliskBER;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
+import com.enderio.machines.common.blocks.farming_station.FarmingStationBlockEntity;
 import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
@@ -192,6 +193,11 @@ public class MachineBlockEntities {
             "relocator_obelisk", RelocatorObeliskBlockEntity::new, MachineBlocks.RELOCATOR_OBELISK)
                     .setRenderer(() -> ObeliskBER.factory(() -> Items.PRISMARINE))
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+
+    public static final RegiliteBlockEntity<FarmingStationBlockEntity> FARMING_STATION =
+        register("farming_station", FarmingStationBlockEntity::new, MachineBlocks.FARMING_STATION)
+            .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .apply(MachineBlockEntities::fluidHandlerCapability);
 
     @SafeVarargs
     private static <B extends BlockEntity> RegiliteBlockEntity<B> register(String name,

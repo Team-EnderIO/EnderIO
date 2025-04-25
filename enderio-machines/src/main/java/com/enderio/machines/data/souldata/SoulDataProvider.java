@@ -4,6 +4,7 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.machines.common.blocks.powered_spawner.MobSpawnMode;
 import com.enderio.machines.common.souldata.EngineSoul;
+import com.enderio.machines.common.souldata.FarmSoul;
 import com.enderio.machines.common.souldata.SolarSoul;
 import com.enderio.machines.common.souldata.SoulData;
 import com.enderio.machines.common.souldata.SpawnerSoul;
@@ -141,6 +142,10 @@ public class SoulDataProvider implements DataProvider {
         addEngineData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 500, 15, finshedSoulDataConsumer);
         addEngineData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.getSource(), 900, 10, finshedSoulDataConsumer);
 
+        addFarmData(EntityType.BEE, 0.8f, 0, 1, finshedSoulDataConsumer);
+        addFarmData(EntityType.VILLAGER, 1, 0, 1.2f, finshedSoulDataConsumer);
+        addFarmData(EntityType.SNIFFER, 1, 1, 1, finshedSoulDataConsumer);
+
         addSolarData(EntityType.PHANTOM, false, true, null, finshedSoulDataConsumer);
     }
 
@@ -189,6 +194,12 @@ public class SoulDataProvider implements DataProvider {
         EngineSoul.SoulData data = new EngineSoul.SoulData(entityRL, fluidRL, powerpermb, tickpermb);
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data,
                 EngineSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
+    }
+
+    private void addFarmData(EntityType<?> entityType, float bonemeal, int seeds, float power, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
+        ResourceLocation entityRL = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+        FarmSoul.SoulData data = new FarmSoul.SoulData(entityRL, bonemeal, seeds, power);
+        finshedSoulDataConsumer.accept(new FinshedSoulData<>(FarmSoul.CODEC, data, FarmSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
     }
 
     private void addSolarData(EntityType<?> entityType, boolean daytime, boolean nighttime,

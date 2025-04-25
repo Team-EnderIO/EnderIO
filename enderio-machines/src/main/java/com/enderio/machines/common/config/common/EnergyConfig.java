@@ -42,6 +42,8 @@ public class EnergyConfig {
     public final ModConfigSpec.ConfigValue<Double> SOUL_ENGINE_GENERATION;
     public final ModConfigSpec.ConfigValue<Integer> DRAIN_CAPACITY;
     public final ModConfigSpec.ConfigValue<Integer> DRAIN_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> FARM_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> FARM_USAGE;
     public final ModConfigSpec.ConfigValue<Integer> INHIBITOR_CAPACITY;
     public final ModConfigSpec.ConfigValue<Integer> INHIBITOR_USAGE;
     public final ModConfigSpec.ConfigValue<Integer> AVERSION_CAPACITY;
@@ -174,6 +176,11 @@ public class EnergyConfig {
                 .defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
         DRAIN_USAGE = builder.comment("The base energy consumption in uI/t.")
                 .defineInRange("usage", 10, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("farm");
+            FARM_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
+            FARM_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage",  10, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("inhibitor");
