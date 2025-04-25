@@ -50,8 +50,8 @@ dependencies {
     // TODO: Does not start on latest NeoForge
 //    runtimeOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge:$cctVersion")
 
-    //Athena ctm
-    runtimeOnly("maven.modrinth:athena-ctm:${athenaVersion}")
+    // Athena ctm - renamed to "Stitch"
+    runtimeOnly("maven.modrinth:stitch:${athenaVersion}")
 
     // AE2
     runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
