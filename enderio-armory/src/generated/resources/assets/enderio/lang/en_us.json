@@ -26,5 +26,6 @@
   "info.enderio.darksteel.upgrade.spoon.description": "Who needs a shovel when you have a spoon?",
   "info.enderio.durability.amount": "Durability %s",
   "info.enderio.headchance": "%s%% chance to drop a mob head",
-  "item.enderio.dark_steel_sword": "The Ender"
+  "item.enderio.dark_steel_sword": "The Ender",
+  "pack.enderio.experiment.armory_rewrite": "EnderIO: Armory Rewrite"
 }
