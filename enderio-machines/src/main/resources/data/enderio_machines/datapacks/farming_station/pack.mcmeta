@@ -1,0 +1,11 @@
+{
+  "features": {
+    "enabled": [
+      "enderio_machines:farming_station"
+    ]
+  },
+  "pack": {
+    "description": "Enable the Farming Station. This is an unfinished feature and is likely to have issues.",
+    "pack_format": 48
+  }
+}

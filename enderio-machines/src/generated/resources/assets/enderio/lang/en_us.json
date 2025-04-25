@@ -129,6 +129,7 @@
   "gui.enderio.spawner.too_many_spawner": "Too many spawners",
   "gui.enderio.spawner.unknown": "Unknown mob",
   "hint.enderio.connected_textures.text": "If you are looking for connected textures on the capacitor bank, you might want to install Athena on your client",
+  "pack.enderio.experiment.farming_station": "EnderIO: Farming Station",
   "tooltip.enderio.grinding_ball_remaining": "Remaining: %s%%",
   "tooltip.enderio.grinding_ball_title": "SAG Mill Grinding Ball",
   "tooltip.enderio.photovoltaic_cell/advanced": "Produces Power during daylight hours",

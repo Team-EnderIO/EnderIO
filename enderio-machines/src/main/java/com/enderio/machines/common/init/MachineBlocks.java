@@ -269,7 +269,7 @@ public class MachineBlocks {
 
     public static final RegiliteBlock<ProgressMachineBlock> FARMING_STATION = BLOCK_REGISTRY
         .registerBlock("farming_station", properties -> new ProgressMachineBlock(MachineBlockEntities.FARMING_STATION, properties),
-            BlockBehaviour.Properties.of().strength(2.5f, 8))
+            BlockBehaviour.Properties.of().strength(2.5f, 8).requiredFeatures(MachineFeatureFlags.FARMING_STATION))
         .setLootTable(MachinesLootTable::copyComponents)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),

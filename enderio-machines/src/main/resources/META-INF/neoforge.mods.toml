@@ -11,6 +11,7 @@ authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rov
 description="The machines module for Ender IO"
 displayURL="https://enderio.com/"
 logoFile="logo.png"
+featureFlags="META-INF/feature_flags.json"
 
 [[mixins]]
 config="enderio-machines.mixins.json"
