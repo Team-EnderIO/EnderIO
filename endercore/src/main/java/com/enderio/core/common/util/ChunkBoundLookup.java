@@ -84,7 +84,9 @@ public class ChunkBoundLookup<T> {
             addForBlockRadius(centerPos, blockRadius, value);
             return;
         }
-
+        // Copy or else can get a concurrent modification exception if the current
+        // chunks are modified in the update
+        currentChunks = new HashSet<>(currentChunks);
         Set<ChunkPos> newChunks = getBlockRadius(centerPos, blockRadius).collect(Collectors.toSet());
         bulkUpdate(value, currentChunks, newChunks);
     }

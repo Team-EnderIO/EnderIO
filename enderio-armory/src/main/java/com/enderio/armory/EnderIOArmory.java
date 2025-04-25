@@ -26,6 +26,11 @@ import com.enderio.regilite.Regilite;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackSource;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -35,6 +40,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.event.AddPackFindersEvent;
 
 @EventBusSubscriber(modid = EnderIOArmory.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 @Mod(EnderIOArmory.MODULE_MOD_ID)
@@ -90,5 +96,17 @@ public class EnderIOArmory {
         provider.addSubProvider(event.includeServer(), b);
 
         event.getGenerator().addProvider(true, provider);
+    }
+
+    @SubscribeEvent
+    public static void addBuiltInPacks(final AddPackFindersEvent event) {
+        event.addPackFinders(
+            ResourceLocation.fromNamespaceAndPath(MODULE_MOD_ID, "data/enderio_armory/datapacks/armory_rewrite"),
+            PackType.SERVER_DATA,
+            ArmoryLang.ARMORY_REWRITE_EXPERIMENT,
+            PackSource.FEATURE,
+            false,
+            Pack.Position.TOP
+        );
     }
 }

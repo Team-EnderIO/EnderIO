@@ -140,6 +140,8 @@ public class ArmoryLang {
         EnderIOArmory.REGILITE.addTranslation(() -> DS_UPGRADE_FLIGHT_KEYBIND, "Toggles Glider/Elytra Upgrade");
     }
 
+    public static final Component ARMORY_REWRITE_EXPERIMENT = addTranslation("pack", EnderIO.loc("experiment.armory_rewrite"), "EnderIO: Armory Rewrite");
+
     // endregion
 
     private static MutableComponent addTranslation(ResourceLocation id, String translation) {

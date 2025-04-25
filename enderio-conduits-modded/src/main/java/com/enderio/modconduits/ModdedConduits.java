@@ -51,14 +51,10 @@ public class ModdedConduits {
 
     @SubscribeEvent
     public static void onData(GatherDataEvent event) {
-        var pack = event.getGenerator().getVanillaPack(true);
-
-        var datapackEntriesProvider = pack.addProvider(output -> new DatapackBuiltinEntriesProvider(output,
-                event.getLookupProvider(), createDatapackEntriesBuilder(), ModdedConduits::buildConduitConditions,
-                Set.of(EnderIO.NAMESPACE)));
+        event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), ModdedConduits::buildConduitConditions, Set.of(EnderIO.NAMESPACE));
 
         PackOutput packOutput = event.getGenerator().getPackOutput();
-        var registryProvider = datapackEntriesProvider.getRegistryProvider();
+        var registryProvider = event.getLookupProvider();
 
         event.getGenerator()
                 .addProvider(event.includeServer(), new ModConduitRecipeProvider(packOutput, registryProvider));
