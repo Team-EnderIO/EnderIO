@@ -59,6 +59,8 @@ public class ArmoryLang {
     public static final Component DS_UPGRADE_EXPLOSIVE_PENETRATION_DESCRIPTION = addTranslation("info",
         EnderIO.loc("darksteel.upgrade.explosive_penetration.description"), "Makes dirt and rock behind the mined block go splodey");
 
+    public static final Component ARMORY_REWRITE_EXPERIMENT = addTranslation("pack", EnderIO.loc("experiment.armory_rewrite"), "EnderIO: Armory Rewrite");
+
     // endregion
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
