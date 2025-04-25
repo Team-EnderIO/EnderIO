@@ -66,20 +66,18 @@ public class EnderIOConduits {
 
     @SubscribeEvent
     public static void onData(GatherDataEvent event) {
-        var pack = event.getGenerator().getVanillaPack(true);
-        var registries = event.getLookupProvider();
-
-        var datapackEntriesProvider = pack.addProvider(output -> new DatapackBuiltinEntriesProvider(output, registries,
-                createDatapackEntriesBuilder(), Set.of(EnderIO.NAMESPACE, MODULE_MOD_ID)));
+        event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), Set.of(EnderIO.NAMESPACE, MODULE_MOD_ID));
 
         PackOutput packOutput = event.getGenerator().getPackOutput();
+        var registries = event.getLookupProvider();
 
         EIODataProvider provider = new EIODataProvider("conduits");
 
         provider.addSubProvider(event.includeServer(),
                 new ConduitTagProvider(packOutput, registries, event.getExistingFileHelper()));
+
         provider.addSubProvider(event.includeServer(),
-                new ConduitRecipes(packOutput, datapackEntriesProvider.getRegistryProvider()));
+                new ConduitRecipes(packOutput, registries));
 
         event.getGenerator().addProvider(true, provider);
     }
