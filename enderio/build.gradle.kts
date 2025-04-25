@@ -51,7 +51,7 @@ dependencies {
 //    runtimeOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge:$cctVersion")
 
     //Athena ctm
-    runtimeOnly("maven.modrinth:athena-ctm:${athenaVersion}")
+    runtimeOnly("maven.modrinth:stitch:${athenaVersion}")
 
     // AE2
     runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
