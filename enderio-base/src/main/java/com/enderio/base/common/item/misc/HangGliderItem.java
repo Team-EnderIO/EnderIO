@@ -12,7 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class HangGliderItem extends Item implements Equipable {
+public class HangGliderItem extends Item /*implements Equipable*/ {
 
     public HangGliderItem(Properties pProperties) {
         super(pProperties);
@@ -35,7 +35,7 @@ public class HangGliderItem extends Item implements Equipable {
         return super.useOn(pContext);
     }
 
-    @Override
+    /*@Override
     public EquipmentSlot getEquipmentSlot() {
         return EquipmentSlot.CHEST;
     }
@@ -43,5 +43,5 @@ public class HangGliderItem extends Item implements Equipable {
     @Nullable
     public Holder<SoundEvent> getEquipSound() {
         return SoundEvents.ARMOR_EQUIP_LEATHER;
-    }
+    }*/
 }

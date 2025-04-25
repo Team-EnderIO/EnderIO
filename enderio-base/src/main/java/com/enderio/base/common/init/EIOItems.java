@@ -352,7 +352,7 @@ public class EIOItems {
     private static RegiliteItem<HangGliderItem> gliderItem(String name) {
         return dumbItem(name, HangGliderItem::new).addItemTags(EIOTags.Items.GLIDER)
                 .setTab(EIOCreativeTabs.GEAR)
-                .setModelProvider((prov, ctx) -> GliderItemModel.create(ctx.get(), prov));
+                /*.setModelProvider((prov, ctx) -> GliderItemModel.create(ctx.get(), prov))*/;
     }
 
     private static RegiliteItem<MaterialItem> materialItem(String name) {
