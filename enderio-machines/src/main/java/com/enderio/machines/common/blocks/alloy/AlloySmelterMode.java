@@ -1,6 +1,5 @@
 package com.enderio.machines.common.blocks.alloy;
 
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import java.util.function.IntFunction;

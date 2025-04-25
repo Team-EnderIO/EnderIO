@@ -14,7 +14,8 @@ public class MobCaptureTask extends PoweredSpawnerTask {
         super(PoweredSpawnerMode.CAPTURE, blockEntity);
     }
 
-    public MobCaptureTask(PoweredSpawnerBlockEntity blockEntity, int energyCost, EntityType<? extends Entity> entityType, MobSpawnMode spawnMode) {
+    public MobCaptureTask(PoweredSpawnerBlockEntity blockEntity, int energyCost,
+            EntityType<? extends Entity> entityType, MobSpawnMode spawnMode) {
         super(PoweredSpawnerMode.CAPTURE, blockEntity, energyCost, entityType, spawnMode);
     }
 
@@ -53,7 +54,8 @@ public class MobCaptureTask extends PoweredSpawnerTask {
         }
 
         PoweredSpawnerBlockEntity.OUTPUT.setStackInSlot(blockEntity, filledStack);
-        PoweredSpawnerBlockEntity.INPUT.setStackInSlot(blockEntity, inputStack.copyWithCount(inputStack.getCount() - 1));
+        PoweredSpawnerBlockEntity.INPUT.setStackInSlot(blockEntity,
+                inputStack.copyWithCount(inputStack.getCount() - 1));
 
         isComplete = true;
     }

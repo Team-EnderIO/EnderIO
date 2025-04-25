@@ -1,9 +1,9 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.core.EnderCore;
-import com.enderio.machines.common.network.FarmStationSoulPacket;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.network.CycleIOConfigPacket;
+import com.enderio.machines.common.network.FarmStationSoulPacket;
 import com.enderio.machines.common.network.MachinePayloadHandler;
 import com.enderio.machines.common.network.PoweredSpawnerSoulPacket;
 import com.enderio.machines.common.network.SolarSoulPacket;
@@ -39,7 +39,7 @@ public class MachineNetwork {
                 MachinePayloadHandler.Client.getInstance()::handleSoulEngineSoul);
 
         registrar.playToClient(FarmStationSoulPacket.TYPE, FarmStationSoulPacket.STREAM_CODEC,
-            MachinePayloadHandler.Client.getInstance()::handleFarmingStationSoul);
+                MachinePayloadHandler.Client.getInstance()::handleFarmingStationSoul);
         registrar.playToClient(SolarSoulPacket.TYPE, SolarSoulPacket.STREAM_CODEC,
                 MachinePayloadHandler.Client.getInstance()::handleSolarSoul);
 

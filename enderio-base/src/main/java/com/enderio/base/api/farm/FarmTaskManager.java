@@ -2,10 +2,9 @@ package com.enderio.base.api.farm;
 
 import com.enderio.base.api.integration.IntegrationManager;
 import com.google.common.collect.ImmutableList;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class FarmTaskManager {
     private final ArrayList<TaskEntry> tasks = new ArrayList<>();

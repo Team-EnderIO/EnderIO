@@ -9,7 +9,6 @@ import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.particle.RangeParticleData;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
@@ -27,7 +26,6 @@ import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.enderio.machines.common.tag.MachineTags;
 import com.mojang.datafixers.util.Either;
-
 import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
@@ -85,8 +83,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             @Override
             protected @Nullable MachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
                 var task = switch (mode) {
-                    case SPAWN -> new MobSpawnTask(PoweredSpawnerBlockEntity.this);
-                    case CAPTURE -> new MobCaptureTask(PoweredSpawnerBlockEntity.this);
+                case SPAWN -> new MobSpawnTask(PoweredSpawnerBlockEntity.this);
+                case CAPTURE -> new MobCaptureTask(PoweredSpawnerBlockEntity.this);
                 };
 
                 task.deserializeNBT(lookupProvider, nbt);
@@ -227,12 +225,12 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .capacitor()
-            .inputSlot((i, stack) -> stack.is(EIOItems.EMPTY_SOUL_VIAL))
-            .slotAccess(INPUT)
-            .outputSlot()
-            .slotAccess(OUTPUT)
-            .build();
+                .capacitor()
+                .inputSlot((i, stack) -> stack.is(EIOItems.EMPTY_SOUL_VIAL))
+                .slotAccess(INPUT)
+                .outputSlot()
+                .slotAccess(OUTPUT)
+                .build();
     }
 
     @Override
@@ -312,7 +310,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         entityData = StoredEntityData.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
 
         if (pTag.contains(MachineNBTKeys.MACHINE_MODE)) {
-            this.mode = PoweredSpawnerMode.parse(lookupProvider, Objects.requireNonNull(pTag.get(MachineNBTKeys.MACHINE_MODE)));
+            this.mode = PoweredSpawnerMode.parse(lookupProvider,
+                    Objects.requireNonNull(pTag.get(MachineNBTKeys.MACHINE_MODE)));
         }
 
         // TODO: Ender IO 8 - remove support for old attachment loading
@@ -322,7 +321,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             removeData(MachineAttachments.ACTION_RANGE);
         }
 
-        isRangeVisible = pTag.contains(MachineNBTKeys.IS_RANGE_VISIBLE) && pTag.getBoolean(MachineNBTKeys.IS_RANGE_VISIBLE);
+        isRangeVisible = pTag.contains(MachineNBTKeys.IS_RANGE_VISIBLE)
+                && pTag.getBoolean(MachineNBTKeys.IS_RANGE_VISIBLE);
 
         // Load task host last
         taskHost.load(lookupProvider, pTag);

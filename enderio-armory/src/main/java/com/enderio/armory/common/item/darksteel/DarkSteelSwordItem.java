@@ -112,14 +112,14 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
             if (pTarget.isDeadOrDying() && Math.random() < empUp.get().getMobHeadChance()) {
                 Optional<ItemStack> skull = getSkull(pTarget);
                 skull.ifPresent(itemStack -> Containers.dropItemStack(pAttacker.level(), pAttacker.position().x,
-                    pAttacker.position().y, pAttacker.position().z, itemStack));
+                        pAttacker.position().y, pAttacker.position().z, itemStack));
             }
         } else {
             // Temporary head drop logic
             if (pTarget.isDeadOrDying() && pTarget.level().random.nextFloat() < 0.07) {
                 Optional<ItemStack> skull = getSkull(pTarget);
-                skull.ifPresent(
-                    itemStack -> Containers.dropItemStack(pAttacker.level(), pAttacker.position().x, pAttacker.position().y, pAttacker.position().z, itemStack));
+                skull.ifPresent(itemStack -> Containers.dropItemStack(pAttacker.level(), pAttacker.position().x,
+                        pAttacker.position().y, pAttacker.position().z, itemStack));
             }
         }
 
@@ -213,8 +213,8 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         if (player != null) {
             if (player.level().enabledFeatures().contains(ArmoryFeatureFlags.ARMORY_REWRITE)) {
                 Optional<EmpoweredUpgrade> empUp = DarkSteelHelper.getEmpoweredUpgrade(itemStack);
-                empUp.ifPresent(empoweredUpgrade -> tooltips.add(
-                    TooltipUtil.withArgs(ArmoryLang.ENDER_HEAD_DROP_CHANCE, (int) Math.round(empoweredUpgrade.getMobHeadChance() * 100))));
+                empUp.ifPresent(empoweredUpgrade -> tooltips.add(TooltipUtil.withArgs(ArmoryLang.ENDER_HEAD_DROP_CHANCE,
+                        (int) Math.round(empoweredUpgrade.getMobHeadChance() * 100))));
                 empUp.ifPresent(empoweredUpgrade -> tooltips.add(TooltipUtil.style(ArmoryLang.ENDER_BLOCK_TELEPORT)));
                 addDurabilityTooltips(itemStack, tooltips);
                 addCurrentUpgradeTooltips(itemStack, tooltips, true);
@@ -229,7 +229,8 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
     public void addAllVariants(CreativeModeTab.Output modifier) {
         modifier.accept(this);
 
-        // TODO: Temporarily disabled to avoid confusion while locked behind an experiment.
+        // TODO: Temporarily disabled to avoid confusion while locked behind an
+        // experiment.
 //        ItemStack fullyUpgraded = createFullyUpgradedStack(this);
 //        ItemStackEnergy.setFull(fullyUpgraded);
 //        modifier.accept(fullyUpgraded);

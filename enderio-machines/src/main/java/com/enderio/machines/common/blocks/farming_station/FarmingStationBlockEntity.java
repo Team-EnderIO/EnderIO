@@ -12,7 +12,6 @@ import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.attachment.ActionRange;
-import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.attachment.RangedActor;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
@@ -23,13 +22,13 @@ import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineDataComponents;
-import com.enderio.machines.common.io.fluid.FluidItemInteractive;
-import com.enderio.machines.common.io.fluid.MachineFluidHandler;
-import com.enderio.machines.common.io.fluid.MachineFluidTank;
-import com.enderio.machines.common.io.fluid.MachineTankLayout;
-import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.souldata.FarmSoul;
 import com.mojang.authlib.GameProfile;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -38,7 +37,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -49,31 +47,23 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
-import net.neoforged.neoforge.common.FarmlandWaterManager;
 import net.neoforged.neoforge.common.SpecialPlantable;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.ticket.AABBTicket;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-
-
 ;
 
-public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingStation  {
+public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingStation {
     public static final String CONSUMED = "Consumed";
-    private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.FARM_CAPACITY);
-    private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.FARM_USAGE);
+    private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+            MachinesConfig.COMMON.ENERGY.FARM_CAPACITY);
+    private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
+            MachinesConfig.COMMON.ENERGY.FARM_USAGE);
 
     private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);
 
@@ -87,9 +77,9 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     public static final MultiSlotAccess BONEMEAL = new MultiSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
 
-    //TODO One fake player for all? Or one for each machine?
-    public static final FakePlayer FARM_PLAYER = new FakePlayer(
-        ServerLifecycleHooks.getCurrentServer().overworld(), new GameProfile(UUID.fromString("7b2621b4-83fb-11ee-b962-0242ac120002"), "enderio:farm"));
+    // TODO One fake player for all? Or one for each machine?
+    public static final FakePlayer FARM_PLAYER = new FakePlayer(ServerLifecycleHooks.getCurrentServer().overworld(),
+            new GameProfile(UUID.fromString("7b2621b4-83fb-11ee-b962-0242ac120002"), "enderio:farm"));
 
     private List<BlockPos> positions;
     private int currentIndex = 0;
@@ -107,9 +97,9 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     private ActionRange actionRange = DEFAULT_RANGE;
 
-
     public FarmingStationBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.FARMING_STATION.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
+        super(MachineBlockEntities.FARMING_STATION.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+                EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 
     @Override
@@ -136,26 +126,26 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     protected @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .capacitor()
-            .inputSlot((i,s) -> s.is(ItemTags.AXES))
-            .slotAccess(AXE)
-            .inputSlot((i,s) -> s.is(ItemTags.HOES))
-            .slotAccess(HOE)
-            .inputSlot((i,s) -> s.is(Tags.Items.TOOLS_SHEAR))
-            .slotAccess(SHEAR)
-            .inputSlot()
-            .slotAccess(NE)
-            .inputSlot()
-            .slotAccess(SE)
-            .inputSlot()
-            .slotAccess(SW)
-            .inputSlot()
-            .slotAccess(NW)
-            .inputSlot(2, (integer, stack) -> stack.is(EIOTags.Items.FERTILIZERS))
-            .slotAccess(BONEMEAL)
-            .outputSlot(6)
-            .slotAccess(OUTPUT)
-            .build();
+                .capacitor()
+                .inputSlot((i, s) -> s.is(ItemTags.AXES))
+                .slotAccess(AXE)
+                .inputSlot((i, s) -> s.is(ItemTags.HOES))
+                .slotAccess(HOE)
+                .inputSlot((i, s) -> s.is(Tags.Items.TOOLS_SHEAR))
+                .slotAccess(SHEAR)
+                .inputSlot()
+                .slotAccess(NE)
+                .inputSlot()
+                .slotAccess(SE)
+                .inputSlot()
+                .slotAccess(SW)
+                .inputSlot()
+                .slotAccess(NW)
+                .inputSlot(2, (integer, stack) -> stack.is(EIOTags.Items.FERTILIZERS))
+                .slotAccess(BONEMEAL)
+                .outputSlot(6)
+                .slotAccess(OUTPUT)
+                .build();
     }
 
     @Override
@@ -175,7 +165,8 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public void clientTick() {
         if (level.isClientSide && level instanceof ClientLevel clientLevel) {
-            getActionRange().addClientParticle(clientLevel, getParticleLocation(), MachinesConfig.CLIENT.BLOCKS.DRAIN_RANGE_COLOR.get());
+            getActionRange().addClientParticle(clientLevel, getParticleLocation(),
+                    MachinesConfig.CLIENT.BLOCKS.DRAIN_RANGE_COLOR.get());
         }
 
         super.clientTick();
@@ -187,47 +178,47 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             BlockPos soil = positions.get(currentIndex);
             if (currentTask != null) {
                 if (currentTask.farm(soil, this) != FarmInteraction.POWERED) {
-                    currentTask = null; //Task is done or no longer valid
+                    currentTask = null; // Task is done or no longer valid
                 }
                 break;
             }
-            //Look for a new task
-            for (FarmTask task: FarmTaskManager.getTasks()) {
+            // Look for a new task
+            for (FarmTask task : FarmTaskManager.getTasks()) {
                 FarmInteraction interaction = task.farm(soil, this);
-                if (interaction == FarmInteraction.POWERED) { //new task found
+                if (interaction == FarmInteraction.POWERED) { // new task found
                     currentTask = task;
                     break;
                 }
-                if (interaction == FarmInteraction.FINISHED) {//Task found and already done
+                if (interaction == FarmInteraction.FINISHED) {// Task found and already done
                     currentTask = null;
                     break;
                 }
             }
-            //task found
+            // task found
             if (currentTask != null) {
                 break;
             }
             currentIndex++;
         }
 
-        //All positions have been checked, restart
+        // All positions have been checked, restart
         if (stop == positions.size()) {
             currentIndex = 0;
         }
     }
 
-    //TODO check if the coords actually are these direction
+    // TODO check if the coords actually are these direction
     public SingleSlotAccess getSeedForPos(BlockPos soil) {
-        if (soil.getX() >= getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()){
+        if (soil.getX() >= getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()) {
             return SW;
         }
-        if (soil.getX() > getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()){
+        if (soil.getX() > getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()) {
             return NW;
         }
-        if (soil.getX() <= getBlockPos().getX() && soil.getZ() < getBlockPos().getZ()){
+        if (soil.getX() <= getBlockPos().getX() && soil.getZ() < getBlockPos().getZ()) {
             return SE;
         }
-        if (soil.getX() < getBlockPos().getX() && soil.getZ() >= getBlockPos().getZ()){
+        if (soil.getX() < getBlockPos().getX() && soil.getZ() >= getBlockPos().getZ()) {
             return NE;
         }
         return NW;
@@ -238,7 +229,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         if (!canAct()) {
             return false;
         }
-        //TODO Check tool
+        // TODO Check tool
         return currentTask != null;
     }
 
@@ -255,12 +246,14 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     private void updateLocations() {
         positions = new ArrayList<>();
         currentIndex = 0;
-        for (BlockPos pos : BlockPos.betweenClosed(worldPosition.offset(-getRange(),-1, -getRange()), worldPosition.offset(getRange(),-1,getRange()))) {
-            positions.add(pos.immutable()); //Need to make it immutable
+        for (BlockPos pos : BlockPos.betweenClosed(worldPosition.offset(-getRange(), -1, -getRange()),
+                worldPosition.offset(getRange(), -1, getRange()))) {
+            positions.add(pos.immutable()); // Need to make it immutable
         }
     }
 
-    public boolean handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemStack stack) {
+    public boolean handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity,
+            ItemStack stack) {
         ItemStack dummy = stack.copy();
         if (soulData != null) {
             var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
@@ -271,14 +264,16 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         return collectDrops(drops, soil);
     }
 
-    //TODO handle inv full
+    // TODO handle inv full
     public boolean collectDrops(List<ItemStack> drops, @Nullable BlockPos soil) {
         ArrayList<ItemStack> list = new ArrayList<>();
         for (ItemStack drop : drops) {
             if (soil != null) {
                 ItemStack seeds = getSeedForPos(soil).getItemStack(this);
                 if (seeds.isEmpty()) {
-                    if (drop.getItem() instanceof BlockItem || drop.getItem() instanceof SpecialPlantable) { //Collect potential seeds
+                    if (drop.getItem() instanceof BlockItem || drop.getItem() instanceof SpecialPlantable) { // Collect
+                                                                                                             // potential
+                                                                                                             // seeds
                         getSeedForPos(soil).setStackInSlot(this, drop);
                         continue;
                     }
@@ -395,7 +390,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         return getEnergyStorage().consumeEnergy(energy, simulate);
     }
 
-
     @Override
     public void setRemoved() {
         super.setRemoved();
@@ -448,7 +442,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
         if (tag.contains(MachineNBTKeys.ACTION_RANGE)) {
             actionRange = ActionRange.parse(lookupProvider,
-                Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
+                    Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
         } else {
             actionRange = DEFAULT_RANGE;
         }

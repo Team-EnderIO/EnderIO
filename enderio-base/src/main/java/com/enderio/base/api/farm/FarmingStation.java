@@ -1,5 +1,6 @@
 package com.enderio.base.api.farm;
 
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -13,8 +14,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
-
-import java.util.Optional;
 
 public interface FarmingStation {
 
@@ -48,7 +47,8 @@ public interface FarmingStation {
 
     default InteractionResult useStack(BlockPos soil, ItemStack stack) {
         getPlayer().setItemInHand(InteractionHand.MAIN_HAND, stack);
-        UseOnContext context = new UseOnContext(getPlayer(), InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atBottomCenterOf(soil), Direction.UP, soil, false));
+        UseOnContext context = new UseOnContext(getPlayer(), InteractionHand.MAIN_HAND,
+                new BlockHitResult(Vec3.atBottomCenterOf(soil), Direction.UP, soil, false));
         InteractionResult result = stack.useOn(context);
         getPlayer().setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
         return result;

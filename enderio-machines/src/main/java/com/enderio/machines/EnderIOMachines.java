@@ -34,6 +34,8 @@ import com.enderio.machines.data.recipes.TankRecipeProvider;
 import com.enderio.machines.data.souldata.SoulDataProvider;
 import com.enderio.machines.data.tag.MachineEntityTypeTagsProvider;
 import com.enderio.regilite.Regilite;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -54,9 +56,6 @@ import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
-
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 @Mod(EnderIOMachines.MODULE_MOD_ID)
@@ -129,12 +128,8 @@ public class EnderIOMachines {
     @SubscribeEvent
     public static void addBuiltInPacks(final AddPackFindersEvent event) {
         event.addPackFinders(
-            ResourceLocation.fromNamespaceAndPath(MODULE_MOD_ID, "data/enderio_machines/datapacks/farming_station"),
-            PackType.SERVER_DATA,
-            MachineLang.FARMING_STATION_EXPERIMENT,
-            PackSource.FEATURE,
-            false,
-            Pack.Position.TOP
-        );
+                ResourceLocation.fromNamespaceAndPath(MODULE_MOD_ID, "data/enderio_machines/datapacks/farming_station"),
+                PackType.SERVER_DATA, MachineLang.FARMING_STATION_EXPERIMENT, PackSource.FEATURE, false,
+                Pack.Position.TOP);
     }
 }

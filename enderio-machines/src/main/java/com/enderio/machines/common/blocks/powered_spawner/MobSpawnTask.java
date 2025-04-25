@@ -1,6 +1,7 @@
 package com.enderio.machines.common.blocks.powered_spawner;
 
 import com.enderio.machines.common.config.MachinesConfig;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -14,8 +15,6 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 
-import java.util.List;
-
 public class MobSpawnTask extends PoweredSpawnerTask {
 
     private float efficiency = 1;
@@ -24,7 +23,8 @@ public class MobSpawnTask extends PoweredSpawnerTask {
         super(PoweredSpawnerMode.SPAWN, blockEntity);
     }
 
-    public MobSpawnTask(PoweredSpawnerBlockEntity blockEntity, int energyCost, EntityType<? extends Entity> entityType, MobSpawnMode spawnMode) {
+    public MobSpawnTask(PoweredSpawnerBlockEntity blockEntity, int energyCost, EntityType<? extends Entity> entityType,
+            MobSpawnMode spawnMode) {
         super(PoweredSpawnerMode.SPAWN, blockEntity, energyCost, entityType, spawnMode);
     }
 
@@ -43,7 +43,7 @@ public class MobSpawnTask extends PoweredSpawnerTask {
         AABB range = new AABB(blockEntity.getBlockPos()).inflate(blockEntity.getRange());
 
         List<? extends Entity> entities = blockEntity.getLevel()
-            .getEntities(entityType(), range, p -> p instanceof LivingEntity);
+                .getEntities(entityType(), range, p -> p instanceof LivingEntity);
 
         if (entities.size() >= MachinesConfig.COMMON.MAX_SPAWNER_ENTITIES.get()) {
             setBlockedReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.TOO_MANY_MOB);
@@ -51,8 +51,8 @@ public class MobSpawnTask extends PoweredSpawnerTask {
         }
 
         long count = BlockPos.betweenClosedStream(range)
-            .filter(pos -> blockEntity.getLevel().getBlockEntity(pos) instanceof PoweredSpawnerBlockEntity)
-            .count();
+                .filter(pos -> blockEntity.getLevel().getBlockEntity(pos) instanceof PoweredSpawnerBlockEntity)
+                .count();
         if (count >= MachinesConfig.COMMON.MAX_SPAWNERS.get()) {
             this.efficiency = MachinesConfig.COMMON.MAX_SPAWNERS.get() / (float) count;
         }
@@ -73,12 +73,12 @@ public class MobSpawnTask extends PoweredSpawnerTask {
         for (int i = 0; i < MachinesConfig.COMMON.SPAWN_AMOUNT.get(); i++) {
             RandomSource randomsource = level.getRandom();
             double x = pos.getX()
-                + (randomsource.nextDouble() - randomsource.nextDouble()) * (double) this.blockEntity.getRange()
-                + 0.5D;
+                    + (randomsource.nextDouble() - randomsource.nextDouble()) * (double) this.blockEntity.getRange()
+                    + 0.5D;
             double y = pos.getY() + randomsource.nextInt(3) - 1;
             double z = pos.getZ()
-                + (randomsource.nextDouble() - randomsource.nextDouble()) * (double) this.blockEntity.getRange()
-                + 0.5D;
+                    + (randomsource.nextDouble() - randomsource.nextDouble()) * (double) this.blockEntity.getRange()
+                    + 0.5D;
 
             if (level.noCollision(entityType().getSpawnAABB(x, y, z))) {
                 Entity entity = null;
@@ -86,10 +86,10 @@ public class MobSpawnTask extends PoweredSpawnerTask {
                 case COPY -> {
                     // TODO: Stop using BE to get entity tag data...
                     entity = EntityType.loadEntityRecursive(blockEntity.getEntityData().getEntityTag(), level,
-                        entity1 -> {
-                            entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
-                            return entity1;
-                        });
+                            entity1 -> {
+                                entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
+                                return entity1;
+                            });
                 }
                 case NEW -> {
                     // TODO: should we be using the ctor that accepts a position and spawn type etc.
@@ -108,13 +108,13 @@ public class MobSpawnTask extends PoweredSpawnerTask {
 
                 if (entity instanceof Mob mob) { // based on vanilla spawner
                     FinalizeSpawnEvent event = EventHooks.finalizeMobSpawnSpawner(mob, level,
-                        level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, blockEntity, false);
+                            level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, blockEntity, false);
                     if (event.isSpawnCancelled()) {
                         setBlockedReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
                         continue;
                     } else {
                         EventHooks.finalizeMobSpawn(mob, level, event.getDifficulty(), event.getSpawnType(),
-                            event.getSpawnData());
+                                event.getSpawnData());
                     }
                 }
 

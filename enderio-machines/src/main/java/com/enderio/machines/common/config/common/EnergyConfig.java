@@ -179,8 +179,10 @@ public class EnergyConfig {
         builder.pop();
 
         builder.push("farm");
-            FARM_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
-            FARM_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage",  10, 1, Integer.MAX_VALUE);
+        FARM_CAPACITY = builder.comment("The base energy capacity in uI.")
+                .defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
+        FARM_USAGE = builder.comment("The base energy consumption in uI/t.")
+                .defineInRange("usage", 10, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("inhibitor");

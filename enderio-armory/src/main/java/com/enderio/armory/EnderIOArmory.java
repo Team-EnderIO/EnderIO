@@ -26,7 +26,6 @@ import com.enderio.regilite.Regilite;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
@@ -101,12 +100,8 @@ public class EnderIOArmory {
     @SubscribeEvent
     public static void addBuiltInPacks(final AddPackFindersEvent event) {
         event.addPackFinders(
-            ResourceLocation.fromNamespaceAndPath(MODULE_MOD_ID, "data/enderio_armory/datapacks/armory_rewrite"),
-            PackType.SERVER_DATA,
-            ArmoryLang.ARMORY_REWRITE_EXPERIMENT,
-            PackSource.FEATURE,
-            false,
-            Pack.Position.TOP
-        );
+                ResourceLocation.fromNamespaceAndPath(MODULE_MOD_ID, "data/enderio_armory/datapacks/armory_rewrite"),
+                PackType.SERVER_DATA, ArmoryLang.ARMORY_REWRITE_EXPERIMENT, PackSource.FEATURE, false,
+                Pack.Position.TOP);
     }
 }

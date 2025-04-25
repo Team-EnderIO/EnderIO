@@ -5,17 +5,13 @@ import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.recipe.ShapedEntityStorageRecipeBuilder;
-import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
-import com.enderio.machines.common.blocks.base.block.MachineBlock;
 import com.enderio.machines.common.init.MachineBlocks;
-
+import com.enderio.regilite.holder.RegiliteBlock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
-import com.enderio.regilite.holder.RegiliteBlock;
 import net.minecraft.Util;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -468,11 +464,10 @@ public class MachineRecipeProvider extends RecipeProvider {
 
     public void eraseRecipes(RecipeOutput recipeOutput) {
         for (var block : MACHINES) {
-            ShapelessRecipeBuilder
-                .shapeless(RecipeCategory.MISC, block)
-                .requires(block)
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block))
-                .save(recipeOutput, EnderIO.loc("erase_" + block.getId().getPath()));
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, block)
+                    .requires(block)
+                    .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block))
+                    .save(recipeOutput, EnderIO.loc("erase_" + block.getId().getPath()));
         }
     }
 }

@@ -27,7 +27,6 @@ import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.item.tool.TravelStaffItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.data.model.item.GliderItemModel;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
@@ -350,9 +349,8 @@ public class EIOItems {
     // region Builders
 
     private static RegiliteItem<HangGliderItem> gliderItem(String name) {
-        return dumbItem(name, HangGliderItem::new).addItemTags(EIOTags.Items.GLIDER)
-                .setTab(EIOCreativeTabs.GEAR)
-                /*.setModelProvider((prov, ctx) -> GliderItemModel.create(ctx.get(), prov))*/;
+        return dumbItem(name, HangGliderItem::new).addItemTags(EIOTags.Items.GLIDER).setTab(EIOCreativeTabs.GEAR)
+        /* .setModelProvider((prov, ctx) -> GliderItemModel.create(ctx.get(), prov)) */;
     }
 
     private static RegiliteItem<MaterialItem> materialItem(String name) {

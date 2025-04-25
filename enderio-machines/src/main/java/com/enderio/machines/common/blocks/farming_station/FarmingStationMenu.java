@@ -1,7 +1,5 @@
 package com.enderio.machines.common.blocks.farming_station;
 
-import com.enderio.machines.common.blocks.base.fluid.FluidStorageInfo;
-import com.enderio.machines.common.blocks.base.fluid.FluidStorageSyncSlot;
 import com.enderio.machines.common.blocks.base.menu.MachineSlot;
 import com.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -21,7 +19,8 @@ public class FarmingStationMenu extends PoweredMachineMenu<FarmingStationBlockEn
     }
 
     public FarmingStationMenu(int pContainerId, Inventory inventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.FARMING_STATION.get(), pContainerId, inventory,buf, MachineBlockEntities.FARMING_STATION.get());
+        super(MachineMenus.FARMING_STATION.get(), pContainerId, inventory, buf,
+                MachineBlockEntities.FARMING_STATION.get());
         addSlots();
 
     }
@@ -44,10 +43,11 @@ public class FarmingStationMenu extends PoweredMachineMenu<FarmingStationBlockEn
         addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.BONEMEAL.get(1), 116 + 18, 19));
 
         for (int i = 0; i < 6; i++) {
-            addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.OUTPUT.get(i), 107 + 18 * (i % 3), i < 3 ? 44 : 44 + 18));
+            addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.OUTPUT.get(i), 107 + 18 * (i % 3),
+                    i < 3 ? 44 : 44 + 18));
         }
 
-        addPlayerInventorySlots(8,87);
+        addPlayerInventorySlots(8, 87);
     }
 
     public boolean isRangeVisible() {

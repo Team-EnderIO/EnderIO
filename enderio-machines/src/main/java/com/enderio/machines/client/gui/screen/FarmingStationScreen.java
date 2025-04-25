@@ -7,7 +7,6 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
-import com.enderio.machines.client.gui.widget.NewCapacitorEnergyWidget;
 import com.enderio.machines.common.blocks.farming_station.FarmingStationMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -31,21 +30,18 @@ public class FarmingStationScreen extends MachineScreen<FarmingStationMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(new CapacitorEnergyWidget(leftPos + 16, topPos + 14, 9, 45,  menu::getEnergyStorage, menu::isCapacitorInstalled));
+        addRenderableOnly(new CapacitorEnergyWidget(leftPos + 16, topPos + 14, 9, 45, menu::getEnergyStorage,
+                menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 16, topPos + 6 , menu::getRedstoneControl,
-            menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 16, topPos + 6,
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 86, 162, 76);
-        addIOConfigButton(leftPos + imageWidth - 16, topPos + 6 + 16 + 2 , overlay);
+        addIOConfigButton(leftPos + imageWidth - 16, topPos + 6 + 16 + 2, overlay);
 
-        addRenderableWidget(EIOCommonWidgets.createRange(
-            leftPos + imageWidth - 16,
-            topPos + 6 + (16 + 2) * 2,
-            EIOLang.HIDE_RANGE,
-            EIOLang.SHOW_RANGE,
-            menu::isRangeVisible,
-            (ignore) -> handleButtonPress(FarmingStationMenu.VISIBILITY_BUTTON_ID)));
+        addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 16, topPos + 6 + (16 + 2) * 2,
+                EIOLang.HIDE_RANGE, EIOLang.SHOW_RANGE, menu::isRangeVisible,
+                (ignore) -> handleButtonPress(FarmingStationMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableOnly(new ActivityWidget(leftPos + imageWidth - 16, topPos + 62, menu::getMachineStates, false));
 

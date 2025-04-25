@@ -67,5 +67,6 @@ public interface Integration {
         return false;
     }
 
-    default void registerFarmTasks(FarmTaskManager manager) {}
+    default void registerFarmTasks(FarmTaskManager manager) {
+    }
 }

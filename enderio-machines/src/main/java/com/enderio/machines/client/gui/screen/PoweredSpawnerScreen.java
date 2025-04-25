@@ -3,23 +3,17 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.client.gui.widget.EIOCommonWidgets;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
-import com.enderio.base.common.lang.EIOEnumLang;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
-import com.enderio.machines.client.gui.widget.AlloySmelterModeWidget;
-import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.NewCapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.NewProgressWidget;
 import com.enderio.machines.client.gui.widget.PoweredSpawnerModeWidget;
 import com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerMenu;
-
-import java.util.Objects;
-import java.util.Optional;
-
-import com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerMode;
 import com.enderio.machines.common.lang.MachineEnumLang;
 import com.enderio.machines.common.lang.MachineLang;
+import java.util.Objects;
+import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -29,13 +23,16 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
 
-    public static final ResourceLocation BG_TEXTURE_SPAWN = EnderIO.loc("textures/gui/screen/powered_spawner_spawn.png");
-    public static final ResourceLocation BG_TEXTURE_CAPTURE = EnderIO.loc("textures/gui/screen/powered_spawner_capture.png");
+    public static final ResourceLocation BG_TEXTURE_SPAWN = EnderIO
+            .loc("textures/gui/screen/powered_spawner_spawn.png");
+    public static final ResourceLocation BG_TEXTURE_CAPTURE = EnderIO
+            .loc("textures/gui/screen/powered_spawner_capture.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 187;
 
     private static final ResourceLocation SPAWN_PROGRESS_SPRITE = EnderIO.loc("screen/powered_spawner/spawn_progress");
-    private static final ResourceLocation CAPTURE_PROGRESS_SPRITE = EnderIO.loc("screen/powered_spawner/capture_progress");
+    private static final ResourceLocation CAPTURE_PROGRESS_SPRITE = EnderIO
+            .loc("screen/powered_spawner/capture_progress");
 
     private NewProgressWidget spawnProgress;
     private NewProgressWidget captureProgress;
@@ -57,28 +54,29 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
         super.init();
         centerAlignTitleLabelX();
 
-        addRenderableOnly(new NewCapacitorEnergyWidget(7 + leftPos, 6 + topPos, menu::getEnergyStorage, menu::isCapacitorInstalled));
+        addRenderableOnly(new NewCapacitorEnergyWidget(7 + leftPos, 6 + topPos, menu::getEnergyStorage,
+                menu::isCapacitorInstalled));
 
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
                 menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 6 + (16 + 2), EIOLang.HIDE_RANGE,
-                EIOLang.SHOW_RANGE, menu::isRangeVisible,
+        addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 6 + (16 + 2),
+                EIOLang.HIDE_RANGE, EIOLang.SHOW_RANGE, menu::isRangeVisible,
                 (ignored) -> handleButtonPress(PoweredSpawnerMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(new PoweredSpawnerModeWidget(leftPos + imageWidth - 6 - 16 - 18, topPos + 6, menu::getMode,
-            menu::setMode, MachineLang.POWERED_SPAWNER_MODE));
+                menu::setMode, MachineLang.POWERED_SPAWNER_MODE));
 
         addRenderableWidget(new ActivityWidget(152 + leftPos, 68 + topPos, menu::getMachineStates));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 93, 162, 87);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 6 + (16 + 2) * 2, overlay);
 
-        spawnProgress = addRenderableOnly(NewProgressWidget.bottomUp(leftPos + 82, topPos + 38, 14, 14, SPAWN_PROGRESS_SPRITE,
-            menu::getSpawnProgress, true));
+        spawnProgress = addRenderableOnly(NewProgressWidget.bottomUp(leftPos + 82, topPos + 38, 14, 14,
+                SPAWN_PROGRESS_SPRITE, menu::getSpawnProgress, true));
 
-        captureProgress = addRenderableOnly(NewProgressWidget.leftRight(leftPos + 75, topPos + 43, 24, 16, CAPTURE_PROGRESS_SPRITE,
-            menu::getSpawnProgress, true));
+        captureProgress = addRenderableOnly(NewProgressWidget.leftRight(leftPos + 75, topPos + 43, 24, 16,
+                CAPTURE_PROGRESS_SPRITE, menu::getSpawnProgress, true));
     }
 
     @Override
@@ -104,8 +102,8 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
 
     private ResourceLocation getBackgroundTexture() {
         return switch (menu.getMode()) {
-            case SPAWN -> BG_TEXTURE_SPAWN;
-            case CAPTURE -> BG_TEXTURE_CAPTURE;
+        case SPAWN -> BG_TEXTURE_SPAWN;
+        case CAPTURE -> BG_TEXTURE_CAPTURE;
         };
     }
 

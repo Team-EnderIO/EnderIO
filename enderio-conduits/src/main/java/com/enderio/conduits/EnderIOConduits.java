@@ -25,7 +25,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
@@ -76,8 +75,7 @@ public class EnderIOConduits {
         provider.addSubProvider(event.includeServer(),
                 new ConduitTagProvider(packOutput, registries, event.getExistingFileHelper()));
 
-        provider.addSubProvider(event.includeServer(),
-                new ConduitRecipes(packOutput, registries));
+        provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, registries));
 
         event.getGenerator().addProvider(true, provider);
     }

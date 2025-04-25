@@ -2,6 +2,7 @@ package com.enderio.machines.common.blocks.powered_spawner;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import java.util.function.IntFunction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -10,16 +11,14 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 
-import java.util.function.IntFunction;
-
 public enum PoweredSpawnerMode implements StringRepresentable {
-    SPAWN(0, "spawn"),
-    CAPTURE(1, "capture");
+    SPAWN(0, "spawn"), CAPTURE(1, "capture");
 
     public static final Codec<PoweredSpawnerMode> CODEC = StringRepresentable.fromEnum(PoweredSpawnerMode::values);
     public static final IntFunction<PoweredSpawnerMode> BY_ID = ByIdMap.continuous(key -> key.id, values(),
-        ByIdMap.OutOfBoundsStrategy.ZERO);
-    public static final StreamCodec<ByteBuf, PoweredSpawnerMode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
+            ByIdMap.OutOfBoundsStrategy.ZERO);
+    public static final StreamCodec<ByteBuf, PoweredSpawnerMode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID,
+            v -> v.id);
 
     private final int id;
     private final String name;

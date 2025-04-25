@@ -11,9 +11,6 @@ import com.enderio.machines.common.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class PoweredSpawnerMenu extends PoweredMachineMenu<PoweredSpawnerBlockEntity> {
 
@@ -28,7 +25,7 @@ public class PoweredSpawnerMenu extends PoweredMachineMenu<PoweredSpawnerBlockEn
 
         spawnProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getSpawnProgress));
         modeSlot = addUpdatableSyncSlot(
-            EnumSyncSlot.simple(PoweredSpawnerMode.class, blockEntity::getMode, blockEntity::setMode));
+                EnumSyncSlot.simple(PoweredSpawnerMode.class, blockEntity::getMode, blockEntity::setMode));
     }
 
     public PoweredSpawnerMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {

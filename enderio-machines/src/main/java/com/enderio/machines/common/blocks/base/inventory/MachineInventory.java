@@ -2,9 +2,8 @@ package com.enderio.machines.common.blocks.base.inventory;
 
 import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.machines.common.blocks.base.state.MachineState;
-import java.util.function.IntConsumer;
-
 import com.mojang.logging.LogUtils;
+import java.util.function.IntConsumer;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -125,8 +124,10 @@ public class MachineInventory extends ItemStackHandler {
     }
 
     // Custom deserialize method that ignores the Size value in the tag.
-    // This is because if we changed the size of the inventory, it'd load it with the old size.
-    // For backward compatibility, we use the original serialize method that writes the Size.
+    // This is because if we changed the size of the inventory, it'd load it with
+    // the old size.
+    // For backward compatibility, we use the original serialize method that writes
+    // the Size.
     // TODO: Ender IO 8 - Look at this again.
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {

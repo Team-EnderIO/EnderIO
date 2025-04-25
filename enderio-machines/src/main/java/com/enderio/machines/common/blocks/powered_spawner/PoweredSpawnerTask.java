@@ -2,14 +2,13 @@ package com.enderio.machines.common.blocks.powered_spawner;
 
 import com.enderio.machines.common.blocks.base.task.PoweredMachineTask;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
+import java.util.Objects;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-
-import java.util.Objects;
 
 public abstract class PoweredSpawnerTask implements PoweredMachineTask {
     // Used to determine if task should cancel
@@ -32,7 +31,8 @@ public abstract class PoweredSpawnerTask implements PoweredMachineTask {
         this.blockEntity = blockEntity;
     }
 
-    public PoweredSpawnerTask(PoweredSpawnerMode spawnerMode, PoweredSpawnerBlockEntity blockEntity, int energyCost, EntityType<? extends Entity> entityType, MobSpawnMode spawnMode) {
+    public PoweredSpawnerTask(PoweredSpawnerMode spawnerMode, PoweredSpawnerBlockEntity blockEntity, int energyCost,
+            EntityType<? extends Entity> entityType, MobSpawnMode spawnMode) {
         this.spawnerMode = spawnerMode;
         if (energyCost <= 0) {
             throw new IllegalArgumentException("Energy cost must be greater than 0");
@@ -92,7 +92,8 @@ public abstract class PoweredSpawnerTask implements PoweredMachineTask {
         return energyConsumed / (float) energyCost;
     }
 
-    // Serialization functions are final to prevent adding extra data in subclasses by accident
+    // Serialization functions are final to prevent adding extra data in subclasses
+    // by accident
     // Tread carefully :)
 
     @Override
