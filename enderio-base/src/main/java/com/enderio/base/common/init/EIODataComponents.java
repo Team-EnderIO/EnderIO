@@ -69,6 +69,9 @@ public class EIODataComponents {
                     builder -> builder.persistent(EntityFilterCapability.Component.CODEC)
                             .networkSynchronized(EntityFilterCapability.Component.STREAM_CODEC));
 
+    public static Supplier<DataComponentType<Boolean>> TRAVEL_ITEM = DATA_COMPONENT_TYPES.registerComponentType(
+            "travel_item", builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+
     public static void register(IEventBus bus) {
         DATA_COMPONENT_TYPES.register(bus);
     }

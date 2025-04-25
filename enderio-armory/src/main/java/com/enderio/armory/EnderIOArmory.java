@@ -1,20 +1,30 @@
 package com.enderio.armory;
 
 import com.enderio.armory.common.config.ArmoryConfig;
+import com.enderio.armory.common.config.ArmoryConfigLang;
+import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.init.ArmoryLootModifiers;
 import com.enderio.armory.common.init.ArmoryRecipes;
+import com.enderio.armory.common.item.darksteel.AnvilRecipeHandler;
+import com.enderio.armory.common.item.darksteel.DarkSteelSwordItem;
+import com.enderio.armory.common.item.darksteel.upgrades.StepAssistUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.flight.GliderIntegration;
+import com.enderio.armory.common.item.darksteel.upgrades.jump.JumpUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisionHandler;
+import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgradeHandler;
+import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.armory.data.loot.ArmoryLootModifiersProvider;
 import com.enderio.armory.data.recipe.ItemRecipeProvider;
 import com.enderio.armory.data.tags.ArmoryBlockTagsProvider;
 import com.enderio.base.api.EnderIO;
+import com.enderio.base.api.integration.IntegrationManager;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.regilite.Regilite;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +37,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
@@ -43,21 +54,35 @@ public class EnderIOArmory {
         // Register config files
         modContainer.registerConfig(ModConfig.Type.COMMON, ArmoryConfig.COMMON_SPEC, "enderio/armory-common.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, ArmoryConfig.CLIENT_SPEC, "enderio/armory-client.toml");
+        ArmoryConfigLang.register();
 
         // Perform initialization and registration for everything so things are
         // registered.
         ArmoryItems.register(modEventBus);
         ArmoryRecipes.register(modEventBus);
         ArmoryLootModifiers.register(modEventBus);
+        ArmoryDataComponents.register(modEventBus);
         ArmoryTags.register();
         ArmoryLang.register();
 
         REGILITE.register(modEventBus);
+
+        // Specific event listeners
+        NeoForge.EVENT_BUS.addListener(DarkSteelSwordItem::onEntityTeleport);
+        NeoForge.EVENT_BUS.addListener(DarkSteelSwordItem::applyAttackModifiers);
+        NeoForge.EVENT_BUS.addListener(StepAssistUpgrade::applyStepHeightModifiers);
+        NeoForge.EVENT_BUS.addListener(SpeedUpgrade::applySpeedModifiers);
+        NeoForge.EVENT_BUS.addListener(SpeedUpgrade::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(JumpUpgrade::doExtraJumps);
+        NeoForge.EVENT_BUS.addListener(AnvilRecipeHandler::handleAnvilRecipe);
+        NeoForge.EVENT_BUS.addListener(NightVisionHandler.INST::updateEffect);
+        NeoForge.EVENT_BUS.addListener(SolarUpgradeHandler::onPlayerTick);
+
+        IntegrationManager.addIntegration(GliderIntegration.INSTANCE);
     }
 
     @SubscribeEvent
     public static void onGatherData(GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
         PackOutput packOutput = event.getGenerator().getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:dark_steel_upgrade_blank"
+    },
+    {
+      "item": "enderio:iron_gear"
+    },
+    {
+      "item": "minecraft:piston"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:dark_steel_upgrade_jump_1"
+  }
+}
