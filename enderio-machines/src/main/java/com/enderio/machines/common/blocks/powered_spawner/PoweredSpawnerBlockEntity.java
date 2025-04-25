@@ -7,11 +7,14 @@ import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.particle.RangeParticleData;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
+import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
 import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.blocks.base.state.MachineStateType;
 import com.enderio.machines.common.blocks.base.task.MachineTask;
@@ -21,11 +24,16 @@ import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.lang.MachineLang;
+import com.enderio.machines.common.souldata.SpawnerSoul;
+import com.enderio.machines.common.tag.MachineTags;
 import com.mojang.datafixers.util.Either;
+
+import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -41,15 +49,19 @@ import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.extensions.IOwnedSpawner;
 import org.jetbrains.annotations.Nullable;
 
-// TODO: I want to revisit the powered spawner and task
-//       But there's not enough time before alpha, so just porting as-is.
 public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IOwnedSpawner {
+
+    public static final SingleSlotAccess INPUT = new SingleSlotAccess();
+    public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
     public static final ResourceLocation NO_MOB = EnderIO.loc("no_mob");
+
+    private static final PoweredSpawnerMode DEFAULT_MODE = PoweredSpawnerMode.SPAWN;
+    private PoweredSpawnerMode mode = DEFAULT_MODE;
 
     // TODO: Config value?
     public static final int ACTION_RANGE = 4;
@@ -67,18 +79,84 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
             @Override
             protected @Nullable MachineTask getNewTask() {
-                return createTask();
+                return createNewTask();
             }
 
             @Override
             protected @Nullable MachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-                SpawnerMachineTask task = createTask();
+                var task = switch (mode) {
+                    case SPAWN -> new MobSpawnTask(PoweredSpawnerBlockEntity.this);
+                    case CAPTURE -> new MobCaptureTask(PoweredSpawnerBlockEntity.this);
+                };
+
                 task.deserializeNBT(lookupProvider, nbt);
+
                 return task;
             }
         };
 
         updateMachineState(new MachineState(MachineStateType.ERROR, this.reason.component), false);
+    }
+
+    public PoweredSpawnerMode getMode() {
+        return mode;
+    }
+
+    public void setMode(PoweredSpawnerMode mode) {
+        this.mode = mode;
+
+        if (level != null && !level.isClientSide()) {
+            taskHost.newTaskAvailable();
+        }
+    }
+
+    @Nullable
+    private PoweredSpawnerTask createNewTask() {
+        // Ensure we have a valid entity type.
+        if (getEntityType().isEmpty()) {
+            setReason(SpawnerBlockedReason.UNKNOWN_MOB);
+            return null;
+        }
+
+        var entityTypeOpt = BuiltInRegistries.ENTITY_TYPE.getOptional(getEntityType().get());
+        if (entityTypeOpt.isEmpty()) {
+            setReason(SpawnerBlockedReason.UNKNOWN_MOB);
+            return null;
+        }
+
+        if (entityTypeOpt.get().is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
+            setReason(SpawnerBlockedReason.DISABLED);
+            return null;
+        }
+
+        // Ensure output is free in capture mode
+        if (mode == PoweredSpawnerMode.CAPTURE) {
+            if (!INPUT.getItemStack(this).is(EIOItems.EMPTY_SOUL_VIAL)) {
+                setReason(SpawnerBlockedReason.INPUT_EMPTY);
+                return null;
+            }
+
+            if (!OUTPUT.getItemStack(this).isEmpty()) {
+                setReason(SpawnerBlockedReason.OUTPUT_FULL);
+                return null;
+            }
+        }
+
+        // Gather spawn data
+        int energyCost = MachinesConfig.COMMON.DEFAULT_SPAWN_ENERGY_COST.get();
+        MobSpawnMode spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
+
+        var spawnDataOpt = SpawnerSoul.SPAWNER.matches(getEntityType().get());
+        if (spawnDataOpt.isPresent()) {
+            var data = spawnDataOpt.get();
+            energyCost = data.power();
+            spawnType = data.spawnType();
+        }
+
+        return switch (mode) {
+        case SPAWN -> new MobSpawnTask(this, energyCost, entityTypeOpt.get(), spawnType);
+        case CAPTURE -> new MobCaptureTask(this, energyCost, entityTypeOpt.get(), spawnType);
+        };
     }
 
     @Nullable
@@ -111,6 +189,13 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
         if (canAct()) {
             taskHost.tick();
+
+            // Blocked reason is powered by the task when one is running
+            if (taskHost.hasTask()) {
+                if (taskHost.getCurrentTask() instanceof PoweredSpawnerTask poweredSpawnerTask) {
+                    setReason(poweredSpawnerTask.getBlockedReason());
+                }
+            }
         }
     }
 
@@ -141,7 +226,13 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder().capacitor().build();
+        return MachineInventoryLayout.builder()
+            .capacitor()
+            .inputSlot((i, stack) -> stack.is(EIOItems.EMPTY_SOUL_VIAL))
+            .slotAccess(INPUT)
+            .outputSlot()
+            .slotAccess(OUTPUT)
+            .build();
     }
 
     @Override
@@ -163,10 +254,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         return canAct() && hasEnergy() && taskHost.hasTask();
     }
 
-    private SpawnerMachineTask createTask() {
-        return new SpawnerMachineTask(this, this.getEnergyStorage(), this.getEntityType().orElse(null));
-    }
-
     // endregion
 
     public Optional<ResourceLocation> getEntityType() {
@@ -181,9 +268,16 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         return entityData;
     }
 
-    public void setReason(SpawnerBlockedReason reason) {
-        updateMachineState(new MachineState(MachineStateType.ERROR, this.reason.component), false);
-        updateMachineState(new MachineState(MachineStateType.ERROR, reason.component), true);
+    // TODO: I want a better way to handle this, but unsure what that could be.
+    private void setReason(SpawnerBlockedReason reason) {
+        if (this.reason != SpawnerBlockedReason.NONE) {
+            updateMachineState(new MachineState(MachineStateType.ERROR, this.reason.component), false);
+        }
+
+        if (reason != SpawnerBlockedReason.NONE) {
+            updateMachineState(new MachineState(MachineStateType.ERROR, reason.component), true);
+        }
+
         this.reason = reason;
     }
 
@@ -203,6 +297,10 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         // future :)
         tag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(registries));
 
+        if (mode != DEFAULT_MODE) {
+            tag.put(MachineNBTKeys.MACHINE_MODE, mode.save(registries));
+        }
+
         if (isRangeVisible) {
             tag.putBoolean(MachineNBTKeys.IS_RANGE_VISIBLE, isRangeVisible);
         }
@@ -212,7 +310,10 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         super.loadAdditional(pTag, lookupProvider);
         entityData = StoredEntityData.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
-        taskHost.load(lookupProvider, pTag);
+
+        if (pTag.contains(MachineNBTKeys.MACHINE_MODE)) {
+            this.mode = PoweredSpawnerMode.parse(lookupProvider, Objects.requireNonNull(pTag.get(MachineNBTKeys.MACHINE_MODE)));
+        }
 
         // TODO: Ender IO 8 - remove support for old attachment loading
         if (hasData(MachineAttachments.ACTION_RANGE)) {
@@ -222,6 +323,9 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         }
 
         isRangeVisible = pTag.contains(MachineNBTKeys.IS_RANGE_VISIBLE) && pTag.getBoolean(MachineNBTKeys.IS_RANGE_VISIBLE);
+
+        // Load task host last
+        taskHost.load(lookupProvider, pTag);
     }
 
     @Override
@@ -267,6 +371,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     public enum SpawnerBlockedReason {
         TOO_MANY_MOB(MachineLang.TOO_MANY_MOB), TOO_MANY_SPAWNER(MachineLang.TOO_MANY_SPAWNER),
         UNKNOWN_MOB(MachineLang.UNKNOWN), OTHER_MOD(MachineLang.OTHER_MOD), DISABLED(MachineLang.DISABLED),
+        INPUT_EMPTY(MachineLang.TOOLTIP_INPUT_EMPTY), OUTPUT_FULL(MachineLang.TOOLTIP_OUTPUT_FULL),
         NONE(Component.literal("NONE"));
 
         private final MutableComponent component;

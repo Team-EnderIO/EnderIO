@@ -34,9 +34,6 @@ public enum AlloySmelterMode implements StringRepresentable {
             ByIdMap.OutOfBoundsStrategy.ZERO);
     public static final StreamCodec<ByteBuf, AlloySmelterMode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
 
-    public static final NetworkDataSlot.CodecType<AlloySmelterMode> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(
-            AlloySmelterMode.CODEC, AlloySmelterMode.STREAM_CODEC.cast());
-
     private final int id;
     private final String name;
     private final boolean canAlloy;
