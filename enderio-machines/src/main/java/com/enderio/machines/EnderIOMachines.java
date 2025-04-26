@@ -131,5 +131,10 @@ public class EnderIOMachines {
                 ResourceLocation.fromNamespaceAndPath(MODULE_MOD_ID, "data/enderio_machines/datapacks/farming_station"),
                 PackType.SERVER_DATA, MachineLang.FARMING_STATION_EXPERIMENT, PackSource.FEATURE, false,
                 Pack.Position.TOP);
+
+        event.addPackFinders(
+                ResourceLocation.fromNamespaceAndPath(MODULE_MOD_ID, "data/enderio_machines/datapacks/enderface"),
+                PackType.SERVER_DATA, MachineLang.ENDERFACE_EXPERIMENT, PackSource.FEATURE, false,
+                Pack.Position.TOP);
     }
 }
