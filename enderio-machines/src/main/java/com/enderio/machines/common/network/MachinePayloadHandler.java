@@ -2,6 +2,7 @@ package com.enderio.machines.common.network;
 
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.blocks.crafter.CrafterMenu;
+import com.enderio.machines.common.blocks.enderface.EnderfaceBlockEntity;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.FarmSoul;
 import com.enderio.machines.common.souldata.SolarSoul;
@@ -58,6 +59,17 @@ public class MachinePayloadHandler {
 
                 if (be instanceof MachineBlockEntity machineBlockEntity) {
                     machineBlockEntity.cycleIOMode(packet.side());
+                }
+            });
+        }
+
+        public void handleEnderfaceInteract(EnderfaceInteractPacket packet, IPayloadContext context) {
+            context.enqueueWork(() -> {
+                var pos = packet.getHitResult().getBlockPos();
+                var level = context.player().level();
+                if (EnderfaceBlockEntity.canPlayerInteractWithBlock(context.player(), level, pos)) {
+                    var state = level.getBlockState(pos);
+                    state.useWithoutItem(level, context.player(), packet.getHitResult());
                 }
             });
         }

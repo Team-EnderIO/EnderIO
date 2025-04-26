@@ -13,6 +13,7 @@ public class MachinesCommonConfig {
     public final ModConfigSpec.ConfigValue<Integer> DEFAULT_SPAWN_ENERGY_COST;
     public final ModConfigSpec.ConfigValue<MobSpawnMode> SPAWN_TYPE;
     public final ModConfigSpec.IntValue SPAWN_AMOUNT;
+    public final ModConfigSpec.IntValue ENDERFACE_RANGE;
 
     public MachinesCommonConfig(ModConfigSpec.Builder builder) {
         ENERGY = new EnergyConfig(builder);
@@ -41,6 +42,11 @@ public class MachinesCommonConfig {
         DEFAULT_SPAWN_ENERGY_COST = builder
                 .comment("The amount of energy used to spawn mobs that do not have custom spawner soul data.")
                 .defineInRange("defaultSpawnEnergyCost", 50000, 0, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("enderface");
+        ENDERFACE_RANGE = builder.comment("Maximum distance from which an Ender IO can interact with blocks")
+            .defineInRange("enderIoRange", 8, 1, 20);
         builder.pop();
     }
 }

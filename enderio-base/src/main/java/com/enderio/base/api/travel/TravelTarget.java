@@ -6,6 +6,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public interface TravelTarget {
     Codec<TravelTarget> CODEC = EnderIORegistries.TRAVEL_TARGET_SERIALIZERS.byNameCodec()
@@ -41,6 +43,21 @@ public interface TravelTarget {
      */
     default boolean canJumpTo() {
         return canTravelTo();
+    }
+
+    /**
+     * @return Whether the target can have a special action performed from long distances.
+     */
+    default boolean canPerformSpecialAction() {
+        return false;
+    }
+
+    /**
+     * Execute a special action.
+     * @return true if action was successful
+     */
+    default boolean executeSpecialAction(Level level, Player player) {
+        return false;
     }
 
     TravelTargetType<?> type();

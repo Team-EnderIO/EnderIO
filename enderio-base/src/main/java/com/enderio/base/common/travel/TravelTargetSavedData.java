@@ -64,7 +64,7 @@ public class TravelTargetSavedData extends SavedData {
 
     public Stream<TravelTarget> getTravelTargetsInItemRange(BlockPos center) {
         return travelTargets.entrySet().stream().
-                filter(entry -> center.distSqr(entry.getKey()) < entry.getValue().item2BlockRange()*entry.getValue().item2BlockRange())
+                filter(entry -> entry.getValue().item2BlockRange() == Integer.MAX_VALUE || center.distSqr(entry.getKey()) < entry.getValue().item2BlockRange()*entry.getValue().item2BlockRange())
             .map(Map.Entry::getValue);
     }
 

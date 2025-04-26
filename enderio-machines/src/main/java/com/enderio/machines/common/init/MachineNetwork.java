@@ -3,6 +3,7 @@ package com.enderio.machines.common.init;
 import com.enderio.core.EnderCore;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.network.CycleIOConfigPacket;
+import com.enderio.machines.common.network.EnderfaceInteractPacket;
 import com.enderio.machines.common.network.FarmStationSoulPacket;
 import com.enderio.machines.common.network.MachinePayloadHandler;
 import com.enderio.machines.common.network.PoweredSpawnerSoulPacket;
@@ -48,5 +49,8 @@ public class MachineNetwork {
 
         registrar.playToServer(CycleIOConfigPacket.TYPE, CycleIOConfigPacket.STREAM_CODEC,
                 MachinePayloadHandler.Server.getInstance()::handleCycleIOConfigPacket);
+
+        registrar.playToServer(EnderfaceInteractPacket.TYPE, EnderfaceInteractPacket.STREAM_CODEC,
+            MachinePayloadHandler.Server.getInstance()::handleEnderfaceInteract);
     }
 }
