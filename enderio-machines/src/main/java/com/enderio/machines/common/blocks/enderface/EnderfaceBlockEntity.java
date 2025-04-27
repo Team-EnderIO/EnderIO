@@ -2,6 +2,7 @@ package com.enderio.machines.common.blocks.enderface;
 
 import com.enderio.base.api.travel.TravelTarget;
 import com.enderio.base.api.travel.TravelTargetApi;
+import com.enderio.base.common.block.EIOBlockEntity;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
@@ -21,7 +22,7 @@ import net.minecraft.world.level.chunk.status.ChunkStatus;
 
 import java.util.Optional;
 
-public class EnderfaceBlockEntity extends EnderBlockEntity {
+public class EnderfaceBlockEntity extends EIOBlockEntity {
     private float lastUiPitch = -45;
     private float lastUiYaw = 45;
     private float lastUiDistance = 10;

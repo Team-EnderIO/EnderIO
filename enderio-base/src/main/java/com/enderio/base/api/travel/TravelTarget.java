@@ -8,6 +8,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.ApiStatus;
 
 public interface TravelTarget {
     Codec<TravelTarget> CODEC = EnderIORegistries.TRAVEL_TARGET_SERIALIZERS.byNameCodec()
@@ -46,17 +47,21 @@ public interface TravelTarget {
     }
 
     /**
-     * @return Whether the target can have a special action performed from long distances.
+     * @apiNote This method is internal, as it is used for an unreleased feature. It is not intended for use by other mods yet, as it will change.
+     * @return Whether the target has a special remote interaction.
      */
-    default boolean canPerformSpecialAction() {
+    @ApiStatus.Internal
+    default boolean canInteract() {
         return false;
     }
 
     /**
-     * Execute a special action.
+     * Interact with the target remotely.
+     * @apiNote This method is internal, as it is used for an unreleased feature. It is not intended for use by other mods yet, as it will change.
      * @return true if action was successful
      */
-    default boolean executeSpecialAction(Level level, Player player) {
+    @ApiStatus.Internal
+    default boolean interact(Level level, Player player) {
         return false;
     }
 

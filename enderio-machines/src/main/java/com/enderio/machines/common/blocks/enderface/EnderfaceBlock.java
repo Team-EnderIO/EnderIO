@@ -1,24 +1,30 @@
 package com.enderio.machines.common.blocks.enderface;
 
 import com.enderio.base.api.travel.TravelTargetApi;
+import com.enderio.base.common.block.EIOBlockEntity;
+import com.enderio.base.common.block.EIOEntityBlock;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class EnderfaceBlock extends Block implements EntityBlock {
+public class EnderfaceBlock extends EIOEntityBlock<EnderfaceBlockEntity> {
     private static final MapCodec<EnderfaceBlock> CODEC = simpleCodec(EnderfaceBlock::new);
 
     public EnderfaceBlock(Properties properties) {
-        super(properties);
+        super(MachineBlockEntities.ENDERFACE::get, properties);
     }
 
     @Override
-    protected MapCodec<? extends Block> codec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
@@ -29,10 +35,5 @@ public class EnderfaceBlock extends Block implements EntityBlock {
         }
 
         super.onRemove(state, level, pos, newState, movedByPiston);
-    }
-
-    @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new EnderfaceBlockEntity(pos, state);
     }
 }

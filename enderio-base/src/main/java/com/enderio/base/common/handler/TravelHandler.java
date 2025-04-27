@@ -102,9 +102,9 @@ public class TravelHandler {
                 .isPresent();
     }
 
-    public static boolean specialAction(Level level, Player player) {
-        return getSpecialActionTarget(player)
-            .filter(iTravelTarget -> specialActionOnTarget(level, player, iTravelTarget))
+    public static boolean interact(Level level, Player player) {
+        return getInteractionTarget(player)
+            .filter(iTravelTarget -> interactWithTarget(level, player, iTravelTarget))
             .isPresent();
     }
 
@@ -142,8 +142,8 @@ public class TravelHandler {
         return false;
     }
 
-    private static boolean specialActionOnTarget(Level level, Player player, TravelTarget target) {
-        return target.executeSpecialAction(level, player);
+    private static boolean interactWithTarget(Level level, Player player, TravelTarget target) {
+        return target.interact(level, player);
     }
 
     public static Optional<Vec3> teleportPosition(Level level, Player player) {
@@ -238,11 +238,11 @@ public class TravelHandler {
         return null;
     }
 
-    public static Optional<TravelTarget> getSpecialActionTarget(Player player) {
+    public static Optional<TravelTarget> getInteractionTarget(Player player) {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
         return TravelTargetApi.INSTANCE.getInItemRange(player.level(), player.blockPosition())
-            .filter(target -> target.canPerformSpecialAction())
+            .filter(TravelTarget::canInteract)
             .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
             .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(),
                 player.getXRot())) <= Math.toRadians(15))

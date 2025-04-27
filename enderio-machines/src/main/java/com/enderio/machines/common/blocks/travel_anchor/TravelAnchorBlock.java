@@ -16,12 +16,6 @@ public class TravelAnchorBlock<T extends TravelAnchorBlockEntity> extends Machin
         super(blockEntityType, props);
     }
 
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return MachineBlockEntities.TRAVEL_ANCHOR.create(pPos, pState);
-    }
-
     @SuppressWarnings("deprecation")
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {

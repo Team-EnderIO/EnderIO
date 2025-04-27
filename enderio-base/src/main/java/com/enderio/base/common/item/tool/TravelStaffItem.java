@@ -91,7 +91,7 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, Cr
             if (TravelHandler.blockTeleport(level, player)) {
                 player.getCooldowns().addCooldown(item, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
                 return true;
-            } else if (TravelHandler.specialAction(level, player)) {
+            } else if (TravelHandler.interact(level, player)) {
                 player.getCooldowns().addCooldown(this, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
                 return true;
             }

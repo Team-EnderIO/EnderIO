@@ -55,12 +55,12 @@ public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
     }
 
     @Override
-    public boolean canPerformSpecialAction() {
+    public boolean canInteract() {
         return true;
     }
 
     @Override
-    public boolean executeSpecialAction(Level level, Player player) {
+    public boolean interact(Level level, Player player) {
         if (level.isClientSide) {
             Minecraft.getInstance().setScreen(new EnderfaceScreen(pos.immutable(), Minecraft.getInstance().level));
         }
