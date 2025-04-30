@@ -103,7 +103,7 @@ public class ItemRecipeProvider extends RecipeProvider {
             .pattern("GQG")
             .define('S', EIOTags.Items.INGOTS_SOULARIUM)
             .define('Q', EIOTags.Items.FUSED_QUARTZ)
-            .define('V', EIOItems.VOID_POTENTIAL)
+            .define('V', EIOItems.SUSPICIOUS_SEED)
             .define('G', EIOItems.GRAINS_OF_INFINITY)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
             .save(recipeOutput);

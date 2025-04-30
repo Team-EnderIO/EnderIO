@@ -17,6 +17,7 @@ import com.enderio.base.common.item.misc.CreativeTabIconItem;
 import com.enderio.base.common.item.misc.EnderiosItem;
 import com.enderio.base.common.item.misc.HangGliderItem;
 import com.enderio.base.common.item.misc.LocationPrintoutItem;
+import com.enderio.base.common.item.misc.LoreItem;
 import com.enderio.base.common.item.misc.MaterialItem;
 import com.enderio.base.common.item.tool.ColdFireIgniter;
 import com.enderio.base.common.item.tool.CoordinateSelectorItem;
@@ -27,6 +28,7 @@ import com.enderio.base.common.item.tool.PoweredToggledItem;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.item.tool.TravelStaffItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.regilite.holder.RegiliteItem;
@@ -37,6 +39,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.Tags;
@@ -97,8 +100,6 @@ public class EIOItems {
 
     public static final RegiliteItem<MaterialItem> INFINITY_ROD = materialItem("infinity_rod");
 
-    public static final RegiliteItem<MaterialItem> VOID_POTENTIAL = materialItem("void_potential");
-
     public static final RegiliteItem<MaterialItem> CONDUIT_BINDER_COMPOSITE = materialItem("conduit_binder_composite");
 
     public static final RegiliteItem<MaterialItem> CONDUIT_BINDER = materialItem("conduit_binder");
@@ -119,6 +120,11 @@ public class EIOItems {
 
     public static final RegiliteItem<MaterialItem> SKELETAL_CONTRACTOR = materialItem("skeletal_contractor");
     public static final RegiliteItem<MaterialItem> GUARDIAN_DIODE = materialItem("guardian_diode");
+
+    public static final RegiliteItem<LoreItem> SUSPICIOUS_SEED = ITEM_REGISTRY
+        .registerItem("suspicious_seed", props -> new LoreItem(props, true, EIOLang.SUSPICIOUS_SEED_LORE),
+            new Item.Properties().rarity(Rarity.RARE))
+        .setTab(EIOCreativeTabs.MAIN);
 
     // endregion
 

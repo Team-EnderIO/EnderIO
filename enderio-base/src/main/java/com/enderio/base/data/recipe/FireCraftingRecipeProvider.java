@@ -25,7 +25,7 @@ public class FireCraftingRecipeProvider extends RecipeProvider {
             new FireCraftingRecipe(
                 List.of(
                     new FireCraftingRecipe.Result(EIOItems.GRAINS_OF_INFINITY.get().getDefaultInstance(), 1, 3, 0.8f),
-                    new FireCraftingRecipe.Result(EIOItems.VOID_POTENTIAL.get().getDefaultInstance(), 1, 1, 0.3f)
+                    new FireCraftingRecipe.Result(EIOItems.SUSPICIOUS_SEED.get().getDefaultInstance(), 1, 1, 0.3f)
                 ),
                 List.of(Blocks.BEDROCK),
                 List.of(),

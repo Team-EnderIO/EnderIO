@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "enderio:item/void_potential"
+    "layer0": "enderio:item/suspicious_seed"
   }
 }

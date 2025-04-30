@@ -267,6 +267,15 @@ public class EIOLang {
 
     // endregion
 
+    // region Lore
+
+    public static final Component SUSPICIOUS_SEED_LORE = addTranslation("item",
+            EnderIO.loc("suspicious_seed.lore"), "The seed appears to interact with nearby experience orbs...")
+        .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC);
+
+    // endregion
+
+
     // region Misc Tooltips
 
     public static final Component SHOW_DETAIL_TOOLTIP = addTranslation("tooltip",
