@@ -1,6 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIOBase;
+import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.common.capability.EntityFilterCapability;
@@ -20,7 +21,7 @@ import com.enderio.base.common.item.misc.MaterialItem;
 import com.enderio.base.common.item.tool.ColdFireIgniter;
 import com.enderio.base.common.item.tool.CoordinateSelectorItem;
 import com.enderio.base.common.item.tool.ElectromagnetItem;
-import com.enderio.base.common.item.tool.ExperienceRodItem;
+import com.enderio.base.common.item.tool.VoidVialItem;
 import com.enderio.base.common.item.tool.LevitationStaffItem;
 import com.enderio.base.common.item.tool.PoweredToggledItem;
 import com.enderio.base.common.item.tool.SoulVialItem;
@@ -95,6 +96,8 @@ public class EIOItems {
             .setTranslation("Grains of Infinity");
 
     public static final RegiliteItem<MaterialItem> INFINITY_ROD = materialItem("infinity_rod");
+
+    public static final RegiliteItem<MaterialItem> VOID_POTENTIAL = materialItem("void_potential");
 
     public static final RegiliteItem<MaterialItem> CONDUIT_BINDER_COMPOSITE = materialItem("conduit_binder_composite");
 
@@ -396,8 +399,9 @@ public class EIOItems {
             .registerItem("coordinate_selector", CoordinateSelectorItem::new, new Item.Properties().stacksTo(1))
             .setTab(EIOCreativeTabs.GEAR);
 
-    public static final RegiliteItem<ExperienceRodItem> EXPERIENCE_ROD = ITEM_REGISTRY
-            .registerItem("experience_rod", ExperienceRodItem::new)
+    public static final RegiliteItem<VoidVialItem> VOID_VIAL = ITEM_REGISTRY
+            .registerItem("void_vial", VoidVialItem::new)
+            .setTranslation("Vial of the Void")
             .setTab(EIOCreativeTabs.GEAR);
 
     public static final RegiliteItem<LevitationStaffItem> LEVITATION_STAFF = ITEM_REGISTRY
@@ -522,6 +526,9 @@ public class EIOItems {
     // endregion
 
     public static void register(IEventBus bus) {
+
+        ITEM_REGISTRY.addAlias(EnderIO.loc("experience_rod"), VOID_VIAL.getId());
+
         ITEM_REGISTRY.register(bus);
     }
 }

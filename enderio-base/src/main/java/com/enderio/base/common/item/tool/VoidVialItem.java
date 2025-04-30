@@ -23,8 +23,9 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-public class ExperienceRodItem extends Item {
-    public ExperienceRodItem(Properties pProperties) {
+// TODO: Change behaviour to add xp tank.
+public class VoidVialItem extends Item {
+    public VoidVialItem(Properties pProperties) {
         super(pProperties.stacksTo(1));
     }
 

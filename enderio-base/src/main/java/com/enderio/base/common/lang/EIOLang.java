@@ -292,10 +292,10 @@ public class EIOLang {
             EnderIO.loc("fire_crafting"), "valid_blocks", "Valid Blocks:");
     public static final Component JEI_FIRE_CRAFTING_VALID_DIMENSIONS = addTranslation("jei",
             EnderIO.loc("fire_crafting"), "valid_dimensions", "Valid Dimensions:");
-    public static final Component JEI_FIRE_CRAFTING_LOOT_TABLE = addTranslation("jei", EnderIO.loc("fire_crafting"),
-            "loot_table", "Loot Table:");
-    public static final Component JEI_FIRE_CRAFTING_MAX_DROPS = addTranslation("jei", EnderIO.loc("fire_crafting"),
-            "max_drops", "Max Item Drops:");
+    public static final MutableComponent JEI_FIRE_CRAFTING_CHANCE = addTranslation("jei", EnderIO.loc("fire_crafting"),
+            "chance", "%s%% Chance");
+    public static final MutableComponent JEI_FIRE_CRAFTING_DROPS = addTranslation("jei", EnderIO.loc("fire_crafting"),
+            "drops", "Drops %s");
 
     // endregion
 
@@ -351,7 +351,7 @@ public class EIOLang {
     private static MutableComponent addTranslation(String prefix, ResourceLocation path, String name,
             String translation) {
         return EnderIOBase.REGILITE.addTranslation(prefix,
-                ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "/" + name), translation);
+                ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "." + name), translation);
     }
 
     public static void register() {

@@ -30,8 +30,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public record FireCraftingRecipe(
-    ResourceKey<LootTable> lootTable,
-    int maxItemDrops,
+    List<Result> results,
     List<Block> bases,
     List<TagKey<Block>> baseTags,
     List<ResourceKey<Level>> dimensions,
@@ -102,8 +101,7 @@ public record FireCraftingRecipe(
 
         public static final MapCodec<FireCraftingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
             .group(
-                ResourceKey.codec(Registries.LOOT_TABLE).fieldOf("loot_table").forGetter(FireCraftingRecipe::lootTable),
-                Codec.INT.fieldOf("max_item_drops").forGetter(FireCraftingRecipe::maxItemDrops),
+                Codec.list(Result.CODEC).fieldOf("results").forGetter(FireCraftingRecipe::results),
                 BuiltInRegistries.BLOCK.byNameCodec().listOf().optionalFieldOf("base_blocks", List.of()).forGetter(FireCraftingRecipe::bases),
                 TagKey.codec(Registries.BLOCK).listOf().optionalFieldOf("base_tags", List.of()).forGetter(FireCraftingRecipe::baseTags),
                 ResourceKey.codec(Registries.DIMENSION).listOf().fieldOf("dimensions").forGetter(FireCraftingRecipe::dimensions),
@@ -111,10 +109,8 @@ public record FireCraftingRecipe(
             .apply(inst, FireCraftingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, FireCraftingRecipe> STREAM_CODEC = StreamCodec.composite(
-            ResourceKey.streamCodec(Registries.LOOT_TABLE),
-            FireCraftingRecipe::lootTable,
-            ByteBufCodecs.INT,
-            FireCraftingRecipe::maxItemDrops,
+            Result.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            FireCraftingRecipe::results,
             ByteBufCodecs.registry(Registries.BLOCK).apply(ByteBufCodecs.list()),
             FireCraftingRecipe::bases,
             ResourceLocation.STREAM_CODEC
@@ -137,5 +133,29 @@ public record FireCraftingRecipe(
         public StreamCodec<RegistryFriendlyByteBuf, FireCraftingRecipe> streamCodec() {
             return STREAM_CODEC;
         }
+    }
+
+    public record Result(ItemStack result, int minCount, int maxCount, float chance) {
+        public static final Codec<Result> CODEC = RecordCodecBuilder.create(
+            resultInstance -> resultInstance
+                .group(
+                    ItemStack.CODEC.fieldOf("result").forGetter(Result::result),
+                    Codec.INT.fieldOf("min_count").forGetter(Result::minCount),
+                    Codec.INT.fieldOf("max_count").forGetter(Result::maxCount),
+                    Codec.FLOAT.fieldOf("chance").forGetter(Result::chance)
+                )
+                .apply(resultInstance, Result::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, Result> STREAM_CODEC = StreamCodec.composite(
+            ItemStack.STREAM_CODEC,
+            Result::result,
+            ByteBufCodecs.INT,
+            Result::minCount,
+            ByteBufCodecs.INT,
+            Result::maxCount,
+            ByteBufCodecs.FLOAT,
+            Result::chance,
+            Result::new
+        );
     }
 }

@@ -105,42 +105,47 @@ public class FireCraftingHandler {
     }
 
     public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, FireCraftingRecipe recipe) {
-        LootParams lootparams = (new LootParams.Builder(level)).withParameter(LootContextParams.ORIGIN, pos.getCenter()).create(LootContextParamSets.COMMAND);
+        boolean didDrop = false;
 
-        LootTable table = level.getServer().reloadableRegistries().getLootTable(recipe.lootTable());
+        for (var result : recipe.results()) {
+            float dropChance = level.getRandom().nextFloat();
+            if (dropChance < result.chance()) {
+                 continue;
+            }
 
-        if (table != LootTable.EMPTY) {
-            ObjectArrayList<ItemStack> randomItems = table.getRandomItems(lootparams);
-            for (int i = 0; i < randomItems.size(); i++) {
-                if (i >= recipe.maxItemDrops()) {
-                    break;
-                }
+            int itemCount = level.getRandom().nextIntBetweenInclusive(result.minCount(), result.maxCount());
+            if (itemCount <= 0) {
+                continue;
+            }
 
-                ItemStack item = randomItems.get(i);
+            ItemStack resultStack = result.result().copy();
+            resultStack.setCount(itemCount);
 
-                // Get random offset
-                double x = RANDOM.nextFloat() * 0.5f + 0.25f;
-                double y = RANDOM.nextFloat() * 0.5f + 0.25f;
-                double z = RANDOM.nextFloat() * 0.5f + 0.25f;
-                ItemEntity itemEntity = new ItemEntity(level, pos.getX() + x, pos.getY() + y, pos.getZ() + z, item);
-                itemEntity.setDefaultPickUpDelay();
+            // Get random offset
+            double x = RANDOM.nextFloat() * 0.5f + 0.25f;
+            double y = RANDOM.nextFloat() * 0.5f + 0.25f;
+            double z = RANDOM.nextFloat() * 0.5f + 0.25f;
+            ItemEntity itemEntity = new ItemEntity(level, pos.getX() + x, pos.getY() + y, pos.getZ() + z, resultStack);
+            itemEntity.setDefaultPickUpDelay();
 
-                // Make it survive the fire for a bit
-                itemEntity.hurt(itemEntity.damageSources().inFire(), -100);
+            // Make it survive the fire for a bit
+            itemEntity.hurt(itemEntity.damageSources().inFire(), -100);
 
-                // Actually set it on fire
-                itemEntity.setRemainingFireTicks(10);
-                level.addFreshEntity(itemEntity);
+            // Actually set it on fire
+            itemEntity.setRemainingFireTicks(10);
+            level.addFreshEntity(itemEntity);
+            didDrop = true;
+        }
 
-                // Play explosion sound
-                if (BaseConfig.COMMON.INFINITY.MAKES_SOUND.get()) {
-                    level.playSound(null, pos, SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, SoundSource.BLOCKS, 1.0f, RANDOM.nextFloat() * 0.4f + 0.8f);
-                }
+        if (didDrop) {
+            // Play explosion sound
+            if (BaseConfig.COMMON.INFINITY.MAKES_SOUND.get()) {
+                level.playSound(null, pos, SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, SoundSource.BLOCKS, 1.0f, RANDOM.nextFloat() * 0.4f + 0.8f);
+            }
 
-                // Replace the base (if applicable)
-                if (recipe.blockAfterBurning().isPresent()) {
-                    level.setBlock(pos.below(), recipe.blockAfterBurning().get().defaultBlockState(), Block.UPDATE_ALL);
-                }
+            // Replace the base (if applicable)
+            if (recipe.blockAfterBurning().isPresent()) {
+                level.setBlock(pos.below(), recipe.blockAfterBurning().get().defaultBlockState(), Block.UPDATE_ALL);
             }
         }
     }

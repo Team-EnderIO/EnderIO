@@ -29,7 +29,6 @@ import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
 import com.enderio.base.data.loot.ChestLootProvider;
 import com.enderio.base.data.loot.EIOLootModifiersProvider;
-import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.BlockRecipeProvider;
 import com.enderio.base.data.recipe.FilterRecipeProvider;
 import com.enderio.base.data.recipe.FireCraftingRecipeProvider;
@@ -156,8 +155,6 @@ public class EnderIOBase {
                 existingFileHelper, List.of(new EIOAdvancementGenerator())));
         provider.addSubProvider(event.includeServer(),
                 new LootTableProvider(packOutput, Collections.emptySet(), List.of(
-                        new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new,
-                                LootContextParamSets.EMPTY),
                         new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)),
                         lookupProvider));
         generator.addProvider(true, provider);
