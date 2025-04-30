@@ -44,12 +44,11 @@ public class BlockRecipeProvider extends RecipeProvider {
 
     private void buildChassisRecipes(RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOBlocks.VOID_CHASSIS.get())
-            .define('B', Blocks.IRON_BARS)
             .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
             .define('I', Tags.Items.INGOTS_IRON)
-            .pattern("BIB")
             .pattern("IGI")
-            .pattern("BIB")
+            .pattern("G G")
+            .pattern("IGI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
             .save(recipeOutput);
 
