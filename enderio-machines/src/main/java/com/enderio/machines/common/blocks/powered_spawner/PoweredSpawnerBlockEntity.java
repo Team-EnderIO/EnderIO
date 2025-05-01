@@ -6,6 +6,7 @@ import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.particle.RangeParticleData;
@@ -226,7 +227,10 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .capacitor()
-                .inputSlot((i, stack) -> stack.is(EIOItems.SOUL_VIAL))
+                .inputSlot((i, stack) -> {
+                    var soulStorage = stack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+                    return soulStorage != null && !soulStorage.hasSoul();
+                })
                 .slotAccess(INPUT)
                 .outputSlot()
                 .slotAccess(OUTPUT)

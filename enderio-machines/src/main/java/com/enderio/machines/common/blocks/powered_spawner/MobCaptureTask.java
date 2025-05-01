@@ -1,6 +1,7 @@
 package com.enderio.machines.common.blocks.powered_spawner;
 
 import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,7 +24,8 @@ public class MobCaptureTask extends PoweredSpawnerTask {
     public boolean isCompleted() {
         // Ensure we have an item to take from
         var inputStack = PoweredSpawnerBlockEntity.INPUT.getItemStack(blockEntity);
-        if (inputStack.isEmpty() || !inputStack.is(EIOItems.SOUL_VIAL)) {
+        var inputSoulStorage = inputStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+        if (inputStack.isEmpty() || inputSoulStorage == null || inputSoulStorage.hasSoul()) {
             return true;
         }
 
@@ -34,7 +36,8 @@ public class MobCaptureTask extends PoweredSpawnerTask {
     protected void onTaskCompleted() {
         // Ensure we have a vial to take
         var inputStack = PoweredSpawnerBlockEntity.INPUT.getItemStack(blockEntity);
-        if (inputStack.isEmpty() || !inputStack.is(EIOItems.SOUL_VIAL)) {
+        var inputSoulStorage = inputStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+        if (inputStack.isEmpty() || inputSoulStorage == null || inputSoulStorage.hasSoul()) {
             return;
         }
 
@@ -44,13 +47,19 @@ public class MobCaptureTask extends PoweredSpawnerTask {
             return;
         }
 
-        ItemStack filledStack = new ItemStack(EIOItems.SOUL_VIAL.get(), 1);
+        ItemStack filledStack = inputStack.copyWithCount(1);
+        var filledSoulStorage = filledStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+        if (filledSoulStorage == null) {
+            // TODO: Log warning?
+            isComplete = true;
+            return;
+        }
 
         var entityTypeKey = BuiltInRegistries.ENTITY_TYPE.getKey(entityType());
 
         switch (spawnMode()) {
-        case NEW -> filledStack.set(EIODataComponents.STORED_ENTITY, StoredEntityData.of(entityTypeKey));
-        case COPY -> filledStack.set(EIODataComponents.STORED_ENTITY, blockEntity.getEntityData());
+        case NEW -> filledSoulStorage.setSoul(StoredEntityData.of(entityTypeKey));
+        case COPY -> filledSoulStorage.setSoul(blockEntity.getEntityData());
         }
 
         PoweredSpawnerBlockEntity.OUTPUT.setStackInSlot(blockEntity, filledStack);
