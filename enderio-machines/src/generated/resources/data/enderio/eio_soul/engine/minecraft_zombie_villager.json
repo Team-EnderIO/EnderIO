@@ -1,6 +1,6 @@
 {
   "entity": "minecraft:zombie_villager",
   "fluid": "enderio:fluid_nutrient_distillation_still",
-  "power/mb": 500,
-  "tick/mb": 15
+  "power/mb": 1000,
+  "tick/mb": 18
 }
