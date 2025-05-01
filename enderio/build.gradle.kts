@@ -20,7 +20,7 @@ val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
 val cctMinecraftVersion: String by project
 val cctVersion: String by project
-val athenaVersion: String by project
+val stitchVersion: String by project
 val ae2Version: String by project
 val refinedstorageVersion: String by project
 val jadeFileId: String by project
@@ -51,7 +51,7 @@ dependencies {
 //    runtimeOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge:$cctVersion")
 
     //Athena ctm
-    runtimeOnly("maven.modrinth:athena-ctm:${athenaVersion}")
+    runtimeOnly("maven.modrinth:stitch:${stitchVersion}")
 
     // AE2
     runtimeOnly("appeng:appliedenergistics2:${ae2Version}")

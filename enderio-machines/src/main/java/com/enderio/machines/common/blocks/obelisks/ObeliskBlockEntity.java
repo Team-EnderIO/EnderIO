@@ -15,8 +15,6 @@ import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.obelisk.ObeliskAreaManager;
-import java.util.Objects;
-import javax.annotation.Nullable;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -30,13 +28,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.LogicalSide;
 
+import javax.annotation.Nullable;
+import java.util.Objects;
+
 public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extends PoweredMachineBlockEntity
         implements RangedActor {
 
     private @Nullable AABB aabb;
     public static SingleSlotAccess FILTER = new SingleSlotAccess();
 
-    private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);
+    private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false, 32);
 
     private ActionRange actionRange = DEFAULT_RANGE;
 

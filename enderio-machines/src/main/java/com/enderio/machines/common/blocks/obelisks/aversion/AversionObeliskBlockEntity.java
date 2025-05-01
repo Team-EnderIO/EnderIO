@@ -55,11 +55,6 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity<AversionObeli
     }
 
     @Override
-    public int getMaxRange() {
-        return 32;
-    }
-
-    @Override
     public String getColor() {
         return MachinesConfig.CLIENT.BLOCKS.AVERSION_RANGE_COLOR.get();
     }
