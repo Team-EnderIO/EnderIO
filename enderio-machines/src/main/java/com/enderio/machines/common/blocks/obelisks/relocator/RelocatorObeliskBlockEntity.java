@@ -58,11 +58,6 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity<RelocatorObe
     }
 
     @Override
-    public int getMaxRange() {
-        return 32;
-    }
-
-    @Override
     public String getColor() {
         return MachinesConfig.CLIENT.BLOCKS.RELOCATOR_RANGE_COLOR.get();
     }

@@ -39,8 +39,8 @@ import com.enderio.machines.common.blocks.vacuum.chest.VacuumChestBlockEntity;
 import com.enderio.machines.common.blocks.vacuum.xp.XPVacuumBlockEntity;
 import com.enderio.machines.common.blocks.vat.VatBlock;
 import com.enderio.machines.common.blocks.wireless_charger.WirelessAntennaBlock;
-import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.item.CapacitorBankItem;
+import com.enderio.machines.common.tag.MachineTags;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.enderio.regilite.data.DataGenContext;
@@ -49,11 +49,6 @@ import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockRegistry;
 import com.enderio.regilite.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMap;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.BlockItem;
@@ -65,7 +60,12 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
-import net.neoforged.neoforge.common.ModConfigSpec;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class MachineBlocks {
     private static final BlockRegistry BLOCK_REGISTRY = EnderIOMachines.REGILITE.blockRegistry();
@@ -156,12 +156,10 @@ public class MachineBlocks {
             () -> MachineBlockEntities.WIRELESS_CHARGER);
 
     public static final RegiliteBlock<WirelessAntennaBlock> WIRELESS_CHARGER_ANTENNA = wirelessAntenna(
-            "wireless_charger_antenna", "Pulsating Wireless Antenna",
-            MachinesConfig.COMMON.WIRELESS_CHARGER_ANTENNA_RANGE);
+        "wireless_charger_antenna", "Pulsating Wireless Antenna");
 
     public static final RegiliteBlock<WirelessAntennaBlock> WIRELESS_CHARGER_ANTENNA_ADVANCED = wirelessAntenna(
-            "wireless_charger_antenna_advanced", "Vibrant Wireless Antenna",
-            MachinesConfig.COMMON.WIRELESS_CHARGER_ANTENNA_RANGE_2);
+        "wireless_charger_antenna_advanced", "Vibrant Wireless Antenna");
 
     public static final RegiliteBlock<LegacyMachineBlock> CREATIVE_POWER = BLOCK_REGISTRY
             .registerBlock("creative_power",
@@ -399,16 +397,15 @@ public class MachineBlocks {
                                         CapacitorBankItem.ENERGY_STORAGE_PROVIDER));
     }
 
-    private static RegiliteBlock<WirelessAntennaBlock> wirelessAntenna(String name, String translation,
-            ModConfigSpec.ConfigValue<Integer> range) {
+    private static RegiliteBlock<WirelessAntennaBlock> wirelessAntenna(String name, String translation) {
         return BLOCK_REGISTRY
-                .registerBlock(name, props -> (new WirelessAntennaBlock(props, range)),
+                .registerBlock(name, WirelessAntennaBlock::new,
                         BlockBehaviour.Properties.of()
                                 .strength(2.5f, 8)
                                 .isViewBlocking((pState, pLevel, pPos) -> false)
                                 .noOcclusion())
                 .setLootTable(MachinesLootTable::copyComponents)
-                .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+                .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, MachineTags.Blocks.RANGE_EXTENDER)
                 .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                         prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
                 .setTranslation(translation)
