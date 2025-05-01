@@ -1,83 +1,110 @@
 package com.enderio.conduits.client;
 
 import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
-import com.enderio.conduits.common.conduit.block.ConduitBundleBlock;
 import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import it.unimi.dsi.fastutil.longs.LongSet;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
+import java.util.Set;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.FastColor;
+import net.minecraft.core.SectionPos;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class ConduitFacadeRendering {
 
+    private static final ThreadLocal<RandomSource> RANDOM = ThreadLocal
+            .withInitial(() -> new SingleThreadedRandomSource(42L));
+
     @SubscribeEvent
-    static void renderFacade(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS || FacadeHelper.areFacadesVisible()) {
+    static void renderFacade(AddSectionGeometryEvent event) {
+        LongSet blockList = ConduitBundleBlockEntity.CHUNK_FACADES
+                .getOrDefault(SectionPos.asLong(event.getSectionOrigin()), null);
+
+        if (blockList == null) {
             return;
         }
-        for (Map.Entry<BlockPos, BlockState> entry : ConduitBundleBlockEntity.FACADES.entrySet()) {
-            ClientLevel level = Minecraft.getInstance().level;
-            if (!level.isLoaded(entry.getKey())) {
-                return;
-            }
-            if (level.getBlockState(entry.getKey()).getBlock() instanceof ConduitBundleBlock) {
-                if (entry.getValue() == null) {
-                    continue;
-                }
 
-                var baseConsumer = Minecraft.getInstance()
-                        .renderBuffers()
-                        .bufferSource()
-                        .getBuffer(Sheets.translucentCullBlockSheet());
-                var wrappedConsumer = new VertexConsumerWrapper(baseConsumer) {
-                    @Override
-                    public VertexConsumer setColor(int r, int g, int b, int a) {
-                        super.setColor(r, g, b, 85);
-                        return this;
-                    }
-                };
+        Map<BlockPos, BlockState> facades = new Object2ObjectOpenHashMap<>();
 
-                var cameraPos = event.getCamera().getPosition();
-                event.getPoseStack().pushPose();
-                event.getPoseStack()
-                        .translate(entry.getKey().getX() - cameraPos.x, entry.getKey().getY() - cameraPos.y,
-                                entry.getKey().getZ() - cameraPos.z);
+        for (long entry : blockList) {
+            facades.put(BlockPos.of(entry), ConduitBundleBlockEntity.FACADES.get(entry));
+        }
+
+        if (facades.isEmpty())
+            return;
+
+        event.addRenderer(new FacadeRenderer(facades, FacadeHelper.areFacadesVisible()));
+    }
+
+    private static class FacadeRenderer implements AddSectionGeometryEvent.AdditionalSectionRenderer {
+        private final Map<BlockPos, BlockState> facades;
+        private final boolean opaque;
+
+        public FacadeRenderer(Map<BlockPos, BlockState> facades, boolean opaque) {
+            this.facades = facades;
+            this.opaque = opaque;
+        }
+
+        @Override
+        public void render(AddSectionGeometryEvent.SectionRenderingContext context) {
+            VertexConsumerWrapper wrapper = opaque ? null : new AlphaWrapper(context);
+
+            RandomSource random = RANDOM.get();
+
+            for (Map.Entry<BlockPos, BlockState> entry : facades.entrySet()) {
+                context.getPoseStack().pushPose();
+                context.getPoseStack()
+                        .translate(entry.getKey().getX() & 15, entry.getKey().getY() & 15, entry.getKey().getZ() & 15);
+
+                var state = entry.getValue();
+                var pos = entry.getKey();
+
+                random.setSeed(42L);
 
                 var model = Minecraft.getInstance()
                         .getModelManager()
                         .getBlockModelShaper()
                         .getBlockModel(entry.getValue());
-                int color = Minecraft.getInstance().getBlockColors().getColor(entry.getValue(), level, entry.getKey());
-                for (var renderType : model.getRenderTypes(entry.getValue(), RandomSource.create(), ModelData.EMPTY)) {
+
+                var modelData = context.getRegion().getModelData(pos);
+
+                modelData = model.getModelData(context.getRegion(), pos, state, modelData);
+
+                for (var renderType : model.getRenderTypes(entry.getValue(), random, modelData)) {
+                    VertexConsumer consumer = wrapper == null ? context.getOrCreateChunkBuffer(renderType) : wrapper;
                     Minecraft.getInstance()
                             .getBlockRenderer()
                             .getModelRenderer()
-                            .renderModel(event.getPoseStack().last(), wrappedConsumer, entry.getValue(), model,
-                                    FastColor.ARGB32.red(color) / 255.0F, FastColor.ARGB32.green(color) / 255.0F,
-                                    FastColor.ARGB32.blue(color) / 255.0F,
-                                    LightTexture.pack(level.getBrightness(LightLayer.BLOCK, entry.getKey()),
-                                            level.getBrightness(LightLayer.SKY, entry.getKey())),
-                                    OverlayTexture.NO_OVERLAY,
-                                    model.getModelData(level, entry.getKey(), entry.getValue(), ModelData.EMPTY),
-                                    renderType);
+                            .tesselateBlock(context.getRegion(), model, state, pos, context.getPoseStack(), consumer,
+                                    true, random, 42L, OverlayTexture.NO_OVERLAY, modelData, renderType);
                 }
-                Minecraft.getInstance().renderBuffers().bufferSource().endBatch(Sheets.translucentCullBlockSheet());
-                event.getPoseStack().popPose();
+
+                context.getPoseStack().popPose();
+            }
+        }
+
+        private static class AlphaWrapper extends VertexConsumerWrapper {
+            public AlphaWrapper(AddSectionGeometryEvent.SectionRenderingContext context) {
+                super(context.getOrCreateChunkBuffer(RenderType.translucent()));
+            }
+
+            @Override
+            public VertexConsumer setColor(int r, int g, int b, int a) {
+                super.setColor(r, g, b, 85);
+                return this;
             }
         }
     }

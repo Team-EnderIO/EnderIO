@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:redstone_nor_filter"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:redstone_nor_filter"
+  }
+}

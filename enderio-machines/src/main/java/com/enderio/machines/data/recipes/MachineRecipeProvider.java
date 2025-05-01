@@ -9,6 +9,8 @@ import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.init.MachineBlocks;
 import java.util.concurrent.CompletableFuture;
+import com.enderio.regilite.holder.RegiliteBlock;
+import net.minecraft.Util;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderLookup;
@@ -18,10 +20,14 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MachineRecipeProvider extends RecipeProvider {
 
@@ -442,14 +448,57 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         // TODO: Enable once the block detector has a model.
-        /*
-         * ShapedRecipeBuilder .shaped(RecipeCategory.MISC,
-         * MachineBlocks.BLOCK_DETECTOR.get()) .define('D',
-         * EIOBlocks.DARK_STEEL_PRESSURE_PLATE) .define('N', EIOItems.DARK_STEEL_NUGGET)
-         * .define('P', Items.PISTON) .define('R', Items.REDSTONE_BLOCK) .pattern("NDN")
-         * .pattern("NPN") .pattern("NRN") .unlockedBy("has_ingredient",
-         * InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().
-         * of(Items.PISTON).build())) .save(recipeOutput);
-         */
+        /*ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.BLOCK_DETECTOR.get())
+            .define('D', EIOBlocks.DARK_STEEL_PRESSURE_PLATE)
+            .define('N', EIOItems.DARK_STEEL_NUGGET)
+            .define('P', Items.PISTON)
+            .define('R', Items.REDSTONE_BLOCK)
+            .pattern("NDN")
+            .pattern("NPN")
+            .pattern("NRN")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Items.PISTON).build()))
+            .save(recipeOutput);*/
+
+        eraseRecipes(recipeOutput);
+    }
+
+    private static final List<RegiliteBlock<?>> MACHINES = Util.make(() -> {
+        List<RegiliteBlock<?>> list = new ArrayList<>();
+        list.addAll(MachineBlocks.CAPACITOR_BANKS.values());
+        list.add(MachineBlocks.FLUID_TANK);
+        list.add(MachineBlocks.PRESSURIZED_FLUID_TANK);
+        list.add(MachineBlocks.PRIMITIVE_ALLOY_SMELTER);
+        list.add(MachineBlocks.ALLOY_SMELTER);
+        list.add(MachineBlocks.STIRLING_GENERATOR);
+        list.add(MachineBlocks.SAG_MILL);
+        list.add(MachineBlocks.SLICE_AND_SPLICE);
+        list.add(MachineBlocks.SOUL_BINDER);
+        list.add(MachineBlocks.WIRED_CHARGER);
+        list.add(MachineBlocks.POWERED_SPAWNER);
+        list.add(MachineBlocks.SOUL_ENGINE);
+        list.add(MachineBlocks.DRAIN);
+        list.add(MachineBlocks.CRAFTER);
+        list.addAll(MachineBlocks.SOLAR_PANELS.values());
+        list.add(MachineBlocks.PAINTING_MACHINE);
+        list.add(MachineBlocks.IMPULSE_HOPPER);
+        list.add(MachineBlocks.XP_OBELISK);
+        list.add(MachineBlocks.AVERSION_OBELISK);
+        list.add(MachineBlocks.INHIBITOR_OBELISK);
+        list.add(MachineBlocks.RELOCATOR_OBELISK);
+        list.add(MachineBlocks.XP_VACUUM);
+        list.add(MachineBlocks.VACUUM_CHEST);
+        list.add(MachineBlocks.TRAVEL_ANCHOR);
+        return list;
+    });
+
+    public void eraseRecipes(RecipeOutput recipeOutput) {
+        for (var block : MACHINES) {
+            ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.MISC, block)
+                .requires(block)
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block))
+                .save(recipeOutput, EnderIO.loc("erase_" + block.getId().getPath()));
+        }
     }
 }

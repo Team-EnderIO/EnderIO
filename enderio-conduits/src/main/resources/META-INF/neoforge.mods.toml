@@ -7,10 +7,13 @@ license="CC0"
 modId="enderio_conduits"
 version="${mod_version}"
 displayName="Ender IO Conduits"
-authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rover656, HypherionSA, agnor99, Ferri_Arnus, dphaldes"
+authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rover656, HypherionSA, liliandev, Ferri_Arnus, dphaldes"
 description="The conduits module for Ender IO"
 displayURL="https://enderio.com/"
 logoFile="logo.png"
+
+[[mixins]]
+config="enderioconduits.mixins.json"
 
 [[dependencies.enderio_conduits]]
 modId="minecraft"
