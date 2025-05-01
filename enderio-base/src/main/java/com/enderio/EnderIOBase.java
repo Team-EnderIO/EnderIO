@@ -100,7 +100,6 @@ public class EnderIOBase {
         EIOBlocks.register(modEventBus);
         EIOBlockEntities.register(modEventBus);
         EIOFluids.register(modEventBus);
-        // EIOEnchantments.register(modEventBus);
         EIOTags.register();
         EIOMenus.register(modEventBus);
         EIOLang.register();
