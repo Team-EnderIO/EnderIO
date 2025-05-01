@@ -440,7 +440,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern(" S ")
             .pattern("CEC")
             .unlockedBy("has_ingredient",
-                InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
+                InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ENDER_RESONATOR.get()))
             .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get())
@@ -451,7 +451,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern(" S ")
             .pattern("CEC")
             .unlockedBy("has_ingredient",
-                InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
+                InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SENTIENT_ENDER.get()))
             .save(recipeOutput);
 
         // TODO: Enable once the block detector has a model.

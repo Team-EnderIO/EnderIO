@@ -30,7 +30,7 @@ public class MachinesClientBlocksConfig {
         AVERSION_RANGE_COLOR = builder.comment("The color of the range box of the Aversion Obelisk")
                 .define("aversionRangeColor", "8B0000");
         WIRELESS_CHARGER_RANGE_COLOR = builder.comment("The color of the range box of the Wireless Charger")
-                .define("aversionRangeColor", "C7CC2A");
+                .define("wirelessChargerRangeColor", "C7CC2A");
         builder.pop();
     }
 }
