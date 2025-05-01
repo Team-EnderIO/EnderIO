@@ -75,7 +75,7 @@ public class MachineBlockEntities {
             EnchanterBlockEntity::new, MachineBlocks.ENCHANTER);
 
     public static final RegiliteBlockEntity<EnderfaceBlockEntity> ENDERFACE = register("enderface",
-        EnderfaceBlockEntity::new, MachineBlocks.ENDERFACE);
+            EnderfaceBlockEntity::new, MachineBlocks.ENDERFACE);
 
     public static final RegiliteBlockEntity<AlloySmelterBlockEntity> ALLOY_SMELTER = register("alloy_smelter",
             AlloySmelterBlockEntity::new, MachineBlocks.ALLOY_SMELTER)

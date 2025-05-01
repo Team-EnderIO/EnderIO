@@ -127,18 +127,18 @@ public class MachineBlocks {
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
     public static final RegiliteBlock<EnderfaceBlock> ENDERFACE = BLOCK_REGISTRY
-        .registerBlock("enderface", EnderfaceBlock::new,
-            BlockBehaviour.Properties.of()
-                .strength(2.5f, 8)
-                .noOcclusion()
-                .isViewBlocking((pState, pLevel, pPos) -> false)
-                .requiredFeatures(MachineFeatureFlags.ENDERFACE))
-        .setLootTable(MachinesLootTable::copyComponents)
-        .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .setTranslation("Ender IO")
-        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
-            prov.models().cubeAll("enderface", EnderIO.loc("block/enderface")).renderType("translucent")))
-        .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
+            .registerBlock("enderface", EnderfaceBlock::new,
+                    BlockBehaviour.Properties.of()
+                            .strength(2.5f, 8)
+                            .noOcclusion()
+                            .isViewBlocking((pState, pLevel, pPos) -> false)
+                            .requiredFeatures(MachineFeatureFlags.ENDERFACE))
+            .setLootTable(MachinesLootTable::copyComponents)
+            .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+            .setTranslation("Ender IO")
+            .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+                    prov.models().cubeAll("enderface", EnderIO.loc("block/enderface")).renderType("translucent")))
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
     public static final RegiliteBlock<ProgressMachineBlock<?>> ALLOY_SMELTER = progressMachine("alloy_smelter",
             () -> MachineBlockEntities.ALLOY_SMELTER);

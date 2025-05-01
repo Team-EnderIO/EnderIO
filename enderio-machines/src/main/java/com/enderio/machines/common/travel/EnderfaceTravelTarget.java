@@ -17,7 +17,7 @@ import net.minecraft.world.level.Level;
 
 public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
     public static NetworkDataSlot.CodecType<EnderfaceTravelTarget> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(
-        EnderfaceTravelTarget.Serializer.CODEC.codec(), EnderfaceTravelTarget.Serializer.STREAM_CODEC);
+            EnderfaceTravelTarget.Serializer.CODEC.codec(), EnderfaceTravelTarget.Serializer.STREAM_CODEC);
 
     @Override
     public int item2BlockRange() {
@@ -69,12 +69,12 @@ public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
 
     public static class Serializer implements TravelTargetSerializer<EnderfaceTravelTarget> {
 
-        public static MapCodec<EnderfaceTravelTarget> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-            .group(BlockPos.CODEC.fieldOf("pos").forGetter(EnderfaceTravelTarget::pos))
-            .apply(instance, EnderfaceTravelTarget::new));
+        public static MapCodec<EnderfaceTravelTarget> CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(BlockPos.CODEC.fieldOf("pos").forGetter(EnderfaceTravelTarget::pos))
+                        .apply(instance, EnderfaceTravelTarget::new));
 
-        public static StreamCodec<RegistryFriendlyByteBuf, EnderfaceTravelTarget> STREAM_CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC, EnderfaceTravelTarget::pos, EnderfaceTravelTarget::new);
+        public static StreamCodec<RegistryFriendlyByteBuf, EnderfaceTravelTarget> STREAM_CODEC = StreamCodec
+                .composite(BlockPos.STREAM_CODEC, EnderfaceTravelTarget::pos, EnderfaceTravelTarget::new);
 
         @Override
         public MapCodec<EnderfaceTravelTarget> codec() {

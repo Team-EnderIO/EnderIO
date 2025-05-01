@@ -46,7 +46,7 @@ public class MachinesCommonConfig {
 
         builder.push("enderface");
         ENDERFACE_RANGE = builder.comment("Maximum distance from which an Ender IO can interact with blocks")
-            .defineInRange("enderIoRange", 8, 1, 20);
+                .defineInRange("enderIoRange", 8, 1, 20);
         builder.pop();
     }
 }

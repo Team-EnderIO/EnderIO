@@ -47,13 +47,14 @@ public class VoidVialItem extends Item {
         }
 
         if (wasSuccess) {
-            var particle = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0.27450980f, 0.88627451f, 0.29411765f);
+            var particle = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0.27450980f, 0.88627451f,
+                    0.29411765f);
 
             PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(pos),
-                new EmitParticlePacket(particle, pos, 0.2, 0.8, 0.2));
+                    new EmitParticlePacket(particle, pos, 0.2, 0.8, 0.2));
 
             level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.1f,
-                0.5F * ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.8F));
+                    0.5F * ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.8F));
             return InteractionResult.SUCCESS;
         }
 

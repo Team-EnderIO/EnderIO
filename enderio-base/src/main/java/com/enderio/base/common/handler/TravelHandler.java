@@ -103,9 +103,8 @@ public class TravelHandler {
     }
 
     public static boolean interact(Level level, Player player) {
-        return getInteractionTarget(player)
-            .filter(iTravelTarget -> interactWithTarget(level, player, iTravelTarget))
-            .isPresent();
+        return getInteractionTarget(player).filter(iTravelTarget -> interactWithTarget(level, player, iTravelTarget))
+                .isPresent();
     }
 
     public static boolean blockElevatorTeleport(Level level, Player player, Direction direction, boolean sendToServer) {
@@ -242,12 +241,12 @@ public class TravelHandler {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
         return TravelTargetApi.INSTANCE.getInItemRange(player.level(), player.blockPosition())
-            .filter(TravelTarget::canInteract)
-            .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
-            .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(),
-                player.getXRot())) <= Math.toRadians(15))
-            .min(Comparator.comparingDouble(target -> Math
-                .abs(getAngleRadians(positionVec, target.pos(), player.getYRot(), player.getXRot()))));
+                .filter(TravelTarget::canInteract)
+                .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
+                .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(),
+                        player.getXRot())) <= Math.toRadians(15))
+                .min(Comparator.comparingDouble(target -> Math
+                        .abs(getAngleRadians(positionVec, target.pos(), player.getYRot(), player.getXRot()))));
     }
 
     public static Optional<TravelTarget> getTeleportAnchorTarget(Player player) {

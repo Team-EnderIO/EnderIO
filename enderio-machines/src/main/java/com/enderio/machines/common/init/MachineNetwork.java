@@ -51,6 +51,6 @@ public class MachineNetwork {
                 MachinePayloadHandler.Server.getInstance()::handleCycleIOConfigPacket);
 
         registrar.playToServer(EnderfaceInteractPacket.TYPE, EnderfaceInteractPacket.STREAM_CODEC,
-            MachinePayloadHandler.Server.getInstance()::handleEnderfaceInteract);
+                MachinePayloadHandler.Server.getInstance()::handleEnderfaceInteract);
     }
 }

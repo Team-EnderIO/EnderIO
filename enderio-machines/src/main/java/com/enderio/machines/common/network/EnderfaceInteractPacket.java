@@ -8,9 +8,8 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class EnderfaceInteractPacket implements CustomPacketPayload {
     public static final Type<EnderfaceInteractPacket> TYPE = new Type<>(EnderIO.loc("enderface_interact"));
-    public static final StreamCodec<FriendlyByteBuf, EnderfaceInteractPacket> STREAM_CODEC = StreamCodec.ofMember(
-        EnderfaceInteractPacket::write, EnderfaceInteractPacket::new
-    );
+    public static final StreamCodec<FriendlyByteBuf, EnderfaceInteractPacket> STREAM_CODEC = StreamCodec
+            .ofMember(EnderfaceInteractPacket::write, EnderfaceInteractPacket::new);
 
     private final BlockHitResult blockHit;
 

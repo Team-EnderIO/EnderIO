@@ -153,8 +153,8 @@ public class EnderIOBase {
         provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, lookupProvider,
                 existingFileHelper, List.of(new EIOAdvancementGenerator())));
         provider.addSubProvider(event.includeServer(),
-                new LootTableProvider(packOutput, Collections.emptySet(), List.of(
-                        new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)),
+                new LootTableProvider(packOutput, Collections.emptySet(), List
+                        .of(new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)),
                         lookupProvider));
         generator.addProvider(true, provider);
     }

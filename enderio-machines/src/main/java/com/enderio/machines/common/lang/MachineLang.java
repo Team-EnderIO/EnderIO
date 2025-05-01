@@ -117,8 +117,8 @@ public class MachineLang {
 
     public static final Component FARMING_STATION_EXPERIMENT = addTranslation("pack",
             EnderIO.loc("experiment.farming_station"), "EnderIO: Farming Station");
-    public static final Component ENDERFACE_EXPERIMENT = addTranslation("pack",
-            EnderIO.loc("experiment.ender_io"), "EnderIO: The Ender IO");
+    public static final Component ENDERFACE_EXPERIMENT = addTranslation("pack", EnderIO.loc("experiment.ender_io"),
+            "EnderIO: The Ender IO");
 
     // TODO: NEO-PORT: Common lang base class?
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {

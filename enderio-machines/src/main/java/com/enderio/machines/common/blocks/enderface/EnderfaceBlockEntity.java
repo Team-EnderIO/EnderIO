@@ -4,12 +4,12 @@ import com.enderio.base.api.travel.TravelTarget;
 import com.enderio.base.api.travel.TravelTargetApi;
 import com.enderio.base.common.block.EIOBlockEntity;
 import com.enderio.base.common.config.BaseConfig;
-import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineFeatureFlags;
 import com.enderio.machines.common.travel.EnderfaceTravelTarget;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.SectionPos;
@@ -19,8 +19,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
-
-import java.util.Optional;
 
 public class EnderfaceBlockEntity extends EIOBlockEntity {
     private float lastUiPitch = -45;
@@ -33,7 +31,7 @@ public class EnderfaceBlockEntity extends EIOBlockEntity {
         super(MachineBlockEntities.ENDERFACE.get(), worldPosition, blockState);
 
         travelTargetDataSlot = addDataSlot(
-            EnderfaceTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
+                EnderfaceTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
     }
 
     @Override
@@ -96,9 +94,9 @@ public class EnderfaceBlockEntity extends EIOBlockEntity {
         int range = MachinesConfig.COMMON.ENDERFACE_RANGE.getAsInt();
         int rangeSqr = range * range;
         int x1 = SectionPos.blockToSectionCoord(pos.getX() - range),
-            x2 = SectionPos.blockToSectionCoord(pos.getX() + range),
-            z1 = SectionPos.blockToSectionCoord(pos.getZ() - range),
-            z2 = SectionPos.blockToSectionCoord(pos.getZ() + range);
+                x2 = SectionPos.blockToSectionCoord(pos.getX() + range),
+                z1 = SectionPos.blockToSectionCoord(pos.getZ() - range),
+                z2 = SectionPos.blockToSectionCoord(pos.getZ() + range);
         for (int z = z1; z <= z2; z++) {
             for (int x = x1; x <= x2; x++) {
                 var chunk = level.getChunk(x, z, ChunkStatus.FULL, false);
@@ -106,8 +104,9 @@ public class EnderfaceBlockEntity extends EIOBlockEntity {
                     var blockEntities = levelChunk.getBlockEntities();
                     if (!blockEntities.isEmpty()) {
                         for (BlockPos bePos : blockEntities.keySet()) {
-                            if (bePos.distSqr(pos) <= rangeSqr && chunk.getBlockEntity(bePos) instanceof EnderfaceBlockEntity enderface
-                                && enderface.canBeUsedByPlayer(player)) {
+                            if (bePos.distSqr(pos) <= rangeSqr
+                                    && chunk.getBlockEntity(bePos) instanceof EnderfaceBlockEntity enderface
+                                    && enderface.canBeUsedByPlayer(player)) {
                                 return true;
                             }
                         }

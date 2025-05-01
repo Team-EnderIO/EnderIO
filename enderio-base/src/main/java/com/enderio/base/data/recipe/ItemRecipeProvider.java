@@ -98,15 +98,16 @@ public class ItemRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.VOID_VIAL.get())
-            .pattern(" S ")
-            .pattern("QVQ")
-            .pattern("GQG")
-            .define('S', EIOTags.Items.INGOTS_SOULARIUM)
-            .define('Q', EIOTags.Items.FUSED_QUARTZ)
-            .define('V', EIOItems.SUSPICIOUS_SEED)
-            .define('G', EIOItems.GRAINS_OF_INFINITY)
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
-            .save(recipeOutput);
+                .pattern(" S ")
+                .pattern("QVQ")
+                .pattern("GQG")
+                .define('S', EIOTags.Items.INGOTS_SOULARIUM)
+                .define('Q', EIOTags.Items.FUSED_QUARTZ)
+                .define('V', EIOItems.SUSPICIOUS_SEED)
+                .define('G', EIOItems.GRAINS_OF_INFINITY)
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
+                .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.LEVITATION_STAFF.get())
                 .define('C', EIOTags.Items.GEMS_PRESCIENT_CRYSTAL)

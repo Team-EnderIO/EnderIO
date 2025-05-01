@@ -14,6 +14,9 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexSorting;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -43,14 +46,13 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 public class EnderfaceScreen extends Screen {
     private static final Quaternionf ROT_180_Z = Axis.ZP.rotation((float) Math.PI);
     private static final Object2ObjectOpenHashMap<RenderType, ByteBufferBuilder> ENDERFACE_BUFFERS = new Object2ObjectOpenHashMap<>();
-    private static final List<RenderType> LAYERS_BEFORE_BLOCK_ENTITIES = RenderType.chunkBufferLayers().stream().filter(l -> l != RenderType.translucent()).toList();
+    private static final List<RenderType> LAYERS_BEFORE_BLOCK_ENTITIES = RenderType.chunkBufferLayers()
+            .stream()
+            .filter(l -> l != RenderType.translucent())
+            .toList();
     private static final List<RenderType> LAYERS_AFTER_BLOCK_ENTITIES = List.of(RenderType.translucent());
     private static final boolean DEBUG_SELECTION_POSITION = false;
     private static final Vec3 RAY_ORIGIN = new Vec3(1.5, 1.5, 1.5);
@@ -160,7 +162,8 @@ public class EnderfaceScreen extends Screen {
         double dx = pDragX / (double) Minecraft.getInstance().getWindow().getGuiScaledWidth();
         double dy = pDragY / (double) Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
-        if (InputConstants.isKeyDown(window, InputConstants.KEY_LCONTROL) || InputConstants.isKeyDown(window, InputConstants.KEY_LSHIFT)) {
+        if (InputConstants.isKeyDown(window, InputConstants.KEY_LCONTROL)
+                || InputConstants.isKeyDown(window, InputConstants.KEY_LSHIFT)) {
             distance -= dy * 15;
         } else {
             yaw -= dx * 180;
@@ -179,7 +182,8 @@ public class EnderfaceScreen extends Screen {
     }
 
     private Iterable<BlockPos> getShownPositions() {
-        return BlockPos.betweenClosed(enderfacePos.offset(-range, -range, -range), enderfacePos.offset(range, range, range));
+        return BlockPos.betweenClosed(enderfacePos.offset(-range, -range, -range),
+                enderfacePos.offset(range, range, range));
     }
 
     private BufferBuilder getBuilderForLayer(RenderType renderType) {
@@ -224,14 +228,15 @@ public class EnderfaceScreen extends Screen {
                 // Resort
                 // TODO not working properly, eye position is probably wrong
                 var byteBuilder = ENDERFACE_BUFFERS.get(type);
-                var indexBuffer = sortState.buildSortedIndexBuffer(byteBuilder, VertexSorting.byDistance((float)eyePosition.x, (float)eyePosition.y, (float)eyePosition.z));
+                var indexBuffer = sortState.buildSortedIndexBuffer(byteBuilder,
+                        VertexSorting.byDistance((float) eyePosition.x, (float) eyePosition.y, (float) eyePosition.z));
                 vertexBuffer.uploadIndexBuffer(indexBuffer);
                 byteBuilder.clear();
             }
 
             type.setupRenderState();
             var chunkOffset = RenderSystem.getShader().CHUNK_OFFSET;
-            chunkOffset.set((float)0, (float)0, (float)0);
+            chunkOffset.set((float) 0, (float) 0, (float) 0);
             var modelView = new Matrix4f(RenderSystem.getModelViewMatrix());
             modelView.mul(pose.pose());
             vertexBuffer.drawWithShader(modelView, RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
@@ -309,10 +314,11 @@ public class EnderfaceScreen extends Screen {
                     pose.translate(pos.getX() - origin.x, pos.getY() - origin.y, pos.getZ() - origin.z);
                     var offset = pose.last();
                     // Use wrapper to make fluid rendering conform to PoseStack matrices
-                    var buffer = new VertexConsumerWrapper(getBuilderForLayer(ItemBlockRenderTypes.getRenderLayer(fluidState))) {
+                    var buffer = new VertexConsumerWrapper(
+                            getBuilderForLayer(ItemBlockRenderTypes.getRenderLayer(fluidState))) {
                         @Override
                         public VertexConsumer addVertex(float x, float y, float z) {
-                            parent.addVertex(offset,x - xTransform, y - yTransform, z - zTransform);
+                            parent.addVertex(offset, x - xTransform, y - yTransform, z - zTransform);
                             return this;
                         }
                     };
@@ -361,11 +367,13 @@ public class EnderfaceScreen extends Screen {
 
         if (DEBUG_SELECTION_POSITION && selectedLocation != null) {
             graphics.pose().pushPose();
-            graphics.pose().translate(selectedLocation.x - origin.x, selectedLocation.y - origin.y, selectedLocation.z - origin.z);
+            graphics.pose()
+                    .translate(selectedLocation.x - origin.x, selectedLocation.y - origin.y,
+                            selectedLocation.z - origin.z);
             graphics.pose().scale(0.3f, 0.3f, 0.3f);
             graphics.pose().translate(-0.5, -0.5, -0.5);
-            dispatcher.renderSingleBlock(Blocks.OAK_PLANKS.defaultBlockState(), graphics.pose(), graphics.bufferSource(), LightTexture.FULL_BRIGHT,
-                OverlayTexture.NO_OVERLAY);
+            dispatcher.renderSingleBlock(Blocks.OAK_PLANKS.defaultBlockState(), graphics.pose(),
+                    graphics.bufferSource(), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
             graphics.bufferSource().endBatch();
             graphics.pose().popPose();
         }
@@ -376,7 +384,7 @@ public class EnderfaceScreen extends Screen {
     private static Vec3 transform(Vec3 vec, Matrix4f transform) {
         // Move vector to a (0,0,0) origin as the transformation matrix expects
         Vector4f vec4 = new Vector4f((float) (vec.x - RAY_ORIGIN.x), (float) (vec.y - RAY_ORIGIN.y),
-            (float) (vec.z - RAY_ORIGIN.z), 1F);
+                (float) (vec.z - RAY_ORIGIN.z), 1F);
         // Apply the transformation matrix
         vec4.mul(transform);
         // Move transformed vector back to the actual origin
@@ -405,7 +413,8 @@ public class EnderfaceScreen extends Screen {
         return shape.clip(start, end, POS);
     }
 
-    private record HitCandidate(BlockHitResult hitResult, BlockPos realHitPos, Vec3 locationOffset) {}
+    private record HitCandidate(BlockHitResult hitResult, BlockPos realHitPos, Vec3 locationOffset) {
+    }
 
     private void updateCamera(int mouseX, int mouseY) {
         Quaternionf rotPitch = Axis.XN.rotationDegrees(pitch);
@@ -432,13 +441,16 @@ public class EnderfaceScreen extends Screen {
             var hitResult = raycast(pos, diffX, diffY, rayTransform);
 
             if (hitResult != null && hitResult.getType() != HitResult.Type.MISS) {
-                candidates.add(new HitCandidate(hitResult, pos.immutable(), hitResult.getLocation().subtract(POS.getX(), POS.getY(), POS.getZ())));
+                candidates.add(new HitCandidate(hitResult, pos.immutable(),
+                        hitResult.getLocation().subtract(POS.getX(), POS.getY(), POS.getZ())));
             }
         });
 
         eyePosition = transform(RAY_START, rayTransform).add(origin.x, origin.y, origin.z);
 
-        var candidate = candidates.stream().min(Comparator.comparingDouble(entry -> entry.realHitPos().distToCenterSqr(eyePosition))).orElse(null);
+        var candidate = candidates.stream()
+                .min(Comparator.comparingDouble(entry -> entry.realHitPos().distToCenterSqr(eyePosition)))
+                .orElse(null);
 
         if (candidate != null) {
             selectedPos = candidate.realHitPos();
@@ -466,12 +478,8 @@ public class EnderfaceScreen extends Screen {
                 updateCamera(par1, par2);
                 renderWorld(graphics, partialTick);
             } else {
-                graphics.drawCenteredString(
-                    Minecraft.getInstance().font,
-                    "EnderIO chunk not loaded.",
-                    width / 2,
-                    height / 2 - 32,
-                    0xFFFFFFFF);
+                graphics.drawCenteredString(Minecraft.getInstance().font, "EnderIO chunk not loaded.", width / 2,
+                        height / 2 - 32, 0xFFFFFFFF);
             }
         }
     }
@@ -486,12 +494,8 @@ public class EnderfaceScreen extends Screen {
                 System.out.println(world.getBlockState(selectedPos));
             }
             // Open menu here
-            PacketDistributor.sendToServer(new EnderfaceInteractPacket(new BlockHitResult(
-                selectedLocation,
-                selectedSide,
-                selectedPos,
-                false
-            )));
+            PacketDistributor.sendToServer(new EnderfaceInteractPacket(
+                    new BlockHitResult(selectedLocation, selectedSide, selectedPos, false)));
             return true;
         }
         return super.mouseClicked(mouseX, mouseY, button);

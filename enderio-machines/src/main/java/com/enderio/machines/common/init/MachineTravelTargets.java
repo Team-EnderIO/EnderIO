@@ -23,7 +23,8 @@ public class MachineTravelTargets {
             .register("travel_anchor", AnchorTravelTarget.Serializer::new);
 
     public static final Supplier<TravelTargetType<EnderfaceTravelTarget>> ENDERFACE_TYPE = registerType("enderface");
-    public static final Supplier<TravelTargetSerializer<EnderfaceTravelTarget>> ENDERFACE_SERIALIZER = TRAVEL_TARGET_SERIALIZERS.register("enderface", EnderfaceTravelTarget.Serializer::new);
+    public static final Supplier<TravelTargetSerializer<EnderfaceTravelTarget>> ENDERFACE_SERIALIZER = TRAVEL_TARGET_SERIALIZERS
+            .register("enderface", EnderfaceTravelTarget.Serializer::new);
 
     private static <T extends TravelTarget> Supplier<TravelTargetType<T>> registerType(String name) {
         return TRAVEL_TARGET_TYPES.register(name, TravelTargetType::simple);

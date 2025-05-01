@@ -22,11 +22,11 @@ import com.enderio.base.common.item.misc.MaterialItem;
 import com.enderio.base.common.item.tool.ColdFireIgniter;
 import com.enderio.base.common.item.tool.CoordinateSelectorItem;
 import com.enderio.base.common.item.tool.ElectromagnetItem;
-import com.enderio.base.common.item.tool.VoidVialItem;
 import com.enderio.base.common.item.tool.LevitationStaffItem;
 import com.enderio.base.common.item.tool.PoweredToggledItem;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.item.tool.TravelStaffItem;
+import com.enderio.base.common.item.tool.VoidVialItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
@@ -122,9 +122,9 @@ public class EIOItems {
     public static final RegiliteItem<MaterialItem> GUARDIAN_DIODE = materialItem("guardian_diode");
 
     public static final RegiliteItem<LoreItem> SUSPICIOUS_SEED = ITEM_REGISTRY
-        .registerItem("suspicious_seed", props -> new LoreItem(props, true, EIOLang.SUSPICIOUS_SEED_LORE),
-            new Item.Properties().rarity(Rarity.RARE))
-        .setTab(EIOCreativeTabs.MAIN);
+            .registerItem("suspicious_seed", props -> new LoreItem(props, true, EIOLang.SUSPICIOUS_SEED_LORE),
+                    new Item.Properties().rarity(Rarity.RARE))
+            .setTab(EIOCreativeTabs.MAIN);
 
     // endregion
 
