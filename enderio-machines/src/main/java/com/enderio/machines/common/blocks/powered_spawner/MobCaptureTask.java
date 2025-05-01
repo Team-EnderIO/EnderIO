@@ -23,7 +23,7 @@ public class MobCaptureTask extends PoweredSpawnerTask {
     public boolean isCompleted() {
         // Ensure we have an item to take from
         var inputStack = PoweredSpawnerBlockEntity.INPUT.getItemStack(blockEntity);
-        if (inputStack.isEmpty() || !inputStack.is(EIOItems.EMPTY_SOUL_VIAL)) {
+        if (inputStack.isEmpty() || !inputStack.is(EIOItems.SOUL_VIAL)) {
             return true;
         }
 
@@ -34,7 +34,7 @@ public class MobCaptureTask extends PoweredSpawnerTask {
     protected void onTaskCompleted() {
         // Ensure we have a vial to take
         var inputStack = PoweredSpawnerBlockEntity.INPUT.getItemStack(blockEntity);
-        if (inputStack.isEmpty() || !inputStack.is(EIOItems.EMPTY_SOUL_VIAL)) {
+        if (inputStack.isEmpty() || !inputStack.is(EIOItems.SOUL_VIAL)) {
             return;
         }
 
@@ -44,7 +44,7 @@ public class MobCaptureTask extends PoweredSpawnerTask {
             return;
         }
 
-        ItemStack filledStack = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get(), 1);
+        ItemStack filledStack = new ItemStack(EIOItems.SOUL_VIAL.get(), 1);
 
         var entityTypeKey = BuiltInRegistries.ENTITY_TYPE.getKey(entityType());
 

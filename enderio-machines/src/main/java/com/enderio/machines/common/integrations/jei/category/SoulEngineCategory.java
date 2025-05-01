@@ -2,14 +2,16 @@ package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.attachment.StoredEntityData;
-import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.client.gui.screen.SoulEngineScreen;
 import com.enderio.machines.common.blocks.soul_engine.SoulEngineBlockEntity;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.souldata.EngineSoul;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -34,10 +36,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> {
 
@@ -97,10 +95,12 @@ public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> 
                         .addItemStack(new ItemStack(SpawnEggItem.byId(value)));
             }
 
-            ItemStack stack = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
-            if (stack.is(EIOTags.Items.ENTITY_STORAGE)) {
-                stack.set(EIODataComponents.STORED_ENTITY, StoredEntityData.of(recipe.entitytype()));
+            ItemStack stack = new ItemStack(EIOItems.SOUL_VIAL.get());
+            var soulStorage = stack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+            if (soulStorage != null) {
+                soulStorage.setSoul(StoredEntityData.of(recipe.entitytype()));
             }
+
             builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStack(stack);
         }
 

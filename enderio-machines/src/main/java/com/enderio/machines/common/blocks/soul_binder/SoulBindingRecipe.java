@@ -1,11 +1,11 @@
 package com.enderio.machines.common.blocks.soul_binder;
 
-import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.network.MassiveStreamCodec;
+import com.enderio.base.api.soul.FilledSoulStorageIngredient;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.recipe.FluidRecipeInput;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blocks.base.MachineRecipe;
@@ -48,6 +48,7 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
     @Override
     public List<OutputStack> craft(Input input, RegistryAccess registryAccess) {
         ItemStack vial = input.getItem(0);
+
         List<OutputStack> results = getResultStacks(registryAccess);
         ItemStack result = results.getFirst().getItem();
 
@@ -55,9 +56,11 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
             result.applyComponents(input.itemToBind.getComponents());
         }
 
-        var storedEntityData = vial.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
-        if (result.is(EIOTags.Items.ENTITY_STORAGE)) {
-            result.set(EIODataComponents.STORED_ENTITY, storedEntityData);
+        var vialSoulStorage = vial.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+        var resultSoulStorage = result.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+
+        if (vialSoulStorage != null && resultSoulStorage != null) {
+            resultSoulStorage.setSoul(vialSoulStorage.getSoul());
         }
 
         return results;
@@ -65,18 +68,17 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.copy()),
-                OutputStack.of(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance()));
+        return List.of(OutputStack.of(output.copy()), OutputStack.of(EIOItems.SOUL_VIAL.get().getDefaultInstance()));
     }
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY, Ingredient.of(EIOItems.FILLED_SOUL_VIAL), input);
+        return NonNullList.of(Ingredient.EMPTY, FilledSoulStorageIngredient.of(EIOItems.SOUL_VIAL), input);
     }
 
     @Override
     public boolean matches(Input recipeInput, Level pLevel) {
-        if (!recipeInput.getItem(0).is(EIOItems.FILLED_SOUL_VIAL.get())) {
+        if (!recipeInput.getItem(0).is(EIOItems.SOUL_VIAL.get())) {
             return false;
         }
 

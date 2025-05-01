@@ -70,7 +70,7 @@ public class EnderIOJEI implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
-        registration.registerSubtypeInterpreter(EIOItems.FILLED_SOUL_VIAL.get(), new EntityStorageSubtypeInterpreter());
+        registration.registerSubtypeInterpreter(EIOItems.SOUL_VIAL.get(), new EntityStorageSubtypeInterpreter());
         registration.registerSubtypeInterpreter(EIOItems.BROKEN_SPAWNER.get(), new EntityStorageSubtypeInterpreter());
     }
 

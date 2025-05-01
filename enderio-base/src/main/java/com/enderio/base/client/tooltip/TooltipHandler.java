@@ -1,9 +1,9 @@
 package com.enderio.base.client.tooltip;
 
 import com.enderio.EnderIOBase;
-import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.grindingball.GrindingBallData;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
@@ -40,7 +40,7 @@ public class TooltipHandler {
         // Misc tooltips.
         addCapacitorTooltips(forItem, evt.getToolTip(), advanced);
         addGrindingBallTooltips(forItem, evt.getToolTip(), advanced);
-        addEntityDataTooltips(forItem, evt.getToolTip(), advanced);
+        addSoulStorageTooltips(forItem, evt.getToolTip(), advanced);
 
         // Advanced tooltip system
         getAdvancedProvider(forItem.getItem()).ifPresent(
@@ -83,11 +83,12 @@ public class TooltipHandler {
 
     // endregion
 
-    // region Entity Storage
+    // region Soul Storage
 
-    private static void addEntityDataTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
-        if (itemStack.has(EIODataComponents.STORED_ENTITY)) {
-            var storedEntityData = itemStack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+    private static void addSoulStorageTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
+        var singleSoulStorage = itemStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+        if (singleSoulStorage != null && singleSoulStorage.hasSoul()) {
+            var storedEntityData = singleSoulStorage.getSoul();
 
             if (storedEntityData.entityType().isPresent()) {
                 components.add(TooltipUtil.style(Component

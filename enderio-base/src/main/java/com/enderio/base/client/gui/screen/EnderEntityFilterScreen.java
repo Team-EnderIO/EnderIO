@@ -3,8 +3,10 @@ package com.enderio.base.client.gui.screen;
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.common.filter.AbstractFilterMenu;
 import com.enderio.base.common.filter.entity.EnderEntityFilterMenu;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.filter.entity.EntityFilterSlot;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
@@ -107,8 +109,11 @@ public class EnderEntityFilterScreen extends EnderContainerScreen<EnderEntityFil
                 return;
             }
 
-            var vial = new ItemStack(EIOItems.FILLED_SOUL_VIAL.asItem());
-            vial.set(EIODataComponents.STORED_ENTITY, entity);
+            var vial = new ItemStack(EIOItems.SOUL_VIAL.asItem());
+            var soulStorage = vial.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+            if (soulStorage != null) {
+                soulStorage.setSoul(entity);
+            }
             super.renderSlotContents(guiGraphics, vial, slot, countString);
         }
 
@@ -123,7 +128,7 @@ public class EnderEntityFilterScreen extends EnderContainerScreen<EnderEntityFil
                 return true;
             }
 
-            var vial = new ItemStack(EIOItems.FILLED_SOUL_VIAL.asItem());
+            var vial = new ItemStack(EIOItems.SOUL_VIAL.asItem());
             vial.set(EIODataComponents.STORED_ENTITY, entity);
             guiGraphics.renderTooltip(font, getTooltipFromContainerItem(vial), vial.getTooltipImage(), vial, x, y);
             return true;

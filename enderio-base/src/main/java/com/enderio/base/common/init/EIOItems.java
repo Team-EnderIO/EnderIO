@@ -291,7 +291,8 @@ public class EIOItems {
 
     public static final RegiliteItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEM_REGISTRY
             .registerItem("broken_spawner", BrokenSpawnerItem::new)
-            .addItemTags(EIOTags.Items.ENTITY_STORAGE)
+            .addCapability(EIOCapabilities.SingleSoulStorage.ITEM,
+                    EIOCapabilities.SingleSoulStorage.BASIC_ITEM_PROVIDER)
             .setModelProvider(ModelHelper::fakeBlockModel)
             .setTab(EIOCreativeTabs.MAIN)
             .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.getPossibleStacks()));
@@ -372,15 +373,16 @@ public class EIOItems {
 
     // region Items
 
-    public static final RegiliteItem<SoulVialItem> EMPTY_SOUL_VIAL = groupedItem("empty_soul_vial", SoulVialItem::new,
-            EIOCreativeTabs.SOULS);
-
-    public static final RegiliteItem<SoulVialItem> FILLED_SOUL_VIAL = ITEM_REGISTRY
-            .registerItem("filled_soul_vial", SoulVialItem::new, new Item.Properties().stacksTo(1))
-            .addItemTags(EIOTags.Items.ENTITY_STORAGE)
-            .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
-    // TODO .removeTab(CreativeModeTabs.SEARCH)
-    ;
+    public static final RegiliteItem<SoulVialItem> SOUL_VIAL = groupedItem("soul_vial", SoulVialItem::new,
+            EIOCreativeTabs.SOULS).setTab(EIOCreativeTabs.GEAR)
+                    .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
+                    .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get())
+                            .override()
+                            .predicate(SoulVialItem.FILLED_MODEL_PROPERTY, 1)
+                            .model(prov.basicItem(EnderIO.loc("soul_vial_filled")))
+                            .end())
+                    .addCapability(EIOCapabilities.SingleSoulStorage.ITEM,
+                            EIOCapabilities.SingleSoulStorage.BASIC_ITEM_PROVIDER);
 
     public static final RegiliteItem<EnderiosItem> ENDERIOS = ITEM_REGISTRY
             .registerItem("enderios", EnderiosItem::new, new Item.Properties().stacksTo(1))
@@ -540,9 +542,16 @@ public class EIOItems {
     // endregion
 
     public static void register(IEventBus bus) {
-        ENDERIOS.setModelProvider((prov, ctx) -> {});
+    	ENDERIOS.setModelProvider((prov, ctx) -> {});
+    
+        // XP rod rename
         ITEM_REGISTRY.addAlias(EnderIO.loc("experience_rod"), VOID_VIAL.getId());
 
+        // Unified soul vials
+        ITEM_REGISTRY.addAlias(EnderIO.loc("empty_soul_vial"), SOUL_VIAL.getId());
+        ITEM_REGISTRY.addAlias(EnderIO.loc("filled_soul_vial"), SOUL_VIAL.getId());
+
+		// Filter renames
         ITEM_REGISTRY.addAlias(EnderIO.loc("basic_filter"), BASIC_ITEM_FILTER.getId());
         ITEM_REGISTRY.addAlias(EnderIO.loc("advanced_filter"), ADVANCED_ITEM_FILTER.getId());
         ITEM_REGISTRY.addAlias(EnderIO.loc("fluid_filter"), BASIC_FLUID_FILTER.getId());

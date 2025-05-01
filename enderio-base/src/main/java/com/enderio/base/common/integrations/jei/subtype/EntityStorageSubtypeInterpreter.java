@@ -1,8 +1,6 @@
 package com.enderio.base.common.integrations.jei.subtype;
 
-import com.enderio.base.api.attachment.StoredEntityData;
-import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.tag.EIOTags;
+import com.enderio.base.common.init.EIOCapabilities;
 import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.resources.ResourceLocation;
@@ -12,19 +10,19 @@ import org.jetbrains.annotations.Nullable;
 public class EntityStorageSubtypeInterpreter implements ISubtypeInterpreter<ItemStack> {
     @Override
     public @Nullable Object getSubtypeData(ItemStack ingredient, UidContext context) {
-        if (ingredient.is(EIOTags.Items.ENTITY_STORAGE)) {
-            return ingredient.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+        var soulStorage = ingredient.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+        if (soulStorage != null) {
+            return soulStorage.getSoul();
         }
+
         return null;
     }
 
     @Override
     public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
-        if (ingredient.is(EIOTags.Items.ENTITY_STORAGE)) {
-            return ingredient.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)
-                    .entityType()
-                    .map(ResourceLocation::toString)
-                    .orElse("");
+        var soulStorage = ingredient.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+        if (soulStorage != null) {
+            return soulStorage.getSoul().entityType().map(ResourceLocation::toString).orElse("");
         }
 
         return "";

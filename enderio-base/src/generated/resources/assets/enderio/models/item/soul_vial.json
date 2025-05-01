@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "enderio:item/soul_vial_filled",
+      "predicate": {
+        "enderio:soul_vial_filled": 1.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "enderio:item/soul_vial"
+  }
+}

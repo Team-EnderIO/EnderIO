@@ -1,6 +1,7 @@
 package com.enderio.machines.data.recipes;
 
 import com.enderio.base.api.EnderIO;
+import com.enderio.base.api.soul.EmptySoulStorageIngredient;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
@@ -204,7 +205,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .define('C', EIOBlocks.ENSOULED_CHASSIS.get())
                 .define('G', EIOTags.Items.GEARS_ENERGIZED)
                 .define('Z', EIOItems.Z_LOGIC_CONTROLLER)
-                .define('V', EIOItems.EMPTY_SOUL_VIAL)
+                .define('V', EmptySoulStorageIngredient.of(EIOItems.SOUL_VIAL))
                 .pattern("IVI")
                 .pattern("GCG")
                 .pattern("IZI")

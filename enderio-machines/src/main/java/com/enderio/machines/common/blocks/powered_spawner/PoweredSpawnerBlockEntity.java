@@ -129,7 +129,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
         // Ensure output is free in capture mode
         if (mode == PoweredSpawnerMode.CAPTURE) {
-            if (!INPUT.getItemStack(this).is(EIOItems.EMPTY_SOUL_VIAL)) {
+            if (!INPUT.getItemStack(this).is(EIOItems.SOUL_VIAL)) {
                 setReason(SpawnerBlockedReason.INPUT_EMPTY);
                 return null;
             }
@@ -226,7 +226,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .capacitor()
-                .inputSlot((i, stack) -> stack.is(EIOItems.EMPTY_SOUL_VIAL))
+                .inputSlot((i, stack) -> stack.is(EIOItems.SOUL_VIAL))
                 .slotAccess(INPUT)
                 .outputSlot()
                 .slotAccess(OUTPUT)

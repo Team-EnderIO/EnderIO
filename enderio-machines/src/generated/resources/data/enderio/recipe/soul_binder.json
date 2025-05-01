@@ -12,7 +12,8 @@
       "tag": "c:ingots/soularium"
     },
     "V": {
-      "item": "enderio:empty_soul_vial"
+      "type": "enderio:empty_soul_storage",
+      "item": "enderio:soul_vial"
     },
     "Z": {
       "item": "enderio:z_logic_controller"

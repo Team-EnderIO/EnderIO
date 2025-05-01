@@ -1,7 +1,7 @@
 package com.enderio.base.common.filter.entity;
 
 import com.enderio.base.api.attachment.StoredEntityData;
-import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.filter.FilterSlot;
 import com.enderio.base.common.tag.EIOTags;
 import java.util.Optional;
@@ -27,9 +27,9 @@ public class EntityFilterSlot extends FilterSlot<StoredEntityData> {
 
     @Override
     public Optional<StoredEntityData> getResourceFrom(ItemStack itemStack) {
-        if (itemStack.is(EIOTags.Items.ENTITY_STORAGE)) {
-            StoredEntityData ghost = itemStack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
-            return Optional.of(ghost);
+        var soulStorage = itemStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+        if (soulStorage != null) {
+            return Optional.of(soulStorage.getSoul());
         } else if (itemStack.getItem() instanceof SpawnEggItem spawnEggItem) {
             Entity entity = spawnEggItem.getType(itemStack).create(Minecraft.getInstance().level);
             if (entity instanceof LivingEntity livingEntity) {

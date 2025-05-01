@@ -14,6 +14,7 @@ import com.enderio.base.common.init.EIOCriterions;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOEntities;
 import com.enderio.base.common.init.EIOFluids;
+import com.enderio.base.common.init.EIOIngredientTypes;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.init.EIOLootModifiers;
 import com.enderio.base.common.init.EIOMenus;
@@ -110,6 +111,7 @@ public class EnderIOBase {
         EIOEntities.register(modEventBus);
         EIOAttachments.register(modEventBus);
         EIOCriterions.register(modEventBus);
+        EIOIngredientTypes.register(modEventBus);
         REGILITE.register(modEventBus);
 
         // Run datagen after registrate is finished.

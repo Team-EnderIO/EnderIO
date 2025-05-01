@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:empty_soul_vial"
+        "recipe": "enderio:soul_vial"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:empty_soul_vial"
+      "enderio:soul_vial"
     ]
   }
 }
