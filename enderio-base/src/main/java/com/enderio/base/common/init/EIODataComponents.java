@@ -8,6 +8,8 @@ import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.common.capability.EntityFilterCapability;
 import com.enderio.base.common.capability.FluidFilterCapability;
 import com.enderio.base.common.capability.ItemFilterCapability;
+import com.enderio.base.common.filter.ExistingItemStackFilter;
+import com.enderio.base.common.filter.SimpleItemStackFilter;
 import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.mojang.serialization.Codec;
@@ -55,6 +57,15 @@ public class EIODataComponents {
     public static Supplier<DataComponentType<GrindingBallData>> GRINDING_BALL = DATA_COMPONENT_TYPES
             .registerComponentType("grinding_ball", builder -> builder.persistent(GrindingBallData.CODEC)
                     .networkSynchronized(GrindingBallData.STREAM_CODEC));
+
+    // TODO: Place this into the old item_filter name...
+    public static final Supplier<DataComponentType<SimpleItemStackFilter>> SIMPLE_ITEM_STACK_FILTER = DATA_COMPONENT_TYPES
+        .registerComponentType("simple_item_stack_filter", builder -> builder.persistent(SimpleItemStackFilter.CODEC)
+            .networkSynchronized(SimpleItemStackFilter.STREAM_CODEC));
+
+    public static final Supplier<DataComponentType<ExistingItemStackFilter>> EXISTING_ITEM_STACK_FILTER = DATA_COMPONENT_TYPES
+        .registerComponentType("existing_item_stack_filter", builder -> builder.persistent(ExistingItemStackFilter.CODEC)
+            .networkSynchronized(ExistingItemStackFilter.STREAM_CODEC));
 
     public static final Supplier<DataComponentType<ItemFilterCapability.Component>> ITEM_FILTER = DATA_COMPONENT_TYPES
             .registerComponentType("item_filter", builder -> builder.persistent(ItemFilterCapability.Component.CODEC)

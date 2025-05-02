@@ -35,7 +35,7 @@ public class ItemConduitTicker
             // TODO: Filters could be handled better...
             var extractFilter = extract.inventory()
                     .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
-                    .getCapability(EIOCapabilities.Filter.ITEM);
+                    .getCapability(EIOCapabilities.ITEM_STACK_FILTER);
 
             IItemHandler extractHandler = extract.itemHandler();
             int extracted = 0;
@@ -48,10 +48,8 @@ public class ItemConduitTicker
                     continue;
                 }
 
-                if (extractFilter instanceof ItemStackFilter itemFilter) {
-                    if (!itemFilter.test(extractedItem)) {
-                        continue;
-                    }
+                if (extractFilter != null && !extractFilter.test(extract.itemHandler, extractedItem)) {
+                    continue;
                 }
 
                 var connectionConfig = extract.node()
@@ -76,12 +74,10 @@ public class ItemConduitTicker
 
                     var insertFilter = insert.inventory()
                             .getStackInSlot(ItemConduit.INSERT_FILTER_SLOT)
-                            .getCapability(EIOCapabilities.Filter.ITEM);
+                            .getCapability(EIOCapabilities.ITEM_STACK_FILTER);
 
-                    if (insertFilter instanceof ItemStackFilter itemFilter) {
-                        if (!itemFilter.test(extractedItem)) {
-                            continue;
-                        }
+                    if (insertFilter != null && !insertFilter.test(insert.itemHandler, extractedItem)) {
+                        continue;
                     }
 
                     ItemStack notInserted = ItemHandlerHelper.insertItem(insert.itemHandler, extractedItem, false);

@@ -48,21 +48,29 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
     protected void addPlayerMainInventorySlots(int xStart, int yStart) {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlot(new Slot(getPlayerInventory(), x + y * 9 + 9, xStart + x * 18, yStart + y * 18));
+                addSlot(createPlayerInventorySlot(getPlayerInventory(), x + y * 9 + 9, xStart + x * 18, yStart + y * 18));
             }
         }
     }
 
     protected void addPlayerHotbarSlots(int x, int y) {
         for (int i = 0; i < 9; i++) {
-            addSlot(new Slot(getPlayerInventory(), i, x + i * 18, y));
+            addSlot(createPlayerInventorySlot(getPlayerInventory(), i, x + i * 18, y));
         }
     }
 
     protected void addArmorSlots(int x, int y) {
         for (int i = 0; i < EQUIPMENT_SLOTS.length; i++) {
-            addSlot(new ArmorSlot(getPlayerInventory(), 36 + (3 - i), x, y + i * 18, EQUIPMENT_SLOTS[i]));
+            addSlot(createPlayerArmorSlot(getPlayerInventory(), 36 + (3 - i), x, y + i * 18, EQUIPMENT_SLOTS[i]));
         }
+    }
+
+    protected Slot createPlayerInventorySlot(Inventory inventory, int slot, int x, int y) {
+        return new Slot(inventory, slot, x, y);
+    }
+
+    protected ArmorSlot createPlayerArmorSlot(Inventory inventory, int slot, int x, int y, EquipmentSlot slotType) {
+        return new ArmorSlot(inventory, slot, x, y, slotType);
     }
 
     // endregion
