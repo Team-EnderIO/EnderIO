@@ -28,6 +28,8 @@ public abstract class FilterSlot<T> extends Slot {
 
     @Override
     public void set(ItemStack stack) {
+        // TODO: Check this behaviour.
+        getResourceFrom(stack).ifPresent(this::setResource);
         setChanged();
     }
 

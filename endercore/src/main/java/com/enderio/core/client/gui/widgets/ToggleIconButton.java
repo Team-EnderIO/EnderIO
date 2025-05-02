@@ -61,11 +61,20 @@ public class ToggleIconButton extends EnderButton {
         }
     }
 
+    private boolean previousValue;
+
     @Override
     public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        boolean value = getter.get();
         ResourceLocation sprite = spriteFunction.apply(getter.get());
         if (sprite != null) {
             guiGraphics.blitSprite(sprite, getX(), getY(), width, height);
+        }
+
+        // TODO: Temp solution for the value changing externally (data sync)
+        if (previousValue != value) {
+            previousValue = value;
+            setTooltip(Tooltip.create(tooltipFunction.apply(getter.get())));
         }
     }
 

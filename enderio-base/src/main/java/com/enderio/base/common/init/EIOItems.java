@@ -12,6 +12,7 @@ import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.filter.EntityFilter;
 import com.enderio.base.common.item.filter.FluidFilter;
 import com.enderio.base.common.item.filter.ItemFilter;
+import com.enderio.base.common.item.filter.SimpleItemFilterItem;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
 import com.enderio.base.common.item.misc.EnderiosItem;
@@ -447,6 +448,11 @@ public class EIOItems {
     // endregion
 
     // region filter
+
+    public static final RegiliteItem<SimpleItemFilterItem> TEST_FILTER = ITEM_REGISTRY
+            .registerItem("test_filter", SimpleItemFilterItem::new)
+            .setTab(EIOCreativeTabs.GEAR)
+            .addCapability(EIOCapabilities.ITEM_STACK_FILTER, SimpleItemFilterItem.ITEM_STACK_FILTER_PROVIDER);
 
     public static final RegiliteItem<ItemFilter> BASIC_ITEM_FILTER = ITEM_REGISTRY
             .registerItem("basic_filter",

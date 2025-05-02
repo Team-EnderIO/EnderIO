@@ -4,6 +4,7 @@ import com.enderio.base.api.new_filter.ItemStackFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 // This is just an example as to why we needed a more extensive filter interface :)
-public record ExistingItemStackFilter(boolean hasSnapshot, List<ItemStack> snapshot, boolean shouldCompareComponents, boolean isInverted) implements ItemStackFilter {
+public record ExistingItemStackFilter(boolean hasSnapshot, NonNullList<ItemStack> snapshot, boolean shouldCompareComponents, boolean isInverted) implements ItemStackFilter {
     public static final Codec<ExistingItemStackFilter> CODEC = RecordCodecBuilder.create(
         componentInstance -> componentInstance
             .group(
@@ -36,6 +37,14 @@ public record ExistingItemStackFilter(boolean hasSnapshot, List<ItemStack> snaps
         ByteBufCodecs.BOOL,
         ExistingItemStackFilter::isInverted,
         ExistingItemStackFilter::new);
+
+    public ExistingItemStackFilter(boolean hasSnapshot, List<ItemStack> snapshot, boolean shouldCompareComponents, boolean isInverted) {
+        this(hasSnapshot, NonNullList.withSize(snapshot.size(), ItemStack.EMPTY), shouldCompareComponents, isInverted);
+
+        for (int i = 0; i < snapshot.size(); i++) {
+            this.snapshot.set(i, snapshot.get(i));
+        }
+    }
     
     @Override
     public boolean test(@Nullable IItemHandler target, ItemStack stack) {

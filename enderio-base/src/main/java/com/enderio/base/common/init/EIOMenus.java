@@ -5,6 +5,7 @@ import com.enderio.base.client.gui.screen.CoordinateMenuScreen;
 import com.enderio.base.client.gui.screen.EntityFilterScreen;
 import com.enderio.base.client.gui.screen.FluidFilterScreen;
 import com.enderio.base.client.gui.screen.ItemFilterScreen;
+import com.enderio.base.client.gui.screen.NewItemFilterScreen;
 import com.enderio.base.common.menu.CoordinateMenu;
 import com.enderio.base.common.menu.EntityFilterMenu;
 import com.enderio.base.common.menu.FluidFilterMenu;
@@ -24,7 +25,10 @@ public class EIOMenus {
         .registerMenu("item_filter", ItemFilterMenu::factory, () -> ItemFilterScreen::new);
 
     public static final RegiliteMenu<SimpleItemFilterMenu> BASIC_ITEM_FILTER = MENU_REGISTRY
-        .registerMenu("item_filter", SimpleItemFilterMenu.clientFactory(EIOMenus.BASIC_ITEM_FILTER, 4), () -> SimpleItemFilterMenu::new);
+        .registerMenu("basic_item_filter", SimpleItemFilterMenu::basic, () -> NewItemFilterScreen::new);
+
+    public static final RegiliteMenu<SimpleItemFilterMenu> ADVANCED_ITEM_FILTER = MENU_REGISTRY
+        .registerMenu("advanced_item_filter", SimpleItemFilterMenu::advanced, () -> NewItemFilterScreen::new);
 
     public static final RegiliteMenu<FluidFilterMenu> FLUID_FILTER = MENU_REGISTRY
         .registerMenu("fluid_filter", FluidFilterMenu::factory, () -> FluidFilterScreen::new);
