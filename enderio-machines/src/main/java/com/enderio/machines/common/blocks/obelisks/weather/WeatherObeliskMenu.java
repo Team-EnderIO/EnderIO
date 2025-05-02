@@ -25,7 +25,8 @@ public class WeatherObeliskMenu extends MachineMenu<WeatherObeliskBlockEntity> {
     }
 
     public WeatherObeliskMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.WEATHER_OBELISK.get(), containerId, playerInventory, buf, MachineBlockEntities.WEATHER_OBELISK.get());
+        super(MachineMenus.WEATHER_OBELISK.get(), containerId, playerInventory, buf,
+                MachineBlockEntities.WEATHER_OBELISK.get());
 
         tank = addSyncSlot(FluidStorageSyncSlot.standalone());
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.standalone());

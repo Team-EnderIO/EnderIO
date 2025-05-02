@@ -11,6 +11,7 @@ import com.enderio.machines.common.blocks.sag_mill.SagMillingRecipe;
 import com.enderio.machines.common.blocks.slicer.SlicingRecipe;
 import com.enderio.machines.common.blocks.soul_binder.SoulBindingRecipe;
 import com.enderio.machines.common.blocks.vat.FermentingRecipe;
+import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -18,8 +19,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-
-import java.util.function.Supplier;
 
 public class MachineRecipes {
 
@@ -45,7 +44,7 @@ public class MachineRecipes {
     public static final RecipeTypeSerializerPair<FermentingRecipe, FermentingRecipe.Serializer> VAT_FERMENTING = register(
             "vat_fermenting", FermentingRecipe.Serializer::new);
     public static final RecipeTypeSerializerPair<WeatherChangeRecipe, WeatherChangeRecipe.Serializer> WEATHER_CHANGE = register(
-        "weather_change", WeatherChangeRecipe.Serializer::new);
+            "weather_change", WeatherChangeRecipe.Serializer::new);
 
     private static <I extends Recipe<?>> DeferredHolder<RecipeType<?>, RecipeType<I>> registerType(String name) {
         return RECIPE_TYPES.register(name, () -> RecipeType.simple(EnderIO.loc(name)));

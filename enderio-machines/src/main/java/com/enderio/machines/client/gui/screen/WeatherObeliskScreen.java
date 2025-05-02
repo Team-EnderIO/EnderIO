@@ -29,8 +29,8 @@ public class WeatherObeliskScreen extends MachineScreen<WeatherObeliskMenu> {
 
         addRenderableOnly(new FluidStackWidget(22 + leftPos, 11 + topPos, 16, 63, menu::getFluidTank));
 
-        addRenderableOnly(new ProgressWidget.BottomUp(WEATHER_BG, menu::getCraftingProgress, 81 + leftPos, 28 + topPos, 12,
-            32, 176, 0));
+        addRenderableOnly(new ProgressWidget.BottomUp(WEATHER_BG, menu::getCraftingProgress, 81 + leftPos, 28 + topPos,
+                12, 32, 176, 0));
     }
 
     @Override

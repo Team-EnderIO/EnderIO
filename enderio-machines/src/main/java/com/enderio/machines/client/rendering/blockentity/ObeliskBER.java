@@ -3,6 +3,8 @@ package com.enderio.machines.client.rendering.blockentity;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -13,9 +15,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class ObeliskBER implements BlockEntityRenderer<MachineBlockEntity> {
 

@@ -17,6 +17,7 @@ import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -34,8 +35,6 @@ import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public class WeatherObeliskBlockEntity extends MachineBlockEntity implements FluidTankUser {
 
     private final MachineFluidHandler fluidHandler;
@@ -47,14 +46,17 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
         super(MachineBlockEntities.WEATHER_OBELISK.get(), worldPosition, blockState, false);
         fluidHandler = createFluidHandler();
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::canAcceptTask, MachineRecipes.WEATHER_CHANGE.type().get(), this::createTask, this::createRecipeInput);
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::canAcceptTask,
+                MachineRecipes.WEATHER_CHANGE.type().get(), this::createTask, this::createRecipeInput);
     }
 
     private WeatherChangeRecipe.Input createRecipeInput() {
         return new WeatherChangeRecipe.Input(TANK.getFluid(getFluidHandler()));
     }
 
-    private CraftingMachineTask<WeatherChangeRecipe, WeatherChangeRecipe.Input> createTask(Level level, WeatherChangeRecipe.Input input, @Nullable RecipeHolder<WeatherChangeRecipe> weatherChangeRecipeRecipeHolder) {
+    private CraftingMachineTask<WeatherChangeRecipe, WeatherChangeRecipe.Input> createTask(Level level,
+            WeatherChangeRecipe.Input input,
+            @Nullable RecipeHolder<WeatherChangeRecipe> weatherChangeRecipeRecipeHolder) {
         return new CraftingMachineTask<>(level, getInventory(), input, null, weatherChangeRecipeRecipeHolder) {
 
             @Override
@@ -78,11 +80,14 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
             protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
                 if (!simulate && level instanceof ServerLevel server) {
                     switch (getRecipe().mode()) {
-                        case DAY -> server.setDayTime(1000);
-                        case NIGHT -> server.setDayTime(13000);
-                        case RAIN -> server.setWeatherParameters(0, ServerLevel.RAIN_DURATION.sample(server.getRandom()), true, false);
-                        case CLEAR -> server.setWeatherParameters(ServerLevel.RAIN_DELAY.sample(server.getRandom()), 0, false, false);
-                        case LIGHTNING -> server.setWeatherParameters(0, ServerLevel.THUNDER_DURATION.sample(server.getRandom()), true, true);
+                    case DAY -> server.setDayTime(1000);
+                    case NIGHT -> server.setDayTime(13000);
+                    case RAIN -> server.setWeatherParameters(0, ServerLevel.RAIN_DURATION.sample(server.getRandom()),
+                            true, false);
+                    case CLEAR ->
+                        server.setWeatherParameters(ServerLevel.RAIN_DELAY.sample(server.getRandom()), 0, false, false);
+                    case LIGHTNING -> server.setWeatherParameters(0,
+                            ServerLevel.THUNDER_DURATION.sample(server.getRandom()), true, true);
                     }
                 }
                 return true;
@@ -139,10 +144,10 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
 
     @Override
     protected @Nullable MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder().
-            inputSlot((i,s) -> s.is(Items.FIREWORK_ROCKET))
-            .slotAccess(ROCKET)
-            .build();
+        return MachineInventoryLayout.builder()
+                .inputSlot((i, s) -> s.is(Items.FIREWORK_ROCKET))
+                .slotAccess(ROCKET)
+                .build();
     }
 
     @Override

@@ -109,8 +109,8 @@ public class MachineMenus {
             .registerMenu("relocator_obelisk", RelocatorObeliskMenu::new, () -> RelocatorObeliskScreen::new);
     public static final RegiliteMenu<VatMenu> VAT = MENU_REGISTRY.registerMenu("vat", VatMenu::new,
             () -> VatScreen::new);
-    public static final RegiliteMenu<WeatherObeliskMenu> WEATHER_OBELISK = MENU_REGISTRY.registerMenu(
-            "weather_obelisk", WeatherObeliskMenu::new, () -> WeatherObeliskScreen::new);
+    public static final RegiliteMenu<WeatherObeliskMenu> WEATHER_OBELISK = MENU_REGISTRY.registerMenu("weather_obelisk",
+            WeatherObeliskMenu::new, () -> WeatherObeliskScreen::new);
 
     public static void register(IEventBus bus) {
         MENU_REGISTRY.register(bus);

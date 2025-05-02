@@ -47,6 +47,11 @@ import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockRegistry;
 import com.enderio.regilite.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMap;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.BlockItem;
@@ -58,12 +63,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class MachineBlocks {
     private static final BlockRegistry BLOCK_REGISTRY = EnderIOMachines.REGILITE.blockRegistry();
@@ -82,9 +81,8 @@ public class MachineBlocks {
                     .customLoader(CompositeModelBuilder::begin)
                     .child("tank",
                             ModelHelper.getExistingAsBuilder(prov.models(),
-                                EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
-                    .child("overlay",
-                            ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
+                                    EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
+                    .child("overlay", ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
                     .end()
                     .texture("particle", EnderIO.loc("block/machine_side"))))
             .createBlockItem(ITEM_REGISTRY, block -> new FluidTankBlockItem(block, new Item.Properties(), 16000),
@@ -107,9 +105,8 @@ public class MachineBlocks {
                     .customLoader(CompositeModelBuilder::begin)
                     .child("tank",
                             ModelHelper.getExistingAsBuilder(prov.models(),
-                                EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
-                    .child("overlay",
-                            ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
+                                    EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
+                    .child("overlay", ModelHelper.getExistingAsBuilder(prov.models(), EnderIO.loc("block/io_overlay")))
                     .end()
                     .texture("particle", EnderIO.loc("block/machine_side"))))
             .createBlockItem(ITEM_REGISTRY, (block) -> new FluidTankBlockItem(block, new Item.Properties(), 32000),
@@ -258,8 +255,7 @@ public class MachineBlocks {
             .registerBlock("block_detector", BlockDetectorBlock::new,
                     BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER))
             .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)
-            .setBlockStateProvider(
-                    (prov, ctx) -> prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName())))
+            .setBlockStateProvider((prov, ctx) -> prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName())))
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
     public static final RegiliteBlock<MachineBlock<XPObeliskBlockEntity>> XP_OBELISK = BLOCK_REGISTRY
@@ -315,17 +311,17 @@ public class MachineBlocks {
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
     public static final RegiliteBlock<MachineBlock<WeatherObeliskBlockEntity>> WEATHER_OBELISK = BLOCK_REGISTRY
-        .registerBlock("weather_obelisk",
-            props -> new MachineBlock<>(MachineBlockEntities.WEATHER_OBELISK::get, props),
-            BlockBehaviour.Properties.of()
-                .strength(2.5f, 8)
-                .isViewBlocking((pState, pLevel, pPos) -> false)
-                .noOcclusion())
-        .setLootTable(MachinesLootTable::copyComponents)
-        .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
-            prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
-        .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+            .registerBlock("weather_obelisk",
+                    props -> new MachineBlock<>(MachineBlockEntities.WEATHER_OBELISK::get, props),
+                    BlockBehaviour.Properties.of()
+                            .strength(2.5f, 8)
+                            .isViewBlocking((pState, pLevel, pPos) -> false)
+                            .noOcclusion())
+            .setLootTable(MachinesLootTable::copyComponents)
+            .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+            .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+                    prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
     // used when single methods needs to be overridden in the block class
     private static <T extends MachineBlock<?>> RegiliteBlock<T> baseMachine(RegiliteBlock<T> machineBlock,

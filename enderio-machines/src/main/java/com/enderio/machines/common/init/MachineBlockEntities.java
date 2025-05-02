@@ -45,6 +45,10 @@ import com.enderio.machines.common.blocks.wired_charger.WiredChargerBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import com.google.common.collect.ImmutableMap;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Supplier;
 import net.minecraft.Util;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -52,11 +56,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class MachineBlockEntities {
     private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIOMachines.REGILITE.blockEntityRegistry();
@@ -199,8 +198,8 @@ public class MachineBlockEntities {
                     .setRenderer(() -> ObeliskBER.factory(() -> Items.PRISMARINE))
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
-    public static final RegiliteBlockEntity<WeatherObeliskBlockEntity> WEATHER_OBELISK = register(
-        "weather_obelisk", WeatherObeliskBlockEntity::new, MachineBlocks.WEATHER_OBELISK)
+    public static final RegiliteBlockEntity<WeatherObeliskBlockEntity> WEATHER_OBELISK = register("weather_obelisk",
+            WeatherObeliskBlockEntity::new, MachineBlocks.WEATHER_OBELISK)
                     .setRenderer(() -> ObeliskBER.factory(() -> Items.FIREWORK_ROCKET))
                     .apply(MachineBlockEntities::machineBlockEntityCapabilities)
                     .apply(MachineBlockEntities::fluidHandlerCapability);
