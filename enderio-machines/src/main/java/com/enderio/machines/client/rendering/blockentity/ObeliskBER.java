@@ -1,10 +1,8 @@
 package com.enderio.machines.client.rendering.blockentity;
 
-import com.enderio.machines.common.blocks.obelisks.ObeliskBlockEntity;
+import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -16,7 +14,10 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-public class ObeliskBER implements BlockEntityRenderer<ObeliskBlockEntity> {
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+public class ObeliskBER implements BlockEntityRenderer<MachineBlockEntity> {
 
     private final Supplier<Item> supplier;
 
@@ -24,13 +25,13 @@ public class ObeliskBER implements BlockEntityRenderer<ObeliskBlockEntity> {
         this.supplier = itemSupplier;
     }
 
-    public static <T extends ObeliskBlockEntity> Function<BlockEntityRendererProvider.Context, BlockEntityRenderer<? super T>> factory(
+    public static <T extends MachineBlockEntity> Function<BlockEntityRendererProvider.Context, BlockEntityRenderer<? super T>> factory(
             Supplier<Item> itemSupplier) {
         return context -> new ObeliskBER(itemSupplier);
     }
 
     @Override
-    public void render(ObeliskBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer,
+    public void render(MachineBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer,
             int packedLight, int packedOverlay) {
         poseStack.pushPose();
         poseStack.translate(0.5, 0.75, 0.5);

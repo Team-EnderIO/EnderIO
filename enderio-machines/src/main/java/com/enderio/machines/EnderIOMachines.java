@@ -31,6 +31,7 @@ import com.enderio.machines.data.recipes.SagMillRecipeProvider;
 import com.enderio.machines.data.recipes.SlicingRecipeProvider;
 import com.enderio.machines.data.recipes.SoulBindingRecipeProvider;
 import com.enderio.machines.data.recipes.TankRecipeProvider;
+import com.enderio.machines.data.recipes.WeatherChangeRecipeProvider;
 import com.enderio.machines.data.souldata.SoulDataProvider;
 import com.enderio.machines.data.tag.MachineEntityTypeTagsProvider;
 import com.enderio.regilite.Regilite;
@@ -115,6 +116,7 @@ public class EnderIOMachines {
                 new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
         provider.addSubProvider(event.includeServer(),
                 new ReagentDataProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(), new WeatherChangeRecipeProvider(packOutput, lookupProvider));
 
         generator.addProvider(true, provider);
         provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, event.getLookupProvider(),

@@ -2,11 +2,11 @@ package com.enderio.machines.common.init;
 
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
 import com.enderio.machines.client.rendering.blockentity.ObeliskBER;
-import com.enderio.machines.client.rendering.blockentity.XPObeliskBER;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
 import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
@@ -27,6 +27,7 @@ import com.enderio.machines.common.blocks.impulse_hopper.ImpulseHopperBlockEntit
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlockEntity;
+import com.enderio.machines.common.blocks.obelisks.weather.WeatherObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.blocks.painting.PaintingMachineBlockEntity;
 import com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity;
@@ -44,10 +45,6 @@ import com.enderio.machines.common.blocks.wired_charger.WiredChargerBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import com.google.common.collect.ImmutableMap;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.Supplier;
 import net.minecraft.Util;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -55,6 +52,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class MachineBlockEntities {
     private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIOMachines.REGILITE.blockEntityRegistry();
@@ -173,9 +175,8 @@ public class MachineBlockEntities {
                     .apply(MachineBlockEntities::fluidHandlerCapability);
 
     public static final RegiliteBlockEntity<XPObeliskBlockEntity> XP_OBELISK = register("xp_obelisk",
-            XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK).setRenderer(() -> XPObeliskBER::new)
-                    // TODO: Make XP Obelisk use the common base class :)
-                    // .setRenderer(() -> ObeliskBER.factory(EIOItems.EXPERIENCE_ROD::get))
+            XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK)
+                    .setRenderer(() -> ObeliskBER.factory(EIOItems.EXPERIENCE_ROD::get))
                     .apply(MachineBlockEntities::machineBlockEntityCapabilities)
                     .apply(MachineBlockEntities::fluidHandlerCapability);
 
@@ -197,6 +198,12 @@ public class MachineBlockEntities {
             "relocator_obelisk", RelocatorObeliskBlockEntity::new, MachineBlocks.RELOCATOR_OBELISK)
                     .setRenderer(() -> ObeliskBER.factory(() -> Items.PRISMARINE))
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+
+    public static final RegiliteBlockEntity<WeatherObeliskBlockEntity> WEATHER_OBELISK = register(
+        "weather_obelisk", WeatherObeliskBlockEntity::new, MachineBlocks.WEATHER_OBELISK)
+                    .setRenderer(() -> ObeliskBER.factory(() -> Items.FIREWORK_ROCKET))
+                    .apply(MachineBlockEntities::machineBlockEntityCapabilities)
+                    .apply(MachineBlockEntities::fluidHandlerCapability);
 
     @SafeVarargs
     private static <B extends BlockEntity> RegiliteBlockEntity<B> register(String name,

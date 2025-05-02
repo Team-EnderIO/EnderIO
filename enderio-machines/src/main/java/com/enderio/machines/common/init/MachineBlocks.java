@@ -28,6 +28,7 @@ import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockItem;
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlockEntity;
+import com.enderio.machines.common.blocks.obelisks.weather.WeatherObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.blocks.soul_engine.SoulEngineBlockEntity;
@@ -46,11 +47,6 @@ import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockRegistry;
 import com.enderio.regilite.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMap;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.BlockItem;
@@ -62,6 +58,12 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class MachineBlocks {
     private static final BlockRegistry BLOCK_REGISTRY = EnderIOMachines.REGILITE.blockRegistry();
@@ -311,6 +313,19 @@ public class MachineBlocks {
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                     prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+
+    public static final RegiliteBlock<MachineBlock<WeatherObeliskBlockEntity>> WEATHER_OBELISK = BLOCK_REGISTRY
+        .registerBlock("weather_obelisk",
+            props -> new MachineBlock<>(MachineBlockEntities.WEATHER_OBELISK::get, props),
+            BlockBehaviour.Properties.of()
+                .strength(2.5f, 8)
+                .isViewBlocking((pState, pLevel, pPos) -> false)
+                .noOcclusion())
+        .setLootTable(MachinesLootTable::copyComponents)
+        .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+            prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+        .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
     // used when single methods needs to be overridden in the block class
     private static <T extends MachineBlock<?>> RegiliteBlock<T> baseMachine(RegiliteBlock<T> machineBlock,

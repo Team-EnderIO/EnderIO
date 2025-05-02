@@ -22,6 +22,7 @@ import com.enderio.machines.client.gui.screen.StirlingGeneratorScreen;
 import com.enderio.machines.client.gui.screen.TravelAnchorScreen;
 import com.enderio.machines.client.gui.screen.VacuumChestScreen;
 import com.enderio.machines.client.gui.screen.VatScreen;
+import com.enderio.machines.client.gui.screen.WeatherObeliskScreen;
 import com.enderio.machines.client.gui.screen.WiredChargerScreen;
 import com.enderio.machines.client.gui.screen.XPObeliskScreen;
 import com.enderio.machines.client.gui.screen.XPVacuumScreen;
@@ -35,6 +36,7 @@ import com.enderio.machines.common.blocks.impulse_hopper.ImpulseHopperMenu;
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskMenu;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskMenu;
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskMenu;
+import com.enderio.machines.common.blocks.obelisks.weather.WeatherObeliskMenu;
 import com.enderio.machines.common.blocks.obelisks.xp.XPObeliskMenu;
 import com.enderio.machines.common.blocks.painting.PaintingMachineMenu;
 import com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerMenu;
@@ -107,6 +109,8 @@ public class MachineMenus {
             .registerMenu("relocator_obelisk", RelocatorObeliskMenu::new, () -> RelocatorObeliskScreen::new);
     public static final RegiliteMenu<VatMenu> VAT = MENU_REGISTRY.registerMenu("vat", VatMenu::new,
             () -> VatScreen::new);
+    public static final RegiliteMenu<WeatherObeliskMenu> WEATHER_OBELISK = MENU_REGISTRY.registerMenu(
+            "weather_obelisk", WeatherObeliskMenu::new, () -> WeatherObeliskScreen::new);
 
     public static void register(IEventBus bus) {
         MENU_REGISTRY.register(bus);
