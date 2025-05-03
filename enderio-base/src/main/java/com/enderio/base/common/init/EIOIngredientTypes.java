@@ -1,6 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.base.api.EnderIO;
+import com.enderio.base.api.soul.AnySoulStorageIngredient;
 import com.enderio.base.api.soul.EmptySoulStorageIngredient;
 import com.enderio.base.api.soul.FilledSoulStorageIngredient;
 import net.neoforged.bus.api.IEventBus;
@@ -18,6 +19,9 @@ public class EIOIngredientTypes {
 
     public static final DeferredHolder<IngredientType<?>, IngredientType<FilledSoulStorageIngredient>> FILLED_SOUL_STORAGE = INGREDIENT_TYPES
             .register("filled_soul_storage", () -> new IngredientType<>(FilledSoulStorageIngredient.CODEC));
+
+    public static final DeferredHolder<IngredientType<?>, IngredientType<AnySoulStorageIngredient>> ANY_SOUL_STORAGE = INGREDIENT_TYPES
+            .register("any_soul_storage", () -> new IngredientType<>(AnySoulStorageIngredient.CODEC));
 
     public static void register(IEventBus bus) {
         INGREDIENT_TYPES.register(bus);

@@ -4,6 +4,7 @@
   "energy": 288000,
   "experience": 8,
   "input": {
+    "type": "enderio:any_soul_storage",
     "item": "enderio:powered_spawner"
   },
   "output": {

@@ -6,10 +6,6 @@ import com.enderio.base.common.init.EIOIngredientTypes;
 import com.enderio.base.common.util.EntityCaptureUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,29 +14,27 @@ import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 
-public class FilledSoulStorageIngredient implements ICustomIngredient {
+import java.util.Optional;
+import java.util.stream.Stream;
 
-    public static final MapCodec<FilledSoulStorageIngredient> CODEC = RecordCodecBuilder.mapCodec(
-        inst -> inst.group(BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(i -> i.item)).apply(inst, FilledSoulStorageIngredient::new));
+public class AnySoulStorageIngredient implements ICustomIngredient {
+
+    public static final MapCodec<AnySoulStorageIngredient> CODEC = RecordCodecBuilder.mapCodec(
+        inst -> inst.group(BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(i -> i.item)).apply(inst, AnySoulStorageIngredient::new));
 
     private final Item item;
 
     public static Ingredient of(ItemLike item) {
-        return new FilledSoulStorageIngredient(item.asItem()).toVanilla();
+        return new AnySoulStorageIngredient(item.asItem()).toVanilla();
     }
 
-    public FilledSoulStorageIngredient(Item item) {
+    public AnySoulStorageIngredient(Item item) {
         this.item = item;
     }
 
     @Override
     public boolean test(ItemStack itemStack) {
-        if (!itemStack.is(item)) {
-            return false;
-        }
-
-        var soulStorage = itemStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-        return soulStorage != null && soulStorage.hasSoul();
+        return itemStack.is(item);
     }
 
     @Override
@@ -56,16 +50,16 @@ public class FilledSoulStorageIngredient implements ICustomIngredient {
             return Optional.empty();
         });
 
-        return possibleItems.flatMap(Optional::stream);
+        return Stream.concat(Stream.of(item.getDefaultInstance()), possibleItems.flatMap(Optional::stream));
     }
 
     @Override
     public boolean isSimple() {
-        return false;
+        return true;
     }
 
     @Override
     public IngredientType<?> getType() {
-        return EIOIngredientTypes.FILLED_SOUL_STORAGE.get();
+        return EIOIngredientTypes.ANY_SOUL_STORAGE.get();
     }
 }
