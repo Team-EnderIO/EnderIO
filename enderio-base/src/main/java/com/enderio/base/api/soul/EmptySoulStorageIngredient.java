@@ -47,7 +47,7 @@ public class EmptySoulStorageIngredient implements ICustomIngredient {
         if (soulStorage != null) {
             soulStorage.setSoul(StoredEntityData.EMPTY);
         }
-        
+
         return Stream.of(stack);
     }
 

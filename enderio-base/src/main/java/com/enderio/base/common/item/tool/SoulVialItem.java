@@ -145,14 +145,18 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_DEAD);
             return Optional.empty();
         }
+
         // Create a filled vial and put the entity's NBT inside.
         if (entity instanceof Mob mob && mob.getLeashHolder() != null) {
             mob.dropLeash(true, true);
         }
-        soulVial.shrink(1);
 
+        // Create the filled vial
         ItemStack filledVial = soulVial.copyWithCount(1);
         setEntityData(filledVial, entity);
+
+        // Consume the stack
+        soulVial.shrink(1);
 
         // Remove the captured mob.
         entity.discard();
