@@ -23,6 +23,10 @@ public class SingleSoulStorageItemStack implements SingleSoulStorage {
 
     @Override
     public void setSoul(StoredEntityData soul) {
-        container.set(componentType, soul);
+        if (soul.hasEntity()) {
+            container.set(componentType, soul);
+        } else {
+            container.remove(componentType);
+        }
     }
 }

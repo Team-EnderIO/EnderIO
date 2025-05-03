@@ -1,5 +1,6 @@
 package com.enderio.base.api.soul;
 
+import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOIngredientTypes;
 import com.mojang.serialization.MapCodec;
@@ -41,7 +42,13 @@ public class EmptySoulStorageIngredient implements ICustomIngredient {
 
     @Override
     public Stream<ItemStack> getItems() {
-        return Stream.of(item.getDefaultInstance());
+        var stack = item.getDefaultInstance();
+        var soulStorage = stack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+        if (soulStorage != null) {
+            soulStorage.setSoul(StoredEntityData.EMPTY);
+        }
+        
+        return Stream.of(stack);
     }
 
     @Override
