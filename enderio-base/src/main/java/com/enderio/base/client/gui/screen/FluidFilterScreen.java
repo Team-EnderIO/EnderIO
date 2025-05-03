@@ -1,11 +1,7 @@
 package com.enderio.base.client.gui.screen;
 
 import com.enderio.base.api.EnderIO;
-import com.enderio.base.api.attachment.StoredEntityData;
-import com.enderio.base.common.capability.EntityFilterCapability;
 import com.enderio.base.common.capability.FluidFilterCapability;
-import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.FluidFilterMenu;
 import com.enderio.core.client.gui.screen.EIOScreen;
@@ -47,7 +43,7 @@ public class FluidFilterScreen extends EIOScreen<FluidFilterMenu> {
     protected void init() {
         super.init();
         addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36, 16, 16, 0, 0, 16, 0, NBT_TEXTURE, getMenu().getFilter()::isNbt, getMenu()::setNbt, () -> getMenu().getFilter().isNbt() ? EIOLang.NBT_FILTER : EIOLang.NO_NBT_FILTER));
-        addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36 + 20, 16, 16, 0, 0, 16, 0, BLACKLIST_TEXTURE, getMenu().getFilter()::isInvert, getMenu()::setInverted, () -> getMenu().getFilter().isInvert() ? EIOLang.BLACKLIST_FILTER : EIOLang.WHITELIST_FILTER));
+        addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36 + 20, 16, 16, 0, 0, 16, 0, BLACKLIST_TEXTURE, getMenu().getFilter()::isInvert, getMenu()::setInverted, () -> getMenu().getFilter().isInvert() ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST));
 
     }
 

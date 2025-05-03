@@ -167,12 +167,13 @@ public class EIOLang {
     public static final Component MAX_RANGE = addTranslation("gui", EnderIO.loc("max_range"), "Maximum Range");
     public static final Component SHOW_RANGE = addTranslation("gui", EnderIO.loc("range.show"), "Show Range");
     public static final Component HIDE_RANGE = addTranslation("gui", EnderIO.loc("range.hide"), "Hide Range");
-    public static final Component WHITELIST_FILTER = addTranslation("gui", EnderIO.loc("filter.whitelist"),
-            "Whitelist");
-    public static final Component BLACKLIST_FILTER = addTranslation("gui", EnderIO.loc("filter.blacklist"),
-            "BlackList");
+    public static final Component FILTER_ALLOW_LIST = addTranslation("gui", EnderIO.loc("filter.allow_list"),
+            "Allow List");
+    public static final Component FILTER_DENY_LIST = addTranslation("gui", EnderIO.loc("filter.deny_list"),
+            "Deny List");
     public static final Component NBT_FILTER = addTranslation("gui", EnderIO.loc("filter.nbt"), "Match Components");
     public static final Component NO_NBT_FILTER = addTranslation("gui", EnderIO.loc("filter.nonbt"), "Ignore Components");
+    public static final Component DAMAGE_FILTER_MODE = addTranslation("gui", EnderIO.loc("filter.damage"), "Damage Filter");
 
     public static final Component IOCONFIG = addTranslation("gui", EnderIO.loc("ioconfig"), "IO Configuration");
     public static final Component TOGGLE_NEIGHBOUR = addTranslation("gui", EnderIO.loc("ioconfig.neighbour"),

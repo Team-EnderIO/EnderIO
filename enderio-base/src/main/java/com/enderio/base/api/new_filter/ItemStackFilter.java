@@ -7,5 +7,5 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 public interface ItemStackFilter {
-    boolean test(@Nullable IItemHandler target, ItemStack stack);
+    ItemStack test(@Nullable IItemHandler target, ItemStack stack);
 }

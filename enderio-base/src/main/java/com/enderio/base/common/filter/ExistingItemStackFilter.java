@@ -24,7 +24,7 @@ public record ExistingItemStackFilter(boolean hasSnapshot, NonNullList<ItemStack
                     .fieldOf("snapshot")
                     .forGetter(ExistingItemStackFilter::snapshot),
                 Codec.BOOL.fieldOf("shouldCompareComponents").forGetter(ExistingItemStackFilter::shouldCompareComponents),
-                Codec.BOOL.fieldOf("isInverted").forGetter(ExistingItemStackFilter::isInverted))
+                Codec.BOOL.fieldOf("isDenyList").forGetter(ExistingItemStackFilter::isInverted))
             .apply(componentInstance, ExistingItemStackFilter::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ExistingItemStackFilter> STREAM_CODEC = StreamCodec.composite(
@@ -47,7 +47,7 @@ public record ExistingItemStackFilter(boolean hasSnapshot, NonNullList<ItemStack
     }
     
     @Override
-    public boolean test(@Nullable IItemHandler target, ItemStack stack) {
+    public ItemStack test(@Nullable IItemHandler target, ItemStack stack) {
         if (hasSnapshot) {
             for (var match : snapshot) {
                 if (match.isEmpty()) {
@@ -59,7 +59,7 @@ public record ExistingItemStackFilter(boolean hasSnapshot, NonNullList<ItemStack
                     : ItemStack.isSameItem(match, stack);
 
                 if (matches) {
-                    return !isInverted;
+                    return isInverted ? ItemStack.EMPTY : stack;
                 }
             }
         } else if (target != null) {
@@ -74,11 +74,11 @@ public record ExistingItemStackFilter(boolean hasSnapshot, NonNullList<ItemStack
                     : ItemStack.isSameItem(match, stack);
 
                 if (matches) {
-                    return !isInverted;
+                    return isInverted ? ItemStack.EMPTY : stack;
                 }
             }
         }
 
-        return isInverted;
+        return isInverted ? stack : ItemStack.EMPTY;
     }
 }

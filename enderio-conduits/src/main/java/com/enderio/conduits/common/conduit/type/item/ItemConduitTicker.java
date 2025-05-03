@@ -48,8 +48,12 @@ public class ItemConduitTicker
                     continue;
                 }
 
-                if (extractFilter != null && !extractFilter.test(extract.itemHandler, extractedItem)) {
-                    continue;
+                if (extractFilter != null) {
+                    extractedItem = extractFilter.test(extract.itemHandler, extractedItem);
+
+                    if (extractedItem.isEmpty()) {
+                        continue;
+                    }
                 }
 
                 var connectionConfig = extract.node()
@@ -64,6 +68,8 @@ public class ItemConduitTicker
                 }
 
                 for (int j = startingIndex; j < startingIndex + senders.size(); j++) {
+                    ItemStack itemToInsert = extractedItem;
+
                     int insertIndex = j % senders.size();
                     Connection insert = senders.get(insertIndex);
 
@@ -76,12 +82,16 @@ public class ItemConduitTicker
                             .getStackInSlot(ItemConduit.INSERT_FILTER_SLOT)
                             .getCapability(EIOCapabilities.ITEM_STACK_FILTER);
 
-                    if (insertFilter != null && !insertFilter.test(insert.itemHandler, extractedItem)) {
-                        continue;
+                    if (insertFilter != null) {
+                        itemToInsert = insertFilter.test(insert.itemHandler, itemToInsert);
+
+                        if (itemToInsert.isEmpty()) {
+                            continue;
+                        }
                     }
 
-                    ItemStack notInserted = ItemHandlerHelper.insertItem(insert.itemHandler, extractedItem, false);
-                    int successfullyInserted = extractedItem.getCount() - notInserted.getCount();
+                    ItemStack notInserted = ItemHandlerHelper.insertItem(insert.itemHandler, itemToInsert, false);
+                    int successfullyInserted = itemToInsert.getCount() - notInserted.getCount();
 
                     if (successfullyInserted > 0) {
                         extracted += successfullyInserted;

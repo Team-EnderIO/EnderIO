@@ -4,6 +4,7 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
+import com.enderio.base.common.filter.DamageFilterMode;
 import com.enderio.core.common.lang.EnumTranslationMap;
 import com.enderio.regilite.Regilite;
 import net.minecraft.network.chat.Component;
@@ -48,6 +49,21 @@ public class EIOEnumLang {
                     .addTranslation(GlassCollisionPredicate.MOBS_BLOCK, "Only solid to monsters")
                     .addTranslation(GlassCollisionPredicate.ANIMALS_PASS, "Not solid to animals")
                     .addTranslation(GlassCollisionPredicate.ANIMALS_BLOCK, "Only solid to animals")
+                    .build();
+
+    public static final EnumTranslationMap<DamageFilterMode> DAMAGE_FILTER_MODE = builder(
+            DamageFilterMode.class, "damage_filter_mode")
+                    .addTranslation(DamageFilterMode.IGNORE, "Ignore Damage")
+                    .addTranslation(DamageFilterMode.UP_TO_25, "Up to 25%% Damaged")
+                    .addTranslation(DamageFilterMode.MORE_THAN_25, "More than 25%% Damaged")
+                    .addTranslation(DamageFilterMode.UP_TO_50, "Up to 50%% Damaged")
+                    .addTranslation(DamageFilterMode.MORE_THAN_50, "More than 50%% Damaged")
+                    .addTranslation(DamageFilterMode.UP_TO_75, "Up to 75%% Damaged")
+                    .addTranslation(DamageFilterMode.MORE_THAN_75, "More than 75%% Damaged")
+                    .addTranslation(DamageFilterMode.NOT_DAMAGED, "Not Damaged")
+                    .addTranslation(DamageFilterMode.ONLY_DAMAGED, "Only Damaged")
+                    .addTranslation(DamageFilterMode.IS_DAMAGEABLE, "Can Be Damaged")
+                    .addTranslation(DamageFilterMode.NOT_DAMAGEABLE, "Cannot Be Damaged")
                     .build();
 
     private static <T extends Enum<T>> EnumTranslationMap.Builder<T> builder(Class<T> enumClass, String prefix) {

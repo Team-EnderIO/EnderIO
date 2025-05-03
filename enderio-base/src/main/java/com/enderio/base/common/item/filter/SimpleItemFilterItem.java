@@ -1,12 +1,10 @@
 package com.enderio.base.common.item.filter;
 
 import com.enderio.base.api.new_filter.ItemStackFilter;
-import com.enderio.base.common.filter.SimpleItemStackFilter;
+import com.enderio.base.common.filter.EnderItemStackFilter;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.menu.AbstractFilterMenu;
-import com.enderio.base.common.menu.ItemFilterMenu;
-import com.enderio.base.common.menu.SimpleItemFilterMenu;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import com.enderio.base.common.menu.EnderItemFilterMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -23,7 +21,7 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 public class SimpleItemFilterItem extends Item {
 
     public static ICapabilityProvider<ItemStack, Void, ItemStackFilter> ITEM_STACK_FILTER_PROVIDER =
-        (stack, v) -> stack.getOrDefault(EIODataComponents.SIMPLE_ITEM_STACK_FILTER, SimpleItemStackFilter.EMPTY);
+        (stack, v) -> stack.getOrDefault(EIODataComponents.SIMPLE_ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
 
     public SimpleItemFilterItem(Properties properties) {
         super(properties);
@@ -42,7 +40,7 @@ public class SimpleItemFilterItem extends Item {
 
                 @Override
                 public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-                    return SimpleItemFilterMenu.basic(pContainerId, pInventory, new AbstractFilterMenu.HandFilterAccess(player.getItemInHand(usedHand)));
+                    return EnderItemFilterMenu.basic(pContainerId, pInventory, new AbstractFilterMenu.HandFilterAccess(player.getItemInHand(usedHand)));
                 }
             });
         }

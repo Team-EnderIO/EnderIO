@@ -4,6 +4,7 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassLighting;
+import com.enderio.base.common.filter.DamageFilterMode;
 import com.enderio.core.client.icon.EnumIconMap;
 import net.minecraft.world.item.DyeColor;
 
@@ -21,6 +22,8 @@ public class EIOEnumIcons {
             .addAll()
             .remove(GlassLighting.NONE)
             .build();
+
+    public static final EnumIconMap<DamageFilterMode> DAMAGE_FILTER_MODE = createAll(DamageFilterMode.class, "damage_filter_mode");
 
     private static <T extends Enum<T>> EnumIconMap<T> createAll(Class<T> enumClass, String iconFolder) {
         return new EnumIconMap<>(EnderIO.NAMESPACE, enumClass, iconFolder);
