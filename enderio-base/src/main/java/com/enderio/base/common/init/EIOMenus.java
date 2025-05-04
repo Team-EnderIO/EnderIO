@@ -6,6 +6,7 @@ import com.enderio.base.client.gui.screen.EntityFilterScreen;
 import com.enderio.base.client.gui.screen.FluidFilterScreen;
 import com.enderio.base.client.gui.screen.ItemFilterScreen;
 import com.enderio.base.client.gui.screen.NewItemFilterScreen;
+import com.enderio.base.common.item.filter.EnderItemFilterItem;
 import com.enderio.base.common.menu.CoordinateMenu;
 import com.enderio.base.common.menu.EntityFilterMenu;
 import com.enderio.base.common.menu.FluidFilterMenu;
@@ -25,10 +26,16 @@ public class EIOMenus {
         .registerMenu("item_filter", ItemFilterMenu::factory, () -> ItemFilterScreen::new);
 
     public static final RegiliteMenu<EnderItemFilterMenu> BASIC_ITEM_FILTER = MENU_REGISTRY
-        .registerMenu("basic_item_filter", EnderItemFilterMenu::basic, () -> NewItemFilterScreen::new);
+        .registerMenu("basic_item_filter", EnderItemFilterItem.Type.BASIC::openMenu, () -> NewItemFilterScreen::new);
 
     public static final RegiliteMenu<EnderItemFilterMenu> ADVANCED_ITEM_FILTER = MENU_REGISTRY
-        .registerMenu("advanced_item_filter", EnderItemFilterMenu::advanced, () -> NewItemFilterScreen::new);
+        .registerMenu("advanced_item_filter", EnderItemFilterItem.Type.ADVANCED::openMenu, () -> NewItemFilterScreen::new);
+
+    public static final RegiliteMenu<EnderItemFilterMenu> BIG_ITEM_FILTER = MENU_REGISTRY
+        .registerMenu("big_item_filter", EnderItemFilterItem.Type.BIG::openMenu, () -> NewItemFilterScreen::new);
+
+    public static final RegiliteMenu<EnderItemFilterMenu> BIG_ADVANCED_ITEM_FILTER = MENU_REGISTRY
+        .registerMenu("big_advanced_item_filter", EnderItemFilterItem.Type.BIG_ADVANCED::openMenu, () -> NewItemFilterScreen::new);
 
     public static final RegiliteMenu<FluidFilterMenu> FLUID_FILTER = MENU_REGISTRY
         .registerMenu("fluid_filter", FluidFilterMenu::factory, () -> FluidFilterScreen::new);
