@@ -5,6 +5,8 @@ import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -13,6 +15,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public record EnderItemStackFilter(NonNullList<ItemStack> matches, boolean isDenyList, boolean shouldCompareComponents, DamageFilterMode damageFilterMode) implements ItemStackFilter {
 
@@ -72,15 +75,30 @@ public record EnderItemStackFilter(NonNullList<ItemStack> matches, boolean isDen
                 continue;
             }
 
-            boolean matches = shouldCompareComponents
-                ? ItemStack.isSameItemSameComponents(match, itemStack)
-                : ItemStack.isSameItem(match, itemStack);
-            
-            if (matches) {
-                return isDenyList ? ItemStack.EMPTY : itemStack;
+            if (ItemStack.isSameItem(match, itemStack)) {
+                if (!shouldCompareComponents || componentsMatch(match, itemStack)) {
+                    return isDenyList ? ItemStack.EMPTY : itemStack;
+                }
             }
         }
         
         return isDenyList ? itemStack : ItemStack.EMPTY;
+    }
+
+    // Ignore damage as it is controlled with the damage filter.
+    private static final List<DataComponentType<?>> IGNORED_COMPONENT_TYPES = List.of(DataComponents.DAMAGE);
+
+    private boolean componentsMatch(ItemStack referenceStack, ItemStack stack) {
+        for (var component : referenceStack.getComponents()) {
+            if (IGNORED_COMPONENT_TYPES.contains(component.type())) {
+                continue;
+            }
+
+            if (!Objects.equals(stack.get(component.type()), component.value())) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
