@@ -31,6 +31,11 @@ public class ConduitHighlightEvent {
                 return;
             }
 
+            // If the conduit is bugged, don't do this.
+            if (conduit.isEmpty()) {
+                return;
+            }
+
             event.setCanceled(true);
             BlockPos pos = event.getTarget().getBlockPos();
             Vec3 camPos = event.getCamera().getPosition();

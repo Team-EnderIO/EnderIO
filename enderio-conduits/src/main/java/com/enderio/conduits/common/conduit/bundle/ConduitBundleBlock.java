@@ -9,7 +9,6 @@ import com.enderio.conduits.api.connection.ConnectionStatus;
 import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
 import com.enderio.conduits.client.particle.ConduitBreakParticle;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
-import com.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduit;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkContext;
@@ -21,13 +20,10 @@ import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -114,9 +110,11 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
             }
 
             // Ensure if a bundle is bugged with 0 conduits that it can be broken.
-            if (!conduit.getConduits().isEmpty()) {
-                return conduit.getShape().getTotalShape();
+            if (conduit.getConduits().isEmpty()) {
+                return Shapes.block();
             }
+
+            return conduit.getShape().getTotalShape();
         }
 
         // If there's no block entity, no shape - this will stop a bounding box flash
