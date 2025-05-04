@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.conduit.type.item;
 
-import com.enderio.base.api.filter.ItemStackFilter;
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
@@ -134,7 +133,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return stack.getCapability(EIOCapabilities.Filter.ITEM) instanceof ItemStackFilter;
+        return stack.getCapability(EIOCapabilities.ITEM_STACK_FILTER) != null;
     }
 
     @Override

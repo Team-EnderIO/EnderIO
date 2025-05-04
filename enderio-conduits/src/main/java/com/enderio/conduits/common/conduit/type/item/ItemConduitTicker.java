@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.conduit.type.item;
 
-import com.enderio.base.api.filter.ItemStackFilter;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.network.ConduitNetwork;
