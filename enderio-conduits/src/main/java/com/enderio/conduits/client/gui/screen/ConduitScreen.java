@@ -127,7 +127,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
         public void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
             if (screenType != null) {
-                screenType.renderScreenLabels(guiGraphics, font, mouseX, mouseY);
+                screenType.renderScreenLabels(dataAccess, guiGraphics, font, mouseX, mouseY);
             }
         }
 

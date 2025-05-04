@@ -132,7 +132,7 @@ public record ItemConduitConnectionConfig(boolean isSend, DyeColor sendColor, bo
 
     public ItemConduitConnectionConfig withPriority(int priority) {
         return new ItemConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+                receiveRedstoneChannel, isRoundRobin, isSelfFeed, Math.min(9999, Math.max(-9999, priority)));
     }
 
     @Override

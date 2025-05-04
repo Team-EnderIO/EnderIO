@@ -81,6 +81,7 @@ public class ConduitLang {
     public static final Component CONDUIT_EXTRACT = addTranslation("gui", EnderIO.loc("conduit.extract"), "Extract");
     public static final Component CONDUIT_INPUT = addTranslation("gui", EnderIO.loc("conduit.input"), "Input");
     public static final Component CONDUIT_OUTPUT = addTranslation("gui", EnderIO.loc("conduit.output"), "Output");
+    public static final Component CONDUIT_PRIORITY = addTranslation("gui", EnderIO.loc("conduit.priority"), "Priority");
 
     // Redstone Conduit
     public static final Component CONDUIT_REDSTONE_SIGNAL_COLOR = addTranslation("gui",

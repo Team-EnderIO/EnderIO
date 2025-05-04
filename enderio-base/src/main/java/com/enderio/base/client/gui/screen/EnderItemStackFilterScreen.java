@@ -21,14 +21,10 @@ public class EnderItemStackFilterScreen extends EnderContainerScreen<EnderItemFi
     private static final int WIDTH = 183;
     private static final int HEIGHT = 201;
 
-    private static final int ROW_HEIGHT = 16 + 2;
-
     private static final ResourceLocation BG_2x9 = EnderIO.loc("textures/gui/screens/filter_2x9.png");
     private static final ResourceLocation BG_1x9 = EnderIO.loc("textures/gui/screens/filter_1x9.png");
     private static final ResourceLocation BG_3x9 = EnderIO.loc("textures/gui/screens/filter_3x9.png");
     private static final ResourceLocation BG_4x9 = EnderIO.loc("textures/gui/screens/filter_4x9.png");
-
-    private static final ResourceLocation NBT_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
 
     private static final ResourceLocation BACK_SPRITE = EnderIO.loc("icon/back");
 

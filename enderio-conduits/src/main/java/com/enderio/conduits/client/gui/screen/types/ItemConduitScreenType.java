@@ -8,6 +8,9 @@ import com.enderio.conduits.api.screen.IOConduitScreenType;
 import com.enderio.conduits.common.conduit.type.item.ItemConduit;
 import com.enderio.conduits.common.conduit.type.item.ItemConduitConnectionConfig;
 import com.enderio.conduits.common.init.ConduitLang;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -17,6 +20,35 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
     private static final ResourceLocation ICON_ROUND_ROBIN_DISABLED = EnderIO.loc("icon/round_robin_disabled");
     private static final ResourceLocation ICON_SELF_FEED_ENABLED = EnderIO.loc("icon/self_feed_enabled");
     private static final ResourceLocation ICON_SELF_FEED_DISABLED = EnderIO.loc("icon/self_feed_disabled");
+
+    private static final ResourceLocation ICON_INCREASE = EnderIO.loc("icon/increase");
+    private static final ResourceLocation ICON_DECREASE = EnderIO.loc("icon/decrease");
+
+    @Override
+    public void renderLabels(ConduitMenuDataAccess<ItemConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics, int startX, int startY, Font font, int mouseX, int mouseY) {
+        super.renderLabels(dataAccess, guiGraphics, startX, startY, font, mouseX, mouseY);
+
+        String priority = String.valueOf(dataAccess.getConnectionConfig().priority());
+        guiGraphics.drawString(font, ConduitLang.CONDUIT_PRIORITY, 22,  7 + 4 + 4 + 8 + 16 + 12, 0x000000, false);
+        guiGraphics.drawString(
+            font,
+            priority,
+            90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12,
+            0x000000,
+            false);
+    }
+
+    private int getIncrement() {
+        if (Screen.hasControlDown()) {
+            return 100;
+        }
+
+        if (Screen.hasShiftDown()) {
+            return 10;
+        }
+
+        return 1;
+    }
 
     @Override
     public void createLeftWidgets(ConduitScreenHelper screen, int startX, int startY,
@@ -29,6 +61,10 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
                 value -> dataAccess.updateConnectionConfig(config -> config.withSendColor(value)));
 
         screen.addFilterConfigureButton(startX + 1, startY + 82, ItemConduit.INSERT_FILTER_SLOT);
+
+        // Priority up/down
+        screen.addIconButton(startX + 70, startY + 38, 9, 9, Component.empty(), ICON_INCREASE, () -> dataAccess.updateConnectionConfig(config -> config.withPriority(config.priority() + getIncrement())));
+        screen.addIconButton(startX + 70, startY + 38 + 9, 9, 9, Component.empty(), ICON_DECREASE, () -> dataAccess.updateConnectionConfig(config -> config.withPriority(config.priority() - getIncrement())));
     }
 
     @Override

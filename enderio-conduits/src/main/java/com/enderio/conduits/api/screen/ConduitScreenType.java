@@ -1,6 +1,7 @@
 package com.enderio.conduits.api.screen;
 
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitConnectionConfig;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.ApiStatus;
@@ -26,8 +27,8 @@ public abstract class ConduitScreenType<U extends ConnectionConfig> {
     }
 
     @ApiStatus.Internal
-    public void renderScreenLabels(GuiGraphics guiGraphics, Font font, int mouseX, int mouseY) {
-        renderLabels(guiGraphics, USABLE_START_X, USABLE_START_Y, font, mouseX, mouseY);
+    public void renderScreenLabels(ConduitMenuDataAccess<U> dataAccess, GuiGraphics guiGraphics, Font font, int mouseX, int mouseY) {
+        renderLabels(dataAccess, guiGraphics, USABLE_START_X, USABLE_START_Y, font, mouseX, mouseY);
     }
 
     protected abstract void createWidgets(ConduitScreenHelper screen, int startX, int startY,
@@ -40,6 +41,6 @@ public abstract class ConduitScreenType<U extends ConnectionConfig> {
      * @param mouseX
      * @param mouseY
      */
-    protected void renderLabels(GuiGraphics guiGraphics, int startX, int startY, Font font, int mouseX, int mouseY) {
+    protected void renderLabels(ConduitMenuDataAccess<U> dataAccess, GuiGraphics guiGraphics, int startX, int startY, Font font, int mouseX, int mouseY) {
     }
 }
