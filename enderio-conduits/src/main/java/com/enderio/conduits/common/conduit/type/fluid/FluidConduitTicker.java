@@ -6,7 +6,11 @@ import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.network.ConduitNetwork;
 import com.enderio.conduits.api.network.node.ConduitNode;
 import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
+
+import java.util.Comparator;
 import java.util.List;
+
+import com.enderio.conduits.common.conduit.type.item.ItemConduitTicker;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.DyeColor;
@@ -96,8 +100,13 @@ public class FluidConduitTicker
         for (Connection receiver : receivers) {
             IFluidHandler extractHandler = receiver.fluidHandler();
 
+            // Prioritize senders in order of distance.
+            var prioritizedSenders = senders.stream()
+                .sorted(Comparator.comparingDouble(e -> e.pos().distSqr(receiver.pos())))
+                .toList();
+
             if (!context.lockedFluid().isSame(Fluids.EMPTY)) {
-                doFluidTransfer(new FluidStack(context.lockedFluid(), fluidRate), receiver, senders);
+                doFluidTransfer(new FluidStack(context.lockedFluid(), fluidRate), receiver, prioritizedSenders);
             } else {
                 int remaining = fluidRate;
 
@@ -107,7 +116,7 @@ public class FluidConduitTicker
                     }
 
                     Fluid fluid = extractHandler.getFluidInTank(i).getFluid();
-                    remaining = doFluidTransfer(new FluidStack(fluid, remaining), receiver, senders);
+                    remaining = doFluidTransfer(new FluidStack(fluid, remaining), receiver, prioritizedSenders);
 
                     if (!conduit.isMultiFluid() && remaining < fluidRate) {
                         if (fluid instanceof FlowingFluid flowing) {

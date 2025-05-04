@@ -8,6 +8,7 @@ import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
 import com.enderio.conduits.common.init.ConduitTypes;
 import java.util.Comparator;
 import java.util.List;
+
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.DyeColor;
@@ -31,7 +32,14 @@ public class ItemConduitTicker
         toNextExtract: for (Connection extract : receivers) {
             ItemConduitNodeData nodeData = extract.node().getOrCreateNodeData(ConduitTypes.NodeData.ITEM.get());
 
-            // TODO: Filters could be handled better...
+            // Prioritize senders in order of priority and distance.
+            var prioritizedSenders = senders.stream()
+                .sorted(Comparator
+                    .comparingInt((Connection c) -> c.config().priority()).reversed()
+                    .thenComparingDouble(e -> e.pos().distSqr(extract.pos())))
+                .toList();
+
+            // Get extraction filter.
             var extractFilter = extract.inventory()
                     .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
                     .getCapability(EIOCapabilities.ITEM_STACK_FILTER);
@@ -61,16 +69,16 @@ public class ItemConduitTicker
                 int startingIndex = 0;
                 if (connectionConfig.isRoundRobin()) {
                     startingIndex = nodeData.getIndex(extract.side());
-                    if (senders.size() <= startingIndex) {
+                    if (prioritizedSenders.size() <= startingIndex) {
                         startingIndex = 0;
                     }
                 }
 
-                for (int j = startingIndex; j < startingIndex + senders.size(); j++) {
+                for (int j = startingIndex; j < startingIndex + prioritizedSenders.size(); j++) {
                     ItemStack itemToInsert = extractedItem;
 
-                    int insertIndex = j % senders.size();
-                    Connection insert = senders.get(insertIndex);
+                    int insertIndex = j % prioritizedSenders.size();
+                    Connection insert = prioritizedSenders.get(insertIndex);
 
                     if (!connectionConfig.isSelfFeed() && extract.side() == insert.side()
                             && extract.node().getPos().equals(insert.node().getPos())) {
@@ -119,6 +127,7 @@ public class ItemConduitTicker
         return true;
     }
 
+    // TODO: I think this is wrong.
     @Override
     protected void preProcessReceivers(List<Connection> receivers) {
         receivers.sort(Comparator.comparingInt((Connection n) -> n.config().priority()).reversed());
