@@ -2,18 +2,18 @@ package com.enderio.base.common.menu;
 
 import com.enderio.core.common.menu.BaseEnderMenu;
 import com.enderio.core.common.network.menu.IntSyncSlot;
+import java.util.Objects;
+import java.util.function.Function;
 import me.liliandev.ensure.ensures.EnsureSide;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
-// TODO: Test, but should provide everything we need to open the filters from the conduit UI.
 public abstract class AbstractFilterMenu extends BaseEnderMenu {
 
     public static int BACK_BUTTON_ID = 0;
@@ -50,6 +50,16 @@ public abstract class AbstractFilterMenu extends BaseEnderMenu {
         return Objects.requireNonNull(filterAccess).getFilterItem();
     }
 
+    @EnsureSide(EnsureSide.Side.SERVER)
+    protected void setFilterStack(ItemStack stack) {
+        Objects.requireNonNull(filterAccess).setFilterItem(stack);
+    }
+
+    @EnsureSide(EnsureSide.Side.SERVER)
+    protected void modifyFilterStack(Function<ItemStack, ItemStack> modifier) {
+        setFilterStack(modifier.apply(getFilterStack()));
+    }
+
     @Override
     public boolean stillValid(Player player) {
         return player.level().isClientSide() || Objects.requireNonNull(filterAccess).stillValid(player);
@@ -68,10 +78,7 @@ public abstract class AbstractFilterMenu extends BaseEnderMenu {
     @Override
     public boolean clickMenuButton(Player player, int id) {
         if (id == BACK_BUTTON_ID) {
-            if (filterAccess.hasCustomBackDestination()) {
-                filterAccess.goBack();
-            } else {
-                // Simply close the menu.
+            if (filterAccess == null || !filterAccess.goBack()) {
                 this.getPlayerInventory().player.closeContainer();
             }
             return true;
@@ -92,18 +99,31 @@ public abstract class AbstractFilterMenu extends BaseEnderMenu {
     public sealed interface FilterAccess {
         ItemStack getFilterItem();
 
+        void setFilterItem(ItemStack stack);
+
         boolean stillValid(Player player);
 
-        boolean hasCustomBackDestination();
-
-        void goBack();
+        boolean goBack();
     }
 
-    public record HandFilterAccess(ItemStack stack) implements FilterAccess {
+    public static final class HandFilterAccess implements FilterAccess {
+        private final Player player;
+        private ItemStack stack;
+
+        public HandFilterAccess(Player player, ItemStack stack) {
+            this.player = player;
+            this.stack = stack;
+        }
 
         @Override
         public ItemStack getFilterItem() {
-            return stack;
+            return stack.copy();
+        }
+
+        @Override
+        public void setFilterItem(ItemStack stack) {
+            player.setItemSlot(EquipmentSlot.MAINHAND, stack);
+            this.stack = stack;
         }
 
         @Override
@@ -112,40 +132,50 @@ public abstract class AbstractFilterMenu extends BaseEnderMenu {
         }
 
         @Override
-        public boolean hasCustomBackDestination() {
+        public boolean goBack() {
             return false;
-        }
-
-        @Override
-        public void goBack() {
         }
     }
 
-    public record InventoryFilterAccess(ItemStack stack, IItemHandler itemHandler, int slot, @Nullable Runnable goBackRunnable)
-            implements FilterAccess {
+    public static final class InventoryFilterAccess implements FilterAccess {
+        private ItemStack stack;
+        private final IItemHandlerModifiable itemHandler;
+        private final int slot;
+        private final @Nullable Runnable goBackRunnable;
+
+        public InventoryFilterAccess(ItemStack stack, IItemHandlerModifiable itemHandler, int slot,
+                @Nullable Runnable goBackRunnable) {
+            this.stack = stack;
+            this.itemHandler = itemHandler;
+            this.slot = slot;
+            this.goBackRunnable = goBackRunnable;
+        }
 
         @Override
         public ItemStack getFilterItem() {
-            return stack;
+            return stack.copy();
+        }
+
+        @Override
+        public void setFilterItem(ItemStack stack) {
+            // Mainly just to deal with handlers that either return a copy or need to
+            // setChanged.
+            itemHandler.setStackInSlot(slot, stack);
+            this.stack = stack;
         }
 
         @Override
         public boolean stillValid(Player player) {
-            // TODO: Maybe check the position of the container too so we can determine if
-            // its in range?
-            // Assumption is that we are though because we've been opened from another gui.
             return itemHandler.getStackInSlot(slot).equals(stack);
         }
 
         @Override
-        public boolean hasCustomBackDestination() {
-            return goBackRunnable != null;
-        }
-
-        @Override
-        public void goBack() {
-            if (hasCustomBackDestination()) {
+        public boolean goBack() {
+            if (goBackRunnable != null) {
                 goBackRunnable.run();
+                return true;
+            } else {
+                return false;
             }
         }
     }

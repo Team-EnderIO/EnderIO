@@ -13,8 +13,10 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 @EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class ConduitBlockEvent {
 
-    // Opening the conduit GUI allows spectators to open conduit gui while still considering their selected conduit type.
-    // we could probably have just opened any conduit to start but I think the attention to detail is nice.
+    // Opening the conduit GUI allows spectators to open conduit gui while still
+    // considering their selected conduit type.
+    // we could probably have just opened any conduit to start but I think the
+    // attention to detail is nice.
     @SubscribeEvent
     public static void onRightClick(PlayerInteractEvent.RightClickBlock event) {
         if (event.getUseItem().isFalse()) {
@@ -37,7 +39,7 @@ public class ConduitBlockEvent {
                     if (conduitBundle.canOpenScreen(conduitConnection.getSecond(), conduitConnection.getFirst())) {
                         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
                             ConduitMenu.openConduitMenu(serverPlayer, conduitBundle, conduitConnection.getFirst(),
-                                conduitConnection.getSecond());
+                                    conduitConnection.getSecond());
                         }
 
                         event.setCanceled(true);

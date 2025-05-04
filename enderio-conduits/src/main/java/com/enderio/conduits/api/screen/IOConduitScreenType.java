@@ -69,7 +69,8 @@ public abstract class IOConduitScreenType<U extends IOConnectionConfig> extends 
     protected abstract U setRightEnabled(U config, boolean isEnabled);
 
     @Override
-    public void renderLabels(ConduitMenuDataAccess<U> dataAccess, GuiGraphics guiGraphics, int startX, int startY, Font font, int mouseX, int mouseY) {
+    public void renderLabels(ConduitMenuDataAccess<U> dataAccess, GuiGraphics guiGraphics, int startX, int startY,
+            Font font, int mouseX, int mouseY) {
         super.renderLabels(dataAccess, guiGraphics, startX, startY, font, mouseX, mouseY);
 
         // TODO: This should be a sprite.

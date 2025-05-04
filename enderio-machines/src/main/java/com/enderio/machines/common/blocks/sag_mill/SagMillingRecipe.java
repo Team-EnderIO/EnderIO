@@ -72,7 +72,7 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
                         // Collect the output
                         ItemStack outputStack = output.getItemStack();
 
-                        // Attempt to add to an existing stack.
+                        // Attempt to add to an existing originalStack.
                         for (OutputStack stack : outputs) {
                             if (outputStack.getCount() <= 0) {
                                 break;
@@ -86,7 +86,7 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
                             }
                         }
 
-                        // Add new stack.
+                        // Add new originalStack.
                         if (outputStack.getCount() >= 0) {
                             outputs.add(OutputStack.of(outputStack));
                         }

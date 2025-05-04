@@ -48,7 +48,7 @@ public class EnderItemStackFilterScreen extends EnderContainerScreen<EnderItemFi
         this.inventoryLabelY = 36 + menu.type.rowCount() * 18;
 
         this.imageWidth = WIDTH;
-        this.imageHeight = HEIGHT;
+        this.imageHeight = HEIGHT - (4 - menu.type.rowCount()) * 18;
 
         switch (pMenu.type.rowCount()) {
         case 1 -> backgroundTexture = BG_1x9;
@@ -63,25 +63,32 @@ public class EnderItemStackFilterScreen extends EnderContainerScreen<EnderItemFi
     protected void init() {
         super.init();
 
-        addRenderableWidget(new IconButton(getGuiLeft() + 3, getGuiTop() + 3, 16, 16, BACK_SPRITE, null, () -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
+        addRenderableWidget(new IconButton(getGuiLeft() + 3, getGuiTop() + 3, 16, 16, BACK_SPRITE, null,
+                () -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
 
         int xPos = getGuiLeft() + WIDTH - 25;
 
         if (getMenu().type.canFilterByDamage()) {
-            addRenderableWidget(new DamageFilterModePickerWidget(xPos, getGuiTop() + 16, getMenu()::damageFilterMode, getMenu()::setDamageFilterMode, EIOLang.DAMAGE_FILTER_MODE));
+            addRenderableWidget(new DamageFilterModePickerWidget(xPos, getGuiTop() + 16, getMenu()::damageFilterMode,
+                    getMenu()::setDamageFilterMode, EIOLang.DAMAGE_FILTER_MODE));
 
             xPos -= 18;
         }
 
         if (getMenu().type.canMatchComponents()) {
-            addRenderableWidget(new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16, (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS, (b) -> b ? EIOLang.FILTER_MATCH_COMPONENTS : EIOLang.FILTER_IGNORE_COMPONENTS, getMenu()::shouldCompareComponents, (b) -> handleButtonPress(
-                EnderItemFilterMenu.SHOULD_COMPARE_COMPONENTS_BUTTON_ID)));
+            addRenderableWidget(new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16,
+                    (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
+                    (b) -> b ? EIOLang.FILTER_MATCH_COMPONENTS : EIOLang.FILTER_IGNORE_COMPONENTS,
+                    getMenu()::shouldCompareComponents,
+                    (b) -> handleButtonPress(EnderItemFilterMenu.SHOULD_COMPARE_COMPONENTS_BUTTON_ID)));
 
             xPos -= 18;
         }
 
-        addRenderableWidget(new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST, (b) -> b ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST, getMenu()::isInverted, (b) -> handleButtonPress(
-            EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
+        addRenderableWidget(
+                new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
+                        (b) -> b ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
+                        (b) -> handleButtonPress(EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
 
         xPos -= 18;
     }
@@ -99,7 +106,7 @@ public class EnderItemStackFilterScreen extends EnderContainerScreen<EnderItemFi
 //                    itemFilterCapability.setEntry(pSlotId, ItemStack.EMPTY);
 //                }
 //            }
-            super.slotClicked(pSlot, pSlotId, pMouseButton, pType);
+        super.slotClicked(pSlot, pSlotId, pMouseButton, pType);
 //        }
     }
 }

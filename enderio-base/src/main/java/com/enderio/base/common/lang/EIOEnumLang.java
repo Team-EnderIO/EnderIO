@@ -22,7 +22,7 @@ public class EIOEnumLang {
                     .addTranslation(RedstoneControl.NEVER_ACTIVE, "Never Active")
                     .build();
 
-    public static final EnumTranslationMap<DyeColor> DYE_COLOR = builder(DyeColor.class, "redstone")
+    public static final EnumTranslationMap<DyeColor> DYE_COLOR = builder(DyeColor.class, "dye_color")
             .addTranslation(DyeColor.WHITE, "White")
             .addTranslation(DyeColor.ORANGE, "Orange")
             .addTranslation(DyeColor.MAGENTA, "Magenta")
@@ -51,9 +51,8 @@ public class EIOEnumLang {
                     .addTranslation(GlassCollisionPredicate.ANIMALS_BLOCK, "Only solid to animals")
                     .build();
 
-    public static final EnumTranslationMap<DamageFilterMode> DAMAGE_FILTER_MODE = builder(
-            DamageFilterMode.class, "damage_filter_mode")
-                    .addTranslation(DamageFilterMode.IGNORE, "Ignore Damage")
+    public static final EnumTranslationMap<DamageFilterMode> DAMAGE_FILTER_MODE = builder(DamageFilterMode.class,
+            "damage_filter_mode").addTranslation(DamageFilterMode.IGNORE, "Ignore Damage")
                     .addTranslation(DamageFilterMode.UP_TO_25, "Up to 25%% Damaged")
                     .addTranslation(DamageFilterMode.MORE_THAN_25, "More than 25%% Damaged")
                     .addTranslation(DamageFilterMode.UP_TO_50, "Up to 50%% Damaged")

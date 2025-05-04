@@ -8,7 +8,6 @@ import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
 import com.enderio.conduits.common.init.ConduitTypes;
 import java.util.Comparator;
 import java.util.List;
-
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.DyeColor;
@@ -34,10 +33,10 @@ public class ItemConduitTicker
 
             // Prioritize senders in order of priority and distance.
             var prioritizedSenders = senders.stream()
-                .sorted(Comparator
-                    .comparingInt((Connection c) -> c.config().priority()).reversed()
-                    .thenComparingDouble(e -> e.pos().distSqr(extract.pos())))
-                .toList();
+                    .sorted(Comparator.comparingInt((Connection c) -> c.config().priority())
+                            .reversed()
+                            .thenComparingDouble(e -> e.pos().distSqr(extract.pos())))
+                    .toList();
 
             // Get extraction filter.
             var extractFilter = extract.inventory()

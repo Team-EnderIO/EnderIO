@@ -41,7 +41,6 @@ public class EnderBlockEntity extends BlockEntity {
     public static final String INDEX = "Index";
     private final List<NetworkDataSlot<?>> dataSlots = new CopyOnWriteArrayList<>();
     private final List<Runnable> afterDataSync = new CopyOnWriteArrayList<>();
-    private boolean isChangedDeferred = true;
 
     private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> selfCapabilities = new HashMap<>();
     private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> neighbourCapabilities = new HashMap<>();
@@ -78,27 +77,13 @@ public class EnderBlockEntity extends BlockEntity {
      */
     @EnsureSide(EnsureSide.Side.CLIENT)
     public void clientTick() {
-
     }
 
     /**
      * Perform client and server side ticking.
      */
     public void endTick() {
-        if (this.level == null) {
-            return;
-        }
-        if (isChangedDeferred) {
-            isChangedDeferred = false;
-            setChanged(level, getBlockPos(), getBlockState());
-        }
     }
-
-    // TODO: I think we might be able to kill this optimisation now?
-//    @Override
-//    public void setChanged() {
-//        this.isChangedDeferred = true;
-//    }
 
     // endregion
 

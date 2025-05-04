@@ -4,7 +4,6 @@ import static com.enderio.conduits.client.ConduitClientSetup.*;
 
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.model.ConduitModelModifier;
-import com.enderio.conduits.client.ConduitFacadeColor;
 import com.enderio.conduits.client.model.BoxTextureQuadTransformer;
 import com.enderio.conduits.client.model.ColorQuadTransformer;
 import com.enderio.conduits.client.model.ConduitTextureEmissiveQuadTransformer;
@@ -32,7 +31,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.IDynamicBakedModel;
 import net.neoforged.neoforge.client.model.IQuadTransformer;

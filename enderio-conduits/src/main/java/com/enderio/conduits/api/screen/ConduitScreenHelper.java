@@ -23,8 +23,8 @@ public interface ConduitScreenHelper {
     AbstractWidget addRedstoneControlPicker(int x, int y, Component title, Supplier<RedstoneControl> getter,
             Consumer<RedstoneControl> setter);
 
-    AbstractWidget addIconButton(int x, int y, int width, int height, Component title,
-        ResourceLocation sprite, Runnable onPress);
+    AbstractWidget addIconButton(int x, int y, int width, int height, Component title, ResourceLocation sprite,
+            Runnable onPress);
 
     AbstractWidget addToggleButton(int x, int y, int width, int height, Component enabledTitle, Component disabledTitle,
             ResourceLocation enabledSprite, ResourceLocation disabledSprite, Supplier<Boolean> getter,

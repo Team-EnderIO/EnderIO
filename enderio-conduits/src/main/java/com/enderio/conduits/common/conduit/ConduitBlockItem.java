@@ -84,7 +84,7 @@ public class ConduitBlockItem extends BlockItem {
 
     @Override
     protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
-        // Ensure the stack being used is valid for placement.
+        // Ensure the originalStack being used is valid for placement.
         var stack = context.getItemInHand();
         if (!stack.has(ConduitComponents.CONDUIT)) {
             var facadeProvider = stack.getCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER);
@@ -100,14 +100,17 @@ public class ConduitBlockItem extends BlockItem {
             var level = context.getLevel();
             if (level.getBlockEntity(context.getClickedPos()) instanceof ConduitBundleBlockEntity conduitBundle) {
                 // Try to work out what the player wants to click.
-                // If they click directly onto the conduit they want to extend, prioritise that face.
+                // If they click directly onto the conduit they want to extend, prioritise that
+                // face.
                 // Otherwise, try to determine based on their horizontal direction
                 var clickedFace = context.getClickedFace();
                 var horizontalDirection = context.getHorizontalDirection();
 
-                if (level.getBlockState(context.getClickedPos().relative(clickedFace.getOpposite())).is(ConduitBlocks.CONDUIT.get())) {
+                if (level.getBlockState(context.getClickedPos().relative(clickedFace.getOpposite()))
+                        .is(ConduitBlocks.CONDUIT.get())) {
                     conduitBundle.primaryConnectionSide = clickedFace.getOpposite();
-                } else if (level.getBlockState(context.getClickedPos().relative(horizontalDirection.getOpposite())).is(ConduitBlocks.CONDUIT.get())) {
+                } else if (level.getBlockState(context.getClickedPos().relative(horizontalDirection.getOpposite()))
+                        .is(ConduitBlocks.CONDUIT.get())) {
                     conduitBundle.primaryConnectionSide = horizontalDirection.getOpposite();
                 }
             }

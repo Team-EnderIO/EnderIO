@@ -23,7 +23,8 @@ public class EIOEnumIcons {
             .remove(GlassLighting.NONE)
             .build();
 
-    public static final EnumIconMap<DamageFilterMode> DAMAGE_FILTER_MODE = createAll(DamageFilterMode.class, "damage_filter_mode");
+    public static final EnumIconMap<DamageFilterMode> DAMAGE_FILTER_MODE = createAll(DamageFilterMode.class,
+            "damage_filter_mode");
 
     private static <T extends Enum<T>> EnumIconMap<T> createAll(Class<T> enumClass, String iconFolder) {
         return new EnumIconMap<>(EnderIO.NAMESPACE, enumClass, iconFolder);

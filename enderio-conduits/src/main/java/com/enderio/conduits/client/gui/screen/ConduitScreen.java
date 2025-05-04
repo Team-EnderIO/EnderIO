@@ -14,7 +14,6 @@ import com.enderio.conduits.client.gui.ConduitSelectionButton;
 import com.enderio.conduits.client.gui.screen.types.ConduitScreenTypes;
 import com.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.conduits.common.init.ConduitLang;
-import com.enderio.conduits.common.network.SetConduitConnectionConfigPacket;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
@@ -33,7 +32,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeColor;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
@@ -193,7 +191,8 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         }
 
         @Override
-        public AbstractWidget addIconButton(int x, int y, int width, int height, Component title, ResourceLocation sprite, Runnable onPress) {
+        public AbstractWidget addIconButton(int x, int y, int width, int height, Component title,
+                ResourceLocation sprite, Runnable onPress) {
             var widget = new IconButton(x, y, width, height, sprite, title, onPress);
             addRenderableWidget(widget);
             return widget;
@@ -212,10 +211,12 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
         @Override
         public AbstractWidget addFilterConfigureButton(int x, int y, int slot) {
-            var widget = addIconButton(x, y, 16, 16, Component.empty(), ICON_CONFIGURE, () -> menu.tryOpenFilterMenu(slot));
+            var widget = addIconButton(x, y, 16, 16, Component.empty(), ICON_CONFIGURE,
+                    () -> menu.tryOpenFilterMenu(slot));
             addPreRenderAction(() -> {
                 var inventory = menu.getConduitInventory();
-                widget.visible = inventory != null && inventory.getStackInSlot(slot).getCapability(EIOCapabilities.FILTER_MENU_PROVIDER) != null;
+                widget.visible = inventory != null
+                        && inventory.getStackInSlot(slot).getCapability(EIOCapabilities.FILTER_MENU_PROVIDER) != null;
             });
             return widget;
         }

@@ -35,7 +35,8 @@ public class FluidTankBlockItem extends BlockItem implements AdvancedTooltipProv
     @Override
     public int getMaxStackSize(ItemStack stack) {
         return 1;// TODO: when fluid tank entity accepts item stacks of more than 1 in the
-                 // internalDrain/fill. Remove this method to allow fluid tank items to stack to
+                 // internalDrain/fill. Remove this method to allow fluid tank items to
+                 // originalStack to
                  // 64.
     }
 

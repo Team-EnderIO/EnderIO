@@ -6,11 +6,8 @@ import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.network.ConduitNetwork;
 import com.enderio.conduits.api.network.node.ConduitNode;
 import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
-
 import java.util.Comparator;
 import java.util.List;
-
-import com.enderio.conduits.common.conduit.type.item.ItemConduitTicker;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.DyeColor;
@@ -102,8 +99,8 @@ public class FluidConduitTicker
 
             // Prioritize senders in order of distance.
             var prioritizedSenders = senders.stream()
-                .sorted(Comparator.comparingDouble(e -> e.pos().distSqr(receiver.pos())))
-                .toList();
+                    .sorted(Comparator.comparingDouble(e -> e.pos().distSqr(receiver.pos())))
+                    .toList();
 
             if (!context.lockedFluid().isSame(Fluids.EMPTY)) {
                 doFluidTransfer(new FluidStack(context.lockedFluid(), fluidRate), receiver, prioritizedSenders);

@@ -65,7 +65,8 @@ public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneCondu
     }
 
     @Override
-    public void renderLabels(ConduitMenuDataAccess<RedstoneConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics, int startX, int startY, Font font, int mouseX, int mouseY) {
+    public void renderLabels(ConduitMenuDataAccess<RedstoneConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics,
+            int startX, int startY, Font font, int mouseX, int mouseY) {
         super.renderLabels(dataAccess, guiGraphics, startX, startY, font, mouseX, mouseY);
 
         guiGraphics.drawString(font, ConduitLang.CONDUIT_REDSTONE_SIGNAL_COLOR, startX + PADDED_SLOT_SIZE,

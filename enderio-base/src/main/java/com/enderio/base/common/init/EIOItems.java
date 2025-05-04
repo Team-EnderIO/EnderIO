@@ -8,9 +8,9 @@ import com.enderio.base.common.capability.EntityFilterCapability;
 import com.enderio.base.common.capability.FluidFilterCapability;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
+import com.enderio.base.common.item.filter.EnderItemFilterItem;
 import com.enderio.base.common.item.filter.EntityFilter;
 import com.enderio.base.common.item.filter.FluidFilter;
-import com.enderio.base.common.item.filter.EnderItemFilterItem;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
 import com.enderio.base.common.item.misc.EnderiosItem;
@@ -454,7 +454,8 @@ public class EIOItems {
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderItemFilterItem.FILTER_MENU_PROVIDER);
 
     public static final RegiliteItem<EnderItemFilterItem> ADVANCED_ITEM_FILTER = ITEM_REGISTRY
-            .registerItem("advanced_item_filter", props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.ADVANCED))
+            .registerItem("advanced_item_filter",
+                    props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.ADVANCED))
             .setTab(EIOCreativeTabs.GEAR)
             .addCapability(EIOCapabilities.ITEM_STACK_FILTER, EnderItemFilterItem.ITEM_STACK_FILTER_PROVIDER)
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderItemFilterItem.FILTER_MENU_PROVIDER);
@@ -466,7 +467,8 @@ public class EIOItems {
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderItemFilterItem.FILTER_MENU_PROVIDER);
 
     public static final RegiliteItem<EnderItemFilterItem> BIG_ADVANCED_ITEM_FILTER = ITEM_REGISTRY
-            .registerItem("big_advanced_item_filter", props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.BIG_ADVANCED))
+            .registerItem("big_advanced_item_filter",
+                    props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.BIG_ADVANCED))
             .setTab(EIOCreativeTabs.GEAR)
             .addCapability(EIOCapabilities.ITEM_STACK_FILTER, EnderItemFilterItem.ITEM_STACK_FILTER_PROVIDER)
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderItemFilterItem.FILTER_MENU_PROVIDER);

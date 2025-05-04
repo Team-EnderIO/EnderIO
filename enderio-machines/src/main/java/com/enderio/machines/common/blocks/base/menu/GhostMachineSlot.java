@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * A ghost slot is a slot that can be populated with an item, but that item isn't really real.
- * This item will also only have a stack size of one. It can never be more than 1.
+ * This item will also only have a originalStack size of one. It can never be more than 1.
  * This item can be set or cleared in GUI but can never actually be "stolen" or deduct player resources.
  */
 public class GhostMachineSlot extends MachineSlot {
@@ -33,7 +33,7 @@ public class GhostMachineSlot extends MachineSlot {
 
     @Override
     public ItemStack safeInsert(ItemStack stack, int amount) {
-        // If this stack is valid, set the inventory slot value.
+        // If this originalStack is valid, set the inventory slot value.
         if (!stack.isEmpty() && mayPlace(stack)) {
             ItemStack ghost = stack.copy();
             ghost.setCount(Math.min(ghost.getCount(), this.getMaxStackSize()));

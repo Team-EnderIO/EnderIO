@@ -31,6 +31,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -57,7 +58,7 @@ public class ConduitMenu extends BaseEnderMenu {
     private final ConnectionAccessor connectionAccessor;
 
     @Nullable
-    private final IItemHandler conduitInventory;
+    private final IItemHandlerModifiable conduitInventory;
 
     @UseOnly(LogicalSide.SERVER)
     private ConnectionConfig remoteConnectionConfig;
@@ -218,8 +219,8 @@ public class ConduitMenu extends BaseEnderMenu {
             var stack = conduitInventory.getStackInSlot(slot);
             var menuProvider = stack.getCapability(EIOCapabilities.FILTER_MENU_PROVIDER);
             if (menuProvider != null) {
-                menuProvider.openMenu(serverPlayer, conduitInventory, slot, () -> openConduitMenu(serverPlayer, (ConduitBundleBlockEntity) connectionAccessor,
-                    side, conduit));
+                menuProvider.openMenu(serverPlayer, conduitInventory, slot, () -> openConduitMenu(serverPlayer,
+                        (ConduitBundleBlockEntity) connectionAccessor, side, conduit));
             }
         } else {
             PacketDistributor.sendToServer(new C2SOpenConduitFilterMenu(containerId, slot));

@@ -8,8 +8,6 @@ import com.enderio.conduits.api.network.node.ConduitNode;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import java.util.List;
-import java.util.Objects;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

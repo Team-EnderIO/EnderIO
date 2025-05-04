@@ -33,6 +33,10 @@ import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.gigaherz.graph3.Graph;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,11 +49,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -131,7 +130,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     private static final String CONDUIT_CLIENT_WORLD_DATA_KEY = "ConduitWorldData";
 
-    // Set by ConduitBlockItem#placeBlock to set the side the block was placed off of.
+    // Set by ConduitBlockItem#placeBlock to set the side the block was placed off
+    // of.
     // This is used to determine which side to prioritise connections to.
     // TODO: Its this or a block state property...
     @Nullable
@@ -241,7 +241,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         if (hasFacade()) {
             FACADES.put(worldPosition.asLong(), getFacadeBlock().defaultBlockState());
             CHUNK_FACADES.computeIfAbsent(SectionPos.asLong(worldPosition), p -> new LongOpenHashSet())
-                .add(worldPosition.asLong());
+                    .add(worldPosition.asLong());
         } else {
             FACADES.remove(worldPosition.asLong());
             LongSet chunkList = CHUNK_FACADES.getOrDefault(SectionPos.asLong(worldPosition), null);

@@ -7,8 +7,8 @@ import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.common.capability.EntityFilterCapability;
 import com.enderio.base.common.capability.FluidFilterCapability;
-import com.enderio.base.common.filter.ExistingItemStackFilter;
 import com.enderio.base.common.filter.EnderItemStackFilter;
+import com.enderio.base.common.filter.ExistingItemStackFilter;
 import com.enderio.base.common.filter.ModIdItemStackFilter;
 import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.core.common.util.NamedFluidContents;
@@ -63,12 +63,13 @@ public class EIODataComponents {
                     .networkSynchronized(EnderItemStackFilter.STREAM_CODEC));
 
     public static final Supplier<DataComponentType<ExistingItemStackFilter>> EXISTING_ITEM_STACK_FILTER = DATA_COMPONENT_TYPES
-        .registerComponentType("existing_item_stack_filter", builder -> builder.persistent(ExistingItemStackFilter.CODEC)
-            .networkSynchronized(ExistingItemStackFilter.STREAM_CODEC));
+            .registerComponentType("existing_item_stack_filter",
+                    builder -> builder.persistent(ExistingItemStackFilter.CODEC)
+                            .networkSynchronized(ExistingItemStackFilter.STREAM_CODEC));
 
     public static final Supplier<DataComponentType<ModIdItemStackFilter>> MOD_ID_ITEM_STACK_FILTER = DATA_COMPONENT_TYPES
-        .registerComponentType("mod_id_item_stack_filter", builder -> builder.persistent(ModIdItemStackFilter.CODEC)
-            .networkSynchronized(ModIdItemStackFilter.STREAM_CODEC));
+            .registerComponentType("mod_id_item_stack_filter", builder -> builder.persistent(ModIdItemStackFilter.CODEC)
+                    .networkSynchronized(ModIdItemStackFilter.STREAM_CODEC));
 
     public static final Supplier<DataComponentType<FluidFilterCapability.Component>> FLUID_FILTER = DATA_COMPONENT_TYPES
             .registerComponentType("fluid_filter", builder -> builder.persistent(FluidFilterCapability.Component.CODEC)

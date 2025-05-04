@@ -158,24 +158,17 @@ public class ConduitRecipes extends RecipeProvider {
 
     private void buildFilterErasureRecipes(RecipeOutput recipeOutput) {
         // List of all filter items to create erasure recipes for
-        ItemLike[] filterItems = {
-            ConduitItems.OR_FILTER,
-            ConduitItems.NOR_FILTER,
-            ConduitItems.AND_FILTER,
-            ConduitItems.NAND_FILTER,
-            ConduitItems.XOR_FILTER,
-            ConduitItems.XNOR_FILTER,
-            ConduitItems.COUNT_FILTER,
-            ConduitItems.TIMER_FILTER
-        };
+        ItemLike[] filterItems = { ConduitItems.OR_FILTER, ConduitItems.NOR_FILTER, ConduitItems.AND_FILTER,
+                ConduitItems.NAND_FILTER, ConduitItems.XOR_FILTER, ConduitItems.XNOR_FILTER, ConduitItems.COUNT_FILTER,
+                ConduitItems.TIMER_FILTER };
 
         // Create erasure recipe for each filter
         for (ItemLike filter : filterItems) {
             String path = BuiltInRegistries.ITEM.getKey(filter.asItem()).getPath();
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, filter)
-                .requires(filter)
-                .unlockedBy("has_ingredient", has(filter))
-                .save(recipeOutput, EnderIO.loc(path + "_erasure"));
+                    .requires(filter)
+                    .unlockedBy("has_ingredient", has(filter))
+                    .save(recipeOutput, EnderIO.loc(path + "_erasure"));
         }
     }
 

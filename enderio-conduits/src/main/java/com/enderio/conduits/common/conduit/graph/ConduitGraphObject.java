@@ -28,8 +28,10 @@ public class ConduitGraphObject implements GraphObject<ConduitGraphContext>, Con
                     ConduitDataContainer.CODEC.fieldOf("data").forGetter(i -> i.legacyDataContainer))
             .apply(instance, ConduitGraphObject::new));
 
-    // Uses the same "data" name here even though "node_data" would be more descriptive because legacy data will not fail
-    // when we have an optional field that deserializes as null. Or in other words, it'll throw an exception when it encounters
+    // Uses the same "data" name here even though "node_data" would be more
+    // descriptive because legacy data will not fail
+    // when we have an optional field that deserializes as null. Or in other words,
+    // it'll throw an exception when it encounters
     // legacy data and fallback to the legacy loader (which we want).
     private static final Codec<ConduitGraphObject> NEW_CODEC = RecordCodecBuilder
             .create(instance -> instance

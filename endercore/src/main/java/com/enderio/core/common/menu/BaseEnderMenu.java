@@ -48,7 +48,8 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
     protected void addPlayerMainInventorySlots(int xStart, int yStart) {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlot(createPlayerInventorySlot(getPlayerInventory(), x + y * 9 + 9, xStart + x * 18, yStart + y * 18));
+                addSlot(createPlayerInventorySlot(getPlayerInventory(), x + y * 9 + 9, xStart + x * 18,
+                        yStart + y * 18));
             }
         }
     }

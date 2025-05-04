@@ -22,7 +22,7 @@ import org.joml.Vector2i;
 
 public class EntityFilterScreen extends EIOScreen<EntityFilterMenu> {
 
-    private static final Vector2i BG_SIZE = new Vector2i(183,201);
+    private static final Vector2i BG_SIZE = new Vector2i(183, 201);
     private static ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/40/item_filter.png");
     private static final ResourceLocation BLACKLIST_TEXTURE = EnderIO.loc("textures/gui/icons/blacklist.png");
     private static final ResourceLocation NBT_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
@@ -30,24 +30,29 @@ public class EntityFilterScreen extends EIOScreen<EntityFilterMenu> {
     public EntityFilterScreen(EntityFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         BG_TEXTURE = switch (pMenu.getFilter().getEntries().size()) {
-            case 5 -> EnderIO.loc("textures/gui/40/basic_item_filter.png");
-            case 2*5 ->  EnderIO.loc("textures/gui/40/advanced_item_filter.png");
-            case 4*9 ->  EnderIO.loc("textures/gui/40/big_item_filter.png");
-            default -> throw new NotImplementedException();
+        case 5 -> EnderIO.loc("textures/gui/40/basic_item_filter.png");
+        case 2 * 5 -> EnderIO.loc("textures/gui/40/advanced_item_filter.png");
+        case 4 * 9 -> EnderIO.loc("textures/gui/40/big_item_filter.png");
+        default -> throw new NotImplementedException();
         };
     }
 
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36, 16, 16, 0, 0, 16, 0, NBT_TEXTURE, getMenu().getFilter()::isNbt, getMenu()::setNbt, () -> getMenu().getFilter().isNbt() ? EIOLang.FILTER_MATCH_COMPONENTS
-                : EIOLang.FILTER_IGNORE_COMPONENTS));
-        addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36 + 20, 16, 16, 0, 0, 16, 0, BLACKLIST_TEXTURE, getMenu().getFilter()::isInvert, getMenu()::setInverted, () -> getMenu().getFilter().isInvert() ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST));
+        addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110, getGuiTop() + 36, 16, 16, 0, 0, 16, 0,
+                NBT_TEXTURE, getMenu().getFilter()::isNbt, getMenu()::setNbt,
+                () -> getMenu().getFilter().isNbt() ? EIOLang.FILTER_MATCH_COMPONENTS
+                        : EIOLang.FILTER_IGNORE_COMPONENTS));
+        addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110, getGuiTop() + 36 + 20, 16, 16, 0, 0, 16,
+                0, BLACKLIST_TEXTURE, getMenu().getFilter()::isInvert, getMenu()::setInverted,
+                () -> getMenu().getFilter().isInvert() ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST));
 
     }
 
     @Override
-    protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot, @Nullable String countString) {
+    protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot,
+            @Nullable String countString) {
         EntityFilterCapability entityFilterCapability = getMenu().getFilter();
         if (slot.index >= entityFilterCapability.getEntries().size()) {
             super.renderSlotContents(guiGraphics, itemstack, slot, countString);
@@ -77,7 +82,8 @@ public class EntityFilterScreen extends EIOScreen<EntityFilterMenu> {
             if (itemstack.isEmpty()) {
                 return;
             }
-            pGuiGraphics.renderTooltip(this.font, this.getTooltipFromContainerItem(itemstack), itemstack.getTooltipImage(), itemstack, pX, pY);
+            pGuiGraphics.renderTooltip(this.font, this.getTooltipFromContainerItem(itemstack),
+                    itemstack.getTooltipImage(), itemstack, pX, pY);
         }
     }
 

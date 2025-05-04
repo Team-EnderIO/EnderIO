@@ -36,8 +36,8 @@ public class ConduitNetwork {
         registrar.playBidirectional(SetConduitConnectionConfigPacket.TYPE,
                 SetConduitConnectionConfigPacket.STREAM_CODEC, ConduitCommonPayloadHandler.getInstance()::handle);
 
-        registrar.playToServer(C2SOpenConduitFilterMenu.TYPE,
-            C2SOpenConduitFilterMenu.STREAM_CODEC, ConduitServerPayloadHandler.getInstance()::handle);
+        registrar.playToServer(C2SOpenConduitFilterMenu.TYPE, C2SOpenConduitFilterMenu.STREAM_CODEC,
+                ConduitServerPayloadHandler.getInstance()::handle);
     }
 
 }

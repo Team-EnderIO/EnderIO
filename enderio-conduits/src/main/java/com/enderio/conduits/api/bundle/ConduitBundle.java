@@ -161,7 +161,7 @@ public interface ConduitBundle {
      * Set the facade provider for this bundle.
      * Pass {@link ItemStack#EMPTY} to clear the facade.
      * @apiNote The item must have an exposed {@link com.enderio.conduits.api.facade.ConduitFacadeProvider} capability.
-     * @param providerStack the stack providing the facade.
+     * @param providerStack the originalStack providing the facade.
      */
     void setFacadeProvider(ItemStack providerStack);
 

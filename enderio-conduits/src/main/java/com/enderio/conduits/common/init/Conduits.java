@@ -53,8 +53,10 @@ public class Conduits {
                 new FluidConduit(EnderIO.loc("block/conduit/ender_fluid"), ConduitLang.ENDER_FLUID_CONDUIT, 200, true));
 
         context.register(ITEM, new ItemConduit(EnderIO.loc("block/conduit/item"), ConduitLang.ITEM_CONDUIT, 32, 20));
-        context.register(ENHANCED_ITEM, new ItemConduit(EnderIO.loc("block/conduit/item"), ConduitLang.ENHANCED_ITEM_CONDUIT, 64, 20));
-        context.register(ENDER_ITEM, new ItemConduit(EnderIO.loc("block/conduit/item"), ConduitLang.ENDER_ITEM_CONDUIT, 64, 10));
+        context.register(ENHANCED_ITEM,
+                new ItemConduit(EnderIO.loc("block/conduit/item"), ConduitLang.ENHANCED_ITEM_CONDUIT, 64, 20));
+        context.register(ENDER_ITEM,
+                new ItemConduit(EnderIO.loc("block/conduit/item"), ConduitLang.ENDER_ITEM_CONDUIT, 64, 10));
     }
 
     public static void register() {

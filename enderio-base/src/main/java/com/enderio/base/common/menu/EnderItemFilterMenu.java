@@ -31,49 +31,46 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
     @Nullable
     private final EnumSyncSlot<DamageFilterMode> damageFilterSyncSlot;
 
-    public EnderItemFilterMenu(@Nullable MenuType<?> menuType, EnderItemFilterItem.Type type, int containerId, Inventory playerInventory, FilterAccess filterAccess) {
+    public EnderItemFilterMenu(@Nullable MenuType<?> menuType, EnderItemFilterItem.Type type, int containerId,
+            Inventory playerInventory, FilterAccess filterAccess) {
         super(menuType, containerId, playerInventory, filterAccess);
         this.type = type;
         this.clientItems = null;
 
-        this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(() -> {
-            var filterStack = getFilterStack();
-            var filter = filterStack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
-            return filter.isDenyList();
-        }));
+        this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(
+                () -> getFilterStack().getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY)
+                        .isDenyList()));
 
-        this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(() -> {
-            var filterStack = getFilterStack();
-            var filter = filterStack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
-            return filter.shouldCompareComponents();
-        }));
+        this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(
+                () -> getFilterStack().getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY)
+                        .shouldCompareComponents()));
 
         if (this.type.canFilterByDamage()) {
-            this.damageFilterSyncSlot = addUpdatableSyncSlot(EnumSyncSlot.simple(DamageFilterMode.class, () -> {
-                var filterStack = getFilterStack();
-                var filter = filterStack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
-                return filter.damageFilterMode();
-            }, (mode) -> {
-                var filterStack = getFilterStack();
-                var filter = filterStack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
-                filterStack.set(EIODataComponents.ITEM_STACK_FILTER,
-                        new EnderItemStackFilter(filter.matches(), filter.isDenyList(),
-                                filter.shouldCompareComponents(), mode));
-            }));
+            this.damageFilterSyncSlot = addUpdatableSyncSlot(EnumSyncSlot.simple(DamageFilterMode.class,
+                    () -> getFilterStack().getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY)
+                            .damageFilterMode(),
+                    (mode) -> modifyFilterStack(stack -> {
+                        var filter = stack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER,
+                                EnderItemStackFilter.EMPTY);
+                        stack.set(EIODataComponents.ITEM_STACK_FILTER, new EnderItemStackFilter(filter.matches(),
+                                filter.isDenyList(), filter.shouldCompareComponents(), mode));
+                        return stack;
+                    })));
         } else {
             this.damageFilterSyncSlot = null;
         }
 
         for (int i = 0; i < this.type.slotCount(); i++) {
             final int slotIndex = i;
-            addSlot(new ItemFilterSlot(() -> getItemInFilter(slotIndex), stack -> setItemInFilter(slotIndex, stack),
-                i, 14 + (i % 5) * 18, 35 + 20 * (i / 5)));
+            addSlot(new ItemFilterSlot(() -> getItemInFilter(slotIndex), stack -> setItemInFilter(slotIndex, stack), i,
+                    14 + (i % 5) * 18, 35 + 20 * (i / 5)));
         }
 
         addPlayerInventorySlots(14, 47 + type.rowCount() * 18);
     }
 
-    public EnderItemFilterMenu(@Nullable MenuType<?> menuType, EnderItemFilterItem.Type type, int containerId, Inventory playerInventory) {
+    public EnderItemFilterMenu(@Nullable MenuType<?> menuType, EnderItemFilterItem.Type type, int containerId,
+            Inventory playerInventory) {
         super(menuType, containerId, playerInventory);
         this.type = type;
         this.clientItems = NonNullList.withSize(this.type.slotCount(), ItemStack.EMPTY);
@@ -89,8 +86,8 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
 
         for (int i = 0; i < this.type.slotCount(); i++) {
             final int slotIndex = i;
-            addSlot(new ItemFilterSlot(() -> clientItems.get(slotIndex), stack -> clientItems.set(slotIndex, stack),
-                i, 14 + (i % 9) * 18, 35 + 18 * (i / 9)));
+            addSlot(new ItemFilterSlot(() -> clientItems.get(slotIndex), stack -> clientItems.set(slotIndex, stack), i,
+                    14 + (i % 9) * 18, 35 + 18 * (i / 9)));
         }
 
         addPlayerInventorySlots(14, 47 + type.rowCount() * 18);
@@ -122,9 +119,7 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
 
     @EnsureSide(EnsureSide.Side.SERVER)
     private ItemStack getItemInFilter(int slotIndex) {
-        var filterStack = getFilterStack();
-        var filter = filterStack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
-
+        var filter = getFilterStack().getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
         if (slotIndex >= filter.matches().size()) {
             return ItemStack.EMPTY;
         }
@@ -134,34 +129,43 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
 
     @EnsureSide(EnsureSide.Side.SERVER)
     private void setItemInFilter(int slotIndex, ItemStack stack) {
-        var filterStack = getFilterStack();
-        var filter = filterStack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
+        modifyFilterStack(filterStack -> {
+            var filter = filterStack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
 
-        var matches = NonNullList.withSize(type.slotCount(), ItemStack.EMPTY);
+            // Copy match list
+            var matches = NonNullList.withSize(type.slotCount(), ItemStack.EMPTY);
+            for (int i = 0; i < matches.size(); i++) {
+                matches.set(i, i < filter.matches().size() ? filter.matches().get(i) : ItemStack.EMPTY);
+            }
 
-        for (int i = 0; i < matches.size(); i++) {
-            matches.set(i, i < filter.matches().size() ? filter.matches().get(i) : ItemStack.EMPTY);
-        }
+            // Change the entry
+            matches.set(slotIndex, stack);
 
-        matches.set(slotIndex, stack);
-
-        filterStack.set(EIODataComponents.ITEM_STACK_FILTER,
-            new EnderItemStackFilter(matches, filter.isDenyList(), filter.shouldCompareComponents(), filter.damageFilterMode()));
+            // Set the new filter
+            filterStack.set(EIODataComponents.ITEM_STACK_FILTER, new EnderItemStackFilter(matches, filter.isDenyList(),
+                    filter.shouldCompareComponents(), filter.damageFilterMode()));
+            return filterStack;
+        });
     }
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
         if (id == IS_INVERTED_BUTTON_ID) {
-            var filterStack = getFilterStack();
-            var filter = filterStack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
-            filterStack.set(EIODataComponents.ITEM_STACK_FILTER,
-                new EnderItemStackFilter(filter.matches(), !filter.isDenyList(), filter.shouldCompareComponents(), filter.damageFilterMode()));
+            modifyFilterStack(stack -> {
+                var filter = stack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
+                stack.set(EIODataComponents.ITEM_STACK_FILTER, new EnderItemStackFilter(filter.matches(),
+                        !filter.isDenyList(), filter.shouldCompareComponents(), filter.damageFilterMode()));
+                return stack;
+            });
+
             return true;
         } else if (id == SHOULD_COMPARE_COMPONENTS_BUTTON_ID && type.canMatchComponents()) {
-            var filterStack = getFilterStack();
-            var filter = filterStack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
-            filterStack.set(EIODataComponents.ITEM_STACK_FILTER,
-                new EnderItemStackFilter(filter.matches(), filter.isDenyList(), !filter.shouldCompareComponents(), filter.damageFilterMode()));
+            modifyFilterStack(stack -> {
+                var filter = stack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
+                stack.set(EIODataComponents.ITEM_STACK_FILTER, new EnderItemStackFilter(filter.matches(),
+                        filter.isDenyList(), !filter.shouldCompareComponents(), filter.damageFilterMode()));
+                return stack;
+            });
             return true;
         }
 

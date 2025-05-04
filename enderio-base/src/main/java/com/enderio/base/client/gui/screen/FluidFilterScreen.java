@@ -24,7 +24,7 @@ import org.joml.Vector2i;
 
 public class FluidFilterScreen extends EIOScreen<FluidFilterMenu> {
 
-    private static final Vector2i BG_SIZE = new Vector2i(183,201);
+    private static final Vector2i BG_SIZE = new Vector2i(183, 201);
     private static ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/40/item_filter.png");
     private static final ResourceLocation BLACKLIST_TEXTURE = EnderIO.loc("textures/gui/icons/blacklist.png");
     private static final ResourceLocation NBT_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
@@ -32,19 +32,23 @@ public class FluidFilterScreen extends EIOScreen<FluidFilterMenu> {
     public FluidFilterScreen(FluidFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         BG_TEXTURE = switch (pMenu.getFilter().size()) {
-            case 5 -> EnderIO.loc("textures/gui/40/basic_item_filter.png");
-            case 2 * 5 -> EnderIO.loc("textures/gui/40/advanced_item_filter.png");
-            case 4 * 9 -> EnderIO.loc("textures/gui/40/big_item_filter.png");
-            default -> throw new NotImplementedException();
+        case 5 -> EnderIO.loc("textures/gui/40/basic_item_filter.png");
+        case 2 * 5 -> EnderIO.loc("textures/gui/40/advanced_item_filter.png");
+        case 4 * 9 -> EnderIO.loc("textures/gui/40/big_item_filter.png");
+        default -> throw new NotImplementedException();
         };
     }
 
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36, 16, 16, 0, 0, 16, 0, NBT_TEXTURE, getMenu().getFilter()::isNbt, getMenu()::setNbt, () -> getMenu().getFilter().isNbt() ? EIOLang.FILTER_MATCH_COMPONENTS
-                : EIOLang.FILTER_IGNORE_COMPONENTS));
-        addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36 + 20, 16, 16, 0, 0, 16, 0, BLACKLIST_TEXTURE, getMenu().getFilter()::isInvert, getMenu()::setInverted, () -> getMenu().getFilter().isInvert() ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST));
+        addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110, getGuiTop() + 36, 16, 16, 0, 0, 16, 0,
+                NBT_TEXTURE, getMenu().getFilter()::isNbt, getMenu()::setNbt,
+                () -> getMenu().getFilter().isNbt() ? EIOLang.FILTER_MATCH_COMPONENTS
+                        : EIOLang.FILTER_IGNORE_COMPONENTS));
+        addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110, getGuiTop() + 36 + 20, 16, 16, 0, 0, 16,
+                0, BLACKLIST_TEXTURE, getMenu().getFilter()::isInvert, getMenu()::setInverted,
+                () -> getMenu().getFilter().isInvert() ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST));
 
     }
 
@@ -64,14 +68,16 @@ public class FluidFilterScreen extends EIOScreen<FluidFilterMenu> {
                 TextureAtlasSprite sprite = atlas.getSprite(still);
 
                 int color = props.getTintColor();
-                RenderSystem.setShaderColor(FastColor.ARGB32.red(color) / 255.0F, FastColor.ARGB32.green(color) / 255.0F,
-                    FastColor.ARGB32.blue(color) / 255.0F, FastColor.ARGB32.alpha(color) / 255.0F);
+                RenderSystem.setShaderColor(FastColor.ARGB32.red(color) / 255.0F,
+                        FastColor.ARGB32.green(color) / 255.0F, FastColor.ARGB32.blue(color) / 255.0F,
+                        FastColor.ARGB32.alpha(color) / 255.0F);
                 RenderSystem.enableBlend();
 
                 int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                 int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-                pGuiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, pSlot.x, pSlot.y, 16, 16, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(),
-                    atlasWidth, atlasHeight);
+                pGuiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, pSlot.x, pSlot.y, 16, 16, sprite.getU0() * atlasWidth,
+                        sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(), atlasWidth,
+                        atlasHeight);
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             }
         }
@@ -92,7 +98,8 @@ public class FluidFilterScreen extends EIOScreen<FluidFilterMenu> {
             if (itemstack.isEmpty()) {
                 return;
             }
-            guiGraphics.renderTooltip(this.font, this.getTooltipFromContainerItem(itemstack), itemstack.getTooltipImage(), itemstack, x, y);
+            guiGraphics.renderTooltip(this.font, this.getTooltipFromContainerItem(itemstack),
+                    itemstack.getTooltipImage(), itemstack, x, y);
         }
     }
 

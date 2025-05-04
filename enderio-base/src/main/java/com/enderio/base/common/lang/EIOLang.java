@@ -64,10 +64,12 @@ public class EIOLang {
     public static final MutableComponent FLUID_TANK_TOOLTIP = addTranslation("tooltip",
             EnderIO.loc("fluid_tank.tank_tooltip"), "%d/%d mb of %s");// [amount]/[capacity] mb of [FluidName]
 
-    public static final MutableComponent CONFIGURED = TooltipUtil.style(addTranslation("tooltip", EnderIO.loc("configured"), "Configured"));
-    public static final MutableComponent FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH = addTranslation("tooltip", EnderIO.loc("filter.not_allowed_component_match"),
-        "This filter uses component matching which is no longer available to this item. Clear this filter using the crafting grid to remove this warning.")
-        .withStyle(ChatFormatting.RED);
+    public static final MutableComponent CONFIGURED = TooltipUtil
+            .style(addTranslation("tooltip", EnderIO.loc("configured"), "Configured"));
+    public static final MutableComponent FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH = addTranslation("tooltip",
+            EnderIO.loc("filter.not_allowed_component_match"),
+            "This filter uses component matching which is no longer available to this item. Clear this filter using the crafting grid to remove this warning.")
+                    .withStyle(ChatFormatting.RED);
 
     // endregion
 
@@ -177,9 +179,12 @@ public class EIOLang {
             "Allow List");
     public static final Component FILTER_DENY_LIST = addTranslation("gui", EnderIO.loc("filter.deny_list"),
             "Deny List");
-    public static final Component FILTER_MATCH_COMPONENTS = addTranslation("gui", EnderIO.loc("filter.match_components"), "Match Components");
-    public static final Component FILTER_IGNORE_COMPONENTS = addTranslation("gui", EnderIO.loc("filter.ignore_components"), "Ignore Components");
-    public static final Component DAMAGE_FILTER_MODE = addTranslation("gui", EnderIO.loc("filter.damage"), "Damage Filter");
+    public static final Component FILTER_MATCH_COMPONENTS = addTranslation("gui",
+            EnderIO.loc("filter.match_components"), "Match Components");
+    public static final Component FILTER_IGNORE_COMPONENTS = addTranslation("gui",
+            EnderIO.loc("filter.ignore_components"), "Ignore Components");
+    public static final Component DAMAGE_FILTER_MODE = addTranslation("gui", EnderIO.loc("filter.damage"),
+            "Damage Filter");
 
     public static final Component IOCONFIG = addTranslation("gui", EnderIO.loc("ioconfig"), "IO Configuration");
     public static final Component TOGGLE_NEIGHBOUR = addTranslation("gui", EnderIO.loc("ioconfig.neighbour"),

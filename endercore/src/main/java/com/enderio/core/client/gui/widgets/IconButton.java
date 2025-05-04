@@ -13,8 +13,8 @@ public class IconButton extends EnderButton {
     private final Component tooltip;
     private final Runnable onPress;
 
-    public IconButton(int x, int y, int width, int height, ResourceLocation sprite,
-            @Nullable Component tooltip, Runnable onPress) {
+    public IconButton(int x, int y, int width, int height, ResourceLocation sprite, @Nullable Component tooltip,
+            Runnable onPress) {
         super(x, y, width, height, Component.empty());
         this.sprite = sprite;
         this.tooltip = tooltip;
