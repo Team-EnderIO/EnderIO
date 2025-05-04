@@ -40,6 +40,7 @@ public class ConduitBlockEvent {
                                 conduitConnection.getSecond());
                         }
 
+                        event.setCanceled(true);
                         event.setCancellationResult(InteractionResult.sidedSuccess(level.isClientSide()));
                     }
                 }
