@@ -5,8 +5,10 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.api.screen.ConduitMenuDataAccess;
 import com.enderio.conduits.api.screen.ConduitScreenHelper;
 import com.enderio.conduits.api.screen.IOConduitScreenType;
+import com.enderio.conduits.common.conduit.type.item.ItemConduit;
 import com.enderio.conduits.common.conduit.type.item.ItemConduitConnectionConfig;
 import com.enderio.conduits.common.init.ConduitLang;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnectionConfig> {
@@ -25,6 +27,8 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
         screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
                 () -> dataAccess.getConnectionConfig().sendColor(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withSendColor(value)));
+
+        screen.addFilterConfigureButton(startX, startY + 80, ItemConduit.INSERT_FILTER_SLOT);
     }
 
     @Override
@@ -64,6 +68,8 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
                 value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
 
         // TODO: Show redstone signal indicators using the extra NBT payload.
+
+        screen.addFilterConfigureButton(startX, startY + 80, ItemConduit.EXTRACT_FILTER_SLOT);
     }
 
     @Override

@@ -450,12 +450,14 @@ public class EIOItems {
     public static final RegiliteItem<EnderItemFilterItem> BASIC_ITEM_FILTER = ITEM_REGISTRY
             .registerItem("basic_filter", props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.BASIC))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.ITEM_STACK_FILTER, EnderItemFilterItem.ITEM_STACK_FILTER_PROVIDER);
+            .addCapability(EIOCapabilities.ITEM_STACK_FILTER, EnderItemFilterItem.ITEM_STACK_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderItemFilterItem.FILTER_MENU_PROVIDER);
 
     public static final RegiliteItem<EnderItemFilterItem> ADVANCED_ITEM_FILTER = ITEM_REGISTRY
             .registerItem("advanced_filter", props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.ADVANCED))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.ITEM_STACK_FILTER, EnderItemFilterItem.ITEM_STACK_FILTER_PROVIDER);
+            .addCapability(EIOCapabilities.ITEM_STACK_FILTER, EnderItemFilterItem.ITEM_STACK_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderItemFilterItem.FILTER_MENU_PROVIDER);
 
 //    public static final RegiliteItem<EnderItemFilterItem> BIG_ITEM_FILTER = ITEM_REGISTRY
 //            .registerItem("big_filter", props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.BIG))

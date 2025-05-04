@@ -4,6 +4,7 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.client.gui.widget.DyeColorPickerWidget;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.screen.ConduitMenuDataAccess;
@@ -15,6 +16,7 @@ import com.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.network.SetConduitConnectionConfigPacket;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
+import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import java.util.ArrayList;
 import java.util.List;
@@ -165,6 +167,8 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
     private class ScreenHelper implements ConduitScreenHelper {
 
+        private static final ResourceLocation ICON_CONFIGURE = EnderIO.loc("icon/configure");
+
         @Override
         public AbstractWidget addCheckbox(int x, int y, Supplier<Boolean> getter, Consumer<Boolean> setter) {
             var widget = ToggleIconButton.createCheckbox(x, y, getter, setter);
@@ -189,6 +193,13 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         }
 
         @Override
+        public AbstractWidget addIconButton(int x, int y, int width, int height, Component title, ResourceLocation sprite, Runnable onPress) {
+            var widget = new IconButton(x, y, width, height, sprite, title, onPress);
+            addRenderableWidget(widget);
+            return widget;
+        }
+
+        @Override
         public AbstractWidget addToggleButton(int x, int y, int width, int height, Component enabledTitle,
                 Component disabledTitle, ResourceLocation enabledSprite, ResourceLocation disabledSprite,
                 Supplier<Boolean> getter, Consumer<Boolean> setter) {
@@ -196,6 +207,16 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
             var widget = ToggleIconButton.of(x, y, width, height, enabledSprite, disabledSprite, enabledTitle,
                     disabledTitle, getter, setter);
             addRenderableWidget(widget);
+            return widget;
+        }
+
+        @Override
+        public AbstractWidget addFilterConfigureButton(int x, int y, int slot) {
+            var widget = addIconButton(x, y, 16, 16, Component.empty(), ICON_CONFIGURE, () -> menu.tryOpenFilterMenu(slot));
+            addPreRenderAction(() -> {
+                var inventory = menu.getConduitInventory();
+                widget.visible = inventory != null && inventory.getStackInSlot(slot).getCapability(EIOCapabilities.FILTER_MENU_PROVIDER) != null;
+            });
             return widget;
         }
 

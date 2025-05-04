@@ -2,6 +2,7 @@ package com.enderio.conduits.common.network;
 
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.bundle.ConduitBundle;
+import com.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitNetworkContext;
 import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
@@ -64,6 +65,17 @@ public class ConduitServerPayloadHandler {
                             networkContext.setLockedFluid(Fluids.EMPTY);
                         }
                     }
+                }
+            }
+        });
+    }
+
+    public void handle(C2SOpenConduitFilterMenu packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (packet.containerId() == context.player().containerMenu.containerId) {
+                // TODO: Spectator viewing filter menus is broken lol
+                if (!context.player().isSpectator() && context.player().containerMenu instanceof ConduitMenu menu) {
+                    menu.tryOpenFilterMenu(packet.slot());
                 }
             }
         });

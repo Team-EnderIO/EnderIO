@@ -4,8 +4,10 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.client.gui.widget.DamageFilterModePickerWidget;
 import com.enderio.base.common.item.filter.EnderItemFilterItem;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.menu.AbstractFilterMenu;
 import com.enderio.base.common.menu.EnderItemFilterMenu;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
+import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -26,6 +28,8 @@ public class NewItemFilterScreen extends EnderContainerScreen<EnderItemFilterMen
 
     private static final ResourceLocation NBT_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
 
+    private static final ResourceLocation BACK_SPRITE = EnderIO.loc("icon/back");
+
     private static final ResourceLocation ALLOW_LIST_SPRITE = EnderIO.loc("icon/allow_list");
     private static final ResourceLocation DENY_LIST_SPRITE = EnderIO.loc("icon/deny_list");
 
@@ -35,6 +39,9 @@ public class NewItemFilterScreen extends EnderContainerScreen<EnderItemFilterMen
         super(pMenu, pPlayerInventory, pTitle);
 
         this.shouldRenderLabels = true;
+
+        this.titleLabelX = 28;
+        this.titleLabelY = 12;
 
         this.imageWidth = WIDTH;
         this.imageHeight = HEIGHT;
@@ -55,6 +62,9 @@ public class NewItemFilterScreen extends EnderContainerScreen<EnderItemFilterMen
     @Override
     protected void init() {
         super.init();
+
+        addRenderableWidget(new IconButton(getGuiLeft() + 3, getGuiTop() + 3, 16, 16, BACK_SPRITE, null, () -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
+
         addRenderableWidget(new ToggleIconButton(getGuiLeft() + 110, getGuiTop() + 36 + 20, 16, 16, (b) -> b ? DENY_LIST_SPRITE : ALLOW_LIST_SPRITE, (b) -> b ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST, getMenu()::isInverted, (b) -> handleButtonPress(
             EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
 

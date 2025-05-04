@@ -121,7 +121,7 @@ public abstract class AbstractFilterMenu extends BaseEnderMenu {
         }
     }
 
-    public record InventoryFilterAccess(ItemStack stack, IItemHandler itemHandler, int slot, Runnable goBackRunnable)
+    public record InventoryFilterAccess(ItemStack stack, IItemHandler itemHandler, int slot, @Nullable Runnable goBackRunnable)
             implements FilterAccess {
 
         @Override
@@ -139,7 +139,7 @@ public abstract class AbstractFilterMenu extends BaseEnderMenu {
 
         @Override
         public boolean hasCustomBackDestination() {
-            return true;
+            return goBackRunnable != null;
         }
 
         @Override

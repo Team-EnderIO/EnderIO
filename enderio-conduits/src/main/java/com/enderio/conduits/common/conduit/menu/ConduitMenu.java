@@ -1,11 +1,13 @@
 package com.enderio.conduits.common.conduit.menu;
 
 import com.enderio.base.api.UseOnly;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitMenus;
+import com.enderio.conduits.common.network.C2SOpenConduitFilterMenu;
 import com.enderio.conduits.common.network.S2CConduitExtraGuiDataPacket;
 import com.enderio.conduits.common.network.S2CConduitListPacket;
 import com.enderio.conduits.common.network.SetConduitConnectionConfigPacket;
@@ -129,6 +131,11 @@ public class ConduitMenu extends BaseEnderMenu {
         return connectionAccessor.getAllOpenableConduits(side);
     }
 
+    @Nullable
+    public IItemHandler getConduitInventory() {
+        return conduitInventory;
+    }
+
     @EnsureSide(EnsureSide.Side.CLIENT)
     public void setConnectedConduits(List<Holder<Conduit<?, ?>>> connectedConduits) {
         if (connectionAccessor instanceof ClientConnectionAccessor clientConnectionAccessor) {
@@ -204,6 +211,19 @@ public class ConduitMenu extends BaseEnderMenu {
     @Override
     public ItemStack quickMoveStack(Player player, int i) {
         return ItemStack.EMPTY;
+    }
+
+    public void tryOpenFilterMenu(int slot) {
+        if (getPlayerInventory().player instanceof ServerPlayer serverPlayer) {
+            var stack = conduitInventory.getStackInSlot(slot);
+            var menuProvider = stack.getCapability(EIOCapabilities.FILTER_MENU_PROVIDER);
+            if (menuProvider != null) {
+                menuProvider.openMenu(serverPlayer, conduitInventory, slot, () -> openConduitMenu(serverPlayer, (ConduitBundleBlockEntity) connectionAccessor,
+                    side, conduit));
+            }
+        } else {
+            PacketDistributor.sendToServer(new C2SOpenConduitFilterMenu(containerId, slot));
+        }
     }
 
     @Override

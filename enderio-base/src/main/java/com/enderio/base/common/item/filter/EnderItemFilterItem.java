@@ -1,9 +1,11 @@
 package com.enderio.base.common.item.filter;
 
+import com.enderio.base.api.new_filter.FilterMenuProvider;
 import com.enderio.base.api.new_filter.ItemStackFilter;
 import com.enderio.base.common.filter.EnderItemStackFilter;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOMenus;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.AbstractFilterMenu;
 import com.enderio.base.common.menu.EnderItemFilterMenu;
 import com.enderio.regilite.holder.RegiliteMenu;
@@ -20,15 +22,22 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.function.Supplier;
 
-public class EnderItemFilterItem extends Item {
+public class EnderItemFilterItem extends Item implements FilterMenuProvider {
 
     public static ICapabilityProvider<ItemStack, Void, ItemStackFilter> ITEM_STACK_FILTER_PROVIDER =
         (stack, v) -> stack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
+
+    public static ICapabilityProvider<ItemStack, Void, FilterMenuProvider> FILTER_MENU_PROVIDER =
+        (stack, v) -> (EnderItemFilterItem)stack.getItem();
 
     private final Type type;
 
@@ -58,6 +67,46 @@ public class EnderItemFilterItem extends Item {
         }
 
         return super.use(level, player, usedHand);
+    }
+
+    @Override
+    public void openMenu(Player player, IItemHandler itemHandler, int slot, @Nullable Runnable goBackRunnable) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            var filterStack = itemHandler.getStackInSlot(slot);
+
+            serverPlayer.openMenu(new MenuProvider() {
+                @Override
+                public Component getDisplayName() {
+                    return getName(filterStack);
+                }
+
+                @Override
+                public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
+                    return type.openMenu(pContainerId, pInventory, new AbstractFilterMenu.InventoryFilterAccess(filterStack, itemHandler, slot, goBackRunnable));
+                }
+
+                public boolean shouldTriggerClientSideContainerClosingOnOpen() {
+                    // Prevents the mouse from jumping when changing between conduits.
+                    return false;
+                }
+            });
+        }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+
+        var filter = stack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
+        if (!filter.equals(EnderItemStackFilter.EMPTY)) {
+            tooltipComponents.add(EIOLang.CONFIGURED);
+        }
+
+        // Display warning on basic item filters which have been set to match on NBT/Components.
+        // This avoids us invalidating existing filters, but lets the user know that the filter has invalid settings that they can't see.
+        if (filter.shouldCompareComponents() && !type.canMatchComponents()) {
+            tooltipComponents.add(EIOLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH);
+        }
     }
 
     public enum Type {

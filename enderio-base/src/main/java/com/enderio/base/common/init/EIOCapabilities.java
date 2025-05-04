@@ -2,6 +2,7 @@ package com.enderio.base.common.init;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.filter.ResourceFilter;
+import com.enderio.base.api.new_filter.FilterMenuProvider;
 import com.enderio.base.api.new_filter.ItemStackFilter;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -22,6 +23,11 @@ public class EIOCapabilities {
                 EnderIO.loc("item_filter"),
                 ResourceFilter.class);
     }
+
+    public static final ItemCapability<FilterMenuProvider, Void> FILTER_MENU_PROVIDER =
+        ItemCapability.createVoid(
+            EnderIO.loc("filter_menu_provider"),
+            FilterMenuProvider.class);
 
     public static final ItemCapability<ItemStackFilter, Void> ITEM_STACK_FILTER =
         ItemCapability.createVoid(
