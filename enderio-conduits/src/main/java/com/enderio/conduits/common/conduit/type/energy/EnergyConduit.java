@@ -97,7 +97,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
                 Direction side = (Direction) context;
 
                 // No connection, no cap.
-                if (!node.isConnectedTo(side)) {
+                if (!node.isConnectedToBlock(side)) {
                     return null;
                 }
 

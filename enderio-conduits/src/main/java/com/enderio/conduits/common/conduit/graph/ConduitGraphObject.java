@@ -187,6 +187,15 @@ public class ConduitGraphObject implements GraphObject<ConduitGraphContext>, Con
     // region Connection Config
 
     @Override
+    public boolean isConnectedToBlock(Direction side) {
+        if (connectionHost == null) {
+            throw new IllegalStateException("No connection host!");
+        }
+
+        return connectionHost.isConnectedToBlock(side);
+    }
+
+    @Override
     public boolean isConnectedTo(Direction side) {
         if (connectionHost == null) {
             throw new IllegalStateException("No connection host!");

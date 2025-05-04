@@ -5,6 +5,7 @@ import appeng.api.networking.IInWorldGridNodeHost;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.util.AECableType;
 import com.enderio.base.api.network.DumbStreamCodec;
+import com.enderio.conduits.api.network.node.NodeData;
 import com.enderio.conduits.api.network.node.legacy.ConduitData;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataType;
 import com.mojang.serialization.MapCodec;
@@ -99,5 +100,10 @@ public class ConduitInWorldGridNodeHost implements IInWorldGridNodeHost, Conduit
         }
 
         return AECableType.SMART;
+    }
+
+    @Override
+    public NodeData toNodeData() {
+        return new MEConduitNodeData(mainNode, savedMainNode, isDense);
     }
 }

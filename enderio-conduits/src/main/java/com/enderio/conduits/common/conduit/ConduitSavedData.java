@@ -352,6 +352,10 @@ public class ConduitSavedData extends SavedData {
             int conduitId = conduitRegistry.getId(conduit.value());
             var conduitTicker = conduit.value().ticker();
 
+            if (conduitTicker == null) {
+                continue;
+            }
+
             for (var graph : entry.getValue()) {
                 tickConduitGraph(serverLevel, entry.getKey(), conduitId, conduitTicker, graph);
             }

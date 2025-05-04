@@ -38,7 +38,7 @@ public abstract class IOAwareConduitTicker<T extends Conduit<T, U>, U extends IO
             }
 
             for (Direction side : Direction.values()) {
-                if (node.isConnectedTo(side)) {
+                if (node.isConnectedToBlock(side)) {
                     var config = node.getConnectionConfig(side, conduit.connectionConfigType());
 
                     if (canSend(node, config)) {

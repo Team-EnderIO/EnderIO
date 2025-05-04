@@ -10,9 +10,17 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Experimental
 public interface ConnectionConfigAccessor {
 
+    // TODO: Do we need separation between toBlock and just to?
+
     /**
      * @param side the side to query.
-     * @return whether there is a connection on the given side.
+     * @return whether there is a connection to a block on this side.
+     */
+    boolean isConnectedToBlock(Direction side);
+
+    /**
+     * @param side the side to query.
+     * @return whether there is a connection a block or conduit on this side.
      */
     boolean isConnectedTo(Direction side);
 

@@ -72,6 +72,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * Get the ticker for this conduit graph type.
      * @apiNote The ticker should never change, it can use the options to determine behaviour in its implementation.
      */
+    @Nullable
     ConduitTicker<TConduit> ticker();
 
     /**

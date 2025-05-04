@@ -15,6 +15,8 @@ public interface ConduitConnectionHost {
 
     BlockPos pos();
 
+    boolean isConnectedToBlock(Direction side);
+
     boolean isConnectedTo(Direction side);
 
     ConnectionConfig getConnectionConfig(Direction side);

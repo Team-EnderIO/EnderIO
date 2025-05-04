@@ -4,6 +4,8 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitApi;
+import com.enderio.conduits.api.connection.config.ConnectionConfigType;
+import com.enderio.conduits.api.network.node.NodeDataType;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataType;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
@@ -33,8 +35,16 @@ public class RefinedStorageModule implements ConduitModule {
 
     public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
             .create(EnderIOConduitsRegistries.CONDUIT_TYPE, EnderIO.NAMESPACE);
+
+    public static final DeferredRegister<ConnectionConfigType<?>> CONDUIT_CONNECTION_CONFIG_TYPES = DeferredRegister
+            .create(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.NAMESPACE);
+
     public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
             .create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, EnderIO.NAMESPACE);
+
+    public static final DeferredRegister<NodeDataType<?>> CONDUIT_NODE_DATA_TYPES = DeferredRegister
+            .create(EnderIOConduitsRegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.NAMESPACE);
+
     public static final ConduitModule INSTANCE = new RefinedStorageModule();
 
     private static final ModLoadedCondition CONDITION = new ModLoadedCondition("refinedstorage");
@@ -45,11 +55,14 @@ public class RefinedStorageModule implements ConduitModule {
                             RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability())
                     .build());
 
-    public static ResourceKey<Conduit<?, ?>> RS = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
-        EnderIO.loc("rs"));
+    public static final Supplier<ConnectionConfigType<RSConduitConnectionConfig>> CONNECTION_CONFIG = CONDUIT_CONNECTION_CONFIG_TYPES
+        .register("rs", () -> RSConduitConnectionConfig.TYPE);
 
     public static final Supplier<ConduitDataType<RSNetworkHost>> DATA = CONDUIT_DATA_TYPES.register("rs",
             () -> new ConduitDataType<>(RSNetworkHost.CODEC, RSNetworkHost.STREAM_CODEC, RSNetworkHost::new));
+
+    public static final Supplier<NodeDataType<RSConduitNodeData>> NODE_DATA = CONDUIT_NODE_DATA_TYPES.register("rs",
+            () -> RSConduitNodeData.TYPE);
 
     private static final Component LANG_RS_CONDUIT = addTranslation("item", EnderIO.loc("rs"),
             "Refined Storage Conduit");
@@ -58,10 +71,15 @@ public class RefinedStorageModule implements ConduitModule {
         return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
     }
 
+    public static ResourceKey<Conduit<?, ?>> RS = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+        EnderIO.loc("rs"));
+
     @Override
     public void register(IEventBus modEventBus) {
         CONDUIT_TYPES.register(modEventBus);
+        CONDUIT_CONNECTION_CONFIG_TYPES.register(modEventBus);
         CONDUIT_DATA_TYPES.register(modEventBus);
+        CONDUIT_NODE_DATA_TYPES.register(modEventBus);
     }
 
     @Override
@@ -80,7 +98,7 @@ public class RefinedStorageModule implements ConduitModule {
 
         var conduit = lookupProvider.holderOrThrow(RS);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApi.INSTANCE.getStackForType(conduit, 3))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApi.INSTANCE.getConduitItem(conduit, 3))
                 .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")

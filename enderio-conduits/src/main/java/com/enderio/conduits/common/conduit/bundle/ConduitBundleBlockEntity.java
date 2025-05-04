@@ -1572,8 +1572,13 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         @Override
-        public boolean isConnectedTo(Direction side) {
+        public boolean isConnectedToBlock(Direction side) {
             return conduitBundle.getConnectionStatus(conduit, side) == ConnectionStatus.CONNECTED_BLOCK;
+        }
+
+        @Override
+        public boolean isConnectedTo(Direction side) {
+            return conduitBundle.getConnectionStatus(conduit, side).isConnected();
         }
 
         @Override

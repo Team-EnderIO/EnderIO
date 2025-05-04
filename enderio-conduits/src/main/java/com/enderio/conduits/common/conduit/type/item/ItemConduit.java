@@ -114,7 +114,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
 
         // Copy connection config
         for (Direction side : Direction.values()) {
-            if (node.isConnectedTo(side)) {
+            if (node.isConnectedToBlock(side)) {
                 var oldSideConfig = legacyData.get(side);
                 var currentConfig = node.getConnectionConfig(side, ItemConduitConnectionConfig.TYPE);
 
@@ -157,7 +157,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     @Override
     @Nullable
     public CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
-        if (!node.isConnectedTo(side)) {
+        if (!node.isConnectedToBlock(side)) {
             return null;
         }
 
