@@ -177,8 +177,8 @@ public class EIOLang {
             "Allow List");
     public static final Component FILTER_DENY_LIST = addTranslation("gui", EnderIO.loc("filter.deny_list"),
             "Deny List");
-    public static final Component NBT_FILTER = addTranslation("gui", EnderIO.loc("filter.nbt"), "Match Components");
-    public static final Component NO_NBT_FILTER = addTranslation("gui", EnderIO.loc("filter.nonbt"), "Ignore Components");
+    public static final Component FILTER_MATCH_COMPONENTS = addTranslation("gui", EnderIO.loc("filter.match_components"), "Match Components");
+    public static final Component FILTER_IGNORE_COMPONENTS = addTranslation("gui", EnderIO.loc("filter.ignore_components"), "Ignore Components");
     public static final Component DAMAGE_FILTER_MODE = addTranslation("gui", EnderIO.loc("filter.damage"), "Damage Filter");
 
     public static final Component IOCONFIG = addTranslation("gui", EnderIO.loc("ioconfig"), "IO Configuration");

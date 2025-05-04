@@ -2,7 +2,6 @@ package com.enderio.base.client.gui.screen;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.client.gui.widget.DamageFilterModePickerWidget;
-import com.enderio.base.common.item.filter.EnderItemFilterItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.AbstractFilterMenu;
 import com.enderio.base.common.menu.EnderItemFilterMenu;
@@ -33,8 +32,11 @@ public class EnderItemStackFilterScreen extends EnderContainerScreen<EnderItemFi
 
     private static final ResourceLocation BACK_SPRITE = EnderIO.loc("icon/back");
 
-    private static final ResourceLocation ALLOW_LIST_SPRITE = EnderIO.loc("icon/allow_list");
-    private static final ResourceLocation DENY_LIST_SPRITE = EnderIO.loc("icon/deny_list");
+    private static final ResourceLocation ICON_MATCH_COMPONENTS = EnderIO.loc("icon/match_components");
+    private static final ResourceLocation ICON_IGNORE_COMPONENTS = EnderIO.loc("icon/ignore_components");
+
+    private static final ResourceLocation ICON_ALLOW_LIST = EnderIO.loc("icon/allow_list");
+    private static final ResourceLocation ICON_DENY_LIST = EnderIO.loc("icon/deny_list");
 
     private final ResourceLocation backgroundTexture;
 
@@ -76,13 +78,13 @@ public class EnderItemStackFilterScreen extends EnderContainerScreen<EnderItemFi
         }
 
         if (getMenu().type.canMatchComponents()) {
-            addRenderableWidget(new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16, (b) -> NBT_TEXTURE, (b) -> b ? EIOLang.NBT_FILTER : EIOLang.NO_NBT_FILTER, getMenu()::shouldCompareComponents, (b) -> handleButtonPress(
+            addRenderableWidget(new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16, (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS, (b) -> b ? EIOLang.FILTER_MATCH_COMPONENTS : EIOLang.FILTER_IGNORE_COMPONENTS, getMenu()::shouldCompareComponents, (b) -> handleButtonPress(
                 EnderItemFilterMenu.SHOULD_COMPARE_COMPONENTS_BUTTON_ID)));
 
             xPos -= 18;
         }
 
-        addRenderableWidget(new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16, (b) -> b ? DENY_LIST_SPRITE : ALLOW_LIST_SPRITE, (b) -> b ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST, getMenu()::isInverted, (b) -> handleButtonPress(
+        addRenderableWidget(new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST, (b) -> b ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST, getMenu()::isInverted, (b) -> handleButtonPress(
             EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
 
         xPos -= 18;
