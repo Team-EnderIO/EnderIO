@@ -72,7 +72,7 @@ public class ToggleIconButton extends EnderButton {
         }
 
         // TODO: Temp solution for the value changing externally (data sync)
-        if (previousValue != value) {
+        if (tooltipFunction != null && previousValue != value) {
             previousValue = value;
             setTooltip(Tooltip.create(tooltipFunction.apply(getter.get())));
         }
