@@ -131,6 +131,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     private static final String CONDUIT_CLIENT_WORLD_DATA_KEY = "ConduitWorldData";
 
+    // Set by ConduitBlockItem#placeBlock to set the side the block was placed off of.
+    // This is used to determine which side to prioritise connections to.
+    // TODO: Its this or a block state property...
+    @Nullable
+    public Direction primaryConnectionSide;
+
     public ConduitBundleBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(ConduitBlockEntities.CONDUIT.get(), worldPosition, blockState);
     }

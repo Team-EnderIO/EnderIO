@@ -4,7 +4,9 @@ import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.api.Conduit;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
+import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitLang;
@@ -78,6 +80,40 @@ public class ConduitBlockItem extends BlockItem {
         }
 
         return super.place(context);
+    }
+
+    @Override
+    protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
+        // Ensure the stack being used is valid for placement.
+        var stack = context.getItemInHand();
+        if (!stack.has(ConduitComponents.CONDUIT)) {
+            var facadeProvider = stack.getCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER);
+            if (facadeProvider == null || !facadeProvider.isValid()) {
+                return false;
+            }
+        }
+
+        boolean result = super.placeBlock(context, state);
+
+        // Save the clicked face for connection logic later.
+        if (result) {
+            var level = context.getLevel();
+            if (level.getBlockEntity(context.getClickedPos()) instanceof ConduitBundleBlockEntity conduitBundle) {
+                // Try to work out what the player wants to click.
+                // If they click directly onto the conduit they want to extend, prioritise that face.
+                // Otherwise, try to determine based on their horizontal direction
+                var clickedFace = context.getClickedFace();
+                var horizontalDirection = context.getHorizontalDirection();
+
+                if (level.getBlockState(context.getClickedPos().relative(clickedFace.getOpposite())).is(ConduitBlocks.CONDUIT.get())) {
+                    conduitBundle.primaryConnectionSide = clickedFace.getOpposite();
+                } else if (level.getBlockState(context.getClickedPos().relative(horizontalDirection.getOpposite())).is(ConduitBlocks.CONDUIT.get())) {
+                    conduitBundle.primaryConnectionSide = horizontalDirection.getOpposite();
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override

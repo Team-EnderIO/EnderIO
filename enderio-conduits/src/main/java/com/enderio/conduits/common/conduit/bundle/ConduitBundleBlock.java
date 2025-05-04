@@ -229,19 +229,18 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack stack) {
-        // TODO: Maybe we need to support non-player placement?
-        if (!(placer instanceof Player player)) {
-            return;
+        // Try to get placing player.
+        Player player = null;
+        if (placer instanceof Player) {
+            player = (Player) placer;
         }
 
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle) {
             Holder<Conduit<?, ?>> conduit = stack.get(ConduitComponents.CONDUIT);
             if (conduit != null) {
-                HitResult hit = player.pick(player.blockInteractionRange() + 5, 1, false);
-                Direction primaryConnectionSide = null;
-                if (hit instanceof BlockHitResult blockHitResult) {
-                    primaryConnectionSide = blockHitResult.getDirection().getOpposite();
-                }
+                // Use the primary connection face, if available from placement.
+                Direction primaryConnectionSide = conduitBundle.primaryConnectionSide;
+                conduitBundle.primaryConnectionSide = null;
 
                 conduitBundle.addConduit(conduit, primaryConnectionSide, player);
             } else {
