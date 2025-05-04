@@ -28,7 +28,7 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
                 () -> dataAccess.getConnectionConfig().sendColor(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withSendColor(value)));
 
-        screen.addFilterConfigureButton(startX, startY + 80, ItemConduit.INSERT_FILTER_SLOT);
+        screen.addFilterConfigureButton(startX + 1, startY + 82, ItemConduit.INSERT_FILTER_SLOT);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
 
         // TODO: Show redstone signal indicators using the extra NBT payload.
 
-        screen.addFilterConfigureButton(startX, startY + 80, ItemConduit.EXTRACT_FILTER_SLOT);
+        screen.addFilterConfigureButton(startX + 1, startY + 82, ItemConduit.EXTRACT_FILTER_SLOT);
     }
 
     @Override

@@ -17,14 +17,17 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import org.apache.commons.lang3.NotImplementedException;
 
-public class NewItemFilterScreen extends EnderContainerScreen<EnderItemFilterMenu> {
+public class EnderItemStackFilterScreen extends EnderContainerScreen<EnderItemFilterMenu> {
 
     private static final int WIDTH = 183;
     private static final int HEIGHT = 201;
 
-    private static final ResourceLocation BASIC_BG_TEXTURE = EnderIO.loc("textures/gui/40/basic_item_filter.png");
-    private static final ResourceLocation ADVANCED_BG_TEXTURE = EnderIO.loc("textures/gui/40/advanced_item_filter.png");
-    private static final ResourceLocation BIG_BG_TEXTURE = EnderIO.loc("textures/gui/40/big_item_filter.png");
+    private static final int ROW_HEIGHT = 16 + 2;
+
+    private static final ResourceLocation BG_2x9 = EnderIO.loc("textures/gui/screens/filter_2x9.png");
+    private static final ResourceLocation BG_1x9 = EnderIO.loc("textures/gui/screens/filter_1x9.png");
+    private static final ResourceLocation BG_3x9 = EnderIO.loc("textures/gui/screens/filter_3x9.png");
+    private static final ResourceLocation BG_4x9 = EnderIO.loc("textures/gui/screens/filter_4x9.png");
 
     private static final ResourceLocation NBT_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
 
@@ -35,7 +38,7 @@ public class NewItemFilterScreen extends EnderContainerScreen<EnderItemFilterMen
 
     private final ResourceLocation backgroundTexture;
 
-    public NewItemFilterScreen(EnderItemFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public EnderItemStackFilterScreen(EnderItemFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
 
         this.shouldRenderLabels = true;
@@ -43,19 +46,18 @@ public class NewItemFilterScreen extends EnderContainerScreen<EnderItemFilterMen
         this.titleLabelX = 28;
         this.titleLabelY = 12;
 
+        this.inventoryLabelX += 6;
+        this.inventoryLabelY = 36 + menu.type.rowCount() * 18;
+
         this.imageWidth = WIDTH;
         this.imageHeight = HEIGHT;
 
-        // TODO: I don't like how this looks tbh
-        //       Maybe the sizes should be discussed in a number of rows instead.
-        if (pMenu.type.slotCount() == EnderItemFilterItem.Type.BASIC.slotCount()) {
-            backgroundTexture = BASIC_BG_TEXTURE;
-        } else if (pMenu.type.slotCount() == EnderItemFilterItem.Type.ADVANCED.slotCount()) {
-            backgroundTexture = ADVANCED_BG_TEXTURE;
-        } else if (pMenu.type.slotCount() == EnderItemFilterItem.Type.BIG.slotCount() || pMenu.type.slotCount() == EnderItemFilterItem.Type.BIG_ADVANCED.slotCount()) {
-            backgroundTexture = BIG_BG_TEXTURE;
-        } else {
-            throw new NotImplementedException();
+        switch (pMenu.type.rowCount()) {
+        case 1 -> backgroundTexture = BG_1x9;
+        case 2 -> backgroundTexture = BG_2x9;
+        case 3 -> backgroundTexture = BG_3x9;
+        case 4 -> backgroundTexture = BG_4x9;
+        default -> throw new NotImplementedException();
         }
     }
 
@@ -65,17 +67,25 @@ public class NewItemFilterScreen extends EnderContainerScreen<EnderItemFilterMen
 
         addRenderableWidget(new IconButton(getGuiLeft() + 3, getGuiTop() + 3, 16, 16, BACK_SPRITE, null, () -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
 
-        addRenderableWidget(new ToggleIconButton(getGuiLeft() + 110, getGuiTop() + 36 + 20, 16, 16, (b) -> b ? DENY_LIST_SPRITE : ALLOW_LIST_SPRITE, (b) -> b ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST, getMenu()::isInverted, (b) -> handleButtonPress(
-            EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
-
-        if (getMenu().type.canMatchComponents()) {
-            addRenderableWidget(new ToggleIconButton(getGuiLeft() + 110, getGuiTop() + 36, 16, 16, (b) -> NBT_TEXTURE, (b) -> b ? EIOLang.NBT_FILTER : EIOLang.NO_NBT_FILTER, getMenu()::shouldCompareComponents, (b) -> handleButtonPress(
-                EnderItemFilterMenu.SHOULD_COMPARE_COMPONENTS_BUTTON_ID)));
-        }
+        int xPos = getGuiLeft() + WIDTH - 25;
 
         if (getMenu().type.canFilterByDamage()) {
-            addRenderableWidget(new DamageFilterModePickerWidget(getGuiLeft() + 110, getGuiTop() + 36 + 40, getMenu()::damageFilterMode, getMenu()::setDamageFilterMode, EIOLang.DAMAGE_FILTER_MODE));
+            addRenderableWidget(new DamageFilterModePickerWidget(xPos, getGuiTop() + 16, getMenu()::damageFilterMode, getMenu()::setDamageFilterMode, EIOLang.DAMAGE_FILTER_MODE));
+
+            xPos -= 18;
         }
+
+        if (getMenu().type.canMatchComponents()) {
+            addRenderableWidget(new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16, (b) -> NBT_TEXTURE, (b) -> b ? EIOLang.NBT_FILTER : EIOLang.NO_NBT_FILTER, getMenu()::shouldCompareComponents, (b) -> handleButtonPress(
+                EnderItemFilterMenu.SHOULD_COMPARE_COMPONENTS_BUTTON_ID)));
+
+            xPos -= 18;
+        }
+
+        addRenderableWidget(new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16, (b) -> b ? DENY_LIST_SPRITE : ALLOW_LIST_SPRITE, (b) -> b ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST, getMenu()::isInverted, (b) -> handleButtonPress(
+            EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
+
+        xPos -= 18;
     }
 
     @Override

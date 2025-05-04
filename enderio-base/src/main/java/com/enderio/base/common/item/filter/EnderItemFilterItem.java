@@ -110,28 +110,30 @@ public class EnderItemFilterItem extends Item implements FilterMenuProvider {
     }
 
     public enum Type {
-        BASIC(() -> EIOMenus.BASIC_ITEM_FILTER, 5, false, false),
-        ADVANCED(() -> EIOMenus.ADVANCED_ITEM_FILTER, 10, true, true),
-
-        // TODO: Big ones need more work.
-        BIG(() -> EIOMenus.BIG_ITEM_FILTER,3*9, false, false),
-        BIG_ADVANCED(() -> EIOMenus.BIG_ADVANCED_ITEM_FILTER,3*9, true, true)
+        BASIC(() -> EIOMenus.BASIC_ITEM_FILTER, 1, false, false),
+        ADVANCED(() -> EIOMenus.ADVANCED_ITEM_FILTER, 2, true, true),
+        BIG(() -> EIOMenus.BIG_ITEM_FILTER,4, false, false),
+        BIG_ADVANCED(() -> EIOMenus.BIG_ADVANCED_ITEM_FILTER,4, true, true)
         ;
 
         private final Supplier<RegiliteMenu<EnderItemFilterMenu>> menuType;
-        private final int slotCount;
+        private final int rowCount;
         private final boolean canMatchComponents;
         private final boolean canFilterByDamage;
 
-        Type(Supplier<RegiliteMenu<EnderItemFilterMenu>> menuType, int slotCount, boolean canMatchComponents, boolean canFilterByDamage) {
+        Type(Supplier<RegiliteMenu<EnderItemFilterMenu>> menuType, int rowCount, boolean canMatchComponents, boolean canFilterByDamage) {
             this.menuType = menuType;
-            this.slotCount = slotCount;
+            this.rowCount = rowCount;
             this.canMatchComponents = canMatchComponents;
             this.canFilterByDamage = canFilterByDamage;
         }
 
+        public int rowCount() {
+            return rowCount;
+        }
+
         public int slotCount() {
-            return slotCount;
+            return rowCount * 9;
         }
 
         public boolean canMatchComponents() {

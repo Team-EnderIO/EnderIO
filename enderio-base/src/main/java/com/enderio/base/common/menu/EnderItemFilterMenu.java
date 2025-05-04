@@ -3,18 +3,16 @@ package com.enderio.base.common.menu;
 import com.enderio.base.common.filter.DamageFilterMode;
 import com.enderio.base.common.filter.EnderItemStackFilter;
 import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.item.filter.EnderItemFilterItem;
 import com.enderio.core.common.network.menu.BoolSyncSlot;
 import com.enderio.core.common.network.menu.EnumSyncSlot;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.IContainerFactory;
 import org.jetbrains.annotations.Nullable;
 
 public class EnderItemFilterMenu extends AbstractFilterMenu {
@@ -72,7 +70,7 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
                 i, 14 + (i % 5) * 18, 35 + 20 * (i / 5)));
         }
 
-        addPlayerInventorySlots(14, 119);
+        addPlayerInventorySlots(14, 47 + type.rowCount() * 18);
     }
 
     public EnderItemFilterMenu(@Nullable MenuType<?> menuType, EnderItemFilterItem.Type type, int containerId, Inventory playerInventory) {
@@ -92,10 +90,10 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
         for (int i = 0; i < this.type.slotCount(); i++) {
             final int slotIndex = i;
             addSlot(new ItemFilterSlot(() -> clientItems.get(slotIndex), stack -> clientItems.set(slotIndex, stack),
-                i, 14 + (i % 5) * 18, 35 + 20 * (i / 5)));
+                i, 14 + (i % 9) * 18, 35 + 18 * (i / 9)));
         }
 
-        addPlayerInventorySlots(14, 119);
+        addPlayerInventorySlots(14, 47 + type.rowCount() * 18);
     }
 
     public boolean isInverted() {
@@ -116,7 +114,10 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     public void setDamageFilterMode(DamageFilterMode mode) {
-        damageFilterSyncSlot.set(mode);
+        if (damageFilterSyncSlot != null) {
+            damageFilterSyncSlot.set(mode);
+            updateSlot(damageFilterSyncSlot);
+        }
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)
@@ -170,5 +171,21 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+        if (slotId >= 0 && slotId < type.slotCount()) {
+            // Only allow PICKUP (click) or QUICK_MOVE (shift + click) events.
+            if (clickType != ClickType.PICKUP && clickType != ClickType.QUICK_MOVE) {
+                return;
+            }
+
+//            if (!capability.getEntry(slotId).isEmpty()) {
+//                capability.setEntry(slotId, ItemStack.EMPTY);
+//            }
+        }
+
+        super.doClick(slotId, button, clickType, player);
     }
 }
