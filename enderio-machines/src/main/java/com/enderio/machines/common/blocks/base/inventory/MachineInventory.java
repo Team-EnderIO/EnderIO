@@ -2,13 +2,14 @@ package com.enderio.machines.common.blocks.base.inventory;
 
 import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.machines.common.blocks.base.state.MachineState;
-import java.util.function.IntConsumer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.IntConsumer;
 
 /**
  * A machine inventory.
@@ -113,6 +114,19 @@ public class MachineInventory extends ItemStackHandler {
     // TODO: not a fan of this pattern.
     public void updateMachineState(MachineState state, boolean add) {
 
+    }
+
+    /**
+     * Creates a snapshot copy of the current state of the inventory. Only used when doing chained simulations.
+     * @return a copy of the current inventory.
+     */
+    public MachineInventory snapshot() {
+        MachineInventory machineInventory = new MachineInventory(ioConfigurable, layout);
+        for (int i = 0; i< getSlots() ; i++) {
+            ItemStack itemStack = getStackInSlot(i);
+            machineInventory.setStackInSlot(i, itemStack.copy());
+        }
+        return machineInventory;
     }
 
     private record Wrapped(MachineInventory master, @Nullable Direction side) implements IItemHandler {

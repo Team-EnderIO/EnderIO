@@ -8,8 +8,6 @@ import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
 import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.mojang.logging.LogUtils;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -22,6 +20,9 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // TODO: A recipe interface that doesn't require power :)
 public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends RecipeInput> implements MachineTask {
@@ -195,11 +196,12 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         }
 
         // See that we can add all the outputs
+        MachineInventory snapshot = getInventory().snapshot(); //Snapshot for chained simulations.
         for (OutputStack output : outputs) {
             ItemStack item = output.getItem();
 
             for (SingleSlotAccess outputAccess : outputSlots.getAccesses()) {
-                item = outputAccess.insertItem(inventory, item, true);
+                item = outputAccess.insertItem(snapshot, item, false); //Don't simulate, we are using a snapshot copy
             }
 
             // If we fail, say we can't accept these outputs
