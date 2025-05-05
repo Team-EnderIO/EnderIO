@@ -2,14 +2,13 @@ package com.enderio.machines.common.blocks.base.inventory;
 
 import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.machines.common.blocks.base.state.MachineState;
+import java.util.function.IntConsumer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.IntConsumer;
 
 /**
  * A machine inventory.
