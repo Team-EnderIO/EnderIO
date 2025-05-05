@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,6 +15,12 @@ public interface ConduitConnectionHost {
     Holder<Conduit<?, ?>> conduit();
 
     BlockPos pos();
+
+    /**
+     * Get a capability for the given side of the node
+     */
+    @Nullable
+    <TCapability> TCapability getNeighbourCapability(BlockCapability<TCapability, Direction> capability, Direction side);
 
     boolean isConnectedToBlock(Direction side);
 

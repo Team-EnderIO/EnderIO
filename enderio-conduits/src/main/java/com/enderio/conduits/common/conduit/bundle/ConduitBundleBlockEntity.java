@@ -80,6 +80,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
@@ -105,6 +106,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     // Map of all conduit nodes for this bundle.
     private final Map<Holder<Conduit<?, ?>>, ConduitGraphObject> conduitNodes = new HashMap<>();
+
+    // Capability caches
+    private final Map<Holder<Conduit<?, ?>>, NeighbouringCapabilityCaches> neighbouringCapabilityCaches = new HashMap<>();
 
     // Data recovery mechanism
     private final Map<Holder<Conduit<?, ?>>, ConduitGraphObject> lazyNodes = new HashMap<>();
@@ -555,6 +559,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             var oldConnectionContainer = conduitConnections.remove(replacementCandidate.get());
             conduitConnections.put(conduit, oldConnectionContainer.copyFor(conduit));
 
+            // Remove caches for the replaced conduit
+            neighbouringCapabilityCaches.remove(replacementCandidate.get());
+
             if (!level.isClientSide()) {
                 ConduitGraphObject oldNode = conduitNodes.remove(replacementCandidate.get());
 
@@ -694,6 +701,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         conduits.remove(conduit);
         conduitConnections.remove(conduit);
         conduitNodes.remove(conduit);
+        neighbouringCapabilityCaches.remove(conduit);
 
         // Remove neighbour connections
         removeNeighborConnections(conduit);
@@ -1344,7 +1352,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 ListTag conduitList = (ListTag) tag.get(CONDUITS_KEY);
                 for (var conduitTag : conduitList) {
                     conduits.add(Conduit.CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), conduitTag)
-                            .getOrThrow());
+                        .getOrThrow());
                 }
             }
 
@@ -1563,12 +1571,42 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
+    private static class NeighbouringCapabilityCaches {
+        private final Map<Direction, Map<BlockCapability<?, Direction>, BlockCapabilityCache<?, Direction>>> caches = new EnumMap<>(Direction.class);
+
+        /**
+         * Get a capability for the given side of the node
+         */
+        @Nullable
+        public <TCapability> TCapability getCapability(BlockCapability<TCapability, Direction> capability, ServerLevel level, BlockPos conduitPos, Direction side) {
+            var cacheMap = caches.computeIfAbsent(side, s -> new HashMap<>());
+            var cache = cacheMap.computeIfAbsent(capability, c -> BlockCapabilityCache.create(c, level, conduitPos.relative(side), side.getOpposite()));
+
+            //noinspection unchecked
+            return (TCapability) cache.getCapability();
+        }
+    }
+
     private record ConnectionHost(ConduitBundleBlockEntity conduitBundle, Holder<Conduit<?, ?>> conduit)
             implements ConduitConnectionHost {
 
         @Override
         public BlockPos pos() {
             return conduitBundle.getBlockPos();
+        }
+
+        @EnsureSide(EnsureSide.Side.SERVER)
+        @Override
+        @Nullable
+        public <TCapability> TCapability getNeighbourCapability(BlockCapability<TCapability, Direction> capability, Direction side) {
+            // Doesn't use EnderBlockEntity's capability cache so that we can bin capability caches that aren't needed when conduits are removed.
+            // Probably an "early optimization" but I don't think this really hurts.
+            if (conduitBundle.level instanceof ServerLevel serverLevel) {
+                var capabilityCache = conduitBundle.neighbouringCapabilityCaches.computeIfAbsent(conduit, c -> new NeighbouringCapabilityCaches());
+                return capabilityCache.getCapability(capability, serverLevel, conduitBundle.getBlockPos(), side);
+            }
+
+            return null;
         }
 
         @Override

@@ -4,7 +4,7 @@ import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.network.ConduitNetwork;
 import com.enderio.conduits.api.network.node.ConduitNode;
 import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
-import java.util.ArrayList;
+
 import java.util.List;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -38,25 +38,16 @@ public class EnergyConduitTicker
             return;
         }
 
-        List<IEnergyStorage> storagesForInsert = new ArrayList<>();
-        for (var sender : senders) {
-            IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, sender.neighborPos(),
-                    sender.neighborSide());
-            if (capability != null) {
-                storagesForInsert.add(capability);
-            }
-        }
-
         // Revert overflow.
-        if (storagesForInsert.size() <= context.rotatingIndex()) {
+        if (senders.size() <= context.rotatingIndex()) {
             context.setRotatingIndex(0);
         }
 
         int startingRotatingIndex = context.rotatingIndex();
-        for (int i = startingRotatingIndex; i < startingRotatingIndex + storagesForInsert.size(); i++) {
-            int insertIndex = i % storagesForInsert.size();
+        for (int i = startingRotatingIndex; i < startingRotatingIndex + senders.size(); i++) {
+            int insertIndex = i % senders.size();
 
-            IEnergyStorage insertHandler = storagesForInsert.get(insertIndex);
+            IEnergyStorage insertHandler = senders.get(insertIndex).energyStorage();
 
             if (!insertHandler.canReceive()) {
                 continue;
@@ -87,8 +78,7 @@ public class EnergyConduitTicker
 
     @Override
     protected @Nullable EnergyConduitTicker.Connection createConnection(Level level, ConduitNode node, Direction side) {
-        IEnergyStorage energyStorage = level.getCapability(Capabilities.EnergyStorage.BLOCK,
-                node.getPos().relative(side), side.getOpposite());
+        var energyStorage = node.getNeighbourCapability(Capabilities.EnergyStorage.BLOCK, side);
         if (energyStorage != null) {
             return new Connection(node, side, node.getConnectionConfig(side, EnergyConduitConnectionConfig.TYPE),
                     energyStorage);

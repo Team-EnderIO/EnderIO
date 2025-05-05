@@ -17,6 +17,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.DyeColor;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
@@ -107,6 +108,16 @@ public class ConduitGraphObject implements GraphObject<ConduitGraphContext>, Con
     @Override
     public ConduitNetwork getNetwork() {
         return wrappedGraph;
+    }
+
+    @Override
+    @Nullable
+    public <TCapability> TCapability getNeighbourCapability(BlockCapability<TCapability, Direction> capability, Direction side) {
+        if (connectionHost == null) {
+            throw new IllegalStateException("No connection host!");
+        }
+
+        return connectionHost.getNeighbourCapability(capability, side);
     }
 
     public void attach(ConduitConnectionHost connectionHost) {

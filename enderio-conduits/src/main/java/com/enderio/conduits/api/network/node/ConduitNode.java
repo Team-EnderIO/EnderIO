@@ -5,6 +5,7 @@ import com.enderio.conduits.api.network.ConduitNetwork;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +26,12 @@ public interface ConduitNode extends NodeDataAccessor, ConnectionConfigAccessor 
     // TODO: investigate nullability for this interface?
     @Nullable
     ConduitNetwork getNetwork();
+
+    /**
+     * Get a capability for the given side of the node
+     */
+    @Nullable
+    <TCapability> TCapability getNeighbourCapability(BlockCapability<TCapability, Direction> capability, Direction side);
 
     /**
      * @return whether this node's bundle is loaded and ticking in the world

@@ -288,36 +288,19 @@ public class EnderBlockEntity extends BlockEntity {
         }
     }
 
+    // TODO: Ensure SERVER usage sometime.
     @Nullable
     protected <T> T getNeighbouringCapability(BlockCapability<T, Direction> capability, Direction side) {
-        if (level == null) {
+        if (level == null || !(level instanceof ServerLevel serverLevel)) {
             return null;
         }
 
-        if (!neighbourCapabilities.containsKey(capability)) {
-            // We've not seen this capability before, time to register it!
-            neighbourCapabilities.put(capability, new EnumMap<>(Direction.class));
-
-            for (Direction direction : Direction.values()) {
-                populateNeighbourCachesFor(direction, capability);
-            }
-        }
-
-        if (!neighbourCapabilities.get(capability).containsKey(side)) {
-            return null;
-        }
+        var sidedCaches = neighbourCapabilities.computeIfAbsent(capability, c -> new EnumMap<>(Direction.class));
+        var cache = sidedCaches.computeIfAbsent(side,
+            s -> BlockCapabilityCache.create(capability, serverLevel, getBlockPos().relative(s), s.getOpposite()));
 
         // noinspection unchecked
-        return (T) neighbourCapabilities.get(capability).get(side).getCapability();
-    }
-
-    private void populateNeighbourCachesFor(Direction direction, BlockCapability<?, Direction> capability) {
-        if (level instanceof ServerLevel serverLevel) {
-            BlockPos neighbourPos = getBlockPos().relative(direction);
-            neighbourCapabilities.get(capability)
-                    .put(direction, BlockCapabilityCache.create(capability, serverLevel, neighbourPos,
-                            direction.getOpposite()));
-        }
+        return (T) cache.getCapability();
     }
 
     // endregion

@@ -131,8 +131,7 @@ public class FluidConduitTicker
 
     @Override
     protected @Nullable FluidConduitTicker.Connection createConnection(Level level, ConduitNode node, Direction side) {
-        IFluidHandler fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, node.getPos().relative(side),
-                side.getOpposite());
+        IFluidHandler fluidHandler = node.getNeighbourCapability(Capabilities.FluidHandler.BLOCK, side);
         if (fluidHandler != null) {
             return new Connection(node, side, node.getConnectionConfig(side, FluidConduitConnectionConfig.TYPE),
                     fluidHandler);

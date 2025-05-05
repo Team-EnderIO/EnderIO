@@ -135,8 +135,7 @@ public class ItemConduitTicker
     @Override
     @Nullable
     protected Connection createConnection(Level level, ConduitNode node, Direction side) {
-        IItemHandler itemHandler = level.getCapability(Capabilities.ItemHandler.BLOCK, node.getPos().relative(side),
-                side.getOpposite());
+        IItemHandler itemHandler = node.getNeighbourCapability(Capabilities.ItemHandler.BLOCK, side);
         if (itemHandler != null) {
             return new Connection(node, side, node.getConnectionConfig(side, ItemConduitConnectionConfig.TYPE),
                     itemHandler);
