@@ -196,7 +196,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         }
 
         // See that we can add all the outputs
-        MachineInventory snapshot = getInventory().snapshot(); //Snapshot for chained simulations.
+        MachineInventory snapshot = getInventory().snapshot(outputSlots); //Snapshot for chained simulations.
         for (OutputStack output : outputs) {
             ItemStack item = output.getItem();
 
