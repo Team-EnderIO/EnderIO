@@ -33,8 +33,7 @@ include("enderio-armory")
 include("enderio-base")
 include("enderio-machines")
 include("enderio-conduits")
-// TODO: Reenable once API is more stable again.
-//include("enderio-conduits-modded")
+include("enderio-conduits-modded")
 
 // Combined project
 include("enderio")
