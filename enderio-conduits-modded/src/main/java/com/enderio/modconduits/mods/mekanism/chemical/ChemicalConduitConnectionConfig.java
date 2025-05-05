@@ -81,7 +81,7 @@ public record ChemicalConduitConnectionConfig(boolean isSend, DyeColor sendColor
         if (receiveRedstoneControl.isRedstoneSensitive()) {
             return receiveRedstoneControl.isActive(signalAware.hasRedstoneSignal(receiveRedstoneChannel));
         } else {
-            return true;
+            return receiveRedstoneControl == RedstoneControl.ALWAYS_ACTIVE;
         }
     }
 

@@ -80,7 +80,7 @@ public record FluidConduitConnectionConfig(boolean isSend, DyeColor sendColor, b
         if (receiveRedstoneControl.isRedstoneSensitive()) {
             return receiveRedstoneControl.isActive(signalAware.hasRedstoneSignal(receiveRedstoneChannel));
         } else {
-            return true;
+            return receiveRedstoneControl == RedstoneControl.ALWAYS_ACTIVE;
         }
     }
 

@@ -75,7 +75,7 @@ public record EnergyConduitConnectionConfig(boolean isSend, boolean isReceive, R
         if (receiveRedstoneControl.isRedstoneSensitive()) {
             return receiveRedstoneControl.isActive(signalAware.hasRedstoneSignal(receiveRedstoneChannel));
         } else {
-            return true;
+            return receiveRedstoneControl == RedstoneControl.ALWAYS_ACTIVE;
         }
     }
 
