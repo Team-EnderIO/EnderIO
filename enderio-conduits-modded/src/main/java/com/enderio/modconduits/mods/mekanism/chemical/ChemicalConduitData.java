@@ -1,7 +1,9 @@
-package com.enderio.modconduits.mods.mekanism;
+package com.enderio.modconduits.mods.mekanism.chemical;
 
+import com.enderio.conduits.api.network.node.NodeData;
 import com.enderio.conduits.api.network.node.legacy.ConduitData;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataType;
+import com.enderio.modconduits.mods.mekanism.MekanismModule;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -9,6 +11,7 @@ import mekanism.api.chemical.ChemicalStack;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -70,6 +73,11 @@ public class ChemicalConduitData implements ConduitData<ChemicalConduitData> {
         // TODO: Soon we will swap to records which will mean this will be a new instance.
         //       This API has been designed with this pending change in mind.
         return this;
+    }
+
+    @Override
+    public @Nullable NodeData toNodeData() {
+        return null;
     }
 
     @Override

@@ -3,14 +3,14 @@ package com.enderio.modconduits.mods.laserio;
 import com.direwolf20.laserio.common.containers.customhandler.FilterBasicHandler;
 import com.direwolf20.laserio.common.items.cards.BaseCard;
 import com.direwolf20.laserio.setup.LaserIODataComponents;
-import com.enderio.base.api.filter.ItemStackFilter;
 import com.enderio.base.common.capability.IFilterCapability;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class LaserItemFilter implements IFilterCapability<ItemStack>, ItemStackFilter {
+// TODO: Sort this out.
+public class LaserItemFilter implements IFilterCapability<ItemStack> {
 
     private final ItemStack container;
 
@@ -73,7 +73,7 @@ public class LaserItemFilter implements IFilterCapability<ItemStack>, ItemStackF
         //Not needed for working filters, however could be good for in gui changes
     }
 
-    @Override
+//    @Override
     public boolean test(ItemStack stack) {
         for (ItemStack testStack : getEntries()) {
             boolean test = isNbt() ? ItemStack.isSameItemSameComponents(testStack, stack) : ItemStack.isSameItem(testStack, stack);

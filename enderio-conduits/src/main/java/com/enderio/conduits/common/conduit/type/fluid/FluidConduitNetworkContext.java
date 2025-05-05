@@ -7,13 +7,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-// TODO: packet to clear the fluid lock.
 public class FluidConduitNetworkContext implements ConduitNetworkContext<FluidConduitNetworkContext> {
 
-    private static final Logger log = LoggerFactory.getLogger(FluidConduitNetworkContext.class);
     public static Codec<FluidConduitNetworkContext> CODEC = RecordCodecBuilder.create(instance -> instance
             .group(BuiltInRegistries.FLUID.byNameCodec()
                     .optionalFieldOf("locked_fluid", Fluids.EMPTY)

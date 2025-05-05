@@ -5,14 +5,21 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.conduits.api.Conduit;
+import com.enderio.conduits.api.connection.config.ConnectionConfigType;
+import com.enderio.conduits.api.network.ConduitNetworkContextType;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataType;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
-import com.enderio.conduits.api.screen.RegisterConduitScreenExtensionsEvent;
 import com.enderio.conduits.common.conduit.ConduitApiImpl;
 import com.enderio.conduits.common.recipe.ConduitIngredient;
 import com.enderio.modconduits.ConduitModule;
 import com.enderio.modconduits.ModdedConduits;
+import com.enderio.modconduits.mods.mekanism.chemical.ChemicalConduit;
+import com.enderio.modconduits.mods.mekanism.chemical.ChemicalConduitConnectionConfig;
+import com.enderio.modconduits.mods.mekanism.chemical.ChemicalConduitData;
+import com.enderio.modconduits.mods.mekanism.chemical.ChemicalConduitNetworkContext;
+import com.enderio.modconduits.mods.mekanism.heat.HeatConduit;
+import com.enderio.modconduits.mods.mekanism.heat.HeatConduitConnectionConfig;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.holder.RegiliteMenu;
 import com.enderio.regilite.registry.ItemRegistry;
@@ -55,18 +62,49 @@ public class MekanismModule implements ConduitModule {
 
     private static final ModLoadedCondition CONDITION = new ModLoadedCondition("mekanism");
 
+    // region Registries
+
+    private static final ItemRegistry ITEM_REGISTRY = ModdedConduits.REGILITE.itemRegistry();
+    private static final MenuRegistry MENU_REGISTRY = ModdedConduits.REGILITE.menuRegistry();
+
+    private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
+        .create(EnderIOConduitsRegistries.CONDUIT_TYPE, EnderIO.NAMESPACE);
+
     public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
             .create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, EnderIO.NAMESPACE);
 
+    public static final DeferredRegister<ConnectionConfigType<?>> CONDUIT_CONNECTION_CONFIG_TYPES = DeferredRegister
+            .create(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.NAMESPACE);
+
+    public static final DeferredRegister<ConduitNetworkContextType<?>> CONDUIT_NETWORK_CONTEXT_TYPES = DeferredRegister
+            .create(EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIO.NAMESPACE);
+
+    static {
+        CONDUIT_CONNECTION_CONFIG_TYPES.register("chemical", () -> ChemicalConduitConnectionConfig.TYPE);
+        CONDUIT_CONNECTION_CONFIG_TYPES.register("heat", () -> HeatConduitConnectionConfig.TYPE);
+
+        CONDUIT_NETWORK_CONTEXT_TYPES.register("chemical", () -> ChemicalConduitNetworkContext.TYPE);
+    }
+
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister
             .createDataComponents(EnderIO.NAMESPACE);
+
+    // endregion
+
+    public static final Supplier<ConduitType<ChemicalConduit>> TYPE_CHEMICAL = CONDUIT_TYPES.register("chemical",
+        () -> ConduitType.of(ChemicalConduit.CODEC));
+
+    public static final Supplier<ConduitType<HeatConduit>> TYPE_HEAT = CONDUIT_TYPES.register("heat",
+        () -> ConduitType.of(HeatConduit::new));
+
+    public static final Supplier<ConduitDataType<ChemicalConduitData>> CHEMICAL_DATA_TYPE = CONDUIT_DATA_TYPES
+        .register("chemical", () -> new ConduitDataType<>(ChemicalConduitData.CODEC,
+            ChemicalConduitData.STREAM_CODEC, ChemicalConduitData::new));
 
     public static final Supplier<DataComponentType<ChemicalFilterCapability.Component>> CHEMICAL_FILTER = DATA_COMPONENT_TYPES
             .registerComponentType("chemical_filter",
                     builder -> builder.persistent(ChemicalFilterCapability.Component.CODEC)
                             .networkSynchronized(ChemicalFilterCapability.Component.STREAM_CODEC));
-
-    private static final ItemRegistry ITEM_REGISTRY = ModdedConduits.REGILITE.itemRegistry();
 
     public static final RegiliteItem<ChemicalFilterItem> BASIC_CHEMICAL_FILTER = ITEM_REGISTRY
             .registerItem("chemical_filter",
@@ -75,22 +113,8 @@ public class MekanismModule implements ConduitModule {
             .setTab(EIOCreativeTabs.GEAR)
             .addCapability(EIOCapabilities.Filter.ITEM, ChemicalFilterItem.FILTER_PROVIDER);
 
-    private static final MenuRegistry MENU_REGISTRY = ModdedConduits.REGILITE.menuRegistry();
-
     public static final RegiliteMenu<ChemicalFilterMenu> CHEMICAL_FILTER_MENU = MENU_REGISTRY
             .registerMenu("chemical_filter", ChemicalFilterMenu::factory, () -> ChemicalFilterScreen::new);
-
-    public static class Types {
-
-        private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
-                .create(EnderIOConduitsRegistries.CONDUIT_TYPE, EnderIO.NAMESPACE);
-
-        public static final Supplier<ConduitType<ChemicalConduit>> CHEMICAL = CONDUIT_TYPES.register("chemical",
-                () -> ConduitType.of(ChemicalConduit.CODEC));
-
-        public static final Supplier<ConduitType<HeatConduit>> HEAT = CONDUIT_TYPES.register("heat",
-                () -> ConduitType.of(HeatConduit::new));
-    }
 
     public static class Capabilities {
         public static final BlockCapability<IChemicalHandler, Direction> CHEMICAL = BlockCapability.createSided(
@@ -105,19 +129,6 @@ public class MekanismModule implements ConduitModule {
                     IChemicalHandler.class);
         }
     }
-
-    public static final ResourceKey<Conduit<?, ?>> CHEMICAL = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
-        EnderIO.loc("chemical"));
-    public static final ResourceKey<Conduit<?, ?>> PRESSURIZED_CHEMICAL = ResourceKey
-            .create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIO.loc("pressurized_chemical"));
-    public static final ResourceKey<Conduit<?, ?>> ENDER_CHEMICAL = ResourceKey
-            .create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIO.loc("ender_chemical"));
-    public static final ResourceKey<Conduit<?, ?>> HEAT = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
-        EnderIO.loc("heat"));
-
-    public static final Supplier<ConduitDataType<ChemicalConduitData>> CHEMICAL_DATA_TYPE = CONDUIT_DATA_TYPES
-            .register("chemical", () -> new ConduitDataType<>(ChemicalConduitData.CODEC,
-                    ChemicalConduitData.STREAM_CODEC, ChemicalConduitData::new));
 
     private static final Component LANG_HEAT_CONDUIT = addTranslation("item", EnderIO.loc("conduit.heat"),
             "Heat Conduit");
@@ -146,19 +157,30 @@ public class MekanismModule implements ConduitModule {
         return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
     }
 
+    public static final ResourceKey<Conduit<?, ?>> CHEMICAL = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+        EnderIO.loc("chemical"));
+    public static final ResourceKey<Conduit<?, ?>> PRESSURIZED_CHEMICAL = ResourceKey
+        .create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIO.loc("pressurized_chemical"));
+    public static final ResourceKey<Conduit<?, ?>> ENDER_CHEMICAL = ResourceKey
+        .create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIO.loc("ender_chemical"));
+    public static final ResourceKey<Conduit<?, ?>> HEAT = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+        EnderIO.loc("heat"));
+
     @Override
     public void register(IEventBus modEventBus) {
-        Types.CONDUIT_TYPES.register(modEventBus);
+        CONDUIT_TYPES.register(modEventBus);
         CONDUIT_DATA_TYPES.register(modEventBus);
+        CONDUIT_CONNECTION_CONFIG_TYPES.register(modEventBus);
+        CONDUIT_NETWORK_CONTEXT_TYPES.register(modEventBus);
         DATA_COMPONENT_TYPES.register(modEventBus);
         ITEM_REGISTRY.register(modEventBus);
         MENU_REGISTRY.register(modEventBus);
-        modEventBus.addListener(this::registerScreen);
+//        modEventBus.addListener(this::registerScreen);
     }
 
-    public void registerScreen(RegisterConduitScreenExtensionsEvent event) {
-        event.register(Types.CHEMICAL.get(), ChemicalConduitScreenExtension::new);
-    }
+//    public void registerScreen(RegisterConduitScreenExtensionsEvent event) {
+//        event.register(Types.CHEMICAL.get(), ChemicalConduitScreenExtension::new);
+//    }
 
     @Override
     public void bootstrapConduits(BootstrapContext<Conduit<?, ?>> context) {
@@ -190,7 +212,7 @@ public class MekanismModule implements ConduitModule {
         var heatConduit = lookupProvider.holderOrThrow(HEAT);
 
         ShapedRecipeBuilder
-                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApiImpl.INSTANCE.getStackForType(chemicalConduit, 3))
+                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApiImpl.INSTANCE.getConduitItem(chemicalConduit, 3))
                 .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")
@@ -203,7 +225,7 @@ public class MekanismModule implements ConduitModule {
 
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.BUILDING_BLOCKS,
-                        ConduitApiImpl.INSTANCE.getStackForType(pressurizedChemicalConduit, 3))
+                        ConduitApiImpl.INSTANCE.getConduitItem(pressurizedChemicalConduit, 3))
                 .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")
@@ -216,7 +238,7 @@ public class MekanismModule implements ConduitModule {
 
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.BUILDING_BLOCKS,
-                        ConduitApiImpl.INSTANCE.getStackForType(enderChemicalConduit, 3))
+                        ConduitApiImpl.INSTANCE.getConduitItem(enderChemicalConduit, 3))
                 .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")
@@ -229,7 +251,7 @@ public class MekanismModule implements ConduitModule {
 
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.BUILDING_BLOCKS,
-                        ConduitApiImpl.INSTANCE.getStackForType(pressurizedChemicalConduit, 8))
+                        ConduitApiImpl.INSTANCE.getConduitItem(pressurizedChemicalConduit, 8))
                 .pattern("CCC")
                 .pattern("CUC")
                 .pattern("CCC")
@@ -242,7 +264,7 @@ public class MekanismModule implements ConduitModule {
 
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.BUILDING_BLOCKS,
-                        ConduitApiImpl.INSTANCE.getStackForType(enderChemicalConduit, 8))
+                        ConduitApiImpl.INSTANCE.getConduitItem(enderChemicalConduit, 8))
                 .pattern("CCC")
                 .pattern("CUC")
                 .pattern("CCC")
@@ -254,7 +276,7 @@ public class MekanismModule implements ConduitModule {
                 .save(mekRecipeOutput, EnderIO.loc("mek_advanced_pressurized_tube_upgrade"));
 
         ShapedRecipeBuilder
-                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApiImpl.INSTANCE.getStackForType(heatConduit, 3))
+                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApiImpl.INSTANCE.getConduitItem(heatConduit, 3))
                 .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")

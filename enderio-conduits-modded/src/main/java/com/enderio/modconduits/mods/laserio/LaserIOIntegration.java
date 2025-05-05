@@ -15,8 +15,8 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class LaserIOIntegration implements Integration {
 
-    public static ICapabilityProvider<ItemStack, Void, ResourceFilter> ITEM_FILTER_PROVIDER =
-        (stack, v) -> new LaserItemFilter(stack);
+//    public static ICapabilityProvider<ItemStack, Void, ResourceFilter> ITEM_FILTER_PROVIDER =
+//        (stack, v) -> new LaserItemFilter(stack);
 
     public static ICapabilityProvider<ItemStack, Void, ResourceFilter> FLUID_FILTER_PROVIDER =
         (stack, v) -> new LaserFluidFilter(stack);
@@ -30,7 +30,7 @@ public class LaserIOIntegration implements Integration {
 
     @SubscribeEvent
     public void registerCapEvent(RegisterCapabilitiesEvent event) {
-        event.registerItem(EIOCapabilities.Filter.ITEM, ITEM_FILTER_PROVIDER, Registration.Card_Item.get());
+//        event.registerItem(EIOCapabilities.Filter.ITEM, ITEM_FILTER_PROVIDER, Registration.Card_Item.get());
         event.registerItem(EIOCapabilities.Filter.ITEM, FLUID_FILTER_PROVIDER, Registration.Card_Fluid.get());
     }
 }
