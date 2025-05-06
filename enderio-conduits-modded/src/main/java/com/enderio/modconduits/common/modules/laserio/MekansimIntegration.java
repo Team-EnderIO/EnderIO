@@ -12,8 +12,8 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class MekansimIntegration implements Integration {
 
-    public static ICapabilityProvider<ItemStack, Void, ResourceFilter> CHEMICAL_FILTER_PROVIDER =
-        (stack, v) -> new LaserChemicalFilter(stack);
+    public static ICapabilityProvider<ItemStack, Void, ResourceFilter> CHEMICAL_FILTER_PROVIDER = (stack,
+            v) -> new LaserChemicalFilter(stack);
 
     @Override
     public void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {

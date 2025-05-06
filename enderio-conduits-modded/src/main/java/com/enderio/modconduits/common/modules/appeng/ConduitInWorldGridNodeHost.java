@@ -18,13 +18,13 @@ import org.jetbrains.annotations.Nullable;
 
 public class ConduitInWorldGridNodeHost implements IInWorldGridNodeHost, ConduitData<ConduitInWorldGridNodeHost> {
 
-    public static final MapCodec<ConduitInWorldGridNodeHost> CODEC = RecordCodecBuilder.mapCodec(
-        instance -> instance.group(
-            CompoundTag.CODEC.fieldOf("main_node").forGetter(ConduitInWorldGridNodeHost::saveMainNode)
-        ).apply(instance, ConduitInWorldGridNodeHost::new)
-    );
+    public static final MapCodec<ConduitInWorldGridNodeHost> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+            .group(CompoundTag.CODEC.fieldOf("main_node").forGetter(ConduitInWorldGridNodeHost::saveMainNode))
+            .apply(instance, ConduitInWorldGridNodeHost::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ConduitInWorldGridNodeHost> STREAM_CODEC = DumbStreamCodec.of(ConduitInWorldGridNodeHost::new).cast();
+    public static final StreamCodec<RegistryFriendlyByteBuf, ConduitInWorldGridNodeHost> STREAM_CODEC = DumbStreamCodec
+            .of(ConduitInWorldGridNodeHost::new)
+            .cast();
 
     @Nullable
     private IManagedGridNode mainNode = null;

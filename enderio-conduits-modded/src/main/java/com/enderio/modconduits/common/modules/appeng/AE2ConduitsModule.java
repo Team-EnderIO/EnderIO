@@ -8,13 +8,15 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitApi;
 import com.enderio.conduits.api.ConduitCapabilities;
+import com.enderio.conduits.api.ConduitType;
+import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.network.node.NodeDataType;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataType;
-import com.enderio.conduits.api.ConduitType;
-import com.enderio.conduits.api.EnderIOConduitsRegistries;
-import com.enderio.modconduits.common.modules.ConduitCommonModule;
 import com.enderio.modconduits.common.ModdedConduits;
+import com.enderio.modconduits.common.modules.ConduitCommonModule;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,9 +37,6 @@ import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class AE2ConduitsModule implements ConduitCommonModule {
 
@@ -63,8 +62,8 @@ public class AE2ConduitsModule implements ConduitCommonModule {
                     .exposeCapability(AECapabilities.IN_WORLD_GRID_NODE_HOST)
                     .build());
 
-    public static Supplier<ConnectionConfigType<MEConduitConnectionConfig>> CONNECTION_CONFIG = CONDUIT_CONNECTION_CONFIG_TYPES.register("me",
-        () -> MEConduitConnectionConfig.TYPE);
+    public static Supplier<ConnectionConfigType<MEConduitConnectionConfig>> CONNECTION_CONFIG = CONDUIT_CONNECTION_CONFIG_TYPES
+            .register("me", () -> MEConduitConnectionConfig.TYPE);
 
     public static final Supplier<ConduitDataType<ConduitInWorldGridNodeHost>> DATA = CONDUIT_DATA_TYPES.register("me",
             () -> new ConduitDataType<>(ConduitInWorldGridNodeHost.CODEC, ConduitInWorldGridNodeHost.STREAM_CODEC,
@@ -73,8 +72,7 @@ public class AE2ConduitsModule implements ConduitCommonModule {
     public static final Supplier<NodeDataType<MEConduitNodeData>> ME_NODE_DATA = CONDUIT_NODE_DATA_TYPES.register("me",
             () -> MEConduitNodeData.TYPE);
 
-    private static final Component LANG_ME_CONDUIT = addTranslation("item", EnderIO.loc("conduit.me"),
-            "ME Conduit");
+    private static final Component LANG_ME_CONDUIT = addTranslation("item", EnderIO.loc("conduit.me"), "ME Conduit");
     private static final Component LANG_DENSE_ME_CONDUIT = addTranslation("item", EnderIO.loc("conduit.dense_me"),
             "Dense ME Conduit");
 
@@ -83,9 +81,9 @@ public class AE2ConduitsModule implements ConduitCommonModule {
     }
 
     public static ResourceKey<Conduit<?, ?>> NORMAL = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
-        EnderIO.loc("me"));
+            EnderIO.loc("me"));
     public static ResourceKey<Conduit<?, ?>> DENSE = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
-        EnderIO.loc("dense_me"));
+            EnderIO.loc("dense_me"));
 
     private static final TagKey<Item> COVERED_DENSE_CABLE = ItemTags
             .create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_dense_cable"));
@@ -116,8 +114,10 @@ public class AE2ConduitsModule implements ConduitCommonModule {
 
     @Override
     public void bootstrapConduits(BootstrapContext<Conduit<?, ?>> context) {
-        context.register(NORMAL, new MEConduit(EnderIO.loc("block/conduit/me"), LANG_ME_CONDUIT, AEColor.TRANSPARENT, false));
-        context.register(DENSE, new MEConduit(EnderIO.loc("block/conduit/dense_me"), LANG_DENSE_ME_CONDUIT, AEColor.TRANSPARENT, true));
+        context.register(NORMAL,
+                new MEConduit(EnderIO.loc("block/conduit/me"), LANG_ME_CONDUIT, AEColor.TRANSPARENT, false));
+        context.register(DENSE,
+                new MEConduit(EnderIO.loc("block/conduit/dense_me"), LANG_DENSE_ME_CONDUIT, AEColor.TRANSPARENT, true));
 
         // TODO: Colored ME conduit.
     }
@@ -135,8 +135,7 @@ public class AE2ConduitsModule implements ConduitCommonModule {
         var normalConduit = lookupProvider.holderOrThrow(NORMAL);
         var denseConduit = lookupProvider.holderOrThrow(DENSE);
 
-        ShapedRecipeBuilder
-                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApi.INSTANCE.getConduitItem(normalConduit, 3))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApi.INSTANCE.getConduitItem(normalConduit, 3))
                 .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")
@@ -145,8 +144,7 @@ public class AE2ConduitsModule implements ConduitCommonModule {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(ae2RecipeOutput, EnderIO.loc("ae_covered_cable"));
 
-        ShapedRecipeBuilder
-                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApi.INSTANCE.getConduitItem(normalConduit, 3))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApi.INSTANCE.getConduitItem(normalConduit, 3))
                 .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")

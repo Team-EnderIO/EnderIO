@@ -4,16 +4,18 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitApi;
+import com.enderio.conduits.api.ConduitType;
+import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.network.node.NodeDataType;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataType;
-import com.enderio.conduits.api.ConduitType;
-import com.enderio.conduits.api.EnderIOConduitsRegistries;
+import com.enderio.modconduits.common.ModdedConduits;
 import com.enderio.modconduits.common.ModuleModIds;
 import com.enderio.modconduits.common.modules.ConduitCommonModule;
-import com.enderio.modconduits.common.ModdedConduits;
 import com.refinedmods.refinedstorage.common.content.Tags;
 import com.refinedmods.refinedstorage.neoforge.RefinedStorageNeoForgeApiImpl;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -29,9 +31,6 @@ import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
-
 public class RefinedStorageCommonModule implements ConduitCommonModule {
 
     public static final ConduitCommonModule INSTANCE = new RefinedStorageCommonModule();
@@ -39,14 +38,18 @@ public class RefinedStorageCommonModule implements ConduitCommonModule {
 
     public static class ConduitKeys {
         public static ResourceKey<Conduit<?, ?>> RS = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
-            EnderIO.loc("rs"));
+                EnderIO.loc("rs"));
     }
 
-    public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister.create(EnderIOConduitsRegistries.CONDUIT_TYPE, EnderIO.NAMESPACE);
-    public static final DeferredRegister<ConnectionConfigType<?>> CONDUIT_CONNECTION_CONFIG_TYPES = DeferredRegister.create(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.NAMESPACE);
-    public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister.create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, EnderIO.NAMESPACE);
+    public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
+            .create(EnderIOConduitsRegistries.CONDUIT_TYPE, EnderIO.NAMESPACE);
+    public static final DeferredRegister<ConnectionConfigType<?>> CONDUIT_CONNECTION_CONFIG_TYPES = DeferredRegister
+            .create(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.NAMESPACE);
+    public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
+            .create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, EnderIO.NAMESPACE);
 
-    public static final DeferredRegister<NodeDataType<?>> CONDUIT_NODE_DATA_TYPES = DeferredRegister.create(EnderIOConduitsRegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.NAMESPACE);
+    public static final DeferredRegister<NodeDataType<?>> CONDUIT_NODE_DATA_TYPES = DeferredRegister
+            .create(EnderIOConduitsRegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.NAMESPACE);
 
     public static final Supplier<ConduitType<RSConduit>> RS_CONDUIT = CONDUIT_TYPES.register("rs",
             () -> ConduitType.builder(RSConduit.CODEC)

@@ -17,8 +17,8 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
 public class ChemicalFilterItem extends Item {
 
-    public static ICapabilityProvider<ItemStack, Void, ResourceFilter> FILTER_PROVIDER =
-        (stack, v) -> new ChemicalFilterCapability(MekanismModule.CHEMICAL_FILTER, stack);
+    public static ICapabilityProvider<ItemStack, Void, ResourceFilter> FILTER_PROVIDER = (stack,
+            v) -> new ChemicalFilterCapability(MekanismModule.CHEMICAL_FILTER, stack);
 
     public ChemicalFilterItem(Properties properties) {
         super(properties);

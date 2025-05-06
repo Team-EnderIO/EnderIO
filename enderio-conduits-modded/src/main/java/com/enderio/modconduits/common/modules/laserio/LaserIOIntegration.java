@@ -18,10 +18,11 @@ public class LaserIOIntegration implements Integration {
 //    public static ICapabilityProvider<ItemStack, Void, ResourceFilter> ITEM_FILTER_PROVIDER =
 //        (stack, v) -> new LaserItemFilter(stack);
 
-    public static ICapabilityProvider<ItemStack, Void, ResourceFilter> FLUID_FILTER_PROVIDER =
-        (stack, v) -> new LaserFluidFilter(stack);
+    public static ICapabilityProvider<ItemStack, Void, ResourceFilter> FLUID_FILTER_PROVIDER = (stack,
+            v) -> new LaserFluidFilter(stack);
 
-    public static final IntegrationWrapper<MekansimIntegration> MEK_LASER_IO_INTEGRATION = IntegrationManager.wrapper("mekanism", () -> MekansimIntegration::new, ModdedConduits.modEventBus);
+    public static final IntegrationWrapper<MekansimIntegration> MEK_LASER_IO_INTEGRATION = IntegrationManager
+            .wrapper("mekanism", () -> MekansimIntegration::new, ModdedConduits.modEventBus);
 
     @Override
     public void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {

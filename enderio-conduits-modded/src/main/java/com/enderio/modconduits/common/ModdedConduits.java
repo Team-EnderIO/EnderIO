@@ -5,11 +5,11 @@ import static java.util.Map.entry;
 import com.enderio.base.api.EnderIO;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.modconduits.common.modules.ConduitCommonModule;
-import com.enderio.modconduits.data.ModConduitRecipeProvider;
 import com.enderio.modconduits.common.modules.Integrations;
 import com.enderio.modconduits.common.modules.appeng.AE2ConduitsModule;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modconduits.common.modules.refinedstorage.RefinedStorageCommonModule;
+import com.enderio.modconduits.data.ModConduitRecipeProvider;
 import com.enderio.regilite.Regilite;
 import java.util.Map;
 import java.util.Set;
@@ -35,10 +35,9 @@ public class ModdedConduits {
     public static final Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
 
     private static final Map<String, Supplier<ConduitCommonModule>> CONDUIT_MODULES = Map.ofEntries(
-        entry(ModuleModIds.APPLIED_ENERGISTICS, () -> AE2ConduitsModule.INSTANCE),
-        entry(ModuleModIds.MEKANISM, () -> MekanismModule.INSTANCE),
-        entry(ModuleModIds.REFINED_STORAGE, () -> RefinedStorageCommonModule.INSTANCE)
-    );
+            entry(ModuleModIds.APPLIED_ENERGISTICS, () -> AE2ConduitsModule.INSTANCE),
+            entry(ModuleModIds.MEKANISM, () -> MekanismModule.INSTANCE),
+            entry(ModuleModIds.REFINED_STORAGE, () -> RefinedStorageCommonModule.INSTANCE));
 
     public static IEventBus modEventBus;
 

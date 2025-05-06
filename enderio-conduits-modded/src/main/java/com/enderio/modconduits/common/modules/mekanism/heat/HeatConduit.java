@@ -11,10 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public record HeatConduit(
-    ResourceLocation texture,
-    Component description
-) implements Conduit<HeatConduit, HeatConduitConnectionConfig> {
+public record HeatConduit(ResourceLocation texture, Component description)
+        implements Conduit<HeatConduit, HeatConduitConnectionConfig> {
 
     private static final HeatTicker TICKER = new HeatTicker();
 
@@ -40,7 +38,8 @@ public record HeatConduit(
 
     @Override
     public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        return level.getCapability(MekanismModule.Capabilities.HEAT, conduitPos.relative(direction), direction.getOpposite()) != null;
+        return level.getCapability(MekanismModule.Capabilities.HEAT, conduitPos.relative(direction),
+                direction.getOpposite()) != null;
     }
 
     @Override

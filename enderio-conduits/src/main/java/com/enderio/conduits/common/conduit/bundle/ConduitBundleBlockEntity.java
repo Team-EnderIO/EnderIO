@@ -1352,7 +1352,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 ListTag conduitList = (ListTag) tag.get(CONDUITS_KEY);
                 for (var conduitTag : conduitList) {
                     conduits.add(Conduit.CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), conduitTag)
-                        .getOrThrow());
+                            .getOrThrow());
                 }
             }
 
@@ -1572,17 +1572,20 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     private static class NeighbouringCapabilityCaches {
-        private final Map<Direction, Map<BlockCapability<?, Direction>, BlockCapabilityCache<?, Direction>>> caches = new EnumMap<>(Direction.class);
+        private final Map<Direction, Map<BlockCapability<?, Direction>, BlockCapabilityCache<?, Direction>>> caches = new EnumMap<>(
+                Direction.class);
 
         /**
          * Get a capability for the given side of the node
          */
         @Nullable
-        public <TCapability> TCapability getCapability(BlockCapability<TCapability, Direction> capability, ServerLevel level, BlockPos conduitPos, Direction side) {
+        public <TCapability> TCapability getCapability(BlockCapability<TCapability, Direction> capability,
+                ServerLevel level, BlockPos conduitPos, Direction side) {
             var cacheMap = caches.computeIfAbsent(side, s -> new HashMap<>());
-            var cache = cacheMap.computeIfAbsent(capability, c -> BlockCapabilityCache.create(c, level, conduitPos.relative(side), side.getOpposite()));
+            var cache = cacheMap.computeIfAbsent(capability,
+                    c -> BlockCapabilityCache.create(c, level, conduitPos.relative(side), side.getOpposite()));
 
-            //noinspection unchecked
+            // noinspection unchecked
             return (TCapability) cache.getCapability();
         }
     }
@@ -1598,11 +1601,14 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         @EnsureSide(EnsureSide.Side.SERVER)
         @Override
         @Nullable
-        public <TCapability> TCapability getNeighbourCapability(BlockCapability<TCapability, Direction> capability, Direction side) {
-            // Doesn't use EnderBlockEntity's capability cache so that we can bin capability caches that aren't needed when conduits are removed.
+        public <TCapability> TCapability getNeighbourCapability(BlockCapability<TCapability, Direction> capability,
+                Direction side) {
+            // Doesn't use EnderBlockEntity's capability cache so that we can bin capability
+            // caches that aren't needed when conduits are removed.
             // Probably an "early optimization" but I don't think this really hurts.
             if (conduitBundle.level instanceof ServerLevel serverLevel) {
-                var capabilityCache = conduitBundle.neighbouringCapabilityCaches.computeIfAbsent(conduit, c -> new NeighbouringCapabilityCaches());
+                var capabilityCache = conduitBundle.neighbouringCapabilityCaches.computeIfAbsent(conduit,
+                        c -> new NeighbouringCapabilityCaches());
                 return capabilityCache.getCapability(capability, serverLevel, conduitBundle.getBlockPos(), side);
             }
 

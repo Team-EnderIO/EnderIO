@@ -32,9 +32,10 @@ public class ChemicalFilterMenu extends AbstractContainerMenu {
 
         for (int i = 0; i < capability.size(); i++) {
             int pSlot = i;
-            addSlot(new ChemicalFilterSlot(fluidStack -> capability.setEntry(pSlot, fluidStack) ,i ,14 + ( i % 5) * 18, 35 + 20 * ( i / 5)));
+            addSlot(new ChemicalFilterSlot(fluidStack -> capability.setEntry(pSlot, fluidStack), i, 14 + (i % 5) * 18,
+                    35 + 20 * (i / 5)));
         }
-        addInventorySlots(14,119, inventory);
+        addInventorySlots(14, 119, inventory);
     }
 
     public ChemicalFilterMenu(int pContainerId, Inventory inventory, ItemStack stack) {
@@ -42,7 +43,8 @@ public class ChemicalFilterMenu extends AbstractContainerMenu {
     }
 
     public static ChemicalFilterMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
-        return new ChemicalFilterMenu(MekanismModule.CHEMICAL_FILTER_MENU.get(), pContainerId, inventory, inventory.player.getMainHandItem());
+        return new ChemicalFilterMenu(MekanismModule.CHEMICAL_FILTER_MENU.get(), pContainerId, inventory,
+                inventory.player.getMainHandItem());
     }
 
     @Override

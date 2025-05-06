@@ -7,32 +7,26 @@ import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.Objects;
 import mekanism.api.chemical.ChemicalStack;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 public class ChemicalConduitData implements ConduitData<ChemicalConduitData> {
 
-    public static MapCodec<ChemicalConduitData> CODEC = RecordCodecBuilder.mapCodec(
-        instance -> instance.group(
-            Codec.BOOL.fieldOf("should_reset").forGetter(i -> i.shouldReset),
-            ChemicalStack.OPTIONAL_CODEC
-                .optionalFieldOf("locked_fluid", ChemicalStack.EMPTY)
-                .forGetter(i -> i.lockedChemical)
-        ).apply(instance, ChemicalConduitData::new)
-    );
+    public static MapCodec<ChemicalConduitData> CODEC = RecordCodecBuilder
+            .mapCodec(
+                    instance -> instance
+                            .group(Codec.BOOL.fieldOf("should_reset").forGetter(i -> i.shouldReset),
+                                    ChemicalStack.OPTIONAL_CODEC.optionalFieldOf("locked_fluid", ChemicalStack.EMPTY)
+                                            .forGetter(i -> i.lockedChemical))
+                            .apply(instance, ChemicalConduitData::new));
 
     public static StreamCodec<RegistryFriendlyByteBuf, ChemicalConduitData> STREAM_CODEC = StreamCodec.composite(
-        ByteBufCodecs.BOOL,
-        i -> i.shouldReset,
-        ChemicalStack.OPTIONAL_STREAM_CODEC,
-        i -> i.lockedChemical,
-        ChemicalConduitData::new
-    );
+            ByteBufCodecs.BOOL, i -> i.shouldReset, ChemicalStack.OPTIONAL_STREAM_CODEC, i -> i.lockedChemical,
+            ChemicalConduitData::new);
 
     private ChemicalStack lockedChemical = ChemicalStack.EMPTY;
     private boolean shouldReset = false;
@@ -70,8 +64,9 @@ public class ChemicalConduitData implements ConduitData<ChemicalConduitData> {
     public ChemicalConduitData withClientChanges(ChemicalConduitData guiData) {
         this.shouldReset = guiData.shouldReset;
 
-        // TODO: Soon we will swap to records which will mean this will be a new instance.
-        //       This API has been designed with this pending change in mind.
+        // TODO: Soon we will swap to records which will mean this will be a new
+        // instance.
+        // This API has been designed with this pending change in mind.
         return this;
     }
 

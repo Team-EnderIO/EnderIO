@@ -3,19 +3,21 @@ package com.enderio.modconduits.common.modules.mekanism.chemical;
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
+import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.bundle.ConduitBundle;
+import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.network.node.ConduitNode;
-import com.enderio.conduits.api.ConduitType;
-import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilter;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
+import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.Objects;
+import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -32,27 +34,21 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-import java.util.Objects;
-import java.util.function.Consumer;
-
-public record ChemicalConduit(
-    ResourceLocation texture,
-    Component description,
-    int transferRatePerTick,
-    boolean isMultiChemical
-) implements Conduit<ChemicalConduit, ChemicalConduitConnectionConfig> {
+public record ChemicalConduit(ResourceLocation texture, Component description, int transferRatePerTick,
+        boolean isMultiChemical) implements Conduit<ChemicalConduit, ChemicalConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
 
-    public static MapCodec<ChemicalConduit> CODEC = RecordCodecBuilder.mapCodec(
-        builder -> builder.group(
-            ResourceLocation.CODEC.fieldOf("texture").forGetter(ChemicalConduit::texture),
-            ComponentSerialization.CODEC.fieldOf("description").forGetter(ChemicalConduit::description),
-            Codec.INT.fieldOf("transfer_rate").forGetter(ChemicalConduit::transferRatePerTick),
-            Codec.BOOL.fieldOf("is_multi_chemical").forGetter(ChemicalConduit::isMultiChemical)
-        ).apply(builder, ChemicalConduit::new)
-    );
+    public static MapCodec<ChemicalConduit> CODEC = RecordCodecBuilder
+            .mapCodec(
+                    builder -> builder
+                            .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ChemicalConduit::texture),
+                                    ComponentSerialization.CODEC.fieldOf("description")
+                                            .forGetter(ChemicalConduit::description),
+                                    Codec.INT.fieldOf("transfer_rate").forGetter(ChemicalConduit::transferRatePerTick),
+                                    Codec.BOOL.fieldOf("is_multi_chemical").forGetter(ChemicalConduit::isMultiChemical))
+                            .apply(builder, ChemicalConduit::new));
 
     private static final ChemicalTicker TICKER = new ChemicalTicker();
 
@@ -130,13 +126,15 @@ public record ChemicalConduit(
 
     @Override
     public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        return level.getCapability(MekanismModule.Capabilities.CHEMICAL, conduitPos.relative(direction), direction.getOpposite()) != null;
+        return level.getCapability(MekanismModule.Capabilities.CHEMICAL, conduitPos.relative(direction),
+                direction.getOpposite()) != null;
     }
 
     @Override
-    public ChemicalConduitConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel, DyeColor outputChannel,
-        RedstoneControl redstoneControl, DyeColor redstoneChannel) {
-        return new ChemicalConduitConnectionConfig(isInsert, inputChannel, isExtract, outputChannel, redstoneControl, redstoneChannel);
+    public ChemicalConduitConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
+            DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
+        return new ChemicalConduitConnectionConfig(isInsert, inputChannel, isExtract, outputChannel, redstoneControl,
+                redstoneChannel);
     }
 
     @Override
@@ -169,18 +167,18 @@ public record ChemicalConduit(
     @Override
     public Vector2i getInventorySlotPosition(int slot) {
         return switch (slot) {
-            case EXTRACT_FILTER_SLOT -> new Vector2i(113, 71);
-            case INSERT_FILTER_SLOT -> new Vector2i(23, 71);
-            default -> throw new IndexOutOfBoundsException();
+        case EXTRACT_FILTER_SLOT -> new Vector2i(113, 71);
+        case INSERT_FILTER_SLOT -> new Vector2i(23, 71);
+        default -> throw new IndexOutOfBoundsException();
         };
     }
 
     @Override
     public int getIndexForLegacySlot(SlotType slotType) {
         return switch (slotType) {
-            case FILTER_EXTRACT -> EXTRACT_FILTER_SLOT;
-            case FILTER_INSERT -> INSERT_FILTER_SLOT;
-            default -> -1;
+        case FILTER_EXTRACT -> EXTRACT_FILTER_SLOT;
+        case FILTER_INSERT -> INSERT_FILTER_SLOT;
+        default -> -1;
         };
     }
 
@@ -210,16 +208,19 @@ public record ChemicalConduit(
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder, TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
+            TooltipFlag pTooltipFlag) {
         String transferLimitFormatted = String.format("%,d", transferRatePerTick());
-        pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, transferLimitFormatted));
+        pTooltipAdder
+                .accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, transferLimitFormatted));
 
         if (isMultiChemical()) {
             pTooltipAdder.accept(MekanismModule.LANG_MULTI_CHEMICAL_TOOLTIP);
         }
 
         if (pTooltipFlag.hasShiftDown()) {
-            String rawRateFormatted = String.format("%,d", (int)Math.ceil(transferRatePerTick() * (20.0 / graphTickRate())));
+            String rawRateFormatted = String.format("%,d",
+                    (int) Math.ceil(transferRatePerTick() * (20.0 / graphTickRate())));
             pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
         }
     }

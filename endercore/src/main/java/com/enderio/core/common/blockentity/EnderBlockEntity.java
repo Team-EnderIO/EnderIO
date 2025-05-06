@@ -297,7 +297,7 @@ public class EnderBlockEntity extends BlockEntity {
 
         var sidedCaches = neighbourCapabilities.computeIfAbsent(capability, c -> new EnumMap<>(Direction.class));
         var cache = sidedCaches.computeIfAbsent(side,
-            s -> BlockCapabilityCache.create(capability, serverLevel, getBlockPos().relative(s), s.getOpposite()));
+                s -> BlockCapabilityCache.create(capability, serverLevel, getBlockPos().relative(s), s.getOpposite()));
 
         // noinspection unchecked
         return (T) cache.getCapability();

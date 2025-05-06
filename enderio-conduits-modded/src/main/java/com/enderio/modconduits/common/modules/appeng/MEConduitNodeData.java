@@ -14,11 +14,9 @@ import org.jetbrains.annotations.Nullable;
 
 public final class MEConduitNodeData implements NodeData, IInWorldGridNodeHost {
 
-    public static final MapCodec<MEConduitNodeData> CODEC = RecordCodecBuilder.mapCodec(
-        instance -> instance.group(
-            CompoundTag.CODEC.fieldOf("main_node").forGetter(MEConduitNodeData::saveMainNode)
-        ).apply(instance, MEConduitNodeData::new)
-    );
+    public static final MapCodec<MEConduitNodeData> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+            .group(CompoundTag.CODEC.fieldOf("main_node").forGetter(MEConduitNodeData::saveMainNode))
+            .apply(instance, MEConduitNodeData::new));
 
     public static NodeDataType<MEConduitNodeData> TYPE = new NodeDataType<>(CODEC, MEConduitNodeData::new);
 
@@ -41,7 +39,7 @@ public final class MEConduitNodeData implements NodeData, IInWorldGridNodeHost {
     MEConduitNodeData(@Nullable IManagedGridNode mainNode, @Nullable CompoundTag savedMainNode, boolean isDense) {
         this.mainNode = mainNode;
         this.savedMainNode = savedMainNode;
-        this.cableType = isDense? AECableType.DENSE_SMART : AECableType.SMART;
+        this.cableType = isDense ? AECableType.DENSE_SMART : AECableType.SMART;
     }
 
     @Nullable
@@ -51,7 +49,7 @@ public final class MEConduitNodeData implements NodeData, IInWorldGridNodeHost {
 
     public void setMainNode(IManagedGridNode mainNode, boolean isDense) {
         this.mainNode = mainNode;
-        this.cableType = isDense? AECableType.DENSE_SMART : AECableType.SMART;
+        this.cableType = isDense ? AECableType.DENSE_SMART : AECableType.SMART;
     }
 
     public void clearMainNode() {

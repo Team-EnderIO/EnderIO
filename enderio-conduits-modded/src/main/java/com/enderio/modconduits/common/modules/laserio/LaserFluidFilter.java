@@ -5,15 +5,14 @@ import com.direwolf20.laserio.common.items.cards.BaseCard;
 import com.direwolf20.laserio.setup.LaserIODataComponents;
 import com.enderio.base.api.filter.FluidStackFilter;
 import com.enderio.base.common.capability.IFilterCapability;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class LaserFluidFilter implements IFilterCapability<FluidStack>, FluidStackFilter {
 
@@ -61,14 +60,14 @@ public class LaserFluidFilter implements IFilterCapability<FluidStack>, FluidSta
         List<FluidStack> filteredFluids = new ArrayList();
         FilterBasicHandler filterSlotHandler = new FilterBasicHandler(15, container);
 
-        for(int i = 0; i < (filterSlotHandler).getSlots(); ++i) {
+        for (int i = 0; i < (filterSlotHandler).getSlots(); ++i) {
             ItemStack itemStack = filterSlotHandler.getStackInSlot(i);
             if (!itemStack.isEmpty()) {
                 Optional<IFluidHandlerItem> fluidHandlerLazyOptional = FluidUtil.getFluidHandler(itemStack);
                 if (!fluidHandlerLazyOptional.isEmpty()) {
                     IFluidHandler fluidHandler = fluidHandlerLazyOptional.get();
 
-                    for(int tank = 0; tank < fluidHandler.getTanks(); ++tank) {
+                    for (int tank = 0; tank < fluidHandler.getTanks(); ++tank) {
                         FluidStack fluidStack = fluidHandler.getFluidInTank(tank);
                         if (!fluidStack.isEmpty()) {
                             filteredFluids.add(fluidStack);
@@ -88,13 +87,14 @@ public class LaserFluidFilter implements IFilterCapability<FluidStack>, FluidSta
 
     @Override
     public void setEntry(int index, FluidStack entry) {
-        //Not needed for working filters, however could be good for in gui changes
+        // Not needed for working filters, however could be good for in gui changes
     }
 
     @Override
     public boolean test(FluidStack stack) {
         for (FluidStack testStack : getEntries()) {
-            boolean test = isNbt() ? FluidStack.isSameFluidSameComponents(testStack, stack) : testStack.is(stack.getFluid());
+            boolean test = isNbt() ? FluidStack.isSameFluidSameComponents(testStack, stack)
+                    : testStack.is(stack.getFluid());
             if (test) {
                 return !isInvert();
             }

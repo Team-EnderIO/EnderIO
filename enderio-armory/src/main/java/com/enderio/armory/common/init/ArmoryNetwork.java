@@ -9,7 +9,6 @@ import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUsePowerPacket;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelEndabledUpdatePacket;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
-import com.enderio.base.api.EnderIO;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;

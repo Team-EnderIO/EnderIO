@@ -1,6 +1,5 @@
 package com.enderio.machines.common.init;
 
-import com.enderio.core.EnderCore;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.network.CycleIOConfigPacket;
 import com.enderio.machines.common.network.EnderfaceInteractPacket;

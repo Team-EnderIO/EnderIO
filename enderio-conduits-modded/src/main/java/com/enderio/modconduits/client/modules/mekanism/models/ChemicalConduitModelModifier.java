@@ -5,6 +5,7 @@ import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.model.ConduitModelModifier;
 import com.enderio.core.client.RenderUtil;
 import com.enderio.modconduits.common.modules.mekanism.chemical.ChemicalConduit;
+import java.util.List;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.Chemical;
 import net.minecraft.client.Minecraft;
@@ -23,16 +24,14 @@ import net.neoforged.neoforge.client.model.IQuadTransformer;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public class ChemicalConduitModelModifier implements ConduitModelModifier {
 
     private static final ModelResourceLocation FLUID_MODEL = ModelResourceLocation
-        .standalone(EnderIO.loc("block/extra/fluids"));
+            .standalone(EnderIO.loc("block/extra/fluids"));
 
     @Override
     public List<BakedQuad> createConnectionQuads(Holder<Conduit<?, ?>> conduit, @Nullable CompoundTag extraWorldData,
-        @Nullable Direction facing, Direction connectionDirection, RandomSource rand, @Nullable RenderType type) {
+            @Nullable Direction facing, Direction connectionDirection, RandomSource rand, @Nullable RenderType type) {
         if (!(conduit.value() instanceof ChemicalConduit chemicalConduit)) {
             return List.of();
         }
@@ -50,9 +49,9 @@ public class ChemicalConduitModelModifier implements ConduitModelModifier {
 
         if (!lockedChemical.isEmptyType()) {
             return new ChemicalPaintQuadTransformer(lockedChemical).process(Minecraft.getInstance()
-                .getModelManager()
-                .getModel(FLUID_MODEL)
-                .getQuads(Blocks.COBBLESTONE.defaultBlockState(), facing, rand, ModelData.EMPTY, type));
+                    .getModelManager()
+                    .getModel(FLUID_MODEL)
+                    .getQuads(Blocks.COBBLESTONE.defaultBlockState(), facing, rand, ModelData.EMPTY, type));
         }
 
         return List.of();
@@ -67,14 +66,14 @@ public class ChemicalConduitModelModifier implements ConduitModelModifier {
         @Override
         public void processInPlace(BakedQuad quad) {
             TextureAtlasSprite sprite = Minecraft.getInstance()
-                .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-                .apply(chemical.getIcon());
+                    .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+                    .apply(chemical.getIcon());
             for (int i = 0; i < 4; i++) {
                 float[] uv0 = RenderUtil.unpackVertices(quad.getVertices(), i, IQuadTransformer.UV0, 2);
                 uv0[0] = (uv0[0] - quad.getSprite().getU0()) * sprite.contents().width()
-                    / quad.getSprite().contents().height() + sprite.getU0();
+                        / quad.getSprite().contents().height() + sprite.getU0();
                 uv0[1] = (uv0[1] - quad.getSprite().getV0()) * sprite.contents().width()
-                    / quad.getSprite().contents().height() + sprite.getV0();
+                        / quad.getSprite().contents().height() + sprite.getV0();
                 int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
                 quad.getVertices()[IQuadTransformer.UV0 + i * IQuadTransformer.STRIDE] = packedTextureData[0];
                 quad.getVertices()[IQuadTransformer.UV0 + 1 + i * IQuadTransformer.STRIDE] = packedTextureData[1];
@@ -84,4 +83,3 @@ public class ChemicalConduitModelModifier implements ConduitModelModifier {
         }
     }
 }
-

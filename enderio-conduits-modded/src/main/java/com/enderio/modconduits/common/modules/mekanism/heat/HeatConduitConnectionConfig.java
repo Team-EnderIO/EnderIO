@@ -10,25 +10,25 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import java.util.List;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 
-import java.util.List;
+public record HeatConduitConnectionConfig(boolean isSend, boolean isReceive, RedstoneControl receiveRedstoneControl,
+        DyeColor receiveRedstoneChannel) implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
-public record HeatConduitConnectionConfig(boolean isSend, boolean isReceive, RedstoneControl receiveRedstoneControl, DyeColor receiveRedstoneChannel)
-    implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
-
-    public static HeatConduitConnectionConfig DEFAULT = new HeatConduitConnectionConfig(true, true, RedstoneControl.ALWAYS_ACTIVE, DyeColor.RED);
+    public static HeatConduitConnectionConfig DEFAULT = new HeatConduitConnectionConfig(true, true,
+            RedstoneControl.ALWAYS_ACTIVE, DyeColor.RED);
 
     public static MapCodec<HeatConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-        .group(Codec.BOOL.fieldOf("is_send").forGetter(HeatConduitConnectionConfig::isSend),
-            Codec.BOOL.fieldOf("is_receive").forGetter(HeatConduitConnectionConfig::isReceive),
-            RedstoneControl.CODEC.fieldOf("receive_redstone_control")
-                .forGetter(HeatConduitConnectionConfig::receiveRedstoneControl),
-            DyeColor.CODEC.fieldOf("receive_redstone_channel")
-                .forGetter(HeatConduitConnectionConfig::receiveRedstoneChannel)
-        ).apply(inst, HeatConduitConnectionConfig::new));
+            .group(Codec.BOOL.fieldOf("is_send").forGetter(HeatConduitConnectionConfig::isSend),
+                    Codec.BOOL.fieldOf("is_receive").forGetter(HeatConduitConnectionConfig::isReceive),
+                    RedstoneControl.CODEC.fieldOf("receive_redstone_control")
+                            .forGetter(HeatConduitConnectionConfig::receiveRedstoneControl),
+                    DyeColor.CODEC.fieldOf("receive_redstone_channel")
+                            .forGetter(HeatConduitConnectionConfig::receiveRedstoneChannel))
+            .apply(inst, HeatConduitConnectionConfig::new));
 
     // @formatter:off
     public static StreamCodec<ByteBuf, HeatConduitConnectionConfig> STREAM_CODEC = StreamCodec.composite(
@@ -44,7 +44,7 @@ public record HeatConduitConnectionConfig(boolean isSend, boolean isReceive, Red
     // @formatter:on
 
     public static ConnectionConfigType<HeatConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
-        STREAM_CODEC.cast(), () -> DEFAULT);
+            STREAM_CODEC.cast(), () -> DEFAULT);
 
     @Override
     public DyeColor sendColor() {
@@ -72,7 +72,6 @@ public record HeatConduitConnectionConfig(boolean isSend, boolean isReceive, Red
             return false;
         }
 
-        // TODO: VERIFY THIS BEHAVIOUR. I THINK IT MAY BE WRONG.
         if (receiveRedstoneControl.isRedstoneSensitive()) {
             return receiveRedstoneControl.isActive(signalAware.hasRedstoneSignal(receiveRedstoneChannel));
         } else {
@@ -94,11 +93,11 @@ public record HeatConduitConnectionConfig(boolean isSend, boolean isReceive, Red
     }
 
     public HeatConduitConnectionConfig withIsReceive(boolean isReceive) {
-        return new HeatConduitConnectionConfig(isSend, isReceive, receiveRedstoneControl,receiveRedstoneChannel);
+        return new HeatConduitConnectionConfig(isSend, isReceive, receiveRedstoneControl, receiveRedstoneChannel);
     }
 
     public HeatConduitConnectionConfig withReceiveRedstoneControl(RedstoneControl receiveRedstoneControl) {
-        return new HeatConduitConnectionConfig(isSend, isReceive, receiveRedstoneControl,receiveRedstoneChannel);
+        return new HeatConduitConnectionConfig(isSend, isReceive, receiveRedstoneControl, receiveRedstoneChannel);
     }
 
     public HeatConduitConnectionConfig withReceiveRedstoneChannel(DyeColor receiveRedstoneChannel) {

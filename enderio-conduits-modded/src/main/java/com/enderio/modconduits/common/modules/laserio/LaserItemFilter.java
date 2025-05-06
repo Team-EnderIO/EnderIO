@@ -4,10 +4,9 @@ import com.direwolf20.laserio.common.containers.customhandler.FilterBasicHandler
 import com.direwolf20.laserio.common.items.cards.BaseCard;
 import com.direwolf20.laserio.setup.LaserIODataComponents;
 import com.enderio.base.common.capability.IFilterCapability;
+import java.util.List;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.List;
 
 // TODO: Sort this out.
 public class LaserItemFilter implements IFilterCapability<ItemStack> {
@@ -55,7 +54,7 @@ public class LaserItemFilter implements IFilterCapability<ItemStack> {
     public List<ItemStack> getEntries() {
         FilterBasicHandler handler = new FilterBasicHandler(15, container);
         List<ItemStack> list = NonNullList.withSize(15, ItemStack.EMPTY);
-        for(int i = 0; i < 15; ++i) {
+        for (int i = 0; i < 15; ++i) {
             ItemStack itemStack = handler.getStackInSlot(i);
             handler.setStackInSlot(i, itemStack);
             list.set(i, itemStack);
@@ -70,13 +69,14 @@ public class LaserItemFilter implements IFilterCapability<ItemStack> {
 
     @Override
     public void setEntry(int index, ItemStack entry) {
-        //Not needed for working filters, however could be good for in gui changes
+        // Not needed for working filters, however could be good for in gui changes
     }
 
 //    @Override
     public boolean test(ItemStack stack) {
         for (ItemStack testStack : getEntries()) {
-            boolean test = isNbt() ? ItemStack.isSameItemSameComponents(testStack, stack) : ItemStack.isSameItem(testStack, stack);
+            boolean test = isNbt() ? ItemStack.isSameItemSameComponents(testStack, stack)
+                    : ItemStack.isSameItem(testStack, stack);
             if (test) {
                 return !isInvert();
             }

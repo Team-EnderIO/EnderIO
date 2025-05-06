@@ -2,13 +2,14 @@ package com.enderio.modconduits.common.modules.refinedstorage;
 
 import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.Conduit;
+import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.network.node.ConduitNode;
-import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.refinedmods.refinedstorage.neoforge.RefinedStorageNeoForgeApiImpl;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -20,15 +21,12 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
-
-public record RSConduit(ResourceLocation texture, Component description) implements Conduit<RSConduit, RSConduitConnectionConfig> {
-    public static MapCodec<RSConduit> CODEC = RecordCodecBuilder.mapCodec(
-        builder -> builder.group(
-            ResourceLocation.CODEC.fieldOf("texture").forGetter(RSConduit::texture),
-            ComponentSerialization.CODEC.fieldOf("description").forGetter(RSConduit::description)
-        ).apply(builder, RSConduit::new)
-    );
+public record RSConduit(ResourceLocation texture, Component description)
+        implements Conduit<RSConduit, RSConduitConnectionConfig> {
+    public static MapCodec<RSConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
+            .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(RSConduit::texture),
+                    ComponentSerialization.CODEC.fieldOf("description").forGetter(RSConduit::description))
+            .apply(builder, RSConduit::new));
 
     @Override
     public ConduitType<RSConduit> type() {
@@ -52,9 +50,11 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
 
     @Override
     public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        var cap = level.getCapability(RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability(), conduitPos.relative(direction), direction.getOpposite());
+        var cap = level.getCapability(
+                RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability(),
+                conduitPos.relative(direction), direction.getOpposite());
         if (cap != null) {
-            for (var connection: cap.getContainers()) {
+            for (var connection : cap.getContainers()) {
                 if (connection.canAcceptIncomingConnection(direction.getOpposite(), level.getBlockState(conduitPos))) {
                     return true;
                 }
@@ -89,13 +89,14 @@ public record RSConduit(ResourceLocation texture, Component description) impleme
     }
 
     @Override
-    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level, ColoredRedstoneProvider coloredRedstoneProvider, ConduitNode node,
-        BlockCapability<TCapability, TContext> capability, @Nullable TContext tContext) {
+    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level,
+            ColoredRedstoneProvider coloredRedstoneProvider, ConduitNode node,
+            BlockCapability<TCapability, TContext> capability, @Nullable TContext tContext) {
 
         if (capability == RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability()) {
             var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
             if (data.isInitialized()) {
-                //noinspection unchecked
+                // noinspection unchecked
                 return (TCapability) data.container;
             }
         }

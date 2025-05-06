@@ -6,13 +6,13 @@ import com.enderio.conduits.api.screen.ConduitMenuDataAccess;
 import com.enderio.conduits.api.screen.ConduitScreenHelper;
 import com.enderio.conduits.api.screen.IOConduitScreenType;
 import com.enderio.conduits.common.init.ConduitLang;
-import com.enderio.conduits.common.network.C2SClearLockedFluidPacket;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modconduits.common.modules.mekanism.chemical.C2SClearLockedChemicalPacket;
 import com.enderio.modconduits.common.modules.mekanism.chemical.ChemicalConduit;
 import com.enderio.modconduits.common.modules.mekanism.chemical.ChemicalConduitConnectionConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
+import java.util.function.Supplier;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.Chemical;
 import net.minecraft.client.Minecraft;
@@ -28,8 +28,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.function.Supplier;
-
 public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalConduitConnectionConfig> {
     private static final ResourceLocation ICON_ROUND_ROBIN_ENABLED = EnderIO.loc("icon/round_robin_enabled");
     private static final ResourceLocation ICON_ROUND_ROBIN_DISABLED = EnderIO.loc("icon/round_robin_disabled");
@@ -38,31 +36,31 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
 
     @Override
     public void createLeftWidgets(ConduitScreenHelper screen, int startX, int startY,
-        ConduitMenuDataAccess<ChemicalConduitConnectionConfig> dataAccess) {
+            ConduitMenuDataAccess<ChemicalConduitConnectionConfig> dataAccess) {
         super.createLeftWidgets(screen, startX, startY, dataAccess);
 
         // Locked fluid widget
         if (dataAccess.conduit() instanceof ChemicalConduit fluidConduit && !fluidConduit.isMultiChemical()) {
             screen.addRenderableWidget(new ChemicalWidget(startX, startY + 20, () -> getLockedChemical(dataAccess),
-                () -> PacketDistributor.sendToServer(new C2SClearLockedChemicalPacket(dataAccess.getBlockPos()))));
+                    () -> PacketDistributor.sendToServer(new C2SClearLockedChemicalPacket(dataAccess.getBlockPos()))));
         } else {
             // Channel colors
             screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                () -> dataAccess.getConnectionConfig().sendColor(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withSendColor(value)));
+                    () -> dataAccess.getConnectionConfig().sendColor(),
+                    value -> dataAccess.updateConnectionConfig(config -> config.withSendColor(value)));
         }
     }
 
     @Override
     public void createRightWidgets(ConduitScreenHelper screen, int startX, int startY,
-        ConduitMenuDataAccess<ChemicalConduitConnectionConfig> dataAccess) {
+            ConduitMenuDataAccess<ChemicalConduitConnectionConfig> dataAccess) {
         super.createRightWidgets(screen, startX, startY, dataAccess);
 
         if (dataAccess.conduit() instanceof ChemicalConduit fluidConduit && fluidConduit.isMultiChemical()) {
             // Channel colors
             screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                () -> dataAccess.getConnectionConfig().receiveColor(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveColor(value)));
+                    () -> dataAccess.getConnectionConfig().receiveColor(),
+                    value -> dataAccess.updateConnectionConfig(config -> config.withReceiveColor(value)));
         }
 
         // TODO: Could be good fluid conduit features?
@@ -82,28 +80,30 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
 
         // Redstone control
         var redstoneChannelWidget = screen.addColorPicker(startX + 16 + 4, startY + 40, ConduitLang.REDSTONE_CHANNEL,
-            () -> dataAccess.getConnectionConfig().receiveRedstoneChannel(),
-            value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneChannel(value)));
+                () -> dataAccess.getConnectionConfig().receiveRedstoneChannel(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneChannel(value)));
 
         // Only show the redstone widget when redstone control is sensitive to signals.
         screen.addPreRenderAction(() -> redstoneChannelWidget.visible = dataAccess.getConnectionConfig()
-            .receiveRedstoneControl()
-            .isRedstoneSensitive());
+                .receiveRedstoneControl()
+                .isRedstoneSensitive());
 
         screen.addRedstoneControlPicker(startX, startY + 40, EIOLang.REDSTONE_MODE,
-            () -> dataAccess.getConnectionConfig().receiveRedstoneControl(),
-            value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
+                () -> dataAccess.getConnectionConfig().receiveRedstoneControl(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
 
         // TODO: Show redstone signal indicators using the extra NBT payload.
     }
 
     @Override
-    protected ChemicalConduitConnectionConfig setLeftEnabled(ChemicalConduitConnectionConfig config, boolean isEnabled) {
+    protected ChemicalConduitConnectionConfig setLeftEnabled(ChemicalConduitConnectionConfig config,
+            boolean isEnabled) {
         return config.withIsSend(isEnabled);
     }
 
     @Override
-    protected ChemicalConduitConnectionConfig setRightEnabled(ChemicalConduitConnectionConfig config, boolean isEnabled) {
+    protected ChemicalConduitConnectionConfig setRightEnabled(ChemicalConduitConnectionConfig config,
+            boolean isEnabled) {
         return config.withIsReceive(isEnabled);
     }
 
@@ -142,7 +142,9 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
                 MutableComponent tooltip = MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID1.copy();
                 tooltip.append("\n").append(MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID2);
                 if (!currentChemical.get().isEmptyType()) {
-                    tooltip.append("\n").append(TooltipUtil.withArgs(MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID3, currentChemical.get().getChemical().getTextComponent()));
+                    tooltip.append("\n")
+                            .append(TooltipUtil.withArgs(MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID3,
+                                    currentChemical.get().getChemical().getTextComponent()));
                 }
                 setTooltip(Tooltip.create(TooltipUtil.style(tooltip)));
             }
@@ -156,19 +158,22 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
             }
 
             ResourceLocation still = currentChemical.get().getIcon();
-            AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
+            AbstractTexture texture = Minecraft.getInstance()
+                    .getTextureManager()
+                    .getTexture(TextureAtlas.LOCATION_BLOCKS);
             if (texture instanceof TextureAtlas atlas) {
                 TextureAtlasSprite sprite = atlas.getSprite(still);
 
                 int color = currentChemical.get().getTint();
-                RenderSystem.setShaderColor( ((color >> 16) & 0xFF) / 255.0F, ((color >> 8) & 0xFF) / 255.0F, (color & 0xFF) / 255.0F, 1);
+                RenderSystem.setShaderColor(((color >> 16) & 0xFF) / 255.0F, ((color >> 8) & 0xFF) / 255.0F,
+                        (color & 0xFF) / 255.0F, 1);
                 RenderSystem.enableBlend();
 
+                int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
+                int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
 
-                int atlasWidth = (int)(sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
-                int atlasHeight = (int)(sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-
-                guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, 0, sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight, 12, 12, atlasWidth, atlasHeight);
+                guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, 0, sprite.getU0() * atlasWidth,
+                        sprite.getV0() * atlasHeight, 12, 12, atlasWidth, atlasHeight);
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             }

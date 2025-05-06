@@ -11,7 +11,6 @@ import com.enderio.base.common.network.SyncTravelDataPacket;
 import com.enderio.base.common.network.TravelTargetRemovedPacket;
 import com.enderio.base.common.network.TravelTargetUpdatedPacket;
 import com.enderio.base.common.network.UpdateCoordinateSelectionNameMenuPacket;
-import com.enderio.core.EnderCore;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;

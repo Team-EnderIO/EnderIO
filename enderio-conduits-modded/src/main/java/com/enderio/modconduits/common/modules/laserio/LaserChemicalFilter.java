@@ -6,12 +6,11 @@ import com.direwolf20.laserio.setup.LaserIODataComponents;
 import com.enderio.base.common.capability.IFilterCapability;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilter;
+import java.util.ArrayList;
+import java.util.List;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class LaserChemicalFilter implements IFilterCapability<ChemicalStack>, ChemicalFilter {
 
@@ -59,13 +58,13 @@ public class LaserChemicalFilter implements IFilterCapability<ChemicalStack>, Ch
         List<ChemicalStack> filteredChemicals = new ArrayList();
         FilterBasicHandler filterSlotHandler = new FilterBasicHandler(15, container);
 
-        for(int i = 0; i < (filterSlotHandler).getSlots(); ++i) {
+        for (int i = 0; i < (filterSlotHandler).getSlots(); ++i) {
             ItemStack stack = filterSlotHandler.getStackInSlot(i);
             if (!stack.isEmpty()) {
                 IChemicalHandler capability = stack.getCapability(MekanismModule.Capabilities.Item.CHEMICAL);
                 if (capability != null) {
 
-                    for(int tank = 0; tank < capability.getChemicalTanks(); ++tank) {
+                    for (int tank = 0; tank < capability.getChemicalTanks(); ++tank) {
                         var chemical = capability.getChemicalInTank(tank);
                         if (!chemical.isEmpty()) {
                             filteredChemicals.add(chemical);

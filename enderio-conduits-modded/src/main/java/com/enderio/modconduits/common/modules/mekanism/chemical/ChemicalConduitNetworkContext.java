@@ -8,15 +8,14 @@ import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.Chemical;
 
 public class ChemicalConduitNetworkContext implements ConduitNetworkContext<ChemicalConduitNetworkContext> {
-    
+
     public static Codec<ChemicalConduitNetworkContext> CODEC = RecordCodecBuilder.create(instance -> instance
-        .group(Chemical.CODEC
-            .optionalFieldOf("locked_chemical", MekanismAPI.EMPTY_CHEMICAL)
-            .forGetter(ChemicalConduitNetworkContext::lockedChemical))
-        .apply(instance, ChemicalConduitNetworkContext::new));
+            .group(Chemical.CODEC.optionalFieldOf("locked_chemical", MekanismAPI.EMPTY_CHEMICAL)
+                    .forGetter(ChemicalConduitNetworkContext::lockedChemical))
+            .apply(instance, ChemicalConduitNetworkContext::new));
 
     public static ConduitNetworkContextType<ChemicalConduitNetworkContext> TYPE = new ConduitNetworkContextType<>(CODEC,
-        ChemicalConduitNetworkContext::new);
+            ChemicalConduitNetworkContext::new);
 
     private Chemical lockedChemical;
     private Chemical lastLockedChemical = MekanismAPI.EMPTY_CHEMICAL;
@@ -52,8 +51,7 @@ public class ChemicalConduitNetworkContext implements ConduitNetworkContext<Chem
     }
 
     @Override
-    public ChemicalConduitNetworkContext mergeWith(
-        ChemicalConduitNetworkContext other) {
+    public ChemicalConduitNetworkContext mergeWith(ChemicalConduitNetworkContext other) {
         // Merge with the locked chemical, but set the last to empty so the ticker marks
         // the nodes as dirty.
         if (lockedChemical.isEmptyType()) {
@@ -73,4 +71,3 @@ public class ChemicalConduitNetworkContext implements ConduitNetworkContext<Chem
         return TYPE;
     }
 }
-

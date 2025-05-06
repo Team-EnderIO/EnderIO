@@ -4,6 +4,12 @@ import com.enderio.base.common.capability.IFilterCapability;
 import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.OptionalInt;
+import java.util.function.Supplier;
 import mekanism.api.chemical.ChemicalStack;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;
@@ -11,13 +17,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.OptionalInt;
-import java.util.function.Supplier;
 
 public class ChemicalFilterCapability implements IFilterCapability<ChemicalStack>, ChemicalFilter {
 
@@ -63,10 +62,7 @@ public class ChemicalFilterCapability implements IFilterCapability<ChemicalStack
     public List<ChemicalStack> getEntries() {
         Component data = getComponent();
 
-        return data.chemicals().stream()
-            .map(ChemicalStack::copy)
-            .limit(data.size())
-            .toList();
+        return data.chemicals().stream().map(ChemicalStack::copy).limit(data.size()).toList();
     }
 
     @Override
@@ -108,32 +104,31 @@ public class ChemicalFilterCapability implements IFilterCapability<ChemicalStack
 
     public record Component(int size, List<ChemicalStack> chemicals, boolean invert) {
 
-        private static final Codec<Component> NEW_CODEC = RecordCodecBuilder.create(
-            componentInstance -> componentInstance
-                .group(
-                    Codec.INT.fieldOf("size").forGetter(Component::size),
-                    OrderedListCodec.create(256, ChemicalStack.OPTIONAL_CODEC, ChemicalStack.EMPTY)
-                        .fieldOf("chemicals")
-                        .forGetter(Component::chemicals),
-                    Codec.BOOL.fieldOf("isInvert").forGetter(Component::invert))
-                .apply(componentInstance, Component::new));
+        private static final Codec<Component> NEW_CODEC = RecordCodecBuilder
+                .create(componentInstance -> componentInstance
+                        .group(Codec.INT.fieldOf("size").forGetter(Component::size),
+                                OrderedListCodec.create(256, ChemicalStack.OPTIONAL_CODEC, ChemicalStack.EMPTY)
+                                        .fieldOf("chemicals")
+                                        .forGetter(Component::chemicals),
+                                Codec.BOOL.fieldOf("isInvert").forGetter(Component::invert))
+                        .apply(componentInstance, Component::new));
 
         // TODO: Remove in Ender IO 8
         // The Codec used up to and including v7.0.2-alpha
-        private static final Codec<Component> LEGACY_CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
-            .group(Component.Slot.CODEC.sizeLimitedListOf(256).fieldOf("chemicals").xmap(Component::fromList, Component::fromChemicals).forGetter(
-                    Component::chemicals),
-                Codec.BOOL.fieldOf("nbt").forGetter(Component::invert))
-            .apply(componentInstance, Component::new));
+        private static final Codec<Component> LEGACY_CODEC = RecordCodecBuilder
+                .create(componentInstance -> componentInstance
+                        .group(Component.Slot.CODEC.sizeLimitedListOf(256)
+                                .fieldOf("chemicals")
+                                .xmap(Component::fromList, Component::fromChemicals)
+                                .forGetter(Component::chemicals),
+                                Codec.BOOL.fieldOf("nbt").forGetter(Component::invert))
+                        .apply(componentInstance, Component::new));
 
         public static final Codec<Component> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
 
         public static final StreamCodec<RegistryFriendlyByteBuf, Component> STREAM_CODEC = StreamCodec.composite(
-            ChemicalStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)),
-            Component::chemicals,
-            ByteBufCodecs.BOOL,
-            Component::invert,
-            Component::new);
+                ChemicalStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)), Component::chemicals,
+                ByteBufCodecs.BOOL, Component::invert, Component::new);
 
         public Component(int size) {
             this(size, NonNullList.withSize(size, ChemicalStack.EMPTY), false);
@@ -178,7 +173,7 @@ public class ChemicalFilterCapability implements IFilterCapability<ChemicalStack
             int i = 0;
 
             ChemicalStack stack;
-            for(Iterator<ChemicalStack> var2 = list.iterator(); var2.hasNext(); i = i * 31 + stack.hashCode()) {
+            for (Iterator<ChemicalStack> var2 = list.iterator(); var2.hasNext(); i = i * 31 + stack.hashCode()) {
                 stack = var2.next();
             }
 
@@ -215,13 +210,10 @@ public class ChemicalFilterCapability implements IFilterCapability<ChemicalStack
         }
 
         public record Slot(int index, ChemicalStack chemical) {
-            public static final Codec<Component.Slot> CODEC = RecordCodecBuilder.create(
-                p_331695_ -> p_331695_.group(
-                        Codec.intRange(0, 255).fieldOf("slot").forGetter(Component.Slot::index),
-                        ChemicalStack.OPTIONAL_CODEC.fieldOf("fluid").forGetter(Component.Slot::chemical)
-                    )
-                    .apply(p_331695_, Component.Slot::new)
-            );
+            public static final Codec<Component.Slot> CODEC = RecordCodecBuilder.create(p_331695_ -> p_331695_
+                    .group(Codec.intRange(0, 255).fieldOf("slot").forGetter(Component.Slot::index),
+                            ChemicalStack.OPTIONAL_CODEC.fieldOf("fluid").forGetter(Component.Slot::chemical))
+                    .apply(p_331695_, Component.Slot::new));
         }
 
         // endregion

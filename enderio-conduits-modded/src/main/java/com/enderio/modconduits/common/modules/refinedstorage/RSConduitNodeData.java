@@ -10,16 +10,15 @@ import com.refinedmods.refinedstorage.common.api.RefinedStorageApi;
 import com.refinedmods.refinedstorage.common.api.support.network.ConnectionSink;
 import com.refinedmods.refinedstorage.common.api.support.network.InWorldNetworkNodeContainer;
 import com.refinedmods.refinedstorage.common.api.support.network.NetworkNodeContainerProvider;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class RSConduitNodeData implements NodeData {
     public static final MapCodec<RSConduitNodeData> CODEC = MapCodec.unit(RSConduitNodeData::new);
@@ -41,10 +40,12 @@ public class RSConduitNodeData implements NodeData {
         mainNode = new ConduitRSNode(level, pos);
 
         // Gather initially connected sides.
-        mainNode.setConnectedSides(Arrays.stream(Direction.values()).filter(conduitNode::isConnectedTo).collect(Collectors.toSet()));
+        mainNode.setConnectedSides(
+                Arrays.stream(Direction.values()).filter(conduitNode::isConnectedTo).collect(Collectors.toSet()));
 
         container.addContainer(mainNode);
-        container.initialize(level, () -> {});
+        container.initialize(level, () -> {
+        });
         level.blockUpdated(pos, level.getBlockState(pos).getBlock());
 
         // TODO: is this necessary?
@@ -84,7 +85,8 @@ public class RSConduitNodeData implements NodeData {
         public ConduitRSNode(Level level, BlockPos pos) {
             this.blockState = level.getBlockState(pos);
             this.globalPos = GlobalPos.of(level.dimension(), pos);
-            // TODO: Config for energy use of RS conduits? Either on the conduit or in mod config.
+            // TODO: Config for energy use of RS conduits? Either on the conduit or in mod
+            // config.
             this.node = new GridNetworkNode(0);
             this.removed = false;
         }
@@ -130,7 +132,8 @@ public class RSConduitNodeData implements NodeData {
         @Override
         public void addOutgoingConnections(ConnectionSink connectionSink) {
             for (Direction direction : connectedSides) {
-                connectionSink.tryConnectInSameDimension(this.globalPos.pos().relative(direction), direction.getOpposite());
+                connectionSink.tryConnectInSameDimension(this.globalPos.pos().relative(direction),
+                        direction.getOpposite());
             }
         }
 

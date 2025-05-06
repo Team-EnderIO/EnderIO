@@ -13,11 +13,13 @@ import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.Nullable;
 
 public class RSNetworkHost extends NetworkNodeContainerProviderImpl implements ConduitData<RSNetworkHost> {
-    public static final MapCodec<RSNetworkHost> CODEC = RecordCodecBuilder.mapCodec(rsNetworkHostInstance ->
-        rsNetworkHostInstance.group(Codec.INT.fieldOf("int").forGetter(i -> i.i)
-        ).apply(rsNetworkHostInstance, RSNetworkHost::new));
+    public static final MapCodec<RSNetworkHost> CODEC = RecordCodecBuilder
+            .mapCodec(rsNetworkHostInstance -> rsNetworkHostInstance.group(Codec.INT.fieldOf("int").forGetter(i -> i.i))
+                    .apply(rsNetworkHostInstance, RSNetworkHost::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, RSNetworkHost> STREAM_CODEC = DumbStreamCodec.of(RSNetworkHost::new).cast();
+    public static final StreamCodec<RegistryFriendlyByteBuf, RSNetworkHost> STREAM_CODEC = DumbStreamCodec
+            .of(RSNetworkHost::new)
+            .cast();
 
     private int i = 0;
 

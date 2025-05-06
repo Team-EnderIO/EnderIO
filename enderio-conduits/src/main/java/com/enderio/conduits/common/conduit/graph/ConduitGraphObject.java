@@ -112,7 +112,8 @@ public class ConduitGraphObject implements GraphObject<ConduitGraphContext>, Con
 
     @Override
     @Nullable
-    public <TCapability> TCapability getNeighbourCapability(BlockCapability<TCapability, Direction> capability, Direction side) {
+    public <TCapability> TCapability getNeighbourCapability(BlockCapability<TCapability, Direction> capability,
+            Direction side) {
         if (connectionHost == null) {
             throw new IllegalStateException("No connection host!");
         }

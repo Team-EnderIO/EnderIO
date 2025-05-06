@@ -5,8 +5,10 @@ import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.network.ConduitNetwork;
 import com.enderio.conduits.api.network.node.ConduitNode;
 import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
-import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilter;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
+import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilter;
+import java.util.Comparator;
+import java.util.List;
 import mekanism.api.Action;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
@@ -17,40 +19,39 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Comparator;
-import java.util.List;
-
-public class ChemicalTicker extends IOAwareConduitTicker<ChemicalConduit, ChemicalConduitConnectionConfig, ChemicalTicker.Connection> {
+public class ChemicalTicker
+        extends IOAwareConduitTicker<ChemicalConduit, ChemicalConduitConnectionConfig, ChemicalTicker.Connection> {
 
     private long doChemicalTransfer(ChemicalStack chemicalStack, Connection receiver, List<Connection> senders) {
-        var extractedFluid = receiver.chemicalHandler.extractChemical(chemicalStack, Action.SIMULATE);
+        var extractedChemical = receiver.chemicalHandler.extractChemical(chemicalStack, Action.SIMULATE);
 
-        if (extractedFluid.isEmpty()) {
+        if (extractedChemical.isEmpty()) {
             return chemicalStack.getAmount();
         }
 
         var extractFilter = receiver.inventory()
-            .getStackInSlot(ChemicalConduit.EXTRACT_FILTER_SLOT)
-            .getCapability(EIOCapabilities.Filter.ITEM);
+                .getStackInSlot(ChemicalConduit.EXTRACT_FILTER_SLOT)
+                .getCapability(EIOCapabilities.Filter.ITEM);
 
         if (extractFilter instanceof ChemicalFilter chemicalFilter) {
-            if (!chemicalFilter.test(extractedFluid)) {
+            if (!chemicalFilter.test(extractedChemical)) {
                 return chemicalStack.getAmount();
             }
         }
 
         for (Connection insert : senders) {
             var insertFilter = insert.inventory()
-                .getStackInSlot(ChemicalConduit.EXTRACT_FILTER_SLOT)
-                .getCapability(EIOCapabilities.Filter.ITEM);
+                    .getStackInSlot(ChemicalConduit.EXTRACT_FILTER_SLOT)
+                    .getCapability(EIOCapabilities.Filter.ITEM);
 
-            if (insertFilter instanceof ChemicalFilter fluidStackFilter) {
-                if (!fluidStackFilter.test(extractedFluid)) {
+            if (insertFilter instanceof ChemicalFilter chemicalStackFilter) {
+                if (!chemicalStackFilter.test(extractedChemical)) {
                     continue;
                 }
             }
 
-            chemicalStack = tryFluidTransfer(insert.chemicalHandler, receiver.chemicalHandler, chemicalStack.copy(), true);
+            chemicalStack = tryChemicalTransfer(insert.chemicalHandler, receiver.chemicalHandler, chemicalStack.copy(),
+                    true);
 
             if (chemicalStack.getAmount() <= 0) {
                 break;
@@ -61,7 +62,8 @@ public class ChemicalTicker extends IOAwareConduitTicker<ChemicalConduit, Chemic
     }
 
     @Override
-    public void tickGraph(ServerLevel level, ChemicalConduit conduit, ConduitNetwork graph, ColoredRedstoneProvider coloredRedstoneProvider) {
+    public void tickGraph(ServerLevel level, ChemicalConduit conduit, ConduitNetwork graph,
+            ColoredRedstoneProvider coloredRedstoneProvider) {
         super.tickGraph(level, conduit, graph, coloredRedstoneProvider);
 
         // Update if the network is now locked
@@ -77,10 +79,11 @@ public class ChemicalTicker extends IOAwareConduitTicker<ChemicalConduit, Chemic
     }
 
     @Override
-    protected void tickColoredGraph(ServerLevel level, ChemicalConduit conduit, List<Connection> senders, List<Connection> receivers, DyeColor color,
-        ConduitNetwork graph, ColoredRedstoneProvider coloredRedstoneProvider) {
+    protected void tickColoredGraph(ServerLevel level, ChemicalConduit conduit, List<Connection> senders,
+            List<Connection> receivers, DyeColor color, ConduitNetwork graph,
+            ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        final long fluidRate = (long) conduit.transferRatePerTick() * conduit.graphTickRate();
+        final long transferRate = (long) conduit.transferRatePerTick() * conduit.graphTickRate();
         var context = graph.getOrCreateContext(ChemicalConduitNetworkContext.TYPE);
 
         for (Connection receiver : receivers) {
@@ -88,13 +91,14 @@ public class ChemicalTicker extends IOAwareConduitTicker<ChemicalConduit, Chemic
 
             // Prioritize senders in order of distance.
             var prioritizedSenders = senders.stream()
-                .sorted(Comparator.comparingDouble(e -> e.pos().distSqr(receiver.pos())))
-                .toList();
+                    .sorted(Comparator.comparingDouble(e -> e.pos().distSqr(receiver.pos())))
+                    .toList();
 
             if (!context.lockedChemical().isEmptyType()) {
-                doChemicalTransfer(new ChemicalStack(context.lockedChemical(), fluidRate), receiver, prioritizedSenders);
+                doChemicalTransfer(new ChemicalStack(context.lockedChemical(), transferRate), receiver,
+                        prioritizedSenders);
             } else {
-                long remaining = fluidRate;
+                long remaining = transferRate;
 
                 for (int i = 0; i < extractHandler.getChemicalTanks() && remaining > 0; i++) {
                     if (extractHandler.getChemicalInTank(i).isEmpty()) {
@@ -102,9 +106,10 @@ public class ChemicalTicker extends IOAwareConduitTicker<ChemicalConduit, Chemic
                     }
 
                     Chemical chemical = extractHandler.getChemicalInTank(i).getChemical();
-                    remaining = doChemicalTransfer(new ChemicalStack(chemical, remaining), receiver, prioritizedSenders);
+                    remaining = doChemicalTransfer(new ChemicalStack(chemical, remaining), receiver,
+                            prioritizedSenders);
 
-                    if (!conduit.isMultiChemical() && remaining < fluidRate) {
+                    if (!conduit.isMultiChemical() && remaining < transferRate) {
                         context.setLockedChemical(chemical);
                         break;
                     }
@@ -113,27 +118,35 @@ public class ChemicalTicker extends IOAwareConduitTicker<ChemicalConduit, Chemic
         }
     }
 
-    public static ChemicalStack tryFluidTransfer(IChemicalHandler fluidDestination, IChemicalHandler fluidSource, int maxAmount, boolean doTransfer) {
-        ChemicalStack drainable = fluidSource.extractChemical(maxAmount, Action.SIMULATE);
-        return !drainable.isEmpty() ? tryFluidTransfer_Internal(fluidDestination, fluidSource, drainable, doTransfer) : ChemicalStack.EMPTY;
+    public static ChemicalStack tryChemicalTransfer(IChemicalHandler chemicalDestination,
+            IChemicalHandler chemicalSource, int maxAmount, boolean doTransfer) {
+        ChemicalStack drainable = chemicalSource.extractChemical(maxAmount, Action.SIMULATE);
+        return !drainable.isEmpty()
+                ? tryChemicalTransfer_Internal(chemicalDestination, chemicalSource, drainable, doTransfer)
+                : ChemicalStack.EMPTY;
     }
 
-    public static ChemicalStack tryFluidTransfer(IChemicalHandler fluidDestination, IChemicalHandler fluidSource, ChemicalStack resource, boolean doTransfer) {
-        ChemicalStack drainable = fluidSource.extractChemical(resource, Action.SIMULATE);
-        return !drainable.isEmpty() && ChemicalStack.isSameChemical(resource, drainable) ? tryFluidTransfer_Internal(fluidDestination, fluidSource, drainable, doTransfer) : ChemicalStack.EMPTY;
+    public static ChemicalStack tryChemicalTransfer(IChemicalHandler chemicalDestination,
+            IChemicalHandler chemicalSource, ChemicalStack resource, boolean doTransfer) {
+        ChemicalStack drainable = chemicalSource.extractChemical(resource, Action.SIMULATE);
+        return !drainable.isEmpty() && ChemicalStack.isSameChemical(resource, drainable)
+                ? tryChemicalTransfer_Internal(chemicalDestination, chemicalSource, drainable, doTransfer)
+                : ChemicalStack.EMPTY;
     }
 
-    private static ChemicalStack tryFluidTransfer_Internal(IChemicalHandler fluidDestination, IChemicalHandler fluidSource, ChemicalStack drainable, boolean doTransfer) {
-        long fillableAmount = drainable.getAmount() - fluidDestination.insertChemical(drainable, Action.SIMULATE).getAmount();
+    private static ChemicalStack tryChemicalTransfer_Internal(IChemicalHandler chemicalDestination,
+            IChemicalHandler chemicalSource, ChemicalStack drainable, boolean doTransfer) {
+        long fillableAmount = drainable.getAmount()
+                - chemicalDestination.insertChemical(drainable, Action.SIMULATE).getAmount();
         if (fillableAmount > 0) {
             drainable.setAmount(fillableAmount);
             if (!doTransfer) {
                 return drainable;
             }
 
-            ChemicalStack drained = fluidSource.extractChemical(drainable, Action.EXECUTE);
+            ChemicalStack drained = chemicalSource.extractChemical(drainable, Action.EXECUTE);
             if (!drained.isEmpty()) {
-                drained.setAmount(fluidDestination.insertChemical(drained, Action.EXECUTE).getAmount());
+                drained.setAmount(chemicalDestination.insertChemical(drained, Action.EXECUTE).getAmount());
                 return drained;
             }
         }
@@ -145,23 +158,20 @@ public class ChemicalTicker extends IOAwareConduitTicker<ChemicalConduit, Chemic
     protected @Nullable ChemicalTicker.Connection createConnection(Level level, ConduitNode node, Direction side) {
         var chemicalHandler = node.getNeighbourCapability(MekanismModule.Capabilities.CHEMICAL, side);
         if (chemicalHandler != null) {
-            return new Connection(node, side, node.getConnectionConfig(side, ChemicalConduitConnectionConfig.TYPE), chemicalHandler);
+            return new Connection(node, side, node.getConnectionConfig(side, ChemicalConduitConnectionConfig.TYPE),
+                    chemicalHandler);
         }
 
         return null;
     }
 
     protected static class Connection extends SimpleConnection<ChemicalConduitConnectionConfig> {
-        private final IChemicalHandler chemicalHandler;
+        final IChemicalHandler chemicalHandler;
 
         public Connection(ConduitNode node, Direction side, ChemicalConduitConnectionConfig config,
-            IChemicalHandler chemicalHandler) {
+                IChemicalHandler chemicalHandler) {
             super(node, side, config);
             this.chemicalHandler = chemicalHandler;
-        }
-
-        public IChemicalHandler chemicalHandler() {
-            return chemicalHandler;
         }
     }
 }

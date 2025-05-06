@@ -20,7 +20,8 @@ public interface ConduitConnectionHost {
      * Get a capability for the given side of the node
      */
     @Nullable
-    <TCapability> TCapability getNeighbourCapability(BlockCapability<TCapability, Direction> capability, Direction side);
+    <TCapability> TCapability getNeighbourCapability(BlockCapability<TCapability, Direction> capability,
+            Direction side);
 
     boolean isConnectedToBlock(Direction side);
 

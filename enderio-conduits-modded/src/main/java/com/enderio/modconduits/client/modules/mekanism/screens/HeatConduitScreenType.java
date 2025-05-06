@@ -10,22 +10,22 @@ import com.enderio.modconduits.common.modules.mekanism.heat.HeatConduitConnectio
 public class HeatConduitScreenType extends IOConduitScreenType<HeatConduitConnectionConfig> {
     @Override
     public void createRightWidgets(ConduitScreenHelper screen, int startX, int startY,
-        ConduitMenuDataAccess<HeatConduitConnectionConfig> dataAccess) {
+            ConduitMenuDataAccess<HeatConduitConnectionConfig> dataAccess) {
         super.createRightWidgets(screen, startX, startY, dataAccess);
 
         // Redstone control
         var redstoneChannelWidget = screen.addColorPicker(startX + 16 + 4, startY + 22, ConduitLang.REDSTONE_CHANNEL,
-            () -> dataAccess.getConnectionConfig().receiveRedstoneChannel(),
-            value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneChannel(value)));
+                () -> dataAccess.getConnectionConfig().receiveRedstoneChannel(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneChannel(value)));
 
         // Only show the redstone widget when redstone control is sensitive to signals.
         screen.addPreRenderAction(() -> redstoneChannelWidget.visible = dataAccess.getConnectionConfig()
-            .receiveRedstoneControl()
-            .isRedstoneSensitive());
+                .receiveRedstoneControl()
+                .isRedstoneSensitive());
 
         screen.addRedstoneControlPicker(startX, startY + 22, EIOLang.REDSTONE_MODE,
-            () -> dataAccess.getConnectionConfig().receiveRedstoneControl(),
-            value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
+                () -> dataAccess.getConnectionConfig().receiveRedstoneControl(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
     }
 
     @Override

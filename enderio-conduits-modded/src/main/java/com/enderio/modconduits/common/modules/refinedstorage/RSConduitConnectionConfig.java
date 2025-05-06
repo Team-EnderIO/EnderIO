@@ -14,12 +14,14 @@ public record RSConduitConnectionConfig(boolean isConnected) implements Connecti
     public static RSConduitConnectionConfig DEFAULT = new RSConduitConnectionConfig(true);
 
     public static MapCodec<RSConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(
-        inst -> inst.group(Codec.BOOL.fieldOf("isConnected").forGetter(RSConduitConnectionConfig::isConnected)).apply(inst, RSConduitConnectionConfig::new));
+            inst -> inst.group(Codec.BOOL.fieldOf("isConnected").forGetter(RSConduitConnectionConfig::isConnected))
+                    .apply(inst, RSConduitConnectionConfig::new));
 
-    public static StreamCodec<ByteBuf, RSConduitConnectionConfig> STREAM_CODEC = ByteBufCodecs.BOOL.map(
-            RSConduitConnectionConfig::new, RSConduitConnectionConfig::isConnected);
+    public static StreamCodec<ByteBuf, RSConduitConnectionConfig> STREAM_CODEC = ByteBufCodecs.BOOL
+            .map(RSConduitConnectionConfig::new, RSConduitConnectionConfig::isConnected);
 
-    public static ConnectionConfigType<RSConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC, STREAM_CODEC.cast(), () -> DEFAULT);
+    public static ConnectionConfigType<RSConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
+            STREAM_CODEC.cast(), () -> DEFAULT);
 
     @Override
     public ConnectionConfigType<?> type() {
