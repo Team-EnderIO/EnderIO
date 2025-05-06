@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:dark_steel_upgrade_blank"
+    },
+    {
+      "item": "enderio:vibrant_crystal"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:dark_steel_upgrade_empowered_1"
+  }
+}

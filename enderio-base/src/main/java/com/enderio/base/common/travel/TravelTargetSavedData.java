@@ -5,6 +5,12 @@ import com.enderio.base.api.travel.TravelTarget;
 import com.enderio.base.common.network.SyncTravelDataPacket;
 import com.enderio.base.common.network.TravelTargetRemovedPacket;
 import com.enderio.base.common.network.TravelTargetUpdatedPacket;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -22,18 +28,11 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
-
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME)
 public class TravelTargetSavedData extends SavedData {
 
     // Even though the client doesn't need to know the data in the old dimensions,
-    //  I am more comfortable with each dimension having its own data on the client.
+    // I am more comfortable with each dimension having its own data on the client.
     private static final Map<ResourceKey<Level>, TravelTargetSavedData> CLIENT_DATA = new ConcurrentHashMap<>();
 
     public static final String TARGETS = "targets";
@@ -48,7 +47,9 @@ public class TravelTargetSavedData extends SavedData {
 
     public static TravelTargetSavedData getTravelData(Level level) {
         if (level instanceof ServerLevel serverLevel) {
-            return serverLevel.getDataStorage().computeIfAbsent(new Factory<>(TravelTargetSavedData::new, TravelTargetSavedData::new), "enderio_traveldata");
+            return serverLevel.getDataStorage()
+                    .computeIfAbsent(new Factory<>(TravelTargetSavedData::new, TravelTargetSavedData::new),
+                            "enderio_traveldata");
         } else {
             return CLIENT_DATA.computeIfAbsent(level.dimension(), l -> new TravelTargetSavedData());
         }
@@ -63,9 +64,12 @@ public class TravelTargetSavedData extends SavedData {
     }
 
     public Stream<TravelTarget> getTravelTargetsInItemRange(BlockPos center) {
-        return travelTargets.entrySet().stream().
-                filter(entry -> center.distSqr(entry.getKey()) < entry.getValue().item2BlockRange()*entry.getValue().item2BlockRange())
-            .map(Map.Entry::getValue);
+        return travelTargets.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().item2BlockRange() == Integer.MAX_VALUE
+                        || center.distSqr(entry.getKey()) < entry.getValue().item2BlockRange()
+                                * entry.getValue().item2BlockRange())
+                .map(Map.Entry::getValue);
     }
 
     // Adds or updates.
@@ -94,19 +98,23 @@ public class TravelTargetSavedData extends SavedData {
     }
 
     private <T extends TravelTarget> Tag saveTarget(HolderLookup.Provider lookupProvider, T target) {
-        return TravelTarget.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), target).getOrThrow();
+        return TravelTarget.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), target)
+                .getOrThrow();
     }
 
     public void loadNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         this.travelTargets.clear();
         ListTag targets = nbt.getList(TARGETS, Tag.TAG_COMPOUND);
-        targets.stream().map(anchorData -> (CompoundTag)anchorData)
-            .map(tag -> loadTarget(lookupProvider, tag))
-            .forEach(target -> travelTargets.put(target.pos(), target));
+        targets.stream()
+                .map(anchorData -> (CompoundTag) anchorData)
+                .map(tag -> loadTarget(lookupProvider, tag))
+                .forEach(target -> travelTargets.put(target.pos(), target));
     }
 
     private TravelTarget loadTarget(HolderLookup.Provider lookupProvider, Tag tag) {
-        return TravelTarget.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow().getFirst();
+        return TravelTarget.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
+                .getOrThrow()
+                .getFirst();
     }
 
     @Override

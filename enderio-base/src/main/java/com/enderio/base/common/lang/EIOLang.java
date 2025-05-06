@@ -152,36 +152,6 @@ public class EIOLang {
     public static final Component GLIDER_DISABLED_FALL_FLYING = addTranslation("message",
             EnderIO.loc("glider.disable.fall_flying"), "Elytra Flight");
 
-    // region Enchantments
-
-    public static final Component AUTO_SMELT_DESC = enchantmentDescription("auto_smelt", "desc",
-            "Automatically smelts whatever is mined.");
-
-    public static final Component REPELLENT_DESC = enchantmentDescription("repellent", "desc",
-            "Chance to teleport attackers away. Higher levels teleport more often and farther.");
-
-    public static final Component SHIMMER_DESC = enchantmentDescription("shimmer", "desc",
-            "Makes the item shimmer as if it was enchanted... That's all... Really...");
-
-    public static final Component SOULBOUND_DESC = enchantmentDescription("soulbound", "desc",
-            "Prevents item from being lost on death. Note: Most gravestone mods are stupid and prevent this from working!");
-
-    public static final Component WITHERING_DESC = enchantmentDescription("withering", "desc",
-            "Applies wither to the target.");
-
-    public static final Component WITHERING_TYPES = enchantmentDescription("withering", "type",
-            "Applies to bladed weapons, bows and crossbows.");
-
-    public static final Component XP_BOOST_DESC = enchantmentDescription("xp_boost", "desc",
-            "Extra XP from mobs and blocks");
-
-    private static Component enchantmentDescription(String enchantmentName, String suffix, String description) {
-        return TooltipUtil.style(addTranslation("enchantment",
-                EnderIO.loc(String.format("%s.%s", enchantmentName, suffix)), description));
-    }
-
-    // endregion
-
     // region Filters
 
     public static final Component FILTER = addTranslation("gui", EnderIO.loc("filter"), "Filter");
@@ -267,6 +237,14 @@ public class EIOLang {
 
     // endregion
 
+    // region Lore
+
+    public static final Component SUSPICIOUS_SEED_LORE = addTranslation("item", EnderIO.loc("suspicious_seed.lore"),
+            "The seed appears to interact with nearby experience orbs...").withStyle(ChatFormatting.DARK_GRAY,
+                    ChatFormatting.ITALIC);
+
+    // endregion
+
     // region Misc Tooltips
 
     public static final Component SHOW_DETAIL_TOOLTIP = addTranslation("tooltip",
@@ -292,10 +270,10 @@ public class EIOLang {
             "valid_blocks", "Valid Blocks:");
     public static final Component JEI_FIRE_CRAFTING_VALID_DIMENSIONS = addTranslation("jei",
             EnderIO.loc("fire_crafting"), "valid_dimensions", "Valid Dimensions:");
-    public static final Component JEI_FIRE_CRAFTING_LOOT_TABLE = addTranslation("jei", EnderIO.loc("fire_crafting"),
-            "loot_table", "Loot Table:");
-    public static final Component JEI_FIRE_CRAFTING_MAX_DROPS = addTranslation("jei", EnderIO.loc("fire_crafting"),
-            "max_drops", "Max Item Drops:");
+    public static final MutableComponent JEI_FIRE_CRAFTING_CHANCE = addTranslation("jei", EnderIO.loc("fire_crafting"),
+            "chance", "%s%% Chance");
+    public static final MutableComponent JEI_FIRE_CRAFTING_DROPS = addTranslation("jei", EnderIO.loc("fire_crafting"),
+            "drops", "Drops %s");
 
     // endregion
 
@@ -349,7 +327,7 @@ public class EIOLang {
     private static MutableComponent addTranslation(String prefix, ResourceLocation path, String name,
             String translation) {
         return EnderIOBase.REGILITE.addTranslation(prefix,
-                ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "/" + name), translation);
+                ResourceLocation.fromNamespaceAndPath(path.getNamespace(), path.getPath() + "." + name), translation);
     }
 
     public static void register() {

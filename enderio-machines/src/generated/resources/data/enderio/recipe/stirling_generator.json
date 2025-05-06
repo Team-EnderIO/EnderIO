@@ -2,8 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "minecraft:stone_bricks"
+    "D": {
+      "item": "minecraft:deepslate"
     },
     "F": {
       "item": "minecraft:furnace"
@@ -12,19 +12,19 @@
       "tag": "c:gears/iron"
     },
     "I": {
-      "tag": "c:ingots/dark_steel"
+      "tag": "c:ingots/iron"
     },
-    "P": {
-      "item": "minecraft:piston"
+    "O": {
+      "tag": "c:obsidians"
     },
     "V": {
       "item": "enderio:void_chassis"
     }
   },
   "pattern": [
-    "BFB",
+    "GFG",
     "IVI",
-    "GPG"
+    "ODO"
   ],
   "result": {
     "count": 1,

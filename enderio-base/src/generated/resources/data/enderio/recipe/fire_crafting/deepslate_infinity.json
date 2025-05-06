@@ -7,6 +7,15 @@
   "dimensions": [
     "minecraft:overworld"
   ],
-  "loot_table": "enderio:fire_crafting/deepslate_infinity",
-  "max_item_drops": 1
+  "results": [
+    {
+      "chance": 0.4,
+      "max_count": 1,
+      "min_count": 1,
+      "result": {
+        "count": 1,
+        "id": "enderio:grains_of_infinity"
+      }
+    }
+  ]
 }

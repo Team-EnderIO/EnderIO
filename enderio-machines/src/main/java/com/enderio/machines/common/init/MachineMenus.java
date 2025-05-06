@@ -7,12 +7,12 @@ import com.enderio.machines.client.gui.screen.CapacitorBankScreen;
 import com.enderio.machines.client.gui.screen.CrafterScreen;
 import com.enderio.machines.client.gui.screen.DrainScreen;
 import com.enderio.machines.client.gui.screen.EnchanterScreen;
+import com.enderio.machines.client.gui.screen.FarmingStationScreen;
 import com.enderio.machines.client.gui.screen.FluidTankScreen;
 import com.enderio.machines.client.gui.screen.ImpulseHopperScreen;
 import com.enderio.machines.client.gui.screen.InhibitorObeliskScreen;
 import com.enderio.machines.client.gui.screen.PaintingMachineScreen;
 import com.enderio.machines.client.gui.screen.PoweredSpawnerScreen;
-import com.enderio.machines.client.gui.screen.PrimitiveAlloySmelterScreen;
 import com.enderio.machines.client.gui.screen.RelocatorObeliskScreen;
 import com.enderio.machines.client.gui.screen.SagMillScreen;
 import com.enderio.machines.client.gui.screen.SlicerScreen;
@@ -27,10 +27,10 @@ import com.enderio.machines.client.gui.screen.WirelessChargerScreen;
 import com.enderio.machines.client.gui.screen.XPObeliskScreen;
 import com.enderio.machines.client.gui.screen.XPVacuumScreen;
 import com.enderio.machines.common.blocks.alloy.AlloySmelterMenu;
-import com.enderio.machines.common.blocks.alloy.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.blocks.crafter.CrafterMenu;
 import com.enderio.machines.common.blocks.drain.DrainMenu;
 import com.enderio.machines.common.blocks.enchanter.EnchanterMenu;
+import com.enderio.machines.common.blocks.farming_station.FarmingStationMenu;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankMenu;
 import com.enderio.machines.common.blocks.impulse_hopper.ImpulseHopperMenu;
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskMenu;
@@ -65,8 +65,6 @@ public class MachineMenus {
             FluidTankMenu::new, () -> FluidTankScreen::new);
     public static final RegiliteMenu<EnchanterMenu> ENCHANTER = MENU_REGISTRY.registerMenu("enchanter",
             EnchanterMenu::new, () -> EnchanterScreen::new);
-    public static final RegiliteMenu<PrimitiveAlloySmelterMenu> PRIMITIVE_ALLOY_SMELTER = MENU_REGISTRY.registerMenu(
-            "primitive_alloy_smelter", PrimitiveAlloySmelterMenu::new, () -> PrimitiveAlloySmelterScreen::new);
     public static final RegiliteMenu<AlloySmelterMenu> ALLOY_SMELTER = MENU_REGISTRY.registerMenu("alloy_smelter",
             AlloySmelterMenu::new, () -> AlloySmelterScreen::new);
     public static final RegiliteMenu<SagMillMenu> SAG_MILL = MENU_REGISTRY.registerMenu("sag_mill", SagMillMenu::new,
@@ -103,6 +101,8 @@ public class MachineMenus {
             TravelAnchorMenu::new, () -> TravelAnchorScreen::new);
     public static final RegiliteMenu<XPObeliskMenu> XP_OBELISK = MENU_REGISTRY.registerMenu("xp_obelisk",
             XPObeliskMenu::new, () -> XPObeliskScreen::new);
+    public static final RegiliteMenu<FarmingStationMenu> FARMING_STATION = MENU_REGISTRY.registerMenu("farming_station",
+            FarmingStationMenu::new, () -> FarmingStationScreen::new);
     public static final RegiliteMenu<InhibitorObeliskMenu> INHIBITOR_OBELISK = MENU_REGISTRY
             .registerMenu("inhibitor_obelisk", InhibitorObeliskMenu::new, () -> InhibitorObeliskScreen::new);
     public static final RegiliteMenu<AversionObeliskMenu> AVERSION_OBELISK = MENU_REGISTRY

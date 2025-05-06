@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "G": {
+      "item": "enderio:grains_of_infinity"
+    },
+    "Q": {
+      "tag": "c:glass_blocks/fused_quartz"
+    },
+    "S": {
+      "tag": "c:ingots/soularium"
+    },
+    "V": {
+      "item": "enderio:suspicious_seed"
+    }
+  },
+  "pattern": [
+    " S ",
+    "QVQ",
+    "GQG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:void_vial"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "enderio:dark_steel_upgrade_blank"
+    },
+    "E": {
+      "tag": "c:ender_pearls"
+    },
+    "I": {
+      "item": "enderio:vibrant_alloy_ingot"
+    },
+    "N": {
+      "item": "enderio:vibrant_alloy_nugget"
+    }
+  },
+  "pattern": [
+    "NIN",
+    "IEI",
+    "NBN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:dark_steel_upgrade_direct"
+  }
+}

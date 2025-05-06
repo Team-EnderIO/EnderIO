@@ -1,6 +1,6 @@
 package com.enderio.machines.common.config.common;
 
-import com.enderio.machines.common.blocks.powered_spawner.SpawnerMachineTask;
+import com.enderio.machines.common.blocks.powered_spawner.MobSpawnMode;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class MachinesCommonConfig {
@@ -10,8 +10,10 @@ public class MachinesCommonConfig {
     public final ModConfigSpec.ConfigValue<Integer> ENCHANTER_BASE_LEVEL_COST;
     public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNER_ENTITIES;
     public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNERS;
-    public final ModConfigSpec.ConfigValue<SpawnerMachineTask.SpawnType> SPAWN_TYPE;
+    public final ModConfigSpec.ConfigValue<Integer> DEFAULT_SPAWN_ENERGY_COST;
+    public final ModConfigSpec.ConfigValue<MobSpawnMode> SPAWN_TYPE;
     public final ModConfigSpec.IntValue SPAWN_AMOUNT;
+    public final ModConfigSpec.IntValue ENDERFACE_RANGE;
     public final ModConfigSpec.ConfigValue<Integer> WIRELESS_CHARGER_RANGE;
 
     public MachinesCommonConfig(ModConfigSpec.Builder builder) {
@@ -33,11 +35,19 @@ public class MachinesCommonConfig {
         MAX_SPAWNER_ENTITIES = builder.comment("The amount of entities that will turn off powered spawner if in range.")
                 .defineInRange("maxEntities", 2, 0, Integer.MAX_VALUE);
         SPAWN_TYPE = builder.comment(
-                "The way a powered spawner spawns an entity. Possible options: 'ENTITY_TYPE' Spawns the same entity types as the soul vial. 'COPY' Spawns an exact copy of the mob in the soul vial")
-                .defineEnum("spawnType", SpawnerMachineTask.SpawnType.ENTITY_TYPE);
+                "The way a powered spawner spawns an entity. Possible options: 'NEW' Spawns the same entity types as the soul vial. 'COPY' Spawns an exact copy of the mob in the soul vial")
+                .defineEnum("spawnType", MobSpawnMode.NEW);
         MAX_SPAWNERS = builder
                 .comment("The maximum amount of spawners before the spawners suffers a loss of efficiency")
                 .defineInRange("maxSpawners", 10, 0, Integer.MAX_VALUE);
+        DEFAULT_SPAWN_ENERGY_COST = builder
+                .comment("The amount of energy used to spawn mobs that do not have custom spawner soul data.")
+                .defineInRange("defaultSpawnEnergyCost", 50000, 0, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("enderface");
+        ENDERFACE_RANGE = builder.comment("Maximum distance from which an Ender IO can interact with blocks")
+                .defineInRange("enderIoRange", 8, 1, 20);
         builder.pop();
 
         builder.push("wirelessCharger");

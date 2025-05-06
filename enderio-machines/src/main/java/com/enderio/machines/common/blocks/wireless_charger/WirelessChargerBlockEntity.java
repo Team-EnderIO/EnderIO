@@ -209,7 +209,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     @Override
     @UseOnly(LogicalSide.SERVER)
     public void setActionRange(ActionRange actionRange) {
-        this.actionRange = actionRange.clamp(0, calculateMaxRange());
+        this.actionRange = actionRange.clamp(0, actionRange.maxRange());
         updateBounds();
         setChanged();
         if (level != null) {

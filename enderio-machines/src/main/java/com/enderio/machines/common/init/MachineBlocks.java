@@ -23,6 +23,7 @@ import com.enderio.machines.common.blocks.base.block.ProgressMachineBlock;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.blocks.block_detector.BlockDetectorBlock;
 import com.enderio.machines.common.blocks.enchanter.EnchanterBlock;
+import com.enderio.machines.common.blocks.enderface.EnderfaceBlock;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlock;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockItem;
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlockEntity;
@@ -128,8 +129,19 @@ public class MachineBlocks {
             .setBlockStateProvider(MachineModelUtil::machineBlock)
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
-    public static final RegiliteBlock<ProgressMachineBlock<?>> PRIMITIVE_ALLOY_SMELTER = progressMachine(
-            "primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER);
+    public static final RegiliteBlock<EnderfaceBlock> ENDERFACE = BLOCK_REGISTRY
+            .registerBlock("enderface", EnderfaceBlock::new,
+                    BlockBehaviour.Properties.of()
+                            .strength(2.5f, 8)
+                            .noOcclusion()
+                            .isViewBlocking((pState, pLevel, pPos) -> false)
+                            .requiredFeatures(MachineFeatureFlags.ENDERFACE))
+            .setLootTable(MachinesLootTable::copyComponents)
+            .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+            .setTranslation("Ender IO")
+            .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+                    prov.models().cubeAll("enderface", EnderIO.loc("block/enderface")).renderType("translucent")))
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
     public static final RegiliteBlock<ProgressMachineBlock<?>> ALLOY_SMELTER = progressMachine("alloy_smelter",
             () -> MachineBlockEntities.ALLOY_SMELTER);
@@ -281,6 +293,15 @@ public class MachineBlocks {
                     prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
             .setTranslation("XP Obelisk")
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+
+    public static final RegiliteBlock<ProgressMachineBlock> FARMING_STATION = BLOCK_REGISTRY.registerBlock(
+            "farming_station", properties -> new ProgressMachineBlock(MachineBlockEntities.FARMING_STATION, properties),
+            BlockBehaviour.Properties.of().strength(2.5f, 8).requiredFeatures(MachineFeatureFlags.FARMING_STATION))
+            .setLootTable(MachinesLootTable::copyComponents)
+            .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+            .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+                    prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
     public static final RegiliteBlock<MachineBlock<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK = BLOCK_REGISTRY
             .registerBlock("inhibitor_obelisk",
