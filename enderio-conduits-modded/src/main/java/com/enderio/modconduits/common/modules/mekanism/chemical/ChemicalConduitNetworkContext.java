@@ -7,7 +7,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.Chemical;
 
-// TODO: Clear chemical lock packet.
 public class ChemicalConduitNetworkContext implements ConduitNetworkContext<ChemicalConduitNetworkContext> {
     
     public static Codec<ChemicalConduitNetworkContext> CODEC = RecordCodecBuilder.create(instance -> instance

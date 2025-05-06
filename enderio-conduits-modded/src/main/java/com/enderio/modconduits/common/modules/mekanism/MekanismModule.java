@@ -5,6 +5,7 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.conduits.api.Conduit;
+import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.network.ConduitNetworkContextType;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataType;
@@ -14,6 +15,7 @@ import com.enderio.conduits.common.conduit.ConduitApiImpl;
 import com.enderio.conduits.common.recipe.ConduitIngredient;
 import com.enderio.modconduits.common.modules.ConduitCommonModule;
 import com.enderio.modconduits.common.ModdedConduits;
+import com.enderio.modconduits.common.modules.mekanism.chemical.C2SClearLockedChemicalPacket;
 import com.enderio.modconduits.common.modules.mekanism.chemical.ChemicalConduit;
 import com.enderio.modconduits.common.modules.mekanism.chemical.ChemicalConduitConnectionConfig;
 import com.enderio.modconduits.common.modules.mekanism.chemical.ChemicalConduitData;
@@ -55,6 +57,8 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.BiConsumer;
@@ -179,12 +183,8 @@ public class MekanismModule implements ConduitCommonModule {
         DATA_COMPONENT_TYPES.register(modEventBus);
         ITEM_REGISTRY.register(modEventBus);
         MENU_REGISTRY.register(modEventBus);
-//        modEventBus.addListener(this::registerScreen);
+        modEventBus.addListener(this::registerPayloadHandlers);
     }
-
-//    public void registerScreen(RegisterConduitScreenExtensionsEvent event) {
-//        event.register(Types.CHEMICAL.get(), ChemicalConduitScreenExtension::new);
-//    }
 
     @Override
     public void bootstrapConduits(BootstrapContext<Conduit<?, ?>> context) {
@@ -300,5 +300,33 @@ public class MekanismModule implements ConduitCommonModule {
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(OSMIUM)))
                 .save(mekRecipeOutput, EnderIO.loc("mek_chemical_filter"));
+    }
+
+    private void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
+        var registrar = event.registrar("1");
+
+        registrar.playToServer(C2SClearLockedChemicalPacket.TYPE, C2SClearLockedChemicalPacket.STREAM_CODEC,
+            this::handleClearLockedPacket);
+    }
+
+    private void handleClearLockedPacket(C2SClearLockedChemicalPacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var level = context.player().level();
+            var be = level.getBlockEntity(packet.pos());
+            if (be instanceof ConduitBundle conduitBundle) {
+                var chemicalConduit = conduitBundle.getConduitByType(TYPE_CHEMICAL.get());
+                if (chemicalConduit != null) {
+                    var node = conduitBundle.getConduitNode(chemicalConduit);
+
+                    var network = node.getNetwork();
+                    if (network != null) {
+                        var networkContext = network.getContext(ChemicalConduitNetworkContext.TYPE);
+                        if (networkContext != null) {
+                            networkContext.setLockedChemical(MekanismAPI.EMPTY_CHEMICAL);
+                        }
+                    }
+                }
+            }
+        });
     }
 }

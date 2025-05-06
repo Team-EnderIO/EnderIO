@@ -9,6 +9,7 @@ import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.network.C2SClearLockedFluidPacket;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
+import com.enderio.modconduits.common.modules.mekanism.chemical.C2SClearLockedChemicalPacket;
 import com.enderio.modconduits.common.modules.mekanism.chemical.ChemicalConduit;
 import com.enderio.modconduits.common.modules.mekanism.chemical.ChemicalConduitConnectionConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -43,7 +44,7 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
         // Locked fluid widget
         if (dataAccess.conduit() instanceof ChemicalConduit fluidConduit && !fluidConduit.isMultiChemical()) {
             screen.addRenderableWidget(new ChemicalWidget(startX, startY + 20, () -> getLockedChemical(dataAccess),
-                () -> PacketDistributor.sendToServer(new C2SClearLockedFluidPacket(dataAccess.getBlockPos()))));
+                () -> PacketDistributor.sendToServer(new C2SClearLockedChemicalPacket(dataAccess.getBlockPos()))));
         } else {
             // Channel colors
             screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
