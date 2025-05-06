@@ -14,6 +14,7 @@ public class MachinesCommonConfig {
     public final ModConfigSpec.ConfigValue<MobSpawnMode> SPAWN_TYPE;
     public final ModConfigSpec.IntValue SPAWN_AMOUNT;
     public final ModConfigSpec.IntValue ENDERFACE_RANGE;
+    public final ModConfigSpec.ConfigValue<Integer> WIRELESS_CHARGER_RANGE;
 
     public MachinesCommonConfig(ModConfigSpec.Builder builder) {
         ENERGY = new EnergyConfig(builder);
@@ -47,6 +48,10 @@ public class MachinesCommonConfig {
         builder.push("enderface");
         ENDERFACE_RANGE = builder.comment("Maximum distance from which an Ender IO can interact with blocks")
                 .defineInRange("enderIoRange", 8, 1, 20);
+        builder.pop();
+
+        builder.push("wirelessCharger");
+        WIRELESS_CHARGER_RANGE = builder.comment("Base range").define("baseRange", 16);
         builder.pop();
     }
 }
