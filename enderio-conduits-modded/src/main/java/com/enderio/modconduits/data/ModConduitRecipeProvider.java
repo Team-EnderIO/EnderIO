@@ -1,6 +1,6 @@
 package com.enderio.modconduits.data;
 
-import com.enderio.modconduits.ModdedConduits;
+import com.enderio.modconduits.common.ModdedConduits;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
