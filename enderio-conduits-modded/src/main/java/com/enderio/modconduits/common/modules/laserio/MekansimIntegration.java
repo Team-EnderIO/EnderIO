@@ -1,9 +1,12 @@
 package com.enderio.modconduits.common.modules.laserio;
 
+import com.direwolf20.laserio.common.items.cards.BaseCard;
 import com.direwolf20.laserio.setup.Registration;
 import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.api.integration.Integration;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
+import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilter;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -12,7 +15,10 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class MekansimIntegration implements Integration {
 
-    public static ICapabilityProvider<ItemStack, Void, ResourceFilter> CHEMICAL_FILTER_PROVIDER = (stack,
+    public static ICapabilityProvider<ItemStack, Void, ChemicalFilter> CARD_CHEMICAL_FILTER_PROVIDER = (stack,
+            v) -> new LaserChemicalFilter(BaseCard.getFilter(stack));
+
+    public static ICapabilityProvider<ItemStack, Void, ChemicalFilter> CHEMICAL_FILTER_PROVIDER = (stack,
             v) -> new LaserChemicalFilter(stack);
 
     @Override
@@ -22,6 +28,7 @@ public class MekansimIntegration implements Integration {
 
     @SubscribeEvent
     public void registerCapEvent(RegisterCapabilitiesEvent event) {
-        event.registerItem(EIOCapabilities.Filter.ITEM, CHEMICAL_FILTER_PROVIDER, Registration.Card_Chemical.get());
+        event.registerItem(MekanismModule.Capabilities.CHEMICAL_FILTER, CARD_CHEMICAL_FILTER_PROVIDER, Registration.Card_Chemical.get());
+        event.registerItem(MekanismModule.Capabilities.CHEMICAL_FILTER, CHEMICAL_FILTER_PROVIDER, Registration.Filter_Basic.get());
     }
 }

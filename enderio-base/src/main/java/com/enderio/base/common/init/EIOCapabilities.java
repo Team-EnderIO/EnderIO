@@ -17,11 +17,6 @@ public class EIOCapabilities {
                 .createSided(EnderIO.loc("side_config"), com.enderio.base.api.capability.SideConfig.class);
     }
 
-    public static final class Filter {
-        public static final ItemCapability<ResourceFilter, Void> ITEM = ItemCapability
-                .createVoid(EnderIO.loc("generic_resource_filter"), ResourceFilter.class);
-    }
-
     public static final ItemCapability<FilterMenuProvider, Void> FILTER_MENU_PROVIDER = ItemCapability
             .createVoid(EnderIO.loc("filter_menu_provider"), FilterMenuProvider.class);
 

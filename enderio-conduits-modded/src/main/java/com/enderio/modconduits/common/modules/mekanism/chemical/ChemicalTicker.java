@@ -34,10 +34,11 @@ public class ChemicalTicker
         // Test the extracted fluid against the target
         var extractFilter = receiver.inventory()
                 .getStackInSlot(ChemicalConduit.EXTRACT_FILTER_SLOT)
-                .getCapability(EIOCapabilities.Filter.ITEM);
+                .getCapability(MekanismModule.Capabilities.CHEMICAL_FILTER);
 
-        if (extractFilter instanceof ChemicalFilter chemicalFilter) {
-            if (!chemicalFilter.test(extractedChemical)) {
+        if (extractFilter != null) {
+            extractedChemical = extractFilter.test(receiver.chemicalHandler, extractedChemical);
+            if (extractedChemical.isEmpty()) {
                 return maxTransfer;
             }
         }
@@ -48,11 +49,12 @@ public class ChemicalTicker
 
             // Test fluid against insert filter.
             var insertFilter = insert.inventory()
-                    .getStackInSlot(ChemicalConduit.EXTRACT_FILTER_SLOT)
-                    .getCapability(EIOCapabilities.Filter.ITEM);
+                    .getStackInSlot(ChemicalConduit.INSERT_FILTER_SLOT)
+                    .getCapability(MekanismModule.Capabilities.CHEMICAL_FILTER);
 
-            if (insertFilter instanceof ChemicalFilter chemicalStackFilter) {
-                if (!chemicalStackFilter.test(chemicalToInsert)) {
+            if (insertFilter != null) {
+                chemicalToInsert = insertFilter.test(insert.chemicalHandler, chemicalToInsert);
+                if (chemicalToInsert.isEmpty()) {
                     continue;
                 }
             }

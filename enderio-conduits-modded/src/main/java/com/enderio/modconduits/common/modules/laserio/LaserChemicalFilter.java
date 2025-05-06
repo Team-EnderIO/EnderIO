@@ -1,99 +1,48 @@
 package com.enderio.modconduits.common.modules.laserio;
 
+import com.direwolf20.laserio.common.containers.FilterBasicContainer;
 import com.direwolf20.laserio.common.containers.customhandler.FilterBasicHandler;
-import com.direwolf20.laserio.common.items.cards.BaseCard;
 import com.direwolf20.laserio.setup.LaserIODataComponents;
-import com.enderio.base.common.capability.IFilterCapability;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilter;
-import java.util.ArrayList;
-import java.util.List;
+
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-public class LaserChemicalFilter implements IFilterCapability<ChemicalStack>, ChemicalFilter {
+public class LaserChemicalFilter implements ChemicalFilter {
 
     private final ItemStack container;
 
-    public LaserChemicalFilter(ItemStack cardItem) {
-        this.container = BaseCard.getFilter(cardItem);
+    public LaserChemicalFilter(ItemStack container) {
+        this.container = container;
     }
 
     @Override
-    public void setNbt(Boolean nbt) {
-        if (!nbt) {
-            container.remove(LaserIODataComponents.FILTER_COMPARE);
-        } else {
-            container.set(LaserIODataComponents.FILTER_COMPARE, nbt);
-        }
-    }
+    public ChemicalStack test(@Nullable IChemicalHandler target, ChemicalStack stack) {
+        final boolean isAllowList = container.getOrDefault(LaserIODataComponents.FILTER_ALLOW, true);
 
-    @Override
-    public boolean isNbt() {
-        return container.getOrDefault(LaserIODataComponents.FILTER_COMPARE, false);
-    }
+        FilterBasicHandler filterSlotHandler = new FilterBasicHandler(FilterBasicContainer.SLOTS, container);
 
-    @Override
-    public void setInverted(Boolean inverted) {
-        if (!inverted) {
-            container.remove(LaserIODataComponents.FILTER_ALLOW);
-        } else {
-            container.set(LaserIODataComponents.FILTER_ALLOW, false);
-        }
-    }
+        for (int i = 0; i < filterSlotHandler.getSlots(); ++i) {
+            ItemStack itemStack = filterSlotHandler.getStackInSlot(i);
 
-    @Override
-    public boolean isInvert() {
-        return !container.getOrDefault(LaserIODataComponents.FILTER_ALLOW, true);
-    }
-
-    @Override
-    public int size() {
-        return 0;
-    }
-
-    @Override
-    public List<ChemicalStack> getEntries() {
-        List<ChemicalStack> filteredChemicals = new ArrayList();
-        FilterBasicHandler filterSlotHandler = new FilterBasicHandler(15, container);
-
-        for (int i = 0; i < (filterSlotHandler).getSlots(); ++i) {
-            ItemStack stack = filterSlotHandler.getStackInSlot(i);
-            if (!stack.isEmpty()) {
-                IChemicalHandler capability = stack.getCapability(MekanismModule.Capabilities.Item.CHEMICAL);
+            if (!itemStack.isEmpty()) {
+                IChemicalHandler capability = itemStack.getCapability(MekanismModule.Capabilities.Item.CHEMICAL);
                 if (capability != null) {
-
                     for (int tank = 0; tank < capability.getChemicalTanks(); ++tank) {
-                        var chemical = capability.getChemicalInTank(tank);
-                        if (!chemical.isEmpty()) {
-                            filteredChemicals.add(chemical);
+                        ChemicalStack fluidStack = capability.getChemicalInTank(tank);
+                        if (!fluidStack.isEmpty()) {
+                            if (ChemicalStack.isSameChemical(fluidStack, stack)) {
+                                return isAllowList ? fluidStack : ChemicalStack.EMPTY;
+                            }
                         }
                     }
                 }
             }
         }
 
-        return filteredChemicals;
-    }
-
-    @Override
-    public ChemicalStack getEntry(int index) {
-        return null;
-    }
-
-    @Override
-    public void setEntry(int index, ChemicalStack entry) {
-
-    }
-
-    @Override
-    public boolean test(ChemicalStack boxedChemicalStack) {
-        for (ChemicalStack stack : getEntries()) {
-            if (ChemicalStack.isSameChemical(stack, boxedChemicalStack)) {
-                return !isInvert();
-            }
-        }
-        return isInvert();
+        return isAllowList ? ChemicalStack.EMPTY : stack;
     }
 }

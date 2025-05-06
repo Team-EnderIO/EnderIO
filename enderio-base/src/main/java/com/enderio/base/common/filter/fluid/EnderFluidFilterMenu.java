@@ -32,12 +32,10 @@ public class EnderFluidFilterMenu extends AbstractFilterMenu<EnderFluidFilter> {
         this.type = type;
 
         this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot
-                .readOnly(() -> getFilterStack().getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY)
-                        .isDenyList()));
+                .readOnly(() -> getFilter().isDenyList()));
 
         this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot
-                .readOnly(() -> getFilterStack().getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY)
-                        .shouldCompareComponents()));
+                .readOnly(() -> getFilter().shouldCompareComponents()));
 
         for (int i = 0; i < this.type.slotCount(); i++) {
             final int slotIndex = i;

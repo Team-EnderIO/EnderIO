@@ -1,6 +1,8 @@
 package com.enderio.modconduits.common.modules.mekanism;
 
 import com.enderio.base.api.EnderIO;
+import com.enderio.base.common.filter.AbstractFilterItem;
+import com.enderio.base.common.filter.item.general.EnderItemFilterItem;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIOItems;
@@ -13,6 +15,7 @@ import com.enderio.conduits.api.network.ConduitNetworkContextType;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataType;
 import com.enderio.conduits.common.conduit.ConduitApiImpl;
 import com.enderio.conduits.common.recipe.ConduitIngredient;
+import com.enderio.modconduits.client.modules.mekanism.screens.EnderChemicalFilterScreen;
 import com.enderio.modconduits.common.ModdedConduits;
 import com.enderio.modconduits.common.modules.ConduitCommonModule;
 import com.enderio.modconduits.common.modules.mekanism.chemical.C2SClearLockedChemicalPacket;
@@ -20,10 +23,10 @@ import com.enderio.modconduits.common.modules.mekanism.chemical.ChemicalConduit;
 import com.enderio.modconduits.common.modules.mekanism.chemical.ChemicalConduitConnectionConfig;
 import com.enderio.modconduits.common.modules.mekanism.chemical.ChemicalConduitData;
 import com.enderio.modconduits.common.modules.mekanism.chemical.ChemicalConduitNetworkContext;
-import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilterCapability;
-import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilterItem;
-import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilterMenu;
-import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilterScreen;
+import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilter;
+import com.enderio.modconduits.common.modules.mekanism.chemical_filter.EnderChemicalFilter;
+import com.enderio.modconduits.common.modules.mekanism.chemical_filter.EnderChemicalFilterItem;
+import com.enderio.modconduits.common.modules.mekanism.chemical_filter.EnderChemicalFilterMenu;
 import com.enderio.modconduits.common.modules.mekanism.heat.HeatConduit;
 import com.enderio.modconduits.common.modules.mekanism.heat.HeatConduitConnectionConfig;
 import com.enderio.regilite.holder.RegiliteItem;
@@ -108,22 +111,27 @@ public class MekanismModule implements ConduitCommonModule {
             .register("chemical", () -> new ConduitDataType<>(ChemicalConduitData.CODEC,
                     ChemicalConduitData.STREAM_CODEC, ChemicalConduitData::new));
 
-    public static final Supplier<DataComponentType<ChemicalFilterCapability.Component>> CHEMICAL_FILTER = DATA_COMPONENT_TYPES
+    public static final Supplier<DataComponentType<EnderChemicalFilter>> CHEMICAL_FILTER = DATA_COMPONENT_TYPES
             .registerComponentType("chemical_filter",
-                    builder -> builder.persistent(ChemicalFilterCapability.Component.CODEC)
-                            .networkSynchronized(ChemicalFilterCapability.Component.STREAM_CODEC));
+                    builder -> builder.persistent(EnderChemicalFilter.CODEC)
+                            .networkSynchronized(EnderChemicalFilter.STREAM_CODEC));
 
-    public static final RegiliteItem<ChemicalFilterItem> BASIC_CHEMICAL_FILTER = ITEM_REGISTRY
-            .registerItem("chemical_filter",
-                    properties -> new ChemicalFilterItem(
-                            properties.component(CHEMICAL_FILTER, new ChemicalFilterCapability.Component(5))))
-            .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.Filter.ITEM, ChemicalFilterItem.FILTER_PROVIDER);
+    public static final RegiliteItem<EnderChemicalFilterItem> BASIC_CHEMICAL_FILTER = ITEM_REGISTRY
+        .registerItem("basic_chemical_filter", props -> new EnderChemicalFilterItem(props, EnderChemicalFilterItem.Type.BASIC))
+        .setTab(EIOCreativeTabs.GEAR)
+        .addCapability(Capabilities.CHEMICAL_FILTER, EnderChemicalFilterItem.CHEMICAL_FILTER_PROVIDER)
+        .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 
-    public static final RegiliteMenu<ChemicalFilterMenu> CHEMICAL_FILTER_MENU = MENU_REGISTRY
-            .registerMenu("chemical_filter", ChemicalFilterMenu::factory, () -> ChemicalFilterScreen::new);
+    static {
+        ITEM_REGISTRY.addAlias(EnderIO.loc("chemical_filter"), BASIC_CHEMICAL_FILTER.getId());
+    }
+
+    public static final RegiliteMenu<EnderChemicalFilterMenu> CHEMICAL_FILTER_MENU = MENU_REGISTRY
+            .registerMenu("chemical_filter", EnderChemicalFilterItem.Type.BASIC::openMenu, () -> EnderChemicalFilterScreen::new);
 
     public static class Capabilities {
+        public static final ItemCapability<ChemicalFilter, Void> CHEMICAL_FILTER = ItemCapability.createVoid(EnderIO.loc("chemical_filter"), ChemicalFilter.class);
+
         public static final BlockCapability<IChemicalHandler, Direction> CHEMICAL = BlockCapability.createSided(
                 ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "chemical_handler"),
                 IChemicalHandler.class);

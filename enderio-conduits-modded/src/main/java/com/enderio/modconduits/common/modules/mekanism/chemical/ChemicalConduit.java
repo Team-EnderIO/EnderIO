@@ -161,7 +161,7 @@ public record ChemicalConduit(ResourceLocation texture, Component description, i
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return stack.getCapability(EIOCapabilities.Filter.ITEM) instanceof ChemicalFilter;
+        return stack.getCapability(MekanismModule.Capabilities.CHEMICAL_FILTER) != null;
     }
 
     @Override
