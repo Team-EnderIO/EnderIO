@@ -2,10 +2,10 @@ package com.enderio.base.common.init;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.attachment.CoordinateSelection;
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.attachment.Soul;
 import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
-import com.enderio.base.common.filter.entity.EnderEntityFilter;
+import com.enderio.base.common.filter.soul.EnderSoulFilter;
 import com.enderio.base.common.filter.fluid.EnderFluidFilter;
 import com.enderio.base.common.filter.item.general.EnderItemFilter;
 import com.enderio.base.common.paint.BlockPaintData;
@@ -37,9 +37,9 @@ public class EIODataComponents {
             "block_paint",
             builder -> builder.persistent(BlockPaintData.CODEC).networkSynchronized(BlockPaintData.STREAM_CODEC));
 
-    public static Supplier<DataComponentType<StoredEntityData>> STORED_ENTITY = DATA_COMPONENT_TYPES
-            .registerComponentType("stored_entity", builder -> builder.persistent(StoredEntityData.CODEC)
-                    .networkSynchronized(StoredEntityData.STREAM_CODEC));
+    public static Supplier<DataComponentType<Soul>> SOUL = DATA_COMPONENT_TYPES
+            .registerComponentType("soul", builder -> builder.persistent(Soul.CODEC)
+                    .networkSynchronized(Soul.STREAM_CODEC));
 
     public static Supplier<DataComponentType<CapacitorData>> CAPACITOR_DATA = DATA_COMPONENT_TYPES
             .registerComponentType("capacitor_data",
@@ -73,14 +73,18 @@ public class EIODataComponents {
             .registerComponentType("fluid_filter", builder -> builder.persistent(EnderFluidFilter.CODEC)
                     .networkSynchronized(EnderFluidFilter.STREAM_CODEC));
 
-    public static final Supplier<DataComponentType<EnderEntityFilter>> ENTITY_FILTER = DATA_COMPONENT_TYPES
-            .registerComponentType("entity_filter", builder -> builder.persistent(EnderEntityFilter.CODEC)
-                    .networkSynchronized(EnderEntityFilter.STREAM_CODEC));
+    public static final Supplier<DataComponentType<EnderSoulFilter>> SOUL_FILTER = DATA_COMPONENT_TYPES
+            .registerComponentType("soul_filter", builder -> builder.persistent(EnderSoulFilter.CODEC)
+                    .networkSynchronized(EnderSoulFilter.STREAM_CODEC));
 
     public static Supplier<DataComponentType<Boolean>> TRAVEL_ITEM = DATA_COMPONENT_TYPES.registerComponentType(
             "travel_item", builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 
     public static void register(IEventBus bus) {
+        // Remap entity to soul
+        DATA_COMPONENT_TYPES.addAlias(EnderIO.loc("stored_entity"), EnderIO.loc("soul"));
+        DATA_COMPONENT_TYPES.addAlias(EnderIO.loc("entity_filter"), EnderIO.loc("soul_filter"));
+
         DATA_COMPONENT_TYPES.register(bus);
     }
 }

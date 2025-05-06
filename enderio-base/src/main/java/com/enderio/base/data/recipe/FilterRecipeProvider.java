@@ -1,6 +1,5 @@
 package com.enderio.base.data.recipe;
 
-import com.enderio.base.api.soul.EmptySoulStorageIngredient;
 import com.enderio.base.common.init.EIOItems;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -51,7 +50,7 @@ public class FilterRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BUCKET))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BASIC_ENTITY_FILTER.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BASIC_SOUL_FILTER.get())
             .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
             .define('S', EIOItems.SOUL_VIAL)
             .pattern(" P ")

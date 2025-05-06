@@ -1,7 +1,7 @@
-package com.enderio.base.common.filter.entity;
+package com.enderio.base.common.filter.soul;
 
-import com.enderio.base.api.attachment.StoredEntityData;
-import com.enderio.base.api.filter.EntityFilter;
+import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.filter.SoulFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -16,39 +16,39 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.List;
 
 // TODO: should tag comparison compare health?
-public record EnderEntityFilter(NonNullList<StoredEntityData> matches, boolean isDenyList, boolean shouldCompareTags)
-    implements EntityFilter {
+public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boolean shouldCompareTags)
+    implements SoulFilter {
 
-    public static final EnderEntityFilter EMPTY = new EnderEntityFilter(0);
+    public static final EnderSoulFilter EMPTY = new EnderSoulFilter(0);
 
     // TODO: 1.22 Rename fields.
-    public static Codec<EnderEntityFilter> CODEC = RecordCodecBuilder.create(
+    public static Codec<EnderSoulFilter> CODEC = RecordCodecBuilder.create(
         componentInstance -> componentInstance
             .group(
-                OrderedListCodec.create(256, StoredEntityData.CODEC, StoredEntityData.EMPTY)
+                OrderedListCodec.create(256, Soul.CODEC, Soul.EMPTY)
                     .fieldOf("entities")
-                    .forGetter(EnderEntityFilter::matches),
-                Codec.BOOL.fieldOf("isInvert").forGetter(EnderEntityFilter::isDenyList),
-                Codec.BOOL.fieldOf("nbt").forGetter(EnderEntityFilter::shouldCompareTags))
-            .apply(componentInstance, EnderEntityFilter::new));
+                    .forGetter(EnderSoulFilter::matches),
+                Codec.BOOL.fieldOf("isInvert").forGetter(EnderSoulFilter::isDenyList),
+                Codec.BOOL.fieldOf("nbt").forGetter(EnderSoulFilter::shouldCompareTags))
+            .apply(componentInstance, EnderSoulFilter::new));
 
     // @formatter:off
-    public static final StreamCodec<RegistryFriendlyByteBuf, EnderEntityFilter> STREAM_CODEC = StreamCodec.composite(
-        StoredEntityData.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)),
-        EnderEntityFilter::matches,
+    public static final StreamCodec<RegistryFriendlyByteBuf, EnderSoulFilter> STREAM_CODEC = StreamCodec.composite(
+        Soul.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)),
+        EnderSoulFilter::matches,
         ByteBufCodecs.BOOL,
-        EnderEntityFilter::isDenyList,
+        EnderSoulFilter::isDenyList,
         ByteBufCodecs.BOOL,
-        EnderEntityFilter::shouldCompareTags,
-        EnderEntityFilter::new);
+        EnderSoulFilter::shouldCompareTags,
+        EnderSoulFilter::new);
     // @formatter:on
 
-    public EnderEntityFilter(int size) {
-        this(NonNullList.withSize(size, StoredEntityData.EMPTY), false, false);
+    public EnderSoulFilter(int size) {
+        this(NonNullList.withSize(size, Soul.EMPTY), false, false);
     }
 
-    public EnderEntityFilter(List<StoredEntityData> matches, boolean isDenyList, boolean shouldCompareComponents) {
-        this(NonNullList.withSize(matches.size(), StoredEntityData.EMPTY), isDenyList, shouldCompareComponents);
+    public EnderSoulFilter(List<Soul> matches, boolean isDenyList, boolean shouldCompareComponents) {
+        this(NonNullList.withSize(matches.size(), Soul.EMPTY), isDenyList, shouldCompareComponents);
 
         for (int i = 0; i < matches.size(); i++) {
             this.matches.set(i, matches.get(i));
@@ -80,22 +80,22 @@ public record EnderEntityFilter(NonNullList<StoredEntityData> matches, boolean i
     }
 
     @Override
-    public boolean test(StoredEntityData storedEntity) {
+    public boolean test(Soul soul) {
         // Empty never passes.
-        if (storedEntity.entityType().isEmpty()) {
+        if (soul.entityType().isEmpty()) {
             return false;
         }
 
         for (var match : matches) {
             if (match.entityType().isPresent()) {
                 // Check for type match
-                if (!match.entityType().get().equals(storedEntity.entityType().get())) {
+                if (!match.entityType().get().equals(soul.entityType().get())) {
                     return isDenyList;
                 }
 
                 // Check components
                 if (shouldCompareTags) {
-                    if (storedEntity.getEntityTag().equals(match.getEntityTag())) {
+                    if (soul.getEntityTag().equals(match.getEntityTag())) {
                         return !isDenyList;
                     }
                 } else {
@@ -108,10 +108,10 @@ public record EnderEntityFilter(NonNullList<StoredEntityData> matches, boolean i
     }
 
     @Override
-    public boolean test(EntityType<?> entity) {
+    public boolean test(EntityType<?> entityType) {
         for (var match : matches) {
             if (match.entityType().isPresent()) {
-                return !isDenyList && match.entityType().get().equals(EntityType.getKey(entity));
+                return !isDenyList && match.entityType().get().equals(EntityType.getKey(entityType));
             }
         }
 

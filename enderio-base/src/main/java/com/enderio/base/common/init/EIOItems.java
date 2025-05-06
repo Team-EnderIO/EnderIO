@@ -5,7 +5,7 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.common.filter.AbstractFilterItem;
-import com.enderio.base.common.filter.entity.EnderEntityFilterItem;
+import com.enderio.base.common.filter.soul.EnderSoulFilterItem;
 import com.enderio.base.common.filter.fluid.EnderFluidFilterItem;
 import com.enderio.base.common.filter.item.general.EnderItemFilterItem;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
@@ -480,11 +480,11 @@ public class EIOItems {
             .addCapability(EIOCapabilities.FLUID_FILTER, EnderFluidFilterItem.FLUID_FILTER_PROVIDER)
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 
-    public static final RegiliteItem<EnderEntityFilterItem> BASIC_ENTITY_FILTER = ITEM_REGISTRY
+    public static final RegiliteItem<EnderSoulFilterItem> BASIC_SOUL_FILTER = ITEM_REGISTRY
             .registerItem("basic_soul_filter",
-                    props -> new EnderEntityFilterItem(props, EnderEntityFilterItem.Type.BASIC))
+                    props -> new EnderSoulFilterItem(props, EnderSoulFilterItem.Type.BASIC))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.ENTITY_FILTER, EnderEntityFilterItem.ENTITY_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.SOUL_FILTER, EnderSoulFilterItem.ENTITY_FILTER_PROVIDER)
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 
     // endregion
@@ -555,7 +555,7 @@ public class EIOItems {
         ITEM_REGISTRY.addAlias(EnderIO.loc("basic_filter"), BASIC_ITEM_FILTER.getId());
         ITEM_REGISTRY.addAlias(EnderIO.loc("advanced_filter"), ADVANCED_ITEM_FILTER.getId());
         ITEM_REGISTRY.addAlias(EnderIO.loc("fluid_filter"), BASIC_FLUID_FILTER.getId());
-        ITEM_REGISTRY.addAlias(EnderIO.loc("entity_filter"), BASIC_ENTITY_FILTER.getId());
+        ITEM_REGISTRY.addAlias(EnderIO.loc("entity_filter"), BASIC_SOUL_FILTER.getId());
 
         ITEM_REGISTRY.register(bus);
     }

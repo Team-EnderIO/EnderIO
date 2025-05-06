@@ -4,7 +4,7 @@ import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.LinearScalable;
 import com.enderio.base.api.capacitor.QuadraticScalable;
-import com.enderio.base.api.filter.EntityFilter;
+import com.enderio.base.api.filter.SoulFilter;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
@@ -67,7 +67,7 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     @Override
     public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-                .inputSlot((integer, itemStack) -> itemStack.getCapability(EIOCapabilities.ENTITY_FILTER) != null)
+                .inputSlot((integer, itemStack) -> itemStack.getCapability(EIOCapabilities.SOUL_FILTER) != null)
                 .slotAccess(FILTER)
                 .capacitor()
                 .build();
@@ -117,7 +117,7 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
         if (aabb == null) {
             return;
         }
-        EntityFilter filter = getEntityFilter();
+        SoulFilter filter = getSoulFilter();
         if (filter == null) {
             return;
         }

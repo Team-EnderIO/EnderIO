@@ -86,20 +86,21 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
             return false;
         }
 
-        if (!recipeInput.getItem(0).has(EIODataComponents.STORED_ENTITY)) {
+        var soulStorage = recipeInput.getItem(0).getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+        if (soulStorage == null || !soulStorage.hasSoul()) {
             return false;
         }
 
-        var storedEntityData = recipeInput.getItem(0).get(EIODataComponents.STORED_ENTITY);
-        if (storedEntityData.entityType().isEmpty()) {
+        var soul = soulStorage.getSoul();
+        if (soul.entityType().isEmpty()) {
             return false;
         }
 
-        var storedEntityType = storedEntityData.entityType().get();
+        var storedEntityType = soul.entityType().get();
 
         if (soulData.isPresent()) { // is in the selected souldata
             if (SoulDataReloadListener.fromString(soulData.get())
-                    .matches(storedEntityData.entityType().get())
+                    .matches(soul.entityType().get())
                     .isEmpty()) {
                 return false;
             }

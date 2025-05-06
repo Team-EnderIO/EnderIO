@@ -1,9 +1,7 @@
 package com.enderio.machines.common.blocks.powered_spawner;
 
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.attachment.Soul;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.init.EIOItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -58,8 +56,8 @@ public class MobCaptureTask extends PoweredSpawnerTask {
         var entityTypeKey = BuiltInRegistries.ENTITY_TYPE.getKey(entityType());
 
         switch (spawnMode()) {
-        case NEW -> filledSoulStorage.setSoul(StoredEntityData.of(entityTypeKey));
-        case COPY -> filledSoulStorage.setSoul(blockEntity.getEntityData());
+        case NEW -> filledSoulStorage.setSoul(Soul.of(entityTypeKey));
+        case COPY -> filledSoulStorage.setSoul(blockEntity.getBoundSoul().copy());
         }
 
         PoweredSpawnerBlockEntity.OUTPUT.setStackInSlot(blockEntity, filledStack);

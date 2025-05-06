@@ -1,6 +1,8 @@
 package com.enderio.machines.common.blockentity.solar;
 
-import com.enderio.base.api.attachment.StoredEntityData;
+import static com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
+
+import com.enderio.base.api.attachment.Soul;
 import com.enderio.base.api.capacitor.FixedScalable;
 import com.enderio.base.api.io.IOMode;
 import com.enderio.base.api.io.energy.EnergyIOMode;
@@ -44,7 +46,7 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
 
     private final MultiEnergyNode node;
 
-    private StoredEntityData entityData = StoredEntityData.EMPTY;
+    private Soul boundSoul = Soul.EMPTY;
     private SolarSoul.SoulData soulData;
     private static boolean reload = false;
     private boolean reloadCache = !reload;
@@ -77,8 +79,8 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
         if (isGenerating()) {
             getEnergyStorage().addEnergy(getGenerationRate());
         }
-        if (reloadCache != reload && entityData.hasEntity()) {
-            Optional<SolarSoul.SoulData> op = SolarSoul.SOLAR.matches(entityData.entityType().get());
+        if (reloadCache != reload && boundSoul.hasEntity()) {
+            Optional<SolarSoul.SoulData> op = SolarSoul.SOLAR.matches(boundSoul.entityType().get());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
@@ -273,14 +275,14 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
 
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        entityData = StoredEntityData.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+        boundSoul = Soul.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
 
         super.loadAdditional(pTag, lookupProvider);
     }
 
     @Override
     public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(lookupProvider));
+        pTag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(lookupProvider));
 
         super.saveAdditional(pTag, lookupProvider);
     }
@@ -288,24 +290,24 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
     @Override
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
-        entityData = components.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+        boundSoul = components.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
     }
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
 
-        if (entityData.hasEntity()) {
-            components.set(EIODataComponents.STORED_ENTITY, entityData);
+        if (boundSoul.hasEntity()) {
+            components.set(EIODataComponents.SOUL, boundSoul);
         }
     }
 
     public Optional<ResourceLocation> getEntityType() {
-        return entityData.entityType();
+        return boundSoul.entityType();
     }
 
     public void setEntityType(ResourceLocation entityType) {
-        entityData = StoredEntityData.of(entityType);
+        boundSoul = Soul.of(entityType);
     }
 
     @SubscribeEvent

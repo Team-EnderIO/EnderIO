@@ -2,7 +2,7 @@ package com.enderio.base.common.item.tool;
 
 import com.enderio.EnderIOBase;
 import com.enderio.base.api.EnderIO;
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.attachment.Soul;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
@@ -48,8 +48,8 @@ import org.jetbrains.annotations.Nullable;
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID)
 public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
-    public static final ICapabilityProvider<ItemStack, Void, StoredEntityData> STORED_ENTITY_PROVIDER = (stack,
-            ctx) -> stack.get(EIODataComponents.STORED_ENTITY);
+    public static final ICapabilityProvider<ItemStack, Void, Soul> STORED_ENTITY_PROVIDER = (stack,
+            ctx) -> stack.get(EIODataComponents.SOUL);
 
     public static final ResourceLocation FILLED_MODEL_PROPERTY = EnderIO.loc("soul_vial_filled");
 
@@ -61,12 +61,12 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return pStack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY).hasEntity();
+        return pStack.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY).hasEntity();
     }
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        itemStack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)
+        itemStack.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY)
                 .getHealthState()
                 .ifPresent(health -> tooltips.add(
                         TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB())));
@@ -125,8 +125,8 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             Consumer<Component> displayCallback) {
 
         // Soul Vial is filled, so it can't capture
-        Optional<StoredEntityData> entityData = getEntityData(soulVial);
-        if (entityData.isPresent() && entityData.get().hasEntity()) {
+        Optional<Soul> soul = getEntityData(soulVial);
+        if (soul.isPresent() && soul.get().hasEntity()) {
             return Optional.empty();
         }
 
@@ -166,7 +166,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos,
             Consumer<ItemStack> emptyVialSetter) {
-        var storedEntity = filledVial.get(EIODataComponents.STORED_ENTITY);
+        var storedEntity = filledVial.get(EIODataComponents.SOUL);
 
         if (storedEntity != null && storedEntity.hasEntity()) {
             // Get the spawn location for the mob.
@@ -214,22 +214,22 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     @Deprecated
     public static void setEntityType(ItemStack stack, ResourceLocation entityType) {
-        stack.set(EIODataComponents.STORED_ENTITY, StoredEntityData.of(entityType));
+        stack.set(EIODataComponents.SOUL, Soul.of(entityType));
     }
 
     @Deprecated
     private static void setEntityData(ItemStack stack, LivingEntity entity) {
-        stack.set(EIODataComponents.STORED_ENTITY, StoredEntityData.of(entity));
+        stack.set(EIODataComponents.SOUL, Soul.of(entity));
     }
 
     @Deprecated
-    public static Optional<StoredEntityData> getEntityData(ItemStack stack) {
-        return Optional.ofNullable(stack.get(EIODataComponents.STORED_ENTITY));
+    public static Optional<Soul> getEntityData(ItemStack stack) {
+        return Optional.ofNullable(stack.get(EIODataComponents.SOUL));
     }
 
     @Deprecated
     public static boolean isFilled(ItemStack stack) {
-        var storedEntity = stack.get(EIODataComponents.STORED_ENTITY);
+        var storedEntity = stack.get(EIODataComponents.SOUL);
         return storedEntity != null && storedEntity.hasEntity();
     }
 

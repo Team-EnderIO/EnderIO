@@ -1,7 +1,7 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.base.api.EnderIO;
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.attachment.Soul;
 import com.enderio.base.client.paint.PaintedBlockColor;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
@@ -187,12 +187,12 @@ public class MachineBlocks {
                     properties -> new ProgressMachineBlock<>(MachineBlockEntities.POWERED_SPAWNER, properties),
                     BlockBehaviour.Properties.of().strength(2.5f, 8))
             .setLootTable(
-                    (l, t) -> MachinesLootTable.copyStandardComponentsWith(l, t, EIODataComponents.STORED_ENTITY.get()))
+                    (l, t) -> MachinesLootTable.copyStandardComponentsWith(l, t, EIODataComponents.SOUL.get()))
             .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .createBlockItem(ITEM_REGISTRY,
                     b -> new BlockItem(b,
-                            new Item.Properties().component(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)),
+                            new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)),
                     item -> item.setTab(EIOCreativeTabs.MACHINES)
                             .addCapability(EIOCapabilities.SingleSoulStorage.ITEM,
                                     EIOCapabilities.SingleSoulStorage.BASIC_ITEM_PROVIDER));
@@ -266,7 +266,7 @@ public class MachineBlocks {
             .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
             .createBlockItem(ITEM_REGISTRY,
                     b -> new BlockItem(b,
-                            new Item.Properties().component(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)),
+                            new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)),
                     item -> item.setTab(EIOCreativeTabs.MACHINES)
                             .addCapability(EIOCapabilities.SingleSoulStorage.ITEM,
                                     EIOCapabilities.SingleSoulStorage.BASIC_ITEM_PROVIDER));

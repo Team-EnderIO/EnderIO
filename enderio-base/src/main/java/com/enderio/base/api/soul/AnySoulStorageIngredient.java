@@ -1,6 +1,6 @@
 package com.enderio.base.api.soul;
 
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.attachment.Soul;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOIngredientTypes;
 import com.enderio.base.common.util.EntityCaptureUtils;
@@ -43,7 +43,7 @@ public class AnySoulStorageIngredient implements ICustomIngredient {
             var stack = item.getDefaultInstance();
             var soulStorage = stack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
             if (soulStorage != null) {
-                soulStorage.setSoul(StoredEntityData.of(entity));
+                soulStorage.setSoul(Soul.of(entity));
                 return Optional.of(stack);
             }
 

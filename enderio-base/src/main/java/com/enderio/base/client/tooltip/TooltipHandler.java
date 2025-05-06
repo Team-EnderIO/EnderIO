@@ -88,11 +88,11 @@ public class TooltipHandler {
     private static void addSoulStorageTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
         var singleSoulStorage = itemStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
         if (singleSoulStorage != null && singleSoulStorage.hasSoul()) {
-            var storedEntityData = singleSoulStorage.getSoul();
+            var soul = singleSoulStorage.getSoul();
 
-            if (storedEntityData.entityType().isPresent()) {
+            if (soul.entityType().isPresent()) {
                 components.add(TooltipUtil.style(Component
-                        .translatable(EntityUtil.getEntityDescriptionId(storedEntityData.entityType().get()))));
+                        .translatable(EntityUtil.getEntityDescriptionId(soul.entityType().get()))));
             } else {
                 components.add(TooltipUtil.style(EIOLang.TOOLTIP_NO_SOULBOUND));
             }

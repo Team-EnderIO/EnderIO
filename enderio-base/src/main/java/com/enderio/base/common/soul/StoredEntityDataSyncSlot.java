@@ -1,6 +1,6 @@
 package com.enderio.base.common.soul;
 
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.attachment.Soul;
 import com.enderio.core.common.network.menu.SyncSlot;
 import com.enderio.core.common.network.menu.payload.ListSlotPayload;
 import com.enderio.core.common.network.menu.payload.ResourceLocationSlotPayload;
@@ -17,53 +17,53 @@ public abstract class StoredEntityDataSyncSlot implements SyncSlot {
 
     public static StoredEntityDataSyncSlot standalone() {
         return new StoredEntityDataSyncSlot() {
-            private StoredEntityData value = StoredEntityData.EMPTY;
+            private Soul value = Soul.EMPTY;
 
             @Override
-            public StoredEntityData get() {
+            public Soul get() {
                 return value;
             }
 
             @Override
-            public void set(StoredEntityData value) {
+            public void set(Soul value) {
                 this.value = value;
             }
         };
     }
 
-    public static StoredEntityDataSyncSlot simple(Supplier<StoredEntityData> getter, Consumer<StoredEntityData> setter) {
+    public static StoredEntityDataSyncSlot simple(Supplier<Soul> getter, Consumer<Soul> setter) {
         return new StoredEntityDataSyncSlot() {
 
             @Override
-            public StoredEntityData get() {
+            public Soul get() {
                 return getter.get();
             }
 
             @Override
-            public void set(StoredEntityData value) {
+            public void set(Soul value) {
                 setter.accept(value);
             }
         };
     }
 
-    public static StoredEntityDataSyncSlot readOnly(Supplier<StoredEntityData> getter) {
+    public static StoredEntityDataSyncSlot readOnly(Supplier<Soul> getter) {
         return new StoredEntityDataSyncSlot() {
 
             @Override
-            public StoredEntityData get() {
+            public Soul get() {
                 return getter.get();
             }
 
             @Override
-            public void set(StoredEntityData value) {
+            public void set(Soul value) {
                 throw new UnsupportedOperationException("Attempt to set a read-only sync slot.");
             }
         };
     }
 
-    private StoredEntityData lastValue;
-    public abstract StoredEntityData get();
-    public abstract void set(StoredEntityData value);
+    private Soul lastValue;
+    public abstract Soul get();
+    public abstract void set(Soul value);
 
     @Override
     public ChangeType detectChanges() {
@@ -93,10 +93,10 @@ public abstract class StoredEntityDataSyncSlot implements SyncSlot {
     public void unpackPayload(Level level, SlotPayload payload) {
         if (payload instanceof ListSlotPayload(List<SlotPayload> contents)) {
             if (contents.isEmpty()) {
-                set(StoredEntityData.EMPTY);
+                set(Soul.EMPTY);
             } else {
                 if (contents.getFirst() instanceof ResourceLocationSlotPayload(ResourceLocation value)) {
-                    set(StoredEntityData.of(value));
+                    set(Soul.of(value));
                 }
             }
         }

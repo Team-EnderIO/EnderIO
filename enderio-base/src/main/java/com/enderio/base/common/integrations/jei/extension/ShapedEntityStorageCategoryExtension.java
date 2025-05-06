@@ -3,7 +3,7 @@ package com.enderio.base.common.integrations.jei.extension;
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.attachment.Soul;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.integrations.jei.EnderIOJEI;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
@@ -52,14 +52,14 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
         if (input.isPresent()) {
             var inputSoulStorage = Objects.requireNonNull(
                     input.get().getTypedValue().getIngredient().getCapability(EIOCapabilities.SingleSoulStorage.ITEM));
-            StoredEntityData storedEntityData = inputSoulStorage.getSoul();
+            Soul soul = inputSoulStorage.getSoul();
 
-            if (storedEntityData != StoredEntityData.EMPTY) {
+            if (soul != Soul.EMPTY) {
                 var resultSoulStorage = resultItem.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
                 if (resultSoulStorage != null) {
                     noData = false;
 
-                    resultSoulStorage.setSoul(storedEntityData);
+                    resultSoulStorage.setSoul(soul);
 
                     inputs = recipe.getIngredients()
                             .stream()
@@ -71,7 +71,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
                                             ItemStack item = ingredientItem.copy();
                                             Objects.requireNonNull(
                                                     item.getCapability(EIOCapabilities.SingleSoulStorage.ITEM))
-                                                    .setSoul(storedEntityData);
+                                                    .setSoul(soul);
                                             consumer.accept(item);
                                         } else {
                                             consumer.accept(ingredientItem);
@@ -87,9 +87,9 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
 
             if (outputSoulStorage != null) {
                 results = List.of(itemStack);
-                StoredEntityData storedEntityData = outputSoulStorage.getSoul();
+                Soul soul = outputSoulStorage.getSoul();
 
-                if (storedEntityData != StoredEntityData.EMPTY) {
+                if (soul != Soul.EMPTY) {
                     noData = false;
                     inputs = recipe.getIngredients()
                             .stream()
@@ -101,7 +101,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
                                             ItemStack item = ingredientItem.copy();
                                             Objects.requireNonNull(
                                                     item.getCapability(EIOCapabilities.SingleSoulStorage.ITEM))
-                                                    .setSoul(storedEntityData);
+                                                    .setSoul(soul);
                                             consumer.accept(item);
                                         } else {
                                             consumer.accept(ingredientItem);
@@ -120,7 +120,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
                 ItemStack result = resultItem.copy();
                 var resultSoulStorage = result.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
                 if (resultSoulStorage != null) {
-                    resultSoulStorage.setSoul(StoredEntityData.of(e));
+                    resultSoulStorage.setSoul(Soul.of(e));
                 }
 
                 return result;
@@ -129,7 +129,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
             ItemStack result = resultItem.copy();
             var resultSoulStorage = result.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
             if (resultSoulStorage != null) {
-                resultSoulStorage.setSoul(StoredEntityData.EMPTY);
+                resultSoulStorage.setSoul(Soul.EMPTY);
             }
 
             results.add(result);
@@ -145,7 +145,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
                                         ItemStack item = ingredientItem.copy();
                                         Objects.requireNonNull(
                                                 item.getCapability(EIOCapabilities.SingleSoulStorage.ITEM))
-                                                .setSoul(StoredEntityData.of(entity));
+                                                .setSoul(Soul.of(entity));
                                         consumer.accept(item);
                                         consumer.accept(item);
                                     }

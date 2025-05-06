@@ -89,7 +89,7 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
     protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot,
             @Nullable String countString) {
         if (menu.getBlockEntity().requiresFilter() && slot.index == 1 && itemstack.isEmpty()) {
-            ItemStack stack = new ItemStack(EIOItems.BASIC_ENTITY_FILTER.get());
+            ItemStack stack = new ItemStack(EIOItems.BASIC_SOUL_FILTER.get());
             RenderSystem.setShaderColor(1, 1, 1, 100 / 255f);
             RenderSystem.enableBlend();
             guiGraphics.renderFakeItem(stack, slot.x, slot.y);

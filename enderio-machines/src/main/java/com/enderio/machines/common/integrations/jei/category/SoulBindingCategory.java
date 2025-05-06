@@ -4,7 +4,7 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 import com.enderio.base.api.EnderIO;
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.attachment.Soul;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.integrations.jei.JEIUtils;
@@ -104,7 +104,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
 
                 var item = new ItemStack(EIOItems.SOUL_VIAL.get());
                 if (outputSoulStorage != null) {
-                    StoredEntityData data = outputSoulStorage.getSoul();
+                    Soul data = outputSoulStorage.getSoul();
                     SoulVialItem.setEntityType(item, data.entityType().get());
                     vials.add(item);
                 }
@@ -130,7 +130,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
 
                 var item = new ItemStack(EIOItems.SOUL_VIAL.get());
                 if (outputSoulStorage != null) {
-                    StoredEntityData data = outputSoulStorage.getSoul();
+                    Soul data = outputSoulStorage.getSoul();
                     SoulVialItem.setEntityType(item, data.entityType().get());
                     vials.add(item);
                 }
@@ -149,11 +149,11 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
         // If the output can take an entity type, then we add it
         if (resultStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM) != null) {
             for (ItemStack vial : vials) {
-                SoulVialItem.getEntityData(vial).flatMap(StoredEntityData::entityType).ifPresent(entityType -> {
+                SoulVialItem.getEntityData(vial).flatMap(Soul::entityType).ifPresent(entityType -> {
                     var result = resultStack.copy();
                     var resultSoulStorage = result.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
                     if (resultSoulStorage != null) {
-                        resultSoulStorage.setSoul(StoredEntityData.of(entityType));
+                        resultSoulStorage.setSoul(Soul.of(entityType));
                         results.add(result);
                     }
                 });

@@ -1,7 +1,6 @@
-package com.enderio.base.common.filter.entity;
+package com.enderio.base.common.filter.soul;
 
-import com.enderio.base.api.filter.EntityFilter;
-import com.enderio.base.api.filter.FilterMenuProvider;
+import com.enderio.base.api.filter.SoulFilter;
 import com.enderio.base.common.filter.AbstractFilterItem;
 import com.enderio.base.common.filter.AbstractFilterMenu;
 import com.enderio.base.common.init.EIODataComponents;
@@ -17,26 +16,26 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
 import java.util.function.Supplier;
 
-public class EnderEntityFilterItem extends AbstractFilterItem<EnderEntityFilter> {
+public class EnderSoulFilterItem extends AbstractFilterItem<EnderSoulFilter> {
 
-    public static ICapabilityProvider<ItemStack, Void, EntityFilter> ENTITY_FILTER_PROVIDER = (stack, v) -> stack
-            .getOrDefault(EIODataComponents.ENTITY_FILTER, EnderEntityFilter.EMPTY);
+    public static ICapabilityProvider<ItemStack, Void, SoulFilter> ENTITY_FILTER_PROVIDER = (stack, v) -> stack
+            .getOrDefault(EIODataComponents.SOUL_FILTER, EnderSoulFilter.EMPTY);
 
     private final Type type;
 
-    public EnderEntityFilterItem(Properties properties, Type type) {
+    public EnderSoulFilterItem(Properties properties, Type type) {
         super(properties);
         this.type = type;
     }
 
     @Override
-    protected Supplier<DataComponentType<EnderEntityFilter>> dataComponentType() {
-        return EIODataComponents.ENTITY_FILTER;
+    protected Supplier<DataComponentType<EnderSoulFilter>> dataComponentType() {
+        return EIODataComponents.SOUL_FILTER;
     }
 
     @Override
-    protected EnderEntityFilter defaultFilter() {
-        return EnderEntityFilter.EMPTY;
+    protected EnderSoulFilter defaultFilter() {
+        return EnderSoulFilter.EMPTY;
     }
 
     @Override
@@ -45,13 +44,13 @@ public class EnderEntityFilterItem extends AbstractFilterItem<EnderEntityFilter>
     }
 
     public enum Type {
-        BASIC(() -> EIOMenus.ENTITY_FILTER, 1, true);
+        BASIC(() -> EIOMenus.BASIC_SOUL_FILTER, 1, true);
 
-        private final Supplier<RegiliteMenu<EnderEntityFilterMenu>> menuType;
+        private final Supplier<RegiliteMenu<EnderSoulFilterMenu>> menuType;
         private final int rowCount;
         private final boolean canMatchComponents;
 
-        Type(Supplier<RegiliteMenu<EnderEntityFilterMenu>> menuType, int rowCount, boolean canMatchComponents) {
+        Type(Supplier<RegiliteMenu<EnderSoulFilterMenu>> menuType, int rowCount, boolean canMatchComponents) {
             this.menuType = menuType;
             this.rowCount = rowCount;
             this.canMatchComponents = canMatchComponents;
@@ -70,14 +69,14 @@ public class EnderEntityFilterItem extends AbstractFilterItem<EnderEntityFilter>
         }
 
         @EnsureSide(EnsureSide.Side.SERVER)
-        public EnderEntityFilterMenu openMenu(int containerId, Inventory playerInventory,
+        public EnderSoulFilterMenu openMenu(int containerId, Inventory playerInventory,
                 AbstractFilterMenu.FilterAccess filterAccess) {
-            return new EnderEntityFilterMenu(menuType.get().get(), this, containerId, playerInventory, filterAccess);
+            return new EnderSoulFilterMenu(menuType.get().get(), this, containerId, playerInventory, filterAccess);
         }
 
         @EnsureSide(EnsureSide.Side.CLIENT)
-        public EnderEntityFilterMenu openMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-            return new EnderEntityFilterMenu(menuType.get().get(), this, containerId, playerInventory);
+        public EnderSoulFilterMenu openMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+            return new EnderSoulFilterMenu(menuType.get().get(), this, containerId, playerInventory);
         }
     }
 

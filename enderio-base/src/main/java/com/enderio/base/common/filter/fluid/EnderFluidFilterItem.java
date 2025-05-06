@@ -1,10 +1,8 @@
 package com.enderio.base.common.filter.fluid;
 
-import com.enderio.base.api.filter.FilterMenuProvider;
 import com.enderio.base.api.filter.FluidFilter;
 import com.enderio.base.common.filter.AbstractFilterItem;
 import com.enderio.base.common.filter.AbstractFilterMenu;
-import com.enderio.base.common.filter.item.general.EnderItemFilter;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.lang.EIOLang;
@@ -15,20 +13,11 @@ import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import org.jetbrains.annotations.Nullable;
 
 public class EnderFluidFilterItem extends AbstractFilterItem<EnderFluidFilter> {
 
@@ -73,7 +62,7 @@ public class EnderFluidFilterItem extends AbstractFilterItem<EnderFluidFilter> {
     }
 
     public enum Type {
-        BASIC(() -> EIOMenus.FLUID_FILTER, 1, true);
+        BASIC(() -> EIOMenus.BASIC_FLUID_FILTER, 1, true);
 
         private final Supplier<RegiliteMenu<EnderFluidFilterMenu>> menuType;
         private final int rowCount;

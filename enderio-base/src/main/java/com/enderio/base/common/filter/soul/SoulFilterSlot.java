@@ -1,9 +1,9 @@
-package com.enderio.base.common.filter.entity;
+package com.enderio.base.common.filter.soul;
 
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.attachment.Soul;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.filter.FilterSlot;
-import com.enderio.base.common.tag.EIOTags;
+
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -14,26 +14,26 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 
-public class EntityFilterSlot extends FilterSlot<StoredEntityData> {
+public class SoulFilterSlot extends FilterSlot<Soul> {
 
-    public EntityFilterSlot(Supplier<StoredEntityData> getter, Consumer<StoredEntityData> setter, int pSlot, int pX, int pY) {
+    public SoulFilterSlot(Supplier<Soul> getter, Consumer<Soul> setter, int pSlot, int pX, int pY) {
         super(getter, setter, pSlot, pX, pY);
     }
 
     @Override
-    protected StoredEntityData emptyResource() {
-        return StoredEntityData.EMPTY;
+    protected Soul emptyResource() {
+        return Soul.EMPTY;
     }
 
     @Override
-    public Optional<StoredEntityData> getResourceFrom(ItemStack itemStack) {
+    public Optional<Soul> getResourceFrom(ItemStack itemStack) {
         var soulStorage = itemStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
         if (soulStorage != null) {
             return Optional.of(soulStorage.getSoul());
         } else if (itemStack.getItem() instanceof SpawnEggItem spawnEggItem) {
             Entity entity = spawnEggItem.getType(itemStack).create(Minecraft.getInstance().level);
             if (entity instanceof LivingEntity livingEntity) {
-                StoredEntityData ghost = new StoredEntityData(
+                Soul ghost = new Soul(
                         livingEntity.serializeNBT(Minecraft.getInstance().level.registryAccess()),
                         livingEntity.getMaxHealth());
                 return Optional.of(ghost);

@@ -2,7 +2,7 @@ package com.enderio.machines.common.blocks.powered_spawner;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.UseOnly;
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.attachment.Soul;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
@@ -65,7 +65,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     // TODO: Config value?
     public static final int ACTION_RANGE = 4;
 
-    private StoredEntityData entityData = StoredEntityData.EMPTY;
+    private Soul boundSoul = Soul.EMPTY;
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
     private final MachineTaskHost taskHost;
 
@@ -259,15 +259,15 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     // endregion
 
     public Optional<ResourceLocation> getEntityType() {
-        return entityData.entityType();
+        return boundSoul.entityType();
     }
 
     public void setEntityType(ResourceLocation entityType) {
-        entityData = StoredEntityData.of(entityType);
+        boundSoul = Soul.of(entityType);
     }
 
-    public StoredEntityData getEntityData() {
-        return entityData;
+    public Soul getBoundSoul() {
+        return boundSoul;
     }
 
     // TODO: I want a better way to handle this, but unsure what that could be.
@@ -297,7 +297,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
         // Sync entity storage in case we want to render the entity or something in
         // future :)
-        tag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(registries));
+        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(registries));
 
         if (mode != DEFAULT_MODE) {
             tag.put(MachineNBTKeys.MACHINE_MODE, mode.save(registries));
@@ -311,7 +311,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         super.loadAdditional(pTag, lookupProvider);
-        entityData = StoredEntityData.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+        boundSoul = Soul.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
 
         if (pTag.contains(MachineNBTKeys.MACHINE_MODE)) {
             this.mode = PoweredSpawnerMode.parse(lookupProvider,
@@ -335,7 +335,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
-        entityData = components.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+        boundSoul = components.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
 
         // TODO: Ender IO 8 - remove.
         var actionRange = components.get(MachineDataComponents.ACTION_RANGE);
@@ -358,8 +358,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             components.set(MachineDataComponents.IS_RANGE_VISIBLE, true);
         }
 
-        if (entityData.hasEntity()) {
-            components.set(EIODataComponents.STORED_ENTITY, entityData);
+        if (boundSoul.hasEntity()) {
+            components.set(EIODataComponents.SOUL, boundSoul);
         }
     }
 

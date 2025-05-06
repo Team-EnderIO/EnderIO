@@ -2,7 +2,7 @@ package com.enderio.machines.common.blocks.obelisks;
 
 import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.capacitor.CapacitorScalable;
-import com.enderio.base.api.filter.EntityFilter;
+import com.enderio.base.api.filter.SoulFilter;
 import com.enderio.base.api.io.IOMode;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIOCapabilities;
@@ -97,12 +97,12 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
     @Override
     public boolean isActive() {
         return canAct() && getEnergyStorage().getEnergyStored() >= getPerTickEnergyCost()
-                && (!requiresFilter() || getEntityFilter() != null);
+                && (!requiresFilter() || getSoulFilter() != null);
     }
 
     @Nullable
-    protected EntityFilter getEntityFilter() {
-        return FILTER.getItemStack(this).getCapability(EIOCapabilities.ENTITY_FILTER);
+    protected SoulFilter getSoulFilter() {
+        return FILTER.getItemStack(this).getCapability(EIOCapabilities.SOUL_FILTER);
     }
 
     @Override
@@ -124,7 +124,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
 
     protected void updateFilterState() {
         updateMachineState(new MachineState(MachineStateType.ERROR, MachineLang.NO_SOUL_FILTER),
-                requiresFilter() && getEntityFilter() == null);
+                requiresFilter() && getSoulFilter() == null);
     }
 
     @Override

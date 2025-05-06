@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 
 import java.util.Optional;
 
-public record StoredEntityData(CompoundTag entityTag, float maxHealth) {
+public record Soul(CompoundTag entityTag, float maxHealth) {
     /**
      * Should match key from {@link IEntityExtension#serializeNBT(HolderLookup.Provider)}.
      */
@@ -29,23 +29,23 @@ public record StoredEntityData(CompoundTag entityTag, float maxHealth) {
      */
     public static final String KEY_HEALTH = "Health";
 
-    public static Codec<StoredEntityData> CODEC = RecordCodecBuilder.create(
+    public static Codec<Soul> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            CompoundTag.CODEC.fieldOf("entityTag").forGetter(StoredEntityData::entityTag),
-            Codec.FLOAT.fieldOf("maxHealth").forGetter(StoredEntityData::maxHealth)
-        ).apply(instance, StoredEntityData::new));
+            CompoundTag.CODEC.fieldOf("entityTag").forGetter(Soul::entityTag),
+            Codec.FLOAT.fieldOf("maxHealth").forGetter(Soul::maxHealth)
+        ).apply(instance, Soul::new));
 
-    public static StreamCodec<ByteBuf, StoredEntityData> STREAM_CODEC = StreamCodec.composite(
+    public static StreamCodec<ByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.COMPOUND_TAG,
-        StoredEntityData::getEntityTag,
+        Soul::getEntityTag,
         ByteBufCodecs.FLOAT,
-        StoredEntityData::maxHealth,
-        StoredEntityData::new
+        Soul::maxHealth,
+        Soul::new
     );
 
-    public static StreamCodec<ByteBuf, StoredEntityData> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
+    public static StreamCodec<ByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
         @Override
-        public StoredEntityData decode(ByteBuf byteBuf) {
+        public Soul decode(ByteBuf byteBuf) {
             boolean hasEntity = byteBuf.readBoolean();
             if (!hasEntity) {
                 return EMPTY;
@@ -55,31 +55,31 @@ public record StoredEntityData(CompoundTag entityTag, float maxHealth) {
         }
 
         @Override
-        public void encode(ByteBuf o, StoredEntityData storedEntityData) {
-            o.writeBoolean(storedEntityData.hasEntity());
-            if (storedEntityData.hasEntity()) {
-                STREAM_CODEC.encode(o, storedEntityData);
+        public void encode(ByteBuf o, Soul soul) {
+            o.writeBoolean(soul.hasEntity());
+            if (soul.hasEntity()) {
+                STREAM_CODEC.encode(o, soul);
             }
         }
     };
 
-    public static final StoredEntityData EMPTY = new StoredEntityData(
+    public static final Soul EMPTY = new Soul(
         new CompoundTag(),
         0.0f
     );
 
-    public static StoredEntityData of(LivingEntity entity) {
-        return new StoredEntityData(
+    public static Soul of(LivingEntity entity) {
+        return new Soul(
             entity.serializeNBT(entity.level().registryAccess()),
             entity.getMaxHealth()
         );
     }
 
-    public static StoredEntityData of(ResourceLocation entityType) {
+    public static Soul of(ResourceLocation entityType) {
         CompoundTag tag = new CompoundTag();
         tag.putString(KEY_ID, entityType.toString());
 
-        return new StoredEntityData(tag, 0.0f);
+        return new Soul(tag, 0.0f);
     }
 
     public boolean hasEntity() {
@@ -109,6 +109,10 @@ public record StoredEntityData(CompoundTag entityTag, float maxHealth) {
         return Optional.empty();
     }
 
+    public Soul copy() {
+        return new Soul(entityTag.copy(), maxHealth);
+    }
+
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public Tag save(HolderLookup.Provider lookupProvider) {
@@ -123,12 +127,12 @@ public record StoredEntityData(CompoundTag entityTag, float maxHealth) {
         return this.hasEntity() ? save(lookupProvider) : new CompoundTag();
     }
 
-    public static Optional<StoredEntityData> parse(HolderLookup.Provider lookupProvider, Tag tag) {
+    public static Optional<Soul> parse(HolderLookup.Provider lookupProvider, Tag tag) {
         return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
             .resultOrPartial(error -> LOGGER.error("Tried to load invalid StoredEntityData: '{}'", error));
     }
 
-    public static StoredEntityData parseOptional(HolderLookup.Provider lookupProvider, CompoundTag tag) {
+    public static Soul parseOptional(HolderLookup.Provider lookupProvider, CompoundTag tag) {
         return tag.isEmpty() ? EMPTY : parse(lookupProvider, tag).orElse(EMPTY);
     }
 }

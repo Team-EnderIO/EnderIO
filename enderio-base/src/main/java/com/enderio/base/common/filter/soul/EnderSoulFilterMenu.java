@@ -1,6 +1,6 @@
-package com.enderio.base.common.filter.entity;
+package com.enderio.base.common.filter.soul;
 
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.attachment.Soul;
 import com.enderio.base.common.filter.AbstractFilterMenu;
 import com.enderio.base.common.filter.fluid.EnderFluidFilter;
 import com.enderio.base.common.init.EIODataComponents;
@@ -17,18 +17,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class EnderEntityFilterMenu extends AbstractFilterMenu<EnderEntityFilter> {
+public class EnderSoulFilterMenu extends AbstractFilterMenu<EnderSoulFilter> {
 
     public static int IS_INVERTED_BUTTON_ID = 1;
     public static int SHOULD_COMPARE_TAGS_BUTTON_ID = 2;
 
-    public final EnderEntityFilterItem.Type type;
+    public final EnderSoulFilterItem.Type type;
 
     private final BoolSyncSlot isInvertedSyncSlot;
     private final BoolSyncSlot shouldCompareComponentsSyncSlot;
 
-    public EnderEntityFilterMenu(@Nullable MenuType<?> menuType, EnderEntityFilterItem.Type type, int containerId,
-                                 Inventory playerInventory, FilterAccess filterAccess) {
+    public EnderSoulFilterMenu(@Nullable MenuType<?> menuType, EnderSoulFilterItem.Type type, int containerId,
+                               Inventory playerInventory, FilterAccess filterAccess) {
         super(menuType, containerId, playerInventory, filterAccess);
         this.type = type;
 
@@ -46,15 +46,15 @@ public class EnderEntityFilterMenu extends AbstractFilterMenu<EnderEntityFilter>
             // Add sync slot for the fluid slot
             addSyncSlot(StoredEntityDataSyncSlot.readOnly(() -> getEntityInFilter(slotIndex)));
 
-            addSlot(new EntityFilterSlot(() -> getEntityInFilter(slotIndex), stack -> setEntityInFilter(slotIndex, stack),
+            addSlot(new SoulFilterSlot(() -> getEntityInFilter(slotIndex), stack -> setEntityInFilter(slotIndex, stack),
                     i, 14 + (i % 5) * 18, 27 + 20 * (i / 5)));
         }
 
         addPlayerInventorySlots(14, 45 + type.rowCount() * 18);
     }
 
-    public EnderEntityFilterMenu(@Nullable MenuType<?> menuType, EnderEntityFilterItem.Type type, int containerId,
-                                 Inventory playerInventory) {
+    public EnderSoulFilterMenu(@Nullable MenuType<?> menuType, EnderSoulFilterItem.Type type, int containerId,
+                               Inventory playerInventory) {
         super(menuType, containerId, playerInventory);
         this.type = type;
 
@@ -63,20 +63,20 @@ public class EnderEntityFilterMenu extends AbstractFilterMenu<EnderEntityFilter>
 
         for (int i = 0; i < this.type.slotCount(); i++) {
             final var syncSlot = addSyncSlot(StoredEntityDataSyncSlot.standalone());
-            addSlot(new EntityFilterSlot(syncSlot::get, syncSlot::set, i, 14 + (i % 9) * 18, 27 + 18 * (i / 9)));
+            addSlot(new SoulFilterSlot(syncSlot::get, syncSlot::set, i, 14 + (i % 9) * 18, 27 + 18 * (i / 9)));
         }
 
         addPlayerInventorySlots(14, 45 + type.rowCount() * 18);
     }
 
     @Override
-    protected Supplier<DataComponentType<EnderEntityFilter>> dataComponentType() {
-        return EIODataComponents.ENTITY_FILTER;
+    protected Supplier<DataComponentType<EnderSoulFilter>> dataComponentType() {
+        return EIODataComponents.SOUL_FILTER;
     }
 
     @Override
-    protected EnderEntityFilter defaultFilter() {
-        return EnderEntityFilter.EMPTY;
+    protected EnderSoulFilter defaultFilter() {
+        return EnderSoulFilter.EMPTY;
     }
 
     public boolean isInverted() {
@@ -88,39 +88,39 @@ public class EnderEntityFilterMenu extends AbstractFilterMenu<EnderEntityFilter>
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)
-    private StoredEntityData getEntityInFilter(int slotIndex) {
+    private Soul getEntityInFilter(int slotIndex) {
         var filter = getFilter();
         if (slotIndex >= filter.matches().size()) {
-            return StoredEntityData.EMPTY;
+            return Soul.EMPTY;
         }
 
         return filter.matches().get(slotIndex);
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)
-    private void setEntityInFilter(int slotIndex, StoredEntityData entity) {
+    private void setEntityInFilter(int slotIndex, Soul entity) {
         modifyFilter(filter -> {
             // Copy match list
-            var matches = NonNullList.withSize(type.slotCount(), StoredEntityData.EMPTY);
+            var matches = NonNullList.withSize(type.slotCount(), Soul.EMPTY);
             for (int i = 0; i < matches.size(); i++) {
-                matches.set(i, i < filter.matches().size() ? filter.matches().get(i) : StoredEntityData.EMPTY);
+                matches.set(i, i < filter.matches().size() ? filter.matches().get(i) : Soul.EMPTY);
             }
 
             // Change the entry
             matches.set(slotIndex, entity);
 
             // Set the new filter
-            return new EnderEntityFilter(matches, filter.isDenyList(), filter.shouldCompareTags());
+            return new EnderSoulFilter(matches, filter.isDenyList(), filter.shouldCompareTags());
         });
     }
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
         if (id == IS_INVERTED_BUTTON_ID) {
-            modifyFilter(filter -> new EnderEntityFilter(filter.matches(), !filter.isDenyList(), filter.shouldCompareTags()));
+            modifyFilter(filter -> new EnderSoulFilter(filter.matches(), !filter.isDenyList(), filter.shouldCompareTags()));
             return true;
         } else if (id == SHOULD_COMPARE_TAGS_BUTTON_ID && type.canMatchComponents()) {
-            modifyFilter(filter -> new EnderEntityFilter(filter.matches(), filter.isDenyList(), !filter.shouldCompareTags()));
+            modifyFilter(filter -> new EnderSoulFilter(filter.matches(), filter.isDenyList(), !filter.shouldCompareTags()));
             return true;
         }
 
