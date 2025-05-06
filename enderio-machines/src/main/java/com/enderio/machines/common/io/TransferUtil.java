@@ -80,7 +80,11 @@ public class TransferUtil {
 
         if (canPull) {
             for (int i = 0; i < selfItemHandler.getTanks(); i++) {
-                FluidUtil.tryFluidTransfer(selfItemHandler, otherItemHandler, new FluidStack(selfItemHandler.getFluidInTank(i).getFluid(), maxDrain), true);
+                if (selfItemHandler.getFluidInTank(i).isEmpty()) {
+                    FluidUtil.tryFluidTransfer(selfItemHandler, otherItemHandler, maxDrain, true);
+                } else {
+                    FluidUtil.tryFluidTransfer(selfItemHandler, otherItemHandler, new FluidStack(selfItemHandler.getFluidInTank(i).getFluid(), maxDrain), true);
+                }
             }
         }
     }
