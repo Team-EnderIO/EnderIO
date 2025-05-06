@@ -156,7 +156,8 @@ public class ChemicalTicker
 
             ChemicalStack drained = chemicalSource.extractChemical(drainable, Action.EXECUTE);
             if (!drained.isEmpty()) {
-                drained.setAmount(chemicalDestination.insertChemical(drained, Action.EXECUTE).getAmount());
+                long remainder = chemicalDestination.insertChemical(drained, Action.EXECUTE).getAmount();
+                drained.setAmount(drained.getAmount() - remainder);
                 return drained;
             }
         }
