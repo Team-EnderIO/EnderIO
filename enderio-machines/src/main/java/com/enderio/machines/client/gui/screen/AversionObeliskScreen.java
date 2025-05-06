@@ -16,5 +16,4 @@ public class AversionObeliskScreen extends ObeliskScreen<AversionObeliskBlockEnt
     public AversionObeliskScreen(AversionObeliskMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle, BG_TEXTURE, WIDTH, HEIGHT);
     }
-
 }

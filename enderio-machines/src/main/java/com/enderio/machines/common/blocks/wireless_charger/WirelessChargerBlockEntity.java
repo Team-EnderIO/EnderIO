@@ -13,16 +13,17 @@ import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSuppor
 import com.enderio.machines.common.blocks.base.energy.PoweredMachineEnergyStorage;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.datamap.RangeExtender;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.IOConfig;
-import java.util.List;
-import java.util.Objects;
+import com.enderio.machines.common.tag.MachineTags;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -36,6 +37,10 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implements RangedActor {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
@@ -47,8 +52,9 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     private final ModConfigSpec.ConfigValue<Integer> energyUpkeep;
 
     private ActionRange actionRange;
+    private int maxRange;
 
-    private @javax.annotation.Nullable AABB bounds;
+    private @Nullable AABB bounds;
 
     public WirelessChargerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.WIRELESS_CHARGER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
@@ -95,7 +101,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     public void neighborChanged(Block neighborBlock, BlockPos neighborPos) {
         super.neighborChanged(neighborBlock, neighborPos);
         if (level != null && !level.isClientSide() && getBlockPos().above().equals(neighborPos)) {
-            int maxRange = getMaxRange();
+            calculateMaxRange();
             if (getRangeExtension() > 0 || actionRange.range() > maxRange) {
                 // Antenna placed or removed from the top so update range
                 setActionRange(new ActionRange(maxRange, actionRange.isVisible()));
@@ -124,8 +130,9 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     @Override
     public void onLoad() {
         super.onLoad();
-        if (level != null && !level.isClientSide() && actionRange.range() > getMaxRange()) {
-            setActionRange(new ActionRange(getMaxRange(), actionRange.isVisible()));
+        calculateMaxRange();
+        if (level != null && !level.isClientSide() && actionRange.range() > this.maxRange) {
+            setActionRange(new ActionRange(maxRange, actionRange.isVisible()));
         }
         updateBounds();
     }
@@ -142,7 +149,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
         if (tag.contains(MachineNBTKeys.ACTION_RANGE)) {
             actionRange = ActionRange.parse(registries, Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
         } else {
-            actionRange = new ActionRange(getMaxRange(), false);
+            actionRange = new ActionRange(maxRange, false);
         }
     }
 
@@ -172,21 +179,31 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
         return hasEnergy() && canAct();
     }
 
-    @Override
-    public int getMaxRange() {
-        return MachinesConfig.COMMON.WIRELESS_CHARGER_RANGE.get() + getRangeExtension();
+    private void calculateMaxRange() {
+        this.maxRange = MachinesConfig.COMMON.WIRELESS_CHARGER_RANGE.get() + getRangeExtension();
+        if (level != null) {
+            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        }
     }
 
     private void updateBounds() {
         bounds = new AABB(getBlockPos()).inflate(getRange());
     }
 
+    @Override
+    public int getMaxRange() {
+        return maxRange;
+    }
+
     private int getRangeExtension() {
         int rangeExtension = 0;
         if (level != null) {
             BlockState bs = level.getBlockState(getBlockPos().above());
-            if (bs.hasProperty(WirelessAntennaBlock.WIRELESS_RANGE)) {
-                rangeExtension = bs.getValue(WirelessAntennaBlock.WIRELESS_RANGE);
+            if (bs.is(MachineTags.Blocks.RANGE_EXTENDER)) {
+                Map<TagKey<Block>, Integer> map = bs.getBlockHolder().getData(RangeExtender.DATA_MAP);
+                if (map != null) {
+                    rangeExtension = map.getOrDefault(MachineTags.Blocks.RANGE_EXTENDER, 0);
+                }
             }
         }
         return rangeExtension;

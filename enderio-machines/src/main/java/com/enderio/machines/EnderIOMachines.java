@@ -21,6 +21,7 @@ import com.enderio.machines.common.lang.MachineEnumLang;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.tag.MachineTags;
 import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
+import com.enderio.machines.data.datamap.RangeExtenderDataProvider;
 import com.enderio.machines.data.reagentdata.ReagentDataProvider;
 import com.enderio.machines.data.recipes.AlloyRecipeProvider;
 import com.enderio.machines.data.recipes.EnchanterRecipeProvider;
@@ -119,6 +120,7 @@ public class EnderIOMachines {
                 new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
         provider.addSubProvider(event.includeServer(),
                 new ReagentDataProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(), new RangeExtenderDataProvider(packOutput, lookupProvider));
 
         generator.addProvider(true, provider);
         provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, event.getLookupProvider(),

@@ -434,6 +434,39 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance
                                 .hasItems(ItemPredicate.Builder.item().of(EIOItems.ENDER_CRYSTAL).build()))
+            .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WIRELESS_CHARGER.get())
+                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('V', EIOBlocks.VOID_CHASSIS.get())
+                .define('E', EIOItems.ENDER_RESONATOR.get())
+                .pattern("CCC")
+                .pattern("CVC")
+                .pattern("CEC")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WIRELESS_CHARGER_ANTENNA.get())
+                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('S', EIOTags.Items.INGOTS_PULSATING_ALLOY)
+                .define('E', EIOItems.ENDER_RESONATOR.get())
+                .pattern(" S ")
+                .pattern(" S ")
+                .pattern("CEC")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ENDER_RESONATOR.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get())
+                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('S', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
+                .define('E', EIOItems.SENTIENT_ENDER.get())
+                .pattern(" S ")
+                .pattern(" S ")
+                .pattern("CEC")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SENTIENT_ENDER.get()))
                 .save(recipeOutput);
 
         // TODO: Enable once the block detector has a model.
@@ -475,6 +508,7 @@ public class MachineRecipeProvider extends RecipeProvider {
         list.add(MachineBlocks.XP_VACUUM);
         list.add(MachineBlocks.VACUUM_CHEST);
         list.add(MachineBlocks.TRAVEL_ANCHOR);
+        list.add(MachineBlocks.WIRELESS_CHARGER);
         return list;
     });
 

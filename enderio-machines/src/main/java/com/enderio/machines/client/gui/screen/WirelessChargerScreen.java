@@ -76,7 +76,7 @@ public class WirelessChargerScreen extends MachineScreen<WirelessChargerMenu> {
                 4210752, false);
         guiGraphics.drawString(font, EIOLang.MAX_RANGE, imageWidth / 2 - font.width(EIOLang.MAX_RANGE) / 2, 20, 0,
                 false);
-        String maxRange = getMenu().getBlockEntity().getMaxRange() + "";
+        String maxRange = getMenu().getMaxRange() + "";
         guiGraphics.drawString(font, maxRange, imageWidth / 2 - font.width(maxRange) / 2, 20 + font.lineHeight + 3, 0,
                 false);
         super.renderLabels(guiGraphics, pMouseX, pMouseY);

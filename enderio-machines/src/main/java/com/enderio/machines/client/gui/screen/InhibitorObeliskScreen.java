@@ -16,5 +16,4 @@ public class InhibitorObeliskScreen extends ObeliskScreen<InhibitorObeliskBlockE
     public InhibitorObeliskScreen(InhibitorObeliskMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle, BG_TEXTURE, WIDTH, HEIGHT);
     }
-
 }

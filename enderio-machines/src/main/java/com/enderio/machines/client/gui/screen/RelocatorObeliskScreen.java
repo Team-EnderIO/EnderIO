@@ -16,5 +16,4 @@ public class RelocatorObeliskScreen extends ObeliskScreen<RelocatorObeliskBlockE
     public RelocatorObeliskScreen(RelocatorObeliskMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle, BG_TEXTURE, WIDTH, HEIGHT);
     }
-
 }
