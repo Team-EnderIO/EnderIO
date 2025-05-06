@@ -82,6 +82,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
         if (pPlayer.level().isClientSide) {
             return InteractionResult.FAIL;
         }
+
         Optional<ItemStack> itemStack = catchEntity(pStack, pInteractionTarget,
                 component -> pPlayer.displayClientMessage(component, true));
         if (itemStack.isPresent()) {
@@ -249,6 +250,12 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     @SubscribeEvent
     public static void onLivingInteract(PlayerInteractEvent.EntityInteractSpecific event) {
         ItemStack stack = event.getItemStack();
+
+        // Use a copy of the stack if we're in creative.
+        if (event.getEntity().getAbilities().instabuild) {
+            stack = stack.copy();
+        }
+
         if (stack.is(EIOItems.SOUL_VIAL.get())) {
             if (event.getTarget() instanceof AbstractChestedHorse || event.getTarget() instanceof Villager
                     || event.getTarget() instanceof WanderingTrader || event.getTarget() instanceof Wolf) {
