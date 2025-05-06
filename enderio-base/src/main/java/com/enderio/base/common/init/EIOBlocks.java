@@ -15,9 +15,6 @@ import com.enderio.base.common.block.glass.GlassBlocks;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassIdentifier;
 import com.enderio.base.common.block.glass.GlassLighting;
-import com.enderio.base.common.block.light.Light;
-import com.enderio.base.common.block.light.LightNode;
-import com.enderio.base.common.block.light.PoweredLight;
 import com.enderio.base.common.block.skull.EnderSkullBlock;
 import com.enderio.base.common.block.skull.WallEnderSkullBlock;
 import com.enderio.base.common.item.misc.EnderSkullBlockItem;
@@ -392,20 +389,6 @@ public class EIOBlocks {
 
     // endregion
 
-    // region Light
-
-    public static final RegiliteBlock<Light> LIGHT = lightBlock("light", s -> new Light(false, s));
-    public static final RegiliteBlock<Light> LIGHT_INVERTED = lightBlock("light_inverted", s -> new Light(true, s));
-    public static final RegiliteBlock<PoweredLight> POWERED_LIGHT = lightBlock("powered_light", s -> new PoweredLight(false, false, s));
-    public static final RegiliteBlock<PoweredLight> POWERED_LIGHT_INVERTED = lightBlock("powered_light_inverted", s -> new PoweredLight(true, false, s));
-    public static final RegiliteBlock<PoweredLight> POWERED_LIGHT_WIRELESS = lightBlock("powered_light_wireless", s -> new PoweredLight(false, true, s));
-    public static final RegiliteBlock<PoweredLight> POWERED_LIGHT_INVERTED_WIRELESS = lightBlock("powered_light_inverted_wireless",
-        s -> new PoweredLight(true, true, s));
-
-    public static final RegiliteBlock<LightNode> LIGHT_NODE = BLOCK_REGISTRY
-        .registerBlock("light_node", LightNode::new, BlockBehaviour.Properties.ofFullCopy(Blocks.AIR).lightLevel(l -> 15).noLootTable().noCollission().noOcclusion())
-        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().withExistingParent("light_node", "block/air")));
-
     public static final RegiliteBlock<EnderSkullBlock> ENDERMAN_HEAD = BLOCK_REGISTRY
         .registerBlock("enderman_head", EnderSkullBlock::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY))
@@ -583,21 +566,6 @@ public class EIOBlocks {
                 b -> itemFactory.apply(b, new Item.Properties()),
                 item -> item
                     .setColorSupplier(() -> PaintedBlockColor::new));
-    }
-
-    public static <T extends Block> RegiliteBlock<T> lightBlock(String name, Function<BlockBehaviour.Properties, T> blockFactory) {
-        return BLOCK_REGISTRY
-            .registerBlock(name, blockFactory, BlockBehaviour.Properties.of().sound(SoundType.METAL).mapColor(MapColor.METAL).lightLevel(l -> {
-                if (l.getValue(Light.ENABLED)) {
-                    return 15;
-                }
-                return 0;
-            }))
-            .setBlockStateProvider(EIOBlockState::lightBlock)
-            .createBlockItem(ITEM_REGISTRY, item -> item
-                .setModelProvider((prov, ctx) -> prov.withExistingParent(name, "block/button_inventory"))
-                .setTab(EIOCreativeTabs.BLOCKS)
-            );
     }
 
     public static void register(IEventBus bus) {

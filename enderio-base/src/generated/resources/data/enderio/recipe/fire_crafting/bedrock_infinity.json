@@ -6,6 +6,24 @@
   "dimensions": [
     "minecraft:overworld"
   ],
-  "loot_table": "enderio:fire_crafting/bedrock_infinity",
-  "max_item_drops": 3
+  "results": [
+    {
+      "chance": 0.8,
+      "max_count": 3,
+      "min_count": 1,
+      "result": {
+        "count": 1,
+        "id": "enderio:grains_of_infinity"
+      }
+    },
+    {
+      "chance": 0.3,
+      "max_count": 1,
+      "min_count": 1,
+      "result": {
+        "count": 1,
+        "id": "enderio:suspicious_seed"
+      }
+    }
+  ]
 }

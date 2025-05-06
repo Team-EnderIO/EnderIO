@@ -50,8 +50,8 @@ dependencies {
     // TODO: Does not start on latest NeoForge
 //    runtimeOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge:$cctVersion")
 
-    //Athena ctm
-    runtimeOnly("maven.modrinth:athena-ctm:${athenaVersion}")
+    // Athena ctm - renamed to "Stitch"
+    runtimeOnly("maven.modrinth:stitch:${athenaVersion}")
 
     // AE2
     runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
@@ -194,11 +194,11 @@ if (getReleaseType() != null) {
             setJavaVersions(JavaVersion.VERSION_21)
 
             curseDepends {
-                optional("jei", /*"patchouli",*/ "athena", "applied-energistics-2", "mekanism", "cc-tweaked")
+                optional("jei", /*"patchouli",*/ "stitch", "applied-energistics-2", "mekanism", "cc-tweaked")
             }
 
             modrinthDepends {
-                optional("jei", "athena-ctm", "ae2", "mekanism", "cc-tweaked")
+                optional("jei", "stitch", "ae2", "mekanism", "cc-tweaked")
             }
         }
     } else {

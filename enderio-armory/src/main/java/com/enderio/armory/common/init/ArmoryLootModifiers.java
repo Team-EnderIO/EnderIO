@@ -15,11 +15,13 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 @SuppressWarnings("unused")
 public class ArmoryLootModifiers {
+
     private static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> SERIALIZERS = DeferredRegister
             .create(NeoForgeRegistries.GLOBAL_LOOT_MODIFIER_SERIALIZERS, EnderIO.NAMESPACE);
 
     private static final DeferredRegister<LootItemConditionType> CONDITIONS = DeferredRegister
             .create(Registries.LOOT_CONDITION_TYPE, EnderIO.NAMESPACE);
+
     private static final DeferredRegister<LootItemFunctionType<?>> FUNCTIONS = DeferredRegister
             .create(Registries.LOOT_FUNCTION_TYPE, EnderIO.NAMESPACE);
 

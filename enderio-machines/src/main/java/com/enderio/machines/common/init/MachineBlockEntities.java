@@ -17,12 +17,13 @@ import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.blocks.alloy.AlloySmelterBlockEntity;
-import com.enderio.machines.common.blocks.alloy.PrimitiveAlloySmelterBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blocks.crafter.CrafterBlockEntity;
 import com.enderio.machines.common.blocks.drain.DrainBlockEntity;
 import com.enderio.machines.common.blocks.enchanter.EnchanterBlockEntity;
+import com.enderio.machines.common.blocks.enderface.EnderfaceBlockEntity;
+import com.enderio.machines.common.blocks.farming_station.FarmingStationBlockEntity;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
 import com.enderio.machines.common.blocks.impulse_hopper.ImpulseHopperBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.attractor.AttractorObeliskBlockEntity;
@@ -47,10 +48,6 @@ import com.enderio.machines.common.blocks.wireless_charger.WirelessChargerBlockE
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import com.google.common.collect.ImmutableMap;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.Supplier;
 import net.minecraft.Util;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -58,6 +55,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class MachineBlockEntities {
     private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIOMachines.REGILITE.blockEntityRegistry();
@@ -76,12 +78,11 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<EnchanterBlockEntity> ENCHANTER = register("enchanter",
             EnchanterBlockEntity::new, MachineBlocks.ENCHANTER);
 
-    public static final RegiliteBlockEntity<PrimitiveAlloySmelterBlockEntity> PRIMITIVE_ALLOY_SMELTER = register(
-            "primitive_alloy_smelter", PrimitiveAlloySmelterBlockEntity::new, MachineBlocks.PRIMITIVE_ALLOY_SMELTER)
-                    .apply(MachineBlockEntities::machineBlockEntityCapabilities);
+    public static final RegiliteBlockEntity<EnderfaceBlockEntity> ENDERFACE = register("enderface",
+            EnderfaceBlockEntity::new, MachineBlocks.ENDERFACE);
 
     public static final RegiliteBlockEntity<AlloySmelterBlockEntity> ALLOY_SMELTER = register("alloy_smelter",
-            AlloySmelterBlockEntity::factory, MachineBlocks.ALLOY_SMELTER)
+            AlloySmelterBlockEntity::new, MachineBlocks.ALLOY_SMELTER)
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<CreativePowerBlockEntity> CREATIVE_POWER = register("creative_power",
@@ -210,6 +211,11 @@ public class MachineBlockEntities {
                     .setRenderer(() -> ObeliskBER.factory(EIOItems.ELECTROMAGNET::asItem))
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
 
+    public static final RegiliteBlockEntity<FarmingStationBlockEntity> FARMING_STATION = register("farming_station",
+            FarmingStationBlockEntity::new, MachineBlocks.FARMING_STATION)
+                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+                    .apply(MachineBlockEntities::fluidHandlerCapability);
+
     @SafeVarargs
     private static <B extends BlockEntity> RegiliteBlockEntity<B> register(String name,
             BlockEntityType.BlockEntitySupplier<B> beFactory, Supplier<? extends Block>... blocks) {
@@ -238,11 +244,6 @@ public class MachineBlockEntities {
             RegiliteBlockEntity<? extends PoweredMachineBlockEntity> blockEntity) {
         machineBlockEntityCapabilities(blockEntity);
         blockEntity.addCapability(Capabilities.EnergyStorage.BLOCK, PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
-    }
-
-    private static void legacyFluidHandlerCapability(
-            RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntity) {
-        blockEntity.addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
     }
 
     private static void fluidHandlerCapability(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {

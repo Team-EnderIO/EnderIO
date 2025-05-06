@@ -6,6 +6,7 @@ import com.enderio.base.api.travel.TravelTarget;
 import com.enderio.base.api.travel.TravelTargetSerializer;
 import com.enderio.base.api.travel.TravelTargetType;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
+import com.enderio.machines.common.travel.EnderfaceTravelTarget;
 import java.util.function.Supplier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -20,6 +21,10 @@ public class MachineTravelTargets {
             "travel_anchor");
     public static final Supplier<TravelTargetSerializer<AnchorTravelTarget>> TRAVEL_ANCHOR_SERIALIZER = TRAVEL_TARGET_SERIALIZERS
             .register("travel_anchor", AnchorTravelTarget.Serializer::new);
+
+    public static final Supplier<TravelTargetType<EnderfaceTravelTarget>> ENDERFACE_TYPE = registerType("enderface");
+    public static final Supplier<TravelTargetSerializer<EnderfaceTravelTarget>> ENDERFACE_SERIALIZER = TRAVEL_TARGET_SERIALIZERS
+            .register("enderface", EnderfaceTravelTarget.Serializer::new);
 
     private static <T extends TravelTarget> Supplier<TravelTargetType<T>> registerType(String name) {
         return TRAVEL_TARGET_TYPES.register(name, TravelTargetType::simple);

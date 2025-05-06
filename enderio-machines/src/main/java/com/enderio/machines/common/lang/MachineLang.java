@@ -12,6 +12,10 @@ public class MachineLang {
 
     public static final Component ALLOY_SMELTER_MODE = addTranslation("gui", EnderIO.loc("alloy_smelter.mode"),
             "Smelting Mode");
+
+    public static final Component POWERED_SPAWNER_MODE = addTranslation("gui", EnderIO.loc("powered_spawner.mode"),
+            "Spawner Mode");
+
     public static final MutableComponent SAG_MILL_GRINDINGBALL_REMAINING = addTranslation("tooltip",
             EnderIO.loc("grinding_ball_remaining"), "Remaining: %s%%");
     public static final MutableComponent SAG_MILL_GRINDINGBALL_TITLE = addTranslation("tooltip",
@@ -120,6 +124,11 @@ public class MachineLang {
             "Transfer tank contents");
     public static final Component DUMP_TANK = addTranslation("gui", EnderIO.loc("button.dump_tank"),
             "Void tank contents");
+
+    public static final Component FARMING_STATION_EXPERIMENT = addTranslation("pack",
+            EnderIO.loc("experiment.farming_station"), "EnderIO: Farming Station");
+    public static final Component ENDERFACE_EXPERIMENT = addTranslation("pack", EnderIO.loc("experiment.ender_io"),
+            "EnderIO: The Ender IO");
 
     // TODO: NEO-PORT: Common lang base class?
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {

@@ -13,8 +13,8 @@ import net.neoforged.neoforge.common.loot.LootModifier;
 
 public class DirectUpgradeLootModifier extends LootModifier {
 
-    public static final MapCodec<DirectUpgradeLootModifier> CODEC = RecordCodecBuilder.mapCodec(
-        inst -> codecStart(inst).apply(inst, DirectUpgradeLootModifier::new));
+    public static final MapCodec<DirectUpgradeLootModifier> CODEC = RecordCodecBuilder
+            .mapCodec(inst -> codecStart(inst).apply(inst, DirectUpgradeLootModifier::new));
 
     public DirectUpgradeLootModifier(LootItemCondition[] conditionsIn) {
         super(conditionsIn);
@@ -22,10 +22,16 @@ public class DirectUpgradeLootModifier extends LootModifier {
 
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-        if (context.getParam(LootContextParams.THIS_ENTITY) instanceof Player player) {
+        Player player = null;
+        if (context.getParam(LootContextParams.THIS_ENTITY) instanceof Player pl) {
+            player = pl;
+        } else if (context.getParam(LootContextParams.ATTACKING_ENTITY) instanceof Player pl) {
+            player = pl;
+        }
+        if (player != null) {
             ObjectArrayList<ItemStack> remaining = new ObjectArrayList<>();
             for (ItemStack is : generatedLoot) {
-                if(!player.addItem(is)) {
+                if (!player.addItem(is)) {
                     remaining.add(is);
                 }
             }

@@ -34,7 +34,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.NotNull;
@@ -63,14 +62,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static AlloySmelterBlockEntity factory(BlockPos pWorldPosition, BlockState pBlockState) {
-        return new AlloySmelterBlockEntity(MachineBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState,
-                CapacitorSupport.REQUIRED);
-    }
-
-    protected AlloySmelterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState,
-            CapacitorSupport capacitorSupport) {
-        super(pType, pWorldPosition, pBlockState, true, capacitorSupport, EnergyIOMode.Input, CAPACITY, USAGE);
+    public AlloySmelterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+        super(MachineBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState, true, CapacitorSupport.REQUIRED,
+                EnergyIOMode.Input, CAPACITY, USAGE);
 
         // Crafting task host
         craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::canAcceptTask,
@@ -117,26 +111,6 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         craftingTaskHost.onLevelReady();
     }
 
-    // region Primitive Smelter Shims
-
-    /**
-     * Whether the mode is restricted.
-     * Used to disable serialization of the mode and sync of the slot when this is the primitive variant.
-     */
-    public boolean isPrimitiveSmelter() {
-        return false;
-    }
-
-    protected MultiSlotAccess getInputsSlotAccess() {
-        return INPUTS;
-    }
-
-    protected SingleSlotAccess getOutputSlotAccess() {
-        return OUTPUT;
-    }
-
-    // endregion
-
     // region Inventory
 
     @Override
@@ -152,15 +126,14 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     protected boolean acceptSlotInput(int slot, ItemStack stack) {
         if (getMode().canAlloy()) {
-            if (RecipeCaches.ALLOY_SMELTING_ONLY_ALLOY.hasValidRecipeIf(getInventory(), getInputsSlotAccess(), slot,
-                    stack)) {
+            if (RecipeCaches.ALLOY_SMELTING_ONLY_ALLOY.hasValidRecipeIf(getInventory(), INPUTS, slot, stack)) {
                 return true;
             }
         }
 
         if (getMode().canSmelt()) {
             // Check all items are the same, or will be
-            var currentStacks = getInputsSlotAccess().getAccesses()
+            var currentStacks = INPUTS.getAccesses()
                     .stream()
                     .map(i -> i.isSlot(slot) ? stack : i.getItemStack(getInventory()))
                     .filter(i -> !i.isEmpty())
@@ -181,7 +154,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private AlloySmeltingRecipe.Input createRecipeInput() {
-        return new AlloySmeltingRecipe.Input(getInputsSlotAccess().getItemStacks(getInventory()), 1);
+        return new AlloySmeltingRecipe.Input(INPUTS.getItemStacks(getInventory()), 1);
     }
 
     // endregion
@@ -199,8 +172,8 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     protected AlloySmeltingMachineTask createTask(Level level, AlloySmeltingRecipe.Input recipeInput,
             @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
-        return new AlloySmeltingMachineTask(level, getInventory(), getEnergyStorage(), recipeInput,
-                getInputsSlotAccess(), getOutputSlotAccess(), recipe);
+        return new AlloySmeltingMachineTask(level, getInventory(), getEnergyStorage(), recipeInput, INPUTS, OUTPUT,
+                recipe);
     }
 
     protected static class AlloySmeltingMachineTask
@@ -338,11 +311,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         craftingTaskHost.save(lookupProvider, pTag);
-
-        if (!isPrimitiveSmelter()) {
-            pTag.putInt(MachineNBTKeys.MACHINE_MODE, this.mode.ordinal());
-        }
-
+        pTag.putInt(MachineNBTKeys.MACHINE_MODE, this.mode.ordinal());
         super.saveAdditional(pTag, lookupProvider);
     }
 
@@ -350,14 +319,12 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         craftingTaskHost.load(lookupProvider, pTag);
 
-        if (!isPrimitiveSmelter()) {
-            try {
-                mode = AlloySmelterMode.values()[pTag.getInt(MachineNBTKeys.MACHINE_MODE)];
-            } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.
-                LOGGER.error("Invalid alloy smelter mode loaded from NBT. Ignoring.");
-            }
+        // TODO: EnderIO 8 - swap to serializing the enum name.
+        try {
+            mode = AlloySmelterMode.values()[pTag.getInt(MachineNBTKeys.MACHINE_MODE)];
+        } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.
+            LOGGER.error("Invalid alloy smelter mode loaded from NBT. Ignoring.");
         }
-
         super.loadAdditional(pTag, lookupProvider);
     }
 
@@ -366,19 +333,13 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         super.applyImplicitComponents(components);
 
         // TODO: 1.21: Write crafting host into the item components.
-
-        if (!isPrimitiveSmelter()) {
-            mode = components.getOrDefault(MachineDataComponents.ALLOY_SMELTER_MODE, AlloySmelterMode.ALL);
-        }
+        mode = components.getOrDefault(MachineDataComponents.ALLOY_SMELTER_MODE, AlloySmelterMode.ALL);
     }
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
-
-        if (!isPrimitiveSmelter()) {
-            components.set(MachineDataComponents.ALLOY_SMELTER_MODE, mode);
-        }
+        components.set(MachineDataComponents.ALLOY_SMELTER_MODE, mode);
     }
 
     @Override

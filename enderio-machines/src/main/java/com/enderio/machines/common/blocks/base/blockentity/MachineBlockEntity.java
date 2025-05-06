@@ -115,7 +115,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
 
         // Every 5 ticks, ensure active state is up-to-date.
         // Doing this every 5 ticks instead of every tick should reduce visual flicker.
-        if (canAct(5)) {
+        if (level != null && level.getGameTime() % 5 == 0) {
+
             boolean isActive = isActive();
             boolean needBlockStateUpdate = supportsActiveState
                     && getBlockState().getValue(ProgressMachineBlock.POWERED) != isActive;
@@ -443,7 +444,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     }
 
     @Override
-    protected void onRedstonePowerChanged() {
+    protected void updateRedstonePower() {
+        super.updateRedstonePower();
         checkIsRedstoneBlocked();
     }
 

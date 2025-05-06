@@ -38,7 +38,7 @@ public class MachineSlot extends SlotItemHandler implements SlotWithOverlay {
     }
 
     public boolean canQuickInsertStack() {
-        return getItemHandler().getLayout().guiCanInsert(getSlotIndex());
+        return isActive() && getItemHandler().getLayout().guiCanInsert(getSlotIndex());
     }
 
     @Override

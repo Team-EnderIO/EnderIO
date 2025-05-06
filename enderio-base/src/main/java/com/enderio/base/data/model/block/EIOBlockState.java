@@ -1,7 +1,6 @@
 package com.enderio.base.data.model.block;
 
 import com.enderio.base.api.EnderIO;
-import com.enderio.base.common.block.light.PoweredLight;
 import com.enderio.regilite.data.DataGenContext;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -40,22 +39,5 @@ public class EIOBlockState {
             .itemTextureRotation(itemTextureRotation)
             .end()
         );
-    }
-
-    public static <T extends Block> void lightBlock(BlockStateProvider prov, DataGenContext<Block, T> ctx) {
-        prov.getVariantBuilder(ctx.get()).forAllStates(state -> {
-            Direction facing = state.getValue(PoweredLight.FACING);
-            AttachFace face = state.getValue(PoweredLight.FACE);
-            boolean powered = state.getValue(PoweredLight.ENABLED);
-
-            ModelFile light = prov.models().withExistingParent(ctx.getName(), EnderIO.loc("block/lightblock"));
-            ModelFile light_powered = prov.models().withExistingParent(ctx.getName() + "_powered", EnderIO.loc("block/lightblock"));
-            return ConfiguredModel.builder()
-                .modelFile(powered ? light : light_powered)
-                .rotationX(face == AttachFace.FLOOR ? 0 : (face == AttachFace.WALL ? 90 : 180))
-                .rotationY((int) (face == AttachFace.CEILING ? facing : facing.getOpposite()).toYRot())
-                .uvLock(face == AttachFace.WALL)
-                .build();
-        });
     }
 }

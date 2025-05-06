@@ -7,6 +7,7 @@ import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.blocks.soul_binder.SoulBindingRecipe;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.souldata.EngineSoul;
+import com.enderio.machines.common.souldata.FarmSoul;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
@@ -45,6 +46,8 @@ public class SoulBindingRecipeProvider extends RecipeProvider {
         build(MachineBlocks.POWERED_SPAWNER, Ingredient.of(MachineBlocks.POWERED_SPAWNER), 288000, 8, true,
                 recipeOutput);
         build(MachineBlocks.SOUL_ENGINE, Ingredient.of(MachineBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME,
+                recipeOutput);
+        build(MachineBlocks.FARMING_STATION, Ingredient.of(MachineBlocks.FARMING_STATION), 188000, 5, FarmSoul.NAME,
                 recipeOutput);
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityType.VILLAGER,
                 recipeOutput);

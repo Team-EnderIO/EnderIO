@@ -41,6 +41,7 @@ public class ClientPayloadHandler {
                 var buf = new RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(update.slotData()),
                         level.registryAccess());
                 enderBlockEntity.clientHandleBufferSync(buf);
+                buf.release();
             }
         });
     }
@@ -54,6 +55,7 @@ public class ClientPayloadHandler {
                     }
                 }
             }
+
         });
     }
 }

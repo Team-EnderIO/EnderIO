@@ -4,6 +4,7 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.registry.EnderIORegistries;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.config.BaseConfigLang;
+import com.enderio.base.common.hangglider.PlayerMovementHandler;
 import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
@@ -28,7 +29,6 @@ import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
 import com.enderio.base.data.loot.ChestLootProvider;
 import com.enderio.base.data.loot.EIOLootModifiersProvider;
-import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.BlockRecipeProvider;
 import com.enderio.base.data.recipe.FilterRecipeProvider;
 import com.enderio.base.data.recipe.FireCraftingRecipeProvider;
@@ -49,7 +49,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
@@ -61,6 +60,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -100,7 +100,6 @@ public class EnderIOBase {
         EIOBlocks.register(modEventBus);
         EIOBlockEntities.register(modEventBus);
         EIOFluids.register(modEventBus);
-        // EIOEnchantments.register(modEventBus);
         EIOTags.register();
         EIOMenus.register(modEventBus);
         EIOLang.register();
@@ -118,6 +117,8 @@ public class EnderIOBase {
         modEventBus.addListener(SoulVialItem::onCommonSetup);
         modEventBus.addListener(this::registerRegistries);
         Integrations.register();
+
+        NeoForge.EVENT_BUS.addListener(PlayerMovementHandler::onPlayerTick);
     }
 
     private void registerRegistries(NewRegistryEvent event) {
@@ -152,10 +153,8 @@ public class EnderIOBase {
         provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, lookupProvider,
                 existingFileHelper, List.of(new EIOAdvancementGenerator())));
         provider.addSubProvider(event.includeServer(),
-                new LootTableProvider(packOutput, Collections.emptySet(), List.of(
-                        new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new,
-                                LootContextParamSets.EMPTY),
-                        new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)),
+                new LootTableProvider(packOutput, Collections.emptySet(), List
+                        .of(new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)),
                         lookupProvider));
         generator.addProvider(true, provider);
     }

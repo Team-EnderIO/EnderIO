@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,8 +39,8 @@ public class EnderBlockEntity extends BlockEntity {
 
     public static final String DATA = "Data";
     public static final String INDEX = "Index";
-    private final List<NetworkDataSlot<?>> dataSlots = new ArrayList<>();
-    private final List<Runnable> afterDataSync = new ArrayList<>();
+    private final List<NetworkDataSlot<?>> dataSlots = new CopyOnWriteArrayList<>();
+    private final List<Runnable> afterDataSync = new CopyOnWriteArrayList<>();
     private boolean isChangedDeferred = true;
 
     private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> selfCapabilities = new HashMap<>();
@@ -172,7 +173,9 @@ public class EnderBlockEntity extends BlockEntity {
             buf.writeInt(i);
             dataSlots.get(i).write(buf);
         });
-        return buf.array();
+        byte[] arr = buf.array();
+        buf.release();
+        return arr;
     }
 
     @Deprecated(forRemoval = true, since = "7.1")
@@ -201,6 +204,7 @@ public class EnderBlockEntity extends BlockEntity {
             buf.writeInt(dataSlots.indexOf(slot));
             slot.write(buf, value);
             PacketDistributor.sendToServer(new ClientboundDataSlotChange(getBlockPos(), buf.array()));
+            buf.release();
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_NEIGHBORS);
         }
     }

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "enderio:block/soul_machine_bottom",
+    "east": "enderio:block/farming_station_side",
+    "north": "enderio:block/farming_station_side",
+    "particle": "enderio:block/farming_station_side",
+    "south": "enderio:block/farming_station_side",
+    "up": "enderio:block/soul_machine_top",
+    "west": "enderio:block/farming_station_side"
+  }
+}
