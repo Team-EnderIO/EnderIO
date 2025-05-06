@@ -3,7 +3,7 @@
     "enderio:fluid_tank",
     "enderio:pressurized_fluid_tank",
     "enderio:enchanter",
-    "enderio:primitive_alloy_smelter",
+    "enderio:enderface",
     "enderio:alloy_smelter",
     "enderio:painting_machine",
     "enderio:wired_charger",
@@ -22,6 +22,7 @@
     "enderio:drain",
     "enderio:vat",
     "enderio:xp_obelisk",
+    "enderio:farming_station",
     "enderio:inhibitor_obelisk",
     "enderio:aversion_obelisk",
     "enderio:relocator_obelisk"

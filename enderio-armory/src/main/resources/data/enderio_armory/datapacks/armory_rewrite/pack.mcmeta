@@ -1,0 +1,11 @@
+{
+  "features": {
+    "enabled": [
+      "enderio_armory:armory_rewrite"
+    ]
+  },
+  "pack": {
+    "description": "Enable the Ender IO Armory Rewrite. This is very early and will likely see many breaking changes.",
+    "pack_format": 48
+  }
+}

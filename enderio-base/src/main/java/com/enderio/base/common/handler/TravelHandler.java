@@ -4,8 +4,9 @@ import com.enderio.base.api.integration.IntegrationManager;
 import com.enderio.base.api.travel.TravelTarget;
 import com.enderio.base.api.travel.TravelTargetApi;
 import com.enderio.base.common.config.BaseConfig;
-import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.network.RequestTravelPacket;
+import com.enderio.core.common.energy.ItemStackEnergy;
 import java.util.Comparator;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
@@ -48,19 +49,21 @@ public class TravelHandler {
     }
 
     private static boolean canItemTeleport(Player player, InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() == EIOItems.TRAVEL_STAFF.get()) {
-            return true;
-        }
-
-        // if (stack.getItem() instanceof IDarkSteelItem darkSteelItem) {
-        // TODO: Check for upgrade;
-        // }
-        return false;
+        @Nullable
+        Boolean comp = player.getItemInHand(hand).get(EIODataComponents.TRAVEL_ITEM);
+        return comp != null && comp;
     }
 
     public static boolean canBlockTeleport(Player player) {
         return IntegrationManager.anyMatch(integration -> integration.canBlockTeleport(player));
+    }
+
+    public static boolean hasResources(ItemStack stack) {
+        return ItemStackEnergy.hasEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get());
+    }
+
+    public static void consumeResources(ItemStack stack) {
+        ItemStackEnergy.extractEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get(), false);
     }
 
     public static boolean shortTeleport(Level level, Player player) {
@@ -99,6 +102,11 @@ public class TravelHandler {
                 .isPresent();
     }
 
+    public static boolean interact(Level level, Player player) {
+        return getInteractionTarget(player).filter(iTravelTarget -> interactWithTarget(level, player, iTravelTarget))
+                .isPresent();
+    }
+
     public static boolean blockElevatorTeleport(Level level, Player player, Direction direction, boolean sendToServer) {
         if (direction.getStepY() != 0) {
             return getElevatorAnchorTarget(player, direction)
@@ -131,6 +139,10 @@ public class TravelHandler {
             return true;
         }
         return false;
+    }
+
+    private static boolean interactWithTarget(Level level, Player player, TravelTarget target) {
+        return target.interact(level, player);
     }
 
     public static Optional<Vec3> teleportPosition(Level level, Player player) {
@@ -225,11 +237,23 @@ public class TravelHandler {
         return null;
     }
 
+    public static Optional<TravelTarget> getInteractionTarget(Player player) {
+        Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
+
+        return TravelTargetApi.INSTANCE.getInItemRange(player.level(), player.blockPosition())
+                .filter(TravelTarget::canInteract)
+                .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
+                .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(),
+                        player.getXRot())) <= Math.toRadians(15))
+                .min(Comparator.comparingDouble(target -> Math
+                        .abs(getAngleRadians(positionVec, target.pos(), player.getYRot(), player.getXRot()))));
+    }
+
     public static Optional<TravelTarget> getTeleportAnchorTarget(Player player) {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
         return TravelTargetApi.INSTANCE.getInItemRange(player.level(), player.blockPosition())
-                .filter(target -> target.canTeleportTo())
+                .filter(TravelTarget::canTeleportTo)
                 .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
                 .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(),
                         player.getXRot())) <= Math.toRadians(15))
@@ -260,7 +284,7 @@ public class TravelHandler {
                 .stream()
                 .filter(target -> target.pos().getX() == anchorX && target.pos().getZ() == anchorZ)
                 .filter(target -> target.pos().getY() > lowerY && target.pos().getY() < upperY)
-                .filter(target -> target.canJumpTo())
+                .filter(TravelTarget::canJumpTo)
                 .filter(target -> isTeleportPositionClear(player.level(), target.pos()).isPresent())
                 .min(Comparator.comparingDouble(target -> Math.abs(target.pos().getY() - anchorY)));
     }
@@ -274,8 +298,6 @@ public class TravelHandler {
 
     /**
      *
-     * @param level
-     * @param target
      * @return Optional.empty if it can't teleport and the height where to place the player. This is so you can tp on top of carpets up to a whole block
      */
     public static Optional<Double> isTeleportPositionClear(BlockGetter level, BlockPos target) {

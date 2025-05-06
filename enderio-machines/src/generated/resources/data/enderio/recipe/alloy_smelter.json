@@ -2,9 +2,6 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "minecraft:cauldron"
-    },
     "F": {
       "item": "minecraft:furnace"
     },
@@ -12,16 +9,19 @@
       "tag": "c:gears/iron"
     },
     "I": {
-      "tag": "c:ingots/dark_steel"
+      "tag": "c:ingots/iron"
+    },
+    "O": {
+      "tag": "c:obsidians"
     },
     "V": {
       "item": "enderio:void_chassis"
     }
   },
   "pattern": [
-    "IFI",
+    "GFG",
     "FVF",
-    "GCG"
+    "IOI"
   ],
   "result": {
     "count": 1,

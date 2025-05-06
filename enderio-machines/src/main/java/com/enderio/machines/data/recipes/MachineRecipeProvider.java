@@ -8,7 +8,6 @@ import com.enderio.base.data.recipe.ShapedEntityStorageRecipeBuilder;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.init.MachineBlocks;
-import java.util.concurrent.CompletableFuture;
 import com.enderio.regilite.holder.RegiliteBlock;
 import net.minecraft.Util;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -28,6 +27,7 @@ import net.neoforged.neoforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class MachineRecipeProvider extends RecipeProvider {
 
@@ -126,46 +126,36 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .define('B', Items.BOOK)
                 .define('D', Tags.Items.GEMS_DIAMOND)
                 .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
-                .pattern("DBD")
+                .define('L', Items.LECTERN)
+                .pattern(" B ")
+                .pattern("DLD")
                 .pattern("III")
-                .pattern(" I ")
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BOOK))
-                .save(recipeOutput);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.PRIMITIVE_ALLOY_SMELTER.get())
-                .define('F', Blocks.FURNACE)
-                .define('D', Blocks.DEEPSLATE)
-                .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
-                .pattern("FFF")
-                .pattern("DGD")
-                .pattern("DDD")
-                .unlockedBy("has_ingredient",
-                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.ALLOY_SMELTER.get())
                 .define('F', Blocks.FURNACE)
-                .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
+                .define('I', Tags.Items.INGOTS_IRON)
                 .define('G', EIOTags.Items.GEARS_IRON)
-                .define('C', Items.CAULDRON)
                 .define('V', EIOBlocks.VOID_CHASSIS.get())
-                .pattern("IFI")
+                .define('O', Tags.Items.OBSIDIANS)
+                .pattern("GFG")
                 .pattern("FVF")
-                .pattern("GCG")
+                .pattern("IOI")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.STIRLING_GENERATOR.get())
-                .define('B', Blocks.STONE_BRICKS)
                 .define('F', Blocks.FURNACE)
-                .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
+                .define('I', Tags.Items.INGOTS_IRON)
                 .define('G', EIOTags.Items.GEARS_IRON)
                 .define('V', EIOBlocks.VOID_CHASSIS.get())
-                .define('P', Items.PISTON)
-                .pattern("BFB")
+                .define('O', Tags.Items.OBSIDIANS)
+                .define('D', Items.DEEPSLATE)
+                .pattern("GFG")
                 .pattern("IVI")
-                .pattern("GPG")
+                .pattern("ODO")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
                 .save(recipeOutput);
@@ -289,7 +279,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .pattern("IRI")
                 .pattern("IPI")
                 .define('I', Tags.Items.INGOTS_IRON)
-                .define('R', EIOItems.EXPERIENCE_ROD)
+                .define('R', EIOItems.VOID_VIAL)
                 .define('P', EIOTags.Items.GEMS_PULSATING_CRYSTAL)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))
@@ -384,7 +374,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.XP_OBELISK.get())
-                .define('R', EIOItems.EXPERIENCE_ROD)
+                .define('R', EIOItems.VOID_VIAL)
                 .define('I', EIOTags.Items.INGOTS_SOULARIUM)
                 .define('C', EIOBlocks.ENSOULED_CHASSIS)
                 .pattern(" R ")
@@ -392,7 +382,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .pattern("ICI")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance
-                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.EXPERIENCE_ROD).build()))
+                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.VOID_VIAL).build()))
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.AVERSION_OBELISK.get())
@@ -448,17 +438,15 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         // TODO: Enable once the block detector has a model.
-        /*ShapedRecipeBuilder
-            .shaped(RecipeCategory.MISC, MachineBlocks.BLOCK_DETECTOR.get())
-            .define('D', EIOBlocks.DARK_STEEL_PRESSURE_PLATE)
-            .define('N', EIOItems.DARK_STEEL_NUGGET)
-            .define('P', Items.PISTON)
-            .define('R', Items.REDSTONE_BLOCK)
-            .pattern("NDN")
-            .pattern("NPN")
-            .pattern("NRN")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Items.PISTON).build()))
-            .save(recipeOutput);*/
+        /*
+         * ShapedRecipeBuilder .shaped(RecipeCategory.MISC,
+         * MachineBlocks.BLOCK_DETECTOR.get()) .define('D',
+         * EIOBlocks.DARK_STEEL_PRESSURE_PLATE) .define('N', EIOItems.DARK_STEEL_NUGGET)
+         * .define('P', Items.PISTON) .define('R', Items.REDSTONE_BLOCK) .pattern("NDN")
+         * .pattern("NPN") .pattern("NRN") .unlockedBy("has_ingredient",
+         * InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().
+         * of(Items.PISTON).build())) .save(recipeOutput);
+         */
 
         eraseRecipes(recipeOutput);
     }
@@ -468,7 +456,6 @@ public class MachineRecipeProvider extends RecipeProvider {
         list.addAll(MachineBlocks.CAPACITOR_BANKS.values());
         list.add(MachineBlocks.FLUID_TANK);
         list.add(MachineBlocks.PRESSURIZED_FLUID_TANK);
-        list.add(MachineBlocks.PRIMITIVE_ALLOY_SMELTER);
         list.add(MachineBlocks.ALLOY_SMELTER);
         list.add(MachineBlocks.STIRLING_GENERATOR);
         list.add(MachineBlocks.SAG_MILL);
@@ -494,11 +481,10 @@ public class MachineRecipeProvider extends RecipeProvider {
 
     public void eraseRecipes(RecipeOutput recipeOutput) {
         for (var block : MACHINES) {
-            ShapelessRecipeBuilder
-                .shapeless(RecipeCategory.MISC, block)
-                .requires(block)
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block))
-                .save(recipeOutput, EnderIO.loc("erase_" + block.getId().getPath()));
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, block)
+                    .requires(block)
+                    .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block))
+                    .save(recipeOutput, EnderIO.loc("erase_" + block.getId().getPath()));
         }
     }
 }
