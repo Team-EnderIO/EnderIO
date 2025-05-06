@@ -15,7 +15,8 @@ public class MachineTags {
 
     public static class EntityTypes {
 
-        private static void init() {}
+        private static void init() {
+        }
 
         public static TagKey<EntityType<?>> SPAWNER_BLACKLIST = create("spawner_blacklist");
 
@@ -26,7 +27,8 @@ public class MachineTags {
 
     public static class Blocks {
 
-        private static void init() {}
+        private static void init() {
+        }
 
         public static TagKey<Block> RANGE_EXTENDER = create("range_extender");
 

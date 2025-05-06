@@ -18,6 +18,9 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.tag.MachineTags;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -37,10 +40,6 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implements RangedActor {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
@@ -58,7 +57,8 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     public WirelessChargerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.WIRELESS_CHARGER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
-        actionRange = new ActionRange(MachinesConfig.COMMON.WIRELESS_CHARGER_RANGE.get(), false, MachinesConfig.COMMON.WIRELESS_CHARGER_RANGE.get());
+        actionRange = new ActionRange(MachinesConfig.COMMON.WIRELESS_CHARGER_RANGE.get(), false,
+                MachinesConfig.COMMON.WIRELESS_CHARGER_RANGE.get());
         energyUpkeep = MachinesConfig.COMMON.ENERGY.WIRELESS_CHARGER_UPKEEP;
     }
 

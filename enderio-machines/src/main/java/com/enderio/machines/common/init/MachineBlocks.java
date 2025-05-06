@@ -49,6 +49,11 @@ import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockRegistry;
 import com.enderio.regilite.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMap;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.BlockItem;
@@ -60,12 +65,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class MachineBlocks {
     private static final BlockRegistry BLOCK_REGISTRY = EnderIOMachines.REGILITE.blockRegistry();
@@ -156,10 +155,10 @@ public class MachineBlocks {
             () -> MachineBlockEntities.WIRELESS_CHARGER);
 
     public static final RegiliteBlock<WirelessAntennaBlock> WIRELESS_CHARGER_ANTENNA = wirelessAntenna(
-        "wireless_charger_antenna", "Pulsating Wireless Antenna");
+            "wireless_charger_antenna", "Pulsating Wireless Antenna");
 
     public static final RegiliteBlock<WirelessAntennaBlock> WIRELESS_CHARGER_ANTENNA_ADVANCED = wirelessAntenna(
-        "wireless_charger_antenna_advanced", "Vibrant Wireless Antenna");
+            "wireless_charger_antenna_advanced", "Vibrant Wireless Antenna");
 
     public static final RegiliteBlock<LegacyMachineBlock> CREATIVE_POWER = BLOCK_REGISTRY
             .registerBlock("creative_power",
@@ -405,7 +404,8 @@ public class MachineBlocks {
                                 .isViewBlocking((pState, pLevel, pPos) -> false)
                                 .noOcclusion())
                 .setLootTable(MachinesLootTable::copyComponents)
-                .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, MachineTags.Blocks.RANGE_EXTENDER)
+                .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE,
+                        MachineTags.Blocks.RANGE_EXTENDER)
                 .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                         prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
                 .setTranslation(translation)
