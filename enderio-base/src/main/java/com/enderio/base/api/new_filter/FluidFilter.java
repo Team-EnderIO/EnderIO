@@ -6,7 +6,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 @ApiStatus.AvailableSince("8.0")
-public interface FluidStackFilter {
+public interface FluidFilter {
     /**
      * Test whether the fluid stack passes this filter.
      * @param target The target handler which can be used for comparisons using the destination before moving.

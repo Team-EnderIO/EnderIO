@@ -6,8 +6,8 @@ import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.common.capability.EntityFilterCapability;
-import com.enderio.base.common.filter.fluid.EnderFluidStackFilter;
-import com.enderio.base.common.filter.item.EnderItemStackFilter;
+import com.enderio.base.common.filter.fluid.EnderFluidFilter;
+import com.enderio.base.common.filter.item.EnderItemFilter;
 import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.mojang.serialization.Codec;
@@ -56,9 +56,9 @@ public class EIODataComponents {
             .registerComponentType("grinding_ball", builder -> builder.persistent(GrindingBallData.CODEC)
                     .networkSynchronized(GrindingBallData.STREAM_CODEC));
 
-    public static final Supplier<DataComponentType<EnderItemStackFilter>> ITEM_STACK_FILTER = DATA_COMPONENT_TYPES
-            .registerComponentType("item_filter", builder -> builder.persistent(EnderItemStackFilter.CODEC)
-                    .networkSynchronized(EnderItemStackFilter.STREAM_CODEC));
+    public static final Supplier<DataComponentType<EnderItemFilter>> ITEM_FILTER = DATA_COMPONENT_TYPES
+            .registerComponentType("item_filter", builder -> builder.persistent(EnderItemFilter.CODEC)
+                    .networkSynchronized(EnderItemFilter.STREAM_CODEC));
 
 //    public static final Supplier<DataComponentType<ExistingItemStackFilter>> EXISTING_ITEM_STACK_FILTER = DATA_COMPONENT_TYPES
 //            .registerComponentType("existing_item_stack_filter",
@@ -69,9 +69,9 @@ public class EIODataComponents {
 //            .registerComponentType("mod_id_item_stack_filter", builder -> builder.persistent(ModIdItemStackFilter.CODEC)
 //                    .networkSynchronized(ModIdItemStackFilter.STREAM_CODEC));
 
-    public static final Supplier<DataComponentType<EnderFluidStackFilter>> FLUID_STACK_FILTER = DATA_COMPONENT_TYPES
-        .registerComponentType("fluid_filter", builder -> builder.persistent(EnderFluidStackFilter.CODEC)
-            .networkSynchronized(EnderFluidStackFilter.STREAM_CODEC));
+    public static final Supplier<DataComponentType<EnderFluidFilter>> FLUID_FILTER = DATA_COMPONENT_TYPES
+        .registerComponentType("fluid_filter", builder -> builder.persistent(EnderFluidFilter.CODEC)
+            .networkSynchronized(EnderFluidFilter.STREAM_CODEC));
 
     public static final Supplier<DataComponentType<EntityFilterCapability.Component>> ENTITY_FILTER = DATA_COMPONENT_TYPES
             .registerComponentType("entity_filter",

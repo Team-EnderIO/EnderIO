@@ -3,12 +3,12 @@ package com.enderio.modconduits.common.modules.laserio;
 import com.direwolf20.laserio.common.containers.FilterBasicContainer;
 import com.direwolf20.laserio.common.containers.customhandler.FilterBasicHandler;
 import com.direwolf20.laserio.setup.LaserIODataComponents;
-import com.enderio.base.api.new_filter.ItemStackFilter;
+import com.enderio.base.api.new_filter.ItemFilter;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class LaserItemFilter implements ItemStackFilter {
+public class LaserItemFilter implements ItemFilter {
 
     private final ItemStack container;
 

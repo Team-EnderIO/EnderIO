@@ -1,10 +1,8 @@
 package com.enderio.base.common.filter.fluid;
 
 import com.enderio.base.common.filter.AbstractFilterMenu;
-import com.enderio.base.common.filter.item.EnderItemStackFilter;
-import com.enderio.base.common.filter.item.ItemFilterSlot;
 import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.item.filter.EnderFluidStackFilterItem;
+import com.enderio.base.common.item.filter.EnderFluidFilterItem;
 import com.enderio.base.common.menu.FluidFilterSlot;
 import com.enderio.core.common.network.menu.BoolSyncSlot;
 import com.enderio.core.common.network.menu.FluidStackSyncSlot;
@@ -18,15 +16,12 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class EnderFluidStackFilterMenu extends AbstractFilterMenu {
+public class EnderFluidFilterMenu extends AbstractFilterMenu {
 
     public static int IS_INVERTED_BUTTON_ID = 1;
     public static int SHOULD_COMPARE_COMPONENTS_BUTTON_ID = 2;
 
-    public final EnderFluidStackFilterItem.Type type;
+    public final EnderFluidFilterItem.Type type;
 
     @Nullable
     private final NonNullList<ItemStack> clientItems;
@@ -34,18 +29,18 @@ public class EnderFluidStackFilterMenu extends AbstractFilterMenu {
     private final BoolSyncSlot isInvertedSyncSlot;
     private final BoolSyncSlot shouldCompareComponentsSyncSlot;
 
-    public EnderFluidStackFilterMenu(@Nullable MenuType<?> menuType, EnderFluidStackFilterItem.Type type, int containerId,
-                                     Inventory playerInventory, FilterAccess filterAccess) {
+    public EnderFluidFilterMenu(@Nullable MenuType<?> menuType, EnderFluidFilterItem.Type type, int containerId,
+                                Inventory playerInventory, FilterAccess filterAccess) {
         super(menuType, containerId, playerInventory, filterAccess);
         this.type = type;
         this.clientItems = null;
 
         this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(
-                () -> getFilterStack().getOrDefault(EIODataComponents.FLUID_STACK_FILTER, EnderFluidStackFilter.EMPTY)
+                () -> getFilterStack().getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY)
                         .isDenyList()));
 
         this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(
-                () -> getFilterStack().getOrDefault(EIODataComponents.FLUID_STACK_FILTER, EnderFluidStackFilter.EMPTY)
+                () -> getFilterStack().getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY)
                         .shouldCompareComponents()));
 
         for (int i = 0; i < this.type.slotCount(); i++) {
@@ -61,8 +56,8 @@ public class EnderFluidStackFilterMenu extends AbstractFilterMenu {
         addPlayerInventorySlots(14, 47 + type.rowCount() * 18);
     }
 
-    public EnderFluidStackFilterMenu(@Nullable MenuType<?> menuType, EnderFluidStackFilterItem.Type type, int containerId,
-                                     Inventory playerInventory) {
+    public EnderFluidFilterMenu(@Nullable MenuType<?> menuType, EnderFluidFilterItem.Type type, int containerId,
+                                Inventory playerInventory) {
         super(menuType, containerId, playerInventory);
         this.type = type;
         this.clientItems = NonNullList.withSize(this.type.slotCount(), ItemStack.EMPTY);
@@ -88,7 +83,7 @@ public class EnderFluidStackFilterMenu extends AbstractFilterMenu {
 
     @EnsureSide(EnsureSide.Side.SERVER)
     private FluidStack getFluidInFilter(int slotIndex) {
-        var filter = getFilterStack().getOrDefault(EIODataComponents.FLUID_STACK_FILTER, EnderFluidStackFilter.EMPTY);
+        var filter = getFilterStack().getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY);
         if (slotIndex >= filter.matches().size()) {
             return FluidStack.EMPTY;
         }
@@ -99,7 +94,7 @@ public class EnderFluidStackFilterMenu extends AbstractFilterMenu {
     @EnsureSide(EnsureSide.Side.SERVER)
     private void setFluidInFilter(int slotIndex, FluidStack stack) {
         modifyFilterStack(filterStack -> {
-            var filter = filterStack.getOrDefault(EIODataComponents.FLUID_STACK_FILTER, EnderFluidStackFilter.EMPTY);
+            var filter = filterStack.getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY);
 
             // Copy match list
             var matches = NonNullList.withSize(type.slotCount(), FluidStack.EMPTY);
@@ -111,7 +106,7 @@ public class EnderFluidStackFilterMenu extends AbstractFilterMenu {
             matches.set(slotIndex, stack);
 
             // Set the new filter
-            filterStack.set(EIODataComponents.FLUID_STACK_FILTER, new EnderFluidStackFilter(matches, filter.isDenyList(),
+            filterStack.set(EIODataComponents.FLUID_FILTER, new EnderFluidFilter(matches, filter.isDenyList(),
                     filter.shouldCompareComponents()));
             return filterStack;
         });
@@ -121,8 +116,8 @@ public class EnderFluidStackFilterMenu extends AbstractFilterMenu {
     public boolean clickMenuButton(Player player, int id) {
         if (id == IS_INVERTED_BUTTON_ID) {
             modifyFilterStack(stack -> {
-                var filter = stack.getOrDefault(EIODataComponents.FLUID_STACK_FILTER, EnderFluidStackFilter.EMPTY);
-                stack.set(EIODataComponents.FLUID_STACK_FILTER, new EnderFluidStackFilter(filter.matches(),
+                var filter = stack.getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY);
+                stack.set(EIODataComponents.FLUID_FILTER, new EnderFluidFilter(filter.matches(),
                         !filter.isDenyList(), filter.shouldCompareComponents()));
                 return stack;
             });
@@ -130,8 +125,8 @@ public class EnderFluidStackFilterMenu extends AbstractFilterMenu {
             return true;
         } else if (id == SHOULD_COMPARE_COMPONENTS_BUTTON_ID && type.canMatchComponents()) {
             modifyFilterStack(stack -> {
-                var filter = stack.getOrDefault(EIODataComponents.FLUID_STACK_FILTER, EnderFluidStackFilter.EMPTY);
-                stack.set(EIODataComponents.FLUID_STACK_FILTER, new EnderFluidStackFilter(filter.matches(),
+                var filter = stack.getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY);
+                stack.set(EIODataComponents.FLUID_FILTER, new EnderFluidFilter(filter.matches(),
                         filter.isDenyList(), !filter.shouldCompareComponents()));
                 return stack;
             });

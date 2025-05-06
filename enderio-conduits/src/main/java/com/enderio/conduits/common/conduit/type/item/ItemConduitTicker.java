@@ -41,7 +41,7 @@ public class ItemConduitTicker
             // Get extraction filter.
             var extractFilter = extract.inventory()
                     .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
-                    .getCapability(EIOCapabilities.ITEM_STACK_FILTER);
+                    .getCapability(EIOCapabilities.ITEM_FILTER);
 
             IItemHandler extractHandler = extract.itemHandler();
             int extracted = 0;
@@ -86,7 +86,7 @@ public class ItemConduitTicker
 
                     var insertFilter = insert.inventory()
                             .getStackInSlot(ItemConduit.INSERT_FILTER_SLOT)
-                            .getCapability(EIOCapabilities.ITEM_STACK_FILTER);
+                            .getCapability(EIOCapabilities.ITEM_FILTER);
 
                     if (insertFilter != null) {
                         itemToInsert = insertFilter.test(insert.itemHandler, itemToInsert);

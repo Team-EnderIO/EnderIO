@@ -163,7 +163,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return stack.getCapability(EIOCapabilities.FLUID_STACK_FILTER) != null;
+        return stack.getCapability(EIOCapabilities.FLUID_FILTER) != null;
     }
 
     @Override

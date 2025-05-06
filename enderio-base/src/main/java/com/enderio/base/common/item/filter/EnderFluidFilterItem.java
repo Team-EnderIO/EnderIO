@@ -1,15 +1,14 @@
 package com.enderio.base.common.item.filter;
 
 import com.enderio.base.api.new_filter.FilterMenuProvider;
-import com.enderio.base.api.new_filter.FluidStackFilter;
-import com.enderio.base.common.filter.fluid.EnderFluidStackFilter;
-import com.enderio.base.common.filter.fluid.EnderFluidStackFilterMenu;
-import com.enderio.base.common.filter.item.EnderItemStackFilter;
+import com.enderio.base.api.new_filter.FluidFilter;
+import com.enderio.base.common.filter.fluid.EnderFluidFilter;
+import com.enderio.base.common.filter.fluid.EnderFluidFilterMenu;
+import com.enderio.base.common.filter.item.EnderItemFilter;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.filter.AbstractFilterMenu;
-import com.enderio.base.common.filter.item.EnderItemFilterMenu;
 import com.enderio.regilite.holder.RegiliteMenu;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -32,17 +31,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class EnderFluidStackFilterItem extends Item implements FilterMenuProvider {
+public class EnderFluidFilterItem extends Item implements FilterMenuProvider {
 
-    public static ICapabilityProvider<ItemStack, Void, FluidStackFilter> FLUID_STACK_FILTER_PROVIDER =
-        (stack, v) -> stack.getOrDefault(EIODataComponents.FLUID_STACK_FILTER, EnderFluidStackFilter.EMPTY);
+    public static ICapabilityProvider<ItemStack, Void, FluidFilter> FLUID_FILTER_PROVIDER =
+        (stack, v) -> stack.getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY);
 
     public static ICapabilityProvider<ItemStack, Void, FilterMenuProvider> FILTER_MENU_PROVIDER = (stack,
-            v) -> (EnderFluidStackFilterItem) stack.getItem();
+            v) -> (EnderFluidFilterItem) stack.getItem();
 
     private final Type type;
 
-    public EnderFluidStackFilterItem(Properties properties, Type type) {
+    public EnderFluidFilterItem(Properties properties, Type type) {
         super(properties);
         this.type = type;
     }
@@ -102,8 +101,8 @@ public class EnderFluidStackFilterItem extends Item implements FilterMenuProvide
             TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
 
-        var filter = stack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
-        if (!filter.equals(EnderItemStackFilter.EMPTY)) {
+        var filter = stack.getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY);
+        if (!filter.equals(EnderItemFilter.EMPTY)) {
             tooltipComponents.add(EIOLang.CONFIGURED);
         }
 
@@ -119,11 +118,11 @@ public class EnderFluidStackFilterItem extends Item implements FilterMenuProvide
     public enum Type {
         BASIC(() -> EIOMenus.FLUID_FILTER, 1, true);
 
-        private final Supplier<RegiliteMenu<EnderFluidStackFilterMenu>> menuType;
+        private final Supplier<RegiliteMenu<EnderFluidFilterMenu>> menuType;
         private final int rowCount;
         private final boolean canMatchComponents;
 
-        Type(Supplier<RegiliteMenu<EnderFluidStackFilterMenu>> menuType, int rowCount, boolean canMatchComponents) {
+        Type(Supplier<RegiliteMenu<EnderFluidFilterMenu>> menuType, int rowCount, boolean canMatchComponents) {
             this.menuType = menuType;
             this.rowCount = rowCount;
             this.canMatchComponents = canMatchComponents;
@@ -142,14 +141,14 @@ public class EnderFluidStackFilterItem extends Item implements FilterMenuProvide
         }
 
         @EnsureSide(EnsureSide.Side.SERVER)
-        public EnderFluidStackFilterMenu openMenu(int containerId, Inventory playerInventory,
+        public EnderFluidFilterMenu openMenu(int containerId, Inventory playerInventory,
                 AbstractFilterMenu.FilterAccess filterAccess) {
-            return new EnderFluidStackFilterMenu(menuType.get().get(), this, containerId, playerInventory, filterAccess);
+            return new EnderFluidFilterMenu(menuType.get().get(), this, containerId, playerInventory, filterAccess);
         }
 
         @EnsureSide(EnsureSide.Side.CLIENT)
-        public EnderFluidStackFilterMenu openMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-            return new EnderFluidStackFilterMenu(menuType.get().get(), this, containerId, playerInventory);
+        public EnderFluidFilterMenu openMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+            return new EnderFluidFilterMenu(menuType.get().get(), this, containerId, playerInventory);
         }
     }
 

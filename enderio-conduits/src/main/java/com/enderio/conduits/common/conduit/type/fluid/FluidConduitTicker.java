@@ -35,7 +35,7 @@ public class FluidConduitTicker
         // Test the extracted fluid against the target
         var extractFilter = receiver.inventory()
                 .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
-                .getCapability(EIOCapabilities.FLUID_STACK_FILTER);
+                .getCapability(EIOCapabilities.FLUID_FILTER);
 
         if (extractFilter != null) {
             extractedFluid = extractFilter.test(receiver.fluidHandler, extractedFluid);
@@ -51,7 +51,7 @@ public class FluidConduitTicker
             // Test fluid against insert filter.
             var insertFilter = insert.inventory()
                     .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
-                    .getCapability(EIOCapabilities.FLUID_STACK_FILTER);
+                    .getCapability(EIOCapabilities.FLUID_FILTER);
 
             if (insertFilter != null) {
                 fluidToInsert = insertFilter.test(insert.fluidHandler, fluidToInsert);

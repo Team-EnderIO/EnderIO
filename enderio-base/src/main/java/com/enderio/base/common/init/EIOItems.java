@@ -7,7 +7,7 @@ import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.common.capability.EntityFilterCapability;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
-import com.enderio.base.common.item.filter.EnderFluidStackFilterItem;
+import com.enderio.base.common.item.filter.EnderFluidFilterItem;
 import com.enderio.base.common.item.filter.EnderItemFilterItem;
 import com.enderio.base.common.item.filter.EntityFilter;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
@@ -449,35 +449,35 @@ public class EIOItems {
     public static final RegiliteItem<EnderItemFilterItem> BASIC_ITEM_FILTER = ITEM_REGISTRY
             .registerItem("basic_item_filter", props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.BASIC))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.ITEM_STACK_FILTER, EnderItemFilterItem.ITEM_STACK_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.ITEM_FILTER, EnderItemFilterItem.ITEM_FILTER_PROVIDER)
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderItemFilterItem.FILTER_MENU_PROVIDER);
 
     public static final RegiliteItem<EnderItemFilterItem> ADVANCED_ITEM_FILTER = ITEM_REGISTRY
             .registerItem("advanced_item_filter",
                     props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.ADVANCED))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.ITEM_STACK_FILTER, EnderItemFilterItem.ITEM_STACK_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.ITEM_FILTER, EnderItemFilterItem.ITEM_FILTER_PROVIDER)
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderItemFilterItem.FILTER_MENU_PROVIDER);
 
     public static final RegiliteItem<EnderItemFilterItem> BIG_ITEM_FILTER = ITEM_REGISTRY
             .registerItem("big_item_filter", props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.BIG))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.ITEM_STACK_FILTER, EnderItemFilterItem.ITEM_STACK_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.ITEM_FILTER, EnderItemFilterItem.ITEM_FILTER_PROVIDER)
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderItemFilterItem.FILTER_MENU_PROVIDER);
 
     public static final RegiliteItem<EnderItemFilterItem> BIG_ADVANCED_ITEM_FILTER = ITEM_REGISTRY
             .registerItem("big_advanced_item_filter",
                     props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.BIG_ADVANCED))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.ITEM_STACK_FILTER, EnderItemFilterItem.ITEM_STACK_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.ITEM_FILTER, EnderItemFilterItem.ITEM_FILTER_PROVIDER)
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderItemFilterItem.FILTER_MENU_PROVIDER);
 
-    public static final RegiliteItem<EnderFluidStackFilterItem> BASIC_FLUID_FILTER = ITEM_REGISTRY
+    public static final RegiliteItem<EnderFluidFilterItem> BASIC_FLUID_FILTER = ITEM_REGISTRY
             .registerItem("basic_fluid_filter",
-                props -> new EnderFluidStackFilterItem(props, EnderFluidStackFilterItem.Type.BASIC))
+                props -> new EnderFluidFilterItem(props, EnderFluidFilterItem.Type.BASIC))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.FLUID_STACK_FILTER, EnderFluidStackFilterItem.FLUID_STACK_FILTER_PROVIDER)
-            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderFluidStackFilterItem.FILTER_MENU_PROVIDER);
+            .addCapability(EIOCapabilities.FLUID_FILTER, EnderFluidFilterItem.FLUID_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderFluidFilterItem.FILTER_MENU_PROVIDER);
 
     public static final RegiliteItem<EntityFilter> ENTITY_FILTER = ITEM_REGISTRY
             .registerItem("entity_filter",

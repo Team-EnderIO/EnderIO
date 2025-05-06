@@ -1,6 +1,6 @@
 package com.enderio.base.common.filter.item;
 
-import com.enderio.base.api.new_filter.ItemStackFilter;
+import com.enderio.base.api.new_filter.ItemFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -14,20 +14,20 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-public record ModIdItemStackFilter(NonNullList<ItemStack> examples, boolean isDenyList) implements ItemStackFilter {
-    public static final Codec<ModIdItemStackFilter> CODEC = RecordCodecBuilder
+public record ModIdItemFilter(NonNullList<ItemStack> examples, boolean isDenyList) implements ItemFilter {
+    public static final Codec<ModIdItemFilter> CODEC = RecordCodecBuilder
             .create(componentInstance -> componentInstance
                     .group(OrderedListCodec.create(256, ItemStack.OPTIONAL_CODEC, ItemStack.EMPTY)
                             .fieldOf("examples")
-                            .forGetter(ModIdItemStackFilter::examples),
-                            Codec.BOOL.fieldOf("isDenyList").forGetter(ModIdItemStackFilter::isDenyList))
-                    .apply(componentInstance, ModIdItemStackFilter::new));
+                            .forGetter(ModIdItemFilter::examples),
+                            Codec.BOOL.fieldOf("isDenyList").forGetter(ModIdItemFilter::isDenyList))
+                    .apply(componentInstance, ModIdItemFilter::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ModIdItemStackFilter> STREAM_CODEC = StreamCodec.composite(
-            ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)), ModIdItemStackFilter::examples,
-            ByteBufCodecs.BOOL, ModIdItemStackFilter::isDenyList, ModIdItemStackFilter::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ModIdItemFilter> STREAM_CODEC = StreamCodec.composite(
+            ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)), ModIdItemFilter::examples,
+            ByteBufCodecs.BOOL, ModIdItemFilter::isDenyList, ModIdItemFilter::new);
 
-    public ModIdItemStackFilter(List<ItemStack> examples, boolean isDenyList) {
+    public ModIdItemFilter(List<ItemStack> examples, boolean isDenyList) {
         this(NonNullList.withSize(examples.size(), ItemStack.EMPTY), isDenyList);
 
         for (int i = 0; i < examples.size(); i++) {

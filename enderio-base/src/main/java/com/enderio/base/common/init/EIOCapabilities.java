@@ -3,8 +3,8 @@ package com.enderio.base.common.init;
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.api.new_filter.FilterMenuProvider;
-import com.enderio.base.api.new_filter.FluidStackFilter;
-import com.enderio.base.api.new_filter.ItemStackFilter;
+import com.enderio.base.api.new_filter.FluidFilter;
+import com.enderio.base.api.new_filter.ItemFilter;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
@@ -24,9 +24,9 @@ public class EIOCapabilities {
     public static final ItemCapability<FilterMenuProvider, Void> FILTER_MENU_PROVIDER = ItemCapability
             .createVoid(EnderIO.loc("filter_menu_provider"), FilterMenuProvider.class);
 
-    public static final ItemCapability<ItemStackFilter, Void> ITEM_STACK_FILTER = ItemCapability
-            .createVoid(EnderIO.loc("item_stack_filter"), ItemStackFilter.class);
+    public static final ItemCapability<ItemFilter, Void> ITEM_FILTER = ItemCapability
+            .createVoid(EnderIO.loc("item_stack_filter"), ItemFilter.class);
 
-    public static final ItemCapability<FluidStackFilter, Void> FLUID_STACK_FILTER = ItemCapability
-            .createVoid(EnderIO.loc("fluid_stack_filter"), FluidStackFilter.class);
+    public static final ItemCapability<FluidFilter, Void> FLUID_FILTER = ItemCapability
+            .createVoid(EnderIO.loc("fluid_stack_filter"), FluidFilter.class);
 }

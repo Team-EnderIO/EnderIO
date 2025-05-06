@@ -2,9 +2,8 @@ package com.enderio.modconduits.common.modules.laserio;
 
 import com.direwolf20.laserio.common.containers.FilterBasicContainer;
 import com.direwolf20.laserio.common.containers.customhandler.FilterBasicHandler;
-import com.direwolf20.laserio.common.items.cards.BaseCard;
 import com.direwolf20.laserio.setup.LaserIODataComponents;
-import com.enderio.base.api.new_filter.FluidStackFilter;
+import com.enderio.base.api.new_filter.FluidFilter;
 
 import java.util.Optional;
 
@@ -15,7 +14,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
 
-public class LaserFluidFilter implements FluidStackFilter {
+public class LaserFluidFilter implements FluidFilter {
 
     private final ItemStack container;
 

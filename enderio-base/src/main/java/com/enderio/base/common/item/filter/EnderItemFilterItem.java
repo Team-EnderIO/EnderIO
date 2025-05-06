@@ -1,8 +1,8 @@
 package com.enderio.base.common.item.filter;
 
 import com.enderio.base.api.new_filter.FilterMenuProvider;
-import com.enderio.base.api.new_filter.ItemStackFilter;
-import com.enderio.base.common.filter.item.EnderItemStackFilter;
+import com.enderio.base.api.new_filter.ItemFilter;
+import com.enderio.base.common.filter.item.EnderItemFilter;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.lang.EIOLang;
@@ -31,8 +31,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class EnderItemFilterItem extends Item implements FilterMenuProvider {
 
-    public static ICapabilityProvider<ItemStack, Void, ItemStackFilter> ITEM_STACK_FILTER_PROVIDER = (stack, v) -> stack
-            .getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
+    public static ICapabilityProvider<ItemStack, Void, ItemFilter> ITEM_FILTER_PROVIDER = (stack, v) -> stack
+            .getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY);
 
     public static ICapabilityProvider<ItemStack, Void, FilterMenuProvider> FILTER_MENU_PROVIDER = (stack,
             v) -> (EnderItemFilterItem) stack.getItem();
@@ -99,8 +99,8 @@ public class EnderItemFilterItem extends Item implements FilterMenuProvider {
             TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
 
-        var filter = stack.getOrDefault(EIODataComponents.ITEM_STACK_FILTER, EnderItemStackFilter.EMPTY);
-        if (!filter.equals(EnderItemStackFilter.EMPTY)) {
+        var filter = stack.getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY);
+        if (!filter.equals(EnderItemFilter.EMPTY)) {
             tooltipComponents.add(EIOLang.CONFIGURED);
         }
 

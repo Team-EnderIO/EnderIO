@@ -1,6 +1,6 @@
 package com.enderio.base.common.filter.item;
 
-import com.enderio.base.api.new_filter.ItemStackFilter;
+import com.enderio.base.api.new_filter.ItemFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -14,28 +14,28 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 // This is just an example as to why we needed a more extensive filter interface :)
-public record ExistingItemStackFilter(boolean hasSnapshot, NonNullList<ItemStack> snapshot,
-        boolean shouldCompareComponents, boolean isInverted) implements ItemStackFilter {
+public record ExistingItemFilter(boolean hasSnapshot, NonNullList<ItemStack> snapshot,
+                                 boolean shouldCompareComponents, boolean isInverted) implements ItemFilter {
 
-    public static final Codec<ExistingItemStackFilter> CODEC = RecordCodecBuilder
+    public static final Codec<ExistingItemFilter> CODEC = RecordCodecBuilder
             .create(componentInstance -> componentInstance
-                    .group(Codec.BOOL.fieldOf("hasSnapshot").forGetter(ExistingItemStackFilter::hasSnapshot),
+                    .group(Codec.BOOL.fieldOf("hasSnapshot").forGetter(ExistingItemFilter::hasSnapshot),
                             OrderedListCodec.create(256, ItemStack.OPTIONAL_CODEC, ItemStack.EMPTY)
                                     .fieldOf("snapshot")
-                                    .forGetter(ExistingItemStackFilter::snapshot),
+                                    .forGetter(ExistingItemFilter::snapshot),
                             Codec.BOOL.fieldOf("shouldCompareComponents")
-                                    .forGetter(ExistingItemStackFilter::shouldCompareComponents),
-                            Codec.BOOL.fieldOf("isDenyList").forGetter(ExistingItemStackFilter::isInverted))
-                    .apply(componentInstance, ExistingItemStackFilter::new));
+                                    .forGetter(ExistingItemFilter::shouldCompareComponents),
+                            Codec.BOOL.fieldOf("isDenyList").forGetter(ExistingItemFilter::isInverted))
+                    .apply(componentInstance, ExistingItemFilter::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ExistingItemStackFilter> STREAM_CODEC = StreamCodec
-            .composite(ByteBufCodecs.BOOL, ExistingItemStackFilter::hasSnapshot,
-                    ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)), ExistingItemStackFilter::snapshot,
-                    ByteBufCodecs.BOOL, ExistingItemStackFilter::shouldCompareComponents, ByteBufCodecs.BOOL,
-                    ExistingItemStackFilter::isInverted, ExistingItemStackFilter::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ExistingItemFilter> STREAM_CODEC = StreamCodec
+            .composite(ByteBufCodecs.BOOL, ExistingItemFilter::hasSnapshot,
+                    ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)), ExistingItemFilter::snapshot,
+                    ByteBufCodecs.BOOL, ExistingItemFilter::shouldCompareComponents, ByteBufCodecs.BOOL,
+                    ExistingItemFilter::isInverted, ExistingItemFilter::new);
 
-    public ExistingItemStackFilter(boolean hasSnapshot, List<ItemStack> snapshot, boolean shouldCompareComponents,
-            boolean isInverted) {
+    public ExistingItemFilter(boolean hasSnapshot, List<ItemStack> snapshot, boolean shouldCompareComponents,
+                              boolean isInverted) {
         this(hasSnapshot, NonNullList.withSize(snapshot.size(), ItemStack.EMPTY), shouldCompareComponents, isInverted);
 
         for (int i = 0; i < snapshot.size(); i++) {

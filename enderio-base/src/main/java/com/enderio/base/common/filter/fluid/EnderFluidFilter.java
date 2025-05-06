@@ -1,7 +1,6 @@
 package com.enderio.base.common.filter.fluid;
 
-import com.enderio.base.api.new_filter.FluidStackFilter;
-import com.enderio.base.common.item.filter.EnderFluidStackFilterItem;
+import com.enderio.base.api.new_filter.FluidFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -15,32 +14,32 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public record EnderFluidStackFilter(NonNullList<FluidStack> matches, boolean isDenyList, boolean shouldCompareComponents) implements FluidStackFilter {
+public record EnderFluidFilter(NonNullList<FluidStack> matches, boolean isDenyList, boolean shouldCompareComponents) implements FluidFilter {
 
-    public static final EnderFluidStackFilter EMPTY = new EnderFluidStackFilter(NonNullList.of(FluidStack.EMPTY), false, false);
+    public static final EnderFluidFilter EMPTY = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY), false, false);
 
     // TODO: 1.22: Rename fields.
-    public static final Codec<EnderFluidStackFilter> CODEC = RecordCodecBuilder.create(inst -> inst
+    public static final Codec<EnderFluidFilter> CODEC = RecordCodecBuilder.create(inst -> inst
         .group(
             OrderedListCodec.create(256, FluidStack.OPTIONAL_CODEC, FluidStack.EMPTY)
                 .fieldOf("fluids")
-                .forGetter(EnderFluidStackFilter::matches),
-            Codec.BOOL.fieldOf("isInvert").forGetter(EnderFluidStackFilter::isDenyList),
-            Codec.BOOL.fieldOf("isNbt").forGetter(EnderFluidStackFilter::shouldCompareComponents))
-        .apply(inst, EnderFluidStackFilter::new));
+                .forGetter(EnderFluidFilter::matches),
+            Codec.BOOL.fieldOf("isInvert").forGetter(EnderFluidFilter::isDenyList),
+            Codec.BOOL.fieldOf("isNbt").forGetter(EnderFluidFilter::shouldCompareComponents))
+        .apply(inst, EnderFluidFilter::new));
 
     // @formatter:off
-    public static final StreamCodec<RegistryFriendlyByteBuf, EnderFluidStackFilter> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, EnderFluidFilter> STREAM_CODEC = StreamCodec.composite(
         FluidStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)),
-        EnderFluidStackFilter::matches,
+        EnderFluidFilter::matches,
         ByteBufCodecs.BOOL,
-        EnderFluidStackFilter::isDenyList,
+        EnderFluidFilter::isDenyList,
         ByteBufCodecs.BOOL,
-        EnderFluidStackFilter::shouldCompareComponents,
-        EnderFluidStackFilter::new);
+        EnderFluidFilter::shouldCompareComponents,
+        EnderFluidFilter::new);
     // @formatter:on
 
-    public EnderFluidStackFilter(List<FluidStack> matches, boolean isDenyList, boolean shouldCompareComponents) {
+    public EnderFluidFilter(List<FluidStack> matches, boolean isDenyList, boolean shouldCompareComponents) {
         this(NonNullList.withSize(matches.size(), FluidStack.EMPTY), isDenyList, shouldCompareComponents);
 
         for (int i = 0; i < matches.size(); i++) {
