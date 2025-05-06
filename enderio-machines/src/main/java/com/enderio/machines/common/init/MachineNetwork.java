@@ -25,7 +25,7 @@ public class MachineNetwork {
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar(EnderCore.MOD_ID).versioned(PROTOCOL_VERSION);
+        final PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
 
         // Sync soul data (optional)
         SpawnerSoul.SPAWNER.subscribeAsSyncable(PoweredSpawnerSoulPacket::new);

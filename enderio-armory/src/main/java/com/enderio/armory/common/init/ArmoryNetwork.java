@@ -23,7 +23,7 @@ public class ArmoryNetwork {
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
 
-        final PayloadRegistrar registrar = event.registrar(EnderIO.NAMESPACE).versioned(PROTOCOL_VERSION);
+        final PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
 
         registrar.playToServer(TravelEndabledUpdatePacket.TYPE, TravelEndabledUpdatePacket.STREAM_CODEC,
                 TravelUpgrade::handleTravelEnabledPacket);
