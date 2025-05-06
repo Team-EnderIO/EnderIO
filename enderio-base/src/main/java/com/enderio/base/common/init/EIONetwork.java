@@ -7,7 +7,6 @@ import com.enderio.base.common.network.ClientPayloadHandler;
 import com.enderio.base.common.network.FilterUpdatePacket;
 import com.enderio.base.common.network.RequestTravelPacket;
 import com.enderio.base.common.network.ServerPayloadHandler;
-import com.enderio.base.common.network.ServerToClientLightUpdate;
 import com.enderio.base.common.network.SyncTravelDataPacket;
 import com.enderio.base.common.network.TravelTargetRemovedPacket;
 import com.enderio.base.common.network.TravelTargetUpdatedPacket;
@@ -20,7 +19,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class EIONetwork {
-    private static final String PROTOCOL_VERSION = "1.0";
+    private static final String PROTOCOL_VERSION = "2";
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
@@ -34,9 +33,6 @@ public class EIONetwork {
 
         registrar.playToClient(TravelTargetRemovedPacket.TYPE, TravelTargetRemovedPacket.STREAM_CODEC,
                 ClientPayloadHandler.getInstance()::handleRemoveTravelTarget);
-
-        registrar.playToClient(ServerToClientLightUpdate.TYPE, ServerToClientLightUpdate.STREAM_CODEC,
-                ClientPayloadHandler.getInstance()::handleLightUpdate);
 
         registrar.playToServer(UpdateCoordinateSelectionNameMenuPacket.TYPE,
                 UpdateCoordinateSelectionNameMenuPacket.STREAM_CODEC,

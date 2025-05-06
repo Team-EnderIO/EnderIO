@@ -2,8 +2,6 @@ package com.enderio.base.common.init;
 
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.blockentity.EnderSkullBlockEntity;
-import com.enderio.base.common.blockentity.LightNodeBlockEntity;
-import com.enderio.base.common.blockentity.PoweredLightBlockEntity;
 import com.enderio.base.common.paint.blockentity.DoublePaintedBlockEntity;
 import com.enderio.base.common.paint.blockentity.SinglePaintedBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
@@ -29,17 +27,6 @@ public class EIOBlockEntities {
 
     public static final RegiliteBlockEntity<DoublePaintedBlockEntity> DOUBLE_PAINTED = BLOCK_ENTITY_REGISTRY
         .registerBlockEntity("double_painted", DoublePaintedBlockEntity::new, EIOBlocks.PAINTED_SLAB);
-
-    public static final RegiliteBlockEntity<PoweredLightBlockEntity> POWERED_LIGHT = BLOCK_ENTITY_REGISTRY
-        .registerBlockEntity("powered_light",
-            PoweredLightBlockEntity::new,
-            EIOBlocks.POWERED_LIGHT,
-            EIOBlocks.POWERED_LIGHT_INVERTED,
-            EIOBlocks.POWERED_LIGHT_WIRELESS,
-            EIOBlocks.POWERED_LIGHT_INVERTED_WIRELESS);
-
-    public static final RegiliteBlockEntity<LightNodeBlockEntity> LIGHT_NODE = BLOCK_ENTITY_REGISTRY
-        .registerBlockEntity("light_node", LightNodeBlockEntity::new, EIOBlocks.LIGHT_NODE);
 
     public static final RegiliteBlockEntity<EnderSkullBlockEntity> ENDER_SKULL = BLOCK_ENTITY_REGISTRY
         .registerBlockEntity("ender_skull", EnderSkullBlockEntity::new, EIOBlocks.WALL_ENDERMAN_HEAD, EIOBlocks.ENDERMAN_HEAD);
