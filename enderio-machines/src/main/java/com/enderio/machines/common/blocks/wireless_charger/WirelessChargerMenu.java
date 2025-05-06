@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blocks.wireless_charger;
 
+import com.enderio.core.common.network.menu.IntSyncSlot;
 import com.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
@@ -13,15 +14,21 @@ public class WirelessChargerMenu extends PoweredMachineMenu<WirelessChargerBlock
     public static final int DECREASE_BUTTON_ID = 1;
     public static final int VISIBILITY_BUTTON_ID = 2;
 
+    private final IntSyncSlot maxRange;
+
     public WirelessChargerMenu(int pContainerId, Inventory inventory, WirelessChargerBlockEntity blockEntity) {
         super(MachineMenus.WIRELESS_CHARGER.get(), pContainerId, inventory, blockEntity);
         addSlots();
+
+        maxRange = addSyncSlot(IntSyncSlot.readOnly(blockEntity::getMaxRange));
     }
 
     public WirelessChargerMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(MachineMenus.WIRELESS_CHARGER.get(), containerId, playerInventory, buf,
                 MachineBlockEntities.WIRELESS_CHARGER.get());
         addSlots();
+
+        maxRange = addSyncSlot(IntSyncSlot.standalone());
     }
 
     private void addSlots() {
@@ -32,6 +39,10 @@ public class WirelessChargerMenu extends PoweredMachineMenu<WirelessChargerBlock
     public boolean isRangeVisible() {
         // This is synced via the block entity.
         return getBlockEntity().isRangeVisible();
+    }
+
+    public int getMaxRange() {
+        return maxRange.get();
     }
 
     @Override

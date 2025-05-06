@@ -5,9 +5,7 @@ import net.neoforged.fml.LogicalSide;
 
 public interface RangedActor {
 
-    default int getMaxRange() {
-        return getActionRange().maxRange();
-    }
+    int getMaxRange();
 
     ActionRange getActionRange();
 
@@ -34,7 +32,7 @@ public interface RangedActor {
     @UseOnly(LogicalSide.SERVER)
     default void increaseRange() {
         var actionRange = getActionRange();
-        if (actionRange.range() < actionRange.maxRange()) {
+        if (actionRange.range() < getMaxRange()) {
             setActionRange(actionRange.increment());
         }
     }

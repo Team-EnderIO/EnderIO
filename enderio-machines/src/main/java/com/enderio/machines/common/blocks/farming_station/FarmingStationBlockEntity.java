@@ -24,11 +24,6 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.souldata.FarmSoul;
 import com.mojang.authlib.GameProfile;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -56,6 +51,12 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
 ;
 
 public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingStation {
@@ -65,7 +66,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.FARM_USAGE);
 
-    private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false, 5);
+    private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);
 
     public static final SingleSlotAccess AXE = new SingleSlotAccess();
     public static final SingleSlotAccess HOE = new SingleSlotAccess();
@@ -116,6 +117,11 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         if (level != null) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
+    }
+
+    @Override
+    public int getMaxRange() {
+        return 5;
     }
 
     @Override

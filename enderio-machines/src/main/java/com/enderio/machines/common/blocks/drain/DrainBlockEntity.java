@@ -23,9 +23,6 @@ import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -47,6 +44,10 @@ import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 public class DrainBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FluidTankUser {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
@@ -54,7 +55,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.DRAIN_USAGE);
 
-    private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false, 10);
+    private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);
 
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
@@ -82,13 +83,18 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
     @Override
     @UseOnly(LogicalSide.SERVER)
     public void setActionRange(ActionRange actionRange) {
-        this.actionRange = actionRange.clamp(0, actionRange.maxRange());
+        this.actionRange = actionRange.clamp(0, getMaxRange());
         updateLocations();
         setChanged();
 
         if (level != null) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
+    }
+
+    @Override
+    public int getMaxRange() {
+        return 10;
     }
 
     @Override
