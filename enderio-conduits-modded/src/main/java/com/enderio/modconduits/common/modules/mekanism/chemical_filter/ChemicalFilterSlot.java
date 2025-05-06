@@ -1,17 +1,24 @@
 package com.enderio.modconduits.common.modules.mekanism.chemical_filter;
 
-import com.enderio.base.common.menu.FilterSlot;
+import com.enderio.base.common.filter.FilterSlot;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
 import net.minecraft.world.item.ItemStack;
 
 public class ChemicalFilterSlot extends FilterSlot<ChemicalStack> {
 
-    public ChemicalFilterSlot(Consumer<ChemicalStack> consumer, int pSlot, int pX, int pY) {
-        super(consumer, pSlot, pX, pY);
+    public ChemicalFilterSlot(Supplier<ChemicalStack> getter, Consumer<ChemicalStack> setter, int pSlot, int pX, int pY) {
+        super(getter, setter, pSlot, pX, pY);
+    }
+
+    @Override
+    protected ChemicalStack emptyResource() {
+        return ChemicalStack.EMPTY;
     }
 
     @Override

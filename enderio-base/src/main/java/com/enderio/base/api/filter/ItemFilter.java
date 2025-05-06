@@ -1,4 +1,4 @@
-package com.enderio.base.api.new_filter;
+package com.enderio.base.api.filter;
 
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;

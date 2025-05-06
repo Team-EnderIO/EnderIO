@@ -3,7 +3,7 @@ package com.enderio.modconduits.common.modules.laserio;
 import com.direwolf20.laserio.common.containers.FilterBasicContainer;
 import com.direwolf20.laserio.common.containers.customhandler.FilterBasicHandler;
 import com.direwolf20.laserio.setup.LaserIODataComponents;
-import com.enderio.base.api.new_filter.FluidFilter;
+import com.enderio.base.api.filter.FluidFilter;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;

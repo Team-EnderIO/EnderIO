@@ -1,7 +1,8 @@
 package com.enderio.base.common.filter.fluid;
 
-import com.enderio.base.api.new_filter.FilterMenuProvider;
-import com.enderio.base.api.new_filter.FluidFilter;
+import com.enderio.base.api.filter.FilterMenuProvider;
+import com.enderio.base.api.filter.FluidFilter;
+import com.enderio.base.common.filter.AbstractFilterItem;
 import com.enderio.base.common.filter.AbstractFilterMenu;
 import com.enderio.base.common.filter.item.general.EnderItemFilter;
 import com.enderio.base.common.init.EIODataComponents;
@@ -11,6 +12,7 @@ import com.enderio.regilite.holder.RegiliteMenu;
 import java.util.List;
 import java.util.function.Supplier;
 import me.liliandev.ensure.ensures.EnsureSide;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,13 +30,10 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
-public class EnderFluidFilterItem extends Item implements FilterMenuProvider {
+public class EnderFluidFilterItem extends AbstractFilterItem<EnderFluidFilter> {
 
     public static ICapabilityProvider<ItemStack, Void, FluidFilter> FLUID_FILTER_PROVIDER = (stack, v) -> stack
             .getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY);
-
-    public static ICapabilityProvider<ItemStack, Void, FilterMenuProvider> FILTER_MENU_PROVIDER = (stack,
-            v) -> (EnderFluidFilterItem) stack.getItem();
 
     private final Type type;
 
@@ -44,53 +43,18 @@ public class EnderFluidFilterItem extends Item implements FilterMenuProvider {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if (player.isSteppingCarefully()) {
-            if (player instanceof ServerPlayer serverPlayer) {
-                var itemInHand = player.getItemInHand(usedHand);
-
-                serverPlayer.openMenu(new MenuProvider() {
-                    @Override
-                    public Component getDisplayName() {
-                        return getName(itemInHand);
-                    }
-
-                    @Override
-                    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-                        return type.openMenu(containerId, inventory,
-                                new AbstractFilterMenu.HandFilterAccess(player, itemInHand));
-                    }
-                });
-            }
-        }
-
-        return super.use(level, player, usedHand);
+    protected Supplier<DataComponentType<EnderFluidFilter>> dataComponentType() {
+        return EIODataComponents.FLUID_FILTER;
     }
 
     @Override
-    public void openMenu(Player player, IItemHandlerModifiable itemHandler, int slot,
-            @Nullable Runnable goBackRunnable) {
-        if (player instanceof ServerPlayer serverPlayer) {
-            var filterStack = itemHandler.getStackInSlot(slot);
+    protected EnderFluidFilter defaultFilter() {
+        return EnderFluidFilter.EMPTY;
+    }
 
-            serverPlayer.openMenu(new MenuProvider() {
-                @Override
-                public Component getDisplayName() {
-                    return getName(filterStack);
-                }
-
-                @Override
-                public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-                    return type.openMenu(containerId, inventory, new AbstractFilterMenu.InventoryFilterAccess(
-                            filterStack, itemHandler, slot, goBackRunnable));
-                }
-
-                public boolean shouldTriggerClientSideContainerClosingOnOpen() {
-                    // Prevents the mouse from jumping when moving between menus
-                    return false;
-                }
-            });
-        }
+    @Override
+    protected AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, AbstractFilterMenu.FilterAccess filterAccess) {
+        return type.openMenu(containerId, playerInventory, filterAccess);
     }
 
     @Override
@@ -98,15 +62,11 @@ public class EnderFluidFilterItem extends Item implements FilterMenuProvider {
             TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
 
-        var filter = stack.getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY);
-        if (!filter.equals(EnderItemFilter.EMPTY)) {
-            tooltipComponents.add(EIOLang.CONFIGURED);
-        }
-
         // Display warning on basic item filters which have been set to match on
         // NBT/Components.
         // This avoids us invalidating existing filters, but lets the user know that the
         // filter has invalid settings that they can't see.
+        var filter = getFilter(stack);
         if (filter.shouldCompareComponents() && !type.canMatchComponents()) {
             tooltipComponents.add(EIOLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH);
         }

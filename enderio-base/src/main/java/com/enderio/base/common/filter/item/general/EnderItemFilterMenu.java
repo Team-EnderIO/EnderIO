@@ -7,6 +7,7 @@ import com.enderio.core.common.network.menu.BoolSyncSlot;
 import com.enderio.core.common.network.menu.EnumSyncSlot;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -14,7 +15,9 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class EnderItemFilterMenu extends AbstractFilterMenu {
+import java.util.function.Supplier;
+
+public class EnderItemFilterMenu extends AbstractFilterMenu<EnderItemFilter> {
 
     public static int IS_INVERTED_BUTTON_ID = 1;
     public static int SHOULD_COMPARE_COMPONENTS_BUTTON_ID = 2;
@@ -91,6 +94,16 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
         addPlayerInventorySlots(14, 47 + type.rowCount() * 18);
     }
 
+    @Override
+    protected Supplier<DataComponentType<EnderItemFilter>> dataComponentType() {
+        return EIODataComponents.ITEM_FILTER;
+    }
+
+    @Override
+    protected EnderItemFilter defaultFilter() {
+        return EnderItemFilter.EMPTY;
+    }
+
     public boolean isInverted() {
         return isInvertedSyncSlot.get();
     }
@@ -117,7 +130,7 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
 
     @EnsureSide(EnsureSide.Side.SERVER)
     private ItemStack getItemInFilter(int slotIndex) {
-        var filter = getFilterStack().getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY);
+        var filter = getFilter();
         if (slotIndex >= filter.matches().size()) {
             return ItemStack.EMPTY;
         }
@@ -127,9 +140,7 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
 
     @EnsureSide(EnsureSide.Side.SERVER)
     private void setItemInFilter(int slotIndex, ItemStack stack) {
-        modifyFilterStack(filterStack -> {
-            var filter = filterStack.getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY);
-
+        modifyFilter(filter -> {
             // Copy match list
             var matches = NonNullList.withSize(type.slotCount(), ItemStack.EMPTY);
             for (int i = 0; i < matches.size(); i++) {
@@ -140,30 +151,17 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
             matches.set(slotIndex, stack);
 
             // Set the new filter
-            filterStack.set(EIODataComponents.ITEM_FILTER, new EnderItemFilter(matches, filter.isDenyList(),
-                    filter.shouldCompareComponents(), filter.damageFilterMode()));
-            return filterStack;
+            return new EnderItemFilter(matches, filter.isDenyList(), filter.shouldCompareComponents(), filter.damageFilterMode());
         });
     }
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
         if (id == IS_INVERTED_BUTTON_ID) {
-            modifyFilterStack(stack -> {
-                var filter = stack.getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY);
-                stack.set(EIODataComponents.ITEM_FILTER, new EnderItemFilter(filter.matches(), !filter.isDenyList(),
-                        filter.shouldCompareComponents(), filter.damageFilterMode()));
-                return stack;
-            });
-
+            modifyFilter(filter -> new EnderItemFilter(filter.matches(), !filter.isDenyList(), filter.shouldCompareComponents(), filter.damageFilterMode()));
             return true;
         } else if (id == SHOULD_COMPARE_COMPONENTS_BUTTON_ID && type.canMatchComponents()) {
-            modifyFilterStack(stack -> {
-                var filter = stack.getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY);
-                stack.set(EIODataComponents.ITEM_FILTER, new EnderItemFilter(filter.matches(), filter.isDenyList(),
-                        !filter.shouldCompareComponents(), filter.damageFilterMode()));
-                return stack;
-            });
+            modifyFilter(filter -> new EnderItemFilter(filter.matches(), filter.isDenyList(), !filter.shouldCompareComponents(), filter.damageFilterMode()));
             return true;
         }
 
@@ -173,21 +171,5 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void doClick(int slotId, int button, ClickType clickType, Player player) {
-        if (slotId >= 0 && slotId < type.slotCount()) {
-            // Only allow PICKUP (click) or QUICK_MOVE (shift + click) events.
-            if (clickType != ClickType.PICKUP && clickType != ClickType.QUICK_MOVE) {
-                return;
-            }
-
-//            if (!capability.getEntry(slotId).isEmpty()) {
-//                capability.setEntry(slotId, ItemStack.EMPTY);
-//            }
-        }
-
-        super.doClick(slotId, button, clickType, player);
     }
 }

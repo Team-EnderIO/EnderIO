@@ -1,6 +1,6 @@
 package com.enderio.base.common.filter.item;
 
-import com.enderio.base.common.menu.FilterSlot;
+import com.enderio.base.common.filter.FilterSlot;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -8,20 +8,23 @@ import net.minecraft.world.item.ItemStack;
 
 public class ItemFilterSlot extends FilterSlot<ItemStack> {
 
-    private final Supplier<ItemStack> item;
+    public ItemFilterSlot(Supplier<ItemStack> getter, Consumer<ItemStack> setter, int pSlot, int pX, int pY) {
+        super(getter, setter, pSlot, pX, pY);
+    }
 
-    public ItemFilterSlot(Supplier<ItemStack> item, Consumer<ItemStack> consumer, int pSlot, int pX, int pY) {
-        super(consumer, pSlot, pX, pY);
-        this.item = item;
+    @Override
+    protected ItemStack emptyResource() {
+        return ItemStack.EMPTY;
     }
 
     @Override
     public ItemStack getItem() {
-        return item.get();
+        return getResource();
     }
 
     @Override
     public ItemStack processResource(ItemStack resource) {
+        // TODO: when we add limited, we'll want to do something with this to allow increasing item stacks etc.
         return resource.copyWithCount(1);
     }
 

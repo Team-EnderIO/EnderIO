@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @net.minecraft.MethodsReturnNonnullByDefault
 
-package com.enderio.base.api.new_filter;
+package com.enderio.base.common.filter.entity;

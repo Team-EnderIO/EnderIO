@@ -1,7 +1,6 @@
 package com.enderio.modconduits.common.modules.mekanism.chemical_filter;
 
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.network.FilterUpdatePacket;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
 import mekanism.api.chemical.ChemicalStack;
 import net.minecraft.network.FriendlyByteBuf;
@@ -32,7 +31,7 @@ public class ChemicalFilterMenu extends AbstractContainerMenu {
 
         for (int i = 0; i < capability.size(); i++) {
             int pSlot = i;
-            addSlot(new ChemicalFilterSlot(fluidStack -> capability.setEntry(pSlot, fluidStack), i, 14 + (i % 5) * 18,
+            addSlot(new ChemicalFilterSlot(() -> capability.getEntry(pSlot), fluidStack -> capability.setEntry(pSlot, fluidStack), i, 14 + (i % 5) * 18,
                     35 + 20 * (i / 5)));
         }
         addInventorySlots(14, 119, inventory);
@@ -92,8 +91,8 @@ public class ChemicalFilterMenu extends AbstractContainerMenu {
     }
 
     public void setInverted(Boolean inverted) {
-        PacketDistributor.sendToServer(new FilterUpdatePacket(capability.isNbt(), inverted));
-        capability.setInverted(inverted);
+//        PacketDistributor.sendToServer(new FilterUpdatePacket(capability.isNbt(), inverted));
+//        capability.setInverted(inverted);
     }
 
     @Override

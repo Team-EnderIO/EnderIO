@@ -1,13 +1,14 @@
 package com.enderio.base.common.integrations.jei;
 
 import com.enderio.base.common.filter.item.ItemFilterSlot;
-import com.enderio.base.common.menu.FilterSlot;
-import com.enderio.base.common.menu.FluidFilterSlot;
+import com.enderio.base.common.filter.FilterSlot;
+import com.enderio.base.common.filter.fluid.FluidFilterSlot;
 import com.enderio.base.common.network.C2SSetFluidFilterSlot;
 import com.enderio.base.common.network.C2SSetItemFilterSlot;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
@@ -17,10 +18,11 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-public class FilterGhostIngredientHandler implements IGhostIngredientHandler<EIOScreen> {
+@SuppressWarnings("rawtypes")
+public class FilterGhostIngredientHandler implements IGhostIngredientHandler<EnderContainerScreen> {
 
     @Override
-    public <I> List<Target<I>> getTargetsTyped(EIOScreen gui, ITypedIngredient<I> ingredient, boolean doStart) {
+    public <I> List<Target<I>> getTargetsTyped(EnderContainerScreen gui, ITypedIngredient<I> ingredient, boolean doStart) {
         List<Target<I>> targets = new ArrayList<>();
 
         var menu = gui.getMenu();

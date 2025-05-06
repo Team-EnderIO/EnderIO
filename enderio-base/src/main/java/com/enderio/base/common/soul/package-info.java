@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @net.minecraft.MethodsReturnNonnullByDefault
 
-package com.enderio.base.common.capability;
+package com.enderio.base.common.soul;

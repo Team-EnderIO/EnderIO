@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:entity_filter"
+        "recipe": "enderio:basic_soul_filter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:entity_filter"
+      "enderio:basic_soul_filter"
     ]
   }
 }

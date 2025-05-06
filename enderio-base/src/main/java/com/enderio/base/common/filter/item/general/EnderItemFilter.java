@@ -1,6 +1,6 @@
 package com.enderio.base.common.filter.item.general;
 
-import com.enderio.base.api.new_filter.ItemFilter;
+import com.enderio.base.api.filter.ItemFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -19,8 +19,7 @@ import org.jetbrains.annotations.Nullable;
 public record EnderItemFilter(NonNullList<ItemStack> matches, boolean isDenyList, boolean shouldCompareComponents,
         DamageFilterMode damageFilterMode) implements ItemFilter {
 
-    public static EnderItemFilter EMPTY = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY), false, false,
-            DamageFilterMode.IGNORE);
+    public static EnderItemFilter EMPTY = new EnderItemFilter(0);
 
     // TODO: 1.22: Change field names
     public static final Codec<EnderItemFilter> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance

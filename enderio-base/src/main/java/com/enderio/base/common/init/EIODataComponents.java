@@ -5,7 +5,7 @@ import com.enderio.base.api.attachment.CoordinateSelection;
 import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
-import com.enderio.base.common.capability.EntityFilterCapability;
+import com.enderio.base.common.filter.entity.EnderEntityFilter;
 import com.enderio.base.common.filter.fluid.EnderFluidFilter;
 import com.enderio.base.common.filter.item.general.EnderItemFilter;
 import com.enderio.base.common.paint.BlockPaintData;
@@ -73,10 +73,9 @@ public class EIODataComponents {
             .registerComponentType("fluid_filter", builder -> builder.persistent(EnderFluidFilter.CODEC)
                     .networkSynchronized(EnderFluidFilter.STREAM_CODEC));
 
-    public static final Supplier<DataComponentType<EntityFilterCapability.Component>> ENTITY_FILTER = DATA_COMPONENT_TYPES
-            .registerComponentType("entity_filter",
-                    builder -> builder.persistent(EntityFilterCapability.Component.CODEC)
-                            .networkSynchronized(EntityFilterCapability.Component.STREAM_CODEC));
+    public static final Supplier<DataComponentType<EnderEntityFilter>> ENTITY_FILTER = DATA_COMPONENT_TYPES
+            .registerComponentType("entity_filter", builder -> builder.persistent(EnderEntityFilter.CODEC)
+                    .networkSynchronized(EnderEntityFilter.STREAM_CODEC));
 
     public static Supplier<DataComponentType<Boolean>> TRAVEL_ITEM = DATA_COMPONENT_TYPES.registerComponentType(
             "travel_item", builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));

@@ -1,4 +1,4 @@
-package com.enderio.base.api.new_filter;
+package com.enderio.base.api.filter;
 
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;

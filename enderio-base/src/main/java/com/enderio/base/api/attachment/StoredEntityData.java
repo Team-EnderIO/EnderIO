@@ -43,6 +43,26 @@ public record StoredEntityData(CompoundTag entityTag, float maxHealth) {
         StoredEntityData::new
     );
 
+    public static StreamCodec<ByteBuf, StoredEntityData> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
+        @Override
+        public StoredEntityData decode(ByteBuf byteBuf) {
+            boolean hasEntity = byteBuf.readBoolean();
+            if (!hasEntity) {
+                return EMPTY;
+            }
+
+            return STREAM_CODEC.decode(byteBuf);
+        }
+
+        @Override
+        public void encode(ByteBuf o, StoredEntityData storedEntityData) {
+            o.writeBoolean(storedEntityData.hasEntity());
+            if (storedEntityData.hasEntity()) {
+                STREAM_CODEC.encode(o, storedEntityData);
+            }
+        }
+    };
+
     public static final StoredEntityData EMPTY = new StoredEntityData(
         new CompoundTag(),
         0.0f

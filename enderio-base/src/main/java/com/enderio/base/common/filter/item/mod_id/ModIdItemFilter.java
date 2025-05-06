@@ -1,6 +1,6 @@
 package com.enderio.base.common.filter.item.mod_id;
 
-import com.enderio.base.api.new_filter.ItemFilter;
+import com.enderio.base.api.filter.ItemFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

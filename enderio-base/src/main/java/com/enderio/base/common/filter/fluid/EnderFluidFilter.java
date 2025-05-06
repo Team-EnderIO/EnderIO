@@ -1,6 +1,6 @@
 package com.enderio.base.common.filter.fluid;
 
-import com.enderio.base.api.new_filter.FluidFilter;
+import com.enderio.base.api.filter.FluidFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public record EnderFluidFilter(NonNullList<FluidStack> matches, boolean isDenyList, boolean shouldCompareComponents)
         implements FluidFilter {
 
-    public static final EnderFluidFilter EMPTY = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY), false, false);
+    public static final EnderFluidFilter EMPTY = new EnderFluidFilter(0);
 
     // TODO: 1.22: Rename fields.
     public static final Codec<EnderFluidFilter> CODEC = RecordCodecBuilder.create(inst -> inst
@@ -37,6 +37,10 @@ public record EnderFluidFilter(NonNullList<FluidStack> matches, boolean isDenyLi
         EnderFluidFilter::shouldCompareComponents,
         EnderFluidFilter::new);
     // @formatter:on
+
+    public EnderFluidFilter(int size) {
+        this(NonNullList.withSize(size, FluidStack.EMPTY), false, false);
+    }
 
     public EnderFluidFilter(List<FluidStack> matches, boolean isDenyList, boolean shouldCompareComponents) {
         this(NonNullList.withSize(matches.size(), FluidStack.EMPTY), isDenyList, shouldCompareComponents);

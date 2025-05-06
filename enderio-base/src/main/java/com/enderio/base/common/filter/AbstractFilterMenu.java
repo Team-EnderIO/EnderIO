@@ -4,17 +4,21 @@ import com.enderio.core.common.menu.BaseEnderMenu;
 import com.enderio.core.common.network.menu.IntSyncSlot;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Supplier;
+
 import me.liliandev.ensure.ensures.EnsureSide;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractFilterMenu extends BaseEnderMenu {
+public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
 
     public static int BACK_BUTTON_ID = 0;
 
@@ -43,6 +47,26 @@ public abstract class AbstractFilterMenu extends BaseEnderMenu {
         this.filterAccess = null;
 
         this.playerInventorySlot = addSyncSlot(IntSyncSlot.standalone());
+    }
+
+    protected abstract Supplier<DataComponentType<T>> dataComponentType();
+    protected abstract T defaultFilter();
+
+    @EnsureSide(EnsureSide.Side.SERVER)
+    protected T getFilter() {
+        return getFilterStack().getOrDefault(dataComponentType(), defaultFilter());
+    }
+
+    @EnsureSide(EnsureSide.Side.SERVER)
+    protected void setFilter(T filter) {
+        var stack = getFilterStack().copy();
+        stack.set(dataComponentType(), filter);
+        setFilterStack(stack);
+    }
+
+    @EnsureSide(EnsureSide.Side.SERVER)
+    protected void modifyFilter(Function<T, T> modifier) {
+        setFilter(modifier.apply(getFilter()));
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)
@@ -94,6 +118,23 @@ public abstract class AbstractFilterMenu extends BaseEnderMenu {
         }
 
         return -1;
+    }
+
+    @Override
+    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+        if (getSlot(slotId) instanceof FilterSlot<?> filterSlot) {
+            // Only allow PICKUP (click) or QUICK_MOVE (shift + click) events.
+            if (clickType != ClickType.PICKUP && clickType != ClickType.QUICK_MOVE) {
+                return;
+            }
+
+            if (!filterSlot.isEmpty()) {
+                filterSlot.clearResource();
+                return;
+            }
+        }
+
+        super.doClick(slotId, button, clickType, player);
     }
 
     public sealed interface FilterAccess {

@@ -1,8 +1,10 @@
-package com.enderio.base.common.menu;
+package com.enderio.base.common.filter.fluid;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import com.enderio.base.common.filter.FilterSlot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -10,16 +12,13 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 public class FluidFilterSlot extends FilterSlot<FluidStack> {
 
-    private final Supplier<FluidStack> getter;
-
-    public FluidFilterSlot(Supplier<FluidStack> getter, Consumer<FluidStack> consumer, int pSlot, int pX, int pY) {
-        super(consumer, pSlot, pX, pY);
-
-        this.getter = getter;
+    public FluidFilterSlot(Supplier<FluidStack> getter, Consumer<FluidStack> setter, int pSlot, int pX, int pY) {
+        super(getter, setter, pSlot, pX, pY);
     }
 
-    public FluidStack getFluid() {
-        return getter.get();
+    @Override
+    protected FluidStack emptyResource() {
+        return FluidStack.EMPTY;
     }
 
     @Override

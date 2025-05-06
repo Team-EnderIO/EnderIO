@@ -4,7 +4,6 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.common.network.C2SSetFluidFilterSlot;
 import com.enderio.base.common.network.C2SSetItemFilterSlot;
 import com.enderio.base.common.network.ClientPayloadHandler;
-import com.enderio.base.common.network.FilterUpdatePacket;
 import com.enderio.base.common.network.RequestTravelPacket;
 import com.enderio.base.common.network.ServerPayloadHandler;
 import com.enderio.base.common.network.SyncTravelDataPacket;
@@ -39,9 +38,6 @@ public class EIONetwork {
 
         registrar.playToServer(RequestTravelPacket.TYPE, RequestTravelPacket.STREAM_CODEC,
                 ServerPayloadHandler.getInstance()::handleTravelRequest);
-
-        registrar.playToServer(FilterUpdatePacket.TYPE, FilterUpdatePacket.STREAM_CODEC,
-                ServerPayloadHandler.getInstance()::handleFilterUpdate);
 
         registrar.playToServer(C2SSetFluidFilterSlot.TYPE, C2SSetFluidFilterSlot.STREAM_CODEC,
                 ServerPayloadHandler.getInstance()::handleSetFluidFilterSlot);

@@ -2,34 +2,29 @@ package com.enderio.base.client.gui.screen;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.common.filter.AbstractFilterMenu;
-import com.enderio.base.common.filter.fluid.EnderFluidFilterMenu;
-import com.enderio.base.common.filter.item.general.EnderItemFilterMenu;
+import com.enderio.base.common.filter.entity.EnderEntityFilterMenu;
+import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.filter.fluid.FluidFilterSlot;
+import com.enderio.base.common.filter.entity.EntityFilterSlot;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.texture.AbstractTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.Nullable;
 
-public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilterMenu> {
+public class EnderEntityFilterScreen extends EnderContainerScreen<EnderEntityFilterMenu> {
 
     private static final int WIDTH = 183;
     private static final int HEIGHT = 201;
 
-    // TODO: we need a central place for resource locations like these...
     private static final ResourceLocation BG_2x9 = EnderIO.loc("textures/gui/screens/filter_2x9.png");
     private static final ResourceLocation BG_1x9 = EnderIO.loc("textures/gui/screens/filter_1x9.png");
     private static final ResourceLocation BG_3x9 = EnderIO.loc("textures/gui/screens/filter_3x9.png");
@@ -45,7 +40,7 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
 
     private final ResourceLocation backgroundTexture;
 
-    public EnderFluidFilterScreen(EnderFluidFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public EnderEntityFilterScreen(EnderEntityFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
 
         this.shouldRenderLabels = true;
@@ -78,11 +73,12 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
         int xPos = getGuiLeft() + WIDTH - 25;
 
         if (getMenu().type.canMatchComponents()) {
+            // TODO: Change to NBT...
             addRenderableWidget(new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16,
                     (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
                     (b) -> b ? EIOLang.FILTER_MATCH_COMPONENTS : EIOLang.FILTER_IGNORE_COMPONENTS,
                     getMenu()::shouldCompareComponents,
-                    (b) -> handleButtonPress(EnderItemFilterMenu.SHOULD_COMPARE_COMPONENTS_BUTTON_ID)));
+                    (b) -> handleButtonPress(EnderEntityFilterMenu.SHOULD_COMPARE_TAGS_BUTTON_ID)));
 
             xPos -= 18;
         }
@@ -90,7 +86,7 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
         addRenderableWidget(
                 new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
                         (b) -> b ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
-                        (b) -> handleButtonPress(EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
+                        (b) -> handleButtonPress(EnderEntityFilterMenu.IS_INVERTED_BUTTON_ID)));
 
         xPos -= 18;
     }
@@ -101,48 +97,38 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
     }
 
     @Override
-    public void renderSlot(GuiGraphics guiGraphics, Slot slot) {
-        super.renderSlot(guiGraphics, slot);
+    protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot, @Nullable String countString) {
+        super.renderSlotContents(guiGraphics, itemstack, slot, countString);
 
-        if (!(slot instanceof FluidFilterSlot fluidFilterSlot)) {
-            return;
-        }
-
-        var fluidStack = fluidFilterSlot.getResource();
-        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-        ResourceLocation still = props.getStillTexture(fluidStack);
-        if (still != null) {
-            AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
-            if (texture instanceof TextureAtlas atlas) {
-                TextureAtlasSprite sprite = atlas.getSprite(still);
-
-                int color = props.getTintColor();
-                RenderSystem.setShaderColor(FastColor.ARGB32.red(color) / 255.0F,
-                        FastColor.ARGB32.green(color) / 255.0F, FastColor.ARGB32.blue(color) / 255.0F,
-                        FastColor.ARGB32.alpha(color) / 255.0F);
-                RenderSystem.enableBlend();
-
-                int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
-                int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-                guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, 16, 16, sprite.getU0() * atlasWidth,
-                        sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(), atlasWidth,
-                        atlasHeight);
-                RenderSystem.setShaderColor(1, 1, 1, 1);
+        if (slot instanceof EntityFilterSlot entityFilterSlot) {
+            var entity = entityFilterSlot.getResource();
+            if (!entity.hasEntity()) {
+                return;
             }
+
+            var vial = new ItemStack(EIOItems.FILLED_SOUL_VIAL.asItem());
+            vial.set(EIODataComponents.STORED_ENTITY, entity);
+            super.renderSlotContents(guiGraphics, vial, slot, countString);
         }
+
+        super.renderSlotContents(guiGraphics, itemstack, slot, countString);
     }
 
     @Override
     protected boolean renderCustomTooltip(GuiGraphics guiGraphics, int x, int y) {
-        if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof FluidFilterSlot fluidFilterSlot) {
-            FluidStack value = fluidFilterSlot.getResource();
-            if (!value.isEmpty()) {
-                guiGraphics.renderTooltip(this.font, value.getHoverName(), x, y);
+        if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof EntityFilterSlot entityFilterSlot) {
+            var entity = entityFilterSlot.getResource();
+            if (!entity.hasEntity()) {
                 return true;
             }
+
+            var vial = new ItemStack(EIOItems.FILLED_SOUL_VIAL.asItem());
+            vial.set(EIODataComponents.STORED_ENTITY, entity);
+            guiGraphics.renderTooltip(font, getTooltipFromContainerItem(vial), vial.getTooltipImage(), vial, x, y);
+            return true;
         }
 
-        return false;
+        return super.renderCustomTooltip(guiGraphics, x, y);
     }
 
     @Override
