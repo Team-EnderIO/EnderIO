@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:basic_filter"
+            "items": "enderio:basic_item_filter"
           }
         ]
       },

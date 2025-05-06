@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.conduit;
 
 import com.enderio.base.common.util.ThrowableUtil;
+import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.mojang.logging.LogUtils;
 import java.util.ArrayList;
 import java.util.HashMap;

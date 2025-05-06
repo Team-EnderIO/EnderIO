@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "H": {
+      "item": "minecraft:hopper"
+    },
+    "P": [
+      {
+        "item": "minecraft:paper"
+      },
+      {
+        "item": "enderio:black_paper"
+      }
+    ]
+  },
+  "pattern": [
+    " P ",
+    "PHP",
+    " P "
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:basic_item_filter"
+  }
+}

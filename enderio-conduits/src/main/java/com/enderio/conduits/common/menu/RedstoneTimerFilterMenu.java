@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.menu;
 
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.conduits.common.network.TimerFilterPacket;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
@@ -23,7 +24,7 @@ public class RedstoneTimerFilterMenu extends AbstractContainerMenu {
     protected RedstoneTimerFilterMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ItemStack pStack) {
         super(pMenuType, pContainerId);
         this.stack = pStack;
-        var resourceFilter = pStack.getCapability(EIOCapabilities.Filter.ITEM);
+        var resourceFilter = pStack.getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
         if (!(resourceFilter instanceof RedstoneTimerFilter filter)) {
             throw new IllegalArgumentException();
         }

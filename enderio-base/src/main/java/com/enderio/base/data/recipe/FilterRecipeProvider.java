@@ -50,7 +50,7 @@ public class FilterRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BUCKET))
             .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.ENTITY_FILTER.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BASIC_ENTITY_FILTER.get())
             .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
             .define('S', EIOItems.EMPTY_SOUL_VIAL)
             .pattern(" P ")

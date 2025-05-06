@@ -42,7 +42,7 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity<AversionObeli
     public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .inputSlot((integer,
-                        itemStack) -> itemStack.getCapability(EIOCapabilities.Filter.ITEM) instanceof EntityFilter)
+                        itemStack) -> itemStack.getCapability(EIOCapabilities.ENTITY_FILTER) != null)
                 .slotAccess(FILTER)
                 .capacitor()
                 .build();
@@ -64,10 +64,9 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity<AversionObeli
             return false;
         }
 
-        if (FILTER.getItemStack(this).getCapability(EIOCapabilities.Filter.ITEM) instanceof EntityFilter entityFilter) {
-            if (!entityFilter.test(event.getEntity())) {
-                return false;
-            }
+        var entityFilter = FILTER.getItemStack(this).getCapability(EIOCapabilities.ENTITY_FILTER);
+        if (entityFilter != null && !entityFilter.test(event.getEntity())) {
+            return false;
         }
 
         if (isActive() && getAABB().contains(event.getX(), event.getY(), event.getZ())) {
