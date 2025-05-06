@@ -3,6 +3,7 @@ package com.enderio.conduits.common.conduit.type.redstone;
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
@@ -99,9 +100,9 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
         if (slot == EXTRACT_FILTER_SLOT) {
-            return stack.getCapability(EIOCapabilities.Filter.ITEM) instanceof RedstoneExtractFilter;
+            return stack.getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER) != null;
         } else if (slot == INSERT_FILTER_SLOT) {
-            return stack.getCapability(EIOCapabilities.Filter.ITEM) instanceof RedstoneInsertFilter;
+            return stack.getCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER) != null;
         }
 
         return false;

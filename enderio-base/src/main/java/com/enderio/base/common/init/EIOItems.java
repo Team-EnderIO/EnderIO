@@ -484,7 +484,7 @@ public class EIOItems {
                     props -> new EnderEntityFilterItem(props, EnderEntityFilterItem.Type.BASIC))
             .setTab(EIOCreativeTabs.GEAR)
             .addCapability(EIOCapabilities.ENTITY_FILTER, EnderEntityFilterItem.ENTITY_FILTER_PROVIDER)
-            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderFluidFilterItem.FILTER_MENU_PROVIDER);
+            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 
     // endregion
 

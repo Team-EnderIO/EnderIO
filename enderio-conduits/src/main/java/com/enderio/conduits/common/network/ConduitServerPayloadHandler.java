@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.network;
 
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitNetworkContext;
@@ -22,7 +23,11 @@ public class ConduitServerPayloadHandler {
     public void handleDoubleChannelFilter(DoubleChannelPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             ItemStack mainHandItem = context.player().getMainHandItem();
-            var channels = mainHandItem.getCapability(EIOCapabilities.Filter.ITEM);
+            Object channels = mainHandItem.getCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER);
+            if (channels == null) {
+                channels = mainHandItem.getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
+            }
+
             if (channels instanceof DoubleRedstoneChannel doubleRedstoneChannel) {
                 doubleRedstoneChannel.setChannels(packet.channel1(), packet.channel2());
             }
@@ -32,7 +37,7 @@ public class ConduitServerPayloadHandler {
     public void handleTimerFilter(TimerFilterPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             ItemStack mainHandItem = context.player().getMainHandItem();
-            var channels = mainHandItem.getCapability(EIOCapabilities.Filter.ITEM);
+            var channels = mainHandItem.getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
             if (channels instanceof RedstoneTimerFilter timer) {
                 timer.setTimer(packet.ticks(), packet.maxTicks());
             }
@@ -42,7 +47,7 @@ public class ConduitServerPayloadHandler {
     public void handleCountFilter(CountFilterPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             ItemStack mainHandItem = context.player().getMainHandItem();
-            var channels = mainHandItem.getCapability(EIOCapabilities.Filter.ITEM);
+            var channels = mainHandItem.getCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER);
             if (channels instanceof RedstoneCountFilter count) {
                 count.setState(packet);
             }

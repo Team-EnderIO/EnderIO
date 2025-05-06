@@ -515,11 +515,11 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
                 return 0;
             }
 
-            var filter = node.getInventory(direction)
+            var redstoneInsertFilter = node.getInventory(direction)
                     .getStackInSlot(RedstoneConduit.INSERT_FILTER_SLOT)
-                    .getCapability(EIOCapabilities.Filter.ITEM);
+                    .getCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER);
 
-            if (filter instanceof RedstoneInsertFilter redstoneInsertFilter) {
+            if (redstoneInsertFilter != null) {
                 return redstoneInsertFilter.getOutputSignal(context, config.sendColor());
             }
 
