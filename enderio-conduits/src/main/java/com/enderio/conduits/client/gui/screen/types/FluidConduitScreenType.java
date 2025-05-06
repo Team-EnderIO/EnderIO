@@ -52,6 +52,8 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
                     () -> dataAccess.getConnectionConfig().sendColor(),
                     value -> dataAccess.updateConnectionConfig(config -> config.withSendColor(value)));
         }
+
+        screen.addFilterConfigureButton(startX + 1, startY + 82, FluidConduit.INSERT_FILTER_SLOT);
     }
 
     @Override
@@ -94,6 +96,8 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         screen.addRedstoneControlPicker(startX, startY + 40, EIOLang.REDSTONE_MODE,
                 () -> dataAccess.getConnectionConfig().receiveRedstoneControl(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
+
+        screen.addFilterConfigureButton(startX + 1, startY + 82, FluidConduit.EXTRACT_FILTER_SLOT);
 
         // TODO: Show redstone signal indicators using the extra NBT payload.
     }

@@ -1,4 +1,4 @@
-package com.enderio.base.common.filter;
+package com.enderio.base.common.filter.item;
 
 import com.enderio.base.api.new_filter.ItemStackFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;

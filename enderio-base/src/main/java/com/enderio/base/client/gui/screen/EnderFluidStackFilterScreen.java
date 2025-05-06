@@ -2,25 +2,35 @@ package com.enderio.base.client.gui.screen;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.client.gui.widget.DamageFilterModePickerWidget;
-import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.filter.AbstractFilterMenu;
+import com.enderio.base.common.filter.fluid.EnderFluidStackFilterMenu;
 import com.enderio.base.common.filter.item.EnderItemFilterMenu;
+import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.menu.FluidFilterSlot;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.NotImplementedException;
 
-public class EnderItemStackFilterScreen extends EnderContainerScreen<EnderItemFilterMenu> {
+public class EnderFluidStackFilterScreen extends EnderContainerScreen<EnderFluidStackFilterMenu> {
 
     private static final int WIDTH = 183;
     private static final int HEIGHT = 201;
 
+    // TODO: we need a central place for resource locations like these...
     private static final ResourceLocation BG_2x9 = EnderIO.loc("textures/gui/screens/filter_2x9.png");
     private static final ResourceLocation BG_1x9 = EnderIO.loc("textures/gui/screens/filter_1x9.png");
     private static final ResourceLocation BG_3x9 = EnderIO.loc("textures/gui/screens/filter_3x9.png");
@@ -36,7 +46,7 @@ public class EnderItemStackFilterScreen extends EnderContainerScreen<EnderItemFi
 
     private final ResourceLocation backgroundTexture;
 
-    public EnderItemStackFilterScreen(EnderItemFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public EnderFluidStackFilterScreen(EnderFluidStackFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
 
         this.shouldRenderLabels = true;
@@ -68,13 +78,6 @@ public class EnderItemStackFilterScreen extends EnderContainerScreen<EnderItemFi
 
         int xPos = getGuiLeft() + WIDTH - 25;
 
-        if (getMenu().type.canFilterByDamage()) {
-            addRenderableWidget(new DamageFilterModePickerWidget(xPos, getGuiTop() + 16, getMenu()::damageFilterMode,
-                    getMenu()::setDamageFilterMode, EIOLang.DAMAGE_FILTER_MODE));
-
-            xPos -= 18;
-        }
-
         if (getMenu().type.canMatchComponents()) {
             addRenderableWidget(new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16,
                     (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
@@ -96,6 +99,51 @@ public class EnderItemStackFilterScreen extends EnderContainerScreen<EnderItemFi
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
         guiGraphics.blit(backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
+    }
+
+    @Override
+    public void renderSlot(GuiGraphics guiGraphics, Slot slot) {
+        super.renderSlot(guiGraphics, slot);
+
+        if (!(slot instanceof FluidFilterSlot fluidFilterSlot)) {
+            return;
+        }
+
+        var fluidStack = fluidFilterSlot.getFluid();
+        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
+        ResourceLocation still = props.getStillTexture(fluidStack);
+        if (still != null) {
+            AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
+            if (texture instanceof TextureAtlas atlas) {
+                TextureAtlasSprite sprite = atlas.getSprite(still);
+
+                int color = props.getTintColor();
+                RenderSystem.setShaderColor(FastColor.ARGB32.red(color) / 255.0F,
+                    FastColor.ARGB32.green(color) / 255.0F, FastColor.ARGB32.blue(color) / 255.0F,
+                    FastColor.ARGB32.alpha(color) / 255.0F);
+                RenderSystem.enableBlend();
+
+                int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
+                int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
+                guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, 16, 16, sprite.getU0() * atlasWidth,
+                    sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(), atlasWidth,
+                    atlasHeight);
+                RenderSystem.setShaderColor(1, 1, 1, 1);
+            }
+        }
+    }
+
+    @Override
+    protected boolean renderCustomTooltip(GuiGraphics guiGraphics, int x, int y) {
+        if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof FluidFilterSlot fluidFilterSlot) {
+            FluidStack value = fluidFilterSlot.getFluid();
+            if (!value.isEmpty()) {
+                guiGraphics.renderTooltip(this.font, value.getHoverName(), x, y);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

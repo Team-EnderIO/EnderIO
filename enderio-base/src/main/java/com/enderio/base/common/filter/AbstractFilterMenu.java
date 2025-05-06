@@ -1,4 +1,4 @@
-package com.enderio.base.common.menu;
+package com.enderio.base.common.filter;
 
 import com.enderio.core.common.menu.BaseEnderMenu;
 import com.enderio.core.common.network.menu.IntSyncSlot;

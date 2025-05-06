@@ -172,7 +172,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @implNote Only needs to be implemented if the conduit existed in Ender IO 7.1 or earlier.
      * @deprecated Only for conversion of <7.1 conduit data. Will be removed in Ender IO 8.
      */
-    @Deprecated(since = "7.2")
+    @Deprecated(since = "8.0.0")
     default TConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
             DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
         return connectionConfigType().getDefault();
@@ -186,7 +186,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @deprecated Only for conversion of <7.1 conduit data. Will be removed in Ender IO 8.
      */
     @SuppressWarnings("removal")
-    @Deprecated(since = "7.2")
+    @Deprecated(since = "8.0.0")
     default void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor) {
     }
 
@@ -218,7 +218,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @param slotType The legacy slot type being queried.
      * @return The index of this slot in the new layout, or <0 for not available.
      */
-    @Deprecated(since = "7.2")
+    @Deprecated(since = "8.0.0")
     default int getIndexForLegacySlot(SlotType slotType) {
         return -1;
     }

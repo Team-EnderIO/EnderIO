@@ -17,7 +17,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
-@Deprecated(forRemoval = true, since = "7.2.0-alpha")
+@Deprecated(forRemoval = true, since = "8.0.0")
 public class LegacyFluidConduitData implements ConduitData<LegacyFluidConduitData> {
 
     public static MapCodec<LegacyFluidConduitData> CODEC = RecordCodecBuilder

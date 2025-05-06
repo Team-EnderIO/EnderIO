@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
-import com.enderio.base.api.filter.FluidStackFilter;
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
@@ -164,7 +163,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return stack.getCapability(EIOCapabilities.Filter.ITEM) instanceof FluidStackFilter;
+        return stack.getCapability(EIOCapabilities.FLUID_STACK_FILTER) != null;
     }
 
     @Override

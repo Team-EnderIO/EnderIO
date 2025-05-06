@@ -17,7 +17,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.Nullable;
 
-@Deprecated(forRemoval = true, since = "7.2")
+@Deprecated(forRemoval = true, since = "8.0.0")
 public class LegacyRedstoneConduitData implements ConduitData<LegacyRedstoneConduitData> {
 
     public static MapCodec<LegacyRedstoneConduitData> CODEC = RecordCodecBuilder

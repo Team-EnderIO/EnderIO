@@ -1,4 +1,4 @@
-package com.enderio.base.common.filter;
+package com.enderio.base.common.filter.item;
 
 import com.enderio.base.api.new_filter.ItemStackFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
@@ -57,10 +57,6 @@ public record EnderItemStackFilter(NonNullList<ItemStack> matches, boolean isDen
         for (int i = 0; i < matches.size(); i++) {
             this.matches.set(i, matches.get(i));
         }
-    }
-
-    public int size() {
-        return matches.size();
     }
 
     @Override

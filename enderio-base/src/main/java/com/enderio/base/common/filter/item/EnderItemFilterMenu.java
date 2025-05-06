@@ -1,9 +1,8 @@
-package com.enderio.base.common.menu;
+package com.enderio.base.common.filter.item;
 
-import com.enderio.base.common.filter.DamageFilterMode;
-import com.enderio.base.common.filter.EnderItemStackFilter;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.item.filter.EnderItemFilterItem;
+import com.enderio.base.common.filter.AbstractFilterMenu;
 import com.enderio.core.common.network.menu.BoolSyncSlot;
 import com.enderio.core.common.network.menu.EnumSyncSlot;
 import me.liliandev.ensure.ensures.EnsureSide;

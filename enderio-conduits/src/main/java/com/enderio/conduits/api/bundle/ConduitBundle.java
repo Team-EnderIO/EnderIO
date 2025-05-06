@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
  * Access into a conduit bundle.
  */
 @ApiStatus.Experimental
-@ApiStatus.AvailableSince("7.2")
+@ApiStatus.AvailableSince("8.0.0")
 public interface ConduitBundle {
 
     // region High-level Bundle Access

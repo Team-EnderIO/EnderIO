@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A safe way to store conduit data.
  */
-@Deprecated(forRemoval = true, since = "7.2")
+@Deprecated(forRemoval = true, since = "8.0.0")
 public class ConduitDataContainer implements ConduitDataAccessor {
 
     public static Codec<ConduitDataContainer> CODEC = ExtraCodecs.optionalEmptyMap(ConduitData.CODEC)

@@ -1,6 +1,6 @@
 package com.enderio.conduits.api.bundle;
 
-@Deprecated(forRemoval = true, since = "7.2")
+@Deprecated(forRemoval = true, since = "8.0.0")
 public enum SlotType {
     FILTER_EXTRACT, FILTER_INSERT, UPGRADE_EXTRACT;
 

@@ -4,7 +4,7 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassLighting;
-import com.enderio.base.common.filter.DamageFilterMode;
+import com.enderio.base.common.filter.item.DamageFilterMode;
 import com.enderio.core.client.icon.EnumIconMap;
 import net.minecraft.world.item.DyeColor;
 

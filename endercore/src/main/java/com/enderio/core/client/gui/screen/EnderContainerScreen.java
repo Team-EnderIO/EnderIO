@@ -108,7 +108,7 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+    protected final void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         // Do not render tooltips if the mouse is over an overlay.
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
@@ -120,7 +120,14 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
             }
         }
 
-        super.renderTooltip(pGuiGraphics, pX, pY);
+        if (!renderCustomTooltip(pGuiGraphics, pX, pY)) {
+            super.renderTooltip(pGuiGraphics, pX, pY);
+        }
+    }
+
+    // Return true to cancel normal tooltips
+    protected boolean renderCustomTooltip(GuiGraphics guiGraphics, int x, int y) {
+        return false;
     }
 
     @Override

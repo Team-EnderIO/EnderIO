@@ -5,12 +5,11 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.common.capability.EntityFilterCapability;
-import com.enderio.base.common.capability.FluidFilterCapability;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
+import com.enderio.base.common.item.filter.EnderFluidStackFilterItem;
 import com.enderio.base.common.item.filter.EnderItemFilterItem;
 import com.enderio.base.common.item.filter.EntityFilter;
-import com.enderio.base.common.item.filter.FluidFilter;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
 import com.enderio.base.common.item.misc.EnderiosItem;
@@ -473,12 +472,12 @@ public class EIOItems {
             .addCapability(EIOCapabilities.ITEM_STACK_FILTER, EnderItemFilterItem.ITEM_STACK_FILTER_PROVIDER)
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderItemFilterItem.FILTER_MENU_PROVIDER);
 
-    public static final RegiliteItem<FluidFilter> BASIC_FLUID_FILTER = ITEM_REGISTRY
-            .registerItem("fluid_filter",
-                    properties -> new FluidFilter(properties.component(EIODataComponents.FLUID_FILTER,
-                            new FluidFilterCapability.Component(5))))
+    public static final RegiliteItem<EnderFluidStackFilterItem> BASIC_FLUID_FILTER = ITEM_REGISTRY
+            .registerItem("basic_fluid_filter",
+                props -> new EnderFluidStackFilterItem(props, EnderFluidStackFilterItem.Type.BASIC))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.Filter.ITEM, FluidFilter.FILTER_PROVIDER);
+            .addCapability(EIOCapabilities.FLUID_STACK_FILTER, EnderFluidStackFilterItem.FLUID_STACK_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderFluidStackFilterItem.FILTER_MENU_PROVIDER);
 
     public static final RegiliteItem<EntityFilter> ENTITY_FILTER = ITEM_REGISTRY
             .registerItem("entity_filter",
@@ -548,6 +547,7 @@ public class EIOItems {
 
         ITEM_REGISTRY.addAlias(EnderIO.loc("basic_filter"), BASIC_ITEM_FILTER.getId());
         ITEM_REGISTRY.addAlias(EnderIO.loc("advanced_filter"), ADVANCED_ITEM_FILTER.getId());
+        ITEM_REGISTRY.addAlias(EnderIO.loc("fluid_filter"), BASIC_FLUID_FILTER.getId());
 
         ITEM_REGISTRY.register(bus);
     }

@@ -8,7 +8,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.Nullable;
 
-@Deprecated(forRemoval = true, since = "7.2")
+@Deprecated(forRemoval = true, since = "8.0.0")
 public interface ConduitData<T extends ConduitData<T>> {
     Codec<ConduitData<?>> CODEC = EnderIOConduitsRegistries.CONDUIT_DATA_TYPE.byNameCodec()
             .dispatch(ConduitData::type, ConduitDataType::codec);

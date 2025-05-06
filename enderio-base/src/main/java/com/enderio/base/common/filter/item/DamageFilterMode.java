@@ -1,4 +1,4 @@
-package com.enderio.base.common.filter;
+package com.enderio.base.common.filter.item;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;

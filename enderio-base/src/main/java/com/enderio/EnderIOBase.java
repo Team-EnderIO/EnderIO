@@ -23,7 +23,7 @@ import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOEnumLang;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.FluidFilterSlot;
-import com.enderio.base.common.menu.ItemFilterSlot;
+import com.enderio.base.common.filter.item.ItemFilterSlot;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
