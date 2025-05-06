@@ -2,9 +2,7 @@ package com.enderio.modconduits.common.modules.laserio;
 
 import com.direwolf20.laserio.common.items.cards.BaseCard;
 import com.direwolf20.laserio.setup.Registration;
-import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.api.integration.Integration;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilter;
 import net.minecraft.world.item.ItemStack;

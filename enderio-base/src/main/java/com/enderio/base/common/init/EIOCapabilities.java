@@ -2,7 +2,6 @@ package com.enderio.base.common.init;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.filter.EntityFilter;
-import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.api.filter.FilterMenuProvider;
 import com.enderio.base.api.filter.FluidFilter;
 import com.enderio.base.api.filter.ItemFilter;

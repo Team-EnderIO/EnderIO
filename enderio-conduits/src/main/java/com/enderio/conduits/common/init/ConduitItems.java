@@ -1,7 +1,5 @@
 package com.enderio.conduits.common.init;
 
-import com.enderio.base.api.filter.ResourceFilter;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.api.ConduitCapabilities;
@@ -21,9 +19,7 @@ import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.util.Unit;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 
