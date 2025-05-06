@@ -7,7 +7,7 @@ import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.common.capability.EntityFilterCapability;
 import com.enderio.base.common.filter.fluid.EnderFluidFilter;
-import com.enderio.base.common.filter.item.EnderItemFilter;
+import com.enderio.base.common.filter.item.general.EnderItemFilter;
 import com.enderio.base.common.paint.BlockPaintData;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.mojang.serialization.Codec;
@@ -70,8 +70,8 @@ public class EIODataComponents {
 //                    .networkSynchronized(ModIdItemStackFilter.STREAM_CODEC));
 
     public static final Supplier<DataComponentType<EnderFluidFilter>> FLUID_FILTER = DATA_COMPONENT_TYPES
-        .registerComponentType("fluid_filter", builder -> builder.persistent(EnderFluidFilter.CODEC)
-            .networkSynchronized(EnderFluidFilter.STREAM_CODEC));
+            .registerComponentType("fluid_filter", builder -> builder.persistent(EnderFluidFilter.CODEC)
+                    .networkSynchronized(EnderFluidFilter.STREAM_CODEC));
 
     public static final Supplier<DataComponentType<EntityFilterCapability.Component>> ENTITY_FILTER = DATA_COMPONENT_TYPES
             .registerComponentType("entity_filter",

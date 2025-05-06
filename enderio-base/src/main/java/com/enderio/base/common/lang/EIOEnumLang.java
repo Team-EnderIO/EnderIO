@@ -4,7 +4,7 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
-import com.enderio.base.common.filter.item.DamageFilterMode;
+import com.enderio.base.common.filter.item.general.DamageFilterMode;
 import com.enderio.core.common.lang.EnumTranslationMap;
 import com.enderio.regilite.Regilite;
 import net.minecraft.network.chat.Component;

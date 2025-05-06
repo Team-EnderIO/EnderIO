@@ -1,7 +1,7 @@
 package com.enderio.base.client.gui.widget;
 
 import com.enderio.base.client.gui.icon.EIOEnumIcons;
-import com.enderio.base.common.filter.item.DamageFilterMode;
+import com.enderio.base.common.filter.item.general.DamageFilterMode;
 import com.enderio.base.common.lang.EIOEnumLang;
 import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import java.util.function.Consumer;

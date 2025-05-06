@@ -5,10 +5,10 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.common.capability.EntityFilterCapability;
+import com.enderio.base.common.filter.fluid.EnderFluidFilterItem;
+import com.enderio.base.common.filter.item.general.EnderItemFilterItem;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
-import com.enderio.base.common.item.filter.EnderFluidFilterItem;
-import com.enderio.base.common.item.filter.EnderItemFilterItem;
 import com.enderio.base.common.item.filter.EntityFilter;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
@@ -474,7 +474,7 @@ public class EIOItems {
 
     public static final RegiliteItem<EnderFluidFilterItem> BASIC_FLUID_FILTER = ITEM_REGISTRY
             .registerItem("basic_fluid_filter",
-                props -> new EnderFluidFilterItem(props, EnderFluidFilterItem.Type.BASIC))
+                    props -> new EnderFluidFilterItem(props, EnderFluidFilterItem.Type.BASIC))
             .setTab(EIOCreativeTabs.GEAR)
             .addCapability(EIOCapabilities.FLUID_FILTER, EnderFluidFilterItem.FLUID_FILTER_PROVIDER)
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, EnderFluidFilterItem.FILTER_MENU_PROVIDER);

@@ -1,15 +1,15 @@
-package com.enderio.base.common.item.filter;
+package com.enderio.base.common.filter.fluid;
 
 import com.enderio.base.api.new_filter.FilterMenuProvider;
 import com.enderio.base.api.new_filter.FluidFilter;
-import com.enderio.base.common.filter.fluid.EnderFluidFilter;
-import com.enderio.base.common.filter.fluid.EnderFluidFilterMenu;
-import com.enderio.base.common.filter.item.EnderItemFilter;
+import com.enderio.base.common.filter.AbstractFilterMenu;
+import com.enderio.base.common.filter.item.general.EnderItemFilter;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.filter.AbstractFilterMenu;
 import com.enderio.regilite.holder.RegiliteMenu;
+import java.util.List;
+import java.util.function.Supplier;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -28,13 +28,10 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 public class EnderFluidFilterItem extends Item implements FilterMenuProvider {
 
-    public static ICapabilityProvider<ItemStack, Void, FluidFilter> FLUID_FILTER_PROVIDER =
-        (stack, v) -> stack.getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY);
+    public static ICapabilityProvider<ItemStack, Void, FluidFilter> FLUID_FILTER_PROVIDER = (stack, v) -> stack
+            .getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY);
 
     public static ICapabilityProvider<ItemStack, Void, FilterMenuProvider> FILTER_MENU_PROVIDER = (stack,
             v) -> (EnderFluidFilterItem) stack.getItem();

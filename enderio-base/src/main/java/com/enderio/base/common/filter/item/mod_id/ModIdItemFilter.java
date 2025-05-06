@@ -1,4 +1,4 @@
-package com.enderio.base.common.filter.item;
+package com.enderio.base.common.filter.item.mod_id;
 
 import com.enderio.base.api.new_filter.ItemFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
@@ -15,13 +15,12 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 public record ModIdItemFilter(NonNullList<ItemStack> examples, boolean isDenyList) implements ItemFilter {
-    public static final Codec<ModIdItemFilter> CODEC = RecordCodecBuilder
-            .create(componentInstance -> componentInstance
-                    .group(OrderedListCodec.create(256, ItemStack.OPTIONAL_CODEC, ItemStack.EMPTY)
-                            .fieldOf("examples")
-                            .forGetter(ModIdItemFilter::examples),
-                            Codec.BOOL.fieldOf("isDenyList").forGetter(ModIdItemFilter::isDenyList))
-                    .apply(componentInstance, ModIdItemFilter::new));
+    public static final Codec<ModIdItemFilter> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
+            .group(OrderedListCodec.create(256, ItemStack.OPTIONAL_CODEC, ItemStack.EMPTY)
+                    .fieldOf("examples")
+                    .forGetter(ModIdItemFilter::examples),
+                    Codec.BOOL.fieldOf("isDenyList").forGetter(ModIdItemFilter::isDenyList))
+            .apply(componentInstance, ModIdItemFilter::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ModIdItemFilter> STREAM_CODEC = StreamCodec.composite(
             ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)), ModIdItemFilter::examples,

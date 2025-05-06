@@ -3,7 +3,7 @@ package com.enderio.base.client.gui.screen;
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.common.filter.AbstractFilterMenu;
 import com.enderio.base.common.filter.fluid.EnderFluidFilterMenu;
-import com.enderio.base.common.filter.item.EnderItemFilterMenu;
+import com.enderio.base.common.filter.item.general.EnderItemFilterMenu;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.FluidFilterSlot;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
@@ -118,15 +118,15 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
 
                 int color = props.getTintColor();
                 RenderSystem.setShaderColor(FastColor.ARGB32.red(color) / 255.0F,
-                    FastColor.ARGB32.green(color) / 255.0F, FastColor.ARGB32.blue(color) / 255.0F,
-                    FastColor.ARGB32.alpha(color) / 255.0F);
+                        FastColor.ARGB32.green(color) / 255.0F, FastColor.ARGB32.blue(color) / 255.0F,
+                        FastColor.ARGB32.alpha(color) / 255.0F);
                 RenderSystem.enableBlend();
 
                 int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                 int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
                 guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, 16, 16, sprite.getU0() * atlasWidth,
-                    sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(), atlasWidth,
-                    atlasHeight);
+                        sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(), atlasWidth,
+                        atlasHeight);
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             }
         }

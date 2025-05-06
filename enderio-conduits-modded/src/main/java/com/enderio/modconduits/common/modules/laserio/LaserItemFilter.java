@@ -25,7 +25,8 @@ public class LaserItemFilter implements ItemFilter {
         for (int i = 0; i < handler.getSlots(); i++) {
             ItemStack match = handler.getStackInSlot(i);
             if (!match.isEmpty()) {
-                if (shouldCompareComponents ? ItemStack.isSameItem(match, stack) : ItemStack.isSameItemSameComponents(match, stack)) {
+                if (shouldCompareComponents ? ItemStack.isSameItem(match, stack)
+                        : ItemStack.isSameItemSameComponents(match, stack)) {
                     return isAllowList ? stack : ItemStack.EMPTY;
                 }
             }

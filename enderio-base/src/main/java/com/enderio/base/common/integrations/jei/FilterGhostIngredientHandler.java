@@ -1,8 +1,8 @@
 package com.enderio.base.common.integrations.jei;
 
+import com.enderio.base.common.filter.item.ItemFilterSlot;
 import com.enderio.base.common.menu.FilterSlot;
 import com.enderio.base.common.menu.FluidFilterSlot;
-import com.enderio.base.common.filter.item.ItemFilterSlot;
 import com.enderio.base.common.network.C2SSetFluidFilterSlot;
 import com.enderio.base.common.network.C2SSetItemFilterSlot;
 import com.enderio.core.client.gui.screen.EIOScreen;

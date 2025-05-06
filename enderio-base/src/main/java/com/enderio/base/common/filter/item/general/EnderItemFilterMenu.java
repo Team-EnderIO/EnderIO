@@ -1,8 +1,8 @@
-package com.enderio.base.common.filter.item;
+package com.enderio.base.common.filter.item.general;
 
-import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.item.filter.EnderItemFilterItem;
 import com.enderio.base.common.filter.AbstractFilterMenu;
+import com.enderio.base.common.filter.item.ItemFilterSlot;
+import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.core.common.network.menu.BoolSyncSlot;
 import com.enderio.core.common.network.menu.EnumSyncSlot;
 import me.liliandev.ensure.ensures.EnsureSide;
@@ -36,12 +36,12 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
         this.type = type;
         this.clientItems = null;
 
-        this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(
-                () -> getFilterStack().getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY)
+        this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot
+                .readOnly(() -> getFilterStack().getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY)
                         .isDenyList()));
 
-        this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(
-                () -> getFilterStack().getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY)
+        this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot
+                .readOnly(() -> getFilterStack().getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY)
                         .shouldCompareComponents()));
 
         if (this.type.canFilterByDamage()) {
@@ -49,8 +49,7 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
                     () -> getFilterStack().getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY)
                             .damageFilterMode(),
                     (mode) -> modifyFilterStack(stack -> {
-                        var filter = stack.getOrDefault(EIODataComponents.ITEM_FILTER,
-                                EnderItemFilter.EMPTY);
+                        var filter = stack.getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY);
                         stack.set(EIODataComponents.ITEM_FILTER, new EnderItemFilter(filter.matches(),
                                 filter.isDenyList(), filter.shouldCompareComponents(), mode));
                         return stack;
@@ -152,8 +151,8 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
         if (id == IS_INVERTED_BUTTON_ID) {
             modifyFilterStack(stack -> {
                 var filter = stack.getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY);
-                stack.set(EIODataComponents.ITEM_FILTER, new EnderItemFilter(filter.matches(),
-                        !filter.isDenyList(), filter.shouldCompareComponents(), filter.damageFilterMode()));
+                stack.set(EIODataComponents.ITEM_FILTER, new EnderItemFilter(filter.matches(), !filter.isDenyList(),
+                        filter.shouldCompareComponents(), filter.damageFilterMode()));
                 return stack;
             });
 
@@ -161,8 +160,8 @@ public class EnderItemFilterMenu extends AbstractFilterMenu {
         } else if (id == SHOULD_COMPARE_COMPONENTS_BUTTON_ID && type.canMatchComponents()) {
             modifyFilterStack(stack -> {
                 var filter = stack.getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY);
-                stack.set(EIODataComponents.ITEM_FILTER, new EnderItemFilter(filter.matches(),
-                        filter.isDenyList(), !filter.shouldCompareComponents(), filter.damageFilterMode()));
+                stack.set(EIODataComponents.ITEM_FILTER, new EnderItemFilter(filter.matches(), filter.isDenyList(),
+                        !filter.shouldCompareComponents(), filter.damageFilterMode()));
                 return stack;
             });
             return true;

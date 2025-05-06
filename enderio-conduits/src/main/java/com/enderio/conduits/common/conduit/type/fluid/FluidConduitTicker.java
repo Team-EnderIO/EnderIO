@@ -27,7 +27,8 @@ public class FluidConduitTicker
 
     private int doFluidTransfer(Fluid fluid, int maxTransfer, Connection receiver, List<Connection> senders) {
         // Attempt to drain fluid from the target.
-        FluidStack extractedFluid = receiver.fluidHandler().drain(new FluidStack(fluid, maxTransfer), IFluidHandler.FluidAction.SIMULATE);
+        FluidStack extractedFluid = receiver.fluidHandler()
+                .drain(new FluidStack(fluid, maxTransfer), IFluidHandler.FluidAction.SIMULATE);
         if (extractedFluid.isEmpty()) {
             return maxTransfer;
         }

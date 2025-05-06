@@ -1,4 +1,4 @@
-package com.enderio.base.common.filter.item;
+package com.enderio.base.common.filter.item.general;
 
 import com.enderio.base.api.new_filter.ItemFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
@@ -17,40 +17,39 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 public record EnderItemFilter(NonNullList<ItemStack> matches, boolean isDenyList, boolean shouldCompareComponents,
-                              DamageFilterMode damageFilterMode) implements ItemFilter {
+        DamageFilterMode damageFilterMode) implements ItemFilter {
 
     public static EnderItemFilter EMPTY = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY), false, false,
             DamageFilterMode.IGNORE);
 
     // TODO: 1.22: Change field names
-    public static final Codec<EnderItemFilter> CODEC = RecordCodecBuilder
-            .create(componentInstance -> componentInstance.group(
-                    OrderedListCodec.create(256, ItemStack.OPTIONAL_CODEC, ItemStack.EMPTY)
-                            .fieldOf("items")
-                            .forGetter(EnderItemFilter::matches),
+    public static final Codec<EnderItemFilter> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
+            .group(OrderedListCodec.create(256, ItemStack.OPTIONAL_CODEC, ItemStack.EMPTY)
+                    .fieldOf("items")
+                    .forGetter(EnderItemFilter::matches),
                     Codec.BOOL.optionalFieldOf("isInvert", false).forGetter(EnderItemFilter::isDenyList),
                     Codec.BOOL.optionalFieldOf("isNbt", false).forGetter(EnderItemFilter::shouldCompareComponents),
                     DamageFilterMode.CODEC.optionalFieldOf("damageMode", DamageFilterMode.IGNORE)
                             .forGetter(EnderItemFilter::damageFilterMode))
-                    .apply(componentInstance, EnderItemFilter::new));
+            .apply(componentInstance, EnderItemFilter::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, EnderItemFilter> STREAM_CODEC = StreamCodec.composite(
             ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)), EnderItemFilter::matches,
             ByteBufCodecs.BOOL, EnderItemFilter::isDenyList, ByteBufCodecs.BOOL,
-            EnderItemFilter::shouldCompareComponents, DamageFilterMode.STREAM_CODEC,
-            EnderItemFilter::damageFilterMode, EnderItemFilter::new);
+            EnderItemFilter::shouldCompareComponents, DamageFilterMode.STREAM_CODEC, EnderItemFilter::damageFilterMode,
+            EnderItemFilter::new);
 
     public EnderItemFilter(int size) {
         this(NonNullList.withSize(size, ItemStack.EMPTY), false, false, DamageFilterMode.IGNORE);
     }
 
     public EnderItemFilter(int size, boolean isDenyList, boolean shouldCompareComponents,
-                           DamageFilterMode damageFilterMode) {
+            DamageFilterMode damageFilterMode) {
         this(NonNullList.withSize(size, ItemStack.EMPTY), isDenyList, shouldCompareComponents, damageFilterMode);
     }
 
     public EnderItemFilter(List<ItemStack> matches, boolean isDenyList, boolean shouldCompareComponents,
-                           DamageFilterMode damageFilterMode) {
+            DamageFilterMode damageFilterMode) {
         this(NonNullList.withSize(matches.size(), ItemStack.EMPTY), isDenyList, shouldCompareComponents,
                 damageFilterMode);
 

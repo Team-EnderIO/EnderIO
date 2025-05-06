@@ -2,9 +2,9 @@ package com.enderio.base.client.gui.screen;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.client.gui.widget.DamageFilterModePickerWidget;
-import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.filter.AbstractFilterMenu;
-import com.enderio.base.common.filter.item.EnderItemFilterMenu;
+import com.enderio.base.common.filter.item.general.EnderItemFilterMenu;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;

@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:fluid_filter"
+            "items": "enderio:basic_fluid_filter"
           }
         ]
       },

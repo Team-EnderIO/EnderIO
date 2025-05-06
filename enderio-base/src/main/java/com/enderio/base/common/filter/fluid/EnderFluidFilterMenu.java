@@ -2,7 +2,6 @@ package com.enderio.base.common.filter.fluid;
 
 import com.enderio.base.common.filter.AbstractFilterMenu;
 import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.item.filter.EnderFluidFilterItem;
 import com.enderio.base.common.menu.FluidFilterSlot;
 import com.enderio.core.common.network.menu.BoolSyncSlot;
 import com.enderio.core.common.network.menu.FluidStackSyncSlot;
@@ -30,17 +29,17 @@ public class EnderFluidFilterMenu extends AbstractFilterMenu {
     private final BoolSyncSlot shouldCompareComponentsSyncSlot;
 
     public EnderFluidFilterMenu(@Nullable MenuType<?> menuType, EnderFluidFilterItem.Type type, int containerId,
-                                Inventory playerInventory, FilterAccess filterAccess) {
+            Inventory playerInventory, FilterAccess filterAccess) {
         super(menuType, containerId, playerInventory, filterAccess);
         this.type = type;
         this.clientItems = null;
 
-        this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(
-                () -> getFilterStack().getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY)
+        this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot
+                .readOnly(() -> getFilterStack().getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY)
                         .isDenyList()));
 
-        this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(
-                () -> getFilterStack().getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY)
+        this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot
+                .readOnly(() -> getFilterStack().getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY)
                         .shouldCompareComponents()));
 
         for (int i = 0; i < this.type.slotCount(); i++) {
@@ -49,15 +48,15 @@ public class EnderFluidFilterMenu extends AbstractFilterMenu {
             // Add sync slot for the fluid slot
             addSyncSlot(FluidStackSyncSlot.readOnly(() -> getFluidInFilter(slotIndex)));
 
-            addSlot(new FluidFilterSlot(() -> getFluidInFilter(slotIndex), stack -> setFluidInFilter(slotIndex, stack), i,
-                    14 + (i % 5) * 18, 35 + 20 * (i / 5)));
+            addSlot(new FluidFilterSlot(() -> getFluidInFilter(slotIndex), stack -> setFluidInFilter(slotIndex, stack),
+                    i, 14 + (i % 5) * 18, 35 + 20 * (i / 5)));
         }
 
         addPlayerInventorySlots(14, 47 + type.rowCount() * 18);
     }
 
     public EnderFluidFilterMenu(@Nullable MenuType<?> menuType, EnderFluidFilterItem.Type type, int containerId,
-                                Inventory playerInventory) {
+            Inventory playerInventory) {
         super(menuType, containerId, playerInventory);
         this.type = type;
         this.clientItems = NonNullList.withSize(this.type.slotCount(), ItemStack.EMPTY);
@@ -106,8 +105,8 @@ public class EnderFluidFilterMenu extends AbstractFilterMenu {
             matches.set(slotIndex, stack);
 
             // Set the new filter
-            filterStack.set(EIODataComponents.FLUID_FILTER, new EnderFluidFilter(matches, filter.isDenyList(),
-                    filter.shouldCompareComponents()));
+            filterStack.set(EIODataComponents.FLUID_FILTER,
+                    new EnderFluidFilter(matches, filter.isDenyList(), filter.shouldCompareComponents()));
             return filterStack;
         });
     }
@@ -117,8 +116,8 @@ public class EnderFluidFilterMenu extends AbstractFilterMenu {
         if (id == IS_INVERTED_BUTTON_ID) {
             modifyFilterStack(stack -> {
                 var filter = stack.getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY);
-                stack.set(EIODataComponents.FLUID_FILTER, new EnderFluidFilter(filter.matches(),
-                        !filter.isDenyList(), filter.shouldCompareComponents()));
+                stack.set(EIODataComponents.FLUID_FILTER,
+                        new EnderFluidFilter(filter.matches(), !filter.isDenyList(), filter.shouldCompareComponents()));
                 return stack;
             });
 
@@ -126,8 +125,8 @@ public class EnderFluidFilterMenu extends AbstractFilterMenu {
         } else if (id == SHOULD_COMPARE_COMPONENTS_BUTTON_ID && type.canMatchComponents()) {
             modifyFilterStack(stack -> {
                 var filter = stack.getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY);
-                stack.set(EIODataComponents.FLUID_FILTER, new EnderFluidFilter(filter.matches(),
-                        filter.isDenyList(), !filter.shouldCompareComponents()));
+                stack.set(EIODataComponents.FLUID_FILTER,
+                        new EnderFluidFilter(filter.matches(), filter.isDenyList(), !filter.shouldCompareComponents()));
                 return stack;
             });
             return true;

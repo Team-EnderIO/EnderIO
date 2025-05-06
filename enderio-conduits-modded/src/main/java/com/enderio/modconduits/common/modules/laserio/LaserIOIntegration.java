@@ -17,11 +17,11 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class LaserIOIntegration implements Integration {
 
-    public static ICapabilityProvider<ItemStack, Void, ItemFilter> CARD_ITEM_FILTER_PROVIDER =
-        (stack, v) -> new LaserItemFilter(BaseCard.getFilter(stack));
+    public static ICapabilityProvider<ItemStack, Void, ItemFilter> CARD_ITEM_FILTER_PROVIDER = (stack,
+            v) -> new LaserItemFilter(BaseCard.getFilter(stack));
 
-    public static ICapabilityProvider<ItemStack, Void, ItemFilter> ITEM_FILTER_PROVIDER =
-        (stack, v) -> new LaserItemFilter(stack);
+    public static ICapabilityProvider<ItemStack, Void, ItemFilter> ITEM_FILTER_PROVIDER = (stack,
+            v) -> new LaserItemFilter(stack);
 
     public static ICapabilityProvider<ItemStack, Void, FluidFilter> CARD_FLUID_FILTER_PROVIDER = (stack,
             v) -> new LaserFluidFilter(BaseCard.getFilter(stack));

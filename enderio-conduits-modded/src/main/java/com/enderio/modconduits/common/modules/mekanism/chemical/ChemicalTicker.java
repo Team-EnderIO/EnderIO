@@ -22,9 +22,11 @@ import org.jetbrains.annotations.Nullable;
 public class ChemicalTicker
         extends IOAwareConduitTicker<ChemicalConduit, ChemicalConduitConnectionConfig, ChemicalTicker.Connection> {
 
-    private long doChemicalTransfer(Chemical chemical, long maxTransfer, Connection receiver, List<Connection> senders) {
+    private long doChemicalTransfer(Chemical chemical, long maxTransfer, Connection receiver,
+            List<Connection> senders) {
         // Attempt to drain chemical from the target.
-        var extractedChemical = receiver.chemicalHandler.extractChemical(new ChemicalStack(chemical, maxTransfer), Action.SIMULATE);
+        var extractedChemical = receiver.chemicalHandler.extractChemical(new ChemicalStack(chemical, maxTransfer),
+                Action.SIMULATE);
         if (extractedChemical.isEmpty()) {
             return maxTransfer;
         }
@@ -56,7 +58,8 @@ public class ChemicalTicker
             }
 
             // Attempt to transfer chemical.
-            var transferredChemical = tryChemicalTransfer(insert.chemicalHandler, receiver.chemicalHandler, chemicalToInsert,true);
+            var transferredChemical = tryChemicalTransfer(insert.chemicalHandler, receiver.chemicalHandler,
+                    chemicalToInsert, true);
 
             // Deduct the transferred chemical from our maximum transfer.
             maxTransfer -= transferredChemical.getAmount();

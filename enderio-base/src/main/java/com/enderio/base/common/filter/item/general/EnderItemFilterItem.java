@@ -1,13 +1,11 @@
-package com.enderio.base.common.item.filter;
+package com.enderio.base.common.filter.item.general;
 
 import com.enderio.base.api.new_filter.FilterMenuProvider;
 import com.enderio.base.api.new_filter.ItemFilter;
-import com.enderio.base.common.filter.item.EnderItemFilter;
+import com.enderio.base.common.filter.AbstractFilterMenu;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.filter.AbstractFilterMenu;
-import com.enderio.base.common.filter.item.EnderItemFilterMenu;
 import com.enderio.regilite.holder.RegiliteMenu;
 import java.util.List;
 import java.util.function.Supplier;

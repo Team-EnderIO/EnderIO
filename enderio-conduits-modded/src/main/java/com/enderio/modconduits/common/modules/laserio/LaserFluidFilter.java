@@ -4,9 +4,7 @@ import com.direwolf20.laserio.common.containers.FilterBasicContainer;
 import com.direwolf20.laserio.common.containers.customhandler.FilterBasicHandler;
 import com.direwolf20.laserio.setup.LaserIODataComponents;
 import com.enderio.base.api.new_filter.FluidFilter;
-
 import java.util.Optional;
-
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
@@ -40,7 +38,8 @@ public class LaserFluidFilter implements FluidFilter {
                     for (int tank = 0; tank < fluidHandler.getTanks(); ++tank) {
                         FluidStack fluidStack = fluidHandler.getFluidInTank(tank);
                         if (!fluidStack.isEmpty()) {
-                            if (shouldCompareComponents ? FluidStack.isSameFluid(fluidStack, stack) : FluidStack.isSameFluidSameComponents(fluidStack, stack)) {
+                            if (shouldCompareComponents ? FluidStack.isSameFluid(fluidStack, stack)
+                                    : FluidStack.isSameFluidSameComponents(fluidStack, stack)) {
                                 return isAllowList ? fluidStack : FluidStack.EMPTY;
                             }
                         }
