@@ -13,7 +13,6 @@ public class MachinesCommonConfig {
     public final ModConfigSpec.ConfigValue<Integer> DEFAULT_SPAWN_ENERGY_COST;
     public final ModConfigSpec.ConfigValue<MobSpawnMode> SPAWN_TYPE;
     public final ModConfigSpec.IntValue SPAWN_AMOUNT;
-    public final ModConfigSpec.ConfigValue<Integer> WIRELESS_CHARGER_RANGE;
     public final ModConfigSpec.ConfigValue<Integer> ATTRACTOR_RANGE;
     public final ModConfigSpec.ConfigValue<Boolean> ATTRACTOR_PULL_BOSSES;
     public final ModConfigSpec.ConfigValue<Integer> INHIBITOR_RANGE;
