@@ -10,14 +10,12 @@ import org.jetbrains.annotations.Nullable;
 public class IconButton extends EnderButton {
 
     private final ResourceLocation sprite;
-    private final Component tooltip;
     private final Runnable onPress;
 
     public IconButton(int x, int y, int width, int height, ResourceLocation sprite, @Nullable Component tooltip,
             Runnable onPress) {
         super(x, y, width, height, Component.empty());
         this.sprite = sprite;
-        this.tooltip = tooltip;
         this.onPress = onPress;
 
         if (tooltip != null) {
@@ -29,8 +27,6 @@ public class IconButton extends EnderButton {
     public void onPress() {
         this.onPress.run();
     }
-
-    private boolean previousValue;
 
     @Override
     public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
