@@ -1,6 +1,6 @@
 {
   "entity": "minecraft:blaze",
   "fluid": "#minecraft:lava",
-  "power/mb": 300,
-  "tick/mb": 15
+  "power/mb": 800,
+  "tick/mb": 18
 }
