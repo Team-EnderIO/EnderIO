@@ -1,12 +1,11 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
 import com.enderio.armory.api.capability.IDarkSteelUpgrade;
-import net.minecraft.core.HolderLookup;
+import com.enderio.armory.api.capability.IUpgradeTier;
+import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-
-import java.util.Optional;
 
 public abstract class TieredUpgrade<T extends IUpgradeTier> implements IDarkSteelUpgrade {
 
@@ -16,8 +15,8 @@ public abstract class TieredUpgrade<T extends IUpgradeTier> implements IDarkStee
     private final String serializedName;
 
     protected TieredUpgrade(T tier, String serializedName) {
-      this.tier = tier;
-      this.serializedName = serializedName;
+        this.tier = tier;
+        this.serializedName = serializedName;
     }
 
     @Override
@@ -28,6 +27,11 @@ public abstract class TieredUpgrade<T extends IUpgradeTier> implements IDarkStee
     @Override
     public Optional<? extends IDarkSteelUpgrade> getNextTier() {
         return getUpgradeForTier(tier.getLevel() + 1);
+    }
+
+    @Override
+    public Optional<? extends IUpgradeTier> getTier() {
+        return Optional.of(tier);
     }
 
     @Override
@@ -49,14 +53,14 @@ public abstract class TieredUpgrade<T extends IUpgradeTier> implements IDarkStee
     }
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
+    public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt(TIER_KEY, tier.getLevel());
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider lookupProvider, Tag tag) {
+    public void deserializeNBT(Tag tag) {
         if (tag instanceof CompoundTag nbt) {
             int level = nbt.getInt(TIER_KEY);
             tier = getTier(level).orElse(getBaseTier());

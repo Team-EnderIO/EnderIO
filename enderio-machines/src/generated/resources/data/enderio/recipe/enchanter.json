@@ -10,12 +10,15 @@
     },
     "I": {
       "tag": "c:ingots/dark_steel"
+    },
+    "L": {
+      "item": "minecraft:lectern"
     }
   },
   "pattern": [
-    "DBD",
-    "III",
-    " I "
+    " B ",
+    "DLD",
+    "III"
   ],
   "result": {
     "count": 1,

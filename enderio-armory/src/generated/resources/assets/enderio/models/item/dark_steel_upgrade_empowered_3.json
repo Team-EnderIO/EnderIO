@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "enderio:item/dark_steel_upgrade_empowered_3"
+  }
+}

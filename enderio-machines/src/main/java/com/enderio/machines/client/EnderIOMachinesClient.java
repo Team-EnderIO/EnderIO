@@ -5,6 +5,7 @@ import com.enderio.base.api.travel.RegisterTravelRenderersEvent;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.client.rendering.item.FluidTankBEWLR;
 import com.enderio.machines.client.rendering.model.IOOverlayBakedModel;
+import com.enderio.machines.client.rendering.travel.EnderfaceRenderer;
 import com.enderio.machines.client.rendering.travel.TravelAnchorHud;
 import com.enderio.machines.client.rendering.travel.TravelAnchorRenderer;
 import com.enderio.machines.common.init.MachineBlocks;
@@ -35,6 +36,7 @@ public class EnderIOMachinesClient {
     @SubscribeEvent
     public static void registerTravelRenderers(RegisterTravelRenderersEvent event) {
         event.register(MachineTravelTargets.TRAVEL_ANCHOR_TYPE.get(), TravelAnchorRenderer::new);
+        event.register(MachineTravelTargets.ENDERFACE_TYPE.get(), EnderfaceRenderer::new);
     }
 
     @SubscribeEvent

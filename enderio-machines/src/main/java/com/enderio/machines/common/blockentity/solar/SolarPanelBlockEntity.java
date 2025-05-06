@@ -31,6 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
@@ -127,39 +128,49 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
 
         float outputScale = 0;
         if (day && (night || hasLiquidSunshine())) {
-            outputScale = 1;
+            outputScale = adjustOutputForWeather(level, 1);
         } else if (day) {
-            // A Day night cycle is 20 minutes, daytime is 10 minutes
-            int dayTime = (int) (level.getDayTime() % GameTicks.DAY_IN_TICKS);
-
-            // Over how long should generation scale up/down and the start/end of the day
-            float rampTimeMinutes = 1.5f;
-            float rampTimeTicks = GameTicks.MINUTE_IN_TICKS * rampTimeMinutes;
-
-            if (dayTime < rampTimeTicks) {
-                // If in the ramp up period of the day, do a linear scale up
-                outputScale = dayTime / rampTimeTicks;
-            } else if (dayTime > (GameTicks.MINUTE_IN_TICKS * 10) - (GameTicks.MINUTE_IN_TICKS * rampTimeMinutes)) {
-                // If in the ramp down period of the day, do a linear scale down
-                int timeLeft = (GameTicks.MINUTE_IN_TICKS * 10) - dayTime;
-                outputScale = timeLeft / rampTimeTicks;
-            } else {
-                // Rest of the day, full power
-                outputScale = 1;
-            }
-
+            outputScale = getOutputScale(level);
         } else if (night) {
             return 0;
         }
+        return (int) Math.ceil(outputScale * tier.getProductionRate());
+    }
 
+    public static float getOutputScale(Level level) {
+
+        float outputScale;
+        // A Day night cycle is 20 minutes, daytime is 10 minutes
+        int dayTime = (int) (level.getDayTime() % GameTicks.DAY_IN_TICKS);
+
+        // Over how long should generation scale up/down and the start/end of the day
+        float rampTimeMinutes = 1.5f;
+        float rampTimeTicks = GameTicks.MINUTE_IN_TICKS * rampTimeMinutes;
+
+        if (dayTime < rampTimeTicks) {
+            // If in the ramp up period of the day, do a linear scale up
+            outputScale = dayTime / rampTimeTicks;
+        } else if (dayTime > (GameTicks.MINUTE_IN_TICKS * 10) - (GameTicks.MINUTE_IN_TICKS * rampTimeMinutes)) {
+            // If in the ramp down period of the day, do a linear scale down
+            int timeLeft = (GameTicks.MINUTE_IN_TICKS * 10) - dayTime;
+            outputScale = timeLeft / rampTimeTicks;
+        } else {
+            // Rest of the day, full power
+            outputScale = 1;
+        }
+        outputScale = adjustOutputForWeather(level, outputScale);
+
+        return outputScale;
+    }
+
+    private static float adjustOutputForWeather(Level level, float outputScale) {
         if (level.isThundering()) {
             outputScale -= 0.7f;
         } else if (level.isRaining()) {
             outputScale -= 0.3f;
         }
         outputScale = Math.clamp(outputScale, 0, 1);
-
-        return (int) Math.ceil(outputScale * tier.getProductionRate());
+        return outputScale;
     }
 
     private boolean hasLiquidSunshine() {

@@ -2,10 +2,10 @@ package com.enderio.base.common.integrations.jei.category;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.common.init.EIOFluids;
-import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.integrations.jei.JEIUtils;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
+import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
 import java.util.ArrayList;
@@ -31,10 +31,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -126,21 +124,28 @@ public class FireCraftingCategory implements IRecipeCategory<RecipeHolder<FireCr
         IIngredientAcceptor<?> block = builder.addInvisibleIngredients(RecipeIngredientRole.CATALYST);
         block.addIngredients(Ingredient.of(recipe.value().getAllBaseBlocks().toArray(Block[]::new)));
 
-        // TODO: Get and display chance
         IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 88, 39)
-                .addTooltipCallback((slowView, tooltip) -> {
-                    Component lootTableComponent = MutableComponent
-                            .create(EIOLang.JEI_FIRE_CRAFTING_LOOT_TABLE.getContents())
-                            .append(Component.literal(" " + recipe.value().lootTable().location()));
-                    Component maxDropsComponent = MutableComponent
-                            .create(EIOLang.JEI_FIRE_CRAFTING_MAX_DROPS.getContents())
-                            .append(Component.literal(" " + recipe.value().maxItemDrops()));
-                    tooltip.clear();
-                    tooltip.add(lootTableComponent);
-                    tooltip.add(maxDropsComponent);
+                .addRichTooltipCallback((slotView, tooltip) -> {
+                    slotView.getDisplayedItemStack().ifPresent(stack -> {
+                        // Gross way of getting the index.
+                        int index = slotView.getItemStacks().toList().indexOf(stack);
+                        var result = recipe.value().results().get(index);
+
+                        tooltip.add(TooltipUtil.withArgs(EIOLang.JEI_FIRE_CRAFTING_CHANCE,
+                                Math.round(result.chance() * 100)));
+
+                        if (result.minCount() != result.maxCount()) {
+                            tooltip.add(TooltipUtil.withArgs(EIOLang.JEI_FIRE_CRAFTING_DROPS,
+                                    result.minCount() + "-" + result.maxCount()));
+                        } else {
+                            tooltip.add(TooltipUtil.withArgs(EIOLang.JEI_FIRE_CRAFTING_DROPS, result.minCount()));
+                        }
+                    });
                 });
-        output.addItemStack(new ItemStack(EIOItems.GRAINS_OF_INFINITY.get())); // TODO: Fetch the output from the loot
-                                                                               // table instead...
+
+        for (var result : recipe.value().results()) {
+            output.addItemStack(result.result().copyWithCount(1));
+        }
 
         IRecipeSlotBuilder catalyst = builder.addSlot(RecipeIngredientRole.CATALYST, 88, 8).setSlotName("catalyst");
         catalyst.addIngredients(Ingredient.of(Items.FLINT_AND_STEEL, EIOFluids.FIRE_WATER.getBucket()));

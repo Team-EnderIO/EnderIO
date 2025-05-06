@@ -32,7 +32,7 @@ public class PaintingMachineScreen extends MachineScreen<PaintingMachineMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(NewProgressWidget.leftRight(leftPos + 89, topPos + 35, 22, 16, PROGRESS_SPRITE,
+        addRenderableOnly(NewProgressWidget.leftRight(leftPos + 88, topPos + 35, 24, 16, PROGRESS_SPRITE,
                 menu::getCraftingProgress, true));
 
         addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage,
