@@ -22,43 +22,50 @@ import org.jetbrains.annotations.Nullable;
 public class ChemicalTicker
         extends IOAwareConduitTicker<ChemicalConduit, ChemicalConduitConnectionConfig, ChemicalTicker.Connection> {
 
-    private long doChemicalTransfer(ChemicalStack chemicalStack, Connection receiver, List<Connection> senders) {
-        var extractedChemical = receiver.chemicalHandler.extractChemical(chemicalStack, Action.SIMULATE);
-
+    private long doChemicalTransfer(Chemical chemical, long maxTransfer, Connection receiver, List<Connection> senders) {
+        // Attempt to drain chemical from the target.
+        var extractedChemical = receiver.chemicalHandler.extractChemical(new ChemicalStack(chemical, maxTransfer), Action.SIMULATE);
         if (extractedChemical.isEmpty()) {
-            return chemicalStack.getAmount();
+            return maxTransfer;
         }
 
+        // Test the extracted fluid against the target
         var extractFilter = receiver.inventory()
                 .getStackInSlot(ChemicalConduit.EXTRACT_FILTER_SLOT)
                 .getCapability(EIOCapabilities.Filter.ITEM);
 
         if (extractFilter instanceof ChemicalFilter chemicalFilter) {
             if (!chemicalFilter.test(extractedChemical)) {
-                return chemicalStack.getAmount();
+                return maxTransfer;
             }
         }
 
+        // Insert into any available blocks
         for (Connection insert : senders) {
+            var chemicalToInsert = extractedChemical.copy();
+
+            // Test fluid against insert filter.
             var insertFilter = insert.inventory()
                     .getStackInSlot(ChemicalConduit.EXTRACT_FILTER_SLOT)
                     .getCapability(EIOCapabilities.Filter.ITEM);
 
             if (insertFilter instanceof ChemicalFilter chemicalStackFilter) {
-                if (!chemicalStackFilter.test(extractedChemical)) {
+                if (!chemicalStackFilter.test(chemicalToInsert)) {
                     continue;
                 }
             }
 
-            chemicalStack = tryChemicalTransfer(insert.chemicalHandler, receiver.chemicalHandler, chemicalStack.copy(),
-                    true);
+            // Attempt to transfer chemical.
+            var transferredChemical = tryChemicalTransfer(insert.chemicalHandler, receiver.chemicalHandler, chemicalToInsert,true);
 
-            if (chemicalStack.getAmount() <= 0) {
+            // Deduct the transferred chemical from our maximum transfer.
+            maxTransfer -= transferredChemical.getAmount();
+            if (maxTransfer <= 0) {
                 break;
             }
         }
 
-        return chemicalStack.getAmount();
+        return maxTransfer;
     }
 
     @Override
@@ -95,8 +102,7 @@ public class ChemicalTicker
                     .toList();
 
             if (!context.lockedChemical().isEmptyType()) {
-                doChemicalTransfer(new ChemicalStack(context.lockedChemical(), transferRate), receiver,
-                        prioritizedSenders);
+                doChemicalTransfer(context.lockedChemical(), transferRate, receiver, prioritizedSenders);
             } else {
                 long remaining = transferRate;
 
@@ -106,8 +112,7 @@ public class ChemicalTicker
                     }
 
                     Chemical chemical = extractHandler.getChemicalInTank(i).getChemical();
-                    remaining = doChemicalTransfer(new ChemicalStack(chemical, remaining), receiver,
-                            prioritizedSenders);
+                    remaining = doChemicalTransfer(chemical, remaining, receiver, prioritizedSenders);
 
                     if (!conduit.isMultiChemical() && remaining < transferRate) {
                         context.setLockedChemical(chemical);

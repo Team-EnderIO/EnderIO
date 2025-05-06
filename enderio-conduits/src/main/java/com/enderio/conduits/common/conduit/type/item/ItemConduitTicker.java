@@ -74,7 +74,7 @@ public class ItemConduitTicker
                 }
 
                 for (int j = startingIndex; j < startingIndex + prioritizedSenders.size(); j++) {
-                    ItemStack itemToInsert = extractedItem;
+                    ItemStack itemToInsert = extractedItem.copy();
 
                     int insertIndex = j % prioritizedSenders.size();
                     Connection insert = prioritizedSenders.get(insertIndex);

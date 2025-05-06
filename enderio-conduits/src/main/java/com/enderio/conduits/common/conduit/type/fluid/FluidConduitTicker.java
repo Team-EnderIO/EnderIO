@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.conduit.type.fluid;
 
-import com.enderio.base.api.filter.FluidStackFilter;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.network.ConduitNetwork;
@@ -26,47 +25,53 @@ public class FluidConduitTicker
 
     public static final FluidConduitTicker INSTANCE = new FluidConduitTicker();
 
-    private int doFluidTransfer(FluidStack fluid, Connection receiver, List<Connection> senders) {
-        FluidStack extractedFluid = receiver.fluidHandler().drain(fluid, IFluidHandler.FluidAction.SIMULATE);
-
+    private int doFluidTransfer(Fluid fluid, int maxTransfer, Connection receiver, List<Connection> senders) {
+        // Attempt to drain fluid from the target.
+        FluidStack extractedFluid = receiver.fluidHandler().drain(new FluidStack(fluid, maxTransfer), IFluidHandler.FluidAction.SIMULATE);
         if (extractedFluid.isEmpty()) {
-            return fluid.getAmount();
+            return maxTransfer;
         }
 
+        // Test the extracted fluid against the target
         var extractFilter = receiver.inventory()
                 .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
-                .getCapability(EIOCapabilities.Filter.ITEM);
+                .getCapability(EIOCapabilities.FLUID_STACK_FILTER);
 
-        if (extractFilter instanceof FluidStackFilter fluidStackFilter) {
-            if (!fluidStackFilter.test(extractedFluid)) {
-                return fluid.getAmount();
+        if (extractFilter != null) {
+            extractedFluid = extractFilter.test(receiver.fluidHandler, extractedFluid);
+            if (extractedFluid.isEmpty()) {
+                return maxTransfer;
             }
         }
 
+        // Insert into any available blocks
         for (Connection insert : senders) {
+            var fluidToInsert = extractedFluid.copy();
+
+            // Test fluid against insert filter.
             var insertFilter = insert.inventory()
                     .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
-                    .getCapability(EIOCapabilities.Filter.ITEM);
+                    .getCapability(EIOCapabilities.FLUID_STACK_FILTER);
 
-            if (insertFilter instanceof FluidStackFilter fluidStackFilter) {
-                if (!fluidStackFilter.test(extractedFluid)) {
+            if (insertFilter != null) {
+                fluidToInsert = insertFilter.test(insert.fluidHandler, fluidToInsert);
+                if (fluidToInsert.isEmpty()) {
                     continue;
                 }
             }
 
+            // Attempt to transfer fluid.
             FluidStack transferredFluid = FluidUtil.tryFluidTransfer(insert.fluidHandler(), receiver.fluidHandler(),
-                    fluid, true);
+                    fluidToInsert, true);
 
-            if (!transferredFluid.isEmpty()) {
-                fluid.shrink(transferredFluid.getAmount());
-            }
-
-            if (fluid.getAmount() <= 0) {
+            // Deduct the transferred fluid from our maximum transfer.
+            maxTransfer -= transferredFluid.getAmount();
+            if (maxTransfer <= 0) {
                 break;
             }
         }
 
-        return fluid.getAmount();
+        return maxTransfer;
     }
 
     @Override
@@ -103,7 +108,7 @@ public class FluidConduitTicker
                     .toList();
 
             if (!context.lockedFluid().isSame(Fluids.EMPTY)) {
-                doFluidTransfer(new FluidStack(context.lockedFluid(), fluidRate), receiver, prioritizedSenders);
+                doFluidTransfer(context.lockedFluid(), fluidRate, receiver, prioritizedSenders);
             } else {
                 int remaining = fluidRate;
 
@@ -113,7 +118,7 @@ public class FluidConduitTicker
                     }
 
                     Fluid fluid = extractHandler.getFluidInTank(i).getFluid();
-                    remaining = doFluidTransfer(new FluidStack(fluid, remaining), receiver, prioritizedSenders);
+                    remaining = doFluidTransfer(fluid, remaining, receiver, prioritizedSenders);
 
                     if (!conduit.isMultiFluid() && remaining < fluidRate) {
                         if (fluid instanceof FlowingFluid flowing) {
