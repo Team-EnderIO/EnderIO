@@ -12,11 +12,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import org.jetbrains.annotations.Nullable;
@@ -37,14 +40,21 @@ public class FilledSoulStorageIngredient implements ICustomIngredient {
         this.item = item;
 
         // Pre-compute
-        itemStacks = EntityCaptureUtils.getCapturableEntityTypes().stream().map(entityType -> {
-            var stack = item.getDefaultInstance();
-            if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entityType))) {
-                return Optional.of(stack);
-            }
+        var defaultStack = item.getDefaultInstance();
+        if (!SoulBoundUtils.canBindSoul(defaultStack)) {
+            var errorStack = new ItemStack(Blocks.BARRIER);
+            errorStack.set(DataComponents.CUSTOM_NAME, Component.literal("Item cannot be bound: " + defaultStack.getHoverName()));
+            itemStacks = new ItemStack[] {errorStack};
+        } else {
+            itemStacks = EntityCaptureUtils.getCapturableEntityTypes().stream().map(entityType -> {
+                var stack = item.getDefaultInstance();
+                if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entityType))) {
+                    return Optional.of(stack);
+                }
 
-            return Optional.<ItemStack>empty();
-        }).flatMap(Optional::stream).toArray(ItemStack[]::new);
+                return Optional.<ItemStack>empty();
+            }).flatMap(Optional::stream).toArray(ItemStack[]::new);
+        }
     }
 
     @Override

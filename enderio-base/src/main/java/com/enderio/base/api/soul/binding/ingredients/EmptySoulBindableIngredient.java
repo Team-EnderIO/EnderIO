@@ -37,7 +37,10 @@ public class EmptySoulBindableIngredient implements ICustomIngredient {
 
         // Attempt to get the unbound item.
         var stack = item.getDefaultInstance();
-        if (SoulBoundUtils.tryBindSoul(stack, Soul.EMPTY)) {
+        if (!SoulBoundUtils.canBindSoul(stack)) {
+            itemStack = new ItemStack(Blocks.BARRIER);
+            itemStack.set(DataComponents.CUSTOM_NAME, Component.literal("Item cannot be bound: " + stack.getHoverName()));
+        } else if (SoulBoundUtils.tryBindSoul(stack, Soul.EMPTY)) {
             itemStack = stack;
         } else {
             ItemStack errorStack = new ItemStack(Blocks.BARRIER);

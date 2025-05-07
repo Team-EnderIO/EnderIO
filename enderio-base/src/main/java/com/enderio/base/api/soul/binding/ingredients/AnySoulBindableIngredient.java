@@ -36,10 +36,19 @@ public class AnySoulBindableIngredient implements ICustomIngredient {
     public AnySoulBindableIngredient(Item item) {
         this.item = item;
 
-        // Attempt to get the unbound item.
+        // Pre-compute
         var unboundStack = item.getDefaultInstance();
+        var unboundName = unboundStack.getHoverName();
+
+        if (!SoulBoundUtils.canBindSoul(unboundStack)) {
+            var errorStack = new ItemStack(Blocks.BARRIER);
+            errorStack.set(DataComponents.CUSTOM_NAME, Component.literal("Item cannot be bound: " + unboundStack.getHoverName()));
+            itemStacks = new ItemStack[] {unboundStack};
+            return;
+        }
+
+        // Attempt to get the unbound item.
         if (!SoulBoundUtils.tryBindSoul(unboundStack, Soul.EMPTY)) {
-            var unboundName = unboundStack.getHoverName();
             unboundStack = new ItemStack(Blocks.BARRIER);
             unboundStack.set(DataComponents.CUSTOM_NAME, Component.literal("Unable to empty binding of " + unboundName));
         }
