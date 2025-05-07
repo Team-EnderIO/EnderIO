@@ -148,8 +148,8 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             Consumer<Component> displayCallback) {
 
         // Soul Vial is filled, so it can't capture
-        Optional<Soul> soul = getEntityData(soulVial);
-        if (soul.isPresent() && soul.get().hasEntity()) {
+        Soul soul = soulVial.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
+        if (soul.hasEntity()) {
             return Optional.empty();
         }
 
@@ -158,15 +158,16 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             return Optional.empty();
         }
 
+        if (!entity.isAlive()) {
+            displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_DEAD);
+            return Optional.empty();
+        }
+
+        //noinspection unchecked
         EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils
                 .getCapturableStatus((EntityType<? extends LivingEntity>) entity.getType(), entity);
         if (status != EntityCaptureUtils.CapturableStatus.CAPTURABLE) {
             displayCallback.accept(status.errorMessage());
-            return Optional.empty();
-        }
-
-        if (!entity.isAlive()) {
-            displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_DEAD);
             return Optional.empty();
         }
 
@@ -177,7 +178,8 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
         // Create the filled vial
         ItemStack filledVial = soulVial.copyWithCount(1);
-        setEntityData(filledVial, entity);
+        filledVial.set(EIODataComponents.SOUL, Soul.of(entity));
+        filledVial.set(EIODataComponents.ENTITY_MAX_HEALTH, entity.getMaxHealth());
 
         // Consume the stack
         soulVial.shrink(1);
@@ -189,9 +191,9 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos,
             Consumer<ItemStack> emptyVialSetter) {
-        var storedEntity = filledVial.get(EIODataComponents.SOUL);
+        var storedSoul = filledVial.get(EIODataComponents.SOUL);
 
-        if (storedEntity != null && storedEntity.hasEntity()) {
+        if (storedSoul != null && storedSoul.hasEntity()) {
             // Get the spawn location for the mob.
             double spawnX = pos.getX() + face.getStepX() + 0.5;
             double spawnY = pos.getY() + face.getStepY();
@@ -201,7 +203,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             float rotation = Mth.wrapDegrees(level.getRandom().nextFloat() * 360.0f);
 
             // Try to get the entity NBT from the item.
-            Optional<Entity> entity = EntityType.create(storedEntity.getEntityTag(), level);
+            Optional<Entity> entity = EntityType.create(storedSoul.getEntityTag(), level);
 
             // Position the entity and add it.
             entity.ifPresent(ent -> {
@@ -221,40 +223,10 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     public static List<ItemStack> getAllFilled() {
         List<ItemStack> items = new ArrayList<>();
-        for (ResourceLocation entity : EntityCaptureUtils.getCapturableEntities()) {
-            ItemStack is = EIOItems.SOUL_VIAL.get().getDefaultInstance();
-            setEntityType(is, entity);
-            items.add(is);
+        for (var entityType : EntityCaptureUtils.getCapturableEntityTypes()) {
+            items.add(forSoul(Soul.of(entityType)));
         }
         return items;
-    }
-
-    // endregion
-
-    // region Entity Storage
-
-    // TODO: Use the capability instead of these helpers.
-
-    @Deprecated
-    public static void setEntityType(ItemStack stack, ResourceLocation entityType) {
-        stack.set(EIODataComponents.SOUL, Soul.of(entityType));
-    }
-
-    @Deprecated
-    private static void setEntityData(ItemStack stack, LivingEntity entity) {
-        stack.set(EIODataComponents.SOUL, Soul.of(entity));
-        stack.set(EIODataComponents.ENTITY_MAX_HEALTH, entity.getMaxHealth());
-    }
-
-    @Deprecated
-    public static Optional<Soul> getEntityData(ItemStack stack) {
-        return Optional.ofNullable(stack.get(EIODataComponents.SOUL));
-    }
-
-    @Deprecated
-    public static boolean isFilled(ItemStack stack) {
-        var storedEntity = stack.get(EIODataComponents.SOUL);
-        return storedEntity != null && storedEntity.hasEntity();
     }
 
     // endregion

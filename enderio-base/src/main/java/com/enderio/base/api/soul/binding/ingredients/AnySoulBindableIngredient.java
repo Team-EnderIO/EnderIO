@@ -40,9 +40,9 @@ public class AnySoulBindableIngredient implements ICustomIngredient {
 
     @Override
     public Stream<ItemStack> getItems() {
-        Stream<Optional<ItemStack>> possibleItems = EntityCaptureUtils.getCapturableEntities().stream().map(entity -> {
+        Stream<Optional<ItemStack>> possibleItems = EntityCaptureUtils.getCapturableEntityTypes().stream().map(entityType -> {
             var stack = item.getDefaultInstance();
-            if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entity))) {
+            if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entityType))) {
                 return Optional.of(stack);
             }
 

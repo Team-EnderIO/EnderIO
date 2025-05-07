@@ -81,10 +81,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
         if (input.isPresent()) {
             vials.add(input.get().getTypedValue().getIngredient());
         } else if (recipe.value().entityType().isPresent()) {
-            var item = new ItemStack(EIOItems.SOUL_VIAL.get());
-            SoulVialItem.setEntityType(item, recipe.value().entityType().get());
-
-            vials.add(item);
+            vials.add(SoulVialItem.forSoul(Soul.of(recipe.value().entityType().get())));
         } else if (recipe.value().mobCategory().isPresent()) {
 
             var allEntitiesOfCategory = BuiltInRegistries.ENTITY_TYPE.stream()
@@ -93,21 +90,16 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
                     .toList();
 
             for (ResourceLocation entity : allEntitiesOfCategory) {
-                var item = new ItemStack(EIOItems.SOUL_VIAL.get());
-                SoulVialItem.setEntityType(item, entity);
-                vials.add(item);
+                vials.add(SoulVialItem.forSoul(Soul.of(entity)));
             }
 
         } else if (recipe.value().soulData().isPresent()) {
             if (output.isPresent()) {
                 var outputStack = output.get().getTypedValue().getIngredient();
-                var outputSoulStorage = outputStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
+                var soul = SoulBoundUtils.getBoundSoul(outputStack);
 
-                var item = new ItemStack(EIOItems.SOUL_VIAL.get());
-                if (outputSoulStorage != null) {
-                    Soul data = outputSoulStorage.getBoundSoul();
-                    SoulVialItem.setEntityType(item, data.entityTypeId());
-                    vials.add(item);
+                if (soul.hasEntity()) {
+                    vials.add(SoulVialItem.forSoul(Soul.of(soul.entityType())));
                 }
             } else {
                 SoulDataReloadListener<? extends SoulData> soulDataReloadListener = SoulDataReloadListener
@@ -119,21 +111,16 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
                         .toList();
 
                 for (ResourceLocation entity : allEntitiesOfSoulData) {
-                    var item = new ItemStack(EIOItems.SOUL_VIAL.get());
-                    SoulVialItem.setEntityType(item, entity);
-                    vials.add(item);
+                    vials.add(SoulVialItem.forSoul(Soul.of(entity)));
                 }
             }
         } else {
             if (output.isPresent()) {
                 var outputStack = output.get().getTypedValue().getIngredient();
-                var outputSoulStorage = outputStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
+                var soul = SoulBoundUtils.getBoundSoul(outputStack);
 
-                var item = new ItemStack(EIOItems.SOUL_VIAL.get());
-                if (outputSoulStorage != null) {
-                    Soul data = outputSoulStorage.getBoundSoul();
-                    SoulVialItem.setEntityType(item, data.entityTypeId());
-                    vials.add(item);
+                if (soul.hasEntity()) {
+                    vials.add(SoulVialItem.forSoul(Soul.of(soul.entityType())));
                 }
             } else {
                 vials.addAll(SoulVialItem.getAllFilled());

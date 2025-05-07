@@ -41,9 +41,9 @@ public class FilledSoulStorageIngredient implements ICustomIngredient {
 
     @Override
     public Stream<ItemStack> getItems() {
-        return EntityCaptureUtils.getCapturableEntities().stream().map(entity -> {
+        return EntityCaptureUtils.getCapturableEntityTypes().stream().map(entityType -> {
             var stack = item.getDefaultInstance();
-            if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entity))) {
+            if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entityType))) {
                 return Optional.of(stack);
             }
 

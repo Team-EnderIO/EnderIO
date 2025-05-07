@@ -145,7 +145,19 @@ public record Soul(CompoundTag entityTag) {
     }
 
     public Soul copy() {
+        if (isEmpty()) {
+            return EMPTY;
+        }
+
         return new Soul(entityTag.copy());
+    }
+
+    public Soul copyOnlyType() {
+        if (isEmpty()) {
+            return EMPTY;
+        }
+
+        return of(entityType());
     }
 
     private static final Logger LOGGER = LogUtils.getLogger();

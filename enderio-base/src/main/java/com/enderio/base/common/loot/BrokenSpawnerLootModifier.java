@@ -40,6 +40,7 @@ public class BrokenSpawnerLootModifier extends LootModifier {
                     BaseSpawner spawner = spawnerBlockEntity.getSpawner();
                     CompoundTag entityTag = spawner.nextSpawnData.getEntityToSpawn();
 
+                    // TODO: should we be copying the entire entity tag?
                     if (entityTag.contains(Soul.KEY_ID)) {
                         ResourceLocation type = ResourceLocation.parse(entityTag.getString(Soul.KEY_ID));
                         ItemStack brokenSpawner = BrokenSpawnerItem.forSoul(Soul.of(type));

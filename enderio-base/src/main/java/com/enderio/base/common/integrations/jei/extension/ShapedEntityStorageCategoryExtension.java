@@ -85,11 +85,11 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
         }
 
         if (noData) {
-            var allCapturableEntities = EntityCaptureUtils.getCapturableEntities();
+            var capturableEntityTypes = EntityCaptureUtils.getCapturableEntityTypes();
 
-            results = new ArrayList<>(allCapturableEntities.stream().map(e -> {
+            results = new ArrayList<>(capturableEntityTypes.stream().map(entityType -> {
                 ItemStack result = resultItem.copy();
-                if (SoulBoundUtils.tryBindSoul(result, Soul.of(e))) {
+                if (SoulBoundUtils.tryBindSoul(result, Soul.of(entityType))) {
                     return Optional.of(result);
                 }
 
@@ -105,10 +105,9 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
                     .map(ingredient -> Arrays.stream(ingredient.getItems())
                             .<ItemStack>mapMulti((ingredientItem, consumer) -> {
                                 if (SoulBoundUtils.canBindSoul(ingredientItem)) {
-                                    for (ResourceLocation entity : allCapturableEntities) {
+                                    for (var entityType : capturableEntityTypes) {
                                         ItemStack item = ingredientItem.copy();
-
-                                        if (SoulBoundUtils.tryBindSoul(item, Soul.of(entity))) {
+                                        if (SoulBoundUtils.tryBindSoul(item, Soul.of(entityType))) {
                                             consumer.accept(item);
                                         }
                                     }

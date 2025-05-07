@@ -83,10 +83,8 @@ public class MobCaptureTask extends PoweredSpawnerTask {
     }
 
     private Soul getSoulForCapture() {
-        var entityTypeKey = BuiltInRegistries.ENTITY_TYPE.getKey(entityType());
-
         return switch (spawnMode()) {
-        case NEW -> Soul.of(entityTypeKey);
+        case NEW -> blockEntity.getBoundSoul().copyOnlyType();
         case COPY -> blockEntity.getBoundSoul().copy();
         };
     }
