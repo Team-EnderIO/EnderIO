@@ -3,6 +3,7 @@ package com.enderio.base.common.item.tool;
 import com.enderio.EnderIOBase;
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.soul.Soul;
+import com.enderio.base.api.soul.SoulBoundUtils;
 import com.enderio.base.api.soul.binding.ComponentSoulBindable;
 import com.enderio.base.api.soul.binding.ISoulBindable;
 import com.enderio.base.api.soul.storage.ISoulHandler;
@@ -22,6 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -54,6 +56,11 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     public static final ResourceLocation FILLED_MODEL_PROPERTY = EnderIO.loc("soul_vial_filled");
 
+    /**
+     * Should match key from {@link LivingEntity#addAdditionalSaveData(CompoundTag)}
+     */
+    public static final String KEY_HEALTH = "Health";
+
     public SoulVialItem(Properties pProperties) {
         super(pProperties);
     }
@@ -73,10 +80,19 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        itemStack.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY)
-                .getHealthState()
-                .ifPresent(health -> tooltips.add(
-                        TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB())));
+        float maxHealth = itemStack.getOrDefault(EIODataComponents.ENTITY_MAX_HEALTH, 0f);
+        if (maxHealth <= 0) {
+            return;
+        }
+
+        var soul = SoulBoundUtils.getBoundSoul(itemStack);
+        if (soul.hasEntity()) {
+            var entityTag = soul.getEntityTag();
+            if (entityTag.contains(KEY_HEALTH)) {
+                float health = entityTag.getFloat(KEY_HEALTH);
+                tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health, maxHealth));
+            }
+        }
     }
 
     // endregion
@@ -227,6 +243,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     @Deprecated
     private static void setEntityData(ItemStack stack, LivingEntity entity) {
         stack.set(EIODataComponents.SOUL, Soul.of(entity));
+        stack.set(EIODataComponents.ENTITY_MAX_HEALTH, entity.getMaxHealth());
     }
 
     @Deprecated

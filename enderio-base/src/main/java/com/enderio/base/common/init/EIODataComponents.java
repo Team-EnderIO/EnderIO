@@ -41,6 +41,10 @@ public class EIODataComponents {
             .registerComponentType("soul", builder -> builder.persistent(Soul.CODEC)
                     .networkSynchronized(Soul.STREAM_CODEC));
 
+    public static Supplier<DataComponentType<Float>> ENTITY_MAX_HEALTH = DATA_COMPONENT_TYPES
+            .registerComponentType("entity_max_health", builder -> builder.persistent(Codec.FLOAT)
+                    .networkSynchronized(ByteBufCodecs.FLOAT));
+
     public static Supplier<DataComponentType<CapacitorData>> CAPACITOR_DATA = DATA_COMPONENT_TYPES
             .registerComponentType("capacitor_data",
                     builder -> builder.persistent(CapacitorData.CODEC).networkSynchronized(CapacitorData.STREAM_CODEC));

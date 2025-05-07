@@ -5,7 +5,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -13,38 +12,32 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.extensions.IEntityExtension;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.Objects;
 import java.util.Optional;
 
-public record Soul(CompoundTag entityTag, float maxHealth) {
+/**
+ * Represents a stored soul, derived from a {@link LivingEntity}.
+ * @param entityTag the entity's NBT tag.
+ */
+public record Soul(CompoundTag entityTag) {
     /**
      * Should match key from {@link IEntityExtension#serializeNBT(HolderLookup.Provider)}.
      */
     public static final String KEY_ID = "id";
 
-    /**
-     * Should match key from {@link LivingEntity#addAdditionalSaveData(CompoundTag)}
-     */
-    public static final String KEY_HEALTH = "Health";
-
     public static Codec<Soul> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            CompoundTag.CODEC.fieldOf("entityTag").forGetter(Soul::entityTag),
-            Codec.FLOAT.fieldOf("maxHealth").forGetter(Soul::maxHealth)
+            CompoundTag.CODEC.fieldOf("entityTag").forGetter(Soul::entityTag)
         ).apply(instance, Soul::new));
 
     public static StreamCodec<ByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.COMPOUND_TAG,
         Soul::getEntityTag,
-        ByteBufCodecs.FLOAT,
-        Soul::maxHealth,
         Soul::new
     );
 
@@ -68,23 +61,16 @@ public record Soul(CompoundTag entityTag, float maxHealth) {
         }
     };
 
-    public static final Soul EMPTY = new Soul(
-        new CompoundTag(),
-        0.0f
-    );
+    public static final Soul EMPTY = new Soul(new CompoundTag());
 
     public static Soul of(LivingEntity entity) {
-        return new Soul(
-            entity.serializeNBT(entity.level().registryAccess()),
-            entity.getMaxHealth()
-        );
+        return new Soul(entity.serializeNBT(entity.level().registryAccess()));
     }
 
     public static Soul of(ResourceLocation entityType) {
         CompoundTag tag = new CompoundTag();
         tag.putString(KEY_ID, entityType.toString());
-
-        return new Soul(tag, 0.0f);
+        return new Soul(tag);
     }
 
     public static Soul of(EntityType<?> entityType) {
@@ -158,19 +144,8 @@ public record Soul(CompoundTag entityTag, float maxHealth) {
         return entityTag;
     }
 
-    public Optional<Tuple<Float, Float>> getHealthState() {
-        if (maxHealth > 0) {
-            CompoundTag tag = entityTag;
-            if (tag.contains(KEY_HEALTH)) {
-                return Optional.of(new Tuple<>(tag.getFloat(KEY_HEALTH), maxHealth));
-            }
-        }
-
-        return Optional.empty();
-    }
-
     public Soul copy() {
-        return new Soul(entityTag.copy(), maxHealth);
+        return new Soul(entityTag.copy());
     }
 
     private static final Logger LOGGER = LogUtils.getLogger();
