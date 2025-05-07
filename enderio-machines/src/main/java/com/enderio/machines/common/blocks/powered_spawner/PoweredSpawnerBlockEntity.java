@@ -223,13 +223,11 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .capacitor()
-                .setStackLimit(1)
                 .inputSlot((i, stack) -> {
                     var soulHandler = stack.getCapability(EIOCapabilities.SoulHandler.ITEM);
                     return soulHandler != null && soulHandler.tryInsertSoul(getSoulForCapture(), true);
                 })
                 .slotAccess(INPUT)
-                .setStackLimit(64)
                 .outputSlot()
                 .slotAccess(OUTPUT)
                 .build();
@@ -277,7 +275,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Nullable
     public EntityType<?> getEntityType() {
-        return boundSoul.entityType();
+        return boundSoul.hasEntity() ? boundSoul.entityType() : null;
     }
 
     public Soul getBoundSoul() {

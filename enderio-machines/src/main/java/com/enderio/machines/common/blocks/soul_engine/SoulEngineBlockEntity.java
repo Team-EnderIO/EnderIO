@@ -108,7 +108,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
     @Nullable
     public EntityType<?> getEntityType() {
-        return boundSoul.entityType();
+        return boundSoul.hasEntity() ? boundSoul.entityType() : null;
     }
 
     @Override

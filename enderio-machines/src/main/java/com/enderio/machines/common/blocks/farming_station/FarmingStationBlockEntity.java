@@ -417,7 +417,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Nullable
     public EntityType<?> getEntityType() {
-        return boundSoul.entityType();
+        return boundSoul.hasEntity() ? boundSoul.entityType() : null;
     }
 
     public void setEntityType(ResourceLocation entityType) {

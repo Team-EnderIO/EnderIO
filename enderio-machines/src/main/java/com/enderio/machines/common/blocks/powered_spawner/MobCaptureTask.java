@@ -44,7 +44,7 @@ public class MobCaptureTask extends PoweredSpawnerTask {
 
         // Clone the input
         var resultStack = inputStack.copyWithCount(1);
-        var resultSoulHandler = inputStack.getCapability(EIOCapabilities.SoulHandler.ITEM);
+        var resultSoulHandler = resultStack.getCapability(EIOCapabilities.SoulHandler.ITEM);
         if (resultSoulHandler == null || !resultSoulHandler.tryInsertSoul(capturedSoul, true)) {
             // Cannot insert soul into the input, so give up
             isComplete = true;
