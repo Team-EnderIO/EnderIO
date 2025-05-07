@@ -3,7 +3,6 @@ package com.enderio.machines.common.blocks.base.inventory;
 import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.machines.common.blocks.base.state.MachineState;
 import com.mojang.logging.LogUtils;
-import java.util.function.IntConsumer;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -14,6 +13,8 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
+
+import java.util.function.IntConsumer;
 
 /**
  * A machine inventory.
@@ -121,6 +122,18 @@ public class MachineInventory extends ItemStackHandler {
     // TODO: not a fan of this pattern.
     public void updateMachineState(MachineState state, boolean add) {
 
+    }
+
+    /**
+     * Creates a snapshot of the inventory with only the MultiSlotAccess slots set. Only used when doing chained simulations.
+     * @return An inventory with copied itemstacks in the MultiSlotAccess slots.
+     */
+    public MachineInventory snapshot(MultiSlotAccess slots) {
+        MachineInventory machineInventory = new MachineInventory(ioConfigurable, layout);
+        for (SingleSlotAccess outputAccess : slots.getAccesses()) {
+            outputAccess.setStackInSlot(machineInventory, outputAccess.getItemStack(this).copy());
+        }
+        return machineInventory;
     }
 
     // Custom deserialize method that ignores the Size value in the tag.

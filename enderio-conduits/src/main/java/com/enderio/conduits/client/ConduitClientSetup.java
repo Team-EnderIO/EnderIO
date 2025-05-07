@@ -2,16 +2,20 @@ package com.enderio.conduits.client;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.conduits.EnderIOConduits;
-import com.enderio.conduits.api.model.RegisterConduitCoreModelModifiersEvent;
-import com.enderio.conduits.api.screen.RegisterConduitScreenExtensionsEvent;
-import com.enderio.conduits.client.gui.conduit.ConduitScreenExtensions;
-import com.enderio.conduits.client.gui.conduit.FluidConduitScreenExtension;
-import com.enderio.conduits.client.gui.conduit.ItemConduitScreenExtension;
-import com.enderio.conduits.client.model.ConduitGeometry;
-import com.enderio.conduits.client.model.ConduitItemModelLoader;
-import com.enderio.conduits.client.model.FacadeItemGeometry;
-import com.enderio.conduits.client.model.conduit.modifier.ConduitCoreModelModifiers;
-import com.enderio.conduits.client.model.conduit.modifier.FluidConduitCoreModelModifier;
+import com.enderio.conduits.api.model.RegisterConduitModelModifiersEvent;
+import com.enderio.conduits.api.screen.RegisterConduitScreenTypesEvent;
+import com.enderio.conduits.client.gui.screen.types.ConduitScreenTypes;
+import com.enderio.conduits.client.gui.screen.types.EnergyConduitScreenType;
+import com.enderio.conduits.client.gui.screen.types.FluidConduitScreenType;
+import com.enderio.conduits.client.gui.screen.types.ItemConduitScreenType;
+import com.enderio.conduits.client.gui.screen.types.RedstoneConduitScreenType;
+import com.enderio.conduits.client.model.conduit.ConduitItemModelLoader;
+import com.enderio.conduits.client.model.conduit.bundle.ConduitBundleGeometry;
+import com.enderio.conduits.client.model.conduit.facades.FacadeItemGeometry;
+import com.enderio.conduits.client.model.conduit.modifier.ConduitModelModifiers;
+import com.enderio.conduits.client.model.conduit.modifier.FluidConduitModelModifier;
+import com.enderio.conduits.client.model.conduit.modifier.RedstoneConduitModelModifier;
+import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitTypes;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +28,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
 @EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class ConduitClientSetup {
@@ -47,23 +52,26 @@ public class ConduitClientSetup {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        ConduitScreenExtensions.init();
+        ConduitScreenTypes.init();
     }
 
     @SubscribeEvent
-    public static void registerConduitCoreModelModifiers(RegisterConduitCoreModelModifiersEvent event) {
-        event.register(ConduitTypes.FLUID.get(), FluidConduitCoreModelModifier::new);
+    public static void registerConduitCoreModelModifiers(RegisterConduitModelModifiersEvent event) {
+        event.register(ConduitTypes.REDSTONE.get(), RedstoneConduitModelModifier::new);
+        event.register(ConduitTypes.FLUID.get(), FluidConduitModelModifier::new);
     }
 
     @SubscribeEvent
-    public static void registerConduitScreenExtensions(RegisterConduitScreenExtensionsEvent event) {
-        event.register(ConduitTypes.FLUID.get(), FluidConduitScreenExtension::new);
-        event.register(ConduitTypes.ITEM.get(), ItemConduitScreenExtension::new);
+    public static void registerConduitScreenTypes(RegisterConduitScreenTypesEvent event) {
+        event.register(ConduitTypes.ENERGY.get(), new EnergyConduitScreenType());
+        event.register(ConduitTypes.FLUID.get(), new FluidConduitScreenType());
+        event.register(ConduitTypes.REDSTONE.get(), new RedstoneConduitScreenType());
+        event.register(ConduitTypes.ITEM.get(), new ItemConduitScreenType());
     }
 
     @SubscribeEvent
     public static void modelLoader(ModelEvent.RegisterGeometryLoaders event) {
-        event.register(EnderIO.loc("conduit"), new ConduitGeometry.Loader());
+        event.register(EnderIO.loc("conduit"), new ConduitBundleGeometry.Loader());
         event.register(EnderIO.loc("conduit_item"), new ConduitItemModelLoader());
         event.register(EnderIO.loc("facades_item"), new FacadeItemGeometry.Loader());
     }
@@ -75,8 +83,8 @@ public class ConduitClientSetup {
         }
 
         // Ensure conduit model modifiers are ready, then load all model dependencies.
-        ConduitCoreModelModifiers.init();
-        ConduitCoreModelModifiers.getAllModelDependencies().forEach(event::register);
+        ConduitModelModifiers.init();
+        ConduitModelModifiers.getAllModelDependencies().forEach(event::register);
     }
 
     @SubscribeEvent
@@ -84,6 +92,11 @@ public class ConduitClientSetup {
         for (ModelResourceLocation modelLocation : MODEL_LOCATIONS) {
             MODELS.put(modelLocation, event.getModels().get(modelLocation));
         }
+    }
+
+    @SubscribeEvent
+    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        event.registerBlock(ConduitBundleExtension.INSTANCE, ConduitBlocks.CONDUIT);
     }
 
     private static ModelResourceLocation loc(String modelName) {

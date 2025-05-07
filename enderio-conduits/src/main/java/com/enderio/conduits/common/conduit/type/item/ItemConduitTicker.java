@@ -1,35 +1,52 @@
 package com.enderio.conduits.common.conduit.type.item;
 
-import com.enderio.base.api.filter.ItemStackFilter;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.ColoredRedstoneProvider;
-import com.enderio.conduits.api.ConduitNetwork;
-import com.enderio.conduits.api.ticker.CapabilityAwareConduitTicker;
-import com.enderio.conduits.common.components.ExtractionSpeedUpgrade;
+import com.enderio.conduits.api.network.ConduitNetwork;
+import com.enderio.conduits.api.network.node.ConduitNode;
+import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
 import com.enderio.conduits.common.init.ConduitTypes;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.Nullable;
 
-public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduit, IItemHandler> {
+public class ItemConduitTicker
+        extends IOAwareConduitTicker<ItemConduit, ItemConduitConnectionConfig, ItemConduitTicker.Connection> {
+
+    public static final ItemConduitTicker INSTANCE = new ItemConduitTicker();
 
     @Override
-    protected void tickCapabilityGraph(ServerLevel level, ItemConduit conduit, List<CapabilityConnection> inserts,
-            List<CapabilityConnection> extracts, ConduitNetwork graph,
+    protected void tickColoredGraph(ServerLevel level, ItemConduit conduit, List<Connection> senders,
+            List<Connection> receivers, DyeColor color, ConduitNetwork graph,
             ColoredRedstoneProvider coloredRedstoneProvider) {
 
-        toNextExtract: for (CapabilityConnection extract : extracts) {
-            IItemHandler extractHandler = extract.capability();
+        toNextExtract: for (Connection extract : receivers) {
+            ItemConduitNodeData nodeData = extract.node().getOrCreateNodeData(ConduitTypes.NodeData.ITEM.get());
+
+            // Prioritize senders in order of priority and distance.
+            var prioritizedSenders = senders.stream()
+                    .sorted(Comparator.comparingInt((Connection c) -> c.config().priority())
+                            .reversed()
+                            .thenComparingDouble(e -> e.pos().distSqr(extract.pos())))
+                    .toList();
+
+            // Get extraction filter.
+            var extractFilter = extract.inventory()
+                    .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
+                    .getCapability(EIOCapabilities.ITEM_FILTER);
+
+            IItemHandler extractHandler = extract.itemHandler();
             int extracted = 0;
 
             int speed = conduit.transferRatePerCycle();
-            if (extract.upgrade() instanceof ExtractionSpeedUpgrade speedUpgrade) {
-                speed *= (int) Math.pow(2, speedUpgrade.tier());
-            }
 
             nextItem: for (int i = 0; i < extractHandler.getSlots(); i++) {
                 ItemStack extractedItem = extractHandler.extractItem(i, speed - extracted, true);
@@ -37,48 +54,57 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduit,
                     continue;
                 }
 
-                if (extract.extractFilter() instanceof ItemStackFilter itemFilter) {
-                    if (!itemFilter.test(extractedItem)) {
+                if (extractFilter != null) {
+                    extractedItem = extractFilter.test(extract.itemHandler, extractedItem);
+
+                    if (extractedItem.isEmpty()) {
                         continue;
                     }
                 }
 
-                ItemConduitData.ItemSidedData sidedExtractData = extract.node()
-                        .getOrCreateData(ConduitTypes.Data.ITEM.get())
-                        .compute(extract.direction());
+                var connectionConfig = extract.node()
+                        .getConnectionConfig(extract.side(), ConduitTypes.ConnectionTypes.ITEM.get());
 
-                if (sidedExtractData.isRoundRobin) {
-                    if (inserts.size() <= sidedExtractData.rotatingIndex) {
-                        sidedExtractData.rotatingIndex = 0;
+                int startingIndex = 0;
+                if (connectionConfig.isRoundRobin()) {
+                    startingIndex = nodeData.getIndex(extract.side());
+                    if (prioritizedSenders.size() <= startingIndex) {
+                        startingIndex = 0;
                     }
-                } else {
-                    sidedExtractData.rotatingIndex = 0;
                 }
 
-                for (int j = sidedExtractData.rotatingIndex; j < sidedExtractData.rotatingIndex + inserts.size(); j++) {
-                    int insertIndex = j % inserts.size();
-                    CapabilityConnection insert = inserts.get(insertIndex);
+                for (int j = startingIndex; j < startingIndex + prioritizedSenders.size(); j++) {
+                    ItemStack itemToInsert = extractedItem.copy();
 
-                    if (!sidedExtractData.isSelfFeed && extract.direction() == insert.direction()
-                            && extract.pos() == insert.pos()) {
+                    int insertIndex = j % prioritizedSenders.size();
+                    Connection insert = prioritizedSenders.get(insertIndex);
+
+                    if (!connectionConfig.isSelfFeed() && extract.side() == insert.side()
+                            && extract.node().getPos().equals(insert.node().getPos())) {
                         continue;
                     }
 
-                    if (insert.insertFilter() instanceof ItemStackFilter itemFilter) {
-                        if (!itemFilter.test(extractedItem)) {
+                    var insertFilter = insert.inventory()
+                            .getStackInSlot(ItemConduit.INSERT_FILTER_SLOT)
+                            .getCapability(EIOCapabilities.ITEM_FILTER);
+
+                    if (insertFilter != null) {
+                        itemToInsert = insertFilter.test(insert.itemHandler, itemToInsert);
+
+                        if (itemToInsert.isEmpty()) {
                             continue;
                         }
                     }
 
-                    ItemStack notInserted = ItemHandlerHelper.insertItem(insert.capability(), extractedItem, false);
-                    int successfullyInserted = extractedItem.getCount() - notInserted.getCount();
+                    ItemStack notInserted = ItemHandlerHelper.insertItem(insert.itemHandler, itemToInsert, false);
+                    int successfullyInserted = itemToInsert.getCount() - notInserted.getCount();
 
                     if (successfullyInserted > 0) {
                         extracted += successfullyInserted;
                         extractHandler.extractItem(i, successfullyInserted, false);
                         if (extracted >= speed || isEmpty(extractHandler, i + 1)) {
-                            if (sidedExtractData.isRoundRobin) {
-                                sidedExtractData.rotatingIndex = insertIndex + 1;
+                            if (connectionConfig.isRoundRobin()) {
+                                nodeData.setIndex(extract.side(), insertIndex + 1);
                             }
                             continue toNextExtract;
                         } else {
@@ -100,8 +126,35 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduit,
         return true;
     }
 
+    // TODO: I think this is wrong.
     @Override
-    protected BlockCapability<IItemHandler, Direction> getCapability() {
-        return Capabilities.ItemHandler.BLOCK;
+    protected void preProcessReceivers(List<Connection> receivers) {
+        receivers.sort(Comparator.comparingInt((Connection n) -> n.config().priority()).reversed());
+    }
+
+    @Override
+    @Nullable
+    protected Connection createConnection(Level level, ConduitNode node, Direction side) {
+        IItemHandler itemHandler = node.getNeighbourCapability(Capabilities.ItemHandler.BLOCK, side);
+        if (itemHandler != null) {
+            return new Connection(node, side, node.getConnectionConfig(side, ItemConduitConnectionConfig.TYPE),
+                    itemHandler);
+        }
+
+        return null;
+    }
+
+    protected static class Connection extends SimpleConnection<ItemConduitConnectionConfig> {
+        private final IItemHandler itemHandler;
+
+        public Connection(ConduitNode node, Direction side, ItemConduitConnectionConfig config,
+                IItemHandler itemHandler) {
+            super(node, side, config);
+            this.itemHandler = itemHandler;
+        }
+
+        public IItemHandler itemHandler() {
+            return itemHandler;
+        }
     }
 }

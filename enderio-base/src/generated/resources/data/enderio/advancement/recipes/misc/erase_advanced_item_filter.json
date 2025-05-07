@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:advanced_filter"
+            "items": "enderio:advanced_item_filter"
           }
         ]
       },

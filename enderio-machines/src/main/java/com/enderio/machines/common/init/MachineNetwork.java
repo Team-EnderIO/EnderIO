@@ -1,6 +1,5 @@
 package com.enderio.machines.common.init;
 
-import com.enderio.core.EnderCore;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.network.CycleIOConfigPacket;
 import com.enderio.machines.common.network.EnderfaceInteractPacket;
@@ -25,7 +24,7 @@ public class MachineNetwork {
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar(EnderCore.MOD_ID).versioned(PROTOCOL_VERSION);
+        final PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
 
         // Sync soul data (optional)
         SpawnerSoul.SPAWNER.subscribeAsSyncable(PoweredSpawnerSoulPacket::new);

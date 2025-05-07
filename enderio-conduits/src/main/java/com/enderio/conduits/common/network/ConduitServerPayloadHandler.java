@@ -1,13 +1,16 @@
 package com.enderio.conduits.common.network;
 
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
-import com.enderio.conduits.common.menu.ConduitMenu;
+import com.enderio.conduits.api.ConduitCapabilities;
+import com.enderio.conduits.api.bundle.ConduitBundle;
+import com.enderio.conduits.common.conduit.menu.ConduitMenu;
+import com.enderio.conduits.common.conduit.type.fluid.FluidConduitNetworkContext;
+import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ConduitServerPayloadHandler {
@@ -17,38 +20,14 @@ public class ConduitServerPayloadHandler {
         return INSTANCE;
     }
 
-    public void handleConduitConnectionState(final C2SSetConduitConnectionState packet, final IPayloadContext context) {
-        context.enqueueWork(() -> {
-            var level = context.player().level();
-            BlockEntity be = level.getBlockEntity(packet.pos());
-            if (be instanceof ConduitBundleBlockEntity conduitBundleBlockEntity) {
-                conduitBundleBlockEntity.handleConnectionStateUpdate(packet.direction(), packet.conduit(), packet.connectionState());
-            }
-        });
-    }
-
-    public void handleConduitExtendedData(final C2SSetConduitExtendedData packet, final IPayloadContext context) {
-        context.enqueueWork(() -> {
-            var level = context.player().level();
-            BlockEntity be = level.getBlockEntity(packet.pos());
-            if (be instanceof ConduitBundleBlockEntity conduitBundleBlockEntity) {
-                conduitBundleBlockEntity.handleConduitDataUpdate(packet.conduit(), packet.conduitDataContainer());
-            }
-        });
-    }
-
-    public void handleConduitMenuSelection(final ConduitMenuSelectionPacket packet, final IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (context.player().containerMenu instanceof ConduitMenu menu) {
-                menu.setConduit(packet.conduit());
-            }
-        });
-    }
-
     public void handleDoubleChannelFilter(DoubleChannelPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             ItemStack mainHandItem = context.player().getMainHandItem();
-            var channels = mainHandItem.getCapability(EIOCapabilities.Filter.ITEM);
+            Object channels = mainHandItem.getCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER);
+            if (channels == null) {
+                channels = mainHandItem.getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
+            }
+
             if (channels instanceof DoubleRedstoneChannel doubleRedstoneChannel) {
                 doubleRedstoneChannel.setChannels(packet.channel1(), packet.channel2());
             }
@@ -58,7 +37,7 @@ public class ConduitServerPayloadHandler {
     public void handleTimerFilter(TimerFilterPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             ItemStack mainHandItem = context.player().getMainHandItem();
-            var channels = mainHandItem.getCapability(EIOCapabilities.Filter.ITEM);
+            var channels = mainHandItem.getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
             if (channels instanceof RedstoneTimerFilter timer) {
                 timer.setTimer(packet.ticks(), packet.maxTicks());
             }
@@ -68,9 +47,41 @@ public class ConduitServerPayloadHandler {
     public void handleCountFilter(CountFilterPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             ItemStack mainHandItem = context.player().getMainHandItem();
-            var channels = mainHandItem.getCapability(EIOCapabilities.Filter.ITEM);
+            var channels = mainHandItem.getCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER);
             if (channels instanceof RedstoneCountFilter count) {
                 count.setState(packet);
+            }
+        });
+    }
+
+    public void handle(C2SClearLockedFluidPacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var level = context.player().level();
+            var be = level.getBlockEntity(packet.pos());
+            if (be instanceof ConduitBundle conduitBundle) {
+                var fluidConduit = conduitBundle.getConduitByType(ConduitTypes.FLUID.get());
+                if (fluidConduit != null) {
+                    var node = conduitBundle.getConduitNode(fluidConduit);
+
+                    var network = node.getNetwork();
+                    if (network != null) {
+                        var networkContext = network.getContext(FluidConduitNetworkContext.TYPE);
+                        if (networkContext != null) {
+                            networkContext.setLockedFluid(Fluids.EMPTY);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    public void handle(C2SOpenConduitFilterMenu packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (packet.containerId() == context.player().containerMenu.containerId) {
+                // TODO: Spectator viewing filter menus is broken lol
+                if (!context.player().isSpectator() && context.player().containerMenu instanceof ConduitMenu menu) {
+                    menu.tryOpenFilterMenu(packet.slot());
+                }
             }
         });
     }

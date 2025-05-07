@@ -1,0 +1,14 @@
+{
+  "type": "enderio:vat_fermenting",
+  "input": {
+    "amount": 500,
+    "fluid": "enderio:fluid_liquid_sunshine_still"
+  },
+  "left_reagent": "enderio:amethyst",
+  "output": {
+    "amount": 1000,
+    "id": "enderio:fluid_liquid_darkness_still"
+  },
+  "right_reagent": "c:dusts/obsidian",
+  "ticks": 600
+}

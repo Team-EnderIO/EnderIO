@@ -11,7 +11,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -74,6 +73,7 @@ public class MachineBlock<T extends MachineBlockEntity> extends EIOEntityBlock<T
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
             BlockHitResult hitResult) {
+
         // Attempt to open machine menu.
         if (canOpenMenu()) {
 //            var menuProvider = this.getMenuProvider(state, level, pos);

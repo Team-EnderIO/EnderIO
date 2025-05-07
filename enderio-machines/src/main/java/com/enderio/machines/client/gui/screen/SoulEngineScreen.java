@@ -9,7 +9,6 @@ import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;
 import com.enderio.machines.common.blocks.soul_engine.SoulEngineMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
-import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -17,8 +16,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 
-public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
+import java.text.DecimalFormat;
+import java.util.Optional;
 
+public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
+    private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/screen/soul_engine.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
@@ -68,14 +70,12 @@ public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
             if (data != null) {
                 double burnRate = menu.getBlockEntity().getBurnRate();
                 float genRate = menu.getBlockEntity().getGenerationRate();
-                double tickPerMb = data.tickpermb() / burnRate;
-                float energyPerMb = data.powerpermb() * genRate;
-                int generating = (int) Math.ceil(energyPerMb / tickPerMb);
-
-                guiGraphics.drawString(font, data.tickpermb() / burnRate + " t/mb", imageWidth / 2f + 12, 40, 4210752,
+                guiGraphics.drawString(font, FORMAT.format((int) (data.powerpermb() * genRate) * burnRate / data.tickpermb()) + " µI/t", imageWidth / 2f + 12, 40, 4210752,
+                    false);
+                guiGraphics.drawString(font, FORMAT.format(data.tickpermb() / burnRate) + " t/mb", imageWidth / 2f + 12, 50, 4210752,
                         false);
-                guiGraphics.drawString(font, (int) (energyPerMb) + " µI/mb", imageWidth / 2f + 12, 50, 4210752, false);
-                guiGraphics.drawString(font, generating + " µI/t", imageWidth / 2f + 12, 60, 4210752, false);
+                guiGraphics.drawString(font, (int) (data.powerpermb() * genRate) + " µI/mb", imageWidth / 2f + 12, 60,
+                        4210752, false);
 
             }
         }

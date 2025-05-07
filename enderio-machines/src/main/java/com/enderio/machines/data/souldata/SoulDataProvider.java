@@ -14,12 +14,6 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -33,6 +27,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class SoulDataProvider implements DataProvider {
 
@@ -117,12 +118,13 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.ZOMBIE_VILLAGER, 32_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
         addSpawnerData(EntityType.ZOMBIFIED_PIGLIN, 32_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
 
-        addEngineData(EntityType.BLAZE, FluidTags.LAVA, 300, 15, finshedSoulDataConsumer);
-        addEngineData(EntityType.ZOMBIE, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 500, 15, finshedSoulDataConsumer);
-        addEngineData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 500, 15,
+        addEngineData(EntityType.BLAZE, FluidTags.LAVA, 800, 18, finshedSoulDataConsumer);
+        addEngineData(EntityType.ZOMBIE, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 1000, 18, finshedSoulDataConsumer);
+        addEngineData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 1000, 18,
                 finshedSoulDataConsumer);
-        addEngineData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 500, 15, finshedSoulDataConsumer);
-        addEngineData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.getSource(), 900, 10, finshedSoulDataConsumer);
+        addEngineData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 1000, 18, finshedSoulDataConsumer);
+        addEngineData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.getSource(), 1200, 12, finshedSoulDataConsumer);
+        addEngineData(EntityType.CREEPER, EIOFluids.ROCKET_FUEL.getSource(), 800, 12, finshedSoulDataConsumer);
 
         addFarmData(EntityType.BEE, 0.8f, 0, 1, finshedSoulDataConsumer);
         addFarmData(EntityType.VILLAGER, 1, 0, 1.2f, finshedSoulDataConsumer);

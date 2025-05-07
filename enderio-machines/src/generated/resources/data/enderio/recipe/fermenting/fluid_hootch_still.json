@@ -4,11 +4,11 @@
     "amount": 1000,
     "tag": "minecraft:water"
   },
-  "left_reagent": "c:seeds",
+  "left_reagent": "enderio:seeds",
   "output": {
     "amount": 250,
     "id": "enderio:fluid_hootch_still"
   },
-  "right_reagent": "c:crops",
-  "ticks": 100
+  "right_reagent": "enderio:crops",
+  "ticks": 200
 }

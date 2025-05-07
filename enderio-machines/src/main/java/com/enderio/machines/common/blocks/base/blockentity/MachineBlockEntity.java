@@ -39,9 +39,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -479,7 +479,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     // region Wrenchable Implementation
 
     @Override
-    public ItemInteractionResult onWrenched(@Nullable Player player, @Nullable Direction side) {
+    public ItemInteractionResult onWrenched(UseOnContext context) {
+        var player = context.getPlayer();
         if (player == null || level == null) {
             return ItemInteractionResult.SUCCESS;
         }
@@ -507,8 +508,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
             return ItemInteractionResult.sidedSuccess(level.isClientSide());
         } else {
             if (level.isClientSide()) {
-                if (side != null && isIOConfigMutable()) {
-                    PacketDistributor.sendToServer(new CycleIOConfigPacket(worldPosition, side));
+                if (isIOConfigMutable()) {
+                    PacketDistributor.sendToServer(new CycleIOConfigPacket(worldPosition, context.getClickedFace()));
                 }
             }
 

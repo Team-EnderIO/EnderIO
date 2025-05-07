@@ -9,9 +9,6 @@ import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.regilite.holder.RegiliteBlock;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.Util;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -27,6 +24,10 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class MachineRecipeProvider extends RecipeProvider {
 
@@ -421,6 +422,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                                 .hasItems(ItemPredicate.Builder.item().of(MachineBlocks.AVERSION_OBELISK).build()))
                 .save(recipeOutput);
 
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.ATTRACTOR_OBELISK.get())
                 .define('M', EIOItems.ELECTROMAGNET)
                 .define('E', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
@@ -433,6 +435,21 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance
                                 .hasItems(ItemPredicate.Builder.item().of(EIOItems.ENDER_CRYSTAL).build()))
+            .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.VAT.get())
+                .define('B', Blocks.BARREL)
+                .define('C', EIOBlocks.VOID_CHASSIS)
+                .define('M', EIOTags.Items.GEARS_IRON)
+                .define('A', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('R', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
+                .define('S', EIOTags.Items.INGOTS_DARK_STEEL)
+                .pattern("SBS")
+                .pattern("ACA")
+                .pattern("MRM")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance
+                                .hasItems(ItemPredicate.Builder.item().of(Blocks.BARREL).build()))
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WIRELESS_CHARGER.get())

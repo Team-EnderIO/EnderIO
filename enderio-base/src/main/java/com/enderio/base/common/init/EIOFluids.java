@@ -35,7 +35,7 @@ public class EIOFluids {
             "Nutrient Distillation", FluidType.Properties.create().density(1500).viscosity(3000));
 
     public static final RegiliteFluid<FluidType> DEW_OF_THE_VOID = fluid("dew_of_the_void", "Fluid of the Void",
-            FluidType.Properties.create().density(200).viscosity(1000).temperature(175));
+            FluidType.Properties.create().density(200).viscosity(1000).temperature(175), 3);
 
     public static final RegiliteFluid<FluidType> VAPOR_OF_LEVITY = gasFluid("vapor_of_levity", "Vapor of Levity",
             FluidType.Properties.create().density(-10).viscosity(100).temperature(5));
@@ -47,14 +47,17 @@ public class EIOFluids {
             FluidType.Properties.create().density(900).viscosity(1000));
 
     public static final RegiliteFluid<FluidType> FIRE_WATER = fluid("fire_water", "Fire Water",
-            FluidType.Properties.create().density(900).viscosity(1000).temperature(2000));
+            FluidType.Properties.create().density(900).viscosity(1000).temperature(2000), 5);
 
     public static final RegiliteFluid<FluidType> XP_JUICE = fluid("xp_juice", "XP Juice",
-            FluidType.Properties.create().lightLevel(10).density(800).viscosity(1500))
+            FluidType.Properties.create().lightLevel(10).density(800).viscosity(1500), 10)
                     .addFluidTags(EIOTags.Fluids.EXPERIENCE);
 
     public static final RegiliteFluid<FluidType> LIQUID_SUNSHINE = fluid("liquid_sunshine", "Liquid Sunshine",
-            FluidType.Properties.create().density(200).viscosity(400)).addFluidTags(EIOTags.Fluids.SOLAR_PANEL_LIGHT);
+            FluidType.Properties.create().density(200).viscosity(400).lightLevel(15).temperature(300), 15).addFluidTags(EIOTags.Fluids.SOLAR_PANEL_LIGHT);
+
+    public static final RegiliteFluid<FluidType> LIQUID_DARKNESS = fluid("liquid_darkness", "Liquid Darkness",
+        FluidType.Properties.create().density(500).viscosity(900).temperature(100)).addFluidTags(EIOTags.Fluids.SOLAR_PANEL_DARK);
 
     public static final RegiliteFluid<FluidType> CLOUD_SEED = fluid("cloud_seed", "Cloud Seed",
             FluidType.Properties.create().density(500).viscosity(800));
@@ -62,8 +65,16 @@ public class EIOFluids {
     public static final RegiliteFluid<FluidType> CLOUD_SEED_CONCENTRATED = fluid("cloud_seed_concentrated",
             "Cloud Seed Concentrated", FluidType.Properties.create().density(1000).viscosity(1200));
 
+    private static RegiliteFluid<FluidType> fluid(String name, String translation, FluidType.Properties properties, int lightLevel) {
+        return baseFluid(name, properties, lightLevel).setTranslation(translation)
+            .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid.get(), new Item.Properties().stacksTo(1)))
+            .setTab(EIOCreativeTabs.MAIN)
+            .setTranslation(translation + " Bucket")
+            .finishBucket();
+    }
+
     private static RegiliteFluid<FluidType> fluid(String name, String translation, FluidType.Properties properties) {
-        return baseFluid(name, properties).setTranslation(translation)
+        return baseFluid(name, properties, 0).setTranslation(translation)
                 .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid.get(), new Item.Properties().stacksTo(1)))
                 .setTab(EIOCreativeTabs.MAIN)
                 .setTranslation(translation + " Bucket")
@@ -71,19 +82,19 @@ public class EIOFluids {
     }
 
     private static RegiliteFluid<FluidType> gasFluid(String name, String translation, FluidType.Properties properties) {
-        return baseFluid(name, properties).setTranslation(translation)
+        return baseFluid(name, properties, 0).setTranslation(translation)
                 .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid.get(), new Item.Properties().stacksTo(1)))
                 .setTab(EIOCreativeTabs.MAIN)
                 .setTranslation(translation + " Bucket")
                 .finishBucket();
     }
 
-    private static RegiliteFluid<FluidType> baseFluid(String name, FluidType.Properties properties) {
+    private static RegiliteFluid<FluidType> baseFluid(String name, FluidType.Properties properties, int lightlevel) {
         return FLUID_TYPE_REGISTRY.registerFluid(name, properties)
                 .setRenderType(() -> RenderType::translucent)
                 .createFluid(FLUID_REGISTRY)
                 .withBlock(BLOCK_REGISTRY,
-                        fluid -> new LiquidBlock(fluid.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)))
+                        fluid -> new LiquidBlock(fluid.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).lightLevel((state) -> lightlevel)))
                 .finishLiquidBlock();
     }
 

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+// TODO: Use StringRepresentable instead of enum names.
 public class EnumIconMap<T extends Enum<T>> {
     private final EnumMap<T, ResourceLocation> icons;
 

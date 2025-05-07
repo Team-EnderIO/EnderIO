@@ -3,6 +3,7 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
@@ -11,12 +12,13 @@ import com.enderio.machines.common.blocks.stirling_generator.StirlingGeneratorMe
 import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.text.DecimalFormat;
+
 public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu> {
+    private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/screen/stirling_generator.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
@@ -53,16 +55,10 @@ public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        if (MachineLang.GENERATING.getContents() instanceof TranslatableContents translatableContents) {
-            int generating = menu.getBurnProgress() > 0 ? getMenu().getBlockEntity().getGenerationRate() : 0;
-            MutableComponent comp = Component.translatable(translatableContents.getKey(), generating);
-            guiGraphics.drawString(font, comp, imageWidth / 2 - font.width(comp.getString()) / 2, 9, 0, false);
-            if (MachineLang.FUEL_EFFICIENCY.getContents() instanceof TranslatableContents conts) {
-                comp = Component.translatable(conts.getKey(), getMenu().getBlockEntity().getFuelEfficiency());
-                guiGraphics.drawString(font, comp, imageWidth / 2 - font.width(comp.getString()) / 2,
-                        9 + font.lineHeight + 2, 0, false);
-            }
-        }
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
+        float genRate = menu.getBlockEntity().getGenerationRate();
+        guiGraphics.drawString(font, TooltipUtil.styledWithArgs(MachineLang.GENERATING, FORMAT.format(genRate)), imageWidth / 2 + 12, 38, 4210752, false);
+        float efficiency = menu.getBlockEntity().getFuelEfficiency();
+        guiGraphics.drawString(font, TooltipUtil.styledWithArgs(MachineLang.FUEL_EFFICIENCY, FORMAT.format(efficiency)), imageWidth / 2 + 12, 9 + font.lineHeight + 2, 0, false);
     }
 }

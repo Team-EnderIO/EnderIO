@@ -57,30 +57,20 @@ public class EIOLang {
     public static final Component TOO_MANY_LEVELS = addTranslation("info", EnderIO.loc("too_many_levels"),
             "You have more than 21862 levels, that's too much XP.");
 
-    public static final Component CONDUIT_CHANNEL = addTranslation("gui", EnderIO.loc("conduit_channel"),
-            "Conduit-Channel");
-    public static final Component REDSTONE_CHANNEL = addTranslation("gui", EnderIO.loc("redstone_channel"),
-            "Redstone-Channel");
     public static final Component REDSTONE_MODE = addTranslation("gui", EnderIO.loc("redstone.mode"), "Redstone Mode");
-    public static final Component ROUND_ROBIN_ENABLED = addTranslation("gui", EnderIO.loc("round_robin.enabled"),
-            "Round Robin Enabled");
-    public static final Component ROUND_ROBIN_DISABLED = addTranslation("gui", EnderIO.loc("round_robin.disabled"),
-            "Round Robin Disabled");
-    public static final Component SELF_FEED_ENABLED = addTranslation("gui", EnderIO.loc("self_feed.enabled"),
-            "Self Feed Enabled");
-    public static final Component SELF_FEED_DISABLED = addTranslation("gui", EnderIO.loc("self_feed.disabled"),
-            "Self Feed Disabled");
-    public static final Component FLUID_CONDUIT_CHANGE_FLUID1 = addTranslation("gui",
-            EnderIO.loc("fluid_conduit.change_fluid1"), "Locked Fluid:");
-    public static final Component FLUID_CONDUIT_CHANGE_FLUID2 = addTranslation("gui",
-            EnderIO.loc("fluid_conduit.change_fluid2"), "Click to reset!");
-    public static final MutableComponent FLUID_CONDUIT_CHANGE_FLUID3 = addTranslation("gui",
-            EnderIO.loc("fluid_conduit.change_fluid3"), "Fluid: %s");
 
     public static final MutableComponent TANK_EMPTY_STRING = addTranslation("tooltip",
             EnderIO.loc("fluid_tank.tank_empty_tooltip"), "Empty tank");
     public static final MutableComponent FLUID_TANK_TOOLTIP = addTranslation("tooltip",
             EnderIO.loc("fluid_tank.tank_tooltip"), "%d/%d mb of %s");// [amount]/[capacity] mb of [FluidName]
+
+    public static final MutableComponent CONFIGURED = TooltipUtil
+            .style(addTranslation("tooltip", EnderIO.loc("configured"), "Configured"));
+    public static final MutableComponent FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH = addTranslation("tooltip",
+            EnderIO.loc("filter.not_allowed_component_match"),
+            "This filter uses component matching which is no longer available to this item. Clear this filter using the crafting grid to remove this warning.")
+                    .withStyle(ChatFormatting.RED);
+
     // endregion
 
     // region Capacitors
@@ -185,12 +175,16 @@ public class EIOLang {
     public static final Component MAX_RANGE = addTranslation("gui", EnderIO.loc("max_range"), "Maximum Range");
     public static final Component SHOW_RANGE = addTranslation("gui", EnderIO.loc("range.show"), "Show Range");
     public static final Component HIDE_RANGE = addTranslation("gui", EnderIO.loc("range.hide"), "Hide Range");
-    public static final Component WHITELIST_FILTER = addTranslation("gui", EnderIO.loc("filter.whitelist"),
-            "Whitelist");
-    public static final Component BLACKLIST_FILTER = addTranslation("gui", EnderIO.loc("filter.blacklist"),
-            "BlackList");
-    public static final Component NBT_FILTER = addTranslation("gui", EnderIO.loc("filter.nbt"), "Match NBT");
-    public static final Component NO_NBT_FILTER = addTranslation("gui", EnderIO.loc("filter.nonbt"), "Ignore NBT");
+    public static final Component FILTER_ALLOW_LIST = addTranslation("gui", EnderIO.loc("filter.allow_list"),
+            "Allow List");
+    public static final Component FILTER_DENY_LIST = addTranslation("gui", EnderIO.loc("filter.deny_list"),
+            "Deny List");
+    public static final Component FILTER_MATCH_COMPONENTS = addTranslation("gui",
+            EnderIO.loc("filter.match_components"), "Match Components");
+    public static final Component FILTER_IGNORE_COMPONENTS = addTranslation("gui",
+            EnderIO.loc("filter.ignore_components"), "Ignore Components");
+    public static final Component DAMAGE_FILTER_MODE = addTranslation("gui", EnderIO.loc("filter.damage"),
+            "Damage Filter");
 
     public static final Component IOCONFIG = addTranslation("gui", EnderIO.loc("ioconfig"), "IO Configuration");
     public static final Component TOGGLE_NEIGHBOUR = addTranslation("gui", EnderIO.loc("ioconfig.neighbour"),

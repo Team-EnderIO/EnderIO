@@ -1,0 +1,6 @@
+{
+  "entity": "minecraft:creeper",
+  "fluid": "enderio:fluid_rocket_fuel_still",
+  "power/mb": 800,
+  "tick/mb": 12
+}

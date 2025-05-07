@@ -4,7 +4,9 @@ import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.api.Conduit;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
+import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitLang;
@@ -37,7 +39,7 @@ public class ConduitBlockItem extends BlockItem {
         super(block, properties);
     }
 
-    public static ItemStack getStackFor(Holder<Conduit<?>> conduit, int count) {
+    public static ItemStack getStackFor(Holder<Conduit<?, ?>> conduit, int count) {
         var stack = new ItemStack(ConduitBlocks.CONDUIT.asItem(), count);
         stack.set(ConduitComponents.CONDUIT, conduit);
         return stack;
@@ -45,7 +47,7 @@ public class ConduitBlockItem extends BlockItem {
 
     @Override
     public Component getName(ItemStack pStack) {
-        Holder<Conduit<?>> conduit = pStack.get(ConduitComponents.CONDUIT);
+        Holder<Conduit<?, ?>> conduit = pStack.get(ConduitComponents.CONDUIT);
         if (conduit == null) {
             return super.getName(pStack);
         }
@@ -66,11 +68,8 @@ public class ConduitBlockItem extends BlockItem {
         @Nullable
         Player player = context.getPlayer();
         BlockPos blockpos = context.getClickedPos();
-        ItemStack itemstack = context.getItemInHand();
 
-        Holder<Conduit<?>> conduit = itemstack.get(ConduitComponents.CONDUIT);
-
-        // Pass through to existing block.
+        // Allow placing from the edge of an adjacent block
         BlockState blockState = level.getBlockState(blockpos);
         if (!blockState.canBeReplaced()) {
             // noinspection DataFlowIssue
@@ -84,9 +83,46 @@ public class ConduitBlockItem extends BlockItem {
     }
 
     @Override
+    protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
+        // Ensure the originalStack being used is valid for placement.
+        var stack = context.getItemInHand();
+        if (!stack.has(ConduitComponents.CONDUIT)) {
+            var facadeProvider = stack.getCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER);
+            if (facadeProvider == null || !facadeProvider.isValid()) {
+                return false;
+            }
+        }
+
+        boolean result = super.placeBlock(context, state);
+
+        // Save the clicked face for connection logic later.
+        if (result) {
+            var level = context.getLevel();
+            if (level.getBlockEntity(context.getClickedPos()) instanceof ConduitBundleBlockEntity conduitBundle) {
+                // Try to work out what the player wants to click.
+                // If they click directly onto the conduit they want to extend, prioritise that
+                // face.
+                // Otherwise, try to determine based on their horizontal direction
+                var clickedFace = context.getClickedFace();
+                var horizontalDirection = context.getHorizontalDirection();
+
+                if (level.getBlockState(context.getClickedPos().relative(clickedFace.getOpposite()))
+                        .is(ConduitBlocks.CONDUIT.get())) {
+                    conduitBundle.primaryConnectionSide = clickedFace.getOpposite();
+                } else if (level.getBlockState(context.getClickedPos().relative(horizontalDirection.getOpposite()))
+                        .is(ConduitBlocks.CONDUIT.get())) {
+                    conduitBundle.primaryConnectionSide = horizontalDirection.getOpposite();
+                }
+            }
+        }
+
+        return result;
+    }
+
+    @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents,
             TooltipFlag tooltipFlag) {
-        Holder<Conduit<?>> conduit = stack.get(ConduitComponents.CONDUIT);
+        Holder<Conduit<?, ?>> conduit = stack.get(ConduitComponents.CONDUIT);
         if (conduit != null) {
             conduit.value().addToTooltip(context, tooltipComponents::add, tooltipFlag);
 
@@ -133,7 +169,7 @@ public class ConduitBlockItem extends BlockItem {
         }
     }
 
-    private static <T extends Conduit<T>> int compareConduitTo(Conduit<T> o1, Conduit<?> o2) {
+    private static <T extends Conduit<T, ?>> int compareConduitTo(Conduit<T, ?> o1, Conduit<?, ?> o2) {
         return o1.compareTo((T) o2);
     }
 }

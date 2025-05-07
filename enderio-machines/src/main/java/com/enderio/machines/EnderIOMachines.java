@@ -22,7 +22,7 @@ import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.tag.MachineTags;
 import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
 import com.enderio.machines.data.datamap.RangeExtenderDataProvider;
-import com.enderio.machines.data.reagentdata.ReagentDataProvider;
+import com.enderio.machines.data.reagentdata.ReagentProvider;
 import com.enderio.machines.data.recipes.AlloyRecipeProvider;
 import com.enderio.machines.data.recipes.EnchanterRecipeProvider;
 import com.enderio.machines.data.recipes.FermentingRecipeProvider;
@@ -33,7 +33,9 @@ import com.enderio.machines.data.recipes.SlicingRecipeProvider;
 import com.enderio.machines.data.recipes.SoulBindingRecipeProvider;
 import com.enderio.machines.data.recipes.TankRecipeProvider;
 import com.enderio.machines.data.souldata.SoulDataProvider;
+import com.enderio.machines.data.tag.MachineBlockTagsProvider;
 import com.enderio.machines.data.tag.MachineEntityTypeTagsProvider;
+import com.enderio.machines.data.tag.MachineItemTagsProvider;
 import com.enderio.regilite.Regilite;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -118,8 +120,14 @@ public class EnderIOMachines {
         provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
         provider.addSubProvider(event.includeServer(),
                 new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(),
-                new ReagentDataProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
+        var b = new MachineBlockTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper());
+        provider.addSubProvider(event.includeServer(), b);
+        provider.addSubProvider(event.includeServer(), new ReagentProvider(packOutput, lookupProvider)); // Reagent Data
+                                                                                                         // needs to be
+                                                                                                         // before
+                                                                                                         // ItemTags
+        provider.addSubProvider(event.includeServer(), new MachineItemTagsProvider(packOutput, lookupProvider,
+                b.contentsGetter(), event.getExistingFileHelper()));
         provider.addSubProvider(event.includeServer(), new RangeExtenderDataProvider(packOutput, lookupProvider));
 
         generator.addProvider(true, provider);

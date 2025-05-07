@@ -12,6 +12,8 @@ import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
@@ -74,7 +76,7 @@ public class EnderIOJEI implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        registration.addGhostIngredientHandler(EIOScreen.class, new FilterGhostIngredientHandler());
+        registration.addGhostIngredientHandler(EnderContainerScreen.class, new FilterGhostIngredientHandler());
     }
 
     // region Utilities
