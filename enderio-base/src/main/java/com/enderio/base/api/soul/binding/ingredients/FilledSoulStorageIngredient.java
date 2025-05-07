@@ -8,6 +8,7 @@ import com.enderio.base.common.util.EntityCaptureUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -18,6 +19,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
+import org.jetbrains.annotations.Nullable;
 
 public class FilledSoulStorageIngredient implements ICustomIngredient {
 
@@ -25,6 +27,7 @@ public class FilledSoulStorageIngredient implements ICustomIngredient {
         inst -> inst.group(BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(i -> i.item)).apply(inst, FilledSoulStorageIngredient::new));
 
     private final Item item;
+    private final ItemStack[] itemStacks;
 
     public static Ingredient of(ItemLike item) {
         return new FilledSoulStorageIngredient(item.asItem()).toVanilla();
@@ -32,6 +35,16 @@ public class FilledSoulStorageIngredient implements ICustomIngredient {
 
     public FilledSoulStorageIngredient(Item item) {
         this.item = item;
+
+        // Pre-compute
+        itemStacks = EntityCaptureUtils.getCapturableEntityTypes().stream().map(entityType -> {
+            var stack = item.getDefaultInstance();
+            if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entityType))) {
+                return Optional.of(stack);
+            }
+
+            return Optional.<ItemStack>empty();
+        }).flatMap(Optional::stream).toArray(ItemStack[]::new);
     }
 
     @Override
@@ -41,14 +54,7 @@ public class FilledSoulStorageIngredient implements ICustomIngredient {
 
     @Override
     public Stream<ItemStack> getItems() {
-        return EntityCaptureUtils.getCapturableEntityTypes().stream().map(entityType -> {
-            var stack = item.getDefaultInstance();
-            if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entityType))) {
-                return Optional.of(stack);
-            }
-
-            return Optional.<ItemStack>empty();
-        }).flatMap(Optional::stream);
+        return Stream.of(itemStacks);
     }
 
     @Override

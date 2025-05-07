@@ -7,11 +7,14 @@ import com.enderio.base.common.init.EIOIngredientTypes;
 import com.enderio.base.common.util.EntityCaptureUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 
@@ -24,6 +27,7 @@ public class AnySoulBindableIngredient implements ICustomIngredient {
         inst -> inst.group(BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(i -> i.item)).apply(inst, AnySoulBindableIngredient::new));
 
     private final Item item;
+    private final ItemStack[] itemStacks;
 
     public static Ingredient of(ItemLike item) {
         return new AnySoulBindableIngredient(item.asItem()).toVanilla();
@@ -31,6 +35,27 @@ public class AnySoulBindableIngredient implements ICustomIngredient {
 
     public AnySoulBindableIngredient(Item item) {
         this.item = item;
+
+        // Attempt to get the unbound item.
+        var unboundStack = item.getDefaultInstance();
+        if (!SoulBoundUtils.tryBindSoul(unboundStack, Soul.EMPTY)) {
+            var unboundName = unboundStack.getHoverName();
+            unboundStack = new ItemStack(Blocks.BARRIER);
+            unboundStack.set(DataComponents.CUSTOM_NAME, Component.literal("Unable to empty binding of " + unboundName));
+        }
+
+        // Pre-compute all stacks
+        itemStacks = Stream.concat(
+            Stream.of(unboundStack),
+            EntityCaptureUtils.getCapturableEntityTypes().stream().map(entityType -> {
+                var stack = item.getDefaultInstance();
+                if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entityType))) {
+                    return Optional.of(stack);
+                }
+
+                return Optional.<ItemStack>empty();
+            }).flatMap(Optional::stream)
+        ).toArray(ItemStack[]::new);
     }
 
     @Override
@@ -40,16 +65,7 @@ public class AnySoulBindableIngredient implements ICustomIngredient {
 
     @Override
     public Stream<ItemStack> getItems() {
-        Stream<Optional<ItemStack>> possibleItems = EntityCaptureUtils.getCapturableEntityTypes().stream().map(entityType -> {
-            var stack = item.getDefaultInstance();
-            if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entityType))) {
-                return Optional.of(stack);
-            }
-
-            return Optional.empty();
-        });
-
-        return Stream.concat(Stream.of(item.getDefaultInstance()), possibleItems.flatMap(Optional::stream));
+        return Stream.of(itemStacks);
     }
 
     @Override

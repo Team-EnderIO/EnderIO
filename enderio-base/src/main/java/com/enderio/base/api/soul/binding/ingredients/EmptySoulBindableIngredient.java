@@ -7,11 +7,15 @@ import com.enderio.base.common.init.EIOIngredientTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.stream.Stream;
+
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 
@@ -22,6 +26,7 @@ public class EmptySoulBindableIngredient implements ICustomIngredient {
                     .apply(inst, EmptySoulBindableIngredient::new));
 
     private final Item item;
+    private final ItemStack itemStack;
 
     public static Ingredient of(ItemLike item) {
         return new EmptySoulBindableIngredient(item.asItem()).toVanilla();
@@ -29,6 +34,16 @@ public class EmptySoulBindableIngredient implements ICustomIngredient {
 
     public EmptySoulBindableIngredient(Item item) {
         this.item = item;
+
+        // Attempt to get the unbound item.
+        var stack = item.getDefaultInstance();
+        if (SoulBoundUtils.tryBindSoul(stack, Soul.EMPTY)) {
+            itemStack = stack;
+        } else {
+            ItemStack errorStack = new ItemStack(Blocks.BARRIER);
+            errorStack.set(DataComponents.CUSTOM_NAME, Component.literal("Unable to empty binding of " + stack.getHoverName()));
+            itemStack = errorStack;
+        }
     }
 
     @Override
@@ -38,17 +53,7 @@ public class EmptySoulBindableIngredient implements ICustomIngredient {
 
     @Override
     public Stream<ItemStack> getItems() {
-        var stack = item.getDefaultInstance();
-        var soulBindable = stack.getCapability(EIOCapabilities.SoulBindable.ITEM);
-        if (soulBindable != null) {
-            // If we can't bind empty, don't include it.
-            if (!SoulBoundUtils.tryBindSoul(soulBindable, Soul.EMPTY) && soulBindable.hasSoul()) {
-                return Stream.of();
-            }
-        }
-
-        // Assume no capability == empty...
-        return Stream.of(stack);
+        return Stream.of(itemStack);
     }
 
     @Override
