@@ -9,7 +9,6 @@ import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.common.blocks.obelisks.ObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.ObeliskMenu;
-import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskMenu;
 import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -47,12 +46,12 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
 
         addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 34, EIOLang.HIDE_RANGE,
                 EIOLang.SHOW_RANGE, menu::isRangeVisible,
-                (ignored) -> handleButtonPress(AversionObeliskMenu.VISIBILITY_BUTTON_ID)));
+                (ignored) -> handleButtonPress(ObeliskMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(EIOCommonWidgets.createRangeIncrease(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2,
-                (b) -> handleButtonPress(AversionObeliskMenu.INCREASE_BUTTON_ID)));
+                (b) -> handleButtonPress(ObeliskMenu.INCREASE_BUTTON_ID)));
         addRenderableWidget(EIOCommonWidgets.createRangeDecrease(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2 + 8,
-                (b) -> handleButtonPress(AversionObeliskMenu.DECREASE_BUTTON_ID)));
+                (b) -> handleButtonPress(ObeliskMenu.DECREASE_BUTTON_ID)));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
     }

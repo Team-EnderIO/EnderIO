@@ -14,8 +14,6 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.obelisk.ObeliskAreaManager;
 import com.mojang.authlib.GameProfile;
-import java.util.List;
-import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,6 +36,9 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.UUID;
 
 public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObeliskBlockEntity> {
 
@@ -163,7 +164,7 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
         Vec3 dir = targetPos.subtract(new Vec3(mob.xo, mob.yo, mob.zo)).normalize();
         dir = dir.scale(speed);
         AABB aabb = mob.getBoundingBox();
-        aabb.move(dir);
+        aabb = aabb.move(dir);
         if (level != null && level.noCollision(mob, aabb)) {
             mob.setDeltaMovement(dir);
         }
