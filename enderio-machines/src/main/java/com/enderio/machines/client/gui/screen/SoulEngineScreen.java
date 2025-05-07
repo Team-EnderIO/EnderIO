@@ -56,18 +56,12 @@ public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        Optional<ResourceLocation> rl = getMenu().getBlockEntity().getEntityType();
-        if (rl.isPresent()) {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(rl.get());
-            if (BuiltInRegistries.ENTITY_TYPE.getKey(type).equals(rl.get())) { // check we don't get the default pig
-                String name = type.getDescription().getString();
-                guiGraphics.drawString(font, name, imageWidth / 2f - font.width(name) / 2f, 10, 4210752, false);
-            } else {
-                guiGraphics.drawString(font, rl.get().toString(),
-                        imageWidth / 2f - font.width(rl.get().toString()) / 2f, 10, 4210752, false);
-            }
-            EngineSoul.SoulData data = EngineSoul.ENGINE.map.get(rl.get());
-            if (data != null) {
+        EntityType<?> entityType = getMenu().getBlockEntity().getEntityType();
+        if (entityType != null) {
+            String name = entityType.getDescription().getString();
+            guiGraphics.drawString(font, name, imageWidth / 2f - font.width(name) / 2f, 10, 4210752, false);
+
+            EngineSoul.ENGINE.matches(entityType).ifPresent(data -> {
                 double burnRate = menu.getBlockEntity().getBurnRate();
                 float genRate = menu.getBlockEntity().getGenerationRate();
                 guiGraphics.drawString(font, FORMAT.format((int) (data.powerpermb() * genRate) * burnRate / data.tickpermb()) + " µI/t", imageWidth / 2f + 12, 40, 4210752,
@@ -76,8 +70,7 @@ public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
                         false);
                 guiGraphics.drawString(font, (int) (data.powerpermb() * genRate) + " µI/mb", imageWidth / 2f + 12, 60,
                         4210752, false);
-
-            }
+            });
         }
 
         super.renderLabels(guiGraphics, pMouseX, pMouseY);

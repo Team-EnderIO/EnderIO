@@ -1,46 +1,32 @@
 package com.enderio.base.common.item.misc;
 
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.util.EntityCaptureUtils;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class BrokenSpawnerItem extends Item {
     public BrokenSpawnerItem(Properties pProperties) {
         super(pProperties);
     }
 
-    public static ItemStack forType(ResourceLocation type) {
+    public static ItemStack forSoul(Soul soul) {
         ItemStack brokenSpawner = new ItemStack(EIOItems.BROKEN_SPAWNER.get());
-        setEntityType(brokenSpawner, type);
+        brokenSpawner.set(EIODataComponents.SOUL, soul);
         return brokenSpawner;
     }
 
     public static List<ItemStack> getPossibleStacks() {
         // Register for every mob that can be captured.
         List<ItemStack> items = new ArrayList<>();
-        for (ResourceLocation entity : EntityCaptureUtils.getCapturableEntities()) {
-            items.add(forType(entity));
+        for (var entity : EntityCaptureUtils.getCapturableEntityTypes()) {
+            items.add(forSoul(Soul.of(entity)));
         }
         return items;
     }
-
-    // region Entity Storage
-
-    public static Optional<ResourceLocation> getEntityType(ItemStack stack) {
-        return stack.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY).entityType();
-    }
-
-    private static void setEntityType(ItemStack stack, ResourceLocation entityType) {
-        stack.set(EIODataComponents.SOUL, Soul.of(entityType));
-    }
-
-    // endregion
 }

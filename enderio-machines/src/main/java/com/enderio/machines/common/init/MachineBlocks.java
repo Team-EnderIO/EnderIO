@@ -1,12 +1,13 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.base.api.EnderIO;
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.client.paint.PaintedBlockColor;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.paint.item.PaintedBlockItem;
+import com.enderio.base.common.soul.SoulCapabilityProviders;
 import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
 import com.enderio.core.data.model.ModelHelper;
@@ -194,8 +195,7 @@ public class MachineBlocks {
                     b -> new BlockItem(b,
                             new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)),
                     item -> item.setTab(EIOCreativeTabs.MACHINES)
-                            .addCapability(EIOCapabilities.SingleSoulStorage.ITEM,
-                                    EIOCapabilities.SingleSoulStorage.BASIC_ITEM_PROVIDER));
+                            .addCapability(EIOCapabilities.SoulBindable.ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER));
 
     public static final RegiliteBlock<MachineBlock<VacuumChestBlockEntity>> VACUUM_CHEST = BLOCK_REGISTRY
             .registerBlock("vacuum_chest", p -> new MachineBlock<>(MachineBlockEntities.VACUUM_CHEST::get, p),
@@ -268,8 +268,7 @@ public class MachineBlocks {
                     b -> new BlockItem(b,
                             new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)),
                     item -> item.setTab(EIOCreativeTabs.MACHINES)
-                            .addCapability(EIOCapabilities.SingleSoulStorage.ITEM,
-                                    EIOCapabilities.SingleSoulStorage.BASIC_ITEM_PROVIDER));
+                            .addCapability(EIOCapabilities.SoulBindable.ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER));
 
     public static final RegiliteBlock<ProgressMachineBlock<?>> DRAIN = progressMachine("drain",
             () -> MachineBlockEntities.DRAIN);
@@ -394,8 +393,7 @@ public class MachineBlocks {
                 .createBlockItem(ITEM_REGISTRY,
                         item -> item.setModelProvider((prov, ctx) -> MachineModelUtil.solarPanel(prov, ctx, tier))
                                 .setTab(EIOCreativeTabs.MACHINES)
-                                .addCapability(EIOCapabilities.SingleSoulStorage.ITEM,
-                                        EIOCapabilities.SingleSoulStorage.BASIC_ITEM_PROVIDER));
+                                .addCapability(EIOCapabilities.SoulBindable.ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER));
     }
 
     private static RegiliteBlock<CapacitorBankBlock> capacitorBank(String name,

@@ -1,6 +1,7 @@
-package com.enderio.base.api.soul;
+package com.enderio.base.api.soul.binding.ingredients;
 
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
+import com.enderio.base.api.soul.SoulBoundUtils;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOIngredientTypes;
 import com.enderio.base.common.util.EntityCaptureUtils;
@@ -17,18 +18,18 @@ import net.neoforged.neoforge.common.crafting.IngredientType;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class AnySoulStorageIngredient implements ICustomIngredient {
+public class AnySoulBindableIngredient implements ICustomIngredient {
 
-    public static final MapCodec<AnySoulStorageIngredient> CODEC = RecordCodecBuilder.mapCodec(
-        inst -> inst.group(BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(i -> i.item)).apply(inst, AnySoulStorageIngredient::new));
+    public static final MapCodec<AnySoulBindableIngredient> CODEC = RecordCodecBuilder.mapCodec(
+        inst -> inst.group(BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(i -> i.item)).apply(inst, AnySoulBindableIngredient::new));
 
     private final Item item;
 
     public static Ingredient of(ItemLike item) {
-        return new AnySoulStorageIngredient(item.asItem()).toVanilla();
+        return new AnySoulBindableIngredient(item.asItem()).toVanilla();
     }
 
-    public AnySoulStorageIngredient(Item item) {
+    public AnySoulBindableIngredient(Item item) {
         this.item = item;
     }
 
@@ -41,9 +42,7 @@ public class AnySoulStorageIngredient implements ICustomIngredient {
     public Stream<ItemStack> getItems() {
         Stream<Optional<ItemStack>> possibleItems = EntityCaptureUtils.getCapturableEntities().stream().map(entity -> {
             var stack = item.getDefaultInstance();
-            var soulStorage = stack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-            if (soulStorage != null) {
-                soulStorage.setSoul(Soul.of(entity));
+            if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entity))) {
                 return Optional.of(stack);
             }
 

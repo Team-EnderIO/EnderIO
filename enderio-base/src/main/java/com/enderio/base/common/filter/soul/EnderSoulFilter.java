@@ -1,6 +1,6 @@
 package com.enderio.base.common.filter.soul;
 
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.api.filter.SoulFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
@@ -58,20 +58,11 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
     @Override
     public boolean test(LivingEntity entity) {
         for (var match : matches) {
-            if (match.entityType().isPresent()) {
-                // Check for type match
-                if (!match.entityType().get().equals(EntityType.getKey(entity.getType()))) {
-                    return isDenyList;
-                }
-
-                // Check components
-                if (shouldCompareTags) {
-                    CompoundTag tag = entity.serializeNBT(entity.level().registryAccess());
-                    if (tag.equals(match.getEntityTag())) {
-                        return !isDenyList;
-                    }
-                } else {
+            if (match.hasEntity()) {
+                if (shouldCompareTags ? Soul.isSameEntitySameTag(match, entity, entity.level().registryAccess()) : Soul.isSameEntity(match, entity)) {
                     return !isDenyList;
+                } else {
+                    return isDenyList;
                 }
             }
         }
@@ -82,24 +73,16 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
     @Override
     public boolean test(Soul soul) {
         // Empty never passes.
-        if (soul.entityType().isEmpty()) {
+        if (soul.isEmpty()) {
             return false;
         }
 
         for (var match : matches) {
-            if (match.entityType().isPresent()) {
-                // Check for type match
-                if (!match.entityType().get().equals(soul.entityType().get())) {
-                    return isDenyList;
-                }
-
-                // Check components
-                if (shouldCompareTags) {
-                    if (soul.getEntityTag().equals(match.getEntityTag())) {
-                        return !isDenyList;
-                    }
-                } else {
+            if (!match.isEmpty()) {
+                if (shouldCompareTags ? Soul.isSameEntitySameTag(match, soul) : Soul.isSameEntity(match, soul)) {
                     return !isDenyList;
+                } else {
+                    return isDenyList;
                 }
             }
         }
@@ -110,8 +93,8 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
     @Override
     public boolean test(EntityType<?> entityType) {
         for (var match : matches) {
-            if (match.entityType().isPresent()) {
-                return !isDenyList && match.entityType().get().equals(EntityType.getKey(entityType));
+            if (!match.isEmpty()) {
+                return !isDenyList && Soul.isSameEntity(match, entityType);
             }
         }
 

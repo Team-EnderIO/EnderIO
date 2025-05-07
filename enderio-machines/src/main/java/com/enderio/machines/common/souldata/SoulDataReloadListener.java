@@ -30,15 +30,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 /**
@@ -138,6 +142,22 @@ public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResour
         if (map.containsKey(entitytype)) {
             return Optional.of(map.get(entitytype));
         }
+        return Optional.empty();
+    }
+
+    /**
+     * Returns an optional ISoulData implementation.
+     */
+    public Optional<T> matches(@Nullable EntityType<?> entitytype) {
+        if (entitytype == null) {
+            return Optional.empty();
+        }
+
+        var id = BuiltInRegistries.ENTITY_TYPE.getKeyOrNull(entitytype);
+        if (id != null) {
+            return matches(id);
+        }
+
         return Optional.empty();
     }
 

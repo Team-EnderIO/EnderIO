@@ -1,7 +1,6 @@
 package com.enderio.machines.common.blocks.farming_station;
 
 import com.enderio.base.api.UseOnly;
-import com.enderio.base.api.attachment.Soul;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.farm.FarmInteraction;
@@ -9,6 +8,7 @@ import com.enderio.base.api.farm.FarmTask;
 import com.enderio.base.api.farm.FarmTaskManager;
 import com.enderio.base.api.farm.FarmingStation;
 import com.enderio.base.api.io.energy.EnergyIOMode;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.common.MachineNBTKeys;
@@ -40,6 +40,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -164,8 +165,8 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public void serverTick() {
-        if (reloadCache != reload && boundSoul != Soul.EMPTY && boundSoul.entityType().isPresent()) {
-            Optional<FarmSoul.SoulData> op = FarmSoul.FARM.matches(boundSoul.entityType().get());
+        if (reloadCache != reload && boundSoul.hasEntity()) {
+            Optional<FarmSoul.SoulData> op = FarmSoul.FARM.matches(boundSoul.entityType());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
@@ -414,7 +415,8 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         }
     }
 
-    public Optional<ResourceLocation> getEntityType() {
+    @Nullable
+    public EntityType<?> getEntityType() {
         return boundSoul.entityType();
     }
 

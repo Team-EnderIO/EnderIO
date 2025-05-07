@@ -1,6 +1,7 @@
-package com.enderio.base.api.soul;
+package com.enderio.base.api.soul.binding.ingredients;
 
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
+import com.enderio.base.api.soul.SoulBoundUtils;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOIngredientTypes;
 import com.enderio.base.common.util.EntityCaptureUtils;
@@ -35,28 +36,19 @@ public class FilledSoulStorageIngredient implements ICustomIngredient {
 
     @Override
     public boolean test(ItemStack itemStack) {
-        if (!itemStack.is(item)) {
-            return false;
-        }
-
-        var soulStorage = itemStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-        return soulStorage != null && soulStorage.hasSoul();
+        return itemStack.is(item) && SoulBoundUtils.isBound(itemStack);
     }
 
     @Override
     public Stream<ItemStack> getItems() {
-        Stream<Optional<ItemStack>> possibleItems = EntityCaptureUtils.getCapturableEntities().stream().map(entity -> {
+        return EntityCaptureUtils.getCapturableEntities().stream().map(entity -> {
             var stack = item.getDefaultInstance();
-            var soulStorage = stack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-            if (soulStorage != null) {
-                soulStorage.setSoul(Soul.of(entity));
+            if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entity))) {
                 return Optional.of(stack);
             }
 
-            return Optional.empty();
-        });
-
-        return possibleItems.flatMap(Optional::stream);
+            return Optional.<ItemStack>empty();
+        }).flatMap(Optional::stream);
     }
 
     @Override

@@ -27,6 +27,7 @@ import com.enderio.base.common.item.tool.TravelStaffItem;
 import com.enderio.base.common.item.tool.VoidVialItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.soul.SoulCapabilityProviders;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.regilite.holder.RegiliteItem;
@@ -291,8 +292,7 @@ public class EIOItems {
 
     public static final RegiliteItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEM_REGISTRY
             .registerItem("broken_spawner", BrokenSpawnerItem::new)
-            .addCapability(EIOCapabilities.SingleSoulStorage.ITEM,
-                    EIOCapabilities.SingleSoulStorage.BASIC_ITEM_PROVIDER)
+            .addCapability(EIOCapabilities.SoulBindable.ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER)
             .setModelProvider(ModelHelper::fakeBlockModel)
             .setTab(EIOCreativeTabs.MAIN)
             .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.getPossibleStacks()));
@@ -381,8 +381,8 @@ public class EIOItems {
                             .predicate(SoulVialItem.FILLED_MODEL_PROPERTY, 1)
                             .model(prov.basicItem(EnderIO.loc("soul_vial_filled")))
                             .end())
-                    .addCapability(EIOCapabilities.SingleSoulStorage.ITEM,
-                            EIOCapabilities.SingleSoulStorage.BASIC_ITEM_PROVIDER);
+                    .addCapability(EIOCapabilities.SoulBindable.ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER)
+                    .addCapability(EIOCapabilities.SoulHandler.ITEM, SoulCapabilityProviders.SINGLE_COMPONENT_SOUL_HANDLER_PROVIDER);
 
     public static final RegiliteItem<EnderiosItem> ENDERIOS = ITEM_REGISTRY
             .registerItem("enderios", EnderiosItem::new, new Item.Properties().stacksTo(1))

@@ -1,7 +1,7 @@
 package com.enderio.machines.common.integrations.jei;
 
 import com.enderio.base.api.EnderIO;
-import com.enderio.base.common.integrations.jei.subtype.EntityStorageSubtypeInterpreter;
+import com.enderio.base.common.integrations.jei.subtype.SoulBindableSubtypeInterpreter;
 import com.enderio.machines.client.gui.screen.AlloySmelterScreen;
 import com.enderio.machines.client.gui.screen.EnchanterScreen;
 import com.enderio.machines.client.gui.screen.FluidTankScreen;
@@ -116,13 +116,13 @@ public class MachinesJEI implements IModPlugin {
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         registration.registerSubtypeInterpreter(MachineBlocks.POWERED_SPAWNER.asItem(),
-                new EntityStorageSubtypeInterpreter());
+                new SoulBindableSubtypeInterpreter());
 
         registration.registerSubtypeInterpreter(MachineBlocks.SOUL_ENGINE.asItem(),
-                new EntityStorageSubtypeInterpreter());
+                new SoulBindableSubtypeInterpreter());
 
         for (var solarPanel : MachineBlocks.SOLAR_PANELS.values()) {
-            registration.registerSubtypeInterpreter(solarPanel.asItem(), new EntityStorageSubtypeInterpreter());
+            registration.registerSubtypeInterpreter(solarPanel.asItem(), new SoulBindableSubtypeInterpreter());
         }
     }
 

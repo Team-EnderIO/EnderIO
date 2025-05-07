@@ -24,6 +24,9 @@ public class EntityCaptureUtils {
     @Nullable
     private static List<ResourceLocation> capturableEntities = null;
 
+    @Nullable
+    private static List<EntityType<?>> capturableEntityTypes = null;
+
     public static List<ResourceLocation> getCapturableEntities() {
         if (capturableEntities == null) {
             //noinspection unchecked
@@ -47,6 +50,21 @@ public class EntityCaptureUtils {
         }
 
         return capturableEntities;
+    }
+
+    public static List<EntityType<?>> getCapturableEntityTypes() {
+        if (capturableEntityTypes == null) {
+            //noinspection unchecked
+            capturableEntityTypes = ImmutableList.copyOf(
+                BuiltInRegistries.ENTITY_TYPE.stream()
+                    .filter(DefaultAttributes::hasSupplier)
+                    .map(entityType -> (EntityType<? extends LivingEntity>) entityType)
+                    .filter(entityType -> getCapturableStatus(entityType, null) == CapturableStatus.CAPTURABLE)
+                    .filter(entityType -> !BuiltInRegistries.ENTITY_TYPE.getKey(entityType).equals(DRAGON))
+                    .collect(Collectors.toList()));
+        }
+
+        return capturableEntityTypes;
     }
 
     public enum CapturableStatus {

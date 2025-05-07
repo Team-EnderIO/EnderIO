@@ -5,11 +5,10 @@ import com.enderio.base.api.filter.SoulFilter;
 import com.enderio.base.api.filter.FilterMenuProvider;
 import com.enderio.base.api.filter.FluidFilter;
 import com.enderio.base.api.filter.ItemFilter;
-import com.enderio.base.api.soul.SingleSoulStorageItemStack;
+import com.enderio.base.api.soul.binding.ISoulBindable;
+import com.enderio.base.api.soul.storage.ISoulHandler;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.capabilities.ItemCapability;
 
 public class EIOCapabilities {
@@ -31,12 +30,13 @@ public class EIOCapabilities {
     public static final ItemCapability<SoulFilter, Void> SOUL_FILTER = ItemCapability
             .createVoid(EnderIO.loc("soul_filter"), SoulFilter.class);
 
-    // TODO: Maybe we should put the I prefix back for parity with the rest of mods?
-    public static final class SingleSoulStorage {
-        public static final ItemCapability<com.enderio.base.api.soul.SingleSoulStorage, Void> ITEM = ItemCapability
-                .createVoid(EnderIO.loc("soul_storage"), com.enderio.base.api.soul.SingleSoulStorage.class);
+    public static final class SoulBindable {
+        public static final ItemCapability<ISoulBindable, Void> ITEM = ItemCapability
+                .createVoid(EnderIO.loc("soul_bindable"), ISoulBindable.class);
+    }
 
-        public static final ICapabilityProvider<ItemStack, Void, com.enderio.base.api.soul.SingleSoulStorage> BASIC_ITEM_PROVIDER = (
-                stack, ctx) -> new SingleSoulStorageItemStack(EIODataComponents.SOUL, stack);
+    public static final class SoulHandler {
+        public static final ItemCapability<ISoulHandler, Void> ITEM = ItemCapability
+                .createVoid(EnderIO.loc("soul_handler"), ISoulHandler.class);
     }
 }

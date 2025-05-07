@@ -1,6 +1,5 @@
 package com.enderio.base.api.soul;
 
-import com.enderio.base.api.attachment.Soul;
 import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.item.ItemStack;

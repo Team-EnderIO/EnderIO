@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blocks.powered_spawner;
 
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
@@ -20,50 +20,74 @@ public class MobCaptureTask extends PoweredSpawnerTask {
 
     @Override
     public boolean isCompleted() {
-        // Ensure we have an item to take from
-        var inputStack = PoweredSpawnerBlockEntity.INPUT.getItemStack(blockEntity);
-        var inputSoulStorage = inputStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-        if (inputStack.isEmpty() || inputSoulStorage == null || inputSoulStorage.hasSoul()) {
-            return true;
-        }
+        // TODO: Test, but I think we can just trust.
+//        // Ensure we have an item to take from
+//        var inputStack = PoweredSpawnerBlockEntity.INPUT.getItemStack(blockEntity);
+//        var inputSoulStorage = inputStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+//        if (inputStack.isEmpty() || inputSoulStorage == null || inputSoulStorage.hasSoul()) {
+//            return true;
+//        }
 
         return super.isCompleted();
     }
 
     @Override
     protected void onTaskCompleted() {
-        // Ensure we have a vial to take
+        final Soul capturedSoul = getSoulForCapture();
+
+        // Ensure we have a storage to fill
         var inputStack = PoweredSpawnerBlockEntity.INPUT.getItemStack(blockEntity);
-        var inputSoulStorage = inputStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-        if (inputStack.isEmpty() || inputSoulStorage == null || inputSoulStorage.hasSoul()) {
-            return;
-        }
 
-        // Do not overwrite slot contents
-        if (!PoweredSpawnerBlockEntity.OUTPUT.getItemStack(blockEntity).isEmpty()) {
-            setBlockedReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OUTPUT_FULL);
-            return;
-        }
-
-        ItemStack filledStack = inputStack.copyWithCount(1);
-        var filledSoulStorage = filledStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-        if (filledSoulStorage == null) {
-            // TODO: Log warning?
+        // Clone the input
+        var resultStack = inputStack.copyWithCount(1);
+        var resultSoulHandler = inputStack.getCapability(EIOCapabilities.SoulHandler.ITEM);
+        if (resultStack.isEmpty() || resultSoulHandler == null || resultSoulHandler.tryInsertSoul(capturedSoul, true)) {
+            // Cannot insert soul into the input, so give up
             isComplete = true;
             return;
         }
 
-        var entityTypeKey = BuiltInRegistries.ENTITY_TYPE.getKey(entityType());
-
-        switch (spawnMode()) {
-        case NEW -> filledSoulStorage.setSoul(Soul.of(entityTypeKey));
-        case COPY -> filledSoulStorage.setSoul(blockEntity.getBoundSoul().copy());
+        // Insert the soul.
+        if (!resultSoulHandler.tryInsertSoul(capturedSoul, false)) {
+            // Unknown failure, give up.
+            isComplete = true;
+            return;
         }
 
-        PoweredSpawnerBlockEntity.OUTPUT.setStackInSlot(blockEntity, filledStack);
+        // If we can add another, leave it in the input for the next task.
+        if (resultSoulHandler.tryInsertSoul(capturedSoul, true)) {
+            PoweredSpawnerBlockEntity.INPUT.setStackInSlot(blockEntity, resultStack);
+            isComplete = true;
+            return;
+        }
+
+        // Otherwise, try and put it into the output.
+        var currentOutputStack = PoweredSpawnerBlockEntity.OUTPUT.getItemStack(blockEntity);
+        if (!currentOutputStack.isEmpty() || !ItemStack.isSameItemSameComponents(currentOutputStack, resultStack)) {
+            setBlockedReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OUTPUT_FULL);
+            return;
+        }
+
+        if (currentOutputStack.isEmpty()) {
+            PoweredSpawnerBlockEntity.OUTPUT.setStackInSlot(blockEntity, resultStack);
+        } else {
+            resultStack.setCount(currentOutputStack.getCount() + 1);
+            PoweredSpawnerBlockEntity.OUTPUT.setStackInSlot(blockEntity, resultStack);
+        }
+
+        // Deduct input
         PoweredSpawnerBlockEntity.INPUT.setStackInSlot(blockEntity,
-                inputStack.copyWithCount(inputStack.getCount() - 1));
+            inputStack.copyWithCount(inputStack.getCount() - 1));
 
         isComplete = true;
+    }
+
+    private Soul getSoulForCapture() {
+        var entityTypeKey = BuiltInRegistries.ENTITY_TYPE.getKey(entityType());
+
+        return switch (spawnMode()) {
+        case NEW -> Soul.of(entityTypeKey);
+        case COPY -> blockEntity.getBoundSoul().copy();
+        };
     }
 }

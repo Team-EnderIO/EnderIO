@@ -1,10 +1,12 @@
-package com.enderio.base.api.attachment;
+package com.enderio.base.api.soul;
 
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -12,10 +14,13 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.extensions.IEntityExtension;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public record Soul(CompoundTag entityTag, float maxHealth) {
@@ -82,16 +87,61 @@ public record Soul(CompoundTag entityTag, float maxHealth) {
         return new Soul(tag, 0.0f);
     }
 
-    public boolean hasEntity() {
-        return entityType().isPresent();
+    public static Soul of(EntityType<?> entityType) {
+        return of(BuiltInRegistries.ENTITY_TYPE.getKey(entityType));
     }
 
-    public Optional<ResourceLocation> entityType() {
-        if (entityTag.contains(KEY_ID)) {
-            return Optional.of(ResourceLocation.parse(entityTag.getString(KEY_ID)));
+    public static boolean isSameEntity(Soul soul1, Soul soul2) {
+        return Objects.equals(soul1.entityType(), soul2.entityType());
+    }
+
+    public static boolean isSameEntity(Soul soul, LivingEntity livingEntity) {
+        return isSameEntity(soul, livingEntity.getType());
+    }
+
+    public static boolean isSameEntity(Soul soul, EntityType<?> entityType) {
+        return Objects.equals(soul.entityType(), entityType);
+    }
+
+    public static boolean isSameEntitySameTag(Soul soul1, Soul soul2) {
+        return Objects.equals(soul1.getEntityTag(), soul2.getEntityTag());
+    }
+
+    public static boolean isSameEntitySameTag(Soul soul, LivingEntity livingEntity, HolderLookup.Provider registries) {
+        if (!isSameEntity(soul, livingEntity)) {
+            return false;
         }
 
-        return Optional.empty();
+        var entityTag = livingEntity.serializeNBT(registries);
+        return Objects.equals(soul.getEntityTag(), entityTag);
+    }
+
+    public boolean hasEntity() {
+        return entityType() != null;
+    }
+
+    public boolean isEmpty() {
+        return entityType() == null;
+    }
+
+    // TODO: Might make these non-null and throw if used without checking hasEntity/isEmpty?
+    @Nullable
+    public EntityType<?> entityType() {
+        var id = entityTypeId();
+        if (id != null) {
+            return BuiltInRegistries.ENTITY_TYPE.getOptional(id).orElse(null);
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public ResourceLocation entityTypeId() {
+        if (entityTag.contains(KEY_ID)) {
+            return ResourceLocation.tryParse(entityTag.getString(KEY_ID));
+        }
+
+        return null;
     }
 
     public CompoundTag getEntityTag() {

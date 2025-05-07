@@ -2,7 +2,7 @@ package com.enderio.base.common.init;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.attachment.CoordinateSelection;
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.common.filter.soul.EnderSoulFilter;

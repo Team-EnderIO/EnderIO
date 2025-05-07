@@ -7,12 +7,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class EntityStorageSubtypeInterpreter implements ISubtypeInterpreter<ItemStack> {
+import java.util.Objects;
+
+public class SoulBindableSubtypeInterpreter implements ISubtypeInterpreter<ItemStack> {
     @Override
     public @Nullable Object getSubtypeData(ItemStack ingredient, UidContext context) {
-        var soulStorage = ingredient.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-        if (soulStorage != null) {
-            return soulStorage.getSoul();
+        var soulBindable = ingredient.getCapability(EIOCapabilities.SoulBindable.ITEM);
+        if (soulBindable != null) {
+            return soulBindable.getBoundSoul();
         }
 
         return null;
@@ -20,9 +22,9 @@ public class EntityStorageSubtypeInterpreter implements ISubtypeInterpreter<Item
 
     @Override
     public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
-        var soulStorage = ingredient.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-        if (soulStorage != null) {
-            return soulStorage.getSoul().entityType().map(ResourceLocation::toString).orElse("");
+        var soulBindable = ingredient.getCapability(EIOCapabilities.SoulBindable.ITEM);
+        if (soulBindable != null && soulBindable.hasSoul()) {
+            return Objects.requireNonNull(soulBindable.getBoundSoul().entityTypeId()).toString();
         }
 
         return "";

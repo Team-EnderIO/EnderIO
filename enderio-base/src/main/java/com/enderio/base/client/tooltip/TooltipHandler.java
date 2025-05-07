@@ -40,7 +40,7 @@ public class TooltipHandler {
         // Misc tooltips.
         addCapacitorTooltips(forItem, evt.getToolTip(), advanced);
         addGrindingBallTooltips(forItem, evt.getToolTip(), advanced);
-        addSoulStorageTooltips(forItem, evt.getToolTip(), advanced);
+        addSoulBindableTooltips(forItem, evt.getToolTip(), advanced);
 
         // Advanced tooltip system
         getAdvancedProvider(forItem.getItem()).ifPresent(
@@ -85,14 +85,14 @@ public class TooltipHandler {
 
     // region Soul Storage
 
-    private static void addSoulStorageTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
-        var singleSoulStorage = itemStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-        if (singleSoulStorage != null && singleSoulStorage.hasSoul()) {
-            var soul = singleSoulStorage.getSoul();
+    private static void addSoulBindableTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
+        var soulBindable = itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
+        if (soulBindable != null && soulBindable.canBind()) {
+            var soul = soulBindable.getBoundSoul();
 
-            if (soul.entityType().isPresent()) {
+            if (soul.hasEntity()) {
                 components.add(TooltipUtil.style(Component
-                        .translatable(EntityUtil.getEntityDescriptionId(soul.entityType().get()))));
+                        .translatable(Objects.requireNonNull(soul.entityType()).getDescriptionId())));
             } else {
                 components.add(TooltipUtil.style(EIOLang.TOOLTIP_NO_SOULBOUND));
             }

@@ -1,6 +1,5 @@
 package com.enderio.base.api.soul;
 
-import com.enderio.base.api.attachment.Soul;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Experimental

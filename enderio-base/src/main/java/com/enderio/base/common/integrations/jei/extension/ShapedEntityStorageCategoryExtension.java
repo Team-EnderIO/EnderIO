@@ -3,7 +3,8 @@ package com.enderio.base.common.integrations.jei.extension;
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
+import com.enderio.base.api.soul.SoulBoundUtils;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.integrations.jei.EnderIOJEI;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
@@ -35,7 +36,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
         Optional<IFocus<ItemStack>> input = focuses.getItemStackFocuses(INPUT)
                 .filter(f -> f.getTypedValue()
                         .getIngredient()
-                        .getCapability(EIOCapabilities.SingleSoulStorage.ITEM) != null)
+                        .getCapability(EIOCapabilities.SoulBindable.ITEM) != null)
                 .findFirst();
 
         ShapedEntityStorageRecipe recipe = recipeHolder.value();
@@ -50,63 +51,38 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
         boolean noData = true;
 
         if (input.isPresent()) {
-            var inputSoulStorage = Objects.requireNonNull(
-                    input.get().getTypedValue().getIngredient().getCapability(EIOCapabilities.SingleSoulStorage.ITEM));
-            Soul soul = inputSoulStorage.getSoul();
+            var inputSoulBindable = Objects.requireNonNull(
+                    input.get().getTypedValue().getIngredient().getCapability(EIOCapabilities.SoulBindable.ITEM));
+            Soul soul = inputSoulBindable.getBoundSoul();
 
             if (soul != Soul.EMPTY) {
-                var resultSoulStorage = resultItem.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-                if (resultSoulStorage != null) {
+                if (SoulBoundUtils.tryBindSoul(resultItem, soul)) {
                     noData = false;
 
-                    resultSoulStorage.setSoul(soul);
-
-                    inputs = recipe.getIngredients()
-                            .stream()
-                            .map(ingredient -> Arrays.stream(ingredient.getItems())
-                                    .<ItemStack>mapMulti((ingredientItem, consumer) -> {
-                                        var ingredientSoulStorage = ingredientItem
-                                                .getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-                                        if (ingredientSoulStorage != null) {
-                                            ItemStack item = ingredientItem.copy();
-                                            Objects.requireNonNull(
-                                                    item.getCapability(EIOCapabilities.SingleSoulStorage.ITEM))
-                                                    .setSoul(soul);
-                                            consumer.accept(item);
-                                        } else {
-                                            consumer.accept(ingredientItem);
-                                        }
-                                    })
-                                    .toList())
-                            .toList();
+                    inputs = recipe
+                        .getIngredients()
+                        .stream()
+                        .map(ingredient -> Arrays
+                            .stream(ingredient.getItems())
+                            .<ItemStack>mapMulti((ingredientItem, consumer) -> SoulBoundUtils.getBoundIfCapable(ingredientItem, soul).ifPresent(consumer))
+                            .toList())
+                        .toList();
                 }
             }
         } else if (output.isPresent()) {
             ItemStack itemStack = output.get().getTypedValue().getIngredient();
-            var outputSoulStorage = itemStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+            var outputSoulBindable = itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
 
-            if (outputSoulStorage != null) {
+            if (outputSoulBindable != null) {
                 results = List.of(itemStack);
-                Soul soul = outputSoulStorage.getSoul();
+                Soul soul = outputSoulBindable.getBoundSoul();
 
                 if (soul != Soul.EMPTY) {
                     noData = false;
                     inputs = recipe.getIngredients()
                             .stream()
                             .map(ingredient -> Arrays.stream(ingredient.getItems())
-                                    .<ItemStack>mapMulti((ingredientItem, consumer) -> {
-                                        var ingredientSoulStorage = ingredientItem
-                                                .getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-                                        if (ingredientSoulStorage != null) {
-                                            ItemStack item = ingredientItem.copy();
-                                            Objects.requireNonNull(
-                                                    item.getCapability(EIOCapabilities.SingleSoulStorage.ITEM))
-                                                    .setSoul(soul);
-                                            consumer.accept(item);
-                                        } else {
-                                            consumer.accept(ingredientItem);
-                                        }
-                                    })
+                                    .<ItemStack>mapMulti((ingredientItem, consumer) -> SoulBoundUtils.getBoundIfCapable(ingredientItem, soul).ifPresent(consumer))
                                     .toList())
                             .toList();
                 }
@@ -118,36 +94,28 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
 
             results = new ArrayList<>(allCapturableEntities.stream().map(e -> {
                 ItemStack result = resultItem.copy();
-                var resultSoulStorage = result.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-                if (resultSoulStorage != null) {
-                    resultSoulStorage.setSoul(Soul.of(e));
+                if (SoulBoundUtils.tryBindSoul(result, Soul.of(e))) {
+                    return Optional.of(result);
                 }
 
-                return result;
-            }).toList());
+                return Optional.<ItemStack>empty();
+            }).flatMap(Optional::stream).toList());
 
             ItemStack result = resultItem.copy();
-            var resultSoulStorage = result.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-            if (resultSoulStorage != null) {
-                resultSoulStorage.setSoul(Soul.EMPTY);
-            }
-
+            SoulBoundUtils.tryBindSoul(result, Soul.EMPTY);
             results.add(result);
 
             inputs = recipe.getIngredients()
                     .stream()
                     .map(ingredient -> Arrays.stream(ingredient.getItems())
                             .<ItemStack>mapMulti((ingredientItem, consumer) -> {
-                                var ingredientSoulStorage = ingredientItem
-                                        .getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-                                if (ingredientSoulStorage != null) {
+                                if (SoulBoundUtils.canBindSoul(ingredientItem)) {
                                     for (ResourceLocation entity : allCapturableEntities) {
                                         ItemStack item = ingredientItem.copy();
-                                        Objects.requireNonNull(
-                                                item.getCapability(EIOCapabilities.SingleSoulStorage.ITEM))
-                                                .setSoul(Soul.of(entity));
-                                        consumer.accept(item);
-                                        consumer.accept(item);
+
+                                        if (SoulBoundUtils.tryBindSoul(item, Soul.of(entity))) {
+                                            consumer.accept(item);
+                                        }
                                     }
                                 } else {
                                     consumer.accept(ingredientItem);

@@ -2,7 +2,7 @@ package com.enderio.machines.common.blocks.powered_spawner;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.UseOnly;
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
@@ -38,6 +38,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -112,18 +113,13 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     @Nullable
     private PoweredSpawnerTask createNewTask() {
         // Ensure we have a valid entity type.
-        if (getEntityType().isEmpty()) {
+        var entityType = getEntityType();
+        if (entityType == null) {
             setReason(SpawnerBlockedReason.UNKNOWN_MOB);
             return null;
         }
 
-        var entityTypeOpt = BuiltInRegistries.ENTITY_TYPE.getOptional(getEntityType().get());
-        if (entityTypeOpt.isEmpty()) {
-            setReason(SpawnerBlockedReason.UNKNOWN_MOB);
-            return null;
-        }
-
-        if (entityTypeOpt.get().is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
+        if (entityType.is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
             setReason(SpawnerBlockedReason.DISABLED);
             return null;
         }
@@ -145,7 +141,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         int energyCost = MachinesConfig.COMMON.DEFAULT_SPAWN_ENERGY_COST.get();
         MobSpawnMode spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
 
-        var spawnDataOpt = SpawnerSoul.SPAWNER.matches(getEntityType().get());
+        var spawnDataOpt = SpawnerSoul.SPAWNER.matches(entityType);
         if (spawnDataOpt.isPresent()) {
             var data = spawnDataOpt.get();
             energyCost = data.power();
@@ -153,8 +149,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         }
 
         return switch (mode) {
-        case SPAWN -> new MobSpawnTask(this, energyCost, entityTypeOpt.get(), spawnType);
-        case CAPTURE -> new MobCaptureTask(this, energyCost, entityTypeOpt.get(), spawnType);
+        case SPAWN -> new MobSpawnTask(this, energyCost, entityType, spawnType);
+        case CAPTURE -> new MobCaptureTask(this, energyCost, entityType, spawnType);
         };
     }
 
@@ -227,14 +223,35 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .capacitor()
+                .setStackLimit(1)
                 .inputSlot((i, stack) -> {
-                    var soulStorage = stack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-                    return soulStorage != null && !soulStorage.hasSoul();
+                    var soulHandler = stack.getCapability(EIOCapabilities.SoulHandler.ITEM);
+                    return soulHandler != null && soulHandler.tryInsertSoul(getSoulForCapture(), true);
                 })
                 .slotAccess(INPUT)
+                .setStackLimit(64)
                 .outputSlot()
                 .slotAccess(OUTPUT)
                 .build();
+    }
+
+    private Soul getSoulForCapture() {
+        var entityType = getEntityType();
+        if (entityType == null) {
+            return Soul.EMPTY;
+        }
+
+        MobSpawnMode spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
+
+        var spawnDataOpt = SpawnerSoul.SPAWNER.matches(entityType);
+        if (spawnDataOpt.isPresent()) {
+            spawnType = spawnDataOpt.get().spawnType();
+        }
+
+        return switch (spawnType) {
+            case NEW -> Soul.of(entityType);
+            case COPY -> getBoundSoul().copy();
+        };
     }
 
     @Override
@@ -258,12 +275,9 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     // endregion
 
-    public Optional<ResourceLocation> getEntityType() {
+    @Nullable
+    public EntityType<?> getEntityType() {
         return boundSoul.entityType();
-    }
-
-    public void setEntityType(ResourceLocation entityType) {
-        boundSoul = Soul.of(entityType);
     }
 
     public Soul getBoundSoul() {

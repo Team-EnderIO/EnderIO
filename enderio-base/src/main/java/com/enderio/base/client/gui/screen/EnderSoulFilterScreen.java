@@ -1,11 +1,10 @@
 package com.enderio.base.client.gui.screen;
 
 import com.enderio.base.api.EnderIO;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.common.filter.AbstractFilterMenu;
 import com.enderio.base.common.filter.soul.EnderSoulFilterMenu;
-import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.filter.soul.SoulFilterSlot;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
@@ -18,6 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
@@ -103,17 +103,13 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
         super.renderSlotContents(guiGraphics, itemstack, slot, countString);
 
         if (slot instanceof SoulFilterSlot soulFilterSlot) {
-            var entity = soulFilterSlot.getResource();
-            if (!entity.hasEntity()) {
+            var soul = soulFilterSlot.getResource();
+            if (!soul.hasEntity()) {
                 return;
             }
 
-            var vial = new ItemStack(EIOItems.SOUL_VIAL.asItem());
-            var soulStorage = vial.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-            if (soulStorage != null) {
-                soulStorage.setSoul(entity);
-            }
-            super.renderSlotContents(guiGraphics, vial, slot, countString);
+            ItemStack renderStack = getRenderStack(soul);
+            super.renderSlotContents(guiGraphics, renderStack, slot, countString);
         }
 
         super.renderSlotContents(guiGraphics, itemstack, slot, countString);
@@ -122,18 +118,31 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
     @Override
     protected boolean renderCustomTooltip(GuiGraphics guiGraphics, int x, int y) {
         if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof SoulFilterSlot soulFilterSlot) {
-            var entity = soulFilterSlot.getResource();
-            if (!entity.hasEntity()) {
+            var soul = soulFilterSlot.getResource();
+            if (!soul.hasEntity()) {
                 return true;
             }
 
-            var vial = new ItemStack(EIOItems.SOUL_VIAL.asItem());
-            vial.set(EIODataComponents.SOUL, entity);
-            guiGraphics.renderTooltip(font, getTooltipFromContainerItem(vial), vial.getTooltipImage(), vial, x, y);
+            ItemStack renderStack = getRenderStack(soul);
+            // TODO: Maybe add extra tooltip to show there is entity NBT?
+            guiGraphics.renderTooltip(font, getTooltipFromContainerItem(renderStack), renderStack.getTooltipImage(), renderStack, x, y);
             return true;
         }
 
         return super.renderCustomTooltip(guiGraphics, x, y);
+    }
+
+    private ItemStack getRenderStack(Soul soul) {
+        // Show spawn egg if available - this is easier to identify visually.
+        ItemStack renderItem;
+        var spawnEgg = SpawnEggItem.byId(soul.entityType());
+        if (spawnEgg != null) {
+            renderItem = spawnEgg.getDefaultInstance();
+        } else {
+            renderItem = SoulVialItem.forSoul(soul);
+        }
+
+        return renderItem;
     }
 
     @Override

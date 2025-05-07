@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -16,6 +17,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.util.FakePlayer;
+import org.jetbrains.annotations.Nullable;
 
 public interface FarmingStation {
 
@@ -46,7 +48,8 @@ public interface FarmingStation {
 
     boolean handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemStack stack);
 
-    Optional<ResourceLocation> getEntityType();
+    @Nullable
+    EntityType<?> getEntityType();
 
     default InteractionResult useStack(BlockPos soil, ItemStack stack) {
         getPlayer().setItemInHand(InteractionHand.MAIN_HAND, stack);

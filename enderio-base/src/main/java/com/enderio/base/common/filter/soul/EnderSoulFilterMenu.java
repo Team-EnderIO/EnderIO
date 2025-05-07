@@ -1,6 +1,6 @@
 package com.enderio.base.common.filter.soul;
 
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.common.filter.AbstractFilterMenu;
 import com.enderio.base.common.filter.fluid.EnderFluidFilter;
 import com.enderio.base.common.init.EIODataComponents;

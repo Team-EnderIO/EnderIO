@@ -1,9 +1,8 @@
 package com.enderio.machines.common.blocks.soul_binder;
 
 import com.enderio.base.api.network.MassiveStreamCodec;
-import com.enderio.base.api.soul.FilledSoulStorageIngredient;
+import com.enderio.base.api.soul.binding.ingredients.FilledSoulStorageIngredient;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.recipe.FluidRecipeInput;
 import com.enderio.base.common.util.ExperienceUtil;
@@ -15,6 +14,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
@@ -56,11 +56,11 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
             result.applyComponents(input.itemToBind.getComponents());
         }
 
-        var vialSoulStorage = vial.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-        var resultSoulStorage = result.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
+        var vialSoulBindable = vial.getCapability(EIOCapabilities.SoulBindable.ITEM);
+        var resultSoulBinding = result.getCapability(EIOCapabilities.SoulBindable.ITEM);
 
-        if (vialSoulStorage != null && resultSoulStorage != null) {
-            resultSoulStorage.setSoul(vialSoulStorage.getSoul());
+        if (vialSoulBindable != null && resultSoulBinding != null) {
+            resultSoulBinding.bindSoul(vialSoulBindable.getBoundSoul());
         }
 
         return results;
@@ -86,21 +86,21 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
             return false;
         }
 
-        var soulStorage = recipeInput.getItem(0).getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-        if (soulStorage == null || !soulStorage.hasSoul()) {
+        var soulBindable = recipeInput.getItem(0).getCapability(EIOCapabilities.SoulBindable.ITEM);
+        if (soulBindable == null || !soulBindable.hasSoul()) {
             return false;
         }
 
-        var soul = soulStorage.getSoul();
-        if (soul.entityType().isEmpty()) {
+        var soul = soulBindable.getBoundSoul();
+        if (soul.isEmpty()) {
             return false;
         }
 
-        var storedEntityType = soul.entityType().get();
+        var entityType = Objects.requireNonNull(soul.entityType());
 
         if (soulData.isPresent()) { // is in the selected souldata
             if (SoulDataReloadListener.fromString(soulData.get())
-                    .matches(soul.entityType().get())
+                    .matches(soul.entityType())
                     .isEmpty()) {
                 return false;
             }
@@ -109,21 +109,14 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
         }
 
         if (mobCategory.isPresent()) {
-            // TODO: We can just call get(...) if we don't care about registry defaulting.
-            var entityTypeOptional = BuiltInRegistries.ENTITY_TYPE.getOptional(storedEntityType);
-            if (entityTypeOptional.isEmpty()) {
-                return false;
-            }
-
-            var entityType = entityTypeOptional.get();
-
             if (!entityType.getCategory().equals(mobCategory.get())) {
                 return false;
             }
         }
 
-        if (entityType.isPresent()) {
-            if (!storedEntityType.equals(entityType.get())) {
+        if (this.entityType.isPresent()) {
+            var entityTypeId = soul.entityTypeId();
+            if (!Objects.requireNonNull(entityTypeId).equals(this.entityType.get())) {
                 return false;
             }
         }

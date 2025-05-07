@@ -74,7 +74,7 @@ public abstract class FilterSlot<T> extends Slot {
     @Override
     public ItemStack safeInsert(ItemStack stack, int increment) {
         if (!stack.isEmpty() && mayPlace(stack)) {
-            getResourceFrom(stack).ifPresent(resource -> setter.accept(processResource(resource)));
+            getResourceFrom(stack).ifPresent(this::setResource);
         }
 
         return stack;

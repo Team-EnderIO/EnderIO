@@ -1,6 +1,6 @@
 package com.enderio.base.common.soul;
 
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.core.common.network.menu.SyncSlot;
 import com.enderio.core.common.network.menu.payload.ListSlotPayload;
 import com.enderio.core.common.network.menu.payload.ResourceLocationSlotPayload;
@@ -78,14 +78,14 @@ public abstract class StoredEntityDataSyncSlot implements SyncSlot {
     @Override
     public SlotPayload createPayload(Level level, ChangeType changeType) {
         var currentValue = get();
-        if (!currentValue.hasEntity()) {
+        if (currentValue.isEmpty()) {
             return new ListSlotPayload(List.of());
         }
 
         // TODO: Need to be able to send the entity tag.
         // Honestly feels like a minor rework is required to add custom payloads instead of combining them.
         return new ListSlotPayload(List.of(
-            new ResourceLocationSlotPayload(currentValue.entityType().get())
+            new ResourceLocationSlotPayload(Objects.requireNonNull(currentValue.entityTypeId()))
         ));
     }
 

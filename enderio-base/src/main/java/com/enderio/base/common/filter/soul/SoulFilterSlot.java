@@ -1,6 +1,6 @@
 package com.enderio.base.common.filter.soul;
 
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.filter.FilterSlot;
 
@@ -8,11 +8,10 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.component.CustomData;
 
 public class SoulFilterSlot extends FilterSlot<Soul> {
 
@@ -27,17 +26,9 @@ public class SoulFilterSlot extends FilterSlot<Soul> {
 
     @Override
     public Optional<Soul> getResourceFrom(ItemStack itemStack) {
-        var soulStorage = itemStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-        if (soulStorage != null) {
-            return Optional.of(soulStorage.getSoul());
-        } else if (itemStack.getItem() instanceof SpawnEggItem spawnEggItem) {
-            Entity entity = spawnEggItem.getType(itemStack).create(Minecraft.getInstance().level);
-            if (entity instanceof LivingEntity livingEntity) {
-                Soul ghost = new Soul(
-                        livingEntity.serializeNBT(Minecraft.getInstance().level.registryAccess()),
-                        livingEntity.getMaxHealth());
-                return Optional.of(ghost);
-            }
+        var soulBindable = itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
+        if (soulBindable != null) {
+            return Optional.of(soulBindable.getBoundSoul());
         }
 
         return Optional.empty();

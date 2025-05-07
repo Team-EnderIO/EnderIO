@@ -2,7 +2,11 @@ package com.enderio.base.common.item.tool;
 
 import com.enderio.EnderIOBase;
 import com.enderio.base.api.EnderIO;
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
+import com.enderio.base.api.soul.binding.ComponentSoulBindable;
+import com.enderio.base.api.soul.binding.ISoulBindable;
+import com.enderio.base.api.soul.storage.ISoulHandler;
+import com.enderio.base.api.soul.storage.SingleComponentSoulHandler;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
@@ -48,13 +52,16 @@ import org.jetbrains.annotations.Nullable;
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID)
 public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
-    public static final ICapabilityProvider<ItemStack, Void, Soul> STORED_ENTITY_PROVIDER = (stack,
-            ctx) -> stack.get(EIODataComponents.SOUL);
-
     public static final ResourceLocation FILLED_MODEL_PROPERTY = EnderIO.loc("soul_vial_filled");
 
     public SoulVialItem(Properties pProperties) {
         super(pProperties);
+    }
+
+    public static ItemStack forSoul(Soul soul) {
+        ItemStack soulVial = new ItemStack(EIOItems.SOUL_VIAL.get());
+        soulVial.set(EIODataComponents.SOUL, soul);
+        return soulVial;
     }
 
     // Item appearance and description

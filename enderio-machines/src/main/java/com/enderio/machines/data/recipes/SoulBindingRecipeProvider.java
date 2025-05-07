@@ -1,7 +1,7 @@
 package com.enderio.machines.data.recipes;
 
 import com.enderio.base.api.EnderIO;
-import com.enderio.base.api.soul.AnySoulStorageIngredient;
+import com.enderio.base.api.soul.binding.ingredients.AnySoulBindableIngredient;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
@@ -43,8 +43,8 @@ public class SoulBindingRecipeProvider extends RecipeProvider {
                 recipeOutput);
         build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 51200, 4, EntityType.WITCH,
                 recipeOutput);
-        build(EIOItems.BROKEN_SPAWNER, AnySoulStorageIngredient.of(EIOItems.BROKEN_SPAWNER), 288000, 8, recipeOutput);
-        build(MachineBlocks.POWERED_SPAWNER, AnySoulStorageIngredient.of(MachineBlocks.POWERED_SPAWNER), 288000, 8, true,
+        build(EIOItems.BROKEN_SPAWNER, AnySoulBindableIngredient.of(EIOItems.BROKEN_SPAWNER), 288000, 8, recipeOutput);
+        build(MachineBlocks.POWERED_SPAWNER, AnySoulBindableIngredient.of(MachineBlocks.POWERED_SPAWNER), 288000, 8, true,
                 recipeOutput);
         build(MachineBlocks.SOUL_ENGINE, Ingredient.of(MachineBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME,
                 recipeOutput);

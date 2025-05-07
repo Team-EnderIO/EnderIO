@@ -2,7 +2,7 @@ package com.enderio.machines.common.blockentity.solar;
 
 import static com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
 
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.api.capacitor.FixedScalable;
 import com.enderio.base.api.io.IOMode;
 import com.enderio.base.api.io.energy.EnergyIOMode;
@@ -26,6 +26,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -59,7 +60,7 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
         this.tier = tier;
         this.node = new MultiEnergyNode(() -> energyStorage,
                 () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
-        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityType().orElse(NO_MOB),
+        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityTypeId().orElse(NO_MOB),
                 this::setEntityType));
     }
 
@@ -80,7 +81,7 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
             getEnergyStorage().addEnergy(getGenerationRate());
         }
         if (reloadCache != reload && boundSoul.hasEntity()) {
-            Optional<SolarSoul.SoulData> op = SolarSoul.SOLAR.matches(boundSoul.entityType().get());
+            Optional<SolarSoul.SoulData> op = SolarSoul.SOLAR.matches(boundSoul.entityType());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
@@ -302,8 +303,9 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
         }
     }
 
-    public Optional<ResourceLocation> getEntityType() {
-        return boundSoul.entityType();
+    @Nullable
+    public Optional<ResourceLocation> getEntityTypeId() {
+        return Optional.ofNullable(boundSoul.entityTypeId());
     }
 
     public void setEntityType(ResourceLocation entityType) {

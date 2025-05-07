@@ -1,6 +1,7 @@
-package com.enderio.base.api.soul;
+package com.enderio.base.api.soul.binding.ingredients;
 
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
+import com.enderio.base.api.soul.SoulBoundUtils;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOIngredientTypes;
 import com.mojang.serialization.MapCodec;
@@ -14,40 +15,39 @@ import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 
-public class EmptySoulStorageIngredient implements ICustomIngredient {
+public class EmptySoulBindableIngredient implements ICustomIngredient {
 
-    public static final MapCodec<EmptySoulStorageIngredient> CODEC = RecordCodecBuilder
+    public static final MapCodec<EmptySoulBindableIngredient> CODEC = RecordCodecBuilder
             .mapCodec(inst -> inst.group(BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(i -> i.item))
-                    .apply(inst, EmptySoulStorageIngredient::new));
+                    .apply(inst, EmptySoulBindableIngredient::new));
 
     private final Item item;
 
     public static Ingredient of(ItemLike item) {
-        return new EmptySoulStorageIngredient(item.asItem()).toVanilla();
+        return new EmptySoulBindableIngredient(item.asItem()).toVanilla();
     }
 
-    public EmptySoulStorageIngredient(Item item) {
+    public EmptySoulBindableIngredient(Item item) {
         this.item = item;
     }
 
     @Override
     public boolean test(ItemStack itemStack) {
-        if (!itemStack.is(item)) {
-            return false;
-        }
-
-        var soulStorage = itemStack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-        return soulStorage != null && !soulStorage.hasSoul();
+        return itemStack.is(item) && !SoulBoundUtils.isBound(itemStack);
     }
 
     @Override
     public Stream<ItemStack> getItems() {
         var stack = item.getDefaultInstance();
-        var soulStorage = stack.getCapability(EIOCapabilities.SingleSoulStorage.ITEM);
-        if (soulStorage != null) {
-            soulStorage.setSoul(Soul.EMPTY);
+        var soulBindable = stack.getCapability(EIOCapabilities.SoulBindable.ITEM);
+        if (soulBindable != null) {
+            // If we can't bind empty, don't include it.
+            if (!SoulBoundUtils.tryBindSoul(soulBindable, Soul.EMPTY) && soulBindable.hasSoul()) {
+                return Stream.of();
+            }
         }
 
+        // Assume no capability == empty...
         return Stream.of(stack);
     }
 

@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blocks.soul_engine;
 
-import com.enderio.base.api.attachment.Soul;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.FixedScalable;
 import com.enderio.base.api.capacitor.LinearScalable;
@@ -21,6 +21,8 @@ import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.souldata.EngineSoul;
+
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
@@ -33,6 +35,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -84,10 +87,11 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     @Override
     public void serverTick() {
         if (reloadCache != reload && boundSoul.hasEntity()) {
-            Optional<EngineSoul.SoulData> op = EngineSoul.ENGINE.matches(boundSoul.entityType().get());
+            Optional<EngineSoul.SoulData> op = EngineSoul.ENGINE.matches(boundSoul.entityType());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
+
         if (soulData != null && isActive()) {
             producePower();
         }
@@ -98,16 +102,13 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
                             && isCapacitorInstalled());
         }
 
-        updateMachineState(MachineState.NOT_SOULBOUND, soulData == null || boundSoul.entityType().isEmpty());
+        updateMachineState(MachineState.NOT_SOULBOUND, soulData == null || boundSoul.entityType() != null);
         super.serverTick();
     }
 
-    public Optional<ResourceLocation> getEntityType() {
+    @Nullable
+    public EntityType<?> getEntityType() {
         return boundSoul.entityType();
-    }
-
-    public void setEntityType(ResourceLocation entityType) {
-        boundSoul = Soul.of(entityType);
     }
 
     @Override

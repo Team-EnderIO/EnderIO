@@ -57,8 +57,7 @@ public record EnderFluidFilter(NonNullList<FluidStack> matches, boolean isDenyLi
                 continue;
             }
 
-            if (shouldCompareComponents ? FluidStack.isSameFluid(match, stack)
-                    : FluidStack.isSameFluidSameComponents(match, stack)) {
+            if (shouldCompareComponents ? FluidStack.isSameFluidSameComponents(match, stack) : FluidStack.isSameFluid(match, stack)) {
                 return isDenyList ? FluidStack.EMPTY : stack;
             }
         }
