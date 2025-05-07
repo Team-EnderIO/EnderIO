@@ -23,9 +23,6 @@ import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -46,6 +43,10 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class DrainBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FluidTankUser {
     public static final String CONSUMED = "Consumed";
@@ -75,11 +76,6 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     @Override
-    public int getMaxRange() {
-        return 10;
-    }
-
-    @Override
     public ActionRange getActionRange() {
         return actionRange;
     }
@@ -94,6 +90,11 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
         if (level != null) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
+    }
+
+    @Override
+    public int getMaxRange() {
+        return 10;
     }
 
     @Override

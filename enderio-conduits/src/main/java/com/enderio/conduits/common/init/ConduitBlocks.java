@@ -4,7 +4,7 @@ import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.client.ConduitFacadeColor;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
-import com.enderio.conduits.common.conduit.block.ConduitBundleBlock;
+import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlock;
 import com.enderio.conduits.data.model.ConduitBlockState;
 import com.enderio.regilite.holder.RegiliteBlock;
 import com.enderio.regilite.registry.BlockRegistry;

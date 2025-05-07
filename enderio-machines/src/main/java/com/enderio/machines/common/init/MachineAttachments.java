@@ -7,11 +7,12 @@ import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.obelisk.AversionObeliskManager;
 import com.enderio.machines.common.obelisk.InhibitorObeliskManager;
 import com.enderio.machines.common.obelisk.RelocatorObeliskManager;
-import java.util.function.Supplier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import java.util.function.Supplier;
 
 public class MachineAttachments {
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister

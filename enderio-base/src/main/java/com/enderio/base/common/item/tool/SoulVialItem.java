@@ -8,6 +8,11 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.EntityCaptureUtils;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
@@ -35,22 +40,15 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
-
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID)
 public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
-    public static final ICapabilityProvider<ItemStack, Void, StoredEntityData> STORED_ENTITY_PROVIDER
-        = (stack, ctx) -> stack.get(EIODataComponents.STORED_ENTITY);
+    public static final ICapabilityProvider<ItemStack, Void, StoredEntityData> STORED_ENTITY_PROVIDER = (stack,
+            ctx) -> stack.get(EIODataComponents.STORED_ENTITY);
 
     public SoulVialItem(Properties pProperties) {
         super(pProperties);
@@ -65,11 +63,10 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        itemStack
-            .getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)
-            .getHealthState()
-            .ifPresent(health ->
-                tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB())));
+        itemStack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY)
+                .getHealthState()
+                .ifPresent(health -> tooltips.add(
+                        TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB())));
     }
 
     // endregion
@@ -77,16 +74,19 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     // region Interactions
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
+    public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget,
+            InteractionHand pUsedHand) {
         if (pPlayer.level().isClientSide) {
             return InteractionResult.FAIL;
         }
-        Optional<ItemStack> itemStack = catchEntity(pStack, pInteractionTarget, component -> pPlayer.displayClientMessage(component, true));
+        Optional<ItemStack> itemStack = catchEntity(pStack, pInteractionTarget,
+                component -> pPlayer.displayClientMessage(component, true));
         if (itemStack.isPresent()) {
             ItemStack filledVial = itemStack.get();
             ItemStack hand = pPlayer.getItemInHand(pUsedHand);
             if (hand.isEmpty()) {
-                hand.setCount(1); // Forge will fire the destroyItemEvent and vanilla replaces it to ItemStack.EMPTY if this isn't done
+                hand.setCount(1); // Forge will fire the destroyItemEvent and vanilla replaces it to
+                                  // ItemStack.EMPTY if this isn't done
                 pPlayer.setItemInHand(pUsedHand, filledVial);
             } else {
                 if (!pPlayer.addItem(filledVial)) {
@@ -110,27 +110,29 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
         if (player == null) {
             return InteractionResult.FAIL;
         }
-        return releaseEntity(pContext.getLevel(), pContext.getItemInHand(), pContext.getClickedFace(), pContext.getClickedPos(),
-            emptyVial -> player.setItemInHand(pContext.getHand(), emptyVial));
+        return releaseEntity(pContext.getLevel(), pContext.getItemInHand(), pContext.getClickedFace(),
+                pContext.getClickedPos(), emptyVial -> player.setItemInHand(pContext.getHand(), emptyVial));
     }
 
     /**
      * @return the filled vial
      */
-    private static Optional<ItemStack> catchEntity(ItemStack soulVial, LivingEntity entity, Consumer<Component> displayCallback) {
+    private static Optional<ItemStack> catchEntity(ItemStack soulVial, LivingEntity entity,
+            Consumer<Component> displayCallback) {
 
-        //Soul Vial is filled, so it can't capture
+        // Soul Vial is filled, so it can't capture
         Optional<StoredEntityData> entityData = getEntityData(soulVial);
         if (entityData.isPresent() && entityData.get().hasEntity()) {
             return Optional.empty();
         }
-        
+
         if (entity instanceof Player) {
             displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_PLAYER);
             return Optional.empty();
         }
 
-        EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils.getCapturableStatus((EntityType<? extends LivingEntity>) entity.getType(), entity);
+        EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils
+                .getCapturableStatus((EntityType<? extends LivingEntity>) entity.getType(), entity);
         if (status != EntityCaptureUtils.CapturableStatus.CAPTURABLE) {
             displayCallback.accept(status.errorMessage());
             return Optional.empty();
@@ -153,7 +155,8 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
         return Optional.of(filledVial);
     }
 
-    private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos, Consumer<ItemStack> emptyVialSetter) {
+    private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos,
+            Consumer<ItemStack> emptyVialSetter) {
         var storedEntity = filledVial.get(EIODataComponents.STORED_ENTITY);
 
         if (storedEntity != null && storedEntity.hasEntity()) {
@@ -228,7 +231,8 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     public static void onLivingInteract(PlayerInteractEvent.EntityInteractSpecific event) {
         ItemStack stack = event.getItemStack();
         if (stack.is(EIOItems.EMPTY_SOUL_VIAL.get())) {
-            if (event.getTarget() instanceof AbstractChestedHorse || event.getTarget() instanceof Villager || event.getTarget() instanceof WanderingTrader || event.getTarget() instanceof Wolf) {
+            if (event.getTarget() instanceof AbstractChestedHorse || event.getTarget() instanceof Villager
+                    || event.getTarget() instanceof WanderingTrader || event.getTarget() instanceof Wolf) {
                 stack.interactLivingEntity(event.getEntity(), (LivingEntity) event.getTarget(), event.getHand());
             }
         }
@@ -248,12 +252,13 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
         @Override
         protected ItemStack execute(BlockSource source, ItemStack stack) {
             BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
-            for (LivingEntity livingentity : source
-                    .level()
-                    .getEntitiesOfClass(LivingEntity.class, new AABB(blockpos), living -> !(living instanceof Player))) {
+            for (LivingEntity livingentity : source.level()
+                    .getEntitiesOfClass(LivingEntity.class, new AABB(blockpos),
+                            living -> !(living instanceof Player))) {
 
-                // Copy, consumeWithRemainder will shrink the stack.
-                Optional<ItemStack> filledVial = catchEntity(stack.copy(), livingentity, component -> {});
+                // Copy, consumeWithRemainder will shrink the originalStack.
+                Optional<ItemStack> filledVial = catchEntity(stack.copy(), livingentity, component -> {
+                });
                 if (filledVial.isPresent()) {
                     return this.consumeWithRemainder(source, stack, filledVial.get());
                 }

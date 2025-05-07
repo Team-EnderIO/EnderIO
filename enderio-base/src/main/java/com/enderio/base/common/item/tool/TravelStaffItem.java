@@ -9,6 +9,7 @@ import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
+import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -24,15 +25,13 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.ComponentEnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-import java.util.List;
-
 public class TravelStaffItem extends Item implements AdvancedTooltipProvider, CreativeTabVariants {
 
-    public static ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
-        (stack, v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY.get(), TravelStaffItem.getMaxEnergy());
+    public static ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (stack,
+            v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY.get(), TravelStaffItem.getMaxEnergy());
 
     public TravelStaffItem(Properties properties) {
-        super(properties);
+        super(properties.component(EIODataComponents.TRAVEL_ITEM, true));
     }
 
     @Override
@@ -50,7 +49,8 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, Cr
     @Override
     public InteractionResult useOn(UseOnContext context) {
         if (getActivationStatus(context.getItemInHand()).isBlock()) {
-            if (context.getPlayer() != null && tryPerformAction(context.getLevel(), context.getPlayer(), context.getItemInHand())) {
+            if (context.getPlayer() != null
+                    && tryPerformAction(context.getLevel(), context.getPlayer(), context.getItemInHand())) {
                 return InteractionResult.sidedSuccess(context.getLevel().isClientSide());
             }
 
@@ -62,10 +62,10 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, Cr
 
     private boolean tryPerformAction(Level level, Player player, ItemStack stack) {
         boolean isCreative = player.isCreative();
-        if (hasResources(stack) || isCreative) {
-            if (performAction(level, player,stack)) {
+        if (TravelHandler.hasResources(stack) || isCreative) {
+            if (performAction(this, level, player)) {
                 if (!level.isClientSide() && !isCreative) {
-                    consumeResources(stack);
+                    TravelHandler.consumeResources(stack);
                 }
 
                 return true;
@@ -81,14 +81,17 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, Cr
      * Perform your action
      * @return true if it was a success and you want to consume the resources
      */
-    public boolean performAction(Level level, Player player, ItemStack stack) {
+    public boolean performAction(Item item, Level level, Player player) {
         if (player.isShiftKeyDown()) {
             if (TravelHandler.shortTeleport(level, player)) {
-                player.getCooldowns().addCooldown(this, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
+                player.getCooldowns().addCooldown(item, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
                 return true;
             }
         } else {
             if (TravelHandler.blockTeleport(level, player)) {
+                player.getCooldowns().addCooldown(item, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
+                return true;
+            } else if (TravelHandler.interact(level, player)) {
                 player.getCooldowns().addCooldown(this, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
                 return true;
             }
@@ -98,14 +101,6 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, Cr
 
     public static int getMaxEnergy() {
         return BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_MAX_ENERGY.get();
-    }
-
-    public boolean hasResources(ItemStack stack) {
-        return ItemStackEnergy.hasEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get());
-    }
-
-    public void consumeResources(ItemStack stack) {
-        ItemStackEnergy.extractEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get(), false);
     }
 
     protected ActivationStatus getActivationStatus(ItemStack stack) {
@@ -141,8 +136,10 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, Cr
     }
 
     @Override
-    public void addCommonTooltips(ItemStack itemStack, @org.jetbrains.annotations.Nullable Player player, List<Component> tooltips) {
-        String energy = String.format("%,d", ItemStackEnergy.getEnergyStored(itemStack)) + "/" + String.format("%,d", ItemStackEnergy.getMaxEnergyStored(itemStack));
+    public void addCommonTooltips(ItemStack itemStack, @org.jetbrains.annotations.Nullable Player player,
+            List<Component> tooltips) {
+        String energy = String.format("%,d", ItemStackEnergy.getEnergyStored(itemStack)) + "/"
+                + String.format("%,d", ItemStackEnergy.getMaxEnergyStored(itemStack));
         tooltips.add(TooltipUtil.styledWithArgs(EIOLang.ENERGY_AMOUNT, energy));
     }
 
@@ -164,6 +161,16 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, Cr
         public boolean isAir() {
             return isAir;
         }
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return slotChanged || oldStack.getItem() != newStack.getItem();
+    }
+
+    @Override
+    public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
+        return oldStack.getItem() != newStack.getItem();
     }
 
 }

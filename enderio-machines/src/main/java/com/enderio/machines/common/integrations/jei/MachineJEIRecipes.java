@@ -9,14 +9,13 @@ import com.enderio.machines.common.blocks.vat.FermentingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.jei.util.WrappedEnchanterRecipe;
 import com.enderio.machines.common.souldata.EngineSoul;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class MachineJEIRecipes {
     private final RecipeManager recipeManager;
@@ -28,15 +27,6 @@ public class MachineJEIRecipes {
     }
 
     public List<RecipeHolder<AlloySmeltingRecipe>> getAlloySmeltingRecipes() {
-        var recipes = recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get())
-                .stream()
-                .filter(recipe -> !recipe.value().isSmelting())
-                .toList();
-
-        return recipes;
-    }
-
-    public List<RecipeHolder<AlloySmeltingRecipe>> getAlloySmeltingRecipesWithSmelting() {
         List<RecipeHolder<AlloySmeltingRecipe>> recipes = new ArrayList<>();
         recipes.addAll(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()));
         return recipes;

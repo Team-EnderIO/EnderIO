@@ -45,7 +45,7 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity<RelocatorObe
     public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .inputSlot((integer,
-                        itemStack) -> itemStack.getCapability(EIOCapabilities.Filter.ITEM) instanceof EntityFilter)
+                        itemStack) -> itemStack.getCapability(EIOCapabilities.ENTITY_FILTER) != null)
                 .slotAccess(FILTER)
                 .capacitor()
                 .build();
@@ -58,20 +58,14 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity<RelocatorObe
     }
 
     @Override
-    public int getMaxRange() {
-        return 32;
-    }
-
-    @Override
     public String getColor() {
         return MachinesConfig.CLIENT.BLOCKS.RELOCATOR_RANGE_COLOR.get();
     }
 
     public boolean handleSpawnEvent(FinalizeSpawnEvent event) {
-        if (FILTER.getItemStack(this).getCapability(EIOCapabilities.Filter.ITEM) instanceof EntityFilter entityFilter) {
-            if (!entityFilter.test(event.getEntity())) {
-                return false;
-            }
+        var entityFilter = FILTER.getItemStack(this).getCapability(EIOCapabilities.ENTITY_FILTER);
+        if (entityFilter != null && !entityFilter.test(event.getEntity())) {
+            return false;
         }
 
         if (isActive() && getAABB().contains(event.getX(), event.getY(), event.getZ())) {

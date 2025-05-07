@@ -11,7 +11,7 @@ public class TooltipUtil {
     /**
      * Style a component italic and gray
      */
-    public static Component style(MutableComponent component) {
+    public static MutableComponent style(MutableComponent component) {
         return component.withStyle(ChatFormatting.AQUA);
     }
 

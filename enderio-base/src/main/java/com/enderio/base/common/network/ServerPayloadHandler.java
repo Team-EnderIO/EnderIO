@@ -2,11 +2,9 @@ package com.enderio.base.common.network;
 
 import com.enderio.base.api.travel.TravelTarget;
 import com.enderio.base.api.travel.TravelTargetApi;
-import com.enderio.base.common.capability.IFilterCapability;
 import com.enderio.base.common.handler.TravelHandler;
-import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.menu.FilterSlot;
-import com.enderio.base.common.menu.FluidFilterSlot;
+import com.enderio.base.common.filter.FilterSlot;
+import com.enderio.base.common.filter.fluid.FluidFilterSlot;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -51,16 +49,6 @@ public class ServerPayloadHandler {
             }
 
             TravelHandler.blockTeleportTo(player.level(), player, target.get(), false);
-        });
-    }
-
-    public void handleFilterUpdate(FilterUpdatePacket packet, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            var resourceFilter = context.player().getMainHandItem().getCapability(EIOCapabilities.Filter.ITEM);
-            if (resourceFilter instanceof IFilterCapability<?> capability) {
-                capability.setNbt(packet.nbt());
-                capability.setInverted(packet.inverted());
-            }
         });
     }
 

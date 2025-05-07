@@ -4,6 +4,6 @@
   "enchantment": "minecraft:mending",
   "input": {
     "count": 1,
-    "item": "enderio:experience_rod"
+    "item": "enderio:void_vial"
   }
 }

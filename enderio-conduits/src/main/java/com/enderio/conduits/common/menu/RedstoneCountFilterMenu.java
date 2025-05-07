@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.menu;
 
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.conduits.common.network.CountFilterPacket;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
@@ -24,7 +25,7 @@ public class RedstoneCountFilterMenu extends AbstractContainerMenu {
     public RedstoneCountFilterMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ItemStack pStack) {
         super(pMenuType, pContainerId);
         this.stack = pStack;
-        var resourceFilter = pStack.getCapability(EIOCapabilities.Filter.ITEM);
+        var resourceFilter = pStack.getCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER);
         if (!(resourceFilter instanceof RedstoneCountFilter filter)) {
             throw new IllegalArgumentException();
         }

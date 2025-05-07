@@ -48,11 +48,6 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity<InhibitorObe
     }
 
     @Override
-    public int getMaxRange() {
-        return 32;
-    }
-
-    @Override
     public String getColor() {
         return MachinesConfig.CLIENT.BLOCKS.INHIBITOR_RANGE_COLOR.get();
     }

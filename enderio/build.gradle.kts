@@ -20,7 +20,7 @@ val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
 val cctMinecraftVersion: String by project
 val cctVersion: String by project
-val athenaVersion: String by project
+val stitchVersion: String by project
 val ae2Version: String by project
 val refinedstorageVersion: String by project
 val jadeFileId: String by project
@@ -50,8 +50,8 @@ dependencies {
     // TODO: Does not start on latest NeoForge
 //    runtimeOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge:$cctVersion")
 
-    // Athena ctm - renamed to "Stitch"
-    runtimeOnly("maven.modrinth:stitch:${athenaVersion}")
+    //Athena ctm
+    runtimeOnly("maven.modrinth:stitch:${stitchVersion}")
 
     // AE2
     runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
@@ -194,11 +194,11 @@ if (getReleaseType() != null) {
             setJavaVersions(JavaVersion.VERSION_21)
 
             curseDepends {
-                optional("jei", /*"patchouli",*/ "athena", "applied-energistics-2", "mekanism", "cc-tweaked")
+                optional("jei", /*"patchouli",*/ "stitch", "applied-energistics-2", "mekanism", "cc-tweaked")
             }
 
             modrinthDepends {
-                optional("jei", "athena-ctm", "ae2", "mekanism", "cc-tweaked")
+                optional("jei", "stitch", "ae2", "mekanism", "cc-tweaked")
             }
         }
     } else {

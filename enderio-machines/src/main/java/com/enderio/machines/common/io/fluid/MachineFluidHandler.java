@@ -2,6 +2,10 @@ package com.enderio.machines.common.io.fluid;
 
 import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.core.CoreNBTKeys;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.IntConsumer;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -13,11 +17,6 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.IntConsumer;
-
 /**
  * MachineFluidStorage takes a list of fluid tanks and handles IO for them all.
  */
@@ -27,11 +26,13 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     public static final String TANK_CONTENTS = "Contents";
     private final IOConfigurable config;
     private final MachineTankLayout layout;
-    private final Map<Integer, MachineFluidTank> tanks =  new HashMap<>();
+    private final Map<Integer, MachineFluidTank> tanks = new HashMap<>();
     private final List<FluidStack> stacks;
 
-    // Not sure if we need this but might be useful to update recipe/task if tank is filled.
-    private IntConsumer changeListener = i -> {};
+    // Not sure if we need this but might be useful to update recipe/task if tank is
+    // filled.
+    private IntConsumer changeListener = i -> {
+    };
 
     public MachineFluidHandler(IOConfigurable config, MachineTankLayout layout) {
         this.config = config;
@@ -51,7 +52,8 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         return layout;
     }
 
-    //Not a good idea to use this method. Tank Access should be the way to access tanks
+    // Not a good idea to use this method. Tank Access should be the way to access
+    // tanks
     @Deprecated
     public final MachineFluidTank getTank(int tank) {
         if (tank > getTanks()) {
@@ -162,7 +164,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
             return 0;
         }
 
-        // Copy the fluid stack and prepare to distribute it across all tanks
+        // Copy the fluid originalStack and prepare to distribute it across all tanks
         FluidStack resourceLeft = resource.copy();
         int totalFilled = 0;
 
@@ -251,7 +253,8 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         return FluidStack.EMPTY;
     }
 
-    protected void onContentsChanged(int slot) {}
+    protected void onContentsChanged(int slot) {
+    }
 
     @Override
     public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {

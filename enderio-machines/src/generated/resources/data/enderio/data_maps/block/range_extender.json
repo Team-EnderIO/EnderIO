@@ -1,0 +1,10 @@
+{
+  "values": {
+    "enderio:wireless_charger_antenna": {
+      "#enderio:range_extender": 16
+    },
+    "enderio:wireless_charger_antenna_advanced": {
+      "#enderio:range_extender": 32
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": [
+      {
+        "item": "minecraft:paper"
+      },
+      {
+        "item": "enderio:black_paper"
+      }
+    ],
+    "R": {
+      "tag": "c:dusts/redstone"
+    },
+    "Z": {
+      "item": "enderio:z_logic_controller"
+    }
+  },
+  "pattern": [
+    "RPR",
+    "PZP",
+    "RPR"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:advanced_item_filter"
+  }
+}

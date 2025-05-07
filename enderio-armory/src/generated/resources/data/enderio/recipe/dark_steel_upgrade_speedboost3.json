@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:dark_steel_upgrade_blank"
+    },
+    {
+      "item": "enderio:vibrant_gear"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:dark_steel_upgrade_speedboost3"
+  }
+}

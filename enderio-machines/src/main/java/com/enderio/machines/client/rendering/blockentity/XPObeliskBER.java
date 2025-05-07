@@ -31,7 +31,7 @@ public class XPObeliskBER implements BlockEntityRenderer<XPObeliskBlockEntity> {
         float f1 = (float) (Mth.atan2(position.z - blockEntity.getBlockPos().getZ() - 0.5D,
                 position.x - blockEntity.getBlockPos().getX() - 0.5D) * 180.0f / Math.PI + 90);
         poseStack.mulPose(Axis.YP.rotationDegrees(-f1));
-        ItemStack stack = new ItemStack(EIOItems.EXPERIENCE_ROD.get());
+        ItemStack stack = new ItemStack(EIOItems.VOID_VIAL.get());
         BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, blockEntity.getLevel(), null, 0);
         minecraft.getItemRenderer()
                 .render(stack, ItemDisplayContext.GUI, true, poseStack, buffer, packedLight, packedOverlay, bakedmodel);

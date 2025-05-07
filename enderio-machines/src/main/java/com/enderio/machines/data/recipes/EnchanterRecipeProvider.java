@@ -67,7 +67,7 @@ public class EnchanterRecipeProvider extends RecipeProvider {
                 recipeOutput);
         build(enchantmentRegistry, Enchantments.UNBREAKING, SizedIngredient.of(Tags.Items.OBSIDIANS, 1), 1,
                 recipeOutput);
-        build(enchantmentRegistry, Enchantments.MENDING, SizedIngredient.of(EIOItems.EXPERIENCE_ROD.get(), 1), 1,
+        build(enchantmentRegistry, Enchantments.MENDING, SizedIngredient.of(EIOItems.VOID_VIAL.get(), 1), 1,
                 recipeOutput);
         build(enchantmentRegistry, Enchantments.FORTUNE, SizedIngredient.of(Tags.Items.GEMS_EMERALD, 1), 1,
                 recipeOutput);

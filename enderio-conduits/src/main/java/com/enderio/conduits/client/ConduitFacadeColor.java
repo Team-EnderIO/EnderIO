@@ -2,8 +2,7 @@ package com.enderio.conduits.client;
 
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
-import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
-import java.util.Optional;
+import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
@@ -11,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -27,14 +25,16 @@ public class ConduitFacadeColor implements BlockColor, ItemColor {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof ConduitBundleBlockEntity conduitBundleBlock) {
 
-                Optional<Block> facade = conduitBundleBlock.getBundle().facade();
+                if (conduitBundleBlock.hasFacade()) {
+                    var facade = conduitBundleBlock.getFacadeBlock();
 
-                if (facade.isPresent() && FacadeHelper.areFacadesVisible()) {
-                    int color = Minecraft.getInstance()
-                            .getBlockColors()
-                            .getColor(facade.get().defaultBlockState(), level, pos, tintIndex);
-                    if (color != -1) {
-                        return color;
+                    if (FacadeHelper.areFacadesVisible()) {
+                        int color = Minecraft.getInstance()
+                                .getBlockColors()
+                                .getColor(facade.defaultBlockState(), level, pos, tintIndex);
+                        if (color != -1) {
+                            return color;
+                        }
                     }
                 }
             }

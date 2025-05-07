@@ -1,13 +1,9 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.conduits.api.ConduitNode;
-import com.enderio.conduits.common.init.Conduits;
+import com.enderio.conduits.api.network.node.ConduitNode;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-public record EnergyConduitStorage(
-    int transferRate,
-    ConduitNode node
-) implements IEnergyStorage {
+public record EnergyConduitStorage(boolean isMutable, int transferRate, ConduitNode node) implements IEnergyStorage {
 
     private static final int ENERGY_BUFFER_SCALER = 4;
 
@@ -17,7 +13,7 @@ public record EnergyConduitStorage(
             return 0;
         }
 
-        EnergyConduitNetworkContext context = node.getParentGraph().getOrCreateContext(Conduits.ContextSerializers.ENERGY.get());
+        var context = node.getNetwork().getOrCreateContext(EnergyConduitNetworkContext.TYPE);
 
         // Cap to transfer rate.
         toReceive = Math.min(transferRate(), toReceive);
@@ -37,7 +33,7 @@ public record EnergyConduitStorage(
 
     @Override
     public int getEnergyStored() {
-        EnergyConduitNetworkContext context = node.getParentGraph().getContext(Conduits.ContextSerializers.ENERGY.get());
+        var context = node.getNetwork().getContext(EnergyConduitNetworkContext.TYPE);
         if (context == null) {
             return 0;
         }
@@ -48,8 +44,9 @@ public record EnergyConduitStorage(
     @Override
     public int getMaxEnergyStored() {
         // Capacity is transfer rate + nodeCount * transferRatePerTick / 2 (expanded).
-        // This ensures at least the transfer rate of the cable is available, but capacity doesn't grow outrageously.
-        int nodeCount = node.getParentGraph().getNodes().size();
+        // This ensures at least the transfer rate of the cable is available, but
+        // capacity doesn't grow outrageously.
+        int nodeCount = node.getNetwork().getNodes().size();
 
         // The maximum number of nodes before the network capacity is INT_MAX.
         int maxNodesBeforeLimit = Integer.MAX_VALUE / (transferRate() / ENERGY_BUFFER_SCALER) - ENERGY_BUFFER_SCALER;
@@ -67,9 +64,10 @@ public record EnergyConduitStorage(
     }
 
     // The block will not expose this capability unless it can be extracted from
-    // This means we don't have to worry about checking if we can extract at this point.
+    // This means we don't have to worry about checking if we can extract at this
+    // point.
     @Override
     public boolean canReceive() {
-        return node.getParentGraph() != null;
+        return node.getNetwork() != null && isMutable;
     }
 }

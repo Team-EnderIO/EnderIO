@@ -1,15 +1,23 @@
 package com.enderio.armory.common.item.darksteel;
 
+import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryItems;
-import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.ForkUpgrade;
-import com.enderio.armory.common.capability.DarkSteelUpgradeable;
+import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
+import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
+import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.BlockUtil;
 import com.enderio.core.common.util.TooltipUtil;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
@@ -27,47 +35,50 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, CreativeTabVariants {
 
+    static {
+        DarkSteelUpgradeRegistry.instance()
+                .registerUpgradesForItem(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_AXE, EmpoweredUpgrade.NAME,
+                        ForkUpgrade.NAME, DirectUpgrade.NAME);
+    }
+
     public DarkSteelAxeItem(Properties pProperties) {
-        super(ArmoryItems.DARK_STEEL_TIER, pProperties
-            .attributes(createAttributes(ArmoryItems.DARK_STEEL_TIER, 5, -3)));
+        super(ArmoryItems.DARK_STEEL_TIER,
+                pProperties.attributes(createAttributes(ArmoryItems.DARK_STEEL_TIER, 5, -3)));
     }
 
     @Override
     public void setDamage(final ItemStack stack, final int newDamage) {
-        int finalDamage = getEmpoweredUpgrade(stack).map(empoweredUpgrade -> empoweredUpgrade.adjustDamage(getDamage(stack), newDamage)).orElse(newDamage);
-        super.setDamage(stack, finalDamage);
+        super.setDamage(stack, EmpoweredUpgrade.getAdjustedDamage(stack, newDamage));
     }
 
     @Override
     public float getDestroySpeed(ItemStack pStack, BlockState pState) {
         final float baseSpeed = super.getDestroySpeed(pStack, pState);
-        return getEmpoweredUpgrade(pStack).map(empoweredUpgrade -> empoweredUpgrade.adjustDestroySpeed(baseSpeed)).orElse(baseSpeed);
+        return getEmpoweredUpgrade(pStack)
+                .map(empoweredUpgrade -> empoweredUpgrade.adjustDestroySpeed(baseSpeed, pStack))
+                .orElse(baseSpeed);
     }
 
     @Override
-    public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
+    public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos,
+            LivingEntity pEntityLiving) {
         if (pEntityLiving instanceof Player player) {
-            if (pEntityLiving.isCrouching() && pState.is(BlockTags.LOGS) && ItemStackEnergy.getEnergyStored(pStack) > 0) {
+            if (pEntityLiving.isCrouching() && pState.is(BlockTags.LOGS)
+                    && ItemStackEnergy.getEnergyStored(pStack) > 0) {
 
-                int maxSearchSize = 400; //put an upper limit on search size
+                int maxSearchSize = 400; // put an upper limit on search size
                 Set<BlockPos> chopCandidates = new HashSet<>();
                 collectTreeBlocks(pLevel, pPos, new HashSet<>(), chopCandidates, maxSearchSize, pState.getBlock());
                 chopCandidates.remove(pPos); // don't double harvest this guy
 
                 int energyPerBlock = ArmoryConfig.COMMON.DARK_STEEL_AXE_ENERGY_PER_FELLED_LOG.get();
-                int maxBlocks = ItemStackEnergy.getEnergyStored(pStack)/energyPerBlock;
+                int maxBlocks = ItemStackEnergy.getEnergyStored(pStack) / energyPerBlock;
 
                 Collection<BlockPos> toChop = chopCandidates;
-                if(maxBlocks < chopCandidates.size()) {
-                    //If not enough power to get them all cut top to bottom to avoid floating logs
+                if (maxBlocks < chopCandidates.size()) {
+                    // If not enough power to get them all cut top to bottom to avoid floating logs
                     List<BlockPos> orderedChopList = new ArrayList<>(chopCandidates);
                     orderedChopList.sort((o1, o2) -> Integer.compare(o2.getY(), o1.getY()));
                     toChop = orderedChopList;
@@ -79,22 +90,17 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
                     if (BlockUtil.removeBlock(pLevel, player, pStack, chopPos)) {
                         energyUse += energyPerBlock;
                         chopCount++;
-                        if(chopCount >= maxBlocks) {
+                        if (chopCount >= maxBlocks) {
                             break;
                         }
                     }
                 }
-                if (energyUse  > 0) {
+                if (energyUse > 0) {
                     ItemStackEnergy.extractEnergy(pStack, energyUse, false);
                 }
             }
         }
         return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);
-    }
-
-    @Override
-    public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return canHarvest(stack, state)/* && TierSortingRegistry.isCorrectTierForDrops(getTier(), state)*/;
     }
 
     @Override
@@ -107,15 +113,22 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
 
     @Override
     public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
-        return super.canPerformAction(stack,itemAbility) || (hasFork(stack) && ItemAbilities.DEFAULT_HOE_ACTIONS.contains(itemAbility));
+        return super.canPerformAction(stack, itemAbility)
+                || (hasFork(stack) && ItemAbilities.DEFAULT_HOE_ACTIONS.contains(itemAbility));
     }
 
-    private boolean canHarvest(ItemStack stack, BlockState state) {
-        return state.is(BlockTags.MINEABLE_WITH_AXE) || (state.is(BlockTags.MINEABLE_WITH_HOE) && hasFork(stack));
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return slotChanged || oldStack.getItem() != newStack.getItem();
+    }
+
+    @Override
+    public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
+        return oldStack.getItem() != newStack.getItem();
     }
 
     private boolean hasFork(ItemStack stack) {
-        return DarkSteelUpgradeable.hasUpgrade(stack, ForkUpgrade.NAME);
+        return DarkSteelHelper.hasUpgrade(stack, ForkUpgrade.NAME);
     }
 
     /**
@@ -127,7 +140,8 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
      * @param maxBlocks the maximum number of blocks that can be checked before the recursion ill end
      * @param targetBock the type of block the tree is made of, e.g. oak log
      */
-    private void collectTreeBlocks(Level level, BlockPos pos, Set<BlockPos> checkedPos, Set<BlockPos> toChop, int maxBlocks, Block targetBock) {
+    private void collectTreeBlocks(Level level, BlockPos pos, Set<BlockPos> checkedPos, Set<BlockPos> toChop,
+            int maxBlocks, Block targetBock) {
         if (toChop.size() >= maxBlocks || checkedPos.contains(pos)) {
             return;
         }
@@ -157,18 +171,11 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
 
     @Override
     public void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips, boolean isDetailed) {
-        if(isDetailed && getEmpoweredUpgrade(itemStack).isPresent()) {
-            tooltips.add(TooltipUtil.withArgs(ArmoryLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, ArmoryConfig.COMMON.EMPOWERED_EFFICIENCY_BOOST.get()));
+        if (isDetailed && getEmpoweredUpgrade(itemStack).isPresent()) {
+            tooltips.add(TooltipUtil.withArgs(ArmoryLang.DS_UPGRADE_EMPOWERED_EFFICIENCY,
+                    ArmoryConfig.COMMON.EMPOWERED_EFFICIENCY_BOOST.get()));
         }
-
         IDarkSteelItem.super.addCurrentUpgradeTooltips(itemStack, tooltips, isDetailed);
-    }
-
-    // region Common for all tools
-
-    @Override
-    public boolean isFoil(ItemStack pStack) {
-        return DarkSteelUpgradeable.hasUpgrade(pStack, EmpoweredUpgrade.NAME);
     }
 
     @Override
@@ -177,10 +184,12 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, Creativ
         modifier.accept(createFullyUpgradedStack(this));
     }
 
+    // region Common for all tools
+
+    public boolean isFoil(ItemStack pStack) {
+        return DarkSteelHelper.hasUpgrade(pStack, EmpoweredUpgrade.NAME) || super.isFoil(pStack);
+    }
+
     // endregion
 
-    @Override
-    public boolean isBarVisible(ItemStack pStack) {
-        return isDurabilityBarVisible(pStack);
-    }
 }

@@ -1,15 +1,13 @@
 package com.enderio.armory.api.capability;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-
 import java.util.Collection;
 import java.util.Optional;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
-public interface IDarkSteelUpgrade extends INBTSerializable<Tag> {
+public interface IDarkSteelUpgrade {// extends INBTSerializable<Tag> {
 
     Component getDisplayName();
 
@@ -43,6 +41,14 @@ public interface IDarkSteelUpgrade extends INBTSerializable<Tag> {
     }
 
     /**
+     * If this upgrade has multiple tiers (eg, level 1, 2, 3 etc) return the current tier.
+     * @return the current tier
+     */
+    default Optional<? extends IUpgradeTier> getTier() {
+        return Optional.empty();
+    }
+
+    /**
      * If an upgrade has multiple tiers, checks that the current upgrade can be replaced by the supplied upgrade
      * @param upgrade the upgrade to be checked
      * @return res
@@ -51,13 +57,16 @@ public interface IDarkSteelUpgrade extends INBTSerializable<Tag> {
         return false;
     }
 
-    @Override
-    default Tag serializeNBT(HolderLookup.Provider provider) {
-        return StringTag.valueOf(getName());
+    default CompoundTag serializeNBT() {
+        return new CompoundTag();
     }
 
-    @Override
-    default void deserializeNBT(HolderLookup.Provider provider, Tag nbt) {
+    default void deserializeNBT(Tag nbt) {
     }
 
+    default void onAddedToItem(ItemStack stack) {
+    }
+
+    default void onRemovedFromItem(ItemStack stack) {
+    }
 }

@@ -19,12 +19,6 @@ public class ClientPayloadHandler {
         });
     }
 
-    public void handleLightUpdate(ServerToClientLightUpdate message, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            Minecraft.getInstance().level.setBlock(message.pos(), message.state(), 3);
-        });
-    }
-
     public void handleAddTravelTarget(TravelTargetUpdatedPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();

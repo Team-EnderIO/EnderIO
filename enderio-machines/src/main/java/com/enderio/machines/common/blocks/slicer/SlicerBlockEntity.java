@@ -96,7 +96,7 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
                 .slotAccess(AXE)
                 .inputSlot((slot, stack) -> stack.getItem() instanceof ShearsItem)
                 .slotAccess(SHEARS)
-                .setStackLimit(64) // Reset stack limit
+                .setStackLimit(64) // Reset originalStack limit
                 .outputSlot()
                 .slotAccess(OUTPUT)
                 .capacitor()
