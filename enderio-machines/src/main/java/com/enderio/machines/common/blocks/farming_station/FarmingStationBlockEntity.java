@@ -24,6 +24,11 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.souldata.FarmSoul;
 import com.mojang.authlib.GameProfile;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -39,6 +44,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -48,14 +54,8 @@ import net.neoforged.neoforge.common.SpecialPlantable;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.ticket.AABBTicket;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
 ;
 
@@ -78,10 +78,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     public static final MultiSlotAccess BONEMEAL = new MultiSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
 
-    // TODO One fake player for all? Or one for each machine?
-    public static final FakePlayer FARM_PLAYER = new FakePlayer(ServerLifecycleHooks.getCurrentServer().overworld(),
-            new GameProfile(UUID.fromString("7b2621b4-83fb-11ee-b962-0242ac120002"), "enderio:farm"));
-
     private List<BlockPos> positions;
     private int currentIndex = 0;
     private int consumed = 0;
@@ -98,9 +94,23 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     private ActionRange actionRange = DEFAULT_RANGE;
 
+    private FakePlayer farmPlayer;
+
     public FarmingStationBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.FARMING_STATION.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
+    }
+
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        if (level instanceof ServerLevel serverLevel) {
+            if (this.getMachineOwner() == null) {
+                this.setMachineOwner(UUID.randomUUID()); // Fallback
+            }
+            farmPlayer = FakePlayerFactory.get(serverLevel,
+                    new GameProfile(getMachineOwner(), "enderio:farm:" + worldPosition));
+        }
     }
 
     @Override
@@ -373,7 +383,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public FakePlayer getPlayer() {
-        return FARM_PLAYER;
+        return farmPlayer;
     }
 
     @Override

@@ -74,11 +74,11 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         guiGraphics.drawString(font, EIOLang.RANGE, imageWidth - 6 - font.width(EIOLang.RANGE), 16 + 8, 4210752, false);
 
-//        guiGraphics.drawString(font, EIOLang.MAX_RANGE, imageWidth / 2 - font.width(EIOLang.MAX_RANGE) / 2, 5, 0,
-//            false);
-//        String maxRange = getMenu().getBlockEntity().getMaxRange() + "";
-//        guiGraphics.drawString(font, maxRange, imageWidth / 2 - font.width(maxRange) / 2, 5 + font.lineHeight + 3, 0,
-//            false);
+        guiGraphics.drawString(font, EIOLang.MAX_RANGE, imageWidth / 2 - font.width(EIOLang.MAX_RANGE) / 2, 5, 0,
+                false);
+        String maxRange = getMenu().getMaxRange() + "";
+        guiGraphics.drawString(font, maxRange, imageWidth / 2 - font.width(maxRange) / 2, 5 + font.lineHeight + 3, 0,
+                false);
 
         if (MachineLang.OBELISK_UPKEEP.getContents() instanceof TranslatableContents translatableContents) {
             MutableComponent comp = Component.translatable(translatableContents.getKey(),

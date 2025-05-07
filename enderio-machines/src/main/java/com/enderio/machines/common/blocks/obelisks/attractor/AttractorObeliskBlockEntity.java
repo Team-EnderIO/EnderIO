@@ -26,7 +26,6 @@ import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.monster.Slime;
-import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -35,6 +34,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.jetbrains.annotations.Nullable;
@@ -48,12 +48,13 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     private static final LinearScalable RANGE = new LinearScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ATTRACTOR_RANGE);
 
-    private Vec3 targetPos = new Vec3(0, 0, 0);
-    private GameProfile fakePlayerID;
+    private final Vec3 targetPos;
+    private FakePlayer fakePlayer;
 
     public AttractorObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.ATTRACTOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, true);
+        targetPos = new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
     }
 
     @Override
@@ -91,8 +92,12 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     public void setLevel(Level level) {
         super.setLevel(level);
         if (level instanceof ServerLevel sl) {
-            targetPos = new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
-            fakePlayerID = new GameProfile(UUID.randomUUID(), "attractor" + targetPos);
+            if (this.getMachineOwner() == null) {
+                this.setMachineOwner(UUID.randomUUID()); // Fallback
+            }
+            fakePlayer = FakePlayerFactory.get(sl,
+                    new GameProfile(getMachineOwner(), "enderio:attractor:" + worldPosition));
+            fakePlayer.setPos(targetPos.x, targetPos.y, targetPos.z);
         }
     }
 
@@ -120,8 +125,7 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
 
         List<Mob> filteredEntities = level.getEntities(EntityTypeTest.forClass(Mob.class), aabb, filter);
         for (Mob mob : filteredEntities) {
-            if (!MachinesConfig.COMMON.ATTRACTOR_PULL_BOSSES.get()
-                    && (mob instanceof WitherBoss || mob instanceof Warden)) {
+            if (!MachinesConfig.COMMON.ATTRACTOR_PULL_BOSSES.get() && mob.getType().is(Tags.EntityTypes.BOSSES)) {
                 // ignore
             } else if (mob instanceof WitherBoss) {
                 mob.goalSelector.disableControlFlag(Goal.Flag.TARGET);
@@ -144,8 +148,6 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
 
     private void setTarget(Mob mob) {
         assert level != null;
-        FakePlayer fakePlayer = FakePlayerFactory.get((ServerLevel) level, fakePlayerID);
-        fakePlayer.setPos(targetPos.x, targetPos.y, targetPos.z);
         mob.setTarget(fakePlayer);
     }
 
