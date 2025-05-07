@@ -373,6 +373,8 @@ public class EIOItems {
 
     // region Items
 
+    // Soul vial uses a read-only ISoulBindable.
+    // This is because the soul vial is a storage which can be used for binding, but is not directly bound to.
     public static final RegiliteItem<SoulVialItem> SOUL_VIAL = groupedItem("soul_vial", SoulVialItem::new,
             EIOCreativeTabs.SOULS).setTab(EIOCreativeTabs.GEAR)
                     .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
@@ -381,7 +383,7 @@ public class EIOItems {
                             .predicate(SoulVialItem.FILLED_MODEL_PROPERTY, 1)
                             .model(prov.basicItem(EnderIO.loc("soul_vial_filled")))
                             .end())
-                    .addCapability(EIOCapabilities.SoulBindable.ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER)
+                    .addCapability(EIOCapabilities.SoulBindable.ITEM, SoulCapabilityProviders.READ_ONLY_COMPONENT_SOUL_BINDABLE_PROVIDER)
                     .addCapability(EIOCapabilities.SoulHandler.ITEM, SoulCapabilityProviders.SINGLE_COMPONENT_SOUL_HANDLER_PROVIDER);
 
     public static final RegiliteItem<EnderiosItem> ENDERIOS = ITEM_REGISTRY

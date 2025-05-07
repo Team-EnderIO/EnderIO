@@ -7,7 +7,6 @@ import org.jetbrains.annotations.ApiStatus;
 /**
  * Intended for items or blocks which support storage of many souls.
  * Can also be implemented by the soul vial for storage interop.
- * <br/>
  * @see ISoulBindable for items or blocks that can be bound to a single soul.
  */
 @ApiStatus.Experimental

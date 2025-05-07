@@ -75,11 +75,10 @@ public class SoulBoundUtils {
      * If the binding fails, the method returns an empty {@link Optional}.
      * If the soul is successfully bound, the method returns the original {@code itemStack}.
      *
-     * @param itemStack The item stack that should have the soul bound to it. This item must implement
-     *                  or provide the {@link EIOCapabilities.SoulBindable} capability.
+     * @param itemStack The item stack that should have the soul bound to it.
      * @param soul      The soul to be bound to the {@code itemStack}.
-     * @return An {@link Optional} containing the original {@code itemStack} if binding was successful,
-     *         or an empty {@link Optional} if binding is not possible or failed.
+     * @return An {@link Optional} containing the original {@code itemStack} if binding was successful or is not possible,
+     *         or an empty {@link Optional} if binding failed.
      */
     public static Optional<ItemStack> getBoundIfCapable(ItemStack itemStack, Soul soul) {
         var soulBindable = itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM);

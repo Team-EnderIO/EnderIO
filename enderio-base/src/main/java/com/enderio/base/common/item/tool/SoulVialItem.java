@@ -79,19 +79,31 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     }
 
     @Override
+    public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
+        // Add entity name
+        var soul = itemStack.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
+        if (!soul.isEmpty()) {
+            tooltips.add(TooltipUtil.style(Component.translatable(soul.entityType().getDescriptionId())));
+        }
+    }
+
+    @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
+        var soul = itemStack.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
+        if (soul.isEmpty()) {
+            return;
+        }
+
+        // Try add entity health
         float maxHealth = itemStack.getOrDefault(EIODataComponents.ENTITY_MAX_HEALTH, 0f);
         if (maxHealth <= 0) {
             return;
         }
 
-        var soul = SoulBoundUtils.getBoundSoul(itemStack);
-        if (soul.hasEntity()) {
-            var entityTag = soul.getEntityTag();
-            if (entityTag.contains(KEY_HEALTH)) {
-                float health = entityTag.getFloat(KEY_HEALTH);
-                tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health, maxHealth));
-            }
+        var entityTag = soul.getEntityTag();
+        if (entityTag.contains(KEY_HEALTH)) {
+            float health = entityTag.getFloat(KEY_HEALTH);
+            tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health, maxHealth));
         }
     }
 

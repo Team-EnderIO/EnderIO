@@ -6,7 +6,6 @@ import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Intended for items that can be soul-bound, like machines or single-soul things like vials.
- * <br/>
  * @see ISoulHandler for soul storage handling.
  */
 @ApiStatus.Experimental
