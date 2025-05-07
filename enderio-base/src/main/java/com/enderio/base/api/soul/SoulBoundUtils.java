@@ -8,9 +8,18 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Optional;
 
+/**
+ * Some helper methods for interacting with {@link ISoulBindable} capabilities.
+ */
 @ApiStatus.AvailableSince("8.0")
 @Experimental
 public class SoulBoundUtils {
+    /**
+     * Test whether the {@code itemStack} supports soul binding.
+     * @implNote This tests both whether the {@code itemStack} supports the capability and that {@link ISoulBindable#canBind()} is true.
+     * @param itemStack the item to test.
+     * @return whether the item can be bound.
+     */
     public static boolean canBindSoul(ItemStack itemStack) {
         var soulBindable = itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
         if (soulBindable == null) {
@@ -19,6 +28,13 @@ public class SoulBoundUtils {
 
         return soulBindable.canBind();
     }
+
+    /**
+     * Test whether the {@code soul} can be bound to the {@code itemStack}.
+     * @param itemStack the item stack to bind to.
+     * @param soul the soul to test.
+     * @return whether it can be bound.
+     */
     public static boolean canBindSoul(ItemStack itemStack, Soul soul) {
         var soulBindable = itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
         if (soulBindable == null) {
@@ -28,6 +44,11 @@ public class SoulBoundUtils {
         return soulBindable.canBind() && soulBindable.isSoulValid(soul);
     }
 
+    /**
+     * Get the soul bound to the {@code itemStack} or {@link Soul#EMPTY}.
+     * @param itemStack the stack to get a soul for.
+     * @return the bound soul, or {@link Soul#EMPTY} if there is no soul bound.
+     */
     public static Soul getBoundSoul(ItemStack itemStack) {
         var soulBindable = itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
         if (soulBindable == null) {
@@ -37,6 +58,11 @@ public class SoulBoundUtils {
         return soulBindable.getBoundSoul();
     }
 
+    /**
+     * Whether the {@code itemStack} has a soul bound to it.
+     * @param itemStack the stack to check.
+     * @return whether there is a bound soul.
+     */
     public static boolean isBound(ItemStack itemStack) {
         var soulBindable = itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
         if (soulBindable == null) {
@@ -46,6 +72,12 @@ public class SoulBoundUtils {
         return soulBindable.hasSoul();
     }
 
+    /**
+     * Attempt to bind a {@code soul} to the {@code itemStack}.
+     * @param itemStack the stack to bind to.
+     * @param soul the soul to be bound.
+     * @return whether the binding was successful
+     */
     public static boolean tryBindSoul(ItemStack itemStack, Soul soul) {
         var soulBindable = itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
         if (soulBindable == null) {
@@ -60,6 +92,12 @@ public class SoulBoundUtils {
         return tryBindSoul(soulBindable, soul);
     }
 
+    /**
+     * Attempt to bind a {@code soul} to the {@code soulBindable}.
+     * @param soulBindable the object to bind to.
+     * @param soul the soul to be bound.
+     * @return whether the binding was successful
+     */
     public static boolean tryBindSoul(ISoulBindable soulBindable, Soul soul) {
         if (!soulBindable.canBind() || !soulBindable.isSoulValid(soul)) {
             return false;
