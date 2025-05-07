@@ -4,7 +4,6 @@ import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.LinearScalable;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.filter.EntityFilter;
-import com.enderio.base.api.filter.ResourceFilter;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
@@ -14,6 +13,8 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.obelisk.ObeliskAreaManager;
 import com.mojang.authlib.GameProfile;
+import java.util.List;
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,9 +37,6 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.UUID;
 
 public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObeliskBlockEntity> {
 
@@ -66,8 +64,7 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     @Override
     public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-                .inputSlot((integer,
-                        itemStack) -> itemStack.getCapability(EIOCapabilities.Filter.ITEM) instanceof EntityFilter)
+                .inputSlot((integer, itemStack) -> itemStack.getCapability(EIOCapabilities.ENTITY_FILTER) != null)
                 .slotAccess(FILTER)
                 .capacitor()
                 .build();
@@ -118,13 +115,12 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
         if (aabb == null) {
             return;
         }
-        @Nullable
-        ResourceFilter cap = FILTER.getItemStack(this).getCapability(EIOCapabilities.Filter.ITEM);
-        if (!(cap instanceof EntityFilter filter)) {
+        EntityFilter filter = getEntityFilter();
+        if (filter == null) {
             return;
         }
-
-        List<Mob> filteredEntities = level.getEntities(EntityTypeTest.forClass(Mob.class), aabb, filter);
+        List<Mob> filteredEntities = level.getEntities(EntityTypeTest.forClass(Mob.class), aabb,
+                mob -> filter.test(mob));
         for (Mob mob : filteredEntities) {
             if (!MachinesConfig.COMMON.ATTRACTOR_PULL_BOSSES.get() && mob.getType().is(Tags.EntityTypes.BOSSES)) {
                 // ignore

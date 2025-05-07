@@ -104,10 +104,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
 
     @Nullable
     protected EntityFilter getEntityFilter() {
-        if (FILTER.getItemStack(this).getCapability(EIOCapabilities.Filter.ITEM) instanceof EntityFilter filter) {
-            return filter;
-        }
-        return null;
+        return FILTER.getItemStack(this).getCapability(EIOCapabilities.ENTITY_FILTER);
     }
 
     @Override

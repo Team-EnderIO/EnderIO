@@ -4,6 +4,7 @@ import com.enderio.base.client.gui.widget.EIOCommonWidgets;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
@@ -13,8 +14,6 @@ import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -79,11 +78,9 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
         guiGraphics.drawString(font, maxRange, imageWidth / 2 - font.width(maxRange) / 2, 5 + font.lineHeight + 3, 0,
                 false);
 
-        if (MachineLang.OBELISK_UPKEEP.getContents() instanceof TranslatableContents translatableContents) {
-            MutableComponent comp = Component.translatable(translatableContents.getKey(),
-                    getMenu().getBlockEntity().getPerTickEnergyCost());
-            guiGraphics.drawString(font, comp, imageWidth / 2 - font.width(EIOLang.MAX_RANGE) / 2, 62, 0, false);
-        }
+        guiGraphics.drawString(font,
+                TooltipUtil.withArgs(MachineLang.OBELISK_UPKEEP, getMenu().getBlockEntity().getPerTickEnergyCost()),
+                imageWidth / 2 - font.width(EIOLang.MAX_RANGE) / 2, 62, 0, false);
 
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }
@@ -92,7 +89,7 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
     protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot,
             @Nullable String countString) {
         if (menu.getBlockEntity().requiresFilter() && slot.index == 1 && itemstack.isEmpty()) {
-            ItemStack stack = new ItemStack(EIOItems.ENTITY_FILTER.asItem());
+            ItemStack stack = new ItemStack(EIOItems.BASIC_ENTITY_FILTER.get());
             RenderSystem.setShaderColor(1, 1, 1, 100 / 255f);
             RenderSystem.enableBlend();
             guiGraphics.renderFakeItem(stack, slot.x, slot.y);

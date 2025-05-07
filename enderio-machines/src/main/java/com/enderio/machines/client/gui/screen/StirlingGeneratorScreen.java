@@ -12,6 +12,7 @@ import com.enderio.machines.common.blocks.stirling_generator.StirlingGeneratorMe
 import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -57,8 +58,11 @@ public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
         float genRate = menu.getBlockEntity().getGenerationRate();
-        guiGraphics.drawString(font, TooltipUtil.styledWithArgs(MachineLang.GENERATING, FORMAT.format(genRate)), imageWidth / 2 + 12, 38, 4210752, false);
         float efficiency = menu.getBlockEntity().getFuelEfficiency();
-        guiGraphics.drawString(font, TooltipUtil.styledWithArgs(MachineLang.FUEL_EFFICIENCY, FORMAT.format(efficiency)), imageWidth / 2 + 12, 9 + font.lineHeight + 2, 0, false);
+        MutableComponent gen = TooltipUtil.withArgs(MachineLang.GENERATING, FORMAT.format(genRate));
+        MutableComponent eff = TooltipUtil.withArgs(MachineLang.FUEL_EFFICIENCY, (int) efficiency);
+        guiGraphics.drawString(font, gen, imageWidth / 2 - font.width(gen.getString()) / 2, 9, 0, false);
+        guiGraphics.drawString(font, eff, imageWidth / 2 - font.width(eff.getString()) / 2, 9 + font.lineHeight + 2, 0,
+                false);
     }
 }
