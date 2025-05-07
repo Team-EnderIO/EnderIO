@@ -262,21 +262,41 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     public static void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            DispenserBlock.registerBehavior(EIOItems.SOUL_VIAL.get(), new EmptySoulVialDispenseBehavior());
-            DispenserBlock.registerBehavior(EIOItems.SOUL_VIAL.get(), new FillSoulVialDispenseBehavior());
+            DispenserBlock.registerBehavior(EIOItems.SOUL_VIAL.get(), new SoulVialDispenseBehavior());
         });
     }
 
     // endregion
 
     // region Dispenser
-    private static class FillSoulVialDispenseBehavior extends OptionalDispenseItemBehavior {
+
+    private static class SoulVialDispenseBehavior extends OptionalDispenseItemBehavior {
         @Override
         protected ItemStack execute(BlockSource source, ItemStack stack) {
+            if (SoulBoundUtils.isBound(stack)) {
+                return release(source, stack);
+            } else {
+                return capture(source, stack);
+            }
+        }
+
+        private ItemStack release(BlockSource source, ItemStack stack) {
+            Direction dispenserDirection = source.state().getValue(DispenserBlock.FACING);
+            AtomicReference<ItemStack> emptyVial = new AtomicReference<>();
+            releaseEntity(source.level(), stack, dispenserDirection, source.pos(), emptyVial::set);
+            if (emptyVial.get() != null) {
+                return emptyVial.get();
+            } else {
+                this.setSuccess(false);
+                return stack;
+            }
+        }
+
+        private ItemStack capture(BlockSource source, ItemStack stack) {
             BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
             for (LivingEntity livingentity : source.level()
-                    .getEntitiesOfClass(LivingEntity.class, new AABB(blockpos),
-                            living -> !(living instanceof Player))) {
+                .getEntitiesOfClass(LivingEntity.class, new AABB(blockpos),
+                    living -> !(living instanceof Player))) {
 
                 // Copy, consumeWithRemainder will shrink the stack.
                 Optional<ItemStack> filledVial = catchEntity(stack.copy(), livingentity, component -> {
@@ -288,20 +308,6 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
             this.setSuccess(false);
             return stack;
-        }
-    }
-
-    private static class EmptySoulVialDispenseBehavior extends OptionalDispenseItemBehavior {
-        protected ItemStack execute(BlockSource source, ItemStack stack) {
-            Direction dispenserDirection = source.state().getValue(DispenserBlock.FACING);
-            AtomicReference<ItemStack> emptyVial = new AtomicReference<>();
-            releaseEntity(source.level(), stack, dispenserDirection, source.pos(), emptyVial::set);
-            if (emptyVial.get() != null) {
-                return emptyVial.get();
-            } else {
-                this.setSuccess(false);
-                return stack;
-            }
         }
     }
 
