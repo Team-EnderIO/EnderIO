@@ -10,6 +10,7 @@ import com.enderio.base.api.soul.storage.ISoulHandler;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
+import org.jetbrains.annotations.Nullable;
 
 public class EIOCapabilities {
 
@@ -33,10 +34,16 @@ public class EIOCapabilities {
     public static final class SoulBindable {
         public static final ItemCapability<ISoulBindable, Void> ITEM = ItemCapability
                 .createVoid(EnderIO.loc("soul_bindable"), ISoulBindable.class);
+
+        public static final BlockCapability<ISoulBindable, Void> BLOCK = BlockCapability
+                .createVoid(EnderIO.loc("soul_bindable"), ISoulBindable.class);
     }
 
     public static final class SoulHandler {
         public static final ItemCapability<ISoulHandler, Void> ITEM = ItemCapability
                 .createVoid(EnderIO.loc("soul_handler"), ISoulHandler.class);
+
+        public static final BlockCapability<ISoulHandler, @Nullable Direction> BLOCK = BlockCapability
+            .createSided(EnderIO.loc("soul_handler"), ISoulHandler.class);
     }
 }
