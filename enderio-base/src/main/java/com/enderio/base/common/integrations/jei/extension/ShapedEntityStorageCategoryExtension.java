@@ -34,9 +34,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
 
         Optional<IFocus<ItemStack>> output = focuses.getItemStackFocuses(OUTPUT).findFirst();
         Optional<IFocus<ItemStack>> input = focuses.getItemStackFocuses(INPUT)
-                .filter(f -> f.getTypedValue()
-                        .getIngredient()
-                        .getCapability(EIOCapabilities.SoulBindable.ITEM) != null)
+                .filter(f -> SoulBoundUtils.canBindSoul(f.getTypedValue().getIngredient()))
                 .findFirst();
 
         ShapedEntityStorageRecipe recipe = recipeHolder.value();
@@ -51,10 +49,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
         boolean noData = true;
 
         if (input.isPresent()) {
-            var inputSoulBindable = Objects.requireNonNull(
-                    input.get().getTypedValue().getIngredient().getCapability(EIOCapabilities.SoulBindable.ITEM));
-            Soul soul = inputSoulBindable.getBoundSoul();
-
+            var soul = SoulBoundUtils.getBoundSoul(input.get().getTypedValue().getIngredient());
             if (soul != Soul.EMPTY) {
                 if (SoulBoundUtils.tryBindSoul(resultItem, soul)) {
                     noData = false;

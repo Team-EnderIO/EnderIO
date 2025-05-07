@@ -85,7 +85,7 @@ public abstract class StoredEntityDataSyncSlot implements SyncSlot {
         // TODO: Need to be able to send the entity tag.
         // Honestly feels like a minor rework is required to add custom payloads instead of combining them.
         return new ListSlotPayload(List.of(
-            new ResourceLocationSlotPayload(Objects.requireNonNull(currentValue.entityTypeId()))
+            new ResourceLocationSlotPayload(currentValue.entityTypeId())
         ));
     }
 

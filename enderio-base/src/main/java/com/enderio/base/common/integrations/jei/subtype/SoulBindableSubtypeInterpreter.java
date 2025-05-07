@@ -24,7 +24,7 @@ public class SoulBindableSubtypeInterpreter implements ISubtypeInterpreter<ItemS
     public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
         var soulBindable = ingredient.getCapability(EIOCapabilities.SoulBindable.ITEM);
         if (soulBindable != null && soulBindable.hasSoul()) {
-            return Objects.requireNonNull(soulBindable.getBoundSoul().entityTypeId()).toString();
+            return soulBindable.getBoundSoul().entityTypeId().toString();
         }
 
         return "";

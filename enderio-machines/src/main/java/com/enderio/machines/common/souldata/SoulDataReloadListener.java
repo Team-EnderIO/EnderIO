@@ -148,11 +148,7 @@ public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResour
     /**
      * Returns an optional ISoulData implementation.
      */
-    public Optional<T> matches(@Nullable EntityType<?> entitytype) {
-        if (entitytype == null) {
-            return Optional.empty();
-        }
-
+    public Optional<T> matches(EntityType<?> entitytype) {
         var id = BuiltInRegistries.ENTITY_TYPE.getKeyOrNull(entitytype);
         if (id != null) {
             return matches(id);

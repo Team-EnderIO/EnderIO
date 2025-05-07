@@ -117,31 +117,41 @@ public record Soul(CompoundTag entityTag, float maxHealth) {
     }
 
     public boolean hasEntity() {
-        return entityType() != null;
+        if (!entityTag.contains(KEY_ID)) {
+            return false;
+        }
+
+        var id = ResourceLocation.tryParse(entityTag.getString(KEY_ID));
+        if (id == null) {
+            return false;
+        }
+
+        var entityType = BuiltInRegistries.ENTITY_TYPE.getOptional(id);
+        return entityType.isPresent();
     }
 
     public boolean isEmpty() {
-        return entityType() == null;
+        return !hasEntity();
     }
 
-    // TODO: Might make these non-null and throw if used without checking hasEntity/isEmpty?
-    @Nullable
-    public EntityType<?> entityType() {
-        var id = entityTypeId();
-        if (id != null) {
-            return BuiltInRegistries.ENTITY_TYPE.getOptional(id).orElse(null);
-        }
-
-        return null;
-    }
-
-    @Nullable
+    /**
+     * @throws IllegalStateException if the soul is empty.
+     * @return
+     */
     public ResourceLocation entityTypeId() {
-        if (entityTag.contains(KEY_ID)) {
-            return ResourceLocation.tryParse(entityTag.getString(KEY_ID));
+        if (isEmpty()) {
+            throw new IllegalStateException("Cannot get Entity Type ID from empty StoredEntityData");
         }
 
-        return null;
+        return ResourceLocation.parse(entityTag.getString(KEY_ID));
+    }
+
+    /**
+     * @throws IllegalStateException if the soul is empty.
+     * @return
+     */
+    public EntityType<?> entityType() {
+        return BuiltInRegistries.ENTITY_TYPE.get(entityTypeId());
     }
 
     public CompoundTag getEntityTag() {
@@ -149,7 +159,7 @@ public record Soul(CompoundTag entityTag, float maxHealth) {
     }
 
     public Optional<Tuple<Float, Float>> getHealthState() {
-        if (maxHealth > 0.0f) {
+        if (maxHealth > 0) {
             CompoundTag tag = entityTag;
             if (tag.contains(KEY_HEALTH)) {
                 return Optional.of(new Tuple<>(tag.getFloat(KEY_HEALTH), maxHealth));
