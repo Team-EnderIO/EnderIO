@@ -1631,6 +1631,11 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         @Override
+        public <T extends ConnectionConfig> T getConnectionConfig(Direction side, ConnectionConfigType<T> type) {
+            return conduitBundle.getConnectionConfig(conduit, side, type);
+        }
+
+        @Override
         public void setConnectionConfig(Direction side, ConnectionConfig connectionConfig) {
             conduitBundle.setConnectionConfig(conduit, side, connectionConfig);
         }

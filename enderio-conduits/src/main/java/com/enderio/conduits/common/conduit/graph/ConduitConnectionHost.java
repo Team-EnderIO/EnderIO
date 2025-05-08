@@ -2,6 +2,7 @@ package com.enderio.conduits.common.conduit.graph;
 
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
+import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -28,6 +29,8 @@ public interface ConduitConnectionHost {
     boolean isConnectedTo(Direction side);
 
     ConnectionConfig getConnectionConfig(Direction side);
+
+    <T extends ConnectionConfig> T getConnectionConfig(Direction side, ConnectionConfigType<T> type);
 
     void setConnectionConfig(Direction side, ConnectionConfig connectionConfig);
 
