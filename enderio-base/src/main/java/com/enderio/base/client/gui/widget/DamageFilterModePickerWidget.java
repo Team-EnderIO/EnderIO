@@ -14,7 +14,7 @@ public class DamageFilterModePickerWidget extends BaseEnumPickerWidget<DamageFil
 
     public DamageFilterModePickerWidget(int pX, int pY, Supplier<DamageFilterMode> getter,
             Consumer<DamageFilterMode> setter, Component optionName) {
-        super(pX, pY, 16, 16, DamageFilterMode.class, getter, setter, optionName);
+        super(pX, pY, 16, 16, DamageFilterMode.class, getter, setter, false, optionName);
     }
 
     @Override

@@ -23,6 +23,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     private final Class<T> clazz;
     private final Supplier<T> getter;
     private final Consumer<T> setter;
+    private final boolean shouldAdvanceOnPress;
 
     private T previousValue;
 
@@ -41,12 +42,13 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     private final Component optionName;
 
     public BaseEnumPickerWidget(int pX, int pY, int width, int height, Class<T> clazz, Supplier<T> getter,
-            Consumer<T> setter, Component optionName) {
+            Consumer<T> setter, boolean shouldAdvanceOnPress, Component optionName) {
         super(pX, pY, width, height, Component.empty());
 
         this.clazz = clazz;
         this.getter = getter;
         this.setter = setter;
+        this.shouldAdvanceOnPress = shouldAdvanceOnPress;
         this.optionName = optionName;
 
         T[] values = getValues();
@@ -133,7 +135,9 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         if (isExpanded()) {
             selectNext(mouseButton != InputConstants.MOUSE_BUTTON_RIGHT);
         } else {
-            selectNext(mouseButton != InputConstants.MOUSE_BUTTON_RIGHT);
+            if (shouldAdvanceOnPress) {
+                selectNext(mouseButton != InputConstants.MOUSE_BUTTON_RIGHT);
+            }
             Minecraft.getInstance().pushGuiLayer(selection);
         }
     }

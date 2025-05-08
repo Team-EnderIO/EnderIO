@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public class PoweredSpawnerModeWidget extends BaseEnumPickerWidget<PoweredSpawnerMode> {
     public PoweredSpawnerModeWidget(int pX, int pY, Supplier<PoweredSpawnerMode> getter,
             Consumer<PoweredSpawnerMode> setter, Component optionName) {
-        super(pX, pY, 16, 16, PoweredSpawnerMode.class, getter, setter, optionName);
+        super(pX, pY, 16, 16, PoweredSpawnerMode.class, getter, setter, true, optionName);
     }
 
     @Nullable

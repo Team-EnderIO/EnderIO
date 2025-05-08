@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public class AlloySmelterModeWidget extends BaseEnumPickerWidget<AlloySmelterMode> {
     public AlloySmelterModeWidget(int pX, int pY, Supplier<AlloySmelterMode> getter, Consumer<AlloySmelterMode> setter,
             Component optionName) {
-        super(pX, pY, 16, 16, AlloySmelterMode.class, getter, setter, optionName);
+        super(pX, pY, 16, 16, AlloySmelterMode.class, getter, setter, true, optionName);
     }
 
     @Nullable
