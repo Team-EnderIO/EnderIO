@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import com.mojang.datafixers.util.Pair;
 import org.jetbrains.annotations.Nullable;
@@ -37,18 +38,15 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
      * @param initialNode The initial node. This node must not be attached to any other graphs.
      */
     public Network(TNode initialNode) {
-        this(List.of(initialNode), List.of(), null);
+        this(List.of(initialNode), List.of());
     }
 
     /**
      * Create a network with a pre-configured set of edges.
-     * This will also split and form new graphs if there are any splits detected.
-     * If the network is split, the order of nodes is ignored so do not rely upon the first node in {@code nodes} being in this graph.
      * @param nodes All the nodes in this network. None may be attached to another network.
      * @param edges All the edges linking nodes together. Edges must reflect the nodes in the {@code nodes} list.
-     * @param onNetworkCreated A callback for any networks created by a split. Not required, but recommended if you are tracking networks.
      */
-    public Network(List<TNode> nodes, List<Pair<TNode, TNode>> edges, @Nullable Consumer<TNet> onNetworkCreated) {
+    public Network(List<TNode> nodes, List<Pair<TNode, TNode>> edges) {
         // Ensure there's at least one edge.
         Preconditions.checkArgument(!nodes.isEmpty(), "Cannot create a network with no nodes.");
         Preconditions.checkArgument(nodes.stream().noneMatch(INetworkNode::isValid), "Some nodes are already in networks.");
@@ -63,9 +61,9 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
             return;
         }
 
-        // If some of these nodes are already in networks, caller should use connect/connectMany instead.
+        // If some of these nodes are already in networks, the caller should use connect/connectMany instead.
         Preconditions.checkArgument(edges.stream().allMatch(e -> nodes.contains(e.getFirst()) && nodes.contains(e.getSecond())),
-            "Some edges reference nodes that were not included in the node list.");
+                "Some edges reference nodes that were not included in the node list.");
 
         // Add all edges (and nodes)
         for (var edge : edges) {
@@ -76,9 +74,6 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
 
         // Network has been updated
         onNetworkChanged();
-
-        // Find any splits and create separate networks
-        splitIfRequired(onNetworkCreated);
     }
 
     /**
@@ -127,6 +122,10 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
     public final Set<TNode> neighbors(TNode node) {
         ensureNotDiscarded();
         return graph.adjacentNodes(node);
+    }
+
+    public final Stream<Pair<TNode, TNode>> edges() {
+        return graph.edges().stream().map(e -> Pair.of(e.nodeU(), e.nodeV()));
     }
 
     // endregion
