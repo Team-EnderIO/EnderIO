@@ -18,6 +18,13 @@ dependencies {
 
     // Almost Unified
     compileOnly("com.almostreliable.mods:almostunified-neoforge:1.21.1-${almostunifiedVersion}:api")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 neoForge {
@@ -27,6 +34,11 @@ neoForge {
         create("endercore") {
             sourceSet(sourceSets["main"])
         }
+    }
+
+    unitTest {
+        enable()
+        testedMod = mods["endercore"]
     }
 }
 
