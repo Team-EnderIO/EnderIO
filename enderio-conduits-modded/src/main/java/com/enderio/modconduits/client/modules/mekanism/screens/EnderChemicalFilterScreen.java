@@ -25,7 +25,7 @@ import org.apache.commons.lang3.NotImplementedException;
 public class EnderChemicalFilterScreen extends EnderContainerScreen<EnderChemicalFilterMenu> {
 
     private static final int WIDTH = 183;
-    private static final int HEIGHT = 201;
+    private static final int HEIGHT = 199;
 
     // TODO: we need a central place for resource locations like these...
     private static final ResourceLocation BG_2x9 = EnderIO.loc("textures/gui/screens/filter_2x9.png");
@@ -49,10 +49,10 @@ public class EnderChemicalFilterScreen extends EnderContainerScreen<EnderChemica
         this.shouldRenderLabels = true;
 
         this.titleLabelX = 28;
-        this.titleLabelY = 12;
+        this.titleLabelY = 14;
 
         this.inventoryLabelX += 6;
-        this.inventoryLabelY = 36 + menu.type.rowCount() * 18;
+        this.inventoryLabelY = 34 + menu.type.rowCount() * 18;
 
         this.imageWidth = WIDTH;
         this.imageHeight = HEIGHT - (4 - menu.type.rowCount()) * 18;
@@ -74,9 +74,10 @@ public class EnderChemicalFilterScreen extends EnderContainerScreen<EnderChemica
             () -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
 
         int xPos = getGuiLeft() + WIDTH - 25;
+        int yPos = getGuiTop() + 27 + menu.type.rowCount() * 18;
 
         addRenderableWidget(
-            new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
+            new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
                 (b) -> b ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
                 (b) -> handleButtonPress(EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
 

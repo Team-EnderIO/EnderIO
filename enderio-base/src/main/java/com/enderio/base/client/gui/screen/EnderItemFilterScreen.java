@@ -19,7 +19,7 @@ import org.apache.commons.lang3.NotImplementedException;
 public class EnderItemFilterScreen extends EnderContainerScreen<EnderItemFilterMenu> {
 
     private static final int WIDTH = 183;
-    private static final int HEIGHT = 201;
+    private static final int HEIGHT = 199;
 
     private static final ResourceLocation BG_2x9 = EnderIO.loc("textures/gui/screens/filter_2x9.png");
     private static final ResourceLocation BG_1x9 = EnderIO.loc("textures/gui/screens/filter_1x9.png");
@@ -42,10 +42,10 @@ public class EnderItemFilterScreen extends EnderContainerScreen<EnderItemFilterM
         this.shouldRenderLabels = true;
 
         this.titleLabelX = 28;
-        this.titleLabelY = 12;
+        this.titleLabelY = 14;
 
         this.inventoryLabelX += 6;
-        this.inventoryLabelY = 36 + menu.type.rowCount() * 18;
+        this.inventoryLabelY = 34 + menu.type.rowCount() * 18;
 
         this.imageWidth = WIDTH;
         this.imageHeight = HEIGHT - (4 - menu.type.rowCount()) * 18;
@@ -67,16 +67,17 @@ public class EnderItemFilterScreen extends EnderContainerScreen<EnderItemFilterM
                 () -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
 
         int xPos = getGuiLeft() + WIDTH - 25;
+        int yPos = getGuiTop() + 27 + menu.type.rowCount() * 18;
 
         if (getMenu().type.canFilterByDamage()) {
-            addRenderableWidget(new DamageFilterModePickerWidget(xPos, getGuiTop() + 16, getMenu()::damageFilterMode,
+            addRenderableWidget(new DamageFilterModePickerWidget(xPos, yPos, getMenu()::damageFilterMode,
                     getMenu()::setDamageFilterMode, EIOLang.DAMAGE_FILTER_MODE));
 
             xPos -= 18;
         }
 
         if (getMenu().type.canMatchComponents()) {
-            addRenderableWidget(new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16,
+            addRenderableWidget(new ToggleIconButton(xPos, yPos, 16, 16,
                     (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
                     (b) -> b ? EIOLang.FILTER_MATCH_COMPONENTS : EIOLang.FILTER_IGNORE_COMPONENTS,
                     getMenu()::shouldCompareComponents,
@@ -86,7 +87,7 @@ public class EnderItemFilterScreen extends EnderContainerScreen<EnderItemFilterM
         }
 
         addRenderableWidget(
-                new ToggleIconButton(xPos, getGuiTop() + 16, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
+                new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
                         (b) -> b ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
                         (b) -> handleButtonPress(EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
 

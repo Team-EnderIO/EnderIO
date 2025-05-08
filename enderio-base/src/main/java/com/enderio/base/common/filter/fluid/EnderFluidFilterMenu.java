@@ -44,10 +44,10 @@ public class EnderFluidFilterMenu extends AbstractFilterMenu<EnderFluidFilter> {
             addSyncSlot(FluidStackSyncSlot.readOnly(() -> getFluidInFilter(slotIndex)));
 
             addSlot(new FluidFilterSlot(() -> getFluidInFilter(slotIndex), stack -> setFluidInFilter(slotIndex, stack),
-                    i, 14 + (i % 5) * 18, 35 + 20 * (i / 5)));
+                    i, 14 + (i % 5) * 18, 27 + 20 * (i / 5)));
         }
 
-        addPlayerInventorySlots(14, 47 + type.rowCount() * 18);
+        addPlayerInventorySlots(14, 45 + type.rowCount() * 18);
     }
 
     public EnderFluidFilterMenu(@Nullable MenuType<?> menuType, EnderFluidFilterItem.Type type, int containerId,
@@ -60,10 +60,10 @@ public class EnderFluidFilterMenu extends AbstractFilterMenu<EnderFluidFilter> {
 
         for (int i = 0; i < this.type.slotCount(); i++) {
             final var syncSlot = addSyncSlot(FluidStackSyncSlot.standalone());
-            addSlot(new FluidFilterSlot(syncSlot::get, syncSlot::set, i, 14 + (i % 9) * 18, 35 + 18 * (i / 9)));
+            addSlot(new FluidFilterSlot(syncSlot::get, syncSlot::set, i, 14 + (i % 9) * 18, 27 + 18 * (i / 9)));
         }
 
-        addPlayerInventorySlots(14, 47 + type.rowCount() * 18);
+        addPlayerInventorySlots(14, 45 + type.rowCount() * 18);
     }
 
     @Override

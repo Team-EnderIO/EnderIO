@@ -64,10 +64,10 @@ public class EnderItemFilterMenu extends AbstractFilterMenu<EnderItemFilter> {
         for (int i = 0; i < this.type.slotCount(); i++) {
             final int slotIndex = i;
             addSlot(new ItemFilterSlot(() -> getItemInFilter(slotIndex), stack -> setItemInFilter(slotIndex, stack), i,
-                    14 + (i % 5) * 18, 35 + 20 * (i / 5)));
+                    14 + (i % 5) * 18, 27 + 20 * (i / 5)));
         }
 
-        addPlayerInventorySlots(14, 47 + type.rowCount() * 18);
+        addPlayerInventorySlots(14, 45 + type.rowCount() * 18);
     }
 
     public EnderItemFilterMenu(@Nullable MenuType<?> menuType, EnderItemFilterItem.Type type, int containerId,
@@ -88,10 +88,10 @@ public class EnderItemFilterMenu extends AbstractFilterMenu<EnderItemFilter> {
         for (int i = 0; i < this.type.slotCount(); i++) {
             final int slotIndex = i;
             addSlot(new ItemFilterSlot(() -> clientItems.get(slotIndex), stack -> clientItems.set(slotIndex, stack), i,
-                    14 + (i % 9) * 18, 35 + 18 * (i / 9)));
+                    14 + (i % 9) * 18, 27 + 18 * (i / 9)));
         }
 
-        addPlayerInventorySlots(14, 47 + type.rowCount() * 18);
+        addPlayerInventorySlots(14, 45 + type.rowCount() * 18);
     }
 
     @Override

@@ -39,10 +39,10 @@ public class EnderChemicalFilterMenu extends AbstractFilterMenu<EnderChemicalFil
             addSyncSlot(ChemicalStackSyncSlot.readOnly(() -> getChemicalInFilter(slotIndex)));
 
             addSlot(new ChemicalFilterSlot(() -> getChemicalInFilter(slotIndex), stack -> setChemicalInFilter(slotIndex, stack),
-                i, 14 + (i % 5) * 18, 35 + 20 * (i / 5)));
+                i, 14 + (i % 5) * 18, 27 + 20 * (i / 5)));
         }
 
-        addPlayerInventorySlots(14, 47 + type.rowCount() * 18);
+        addPlayerInventorySlots(14, 45 + type.rowCount() * 18);
     }
 
     public EnderChemicalFilterMenu(@Nullable MenuType<?> menuType, EnderChemicalFilterItem.Type type, int containerId,
@@ -54,10 +54,10 @@ public class EnderChemicalFilterMenu extends AbstractFilterMenu<EnderChemicalFil
 
         for (int i = 0; i < this.type.slotCount(); i++) {
             final var syncSlot = addSyncSlot(ChemicalStackSyncSlot.standalone());
-            addSlot(new ChemicalFilterSlot(syncSlot::get, syncSlot::set, i, 14 + (i % 9) * 18, 35 + 18 * (i / 9)));
+            addSlot(new ChemicalFilterSlot(syncSlot::get, syncSlot::set, i, 14 + (i % 9) * 18, 27 + 18 * (i / 9)));
         }
 
-        addPlayerInventorySlots(14, 47 + type.rowCount() * 18);
+        addPlayerInventorySlots(14, 45 + type.rowCount() * 18);
     }
 
     @Override
