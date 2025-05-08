@@ -1,7 +1,12 @@
 package com.enderio.core;
 
 import com.enderio.core.common.graph.BasicNetwork;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.mojang.datafixers.util.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -12,13 +17,16 @@ public class NetworkTests {
         var node1 = new TestNode();
         var node2 = new TestNode();
 
-        BasicNetwork<TestNode> network = new BasicNetwork<>(node1);
+        // Ensure the nodes have networks
+        Assertions.assertTrue(node1.isValid());
+        Assertions.assertTrue(node2.isValid());
 
-        Assertions.assertNotNull(node1.getNetwork());
-        Assertions.assertEquals(node1.getNetwork(), network);
+        var network = node1.getNetwork();
 
-        Assertions.assertDoesNotThrow(() -> network.connect(node1, node2));
-        Assertions.assertNotNull(node2.getNetwork());
+        // Try to connect two nodes
+        AtomicBoolean networkWasDiscarded = new AtomicBoolean(false);
+        Assertions.assertDoesNotThrow(() -> network.connect(node1, node2, n -> networkWasDiscarded.set(true)));
+        Assertions.assertTrue(networkWasDiscarded.get(), "Node 2's network was not discarded.");
         Assertions.assertEquals(node2.getNetwork(), network);
     }
 
@@ -26,15 +34,21 @@ public class NetworkTests {
     public void testNetworkMerging() {
         // Create nodes
         var node1 = new TestNode();
-        var node2 = new TestNode();
+        var node2 = new TestNode(false);
         var node3 = new TestNode();
-        var node4 = new TestNode();
+        var node4 = new TestNode(false);
 
-        // Create two separate networks
-        var network1 = new BasicNetwork<>(node1);
-        var network2 = new BasicNetwork<>(node3);
+        // Ensure only node 1 and node 3 have networks
+        Assertions.assertTrue(node1.isValid());
+        Assertions.assertFalse(node2.isValid());
+        Assertions.assertTrue(node3.isValid());
+        Assertions.assertFalse(node4.isValid());
 
-        // Connect their secondary nodes
+        // Designate two separate networks
+        var network1 = node1.getNetwork();
+        var network2 = node3.getNetwork();
+
+        // Connect their secondary nodes (this will discard node2's and node4's networks)
         network1.connect(node1, node2);
         network2.connect(node3, node4);
 
@@ -63,11 +77,11 @@ public class NetworkTests {
     public void testNetworkSplitting() {
         // Create nodes for the network
         var node1 = new TestNode();
-        var node2 = new TestNode();
-        var node3 = new TestNode();
+        var node2 = new TestNode(false);
+        var node3 = new TestNode(false);
 
-        // Create the initial network
-        var network = new BasicNetwork<>(node1);
+        // Get the main network
+        var network = node1.getNetwork();
 
         // Connect 1 -> 2 and 2 -> 3.
         network.connect(node1, node2);
@@ -76,74 +90,102 @@ public class NetworkTests {
         // Ensure all nodes belong to the same graph
         Assertions.assertEquals(node1.getNetwork(), node3.getNetwork());
 
-        // Remove the connection between node2 and node3
+        // Remove node2 from the network (should cause a split for node1 and node3, and should invalidate node2)
         Assertions.assertDoesNotThrow(() -> node2.getNetwork().remove(node2));
+        Assertions.assertFalse(node2.isValid());
 
         // Verify graph split
         Assertions.assertNotEquals(node1.getNetwork(), node3.getNetwork());
     }
 
-    @Test
-    public void testIntegrateSingleGraph() {
-//        var node1 = new TestNode();
-//        var neighbor1 = new TestNode();
-//        var neighbor2 = new TestNode();
-//
-//        // Connect initial neighbors
-//        Graph.connect(neighbor1, neighbor2);
-//
-//        // Integrate node1 with neighbors in the same graph
-//        Assertions.assertDoesNotThrow(() -> Graph.integrate(node1, List.of(neighbor1, neighbor2)));
-//
-//        // Verify all nodes are part of the same graph
-//        Assertions.assertNotNull(node1.getGraph());
-//        Assertions.assertEquals(node1.getGraph(), neighbor1.getGraph());
-//        Assertions.assertEquals(node1.getGraph(), neighbor2.getGraph());
+    @Test void testNetworkConnectMany() {
+        var node1 = new TestNode();
+
+        // Create some neighbors
+        var neighbors = new ArrayList<TestNode>();
+        for (int i = 0; i < 4; i++) {
+            neighbors.add(new TestNode(false));
+        }
+
+        // Get the network
+        var network = node1.getNetwork();
+
+        // Connect all the neighbors to node1.
+        Assertions.assertDoesNotThrow(() -> network.connectMany(node1, neighbors));
+
+        // Ensure all neighbors are now in this network
+        neighbors.forEach(n -> Assertions.assertTrue(network.contains(n)));
+
+        // Ensure all neighbors are connected to node1
+        neighbors.forEach(n -> Assertions.assertTrue(network.neighbors(node1).contains(n)));
     }
 
     @Test
-    public void testIntegrateWithNoNeighbors() {
-//        var node1 = new TestNode();
-//
-//        // Integrate node1 with no neighbors
-//        Assertions.assertDoesNotThrow(() -> Graph.integrate(node1, List.of()));
-//
-//        // Verify node1 is in a graph
-//        Assertions.assertNotNull(node1.getGraph());
-//        Assertions.assertEquals(1, node1.getGraph().getNodes().size());
-//        Assertions.assertTrue(node1.getGraph().contains(node1));
+    public void testNetworkConstructionWithCyclicEdges() {
+        var node1 = new TestNode(false);
+        var node2 = new TestNode(false);
+        var node3 = new TestNode(false);
+        var node4 = new TestNode(false);
+
+        var nodes = List.of(node1, node2, node3, node4);
+
+        var edges = List.of(
+            Pair.of(node1, node2),
+            Pair.of(node2, node3),
+            Pair.of(node3, node4));
+
+        var anyAdditionalNetworks = new AtomicBoolean(false);
+        var network = new BasicNetwork<>(nodes, edges, n -> anyAdditionalNetworks.set(true));
+
+        // Ensure no split occurred
+        Assertions.assertFalse(anyAdditionalNetworks.get(), "Should not have created any additional networks.");
+
+        // Ensure all networks are correct.
+        nodes.forEach(n -> Assertions.assertEquals(network, n.getNetwork()));
+        nodes.forEach(n -> Assertions.assertTrue(network.contains(n)));
+
+        // Ensure all edges are correct
+        edges.forEach(e -> Assertions.assertTrue(network.neighbors(e.getFirst()).contains(e.getSecond())));
+        edges.forEach(e -> Assertions.assertTrue(network.neighbors(e.getSecond()).contains(e.getFirst())));
     }
 
     @Test
-    public void testIntegrateMergingMultipleGraphs() {
-//        var node1 = new TestNode();
-//        var neighbor1 = new TestNode();
-//        var neighbor2 = new TestNode();
-//        var neighbor3 = new TestNode();
-//
-//        // Create two separate graphs
-//        Graph.connect(neighbor1, neighbor2);
-//        Graph.integrate(neighbor3, List.of()); // neighbor3 in a separate graph
-//
-//        // Integrate node1 with neighbors from multiple graphs
-//        Assertions.assertDoesNotThrow(() -> Graph.integrate(node1, List.of(neighbor1, neighbor3)));
-//
-//        // Verify all nodes are part of the same graph
-//        Assertions.assertNotNull(node1.getGraph());
-//        Assertions.assertEquals(node1.getGraph(), neighbor1.getGraph());
-//        Assertions.assertEquals(node1.getGraph(), neighbor3.getGraph());
-    }
+    public void testNetworkConstructionWithSplitEdges() {
+        var node1 = new TestNode(false);
+        var node2 = new TestNode(false);
+        var node3 = new TestNode(false);
+        var node4 = new TestNode(false);
 
-    @Test
-    public void testIntegrateWithAlreadyExistingGraph() {
-//        var node1 = new TestNode();
-//        var node2 = new TestNode();
-//
-//        // Connect initial nodes
-//        Graph.connect(node1, node2);
-//
-//        // Attempt to integrate a node that already belongs to a graph
-//        Assertions.assertThrows(IllegalArgumentException.class, () -> Graph.integrate(node1, List.of(node2)));
+        var nodes = List.of(node1, node2, node3, node4);
+
+        // These edges will yield two separate networks.
+        var edges = List.of(
+            Pair.of(node1, node2),
+            Pair.of(node3, node4));
+
+        var anyAdditionalNetworks = new AtomicBoolean(false);
+
+        // Note - creating a network like this makes no guarantees about which nodes end up on which side of the split.
+        var newNetwork = new BasicNetwork<>(nodes, edges, n -> anyAdditionalNetworks.set(true));
+
+        // Ensure no split occurred
+        Assertions.assertTrue(anyAdditionalNetworks.get(), "Should have created an additional networks.");
+
+        // Ensure nodes are in the correct networks
+        Assertions.assertEquals(node1.getNetwork(), node2.getNetwork());
+        Assertions.assertEquals(node3.getNetwork(), node4.getNetwork());
+
+        var network1 = node1.getNetwork();
+        Assertions.assertTrue(network1.contains(node1));
+        Assertions.assertTrue(network1.contains(node2));
+        Assertions.assertFalse(network1.contains(node3));
+        Assertions.assertFalse(network1.contains(node4));
+
+        var network2 = node3.getNetwork();
+        Assertions.assertTrue(network2.contains(node3));
+        Assertions.assertTrue(network2.contains(node4));
+        Assertions.assertFalse(network2.contains(node1));
+        Assertions.assertFalse(network2.contains(node2));
     }
 
 }

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import com.mojang.datafixers.util.Pair;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -30,12 +32,59 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
     // Whether the network has been discarded due to a merge.
     boolean isDiscarded;
 
-    protected Network(TNode initialNode) {
-        graph.addNode(initialNode);
-        initialNode.setNetwork(self());
-        onNetworkChanged();
+    /**
+     * Create a network with a single starting node.
+     * @param initialNode The initial node. This node must not be attached to any other graphs.
+     */
+    public Network(TNode initialNode) {
+        this(List.of(initialNode), List.of(), null);
     }
 
+    /**
+     * Create a network with a pre-configured set of edges.
+     * This will also split and form new graphs if there are any splits detected.
+     * If the network is split, the order of nodes is ignored so do not rely upon the first node in {@code nodes} being in this graph.
+     * @param nodes All the nodes in this network. None may be attached to another network.
+     * @param edges All the edges linking nodes together. Edges must reflect the nodes in the {@code nodes} list.
+     * @param onNetworkCreated A callback for any networks created by a split. Not required, but recommended if you are tracking networks.
+     */
+    public Network(List<TNode> nodes, List<Pair<TNode, TNode>> edges, @Nullable Consumer<TNet> onNetworkCreated) {
+        // Ensure there's at least one edge.
+        Preconditions.checkArgument(!nodes.isEmpty(), "Cannot create a network with no nodes.");
+        Preconditions.checkArgument(nodes.stream().noneMatch(INetworkNode::isValid), "Some nodes are already in networks.");
+
+        // Special case for a single starting node
+        if (nodes.size() == 1) {
+            Preconditions.checkArgument(edges.isEmpty(), "A single node cannot have any edges.");
+            var node = nodes.getFirst();
+            graph.addNode(node);
+            node.setNetwork(self());
+            onNetworkChanged();
+            return;
+        }
+
+        // If some of these nodes are already in networks, caller should use connect/connectMany instead.
+        Preconditions.checkArgument(edges.stream().allMatch(e -> nodes.contains(e.getFirst()) && nodes.contains(e.getSecond())),
+            "Some edges reference nodes that were not included in the node list.");
+
+        // Add all edges (and nodes)
+        for (var edge : edges) {
+            edge.getFirst().setNetwork(self());
+            edge.getSecond().setNetwork(self());
+            graph.putEdge(edge.getFirst(), edge.getSecond());
+        }
+
+        // Network has been updated
+        onNetworkChanged();
+
+        // Find any splits and create separate networks
+        splitIfRequired(onNetworkCreated);
+    }
+
+    /**
+     * This constructor is used when merging graphs and thus can be initialized with no nodes.
+     * This constructor should never be made public. Use {@link Network#Network(INetworkNode)}} instead.
+     */
     protected Network() {
     }
 
@@ -91,54 +140,55 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
     public final void connect(TNode node, TNode neighbor, @Nullable Consumer<TNet> onNetworkDiscard) {
         ensureNotDiscarded();
 
+        Preconditions.checkArgument(node.isValid(), "Node is not valid");
         Preconditions.checkArgument(node != neighbor, "Cannot connect a node to itself.");
         Preconditions.checkArgument(contains(node), "Node is not in this graph.");
 
-        // Merge any potential network.
-        var neighborNetwork = neighbor.getNetwork();
-        if (neighborNetwork != null && neighborNetwork != this) {
-            mergeWith(neighborNetwork, onNetworkDiscard);
+        if (neighbor.isValid()) {
+            // Merge the network if it differs from this.
+            mergeIfDifferent(neighbor.getNetwork(), onNetworkDiscard);
         } else {
-            // Ensure the neighbor is set to this network.
+            // Introduce this node to this network.
             neighbor.setNetwork(self());
         }
 
+        // Add the edge (and neighbor node if it is new)
         graph.putEdge(node, neighbor);
         onNetworkChanged();
+    }
+
+    public final void connectMany(TNode node, List<TNode> neighbors) {
+        connectMany(node, neighbors, null);
     }
 
     public final void connectMany(TNode node, List<TNode> neighbors, @Nullable Consumer<TNet> onNetworkDiscard) {
         ensureNotDiscarded();
 
+        Preconditions.checkArgument(node.isValid(), "Node is not valid");
         Preconditions.checkArgument(contains(node), "Node is not in this graph.");
 
-        // Find all graphs within the neighbors
-        Set<TNet> otherGraphs = Sets.newHashSet();
+        // Find all networks within the neighbors
+        // We don't immediately merge to avoid creating invalid state if preconditions fail.
+        Set<TNet> otherNetworks = Sets.newHashSet();
         for (var neighbor : neighbors) {
             Preconditions.checkArgument(neighbor != node, "Cannot connect a node to itself.");
-
-            var neighborNetwork = neighbor.getNetwork();
-            if (neighborNetwork != null && neighborNetwork != this) {
-                otherGraphs.add(neighborNetwork);
+            if (neighbor.isValid() && neighbor.getNetwork() != this) {
+                otherNetworks.add(neighbor.getNetwork());
             }
         }
 
-        // If there are any other graphs, merge them into this one
-        if (!otherGraphs.isEmpty()) {
-            // Merge with all graphs
-            for (var graph : otherGraphs) {
-                mergeWith(graph, onNetworkDiscard);
-            }
+        // If there are any other networks, merge them into this one
+        for (var network : otherNetworks) {
+            mergeIfDifferent(network, onNetworkDiscard);
         }
 
         for (var neighbor : neighbors) {
-            // Any neighbors who had no graph get set to this network.
-            // For other neighbors, this was done during merging.
-            if (neighbor.getNetwork() == null) {
+            // Any neighbor who is not yet member of a graph must be added to this one.
+            if (!neighbor.isValid()) {
                 neighbor.setNetwork(self());
             }
 
-            // Add edges
+            // Add edges (and neighbor nodes if not present)
             graph.putEdge(node, neighbor);
         }
 
@@ -148,9 +198,11 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
     public final void disconnect(TNode node1, TNode node2, @Nullable Consumer<TNet> onNetworkCreated) {
         ensureNotDiscarded();
 
-        Preconditions.checkArgument(node1.getNetwork() == this, "Node 1 does not belong to this network");
-        Preconditions.checkArgument(node2.getNetwork() == this, "Node 2 does not belong to this network");
         Preconditions.checkArgument(node1 != node2, "Cannot disconnect a node from itself");
+        Preconditions.checkArgument(node1.isValid(), "Node 1 is not valid");
+        Preconditions.checkArgument(node2.isValid(), "Node 2 is not valid");
+        Preconditions.checkArgument(contains(node1), "Node 1 does not belong to this network");
+        Preconditions.checkArgument(contains(node2), "Node 2 does not belong to this network");
 
         // Remove edge between these two nodes
         graph.removeEdge(node1, node2);
@@ -167,15 +219,19 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
     public final void remove(TNode node, @Nullable Consumer<TNet> onNetworkCreated) {
         ensureNotDiscarded();
 
-        Preconditions.checkArgument(node.getNetwork() == this, "Node does not belong to this network");
+        Preconditions.checkArgument(node.isValid(), "Node is not valid");
+        Preconditions.checkArgument(contains(node), "Node does not belong to this network");
 
         // Remove the node (also removes its edges)
-        node.setNetwork(null);
         graph.removeNode(node);
-        onNetworkChanged();
+
+        // Invalidate the node
+        node.setNetwork(null);
 
         // Split networks
         splitIfRequired(onNetworkCreated);
+
+        onNetworkChanged();
     }
 
     protected void onNetworkChanged() {
@@ -185,8 +241,8 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
 
     // region Internal Behaviors
 
-    private void mergeWith(TNet other, @Nullable Consumer<TNet> onNetworkDiscard) {
-        // No-op if we try to merge ourself.
+    private void mergeIfDifferent(TNet other, @Nullable Consumer<TNet> onNetworkDiscard) {
+        // Do not attempt to merge with ourself.
         if (other == this) {
             return;
         }
@@ -255,6 +311,7 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
             seen.add(firstNode);
             remaining.remove(firstNode);
 
+            // TODO: Potentially rework this to use the new constructor?
             var newGraph = createEmpty();
             while (!toVisit.isEmpty()) {
                 var node = toVisit.poll();
