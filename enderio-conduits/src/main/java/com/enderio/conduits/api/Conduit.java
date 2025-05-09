@@ -8,8 +8,7 @@ import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.network.node.ConduitNode;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
 import com.enderio.conduits.api.ticker.ConduitTicker;
-import com.enderio.conduits.common.conduit.new_graph.BlockConnection;
-import com.enderio.conduits.common.conduit.new_graph.NewConduitNode;
+import com.enderio.conduits.api.network.ConduitBlockConnection;
 import com.mojang.serialization.Codec;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -97,7 +96,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     // Network connection sorting
     // Can be used to change what the network prioritizes
-    default int compare(BlockConnection refNode, BlockConnection nodeA, BlockConnection nodeB) {
+    default int compare(ConduitBlockConnection refNode, ConduitBlockConnection nodeA, ConduitBlockConnection nodeB) {
         // TODO: should it be node positions or the block positions (i.e. if one node connects two chests, do closest chest first?)
         return Integer.compare(
             refNode.node().pos().distManhattan(nodeA.node().pos()),

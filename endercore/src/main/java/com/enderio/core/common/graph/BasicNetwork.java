@@ -1,10 +1,8 @@
 package com.enderio.core.common.graph;
 
 import com.mojang.datafixers.util.Pair;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * A basic network implementation with no special context.

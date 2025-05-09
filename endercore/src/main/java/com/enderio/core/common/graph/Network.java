@@ -404,7 +404,7 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
 
     // Generic fun and games :(
     @SuppressWarnings("unchecked")
-    private final TNet self() {
+    private TNet self() {
         return (TNet) this;
     }
 

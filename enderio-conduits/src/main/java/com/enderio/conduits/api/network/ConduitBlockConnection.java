@@ -1,13 +1,17 @@
-package com.enderio.conduits.common.conduit.new_graph;
+package com.enderio.conduits.api.network;
 
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
+import com.enderio.conduits.api.network.node.IConduitNode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import org.jetbrains.annotations.ApiStatus;
 
-public record BlockConnection(NewConduitNode node, Direction connectionSide) {
+@ApiStatus.AvailableSince("8.0")
+@ApiStatus.Experimental
+public record ConduitBlockConnection(IConduitNode node, Direction connectionSide) {
 
     // TODO: we might want support for Void block capabilities...
 
@@ -20,11 +24,11 @@ public record BlockConnection(NewConduitNode node, Direction connectionSide) {
     }
 
     public ConnectionConfig connectionConfig() {
-        return node.connectionConfig(connectionSide);
+        return node.getConnectionConfig(connectionSide);
     }
 
     public <T extends ConnectionConfig> T connectionConfig(ConnectionConfigType<T> type) {
-        return node.connectionConfig(connectionSide, type);
+        return node.getConnectionConfig(connectionSide, type);
     }
 
     public void setConnectionConfig(ConnectionConfig connectionConfig) {

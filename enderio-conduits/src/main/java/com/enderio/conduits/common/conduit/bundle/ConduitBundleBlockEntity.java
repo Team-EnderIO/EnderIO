@@ -373,49 +373,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     // endregion
 
-    // region Redstone Cache
-
-    private boolean hasRedstoneSignal;
-
-    public void updateNeighborRedstone() {
-        if (level == null) {
-            hasRedstoneSignal = false;
-        } else {
-            hasRedstoneSignal = level.hasNeighborSignal(getBlockPos());
-        }
-    }
-
-    private boolean hasRedstoneSignal(@Nullable DyeColor signalColor) {
-        if (hasRedstoneSignal) {
-            return true;
-        }
-
-        // If we have no signal color, do not attempt to query a redstone conduit
-        if (signalColor == null) {
-            return false;
-        }
-
-        var redstoneConduit = getConduitByType(ConduitTypes.REDSTONE.get());
-        if (redstoneConduit == null) {
-            return false;
-        }
-
-        var node = getConduitNode(redstoneConduit);
-        var network = node.getNetwork();
-        if (network == null) {
-            return false;
-        }
-
-        var context = network.getContext(ConduitTypes.ContextTypes.REDSTONE.get());
-        if (context == null) {
-            return false;
-        }
-
-        return context.isActive(signalColor);
-    }
-
-    // endregion
-
     // region Capability Proxies
 
     public static <TCap, TContext> ICapabilityProvider<ConduitBundleBlockEntity, TContext, TCap> createCapabilityProvider(
@@ -1033,6 +990,71 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             }
         }
     }
+
+    // endregion
+
+    // region Node Interactions
+
+    public void markNodesDirty() {
+        hasDirtyNodes = true;
+    }
+
+    @Nullable
+    public <TCapability> TCapability getNeighbourCapability(Holder<Conduit<?, ?>> conduit, BlockCapability<TCapability, Direction> capability, Direction side) {
+        // Doesn't use EnderBlockEntity's capability cache so that we can bin capability
+        // caches that aren't needed when conduits are removed.
+        // Probably an "early optimization" but I don't think this really hurts.
+        if (level instanceof ServerLevel serverLevel) {
+            var capabilityCache = neighbouringCapabilityCaches.computeIfAbsent(conduit,
+                c -> new NeighbouringCapabilityCaches());
+            return capabilityCache.getCapability(capability, serverLevel, getBlockPos(), side);
+        }
+
+        return null;
+    }
+
+    // region Redstone Cache
+
+    private boolean hasRedstoneSignal;
+
+    public void updateNeighborRedstone() {
+        if (level == null) {
+            hasRedstoneSignal = false;
+        } else {
+            hasRedstoneSignal = level.hasNeighborSignal(getBlockPos());
+        }
+    }
+
+    public boolean hasRedstoneSignal(@Nullable DyeColor signalColor) {
+        if (hasRedstoneSignal) {
+            return true;
+        }
+
+        // If we have no signal color, do not attempt to query a redstone conduit
+        if (signalColor == null) {
+            return false;
+        }
+
+        var redstoneConduit = getConduitByType(ConduitTypes.REDSTONE.get());
+        if (redstoneConduit == null) {
+            return false;
+        }
+
+        var node = getConduitNode(redstoneConduit);
+        var network = node.getNetwork();
+        if (network == null) {
+            return false;
+        }
+
+        var context = network.getContext(ConduitTypes.ContextTypes.REDSTONE.get());
+        if (context == null) {
+            return false;
+        }
+
+        return context.isActive(signalColor);
+    }
+
+    // endregion
 
     // endregion
 

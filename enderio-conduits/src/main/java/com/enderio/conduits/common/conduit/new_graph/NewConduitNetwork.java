@@ -2,8 +2,11 @@ package com.enderio.conduits.common.conduit.new_graph;
 
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.connection.config.IOConnectionConfig;
+import com.enderio.conduits.api.network.ConduitBlockConnection;
 import com.enderio.conduits.api.network.ConduitNetworkContext;
 import com.enderio.conduits.api.network.ConduitNetworkContextType;
+import com.enderio.conduits.api.network.IConduitNetwork;
+import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.core.common.graph.Network;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
@@ -17,12 +20,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode> {
+public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode> implements IConduitNetwork {
 
     // TODO: Need to test this, we won't use this Codec unless I can be bothered to convert saves or when we update to 1.22
     public static final Codec<NewConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance
         .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit),
-            ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context").forGetter(i -> Optional.ofNullable(i.context)))
+            ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context", null).forGetter(i -> i.context))
         .and(graphCodec(instance, NewConduitNode.NEW_CODEC))
         .apply(instance, NewConduitNetwork::new));
 
@@ -34,34 +37,58 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
     // Caches
     private boolean shouldRebuildCache = true;
     private boolean haveConnectionsChanged = true;
+
     private final Set<NewConduitNode> loadedNodes = Sets.newHashSet();
 
-    private final SetMultimap<NewConduitNode, BlockConnection> endpointConnections = HashMultimap.create();
-    private final Map<BlockConnection, List<BlockConnection>> accessibleBlockConnectionsMap = Maps.newHashMap();
+    private final SetMultimap<NewConduitNode, ConduitBlockConnection> endpointConnections = HashMultimap.create();
+    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> accessibleBlockConnectionsMap = Maps.newHashMap();
 
     private final Set<DyeColor> allChannels = Sets.newHashSet();
-    private final SetMultimap<DyeColor, BlockConnection> sendingConnections = HashMultimap.create();
-    private final SetMultimap<DyeColor, BlockConnection> receivingConnections = HashMultimap.create();
+    private final SetMultimap<DyeColor, ConduitBlockConnection> sendingConnections = HashMultimap.create();
+    private final SetMultimap<DyeColor, ConduitBlockConnection> receivingConnections = HashMultimap.create();
 
-    private final Map<BlockConnection, List<BlockConnection>> receivingConnectionsBySender = Maps.newHashMap();
-    private final Map<BlockConnection, List<BlockConnection>> sendingConnectionsByReceiver = Maps.newHashMap();
+    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> receivingConnectionsBySender = Maps.newHashMap();
+    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> sendingConnectionsByReceiver = Maps.newHashMap();
 
     public NewConduitNetwork(Holder<Conduit<?, ?>> conduit, NewConduitNode initialNode) {
         super(initialNode);
         this.conduit = conduit;
     }
 
-    private NewConduitNetwork(Holder<Conduit<?, ?>> conduit, Optional<ConduitNetworkContext<?>> context, List<NewConduitNode> nodes, IndexedEdgeList edges) {
+    private NewConduitNetwork(Holder<Conduit<?, ?>> conduit, @Nullable ConduitNetworkContext<?> context, List<NewConduitNode> nodes, IndexedEdgeList edges) {
         super(nodes, edges);
         this.conduit = conduit;
-        this.context = context.orElse(null);
+        this.context = context;
     }
 
     protected NewConduitNetwork(Holder<Conduit<?, ?>> conduit) {
         this.conduit = conduit;
     }
 
+    public Holder<Conduit<?, ?>> conduit() {
+        return conduit;
+    }
+
     // region Queries
+
+    // These are unfortunately necessary for the IConduitNetwork interface.
+    @Override
+    public boolean contains(IConduitNode node) {
+        if (node instanceof NewConduitNode typedNode) {
+            return contains(typedNode);
+        }
+
+        return false;
+    }
+
+    @Override
+    public Set<? extends IConduitNode> neighbors(IConduitNode node) {
+        if (node instanceof NewConduitNode typedNode) {
+            return neighbors(typedNode);
+        }
+
+        return Set.of();
+    }
 
     public Collection<NewConduitNode> loadedNodes() {
         return Collections.unmodifiableCollection(loadedNodes);
@@ -71,12 +98,12 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
         return Collections.unmodifiableCollection(endpointConnections.keySet());
     }
 
-    public Collection<BlockConnection> blockConnections() {
+    public Collection<ConduitBlockConnection> blockConnections() {
         return Collections.unmodifiableCollection(endpointConnections.values());
     }
 
     // This is sorted
-    public List<BlockConnection> blockConnectionsAccessibleFrom(BlockConnection connection) {
+    public List<ConduitBlockConnection> blockConnectionsAccessibleFrom(ConduitBlockConnection connection) {
         return accessibleBlockConnectionsMap.getOrDefault(connection, List.of());
     }
 
@@ -84,29 +111,29 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
         return allChannels;
     }
 
-    public Collection<BlockConnection> sendingConnections() {
+    public Collection<ConduitBlockConnection> sendingConnections() {
         return sendingConnections.values();
     }
 
-    public Collection<BlockConnection> sendingConnections(DyeColor color) {
+    public Collection<ConduitBlockConnection> sendingConnections(DyeColor color) {
         return sendingConnections.get(color);
     }
 
     // This is sorted
-    public List<BlockConnection> receivingConnectionsFrom(BlockConnection sender) {
+    public List<ConduitBlockConnection> receivingConnectionsFrom(ConduitBlockConnection sender) {
         return receivingConnectionsBySender.getOrDefault(sender, List.of());
     }
 
-    public Collection<BlockConnection> receivingConnections() {
+    public Collection<ConduitBlockConnection> receivingConnections() {
         return receivingConnections.values();
     }
 
-    public Collection<BlockConnection> receivingConnections(DyeColor color) {
+    public Collection<ConduitBlockConnection> receivingConnections(DyeColor color) {
         return receivingConnections.get(color);
     }
 
     // This is sorted
-    public List<BlockConnection> sendingConnectionsFrom(BlockConnection receiverNode) {
+    public List<ConduitBlockConnection> sendingConnectionsFrom(ConduitBlockConnection receiverNode) {
         return sendingConnectionsByReceiver.getOrDefault(receiverNode, List.of());
     }
 
@@ -232,7 +259,7 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
                 continue;
             }
 
-            var connection = new BlockConnection(node, side);
+            var connection = new ConduitBlockConnection(node, side);
             endpointConnections.put(node, connection);
 
             // Add this connection to all other block connection's access maps
@@ -249,7 +276,7 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
             }
 
             // Handle IO caching
-            var config = node.connectionConfig(side);
+            var config = node.getConnectionConfig(side);
             if (config instanceof IOConnectionConfig ioConnectionConfig) {
                 // First add sending and receiving connections
                 if (ioConnectionConfig.isSend()) {
@@ -365,7 +392,7 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
         haveConnectionsChanged = false;
     }
 
-    private void sortConnections(BlockConnection ref, List<BlockConnection> connections) {
+    private void sortConnections(ConduitBlockConnection ref, List<ConduitBlockConnection> connections) {
         connections.sort((a, b) -> conduit.value().compare(ref, a, b));
     }
 
