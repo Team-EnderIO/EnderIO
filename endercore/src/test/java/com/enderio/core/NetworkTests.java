@@ -134,11 +134,7 @@ public class NetworkTests {
             Pair.of(node2, node3),
             Pair.of(node3, node4));
 
-        var anyAdditionalNetworks = new AtomicBoolean(false);
-        var network = new BasicNetwork<>(nodes, edges, n -> anyAdditionalNetworks.set(true));
-
-        // Ensure no split occurred
-        Assertions.assertFalse(anyAdditionalNetworks.get(), "Should not have created any additional networks.");
+        var network = new BasicNetwork<>(nodes, edges);
 
         // Ensure all networks are correct.
         nodes.forEach(n -> Assertions.assertEquals(network, n.getNetwork()));
@@ -147,45 +143,6 @@ public class NetworkTests {
         // Ensure all edges are correct
         edges.forEach(e -> Assertions.assertTrue(network.neighbors(e.getFirst()).contains(e.getSecond())));
         edges.forEach(e -> Assertions.assertTrue(network.neighbors(e.getSecond()).contains(e.getFirst())));
-    }
-
-    @Test
-    public void testNetworkConstructionWithSplitEdges() {
-        var node1 = new TestNode(false);
-        var node2 = new TestNode(false);
-        var node3 = new TestNode(false);
-        var node4 = new TestNode(false);
-
-        var nodes = List.of(node1, node2, node3, node4);
-
-        // These edges will yield two separate networks.
-        var edges = List.of(
-            Pair.of(node1, node2),
-            Pair.of(node3, node4));
-
-        var anyAdditionalNetworks = new AtomicBoolean(false);
-
-        // Note - creating a network like this makes no guarantees about which nodes end up on which side of the split.
-        var newNetwork = new BasicNetwork<>(nodes, edges, n -> anyAdditionalNetworks.set(true));
-
-        // Ensure no split occurred
-        Assertions.assertTrue(anyAdditionalNetworks.get(), "Should have created an additional networks.");
-
-        // Ensure nodes are in the correct networks
-        Assertions.assertEquals(node1.getNetwork(), node2.getNetwork());
-        Assertions.assertEquals(node3.getNetwork(), node4.getNetwork());
-
-        var network1 = node1.getNetwork();
-        Assertions.assertTrue(network1.contains(node1));
-        Assertions.assertTrue(network1.contains(node2));
-        Assertions.assertFalse(network1.contains(node3));
-        Assertions.assertFalse(network1.contains(node4));
-
-        var network2 = node3.getNetwork();
-        Assertions.assertTrue(network2.contains(node3));
-        Assertions.assertTrue(network2.contains(node4));
-        Assertions.assertFalse(network2.contains(node1));
-        Assertions.assertFalse(network2.contains(node2));
     }
 
 }

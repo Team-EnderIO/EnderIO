@@ -16,8 +16,8 @@ public class BasicNetwork<N extends INetworkNode<BasicNetwork<N>, N>> extends Ne
         super(initialNode);
     }
 
-    public BasicNetwork(List<N> ns, List<Pair<N, N>> edges, @Nullable Consumer<BasicNetwork<N>> onNetworkCreated) {
-        super(ns, edges, onNetworkCreated);
+    public BasicNetwork(List<N> ns, List<Pair<N, N>> edges) {
+        super(ns, edges);
     }
 
     protected BasicNetwork() {
