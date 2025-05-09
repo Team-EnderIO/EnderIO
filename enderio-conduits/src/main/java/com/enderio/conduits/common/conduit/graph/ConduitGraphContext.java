@@ -108,8 +108,11 @@ public class ConduitGraphContext implements Mergeable<ConduitGraphContext>, Cond
     @SuppressWarnings("unchecked")
     private <T extends ConduitNetworkContext<T>> Tag encodeContext(HolderLookup.Provider lookupProvider,
             ConduitNetworkContextType<T> type) {
+
+        var ops = lookupProvider.createSerializationContext(NbtOps.INSTANCE);
+
         return type.codec()
-                .encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), (T) context)
+                .encode((T) context, ops, ops.mapBuilder()).build(new CompoundTag())
                 .getOrThrow();
     }
 
@@ -142,6 +145,7 @@ public class ConduitGraphContext implements Mergeable<ConduitGraphContext>, Cond
         // TODO: We're using getOrThrow a lot for conduits. Should definitely make more
         // robust/flexible.
         CompoundTag data = contextTag.getCompound("Data");
-        return contextType.codec().parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), data).getOrThrow();
+        var ops = lookupProvider.createSerializationContext(NbtOps.INSTANCE);
+        return contextType.codec().decode(ops, ops.getMap(data).getOrThrow()).getOrThrow();
     }
 }

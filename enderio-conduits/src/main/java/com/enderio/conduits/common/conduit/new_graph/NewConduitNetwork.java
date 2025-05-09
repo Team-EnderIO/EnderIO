@@ -24,7 +24,8 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
     // TODO: Need to test this, we won't use this Codec unless I can be bothered to convert saves or when we update to 1.22
     public static final Codec<NewConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit),
-            NodeAndEdgeIds.CODEC.fieldOf("contents").forGetter(NewConduitNetwork::getNodeAndEdgeIds)
+            NodeAndEdgeIds.CODEC.fieldOf("contents").forGetter(NewConduitNetwork::getNodeAndEdgeIds),
+            ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context").forGetter(i -> Optional.ofNullable(i.context))
     ).apply(instance, NewConduitNetwork::new));
 
     private final Holder<Conduit<?, ?>> conduit;
@@ -52,9 +53,10 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
         this.conduit = conduit;
     }
 
-    private NewConduitNetwork(Holder<Conduit<?, ?>> conduit, NodeAndEdgeIds nodeAndEdgeIds) {
+    private NewConduitNetwork(Holder<Conduit<?, ?>> conduit, NodeAndEdgeIds nodeAndEdgeIds, Optional<ConduitNetworkContext<?>> context) {
         super(nodeAndEdgeIds.nodes(), nodeAndEdgeIds.edgeList());
         this.conduit = conduit;
+        this.context = context.orElse(null);
     }
 
     protected NewConduitNetwork(Holder<Conduit<?, ?>> conduit) {

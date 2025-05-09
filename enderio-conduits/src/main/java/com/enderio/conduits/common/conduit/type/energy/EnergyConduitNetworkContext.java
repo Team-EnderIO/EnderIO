@@ -3,11 +3,12 @@ package com.enderio.conduits.common.conduit.type.energy;
 import com.enderio.conduits.api.network.ConduitNetworkContext;
 import com.enderio.conduits.api.network.ConduitNetworkContextType;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 public class EnergyConduitNetworkContext implements ConduitNetworkContext<EnergyConduitNetworkContext> {
 
-    public static final Codec<EnergyConduitNetworkContext> CODEC = RecordCodecBuilder.create(builder -> builder
+    public static final MapCodec<EnergyConduitNetworkContext> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
             .group(Codec.INT.fieldOf("energy_stored").forGetter(i -> i.energyStored),
                     Codec.INT.fieldOf("rotating_index").forGetter(i -> i.rotatingIndex))
             .apply(builder, EnergyConduitNetworkContext::new));
