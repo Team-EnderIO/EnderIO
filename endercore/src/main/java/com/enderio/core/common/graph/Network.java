@@ -12,7 +12,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import com.mojang.datafixers.Products;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -24,10 +27,12 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends INetworkNode<TNet, TNode>> {
 
-    // This network's graph.
+    // The underlying graph.
+    // Uses stable element ordering to ensure consistent behavior when serializing the graph.
     final MutableGraph<TNode> graph = GraphBuilder.undirected()
             .allowsSelfLoops(false)
-            .nodeOrder(ElementOrder.unordered())
+            .nodeOrder(ElementOrder.stable())
+            .incidentEdgeOrder(ElementOrder.stable())
             .build();
 
     // Whether the network has been discarded due to a merge.
@@ -74,6 +79,16 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
 
         // Network has been updated
         onNetworkChanged();
+    }
+
+    /**
+     * Create a network with a pre-configured set of edges, represented as pairs of indices into {@code nodes}.
+     * This is intended for use during serialization/deserialization.
+     * @param nodes All the nodes in this network. None may be attached to another network.
+     * @param edges All the edges linking nodes together, indexing nodes in {@code nodes}.
+     */
+    public Network(List<TNode> nodes, IndexedEdgeList edges) {
+        this(nodes, edges.expand(nodes));
     }
 
     /**
@@ -343,6 +358,40 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
 
     protected void onGraphSplit(Set<TNet> newGraphs) {
         // This is where context splitting should occur.
+    }
+
+    // endregion
+
+    // region Serialization Helpers
+
+    protected static <TNet extends Network<TNet, TNode>, TNode extends INetworkNode<TNet, TNode>> Products.P2<RecordCodecBuilder.Mu<TNet>, List<TNode>, IndexedEdgeList> graphCodec(RecordCodecBuilder.Instance<TNet> instance, Codec<TNode> nodeCodec) {
+        return instance.group(nodeCodec.listOf().fieldOf("nodes").forGetter(TNet::createNodeList), IndexedEdgeList.CODEC.fieldOf("edges").forGetter(TNet::createEdgeIndices));
+    }
+
+    public List<TNode> createNodeList() {
+        return List.copyOf(nodes());
+    }
+
+    public IndexedEdgeList createEdgeIndices() {
+        // Copy our edges into a list.
+        // Because the underlying graph is set to be "stable", the order of this list should be constant.
+        var nodes = createNodeList();
+        return new IndexedEdgeList(edges().map(pair -> Pair.of(nodes.indexOf(pair.getFirst()), nodes.indexOf(pair.getSecond()))).toList());
+    }
+
+    // Wrapper to get around type erasure issue in the constructors.
+    public record IndexedEdgeList(List<Pair<Integer, Integer>> edges) {
+        private static final Codec<Pair<Integer, Integer>> EDGE_CODEC = RecordCodecBuilder.create(inst -> inst.group(
+            Codec.INT.fieldOf("first").forGetter(Pair::getFirst),
+            Codec.INT.fieldOf("second").forGetter(Pair::getSecond)
+        ).apply(inst, Pair::of));
+
+        public static final Codec<IndexedEdgeList> CODEC = EDGE_CODEC.listOf().xmap(
+            IndexedEdgeList::new, IndexedEdgeList::edges);
+
+        public <TNode extends INetworkNode<? extends Network<?, TNode>, TNode>> List<Pair<TNode, TNode>> expand(List<TNode> nodes) {
+            return edges.stream().map(pair -> Pair.of(nodes.get(pair.getFirst()), nodes.get(pair.getSecond()))).toList();
+        }
     }
 
     // endregion

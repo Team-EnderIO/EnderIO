@@ -145,4 +145,42 @@ public class NetworkTests {
         edges.forEach(e -> Assertions.assertTrue(network.neighbors(e.getSecond()).contains(e.getFirst())));
     }
 
+    @Test
+    public void testNetworkEdgeIndexing() {
+        // This test is to ensure the node and edge indexing used for serialization works as expected.
+        var node1 = new TestNode(false);
+        var node2 = new TestNode(false);
+        var node3 = new TestNode(false);
+        var node4 = new TestNode(false);
+
+        var nodes = List.of(node1, node2, node3, node4);
+
+        var edges = List.of(
+            Pair.of(node1, node2),
+            Pair.of(node2, node3),
+            Pair.of(node3, node4));
+
+        var network = new BasicNetwork<>(nodes, edges);
+
+        var nodeList = network.createNodeList();
+        var edgeIndices = network.createEdgeIndices();
+
+        Assertions.assertTrue(network.edges().allMatch(e -> {
+            boolean found = false;
+            int indexA = nodeList.indexOf(e.getFirst());
+            int indexB = nodeList.indexOf(e.getSecond());
+
+            // See if we can find this pair
+            for (var pair : edgeIndices.edges()) {
+                if ((pair.getFirst() == indexA && pair.getSecond() == indexB) ||
+                    pair.getFirst() == indexB && pair.getSecond() == indexA) {
+                    found = true;
+                    break;
+                }
+            }
+
+            return found;
+        }), "Node index list does not match real edges.");
+    }
+
 }

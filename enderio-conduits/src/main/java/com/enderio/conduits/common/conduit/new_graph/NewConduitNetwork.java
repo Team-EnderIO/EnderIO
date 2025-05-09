@@ -7,7 +7,6 @@ import com.enderio.conduits.api.network.ConduitNetworkContextType;
 import com.enderio.core.common.graph.Network;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Direction;
@@ -17,16 +16,15 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode> {
 
     // TODO: Need to test this, we won't use this Codec unless I can be bothered to convert saves or when we update to 1.22
-    public static final Codec<NewConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit),
-            NodeAndEdgeIds.CODEC.fieldOf("contents").forGetter(NewConduitNetwork::getNodeAndEdgeIds),
-            ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context").forGetter(i -> Optional.ofNullable(i.context))
-    ).apply(instance, NewConduitNetwork::new));
+    public static final Codec<NewConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance
+        .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit),
+            ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context").forGetter(i -> Optional.ofNullable(i.context)))
+        .and(graphCodec(instance, NewConduitNode.NEW_CODEC))
+        .apply(instance, NewConduitNetwork::new));
 
     private final Holder<Conduit<?, ?>> conduit;
 
@@ -53,18 +51,14 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
         this.conduit = conduit;
     }
 
-    private NewConduitNetwork(Holder<Conduit<?, ?>> conduit, NodeAndEdgeIds nodeAndEdgeIds, Optional<ConduitNetworkContext<?>> context) {
-        super(nodeAndEdgeIds.nodes(), nodeAndEdgeIds.edgeList());
+    private NewConduitNetwork(Holder<Conduit<?, ?>> conduit, Optional<ConduitNetworkContext<?>> context, List<NewConduitNode> nodes, IndexedEdgeList edges) {
+        super(nodes, edges);
         this.conduit = conduit;
         this.context = context.orElse(null);
     }
 
     protected NewConduitNetwork(Holder<Conduit<?, ?>> conduit) {
         this.conduit = conduit;
-    }
-
-    private NodeAndEdgeIds getNodeAndEdgeIds() {
-        return NodeAndEdgeIds.of(nodes(), edges());
     }
 
     // region Queries
@@ -426,27 +420,4 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
     }
 
     // endregion
-
-    private record NodeAndEdgeIds(List<NewConduitNode> nodes, List<Pair<Integer, Integer>> edgeIndices) {
-
-        private static final Codec<Pair<Integer, Integer>> EDGE_CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                Codec.INT.fieldOf("first").forGetter(Pair::getFirst),
-                Codec.INT.fieldOf("second").forGetter(Pair::getSecond)
-        ).apply(inst, Pair::of));
-
-        public static final Codec<NodeAndEdgeIds> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                NewConduitNode.NEW_CODEC.listOf().fieldOf("nodeList").forGetter(NodeAndEdgeIds::nodes),
-                EDGE_CODEC.listOf().fieldOf("edgeIndices").forGetter(NodeAndEdgeIds::edgeIndices)
-        ).apply(inst, NodeAndEdgeIds::new));
-
-        public static NodeAndEdgeIds of(Set<NewConduitNode> nodes, Stream<Pair<NewConduitNode, NewConduitNode>> edges) {
-            var nodeList = List.copyOf(nodes);
-            var edgeList = edges.map(pair -> Pair.of(nodeList.indexOf(pair.getFirst()), nodeList.indexOf(pair.getSecond()))).toList();
-            return new NodeAndEdgeIds(nodeList, edgeList);
-        }
-
-        public List<Pair<NewConduitNode, NewConduitNode>> edgeList() {
-            return edgeIndices.stream().map(pair -> Pair.of(nodes.get(pair.getFirst()), nodes.get(pair.getSecond()))).toList();
-        }
-    }
 }
