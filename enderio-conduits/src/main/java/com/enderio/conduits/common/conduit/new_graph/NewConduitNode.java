@@ -1,27 +1,60 @@
 package com.enderio.conduits.common.conduit.new_graph;
 
+import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
+import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.network.node.NodeData;
 import com.enderio.conduits.api.network.node.NodeDataType;
 import com.enderio.conduits.common.conduit.graph.ConduitConnectionHost;
 import com.enderio.core.common.graph.INetworkNode;
 import com.google.common.base.Preconditions;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
-public class NewConduitNode<T extends ConnectionConfig> implements INetworkNode<NewConduitNetwork<T>, NewConduitNode<T>> {
+import java.util.Objects;
+import java.util.Optional;
+
+public class NewConduitNode implements INetworkNode<NewConduitNetwork, NewConduitNode> {
 
     // TODO: Add serialization and legacy data conversion.
 
-    private BlockPos pos;
+    public static final Codec<NewConduitNode> NEW_CODEC = RecordCodecBuilder
+        .create(instance -> instance
+            .group(
+                BlockPos.CODEC.fieldOf("pos").forGetter(NewConduitNode::pos),
+                NodeData.GENERIC_CODEC.optionalFieldOf("data")
+                    .forGetter(i -> Optional.ofNullable(i.nodeData)))
+            .apply(instance, NewConduitNode::new));
+
+    private final BlockPos pos;
+
     @Nullable private NodeData nodeData;
 
-    @Nullable private NewConduitNetwork<T> network;
+    @Nullable private NewConduitNetwork network;
     @Nullable private ConduitConnectionHost connectionHost;
+
+    public NewConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
+        this(conduit, pos, null);
+    }
+
+    public NewConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos, @Nullable NodeData nodeData) {
+        this.pos = pos;
+        this.nodeData = nodeData;
+        this.network = new NewConduitNetwork(conduit, this);
+    }
+
+    private NewConduitNode(BlockPos pos, Optional<NodeData> nodeData) {
+        this.pos = pos;
+        this.nodeData = nodeData.orElse(null);
+        // Does not create a network because we're loading.
+    }
 
     public BlockPos pos() {
         return pos;
@@ -105,13 +138,19 @@ public class NewConduitNode<T extends ConnectionConfig> implements INetworkNode<
         return connectionHost.isConnectedTo(side);
     }
 
-    public T connectionConfig(Direction side) {
+    public ConnectionConfig connectionConfig(Direction side) {
         ensureValid();
         //noinspection DataFlowIssue
-        return connectionHost.getConnectionConfig(side, network.connectionConfigType());
+        return connectionHost.getConnectionConfig(side);
     }
 
-    public void setConnectionConfig(Direction side, T connectionConfig) {
+    public <T extends ConnectionConfig> T connectionConfig(Direction side, ConnectionConfigType<T> type) {
+        ensureValid();
+        //noinspection DataFlowIssue
+        return connectionHost.getConnectionConfig(side, type);
+    }
+
+    public void setConnectionConfig(Direction side, ConnectionConfig connectionConfig) {
         ensureValid();
         //noinspection DataFlowIssue
         connectionHost.setConnectionConfig(side, connectionConfig);
@@ -140,13 +179,17 @@ public class NewConduitNode<T extends ConnectionConfig> implements INetworkNode<
     // region Network Node Impl
 
     @Override
-    @Nullable
-    public NewConduitNetwork<T> getNetwork() {
-        return network;
+    public boolean isValid() {
+        return network != null;
     }
 
     @Override
-    public void setNetwork(@Nullable NewConduitNetwork<T> network) {
+    public NewConduitNetwork getNetwork() {
+        return Objects.requireNonNull(network, "Node is not valid!");
+    }
+
+    @Override
+    public void setNetwork(@Nullable NewConduitNetwork network) {
         this.network = network;
     }
 
