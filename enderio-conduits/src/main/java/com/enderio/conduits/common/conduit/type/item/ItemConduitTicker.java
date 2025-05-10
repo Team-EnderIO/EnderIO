@@ -17,10 +17,10 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
     @Override
     public void tick(ServerLevel level, ItemConduit conduit, IConduitNetwork network) {
         for (var channel : network.allChannels()) {
-            toNextExtract:
-            for (var receivingConnection : network.receivingConnections(channel)) {
+            toNextExtract: for (var receivingConnection : network.receivingConnections(channel)) {
                 // Get extract handler from the connection.
-                IItemHandler extractHandler = receivingConnection.getConnectedCapability(Capabilities.ItemHandler.BLOCK);
+                IItemHandler extractHandler = receivingConnection
+                        .getConnectedCapability(Capabilities.ItemHandler.BLOCK);
                 if (extractHandler == null) {
                     continue;
                 }
@@ -30,16 +30,14 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                 var connectionConfig = receivingConnection.connectionConfig(ConduitTypes.ConnectionTypes.ITEM.get());
 
                 // Get extraction filter
-                var extractFilter = receivingConnection
-                    .getInventory()
-                    .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
-                    .getCapability(EIOCapabilities.ITEM_FILTER);
+                var extractFilter = receivingConnection.getInventory()
+                        .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
+                        .getCapability(EIOCapabilities.ITEM_FILTER);
 
                 int extracted = 0;
                 int speed = conduit.transferRatePerCycle();
 
-                nextItem:
-                for (int i = 0; i < extractHandler.getSlots(); i++) {
+                nextItem: for (int i = 0; i < extractHandler.getSlots(); i++) {
                     ItemStack extractedItem = extractHandler.extractItem(i, speed - extracted, true);
                     if (extractedItem.isEmpty()) {
                         continue;
@@ -72,19 +70,21 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                         }
 
                         // Prevent self-feeding
-                        if (!connectionConfig.isSelfFeed() && receivingConnection.connectionSide() == sendingConnection.connectionSide()
-                            && receivingConnection.node() == sendingConnection.node()) {
+                        if (!connectionConfig.isSelfFeed()
+                                && receivingConnection.connectionSide() == sendingConnection.connectionSide()
+                                && receivingConnection.node() == sendingConnection.node()) {
                             continue;
                         }
 
-                        var insertFilter = sendingConnection
-                            .getInventory()
-                            .getStackInSlot(ItemConduit.INSERT_FILTER_SLOT)
-                            .getCapability(EIOCapabilities.ITEM_FILTER);
+                        var insertFilter = sendingConnection.getInventory()
+                                .getStackInSlot(ItemConduit.INSERT_FILTER_SLOT)
+                                .getCapability(EIOCapabilities.ITEM_FILTER);
 
                         ItemStack itemToInsert = extractedItem.copy();
                         if (insertFilter != null) {
-                            itemToInsert = insertFilter.test(sendingConnection.getConnectedCapability(Capabilities.ItemHandler.BLOCK), itemToInsert);
+                            itemToInsert = insertFilter.test(
+                                    sendingConnection.getConnectedCapability(Capabilities.ItemHandler.BLOCK),
+                                    itemToInsert);
                             if (itemToInsert.isEmpty()) {
                                 continue;
                             }

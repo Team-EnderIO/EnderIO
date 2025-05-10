@@ -5,10 +5,10 @@ import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
+import com.enderio.conduits.api.network.ConduitBlockConnection;
 import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
 import com.enderio.conduits.api.ticker.ConduitTicker;
-import com.enderio.conduits.api.network.ConduitBlockConnection;
 import com.mojang.serialization.Codec;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -88,19 +88,18 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     boolean hasMenu();
 
     @Nullable
-    default <TCapability, TContext> TCapability proxyCapability(Level level, IConduitNode node, BlockCapability<TCapability, TContext> capability,
-        @Nullable TContext context) {
+    default <TCapability, TContext> TCapability proxyCapability(Level level, IConduitNode node,
+            BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
         return null;
     }
 
     // Network connection sorting
     // Can be used to change what the network prioritizes
     default int compare(ConduitBlockConnection refNode, ConduitBlockConnection nodeA, ConduitBlockConnection nodeB) {
-        // TODO: should it be node positions or the block positions (i.e. if one node connects two chests, do closest chest first?)
-        return Integer.compare(
-            refNode.node().pos().distManhattan(nodeA.node().pos()),
-            refNode.node().pos().distManhattan(nodeB.node().pos())
-        );
+        // TODO: should it be node positions or the block positions (i.e. if one node
+        // connects two chests, do closest chest first?)
+        return Integer.compare(refNode.node().pos().distManhattan(nodeA.node().pos()),
+                refNode.node().pos().distManhattan(nodeB.node().pos()));
     }
 
     // region Conduit Checks

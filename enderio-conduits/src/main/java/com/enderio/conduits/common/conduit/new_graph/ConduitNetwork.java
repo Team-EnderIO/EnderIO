@@ -12,22 +12,22 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.*;
+import java.util.function.Consumer;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.Consumer;
-
 public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> implements IConduitNetwork {
 
     public static final Codec<ConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance
-        .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit),
-            ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context").forGetter(i -> Optional.ofNullable(i.context)))
-        .and(graphCodec(instance, ConduitNode.CODEC))
-        .apply(instance, ConduitNetwork::new));
+            .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit),
+                    ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
+                            .forGetter(i -> Optional.ofNullable(i.context)))
+            .and(graphCodec(instance, ConduitNode.CODEC))
+            .apply(instance, ConduitNetwork::new));
 
     private final Holder<Conduit<?, ?>> conduit;
 
@@ -43,17 +43,22 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     private final Set<ConduitNode> loadedNodes = Sets.newHashSet();
 
     private final SetMultimap<ConduitNode, ConduitBlockConnection> endpointConnections = HashMultimap.create();
-    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> accessibleBlockConnectionsMap = Maps.newHashMap();
+    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> accessibleBlockConnectionsMap = Maps
+            .newHashMap();
 
     private final List<ConduitBlockConnection> sendingConnections = Lists.newArrayList();
     private final List<ConduitBlockConnection> receivingConnections = Lists.newArrayList();
 
     private final Set<DyeColor> allChannels = Sets.newHashSet();
-    private final ListMultimap<DyeColor, ConduitBlockConnection> sendingConnectionsByChannel = ArrayListMultimap.create();
-    private final ListMultimap<DyeColor, ConduitBlockConnection> receivingConnectionsByChannel = ArrayListMultimap.create();
+    private final ListMultimap<DyeColor, ConduitBlockConnection> sendingConnectionsByChannel = ArrayListMultimap
+            .create();
+    private final ListMultimap<DyeColor, ConduitBlockConnection> receivingConnectionsByChannel = ArrayListMultimap
+            .create();
 
-    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> receivingConnectionsBySender = Maps.newHashMap();
-    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> sendingConnectionsByReceiver = Maps.newHashMap();
+    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> receivingConnectionsBySender = Maps
+            .newHashMap();
+    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> sendingConnectionsByReceiver = Maps
+            .newHashMap();
 
     private Consumer<ConduitNetwork> onChunkCoverageChanged;
 
@@ -64,7 +69,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
     // TODO: Only public for legacy deserialisation.
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public ConduitNetwork(Holder<Conduit<?, ?>> conduit, Optional<ConduitNetworkContext<?>> context, List<ConduitNode> nodes, IndexedEdgeList edges) {
+    public ConduitNetwork(Holder<Conduit<?, ?>> conduit, Optional<ConduitNetworkContext<?>> context,
+            List<ConduitNode> nodes, IndexedEdgeList edges) {
         super(nodes, edges);
         this.conduit = conduit;
         this.context = context.orElse(null);
@@ -253,8 +259,9 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         if (!loadedNodes.contains(node)) {
             addLoadedNode(node);
         } else {
-            // TODO: We should do this with a partial edit rather than remove then add again...
-            //       This will do for testing though
+            // TODO: We should do this with a partial edit rather than remove then add
+            // again...
+            // This will do for testing though
             removeLoadedNode(node);
             addLoadedNode(node);
         }
@@ -297,7 +304,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
             }
 
             // Add own list of block connection accesses.
-            accessibleBlockConnectionsMap.computeIfAbsent(connection, k -> new ArrayList<>(endpointConnections.values().size()));
+            accessibleBlockConnectionsMap.computeIfAbsent(connection,
+                    k -> new ArrayList<>(endpointConnections.values().size()));
             for (var accessibleConnection : endpointConnections.values()) {
                 if (accessibleConnection != connection) {
                     accessibleBlockConnectionsMap.get(connection).add(accessibleConnection);
@@ -321,9 +329,11 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
                     receivingConnectionsByChannel.put(ioConnectionConfig.receiveColor(), connection);
                 }
 
-                // Now handle the mappings between them, do it after both are added in case we can self-feed.
+                // Now handle the mappings between them, do it after both are added in case we
+                // can self-feed.
                 if (canSend) {
-                    receivingConnectionsBySender.computeIfAbsent(connection, k -> new ArrayList<>()).addAll(receivingConnectionsByChannel.get(ioConnectionConfig.sendColor()));
+                    receivingConnectionsBySender.computeIfAbsent(connection, k -> new ArrayList<>())
+                            .addAll(receivingConnectionsByChannel.get(ioConnectionConfig.sendColor()));
 
                     for (var receiver : receivingConnectionsByChannel.get(ioConnectionConfig.sendColor())) {
                         sendingConnectionsByReceiver.computeIfAbsent(receiver, k -> new ArrayList<>()).add(connection);
@@ -331,11 +341,13 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
                 }
 
                 if (canReceive) {
-                    sendingConnectionsByReceiver.computeIfAbsent(connection, k -> new ArrayList<>()).addAll(sendingConnectionsByChannel.get(ioConnectionConfig.receiveColor()));
+                    sendingConnectionsByReceiver.computeIfAbsent(connection, k -> new ArrayList<>())
+                            .addAll(sendingConnectionsByChannel.get(ioConnectionConfig.receiveColor()));
 
                     for (var sender : sendingConnectionsByChannel.get(ioConnectionConfig.receiveColor())) {
                         if (sender != connection) {
-                            receivingConnectionsBySender.computeIfAbsent(sender, k -> new ArrayList<>()).add(connection);
+                            receivingConnectionsBySender.computeIfAbsent(sender, k -> new ArrayList<>())
+                                    .add(connection);
                         }
                     }
                 }

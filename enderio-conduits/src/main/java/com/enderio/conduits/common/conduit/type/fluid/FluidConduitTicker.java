@@ -4,10 +4,8 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.network.ConduitBlockConnection;
 import com.enderio.conduits.api.network.IConduitNetwork;
 import com.enderio.conduits.api.ticker.ConduitTicker;
-
 import java.util.List;
 import java.util.Objects;
-
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
@@ -28,7 +26,8 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
 
         for (var channel : network.allChannels()) {
             for (var receivingConnection : network.receivingConnections(channel)) {
-                IFluidHandler extractHandler = receivingConnection.getConnectedCapability(Capabilities.FluidHandler.BLOCK);
+                IFluidHandler extractHandler = receivingConnection
+                        .getConnectedCapability(Capabilities.FluidHandler.BLOCK);
                 if (extractHandler == null) {
                     continue;
                 }
@@ -72,11 +71,13 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
         }
     }
 
-    private int doFluidTransfer(Fluid fluid, int maxTransfer, ConduitBlockConnection receiver, List<ConduitBlockConnection> senders) {
+    private int doFluidTransfer(Fluid fluid, int maxTransfer, ConduitBlockConnection receiver,
+            List<ConduitBlockConnection> senders) {
         var receiverHandler = Objects.requireNonNull(receiver.getConnectedCapability(Capabilities.FluidHandler.BLOCK));
 
         // Attempt to drain fluid from the target.
-        FluidStack extractedFluid = receiverHandler.drain(new FluidStack(fluid, maxTransfer), IFluidHandler.FluidAction.SIMULATE);
+        FluidStack extractedFluid = receiverHandler.drain(new FluidStack(fluid, maxTransfer),
+                IFluidHandler.FluidAction.SIMULATE);
         if (extractedFluid.isEmpty()) {
             return maxTransfer;
         }
@@ -115,7 +116,8 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
             }
 
             // Attempt to transfer fluid.
-            FluidStack transferredFluid = FluidUtil.tryFluidTransfer(insertHandler, receiverHandler, fluidToInsert, true);
+            FluidStack transferredFluid = FluidUtil.tryFluidTransfer(insertHandler, receiverHandler, fluidToInsert,
+                    true);
 
             // Deduct the transferred fluid from our maximum transfer.
             maxTransfer -= transferredFluid.getAmount();

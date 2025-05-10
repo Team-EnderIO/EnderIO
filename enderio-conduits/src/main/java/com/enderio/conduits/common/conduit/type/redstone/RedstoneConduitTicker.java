@@ -22,11 +22,12 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
                 int signal;
 
                 var redstoneExtractFilter = receivingConnection.getInventory()
-                    .getStackInSlot(RedstoneConduit.EXTRACT_FILTER_SLOT)
-                    .getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
+                        .getStackInSlot(RedstoneConduit.EXTRACT_FILTER_SLOT)
+                        .getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
 
                 if (redstoneExtractFilter != null) {
-                    signal = redstoneExtractFilter.getInputSignal(level, receivingConnection.blockPos(), receivingConnection.connectionSide());
+                    signal = redstoneExtractFilter.getInputSignal(level, receivingConnection.blockPos(),
+                            receivingConnection.connectionSide());
                 } else {
                     signal = level.getSignal(receivingConnection.blockPos(), receivingConnection.connectionSide());
                 }

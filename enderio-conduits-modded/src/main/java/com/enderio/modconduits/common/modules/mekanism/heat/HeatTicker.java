@@ -3,7 +3,6 @@ package com.enderio.modconduits.common.modules.mekanism.heat;
 import com.enderio.conduits.api.network.IConduitNetwork;
 import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
-
 import mekanism.api.heat.IHeatHandler;
 import net.minecraft.server.level.ServerLevel;
 
@@ -28,9 +27,9 @@ public class HeatTicker implements ConduitTicker<HeatConduit> {
 
                 double heatCapacity = extractHandler.getTotalHeatCapacity();
                 double invConduction = insertHandler.getTotalInverseConduction()
-                    + extractHandler.getTotalInverseConduction();
+                        + extractHandler.getTotalInverseConduction();
                 double tempToTransfer = (extractHandler.getTotalTemperature() - insertHandler.getTotalTemperature())
-                    / invConduction; // TODO subtract ambient? - HeatAPI.getAmbientTemp(level, )
+                        / invConduction; // TODO subtract ambient? - HeatAPI.getAmbientTemp(level, )
 
                 double heatToTransfer = tempToTransfer * heatCapacity;
                 if (heatToTransfer > 0) {

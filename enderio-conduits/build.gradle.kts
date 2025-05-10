@@ -27,8 +27,6 @@ sourceSets {
 val regiliteVersion: String by project
 val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
-val graphlibVersion: String by project
-val graphlibVersionRange: String by project
 val cctMinecraftVersion: String by project
 val cctVersion: String by project
 val jadeFileId: String by project
@@ -58,14 +56,6 @@ dependencies {
     // TODO: This isn't great.
     compileOnly(project(":enderio-machines"))
     add("localRuntime", project(":enderio-machines"))
-
-    api("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
-    jarJar("dev.gigaherz.graph:GraphLib3:$graphlibVersion") {
-        version {
-            strictly(graphlibVersionRange)
-            prefer(graphlibVersion)
-        }
-    }
 }
 
 neoForge {

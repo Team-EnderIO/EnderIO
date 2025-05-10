@@ -6,9 +6,8 @@ import com.enderio.conduits.api.connection.ConnectionStatus;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.facade.FacadeType;
-import java.util.List;
-
 import com.enderio.conduits.api.network.node.IConduitNode;
+import java.util.List;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;

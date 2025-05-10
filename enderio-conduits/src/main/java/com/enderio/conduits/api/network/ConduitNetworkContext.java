@@ -5,7 +5,7 @@ import com.mojang.serialization.Codec;
 
 public interface ConduitNetworkContext<T extends ConduitNetworkContext<T>> {
     Codec<ConduitNetworkContext<?>> GENERIC_CODEC = EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE.byNameCodec()
-        .dispatch(ConduitNetworkContext::type, ConduitNetworkContextType::codec);
+            .dispatch(ConduitNetworkContext::type, ConduitNetworkContextType::codec);
 
     T mergeWith(T other);
 

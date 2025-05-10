@@ -23,7 +23,6 @@ import com.enderio.conduits.common.conduit.legacy.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.legacy.StaticConnectionStates;
 import com.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.conduits.common.conduit.new_graph.ConduitNetworkSavedData;
-import com.enderio.conduits.common.conduit.new_graph.ConduitNetwork;
 import com.enderio.conduits.common.conduit.new_graph.ConduitNode;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitTypes;
@@ -335,7 +334,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                         var otherNetwork = otherNode.getNetwork();
 
                         if (thisNetwork != otherNetwork) {
-                            thisNetwork.disconnect(thisNode, otherNode, n -> ConduitNetworkSavedData.onNetworkCreated(serverLevel, n));
+                            thisNetwork.disconnect(thisNode, otherNode,
+                                    n -> ConduitNetworkSavedData.onNetworkCreated(serverLevel, n));
                         }
 
                         bundleChanged();
@@ -389,8 +389,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             return null;
         }
 
-        return conduit.value()
-                .proxyCapability(blockEntity.level, node, capability, context);
+        return conduit.value().proxyCapability(blockEntity.level, node, capability, context);
     }
 
     // endregion
@@ -985,13 +984,14 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     @Nullable
-    public <TCapability> TCapability getNeighbourCapability(Holder<Conduit<?, ?>> conduit, BlockCapability<TCapability, Direction> capability, Direction side) {
+    public <TCapability> TCapability getNeighbourCapability(Holder<Conduit<?, ?>> conduit,
+            BlockCapability<TCapability, Direction> capability, Direction side) {
         // Doesn't use EnderBlockEntity's capability cache so that we can bin capability
         // caches that aren't needed when conduits are removed.
         // Probably an "early optimization" but I don't think this really hurts.
         if (level instanceof ServerLevel serverLevel) {
             var capabilityCache = neighbouringCapabilityCaches.computeIfAbsent(conduit,
-                c -> new NeighbouringCapabilityCaches());
+                    c -> new NeighbouringCapabilityCaches());
             return capabilityCache.getCapability(capability, serverLevel, getBlockPos(), side);
         }
 
@@ -1197,7 +1197,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)
-    private void loadConduitFromSavedData(ConduitNetworkSavedData savedData, Holder<Conduit<?, ?>> conduit, int typeIndex) {
+    private void loadConduitFromSavedData(ConduitNetworkSavedData savedData, Holder<Conduit<?, ?>> conduit,
+            int typeIndex) {
         if (level == null || level.isClientSide()) {
             return;
         }
@@ -1642,9 +1643,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                         .fieldOf("connections")
                         .forGetter(i -> i.connections),
                 ItemStack.OPTIONAL_CODEC.optionalFieldOf("facade", ItemStack.EMPTY).forGetter(i -> i.facadeItem),
-                Codec.unboundedMap(Conduit.CODEC, ConduitNode.CODEC)
-                        .fieldOf("nodes")
-                        .forGetter(i -> i.conduitNodes))
+                Codec.unboundedMap(Conduit.CODEC, ConduitNode.CODEC).fieldOf("nodes").forGetter(i -> i.conduitNodes))
                 .apply(instance, LegacyConduitBundle::new));
 
         public static LegacyConduitBundle parse(HolderLookup.Provider lookupProvider, Tag tag) {

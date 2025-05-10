@@ -1,12 +1,10 @@
 package com.enderio.core;
 
 import com.enderio.core.common.graph.BasicNetwork;
-
+import com.mojang.datafixers.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.mojang.datafixers.util.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +46,8 @@ public class NetworkTests {
         var network1 = node1.getNetwork();
         var network2 = node3.getNetwork();
 
-        // Connect their secondary nodes (this will discard node2's and node4's networks)
+        // Connect their secondary nodes (this will discard node2's and node4's
+        // networks)
         network1.connect(node1, node2);
         network2.connect(node3, node4);
 
@@ -90,7 +89,8 @@ public class NetworkTests {
         // Ensure all nodes belong to the same graph
         Assertions.assertEquals(node1.getNetwork(), node3.getNetwork());
 
-        // Remove node2 from the network (should cause a split for node1 and node3, and should invalidate node2)
+        // Remove node2 from the network (should cause a split for node1 and node3, and
+        // should invalidate node2)
         Assertions.assertDoesNotThrow(() -> node2.getNetwork().remove(node2));
         Assertions.assertFalse(node2.isValid());
 
@@ -100,7 +100,8 @@ public class NetworkTests {
         Assertions.assertTrue(node3.getNetwork().contains(node3));
     }
 
-    @Test void testNetworkConnectMany() {
+    @Test
+    void testNetworkConnectMany() {
         var node1 = new TestNode();
 
         // Create some neighbors
@@ -131,10 +132,7 @@ public class NetworkTests {
 
         var nodes = List.of(node1, node2, node3, node4);
 
-        var edges = List.of(
-            Pair.of(node1, node2),
-            Pair.of(node2, node3),
-            Pair.of(node3, node4));
+        var edges = List.of(Pair.of(node1, node2), Pair.of(node2, node3), Pair.of(node3, node4));
 
         var network = new BasicNetwork<>(nodes, edges);
 
@@ -149,7 +147,8 @@ public class NetworkTests {
 
     @Test
     public void testNetworkEdgeIndexing() {
-        // This test is to ensure the node and edge indexing used for serialization works as expected.
+        // This test is to ensure the node and edge indexing used for serialization
+        // works as expected.
         var node1 = new TestNode(false);
         var node2 = new TestNode(false);
         var node3 = new TestNode(false);
@@ -157,10 +156,7 @@ public class NetworkTests {
 
         var nodes = List.of(node1, node2, node3, node4);
 
-        var edges = List.of(
-            Pair.of(node1, node2),
-            Pair.of(node2, node3),
-            Pair.of(node3, node4));
+        var edges = List.of(Pair.of(node1, node2), Pair.of(node2, node3), Pair.of(node3, node4));
 
         var network = new BasicNetwork<>(nodes, edges);
 
@@ -174,8 +170,8 @@ public class NetworkTests {
 
             // See if we can find this pair
             for (var pair : edgeIndices.edges()) {
-                if ((pair.getFirst() == indexA && pair.getSecond() == indexB) ||
-                    pair.getFirst() == indexB && pair.getSecond() == indexA) {
+                if ((pair.getFirst() == indexA && pair.getSecond() == indexB)
+                        || pair.getFirst() == indexB && pair.getSecond() == indexA) {
                     found = true;
                     break;
                 }

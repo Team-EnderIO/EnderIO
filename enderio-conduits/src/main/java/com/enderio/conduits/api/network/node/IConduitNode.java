@@ -3,7 +3,6 @@ package com.enderio.conduits.api.network.node;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.network.IConduitNetwork;
-import com.enderio.core.common.graph.INetworkNode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;
@@ -15,7 +14,9 @@ import org.jetbrains.annotations.Nullable;
 @ApiStatus.AvailableSince("8.0.0")
 public interface IConduitNode {
     BlockPos pos();
+
     boolean isLoaded();
+
     void markDirty();
 
     IConduitNetwork getNetwork();
@@ -54,7 +55,8 @@ public interface IConduitNode {
     <T extends NodeData> void setNodeData(@Nullable T data);
 
     @Nullable
-    <TCapability> TCapability getCapabilityAtNeighbor(BlockCapability<TCapability, Direction> capability, Direction side);
+    <TCapability> TCapability getCapabilityAtNeighbor(BlockCapability<TCapability, Direction> capability,
+            Direction side);
 
     boolean hasRedstoneSignal(@Nullable DyeColor signalColor);
 
@@ -63,7 +65,9 @@ public interface IConduitNode {
     boolean isConnectedTo(Direction side);
 
     ConnectionConfig getConnectionConfig(Direction side);
+
     <T extends ConnectionConfig> T getConnectionConfig(Direction side, ConnectionConfigType<T> type);
+
     void setConnectionConfig(Direction side, ConnectionConfig config);
 
     IItemHandlerModifiable getInventory(Direction side);

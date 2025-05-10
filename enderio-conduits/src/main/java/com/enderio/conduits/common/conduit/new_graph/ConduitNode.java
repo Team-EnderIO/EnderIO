@@ -12,6 +12,8 @@ import com.enderio.core.common.graph.INetworkNode;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.Objects;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -20,34 +22,34 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-import java.util.Optional;
-
 public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNode>, IConduitNode {
 
     // TODO: 1.22 - Remove legacy codec.
     private static final Codec<ConduitNode> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
-        .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNode::pos),
-            ConduitDataContainer.CODEC.fieldOf("data").forGetter(i -> i.legacyDataContainer))
-        .apply(instance, ConduitNode::new));
+            .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNode::pos),
+                    ConduitDataContainer.CODEC.fieldOf("data").forGetter(i -> i.legacyDataContainer))
+            .apply(instance, ConduitNode::new));
 
     private static final Codec<ConduitNode> NEW_CODEC = RecordCodecBuilder
-        .create(instance -> instance
-            .group(
-                BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNode::pos),
-                NodeData.GENERIC_CODEC.optionalFieldOf("data").forGetter(i -> Optional.ofNullable(i.nodeData)))
-            .apply(instance, ConduitNode::new));
+            .create(instance -> instance
+                    .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNode::pos),
+                            NodeData.GENERIC_CODEC.optionalFieldOf("data")
+                                    .forGetter(i -> Optional.ofNullable(i.nodeData)))
+                    .apply(instance, ConduitNode::new));
 
     public static final Codec<ConduitNode> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
 
     private final BlockPos pos;
 
-    @Nullable private NodeData nodeData;
+    @Nullable
+    private NodeData nodeData;
 
     // TODO: Remove in 1.22
-    @Nullable private ConduitDataContainer legacyDataContainer = null;
+    @Nullable
+    private ConduitDataContainer legacyDataContainer = null;
 
-    @Nullable private ConduitNetwork network;
+    @Nullable
+    private ConduitNetwork network;
 
     @Nullable
     private ConduitBundleBlockEntity conduitBundle;
@@ -55,7 +57,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
     private Holder<Conduit<?, ?>> conduit;
 
     public ConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
-        this(conduit, pos, (NodeData)null);
+        this(conduit, pos, (NodeData) null);
     }
 
     public ConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos, @Nullable NodeData nodeData) {
@@ -65,7 +67,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
     }
 
     public ConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos, ConduitDataContainer legacyDataContainer) {
-        this(conduit, pos, (NodeData)null);
+        this(conduit, pos, (NodeData) null);
 
         // Extract node data from legacy data
         var oldData = legacyDataContainer.getData();
@@ -129,12 +131,13 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
             return false;
         }
 
-        return conduitBundle.hasLevel() && conduitBundle.getLevel().isLoaded(pos) && conduitBundle.getLevel().shouldTickBlocksAt(pos);
+        return conduitBundle.hasLevel() && conduitBundle.getLevel().isLoaded(pos)
+                && conduitBundle.getLevel().shouldTickBlocksAt(pos);
     }
 
     public void markDirty() {
         ensureValid();
-        //noinspection DataFlowIssue
+        // noinspection DataFlowIssue
         conduitBundle.markNodesDirty();
     }
 
@@ -152,7 +155,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
     @Nullable
     public <D extends NodeData> D getNodeData(NodeDataType<D> type) {
         if (nodeData != null && type == nodeData.type()) {
-            //noinspection unchecked
+            // noinspection unchecked
             return (D) nodeData;
         }
 
@@ -178,15 +181,16 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
 
     // region World Interaction
 
-    public <TCapability> TCapability getCapabilityAtNeighbor(BlockCapability<TCapability, Direction> capability, Direction side) {
+    public <TCapability> TCapability getCapabilityAtNeighbor(BlockCapability<TCapability, Direction> capability,
+            Direction side) {
         ensureValid();
-        //noinspection DataFlowIssue
+        // noinspection DataFlowIssue
         return conduitBundle.getNeighbourCapability(conduit, capability, side);
     }
 
     public boolean hasRedstoneSignal(@Nullable DyeColor signalColor) {
         ensureValid();
-        //noinspection DataFlowIssue
+        // noinspection DataFlowIssue
         return conduitBundle.hasRedstoneSignal(signalColor);
     }
 
@@ -196,31 +200,31 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
 
     public boolean isConnectedToBlock(Direction side) {
         ensureValid();
-        //noinspection DataFlowIssue
+        // noinspection DataFlowIssue
         return conduitBundle.getConnectionStatus(conduit, side).isEndpoint();
     }
 
     public boolean isConnectedTo(Direction side) {
         ensureValid();
-        //noinspection DataFlowIssue
+        // noinspection DataFlowIssue
         return conduitBundle.getConnectionStatus(conduit, side).isConnected();
     }
 
     public ConnectionConfig getConnectionConfig(Direction side) {
         ensureValid();
-        //noinspection DataFlowIssue
+        // noinspection DataFlowIssue
         return conduitBundle.getConnectionConfig(conduit, side);
     }
 
     public <T extends ConnectionConfig> T getConnectionConfig(Direction side, ConnectionConfigType<T> type) {
         ensureValid();
-        //noinspection DataFlowIssue
+        // noinspection DataFlowIssue
         return conduitBundle.getConnectionConfig(conduit, side, type);
     }
 
     public void setConnectionConfig(Direction side, ConnectionConfig connectionConfig) {
         ensureValid();
-        //noinspection DataFlowIssue
+        // noinspection DataFlowIssue
         conduitBundle.setConnectionConfig(conduit, side, connectionConfig);
     }
 
@@ -233,7 +237,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
 
         // We don't have to do this, but it saves null checks in the tickers.
         // Only tickers that know they have inventories should use this anyway.
-        //noinspection DataFlowIssue
+        // noinspection DataFlowIssue
         var inventory = conduitBundle.getConnectionInventory(conduit, side);
         if (inventory == null) {
             throw new IllegalStateException("This conduit does not have an inventory!");
@@ -261,7 +265,8 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
         this.network = network;
 
         if (network != null && legacyDataContainer != null) {
-            // We now know what type of conduit we are, so upgrade the connection data then drop legacy data
+            // We now know what type of conduit we are, so upgrade the connection data then
+            // drop legacy data
             network.conduit().value().copyLegacyData(this, legacyDataContainer);
             legacyDataContainer = null;
         }

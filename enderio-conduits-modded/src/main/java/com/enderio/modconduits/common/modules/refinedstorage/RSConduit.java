@@ -88,8 +88,8 @@ public record RSConduit(ResourceLocation texture, Component description)
     }
 
     @Override
-    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level, IConduitNode node, BlockCapability<TCapability, TContext> capability,
-        @Nullable TContext tContext) {
+    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level, IConduitNode node,
+            BlockCapability<TCapability, TContext> capability, @Nullable TContext tContext) {
 
         if (capability == RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability()) {
             var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);

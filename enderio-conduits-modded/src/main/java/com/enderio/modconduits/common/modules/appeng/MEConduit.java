@@ -149,8 +149,8 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
     }
 
     @Override
-    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level, IConduitNode node, BlockCapability<TCapability, TContext> capability,
-        @Nullable TContext tContext) {
+    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level, IConduitNode node,
+            BlockCapability<TCapability, TContext> capability, @Nullable TContext tContext) {
         if (capability == AECapabilities.IN_WORLD_GRID_NODE_HOST) {
             // noinspection unchecked
             return (TCapability) node.getOrCreateNodeData(MEConduitNodeData.TYPE);

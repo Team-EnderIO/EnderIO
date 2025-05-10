@@ -14,6 +14,11 @@ import com.google.common.collect.Multimap;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -33,19 +38,14 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
 @EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID)
 public class ConduitNetworkSavedData extends SavedData {
 
-    public static Codec<ConduitNetworkSavedData> CODEC = ConduitNetwork.CODEC.listOf().xmap(ConduitNetworkSavedData::new, ConduitNetworkSavedData::getNetworks);
+    public static Codec<ConduitNetworkSavedData> CODEC = ConduitNetwork.CODEC.listOf()
+            .xmap(ConduitNetworkSavedData::new, ConduitNetworkSavedData::getNetworks);
 
     private final Multimap<Holder<Conduit<?, ?>>, ConduitNetwork> networks = HashMultimap.create();
-    
+
     private final Multimap<Long, ConduitNetwork> networksByChunk = HashMultimap.create();
     private final Multimap<ConduitNetwork, Long> chunksByNetwork = HashMultimap.create();
 
@@ -54,7 +54,9 @@ public class ConduitNetworkSavedData extends SavedData {
     private static final String KEY_NEW_DATA = "Networks";
 
     public static ConduitNetworkSavedData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(new Factory<>(ConduitNetworkSavedData::new, ConduitNetworkSavedData::load), "enderio_conduit_network");
+        return level.getDataStorage()
+                .computeIfAbsent(new Factory<>(ConduitNetworkSavedData::new, ConduitNetworkSavedData::load),
+                        "enderio_conduit_network");
     }
 
     public ConduitNetworkSavedData() {
@@ -77,7 +79,8 @@ public class ConduitNetworkSavedData extends SavedData {
         }
 
         // TODO: Are we handling partials fine here?
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nbt.get(KEY_NEW_DATA)).getPartialOrThrow();
+        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nbt.get(KEY_NEW_DATA))
+                .getPartialOrThrow();
     }
 
     private List<ConduitNetwork> getNetworks() {
@@ -87,7 +90,8 @@ public class ConduitNetworkSavedData extends SavedData {
 
     @Override
     public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        compoundTag.put(KEY_NEW_DATA, CODEC.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow());
+        compoundTag.put(KEY_NEW_DATA,
+                CODEC.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow());
         return compoundTag;
     }
 
@@ -121,11 +125,11 @@ public class ConduitNetworkSavedData extends SavedData {
         onNetworkChunksChanged(network);
         network.setOnChunkCoverageChanged(this::onNetworkChunksChanged);
     }
-    
+
     private void onNetworkChunksChanged(ConduitNetwork network) {
         var knownChunks = chunksByNetwork.get(network);
         var currentChunks = network.allChunks();
-        
+
         // Find removed chunks
         var removedChunks = knownChunks.stream().filter(chunk -> !currentChunks.contains(chunk)).toList();
 
@@ -162,7 +166,8 @@ public class ConduitNetworkSavedData extends SavedData {
         // Remove any empty or discarded graphs.
         networks.values().removeIf(network -> !network.isValid() || network.isEmpty());
 
-        Registry<Conduit<?, ?>> conduitRegistry = serverLevel.registryAccess().registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT);
+        Registry<Conduit<?, ?>> conduitRegistry = serverLevel.registryAccess()
+                .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT);
 
         for (var conduit : networks.keySet()) {
             // Skip non-ticking graphs.
@@ -178,8 +183,8 @@ public class ConduitNetworkSavedData extends SavedData {
         }
     }
 
-    private <T extends Conduit<T, ?>> void tickNetwork(ServerLevel serverLevel, Holder<Conduit<?, ?>> conduit, int conduitId, ConduitTicker<T> ticker,
-        ConduitNetwork network) {
+    private <T extends Conduit<T, ?>> void tickNetwork(ServerLevel serverLevel, Holder<Conduit<?, ?>> conduit,
+            int conduitId, ConduitTicker<T> ticker, ConduitNetwork network) {
 
         int conduitTickRate = conduit.value().graphTickRate();
 
@@ -188,8 +193,8 @@ public class ConduitNetworkSavedData extends SavedData {
             // Perform pre-tick network actions
             network.beforeTicking();
 
-            //noinspection unchecked
-            ticker.tick(serverLevel, (T)conduit.value(), network);
+            // noinspection unchecked
+            ticker.tick(serverLevel, (T) conduit.value(), network);
         }
     }
 
@@ -220,7 +225,7 @@ public class ConduitNetworkSavedData extends SavedData {
         for (Tag tag : graphsTag) {
             CompoundTag typedGraphTag = (CompoundTag) tag;
             ResourceKey<Conduit<?, ?>> conduitKey = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
-                ResourceLocation.parse(typedGraphTag.getString(KEY_TYPE)));
+                    ResourceLocation.parse(typedGraphTag.getString(KEY_TYPE)));
 
             var registry = lookupProvider.lookupOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT);
 
@@ -238,7 +243,7 @@ public class ConduitNetworkSavedData extends SavedData {
     }
 
     private static void deserializeGraphs(HolderLookup.Provider lookupProvider, Holder<Conduit<?, ?>> conduit,
-        ListTag graphs, ConduitNetworkSavedData savedData) {
+            ListTag graphs, ConduitNetworkSavedData savedData) {
         for (Tag tag1 : graphs) {
             CompoundTag graphTag = (CompoundTag) tag1;
 
@@ -256,10 +261,9 @@ public class ConduitNetworkSavedData extends SavedData {
             List<ConduitNode> nodes = new ArrayList<>();
             for (int i = 0; i < graphObjectsTag.size(); i++) {
                 CompoundTag nodeTag = graphObjectsTag.getCompound(i);
-                var node = ConduitNode.CODEC
-                    .decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nodeTag)
-                    .getOrThrow()
-                    .getFirst();
+                var node = ConduitNode.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nodeTag)
+                        .getOrThrow()
+                        .getFirst();
 
                 nodes.add(node);
             }
@@ -278,29 +282,32 @@ public class ConduitNetworkSavedData extends SavedData {
             }
 
             // Create network
-            var network = new ConduitNetwork(conduit, Optional.ofNullable(context), nodes, new Network.IndexedEdgeList(connections));
+            var network = new ConduitNetwork(conduit, Optional.ofNullable(context), nodes,
+                    new Network.IndexedEdgeList(connections));
 
             // Ensure the nodes are all valid
             if (nodes.stream().anyMatch(n -> !n.isValid())) {
                 LOGGER.error(
-                    "Node(s) are still invalid after loading the network. Please report this issue to Ender IO, loading cannot continue.");
+                        "Node(s) are still invalid after loading the network. Please report this issue to Ender IO, loading cannot continue.");
                 throw new IllegalStateException("Graph was null after loading the conduit network");
             }
 
             savedData.networks.put(conduit, network);
 
             for (var node : network.nodes()) {
-                savedData.unloadedNodes.computeIfAbsent(network.conduit(), c -> Maps.newHashMap()).put(node.pos(), node);
+                savedData.unloadedNodes.computeIfAbsent(network.conduit(), c -> Maps.newHashMap())
+                        .put(node.pos(), node);
             }
         }
     }
 
     @Nullable
-    private static ConduitNetworkContext<?> loadNetworkContext(HolderLookup.Provider lookupProvider, CompoundTag contextTag) {
+    private static ConduitNetworkContext<?> loadNetworkContext(HolderLookup.Provider lookupProvider,
+            CompoundTag contextTag) {
         ResourceLocation serializerKey = ResourceLocation.parse(contextTag.getString("Type"));
         ConduitNetworkContextType<?> contextType = Objects.requireNonNull(
-            EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE.get(serializerKey),
-            "Unable to find conduit network context type with key " + serializerKey);
+                EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE.get(serializerKey),
+                "Unable to find conduit network context type with key " + serializerKey);
 
         if (contextType.codec() == null) {
             return null;

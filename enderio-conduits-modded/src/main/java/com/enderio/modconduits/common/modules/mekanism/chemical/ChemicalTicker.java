@@ -4,10 +4,8 @@ import com.enderio.conduits.api.network.ConduitBlockConnection;
 import com.enderio.conduits.api.network.IConduitNetwork;
 import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
-
 import java.util.List;
 import java.util.Objects;
-
 import mekanism.api.Action;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
@@ -23,7 +21,8 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
 
         for (var channel : network.allChannels()) {
             for (var receivingConnection : network.receivingConnections(channel)) {
-                IChemicalHandler extractHandler = receivingConnection.getConnectedCapability(MekanismModule.Capabilities.CHEMICAL);
+                IChemicalHandler extractHandler = receivingConnection
+                        .getConnectedCapability(MekanismModule.Capabilities.CHEMICAL);
                 if (extractHandler == null) {
                     continue;
                 }
@@ -63,8 +62,10 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
         }
     }
 
-    private long doChemicalTransfer(Chemical chemical, long maxTransfer, ConduitBlockConnection receiver, List<ConduitBlockConnection> senders) {
-        var receiverHandler = Objects.requireNonNull(receiver.getConnectedCapability(MekanismModule.Capabilities.CHEMICAL));
+    private long doChemicalTransfer(Chemical chemical, long maxTransfer, ConduitBlockConnection receiver,
+            List<ConduitBlockConnection> senders) {
+        var receiverHandler = Objects
+                .requireNonNull(receiver.getConnectedCapability(MekanismModule.Capabilities.CHEMICAL));
 
         // Attempt to drain chemical from the target.
         var extractedChemical = receiverHandler.extractChemical(new ChemicalStack(chemical, maxTransfer),

@@ -6,16 +6,15 @@ import com.google.common.collect.Sets;
 import com.google.common.graph.ElementOrder;
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
+import com.mojang.datafixers.Products;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-
-import com.mojang.datafixers.Products;
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -28,7 +27,8 @@ import org.jetbrains.annotations.Nullable;
 public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends INetworkNode<TNet, TNode>> {
 
     // The underlying graph.
-    // Uses stable element ordering to ensure consistent behavior when serializing the graph.
+    // Uses stable element ordering to ensure consistent behavior when serializing
+    // the graph.
     final MutableGraph<TNode> graph = GraphBuilder.undirected()
             .allowsSelfLoops(false)
             .nodeOrder(ElementOrder.stable())
@@ -54,7 +54,8 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
     public Network(List<TNode> nodes, List<Pair<TNode, TNode>> edges) {
         // Ensure there's at least one edge.
         Preconditions.checkArgument(!nodes.isEmpty(), "Cannot create a network with no nodes.");
-        Preconditions.checkArgument(nodes.stream().noneMatch(INetworkNode::isValid), "Some nodes are already in networks.");
+        Preconditions.checkArgument(nodes.stream().noneMatch(INetworkNode::isValid),
+                "Some nodes are already in networks.");
 
         // Special case for a single starting node
         if (nodes.size() == 1) {
@@ -66,8 +67,10 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
             return;
         }
 
-        // If some of these nodes are already in networks, the caller should use connect/connectMany instead.
-        Preconditions.checkArgument(edges.stream().allMatch(e -> nodes.contains(e.getFirst()) && nodes.contains(e.getSecond())),
+        // If some of these nodes are already in networks, the caller should use
+        // connect/connectMany instead.
+        Preconditions.checkArgument(
+                edges.stream().allMatch(e -> nodes.contains(e.getFirst()) && nodes.contains(e.getSecond())),
                 "Some edges reference nodes that were not included in the node list.");
 
         // Add all edges (and nodes)
@@ -192,7 +195,8 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
         Preconditions.checkArgument(contains(node), "Node is not in this graph.");
 
         // Find all networks within the neighbors
-        // We don't immediately merge to avoid creating invalid state if preconditions fail.
+        // We don't immediately merge to avoid creating invalid state if preconditions
+        // fail.
         Set<TNet> otherNetworks = Sets.newHashSet();
         for (var neighbor : neighbors) {
             Preconditions.checkArgument(neighbor != node, "Cannot connect a node to itself.");
@@ -387,8 +391,10 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
 
     // region Serialization Helpers
 
-    protected static <TNet extends Network<TNet, TNode>, TNode extends INetworkNode<TNet, TNode>> Products.P2<RecordCodecBuilder.Mu<TNet>, List<TNode>, IndexedEdgeList> graphCodec(RecordCodecBuilder.Instance<TNet> instance, Codec<TNode> nodeCodec) {
-        return instance.group(nodeCodec.listOf().fieldOf("nodes").forGetter(TNet::createNodeList), IndexedEdgeList.CODEC.fieldOf("edges").forGetter(TNet::createEdgeIndices));
+    protected static <TNet extends Network<TNet, TNode>, TNode extends INetworkNode<TNet, TNode>> Products.P2<RecordCodecBuilder.Mu<TNet>, List<TNode>, IndexedEdgeList> graphCodec(
+            RecordCodecBuilder.Instance<TNet> instance, Codec<TNode> nodeCodec) {
+        return instance.group(nodeCodec.listOf().fieldOf("nodes").forGetter(TNet::createNodeList),
+                IndexedEdgeList.CODEC.fieldOf("edges").forGetter(TNet::createEdgeIndices));
     }
 
     public List<TNode> createNodeList() {
@@ -397,23 +403,29 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
 
     public IndexedEdgeList createEdgeIndices() {
         // Copy our edges into a list.
-        // Because the underlying graph is set to be "stable", the order of this list should be constant.
+        // Because the underlying graph is set to be "stable", the order of this list
+        // should be constant.
         var nodes = createNodeList();
-        return new IndexedEdgeList(edges().map(pair -> Pair.of(nodes.indexOf(pair.getFirst()), nodes.indexOf(pair.getSecond()))).toList());
+        return new IndexedEdgeList(
+                edges().map(pair -> Pair.of(nodes.indexOf(pair.getFirst()), nodes.indexOf(pair.getSecond()))).toList());
     }
 
     // Wrapper to get around type erasure issue in the constructors.
     public record IndexedEdgeList(List<Pair<Integer, Integer>> edges) {
-        private static final Codec<Pair<Integer, Integer>> EDGE_CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            Codec.INT.fieldOf("first").forGetter(Pair::getFirst),
-            Codec.INT.fieldOf("second").forGetter(Pair::getSecond)
-        ).apply(inst, Pair::of));
+        private static final Codec<Pair<Integer, Integer>> EDGE_CODEC = RecordCodecBuilder
+                .create(inst -> inst
+                        .group(Codec.INT.fieldOf("first").forGetter(Pair::getFirst),
+                                Codec.INT.fieldOf("second").forGetter(Pair::getSecond))
+                        .apply(inst, Pair::of));
 
-        public static final Codec<IndexedEdgeList> CODEC = EDGE_CODEC.listOf().xmap(
-            IndexedEdgeList::new, IndexedEdgeList::edges);
+        public static final Codec<IndexedEdgeList> CODEC = EDGE_CODEC.listOf()
+                .xmap(IndexedEdgeList::new, IndexedEdgeList::edges);
 
-        public <TNode extends INetworkNode<? extends Network<?, TNode>, TNode>> List<Pair<TNode, TNode>> expand(List<TNode> nodes) {
-            return edges.stream().map(pair -> Pair.of(nodes.get(pair.getFirst()), nodes.get(pair.getSecond()))).toList();
+        public <TNode extends INetworkNode<? extends Network<?, TNode>, TNode>> List<Pair<TNode, TNode>> expand(
+                List<TNode> nodes) {
+            return edges.stream()
+                    .map(pair -> Pair.of(nodes.get(pair.getFirst()), nodes.get(pair.getSecond())))
+                    .toList();
         }
     }
 
