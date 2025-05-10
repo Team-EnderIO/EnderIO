@@ -61,7 +61,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Clearable;
 import net.minecraft.world.Container;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -859,7 +858,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                     conduit.value().onConnectTo(neighbourNode, node);
 
                     // Connect the neighbor to our node.
-                    node.getNetwork().connect(node, neighbourNode, n -> ConduitNetworkSavedData.onNetworkDiscarded((ServerLevel) level, n));
+                    node.getNetwork()
+                            .connect(node, neighbourNode,
+                                    n -> ConduitNetworkSavedData.onNetworkDiscarded((ServerLevel) level, n));
                 }
                 return true;
             }
@@ -1257,7 +1258,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     public void setRemoved() {
         super.setRemoved();
 
-        // Remove all conduits and the facade if this block is being destroyed (not unloaded).
+        // Remove all conduits and the facade if this block is being destroyed (not
+        // unloaded).
         if (!isChunkUnload) {
             var allConduits = List.copyOf(getConduits());
             for (var conduit : allConduits) {

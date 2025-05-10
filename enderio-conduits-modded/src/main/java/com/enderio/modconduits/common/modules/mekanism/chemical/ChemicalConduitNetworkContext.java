@@ -5,10 +5,9 @@ import com.enderio.conduits.api.network.ConduitNetworkContextType;
 import com.enderio.conduits.api.network.IConduitNetwork;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.Set;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.Chemical;
-
-import java.util.Set;
 
 public class ChemicalConduitNetworkContext implements ConduitNetworkContext<ChemicalConduitNetworkContext> {
 
@@ -65,7 +64,8 @@ public class ChemicalConduitNetworkContext implements ConduitNetworkContext<Chem
     }
 
     @Override
-    public ChemicalConduitNetworkContext split(IConduitNetwork selfNetwork, Set<? extends IConduitNetwork> allNetworks) {
+    public ChemicalConduitNetworkContext split(IConduitNetwork selfNetwork,
+            Set<? extends IConduitNetwork> allNetworks) {
         return new ChemicalConduitNetworkContext(lockedChemical);
     }
 

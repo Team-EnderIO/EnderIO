@@ -5,8 +5,9 @@ import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.conduits.api.network.IConduitNetwork;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
-import com.enderio.conduits.common.init.Conduits;
 import com.mojang.authlib.GameProfile;
+import java.util.UUID;
+import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -20,13 +21,9 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.testframework.gametest.ExtendedGameTestHelper;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
-import java.util.function.Predicate;
 
 public class ConduitGameTestHelper extends ExtendedGameTestHelper {
     private static final UUID DEFAULT_FAKE_PLAYER_UUID = UUID.fromString("dc8dcc7b-033e-4157-a547-26cae4971aba");
@@ -51,7 +48,8 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         var absolutePos = absolutePos(new BlockPos(x, y, z));
         var conduitItem = ConduitBlockItem.getStackFor(conduit, 1);
         if (conduitItem.getItem() instanceof BlockItem blockItem) {
-            blockItem.place(new BlockPlaceContext(getLevel(), fakePlayer, InteractionHand.MAIN_HAND, conduitItem, new BlockHitResult(absolutePos.getCenter(), Direction.DOWN, absolutePos, false)));
+            blockItem.place(new BlockPlaceContext(getLevel(), fakePlayer, InteractionHand.MAIN_HAND, conduitItem,
+                    new BlockHitResult(absolutePos.getCenter(), Direction.DOWN, absolutePos, false)));
         }
     }
 
@@ -69,7 +67,8 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         }
     }
 
-    public void fillConduits(Holder<Conduit<?, ?>> conduit, int startX, int startY, int startZ, int endX, int endY, int endZ) {
+    public void fillConduits(Holder<Conduit<?, ?>> conduit, int startX, int startY, int startZ, int endX, int endY,
+            int endZ) {
         for (int x = startX; x <= endX; x++) {
             for (int y = startY; y <= endY; y++) {
                 for (int z = startZ; z <= endZ; z++) {
@@ -81,7 +80,8 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
 
     @Nullable
     public ConduitBundleBlockEntity getConduitBundle(int x, int y, int z, boolean allowMissing) {
-        if (getLevel().getBlockEntity(absolutePos(new BlockPos(x, y, z))) instanceof ConduitBundleBlockEntity conduitBundle) {
+        if (getLevel()
+                .getBlockEntity(absolutePos(new BlockPos(x, y, z))) instanceof ConduitBundleBlockEntity conduitBundle) {
             return conduitBundle;
         }
 
@@ -91,7 +91,8 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         return null;
     }
 
-    public void assertAllConduitBundlesMatch(int startX, int startY, int startZ, int endX, int endY, int endZ, boolean allowMissingBundles, Predicate<ConduitBundleBlockEntity> predicate, String errorMessage) {
+    public void assertAllConduitBundlesMatch(int startX, int startY, int startZ, int endX, int endY, int endZ,
+            boolean allowMissingBundles, Predicate<ConduitBundleBlockEntity> predicate, String errorMessage) {
         for (int x = startX; x <= endX; x++) {
             for (int y = startY; y <= endY; y++) {
                 for (int z = startZ; z <= endZ; z++) {
@@ -104,7 +105,8 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         }
     }
 
-    public void assertAllNetworksMatch(Holder<Conduit<?, ?>> conduit, int startX, int startY, int startZ, int endX, int endY, int endZ, boolean allowMissingBundles) {
+    public void assertAllNetworksMatch(Holder<Conduit<?, ?>> conduit, int startX, int startY, int startZ, int endX,
+            int endY, int endZ, boolean allowMissingBundles) {
         boolean foundFirstNetwork = false;
         IConduitNetwork network = null;
 
@@ -130,7 +132,8 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         }
     }
 
-    public void assertAllNetworksDiffer(Holder<Conduit<?, ?>> conduit, int startX, int startY, int startZ, int endX, int endY, int endZ, boolean allowMissingBundles) {
+    public void assertAllNetworksDiffer(Holder<Conduit<?, ?>> conduit, int startX, int startY, int startZ, int endX,
+            int endY, int endZ, boolean allowMissingBundles) {
         for (int x1 = startX; x1 <= endX; x1++) {
             for (int y1 = startY; y1 <= endY; y1++) {
                 for (int z1 = startZ; z1 <= endZ; z1++) {
@@ -156,7 +159,8 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
                                 var nodeB = bundleB.getConduitNode(conduit);
 
                                 if (nodeA.getNetwork() == nodeB.getNetwork()) {
-                                    throw new GameTestAssertException("Conduit nodes have same network at " + x1 + ", " + y1 + ", " + z1 + " and " + x2 + ", " + y2 + ", " + z2);
+                                    throw new GameTestAssertException("Conduit nodes have same network at " + x1 + ", "
+                                            + y1 + ", " + z1 + " and " + x2 + ", " + y2 + ", " + z2);
                                 }
                             }
                         }
@@ -166,7 +170,8 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         }
     }
 
-    public void assertNetworksMatchBetween(Holder<Conduit<?, ?>> conduit, int x1, int y1, int z1, int x2, int y2, int z2) {
+    public void assertNetworksMatchBetween(Holder<Conduit<?, ?>> conduit, int x1, int y1, int z1, int x2, int y2,
+            int z2) {
         var firstBundle = getConduitBundle(x1, y1, z1, false);
         var secondBundle = getConduitBundle(x2, y2, z2, false);
 
@@ -174,11 +179,13 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         var secondNode = secondBundle.getConduitNode(conduit);
 
         if (firstNode.getNetwork() != secondNode.getNetwork()) {
-            throw new GameTestAssertException("Conduit nodes have different networks at " + x1 + ", " + y1 + ", " + z1 + " and " + x2 + ", " + y2 + ", " + z2);
+            throw new GameTestAssertException("Conduit nodes have different networks at " + x1 + ", " + y1 + ", " + z1
+                    + " and " + x2 + ", " + y2 + ", " + z2);
         }
     }
 
-    public void assertNetworksDifferBetween(Holder<Conduit<?, ?>> conduit, int x1, int y1, int z1, int x2, int y2, int z2) {
+    public void assertNetworksDifferBetween(Holder<Conduit<?, ?>> conduit, int x1, int y1, int z1, int x2, int y2,
+            int z2) {
         var firstBundle = getConduitBundle(x1, y1, z1, false);
         var secondBundle = getConduitBundle(x2, y2, z2, false);
 
@@ -186,7 +193,8 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         var secondNode = secondBundle.getConduitNode(conduit);
 
         if (firstNode.getNetwork() == secondNode.getNetwork()) {
-            throw new GameTestAssertException("Conduit nodes have same network at " + x1 + ", " + y1 + ", " + z1 + " and " + x2 + ", " + y2 + ", " + z2);
+            throw new GameTestAssertException("Conduit nodes have same network at " + x1 + ", " + y1 + ", " + z1
+                    + " and " + x2 + ", " + y2 + ", " + z2);
         }
     }
 }

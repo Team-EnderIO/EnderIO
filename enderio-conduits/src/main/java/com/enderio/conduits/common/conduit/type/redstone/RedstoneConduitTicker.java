@@ -29,7 +29,8 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
                     signal = redstoneExtractFilter.getInputSignal(level, receivingConnection.connectedBlockPos(),
                             receivingConnection.connectionSide());
                 } else {
-                    signal = level.getSignal(receivingConnection.connectedBlockPos(), receivingConnection.connectionSide());
+                    signal = level.getSignal(receivingConnection.connectedBlockPos(),
+                            receivingConnection.connectionSide());
                 }
 
                 if (signal > 0) {

@@ -16,7 +16,6 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
@@ -26,11 +25,12 @@ import org.jetbrains.annotations.Nullable;
 public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> implements IConduitNetwork {
 
     public static final Codec<ConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance
-        .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit), ConduitNetworkContext.GENERIC_CODEC
-            .optionalFieldOf("context")
-            .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty() : Optional.of(i.context)))
-        .and(graphCodec(instance, ConduitNode.CODEC))
-        .apply(instance, ConduitNetwork::new));
+            .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit),
+                    ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
+                            .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
+                                    : Optional.of(i.context)))
+            .and(graphCodec(instance, ConduitNode.CODEC))
+            .apply(instance, ConduitNetwork::new));
 
     private final Holder<Conduit<?, ?>> conduit;
 
@@ -562,7 +562,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         for (var newNetwork : newNetworks) {
             newNetwork.context = context.split(newNetwork, allNetworks);
             if (newNetwork.context == context) {
-                throw new IllegalStateException("Splitting context for a network of '" + conduit.getRegisteredName() + "' resulted in the same context for multiple networks.");
+                throw new IllegalStateException("Splitting context for a network of '" + conduit.getRegisteredName()
+                        + "' resulted in the same context for multiple networks.");
             }
 
             newNetwork.shouldRebuildCache = true;
@@ -570,7 +571,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
         var newContext = context.split(this, allNetworks);
         if (newContext == context) {
-            throw new IllegalStateException("Splitting context for a network of '" + conduit.getRegisteredName() + "' resulted in the same context for multiple networks.");
+            throw new IllegalStateException("Splitting context for a network of '" + conduit.getRegisteredName()
+                    + "' resulted in the same context for multiple networks.");
         }
 
         context = newContext;

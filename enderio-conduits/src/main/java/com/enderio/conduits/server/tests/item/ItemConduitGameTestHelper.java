@@ -14,7 +14,8 @@ public class ItemConduitGameTestHelper extends ConduitGameTestHelper {
     }
 
     public void insertIntoContainer(int x, int y, int z, Item item, int count) {
-        var itemHandler = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        var itemHandler = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
+                null);
         if (itemHandler == null) {
             throw new GameTestAssertException("No item handler at " + x + "," + y + "," + z);
         }
@@ -29,12 +30,14 @@ public class ItemConduitGameTestHelper extends ConduitGameTestHelper {
         }
 
         if (count > 0) {
-            throw new GameTestAssertException("Could not insert " + count + " items into container at " + x + "," + y + "," + z);
+            throw new GameTestAssertException(
+                    "Could not insert " + count + " items into container at " + x + "," + y + "," + z);
         }
     }
 
     public void assertContainerHasExactly(int x, int y, int z, Item item, int count) {
-        var itemHandler = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        var itemHandler = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
+                null);
         if (itemHandler == null) {
             throw new GameTestAssertException("No item handler at " + x + "," + y + "," + z);
         }
@@ -46,7 +49,8 @@ public class ItemConduitGameTestHelper extends ConduitGameTestHelper {
         }
 
         if (foundCount != count) {
-            throw new GameTestAssertException("Expected " + count + " of " + item + " in container at " + x + "," + y + "," + z + " but found " + foundCount);
+            throw new GameTestAssertException("Expected " + count + " of " + item + " in container at " + x + "," + y
+                    + "," + z + " but found " + foundCount);
         }
     }
 }

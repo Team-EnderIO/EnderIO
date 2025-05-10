@@ -2,11 +2,9 @@ package com.enderio.conduits.api.network;
 
 import com.enderio.conduits.api.connection.config.IOConnectionConfig;
 import com.enderio.conduits.api.network.node.IConduitNode;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +24,8 @@ public interface IConduitNetwork {
     /**
      * @return whether the network has no nodes.
      */
-    // TODO: Marked as experimental as idk if this is useful to a ticker, I might remove this method.
+    // TODO: Marked as experimental as idk if this is useful to a ticker, I might
+    // remove this method.
     @ApiStatus.Experimental
     boolean isEmpty();
 
@@ -34,7 +33,8 @@ public interface IConduitNetwork {
      * @param node the node to test for
      * @return whether the node belongs to this network.
      */
-    // TODO: Marked as experimental as idk if this is useful to a ticker, I might remove this method.
+    // TODO: Marked as experimental as idk if this is useful to a ticker, I might
+    // remove this method.
     @ApiStatus.Experimental
     boolean contains(IConduitNode node);
 
@@ -140,7 +140,8 @@ public interface IConduitNetwork {
      * @param type the type of the desired context.
      * @return the context of the given type, or null if there is no context or the type differs.
      */
-    @Nullable <T extends ConduitNetworkContext<T>> T getContext(ConduitNetworkContextType<T> type);
+    @Nullable
+    <T extends ConduitNetworkContext<T>> T getContext(ConduitNetworkContextType<T> type);
 
     /**
      * @param type the type of the desired context.

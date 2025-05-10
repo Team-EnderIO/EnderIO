@@ -19,13 +19,15 @@ import org.lwjgl.glfw.GLFW;
 @Mod(EnderIOConduits.MODULE_MOD_ID)
 public class EnderIOConduitsServer {
     public EnderIOConduitsServer(IEventBus eventBus, ModContainer container) {
-        final MutableTestFramework framework = FrameworkConfiguration.builder(ResourceLocation.fromNamespaceAndPath(EnderIOConduits.MODULE_MOD_ID, "tests"))
-            .clientConfiguration(() -> ClientConfiguration.builder()
-                .toggleOverlayKey(GLFW.GLFW_KEY_O)
-                .openManagerKey(GLFW.GLFW_KEY_M)
-                .build())
-            .enable(Feature.CLIENT_SYNC, Feature.TEST_STORE)
-            .build().create();
+        final MutableTestFramework framework = FrameworkConfiguration
+                .builder(ResourceLocation.fromNamespaceAndPath(EnderIOConduits.MODULE_MOD_ID, "tests"))
+                .clientConfiguration(() -> ClientConfiguration.builder()
+                        .toggleOverlayKey(GLFW.GLFW_KEY_O)
+                        .openManagerKey(GLFW.GLFW_KEY_M)
+                        .build())
+                .enable(Feature.CLIENT_SYNC, Feature.TEST_STORE)
+                .build()
+                .create();
 
         framework.init(eventBus, container);
 

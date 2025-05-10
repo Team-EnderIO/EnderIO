@@ -198,7 +198,8 @@ public class NetworkTests {
         // works as expected.
         var node1 = new TestNode(false);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new BasicNetwork<>(List.of(node1), List.of(Pair.of(node1, node1))));
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> new BasicNetwork<>(List.of(node1), List.of(Pair.of(node1, node1))));
         Assertions.assertFalse(node1.isValid());
     }
 
@@ -213,7 +214,8 @@ public class NetworkTests {
         // works as expected.
         var node1 = new TestNode(false);
 
-        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> new BasicNetwork<>(List.of(node1), new Network.IndexedEdgeList(List.of(Pair.of(1, 5)))));
+        Assertions.assertThrows(IndexOutOfBoundsException.class,
+                () -> new BasicNetwork<>(List.of(node1), new Network.IndexedEdgeList(List.of(Pair.of(1, 5)))));
         Assertions.assertFalse(node1.isValid());
     }
 

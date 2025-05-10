@@ -137,9 +137,10 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @param connectionB  the second connection to compare.
      * @return Returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
      */
-    default int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA, ConduitBlockConnection connectionB) {
+    default int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA,
+            ConduitBlockConnection connectionB) {
         return Integer.compare(refConnection.connectedBlockPos().distManhattan(connectionA.connectedBlockPos()),
-            refConnection.connectedBlockPos().distManhattan(connectionB.connectedBlockPos()));
+                refConnection.connectedBlockPos().distManhattan(connectionB.connectedBlockPos()));
     }
 
     // endregion
@@ -261,7 +262,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      */
     @Deprecated(since = "8.0.0")
     default TConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
-        DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
+            DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
         return connectionConfigType().getDefault();
     }
 

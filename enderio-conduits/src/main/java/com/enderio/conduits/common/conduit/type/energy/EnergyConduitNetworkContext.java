@@ -6,7 +6,6 @@ import com.enderio.conduits.api.network.IConduitNetwork;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import java.util.Set;
 
 public class EnergyConduitNetworkContext implements ConduitNetworkContext<EnergyConduitNetworkContext> {
@@ -61,7 +60,8 @@ public class EnergyConduitNetworkContext implements ConduitNetworkContext<Energy
     @Override
     public EnergyConduitNetworkContext split(IConduitNetwork selfNetwork, Set<? extends IConduitNetwork> allNetworks) {
         // Split stored energy based on the network size difference.
-        float proportion = selfNetwork.nodeCount() / (float) allNetworks.stream().map(IConduitNetwork::nodeCount).reduce(0, Integer::sum);
+        float proportion = selfNetwork.nodeCount()
+                / (float) allNetworks.stream().map(IConduitNetwork::nodeCount).reduce(0, Integer::sum);
         return new EnergyConduitNetworkContext((int) Math.floor(proportion * energyStored));
     }
 

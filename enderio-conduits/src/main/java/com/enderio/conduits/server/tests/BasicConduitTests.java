@@ -15,29 +15,30 @@ public class BasicConduitTests {
     @TestHolder(description = "Ensures that placing conduits forms a network and breaking the middle splits the network.")
     public static void testPlacementAndNetworkSplitting(final DynamicTest test) {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 1, 6)
-            .set(0, 0, 0, Blocks.CHEST.defaultBlockState())
-            .set(0, 0, 5, Blocks.CHEST.defaultBlockState()));
+                .set(0, 0, 0, Blocks.CHEST.defaultBlockState())
+                .set(0, 0, 5, Blocks.CHEST.defaultBlockState()));
 
         test.onGameTest(ConduitGameTestHelper.class, helper -> {
 
-            var itemConduit = helper.getLevel().registryAccess()
-                .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT)
-                .getHolderOrThrow(Conduits.ITEM);
+            var itemConduit = helper.getLevel()
+                    .registryAccess()
+                    .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT)
+                    .getHolderOrThrow(Conduits.ITEM);
 
             helper.startSequence()
-                // Reset in case of repeated runs (in client)
-                .thenExecute(() -> helper.fillAir(0, 1, 1, 0, 1, 4))
-                // Build a row of conduits
-                .thenExecute(() -> helper.fillConduits(itemConduit, 0, 1, 1, 0, 1, 4))
-                // Ensure all conduits are on the same network
-                .thenExecute(() -> helper.assertAllNetworksMatch(itemConduit, 0, 1, 1, 0, 1, 4, false))
-                // Split the network in half
-                .thenExecute(() -> helper.setBlock(0, 1, 2, Blocks.AIR.defaultBlockState()))
-                // Ensure the remainder are all on the same network
-                .thenExecute(() -> helper.assertAllNetworksMatch(itemConduit, 0, 1, 3, 0, 1, 4, false))
-                // Ensure the two separated sets are different networks
-                .thenExecute(() -> helper.assertNetworksDifferBetween(itemConduit, 0, 1, 1, 0, 1, 3))
-                .thenSucceed();
+                    // Reset in case of repeated runs (in client)
+                    .thenExecute(() -> helper.fillAir(0, 1, 1, 0, 1, 4))
+                    // Build a row of conduits
+                    .thenExecute(() -> helper.fillConduits(itemConduit, 0, 1, 1, 0, 1, 4))
+                    // Ensure all conduits are on the same network
+                    .thenExecute(() -> helper.assertAllNetworksMatch(itemConduit, 0, 1, 1, 0, 1, 4, false))
+                    // Split the network in half
+                    .thenExecute(() -> helper.setBlock(0, 1, 2, Blocks.AIR.defaultBlockState()))
+                    // Ensure the remainder are all on the same network
+                    .thenExecute(() -> helper.assertAllNetworksMatch(itemConduit, 0, 1, 3, 0, 1, 4, false))
+                    // Ensure the two separated sets are different networks
+                    .thenExecute(() -> helper.assertNetworksDifferBetween(itemConduit, 0, 1, 1, 0, 1, 3))
+                    .thenSucceed();
         });
     }
 
@@ -48,27 +49,29 @@ public class BasicConduitTests {
 
         test.onGameTest(ConduitGameTestHelper.class, helper -> {
 
-            var itemConduit = helper.getLevel().registryAccess()
-                .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT)
-                .getHolderOrThrow(Conduits.ITEM);
+            var itemConduit = helper.getLevel()
+                    .registryAccess()
+                    .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT)
+                    .getHolderOrThrow(Conduits.ITEM);
 
             helper.startSequence()
-                // Reset in case of repeated runs (in client)
-                .thenExecute(() -> helper.fillAir(0, 1, 0, 2, 1, 2))
-                // Build four separate conduits
-                .thenExecute(() -> helper.placeConduit(itemConduit, 1, 1, 0))
-                .thenExecute(() -> helper.placeConduit(itemConduit, 1, 1, 2))
-                .thenExecute(() -> helper.placeConduit(itemConduit, 0, 1, 1))
-                .thenExecute(() -> helper.placeConduit(itemConduit, 2, 1, 1))
-                // Ensure all conduits are on different networks
-                .thenExecute(() -> helper.assertAllNetworksDiffer(itemConduit, 0, 1, 1, 2, 1, 2, true))
-                // Now add a conduit in the middle to merge the networks
-                .thenExecute(() -> helper.placeConduit(itemConduit, 1, 1, 1))
-                // Now validate all networks are the same
-                .thenExecute(() -> helper.assertAllNetworksMatch(itemConduit, 0, 1, 1, 2, 1, 2, true))
-                .thenSucceed();
+                    // Reset in case of repeated runs (in client)
+                    .thenExecute(() -> helper.fillAir(0, 1, 0, 2, 1, 2))
+                    // Build four separate conduits
+                    .thenExecute(() -> helper.placeConduit(itemConduit, 1, 1, 0))
+                    .thenExecute(() -> helper.placeConduit(itemConduit, 1, 1, 2))
+                    .thenExecute(() -> helper.placeConduit(itemConduit, 0, 1, 1))
+                    .thenExecute(() -> helper.placeConduit(itemConduit, 2, 1, 1))
+                    // Ensure all conduits are on different networks
+                    .thenExecute(() -> helper.assertAllNetworksDiffer(itemConduit, 0, 1, 1, 2, 1, 2, true))
+                    // Now add a conduit in the middle to merge the networks
+                    .thenExecute(() -> helper.placeConduit(itemConduit, 1, 1, 1))
+                    // Now validate all networks are the same
+                    .thenExecute(() -> helper.assertAllNetworksMatch(itemConduit, 0, 1, 1, 2, 1, 2, true))
+                    .thenSucceed();
         });
     }
 
-    // TODO: Set up some chests and item conduits and ensure that when the network breaks, transfers stop and re-adding the node resumes.
+    // TODO: Set up some chests and item conduits and ensure that when the network
+    // breaks, transfers stop and re-adding the node resumes.
 }
