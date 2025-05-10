@@ -374,6 +374,7 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
                 node.setNetwork(newGraph);
             }
 
+            newGraphs.add(newGraph);
             if (onNetworkCreated != null) {
                 onNetworkCreated.accept(newGraph);
             }

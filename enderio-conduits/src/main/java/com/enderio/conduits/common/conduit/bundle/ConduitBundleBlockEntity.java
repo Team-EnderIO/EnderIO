@@ -333,7 +333,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                         var thisNetwork = thisNode.getNetwork();
                         var otherNetwork = otherNode.getNetwork();
 
-                        if (thisNetwork != otherNetwork) {
+                        if (thisNetwork == otherNetwork) {
                             thisNetwork.disconnect(thisNode, otherNode,
                                     n -> ConduitNetworkSavedData.onNetworkCreated(serverLevel, n));
                         }
