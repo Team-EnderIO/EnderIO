@@ -14,6 +14,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.apache.commons.lang3.NotImplementedException;
 
 public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
     public static NetworkDataSlot.CodecType<EnderfaceTravelTarget> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(
@@ -62,7 +63,8 @@ public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
     @Override
     public boolean interact(Level level, Player player) {
         if (level.isClientSide) {
-            Minecraft.getInstance().setScreen(new EnderfaceScreen(pos.immutable(), Minecraft.getInstance().level));
+            // TODO: Causes classload errors on dedicated servers.
+//            Minecraft.getInstance().setScreen(new EnderfaceScreen(pos.immutable(), Minecraft.getInstance().level));
         }
         return true;
     }
