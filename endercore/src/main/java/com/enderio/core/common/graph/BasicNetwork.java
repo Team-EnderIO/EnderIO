@@ -17,6 +17,10 @@ public class BasicNetwork<N extends INetworkNode<BasicNetwork<N>, N>> extends Ne
         super(ns, edges);
     }
 
+    public BasicNetwork(List<N> ns, IndexedEdgeList edges) {
+        super(ns, edges);
+    }
+
     protected BasicNetwork() {
         super();
     }

@@ -1,6 +1,7 @@
 package com.enderio.core;
 
 import com.enderio.core.common.graph.BasicNetwork;
+import com.enderio.core.common.graph.Network;
 import com.mojang.datafixers.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -179,6 +180,41 @@ public class NetworkTests {
 
             return found;
         }), "Node index list does not match real edges.");
+    }
+
+    @Test
+    public void testNetworkSingleNodeWithEmptyEdges() {
+        // This test is to ensure the node and edge indexing used for serialization
+        // works as expected.
+        var node1 = new TestNode(false);
+
+        Assertions.assertDoesNotThrow(() -> new BasicNetwork<>(List.of(node1), List.of()));
+        Assertions.assertTrue(node1.isValid());
+    }
+
+    @Test
+    public void testNetworkSingleNodeWithEdges() {
+        // This test is to ensure the node and edge indexing used for serialization
+        // works as expected.
+        var node1 = new TestNode(false);
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new BasicNetwork<>(List.of(node1), List.of(Pair.of(node1, node1))));
+        Assertions.assertFalse(node1.isValid());
+    }
+
+    @Test
+    public void testCreateNetworkNoNodesNoEdges() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new BasicNetwork<TestNode>(List.of(), List.of()));
+    }
+
+    @Test
+    public void testNetworkCreateWithInvalidEdgeIndices() {
+        // This test is to ensure the node and edge indexing used for serialization
+        // works as expected.
+        var node1 = new TestNode(false);
+
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> new BasicNetwork<>(List.of(node1), new Network.IndexedEdgeList(List.of(Pair.of(1, 5)))));
+        Assertions.assertFalse(node1.isValid());
     }
 
 }
