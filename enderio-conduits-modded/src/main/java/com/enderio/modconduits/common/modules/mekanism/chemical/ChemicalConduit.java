@@ -138,7 +138,8 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     }
 
     @Override
-    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor, BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
+    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor,
+            BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
         var legacyData = legacyDataAccessor.getData(MekanismModule.CHEMICAL_DATA_TYPE.get());
         if (legacyData == null) {
             return;

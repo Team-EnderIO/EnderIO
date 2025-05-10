@@ -4,17 +4,14 @@ import com.enderio.base.api.travel.TravelTarget;
 import com.enderio.base.api.travel.TravelTargetSerializer;
 import com.enderio.base.api.travel.TravelTargetType;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.machines.client.gui.screen.EnderfaceScreen;
 import com.enderio.machines.common.init.MachineTravelTargets;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import org.apache.commons.lang3.NotImplementedException;
 
 public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
     public static NetworkDataSlot.CodecType<EnderfaceTravelTarget> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(

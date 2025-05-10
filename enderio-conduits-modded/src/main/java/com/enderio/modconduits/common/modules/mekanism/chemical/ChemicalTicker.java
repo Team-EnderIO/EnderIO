@@ -21,7 +21,8 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
 
         for (var channel : network.allChannels()) {
             for (var receivingConnection : network.receivingConnections(channel)) {
-                IChemicalHandler extractHandler = receivingConnection.getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
+                IChemicalHandler extractHandler = receivingConnection
+                        .getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
                 if (extractHandler == null) {
                     continue;
                 }
@@ -63,8 +64,7 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
 
     private long doChemicalTransfer(Chemical chemical, long maxTransfer, ConduitBlockConnection receiver,
             List<ConduitBlockConnection> senders) {
-        var receiverHandler = Objects
-                .requireNonNull(receiver.getSidedCapability(MekanismModule.Capabilities.CHEMICAL));
+        var receiverHandler = Objects.requireNonNull(receiver.getSidedCapability(MekanismModule.Capabilities.CHEMICAL));
 
         // Attempt to drain chemical from the target.
         var extractedChemical = receiverHandler.extractChemical(new ChemicalStack(chemical, maxTransfer),

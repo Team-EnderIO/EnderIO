@@ -31,10 +31,10 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
             .apply(instance, ConduitNode::new));
 
     private static final Codec<ConduitNode> NEW_CODEC = RecordCodecBuilder
-            .create(instance -> instance
-                    .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNode::pos),
-                            NodeData.GENERIC_CODEC.optionalFieldOf("data")
-                                    .forGetter(i -> i.nodeData == null || !i.nodeData.type().isPersistent() ? Optional.empty() : Optional.of(i.nodeData)))
+            .create(instance -> instance.group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNode::pos),
+                    NodeData.GENERIC_CODEC.optionalFieldOf("data")
+                            .forGetter(i -> i.nodeData == null || !i.nodeData.type().isPersistent() ? Optional.empty()
+                                    : Optional.of(i.nodeData)))
                     .apply(instance, ConduitNode::new));
 
     public static final Codec<ConduitNode> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
@@ -289,7 +289,10 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
         if (network != null && legacyDataContainer != null && isLoaded()) {
             // We now know what type of conduit we are, so upgrade the connection data then
             // drop legacy data
-            network.conduit().value().copyLegacyData(this, legacyDataContainer, (side, config) -> conduitBundle.setConnectionConfig(conduit, side, config));
+            network.conduit()
+                    .value()
+                    .copyLegacyData(this, legacyDataContainer,
+                            (side, config) -> conduitBundle.setConnectionConfig(conduit, side, config));
             legacyDataContainer = null;
         }
     }

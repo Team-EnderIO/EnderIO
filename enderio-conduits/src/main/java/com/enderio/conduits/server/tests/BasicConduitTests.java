@@ -1,6 +1,5 @@
 package com.enderio.conduits.server.tests;
 
-import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.conduits.common.init.Conduits;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.level.block.Blocks;
@@ -66,7 +65,8 @@ public class BasicConduitTests {
 
     // TODO: Test redstone signalling
 
-    // TODO: Set up some chests and item conduits and ensure that when the network breaks, transfers stop and re-adding the node resumes.
+    // TODO: Set up some chests and item conduits and ensure that when the network
+    // breaks, transfers stop and re-adding the node resumes.
 
     // TODO: Add the following
     // - Ensure transfers stop when network is broken + resume when fixed.

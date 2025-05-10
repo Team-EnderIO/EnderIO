@@ -82,8 +82,7 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                         ItemStack itemToInsert = extractedItem.copy();
                         if (insertFilter != null) {
                             itemToInsert = insertFilter.test(
-                                    sendingConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK),
-                                    itemToInsert);
+                                    sendingConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK), itemToInsert);
                             if (itemToInsert.isEmpty()) {
                                 continue;
                             }

@@ -81,7 +81,7 @@ public interface IConduitNode {
      */
     @Nullable
     <TCapability> TCapability getNeighborSidedCapability(BlockCapability<TCapability, Direction> capability,
-                                                         Direction side);
+            Direction side);
 
     /**
      * Get the desired capability from a neighboring block.
@@ -91,8 +91,7 @@ public interface IConduitNode {
      * @return the capability or null if it is not available.
      */
     @Nullable
-    <TCapability> TCapability getNeighborVoidCapability(BlockCapability<TCapability, Void> capability,
-                                                         Direction side);
+    <TCapability> TCapability getNeighborVoidCapability(BlockCapability<TCapability, Void> capability, Direction side);
 
     /**
      * @param signalColor the redstone conduit signal color to check for, or null for in-world signal only.

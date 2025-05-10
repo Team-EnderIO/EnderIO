@@ -17,7 +17,6 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
@@ -37,19 +36,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle, int networkTickRate)
-        implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
+public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle,
+        int networkTickRate) implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
 
-    public static final MapCodec<ItemConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
-            .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ItemConduit::texture),
-                    ComponentSerialization.CODEC.fieldOf("description").forGetter(ItemConduit::description),
-                    // Using optionals in order to support the old conduit format.
-                    Codec.INT.optionalFieldOf("transfer_rate", 4).forGetter(ItemConduit::transferRatePerCycle),
-                    Codec.intRange(1, 20).optionalFieldOf("ticks_per_cycle", 20).forGetter(ItemConduit::networkTickRate))
-            .apply(builder, ItemConduit::new));
+    public static final MapCodec<ItemConduit> CODEC = RecordCodecBuilder.mapCodec(
+            builder -> builder
+                    .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ItemConduit::texture),
+                            ComponentSerialization.CODEC.fieldOf("description").forGetter(ItemConduit::description),
+                            // Using optionals in order to support the old conduit format.
+                            Codec.INT.optionalFieldOf("transfer_rate", 4).forGetter(ItemConduit::transferRatePerCycle),
+                            Codec.intRange(1, 20)
+                                    .optionalFieldOf("ticks_per_cycle", 20)
+                                    .forGetter(ItemConduit::networkTickRate))
+                    .apply(builder, ItemConduit::new));
 
     @Override
     public ConduitType<ItemConduit> type() {
@@ -121,7 +123,8 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
-    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor, BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
+    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor,
+            BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
         var legacyData = legacyDataAccessor.getData(ConduitTypes.Data.ITEM.get());
         if (legacyData == null) {
             return;

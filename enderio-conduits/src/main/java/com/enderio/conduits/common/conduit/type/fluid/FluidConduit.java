@@ -142,7 +142,8 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor, BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
+    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor,
+            BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
         var legacyData = legacyDataAccessor.getData(ConduitTypes.Data.FLUID.get());
         if (legacyData == null) {
             return;

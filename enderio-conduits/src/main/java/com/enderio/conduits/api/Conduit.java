@@ -276,7 +276,8 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @deprecated Only for conversion of 7.X conduit data. Will be removed in 1.22.
      */
     @Deprecated(since = "8.0.0")
-    default void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor, BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
+    default void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor,
+            BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
     }
 
     // endregion
