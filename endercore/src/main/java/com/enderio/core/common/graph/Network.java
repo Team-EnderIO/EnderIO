@@ -73,20 +73,15 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
                 edges.stream().allMatch(e -> nodes.contains(e.getFirst()) && nodes.contains(e.getSecond())),
                 "Some edges reference nodes that were not included in the node list.");
 
+        // Add all nodes
+        for (var node : nodes) {
+            graph.addNode(node);
+            node.setNetwork(self());
+            onNodeAdded(node);
+        }
+
         // Add all edges (and nodes)
         for (var edge : edges) {
-            if (!contains(edge.getFirst())) {
-                edge.getFirst().setNetwork(self());
-                graph.addNode(edge.getFirst());
-                onNodeAdded(edge.getFirst());
-            }
-
-            if (!contains(edge.getSecond())) {
-                edge.getSecond().setNetwork(self());
-                graph.addNode(edge.getSecond());
-                onNodeAdded(edge.getSecond());
-            }
-
             graph.putEdge(edge.getFirst(), edge.getSecond());
             onNodesConnected(edge.getFirst(), edge.getSecond());
         }

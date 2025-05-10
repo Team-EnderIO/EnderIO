@@ -84,8 +84,7 @@ public class ConduitNetworkSavedData extends SavedData {
     }
 
     private List<ConduitNetwork> getNetworks() {
-        // TODO: maybe reduce copies?
-        return List.copyOf(networks.values());
+        return networks.values().stream().filter(n -> n.isValid() && !n.isEmpty()).toList();
     }
 
     @Override
@@ -93,10 +92,6 @@ public class ConduitNetworkSavedData extends SavedData {
         compoundTag.put(KEY_NEW_DATA,
                 CODEC.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow());
         return compoundTag;
-    }
-
-    public static void onNetworkCreated(ServerLevel level, ConduitNetwork network) {
-        get(level).onNetworkCreated(network);
     }
 
     @Nullable
@@ -119,11 +114,29 @@ public class ConduitNetworkSavedData extends SavedData {
         unloadedNodes.computeIfAbsent(conduit, c -> Maps.newHashMap()).put(pos, node);
     }
 
+    public static void onNetworkCreated(ServerLevel level, ConduitNetwork network) {
+        get(level).onNetworkCreated(network);
+    }
+
     private void onNetworkCreated(ConduitNetwork network) {
         Preconditions.checkArgument(network.isValid(), "New network is not valid!");
         networks.put(network.conduit(), network);
         onNetworkChunksChanged(network);
         network.setOnChunkCoverageChanged(this::onNetworkChunksChanged);
+    }
+
+    public static void onNetworkDiscarded(ServerLevel level, ConduitNetwork network) {
+        get(level).onNetworkDiscarded(network);
+    }
+
+    private void onNetworkDiscarded(ConduitNetwork network) {
+        Preconditions.checkArgument(network.isDiscarded(), "Network is not discarded!");
+        networks.remove(network.conduit(), network);
+
+        for (var chunk : network.allChunks()) {
+            networksByChunk.remove(chunk, network);
+            chunksByNetwork.remove(network, chunk);
+        }
     }
 
     private void onNetworkChunksChanged(ConduitNetwork network) {
@@ -163,8 +176,8 @@ public class ConduitNetworkSavedData extends SavedData {
     }
 
     private void tick(ServerLevel serverLevel) {
-        // Remove any empty or discarded graphs.
-        networks.values().removeIf(network -> !network.isValid() || network.isEmpty());
+        // Only remove empty graphs here
+        networks.values().removeIf(network -> network.isValid() && network.isEmpty());
 
         Registry<Conduit<?, ?>> conduitRegistry = serverLevel.registryAccess()
                 .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT);

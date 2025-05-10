@@ -84,7 +84,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class ConduitBundleBlockEntity extends EnderBlockEntity
-        implements ConduitBundle, Clearable, Wrenchable, ConduitMenu.ConnectionAccessor {
+        implements ConduitBundle, Wrenchable, ConduitMenu.ConnectionAccessor {
 
     public static final int MAX_CONDUITS = 9;
 
@@ -139,16 +139,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     public ConduitBundleBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(ConduitBlockEntities.CONDUIT.get(), worldPosition, blockState);
-    }
-
-    @Override
-    public void clearContent() {
-        // Remove all conduits and facades, this is normally called by /set
-        for (var conduit : getConduits()) {
-            removeConduit(conduit, null);
-        }
-
-        setFacadeProvider(ItemStack.EMPTY);
     }
 
     @Override
@@ -624,7 +614,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
             // Remove from the graph.
             if (node.isValid()) {
-                node.getNetwork().remove(node);
+                node.getNetwork().remove(node, n -> ConduitNetworkSavedData.onNetworkCreated((ServerLevel) level, n));
             }
         }
 
@@ -869,7 +859,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                     conduit.value().onConnectTo(neighbourNode, node);
 
                     // Connect the neighbor to our node.
-                    node.getNetwork().connect(node, neighbourNode);
+                    node.getNetwork().connect(node, neighbourNode, n -> ConduitNetworkSavedData.onNetworkDiscarded((ServerLevel) level, n));
                 }
                 return true;
             }
@@ -1237,9 +1227,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
+    private boolean isChunkUnload = false;
+
     @Override
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
+        isChunkUnload = true;
 
         if (level == null) {
             return;
@@ -1263,6 +1256,16 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     @Override
     public void setRemoved() {
         super.setRemoved();
+
+        // Remove all conduits and the facade if this block is being destroyed (not unloaded).
+        if (!isChunkUnload) {
+            var allConduits = List.copyOf(getConduits());
+            for (var conduit : allConduits) {
+                removeConduit(conduit, null);
+            }
+
+            setFacadeProvider(ItemStack.EMPTY);
+        }
 
         if (level != null && level.isClientSide()) {
             FACADES.remove(worldPosition.asLong());

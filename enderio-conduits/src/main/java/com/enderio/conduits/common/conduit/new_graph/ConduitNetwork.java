@@ -547,6 +547,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
     @Override
     protected void onGraphSplit(Set<ConduitNetwork> newNetworks) {
+        shouldRebuildCache = true;
         if (context == null) {
             return;
         }
@@ -560,7 +561,6 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         }
 
         context = context.copy();
-        shouldRebuildCache = true;
     }
 
     // endregion

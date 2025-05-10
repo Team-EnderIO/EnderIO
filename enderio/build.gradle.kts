@@ -102,6 +102,10 @@ neoForge {
         create("server") {
             server()
         }
+
+        create("gameTestServer") {
+            type = "gameTestServer"
+        }
     }
 }
 

@@ -41,6 +41,11 @@ dependencies {
     api(project(":enderio-base"))
     accessTransformers(project(":enderio-base"))
 
+    // Neo test framework
+    implementation("net.neoforged:testframework:$neoForgeVersion") {
+        isTransitive = false
+    }
+
     // JEI
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge-api:$jeiVersion")

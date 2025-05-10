@@ -101,7 +101,10 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
         Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
         this.conduitBundle = conduitBundle;
         this.conduit = conduit;
-        network.onNodeLoaded(this);
+
+        if (isLoaded()) {
+            network.onNodeLoaded(this);
+        }
     }
 
     public void detach() {
