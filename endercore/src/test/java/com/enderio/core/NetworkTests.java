@@ -96,6 +96,8 @@ public class NetworkTests {
 
         // Verify graph split
         Assertions.assertNotEquals(node1.getNetwork(), node3.getNetwork());
+        Assertions.assertTrue(node1.getNetwork().contains(node1));
+        Assertions.assertTrue(node3.getNetwork().contains(node3));
     }
 
     @Test void testNetworkConnectMany() {

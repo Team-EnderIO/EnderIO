@@ -1,6 +1,6 @@
 package com.enderio.modconduits.common.modules.refinedstorage;
 
-import com.enderio.conduits.api.network.node.ConduitNode;
+import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.network.node.NodeData;
 import com.enderio.conduits.api.network.node.NodeDataType;
 import com.mojang.serialization.MapCodec;
@@ -36,7 +36,7 @@ public class RSConduitNodeData implements NodeData {
         return mainNode != null && !mainNode.isRemoved();
     }
 
-    public void initialize(ConduitNode conduitNode, Level level, BlockPos pos) {
+    public void initialize(IConduitNode conduitNode, Level level, BlockPos pos) {
         mainNode = new ConduitRSNode(level, pos);
 
         // Gather initially connected sides.

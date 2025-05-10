@@ -1,11 +1,10 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.base.api.misc.RedstoneControl;
-import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.conduits.api.network.node.ConduitNode;
+import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.core.common.util.TooltipUtil;
@@ -87,8 +86,8 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
-    public <TCap, TContext> @Nullable TCap proxyCapability(Level level, ColoredRedstoneProvider coloredRedstoneProvider,
-            ConduitNode node, BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
+    public <TCap, TContext> @Nullable TCap proxyCapability(Level level, IConduitNode node, BlockCapability<TCap, TContext> capability,
+        @Nullable TContext context) {
 
         if (Capabilities.EnergyStorage.BLOCK == capability && (context == null || context instanceof Direction)) {
             boolean isMutable = true;
@@ -109,11 +108,10 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
                 if (config.receiveRedstoneControl() == RedstoneControl.NEVER_ACTIVE) {
                     isMutable = false;
                 } else if (config.receiveRedstoneControl() != RedstoneControl.ALWAYS_ACTIVE) {
-                    boolean hasRedstone = coloredRedstoneProvider.isRedstoneActive(level, node.getPos(),
-                            config.receiveRedstoneChannel());
+                    boolean hasRedstone = node.hasRedstoneSignal(config.receiveRedstoneChannel());
                     if (!hasRedstone) {
                         for (Direction direction : Direction.values()) {
-                            if (level.getSignal(node.getPos().relative(direction), direction.getOpposite()) > 0) {
+                            if (level.getSignal(node.pos().relative(direction), direction.getOpposite()) > 0) {
                                 hasRedstone = true;
                                 break;
                             }
@@ -134,7 +132,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
-    public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
+    public void onRemoved(IConduitNode node, Level level, BlockPos pos) {
         level.invalidateCapabilities(pos);
     }
 

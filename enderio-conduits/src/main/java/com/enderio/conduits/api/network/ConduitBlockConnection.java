@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 @ApiStatus.AvailableSince("8.0")
 @ApiStatus.Experimental
@@ -19,6 +20,7 @@ public record ConduitBlockConnection(IConduitNode node, Direction connectionSide
         return node.pos().relative(connectionSide);
     }
 
+    @Nullable
     public <TCapability> TCapability getConnectedCapability(BlockCapability<TCapability, Direction> capability) {
         return node.getCapabilityAtNeighbor(capability, connectionSide);
     }

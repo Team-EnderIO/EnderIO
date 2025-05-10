@@ -5,7 +5,7 @@ import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.conduits.api.network.node.ConduitNode;
+import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
 import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.enderio.conduits.api.network.ConduitBlockConnection;
@@ -88,9 +88,8 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     boolean hasMenu();
 
     @Nullable
-    default <TCapability, TContext> TCapability proxyCapability(Level level,
-            ColoredRedstoneProvider coloredRedstoneProvider, ConduitNode node,
-            BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
+    default <TCapability, TContext> TCapability proxyCapability(Level level, IConduitNode node, BlockCapability<TCapability, TContext> capability,
+        @Nullable TContext context) {
         return null;
     }
 
@@ -122,7 +121,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     }
 
     /**
-     * If this conduit overrides {@link #canConnectConduits(ConduitNode, ConduitNode)}, return true.
+     * If this conduit overrides {@link #canConnectConduits(IConduitNode, IConduitNode)}, return true.
      * This will avoid showing connections between conduits on the client until the server evaluates whether they can connect.
      * @apiNote Failing to override this properly could result in connection desyncs.
      * @return whether this conduit has additional server-side connection checks.
@@ -136,7 +135,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @apiNote Not called by the server if {@link #hasServerConnectionChecks()} does not return true.
      * @return true if both nodes are compatible.
      */
-    default boolean canConnectConduits(ConduitNode selfNode, ConduitNode otherNode) {
+    default boolean canConnectConduits(IConduitNode selfNode, IConduitNode otherNode) {
         return true;
     }
 
@@ -161,16 +160,16 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     // region Events
 
-    default void onCreated(ConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
+    default void onCreated(IConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
     }
 
-    default void onRemoved(ConduitNode node, Level level, BlockPos pos) {
+    default void onRemoved(IConduitNode node, Level level, BlockPos pos) {
     }
 
-    default void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
+    default void onConnectionsUpdated(IConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
     }
 
-    default void onConnectTo(ConduitNode selfNode, ConduitNode otherNode) {
+    default void onConnectTo(IConduitNode selfNode, IConduitNode otherNode) {
     }
 
     // endregion
@@ -198,7 +197,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "8.0.0")
-    default void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor) {
+    default void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor) {
     }
 
     // endregion
@@ -239,7 +238,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     // region Custom Data Sync
 
     @Nullable
-    default CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
+    default CompoundTag getExtraGuiData(ConduitBundle conduitBundle, IConduitNode node, Direction side) {
         return null;
     }
 
@@ -248,7 +247,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @return custom sync data.
      */
     @Nullable
-    default CompoundTag getExtraWorldData(ConduitBundle conduitBundle, ConduitNode node) {
+    default CompoundTag getExtraWorldData(ConduitBundle conduitBundle, IConduitNode node) {
         return null;
     }
 

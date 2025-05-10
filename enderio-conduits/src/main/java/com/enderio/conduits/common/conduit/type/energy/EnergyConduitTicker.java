@@ -1,20 +1,12 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.conduits.api.ColoredRedstoneProvider;
-import com.enderio.conduits.api.network.ConduitNetwork;
-import com.enderio.conduits.api.network.node.ConduitNode;
-import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
-import java.util.List;
-import net.minecraft.core.Direction;
+import com.enderio.conduits.api.network.IConduitNetwork;
+import com.enderio.conduits.api.ticker.ConduitTicker;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.Nullable;
 
-public class EnergyConduitTicker
-        extends IOAwareConduitTicker<EnergyConduit, EnergyConduitConnectionConfig, EnergyConduitTicker.Connection> {
+public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
 
     public static final EnergyConduitTicker INSTANCE = new EnergyConduitTicker();
 
@@ -22,13 +14,9 @@ public class EnergyConduitTicker
     }
 
     @Override
-    protected void tickColoredGraph(ServerLevel level, EnergyConduit conduit, List<Connection> senders,
-            List<Connection> receivers, DyeColor color, ConduitNetwork graph,
-            ColoredRedstoneProvider coloredRedstoneProvider) {
-
-        int transferRate = conduit.transferRatePerTick() * conduit.graphTickRate();
-
-        EnergyConduitNetworkContext context = graph.getContext(EnergyConduitNetworkContext.TYPE);
+    public void tick(ServerLevel level, EnergyConduit conduit, IConduitNetwork network) {
+        final int transferRate = conduit.transferRatePerTick() * conduit.graphTickRate();
+        EnergyConduitNetworkContext context = network.getContext(EnergyConduitNetworkContext.TYPE);
         if (context == null) {
             return;
         }
@@ -36,6 +24,8 @@ public class EnergyConduitTicker
         if (context.energyStored() <= 0) {
             return;
         }
+
+        var senders = network.sendingConnections();
 
         // Revert overflow.
         if (senders.size() <= context.rotatingIndex()) {
@@ -45,10 +35,10 @@ public class EnergyConduitTicker
         int startingRotatingIndex = context.rotatingIndex();
         for (int i = startingRotatingIndex; i < startingRotatingIndex + senders.size(); i++) {
             int insertIndex = i % senders.size();
+            var sendingConnection = senders.get(insertIndex);
 
-            IEnergyStorage insertHandler = senders.get(insertIndex).energyStorage();
-
-            if (!insertHandler.canReceive()) {
+            IEnergyStorage insertHandler = sendingConnection.getConnectedCapability(Capabilities.EnergyStorage.BLOCK);
+            if (insertHandler == null || !insertHandler.canReceive()) {
                 continue;
             }
 
@@ -61,42 +51,6 @@ public class EnergyConduitTicker
                 // index next time around to spread out any new energy
                 break;
             }
-        }
-    }
-
-    @Override
-    protected boolean canReceive(ConduitNode node, EnergyConduitConnectionConfig config) {
-        // We don't require a receive component.
-        return false;
-    }
-
-    @Override
-    protected boolean shouldSkipColor(List<Connection> senders, List<Connection> receivers) {
-        return senders.isEmpty();
-    }
-
-    @Override
-    protected @Nullable EnergyConduitTicker.Connection createConnection(Level level, ConduitNode node, Direction side) {
-        var energyStorage = node.getNeighbourCapability(Capabilities.EnergyStorage.BLOCK, side);
-        if (energyStorage != null) {
-            return new Connection(node, side, node.getConnectionConfig(side, EnergyConduitConnectionConfig.TYPE),
-                    energyStorage);
-        }
-
-        return null;
-    }
-
-    protected static class Connection extends SimpleConnection<EnergyConduitConnectionConfig> {
-        private final IEnergyStorage energyStorage;
-
-        public Connection(ConduitNode node, Direction side, EnergyConduitConnectionConfig config,
-                IEnergyStorage energyStorage) {
-            super(node, side, config);
-            this.energyStorage = energyStorage;
-        }
-
-        public IEnergyStorage energyStorage() {
-            return energyStorage;
         }
     }
 }

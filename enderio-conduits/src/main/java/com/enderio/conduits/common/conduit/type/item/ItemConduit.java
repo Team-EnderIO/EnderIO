@@ -7,7 +7,8 @@ import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.conduits.api.network.node.ConduitNode;
+import com.enderio.conduits.api.network.ConduitBlockConnection;
+import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitTypes;
@@ -63,6 +64,16 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
+    public int compare(ConduitBlockConnection refNode, ConduitBlockConnection nodeA, ConduitBlockConnection nodeB) {
+        int priorityA = nodeA.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
+        int priorityB = nodeB.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
+        if (priorityA != priorityB) {
+            return Integer.compare(priorityB, priorityA);
+        }
+        return Conduit.super.compare(refNode, nodeA, nodeB);
+    }
+
+    @Override
     public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
             TooltipFlag pTooltipFlag) {
         String calculatedTransferLimitFormatted = String.format("%,d",
@@ -106,7 +117,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
-    public void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor) {
+    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor) {
         var legacyData = legacyDataAccessor.getData(ConduitTypes.Data.ITEM.get());
         if (legacyData == null) {
             return;
@@ -156,7 +167,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
 
     @Override
     @Nullable
-    public CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
+    public CompoundTag getExtraGuiData(ConduitBundle conduitBundle, IConduitNode node, Direction side) {
         if (!node.isConnectedToBlock(side)) {
             return null;
         }

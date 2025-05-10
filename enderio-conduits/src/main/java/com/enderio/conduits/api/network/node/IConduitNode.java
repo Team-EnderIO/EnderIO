@@ -12,11 +12,13 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-@ApiStatus.AvailableSince("8.0")
+@ApiStatus.AvailableSince("8.0.0")
 public interface IConduitNode {
     BlockPos pos();
     boolean isLoaded();
     void markDirty();
+
+    IConduitNetwork getNetwork();
 
     boolean hasNodeData(NodeDataType<?> type);
 

@@ -1,67 +1,113 @@
 package com.enderio.modconduits.common.modules.mekanism.chemical;
 
-import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.conduits.api.ColoredRedstoneProvider;
-import com.enderio.conduits.api.network.ConduitNetwork;
-import com.enderio.conduits.api.network.node.ConduitNode;
-import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
+import com.enderio.conduits.api.network.ConduitBlockConnection;
+import com.enderio.conduits.api.network.IConduitNetwork;
+import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
-import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilter;
-import java.util.Comparator;
+
 import java.util.List;
+import java.util.Objects;
+
 import mekanism.api.Action;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
-public class ChemicalTicker
-        extends IOAwareConduitTicker<ChemicalConduit, ChemicalConduitConnectionConfig, ChemicalTicker.Connection> {
+public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
 
-    private long doChemicalTransfer(Chemical chemical, long maxTransfer, Connection receiver,
-            List<Connection> senders) {
+    @Override
+    public void tick(ServerLevel level, ChemicalConduit conduit, IConduitNetwork network) {
+        final long transferRate = conduit.transferRatePerTick() * conduit.graphTickRate();
+        var context = network.getOrCreateContext(ChemicalConduitNetworkContext.TYPE);
+
+        for (var channel : network.allChannels()) {
+            for (var receivingConnection : network.receivingConnections(channel)) {
+                IChemicalHandler extractHandler = receivingConnection.getConnectedCapability(MekanismModule.Capabilities.CHEMICAL);
+                if (extractHandler == null) {
+                    continue;
+                }
+
+                var senders = network.sendingConnectionsFrom(receivingConnection);
+
+                if (!context.lockedChemical().isEmptyType()) {
+                    doChemicalTransfer(context.lockedChemical(), transferRate, receivingConnection, senders);
+                } else {
+                    long remaining = transferRate;
+
+                    for (int i = 0; i < extractHandler.getChemicalTanks() && remaining > 0; i++) {
+                        if (extractHandler.getChemicalInTank(i).isEmpty()) {
+                            continue;
+                        }
+
+                        Chemical chemical = extractHandler.getChemicalInTank(i).getChemical();
+                        remaining = doChemicalTransfer(chemical, remaining, receivingConnection, senders);
+
+                        if (!conduit.isMultiChemical() && remaining < transferRate) {
+                            context.setLockedChemical(chemical);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Mark nodes as dirty if we've acquired a new locked fluid
+        if (!conduit.isMultiChemical()) {
+            if (context != null && !context.lockedChemical().equals(context.lastLockedChemical())) {
+                context.clearLastLockedChemical();
+                for (var node : network.loadedNodes()) {
+                    node.markDirty();
+                }
+            }
+        }
+    }
+
+    private long doChemicalTransfer(Chemical chemical, long maxTransfer, ConduitBlockConnection receiver, List<ConduitBlockConnection> senders) {
+        var receiverHandler = Objects.requireNonNull(receiver.getConnectedCapability(MekanismModule.Capabilities.CHEMICAL));
+
         // Attempt to drain chemical from the target.
-        var extractedChemical = receiver.chemicalHandler.extractChemical(new ChemicalStack(chemical, maxTransfer),
+        var extractedChemical = receiverHandler.extractChemical(new ChemicalStack(chemical, maxTransfer),
                 Action.SIMULATE);
         if (extractedChemical.isEmpty()) {
             return maxTransfer;
         }
 
         // Test the extracted fluid against the target
-        var extractFilter = receiver.inventory()
+        var extractFilter = receiver.getInventory()
                 .getStackInSlot(ChemicalConduit.EXTRACT_FILTER_SLOT)
                 .getCapability(MekanismModule.Capabilities.CHEMICAL_FILTER);
 
         if (extractFilter != null) {
-            extractedChemical = extractFilter.test(receiver.chemicalHandler, extractedChemical);
+            extractedChemical = extractFilter.test(receiverHandler, extractedChemical);
             if (extractedChemical.isEmpty()) {
                 return maxTransfer;
             }
         }
 
         // Insert into any available blocks
-        for (Connection insert : senders) {
+        for (var insert : senders) {
+            IChemicalHandler insertHandler = insert.getConnectedCapability(MekanismModule.Capabilities.CHEMICAL);
+            if (insertHandler == null) {
+                continue;
+            }
+
             var chemicalToInsert = extractedChemical.copy();
 
             // Test fluid against insert filter.
-            var insertFilter = insert.inventory()
+            var insertFilter = insert.getInventory()
                     .getStackInSlot(ChemicalConduit.INSERT_FILTER_SLOT)
                     .getCapability(MekanismModule.Capabilities.CHEMICAL_FILTER);
 
             if (insertFilter != null) {
-                chemicalToInsert = insertFilter.test(insert.chemicalHandler, chemicalToInsert);
+                chemicalToInsert = insertFilter.test(insertHandler, chemicalToInsert);
                 if (chemicalToInsert.isEmpty()) {
                     continue;
                 }
             }
 
             // Attempt to transfer chemical.
-            var transferredChemical = tryChemicalTransfer(insert.chemicalHandler, receiver.chemicalHandler,
-                    chemicalToInsert, true);
+            var transferredChemical = tryChemicalTransfer(insertHandler, receiverHandler, chemicalToInsert, true);
 
             // Deduct the transferred chemical from our maximum transfer.
             maxTransfer -= transferredChemical.getAmount();
@@ -71,61 +117,6 @@ public class ChemicalTicker
         }
 
         return maxTransfer;
-    }
-
-    @Override
-    public void tickGraph(ServerLevel level, ChemicalConduit conduit, ConduitNetwork graph,
-            ColoredRedstoneProvider coloredRedstoneProvider) {
-        super.tickGraph(level, conduit, graph, coloredRedstoneProvider);
-
-        // Update if the network is now locked
-        var context = graph.getOrCreateContext(ChemicalConduitNetworkContext.TYPE);
-        if (!context.lockedChemical().equals(context.lastLockedChemical())) {
-            context.clearLastLockedChemical();
-            for (var node : graph.getNodes()) {
-                if (node.isLoaded()) {
-                    node.markDirty();
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void tickColoredGraph(ServerLevel level, ChemicalConduit conduit, List<Connection> senders,
-            List<Connection> receivers, DyeColor color, ConduitNetwork graph,
-            ColoredRedstoneProvider coloredRedstoneProvider) {
-
-        final long transferRate = (long) conduit.transferRatePerTick() * conduit.graphTickRate();
-        var context = graph.getOrCreateContext(ChemicalConduitNetworkContext.TYPE);
-
-        for (Connection receiver : receivers) {
-            var extractHandler = receiver.chemicalHandler;
-
-            // Prioritize senders in order of distance.
-            var prioritizedSenders = senders.stream()
-                    .sorted(Comparator.comparingDouble(e -> e.pos().distSqr(receiver.pos())))
-                    .toList();
-
-            if (!context.lockedChemical().isEmptyType()) {
-                doChemicalTransfer(context.lockedChemical(), transferRate, receiver, prioritizedSenders);
-            } else {
-                long remaining = transferRate;
-
-                for (int i = 0; i < extractHandler.getChemicalTanks() && remaining > 0; i++) {
-                    if (extractHandler.getChemicalInTank(i).isEmpty()) {
-                        continue;
-                    }
-
-                    Chemical chemical = extractHandler.getChemicalInTank(i).getChemical();
-                    remaining = doChemicalTransfer(chemical, remaining, receiver, prioritizedSenders);
-
-                    if (!conduit.isMultiChemical() && remaining < transferRate) {
-                        context.setLockedChemical(chemical);
-                        break;
-                    }
-                }
-            }
-        }
     }
 
     public static ChemicalStack tryChemicalTransfer(IChemicalHandler chemicalDestination,
@@ -163,26 +154,5 @@ public class ChemicalTicker
         }
 
         return ChemicalStack.EMPTY;
-    }
-
-    @Override
-    protected @Nullable ChemicalTicker.Connection createConnection(Level level, ConduitNode node, Direction side) {
-        var chemicalHandler = node.getNeighbourCapability(MekanismModule.Capabilities.CHEMICAL, side);
-        if (chemicalHandler != null) {
-            return new Connection(node, side, node.getConnectionConfig(side, ChemicalConduitConnectionConfig.TYPE),
-                    chemicalHandler);
-        }
-
-        return null;
-    }
-
-    protected static class Connection extends SimpleConnection<ChemicalConduitConnectionConfig> {
-        final IChemicalHandler chemicalHandler;
-
-        public Connection(ConduitNode node, Direction side, ChemicalConduitConnectionConfig config,
-                IChemicalHandler chemicalHandler) {
-            super(node, side, config);
-            this.chemicalHandler = chemicalHandler;
-        }
     }
 }

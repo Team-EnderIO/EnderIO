@@ -62,7 +62,7 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
             var node = nodes.getFirst();
             graph.addNode(node);
             node.setNetwork(self());
-            onNetworkChanged();
+            onNodeAdded(node);
             return;
         }
 
@@ -72,13 +72,21 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
 
         // Add all edges (and nodes)
         for (var edge : edges) {
-            edge.getFirst().setNetwork(self());
-            edge.getSecond().setNetwork(self());
-            graph.putEdge(edge.getFirst(), edge.getSecond());
-        }
+            if (!contains(edge.getFirst())) {
+                edge.getFirst().setNetwork(self());
+                graph.addNode(edge.getFirst());
+                onNodeAdded(edge.getFirst());
+            }
 
-        // Network has been updated
-        onNetworkChanged();
+            if (!contains(edge.getSecond())) {
+                edge.getSecond().setNetwork(self());
+                graph.addNode(edge.getSecond());
+                onNodeAdded(edge.getSecond());
+            }
+
+            graph.putEdge(edge.getFirst(), edge.getSecond());
+            onNodesConnected(edge.getFirst(), edge.getSecond());
+        }
     }
 
     /**
@@ -164,11 +172,13 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
         } else {
             // Introduce this node to this network.
             neighbor.setNetwork(self());
+            graph.addNode(neighbor);
+            onNodeAdded(neighbor);
         }
 
         // Add the edge (and neighbor node if it is new)
         graph.putEdge(node, neighbor);
-        onNetworkChanged();
+        onNodesConnected(node, neighbor);
     }
 
     public final void connectMany(TNode node, List<TNode> neighbors) {
@@ -200,13 +210,24 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
             // Any neighbor who is not yet member of a graph must be added to this one.
             if (!neighbor.isValid()) {
                 neighbor.setNetwork(self());
+                graph.addNode(neighbor);
+                onNodeAdded(neighbor);
             }
 
             // Add edges (and neighbor nodes if not present)
             graph.putEdge(node, neighbor);
+            onNodesConnected(node, neighbor);
         }
+    }
 
-        onNetworkChanged();
+    protected void onNodeAdded(TNode node) {
+    }
+
+    protected void onNodesConnected(TNode node1, TNode node2) {
+    }
+
+    public final void disconnect(TNode node1, TNode node2) {
+        disconnect(node1, node2, null);
     }
 
     public final void disconnect(TNode node1, TNode node2, @Nullable Consumer<TNet> onNetworkCreated) {
@@ -220,10 +241,14 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
 
         // Remove edge between these two nodes
         graph.removeEdge(node1, node2);
-        onNetworkChanged();
 
         // Split networks if necessary
         splitIfRequired(onNetworkCreated);
+
+        onNodesDisconnected(node1, node2);
+    }
+
+    protected void onNodesDisconnected(TNode node1, TNode node2) {
     }
 
     public final void remove(TNode node) {
@@ -245,10 +270,11 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
         // Split networks
         splitIfRequired(onNetworkCreated);
 
-        onNetworkChanged();
+        // Fire remove event
+        onNodeRemoved(node);
     }
 
-    protected void onNetworkChanged() {
+    protected void onNodeRemoved(TNode node) {
     }
 
     // endregion
@@ -272,7 +298,6 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
 
         // Handle the merge.
         onMerged(other);
-        onNetworkChanged();
 
         // Mark the other network as discarded.
         other.isDiscarded = true;
@@ -320,13 +345,14 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
         // If any nodes remain, they are now disconnected - form graphs to replace them.
         Set<TNet> newGraphs = Sets.newHashSet();
         while (!remaining.isEmpty()) {
+            // TODO: Potentially rework this to use the new constructor?
+            var newGraph = createEmpty();
+
             firstNode = remaining.iterator().next();
             toVisit.add(firstNode);
             seen.add(firstNode);
             remaining.remove(firstNode);
 
-            // TODO: Potentially rework this to use the new constructor?
-            var newGraph = createEmpty();
             while (!toVisit.isEmpty()) {
                 var node = toVisit.poll();
                 for (var neighbor : graph.adjacentNodes(node)) {
@@ -338,6 +364,7 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
                 }
 
                 // Add node and its edges to the new graph.
+                newGraph.graph.addNode(node);
                 graph.incidentEdges(node).forEach(newGraph.graph::putEdge);
                 graph.removeNode(node);
                 node.setNetwork(newGraph);
@@ -350,10 +377,6 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
 
         // Perform any additional split actions
         onGraphSplit(newGraphs);
-
-        // Fire network on changed events
-        newGraphs.forEach(TNet::onNetworkChanged);
-        onNetworkChanged();
     }
 
     protected void onGraphSplit(Set<TNet> newGraphs) {

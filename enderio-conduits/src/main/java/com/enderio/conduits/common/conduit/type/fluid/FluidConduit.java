@@ -7,7 +7,7 @@ import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.conduits.api.network.node.ConduitNode;
+import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitTypes;
@@ -92,7 +92,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public boolean canConnectConduits(ConduitNode selfNode, ConduitNode otherNode) {
+    public boolean canConnectConduits(IConduitNode selfNode, IConduitNode otherNode) {
         if (isMultiFluid()) {
             return true;
         }
@@ -140,7 +140,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor) {
+    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor) {
         var legacyData = legacyDataAccessor.getData(ConduitTypes.Data.FLUID.get());
         if (legacyData == null) {
             return;
@@ -185,13 +185,13 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public @Nullable CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
+    public @Nullable CompoundTag getExtraGuiData(ConduitBundle conduitBundle, IConduitNode node, Direction side) {
         return getExtraWorldData(conduitBundle, node);
     }
 
     @Override
     @Nullable
-    public CompoundTag getExtraWorldData(ConduitBundle conduitBundle, ConduitNode node) {
+    public CompoundTag getExtraWorldData(ConduitBundle conduitBundle, IConduitNode node) {
         if (node.getNetwork() == null) {
             return null;
         }

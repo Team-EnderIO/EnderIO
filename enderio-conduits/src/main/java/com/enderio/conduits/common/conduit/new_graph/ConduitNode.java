@@ -7,7 +7,7 @@ import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.network.node.NodeData;
 import com.enderio.conduits.api.network.node.NodeDataType;
 import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
-import com.enderio.conduits.common.conduit.graph.ConduitDataContainer;
+import com.enderio.conduits.common.conduit.legacy.ConduitDataContainer;
 import com.enderio.core.common.graph.INetworkNode;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
@@ -21,23 +21,24 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 
-public final class NewConduitNode implements INetworkNode<NewConduitNetwork, NewConduitNode>, IConduitNode {
+public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNode>, IConduitNode {
 
     // TODO: 1.22 - Remove legacy codec.
-    private static final Codec<NewConduitNode> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
-        .group(BlockPos.CODEC.fieldOf("pos").forGetter(NewConduitNode::pos),
+    private static final Codec<ConduitNode> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
+        .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNode::pos),
             ConduitDataContainer.CODEC.fieldOf("data").forGetter(i -> i.legacyDataContainer))
-        .apply(instance, NewConduitNode::new));
+        .apply(instance, ConduitNode::new));
 
-    public static final Codec<NewConduitNode> NEW_CODEC = RecordCodecBuilder
+    private static final Codec<ConduitNode> NEW_CODEC = RecordCodecBuilder
         .create(instance -> instance
             .group(
-                BlockPos.CODEC.fieldOf("pos").forGetter(NewConduitNode::pos),
-                NodeData.GENERIC_CODEC.optionalFieldOf("data", null).forGetter(i -> i.nodeData))
-            .apply(instance, NewConduitNode::new));
+                BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNode::pos),
+                NodeData.GENERIC_CODEC.optionalFieldOf("data").forGetter(i -> Optional.ofNullable(i.nodeData)))
+            .apply(instance, ConduitNode::new));
 
-    public static final Codec<NewConduitNode> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
+    public static final Codec<ConduitNode> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
 
     private final BlockPos pos;
 
@@ -46,31 +47,44 @@ public final class NewConduitNode implements INetworkNode<NewConduitNetwork, New
     // TODO: Remove in 1.22
     @Nullable private ConduitDataContainer legacyDataContainer = null;
 
-    @Nullable private NewConduitNetwork network;
+    @Nullable private ConduitNetwork network;
 
     @Nullable
     private ConduitBundleBlockEntity conduitBundle;
     @Nullable
     private Holder<Conduit<?, ?>> conduit;
 
-    public NewConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
-        this(conduit, pos, null);
+    public ConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
+        this(conduit, pos, (NodeData)null);
     }
 
-    public NewConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos, @Nullable NodeData nodeData) {
+    public ConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos, @Nullable NodeData nodeData) {
         this.pos = pos;
         this.nodeData = nodeData;
-        this.network = new NewConduitNetwork(conduit, this);
+        this.network = new ConduitNetwork(conduit, this);
     }
 
-    private NewConduitNode(BlockPos pos, @Nullable NodeData nodeData) {
+    public ConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos, ConduitDataContainer legacyDataContainer) {
+        this(conduit, pos, (NodeData)null);
+
+        // Extract node data from legacy data
+        var oldData = legacyDataContainer.getData();
+        if (oldData != null) {
+            // Store for copyLegacyData once we have a network.
+            this.legacyDataContainer = legacyDataContainer;
+            this.nodeData = oldData.toNodeData();
+        }
+    }
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private ConduitNode(BlockPos pos, Optional<NodeData> nodeData) {
         this.pos = pos;
-        this.nodeData = nodeData;
+        this.nodeData = nodeData.orElse(null);
         // Does not create a network because we're loading.
     }
 
-    private NewConduitNode(BlockPos pos, ConduitDataContainer legacyDataContainer) {
-        this(pos, (NodeData)null);
+    private ConduitNode(BlockPos pos, ConduitDataContainer legacyDataContainer) {
+        this(pos, Optional.empty());
 
         // Extract node data from legacy data
         var oldData = legacyDataContainer.getData();
@@ -82,13 +96,28 @@ public final class NewConduitNode implements INetworkNode<NewConduitNetwork, New
     }
 
     public void attach(ConduitBundleBlockEntity conduitBundle, Holder<Conduit<?, ?>> conduit) {
+        Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
         this.conduitBundle = conduitBundle;
         this.conduit = conduit;
+        network.onNodeLoaded(this);
     }
 
     public void detach() {
+        // TODO: Review this condition...
+        Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
         this.conduitBundle = null;
         this.conduit = null;
+        network.onNodeUnloaded(this);
+    }
+
+    public void onConfigChanged() {
+        Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
+        network.onNodeUpdated(this);
+    }
+
+    public void onRedstoneChanged() {
+        Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
+        network.onNodeUpdated(this);
     }
 
     public BlockPos pos() {
@@ -223,12 +252,12 @@ public final class NewConduitNode implements INetworkNode<NewConduitNetwork, New
     }
 
     @Override
-    public NewConduitNetwork getNetwork() {
+    public ConduitNetwork getNetwork() {
         return Objects.requireNonNull(network, "Node is not valid!");
     }
 
     @Override
-    public void setNetwork(@Nullable NewConduitNetwork network) {
+    public void setNetwork(@Nullable ConduitNetwork network) {
         this.network = network;
 
         if (network != null && legacyDataContainer != null) {

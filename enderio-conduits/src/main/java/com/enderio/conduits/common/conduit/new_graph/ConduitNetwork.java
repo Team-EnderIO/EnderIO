@@ -15,19 +15,19 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 
-public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode> implements IConduitNetwork {
+public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> implements IConduitNetwork {
 
-    // TODO: Need to test this, we won't use this Codec unless I can be bothered to convert saves or when we update to 1.22
-    public static final Codec<NewConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance
+    public static final Codec<ConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance
         .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit),
-            ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context", null).forGetter(i -> i.context))
-        .and(graphCodec(instance, NewConduitNode.NEW_CODEC))
-        .apply(instance, NewConduitNetwork::new));
+            ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context").forGetter(i -> Optional.ofNullable(i.context)))
+        .and(graphCodec(instance, ConduitNode.CODEC))
+        .apply(instance, ConduitNetwork::new));
 
     private final Holder<Conduit<?, ?>> conduit;
 
@@ -38,30 +38,39 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
     private boolean shouldRebuildCache = true;
     private boolean haveConnectionsChanged = true;
 
-    private final Set<NewConduitNode> loadedNodes = Sets.newHashSet();
+    private final Multimap<Long, ConduitNode> nodesByChunkPos = HashMultimap.create();
 
-    private final SetMultimap<NewConduitNode, ConduitBlockConnection> endpointConnections = HashMultimap.create();
+    private final Set<ConduitNode> loadedNodes = Sets.newHashSet();
+
+    private final SetMultimap<ConduitNode, ConduitBlockConnection> endpointConnections = HashMultimap.create();
     private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> accessibleBlockConnectionsMap = Maps.newHashMap();
 
+    private final List<ConduitBlockConnection> sendingConnections = Lists.newArrayList();
+    private final List<ConduitBlockConnection> receivingConnections = Lists.newArrayList();
+
     private final Set<DyeColor> allChannels = Sets.newHashSet();
-    private final SetMultimap<DyeColor, ConduitBlockConnection> sendingConnections = HashMultimap.create();
-    private final SetMultimap<DyeColor, ConduitBlockConnection> receivingConnections = HashMultimap.create();
+    private final ListMultimap<DyeColor, ConduitBlockConnection> sendingConnectionsByChannel = ArrayListMultimap.create();
+    private final ListMultimap<DyeColor, ConduitBlockConnection> receivingConnectionsByChannel = ArrayListMultimap.create();
 
     private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> receivingConnectionsBySender = Maps.newHashMap();
     private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> sendingConnectionsByReceiver = Maps.newHashMap();
 
-    public NewConduitNetwork(Holder<Conduit<?, ?>> conduit, NewConduitNode initialNode) {
+    private Consumer<ConduitNetwork> onChunkCoverageChanged;
+
+    public ConduitNetwork(Holder<Conduit<?, ?>> conduit, ConduitNode initialNode) {
         super(initialNode);
         this.conduit = conduit;
     }
 
-    private NewConduitNetwork(Holder<Conduit<?, ?>> conduit, @Nullable ConduitNetworkContext<?> context, List<NewConduitNode> nodes, IndexedEdgeList edges) {
+    // TODO: Only public for legacy deserialisation.
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public ConduitNetwork(Holder<Conduit<?, ?>> conduit, Optional<ConduitNetworkContext<?>> context, List<ConduitNode> nodes, IndexedEdgeList edges) {
         super(nodes, edges);
         this.conduit = conduit;
-        this.context = context;
+        this.context = context.orElse(null);
     }
 
-    protected NewConduitNetwork(Holder<Conduit<?, ?>> conduit) {
+    protected ConduitNetwork(Holder<Conduit<?, ?>> conduit) {
         this.conduit = conduit;
     }
 
@@ -69,12 +78,24 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
         return conduit;
     }
 
+    // region Chunk Tracking
+
+    public Set<Long> allChunks() {
+        return nodesByChunkPos.keySet();
+    }
+
+    public void setOnChunkCoverageChanged(Consumer<ConduitNetwork> onChunkCoverageChanged) {
+        this.onChunkCoverageChanged = onChunkCoverageChanged;
+    }
+
+    // endregion
+
     // region Queries
 
     // These are unfortunately necessary for the IConduitNetwork interface.
     @Override
     public boolean contains(IConduitNode node) {
-        if (node instanceof NewConduitNode typedNode) {
+        if (node instanceof ConduitNode typedNode) {
             return contains(typedNode);
         }
 
@@ -83,76 +104,69 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
 
     @Override
     public Set<? extends IConduitNode> neighbors(IConduitNode node) {
-        if (node instanceof NewConduitNode typedNode) {
+        if (node instanceof ConduitNode typedNode) {
             return neighbors(typedNode);
         }
 
         return Set.of();
     }
 
-    public Collection<NewConduitNode> loadedNodes() {
+    public Collection<ConduitNode> loadedNodes() {
+        ensureNotDiscarded();
         return Collections.unmodifiableCollection(loadedNodes);
     }
 
-    public Collection<NewConduitNode> blockEndpoints() {
+    public Collection<ConduitNode> blockEndpoints() {
+        ensureNotDiscarded();
         return Collections.unmodifiableCollection(endpointConnections.keySet());
     }
 
     public Collection<ConduitBlockConnection> blockConnections() {
+        ensureNotDiscarded();
         return Collections.unmodifiableCollection(endpointConnections.values());
     }
 
     // This is sorted
     public List<ConduitBlockConnection> blockConnectionsAccessibleFrom(ConduitBlockConnection connection) {
+        ensureNotDiscarded();
         return accessibleBlockConnectionsMap.getOrDefault(connection, List.of());
     }
 
     public Set<DyeColor> allChannels() {
+        ensureNotDiscarded();
         return allChannels;
     }
 
-    public Collection<ConduitBlockConnection> sendingConnections() {
-        return sendingConnections.values();
+    public List<ConduitBlockConnection> sendingConnections() {
+        ensureNotDiscarded();
+        return Collections.unmodifiableList(sendingConnections);
     }
 
-    public Collection<ConduitBlockConnection> sendingConnections(DyeColor color) {
-        return sendingConnections.get(color);
+    public List<ConduitBlockConnection> sendingConnections(DyeColor color) {
+        ensureNotDiscarded();
+        return sendingConnectionsByChannel.get(color);
     }
 
     // This is sorted
     public List<ConduitBlockConnection> receivingConnectionsFrom(ConduitBlockConnection sender) {
+        ensureNotDiscarded();
         return receivingConnectionsBySender.getOrDefault(sender, List.of());
     }
 
-    public Collection<ConduitBlockConnection> receivingConnections() {
-        return receivingConnections.values();
+    public List<ConduitBlockConnection> receivingConnections() {
+        ensureNotDiscarded();
+        return Collections.unmodifiableList(receivingConnections);
     }
 
-    public Collection<ConduitBlockConnection> receivingConnections(DyeColor color) {
-        return receivingConnections.get(color);
+    public List<ConduitBlockConnection> receivingConnections(DyeColor color) {
+        ensureNotDiscarded();
+        return receivingConnectionsByChannel.get(color);
     }
 
     // This is sorted
     public List<ConduitBlockConnection> sendingConnectionsFrom(ConduitBlockConnection receiverNode) {
+        ensureNotDiscarded();
         return sendingConnectionsByReceiver.getOrDefault(receiverNode, List.of());
-    }
-
-    // Example of how to interact with these networks. Will remove shortly.
-    private void example() {
-        for (DyeColor channel : allChannels()) {
-            for (var receiver : receivingConnections(channel)) {
-                var extractHandler = receiver.getConnectedCapability(Capabilities.ItemHandler.BLOCK);
-
-                // Using basic for loop to show that round robin would be fine
-                var senders = sendingConnectionsFrom(receiver);
-                for (int i = 0; i < senders.size(); i++) {
-                    var sender = senders.get(i);
-                    var insertHandler = sender.getConnectedCapability(Capabilities.ItemHandler.BLOCK);
-
-                    // TODO: do transfers
-                }
-            }
-        }
     }
 
     // endregion
@@ -160,11 +174,13 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
     // region Context
 
     public boolean hasContext(ConduitNetworkContextType<?> type) {
+        ensureNotDiscarded();
         return context != null && context.type() == type;
     }
 
     @SuppressWarnings("unchecked")
     public <C extends ConduitNetworkContext<C>> @Nullable C getContext(ConduitNetworkContextType<C> type) {
+        ensureNotDiscarded();
         if (context != null && context.type() == type) {
             return (C) context;
         }
@@ -174,6 +190,7 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
 
     @SuppressWarnings("unchecked")
     public <C extends ConduitNetworkContext<C>> C getOrCreateContext(ConduitNetworkContextType<C> type) {
+        ensureNotDiscarded();
         if (context != null && context.type() == type) {
             return (C) context;
         }
@@ -191,6 +208,8 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
      * We use this to defer cache rebuilds to the last possible moment to ensure network mutations are less expensive.
      */
     public void beforeTicking() {
+        ensureNotDiscarded();
+
         if (shouldRebuildCache) {
             rebuildCache();
         }
@@ -201,7 +220,7 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
         }
     }
 
-    public void onNodeLoaded(NewConduitNode node) {
+    public void onNodeLoaded(ConduitNode node) {
         Preconditions.checkArgument(node.isLoaded(), "Node is not loaded!");
 
         // If a full rebuild is scheduled, don't modify the cache
@@ -212,7 +231,7 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
         addLoadedNode(node);
     }
 
-    public void onNodeUnloaded(NewConduitNode node) {
+    public void onNodeUnloaded(ConduitNode node) {
         Preconditions.checkArgument(!node.isLoaded(), "Node is still loaded!");
 
         // If a full rebuild is scheduled, don't modify the cache
@@ -223,14 +242,14 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
         removeLoadedNode(node);
     }
 
-    public void onNodeUpdated(NewConduitNode node) {
+    public void onNodeUpdated(ConduitNode node) {
         Preconditions.checkArgument(node.isLoaded(), "Node is not loaded!");
 
         if (shouldRebuildCache) {
             return;
         }
 
-        // If we've somehow missed this node, do a full processing
+        // If we've somehow missed this node, do the full works
         if (!loadedNodes.contains(node)) {
             addLoadedNode(node);
         } else {
@@ -247,11 +266,21 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
         haveConnectionsChanged = true;
     }
 
+    public void onChunkTickStatusChanged(long chunk) {
+        for (var node : nodesByChunkPos.get(chunk)) {
+            if (node.isLoaded()) {
+                addLoadedNode(node);
+            } else {
+                removeLoadedNode(node);
+            }
+        }
+    }
+
     // endregion
 
     // region Caching Logic
 
-    private void addLoadedNode(NewConduitNode node) {
+    private void addLoadedNode(ConduitNode node) {
         loadedNodes.add(node);
 
         for (var side : Direction.values()) {
@@ -279,21 +308,36 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
             var config = node.getConnectionConfig(side);
             if (config instanceof IOConnectionConfig ioConnectionConfig) {
                 // First add sending and receiving connections
-                if (ioConnectionConfig.isSend()) {
-                    sendingConnections.put(ioConnectionConfig.sendColor(), connection);
+                boolean canSend = ioConnectionConfig.canSend(node::hasRedstoneSignal);
+                boolean canReceive = ioConnectionConfig.canReceive(node::hasRedstoneSignal);
+
+                if (canSend) {
+                    sendingConnections.add(connection);
+                    sendingConnectionsByChannel.put(ioConnectionConfig.sendColor(), connection);
                 }
 
-                if (ioConnectionConfig.isReceive()) {
-                    receivingConnections.put(ioConnectionConfig.receiveColor(), connection);
+                if (canReceive) {
+                    receivingConnections.add(connection);
+                    receivingConnectionsByChannel.put(ioConnectionConfig.receiveColor(), connection);
                 }
 
                 // Now handle the mappings between them, do it after both are added in case we can self-feed.
-                if (ioConnectionConfig.isSend()) {
-                    receivingConnectionsBySender.computeIfAbsent(connection, k -> new ArrayList<>()).addAll(receivingConnections.get(ioConnectionConfig.receiveColor()));
+                if (canSend) {
+                    receivingConnectionsBySender.computeIfAbsent(connection, k -> new ArrayList<>()).addAll(receivingConnectionsByChannel.get(ioConnectionConfig.sendColor()));
+
+                    for (var receiver : receivingConnectionsByChannel.get(ioConnectionConfig.sendColor())) {
+                        sendingConnectionsByReceiver.computeIfAbsent(receiver, k -> new ArrayList<>()).add(connection);
+                    }
                 }
 
-                if (ioConnectionConfig.isReceive()) {
-                    sendingConnectionsByReceiver.computeIfAbsent(connection, k -> new ArrayList<>()).addAll(sendingConnections.get(ioConnectionConfig.sendColor()));
+                if (canReceive) {
+                    sendingConnectionsByReceiver.computeIfAbsent(connection, k -> new ArrayList<>()).addAll(sendingConnectionsByChannel.get(ioConnectionConfig.receiveColor()));
+
+                    for (var sender : sendingConnectionsByChannel.get(ioConnectionConfig.receiveColor())) {
+                        if (sender != connection) {
+                            receivingConnectionsBySender.computeIfAbsent(sender, k -> new ArrayList<>()).add(connection);
+                        }
+                    }
                 }
             }
 
@@ -302,7 +346,11 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
         }
     }
 
-    private void removeLoadedNode(NewConduitNode node) {
+    private void removeLoadedNode(ConduitNode node) {
+        if (!loadedNodes.contains(node)) {
+            return;
+        }
+
         loadedNodes.remove(node);
 
         // Remove connections from any maps
@@ -312,8 +360,10 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
 
             // Not a fan of having to iterate, but it's probably fine.
             for (var color : DyeColor.values()) {
-                sendingConnections.remove(color, connection);
-                receivingConnections.remove(color, connection);
+                sendingConnections.remove(connection);
+                receivingConnections.remove(connection);
+                sendingConnectionsByChannel.remove(color, connection);
+                receivingConnectionsByChannel.remove(color, connection);
             }
 
             receivingConnectionsBySender.remove(connection);
@@ -341,8 +391,8 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
 
     private void updateChannelList() {
         allChannels.clear();
-        allChannels.addAll(sendingConnections.keySet());
-        allChannels.addAll(receivingConnections.keySet());
+        allChannels.addAll(sendingConnectionsByChannel.keySet());
+        allChannels.addAll(receivingConnectionsByChannel.keySet());
     }
 
     private void sortConnectionLists() {
@@ -366,16 +416,22 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
      * For other network mutations, partial cache modifications are supported.
      */
     private void rebuildCache() {
+        nodesByChunkPos.clear();
         loadedNodes.clear();
         endpointConnections.clear();
         accessibleBlockConnectionsMap.clear();
         sendingConnections.clear();
         receivingConnections.clear();
+        sendingConnectionsByChannel.clear();
+        receivingConnectionsByChannel.clear();
         sendingConnectionsByReceiver.clear();
         receivingConnectionsBySender.clear();
 
         // Add each loaded node into the caches.
         for (var node : nodes()) {
+            // Put nodes into the position map.
+            addNodeToPositionMaps(node, true);
+
             if (node.isLoaded()) {
                 addLoadedNode(node);
             }
@@ -387,6 +443,11 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
         // Sort all lists
         sortConnectionLists();
 
+        // Fire chunk coverage update
+        if (onChunkCoverageChanged != null) {
+            onChunkCoverageChanged.accept(this);
+        }
+
         // Rebuild complete
         shouldRebuildCache = false;
         haveConnectionsChanged = false;
@@ -396,23 +457,67 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
         connections.sort((a, b) -> conduit.value().compare(ref, a, b));
     }
 
+    private void addNodeToPositionMaps(ConduitNode node, boolean isRebuild) {
+        // Put nodes into the position map.
+        long chunk = ChunkPos.asLong(node.pos());
+        boolean isNewChunk = !nodesByChunkPos.containsKey(chunk);
+        nodesByChunkPos.put(chunk, node);
+
+        if (!isRebuild && isNewChunk) {
+            onChunkCoverageChanged.accept(this);
+        }
+    }
+
+    private void removeNodeFromPositionMaps(ConduitNode node) {
+        // Put nodes into the position map.
+        long chunk = ChunkPos.asLong(node.pos());
+        nodesByChunkPos.remove(chunk, node);
+
+        boolean isRemovedChunk = !nodesByChunkPos.containsKey(chunk);
+        if (isRemovedChunk) {
+            onChunkCoverageChanged.accept(this);
+        }
+    }
+
     // endregion
 
     // region Network Impl
 
     @Override
-    protected NewConduitNetwork createEmpty() {
-        return new NewConduitNetwork(conduit);
-    }
-
-    // TODO: rather than recomputing the entire cache, I want more specific action hooks.
-    @Override
-    protected void onNetworkChanged() {
-//        markCacheDirty();
+    protected ConduitNetwork createEmpty() {
+        return new ConduitNetwork(conduit);
     }
 
     @Override
-    protected void onMerged(NewConduitNetwork other) {
+    protected void onNodeAdded(ConduitNode node) {
+        // If called during super constructor
+        // TODO: Review this behaviour...
+        if (nodesByChunkPos == null) {
+            return;
+        }
+
+        if (shouldRebuildCache) {
+            return;
+        }
+
+        addNodeToPositionMaps(node, false);
+        if (node.isLoaded()) {
+            addLoadedNode(node);
+        }
+    }
+
+    @Override
+    protected void onNodeRemoved(ConduitNode node) {
+        if (shouldRebuildCache) {
+            return;
+        }
+
+        removeNodeFromPositionMaps(node);
+        removeLoadedNode(node);
+    }
+
+    @Override
+    protected void onMerged(ConduitNetwork other) {
         if (context != null && other.context != null) {
             context = context.mergeWith(other.castContext());
         } else if (context == null && other.context != null) {
@@ -429,7 +534,7 @@ public class NewConduitNetwork extends Network<NewConduitNetwork, NewConduitNode
     }
 
     @Override
-    protected void onGraphSplit(Set<NewConduitNetwork> newNetworks) {
+    protected void onGraphSplit(Set<ConduitNetwork> newNetworks) {
         if (context == null) {
             return;
         }

@@ -20,11 +20,11 @@ public interface IConduitNetwork {
     Collection<ConduitBlockConnection> blockConnections();
     List<ConduitBlockConnection> blockConnectionsAccessibleFrom(ConduitBlockConnection connection);
     Set<DyeColor> allChannels();
-    Collection<ConduitBlockConnection> sendingConnections();
-    Collection<ConduitBlockConnection> sendingConnections(DyeColor channel);
+    List<ConduitBlockConnection> sendingConnections();
+    List<ConduitBlockConnection> sendingConnections(DyeColor channel);
     List<ConduitBlockConnection> receivingConnectionsFrom(ConduitBlockConnection sender);
-    Collection<ConduitBlockConnection> receivingConnections();
-    Collection<ConduitBlockConnection> receivingConnections(DyeColor channel);
+    List<ConduitBlockConnection> receivingConnections();
+    List<ConduitBlockConnection> receivingConnections(DyeColor channel);
     List<ConduitBlockConnection> sendingConnectionsFrom(ConduitBlockConnection receiver);
 
     boolean hasContext(ConduitNetworkContextType<?> type);

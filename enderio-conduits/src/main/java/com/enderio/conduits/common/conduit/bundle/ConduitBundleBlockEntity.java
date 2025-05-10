@@ -16,23 +16,20 @@ import com.enderio.conduits.api.facade.FacadeType;
 import com.enderio.conduits.api.network.node.NodeData;
 import com.enderio.conduits.client.model.conduit.bundle.ConduitBundleRenderState;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
-import com.enderio.conduits.common.conduit.ConduitSavedData;
 import com.enderio.conduits.common.conduit.ConduitSorter;
-import com.enderio.conduits.common.conduit.graph.ConduitConnectionHost;
-import com.enderio.conduits.common.conduit.graph.ConduitDataContainer;
-import com.enderio.conduits.common.conduit.graph.ConduitGraphContext;
-import com.enderio.conduits.common.conduit.graph.ConduitGraphObject;
-import com.enderio.conduits.common.conduit.graph.ConduitGraphUtility;
+import com.enderio.conduits.common.conduit.legacy.ConduitDataContainer;
 import com.enderio.conduits.common.conduit.legacy.ConnectionState;
 import com.enderio.conduits.common.conduit.legacy.DynamicConnectionState;
 import com.enderio.conduits.common.conduit.legacy.StaticConnectionStates;
 import com.enderio.conduits.common.conduit.menu.ConduitMenu;
+import com.enderio.conduits.common.conduit.new_graph.ConduitNetworkSavedData;
+import com.enderio.conduits.common.conduit.new_graph.ConduitNetwork;
+import com.enderio.conduits.common.conduit.new_graph.ConduitNode;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.gigaherz.graph3.Graph;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -105,13 +102,13 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     private Map<Holder<Conduit<?, ?>>, ConnectionContainer> conduitConnections = new HashMap<>();
 
     // Map of all conduit nodes for this bundle.
-    private final Map<Holder<Conduit<?, ?>>, ConduitGraphObject> conduitNodes = new HashMap<>();
+    private final Map<Holder<Conduit<?, ?>>, ConduitNode> conduitNodes = new HashMap<>();
 
     // Capability caches
     private final Map<Holder<Conduit<?, ?>>, NeighbouringCapabilityCaches> neighbouringCapabilityCaches = new HashMap<>();
 
     // Data recovery mechanism
-    private final Map<Holder<Conduit<?, ?>>, ConduitGraphObject> lazyNodes = new HashMap<>();
+    private final Map<Holder<Conduit<?, ?>>, ConduitNode> lazyNodes = new HashMap<>();
     private ListTag lazyNodeNBT = null;
     private Map<Holder<Conduit<?, ?>>, NodeData> lazyNodeData = null;
 
@@ -183,7 +180,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         updateShape();
         updateNeighborRedstone();
 
-        if (level instanceof ServerLevel serverLevel) {
+        if (level != null && !level.isClientSide()) {
             // Fire on-created events
             for (var conduit : conduits) {
                 conduit.value().onCreated(conduitNodes.get(conduit), level, getBlockPos(), null);
@@ -192,15 +189,10 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             // Attempt to make connections for recovered nodes.
             for (var entry : lazyNodes.entrySet()) {
                 Holder<Conduit<?, ?>> conduit = entry.getKey();
-                ConduitGraphObject node = entry.getValue();
-
-                Graph<ConduitGraphContext> graph = Objects.requireNonNull(node.getGraph());
 
                 for (Direction dir : Direction.values()) {
                     tryConnectTo(conduit, dir, false);
                 }
-
-                ConduitSavedData.addPotentialGraph(conduit, graph, serverLevel);
             }
         }
 
@@ -327,29 +319,24 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
             // Disable the connection
             setConnectionStatus(conduitConnection.getSecond(), conduitConnection.getFirst(), ConnectionStatus.DISABLED);
-            onConnectionsUpdated(conduitConnection.getSecond());
 
             // If we were connected to another bundle, we need to sever the graph
             if (level.getBlockEntity(getBlockPos()
                     .relative(conduitConnection.getFirst())) instanceof ConduitBundleBlockEntity neighborBundle) {
                 neighborBundle.setConnectionStatus(conduitConnection.getSecond(),
                         conduitConnection.getFirst().getOpposite(), ConnectionStatus.DISABLED);
-                neighborBundle.onConnectionsUpdated(conduitConnection.getSecond());
 
                 if (level instanceof ServerLevel serverLevel) {
-                    ConduitGraphObject thisNode = getConduitNode(conduitConnection.getSecond());
-                    ConduitGraphObject otherNode = neighborBundle.getConduitNode(conduitConnection.getSecond());
+                    ConduitNode thisNode = getConduitNode(conduitConnection.getSecond());
+                    ConduitNode otherNode = neighborBundle.getConduitNode(conduitConnection.getSecond());
 
-                    if (thisNode.getGraph() != null && otherNode.getGraph() != null) {
-                        if (thisNode.getGraph() == otherNode.getGraph()) {
-                            thisNode.getGraph().removeSingleEdge(thisNode, otherNode);
-                            thisNode.getGraph().removeSingleEdge(otherNode, thisNode);
+                    if (thisNode.isValid() && otherNode.isValid()) {
+                        var thisNetwork = thisNode.getNetwork();
+                        var otherNetwork = otherNode.getNetwork();
+
+                        if (thisNetwork != otherNetwork) {
+                            thisNetwork.disconnect(thisNode, otherNode, n -> ConduitNetworkSavedData.onNetworkCreated(serverLevel, n));
                         }
-
-                        ConduitSavedData.addPotentialGraph(conduitConnection.getSecond(), thisNode.getGraph(),
-                                serverLevel);
-                        ConduitSavedData.addPotentialGraph(conduitConnection.getSecond(), otherNode.getGraph(),
-                                serverLevel);
 
                         bundleChanged();
                     } else {
@@ -397,13 +384,13 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             return null;
         }
 
-        ConduitGraphObject node = blockEntity.conduitNodes.get(conduit);
-        if (node.getNetwork() == null) {
+        var node = blockEntity.conduitNodes.get(conduit);
+        if (!node.isValid()) {
             return null;
         }
 
         return conduit.value()
-                .proxyCapability(blockEntity.level, ConduitSavedData::isRedstoneActive, node, capability, context);
+                .proxyCapability(blockEntity.level, node, capability, context);
     }
 
     // endregion
@@ -520,16 +507,16 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             neighbouringCapabilityCaches.remove(replacementCandidate.get());
 
             if (!level.isClientSide()) {
-                ConduitGraphObject oldNode = conduitNodes.remove(replacementCandidate.get());
+                ConduitNode oldNode = conduitNodes.remove(replacementCandidate.get());
 
-                ConduitGraphObject newNode;
+                ConduitNode newNode;
                 if (oldNode != null) {
                     // Copy data into the node
-                    newNode = new ConduitGraphObject(getBlockPos(), oldNode.getNodeData());
+                    newNode = new ConduitNode(conduit, getBlockPos(), oldNode.getNodeData());
                     conduit.value().onRemoved(oldNode, level, getBlockPos());
-                    oldNode.getGraph().remove(oldNode);
+                    oldNode.getNetwork().remove(oldNode);
                 } else {
-                    newNode = new ConduitGraphObject(getBlockPos());
+                    newNode = new ConduitNode(conduit, getBlockPos());
                 }
 
                 setNode(conduit, newNode);
@@ -563,7 +550,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
             if (!level.isClientSide()) {
                 // Create the new node
-                ConduitGraphObject node = new ConduitGraphObject(getBlockPos());
+                ConduitNode node = new ConduitNode(conduit, getBlockPos());
 
                 // Add the node
                 setNode(conduit, node);
@@ -579,15 +566,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             result = new AddConduitResult.Insert();
         }
 
-        if (!level.isClientSide()) {
-            // Attach the new node to its own graph
-            var node = getConduitNode(conduit);
-            ConduitGraphUtility.integrate(conduit, node, List.of());
-
-            // Attach the bundle
-            node.attach(new ConnectionHost(this, conduit));
-        }
-
         // Now attempt to make connections, starting from the "primary" side (clicked or
         // facing direction)
         if (primaryConnectionSide != null) {
@@ -601,8 +579,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         if (level instanceof ServerLevel serverLevel) {
-            ConduitSavedData.addPotentialGraph(conduit, Objects.requireNonNull(getConduitNode(conduit).getGraph()),
-                    serverLevel);
+            ConduitNetworkSavedData.onNetworkCreated(serverLevel, getConduitNode(conduit).getNetwork());
         }
 
         if (result instanceof AddConduitResult.Upgrade(Holder<Conduit<?, ?>> replacedConduit)
@@ -643,14 +620,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         // Node remove event
         if (!level.isClientSide()) {
             var node = getConduitNode(conduit);
-            if (node != null) {
-                conduit.value().onRemoved(node, level, getBlockPos());
-                node.detach();
+            conduit.value().onRemoved(node, level, getBlockPos());
+            node.detach();
 
-                // Remove from the graph.
-                if (node.getGraph() != null) {
-                    node.getGraph().remove(node);
-                }
+            // Remove from the graph.
+            if (node.isValid()) {
+                node.getNetwork().remove(node);
             }
         }
 
@@ -694,14 +669,15 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
         neighborBundle.disconnect(conduit, side.getOpposite());
 
-        if (level instanceof ServerLevel serverLevel) {
-            if (neighborBundle.hasConduitByType(conduit)) {
-                Optional.of(neighborBundle.getConduitNode(conduit))
-                        .map(ConduitGraphObject::getGraph)
-                        .filter(Objects::nonNull)
-                        .ifPresent(graph -> ConduitSavedData.addPotentialGraph(conduit, graph, serverLevel));
-            }
-        }
+        // TODO: Do we need an equivalent to this?
+//        if (level instanceof ServerLevel serverLevel) {
+//            if (neighborBundle.hasConduitByType(conduit)) {
+//                Optional.of(neighborBundle.getConduitNode(conduit))
+//                        .map(ConduitGraphObject::getGraph)
+//                        .filter(Objects::nonNull)
+//                        .ifPresent(graph -> ConduitSavedData.addPotentialGraph(conduit, graph, serverLevel));
+//            }
+//        }
     }
 
     private void dropItem(ItemStack stack) {
@@ -712,7 +688,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)
-    public ConduitGraphObject getConduitNode(Holder<Conduit<?, ?>> conduit) {
+    public ConduitNode getConduitNode(Holder<Conduit<?, ?>> conduit) {
         if (!hasConduitByType(conduit)) {
             throw new IllegalStateException("Conduit not found in bundle.");
         }
@@ -739,11 +715,11 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)
-    private void setNode(Holder<Conduit<?, ?>> conduit, ConduitGraphObject loadedNode) {
+    private void setNode(Holder<Conduit<?, ?>> conduit, ConduitNode loadedNode) {
         conduitNodes.put(conduit, loadedNode);
 
         // Attach to the node to provide connection data and inventory.
-        loadedNode.attach(new ConnectionHost(this, conduit));
+        loadedNode.attach(this, conduit);
     }
 
     // endregion
@@ -799,10 +775,15 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         conduitConnections.get(conduit).setConfig(side, config);
-        if (config.isConnected()) {
+        if (config.isConnected() && getConnectionStatus(conduit, side) != ConnectionStatus.CONNECTED_BLOCK) {
             setConnectionStatus(conduit, side, ConnectionStatus.CONNECTED_BLOCK);
-        } else {
+        } else if (!config.isConnected()) {
             setConnectionStatus(conduit, side, ConnectionStatus.DISABLED);
+        } else {
+            // Fire on config changed manually if we've not changed any connections
+            if (level != null && !level.isClientSide()) {
+                getConduitNode(conduit).onConfigChanged();
+            }
         }
 
         bundleChanged();
@@ -814,12 +795,14 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         conduitConnections.get(conduit).setStatus(side, status);
+        onConnectionsUpdated(conduit);
+
         bundleChanged();
     }
 
     // TODO: This needs a better name or to handle blocks as well as conduits before
     // it can be exposed via the interface.
-    public boolean canConnectTo(Holder<Conduit<?, ?>> conduit, Direction side, ConduitGraphObject otherNode,
+    public boolean canConnectTo(Holder<Conduit<?, ?>> conduit, Direction side, ConduitNode otherNode,
             boolean isForcedConnection) {
         if (level == null) {
             return false;
@@ -886,8 +869,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                     conduit.value().onConnectTo(node, neighbourNode);
                     conduit.value().onConnectTo(neighbourNode, node);
 
-                    // Connect the graphs together
-                    ConduitGraphUtility.connect(conduit, node, neighbourNode);
+                    // Connect the neighbor to our node.
+                    node.getNetwork().connect(node, neighbourNode);
                 }
                 return true;
             }
@@ -912,6 +895,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                     .collect(Collectors.toSet());
 
             conduit.value().onConnectionsUpdated(node, level, getBlockPos(), connectedSides);
+
+            node.getNetwork().onNodeUpdated(node);
         }
     }
 
@@ -1022,6 +1007,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             hasRedstoneSignal = false;
         } else {
             hasRedstoneSignal = level.hasNeighborSignal(getBlockPos());
+        }
+
+        if (level == null && !level.isClientSide()) {
+            for (var node : conduitNodes.values()) {
+                node.onRedstoneChanged();
+            }
         }
     }
 
@@ -1195,7 +1186,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             return;
         }
 
-        ConduitSavedData savedData = ConduitSavedData.get(serverLevel);
+        ConduitNetworkSavedData savedData = ConduitNetworkSavedData.get(serverLevel);
         for (int i = 0; i < conduits.size(); i++) {
             Holder<Conduit<?, ?>> type = conduits.get(i);
             loadConduitFromSavedData(savedData, type, i);
@@ -1206,12 +1197,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)
-    private void loadConduitFromSavedData(ConduitSavedData savedData, Holder<Conduit<?, ?>> conduit, int typeIndex) {
+    private void loadConduitFromSavedData(ConduitNetworkSavedData savedData, Holder<Conduit<?, ?>> conduit, int typeIndex) {
         if (level == null || level.isClientSide()) {
             return;
         }
 
-        ConduitGraphObject node = savedData.takeUnloadedNodeIdentifier(conduit, this.worldPosition);
+        ConduitNode node = savedData.claimNode(conduit, this.worldPosition);
         if (node == null && conduitNodes.get(conduit) == null) {
             // Attempt to recover node data
             NodeData nodeData = null;
@@ -1228,17 +1219,18 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 }
 
                 if (dataContainer != null) {
-                    node = new ConduitGraphObject(getBlockPos(), dataContainer);
+                    node = new ConduitNode(conduit, getBlockPos(), dataContainer);
                 } else {
-                    node = new ConduitGraphObject(getBlockPos());
+                    node = new ConduitNode(conduit, getBlockPos());
                 }
             } else {
-                node = new ConduitGraphObject(getBlockPos(), nodeData);
+                node = new ConduitNode(conduit, getBlockPos(), nodeData);
             }
 
-            ConduitGraphUtility.integrate(conduit, node, List.of());
             setNode(conduit, node);
             lazyNodes.put(conduit, node);
+
+            ConduitNetworkSavedData.onNetworkCreated((ServerLevel) level, node.getNetwork());
         } else if (node != null) {
             setNode(conduit, node);
         }
@@ -1253,13 +1245,13 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         if (level instanceof ServerLevel serverLevel) {
-            var savedData = ConduitSavedData.get(serverLevel);
+            var savedData = ConduitNetworkSavedData.get(serverLevel);
 
             for (var conduit : conduits) {
                 var node = conduitNodes.get(conduit);
                 conduit.value().onRemoved(node, level, getBlockPos());
                 node.detach();
-                savedData.putUnloadedNodeIdentifier(conduit, this.worldPosition, node);
+                savedData.returnNode(conduit, this.worldPosition, node);
             }
         } else {
             CHUNK_FACADES.remove(SectionPos.asLong(worldPosition));
@@ -1612,79 +1604,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    private record ConnectionHost(ConduitBundleBlockEntity conduitBundle, Holder<Conduit<?, ?>> conduit)
-            implements ConduitConnectionHost {
-
-        @Override
-        public BlockPos pos() {
-            return conduitBundle.getBlockPos();
-        }
-
-        @EnsureSide(EnsureSide.Side.SERVER)
-        @Override
-        @Nullable
-        public <TCapability> TCapability getNeighbourCapability(BlockCapability<TCapability, Direction> capability,
-                Direction side) {
-            // Doesn't use EnderBlockEntity's capability cache so that we can bin capability
-            // caches that aren't needed when conduits are removed.
-            // Probably an "early optimization" but I don't think this really hurts.
-            if (conduitBundle.level instanceof ServerLevel serverLevel) {
-                var capabilityCache = conduitBundle.neighbouringCapabilityCaches.computeIfAbsent(conduit,
-                        c -> new NeighbouringCapabilityCaches());
-                return capabilityCache.getCapability(capability, serverLevel, conduitBundle.getBlockPos(), side);
-            }
-
-            return null;
-        }
-
-        @Override
-        public boolean isConnectedToBlock(Direction side) {
-            return conduitBundle.getConnectionStatus(conduit, side) == ConnectionStatus.CONNECTED_BLOCK;
-        }
-
-        @Override
-        public boolean isConnectedTo(Direction side) {
-            return conduitBundle.getConnectionStatus(conduit, side).isConnected();
-        }
-
-        @Override
-        public ConnectionConfig getConnectionConfig(Direction side) {
-            return conduitBundle.getConnectionConfig(conduit, side);
-        }
-
-        @Override
-        public <T extends ConnectionConfig> T getConnectionConfig(Direction side, ConnectionConfigType<T> type) {
-            return conduitBundle.getConnectionConfig(conduit, side, type);
-        }
-
-        @Override
-        public void setConnectionConfig(Direction side, ConnectionConfig connectionConfig) {
-            conduitBundle.setConnectionConfig(conduit, side, connectionConfig);
-        }
-
-        @Override
-        @Nullable
-        public IItemHandlerModifiable getInventory(Direction side) {
-            return conduitBundle.getConnectionInventory(conduit, side);
-        }
-
-        @Override
-        public void onNodeDirty() {
-            conduitBundle.hasDirtyNodes = true;
-        }
-
-        @Override
-        public boolean isLoaded() {
-            return conduitBundle.level != null && conduitBundle.level.isLoaded(pos())
-                    && conduitBundle.level.shouldTickBlocksAt(pos());
-        }
-
-        @Override
-        public boolean hasRedstoneSignal(@Nullable DyeColor signalColor) {
-            return conduitBundle.hasRedstoneSignal(signalColor);
-        }
-    }
-
     public enum UpdateState {
         NONE, NEXT_NEXT, NEXT, INITIALIZED;
 
@@ -1714,7 +1633,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     @SuppressWarnings("removal")
     private record LegacyConduitBundle(BlockPos pos, List<Holder<Conduit<?, ?>>> conduits,
             Map<Direction, ConduitConnection> connections, ItemStack facadeItem,
-            Map<Holder<Conduit<?, ?>>, ConduitGraphObject> conduitNodes) {
+            Map<Holder<Conduit<?, ?>>, ConduitNode> conduitNodes) {
 
         public static Codec<LegacyConduitBundle> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 BlockPos.CODEC.fieldOf("pos").forGetter(i -> i.pos),
@@ -1723,7 +1642,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                         .fieldOf("connections")
                         .forGetter(i -> i.connections),
                 ItemStack.OPTIONAL_CODEC.optionalFieldOf("facade", ItemStack.EMPTY).forGetter(i -> i.facadeItem),
-                Codec.unboundedMap(Conduit.CODEC, ConduitGraphObject.CODEC)
+                Codec.unboundedMap(Conduit.CODEC, ConduitNode.CODEC)
                         .fieldOf("nodes")
                         .forGetter(i -> i.conduitNodes))
                 .apply(instance, LegacyConduitBundle::new));

@@ -1,10 +1,9 @@
 package com.enderio.modconduits.common.modules.refinedstorage;
 
-import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.conduits.api.network.node.ConduitNode;
+import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -65,7 +64,7 @@ public record RSConduit(ResourceLocation texture, Component description)
     }
 
     @Override
-    public void onCreated(ConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
+    public void onCreated(IConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
         var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
         if (!data.isInitialized()) {
             data.initialize(node, level, pos);
@@ -73,7 +72,7 @@ public record RSConduit(ResourceLocation texture, Component description)
     }
 
     @Override
-    public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
+    public void onRemoved(IConduitNode node, Level level, BlockPos pos) {
         var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
         if (data.isInitialized()) {
             data.remove(level);
@@ -81,7 +80,7 @@ public record RSConduit(ResourceLocation texture, Component description)
     }
 
     @Override
-    public void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
+    public void onConnectionsUpdated(IConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
         var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
         if (data.isInitialized()) {
             data.update(level, connectedSides);
@@ -89,9 +88,8 @@ public record RSConduit(ResourceLocation texture, Component description)
     }
 
     @Override
-    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level,
-            ColoredRedstoneProvider coloredRedstoneProvider, ConduitNode node,
-            BlockCapability<TCapability, TContext> capability, @Nullable TContext tContext) {
+    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level, IConduitNode node, BlockCapability<TCapability, TContext> capability,
+        @Nullable TContext tContext) {
 
         if (capability == RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability()) {
             var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);

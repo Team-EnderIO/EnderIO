@@ -1,17 +1,14 @@
 package com.enderio.conduits.common.conduit.type.redstone;
 
 import com.enderio.base.api.misc.RedstoneControl;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.conduits.api.network.node.ConduitNode;
+import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.conduits.common.redstone.RedstoneExtractFilter;
-import com.enderio.conduits.common.redstone.RedstoneInsertFilter;
 import com.enderio.conduits.common.tag.ConduitTags;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -62,7 +59,7 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     }
 
     @Override
-    public void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
+    public void onConnectionsUpdated(IConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
         node.markDirty();
     }
 
@@ -127,7 +124,7 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     }
 
     @Override
-    public CompoundTag getExtraWorldData(ConduitBundle conduitBundle, ConduitNode node) {
+    public CompoundTag getExtraWorldData(ConduitBundle conduitBundle, IConduitNode node) {
         var tag = new CompoundTag();
 
         if (node.getNetwork() == null) {
