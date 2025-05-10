@@ -16,7 +16,7 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
 
     @Override
     public void tick(ServerLevel level, ChemicalConduit conduit, IConduitNetwork network) {
-        final long transferRate = conduit.transferRatePerTick() * conduit.graphTickRate();
+        final long transferRate = conduit.transferRatePerTick() * conduit.networkTickRate();
         var context = network.getOrCreateContext(ChemicalConduitNetworkContext.TYPE);
 
         for (var channel : network.allChannels()) {

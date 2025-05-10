@@ -131,7 +131,7 @@ public class ConduitBlockItem extends BlockItem {
 
             if (conduit.value().showDebugTooltip() && tooltipFlag.hasShiftDown()) {
                 tooltipComponents.add(TooltipUtil.styledWithArgs(ConduitLang.GRAPH_TICK_RATE_TOOLTIP,
-                        20 / conduit.value().graphTickRate()));
+                        20 / conduit.value().networkTickRate()));
             }
 
             if (showDetailTooltip) {

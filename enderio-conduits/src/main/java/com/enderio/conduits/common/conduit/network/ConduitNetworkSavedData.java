@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.conduit.new_graph;
+package com.enderio.conduits.common.conduit.network;
 
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.api.Conduit;
@@ -199,7 +199,7 @@ public class ConduitNetworkSavedData extends SavedData {
     private <T extends Conduit<T, ?>> void tickNetwork(ServerLevel serverLevel, Holder<Conduit<?, ?>> conduit,
             int conduitId, ConduitTicker<T> ticker, ConduitNetwork network) {
 
-        int conduitTickRate = conduit.value().graphTickRate();
+        int conduitTickRate = conduit.value().networkTickRate();
 
         // TODO: Offsets for networks so they don't all tick on the same tick.
         if (serverLevel.getGameTime() % conduitTickRate == conduitId % conduitTickRate) {

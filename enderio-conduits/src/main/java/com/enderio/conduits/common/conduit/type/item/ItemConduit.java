@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle, int graphTickRate)
+public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle, int networkTickRate)
         implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
@@ -48,7 +48,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(ItemConduit::description),
                     // Using optionals in order to support the old conduit format.
                     Codec.INT.optionalFieldOf("transfer_rate", 4).forGetter(ItemConduit::transferRatePerCycle),
-                    Codec.intRange(1, 20).optionalFieldOf("ticks_per_cycle", 20).forGetter(ItemConduit::graphTickRate))
+                    Codec.intRange(1, 20).optionalFieldOf("ticks_per_cycle", 20).forGetter(ItemConduit::networkTickRate))
             .apply(builder, ItemConduit::new));
 
     @Override
@@ -81,7 +81,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
             TooltipFlag pTooltipFlag) {
         String calculatedTransferLimitFormatted = String.format("%,d",
-                (int) Math.floor(transferRatePerCycle() * (20.0 / graphTickRate())));
+                (int) Math.floor(transferRatePerCycle() * (20.0 / networkTickRate())));
         pTooltipAdder.accept(
                 TooltipUtil.styledWithArgs(ConduitLang.ITEM_EFFECTIVE_RATE_TOOLTIP, calculatedTransferLimitFormatted));
 
@@ -189,8 +189,8 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
 
     @Override
     public int compareTo(@NotNull ItemConduit o) {
-        double selfEffectiveSpeed = transferRatePerCycle() * (20.0 / graphTickRate());
-        double otherEffectiveSpeed = o.transferRatePerCycle() * (20.0 / o.graphTickRate());
+        double selfEffectiveSpeed = transferRatePerCycle() * (20.0 / networkTickRate());
+        double otherEffectiveSpeed = o.transferRatePerCycle() * (20.0 / o.networkTickRate());
 
         if (selfEffectiveSpeed < otherEffectiveSpeed) {
             return -1;

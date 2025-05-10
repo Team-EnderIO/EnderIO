@@ -21,7 +21,7 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
 
     @Override
     public void tick(ServerLevel level, FluidConduit conduit, IConduitNetwork network) {
-        final int fluidRate = conduit.transferRatePerTick() * conduit.graphTickRate();
+        final int fluidRate = conduit.transferRatePerTick() * conduit.networkTickRate();
         var context = network.getOrCreateContext(FluidConduitNetworkContext.TYPE);
 
         for (var channel : network.allChannels()) {

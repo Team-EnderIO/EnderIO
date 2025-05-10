@@ -55,13 +55,13 @@ public class ConduitLang {
     // endregion
 
     public static final MutableComponent GRAPH_TICK_RATE_TOOLTIP = addTranslation("tooltip",
-            EnderIO.loc("conduit.debug.tick_rate"), "Graph Ticks: %s/sec");
+            EnderIO.loc("conduit.debug.tick_rate"), "Network Ticks: %s/sec");
 
     public static final MutableComponent ENERGY_RATE_TOOLTIP = addTranslation("tooltip",
             EnderIO.loc("conduit.energy.rate"), "Max Output %s \u00B5I/t");
 
     public static final MutableComponent FLUID_RAW_RATE_TOOLTIP = addTranslation("tooltip",
-            EnderIO.loc("conduit.fluid.raw_rate"), "Rate: %s mB/graph tick");
+            EnderIO.loc("conduit.fluid.raw_rate"), "Rate: %s mB/network tick");
     public static final MutableComponent FLUID_EFFECTIVE_RATE_TOOLTIP = addTranslation("tooltip",
             EnderIO.loc("conduit.fluid.effective_rate"), "Effective Rate: %s mB/t");
 
@@ -69,14 +69,13 @@ public class ConduitLang {
             "Allows multiple fluids to be transported on the same line");
 
     public static final MutableComponent ITEM_RAW_RATE_TOOLTIP = addTranslation("tooltip",
-            EnderIO.loc("conduit.item.raw_rate"), "Rate: %s Items/graph tick");
+            EnderIO.loc("conduit.item.raw_rate"), "Rate: %s Items/network tick");
     public static final MutableComponent ITEM_EFFECTIVE_RATE_TOOLTIP = addTranslation("tooltip",
             EnderIO.loc("conduit.item.effective_rate"), "Effective Rate: %s Items/sec");
 
     public static final Component CONDUIT_ERROR_NO_SCREEN_TYPE = addTranslation("gui",
             EnderIO.loc("conduit.error.no_screen_type"), "Error: No screen type defined");
 
-    public static final Component CONDUIT_ENABLED = addTranslation("gui", EnderIO.loc("conduit.enabled"), "Enabled");
     public static final Component CONDUIT_INSERT = addTranslation("gui", EnderIO.loc("conduit.insert"), "Insert");
     public static final Component CONDUIT_EXTRACT = addTranslation("gui", EnderIO.loc("conduit.extract"), "Extract");
     public static final Component CONDUIT_INPUT = addTranslation("gui", EnderIO.loc("conduit.input"), "Input");

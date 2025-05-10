@@ -44,7 +44,7 @@ public class ItemConduitTests {
 
         test.onGameTest(ItemConduitGameTestHelper.class, helper -> {
             var itemConduit = helper.getConduit(Conduits.ITEM);
-            final int tickRate = itemConduit.value().graphTickRate();
+            final int tickRate = itemConduit.value().networkTickRate();
 
             helper.startSequence()
                     // Destroy any previous conduit
@@ -82,7 +82,7 @@ public class ItemConduitTests {
     @TestHolder(description = "Ensures item conduits prioritise closest container first.")
     public static void itemConduitDistancePriority(final ItemConduitGameTestHelper helper) {
         var itemConduit = helper.getConduit(Conduits.ITEM);
-        final int tickRate = itemConduit.value().graphTickRate();
+        final int tickRate = itemConduit.value().networkTickRate();
 
         helper.startSequence()
                 // Destroy all previous conduits
@@ -114,7 +114,7 @@ public class ItemConduitTests {
     @TestHolder(description = "Ensures item conduits prioritise highest priority container first, before closest.")
     public static void itemConduitManualPriority(final ItemConduitGameTestHelper helper) {
         var itemConduit = helper.getConduit(Conduits.ITEM);
-        final int tickRate = itemConduit.value().graphTickRate();
+        final int tickRate = itemConduit.value().networkTickRate();
 
         helper.startSequence()
                 // Destroy all previous conduits
@@ -148,7 +148,7 @@ public class ItemConduitTests {
     @TestHolder(description = "Ensures item conduit round robin works.")
     public static void itemConduitRoundRobin(final ItemConduitGameTestHelper helper) {
         var itemConduit = helper.getConduit(Conduits.ITEM);
-        final int tickRate = itemConduit.value().graphTickRate();
+        final int tickRate = itemConduit.value().networkTickRate();
         final int transferRate = ((ItemConduit) itemConduit.value()).transferRatePerCycle();
 
         helper.startSequence()

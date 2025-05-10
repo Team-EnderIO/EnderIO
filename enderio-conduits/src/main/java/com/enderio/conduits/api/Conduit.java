@@ -60,7 +60,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @implNote Must be >= 1 and <= 20
      * @return the number of ticks that should pass before the conduit graph ticks.
      */
-    default int graphTickRate() {
+    default int networkTickRate() {
         return 5;
     }
 

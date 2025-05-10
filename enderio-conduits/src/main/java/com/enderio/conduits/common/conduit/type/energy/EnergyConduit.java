@@ -45,7 +45,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
 
     // Not configurable - energy is instantaneous
     @Override
-    public int graphTickRate() {
+    public int networkTickRate() {
         return 1;
     }
 

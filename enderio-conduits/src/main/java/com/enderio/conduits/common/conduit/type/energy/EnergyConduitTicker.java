@@ -15,7 +15,7 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
 
     @Override
     public void tick(ServerLevel level, EnergyConduit conduit, IConduitNetwork network) {
-        final int transferRate = conduit.transferRatePerTick() * conduit.graphTickRate();
+        final int transferRate = conduit.transferRatePerTick() * conduit.networkTickRate();
         EnergyConduitNetworkContext context = network.getContext(EnergyConduitNetworkContext.TYPE);
         if (context == null) {
             return;

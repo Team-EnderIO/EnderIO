@@ -220,7 +220,7 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
 
         if (pTooltipFlag.hasShiftDown()) {
             String rawRateFormatted = String.format("%,d",
-                    (int) Math.ceil(transferRatePerTick() * (20.0 / graphTickRate())));
+                    (int) Math.ceil(transferRatePerTick() * (20.0 / networkTickRate())));
             pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
         }
     }

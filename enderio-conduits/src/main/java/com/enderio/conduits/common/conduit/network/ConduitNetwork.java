@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.conduit.new_graph;
+package com.enderio.conduits.common.conduit.network;
 
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.connection.config.IOConnectionConfig;

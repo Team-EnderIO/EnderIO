@@ -39,7 +39,7 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
             .apply(builder, RedstoneConduit::new));
 
     @Override
-    public int graphTickRate() {
+    public int networkTickRate() {
         return 2;
     }
 

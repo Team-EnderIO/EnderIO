@@ -19,11 +19,7 @@ public class BasicConduitTests {
                 .set(0, 0, 5, Blocks.CHEST.defaultBlockState()));
 
         test.onGameTest(ConduitGameTestHelper.class, helper -> {
-
-            var itemConduit = helper.getLevel()
-                    .registryAccess()
-                    .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT)
-                    .getHolderOrThrow(Conduits.ITEM);
+            var itemConduit = helper.getConduit(Conduits.ITEM);
 
             helper.startSequence()
                     // Reset in case of repeated runs (in client)
@@ -48,11 +44,7 @@ public class BasicConduitTests {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(3, 1, 3));
 
         test.onGameTest(ConduitGameTestHelper.class, helper -> {
-
-            var itemConduit = helper.getLevel()
-                    .registryAccess()
-                    .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT)
-                    .getHolderOrThrow(Conduits.ITEM);
+            var itemConduit = helper.getConduit(Conduits.ITEM);
 
             helper.startSequence()
                     // Reset in case of repeated runs (in client)
@@ -72,6 +64,11 @@ public class BasicConduitTests {
         });
     }
 
-    // TODO: Set up some chests and item conduits and ensure that when the network
-    // breaks, transfers stop and re-adding the node resumes.
+    // TODO: Test redstone signalling
+
+    // TODO: Set up some chests and item conduits and ensure that when the network breaks, transfers stop and re-adding the node resumes.
+
+    // TODO: Add the following
+    // - Ensure transfers stop when network is broken + resume when fixed.
+    // - Check all yeta wrench interactions
 }
