@@ -93,15 +93,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
         return null;
     }
 
-    // Network connection sorting
-    // Can be used to change what the network prioritizes
-    default int compare(ConduitBlockConnection refNode, ConduitBlockConnection nodeA, ConduitBlockConnection nodeB) {
-        // TODO: should it be node positions or the block positions (i.e. if one node
-        // connects two chests, do closest chest first?)
-        return Integer.compare(refNode.node().pos().distManhattan(nodeA.node().pos()),
-                refNode.node().pos().distManhattan(nodeB.node().pos()));
-    }
-
     // region Conduit Checks
 
     default boolean canBeInSameBundle(Holder<Conduit<?, ?>> otherConduit) {
@@ -138,6 +129,19 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
         return true;
     }
 
+    /**
+     * Compare {@code connectionA} and {@code connectionB} to determine their sorting order with respect to {@code refConnection}.
+     * By default, this will compare the distances between the two connection's blocks to the reference node's connected block.
+     * @param refConnection the reference node's connection to compare against.
+     * @param connectionA  the first connection to compare.
+     * @param connectionB  the second connection to compare.
+     * @return Returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
+     */
+    default int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA, ConduitBlockConnection connectionB) {
+        return Integer.compare(refConnection.connectedBlockPos().distManhattan(connectionA.connectedBlockPos()),
+            refConnection.connectedBlockPos().distManhattan(connectionB.connectedBlockPos()));
+    }
+
     // endregion
 
     // region Connections
@@ -169,34 +173,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     }
 
     default void onConnectTo(IConduitNode selfNode, IConduitNode otherNode) {
-    }
-
-    // endregion
-
-    // region Legacy Conduit Connections
-
-    /**
-     * Convert old conduit connection data into the new connection config.
-     * This is executed during world load, so no level is available to query.
-     * @implNote Only needs to be implemented if the conduit existed in Ender IO 7.1 or earlier.
-     * @deprecated Only for conversion of <7.1 conduit data. Will be removed in Ender IO 8.
-     */
-    @Deprecated(since = "8.0.0")
-    default TConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
-            DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
-        return connectionConfigType().getDefault();
-    }
-
-    /**
-     * Copy legacy data from the old conduit data accessor to the new node however you wish.
-     * @implNote The node is guaranteed to have a network at this point, so the context can be accessed.
-     * @param node the node.
-     * @param legacyDataAccessor the legacy data.
-     * @deprecated Only for conversion of <7.1 conduit data. Will be removed in Ender IO 8.
-     */
-    @SuppressWarnings("removal")
-    @Deprecated(since = "8.0.0")
-    default void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor) {
     }
 
     // endregion
@@ -271,6 +247,34 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      */
     default boolean showDebugTooltip() {
         return false;
+    }
+
+    // endregion
+
+    // region Legacy Conduit Connections
+
+    /**
+     * Convert old conduit connection data into the new connection config.
+     * This is executed during world load, so no level is available to query.
+     * @implNote Only needs to be implemented if the conduit existed in Ender IO 7.1 or earlier.
+     * @deprecated Only for conversion of <7.1 conduit data. Will be removed in Ender IO 8.
+     */
+    @Deprecated(since = "8.0.0")
+    default TConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
+        DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
+        return connectionConfigType().getDefault();
+    }
+
+    /**
+     * Copy legacy data from the old conduit data accessor to the new node however you wish.
+     * @implNote The node is guaranteed to have a network at this point, so the context can be accessed.
+     * @param node the node.
+     * @param legacyDataAccessor the legacy data.
+     * @deprecated Only for conversion of <7.1 conduit data. Will be removed in Ender IO 8.
+     */
+    @SuppressWarnings("removal")
+    @Deprecated(since = "8.0.0")
+    default void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor) {
     }
 
     // endregion

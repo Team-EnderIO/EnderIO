@@ -64,13 +64,13 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
-    public int compare(ConduitBlockConnection refNode, ConduitBlockConnection nodeA, ConduitBlockConnection nodeB) {
-        int priorityA = nodeA.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
-        int priorityB = nodeB.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
+    public int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA, ConduitBlockConnection connectionB) {
+        int priorityA = connectionA.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
+        int priorityB = connectionB.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
         if (priorityA != priorityB) {
             return Integer.compare(priorityB, priorityA);
         }
-        return Conduit.super.compare(refNode, nodeA, nodeB);
+        return Conduit.super.compareNodes(refConnection, connectionA, connectionB);
     }
 
     @Override

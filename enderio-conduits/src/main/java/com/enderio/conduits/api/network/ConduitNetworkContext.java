@@ -31,5 +31,8 @@ public interface ConduitNetworkContext<T extends ConduitNetworkContext<T>> {
      */
     T split(IConduitNetwork selfNetwork, Set<? extends IConduitNetwork> allNetworks);
 
+    /**
+     * @return the type of this context. Used for type comparisons and serialization.
+     */
     ConduitNetworkContextType<T> type();
 }

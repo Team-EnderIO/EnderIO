@@ -16,7 +16,11 @@ public record ConduitBlockConnection(IConduitNode node, Direction connectionSide
 
     // TODO: we might want support for Void block capabilities...
 
-    public BlockPos blockPos() {
+    public BlockPos nodePos() {
+        return node.pos();
+    }
+
+    public BlockPos connectedBlockPos() {
         return node.pos().relative(connectionSide);
     }
 

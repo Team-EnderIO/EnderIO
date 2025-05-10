@@ -26,10 +26,10 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
                         .getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
 
                 if (redstoneExtractFilter != null) {
-                    signal = redstoneExtractFilter.getInputSignal(level, receivingConnection.blockPos(),
+                    signal = redstoneExtractFilter.getInputSignal(level, receivingConnection.connectedBlockPos(),
                             receivingConnection.connectionSide());
                 } else {
-                    signal = level.getSignal(receivingConnection.blockPos(), receivingConnection.connectionSide());
+                    signal = level.getSignal(receivingConnection.connectedBlockPos(), receivingConnection.connectionSide());
                 }
 
                 if (signal > 0) {
@@ -43,7 +43,7 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
                     level.updateNeighborsAt(sender.node().pos(), ConduitBlocks.CONDUIT.get());
 
                     if (sender.connectionConfig(RedstoneConduitConnectionConfig.TYPE).isStrongOutputSignal()) {
-                        level.updateNeighborsAt(sender.blockPos(), ConduitBlocks.CONDUIT.get());
+                        level.updateNeighborsAt(sender.connectedBlockPos(), ConduitBlocks.CONDUIT.get());
                     }
                 }
             }

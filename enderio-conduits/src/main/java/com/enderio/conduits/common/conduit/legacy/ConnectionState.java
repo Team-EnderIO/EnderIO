@@ -7,7 +7,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.apache.commons.lang3.NotImplementedException;
 
-@Deprecated(forRemoval = true, since = "8.0.0")
+@Deprecated(since = "8.0.0")
 public sealed interface ConnectionState permits StaticConnectionStates, DynamicConnectionState {
 
     Codec<ConnectionState> CODEC = Codec.either(StaticConnectionStates.CODEC, DynamicConnectionState.CODEC)

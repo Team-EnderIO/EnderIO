@@ -469,7 +469,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     }
 
     private void sortConnections(ConduitBlockConnection ref, List<ConduitBlockConnection> connections) {
-        connections.sort((a, b) -> conduit.value().compare(ref, a, b));
+        connections.sort((a, b) -> conduit.value().compareNodes(ref, a, b));
     }
 
     private void addNodeToPositionMaps(ConduitNode node, boolean isRebuild) {

@@ -67,7 +67,7 @@ public interface IConduitNetwork {
     /**
      * @param connection the connection to query from.
      * @return all nodes that are accessible from the given {@code connection}, this list will not include {@code connection}. This will be in the conduit's specified order.
-     * @implNote The list is ordered by {@link com.enderio.conduits.api.Conduit#compare(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
+     * @implNote The list is ordered by {@link com.enderio.conduits.api.Conduit#compareNodes(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
      */
     List<ConduitBlockConnection> blockConnectionsAccessibleFrom(ConduitBlockConnection connection);
 
@@ -100,7 +100,7 @@ public interface IConduitNetwork {
      *
      * @param sender the sender to query from.
      * @return all the receiving connections that are accessible to the {@code sender}, in the conduit's specified order.
-     * @implNote The list is ordered by {@link com.enderio.conduits.api.Conduit#compare(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
+     * @implNote The list is ordered by {@link com.enderio.conduits.api.Conduit#compareNodes(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
      */
     List<ConduitBlockConnection> receivingConnectionsFrom(ConduitBlockConnection sender);
 
@@ -126,7 +126,7 @@ public interface IConduitNetwork {
      *
      * @param receiver the receiver to query from.
      * @return all the sending connections that are accessible to the {@code receiver}, in the conduit's specified order.
-     * @implNote The list is ordered by {@link com.enderio.conduits.api.Conduit#compare(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
+     * @implNote The list is ordered by {@link com.enderio.conduits.api.Conduit#compareNodes(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
      */
     List<ConduitBlockConnection> sendingConnectionsFrom(ConduitBlockConnection receiver);
 
