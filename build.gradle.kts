@@ -4,7 +4,7 @@ import java.net.URI
 
 plugins {
     id("maven-publish")
-    id("net.neoforged.moddev") version "1.0.19" apply false
+    id("net.neoforged.moddev") version "2.0.88" apply false
     id("com.diffplug.spotless") version "6.25.0"
     id("idea")
     id("com.github.spotbugs") version "6.0.22"

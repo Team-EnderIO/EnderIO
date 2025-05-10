@@ -65,20 +65,5 @@ neoForge {
     }
 
     mods {
-        create("endercore") {
-            dependency(project(":endercore"))
-        }
-
-        create("enderio") {
-            sourceSet(project(":enderio-base").sourceSets["main"])
-        }
-
-        create("enderio_machines") {
-            sourceSet(project(":enderio-machines").sourceSets["main"])
-        }
-
-        create("enderio_armory") {
-            sourceSet(sourceSets["main"])
-        }
     }
 }

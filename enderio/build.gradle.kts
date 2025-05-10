@@ -103,32 +103,6 @@ neoForge {
             server()
         }
     }
-
-    mods {
-        create("endercore") {
-            dependency(project(":endercore"))
-        }
-
-        create("enderio_base") {
-            sourceSet(project(":enderio-base").sourceSets["main"])
-        }
-
-        create("enderio_machines") {
-            sourceSet(project(":enderio-machines").sourceSets["main"])
-        }
-
-        create("enderio_conduits") {
-            sourceSet(project(":enderio-conduits").sourceSets["main"])
-        }
-
-        create("enderio_conduits_modded") {
-            sourceSet(project(":enderio-conduits-modded").sourceSets["main"])
-        }
-
-        create("enderio_armory") {
-            sourceSet(project(":enderio-armory").sourceSets["main"])
-        }
-    }
 }
 
 // Collect all API packages from all modules.
