@@ -2,11 +2,14 @@ package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.conduits.api.network.ConduitNetworkContext;
 import com.enderio.conduits.api.network.ConduitNetworkContextType;
+import com.enderio.conduits.api.network.IConduitNetwork;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+
+import java.util.Set;
 
 public class FluidConduitNetworkContext implements ConduitNetworkContext<FluidConduitNetworkContext> {
 
@@ -64,7 +67,7 @@ public class FluidConduitNetworkContext implements ConduitNetworkContext<FluidCo
     }
 
     @Override
-    public FluidConduitNetworkContext copy() {
+    public FluidConduitNetworkContext split(IConduitNetwork selfNetwork, Set<? extends IConduitNetwork> allNetworks) {
         return new FluidConduitNetworkContext(lockedFluid);
     }
 

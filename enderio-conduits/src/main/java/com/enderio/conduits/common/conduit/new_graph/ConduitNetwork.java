@@ -14,6 +14,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
@@ -552,15 +555,16 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
             return;
         }
 
-        // TODO: Implement proper split method for contexts!
+        // Collect all networks for splitting
+        var allNetworks = Stream.concat(Stream.of(this), newNetworks.stream()).collect(Collectors.toSet());
 
         // Handle the new graphs first
         for (var newNetwork : newNetworks) {
-            newNetwork.context = context.copy();
+            newNetwork.context = context.split(newNetwork, allNetworks);
             newNetwork.shouldRebuildCache = true;
         }
 
-        context = context.copy();
+        context = context.split(this, allNetworks);
     }
 
     // endregion
