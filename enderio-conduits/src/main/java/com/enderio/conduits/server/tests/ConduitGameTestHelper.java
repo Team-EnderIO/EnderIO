@@ -1,15 +1,18 @@
 package com.enderio.conduits.server.tests;
 
 import com.enderio.conduits.api.Conduit;
+import com.enderio.conduits.api.EnderIOConduitsRegistries;
 import com.enderio.conduits.api.network.IConduitNetwork;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
+import com.enderio.conduits.common.init.Conduits;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestInfo;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -18,6 +21,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.testframework.gametest.ExtendedGameTestHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +34,13 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
 
     public ConduitGameTestHelper(GameTestInfo info) {
         super(info);
-        fakePlayer = new FakePlayer(info.getLevel(), new GameProfile(DEFAULT_FAKE_PLAYER_UUID, "[EnderIO]"));
+        fakePlayer = FakePlayerFactory.get(info.getLevel(), new GameProfile(DEFAULT_FAKE_PLAYER_UUID, "[EnderIO]"));
+    }
+
+    public Holder<Conduit<?, ?>> getConduit(ResourceKey<Conduit<?, ?>> conduitType) {
+        return getLevel().registryAccess()
+                .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT)
+                .getHolderOrThrow(conduitType);
     }
 
     public Player getPlayer() {
