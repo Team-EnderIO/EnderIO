@@ -31,11 +31,8 @@ public class EnderFluidFilterMenu extends AbstractFilterMenu<EnderFluidFilter> {
         super(menuType, containerId, playerInventory, filterAccess);
         this.type = type;
 
-        this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot
-                .readOnly(() -> getFilter().isDenyList()));
-
-        this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot
-                .readOnly(() -> getFilter().shouldCompareComponents()));
+        this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(() -> getFilter().isDenyList()));
+        this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(() -> getFilter().shouldCompareComponents()));
 
         for (int i = 0; i < this.type.slotCount(); i++) {
             final int slotIndex = i;

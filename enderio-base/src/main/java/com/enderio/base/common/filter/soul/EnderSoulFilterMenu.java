@@ -2,7 +2,6 @@ package com.enderio.base.common.filter.soul;
 
 import com.enderio.base.api.soul.Soul;
 import com.enderio.base.common.filter.AbstractFilterMenu;
-import com.enderio.base.common.filter.fluid.EnderFluidFilter;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.soul.StoredEntityDataSyncSlot;
 import com.enderio.core.common.network.menu.BoolSyncSlot;
@@ -25,20 +24,15 @@ public class EnderSoulFilterMenu extends AbstractFilterMenu<EnderSoulFilter> {
     public final EnderSoulFilterItem.Type type;
 
     private final BoolSyncSlot isInvertedSyncSlot;
-    private final BoolSyncSlot shouldCompareComponentsSyncSlot;
+    private final BoolSyncSlot shouldCompareTagsSyncSlot;
 
     public EnderSoulFilterMenu(@Nullable MenuType<?> menuType, EnderSoulFilterItem.Type type, int containerId,
                                Inventory playerInventory, FilterAccess filterAccess) {
         super(menuType, containerId, playerInventory, filterAccess);
         this.type = type;
 
-        this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot
-                .readOnly(() -> getFilterStack().getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY)
-                        .isDenyList()));
-
-        this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot
-                .readOnly(() -> getFilterStack().getOrDefault(EIODataComponents.FLUID_FILTER, EnderFluidFilter.EMPTY)
-                        .shouldCompareComponents()));
+        this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(() -> getFilter().isDenyList()));
+        this.shouldCompareTagsSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(() -> getFilter().shouldCompareTags()));
 
         for (int i = 0; i < this.type.slotCount(); i++) {
             final int slotIndex = i;
@@ -59,7 +53,7 @@ public class EnderSoulFilterMenu extends AbstractFilterMenu<EnderSoulFilter> {
         this.type = type;
 
         this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot.standalone());
-        this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot.standalone());
+        this.shouldCompareTagsSyncSlot = addSyncSlot(BoolSyncSlot.standalone());
 
         for (int i = 0; i < this.type.slotCount(); i++) {
             final var syncSlot = addSyncSlot(StoredEntityDataSyncSlot.standalone());
@@ -83,8 +77,8 @@ public class EnderSoulFilterMenu extends AbstractFilterMenu<EnderSoulFilter> {
         return isInvertedSyncSlot.get();
     }
 
-    public boolean shouldCompareComponents() {
-        return shouldCompareComponentsSyncSlot.get();
+    public boolean shouldCompareTags() {
+        return shouldCompareTagsSyncSlot.get();
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)

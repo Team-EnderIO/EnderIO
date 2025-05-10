@@ -79,7 +79,7 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
             addRenderableWidget(new ToggleIconButton(xPos, yPos, 16, 16,
                     (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
                     (b) -> b ? EIOLang.FILTER_MATCH_COMPONENTS : EIOLang.FILTER_IGNORE_COMPONENTS,
-                    getMenu()::shouldCompareComponents,
+                    getMenu()::shouldCompareTags,
                     (b) -> handleButtonPress(EnderSoulFilterMenu.SHOULD_COMPARE_TAGS_BUTTON_ID)));
 
             xPos -= 18;
