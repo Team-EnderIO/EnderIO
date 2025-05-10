@@ -1,7 +1,6 @@
 package com.enderio.conduits.server.tests;
 
 import com.enderio.conduits.api.Conduit;
-import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.network.IConduitNetwork;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
@@ -20,9 +19,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.testframework.gametest.ExtendedGameTestHelper;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class ConduitGameTestHelper extends ExtendedGameTestHelper {
@@ -70,19 +69,24 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         }
     }
 
-    public ConduitBundleBlockEntity getConduitBundle(int x, int y, int z) {
+    @Nullable
+    public ConduitBundleBlockEntity getConduitBundle(int x, int y, int z, boolean allowMissing) {
         if (getLevel().getBlockEntity(absolutePos(new BlockPos(x, y, z))) instanceof ConduitBundleBlockEntity conduitBundle) {
             return conduitBundle;
         }
 
-        throw new GameTestAssertException("No conduit bundle at " + x + ", " + y + ", " + z);
+        if (!allowMissing) {
+            throw new GameTestAssertException("No conduit bundle at " + x + ", " + y + ", " + z);
+        }
+        return null;
     }
 
-    public void assertAllConduitBundlesMatch(int startX, int startY, int startZ, int endX, int endY, int endZ, Predicate<ConduitBundleBlockEntity> predicate, String errorMessage) {
+    public void assertAllConduitBundlesMatch(int startX, int startY, int startZ, int endX, int endY, int endZ, boolean allowMissingBundles, Predicate<ConduitBundleBlockEntity> predicate, String errorMessage) {
         for (int x = startX; x <= endX; x++) {
             for (int y = startY; y <= endY; y++) {
                 for (int z = startZ; z <= endZ; z++) {
-                    if (!predicate.test(getConduitBundle(x, y, z))) {
+                    var bundle = getConduitBundle(x, y, z, allowMissingBundles);
+                    if (bundle != null && !predicate.test(bundle)) {
                         throw new GameTestAssertException(errorMessage + " at " + x + ", " + y + ", " + z);
                     }
                 }
@@ -90,14 +94,18 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         }
     }
 
-    public void assertAllConduitNodesSameNetwork(Holder<Conduit<?, ?>> conduit, int startX, int startY, int startZ, int endX, int endY, int endZ) {
+    public void assertAllNetworksMatch(Holder<Conduit<?, ?>> conduit, int startX, int startY, int startZ, int endX, int endY, int endZ, boolean allowMissingBundles) {
         boolean foundFirstNetwork = false;
         IConduitNetwork network = null;
 
         for (int x = startX; x <= endX; x++) {
             for (int y = startY; y <= endY; y++) {
                 for (int z = startZ; z <= endZ; z++) {
-                    var bundle = getConduitBundle(x, y, z);
+                    var bundle = getConduitBundle(x, y, z, allowMissingBundles);
+                    if (bundle == null) {
+                        continue;
+                    }
+
                     if (!foundFirstNetwork) {
                         network = bundle.getConduitNode(conduit).getNetwork();
                         foundFirstNetwork = true;
@@ -112,9 +120,57 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         }
     }
 
-    public void assertConduitNodesDifferentNetwork(Holder<Conduit<?, ?>> conduit, int x1, int y1, int z1, int x2, int y2, int z2) {
-        var firstBundle = getConduitBundle(x1, y1, z1);
-        var secondBundle = getConduitBundle(x2, y2, z2);
+    public void assertAllNetworksDiffer(Holder<Conduit<?, ?>> conduit, int startX, int startY, int startZ, int endX, int endY, int endZ, boolean allowMissingBundles) {
+        for (int x1 = startX; x1 <= endX; x1++) {
+            for (int y1 = startY; y1 <= endY; y1++) {
+                for (int z1 = startZ; z1 <= endZ; z1++) {
+                    var bundleA = getConduitBundle(x1, y1, z1, allowMissingBundles);
+                    if (bundleA == null || !bundleA.hasConduitStrict(conduit)) {
+                        continue;
+                    }
+
+                    var nodeA = bundleA.getConduitNode(conduit);
+
+                    for (int x2 = startX; x2 <= endX; x2++) {
+                        for (int y2 = startY; y2 <= endY; y2++) {
+                            for (int z2 = startZ; z2 <= endZ; z2++) {
+                                if (x1 == x2 && y1 == y2 && z1 == z2) {
+                                    continue;
+                                }
+
+                                var bundleB = getConduitBundle(x2, y2, z2, allowMissingBundles);
+                                if (bundleB == null || !bundleB.hasConduitStrict(conduit)) {
+                                    continue;
+                                }
+
+                                var nodeB = bundleB.getConduitNode(conduit);
+
+                                if (nodeA.getNetwork() == nodeB.getNetwork()) {
+                                    throw new GameTestAssertException("Conduit nodes have same network at " + x1 + ", " + y1 + ", " + z1 + " and " + x2 + ", " + y2 + ", " + z2);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void assertNetworksMatchBetween(Holder<Conduit<?, ?>> conduit, int x1, int y1, int z1, int x2, int y2, int z2) {
+        var firstBundle = getConduitBundle(x1, y1, z1, false);
+        var secondBundle = getConduitBundle(x2, y2, z2, false);
+
+        var firstNode = firstBundle.getConduitNode(conduit);
+        var secondNode = secondBundle.getConduitNode(conduit);
+
+        if (firstNode.getNetwork() != secondNode.getNetwork()) {
+            throw new GameTestAssertException("Conduit nodes have different networks at " + x1 + ", " + y1 + ", " + z1 + " and " + x2 + ", " + y2 + ", " + z2);
+        }
+    }
+
+    public void assertNetworksDifferBetween(Holder<Conduit<?, ?>> conduit, int x1, int y1, int z1, int x2, int y2, int z2) {
+        var firstBundle = getConduitBundle(x1, y1, z1, false);
+        var secondBundle = getConduitBundle(x2, y2, z2, false);
 
         var firstNode = firstBundle.getConduitNode(conduit);
         var secondNode = secondBundle.getConduitNode(conduit);
