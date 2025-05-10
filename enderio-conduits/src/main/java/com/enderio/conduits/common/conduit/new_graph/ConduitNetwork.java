@@ -561,10 +561,19 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         // Handle the new graphs first
         for (var newNetwork : newNetworks) {
             newNetwork.context = context.split(newNetwork, allNetworks);
+            if (newNetwork.context == context) {
+                throw new IllegalStateException("Splitting context for a network of '" + conduit.getRegisteredName() + "' resulted in the same context for multiple networks.");
+            }
+
             newNetwork.shouldRebuildCache = true;
         }
 
-        context = context.split(this, allNetworks);
+        var newContext = context.split(this, allNetworks);
+        if (newContext == context) {
+            throw new IllegalStateException("Splitting context for a network of '" + conduit.getRegisteredName() + "' resulted in the same context for multiple networks.");
+        }
+
+        context = newContext;
     }
 
     // endregion

@@ -7,7 +7,7 @@ import com.mojang.serialization.Codec;
 
 /**
  * Data which is stored on each conduit node. This is not synced to the client.
- * If you want to sync data from here to the client, use {@link com.enderio.conduits.api.Conduit#getExtraWorldData(ConduitBundle, ConduitNode)}.
+ * If you want to sync data from here to the client, use {@link com.enderio.conduits.api.Conduit#getExtraWorldData(ConduitBundle, IConduitNode)}.
  * For connection-related settings, use {@link ConnectionConfig}.
  */
 public interface NodeData {
