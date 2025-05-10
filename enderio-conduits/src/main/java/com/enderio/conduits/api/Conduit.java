@@ -11,6 +11,7 @@ import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
 import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.mojang.serialization.Codec;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -258,7 +259,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * Convert old conduit connection data into the new connection config.
      * This is executed during world load, so no level is available to query.
      * @implNote Only needs to be implemented if the conduit existed in Ender IO 7.1 or earlier.
-     * @deprecated Only for conversion of <7.1 conduit data. Will be removed in Ender IO 8.
+     * @deprecated Only for conversion of 7.X conduit data. Will be removed in 1.22.
      */
     @Deprecated(since = "8.0.0")
     default TConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
@@ -271,11 +272,11 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @implNote The node is guaranteed to have a network at this point, so the context can be accessed.
      * @param node the node.
      * @param legacyDataAccessor the legacy data.
-     * @deprecated Only for conversion of <7.1 conduit data. Will be removed in Ender IO 8.
+     * @param connectionConfigSetter a setter if the connection config needs to be updated.
+     * @deprecated Only for conversion of 7.X conduit data. Will be removed in 1.22.
      */
-    @SuppressWarnings("removal")
     @Deprecated(since = "8.0.0")
-    default void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor) {
+    default void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor, BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
     }
 
     // endregion

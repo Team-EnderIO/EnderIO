@@ -21,8 +21,7 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
 
         for (var channel : network.allChannels()) {
             for (var receivingConnection : network.receivingConnections(channel)) {
-                IChemicalHandler extractHandler = receivingConnection
-                        .getConnectedCapability(MekanismModule.Capabilities.CHEMICAL);
+                IChemicalHandler extractHandler = receivingConnection.getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
                 if (extractHandler == null) {
                     continue;
                 }
@@ -65,7 +64,7 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
     private long doChemicalTransfer(Chemical chemical, long maxTransfer, ConduitBlockConnection receiver,
             List<ConduitBlockConnection> senders) {
         var receiverHandler = Objects
-                .requireNonNull(receiver.getConnectedCapability(MekanismModule.Capabilities.CHEMICAL));
+                .requireNonNull(receiver.getSidedCapability(MekanismModule.Capabilities.CHEMICAL));
 
         // Attempt to drain chemical from the target.
         var extractedChemical = receiverHandler.extractChemical(new ChemicalStack(chemical, maxTransfer),
@@ -75,7 +74,7 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
         }
 
         // Test the extracted fluid against the target
-        var extractFilter = receiver.getInventory()
+        var extractFilter = receiver.inventory()
                 .getStackInSlot(ChemicalConduit.EXTRACT_FILTER_SLOT)
                 .getCapability(MekanismModule.Capabilities.CHEMICAL_FILTER);
 
@@ -88,7 +87,7 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
 
         // Insert into any available blocks
         for (var insert : senders) {
-            IChemicalHandler insertHandler = insert.getConnectedCapability(MekanismModule.Capabilities.CHEMICAL);
+            IChemicalHandler insertHandler = insert.getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
             if (insertHandler == null) {
                 continue;
             }
@@ -96,7 +95,7 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
             var chemicalToInsert = extractedChemical.copy();
 
             // Test fluid against insert filter.
-            var insertFilter = insert.getInventory()
+            var insertFilter = insert.inventory()
                     .getStackInSlot(ChemicalConduit.INSERT_FILTER_SLOT)
                     .getCapability(MekanismModule.Capabilities.CHEMICAL_FILTER);
 

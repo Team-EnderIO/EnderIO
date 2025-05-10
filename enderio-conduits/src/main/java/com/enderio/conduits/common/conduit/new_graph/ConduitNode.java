@@ -34,7 +34,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
             .create(instance -> instance
                     .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNode::pos),
                             NodeData.GENERIC_CODEC.optionalFieldOf("data")
-                                    .forGetter(i -> Optional.ofNullable(i.nodeData)))
+                                    .forGetter(i -> i.nodeData == null || !i.nodeData.type().isPersistent() ? Optional.empty() : Optional.of(i.nodeData)))
                     .apply(instance, ConduitNode::new));
 
     public static final Codec<ConduitNode> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
@@ -105,6 +105,8 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
         if (isLoaded()) {
             network.onNodeLoaded(this);
         }
+
+        tryCopyLegacyData();
     }
 
     public void detach() {
@@ -184,11 +186,18 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
 
     // region World Interaction
 
-    public <TCapability> TCapability getCapabilityAtNeighbor(BlockCapability<TCapability, Direction> capability,
+    public <TCapability> TCapability getNeighborSidedCapability(BlockCapability<TCapability, Direction> capability,
             Direction side) {
         ensureValid();
         // noinspection DataFlowIssue
-        return conduitBundle.getNeighbourCapability(conduit, capability, side);
+        return conduitBundle.getNeighborSidedCapability(conduit, capability, side);
+    }
+
+    public <TCapability> TCapability getNeighborVoidCapability(BlockCapability<TCapability, Void> capability,
+            Direction side) {
+        ensureValid();
+        // noinspection DataFlowIssue
+        return conduitBundle.getNeighborVoidCapability(conduit, capability, side);
     }
 
     public boolean hasRedstoneSignal(@Nullable DyeColor signalColor) {
@@ -266,13 +275,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
     @Override
     public void setNetwork(@Nullable ConduitNetwork network) {
         this.network = network;
-
-        if (network != null && legacyDataContainer != null) {
-            // We now know what type of conduit we are, so upgrade the connection data then
-            // drop legacy data
-            network.conduit().value().copyLegacyData(this, legacyDataContainer);
-            legacyDataContainer = null;
-        }
+        tryCopyLegacyData();
     }
 
     // endregion
@@ -280,5 +283,14 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
     private void ensureValid() {
         Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
         Preconditions.checkState(isLoaded(), "Conduit node is not attached or in a loaded chunk.");
+    }
+
+    private void tryCopyLegacyData() {
+        if (network != null && legacyDataContainer != null && isLoaded()) {
+            // We now know what type of conduit we are, so upgrade the connection data then
+            // drop legacy data
+            network.conduit().value().copyLegacyData(this, legacyDataContainer, (side, config) -> conduitBundle.setConnectionConfig(conduit, side, config));
+            legacyDataContainer = null;
+        }
     }
 }

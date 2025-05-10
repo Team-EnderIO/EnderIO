@@ -21,7 +21,7 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
             for (var receivingConnection : network.receivingConnections(channel)) {
                 int signal;
 
-                var redstoneExtractFilter = receivingConnection.getInventory()
+                var redstoneExtractFilter = receivingConnection.inventory()
                         .getStackInSlot(RedstoneConduit.EXTRACT_FILTER_SLOT)
                         .getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
 

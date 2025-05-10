@@ -6,6 +6,7 @@ import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
+import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.network.ConduitBlockConnection;
 import com.enderio.conduits.api.network.node.IConduitNode;
@@ -16,6 +17,8 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -118,7 +121,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
-    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor) {
+    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor, BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
         var legacyData = legacyDataAccessor.getData(ConduitTypes.Data.ITEM.get());
         if (legacyData == null) {
             return;
@@ -130,7 +133,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
                 var oldSideConfig = legacyData.get(side);
                 var currentConfig = node.getConnectionConfig(side, ItemConduitConnectionConfig.TYPE);
 
-                node.setConnectionConfig(side,
+                connectionConfigSetter.accept(side,
                         currentConfig.withIsRoundRobin(oldSideConfig.isRoundRobin)
                                 .withIsSelfFeed(oldSideConfig.isSelfFeed)
                                 .withPriority(oldSideConfig.priority));

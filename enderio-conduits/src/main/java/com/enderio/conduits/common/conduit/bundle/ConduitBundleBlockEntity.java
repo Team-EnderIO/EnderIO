@@ -103,7 +103,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     private final Map<Holder<Conduit<?, ?>>, ConduitNode> conduitNodes = new HashMap<>();
 
     // Capability caches
-    private final Map<Holder<Conduit<?, ?>>, NeighbouringCapabilityCaches> neighbouringCapabilityCaches = new HashMap<>();
+    private final Map<Holder<Conduit<?, ?>>, NeighboringCapabilityCaches> neighbouringCapabilityCaches = new HashMap<>();
 
     // Data recovery mechanism
     private final Map<Holder<Conduit<?, ?>>, ConduitNode> lazyNodes = new HashMap<>();
@@ -975,15 +975,30 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     @Nullable
-    public <TCapability> TCapability getNeighbourCapability(Holder<Conduit<?, ?>> conduit,
+    public <TCapability> TCapability getNeighborSidedCapability(Holder<Conduit<?, ?>> conduit,
             BlockCapability<TCapability, Direction> capability, Direction side) {
         // Doesn't use EnderBlockEntity's capability cache so that we can bin capability
         // caches that aren't needed when conduits are removed.
         // Probably an "early optimization" but I don't think this really hurts.
         if (level instanceof ServerLevel serverLevel) {
             var capabilityCache = neighbouringCapabilityCaches.computeIfAbsent(conduit,
-                    c -> new NeighbouringCapabilityCaches());
-            return capabilityCache.getCapability(capability, serverLevel, getBlockPos(), side);
+                    c -> new NeighboringCapabilityCaches());
+            return capabilityCache.getSidedCapability(capability, serverLevel, getBlockPos(), side);
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public <TCapability> TCapability getNeighborVoidCapability(Holder<Conduit<?, ?>> conduit,
+            BlockCapability<TCapability, Void> capability, Direction side) {
+        // Doesn't use EnderBlockEntity's capability cache so that we can bin capability
+        // caches that aren't needed when conduits are removed.
+        // Probably an "early optimization" but I don't think this really hurts.
+        if (level instanceof ServerLevel serverLevel) {
+            var capabilityCache = neighbouringCapabilityCaches.computeIfAbsent(conduit,
+                    c -> new NeighboringCapabilityCaches());
+            return capabilityCache.getVoidCapability(capability, serverLevel, getBlockPos(), side);
         }
 
         return null;
@@ -1166,6 +1181,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     public void setLevel(Level level) {
         super.setLevel(level);
 
+        // TODO: Do this in clear removed instead?
         if (!level.isClientSide()) {
             loadFromSavedData();
         }
@@ -1285,7 +1301,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         for (Holder<Conduit<?, ?>> conduit : conduits) {
             var data = conduitNodes.get(conduit).getNodeData();
 
-            if (data != null) {
+            if (data != null && data.type().isPersistent()) {
                 CompoundTag nodeTag = new CompoundTag();
                 nodeTag.put("Conduit", Conduit.CODEC.encodeStart(serializationContext, conduit).getOrThrow());
                 nodeTag.put("Data", NodeData.GENERIC_CODEC.encodeStart(serializationContext, data).getOrThrow());
@@ -1591,19 +1607,35 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    private static class NeighbouringCapabilityCaches {
-        private final Map<Direction, Map<BlockCapability<?, Direction>, BlockCapabilityCache<?, Direction>>> caches = new EnumMap<>(
+    private static class NeighboringCapabilityCaches {
+        private final Map<Direction, Map<BlockCapability<?, Direction>, BlockCapabilityCache<?, Direction>>> directionalCaches = new EnumMap<>(
+                Direction.class);
+        private final Map<Direction, Map<BlockCapability<?, Void>, BlockCapabilityCache<?, Void>>> voidCaches = new EnumMap<>(
                 Direction.class);
 
         /**
          * Get a capability for the given side of the node
          */
         @Nullable
-        public <TCapability> TCapability getCapability(BlockCapability<TCapability, Direction> capability,
+        public <TCapability> TCapability getSidedCapability(BlockCapability<TCapability, Direction> capability,
                 ServerLevel level, BlockPos conduitPos, Direction side) {
-            var cacheMap = caches.computeIfAbsent(side, s -> new HashMap<>());
+            var cacheMap = directionalCaches.computeIfAbsent(side, s -> new HashMap<>());
             var cache = cacheMap.computeIfAbsent(capability,
                     c -> BlockCapabilityCache.create(c, level, conduitPos.relative(side), side.getOpposite()));
+
+            // noinspection unchecked
+            return (TCapability) cache.getCapability();
+        }
+
+        /**
+         * Get a capability for the given side of the node
+         */
+        @Nullable
+        public <TCapability> TCapability getVoidCapability(BlockCapability<TCapability, Void> capability,
+                ServerLevel level, BlockPos conduitPos, Direction side) {
+            var cacheMap = voidCaches.computeIfAbsent(side, s -> new HashMap<>());
+            var cache = cacheMap.computeIfAbsent(capability,
+                    c -> BlockCapabilityCache.create(c, level, conduitPos.relative(side), null));
 
             // noinspection unchecked
             return (TCapability) cache.getCapability();

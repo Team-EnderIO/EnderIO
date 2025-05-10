@@ -10,38 +10,64 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-@ApiStatus.AvailableSince("8.0")
-@ApiStatus.Experimental
+/**
+ * Represents a connection between a node and a block.
+ *
+ * @param node           The node that is connected to the block.
+ * @param connectionSide The direction of the connection from the node.
+ */
+@ApiStatus.AvailableSince("8.0.0")
 public record ConduitBlockConnection(IConduitNode node, Direction connectionSide) {
 
-    // TODO: we might want support for Void block capabilities...
-
-    public BlockPos nodePos() {
-        return node.pos();
-    }
-
+    /**
+     * @return the position of the connected block.
+     */
     public BlockPos connectedBlockPos() {
         return node.pos().relative(connectionSide);
     }
 
+    /**
+     * Get the desired capability from the connected block.
+     *
+     * @param capability the desired capability.
+     * @return the capability or null if it is not available.
+     */
     @Nullable
-    public <TCapability> TCapability getConnectedCapability(BlockCapability<TCapability, Direction> capability) {
-        return node.getCapabilityAtNeighbor(capability, connectionSide);
+    public <TCapability> TCapability getSidedCapability(BlockCapability<TCapability, Direction> capability) {
+        return node.getNeighborSidedCapability(capability, connectionSide);
     }
 
+    /**
+     * Get the desired capability from the connected block.
+     *
+     * @param capability the desired capability.
+     * @return the capability or null if it is not available.
+     */
+    @Nullable
+    public <TCapability> TCapability getVoidCapability(BlockCapability<TCapability, Void> capability) {
+        return node.getNeighborVoidCapability(capability, connectionSide);
+    }
+
+    /**
+     * @return the configuration for this connection, untyped.
+     */
     public ConnectionConfig connectionConfig() {
         return node.getConnectionConfig(connectionSide);
     }
 
+    /**
+     * @param type the type of configuration to get.
+     * @return the configuration for this connection.
+     * @throws IllegalStateException if the type requested does not match the stored type.
+     */
     public <T extends ConnectionConfig> T connectionConfig(ConnectionConfigType<T> type) {
         return node.getConnectionConfig(connectionSide, type);
     }
 
-    public void setConnectionConfig(ConnectionConfig connectionConfig) {
-        node.setConnectionConfig(connectionSide, connectionConfig);
-    }
-
-    public IItemHandlerModifiable getInventory() {
+    /**
+     * @return the inventory for this conduit connection.
+     */
+    public IItemHandlerModifiable inventory() {
         return node.getInventory(connectionSide);
     }
 }

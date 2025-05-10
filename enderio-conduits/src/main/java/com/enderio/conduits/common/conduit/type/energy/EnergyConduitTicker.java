@@ -37,7 +37,7 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
             int insertIndex = i % senders.size();
             var sendingConnection = senders.get(insertIndex);
 
-            IEnergyStorage insertHandler = sendingConnection.getConnectedCapability(Capabilities.EnergyStorage.BLOCK);
+            IEnergyStorage insertHandler = sendingConnection.getSidedCapability(Capabilities.EnergyStorage.BLOCK);
             if (insertHandler == null || !insertHandler.canReceive()) {
                 continue;
             }

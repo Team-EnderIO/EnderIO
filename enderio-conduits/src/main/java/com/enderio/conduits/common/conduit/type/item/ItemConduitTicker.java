@@ -19,8 +19,7 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
         for (var channel : network.allChannels()) {
             toNextExtract: for (var receivingConnection : network.receivingConnections(channel)) {
                 // Get extract handler from the connection.
-                IItemHandler extractHandler = receivingConnection
-                        .getConnectedCapability(Capabilities.ItemHandler.BLOCK);
+                IItemHandler extractHandler = receivingConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK);
                 if (extractHandler == null) {
                     continue;
                 }
@@ -30,7 +29,7 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                 var connectionConfig = receivingConnection.connectionConfig(ConduitTypes.ConnectionTypes.ITEM.get());
 
                 // Get extraction filter
-                var extractFilter = receivingConnection.getInventory()
+                var extractFilter = receivingConnection.inventory()
                         .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
                         .getCapability(EIOCapabilities.ITEM_FILTER);
 
@@ -64,7 +63,7 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                         int senderIndex = j % allSenders.size();
                         var sendingConnection = allSenders.get(senderIndex);
 
-                        var insertHandler = sendingConnection.getConnectedCapability(Capabilities.ItemHandler.BLOCK);
+                        var insertHandler = sendingConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK);
                         if (insertHandler == null) {
                             continue;
                         }
@@ -76,14 +75,14 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                             continue;
                         }
 
-                        var insertFilter = sendingConnection.getInventory()
+                        var insertFilter = sendingConnection.inventory()
                                 .getStackInSlot(ItemConduit.INSERT_FILTER_SLOT)
                                 .getCapability(EIOCapabilities.ITEM_FILTER);
 
                         ItemStack itemToInsert = extractedItem.copy();
                         if (insertFilter != null) {
                             itemToInsert = insertFilter.test(
-                                    sendingConnection.getConnectedCapability(Capabilities.ItemHandler.BLOCK),
+                                    sendingConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK),
                                     itemToInsert);
                             if (itemToInsert.isEmpty()) {
                                 continue;

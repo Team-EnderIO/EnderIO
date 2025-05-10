@@ -12,7 +12,7 @@ import com.mojang.serialization.Codec;
  */
 public interface NodeData {
     Codec<NodeData> GENERIC_CODEC = EnderIOConduitsRegistries.CONDUIT_NODE_DATA_TYPE.byNameCodec()
-            .dispatch(NodeData::type, NodeDataType::codec);
+            .dispatch(NodeData::type, NodeDataType::codecOrThrow);
 
     NodeDataType<?> type();
 }
