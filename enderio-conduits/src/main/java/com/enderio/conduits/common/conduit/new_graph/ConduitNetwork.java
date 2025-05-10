@@ -26,11 +26,11 @@ import org.jetbrains.annotations.Nullable;
 public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> implements IConduitNetwork {
 
     public static final Codec<ConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance
-            .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit),
-                    ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
-                            .forGetter(i -> Optional.ofNullable(i.context)))
-            .and(graphCodec(instance, ConduitNode.CODEC))
-            .apply(instance, ConduitNetwork::new));
+        .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit), ConduitNetworkContext.GENERIC_CODEC
+            .optionalFieldOf("context")
+            .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty() : Optional.of(i.context)))
+        .and(graphCodec(instance, ConduitNode.CODEC))
+        .apply(instance, ConduitNetwork::new));
 
     private final Holder<Conduit<?, ?>> conduit;
 

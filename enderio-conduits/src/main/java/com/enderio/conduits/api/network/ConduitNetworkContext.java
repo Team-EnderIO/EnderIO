@@ -5,9 +5,14 @@ import com.mojang.serialization.Codec;
 
 import java.util.Set;
 
+/**
+ * Additional information that is stored on a conduit network.
+ * This is not synced to the client, but can be saved if desired.
+ * @param <T>
+ */
 public interface ConduitNetworkContext<T extends ConduitNetworkContext<T>> {
     Codec<ConduitNetworkContext<?>> GENERIC_CODEC = EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE.byNameCodec()
-            .dispatch(ConduitNetworkContext::type, ConduitNetworkContextType::codec);
+            .dispatch(ConduitNetworkContext::type, ConduitNetworkContextType::codecOrThrow);
 
     /**
      * Merges this context with another.
