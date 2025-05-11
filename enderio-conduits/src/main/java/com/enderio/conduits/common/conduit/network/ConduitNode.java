@@ -142,7 +142,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
 
     public void markDirty() {
         // No-op if we're loading chunks, just in case.
-        if (!isLoaded()) {
+        if (isLoaded()) {
             ensureValid();
             // noinspection DataFlowIssue
             conduitBundle.markNodesDirty();
