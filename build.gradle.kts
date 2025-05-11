@@ -1,13 +1,9 @@
-import com.github.spotbugs.snom.Effort
-import com.github.spotbugs.snom.SpotBugsTask
 import java.net.URI
 
 plugins {
     id("maven-publish")
     id("net.neoforged.moddev") version "2.0.88" apply false
-    id("com.diffplug.spotless") version "6.25.0"
     id("idea")
-    id("com.github.spotbugs") version "6.0.22"
 }
 
 println("Release type: ${getReleaseType()}")
@@ -33,46 +29,6 @@ subprojects {
     if (project.name != "ensure_plugin") {
         apply(plugin = "maven-publish")
         apply(plugin = "net.neoforged.moddev")
-        apply(plugin = "com.diffplug.spotless")
-        apply(plugin = "com.github.spotbugs")
-
-        spotless {
-
-            if (project.name != "endercore") {
-                ratchetFrom = "origin/dev/1.21.1"
-            }
-
-            encoding("UTF-8")
-
-            java {
-                cleanthat().version("2.8")
-
-                eclipse().configFile("$rootDir/config/codeformat/codeformat.xml")
-
-                // Revert to spaces, thank you eclipse
-                indentWithSpaces(4)
-
-                importOrder()
-                removeUnusedImports()
-                trimTrailingWhitespace()
-                endWithNewline()
-            }
-        }
-
-        spotbugs {
-            reportsDir = project.layout.buildDirectory.dir("reports/spotbugs/")
-            effort = Effort.MAX
-            ignoreFailures = true
-        }
-
-        tasks.withType<SpotBugsTask> {
-            reports {
-                create("html") {
-                    required = true
-                    outputLocation = project.layout.buildDirectory.file("reports/spotbugs/spotbugs.html")
-                }
-            }
-        }
 
         publishing {
             repositories {
