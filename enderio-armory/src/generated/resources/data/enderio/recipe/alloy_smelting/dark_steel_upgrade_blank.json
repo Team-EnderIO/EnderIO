@@ -1,0 +1,23 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 6400,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "item": "enderio:dark_steel_bars"
+    },
+    {
+      "count": 1,
+      "item": "minecraft:clay_ball"
+    },
+    {
+      "count": 4,
+      "item": "minecraft:string"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "enderio:dark_steel_upgrade_blank"
+  }
+}
