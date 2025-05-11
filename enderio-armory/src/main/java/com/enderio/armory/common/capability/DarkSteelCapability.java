@@ -49,6 +49,10 @@ public class DarkSteelCapability implements IDarkSteelCapability {
 
     @Override
     public void removeUpgrade(String name) {
+        if (!upgrades.containsKey(name)) {
+            return;
+        }
+
         IDarkSteelUpgrade upgrade = upgrades.remove(name);
         upgrade.onRemovedFromItem(onStack);
         updateComponent();
