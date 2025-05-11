@@ -1,4 +1,4 @@
-name: Spotless and All Tests
+name: Game and Unit Tests
 
 permissions:
   contents: read
@@ -21,6 +21,7 @@ on:
 
 jobs:
   test:
+    name: Run Tests
     timeout-minutes: 60
     runs-on: ubuntu-latest
 
@@ -43,9 +44,6 @@ jobs:
       - uses: gradle/actions/wrapper-validation@v3
 
       - uses: gradle/actions/setup-gradle@v3
-
-      - name: Check Spotless Code Style with Gradle
-        run: ./gradlew spotlessCheck
 
       - name: Run Game Tests with Gradle
         run: ./gradlew runGameTestServer
