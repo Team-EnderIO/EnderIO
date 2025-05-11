@@ -257,6 +257,13 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         }
 
         @Override
+        public void onClose() {
+            super.onClose();
+            // Close the underlying GUI as well, player pressing escape likely wants to close the screen, not the popout
+            minecraft.popGuiLayer();
+        }
+
+        @Override
         public void resize(Minecraft minecraft, int width, int height) {
             minecraft.popGuiLayer();
             minecraft.screen.resize(minecraft, width, height);
