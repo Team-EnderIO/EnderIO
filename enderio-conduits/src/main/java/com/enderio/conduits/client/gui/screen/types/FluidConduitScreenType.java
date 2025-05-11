@@ -49,8 +49,8 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         } else {
             // Channel colors
             screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                    () -> dataAccess.getConnectionConfig().insertColor(),
-                    value -> dataAccess.updateConnectionConfig(config -> config.withInsertColor(value)));
+                    () -> dataAccess.getConnectionConfig().insertChannel(),
+                    value -> dataAccess.updateConnectionConfig(config -> config.withInsertChannel(value)));
         }
 
         screen.addFilterConfigureButton(startX + 1, startY + 82, FluidConduit.INSERT_FILTER_SLOT);
@@ -64,8 +64,8 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         if (dataAccess.conduit() instanceof FluidConduit fluidConduit && fluidConduit.isMultiFluid()) {
             // Channel colors
             screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                    () -> dataAccess.getConnectionConfig().extractColor(),
-                    value -> dataAccess.updateConnectionConfig(config -> config.withExtractColor(value)));
+                    () -> dataAccess.getConnectionConfig().extractChannel(),
+                    value -> dataAccess.updateConnectionConfig(config -> config.withExtractChannel(value)));
         }
 
         // TODO: Could be good fluid conduit features?

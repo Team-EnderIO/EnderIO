@@ -22,7 +22,7 @@ public interface IOConnectionConfig extends ConnectionConfig {
      * In this scenario, this is now simply the color of the arrow on the model.
      * @return the insert color channel.
      */
-    DyeColor insertColor();
+    DyeColor insertChannel();
 
     /**
      * These colors are used for extract separation in the ticker.
@@ -30,7 +30,7 @@ public interface IOConnectionConfig extends ConnectionConfig {
      * In this scenario, this is now simply the color of the arrow on the model.
      * @return the extract color channel.
      */
-    DyeColor extractColor();
+    DyeColor extractChannel();
 
     default boolean canInsert(ConduitRedstoneSignalAware signalAware) {
         return isInsert();

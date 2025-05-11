@@ -16,8 +16,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 
-public record ItemConduitConnectionConfig(boolean isInsert, DyeColor insertColor, boolean isExtract,
-        DyeColor extractColor, RedstoneControl extractRedstoneControl, DyeColor extractRedstoneChannel,
+public record ItemConduitConnectionConfig(boolean isInsert, DyeColor insertChannel, boolean isExtract,
+        DyeColor extractChannel, RedstoneControl extractRedstoneControl, DyeColor extractRedstoneChannel,
         boolean isRoundRobin, boolean isSelfFeed, int priority)
         implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
@@ -26,9 +26,9 @@ public record ItemConduitConnectionConfig(boolean isInsert, DyeColor insertColor
 
     public static MapCodec<ItemConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(Codec.BOOL.fieldOf("is_insert").forGetter(ItemConduitConnectionConfig::isInsert),
-                    DyeColor.CODEC.fieldOf("insert_color").forGetter(ItemConduitConnectionConfig::insertColor),
+                    DyeColor.CODEC.fieldOf("insert_channel").forGetter(ItemConduitConnectionConfig::insertChannel),
                     Codec.BOOL.fieldOf("is_extract").forGetter(ItemConduitConnectionConfig::isExtract),
-                    DyeColor.CODEC.fieldOf("extract_color").forGetter(ItemConduitConnectionConfig::extractColor),
+                    DyeColor.CODEC.fieldOf("extract_channel").forGetter(ItemConduitConnectionConfig::extractChannel),
                     RedstoneControl.CODEC.fieldOf("extract_redstone_control")
                             .forGetter(ItemConduitConnectionConfig::extractRedstoneControl),
                     DyeColor.CODEC.fieldOf("extract_redstone_channel")
@@ -40,8 +40,8 @@ public record ItemConduitConnectionConfig(boolean isInsert, DyeColor insertColor
 
     public static StreamCodec<ByteBuf, ItemConduitConnectionConfig> STREAM_CODEC = MassiveStreamCodec.composite(
             ByteBufCodecs.BOOL, ItemConduitConnectionConfig::isInsert, DyeColor.STREAM_CODEC,
-            ItemConduitConnectionConfig::insertColor, ByteBufCodecs.BOOL, ItemConduitConnectionConfig::isExtract,
-            DyeColor.STREAM_CODEC, ItemConduitConnectionConfig::extractColor, RedstoneControl.STREAM_CODEC,
+            ItemConduitConnectionConfig::insertChannel, ByteBufCodecs.BOOL, ItemConduitConnectionConfig::isExtract,
+            DyeColor.STREAM_CODEC, ItemConduitConnectionConfig::extractChannel, RedstoneControl.STREAM_CODEC,
             ItemConduitConnectionConfig::extractRedstoneControl, DyeColor.STREAM_CODEC,
             ItemConduitConnectionConfig::extractRedstoneChannel, ByteBufCodecs.BOOL,
             ItemConduitConnectionConfig::isRoundRobin, ByteBufCodecs.BOOL, ItemConduitConnectionConfig::isSelfFeed,
@@ -52,13 +52,13 @@ public record ItemConduitConnectionConfig(boolean isInsert, DyeColor insertColor
 
     @Override
     public ConnectionConfig reconnected() {
-        return new ItemConduitConnectionConfig(false, insertColor, true, extractColor, extractRedstoneControl,
+        return new ItemConduitConnectionConfig(false, insertChannel, true, extractChannel, extractRedstoneControl,
                 extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
     @Override
     public ConnectionConfig disconnected() {
-        return new ItemConduitConnectionConfig(false, insertColor, false, extractColor, extractRedstoneControl,
+        return new ItemConduitConnectionConfig(false, insertChannel, false, extractChannel, extractRedstoneControl,
                 extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
@@ -91,48 +91,49 @@ public record ItemConduitConnectionConfig(boolean isInsert, DyeColor insertColor
     }
 
     public ItemConduitConnectionConfig withIsInsert(boolean isInsert) {
-        return new ItemConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
-                extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
-    public ItemConduitConnectionConfig withInsertColor(DyeColor insertColor) {
-        return new ItemConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
-                extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+    public ItemConduitConnectionConfig withInsertChannel(DyeColor insertChannel) {
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
     public ItemConduitConnectionConfig withIsExtract(boolean isExtract) {
-        return new ItemConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
-                extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
-    public ItemConduitConnectionConfig withExtractColor(DyeColor extractColor) {
-        return new ItemConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
-                extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+    public ItemConduitConnectionConfig withExtractChannel(DyeColor extractChannel) {
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
     public ItemConduitConnectionConfig withExtractRedstoneControl(RedstoneControl extractRedstoneControl) {
-        return new ItemConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
-                extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
     public ItemConduitConnectionConfig withExtractRedstoneChannel(DyeColor extractRedstoneChannel) {
-        return new ItemConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
-                extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
     public ItemConduitConnectionConfig withIsRoundRobin(boolean isRoundRobin) {
-        return new ItemConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
-                extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
     public ItemConduitConnectionConfig withIsSelfFeed(boolean isSelfFeed) {
-        return new ItemConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
-                extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
     public ItemConduitConnectionConfig withPriority(int priority) {
-        return new ItemConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
-                extractRedstoneChannel, isRoundRobin, isSelfFeed, Math.min(9999, Math.max(-9999, priority)));
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed,
+                Math.min(9999, Math.max(-9999, priority)));
     }
 
     @Override

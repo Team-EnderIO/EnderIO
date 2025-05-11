@@ -51,12 +51,12 @@ public record EnergyConduitConnectionConfig(boolean isInsert, boolean isExtract,
     }
 
     @Override
-    public DyeColor insertColor() {
+    public DyeColor insertChannel() {
         return DyeColor.RED;
     }
 
     @Override
-    public DyeColor extractColor() {
+    public DyeColor extractChannel() {
         return DyeColor.RED;
     }
 

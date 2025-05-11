@@ -518,10 +518,10 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
                     .getCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER);
 
             if (redstoneInsertFilter != null) {
-                return redstoneInsertFilter.getOutputSignal(context, config.insertColor());
+                return redstoneInsertFilter.getOutputSignal(context, config.insertChannel());
             }
 
-            return context.getSignal(config.insertColor());
+            return context.getSignal(config.insertChannel());
         }
 
         return 0;

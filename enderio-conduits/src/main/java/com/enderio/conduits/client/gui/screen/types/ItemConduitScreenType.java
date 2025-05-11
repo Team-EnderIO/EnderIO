@@ -55,8 +55,8 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
 
         // Channel color
         screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                () -> dataAccess.getConnectionConfig().insertColor(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withInsertColor(value)));
+                () -> dataAccess.getConnectionConfig().insertChannel(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withInsertChannel(value)));
 
         screen.addFilterConfigureButton(startX + 1, startY + 82, ItemConduit.INSERT_FILTER_SLOT);
 
@@ -74,8 +74,8 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
 
         // Channel color
         screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                () -> dataAccess.getConnectionConfig().extractColor(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withExtractColor(value)));
+                () -> dataAccess.getConnectionConfig().extractChannel(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractChannel(value)));
 
         // Round robin
         screen.addToggleButton(startX + 16 + 4, startY + 20, 16, 16, ConduitLang.ROUND_ROBIN_ENABLED,

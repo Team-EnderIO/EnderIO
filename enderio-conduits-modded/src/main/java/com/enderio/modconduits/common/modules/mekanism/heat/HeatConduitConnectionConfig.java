@@ -47,12 +47,12 @@ public record HeatConduitConnectionConfig(boolean isInsert, boolean isExtract, R
             STREAM_CODEC.cast(), () -> DEFAULT);
 
     @Override
-    public DyeColor insertColor() {
+    public DyeColor insertChannel() {
         return DyeColor.RED;
     }
 
     @Override
-    public DyeColor extractColor() {
+    public DyeColor extractChannel() {
         return DyeColor.RED;
     }
 

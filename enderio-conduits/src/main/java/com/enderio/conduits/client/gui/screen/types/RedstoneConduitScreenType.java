@@ -23,8 +23,8 @@ public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneCondu
 
         // Send channel
         screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                () -> dataAccess.getConnectionConfig().extractColor(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withExtractColor(value)));
+                () -> dataAccess.getConnectionConfig().extractChannel(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractChannel(value)));
     }
 
     @Override
@@ -34,8 +34,8 @@ public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneCondu
 
         // Send channel
         screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                () -> dataAccess.getConnectionConfig().insertColor(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withInsertColor(value)));
+                () -> dataAccess.getConnectionConfig().insertChannel(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withInsertChannel(value)));
 
         // Strong signal
         screen.addCheckbox(startX, startY + 40, () -> dataAccess.getConnectionConfig().isStrongOutputSignal(),

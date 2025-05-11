@@ -322,30 +322,30 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
                 if (canInsert) {
                     insertConnections.add(connection);
-                    insertConnectionsByChannel.put(ioConnectionConfig.insertColor(), connection);
+                    insertConnectionsByChannel.put(ioConnectionConfig.insertChannel(), connection);
                 }
 
                 if (canExtract) {
                     extractConnections.add(connection);
-                    extractConnectionsByChannel.put(ioConnectionConfig.extractColor(), connection);
+                    extractConnectionsByChannel.put(ioConnectionConfig.extractChannel(), connection);
                 }
 
                 // Now handle the mappings between them, do it after both are added in case we
                 // can self-feed.
                 if (canInsert) {
                     extractConnectionsByInsert.computeIfAbsent(connection, k -> new ArrayList<>())
-                            .addAll(extractConnectionsByChannel.get(ioConnectionConfig.insertColor()));
+                            .addAll(extractConnectionsByChannel.get(ioConnectionConfig.insertChannel()));
 
-                    for (var receiver : extractConnectionsByChannel.get(ioConnectionConfig.insertColor())) {
+                    for (var receiver : extractConnectionsByChannel.get(ioConnectionConfig.insertChannel())) {
                         insertConnectionsByExtract.computeIfAbsent(receiver, k -> new ArrayList<>()).add(connection);
                     }
                 }
 
                 if (canExtract) {
                     insertConnectionsByExtract.computeIfAbsent(connection, k -> new ArrayList<>())
-                            .addAll(insertConnectionsByChannel.get(ioConnectionConfig.extractColor()));
+                            .addAll(insertConnectionsByChannel.get(ioConnectionConfig.extractChannel()));
 
-                    for (var sender : insertConnectionsByChannel.get(ioConnectionConfig.extractColor())) {
+                    for (var sender : insertConnectionsByChannel.get(ioConnectionConfig.extractChannel())) {
                         if (sender != connection) {
                             extractConnectionsByInsert.computeIfAbsent(sender, k -> new ArrayList<>()).add(connection);
                         }

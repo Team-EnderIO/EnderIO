@@ -25,8 +25,8 @@ public record ConduitConnectionRenderState(boolean canInput, DyeColor inputChann
             // TODO: Tidy the language here.
             canInput = ioConnectionConfig.isInsert();
             canOutput = ioConnectionConfig.isExtract();
-            inputChannel = ioConnectionConfig.insertColor();
-            outputChannel = ioConnectionConfig.extractColor();
+            inputChannel = ioConnectionConfig.insertChannel();
+            outputChannel = ioConnectionConfig.extractChannel();
         }
 
         boolean isRedstoneSensitive = false;
