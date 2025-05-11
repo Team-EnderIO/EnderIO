@@ -63,7 +63,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> insertConnectionsByExtract = Maps
             .newHashMap();
 
-    private Consumer<ConduitNetwork> onChunkCoverageChanged;
+    @Nullable
+    private Consumer<ConduitNetwork> onChunkCoverageChanged = null;
 
     public ConduitNetwork(Holder<Conduit<?, ?>> conduit, ConduitNode initialNode) {
         super(initialNode);
@@ -475,7 +476,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         boolean isNewChunk = !nodesByChunkPos.containsKey(chunk);
         nodesByChunkPos.put(chunk, node);
 
-        if (!isRebuild && isNewChunk) {
+        if (!isRebuild && isNewChunk && onChunkCoverageChanged != null) {
             onChunkCoverageChanged.accept(this);
         }
     }
@@ -486,7 +487,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         nodesByChunkPos.remove(chunk, node);
 
         boolean isRemovedChunk = !nodesByChunkPos.containsKey(chunk);
-        if (isRemovedChunk) {
+        if (isRemovedChunk && onChunkCoverageChanged != null) {
             onChunkCoverageChanged.accept(this);
         }
     }
