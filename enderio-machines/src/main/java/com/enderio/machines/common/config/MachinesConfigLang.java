@@ -47,6 +47,7 @@ public class MachinesConfigLang {
         addTranslation("inhibitor", "Inhibitor Obelisk");
         addTranslation("aversion", "Aversion Obelisk");
         addTranslation("relocator", "Relocator Obelisk");
+        addTranslation("attractor", "Attractor Obelisk");
 
         // Enchanter
         addTranslation("enchanter", "Enchanter");
@@ -67,6 +68,9 @@ public class MachinesConfigLang {
         addTranslation("chargeRate", "Charge Speed (\u00B5I/t)");
         addTranslation("pulsatingRangeExtension", "Pulsating Antenna range extension");
         addTranslation("vibrantRangeExtension", "Vibrant Antenna range extension");
+
+        // Obelisks
+        addTranslation("obelisks", "Obelisks");
 
         // -- Client --
 

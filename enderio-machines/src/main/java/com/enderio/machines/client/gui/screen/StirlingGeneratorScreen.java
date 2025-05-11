@@ -3,17 +3,22 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.blocks.stirling_generator.StirlingGeneratorMenu;
+import com.enderio.machines.common.lang.MachineLang;
+import java.text.DecimalFormat;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu> {
+    private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/screen/stirling_generator.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
@@ -52,7 +57,13 @@ public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
         float genRate = menu.getBlockEntity().getGenerationRate();
-        guiGraphics.drawString(font, genRate + " µI/t", imageWidth / 2f + 12, 38, 4210752,
-            false);
+        float efficiency = menu.getBlockEntity().getFuelEfficiency();
+        MutableComponent gen = TooltipUtil.withArgs(MachineLang.GENERATING, FORMAT.format(genRate));
+        MutableComponent eff = TooltipUtil.withArgs(MachineLang.FUEL_EFFICIENCY, (int) efficiency);
+        guiGraphics.drawString(font, gen, imageWidth / 2 - font.width(gen.getString()) / 2, 9, 0, false);
+        if (menu.getBlockEntity().isCapacitorInstalled()) {
+            guiGraphics.drawString(font, eff, imageWidth / 2 - font.width(eff.getString()) / 2, 9 + font.lineHeight + 2,
+                    0, false);
+        }
     }
 }

@@ -12,8 +12,10 @@ public class MachineLang {
 
     public static final Component ALLOY_SMELTER_MODE = addTranslation("gui", EnderIO.loc("alloy_smelter.mode"),
             "Smelting Mode");
+
     public static final Component POWERED_SPAWNER_MODE = addTranslation("gui", EnderIO.loc("powered_spawner.mode"),
             "Spawner Mode");
+
     public static final MutableComponent SAG_MILL_GRINDINGBALL_REMAINING = addTranslation("tooltip",
             EnderIO.loc("grinding_ball_remaining"), "Remaining: %s%%");
     public static final MutableComponent SAG_MILL_GRINDINGBALL_TITLE = addTranslation("tooltip",
@@ -96,6 +98,14 @@ public class MachineLang {
     public static final Component MULTIBLOCK_CONNECTED_TEXTURES = addTranslation("hint",
             EnderIO.loc("connected_textures.text"),
             "If you are looking for connected textures on the capacitor bank, you might want to install Athena on your client");
+    public static final MutableComponent OBELISK_UPKEEP = addTranslation("gui", EnderIO.loc("obelisk.upkeep_cost"),
+            "Upkeep %s \u00B5I/t ");
+    public static final MutableComponent GENERATING = addTranslation("gui", EnderIO.loc("generator.generating"),
+            "Generating %s \u00B5I/t ");
+    public static final MutableComponent FUEL_EFFICIENCY = addTranslation("gui", EnderIO.loc("generator.efficiency"),
+            "Efficiency %s%%");
+    public static final MutableComponent NO_SOUL_FILTER = addTranslation("gui", EnderIO.loc("obelisk.no_soul_filter"),
+            "No Soul Filter Installed");
 
     // GUI BUTTONS
     public static final Component RETRIEVE_1 = addTranslation("gui", EnderIO.loc("button.retrieve_1_level"),

@@ -35,6 +35,7 @@
     "enderio:farming_station",
     "enderio:inhibitor_obelisk",
     "enderio:aversion_obelisk",
-    "enderio:relocator_obelisk"
+    "enderio:relocator_obelisk",
+    "enderio:attractor_obelisk"
   ]
 }

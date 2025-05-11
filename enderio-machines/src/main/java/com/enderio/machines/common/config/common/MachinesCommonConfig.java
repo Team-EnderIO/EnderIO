@@ -13,6 +13,11 @@ public class MachinesCommonConfig {
     public final ModConfigSpec.ConfigValue<Integer> DEFAULT_SPAWN_ENERGY_COST;
     public final ModConfigSpec.ConfigValue<MobSpawnMode> SPAWN_TYPE;
     public final ModConfigSpec.IntValue SPAWN_AMOUNT;
+    public final ModConfigSpec.ConfigValue<Integer> ATTRACTOR_RANGE;
+    public final ModConfigSpec.ConfigValue<Boolean> ATTRACTOR_PULL_BOSSES;
+    public final ModConfigSpec.ConfigValue<Integer> INHIBITOR_RANGE;
+    public final ModConfigSpec.ConfigValue<Integer> AVERSION_RANGE;
+    public final ModConfigSpec.ConfigValue<Integer> RELOCATOR_RANGE;
     public final ModConfigSpec.IntValue ENDERFACE_RANGE;
     public final ModConfigSpec.ConfigValue<Integer> WIRELESS_CHARGER_RANGE;
 
@@ -52,6 +57,15 @@ public class MachinesCommonConfig {
 
         builder.push("wirelessCharger");
         WIRELESS_CHARGER_RANGE = builder.comment("Base range").define("baseRange", 16);
+        builder.pop();
+
+        builder.push("obelisks");
+        ATTRACTOR_RANGE = builder.comment("Attractor Obelisk base range").define("attractorRange", 8);
+        ATTRACTOR_PULL_BOSSES = builder.comment("Attractor Obelisk attracts bosses")
+                .define("attractorAttractBosses", false);
+        INHIBITOR_RANGE = builder.comment("Inhibitor Obelisk base range").define("inhibitorRange", 16);
+        AVERSION_RANGE = builder.comment("Aversion Obelisk base range").define("aversionRange", 16);
+        RELOCATOR_RANGE = builder.comment("Relocator Obelisk base range").define("relocatorRange", 16);
         builder.pop();
     }
 }
