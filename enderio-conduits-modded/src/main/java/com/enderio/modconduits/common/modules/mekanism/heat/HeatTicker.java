@@ -13,14 +13,14 @@ public class HeatTicker implements ConduitTicker<HeatConduit> {
 
     @Override
     public void tick(ServerLevel level, HeatConduit conduit, IConduitNetwork network) {
-        for (var receiver : network.receivingConnections()) {
-            IHeatHandler extractHandler = receiver.getSidedCapability(MekanismModule.Capabilities.HEAT);
+        for (var extractConnection : network.extractConnections()) {
+            IHeatHandler extractHandler = extractConnection.getSidedCapability(MekanismModule.Capabilities.HEAT);
             if (extractHandler == null) {
                 continue;
             }
 
-            for (var sender : network.sendingConnectionsFrom(receiver)) {
-                IHeatHandler insertHandler = sender.getSidedCapability(MekanismModule.Capabilities.HEAT);
+            for (var insertConnection : network.insertConnectionsFrom(extractConnection)) {
+                IHeatHandler insertHandler = insertConnection.getSidedCapability(MekanismModule.Capabilities.HEAT);
                 if (insertHandler == null) {
                     continue;
                 }

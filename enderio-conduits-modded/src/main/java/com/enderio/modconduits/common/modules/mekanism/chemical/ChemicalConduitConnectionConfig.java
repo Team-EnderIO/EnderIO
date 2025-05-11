@@ -15,38 +15,38 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 
-public record ChemicalConduitConnectionConfig(boolean isSend, DyeColor sendColor, boolean isReceive,
-        DyeColor receiveColor, RedstoneControl receiveRedstoneControl, DyeColor receiveRedstoneChannel)
+public record ChemicalConduitConnectionConfig(boolean isInsert, DyeColor insertColor, boolean isExtract,
+                                              DyeColor extractColor, RedstoneControl extractRedstoneControl, DyeColor extractRedstoneChannel)
         implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
     public static ChemicalConduitConnectionConfig DEFAULT = new ChemicalConduitConnectionConfig(false, DyeColor.GREEN,
             true, DyeColor.GREEN, RedstoneControl.NEVER_ACTIVE, DyeColor.RED);
 
     public static MapCodec<ChemicalConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-            .group(Codec.BOOL.fieldOf("is_send").forGetter(ChemicalConduitConnectionConfig::isSend),
-                    DyeColor.CODEC.fieldOf("send_color").forGetter(ChemicalConduitConnectionConfig::sendColor),
-                    Codec.BOOL.fieldOf("is_receive").forGetter(ChemicalConduitConnectionConfig::isReceive),
-                    DyeColor.CODEC.fieldOf("receive_channel").forGetter(ChemicalConduitConnectionConfig::receiveColor),
-                    RedstoneControl.CODEC.fieldOf("receive_redstone_control")
-                            .forGetter(ChemicalConduitConnectionConfig::receiveRedstoneControl),
-                    DyeColor.CODEC.fieldOf("receive_redstone_channel")
-                            .forGetter(ChemicalConduitConnectionConfig::receiveRedstoneChannel))
+            .group(Codec.BOOL.fieldOf("is_insert").forGetter(ChemicalConduitConnectionConfig::isInsert),
+                    DyeColor.CODEC.fieldOf("insert_color").forGetter(ChemicalConduitConnectionConfig::insertColor),
+                    Codec.BOOL.fieldOf("is_extract").forGetter(ChemicalConduitConnectionConfig::isExtract),
+                    DyeColor.CODEC.fieldOf("extract_channel").forGetter(ChemicalConduitConnectionConfig::extractColor),
+                    RedstoneControl.CODEC.fieldOf("extract_redstone_control")
+                            .forGetter(ChemicalConduitConnectionConfig::extractRedstoneControl),
+                    DyeColor.CODEC.fieldOf("extract_redstone_channel")
+                            .forGetter(ChemicalConduitConnectionConfig::extractRedstoneChannel))
             .apply(instance, ChemicalConduitConnectionConfig::new));
 
     // @formatter:off
     public static StreamCodec<ByteBuf, ChemicalConduitConnectionConfig> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.BOOL,
-        ChemicalConduitConnectionConfig::isSend,
+        ChemicalConduitConnectionConfig::isInsert,
         DyeColor.STREAM_CODEC,
-        ChemicalConduitConnectionConfig::sendColor,
+        ChemicalConduitConnectionConfig::insertColor,
         ByteBufCodecs.BOOL,
-        ChemicalConduitConnectionConfig::isReceive,
+        ChemicalConduitConnectionConfig::isExtract,
         DyeColor.STREAM_CODEC,
-        ChemicalConduitConnectionConfig::receiveColor,
+        ChemicalConduitConnectionConfig::extractColor,
         RedstoneControl.STREAM_CODEC,
-        ChemicalConduitConnectionConfig::receiveRedstoneControl,
+        ChemicalConduitConnectionConfig::extractRedstoneControl,
         DyeColor.STREAM_CODEC,
-        ChemicalConduitConnectionConfig::receiveRedstoneChannel,
+        ChemicalConduitConnectionConfig::extractRedstoneChannel,
         ChemicalConduitConnectionConfig::new);
     // @formatter:on
 
@@ -55,72 +55,66 @@ public record ChemicalConduitConnectionConfig(boolean isSend, DyeColor sendColor
 
     @Override
     public ConnectionConfig reconnected() {
-        return new ChemicalConduitConnectionConfig(DEFAULT.isSend, sendColor, DEFAULT.isReceive, receiveColor,
-                receiveRedstoneControl, receiveRedstoneChannel);
+        return new ChemicalConduitConnectionConfig(DEFAULT.isInsert, insertColor, DEFAULT.isExtract, extractColor, extractRedstoneControl,
+            extractRedstoneChannel);
     }
 
     @Override
     public ConnectionConfig disconnected() {
-        return new ChemicalConduitConnectionConfig(false, sendColor, false, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel);
+        return new ChemicalConduitConnectionConfig(false, insertColor, false, extractColor, extractRedstoneControl, extractRedstoneChannel);
     }
 
     @Override
-    public boolean canSend(ConduitRedstoneSignalAware signalAware) {
+    public boolean canInsert(ConduitRedstoneSignalAware signalAware) {
         // TODO: sendRedstoneControl
-        return isSend();
+        return isInsert();
     }
 
     @Override
-    public boolean canReceive(ConduitRedstoneSignalAware signalAware) {
-        if (!isReceive()) {
+    public boolean canExtract(ConduitRedstoneSignalAware signalAware) {
+        if (!isExtract()) {
             return false;
         }
 
-        if (receiveRedstoneControl.isRedstoneSensitive()) {
-            return receiveRedstoneControl.isActive(signalAware.hasRedstoneSignal(receiveRedstoneChannel));
+        if (extractRedstoneControl.isRedstoneSensitive()) {
+            return extractRedstoneControl.isActive(signalAware.hasRedstoneSignal(extractRedstoneChannel));
         } else {
-            return receiveRedstoneControl == RedstoneControl.ALWAYS_ACTIVE;
+            return extractRedstoneControl == RedstoneControl.ALWAYS_ACTIVE;
         }
     }
 
     @Override
     public List<DyeColor> getRedstoneSignalColors() {
-        if (receiveRedstoneControl.isRedstoneSensitive()) {
-            return List.of(receiveRedstoneChannel);
+        if (extractRedstoneControl.isRedstoneSensitive()) {
+            return List.of(extractRedstoneChannel);
         }
 
         return List.of();
     }
 
-    public ChemicalConduitConnectionConfig withIsSend(boolean isSend) {
-        return new ChemicalConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel);
+    public ChemicalConduitConnectionConfig withIsInsert(boolean isInsert) {
+        return new ChemicalConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl, extractRedstoneChannel);
     }
 
-    public ChemicalConduitConnectionConfig withSendColor(DyeColor sendColor) {
-        return new ChemicalConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel);
+    public ChemicalConduitConnectionConfig withInsertColor(DyeColor insertColor) {
+        return new ChemicalConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl, extractRedstoneChannel);
     }
 
-    public ChemicalConduitConnectionConfig withIsReceive(boolean isReceive) {
-        return new ChemicalConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel);
+    public ChemicalConduitConnectionConfig withIsExtract(boolean isExtract) {
+        return new ChemicalConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl, extractRedstoneChannel);
     }
 
-    public ChemicalConduitConnectionConfig withReceiveColor(DyeColor receiveColor) {
-        return new ChemicalConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel);
+    public ChemicalConduitConnectionConfig withExtractColor(DyeColor extractColor) {
+        return new ChemicalConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl, extractRedstoneChannel);
     }
 
-    public ChemicalConduitConnectionConfig withReceiveRedstoneControl(RedstoneControl receiveRedstoneControl) {
-        return new ChemicalConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel);
+    public ChemicalConduitConnectionConfig withExtractRedstoneControl(RedstoneControl extractRedstoneControl) {
+        return new ChemicalConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl, extractRedstoneChannel);
     }
 
-    public ChemicalConduitConnectionConfig withReceiveRedstoneChannel(DyeColor receiveRedstoneChannel) {
-        return new ChemicalConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel);
+    public ChemicalConduitConnectionConfig withExtractRedstoneChannel(DyeColor extractRedstoneChannel) {
+        return new ChemicalConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
+                extractRedstoneChannel);
     }
 
     @Override

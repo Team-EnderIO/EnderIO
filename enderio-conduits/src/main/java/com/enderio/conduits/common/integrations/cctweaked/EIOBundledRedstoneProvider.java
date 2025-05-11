@@ -31,7 +31,7 @@ public class EIOBundledRedstoneProvider implements BundledRedstoneProvider {
             }
 
             var config = conduit.getConnectionConfig(redstoneConduit, side, RedstoneConduitConnectionConfig.TYPE);
-            if (!config.canSend(ConduitRedstoneSignalAware.NONE)) {
+            if (!config.canInsert(ConduitRedstoneSignalAware.NONE)) {
                 return -1;
             }
 

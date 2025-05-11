@@ -54,13 +54,13 @@ public class ItemConduitTests {
                     // Configure the extract end
                     .thenExecute(() -> helper.getConduitBundle(0, 1, 1, false)
                             .setConnectionConfig(itemConduit, Direction.NORTH,
-                                    ItemConduitConnectionConfig.DEFAULT.withIsReceive(true)
-                                            .withIsSend(false)
-                                            .withReceiveRedstoneControl(RedstoneControl.NEVER_ACTIVE)))
+                                    ItemConduitConnectionConfig.DEFAULT.withIsExtract(true)
+                                            .withIsInsert(false)
+                                            .withExtractRedstoneControl(RedstoneControl.NEVER_ACTIVE)))
                     // Configure the insert end
                     .thenExecute(() -> helper.getConduitBundle(0, 1, 1, false)
                             .setConnectionConfig(itemConduit, Direction.SOUTH,
-                                    ItemConduitConnectionConfig.DEFAULT.withIsReceive(false).withIsSend(true)))
+                                    ItemConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
                     // Put some dirt in the chest we'll extract from
                     .thenExecute(() -> helper.insertIntoContainer(0, 1, 0, Items.DIRT, 1))
                     // Ensure the item is still there
@@ -68,9 +68,9 @@ public class ItemConduitTests {
                     // Now enable movement with redstone control
                     .thenExecute(() -> helper.getConduitBundle(0, 1, 1, false)
                             .setConnectionConfig(itemConduit, Direction.NORTH,
-                                    ItemConduitConnectionConfig.DEFAULT.withIsReceive(true)
-                                            .withIsSend(false)
-                                            .withReceiveRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
+                                    ItemConduitConnectionConfig.DEFAULT.withIsExtract(true)
+                                            .withIsInsert(false)
+                                            .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
                     // Ensure the item moves
                     .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(0, 1, 2, Items.DIRT, 1))
                     // Place an item into the first chest
@@ -92,16 +92,16 @@ public class ItemConduitTests {
                 // Configure the insert ends
                 .thenExecute(() -> helper.getConduitBundle(1, 1, 2, false)
                         .setConnectionConfig(itemConduit, Direction.EAST,
-                                ItemConduitConnectionConfig.DEFAULT.withIsReceive(false).withIsSend(true)))
+                                ItemConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
                 .thenExecute(() -> helper.getConduitBundle(1, 1, 2, false)
                         .setConnectionConfig(itemConduit, Direction.WEST,
-                                ItemConduitConnectionConfig.DEFAULT.withIsReceive(false).withIsSend(true)))
+                                ItemConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
                 // Configure the extract end
                 .thenExecute(() -> helper.getConduitBundle(1, 1, 0, false)
                         .setConnectionConfig(itemConduit, Direction.EAST,
-                                ItemConduitConnectionConfig.DEFAULT.withIsReceive(true)
-                                        .withIsSend(false)
-                                        .withReceiveRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
+                                ItemConduitConnectionConfig.DEFAULT.withIsExtract(true)
+                                        .withIsInsert(false)
+                                        .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
                 // Put some dirt in the chest we'll extract from
                 .thenExecute(() -> helper.insertIntoContainer(2, 1, 0, Items.DIRT, 1))
                 // Ensure the item moves to the closer chest
@@ -124,18 +124,18 @@ public class ItemConduitTests {
                 // Configure the insert ends
                 .thenExecute(() -> helper.getConduitBundle(1, 1, 2, false)
                         .setConnectionConfig(itemConduit, Direction.EAST,
-                                ItemConduitConnectionConfig.DEFAULT.withIsReceive(false).withIsSend(true)))
+                                ItemConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
                 .thenExecute(() -> helper.getConduitBundle(1, 1, 2, false)
                         .setConnectionConfig(itemConduit, Direction.WEST,
-                                ItemConduitConnectionConfig.DEFAULT.withIsReceive(false)
-                                        .withIsSend(true)
+                                ItemConduitConnectionConfig.DEFAULT.withIsExtract(false)
+                                        .withIsInsert(true)
                                         .withPriority(2)))
                 // Configure the extract end
                 .thenExecute(() -> helper.getConduitBundle(1, 1, 0, false)
                         .setConnectionConfig(itemConduit, Direction.EAST,
-                                ItemConduitConnectionConfig.DEFAULT.withIsReceive(true)
-                                        .withIsSend(false)
-                                        .withReceiveRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
+                                ItemConduitConnectionConfig.DEFAULT.withIsExtract(true)
+                                        .withIsInsert(false)
+                                        .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
                 // Put some dirt in the chest we'll extract from
                 .thenExecute(() -> helper.insertIntoContainer(2, 1, 0, Items.DIRT, 1))
                 // Ensure the item moves to the closer chest
@@ -159,16 +159,16 @@ public class ItemConduitTests {
                 // Configure the insert ends
                 .thenExecute(() -> helper.getConduitBundle(1, 1, 2, false)
                         .setConnectionConfig(itemConduit, Direction.EAST,
-                                ItemConduitConnectionConfig.DEFAULT.withIsReceive(false).withIsSend(true)))
+                                ItemConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
                 .thenExecute(() -> helper.getConduitBundle(1, 1, 2, false)
                         .setConnectionConfig(itemConduit, Direction.WEST,
-                                ItemConduitConnectionConfig.DEFAULT.withIsReceive(false).withIsSend(true)))
+                                ItemConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
                 // Configure the extract end
                 .thenExecute(() -> helper.getConduitBundle(1, 1, 0, false)
                         .setConnectionConfig(itemConduit, Direction.EAST,
-                                ItemConduitConnectionConfig.DEFAULT.withIsReceive(true)
-                                        .withIsSend(false)
-                                        .withReceiveRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)
+                                ItemConduitConnectionConfig.DEFAULT.withIsExtract(true)
+                                        .withIsInsert(false)
+                                        .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)
                                         .withIsRoundRobin(true)))
                 // Put some dirt in the chest we'll extract from, 2x transfer rate of our
                 // conduit so we can follow two network ticks.

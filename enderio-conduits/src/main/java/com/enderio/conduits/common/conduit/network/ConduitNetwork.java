@@ -49,18 +49,18 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> accessibleBlockConnectionsMap = Maps
             .newHashMap();
 
-    private final List<ConduitBlockConnection> sendingConnections = Lists.newArrayList();
-    private final List<ConduitBlockConnection> receivingConnections = Lists.newArrayList();
+    private final List<ConduitBlockConnection> insertConnections = Lists.newArrayList();
+    private final List<ConduitBlockConnection> extractConnections = Lists.newArrayList();
 
     private final Set<DyeColor> allChannels = Sets.newHashSet();
-    private final ListMultimap<DyeColor, ConduitBlockConnection> sendingConnectionsByChannel = ArrayListMultimap
+    private final ListMultimap<DyeColor, ConduitBlockConnection> insertConnectionsByChannel = ArrayListMultimap
             .create();
-    private final ListMultimap<DyeColor, ConduitBlockConnection> receivingConnectionsByChannel = ArrayListMultimap
+    private final ListMultimap<DyeColor, ConduitBlockConnection> extractConnectionsByChannel = ArrayListMultimap
             .create();
 
-    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> receivingConnectionsBySender = Maps
+    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> extractConnectionsByInsert = Maps
             .newHashMap();
-    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> sendingConnectionsByReceiver = Maps
+    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> insertConnectionsByExtract = Maps
             .newHashMap();
 
     private Consumer<ConduitNetwork> onChunkCoverageChanged;
@@ -146,36 +146,36 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         return allChannels;
     }
 
-    public List<ConduitBlockConnection> sendingConnections() {
+    public List<ConduitBlockConnection> insertConnections() {
         ensureNotDiscarded();
-        return Collections.unmodifiableList(sendingConnections);
+        return Collections.unmodifiableList(insertConnections);
     }
 
-    public List<ConduitBlockConnection> sendingConnections(DyeColor color) {
+    public List<ConduitBlockConnection> insertConnections(DyeColor color) {
         ensureNotDiscarded();
-        return sendingConnectionsByChannel.get(color);
-    }
-
-    // This is sorted
-    public List<ConduitBlockConnection> receivingConnectionsFrom(ConduitBlockConnection sender) {
-        ensureNotDiscarded();
-        return receivingConnectionsBySender.getOrDefault(sender, List.of());
-    }
-
-    public List<ConduitBlockConnection> receivingConnections() {
-        ensureNotDiscarded();
-        return Collections.unmodifiableList(receivingConnections);
-    }
-
-    public List<ConduitBlockConnection> receivingConnections(DyeColor color) {
-        ensureNotDiscarded();
-        return receivingConnectionsByChannel.get(color);
+        return insertConnectionsByChannel.get(color);
     }
 
     // This is sorted
-    public List<ConduitBlockConnection> sendingConnectionsFrom(ConduitBlockConnection receiverNode) {
+    public List<ConduitBlockConnection> extractConnectionsFrom(ConduitBlockConnection insertConnection) {
         ensureNotDiscarded();
-        return sendingConnectionsByReceiver.getOrDefault(receiverNode, List.of());
+        return extractConnectionsByInsert.getOrDefault(insertConnection, List.of());
+    }
+
+    public List<ConduitBlockConnection> extractConnections() {
+        ensureNotDiscarded();
+        return Collections.unmodifiableList(extractConnections);
+    }
+
+    public List<ConduitBlockConnection> extractConnections(DyeColor color) {
+        ensureNotDiscarded();
+        return extractConnectionsByChannel.get(color);
+    }
+
+    // This is sorted
+    public List<ConduitBlockConnection> insertConnectionsFrom(ConduitBlockConnection extractConnection) {
+        ensureNotDiscarded();
+        return insertConnectionsByExtract.getOrDefault(extractConnection, List.of());
     }
 
     // endregion
@@ -262,9 +262,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         if (!loadedNodes.contains(node)) {
             addLoadedNode(node);
         } else {
-            // TODO: We should do this with a partial edit rather than remove then add
-            // again...
-            // This will do for testing though
+            // TODO: is it worth writing more code to do a partial rebuild?
             removeLoadedNode(node);
             addLoadedNode(node);
         }
@@ -319,37 +317,37 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
             var config = node.getConnectionConfig(side);
             if (config instanceof IOConnectionConfig ioConnectionConfig) {
                 // First add sending and receiving connections
-                boolean canSend = ioConnectionConfig.canSend(node::hasRedstoneSignal);
-                boolean canReceive = ioConnectionConfig.canReceive(node::hasRedstoneSignal);
+                boolean canInsert = ioConnectionConfig.canInsert(node::hasRedstoneSignal);
+                boolean canExtract = ioConnectionConfig.canExtract(node::hasRedstoneSignal);
 
-                if (canSend) {
-                    sendingConnections.add(connection);
-                    sendingConnectionsByChannel.put(ioConnectionConfig.sendColor(), connection);
+                if (canInsert) {
+                    insertConnections.add(connection);
+                    insertConnectionsByChannel.put(ioConnectionConfig.insertColor(), connection);
                 }
 
-                if (canReceive) {
-                    receivingConnections.add(connection);
-                    receivingConnectionsByChannel.put(ioConnectionConfig.receiveColor(), connection);
+                if (canExtract) {
+                    extractConnections.add(connection);
+                    extractConnectionsByChannel.put(ioConnectionConfig.extractColor(), connection);
                 }
 
                 // Now handle the mappings between them, do it after both are added in case we
                 // can self-feed.
-                if (canSend) {
-                    receivingConnectionsBySender.computeIfAbsent(connection, k -> new ArrayList<>())
-                            .addAll(receivingConnectionsByChannel.get(ioConnectionConfig.sendColor()));
+                if (canInsert) {
+                    extractConnectionsByInsert.computeIfAbsent(connection, k -> new ArrayList<>())
+                            .addAll(extractConnectionsByChannel.get(ioConnectionConfig.insertColor()));
 
-                    for (var receiver : receivingConnectionsByChannel.get(ioConnectionConfig.sendColor())) {
-                        sendingConnectionsByReceiver.computeIfAbsent(receiver, k -> new ArrayList<>()).add(connection);
+                    for (var receiver : extractConnectionsByChannel.get(ioConnectionConfig.insertColor())) {
+                        insertConnectionsByExtract.computeIfAbsent(receiver, k -> new ArrayList<>()).add(connection);
                     }
                 }
 
-                if (canReceive) {
-                    sendingConnectionsByReceiver.computeIfAbsent(connection, k -> new ArrayList<>())
-                            .addAll(sendingConnectionsByChannel.get(ioConnectionConfig.receiveColor()));
+                if (canExtract) {
+                    insertConnectionsByExtract.computeIfAbsent(connection, k -> new ArrayList<>())
+                            .addAll(insertConnectionsByChannel.get(ioConnectionConfig.extractColor()));
 
-                    for (var sender : sendingConnectionsByChannel.get(ioConnectionConfig.receiveColor())) {
+                    for (var sender : insertConnectionsByChannel.get(ioConnectionConfig.extractColor())) {
                         if (sender != connection) {
-                            receivingConnectionsBySender.computeIfAbsent(sender, k -> new ArrayList<>())
+                            extractConnectionsByInsert.computeIfAbsent(sender, k -> new ArrayList<>())
                                     .add(connection);
                         }
                     }
@@ -375,25 +373,25 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
             // Not a fan of having to iterate, but it's probably fine.
             for (var color : DyeColor.values()) {
-                sendingConnections.remove(connection);
-                receivingConnections.remove(connection);
-                sendingConnectionsByChannel.remove(color, connection);
-                receivingConnectionsByChannel.remove(color, connection);
+                insertConnections.remove(connection);
+                extractConnections.remove(connection);
+                insertConnectionsByChannel.remove(color, connection);
+                extractConnectionsByChannel.remove(color, connection);
             }
 
-            receivingConnectionsBySender.remove(connection);
-            sendingConnectionsByReceiver.remove(connection);
+            extractConnectionsByInsert.remove(connection);
+            insertConnectionsByExtract.remove(connection);
 
             // Remove this connection from other maps
             for (var list : accessibleBlockConnectionsMap.values()) {
                 list.remove(connection);
             }
 
-            for (var list : receivingConnectionsBySender.values()) {
+            for (var list : extractConnectionsByInsert.values()) {
                 list.remove(connection);
             }
 
-            for (var list : sendingConnectionsByReceiver.values()) {
+            for (var list : insertConnectionsByExtract.values()) {
                 list.remove(connection);
             }
 
@@ -406,8 +404,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
     private void updateChannelList() {
         allChannels.clear();
-        allChannels.addAll(sendingConnectionsByChannel.keySet());
-        allChannels.addAll(receivingConnectionsByChannel.keySet());
+        allChannels.addAll(insertConnectionsByChannel.keySet());
+        allChannels.addAll(extractConnectionsByChannel.keySet());
     }
 
     private void sortConnectionLists() {
@@ -415,11 +413,11 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
             sortConnections(entry.getKey(), entry.getValue());
         }
 
-        for (var entry : receivingConnectionsBySender.entrySet()) {
+        for (var entry : extractConnectionsByInsert.entrySet()) {
             sortConnections(entry.getKey(), entry.getValue());
         }
 
-        for (var entry : sendingConnectionsByReceiver.entrySet()) {
+        for (var entry : insertConnectionsByExtract.entrySet()) {
             sortConnections(entry.getKey(), entry.getValue());
         }
 
@@ -435,12 +433,12 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         loadedNodes.clear();
         endpointConnections.clear();
         accessibleBlockConnectionsMap.clear();
-        sendingConnections.clear();
-        receivingConnections.clear();
-        sendingConnectionsByChannel.clear();
-        receivingConnectionsByChannel.clear();
-        sendingConnectionsByReceiver.clear();
-        receivingConnectionsBySender.clear();
+        insertConnections.clear();
+        extractConnections.clear();
+        insertConnectionsByChannel.clear();
+        extractConnectionsByChannel.clear();
+        insertConnectionsByExtract.clear();
+        extractConnectionsByInsert.clear();
 
         // Add each loaded node into the caches.
         for (var node : nodes()) {

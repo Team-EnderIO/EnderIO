@@ -49,8 +49,8 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         } else {
             // Channel colors
             screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                    () -> dataAccess.getConnectionConfig().sendColor(),
-                    value -> dataAccess.updateConnectionConfig(config -> config.withSendColor(value)));
+                    () -> dataAccess.getConnectionConfig().insertColor(),
+                    value -> dataAccess.updateConnectionConfig(config -> config.withInsertColor(value)));
         }
 
         screen.addFilterConfigureButton(startX + 1, startY + 82, FluidConduit.INSERT_FILTER_SLOT);
@@ -64,8 +64,8 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         if (dataAccess.conduit() instanceof FluidConduit fluidConduit && fluidConduit.isMultiFluid()) {
             // Channel colors
             screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                    () -> dataAccess.getConnectionConfig().receiveColor(),
-                    value -> dataAccess.updateConnectionConfig(config -> config.withReceiveColor(value)));
+                    () -> dataAccess.getConnectionConfig().extractColor(),
+                    value -> dataAccess.updateConnectionConfig(config -> config.withExtractColor(value)));
         }
 
         // TODO: Could be good fluid conduit features?
@@ -85,17 +85,17 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
 
         // Redstone control
         var redstoneChannelWidget = screen.addColorPicker(startX + 16 + 4, startY + 40, ConduitLang.REDSTONE_CHANNEL,
-                () -> dataAccess.getConnectionConfig().receiveRedstoneChannel(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneChannel(value)));
+                () -> dataAccess.getConnectionConfig().extractRedstoneChannel(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneChannel(value)));
 
         // Only show the redstone widget when redstone control is sensitive to signals.
         screen.addPreRenderAction(() -> redstoneChannelWidget.visible = dataAccess.getConnectionConfig()
-                .receiveRedstoneControl()
+                .extractRedstoneControl()
                 .isRedstoneSensitive());
 
         screen.addRedstoneControlPicker(startX, startY + 40, EIOLang.REDSTONE_MODE,
-                () -> dataAccess.getConnectionConfig().receiveRedstoneControl(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
+                () -> dataAccess.getConnectionConfig().extractRedstoneControl(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneControl(value)));
 
         screen.addFilterConfigureButton(startX + 1, startY + 82, FluidConduit.EXTRACT_FILTER_SLOT);
 
@@ -104,12 +104,12 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
 
     @Override
     protected FluidConduitConnectionConfig setLeftEnabled(FluidConduitConnectionConfig config, boolean isEnabled) {
-        return config.withIsSend(isEnabled);
+        return config.withIsInsert(isEnabled);
     }
 
     @Override
     protected FluidConduitConnectionConfig setRightEnabled(FluidConduitConnectionConfig config, boolean isEnabled) {
-        return config.withIsReceive(isEnabled);
+        return config.withIsExtract(isEnabled);
     }
 
     private Fluid getLockedFluid(ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess) {

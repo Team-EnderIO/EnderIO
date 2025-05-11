@@ -101,13 +101,13 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
                 }
 
                 var config = node.getConnectionConfig(side, connectionConfigType());
-                if (!config.isConnected() || !config.isReceive()) {
+                if (!config.isConnected() || !config.isExtract()) {
                     return null;
                 }
 
-                if (config.receiveRedstoneControl() == RedstoneControl.NEVER_ACTIVE) {
+                if (config.extractRedstoneControl() == RedstoneControl.NEVER_ACTIVE) {
                     isMutable = false;
-                } else if (config.receiveRedstoneControl() != RedstoneControl.ALWAYS_ACTIVE) {
+                } else if (config.extractRedstoneControl() != RedstoneControl.ALWAYS_ACTIVE) {
                     boolean hasRedstone = node.hasRedstoneSignal(config.receiveRedstoneChannel());
                     if (!hasRedstone) {
                         for (Direction direction : Direction.values()) {

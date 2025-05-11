@@ -180,7 +180,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
         }
 
         var config = node.getConnectionConfig(side, connectionConfigType());
-        if (!config.receiveRedstoneControl().isRedstoneSensitive()) {
+        if (!config.extractRedstoneControl().isRedstoneSensitive()) {
             return null;
         }
 

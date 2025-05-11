@@ -25,16 +25,16 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
         var context = network.getOrCreateContext(FluidConduitNetworkContext.TYPE);
 
         for (var channel : network.allChannels()) {
-            for (var receivingConnection : network.receivingConnections(channel)) {
-                IFluidHandler extractHandler = receivingConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK);
+            for (var extractConnection : network.extractConnections(channel)) {
+                IFluidHandler extractHandler = extractConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK);
                 if (extractHandler == null) {
                     continue;
                 }
 
-                var senders = network.sendingConnectionsFrom(receivingConnection);
+                var insertConnections = network.insertConnectionsFrom(extractConnection);
 
                 if (!context.lockedFluid().isSame(Fluids.EMPTY)) {
-                    doFluidTransfer(context.lockedFluid(), fluidRate, receivingConnection, senders);
+                    doFluidTransfer(context.lockedFluid(), fluidRate, extractConnection, insertConnections);
                 } else {
                     int remaining = fluidRate;
 
@@ -44,7 +44,7 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
                         }
 
                         Fluid fluid = extractHandler.getFluidInTank(i).getFluid();
-                        remaining = doFluidTransfer(fluid, remaining, receivingConnection, senders);
+                        remaining = doFluidTransfer(fluid, remaining, extractConnection, insertConnections);
 
                         if (!conduit.isMultiFluid() && remaining < fluidRate) {
                             if (fluid instanceof FlowingFluid flowing) {
@@ -70,32 +70,31 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
         }
     }
 
-    private int doFluidTransfer(Fluid fluid, int maxTransfer, ConduitBlockConnection receiver,
-            List<ConduitBlockConnection> senders) {
-        var receiverHandler = Objects.requireNonNull(receiver.getSidedCapability(Capabilities.FluidHandler.BLOCK));
+    private int doFluidTransfer(Fluid fluid, int maxTransfer, ConduitBlockConnection extractConnection, List<ConduitBlockConnection> insertConnections) {
+        var extractHandler = Objects.requireNonNull(extractConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK));
 
         // Attempt to drain fluid from the target.
-        FluidStack extractedFluid = receiverHandler.drain(new FluidStack(fluid, maxTransfer),
+        FluidStack extractedFluid = extractHandler.drain(new FluidStack(fluid, maxTransfer),
                 IFluidHandler.FluidAction.SIMULATE);
         if (extractedFluid.isEmpty()) {
             return maxTransfer;
         }
 
         // Test the extracted fluid against the target
-        var extractFilter = receiver.inventory()
+        var extractFilter = extractConnection.inventory()
                 .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
                 .getCapability(EIOCapabilities.FLUID_FILTER);
 
         if (extractFilter != null) {
-            extractedFluid = extractFilter.test(receiverHandler, extractedFluid);
+            extractedFluid = extractFilter.test(extractHandler, extractedFluid);
             if (extractedFluid.isEmpty()) {
                 return maxTransfer;
             }
         }
 
         // Insert into any available blocks
-        for (var insert : senders) {
-            IFluidHandler insertHandler = insert.getSidedCapability(Capabilities.FluidHandler.BLOCK);
+        for (var insertConnection : insertConnections) {
+            IFluidHandler insertHandler = insertConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK);
             if (insertHandler == null) {
                 continue;
             }
@@ -103,7 +102,7 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
             var fluidToInsert = extractedFluid.copy();
 
             // Test fluid against insert filter.
-            var insertFilter = insert.inventory()
+            var insertFilter = insertConnection.inventory()
                     .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
                     .getCapability(EIOCapabilities.FLUID_FILTER);
 
@@ -115,7 +114,7 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
             }
 
             // Attempt to transfer fluid.
-            FluidStack transferredFluid = FluidUtil.tryFluidTransfer(insertHandler, receiverHandler, fluidToInsert,
+            FluidStack transferredFluid = FluidUtil.tryFluidTransfer(insertHandler, extractHandler, fluidToInsert,
                     true);
 
             // Deduct the transferred fluid from our maximum transfer.

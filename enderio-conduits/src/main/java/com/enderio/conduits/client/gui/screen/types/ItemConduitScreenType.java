@@ -55,8 +55,8 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
 
         // Channel color
         screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                () -> dataAccess.getConnectionConfig().sendColor(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withSendColor(value)));
+                () -> dataAccess.getConnectionConfig().insertColor(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withInsertColor(value)));
 
         screen.addFilterConfigureButton(startX + 1, startY + 82, ItemConduit.INSERT_FILTER_SLOT);
 
@@ -74,8 +74,8 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
 
         // Channel color
         screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                () -> dataAccess.getConnectionConfig().receiveColor(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveColor(value)));
+                () -> dataAccess.getConnectionConfig().extractColor(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractColor(value)));
 
         // Round robin
         screen.addToggleButton(startX + 16 + 4, startY + 20, 16, 16, ConduitLang.ROUND_ROBIN_ENABLED,
@@ -92,27 +92,27 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
         // Redstone control
         var redstoneChannelWidget = screen.addColorPicker(startX + 16 + 4, startY + 40, ConduitLang.REDSTONE_CHANNEL,
                 () -> dataAccess.getConnectionConfig().receiveRedstoneChannel(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneChannel(value)));
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneChannel(value)));
 
         // Only show the redstone widget when redstone control is sensitive to signals.
         screen.addPreRenderAction(() -> redstoneChannelWidget.visible = dataAccess.getConnectionConfig()
-                .receiveRedstoneControl()
+                .extractRedstoneControl()
                 .isRedstoneSensitive());
 
         screen.addRedstoneControlPicker(startX, startY + 40, EIOLang.REDSTONE_MODE,
-                () -> dataAccess.getConnectionConfig().receiveRedstoneControl(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
+                () -> dataAccess.getConnectionConfig().extractRedstoneControl(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneControl(value)));
 
         screen.addFilterConfigureButton(startX + 1, startY + 82, ItemConduit.EXTRACT_FILTER_SLOT);
     }
 
     @Override
     protected ItemConduitConnectionConfig setLeftEnabled(ItemConduitConnectionConfig config, boolean isEnabled) {
-        return config.withIsSend(isEnabled);
+        return config.withIsInsert(isEnabled);
     }
 
     @Override
     protected ItemConduitConnectionConfig setRightEnabled(ItemConduitConnectionConfig config, boolean isEnabled) {
-        return config.withIsReceive(isEnabled);
+        return config.withIsExtract(isEnabled);
     }
 }

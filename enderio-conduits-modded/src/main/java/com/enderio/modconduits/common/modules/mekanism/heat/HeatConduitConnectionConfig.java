@@ -15,31 +15,31 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 
-public record HeatConduitConnectionConfig(boolean isSend, boolean isReceive, RedstoneControl receiveRedstoneControl,
-        DyeColor receiveRedstoneChannel) implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
+public record HeatConduitConnectionConfig(boolean isInsert, boolean isExtract, RedstoneControl extractRedstoneControl,
+                                          DyeColor extractRedstoneChannel) implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
     public static HeatConduitConnectionConfig DEFAULT = new HeatConduitConnectionConfig(true, true,
             RedstoneControl.ALWAYS_ACTIVE, DyeColor.RED);
 
     public static MapCodec<HeatConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-            .group(Codec.BOOL.fieldOf("is_send").forGetter(HeatConduitConnectionConfig::isSend),
-                    Codec.BOOL.fieldOf("is_receive").forGetter(HeatConduitConnectionConfig::isReceive),
-                    RedstoneControl.CODEC.fieldOf("receive_redstone_control")
-                            .forGetter(HeatConduitConnectionConfig::receiveRedstoneControl),
-                    DyeColor.CODEC.fieldOf("receive_redstone_channel")
-                            .forGetter(HeatConduitConnectionConfig::receiveRedstoneChannel))
+            .group(Codec.BOOL.fieldOf("is_insert").forGetter(HeatConduitConnectionConfig::isInsert),
+                    Codec.BOOL.fieldOf("is_extract").forGetter(HeatConduitConnectionConfig::isExtract),
+                    RedstoneControl.CODEC.fieldOf("extract_redstone_control")
+                            .forGetter(HeatConduitConnectionConfig::extractRedstoneControl),
+                    DyeColor.CODEC.fieldOf("extract_redstone_channel")
+                            .forGetter(HeatConduitConnectionConfig::extractRedstoneChannel))
             .apply(inst, HeatConduitConnectionConfig::new));
 
     // @formatter:off
     public static StreamCodec<ByteBuf, HeatConduitConnectionConfig> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.BOOL,
-        HeatConduitConnectionConfig::isSend,
+        HeatConduitConnectionConfig::isInsert,
         ByteBufCodecs.BOOL,
-        HeatConduitConnectionConfig::isReceive,
+        HeatConduitConnectionConfig::isExtract,
         RedstoneControl.STREAM_CODEC,
-        HeatConduitConnectionConfig::receiveRedstoneControl,
+        HeatConduitConnectionConfig::extractRedstoneControl,
         DyeColor.STREAM_CODEC,
-        HeatConduitConnectionConfig::receiveRedstoneChannel,
+        HeatConduitConnectionConfig::extractRedstoneChannel,
         HeatConduitConnectionConfig::new);
     // @formatter:on
 
@@ -47,12 +47,12 @@ public record HeatConduitConnectionConfig(boolean isSend, boolean isReceive, Red
             STREAM_CODEC.cast(), () -> DEFAULT);
 
     @Override
-    public DyeColor sendColor() {
+    public DyeColor insertColor() {
         return DyeColor.RED;
     }
 
     @Override
-    public DyeColor receiveColor() {
+    public DyeColor extractColor() {
         return DyeColor.RED;
     }
 
@@ -67,41 +67,41 @@ public record HeatConduitConnectionConfig(boolean isSend, boolean isReceive, Red
     }
 
     @Override
-    public boolean canReceive(ConduitRedstoneSignalAware signalAware) {
-        if (!isReceive()) {
+    public boolean canExtract(ConduitRedstoneSignalAware signalAware) {
+        if (!isExtract()) {
             return false;
         }
 
-        if (receiveRedstoneControl.isRedstoneSensitive()) {
-            return receiveRedstoneControl.isActive(signalAware.hasRedstoneSignal(receiveRedstoneChannel));
+        if (extractRedstoneControl.isRedstoneSensitive()) {
+            return extractRedstoneControl.isActive(signalAware.hasRedstoneSignal(extractRedstoneChannel));
         } else {
-            return receiveRedstoneControl == RedstoneControl.ALWAYS_ACTIVE;
+            return extractRedstoneControl == RedstoneControl.ALWAYS_ACTIVE;
         }
     }
 
     @Override
     public List<DyeColor> getRedstoneSignalColors() {
-        if (receiveRedstoneControl.isRedstoneSensitive()) {
-            return List.of(receiveRedstoneChannel);
+        if (extractRedstoneControl.isRedstoneSensitive()) {
+            return List.of(extractRedstoneChannel);
         }
 
         return List.of();
     }
 
-    public HeatConduitConnectionConfig withIsSend(boolean isSend) {
-        return new HeatConduitConnectionConfig(isSend, isReceive, receiveRedstoneControl, receiveRedstoneChannel);
+    public HeatConduitConnectionConfig withIsInsert(boolean isInsert) {
+        return new HeatConduitConnectionConfig(isInsert, isExtract, extractRedstoneControl, extractRedstoneChannel);
     }
 
-    public HeatConduitConnectionConfig withIsReceive(boolean isReceive) {
-        return new HeatConduitConnectionConfig(isSend, isReceive, receiveRedstoneControl, receiveRedstoneChannel);
+    public HeatConduitConnectionConfig withIsExtract(boolean isExtract) {
+        return new HeatConduitConnectionConfig(isInsert, isExtract, extractRedstoneControl, extractRedstoneChannel);
     }
 
-    public HeatConduitConnectionConfig withReceiveRedstoneControl(RedstoneControl receiveRedstoneControl) {
-        return new HeatConduitConnectionConfig(isSend, isReceive, receiveRedstoneControl, receiveRedstoneChannel);
+    public HeatConduitConnectionConfig withExtractRedstoneControl(RedstoneControl extractRedstoneControl) {
+        return new HeatConduitConnectionConfig(isInsert, isExtract, extractRedstoneControl, extractRedstoneChannel);
     }
 
-    public HeatConduitConnectionConfig withReceiveRedstoneChannel(DyeColor receiveRedstoneChannel) {
-        return new HeatConduitConnectionConfig(isSend, isReceive, receiveRedstoneControl, receiveRedstoneChannel);
+    public HeatConduitConnectionConfig withExtractRedstoneChannel(DyeColor extractRedstoneChannel) {
+        return new HeatConduitConnectionConfig(isInsert, isExtract, extractRedstoneControl, extractRedstoneChannel);
     }
 
     @Override

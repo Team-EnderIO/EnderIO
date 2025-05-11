@@ -25,17 +25,17 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
             return;
         }
 
-        var senders = network.sendingConnections();
+        var inserts = network.insertConnections();
 
         // Revert overflow.
-        if (senders.size() <= context.rotatingIndex()) {
+        if (inserts.size() <= context.rotatingIndex()) {
             context.setRotatingIndex(0);
         }
 
         int startingRotatingIndex = context.rotatingIndex();
-        for (int i = startingRotatingIndex; i < startingRotatingIndex + senders.size(); i++) {
-            int insertIndex = i % senders.size();
-            var sendingConnection = senders.get(insertIndex);
+        for (int i = startingRotatingIndex; i < startingRotatingIndex + inserts.size(); i++) {
+            int insertIndex = i % inserts.size();
+            var sendingConnection = inserts.get(insertIndex);
 
             IEnergyStorage insertHandler = sendingConnection.getSidedCapability(Capabilities.EnergyStorage.BLOCK);
             if (insertHandler == null || !insertHandler.canReceive()) {

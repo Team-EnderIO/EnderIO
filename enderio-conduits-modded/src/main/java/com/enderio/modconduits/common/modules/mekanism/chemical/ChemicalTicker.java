@@ -20,17 +20,17 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
         var context = network.getOrCreateContext(ChemicalConduitNetworkContext.TYPE);
 
         for (var channel : network.allChannels()) {
-            for (var receivingConnection : network.receivingConnections(channel)) {
-                IChemicalHandler extractHandler = receivingConnection
+            for (var extractConnection : network.extractConnections(channel)) {
+                IChemicalHandler extractHandler = extractConnection
                         .getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
                 if (extractHandler == null) {
                     continue;
                 }
 
-                var senders = network.sendingConnectionsFrom(receivingConnection);
+                var insertConnections = network.insertConnectionsFrom(extractConnection);
 
                 if (!context.lockedChemical().isEmptyType()) {
-                    doChemicalTransfer(context.lockedChemical(), transferRate, receivingConnection, senders);
+                    doChemicalTransfer(context.lockedChemical(), transferRate, extractConnection, insertConnections);
                 } else {
                     long remaining = transferRate;
 
@@ -40,7 +40,7 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
                         }
 
                         Chemical chemical = extractHandler.getChemicalInTank(i).getChemical();
-                        remaining = doChemicalTransfer(chemical, remaining, receivingConnection, senders);
+                        remaining = doChemicalTransfer(chemical, remaining, extractConnection, insertConnections);
 
                         if (!conduit.isMultiChemical() && remaining < transferRate) {
                             context.setLockedChemical(chemical);
@@ -62,9 +62,9 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
         }
     }
 
-    private long doChemicalTransfer(Chemical chemical, long maxTransfer, ConduitBlockConnection receiver,
-            List<ConduitBlockConnection> senders) {
-        var receiverHandler = Objects.requireNonNull(receiver.getSidedCapability(MekanismModule.Capabilities.CHEMICAL));
+    private long doChemicalTransfer(Chemical chemical, long maxTransfer, ConduitBlockConnection extractConnection,
+            List<ConduitBlockConnection> insertConnections) {
+        var receiverHandler = Objects.requireNonNull(extractConnection.getSidedCapability(MekanismModule.Capabilities.CHEMICAL));
 
         // Attempt to drain chemical from the target.
         var extractedChemical = receiverHandler.extractChemical(new ChemicalStack(chemical, maxTransfer),
@@ -74,7 +74,7 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
         }
 
         // Test the extracted fluid against the target
-        var extractFilter = receiver.inventory()
+        var extractFilter = extractConnection.inventory()
                 .getStackInSlot(ChemicalConduit.EXTRACT_FILTER_SLOT)
                 .getCapability(MekanismModule.Capabilities.CHEMICAL_FILTER);
 
@@ -86,8 +86,8 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
         }
 
         // Insert into any available blocks
-        for (var insert : senders) {
-            IChemicalHandler insertHandler = insert.getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
+        for (var insertConnection : insertConnections) {
+            IChemicalHandler insertHandler = insertConnection.getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
             if (insertHandler == null) {
                 continue;
             }
@@ -95,7 +95,7 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
             var chemicalToInsert = extractedChemical.copy();
 
             // Test fluid against insert filter.
-            var insertFilter = insert.inventory()
+            var insertFilter = insertConnection.inventory()
                     .getStackInSlot(ChemicalConduit.INSERT_FILTER_SLOT)
                     .getCapability(MekanismModule.Capabilities.CHEMICAL_FILTER);
 

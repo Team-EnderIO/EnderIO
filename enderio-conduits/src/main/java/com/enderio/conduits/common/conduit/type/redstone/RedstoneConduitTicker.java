@@ -18,19 +18,19 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
 
         for (var channel : network.allChannels()) {
             // Receive input signals.
-            for (var receivingConnection : network.receivingConnections(channel)) {
+            for (var extractConnection : network.extractConnections(channel)) {
                 int signal;
 
-                var redstoneExtractFilter = receivingConnection.inventory()
+                var redstoneExtractFilter = extractConnection.inventory()
                         .getStackInSlot(RedstoneConduit.EXTRACT_FILTER_SLOT)
                         .getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
 
                 if (redstoneExtractFilter != null) {
-                    signal = redstoneExtractFilter.getInputSignal(level, receivingConnection.connectedBlockPos(),
-                            receivingConnection.connectionSide());
+                    signal = redstoneExtractFilter.getInputSignal(level, extractConnection.connectedBlockPos(),
+                            extractConnection.connectionSide());
                 } else {
-                    signal = level.getSignal(receivingConnection.connectedBlockPos(),
-                            receivingConnection.connectionSide());
+                    signal = level.getSignal(extractConnection.connectedBlockPos(),
+                            extractConnection.connectionSide());
                 }
 
                 if (signal > 0) {
@@ -40,11 +40,11 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
 
             // Fire block updates if the signal changed.
             if (context.isNew() || context.getSignal(channel) != context.getSignalLastTick(channel)) {
-                for (var sender : network.sendingConnections()) {
-                    level.updateNeighborsAt(sender.node().pos(), ConduitBlocks.CONDUIT.get());
+                for (var insertConnection : network.insertConnections()) {
+                    level.updateNeighborsAt(insertConnection.node().pos(), ConduitBlocks.CONDUIT.get());
 
-                    if (sender.connectionConfig(RedstoneConduitConnectionConfig.TYPE).isStrongOutputSignal()) {
-                        level.updateNeighborsAt(sender.connectedBlockPos(), ConduitBlocks.CONDUIT.get());
+                    if (insertConnection.connectionConfig(RedstoneConduitConnectionConfig.TYPE).isStrongOutputSignal()) {
+                        level.updateNeighborsAt(insertConnection.connectedBlockPos(), ConduitBlocks.CONDUIT.get());
                     }
                 }
             }

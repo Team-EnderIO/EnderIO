@@ -84,7 +84,7 @@ public interface IConduitNetwork {
      * @return all the sending connections across all channels.
      * @implNote The list is in no specific order.
      */
-    List<ConduitBlockConnection> sendingConnections();
+    List<ConduitBlockConnection> insertConnections();
 
     /**
      * For this query to yield results, the conduit's connection config must be derived from {@link IOConnectionConfig}.
@@ -93,16 +93,16 @@ public interface IConduitNetwork {
      * @return all the sending connections in the given {@code channel}.
      * @implNote The list is in no specific order.
      */
-    List<ConduitBlockConnection> sendingConnections(DyeColor channel);
+    List<ConduitBlockConnection> insertConnections(DyeColor channel);
 
     /**
      * For this query to yield results, the conduit's connection config must be derived from {@link IOConnectionConfig}.
      *
-     * @param sender the sender to query from.
-     * @return all the receiving connections that are accessible to the {@code sender}, in the conduit's specified order.
+     * @param insertConnection the insert connection to query from.
+     * @return all the receiving connections that are accessible to the {@code insertConnection}, in the conduit's specified order.
      * @implNote The list is ordered by {@link com.enderio.conduits.api.Conduit#compareNodes(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
      */
-    List<ConduitBlockConnection> receivingConnectionsFrom(ConduitBlockConnection sender);
+    List<ConduitBlockConnection> extractConnectionsFrom(ConduitBlockConnection insertConnection);
 
     /**
      * For this query to yield results, the conduit's connection config must be derived from {@link IOConnectionConfig}.
@@ -110,7 +110,7 @@ public interface IConduitNetwork {
      * @return all the receiving connections across all channels.
      * @implNote The list is in no specific order.
      */
-    List<ConduitBlockConnection> receivingConnections();
+    List<ConduitBlockConnection> extractConnections();
 
     /**
      * For this query to yield results, the conduit's connection config must be derived from {@link IOConnectionConfig}.
@@ -119,16 +119,16 @@ public interface IConduitNetwork {
      * @return all the receiving connections in the given {@code channel}.
      * @implNote The list is in no specific order.
      */
-    List<ConduitBlockConnection> receivingConnections(DyeColor channel);
+    List<ConduitBlockConnection> extractConnections(DyeColor channel);
 
     /**
      * For this query to yield results, the conduit's connection config must be derived from {@link IOConnectionConfig}.
      *
-     * @param receiver the receiver to query from.
-     * @return all the sending connections that are accessible to the {@code receiver}, in the conduit's specified order.
+     * @param extractConnection the extract connection to query from.
+     * @return all the sending connections that are accessible to the {@code extractConnection}, in the conduit's specified order.
      * @implNote The list is ordered by {@link com.enderio.conduits.api.Conduit#compareNodes(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
      */
-    List<ConduitBlockConnection> sendingConnectionsFrom(ConduitBlockConnection receiver);
+    List<ConduitBlockConnection> insertConnectionsFrom(ConduitBlockConnection extractConnection);
 
     /**
      * @param type the context type to check for.

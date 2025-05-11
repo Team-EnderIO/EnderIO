@@ -51,11 +51,11 @@ public abstract class IOConduitScreenType<U extends IOConnectionConfig> extends 
     }
 
     public boolean getLeftEnabled(U config) {
-        return config.isSend();
+        return config.isInsert();
     }
 
     public boolean getRightEnabled(U config) {
-        return config.isReceive();
+        return config.isExtract();
     }
 
     /**

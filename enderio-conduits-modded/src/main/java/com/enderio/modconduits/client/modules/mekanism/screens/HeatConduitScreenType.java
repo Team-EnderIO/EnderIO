@@ -15,26 +15,26 @@ public class HeatConduitScreenType extends IOConduitScreenType<HeatConduitConnec
 
         // Redstone control
         var redstoneChannelWidget = screen.addColorPicker(startX + 16 + 4, startY + 22, ConduitLang.REDSTONE_CHANNEL,
-                () -> dataAccess.getConnectionConfig().receiveRedstoneChannel(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneChannel(value)));
+                () -> dataAccess.getConnectionConfig().extractRedstoneChannel(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneChannel(value)));
 
         // Only show the redstone widget when redstone control is sensitive to signals.
         screen.addPreRenderAction(() -> redstoneChannelWidget.visible = dataAccess.getConnectionConfig()
-                .receiveRedstoneControl()
+                .extractRedstoneControl()
                 .isRedstoneSensitive());
 
         screen.addRedstoneControlPicker(startX, startY + 22, EIOLang.REDSTONE_MODE,
-                () -> dataAccess.getConnectionConfig().receiveRedstoneControl(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
+                () -> dataAccess.getConnectionConfig().extractRedstoneControl(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneControl(value)));
     }
 
     @Override
     protected HeatConduitConnectionConfig setLeftEnabled(HeatConduitConnectionConfig config, boolean isEnabled) {
-        return config.withIsSend(isEnabled);
+        return config.withIsInsert(isEnabled);
     }
 
     @Override
     protected HeatConduitConnectionConfig setRightEnabled(HeatConduitConnectionConfig config, boolean isEnabled) {
-        return config.withIsReceive(isEnabled);
+        return config.withIsExtract(isEnabled);
     }
 }
