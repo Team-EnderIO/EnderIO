@@ -62,8 +62,8 @@ public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu
         MutableComponent eff = TooltipUtil.withArgs(MachineLang.FUEL_EFFICIENCY, (int) efficiency);
         guiGraphics.drawString(font, gen, imageWidth / 2 - font.width(gen.getString()) / 2, 9, 0, false);
         if (menu.getBlockEntity().isCapacitorInstalled()) {
-            guiGraphics.drawString(font, eff, imageWidth / 2 - font.width(eff.getString()) / 2, 9 + font.lineHeight + 2, 0,
-                false);
+            guiGraphics.drawString(font, eff, imageWidth / 2 - font.width(eff.getString()) / 2, 9 + font.lineHeight + 2,
+                    0, false);
         }
     }
 }
