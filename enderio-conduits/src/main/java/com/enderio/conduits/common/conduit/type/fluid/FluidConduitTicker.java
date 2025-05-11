@@ -26,12 +26,15 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
 
         for (var channel : network.allChannels()) {
             for (var extractConnection : network.extractConnections(channel)) {
+                var insertConnections = network.insertConnectionsFrom(extractConnection);
+                if (insertConnections.isEmpty()) {
+                    continue;
+                }
+
                 IFluidHandler extractHandler = extractConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK);
                 if (extractHandler == null) {
                     continue;
                 }
-
-                var insertConnections = network.insertConnectionsFrom(extractConnection);
 
                 if (!context.lockedFluid().isSame(Fluids.EMPTY)) {
                     doFluidTransfer(context.lockedFluid(), fluidRate, extractConnection, insertConnections);

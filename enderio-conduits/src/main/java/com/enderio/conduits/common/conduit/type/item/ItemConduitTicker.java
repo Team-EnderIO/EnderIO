@@ -18,6 +18,11 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
     public void tick(ServerLevel level, ItemConduit conduit, IConduitNetwork network) {
         for (var channel : network.allChannels()) {
             toNextExtract: for (var extractConnection : network.extractConnections(channel)) {
+                var insertConnections = network.insertConnectionsFrom(extractConnection);
+                if (insertConnections.isEmpty()) {
+                    continue;
+                }
+
                 // Get extract handler from the connection.
                 IItemHandler extractHandler = extractConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK);
                 if (extractHandler == null) {
@@ -48,8 +53,6 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                             continue;
                         }
                     }
-
-                    var insertConnections = network.insertConnectionsFrom(extractConnection);
 
                     int startingIndex = 0;
                     if (connectionConfig.isRoundRobin()) {

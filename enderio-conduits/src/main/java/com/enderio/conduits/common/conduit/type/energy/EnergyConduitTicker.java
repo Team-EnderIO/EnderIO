@@ -15,6 +15,11 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
 
     @Override
     public void tick(ServerLevel level, EnergyConduit conduit, IConduitNetwork network) {
+        var inserts = network.insertConnections();
+        if (inserts.isEmpty()) {
+            return;
+        }
+
         final int transferRate = conduit.transferRatePerTick() * conduit.networkTickRate();
         EnergyConduitNetworkContext context = network.getContext(EnergyConduitNetworkContext.TYPE);
         if (context == null) {
@@ -24,8 +29,6 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
         if (context.energyStored() <= 0) {
             return;
         }
-
-        var inserts = network.insertConnections();
 
         // Revert overflow.
         if (inserts.size() <= context.rotatingIndex()) {

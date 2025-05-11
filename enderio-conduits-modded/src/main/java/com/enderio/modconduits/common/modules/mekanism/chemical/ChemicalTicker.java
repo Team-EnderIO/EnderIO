@@ -21,13 +21,16 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
 
         for (var channel : network.allChannels()) {
             for (var extractConnection : network.extractConnections(channel)) {
+                var insertConnections = network.insertConnectionsFrom(extractConnection);
+                if (insertConnections.isEmpty()) {
+                    continue;
+                }
+
                 IChemicalHandler extractHandler = extractConnection
                         .getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
                 if (extractHandler == null) {
                     continue;
                 }
-
-                var insertConnections = network.insertConnectionsFrom(extractConnection);
 
                 if (!context.lockedChemical().isEmptyType()) {
                     doChemicalTransfer(context.lockedChemical(), transferRate, extractConnection, insertConnections);
