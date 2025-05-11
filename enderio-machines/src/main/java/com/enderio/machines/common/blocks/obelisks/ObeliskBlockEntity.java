@@ -41,18 +41,15 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
     private @Nullable AABB aabb;
     public static SingleSlotAccess FILTER = new SingleSlotAccess();
 
-    private boolean requiresFilter;
-
     private static final ActionRange DEFAULT_RANGE = new ActionRange(0, false);
 
     private ActionRange actionRange = DEFAULT_RANGE;
 
     public ObeliskBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
             boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
-            CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse, boolean requiresFilter) {
+            CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
         super(type, worldPosition, blockState, isIoConfigMutable, capacitorSupport, energyIOMode,
                 scalableEnergyCapacity, scalableMaxEnergyUse);
-        this.requiresFilter = requiresFilter;
     }
 
     @Nullable
@@ -99,7 +96,8 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
 
     @Override
     public boolean isActive() {
-        return canAct() && getEnergyStorage().getEnergyStored() >= 0 && (!requiresFilter || getEntityFilter() != null);
+        return canAct() && getEnergyStorage().getEnergyStored() >= getPerTickEnergyCost()
+                && (!requiresFilter() || getEntityFilter() != null);
     }
 
     @Nullable
@@ -126,7 +124,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
 
     protected void updateFilterState() {
         updateMachineState(new MachineState(MachineStateType.ERROR, MachineLang.NO_SOUL_FILTER),
-                requiresFilter && getEntityFilter() == null);
+                requiresFilter() && getEntityFilter() == null);
     }
 
     @Override
@@ -194,7 +192,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
     }
 
     public boolean requiresFilter() {
-        return requiresFilter;
+        return true;
     }
 
     @Override

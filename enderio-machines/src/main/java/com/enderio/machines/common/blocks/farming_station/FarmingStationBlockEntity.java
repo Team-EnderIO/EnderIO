@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blocks.farming_station;
 
+import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -49,6 +51,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.common.SpecialPlantable;
 import net.neoforged.neoforge.common.Tags;
@@ -94,6 +97,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     private ActionRange actionRange = DEFAULT_RANGE;
 
+    @UseOnly(LogicalSide.SERVER)
     private FakePlayer farmPlayer;
 
     public FarmingStationBlockEntity(BlockPos worldPosition, BlockState blockState) {
@@ -108,8 +112,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             if (this.getMachineOwner() == null) {
                 this.setMachineOwner(UUID.randomUUID()); // Fallback
             }
-            farmPlayer = FakePlayerFactory.get(serverLevel,
-                    new GameProfile(getMachineOwner(), "enderio:farm:" + worldPosition));
+            farmPlayer = FakePlayerFactory.get(serverLevel, new GameProfile(getMachineOwner(), "enderio:farm"));
         }
     }
 
@@ -381,6 +384,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         return SHEAR.getItemStack(this);
     }
 
+    @EnsureSide(EnsureSide.Side.SERVER)
     @Override
     public FakePlayer getPlayer() {
         return farmPlayer;

@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blocks.obelisks.attractor;
 
+import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.LinearScalable;
 import com.enderio.base.api.capacitor.QuadraticScalable;
@@ -33,9 +34,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.jetbrains.annotations.Nullable;
 
 public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObeliskBlockEntity> {
@@ -48,11 +49,13 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
             MachinesConfig.COMMON.ATTRACTOR_RANGE);
 
     private final Vec3 targetPos;
+
+    @UseOnly(LogicalSide.SERVER)
     private FakePlayer fakePlayer;
 
     public AttractorObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.ATTRACTOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
-                EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, true);
+                EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
         targetPos = new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
     }
 
@@ -93,8 +96,7 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
             if (this.getMachineOwner() == null) {
                 this.setMachineOwner(UUID.randomUUID()); // Fallback
             }
-            fakePlayer = FakePlayerFactory.get(sl,
-                    new GameProfile(getMachineOwner(), "enderio:attractor:" + worldPosition));
+            fakePlayer = new FakePlayer(sl, new GameProfile(getMachineOwner(), "enderio:attractor:" + worldPosition));
             fakePlayer.setPos(targetPos.x, targetPos.y, targetPos.z);
         }
     }
@@ -166,4 +168,11 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
         }
     }
 
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        if (!level.isClientSide) {
+            fakePlayer.discard();
+        }
+    }
 }

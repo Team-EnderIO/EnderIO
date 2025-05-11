@@ -1,5 +1,6 @@
 package com.enderio.base.api.farm;
 
+import com.enderio.base.api.UseOnly;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
 public interface FarmingStation {
@@ -31,6 +33,7 @@ public interface FarmingStation {
 
     ItemStack getShears();
 
+    @UseOnly(LogicalSide.SERVER)
     FakePlayer getPlayer();
 
     BlockPos getPosition();

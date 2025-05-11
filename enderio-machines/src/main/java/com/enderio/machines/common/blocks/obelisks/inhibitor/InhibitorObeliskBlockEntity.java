@@ -32,12 +32,17 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity<InhibitorObe
 
     public InhibitorObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.INHIBITOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
-                EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, false);
+                EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 
     @Override
     protected @Nullable ObeliskAreaManager<InhibitorObeliskBlockEntity> getAreaManager(ServerLevel level) {
         return InhibitorObeliskManager.getManager(level);
+    }
+
+    @Override
+    public boolean requiresFilter() {
+        return false;
     }
 
     @Override
