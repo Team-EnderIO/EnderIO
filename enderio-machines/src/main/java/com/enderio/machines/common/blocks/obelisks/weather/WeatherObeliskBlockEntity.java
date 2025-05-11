@@ -62,7 +62,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
             @Override
             protected void consumeInputs(WeatherChangeRecipe recipe) {
                 MachineFluidHandler handler = getFluidHandler();
-                TANK.drain(handler, getRecipe().fluid(), IFluidHandler.FluidAction.EXECUTE);
+                TANK.drain(handler, recipe.fluid(), IFluidHandler.FluidAction.EXECUTE);
                 ROCKET.getItemStack(getInventory()).shrink(1);
             }
 
@@ -80,8 +80,6 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
             protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
                 if (!simulate && level instanceof ServerLevel server) {
                     switch (getRecipe().mode()) {
-                    case DAY -> server.setDayTime(1000);
-                    case NIGHT -> server.setDayTime(13000);
                     case RAIN -> server.setWeatherParameters(0, ServerLevel.RAIN_DURATION.sample(server.getRandom()),
                             true, false);
                     case CLEAR ->

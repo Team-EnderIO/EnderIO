@@ -20,10 +20,6 @@ public class WeatherChangeRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
-        // build(EnderIO.loc("day"), EIOFluids.LIQUID_SUNSHINE.getSource(), 1000,
-        // WeatherChangeRecipe.WeatherMode.DAY, recipeOutput);
-        // build(EnderIO.loc("night"), EIOFluids.LIQUID_SUNSHINE.getSource(), 1000,
-        // WeatherChangeRecipe.WeatherMode.NIGHT, recipeOutput);
         build(EnderIO.loc("clear"), EIOFluids.LIQUID_SUNSHINE.getSource(), 1000, WeatherChangeRecipe.WeatherMode.CLEAR,
                 recipeOutput);
         build(EnderIO.loc("rain"), EIOFluids.CLOUD_SEED.getSource(), 1000, WeatherChangeRecipe.WeatherMode.RAIN,

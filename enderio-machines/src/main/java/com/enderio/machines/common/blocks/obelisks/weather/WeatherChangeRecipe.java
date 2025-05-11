@@ -74,7 +74,7 @@ public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode)
     }
 
     public enum WeatherMode implements StringRepresentable {
-        DAY("day"), NIGHT("night"), CLEAR("clear"), RAIN("rain"), LIGHTNING("lightning");
+        CLEAR("clear"), RAIN("rain"), LIGHTNING("lightning");
 
         public static final Codec<WeatherMode> CODEC = StringRepresentable.fromEnum(WeatherMode::values);
         public static final IntFunction<WeatherMode> BY_ID = ByIdMap.continuous(Enum::ordinal, values(),
