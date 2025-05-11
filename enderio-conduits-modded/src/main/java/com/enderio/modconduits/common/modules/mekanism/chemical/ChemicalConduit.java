@@ -1,22 +1,22 @@
 package com.enderio.modconduits.common.modules.mekanism.chemical;
 
 import com.enderio.base.api.misc.RedstoneControl;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
+import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.conduits.api.network.node.ConduitNode;
+import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
-import com.enderio.modconduits.common.modules.mekanism.chemical_filter.ChemicalFilter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-public record ChemicalConduit(ResourceLocation texture, Component description, int transferRatePerTick,
+public record ChemicalConduit(ResourceLocation texture, Component description, long transferRatePerTick,
         boolean isMultiChemical) implements Conduit<ChemicalConduit, ChemicalConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
@@ -46,7 +46,7 @@ public record ChemicalConduit(ResourceLocation texture, Component description, i
                             .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ChemicalConduit::texture),
                                     ComponentSerialization.CODEC.fieldOf("description")
                                             .forGetter(ChemicalConduit::description),
-                                    Codec.INT.fieldOf("transfer_rate").forGetter(ChemicalConduit::transferRatePerTick),
+                                    Codec.LONG.fieldOf("transfer_rate").forGetter(ChemicalConduit::transferRatePerTick),
                                     Codec.BOOL.fieldOf("is_multi_chemical").forGetter(ChemicalConduit::isMultiChemical))
                             .apply(builder, ChemicalConduit::new));
 
@@ -96,7 +96,7 @@ public record ChemicalConduit(ResourceLocation texture, Component description, i
     }
 
     @Override
-    public boolean canConnectConduits(ConduitNode selfNode, ConduitNode otherNode) {
+    public boolean canConnectConduits(IConduitNode selfNode, IConduitNode otherNode) {
         if (isMultiChemical()) {
             return true;
         }
@@ -138,7 +138,8 @@ public record ChemicalConduit(ResourceLocation texture, Component description, i
     }
 
     @Override
-    public void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor) {
+    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor,
+            BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
         var legacyData = legacyDataAccessor.getData(MekanismModule.CHEMICAL_DATA_TYPE.get());
         if (legacyData == null) {
             return;
@@ -183,12 +184,12 @@ public record ChemicalConduit(ResourceLocation texture, Component description, i
     }
 
     @Override
-    public @Nullable CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
+    public @Nullable CompoundTag getExtraGuiData(ConduitBundle conduitBundle, IConduitNode node, Direction side) {
         return getExtraWorldData(conduitBundle, node);
     }
 
     @Override
-    public @Nullable CompoundTag getExtraWorldData(ConduitBundle conduitBundle, ConduitNode node) {
+    public @Nullable CompoundTag getExtraWorldData(ConduitBundle conduitBundle, IConduitNode node) {
         if (node.getNetwork() == null) {
             return null;
         }
@@ -220,7 +221,7 @@ public record ChemicalConduit(ResourceLocation texture, Component description, i
 
         if (pTooltipFlag.hasShiftDown()) {
             String rawRateFormatted = String.format("%,d",
-                    (int) Math.ceil(transferRatePerTick() * (20.0 / graphTickRate())));
+                    (int) Math.ceil(transferRatePerTick() * (20.0 / networkTickRate())));
             pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
         }
     }

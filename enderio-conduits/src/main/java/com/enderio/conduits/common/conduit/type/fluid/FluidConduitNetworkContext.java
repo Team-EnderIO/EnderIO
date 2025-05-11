@@ -2,15 +2,17 @@ package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.conduits.api.network.ConduitNetworkContext;
 import com.enderio.conduits.api.network.ConduitNetworkContextType;
-import com.mojang.serialization.Codec;
+import com.enderio.conduits.api.network.IConduitNetwork;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.Set;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
 public class FluidConduitNetworkContext implements ConduitNetworkContext<FluidConduitNetworkContext> {
 
-    public static Codec<FluidConduitNetworkContext> CODEC = RecordCodecBuilder.create(instance -> instance
+    public static MapCodec<FluidConduitNetworkContext> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(BuiltInRegistries.FLUID.byNameCodec()
                     .optionalFieldOf("locked_fluid", Fluids.EMPTY)
                     .forGetter(FluidConduitNetworkContext::lockedFluid))
@@ -64,7 +66,7 @@ public class FluidConduitNetworkContext implements ConduitNetworkContext<FluidCo
     }
 
     @Override
-    public FluidConduitNetworkContext copy() {
+    public FluidConduitNetworkContext split(IConduitNetwork selfNetwork, Set<? extends IConduitNetwork> allNetworks) {
         return new FluidConduitNetworkContext(lockedFluid);
     }
 

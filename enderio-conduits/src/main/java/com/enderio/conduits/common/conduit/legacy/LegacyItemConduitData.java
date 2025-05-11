@@ -18,7 +18,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.Nullable;
 
-@Deprecated(forRemoval = true, since = "8.0.0")
+@Deprecated(since = "8.0.0")
 public class LegacyItemConduitData implements ConduitData<LegacyItemConduitData> {
 
     public static MapCodec<LegacyItemConduitData> CODEC = RecordCodecBuilder

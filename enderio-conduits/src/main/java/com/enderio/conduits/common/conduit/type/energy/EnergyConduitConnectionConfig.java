@@ -15,93 +15,94 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 
-public record EnergyConduitConnectionConfig(boolean isSend, boolean isReceive, RedstoneControl receiveRedstoneControl,
-        DyeColor receiveRedstoneChannel) implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
+public record EnergyConduitConnectionConfig(boolean isInsert, boolean isExtract, RedstoneControl extractRedstoneControl,
+        DyeColor extractRedstoneChannel) implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
     public static EnergyConduitConnectionConfig DEFAULT = new EnergyConduitConnectionConfig(true, true,
             RedstoneControl.ALWAYS_ACTIVE, DyeColor.RED);
 
     public static MapCodec<EnergyConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-            .group(Codec.BOOL.fieldOf("is_send").forGetter(EnergyConduitConnectionConfig::isSend),
-                    Codec.BOOL.fieldOf("is_receive").forGetter(EnergyConduitConnectionConfig::isReceive),
-                    RedstoneControl.CODEC.fieldOf("receive_redstone_control")
-                            .forGetter(EnergyConduitConnectionConfig::receiveRedstoneControl),
-                    DyeColor.CODEC.fieldOf("receive_redstone_channel")
-                            .forGetter(EnergyConduitConnectionConfig::receiveRedstoneChannel))
+            .group(Codec.BOOL.fieldOf("is_insert").forGetter(EnergyConduitConnectionConfig::isInsert),
+                    Codec.BOOL.fieldOf("is_extract").forGetter(EnergyConduitConnectionConfig::isExtract),
+                    RedstoneControl.CODEC.fieldOf("extract_redstone_control")
+                            .forGetter(EnergyConduitConnectionConfig::extractRedstoneControl),
+                    DyeColor.CODEC.fieldOf("extract_redstone_channel")
+                            .forGetter(EnergyConduitConnectionConfig::extractRedstoneChannel))
             .apply(instance, EnergyConduitConnectionConfig::new));
 
     public static StreamCodec<ByteBuf, EnergyConduitConnectionConfig> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.BOOL, EnergyConduitConnectionConfig::isSend, ByteBufCodecs.BOOL,
-            EnergyConduitConnectionConfig::isReceive, RedstoneControl.STREAM_CODEC,
-            EnergyConduitConnectionConfig::receiveRedstoneControl, DyeColor.STREAM_CODEC,
-            EnergyConduitConnectionConfig::receiveRedstoneChannel, EnergyConduitConnectionConfig::new);
+            ByteBufCodecs.BOOL, EnergyConduitConnectionConfig::isInsert, ByteBufCodecs.BOOL,
+            EnergyConduitConnectionConfig::isExtract, RedstoneControl.STREAM_CODEC,
+            EnergyConduitConnectionConfig::extractRedstoneControl, DyeColor.STREAM_CODEC,
+            EnergyConduitConnectionConfig::extractRedstoneChannel, EnergyConduitConnectionConfig::new);
 
     public static final ConnectionConfigType<EnergyConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
             STREAM_CODEC.cast(), () -> DEFAULT);
 
     @Override
     public ConnectionConfig reconnected() {
-        return new EnergyConduitConnectionConfig(DEFAULT.isSend, DEFAULT.isReceive, receiveRedstoneControl,
-                receiveRedstoneChannel);
+        return new EnergyConduitConnectionConfig(DEFAULT.isInsert, DEFAULT.isExtract, extractRedstoneControl,
+                extractRedstoneChannel);
     }
 
     @Override
     public ConnectionConfig disconnected() {
-        return new EnergyConduitConnectionConfig(false, false, receiveRedstoneControl, receiveRedstoneChannel);
+        return new EnergyConduitConnectionConfig(false, false, extractRedstoneControl, extractRedstoneChannel);
     }
 
     @Override
-    public DyeColor sendColor() {
+    public DyeColor insertChannel() {
         return DyeColor.RED;
     }
 
     @Override
-    public DyeColor receiveColor() {
+    public DyeColor extractChannel() {
         return DyeColor.RED;
     }
 
     @Override
-    public boolean canSend(ConduitRedstoneSignalAware signalAware) {
-        // TODO: sendRedstoneControl
-        return isSend();
+    public boolean canInsert(ConduitRedstoneSignalAware signalAware) {
+        // TODO: insertRedstoneControl
+        return isInsert();
     }
 
     @Override
-    public boolean canReceive(ConduitRedstoneSignalAware signalAware) {
-        if (!isReceive()) {
+    public boolean canExtract(ConduitRedstoneSignalAware signalAware) {
+        if (!isExtract()) {
             return false;
         }
 
-        if (receiveRedstoneControl.isRedstoneSensitive()) {
-            return receiveRedstoneControl.isActive(signalAware.hasRedstoneSignal(receiveRedstoneChannel));
+        if (extractRedstoneControl.isRedstoneSensitive()) {
+            return extractRedstoneControl.isActive(signalAware.hasRedstoneSignal(extractRedstoneChannel));
         } else {
-            return receiveRedstoneControl == RedstoneControl.ALWAYS_ACTIVE;
+            return extractRedstoneControl == RedstoneControl.ALWAYS_ACTIVE;
         }
     }
 
     @Override
     public List<DyeColor> getRedstoneSignalColors() {
-        if (receiveRedstoneControl.isRedstoneSensitive()) {
-            return List.of(receiveRedstoneChannel);
+        if (extractRedstoneControl.isRedstoneSensitive()) {
+            return List.of(extractRedstoneChannel);
         }
 
         return List.of();
     }
 
-    public EnergyConduitConnectionConfig withIsSend(boolean isSend) {
-        return new EnergyConduitConnectionConfig(isSend, isReceive, receiveRedstoneControl, receiveRedstoneChannel);
+    public EnergyConduitConnectionConfig withIsInsert(boolean isInsert) {
+        return new EnergyConduitConnectionConfig(isInsert, this.isExtract, extractRedstoneControl,
+                extractRedstoneChannel);
     }
 
-    public EnergyConduitConnectionConfig withIsReceive(boolean isReceive) {
-        return new EnergyConduitConnectionConfig(isSend, isReceive, receiveRedstoneControl, receiveRedstoneChannel);
+    public EnergyConduitConnectionConfig withIsExtract(boolean isExtract) {
+        return new EnergyConduitConnectionConfig(isInsert, isExtract, extractRedstoneControl, extractRedstoneChannel);
     }
 
-    public EnergyConduitConnectionConfig withReceiveRedstoneControl(RedstoneControl receiveRedstoneControl) {
-        return new EnergyConduitConnectionConfig(isSend, isReceive, receiveRedstoneControl, receiveRedstoneChannel);
+    public EnergyConduitConnectionConfig withExtractRedstoneControl(RedstoneControl extractRedstoneControl) {
+        return new EnergyConduitConnectionConfig(isInsert, isExtract, extractRedstoneControl, extractRedstoneChannel);
     }
 
-    public EnergyConduitConnectionConfig withReceiveRedstoneChannel(DyeColor receiveRedstoneChannel) {
-        return new EnergyConduitConnectionConfig(isSend, isReceive, receiveRedstoneControl, receiveRedstoneChannel);
+    public EnergyConduitConnectionConfig withExtractRedstoneChannel(DyeColor extractRedstoneChannel) {
+        return new EnergyConduitConnectionConfig(isInsert, isExtract, extractRedstoneControl, extractRedstoneChannel);
     }
 
     @Override

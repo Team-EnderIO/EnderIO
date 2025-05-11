@@ -23,8 +23,8 @@ public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneCondu
 
         // Send channel
         screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                () -> dataAccess.getConnectionConfig().receiveColor(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveColor(value)));
+                () -> dataAccess.getConnectionConfig().extractChannel(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractChannel(value)));
     }
 
     @Override
@@ -34,8 +34,8 @@ public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneCondu
 
         // Send channel
         screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                () -> dataAccess.getConnectionConfig().sendColor(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withSendColor(value)));
+                () -> dataAccess.getConnectionConfig().insertChannel(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withInsertChannel(value)));
 
         // Strong signal
         screen.addCheckbox(startX, startY + 40, () -> dataAccess.getConnectionConfig().isStrongOutputSignal(),
@@ -44,24 +44,24 @@ public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneCondu
 
     @Override
     public boolean getLeftEnabled(RedstoneConduitConnectionConfig config) {
-        return config.isReceive();
+        return config.isExtract();
     }
 
     @Override
     public boolean getRightEnabled(RedstoneConduitConnectionConfig config) {
-        return config.isSend();
+        return config.isInsert();
     }
 
     @Override
     protected RedstoneConduitConnectionConfig setLeftEnabled(RedstoneConduitConnectionConfig config,
             boolean isEnabled) {
-        return config.withIsReceive(isEnabled);
+        return config.withIsExtract(isEnabled);
     }
 
     @Override
     protected RedstoneConduitConnectionConfig setRightEnabled(RedstoneConduitConnectionConfig config,
             boolean isEnabled) {
-        return config.withIsSend(isEnabled);
+        return config.withIsInsert(isEnabled);
     }
 
     @Override

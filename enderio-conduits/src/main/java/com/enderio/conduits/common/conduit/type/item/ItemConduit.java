@@ -6,8 +6,10 @@ import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
+import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.conduits.api.network.node.ConduitNode;
+import com.enderio.conduits.api.network.ConduitBlockConnection;
+import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitTypes;
@@ -15,6 +17,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,19 +36,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle, int graphTickRate)
-        implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
+public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle,
+        int networkTickRate) implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
 
-    public static final MapCodec<ItemConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
-            .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ItemConduit::texture),
-                    ComponentSerialization.CODEC.fieldOf("description").forGetter(ItemConduit::description),
-                    // Using optionals in order to support the old conduit format.
-                    Codec.INT.optionalFieldOf("transfer_rate", 4).forGetter(ItemConduit::transferRatePerCycle),
-                    Codec.intRange(1, 20).optionalFieldOf("ticks_per_cycle", 20).forGetter(ItemConduit::graphTickRate))
-            .apply(builder, ItemConduit::new));
+    public static final MapCodec<ItemConduit> CODEC = RecordCodecBuilder.mapCodec(
+            builder -> builder
+                    .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ItemConduit::texture),
+                            ComponentSerialization.CODEC.fieldOf("description").forGetter(ItemConduit::description),
+                            // Using optionals in order to support the old conduit format.
+                            Codec.INT.optionalFieldOf("transfer_rate", 4).forGetter(ItemConduit::transferRatePerCycle),
+                            Codec.intRange(1, 20)
+                                    .optionalFieldOf("ticks_per_cycle", 20)
+                                    .forGetter(ItemConduit::networkTickRate))
+                    .apply(builder, ItemConduit::new));
 
     @Override
     public ConduitType<ItemConduit> type() {
@@ -63,10 +69,21 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
+    public int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA,
+            ConduitBlockConnection connectionB) {
+        int priorityA = connectionA.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
+        int priorityB = connectionB.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
+        if (priorityA != priorityB) {
+            return Integer.compare(priorityB, priorityA);
+        }
+        return Conduit.super.compareNodes(refConnection, connectionA, connectionB);
+    }
+
+    @Override
     public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
             TooltipFlag pTooltipFlag) {
         String calculatedTransferLimitFormatted = String.format("%,d",
-                (int) Math.floor(transferRatePerCycle() * (20.0 / graphTickRate())));
+                (int) Math.floor(transferRatePerCycle() * (20.0 / networkTickRate())));
         pTooltipAdder.accept(
                 TooltipUtil.styledWithArgs(ConduitLang.ITEM_EFFECTIVE_RATE_TOOLTIP, calculatedTransferLimitFormatted));
 
@@ -106,7 +123,8 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
-    public void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor) {
+    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor,
+            BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
         var legacyData = legacyDataAccessor.getData(ConduitTypes.Data.ITEM.get());
         if (legacyData == null) {
             return;
@@ -118,7 +136,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
                 var oldSideConfig = legacyData.get(side);
                 var currentConfig = node.getConnectionConfig(side, ItemConduitConnectionConfig.TYPE);
 
-                node.setConnectionConfig(side,
+                connectionConfigSetter.accept(side,
                         currentConfig.withIsRoundRobin(oldSideConfig.isRoundRobin)
                                 .withIsSelfFeed(oldSideConfig.isSelfFeed)
                                 .withPriority(oldSideConfig.priority));
@@ -156,26 +174,26 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
 
     @Override
     @Nullable
-    public CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
+    public CompoundTag getExtraGuiData(ConduitBundle conduitBundle, IConduitNode node, Direction side) {
         if (!node.isConnectedToBlock(side)) {
             return null;
         }
 
         var config = node.getConnectionConfig(side, connectionConfigType());
-        if (!config.receiveRedstoneControl().isRedstoneSensitive()) {
+        if (!config.extractRedstoneControl().isRedstoneSensitive()) {
             return null;
         }
 
         CompoundTag tag = new CompoundTag();
-        tag.putBoolean("HasRedstoneSignal", node.hasRedstoneSignal(config.receiveRedstoneChannel()));
+        tag.putBoolean("HasRedstoneSignal", node.hasRedstoneSignal(config.extractRedstoneChannel()));
         tag.putBoolean("HasRedstoneConduit", conduitBundle.hasConduitByType(ConduitTypes.REDSTONE.get()));
         return tag;
     }
 
     @Override
     public int compareTo(@NotNull ItemConduit o) {
-        double selfEffectiveSpeed = transferRatePerCycle() * (20.0 / graphTickRate());
-        double otherEffectiveSpeed = o.transferRatePerCycle() * (20.0 / o.graphTickRate());
+        double selfEffectiveSpeed = transferRatePerCycle() * (20.0 / networkTickRate());
+        double otherEffectiveSpeed = o.transferRatePerCycle() * (20.0 / o.networkTickRate());
 
         if (selfEffectiveSpeed < otherEffectiveSpeed) {
             return -1;

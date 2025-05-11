@@ -10,7 +10,7 @@ public class ConduitCommonPayloadHandler {
         context.enqueueWork(() -> {
             if (packet.containerId() == context.player().containerMenu.containerId) {
                 if (!context.player().isSpectator() && context.player().containerMenu instanceof ConduitMenu menu) {
-                    menu.setConnectionConfig(packet.connectionConfig());
+                    menu.handleConnectionConfigUpdate(packet);
                 }
             }
         });

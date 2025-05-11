@@ -1,9 +1,9 @@
 package com.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.conduits.api.network.node.ConduitNode;
+import com.enderio.conduits.api.network.node.IConduitNode;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-public record EnergyConduitStorage(boolean isMutable, int transferRate, ConduitNode node) implements IEnergyStorage {
+public record EnergyConduitStorage(boolean isMutable, int transferRate, IConduitNode node) implements IEnergyStorage {
 
     private static final int ENERGY_BUFFER_SCALER = 4;
 
@@ -46,7 +46,7 @@ public record EnergyConduitStorage(boolean isMutable, int transferRate, ConduitN
         // Capacity is transfer rate + nodeCount * transferRatePerTick / 2 (expanded).
         // This ensures at least the transfer rate of the cable is available, but
         // capacity doesn't grow outrageously.
-        int nodeCount = node.getNetwork().getNodes().size();
+        int nodeCount = node.getNetwork().nodeCount();
 
         // The maximum number of nodes before the network capacity is INT_MAX.
         int maxNodesBeforeLimit = Integer.MAX_VALUE / (transferRate() / ENERGY_BUFFER_SCALER) - ENERGY_BUFFER_SCALER;

@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.conduit.bundle;
 
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.ConduitRedstoneSignalAware;
@@ -15,7 +14,6 @@ import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkC
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.conduits.common.redstone.RedstoneInsertFilter;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -460,7 +458,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
 
             var config = conduitBundle.getConnectionConfig(redstoneConduit, direction,
                     RedstoneConduitConnectionConfig.TYPE);
-            return config.canSend(ConduitRedstoneSignalAware.NONE);
+            return config.canInsert(ConduitRedstoneSignalAware.NONE);
         }
 
         return false;
@@ -496,7 +494,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
 
             var config = conduitBundle.getConnectionConfig(redstoneConduit, direction.getOpposite(),
                     RedstoneConduitConnectionConfig.TYPE);
-            if (!config.canSend(ConduitRedstoneSignalAware.NONE)) {
+            if (!config.canInsert(ConduitRedstoneSignalAware.NONE)) {
                 return 0;
             }
 
@@ -520,10 +518,10 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
                     .getCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER);
 
             if (redstoneInsertFilter != null) {
-                return redstoneInsertFilter.getOutputSignal(context, config.sendColor());
+                return redstoneInsertFilter.getOutputSignal(context, config.insertChannel());
             }
 
-            return context.getSignal(config.sendColor());
+            return context.getSignal(config.insertChannel());
         }
 
         return 0;

@@ -7,12 +7,12 @@ import com.mojang.serialization.Codec;
 
 /**
  * Data which is stored on each conduit node. This is not synced to the client.
- * If you want to sync data from here to the client, use {@link com.enderio.conduits.api.Conduit#getExtraWorldData(ConduitBundle, ConduitNode)}.
+ * If you want to sync data from here to the client, use {@link com.enderio.conduits.api.Conduit#getExtraWorldData(ConduitBundle, IConduitNode)}.
  * For connection-related settings, use {@link ConnectionConfig}.
  */
 public interface NodeData {
     Codec<NodeData> GENERIC_CODEC = EnderIOConduitsRegistries.CONDUIT_NODE_DATA_TYPE.byNameCodec()
-            .dispatch(NodeData::type, NodeDataType::codec);
+            .dispatch(NodeData::type, NodeDataType::codecOrThrow);
 
     NodeDataType<?> type();
 }

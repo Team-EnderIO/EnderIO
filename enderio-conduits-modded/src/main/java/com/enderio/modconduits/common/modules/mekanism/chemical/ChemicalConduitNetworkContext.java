@@ -2,14 +2,16 @@ package com.enderio.modconduits.common.modules.mekanism.chemical;
 
 import com.enderio.conduits.api.network.ConduitNetworkContext;
 import com.enderio.conduits.api.network.ConduitNetworkContextType;
-import com.mojang.serialization.Codec;
+import com.enderio.conduits.api.network.IConduitNetwork;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.Set;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.Chemical;
 
 public class ChemicalConduitNetworkContext implements ConduitNetworkContext<ChemicalConduitNetworkContext> {
 
-    public static Codec<ChemicalConduitNetworkContext> CODEC = RecordCodecBuilder.create(instance -> instance
+    public static MapCodec<ChemicalConduitNetworkContext> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(Chemical.CODEC.optionalFieldOf("locked_chemical", MekanismAPI.EMPTY_CHEMICAL)
                     .forGetter(ChemicalConduitNetworkContext::lockedChemical))
             .apply(instance, ChemicalConduitNetworkContext::new));
@@ -62,7 +64,8 @@ public class ChemicalConduitNetworkContext implements ConduitNetworkContext<Chem
     }
 
     @Override
-    public ChemicalConduitNetworkContext copy() {
+    public ChemicalConduitNetworkContext split(IConduitNetwork selfNetwork,
+            Set<? extends IConduitNetwork> allNetworks) {
         return new ChemicalConduitNetworkContext(lockedChemical);
     }
 

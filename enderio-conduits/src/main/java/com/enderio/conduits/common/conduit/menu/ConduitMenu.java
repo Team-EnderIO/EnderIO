@@ -174,6 +174,10 @@ public class ConduitMenu extends BaseEnderMenu {
         }
     }
 
+    public void handleConnectionConfigUpdate(SetConduitConnectionConfigPacket packet) {
+        connectionAccessor.setConnectionConfig(conduit, side, packet.connectionConfig());
+    }
+
     @Nullable
     public CompoundTag extraGuiData() {
         return connectionAccessor.getConduitExtraGuiData(conduit, side);

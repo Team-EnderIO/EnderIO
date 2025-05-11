@@ -1,33 +1,34 @@
 package com.enderio.modconduits.common.modules.mekanism.heat;
 
-import com.enderio.conduits.api.ColoredRedstoneProvider;
-import com.enderio.conduits.api.network.ConduitNetwork;
-import com.enderio.conduits.api.network.node.ConduitNode;
-import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
+import com.enderio.conduits.api.network.IConduitNetwork;
+import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.enderio.modconduits.common.modules.mekanism.MekanismModule;
-import java.util.List;
 import mekanism.api.heat.IHeatHandler;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
-public class HeatTicker extends IOAwareConduitTicker<HeatConduit, HeatConduitConnectionConfig, HeatTicker.Connection> {
+public class HeatTicker implements ConduitTicker<HeatConduit> {
 
     public HeatTicker() {
     }
 
     @Override
-    protected void tickColoredGraph(ServerLevel level, HeatConduit conduit, List<Connection> senders,
-            List<Connection> receivers, DyeColor color, ConduitNetwork graph,
-            ColoredRedstoneProvider coloredRedstoneProvider) {
+    public void tick(ServerLevel level, HeatConduit conduit, IConduitNetwork network) {
+        for (var extractConnection : network.extractConnections()) {
+            var insertConnections = network.insertConnectionsFrom(extractConnection);
+            if (insertConnections.isEmpty()) {
+                continue;
+            }
 
-        for (var receiver : receivers) {
-            IHeatHandler extractHandler = receiver.heatHandler();
+            IHeatHandler extractHandler = extractConnection.getSidedCapability(MekanismModule.Capabilities.HEAT);
+            if (extractHandler == null) {
+                continue;
+            }
 
-            for (var sender : senders) {
-                IHeatHandler insertHandler = sender.heatHandler();
+            for (var insertConnection : insertConnections) {
+                IHeatHandler insertHandler = insertConnection.getSidedCapability(MekanismModule.Capabilities.HEAT);
+                if (insertHandler == null) {
+                    continue;
+                }
 
                 double heatCapacity = extractHandler.getTotalHeatCapacity();
                 double invConduction = insertHandler.getTotalInverseConduction()
@@ -41,31 +42,6 @@ public class HeatTicker extends IOAwareConduitTicker<HeatConduit, HeatConduitCon
                     insertHandler.handleHeat(heatToTransfer);
                 }
             }
-        }
-    }
-
-    @Override
-    protected @Nullable HeatTicker.Connection createConnection(Level level, ConduitNode node, Direction side) {
-        var heatHandler = level.getCapability(MekanismModule.Capabilities.HEAT, node.getPos().relative(side),
-                side.getOpposite());
-        if (heatHandler != null) {
-            return new Connection(node, side, node.getConnectionConfig(side, HeatConduitConnectionConfig.TYPE),
-                    heatHandler);
-        }
-        return null;
-    }
-
-    protected static class Connection extends SimpleConnection<HeatConduitConnectionConfig> {
-        private final IHeatHandler heatHandler;
-
-        public Connection(ConduitNode node, Direction side, HeatConduitConnectionConfig config,
-                IHeatHandler heatHandler) {
-            super(node, side, config);
-            this.heatHandler = heatHandler;
-        }
-
-        public IHeatHandler heatHandler() {
-            return heatHandler;
         }
     }
 }

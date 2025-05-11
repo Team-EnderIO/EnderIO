@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.LogicalSide;
 
-@Deprecated(forRemoval = true, since = "8.0.0")
+@Deprecated(since = "8.0.0")
 public record DynamicConnectionState(boolean isInsert, DyeColor insertChannel, boolean isExtract,
         DyeColor extractChannel, RedstoneControl control, DyeColor redstoneChannel,
         @UseOnly(LogicalSide.SERVER) ItemStack filterInsert, @UseOnly(LogicalSide.SERVER) ItemStack filterExtract,

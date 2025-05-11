@@ -1,97 +1,61 @@
 package com.enderio.conduits.common.conduit.type.redstone;
 
-import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.conduits.api.ColoredRedstoneProvider;
 import com.enderio.conduits.api.ConduitCapabilities;
-import com.enderio.conduits.api.network.ConduitNetwork;
-import com.enderio.conduits.api.network.node.ConduitNode;
-import com.enderio.conduits.api.ticker.IOAwareConduitTicker;
+import com.enderio.conduits.api.network.IConduitNetwork;
+import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.enderio.conduits.common.init.ConduitBlocks;
-import com.enderio.conduits.common.redstone.RedstoneExtractFilter;
-import java.util.List;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
-public class RedstoneConduitTicker extends
-        IOAwareConduitTicker<RedstoneConduit, RedstoneConduitConnectionConfig, RedstoneConduitTicker.Connection> {
+public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
 
     public static final RedstoneConduitTicker INSTANCE = new RedstoneConduitTicker();
 
     @Override
-    public void tickGraph(ServerLevel level, RedstoneConduit conduit, ConduitNetwork graph,
-            ColoredRedstoneProvider coloredRedstoneProvider) {
-
-        var context = graph.getOrCreateContext(RedstoneConduitNetworkContext.TYPE);
+    public void tick(ServerLevel level, RedstoneConduit conduit, IConduitNetwork network) {
+        var context = network.getOrCreateContext(RedstoneConduitNetworkContext.TYPE);
         boolean isActiveBeforeTick = context.isActive();
         context.nextTick();
 
-        super.tickGraph(level, conduit, graph, coloredRedstoneProvider);
+        for (var channel : network.allChannels()) {
+            // Receive input signals.
+            for (var extractConnection : network.extractConnections(channel)) {
+                int signal;
 
-        // If active changed -or- this graph is fresh, nodes need to be synced.
+                var redstoneExtractFilter = extractConnection.inventory()
+                        .getStackInSlot(RedstoneConduit.EXTRACT_FILTER_SLOT)
+                        .getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
+
+                if (redstoneExtractFilter != null) {
+                    signal = redstoneExtractFilter.getInputSignal(level, extractConnection.connectedBlockPos(),
+                            extractConnection.connectionSide());
+                } else {
+                    signal = level.getSignal(extractConnection.connectedBlockPos(), extractConnection.connectionSide());
+                }
+
+                if (signal > 0) {
+                    context.setSignal(channel, signal);
+                }
+            }
+
+            // Fire block updates if the signal changed.
+            if (context.isNew() || context.getSignal(channel) != context.getSignalLastTick(channel)) {
+                for (var insertConnection : network.insertConnections(channel)) {
+                    level.updateNeighborsAt(insertConnection.node().pos(), ConduitBlocks.CONDUIT.get());
+
+                    if (insertConnection.connectionConfig(RedstoneConduitConnectionConfig.TYPE)
+                            .isStrongOutputSignal()) {
+                        level.updateNeighborsAt(insertConnection.connectedBlockPos(), ConduitBlocks.CONDUIT.get());
+                    }
+                }
+            }
+        }
+
+        // Mark all nodes as dirty if the active state changes (update block models).
         if (context.isNew() || context.isActive() != isActiveBeforeTick) {
-            for (var node : graph.getNodes()) {
-                if (node.isLoaded()) {
-                    node.markDirty();
-                }
+            for (var node : network.loadedNodes()) {
+                node.markDirty();
             }
         }
     }
 
-    @Override
-    protected void tickColoredGraph(ServerLevel level, RedstoneConduit conduit, List<Connection> senders,
-            List<Connection> receivers, DyeColor color, ConduitNetwork graph,
-            ColoredRedstoneProvider coloredRedstoneProvider) {
-
-        RedstoneConduitNetworkContext networkContext = graph.getOrCreateContext(RedstoneConduitNetworkContext.TYPE);
-
-        for (Connection receiver : receivers) {
-            int signal;
-
-            var inventory = receiver.inventory();
-            var redstoneExtractFilter = inventory.getStackInSlot(RedstoneConduit.EXTRACT_FILTER_SLOT)
-                    .getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
-
-            if (redstoneExtractFilter != null) {
-                signal = redstoneExtractFilter.getInputSignal(level, receiver.neighborPos(), receiver.neighborSide());
-            } else {
-                signal = level.getSignal(receiver.neighborPos(), receiver.neighborSide());
-            }
-
-            if (signal > 0) {
-                networkContext.setSignal(color, signal);
-            }
-        }
-
-        // Only update neighbours if this is a new context or the signal strength
-        // changed this time.
-        if (networkContext.isNew() || networkContext.getSignal(color) != networkContext.getSignalLastTick(color)) {
-            for (Connection sender : senders) {
-                level.updateNeighborsAt(sender.pos(), ConduitBlocks.CONDUIT.get());
-
-                // Update blocks connected to strong signals too.
-                if (sender.config().isStrongOutputSignal()) {
-                    level.updateNeighborsAt(sender.neighborPos(), ConduitBlocks.CONDUIT.get());
-                }
-            }
-        }
-    }
-
-    @Override
-    protected boolean shouldSkipColor(List<Connection> senders, List<Connection> receivers) {
-        return senders.isEmpty() && receivers.isEmpty();
-    }
-
-    @Override
-    protected @Nullable Connection createConnection(Level level, ConduitNode node, Direction side) {
-        return new Connection(node, side, node.getConnectionConfig(side, RedstoneConduitConnectionConfig.TYPE));
-    }
-
-    protected static class Connection extends SimpleConnection<RedstoneConduitConnectionConfig> {
-        public Connection(ConduitNode node, Direction side, RedstoneConduitConnectionConfig config) {
-            super(node, side, config);
-        }
-    }
 }

@@ -16,28 +16,28 @@ public class EnergyConduitScreenType extends IOConduitScreenType<EnergyConduitCo
 
         // Redstone control
         var redstoneChannelWidget = screen.addColorPicker(startX + 16 + 4, startY + 20, ConduitLang.REDSTONE_CHANNEL,
-                () -> dataAccess.getConnectionConfig().receiveRedstoneChannel(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneChannel(value)));
+                () -> dataAccess.getConnectionConfig().extractRedstoneChannel(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneChannel(value)));
 
         // Only show the redstone widget when redstone control is sensitive to signals.
         screen.addPreRenderAction(() -> redstoneChannelWidget.visible = dataAccess.getConnectionConfig()
-                .receiveRedstoneControl()
+                .extractRedstoneControl()
                 .isRedstoneSensitive());
 
         screen.addRedstoneControlPicker(startX, startY + 20, EIOLang.REDSTONE_MODE,
-                () -> dataAccess.getConnectionConfig().receiveRedstoneControl(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
+                () -> dataAccess.getConnectionConfig().extractRedstoneControl(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneControl(value)));
 
         // TODO: Show redstone signal indicators using the extra NBT payload.
     }
 
     @Override
     protected EnergyConduitConnectionConfig setLeftEnabled(EnergyConduitConnectionConfig config, boolean isEnabled) {
-        return config.withIsSend(isEnabled);
+        return config.withIsInsert(isEnabled);
     }
 
     @Override
     protected EnergyConduitConnectionConfig setRightEnabled(EnergyConduitConnectionConfig config, boolean isEnabled) {
-        return config.withIsReceive(isEnabled);
+        return config.withIsExtract(isEnabled);
     }
 }

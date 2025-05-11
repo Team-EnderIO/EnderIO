@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.conduit.graph;
+package com.enderio.conduits.common.conduit.legacy;
 
 import com.enderio.conduits.api.network.node.legacy.ConduitData;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
@@ -9,24 +9,17 @@ import java.util.Optional;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * A safe way to store conduit data.
  */
-@Deprecated(forRemoval = true, since = "8.0.0")
+@Deprecated(since = "8.0.0")
 public class ConduitDataContainer implements ConduitDataAccessor {
 
     public static Codec<ConduitDataContainer> CODEC = ExtraCodecs.optionalEmptyMap(ConduitData.CODEC)
             .xmap(ConduitDataContainer::new, i -> Optional.ofNullable(i.data));
-
-    public static StreamCodec<RegistryFriendlyByteBuf, ConduitDataContainer> STREAM_CODEC = ByteBufCodecs
-            .optional(ConduitData.STREAM_CODEC)
-            .map(ConduitDataContainer::new, i -> Optional.ofNullable(i.data));
 
     @Nullable
     private ConduitData<?> data;

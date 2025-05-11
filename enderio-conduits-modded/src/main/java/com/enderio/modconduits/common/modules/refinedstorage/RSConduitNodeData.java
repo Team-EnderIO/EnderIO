@@ -1,9 +1,8 @@
 package com.enderio.modconduits.common.modules.refinedstorage;
 
-import com.enderio.conduits.api.network.node.ConduitNode;
+import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.network.node.NodeData;
 import com.enderio.conduits.api.network.node.NodeDataType;
-import com.mojang.serialization.MapCodec;
 import com.refinedmods.refinedstorage.api.network.impl.node.grid.GridNetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.common.api.RefinedStorageApi;
@@ -21,9 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class RSConduitNodeData implements NodeData {
-    public static final MapCodec<RSConduitNodeData> CODEC = MapCodec.unit(RSConduitNodeData::new);
-
-    public static NodeDataType<RSConduitNodeData> TYPE = new NodeDataType<>(CODEC, RSConduitNodeData::new);
+    public static NodeDataType<RSConduitNodeData> TYPE = new NodeDataType<>(null, RSConduitNodeData::new);
 
     public final NetworkNodeContainerProvider container;
     private ConduitRSNode mainNode;
@@ -36,7 +33,7 @@ public class RSConduitNodeData implements NodeData {
         return mainNode != null && !mainNode.isRemoved();
     }
 
-    public void initialize(ConduitNode conduitNode, Level level, BlockPos pos) {
+    public void initialize(IConduitNode conduitNode, Level level, BlockPos pos) {
         mainNode = new ConduitRSNode(level, pos);
 
         // Gather initially connected sides.

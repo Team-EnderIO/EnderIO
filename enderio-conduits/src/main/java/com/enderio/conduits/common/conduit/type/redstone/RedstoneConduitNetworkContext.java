@@ -2,8 +2,10 @@ package com.enderio.conduits.common.conduit.type.redstone;
 
 import com.enderio.conduits.api.network.ConduitNetworkContext;
 import com.enderio.conduits.api.network.ConduitNetworkContextType;
+import com.enderio.conduits.api.network.IConduitNetwork;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import net.minecraft.world.item.DyeColor;
 
 public class RedstoneConduitNetworkContext implements ConduitNetworkContext<RedstoneConduitNetworkContext> {
@@ -78,7 +80,12 @@ public class RedstoneConduitNetworkContext implements ConduitNetworkContext<Reds
     }
 
     @Override
-    public RedstoneConduitNetworkContext copy() {
+    public RedstoneConduitNetworkContext split(IConduitNetwork selfNetwork,
+            Set<? extends IConduitNetwork> allNetworks) {
+        return copy();
+    }
+
+    private RedstoneConduitNetworkContext copy() {
         return new RedstoneConduitNetworkContext(isActive, new HashMap<>(channelSignals));
     }
 

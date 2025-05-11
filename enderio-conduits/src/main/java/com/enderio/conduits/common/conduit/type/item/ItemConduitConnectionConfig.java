@@ -16,33 +16,34 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 
-public record ItemConduitConnectionConfig(boolean isSend, DyeColor sendColor, boolean isReceive, DyeColor receiveColor,
-        RedstoneControl receiveRedstoneControl, DyeColor receiveRedstoneChannel, boolean isRoundRobin,
-        boolean isSelfFeed, int priority) implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
+public record ItemConduitConnectionConfig(boolean isInsert, DyeColor insertChannel, boolean isExtract,
+        DyeColor extractChannel, RedstoneControl extractRedstoneControl, DyeColor extractRedstoneChannel,
+        boolean isRoundRobin, boolean isSelfFeed, int priority)
+        implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
     public static ItemConduitConnectionConfig DEFAULT = new ItemConduitConnectionConfig(false, DyeColor.GREEN, true,
             DyeColor.GREEN, RedstoneControl.NEVER_ACTIVE, DyeColor.RED, false, false, 0);
 
     public static MapCodec<ItemConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-            .group(Codec.BOOL.fieldOf("is_send").forGetter(ItemConduitConnectionConfig::isSend),
-                    DyeColor.CODEC.fieldOf("send_color").forGetter(ItemConduitConnectionConfig::sendColor),
-                    Codec.BOOL.fieldOf("is_receive").forGetter(ItemConduitConnectionConfig::isReceive),
-                    DyeColor.CODEC.fieldOf("receive_color").forGetter(ItemConduitConnectionConfig::receiveColor),
-                    RedstoneControl.CODEC.fieldOf("receive_redstone_control")
-                            .forGetter(ItemConduitConnectionConfig::receiveRedstoneControl),
-                    DyeColor.CODEC.fieldOf("receive_redstone_channel")
-                            .forGetter(ItemConduitConnectionConfig::receiveRedstoneChannel),
+            .group(Codec.BOOL.fieldOf("is_insert").forGetter(ItemConduitConnectionConfig::isInsert),
+                    DyeColor.CODEC.fieldOf("insert_channel").forGetter(ItemConduitConnectionConfig::insertChannel),
+                    Codec.BOOL.fieldOf("is_extract").forGetter(ItemConduitConnectionConfig::isExtract),
+                    DyeColor.CODEC.fieldOf("extract_channel").forGetter(ItemConduitConnectionConfig::extractChannel),
+                    RedstoneControl.CODEC.fieldOf("extract_redstone_control")
+                            .forGetter(ItemConduitConnectionConfig::extractRedstoneControl),
+                    DyeColor.CODEC.fieldOf("extract_redstone_channel")
+                            .forGetter(ItemConduitConnectionConfig::extractRedstoneChannel),
                     Codec.BOOL.fieldOf("is_round_robin").forGetter(ItemConduitConnectionConfig::isRoundRobin),
                     Codec.BOOL.fieldOf("is_self_feed").forGetter(ItemConduitConnectionConfig::isSelfFeed),
                     Codec.INT.fieldOf("priority").forGetter(ItemConduitConnectionConfig::priority))
             .apply(instance, ItemConduitConnectionConfig::new));
 
     public static StreamCodec<ByteBuf, ItemConduitConnectionConfig> STREAM_CODEC = MassiveStreamCodec.composite(
-            ByteBufCodecs.BOOL, ItemConduitConnectionConfig::isSend, DyeColor.STREAM_CODEC,
-            ItemConduitConnectionConfig::sendColor, ByteBufCodecs.BOOL, ItemConduitConnectionConfig::isReceive,
-            DyeColor.STREAM_CODEC, ItemConduitConnectionConfig::receiveColor, RedstoneControl.STREAM_CODEC,
-            ItemConduitConnectionConfig::receiveRedstoneControl, DyeColor.STREAM_CODEC,
-            ItemConduitConnectionConfig::receiveRedstoneChannel, ByteBufCodecs.BOOL,
+            ByteBufCodecs.BOOL, ItemConduitConnectionConfig::isInsert, DyeColor.STREAM_CODEC,
+            ItemConduitConnectionConfig::insertChannel, ByteBufCodecs.BOOL, ItemConduitConnectionConfig::isExtract,
+            DyeColor.STREAM_CODEC, ItemConduitConnectionConfig::extractChannel, RedstoneControl.STREAM_CODEC,
+            ItemConduitConnectionConfig::extractRedstoneControl, DyeColor.STREAM_CODEC,
+            ItemConduitConnectionConfig::extractRedstoneChannel, ByteBufCodecs.BOOL,
             ItemConduitConnectionConfig::isRoundRobin, ByteBufCodecs.BOOL, ItemConduitConnectionConfig::isSelfFeed,
             ByteBufCodecs.INT, ItemConduitConnectionConfig::priority, ItemConduitConnectionConfig::new);
 
@@ -51,88 +52,88 @@ public record ItemConduitConnectionConfig(boolean isSend, DyeColor sendColor, bo
 
     @Override
     public ConnectionConfig reconnected() {
-        return new ItemConduitConnectionConfig(false, sendColor, true, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+        return new ItemConduitConnectionConfig(false, insertChannel, true, extractChannel, extractRedstoneControl,
+                extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
     @Override
     public ConnectionConfig disconnected() {
-        return new ItemConduitConnectionConfig(false, sendColor, false, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+        return new ItemConduitConnectionConfig(false, insertChannel, false, extractChannel, extractRedstoneControl,
+                extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
     @Override
-    public boolean canSend(ConduitRedstoneSignalAware signalAware) {
+    public boolean canInsert(ConduitRedstoneSignalAware signalAware) {
         // TODO: sendRedstoneControl
-        return isSend();
+        return isInsert();
     }
 
     @Override
-    public boolean canReceive(ConduitRedstoneSignalAware signalAware) {
-        if (!isReceive()) {
+    public boolean canExtract(ConduitRedstoneSignalAware signalAware) {
+        if (!isExtract()) {
             return false;
         }
 
-        if (receiveRedstoneControl.isRedstoneSensitive()) {
-            return receiveRedstoneControl.isActive(signalAware.hasRedstoneSignal(receiveRedstoneChannel));
+        if (extractRedstoneControl.isRedstoneSensitive()) {
+            return extractRedstoneControl.isActive(signalAware.hasRedstoneSignal(extractRedstoneChannel));
         } else {
-            return receiveRedstoneControl == RedstoneControl.ALWAYS_ACTIVE;
+            return extractRedstoneControl == RedstoneControl.ALWAYS_ACTIVE;
         }
     }
 
     @Override
     public List<DyeColor> getRedstoneSignalColors() {
-        if (receiveRedstoneControl.isRedstoneSensitive()) {
-            return List.of(receiveRedstoneChannel);
+        if (extractRedstoneControl.isRedstoneSensitive()) {
+            return List.of(extractRedstoneChannel);
         }
 
         return List.of();
     }
 
-    // Generate with methods for each field
-    public ItemConduitConnectionConfig withIsSend(boolean isSend) {
-        return new ItemConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+    public ItemConduitConnectionConfig withIsInsert(boolean isInsert) {
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
-    public ItemConduitConnectionConfig withSendColor(DyeColor sendColor) {
-        return new ItemConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+    public ItemConduitConnectionConfig withInsertChannel(DyeColor insertChannel) {
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
-    public ItemConduitConnectionConfig withIsReceive(boolean isReceive) {
-        return new ItemConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+    public ItemConduitConnectionConfig withIsExtract(boolean isExtract) {
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
-    public ItemConduitConnectionConfig withReceiveColor(DyeColor receiveColor) {
-        return new ItemConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+    public ItemConduitConnectionConfig withExtractChannel(DyeColor extractChannel) {
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
-    public ItemConduitConnectionConfig withReceiveRedstoneControl(RedstoneControl receiveRedstoneControl) {
-        return new ItemConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+    public ItemConduitConnectionConfig withExtractRedstoneControl(RedstoneControl extractRedstoneControl) {
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
-    public ItemConduitConnectionConfig withReceiveRedstoneChannel(DyeColor receiveRedstoneChannel) {
-        return new ItemConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+    public ItemConduitConnectionConfig withExtractRedstoneChannel(DyeColor extractRedstoneChannel) {
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
     public ItemConduitConnectionConfig withIsRoundRobin(boolean isRoundRobin) {
-        return new ItemConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
     public ItemConduitConnectionConfig withIsSelfFeed(boolean isSelfFeed) {
-        return new ItemConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel, isRoundRobin, isSelfFeed, priority);
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed, priority);
     }
 
     public ItemConduitConnectionConfig withPriority(int priority) {
-        return new ItemConduitConnectionConfig(isSend, sendColor, isReceive, receiveColor, receiveRedstoneControl,
-                receiveRedstoneChannel, isRoundRobin, isSelfFeed, Math.min(9999, Math.max(-9999, priority)));
+        return new ItemConduitConnectionConfig(isInsert, insertChannel, isExtract, extractChannel,
+                extractRedstoneControl, extractRedstoneChannel, isRoundRobin, isSelfFeed,
+                Math.min(9999, Math.max(-9999, priority)));
     }
 
     @Override

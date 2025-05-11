@@ -4,11 +4,9 @@ import com.enderio.base.api.travel.TravelTarget;
 import com.enderio.base.api.travel.TravelTargetSerializer;
 import com.enderio.base.api.travel.TravelTargetType;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.machines.client.gui.screen.EnderfaceScreen;
 import com.enderio.machines.common.init.MachineTravelTargets;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -62,7 +60,8 @@ public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
     @Override
     public boolean interact(Level level, Player player) {
         if (level.isClientSide) {
-            Minecraft.getInstance().setScreen(new EnderfaceScreen(pos.immutable(), Minecraft.getInstance().level));
+            // TODO: Causes classload errors on dedicated servers.
+//            Minecraft.getInstance().setScreen(new EnderfaceScreen(pos.immutable(), Minecraft.getInstance().level));
         }
         return true;
     }

@@ -46,8 +46,8 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
         } else {
             // Channel colors
             screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                    () -> dataAccess.getConnectionConfig().sendColor(),
-                    value -> dataAccess.updateConnectionConfig(config -> config.withSendColor(value)));
+                    () -> dataAccess.getConnectionConfig().insertChannel(),
+                    value -> dataAccess.updateConnectionConfig(config -> config.withInsertChannel(value)));
         }
 
         screen.addFilterConfigureButton(startX + 1, startY + 82, ChemicalConduit.INSERT_FILTER_SLOT);
@@ -61,8 +61,8 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
         if (dataAccess.conduit() instanceof ChemicalConduit fluidConduit && fluidConduit.isMultiChemical()) {
             // Channel colors
             screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
-                    () -> dataAccess.getConnectionConfig().receiveColor(),
-                    value -> dataAccess.updateConnectionConfig(config -> config.withReceiveColor(value)));
+                    () -> dataAccess.getConnectionConfig().extractChannel(),
+                    value -> dataAccess.updateConnectionConfig(config -> config.withExtractChannel(value)));
         }
 
         // TODO: Could be good fluid conduit features?
@@ -82,17 +82,17 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
 
         // Redstone control
         var redstoneChannelWidget = screen.addColorPicker(startX + 16 + 4, startY + 40, ConduitLang.REDSTONE_CHANNEL,
-                () -> dataAccess.getConnectionConfig().receiveRedstoneChannel(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneChannel(value)));
+                () -> dataAccess.getConnectionConfig().extractRedstoneChannel(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneChannel(value)));
 
         // Only show the redstone widget when redstone control is sensitive to signals.
         screen.addPreRenderAction(() -> redstoneChannelWidget.visible = dataAccess.getConnectionConfig()
-                .receiveRedstoneControl()
+                .extractRedstoneControl()
                 .isRedstoneSensitive());
 
         screen.addRedstoneControlPicker(startX, startY + 40, EIOLang.REDSTONE_MODE,
-                () -> dataAccess.getConnectionConfig().receiveRedstoneControl(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withReceiveRedstoneControl(value)));
+                () -> dataAccess.getConnectionConfig().extractRedstoneControl(),
+                value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneControl(value)));
 
         screen.addFilterConfigureButton(startX + 1, startY + 82, ChemicalConduit.EXTRACT_FILTER_SLOT);
 
@@ -102,13 +102,13 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
     @Override
     protected ChemicalConduitConnectionConfig setLeftEnabled(ChemicalConduitConnectionConfig config,
             boolean isEnabled) {
-        return config.withIsSend(isEnabled);
+        return config.withIsInsert(isEnabled);
     }
 
     @Override
     protected ChemicalConduitConnectionConfig setRightEnabled(ChemicalConduitConnectionConfig config,
             boolean isEnabled) {
-        return config.withIsReceive(isEnabled);
+        return config.withIsExtract(isEnabled);
     }
 
     private Chemical getLockedChemical(ConduitMenuDataAccess<ChemicalConduitConnectionConfig> dataAccess) {
