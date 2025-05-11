@@ -2,7 +2,7 @@ package com.enderio.conduits.client;
 
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
-import com.enderio.conduits.common.conduit.block.ConduitBundleBlockEntity;
+import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
@@ -27,7 +27,12 @@ public class ConduitHighlightEvent {
         if (minecraft.level
                 .getBlockEntity(event.getTarget().getBlockPos()) instanceof ConduitBundleBlockEntity conduit) {
             // Use standard block highlights for facades.
-            if (conduit.getBundle().hasFacade() && FacadeHelper.areFacadesVisible()) {
+            if (conduit.hasFacade() && FacadeHelper.areFacadesVisible()) {
+                return;
+            }
+
+            // If the conduit is bugged, don't do this.
+            if (conduit.isEmpty()) {
                 return;
             }
 

@@ -18,10 +18,8 @@ import org.apache.commons.lang3.NotImplementedException;
 
 public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
 
-    public static final ResourceLocation BG_TEXTURE_AUTO = EnderIO
-            .loc("textures/gui/screen/alloy_smelter_auto.png");
-    private static final ResourceLocation BG_TEXTURE_ALLOY = EnderIO
-            .loc("textures/gui/screen/alloy_smelter_alloy.png");
+    public static final ResourceLocation BG_TEXTURE_AUTO = EnderIO.loc("textures/gui/screen/alloy_smelter_auto.png");
+    private static final ResourceLocation BG_TEXTURE_ALLOY = EnderIO.loc("textures/gui/screen/alloy_smelter_alloy.png");
     private static final ResourceLocation BG_TEXTURE_FURNACE = EnderIO
             .loc("textures/gui/screen/alloy_smelter_furnace.png");
 
@@ -55,11 +53,11 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
         addRenderableOnly(new NewCapacitorEnergyWidget(leftPos + 7, topPos + 27, menu::getEnergyStorage,
                 menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55 - 16 - 2,
-                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
-
         addRenderableWidget(new AlloySmelterModeWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55, menu::getMode,
                 menu::setMode, MachineLang.ALLOY_SMELTER_MODE));
+
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55 - (16 + 2),
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 114, 162, 87);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 6 + 55 - (16 + 2) * 2, overlay);

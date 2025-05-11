@@ -125,46 +125,36 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .define('B', Items.BOOK)
                 .define('D', Tags.Items.GEMS_DIAMOND)
                 .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
-                .pattern("DBD")
+                .define('L', Items.LECTERN)
+                .pattern(" B ")
+                .pattern("DLD")
                 .pattern("III")
-                .pattern(" I ")
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BOOK))
-                .save(recipeOutput);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.PRIMITIVE_ALLOY_SMELTER.get())
-                .define('F', Blocks.FURNACE)
-                .define('D', Blocks.DEEPSLATE)
-                .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
-                .pattern("FFF")
-                .pattern("DGD")
-                .pattern("DDD")
-                .unlockedBy("has_ingredient",
-                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.ALLOY_SMELTER.get())
                 .define('F', Blocks.FURNACE)
-                .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
+                .define('I', Tags.Items.INGOTS_IRON)
                 .define('G', EIOTags.Items.GEARS_IRON)
-                .define('C', Items.CAULDRON)
                 .define('V', EIOBlocks.VOID_CHASSIS.get())
-                .pattern("IFI")
+                .define('O', Tags.Items.OBSIDIANS)
+                .pattern("GFG")
                 .pattern("FVF")
-                .pattern("GCG")
+                .pattern("IOI")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.STIRLING_GENERATOR.get())
-                .define('B', Blocks.STONE_BRICKS)
                 .define('F', Blocks.FURNACE)
-                .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
+                .define('I', Tags.Items.INGOTS_IRON)
                 .define('G', EIOTags.Items.GEARS_IRON)
                 .define('V', EIOBlocks.VOID_CHASSIS.get())
-                .define('P', Items.PISTON)
-                .pattern("BFB")
+                .define('O', Tags.Items.OBSIDIANS)
+                .define('D', Items.DEEPSLATE)
+                .pattern("GFG")
                 .pattern("IVI")
-                .pattern("GPG")
+                .pattern("ODO")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
                 .save(recipeOutput);
@@ -288,7 +278,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .pattern("IRI")
                 .pattern("IPI")
                 .define('I', Tags.Items.INGOTS_IRON)
-                .define('R', EIOItems.EXPERIENCE_ROD)
+                .define('R', EIOItems.VOID_VIAL)
                 .define('P', EIOTags.Items.GEMS_PULSATING_CRYSTAL)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))
@@ -383,7 +373,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.XP_OBELISK.get())
-                .define('R', EIOItems.EXPERIENCE_ROD)
+                .define('R', EIOItems.VOID_VIAL)
                 .define('I', EIOTags.Items.INGOTS_SOULARIUM)
                 .define('C', EIOBlocks.ENSOULED_CHASSIS)
                 .pattern(" R ")
@@ -391,7 +381,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .pattern("ICI")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance
-                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.EXPERIENCE_ROD).build()))
+                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.VOID_VIAL).build()))
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.AVERSION_OBELISK.get())
@@ -431,17 +421,79 @@ public class MachineRecipeProvider extends RecipeProvider {
                                 .hasItems(ItemPredicate.Builder.item().of(MachineBlocks.AVERSION_OBELISK).build()))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WEATHER_OBELISK.get())
-                .define('W', EIOItems.WEATHER_CRYSTAL)
-                .define('S', EIOTags.Items.INGOTS_SOULARIUM)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.ATTRACTOR_OBELISK.get())
+                .define('M', EIOItems.ELECTROMAGNET)
                 .define('E', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
-                .define('C', EIOBlocks.VOID_CHASSIS)
-                .pattern(" W ")
-                .pattern("ESE")
-                .pattern("SCS")
+                .define('G', EIOItems.GEAR_ENERGIZED)
+                .define('I', EIOTags.Items.INGOTS_SOULARIUM)
+                .define('C', EIOBlocks.ENSOULED_CHASSIS)
+                .pattern(" M ")
+                .pattern("EGE")
+                .pattern("ICI")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance
-                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.WEATHER_CRYSTAL).build()))
+                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.ENDER_CRYSTAL).build()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WEATHER_OBELISK.get())
+            .define('W', EIOItems.WEATHER_CRYSTAL)
+            .define('S', EIOTags.Items.INGOTS_SOULARIUM)
+            .define('E', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
+            .define('C', EIOBlocks.VOID_CHASSIS)
+            .pattern(" W ")
+            .pattern("ESE")
+            .pattern("SCS")
+            .unlockedBy("has_ingredient",
+                InventoryChangeTrigger.TriggerInstance
+                    .hasItems(ItemPredicate.Builder.item().of(EIOItems.WEATHER_CRYSTAL).build()))
+            .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.VAT.get())
+                .define('B', Blocks.BARREL)
+                .define('C', EIOBlocks.VOID_CHASSIS)
+                .define('M', EIOTags.Items.GEARS_IRON)
+                .define('A', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('R', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
+                .define('S', EIOTags.Items.INGOTS_DARK_STEEL)
+                .pattern("SBS")
+                .pattern("ACA")
+                .pattern("MRM")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance
+                                .hasItems(ItemPredicate.Builder.item().of(Blocks.BARREL).build()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WIRELESS_CHARGER.get())
+                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('V', EIOBlocks.VOID_CHASSIS.get())
+                .define('E', EIOItems.ENDER_RESONATOR.get())
+                .pattern("CCC")
+                .pattern("CVC")
+                .pattern("CEC")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WIRELESS_CHARGER_ANTENNA.get())
+                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('S', EIOTags.Items.INGOTS_PULSATING_ALLOY)
+                .define('E', EIOItems.ENDER_RESONATOR.get())
+                .pattern(" S ")
+                .pattern(" S ")
+                .pattern("CEC")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ENDER_RESONATOR.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get())
+                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('S', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
+                .define('E', EIOItems.SENTIENT_ENDER.get())
+                .pattern(" S ")
+                .pattern(" S ")
+                .pattern("CEC")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SENTIENT_ENDER.get()))
                 .save(recipeOutput);
 
         // TODO: Enable once the block detector has a model.
@@ -454,7 +506,6 @@ public class MachineRecipeProvider extends RecipeProvider {
          * InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().
          * of(Items.PISTON).build())) .save(recipeOutput);
          */
-
         eraseRecipes(recipeOutput);
     }
 
@@ -463,7 +514,6 @@ public class MachineRecipeProvider extends RecipeProvider {
         list.addAll(MachineBlocks.CAPACITOR_BANKS.values());
         list.add(MachineBlocks.FLUID_TANK);
         list.add(MachineBlocks.PRESSURIZED_FLUID_TANK);
-        list.add(MachineBlocks.PRIMITIVE_ALLOY_SMELTER);
         list.add(MachineBlocks.ALLOY_SMELTER);
         list.add(MachineBlocks.STIRLING_GENERATOR);
         list.add(MachineBlocks.SAG_MILL);
@@ -481,9 +531,11 @@ public class MachineRecipeProvider extends RecipeProvider {
         list.add(MachineBlocks.AVERSION_OBELISK);
         list.add(MachineBlocks.INHIBITOR_OBELISK);
         list.add(MachineBlocks.RELOCATOR_OBELISK);
+        list.add(MachineBlocks.ATTRACTOR_OBELISK);
         list.add(MachineBlocks.XP_VACUUM);
         list.add(MachineBlocks.VACUUM_CHEST);
         list.add(MachineBlocks.TRAVEL_ANCHOR);
+        list.add(MachineBlocks.WIRELESS_CHARGER);
         return list;
     });
 

@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blocks.obelisks;
 
+import com.enderio.core.common.network.menu.IntSyncSlot;
 import com.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,13 +14,19 @@ public class ObeliskMenu<T extends ObeliskBlockEntity<T>> extends PoweredMachine
     public static final int DECREASE_BUTTON_ID = 1;
     public static final int VISIBILITY_BUTTON_ID = 2;
 
+    private final IntSyncSlot maxRange;
+
     protected ObeliskMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory, T blockEntity) {
         super(menuType, containerId, playerInventory, blockEntity);
+
+        maxRange = addSyncSlot(IntSyncSlot.readOnly(blockEntity::getMaxRange));
     }
 
     protected ObeliskMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
             RegistryFriendlyByteBuf buf, BlockEntityType<? extends T>... blockEntityTypes) {
         super(menuType, containerId, playerInventory, buf, blockEntityTypes);
+
+        maxRange = addSyncSlot(IntSyncSlot.standalone());
     }
 
     public boolean isRangeVisible() {
@@ -44,5 +51,9 @@ public class ObeliskMenu<T extends ObeliskBlockEntity<T>> extends PoweredMachine
         default:
             return false;
         }
+    }
+
+    public int getMaxRange() {
+        return maxRange.get();
     }
 }

@@ -1,5 +1,6 @@
 package com.enderio.base.api.integration;
 
+import com.enderio.base.api.farm.FarmTaskManager;
 import com.enderio.base.api.glider.GliderMovementInfo;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
@@ -64,5 +65,8 @@ public interface Integration {
      */
     default boolean canBlockTeleport(Player player) {
         return false;
+    }
+
+    default void registerFarmTasks(FarmTaskManager manager) {
     }
 }

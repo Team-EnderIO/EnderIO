@@ -57,7 +57,7 @@ public class MachineInventoryLayout {
     }
 
     /**
-     * Get the item stack limit for the given slot.
+     * Get the item originalStack limit for the given slot.
      */
     public int getStackLimit(int slot) {
         return slots.get(slot).stackLimit;
@@ -92,7 +92,7 @@ public class MachineInventoryLayout {
     }
 
     /**
-     * Test if an item stack is valid for the given slot.
+     * Test if an item originalStack is valid for the given slot.
      */
     public boolean isItemValid(int slot, ItemStack stack) {
         return slots.get(slot).filter.test(slot, stack);
@@ -118,7 +118,7 @@ public class MachineInventoryLayout {
         // region Stack limit helper
 
         /**
-         * Set the stack limit for the next slots to be added.
+         * Set the originalStack limit for the next slots to be added.
          */
         public Builder setStackLimit(int limit) {
             currentStackLimit = limit;
@@ -427,7 +427,7 @@ public class MachineInventoryLayout {
             }
 
             /**
-             * Set the stack limit.
+             * Set the originalStack limit.
              */
             public SlotBuilder stackLimit(int limit) {
                 this.stackLimit = Math.max(Math.min(limit, 64), 0);

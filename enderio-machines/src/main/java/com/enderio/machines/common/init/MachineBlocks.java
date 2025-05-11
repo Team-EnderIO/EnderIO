@@ -23,8 +23,10 @@ import com.enderio.machines.common.blocks.base.block.ProgressMachineBlock;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.blocks.block_detector.BlockDetectorBlock;
 import com.enderio.machines.common.blocks.enchanter.EnchanterBlock;
+import com.enderio.machines.common.blocks.enderface.EnderfaceBlock;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlock;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockItem;
+import com.enderio.machines.common.blocks.obelisks.attractor.AttractorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlockEntity;
@@ -38,7 +40,9 @@ import com.enderio.machines.common.blocks.travel_anchor.TravelAnchorBlockEntity;
 import com.enderio.machines.common.blocks.vacuum.chest.VacuumChestBlockEntity;
 import com.enderio.machines.common.blocks.vacuum.xp.XPVacuumBlockEntity;
 import com.enderio.machines.common.blocks.vat.VatBlock;
+import com.enderio.machines.common.blocks.wireless_charger.WirelessAntennaBlock;
 import com.enderio.machines.common.item.CapacitorBankItem;
+import com.enderio.machines.common.tag.MachineTags;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.enderio.regilite.data.DataGenContext;
@@ -126,8 +130,19 @@ public class MachineBlocks {
             .setBlockStateProvider(MachineModelUtil::machineBlock)
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
-    public static final RegiliteBlock<ProgressMachineBlock<?>> PRIMITIVE_ALLOY_SMELTER = progressMachine(
-            "primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER);
+    public static final RegiliteBlock<EnderfaceBlock> ENDERFACE = BLOCK_REGISTRY
+            .registerBlock("enderface", EnderfaceBlock::new,
+                    BlockBehaviour.Properties.of()
+                            .strength(2.5f, 8)
+                            .noOcclusion()
+                            .isViewBlocking((pState, pLevel, pPos) -> false)
+                            .requiredFeatures(MachineFeatureFlags.ENDERFACE))
+            .setLootTable(MachinesLootTable::copyComponents)
+            .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+            .setTranslation("Ender IO")
+            .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+                    prov.models().cubeAll("enderface", EnderIO.loc("block/enderface")).renderType("translucent")))
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
     public static final RegiliteBlock<ProgressMachineBlock<?>> ALLOY_SMELTER = progressMachine("alloy_smelter",
             () -> MachineBlockEntities.ALLOY_SMELTER);
@@ -137,6 +152,15 @@ public class MachineBlocks {
 
     public static final RegiliteBlock<MachineBlock<?>> WIRED_CHARGER = machine("wired_charger",
             () -> MachineBlockEntities.WIRED_CHARGER);
+
+    public static final RegiliteBlock<ProgressMachineBlock<?>> WIRELESS_CHARGER = progressMachine("wireless_charger",
+            () -> MachineBlockEntities.WIRELESS_CHARGER);
+
+    public static final RegiliteBlock<WirelessAntennaBlock> WIRELESS_CHARGER_ANTENNA = wirelessAntenna(
+            "wireless_charger_antenna", "Pulsating Wireless Antenna");
+
+    public static final RegiliteBlock<WirelessAntennaBlock> WIRELESS_CHARGER_ANTENNA_ADVANCED = wirelessAntenna(
+            "wireless_charger_antenna_advanced", "Vibrant Wireless Antenna");
 
     public static final RegiliteBlock<LegacyMachineBlock> CREATIVE_POWER = BLOCK_REGISTRY
             .registerBlock("creative_power",
@@ -271,6 +295,15 @@ public class MachineBlocks {
             .setTranslation("XP Obelisk")
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
+    public static final RegiliteBlock<ProgressMachineBlock> FARMING_STATION = BLOCK_REGISTRY.registerBlock(
+            "farming_station", properties -> new ProgressMachineBlock(MachineBlockEntities.FARMING_STATION, properties),
+            BlockBehaviour.Properties.of().strength(2.5f, 8).requiredFeatures(MachineFeatureFlags.FARMING_STATION))
+            .setLootTable(MachinesLootTable::copyComponents)
+            .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+            .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+                    prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
+
     public static final RegiliteBlock<MachineBlock<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK = BLOCK_REGISTRY
             .registerBlock("inhibitor_obelisk",
                     props -> new MachineBlock<>(MachineBlockEntities.INHIBITOR_OBELISK::get, props),
@@ -310,9 +343,22 @@ public class MachineBlocks {
                     prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
+    public static final RegiliteBlock<MachineBlock<AttractorObeliskBlockEntity>> ATTRACTOR_OBELISK = BLOCK_REGISTRY
+            .registerBlock("attractor_obelisk",
+                    props -> new MachineBlock<>(MachineBlockEntities.ATTRACTOR_OBELISK::get, props),
+                BlockBehaviour.Properties.of()
+                    .strength(2.5f, 8)
+                    .isViewBlocking((pState, pLevel, pPos) -> false)
+                    .noOcclusion())
+        .setLootTable(MachinesLootTable::copyComponents)
+        .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+            prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+        .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+
     public static final RegiliteBlock<MachineBlock<WeatherObeliskBlockEntity>> WEATHER_OBELISK = BLOCK_REGISTRY
-            .registerBlock("weather_obelisk",
-                    props -> new MachineBlock<>(MachineBlockEntities.WEATHER_OBELISK::get, props),
+        .registerBlock("weather_obelisk",
+            props -> new MachineBlock<>(MachineBlockEntities.WEATHER_OBELISK::get, props),
                     BlockBehaviour.Properties.of()
                             .strength(2.5f, 8)
                             .isViewBlocking((pState, pLevel, pPos) -> false)
@@ -376,6 +422,22 @@ public class MachineBlocks {
                                 .setTab(EIOCreativeTabs.MACHINES)
                                 .addCapability(Capabilities.EnergyStorage.ITEM,
                                         CapacitorBankItem.ENERGY_STORAGE_PROVIDER));
+    }
+
+    private static RegiliteBlock<WirelessAntennaBlock> wirelessAntenna(String name, String translation) {
+        return BLOCK_REGISTRY
+                .registerBlock(name, WirelessAntennaBlock::new,
+                        BlockBehaviour.Properties.of()
+                                .strength(2.5f, 8)
+                                .isViewBlocking((pState, pLevel, pPos) -> false)
+                                .noOcclusion())
+                .setLootTable(MachinesLootTable::copyComponents)
+                .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE,
+                        MachineTags.Blocks.RANGE_EXTENDER)
+                .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+                        prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+                .setTranslation(translation)
+                .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
     }
 
     public static void register(IEventBus bus) {

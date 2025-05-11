@@ -61,14 +61,6 @@ neoForge {
     }
 
     mods {
-        register("endercore") {
-            dependency(project(":endercore"))
-        }
-
-        register("enderio_base") {
-            sourceSet(project(":enderio-base").sourceSets["main"])
-        }
-
         create("enderio_machines") {
             sourceSet(sourceSets["main"])
         }

@@ -110,7 +110,7 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(pIndex);
 
-        // Clear the ghost slot but don't actually take the stack.
+        // Clear the ghost slot but don't actually take the originalStack.
         if (slot instanceof GhostMachineSlot) {
             slot.set(ItemStack.EMPTY);
             return itemstack;
@@ -161,10 +161,10 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
 
                 Slot slot = this.slots.get(i);
 
-                // Do not insertChannel into ghost slots
+                // Do not insert into ghost slots
                 if (!(slot instanceof GhostMachineSlot)) {
 
-                    // Do not insertChannel into a slot that cannot be inserted into normally.
+                    // Do not insert into a slot that cannot be inserted into normally.
                     if (!(slot instanceof MachineSlot machineSlot) || machineSlot.canQuickInsertStack()) {
 
                         ItemStack itemstack = slot.getItem();
@@ -212,17 +212,21 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
 
                 Slot slot1 = this.slots.get(i);
                 if (!(slot1 instanceof GhostMachineSlot)) {
-                    ItemStack itemstack1 = slot1.getItem();
-                    if (itemstack1.isEmpty() && slot1.mayPlace(stack)) {
-                        if (stack.getCount() > slot1.getMaxStackSize()) {
-                            slot1.set(stack.split(slot1.getMaxStackSize()));
-                        } else {
-                            slot1.set(stack.split(stack.getCount()));
-                        }
 
-                        slot1.setChanged();
-                        flag = true;
-                        break;
+                    // Do not insert into a slot that cannot be inserted into normally.
+                    if (!(slot1 instanceof MachineSlot machineSlot) || machineSlot.canQuickInsertStack()) {
+                        ItemStack itemstack1 = slot1.getItem();
+                        if (itemstack1.isEmpty() && slot1.mayPlace(stack)) {
+                            if (stack.getCount() > slot1.getMaxStackSize()) {
+                                slot1.set(stack.split(slot1.getMaxStackSize()));
+                            } else {
+                                slot1.set(stack.split(stack.getCount()));
+                            }
+
+                            slot1.setChanged();
+                            flag = true;
+                            break;
+                        }
                     }
                 }
 

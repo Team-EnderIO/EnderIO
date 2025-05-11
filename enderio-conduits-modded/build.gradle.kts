@@ -81,18 +81,6 @@ neoForge {
     }
 
     mods {
-        create("endercore") {
-            dependency(project(":endercore"))
-        }
-
-        create("enderio_base") {
-            sourceSet(project(":enderio-base").sourceSets["main"])
-        }
-
-        create("enderio_conduits") {
-            sourceSet(project(":enderio-conduits").sourceSets["main"])
-        }
-
         create("enderio_conduits_modded") {
             sourceSet(sourceSets.getByName("main"))
         }

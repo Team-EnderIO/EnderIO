@@ -1,33 +1,33 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIOBase;
+import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
-import com.enderio.base.common.capability.EntityFilterCapability;
-import com.enderio.base.common.capability.FluidFilterCapability;
-import com.enderio.base.common.capability.ItemFilterCapability;
+import com.enderio.base.common.filter.AbstractFilterItem;
+import com.enderio.base.common.filter.entity.EnderEntityFilterItem;
+import com.enderio.base.common.filter.fluid.EnderFluidFilterItem;
+import com.enderio.base.common.filter.item.general.EnderItemFilterItem;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
-import com.enderio.base.common.item.filter.EntityFilter;
-import com.enderio.base.common.item.filter.FluidFilter;
-import com.enderio.base.common.item.filter.ItemFilter;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.misc.CreativeTabIconItem;
 import com.enderio.base.common.item.misc.EnderiosItem;
 import com.enderio.base.common.item.misc.HangGliderItem;
 import com.enderio.base.common.item.misc.LocationPrintoutItem;
+import com.enderio.base.common.item.misc.LoreItem;
 import com.enderio.base.common.item.misc.MaterialItem;
 import com.enderio.base.common.item.tool.ColdFireIgniter;
 import com.enderio.base.common.item.tool.CoordinateSelectorItem;
 import com.enderio.base.common.item.tool.ElectromagnetItem;
-import com.enderio.base.common.item.tool.ExperienceRodItem;
 import com.enderio.base.common.item.tool.LevitationStaffItem;
 import com.enderio.base.common.item.tool.PoweredToggledItem;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.item.tool.TravelStaffItem;
+import com.enderio.base.common.item.tool.VoidVialItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.data.model.item.GliderItemModel;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
@@ -37,6 +37,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.Tags;
@@ -117,6 +118,11 @@ public class EIOItems {
 
     public static final RegiliteItem<MaterialItem> SKELETAL_CONTRACTOR = materialItem("skeletal_contractor");
     public static final RegiliteItem<MaterialItem> GUARDIAN_DIODE = materialItem("guardian_diode");
+
+    public static final RegiliteItem<LoreItem> SUSPICIOUS_SEED = ITEM_REGISTRY
+            .registerItem("suspicious_seed", props -> new LoreItem(props, true, EIOLang.SUSPICIOUS_SEED_LORE),
+                    new Item.Properties().rarity(Rarity.RARE))
+            .setTab(EIOCreativeTabs.MAIN);
 
     // endregion
 
@@ -334,8 +340,7 @@ public class EIOItems {
     // return tempMap;
     // });
 
-    // public static final RegiliteItem<HangGliderItem> GLIDER =
-    // gliderItem("glider");
+    public static final RegiliteItem<HangGliderItem> GLIDER = gliderItem("glider");
 
     private static RegiliteItem<MaterialItem> grindingBall(String name, GrindingBallData grindingBallData) {
         return ITEM_REGISTRY
@@ -351,9 +356,8 @@ public class EIOItems {
     // region Builders
 
     private static RegiliteItem<HangGliderItem> gliderItem(String name) {
-        return dumbItem(name, HangGliderItem::new).addItemTags(EIOTags.Items.GLIDER)
-                .setTab(EIOCreativeTabs.MAIN)
-                .setModelProvider((prov, ctx) -> GliderItemModel.create(ctx.get(), prov));
+        return dumbItem(name, HangGliderItem::new).addItemTags(EIOTags.Items.GLIDER).setTab(EIOCreativeTabs.GEAR)
+        /* .setModelProvider((prov, ctx) -> GliderItemModel.create(ctx.get(), prov)) */;
     }
 
     private static RegiliteItem<MaterialItem> materialItem(String name) {
@@ -399,8 +403,9 @@ public class EIOItems {
             .registerItem("coordinate_selector", CoordinateSelectorItem::new, new Item.Properties().stacksTo(1))
             .setTab(EIOCreativeTabs.GEAR);
 
-    public static final RegiliteItem<ExperienceRodItem> EXPERIENCE_ROD = ITEM_REGISTRY
-            .registerItem("experience_rod", ExperienceRodItem::new)
+    public static final RegiliteItem<VoidVialItem> VOID_VIAL = ITEM_REGISTRY
+            .registerItem("void_vial", VoidVialItem::new)
+            .setTranslation("Vial of the Void")
             .setTab(EIOCreativeTabs.GEAR);
 
     public static final RegiliteItem<LevitationStaffItem> LEVITATION_STAFF = ITEM_REGISTRY
@@ -441,34 +446,45 @@ public class EIOItems {
 
     // region filter
 
-    public static final RegiliteItem<ItemFilter> BASIC_ITEM_FILTER = ITEM_REGISTRY
-            .registerItem("basic_filter",
-                    properties -> new ItemFilter(
-                            properties.component(EIODataComponents.ITEM_FILTER, new ItemFilterCapability.Component(5))))
+    public static final RegiliteItem<EnderItemFilterItem> BASIC_ITEM_FILTER = ITEM_REGISTRY
+            .registerItem("basic_item_filter", props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.BASIC))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
+            .addCapability(EIOCapabilities.ITEM_FILTER, EnderItemFilterItem.ITEM_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 
-    public static final RegiliteItem<ItemFilter> ADVANCED_ITEM_FILTER = ITEM_REGISTRY
-            .registerItem("advanced_filter",
-                    properties -> new ItemFilter(properties.component(EIODataComponents.ITEM_FILTER,
-                            new ItemFilterCapability.Component(10))))
+    public static final RegiliteItem<EnderItemFilterItem> ADVANCED_ITEM_FILTER = ITEM_REGISTRY
+            .registerItem("advanced_item_filter",
+                    props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.ADVANCED))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.Filter.ITEM, ItemFilter.FILTER_PROVIDER);
+            .addCapability(EIOCapabilities.ITEM_FILTER, EnderItemFilterItem.ITEM_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 
-    public static final RegiliteItem<FluidFilter> BASIC_FLUID_FILTER = ITEM_REGISTRY
-            .registerItem("fluid_filter",
-                    properties -> new FluidFilter(properties.component(EIODataComponents.FLUID_FILTER,
-                            new FluidFilterCapability.Component(5))))
+    public static final RegiliteItem<EnderItemFilterItem> BIG_ITEM_FILTER = ITEM_REGISTRY
+            .registerItem("big_item_filter", props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.BIG))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.Filter.ITEM, FluidFilter.FILTER_PROVIDER);
+            .addCapability(EIOCapabilities.ITEM_FILTER, EnderItemFilterItem.ITEM_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 
-    public static final RegiliteItem<EntityFilter> ENTITY_FILTER = ITEM_REGISTRY
-            .registerItem("entity_filter",
-                    properties -> new EntityFilter(properties.component(EIODataComponents.ENTITY_FILTER,
-                            new EntityFilterCapability.Component(5))))
-            .setTranslation("Soul Filter")
+    public static final RegiliteItem<EnderItemFilterItem> BIG_ADVANCED_ITEM_FILTER = ITEM_REGISTRY
+            .registerItem("big_advanced_item_filter",
+                    props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.BIG_ADVANCED))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.Filter.ITEM, EntityFilter.ENTITY_FILTER);
+            .addCapability(EIOCapabilities.ITEM_FILTER, EnderItemFilterItem.ITEM_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
+
+    public static final RegiliteItem<EnderFluidFilterItem> BASIC_FLUID_FILTER = ITEM_REGISTRY
+            .registerItem("basic_fluid_filter",
+                    props -> new EnderFluidFilterItem(props, EnderFluidFilterItem.Type.BASIC))
+            .setTab(EIOCreativeTabs.GEAR)
+            .addCapability(EIOCapabilities.FLUID_FILTER, EnderFluidFilterItem.FLUID_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
+
+    public static final RegiliteItem<EnderEntityFilterItem> BASIC_ENTITY_FILTER = ITEM_REGISTRY
+            .registerItem("basic_soul_filter",
+                    props -> new EnderEntityFilterItem(props, EnderEntityFilterItem.Type.BASIC))
+            .setTab(EIOCreativeTabs.GEAR)
+            .addCapability(EIOCapabilities.ENTITY_FILTER, EnderEntityFilterItem.ENTITY_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 
     // endregion
 
@@ -525,6 +541,14 @@ public class EIOItems {
     // endregion
 
     public static void register(IEventBus bus) {
+    
+        ITEM_REGISTRY.addAlias(EnderIO.loc("experience_rod"), VOID_VIAL.getId());
+
+        ITEM_REGISTRY.addAlias(EnderIO.loc("basic_filter"), BASIC_ITEM_FILTER.getId());
+        ITEM_REGISTRY.addAlias(EnderIO.loc("advanced_filter"), ADVANCED_ITEM_FILTER.getId());
+        ITEM_REGISTRY.addAlias(EnderIO.loc("fluid_filter"), BASIC_FLUID_FILTER.getId());
+        ITEM_REGISTRY.addAlias(EnderIO.loc("entity_filter"), BASIC_ENTITY_FILTER.getId());
+
         ITEM_REGISTRY.register(bus);
     }
 }

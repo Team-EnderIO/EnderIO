@@ -35,6 +35,10 @@ dependencies {
     api(project(":enderio-base"))
     accessTransformers(project(":enderio-base"))
 
+    api(project(":enderio-machines"))
+    accessTransformers(project(":enderio-machines"))
+    accessTransformersElements(project(":enderio-machines"))
+
     // JEI
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge-api:$jeiVersion")
@@ -61,16 +65,5 @@ neoForge {
     }
 
     mods {
-        create("endercore") {
-            dependency(project(":endercore"))
-        }
-
-        create("enderio") {
-            sourceSet(project(":enderio-base").sourceSets["main"])
-        }
-
-        create("enderio_armory") {
-            sourceSet(sourceSets["main"])
-        }
     }
 }

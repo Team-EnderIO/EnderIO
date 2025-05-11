@@ -4,7 +4,12 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -18,22 +23,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 @SuppressWarnings("unused")
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID)
@@ -44,7 +38,8 @@ public class FireCraftingHandler {
     private static List<RecipeHolder<FireCraftingRecipe>> cachedRecipes;
     private static boolean recipesCached = false;
 
-    private record FireIndex(BlockPos pos, ResourceKey<Level> dimension) {}
+    private record FireIndex(BlockPos pos, ResourceKey<Level> dimension) {
+    }
 
     @SubscribeEvent
     public static void onRecipeUpdate(RecipesUpdatedEvent event) {
@@ -105,42 +100,48 @@ public class FireCraftingHandler {
     }
 
     public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, FireCraftingRecipe recipe) {
-        LootParams lootparams = (new LootParams.Builder(level)).withParameter(LootContextParams.ORIGIN, pos.getCenter()).create(LootContextParamSets.COMMAND);
+        boolean didDrop = false;
 
-        LootTable table = level.getServer().reloadableRegistries().getLootTable(recipe.lootTable());
+        for (var result : recipe.results()) {
+            float dropChance = level.getRandom().nextFloat();
+            if (dropChance < result.chance()) {
+                continue;
+            }
 
-        if (table != LootTable.EMPTY) {
-            ObjectArrayList<ItemStack> randomItems = table.getRandomItems(lootparams);
-            for (int i = 0; i < randomItems.size(); i++) {
-                if (i >= recipe.maxItemDrops()) {
-                    break;
-                }
+            int itemCount = level.getRandom().nextIntBetweenInclusive(result.minCount(), result.maxCount());
+            if (itemCount <= 0) {
+                continue;
+            }
 
-                ItemStack item = randomItems.get(i);
+            ItemStack resultStack = result.result().copy();
+            resultStack.setCount(itemCount);
 
-                // Get random offset
-                double x = RANDOM.nextFloat() * 0.5f + 0.25f;
-                double y = RANDOM.nextFloat() * 0.5f + 0.25f;
-                double z = RANDOM.nextFloat() * 0.5f + 0.25f;
-                ItemEntity itemEntity = new ItemEntity(level, pos.getX() + x, pos.getY() + y, pos.getZ() + z, item);
-                itemEntity.setDefaultPickUpDelay();
+            // Get random offset
+            double x = RANDOM.nextFloat() * 0.5f + 0.25f;
+            double y = RANDOM.nextFloat() * 0.5f + 0.25f;
+            double z = RANDOM.nextFloat() * 0.5f + 0.25f;
+            ItemEntity itemEntity = new ItemEntity(level, pos.getX() + x, pos.getY() + y, pos.getZ() + z, resultStack);
+            itemEntity.setDefaultPickUpDelay();
 
-                // Make it survive the fire for a bit
-                itemEntity.hurt(itemEntity.damageSources().inFire(), -100);
+            // Make it survive the fire for a bit
+            itemEntity.hurt(itemEntity.damageSources().inFire(), -100);
 
-                // Actually set it on fire
-                itemEntity.setRemainingFireTicks(10);
-                level.addFreshEntity(itemEntity);
+            // Actually set it on fire
+            itemEntity.setRemainingFireTicks(10);
+            level.addFreshEntity(itemEntity);
+            didDrop = true;
+        }
 
-                // Play explosion sound
-                if (BaseConfig.COMMON.INFINITY.MAKES_SOUND.get()) {
-                    level.playSound(null, pos, SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, SoundSource.BLOCKS, 1.0f, RANDOM.nextFloat() * 0.4f + 0.8f);
-                }
+        if (didDrop) {
+            // Play explosion sound
+            if (BaseConfig.COMMON.INFINITY.MAKES_SOUND.get()) {
+                level.playSound(null, pos, SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, SoundSource.BLOCKS, 1.0f,
+                        RANDOM.nextFloat() * 0.4f + 0.8f);
+            }
 
-                // Replace the base (if applicable)
-                if (recipe.blockAfterBurning().isPresent()) {
-                    level.setBlock(pos.below(), recipe.blockAfterBurning().get().defaultBlockState(), Block.UPDATE_ALL);
-                }
+            // Replace the base (if applicable)
+            if (recipe.blockAfterBurning().isPresent()) {
+                level.setBlock(pos.below(), recipe.blockAfterBurning().get().defaultBlockState(), Block.UPDATE_ALL);
             }
         }
     }
@@ -151,7 +152,8 @@ public class FireCraftingHandler {
         var level = event.getLevel();
 
         if (!FIRE_TRACKER.isEmpty() && !level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
-            // Create a list of positions that need to be turned to air. Fixes issues with the fire tracker being modified while we iterate
+            // Create a list of positions that need to be turned to air. Fixes issues with
+            // the fire tracker being modified while we iterate
             List<BlockPos> blocksToClear = new ArrayList<>();
 
             // Search for any fires that are due to spawn drops.

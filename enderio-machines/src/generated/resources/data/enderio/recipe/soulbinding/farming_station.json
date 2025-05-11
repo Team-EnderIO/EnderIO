@@ -1,0 +1,13 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 188000,
+  "experience": 5,
+  "input": {
+    "item": "enderio:farming_station"
+  },
+  "output": {
+    "count": 1,
+    "id": "enderio:farming_station"
+  },
+  "soul_data": "farm"
+}

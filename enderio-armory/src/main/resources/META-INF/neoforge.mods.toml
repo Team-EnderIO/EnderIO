@@ -11,6 +11,7 @@ authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rov
 description="The Ender IO Armory module."
 displayURL="https://enderio.com/"
 logoFile="logo.png"
+featureFlags="META-INF/feature_flags.json"
 
 [[dependencies.enderio_armory]]
 modId="minecraft"

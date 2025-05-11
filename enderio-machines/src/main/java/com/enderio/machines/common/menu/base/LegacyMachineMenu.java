@@ -104,7 +104,7 @@ public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> exte
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(pIndex);
 
-        // Clear the ghost slot but don't actually take the stack.
+        // Clear the ghost slot but don't actually take the originalStack.
         if (slot instanceof GhostMachineSlot) {
             slot.set(ItemStack.EMPTY);
             return itemstack;

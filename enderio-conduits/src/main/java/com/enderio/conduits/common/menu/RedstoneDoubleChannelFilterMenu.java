@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.menu;
 
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.conduits.common.network.DoubleChannelPacket;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
@@ -26,7 +27,12 @@ public class RedstoneDoubleChannelFilterMenu extends AbstractContainerMenu {
     protected RedstoneDoubleChannelFilterMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ItemStack pStack) {
         super(pMenuType, pContainerId);
         this.stack = pStack;
-        var resourceFilter = pStack.getCapability(EIOCapabilities.Filter.ITEM);
+
+        // TODO: Gross workaround, I think these menus should be rewritten sometime.
+        Object resourceFilter = pStack.getCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER);
+        if (resourceFilter == null) {
+            resourceFilter = pStack.getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
+        }
         if (!(resourceFilter instanceof RedstoneInsertFilter filter)) {
             throw new IllegalArgumentException();
         }

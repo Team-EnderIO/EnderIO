@@ -25,7 +25,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
@@ -39,7 +38,7 @@ public class EnderIOConduits {
     public static Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
 
     public EnderIOConduits(IEventBus modEventBus, ModContainer modContainer) {
-        Conduits.register(modEventBus);
+        Conduits.register();
         ConduitTypes.register(modEventBus);
         ConduitBlockEntities.register(modEventBus);
         ConduitMenus.register(modEventBus);
@@ -56,6 +55,8 @@ public class EnderIOConduits {
     public static void onNewRegistries(NewRegistryEvent event) {
         event.register(EnderIOConduitsRegistries.CONDUIT_TYPE);
         event.register(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE);
+        event.register(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE);
+        event.register(EnderIOConduitsRegistries.CONDUIT_NODE_DATA_TYPE);
         event.register(EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE);
     }
 
@@ -66,20 +67,17 @@ public class EnderIOConduits {
 
     @SubscribeEvent
     public static void onData(GatherDataEvent event) {
-        var pack = event.getGenerator().getVanillaPack(true);
-        var registries = event.getLookupProvider();
-
-        var datapackEntriesProvider = pack.addProvider(output -> new DatapackBuiltinEntriesProvider(output, registries,
-                createDatapackEntriesBuilder(), Set.of(EnderIO.NAMESPACE, MODULE_MOD_ID)));
+        event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), Set.of(EnderIO.NAMESPACE, MODULE_MOD_ID));
 
         PackOutput packOutput = event.getGenerator().getPackOutput();
+        var registries = event.getLookupProvider();
 
         EIODataProvider provider = new EIODataProvider("conduits");
 
         provider.addSubProvider(event.includeServer(),
                 new ConduitTagProvider(packOutput, registries, event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(),
-                new ConduitRecipes(packOutput, datapackEntriesProvider.getRegistryProvider()));
+
+        provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, registries));
 
         event.getGenerator().addProvider(true, provider);
     }

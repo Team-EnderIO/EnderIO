@@ -2,8 +2,10 @@ package com.enderio.machines.common.blocks.obelisks;
 
 import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.capacitor.CapacitorScalable;
+import com.enderio.base.api.filter.EntityFilter;
 import com.enderio.base.api.io.IOMode;
 import com.enderio.base.api.io.energy.EnergyIOMode;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.attachment.RangedActor;
@@ -11,9 +13,11 @@ import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEn
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
 import com.enderio.machines.common.blocks.base.state.MachineState;
+import com.enderio.machines.common.blocks.base.state.MachineStateType;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.io.IOConfig;
+import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.obelisk.ObeliskAreaManager;
 import java.util.Objects;
 import javax.annotation.Nullable;
@@ -23,6 +27,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -36,7 +41,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
     private @Nullable AABB aabb;
     public static SingleSlotAccess FILTER = new SingleSlotAccess();
 
-    private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);
+    private static final ActionRange DEFAULT_RANGE = new ActionRange(0, false);
 
     private ActionRange actionRange = DEFAULT_RANGE;
 
@@ -61,6 +66,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
                 manager.register((T) this);
             }
         }
+        updateFilterState();
     }
 
     @Override
@@ -90,7 +96,13 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
 
     @Override
     public boolean isActive() {
-        return canAct();
+        return canAct() && getEnergyStorage().getEnergyStored() >= getPerTickEnergyCost()
+                && (!requiresFilter() || getEntityFilter() != null);
+    }
+
+    @Nullable
+    protected EntityFilter getEntityFilter() {
+        return FILTER.getItemStack(this).getCapability(EIOCapabilities.ENTITY_FILTER);
     }
 
     @Override
@@ -110,10 +122,58 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
         }
     }
 
+    protected void updateFilterState() {
+        updateMachineState(new MachineState(MachineStateType.ERROR, MachineLang.NO_SOUL_FILTER),
+                requiresFilter() && getEntityFilter() == null);
+    }
+
+    @Override
+    protected void updateCapacitorData() {
+        if (level == null || level.isClientSide()) {
+            super.updateCapacitorData();
+            return;
+        }
+
+        int oldMaxRange = getMaxRange();
+        super.updateCapacitorData();
+        int newMaxRange = getMaxRange();
+        if (newMaxRange != oldMaxRange) {
+            int newRange = getRange();
+            if (newRange <= 0 || getRange() == oldMaxRange) {
+                // If the range was 0 (not cap) or was already at max auto increase to the new
+                // max
+                newRange = newMaxRange;
+            } else {
+                // Either reduced the max or had a custom range so just ensure it's in bounds
+                newRange = Math.min(getRange(), newMaxRange);
+            }
+            setActionRange(new ActionRange(newRange, getActionRange().isVisible()));
+        }
+    }
+
+    @Override
+    protected void onInventoryContentsChanged(int slot) {
+        super.onInventoryContentsChanged(slot);
+        updateFilterState();
+    }
+
+    @Override
+    public int getMaxRange() {
+        return 32;
+    }
+
     @Override
     public void serverTick() {
         updateMachineState(MachineState.ACTIVE, isActive()); // No powered model state, so it needs to be done manually
         super.serverTick();
+        if (isActive()) {
+            int amount = getPerTickEnergyCost();
+            getEnergyStorage().consumeEnergy(amount);
+        }
+    }
+
+    public int getPerTickEnergyCost() {
+        return Mth.ceil(getMaxEnergyUse() * ((float) getRange() / getMaxRange()));
     }
 
     @Override
@@ -129,6 +189,10 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
 
     public @Nullable AABB getAABB() {
         return aabb;
+    }
+
+    public boolean requiresFilter() {
+        return true;
     }
 
     @Override

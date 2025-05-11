@@ -1,6 +1,5 @@
 package com.enderio.machines.common.block;
 
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.mojang.serialization.Codec;
@@ -106,13 +105,6 @@ public class LegacyMachineBlock extends BaseEntityBlock {
         BlockEntity entity = level.getBlockEntity(pos);
         if (!(entity instanceof LegacyMachineBlockEntity machineBlockEntity)) { // This also covers nulls
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        }
-
-        if (!level.isClientSide && stack.is(EIOTags.Items.WRENCH)) {
-            var res = machineBlockEntity.onWrenched(player, hit.getDirection());
-            if (res != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
-                return res;
-            }
         }
 
         var result = machineBlockEntity.onBlockEntityUsed(state, level, pos, player, interactionHand, hit);
