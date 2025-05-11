@@ -3,10 +3,13 @@
     "enderio:fluid_tank",
     "enderio:pressurized_fluid_tank",
     "enderio:enchanter",
-    "enderio:primitive_alloy_smelter",
+    "enderio:enderface",
     "enderio:alloy_smelter",
     "enderio:painting_machine",
     "enderio:wired_charger",
+    "enderio:wireless_charger",
+    "enderio:wireless_charger_antenna",
+    "enderio:wireless_charger_antenna_advanced",
     "enderio:stirling_generator",
     "enderio:sag_mill",
     "enderio:slice_and_splice",
@@ -29,9 +32,11 @@
     "enderio:vat",
     "enderio:block_detector",
     "enderio:xp_obelisk",
+    "enderio:farming_station",
     "enderio:inhibitor_obelisk",
     "enderio:aversion_obelisk",
     "enderio:relocator_obelisk",
+    "enderio:attractor_obelisk",
     "enderio:weather_obelisk"
   ]
 }

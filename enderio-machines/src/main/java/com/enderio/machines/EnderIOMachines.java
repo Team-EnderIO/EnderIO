@@ -32,7 +32,6 @@ import com.enderio.machines.data.recipes.SagMillRecipeProvider;
 import com.enderio.machines.data.recipes.SlicingRecipeProvider;
 import com.enderio.machines.data.recipes.SoulBindingRecipeProvider;
 import com.enderio.machines.data.recipes.TankRecipeProvider;
-import com.enderio.machines.data.recipes.WeatherChangeRecipeProvider;
 import com.enderio.machines.data.souldata.SoulDataProvider;
 import com.enderio.machines.data.tag.MachineBlockTagsProvider;
 import com.enderio.machines.data.tag.MachineEntityTypeTagsProvider;

@@ -1,8 +1,0 @@
-{
-  "type": "enderio:weather_change",
-  "fluid": {
-    "amount": 1000,
-    "id": "enderio:fluid_liquid_sunshine_still"
-  },
-  "mode": "clear"
-}

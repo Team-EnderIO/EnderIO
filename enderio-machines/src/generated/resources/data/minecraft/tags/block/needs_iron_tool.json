@@ -29,6 +29,7 @@
     "enderio:inhibitor_obelisk",
     "enderio:aversion_obelisk",
     "enderio:relocator_obelisk",
-    "enderio:attractor_obelisk"
+    "enderio:attractor_obelisk",
+    "enderio:weather_obelisk"
   ]
 }
