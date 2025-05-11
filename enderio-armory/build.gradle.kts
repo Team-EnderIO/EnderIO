@@ -65,5 +65,8 @@ neoForge {
     }
 
     mods {
+        register("enderio_armory") {
+            sourceSet(sourceSets["main"])
+        }
     }
 }
