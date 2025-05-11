@@ -105,7 +105,7 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
 
             // Test fluid against insert filter.
             var insertFilter = insertConnection.inventory()
-                    .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
+                    .getStackInSlot(FluidConduit.INSERT_FILTER_SLOT)
                     .getCapability(EIOCapabilities.FLUID_FILTER);
 
             if (insertFilter != null) {

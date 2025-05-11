@@ -177,7 +177,11 @@ public class ConduitNetworkSavedData extends SavedData {
 
     private void tick(ServerLevel serverLevel) {
         // Only remove empty graphs here
-        networks.values().removeIf(network -> network.isValid() && network.isEmpty());
+        networks.values()
+                .stream()
+                .filter(n -> !n.isValid() || n.isEmpty())
+                .toList() // avoid CME
+                .forEach(this::onNetworkDiscarded);
 
         Registry<Conduit<?, ?>> conduitRegistry = serverLevel.registryAccess()
                 .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT);

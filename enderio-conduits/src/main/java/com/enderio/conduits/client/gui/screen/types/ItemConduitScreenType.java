@@ -91,7 +91,7 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
 
         // Redstone control
         var redstoneChannelWidget = screen.addColorPicker(startX + 16 + 4, startY + 40, ConduitLang.REDSTONE_CHANNEL,
-                () -> dataAccess.getConnectionConfig().receiveRedstoneChannel(),
+                () -> dataAccess.getConnectionConfig().extractRedstoneChannel(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneChannel(value)));
 
         // Only show the redstone widget when redstone control is sensitive to signals.

@@ -1015,7 +1015,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             hasRedstoneSignal = level.hasNeighborSignal(getBlockPos());
         }
 
-        if (level == null && !level.isClientSide()) {
+        if (level != null && !level.isClientSide()) {
             for (var node : conduitNodes.values()) {
                 node.onRedstoneChanged();
             }

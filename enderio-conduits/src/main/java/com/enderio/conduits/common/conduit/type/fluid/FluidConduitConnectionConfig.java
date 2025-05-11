@@ -26,7 +26,7 @@ public record FluidConduitConnectionConfig(boolean isInsert, DyeColor insertColo
             .group(Codec.BOOL.fieldOf("is_insert").forGetter(FluidConduitConnectionConfig::isInsert),
                     DyeColor.CODEC.fieldOf("insert_color").forGetter(FluidConduitConnectionConfig::insertColor),
                     Codec.BOOL.fieldOf("is_extract").forGetter(FluidConduitConnectionConfig::isExtract),
-                    DyeColor.CODEC.fieldOf("extract_channel").forGetter(FluidConduitConnectionConfig::extractColor),
+                    DyeColor.CODEC.fieldOf("extract_color").forGetter(FluidConduitConnectionConfig::extractColor),
                     RedstoneControl.CODEC.fieldOf("extract_redstone_control")
                             .forGetter(FluidConduitConnectionConfig::extractRedstoneControl),
                     DyeColor.CODEC.fieldOf("extract_redstone_channel")

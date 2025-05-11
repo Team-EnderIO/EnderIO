@@ -108,7 +108,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
                 if (config.extractRedstoneControl() == RedstoneControl.NEVER_ACTIVE) {
                     isMutable = false;
                 } else if (config.extractRedstoneControl() != RedstoneControl.ALWAYS_ACTIVE) {
-                    boolean hasRedstone = node.hasRedstoneSignal(config.receiveRedstoneChannel());
+                    boolean hasRedstone = node.hasRedstoneSignal(config.extractRedstoneChannel());
                     if (!hasRedstone) {
                         for (Direction direction : Direction.values()) {
                             if (level.getSignal(node.pos().relative(direction), direction.getOpposite()) > 0) {

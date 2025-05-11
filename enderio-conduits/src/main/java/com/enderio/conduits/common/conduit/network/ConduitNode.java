@@ -141,9 +141,12 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
     }
 
     public void markDirty() {
-        ensureValid();
-        // noinspection DataFlowIssue
-        conduitBundle.markNodesDirty();
+        // No-op if we're loading chunks, just in case.
+        if (!isLoaded()) {
+            ensureValid();
+            // noinspection DataFlowIssue
+            conduitBundle.markNodesDirty();
+        }
     }
 
     // region Node Data

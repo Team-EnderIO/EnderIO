@@ -59,9 +59,15 @@ public class EnergyConduitNetworkContext implements ConduitNetworkContext<Energy
 
     @Override
     public EnergyConduitNetworkContext split(IConduitNetwork selfNetwork, Set<? extends IConduitNetwork> allNetworks) {
+        int totalNodes = allNetworks.stream().map(IConduitNetwork::nodeCount).reduce(0, Integer::sum);
+
+        // Avoid any divide by zero errors, even though they should never occur.
+        if (totalNodes == 0) {
+            return new EnergyConduitNetworkContext(0);
+        }
+
         // Split stored energy based on the network size difference.
-        float proportion = selfNetwork.nodeCount()
-                / (float) allNetworks.stream().map(IConduitNetwork::nodeCount).reduce(0, Integer::sum);
+        float proportion = selfNetwork.nodeCount() / (float) totalNodes;
         return new EnergyConduitNetworkContext((int) Math.floor(proportion * energyStored));
     }
 
