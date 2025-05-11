@@ -347,8 +347,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
                     for (var sender : insertConnectionsByChannel.get(ioConnectionConfig.extractColor())) {
                         if (sender != connection) {
-                            extractConnectionsByInsert.computeIfAbsent(sender, k -> new ArrayList<>())
-                                    .add(connection);
+                            extractConnectionsByInsert.computeIfAbsent(sender, k -> new ArrayList<>()).add(connection);
                         }
                     }
                 }

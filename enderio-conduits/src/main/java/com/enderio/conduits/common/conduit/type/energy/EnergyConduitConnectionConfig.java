@@ -16,7 +16,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 
 public record EnergyConduitConnectionConfig(boolean isInsert, boolean isExtract, RedstoneControl extractRedstoneControl,
-                                            DyeColor receiveRedstoneChannel) implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
+        DyeColor receiveRedstoneChannel) implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
     public static EnergyConduitConnectionConfig DEFAULT = new EnergyConduitConnectionConfig(true, true,
             RedstoneControl.ALWAYS_ACTIVE, DyeColor.RED);
@@ -89,7 +89,8 @@ public record EnergyConduitConnectionConfig(boolean isInsert, boolean isExtract,
     }
 
     public EnergyConduitConnectionConfig withIsInsert(boolean isExtract) {
-        return new EnergyConduitConnectionConfig(isExtract, this.isExtract, extractRedstoneControl, receiveRedstoneChannel);
+        return new EnergyConduitConnectionConfig(isExtract, this.isExtract, extractRedstoneControl,
+                receiveRedstoneChannel);
     }
 
     public EnergyConduitConnectionConfig withIsExtract(boolean isExtract) {

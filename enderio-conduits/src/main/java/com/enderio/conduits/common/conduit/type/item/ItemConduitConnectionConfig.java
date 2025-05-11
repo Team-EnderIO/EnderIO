@@ -16,9 +16,10 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 
-public record ItemConduitConnectionConfig(boolean isInsert, DyeColor insertColor, boolean isExtract, DyeColor extractColor,
-                                          RedstoneControl extractRedstoneControl, DyeColor receiveRedstoneChannel, boolean isRoundRobin,
-                                          boolean isSelfFeed, int priority) implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
+public record ItemConduitConnectionConfig(boolean isInsert, DyeColor insertColor, boolean isExtract,
+        DyeColor extractColor, RedstoneControl extractRedstoneControl, DyeColor receiveRedstoneChannel,
+        boolean isRoundRobin, boolean isSelfFeed, int priority)
+        implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
     public static ItemConduitConnectionConfig DEFAULT = new ItemConduitConnectionConfig(false, DyeColor.GREEN, true,
             DyeColor.GREEN, RedstoneControl.NEVER_ACTIVE, DyeColor.RED, false, false, 0);

@@ -70,8 +70,10 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
         }
     }
 
-    private int doFluidTransfer(Fluid fluid, int maxTransfer, ConduitBlockConnection extractConnection, List<ConduitBlockConnection> insertConnections) {
-        var extractHandler = Objects.requireNonNull(extractConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK));
+    private int doFluidTransfer(Fluid fluid, int maxTransfer, ConduitBlockConnection extractConnection,
+            List<ConduitBlockConnection> insertConnections) {
+        var extractHandler = Objects
+                .requireNonNull(extractConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK));
 
         // Attempt to drain fluid from the target.
         FluidStack extractedFluid = extractHandler.drain(new FluidStack(fluid, maxTransfer),

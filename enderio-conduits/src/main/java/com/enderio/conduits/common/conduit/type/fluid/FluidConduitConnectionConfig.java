@@ -15,8 +15,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 
-public record FluidConduitConnectionConfig(boolean isInsert, DyeColor insertColor, boolean isExtract, DyeColor extractColor,
-                                           RedstoneControl extractRedstoneControl, DyeColor extractRedstoneChannel)
+public record FluidConduitConnectionConfig(boolean isInsert, DyeColor insertColor, boolean isExtract,
+        DyeColor extractColor, RedstoneControl extractRedstoneControl, DyeColor extractRedstoneChannel)
         implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
     public static FluidConduitConnectionConfig DEFAULT = new FluidConduitConnectionConfig(false, DyeColor.GREEN, true,
@@ -55,12 +55,14 @@ public record FluidConduitConnectionConfig(boolean isInsert, DyeColor insertColo
 
     @Override
     public ConnectionConfig reconnected() {
-        return new FluidConduitConnectionConfig(DEFAULT.isInsert, insertColor, DEFAULT.isExtract, extractColor, extractRedstoneControl, extractRedstoneChannel);
+        return new FluidConduitConnectionConfig(DEFAULT.isInsert, insertColor, DEFAULT.isExtract, extractColor,
+                extractRedstoneControl, extractRedstoneChannel);
     }
 
     @Override
     public ConnectionConfig disconnected() {
-        return new FluidConduitConnectionConfig(false, insertColor, false, extractColor, extractRedstoneControl, extractRedstoneChannel);
+        return new FluidConduitConnectionConfig(false, insertColor, false, extractColor, extractRedstoneControl,
+                extractRedstoneChannel);
     }
 
     @Override
@@ -92,27 +94,33 @@ public record FluidConduitConnectionConfig(boolean isInsert, DyeColor insertColo
     }
 
     public FluidConduitConnectionConfig withIsInsert(boolean isInsert) {
-        return new FluidConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl, extractRedstoneChannel);
+        return new FluidConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
+                extractRedstoneChannel);
     }
 
     public FluidConduitConnectionConfig withInsertColor(DyeColor insertColor) {
-        return new FluidConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl, extractRedstoneChannel);
+        return new FluidConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
+                extractRedstoneChannel);
     }
 
     public FluidConduitConnectionConfig withIsExtract(boolean isExtract) {
-        return new FluidConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl, extractRedstoneChannel);
+        return new FluidConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
+                extractRedstoneChannel);
     }
 
     public FluidConduitConnectionConfig withExtractColor(DyeColor extractColor) {
-        return new FluidConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl, extractRedstoneChannel);
+        return new FluidConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
+                extractRedstoneChannel);
     }
 
     public FluidConduitConnectionConfig withExtractRedstoneControl(RedstoneControl extractRedstoneControl) {
-        return new FluidConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl, extractRedstoneChannel);
+        return new FluidConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
+                extractRedstoneChannel);
     }
 
     public FluidConduitConnectionConfig withExtractRedstoneChannel(DyeColor extractRedstoneChannel) {
-        return new FluidConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl, extractRedstoneChannel);
+        return new FluidConduitConnectionConfig(isInsert, insertColor, isExtract, extractColor, extractRedstoneControl,
+                extractRedstoneChannel);
     }
 
     @Override

@@ -14,7 +14,6 @@ import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkC
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitTypes;
-
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
