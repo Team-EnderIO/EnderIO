@@ -19,13 +19,21 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -38,6 +46,7 @@ import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 @Mod(value = EnderIOBase.MODULE_MOD_ID, dist = Dist.CLIENT)
@@ -53,6 +62,19 @@ public class EnderIOBaseClient {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
         TravelTargetRendering.init();
+
+        //switch to item model component in 1.21.2
+        ItemProperties.register(EIOItems.ENDERIOS.asItem(), EnderIO.loc("inverted"), new ClampedItemPropertyFunction() {
+
+            @Override
+            public float unclampedCall(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity, int seed) {
+                Component name = itemStack.get(DataComponents.CUSTOM_NAME);
+                if (name != null && name.getContents() instanceof PlainTextContents literal && literal.text().equalsIgnoreCase("soiredne")) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
     }
 
     @SubscribeEvent

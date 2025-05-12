@@ -1,0 +1,14 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "enderio:item/enderios"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "enderio:inverted": 1
+            },
+            "model": "enderio:item/soiredne"
+        }
+    ]
+}
