@@ -305,7 +305,7 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
 
     @Nullable
     public Optional<ResourceLocation> getEntityTypeId() {
-        return Optional.ofNullable(boundSoul.entityTypeId());
+        return boundSoul.isEmpty() ? Optional.empty() : Optional.of(boundSoul.entityTypeId());
     }
 
     public void setEntityType(ResourceLocation entityType) {
