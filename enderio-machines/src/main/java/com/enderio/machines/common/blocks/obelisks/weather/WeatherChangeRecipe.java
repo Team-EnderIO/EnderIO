@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.ints.IntList;
 import java.util.List;
 import java.util.function.IntFunction;
 import net.minecraft.core.RegistryAccess;
@@ -15,7 +16,10 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.FireworkExplosion;
+import net.minecraft.world.item.component.Fireworks;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -74,7 +78,21 @@ public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode)
     }
 
     public enum WeatherMode implements StringRepresentable {
-        CLEAR("clear"), RAIN("rain"), LIGHTNING("lightning");
+        CLEAR("clear",
+                new Fireworks(2,
+                        List.of(new FireworkExplosion(FireworkExplosion.Shape.LARGE_BALL,
+                                IntList.of(DyeColor.YELLOW.getFireworkColor(), DyeColor.WHITE.getFireworkColor()),
+                                IntList.of(DyeColor.WHITE.getFireworkColor()), false, true)))),
+        RAIN("rain",
+                new Fireworks(2,
+                        List.of(new FireworkExplosion(FireworkExplosion.Shape.LARGE_BALL,
+                                IntList.of(DyeColor.BLUE.getFireworkColor(), DyeColor.LIGHT_BLUE.getFireworkColor()),
+                                IntList.of(DyeColor.LIGHT_BLUE.getFireworkColor()), false, true)))),
+        LIGHTNING("lightning",
+                new Fireworks(2,
+                        List.of(new FireworkExplosion(FireworkExplosion.Shape.LARGE_BALL,
+                                IntList.of(DyeColor.BLUE.getFireworkColor(), DyeColor.YELLOW.getFireworkColor()),
+                                IntList.of(DyeColor.YELLOW.getFireworkColor()), false, true))));
 
         public static final Codec<WeatherMode> CODEC = StringRepresentable.fromEnum(WeatherMode::values);
         public static final IntFunction<WeatherMode> BY_ID = ByIdMap.continuous(Enum::ordinal, values(),
@@ -82,14 +100,20 @@ public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode)
         public static final StreamCodec<ByteBuf, WeatherMode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID,
                 Enum::ordinal);
         private final String type;
+        private final Fireworks fireworks;
 
-        WeatherMode(String type) {
+        WeatherMode(String type, Fireworks fireworks) {
             this.type = type;
+            this.fireworks = fireworks;
         }
 
         @Override
         public String getSerializedName() {
             return type;
+        }
+
+        public Fireworks getFireworks() {
+            return fireworks;
         }
     }
 

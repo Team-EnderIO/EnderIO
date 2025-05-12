@@ -21,11 +21,14 @@ import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
@@ -37,6 +40,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class WeatherObeliskBlockEntity extends MachineBlockEntity implements FluidTankUser {
 
+    public static final ItemStack FIREWORK = new ItemStack(Items.FIREWORK_ROCKET, 1);
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
     public static final SingleSlotAccess ROCKET = new SingleSlotAccess();
@@ -47,7 +51,16 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
         fluidHandler = createFluidHandler();
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::canAcceptTask,
-                MachineRecipes.WEATHER_CHANGE.type().get(), this::createTask, this::createRecipeInput);
+                MachineRecipes.WEATHER_CHANGE.type().get(), this::createTask, this::createRecipeInput) {
+
+            @Override
+            protected boolean shouldStartNewTask() {
+                if (ROCKET.getItemStack(getInventory()).isEmpty()) {
+                    return true;
+                }
+                return super.shouldStartNewTask();
+            }
+        };
     }
 
     private WeatherChangeRecipe.Input createRecipeInput() {
@@ -68,7 +81,14 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
 
             @Override
             protected int makeProgress(int remainingProgress) {
-                return ROCKET.getItemStack(getInventory()).isEmpty() ? 0 : 1;
+                boolean hasRocket = !ROCKET.getItemStack(getInventory()).isEmpty();
+                boolean weatherDifferent = switch (getRecipe().mode()) {
+                case RAIN -> !level.isRaining();
+                case CLEAR -> level.isRaining() || level.isThundering();
+                case LIGHTNING -> !level.isThundering();
+                };
+                boolean sky = level.canSeeSky(getBlockPos().above());
+                return hasRocket && weatherDifferent && sky ? 1 : 0;
             }
 
             @Override
@@ -87,6 +107,9 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
                     case LIGHTNING -> server.setWeatherParameters(0,
                             ServerLevel.THUNDER_DURATION.sample(server.getRandom()), true, true);
                     }
+                    FIREWORK.set(DataComponents.FIREWORKS, getRecipe().mode().getFireworks());
+                    server.addFreshEntity(new FireworkRocketEntity(server, null, getBlockPos().getX() + 0.5,
+                            getBlockPos().getY() + 1.1, getBlockPos().getZ() + 0.5, FIREWORK));
                 }
                 return true;
             }
