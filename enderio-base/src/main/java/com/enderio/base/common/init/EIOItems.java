@@ -386,7 +386,6 @@ public class EIOItems {
             .registerItem("enderios", EnderiosItem::new, new Item.Properties().stacksTo(1))
             .setTab(EIOCreativeTabs.MAIN)
             .setTranslation("\"Enderios\"");
-
     // endregion
 
     // region Tools
@@ -541,7 +540,7 @@ public class EIOItems {
     // endregion
 
     public static void register(IEventBus bus) {
-    
+        ENDERIOS.setModelProvider((prov, ctx) -> {});
         ITEM_REGISTRY.addAlias(EnderIO.loc("experience_rod"), VOID_VIAL.getId());
 
         ITEM_REGISTRY.addAlias(EnderIO.loc("basic_filter"), BASIC_ITEM_FILTER.getId());
