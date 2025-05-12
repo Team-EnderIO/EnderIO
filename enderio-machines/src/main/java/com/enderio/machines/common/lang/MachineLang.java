@@ -106,6 +106,8 @@ public class MachineLang {
             "Efficiency %s%%");
     public static final MutableComponent NO_SOUL_FILTER = addTranslation("gui", EnderIO.loc("obelisk.no_soul_filter"),
             "No Soul Filter Installed");
+    public static final Component EMPTY_FLUID_TANK = addTranslation("gui", EnderIO.loc("empty_fluid_tank"),
+            "Empty Fluid Tank");
 
     // GUI BUTTONS
     public static final Component RETRIEVE_1 = addTranslation("gui", EnderIO.loc("button.retrieve_1_level"),
