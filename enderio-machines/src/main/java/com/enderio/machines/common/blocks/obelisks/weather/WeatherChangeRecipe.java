@@ -101,6 +101,18 @@ public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode)
                 Enum::ordinal);
         private final String type;
         private final Fireworks fireworks;
+        public static final Fireworks SURPRISE = new Fireworks(2,
+                List.of(new FireworkExplosion(FireworkExplosion.Shape.LARGE_BALL,
+                        IntList.of(DyeColor.RED.getFireworkColor(), DyeColor.ORANGE.getFireworkColor(),
+                                DyeColor.YELLOW.getFireworkColor(), DyeColor.GREEN.getFireworkColor(),
+                                DyeColor.BLUE.getFireworkColor(), DyeColor.PURPLE.getFireworkColor()),
+                        IntList.of(), true, true)));
+
+        public static final Fireworks SURPRISE_2 = new Fireworks(2,
+                List.of(new FireworkExplosion(
+                        FireworkExplosion.Shape.LARGE_BALL, IntList.of(DyeColor.LIGHT_BLUE.getFireworkColor(),
+                                DyeColor.PINK.getFireworkColor(), DyeColor.WHITE.getFireworkColor()),
+                        IntList.of(), true, true)));
 
         WeatherMode(String type, Fireworks fireworks) {
             this.type = type;

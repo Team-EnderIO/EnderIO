@@ -17,7 +17,6 @@ import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -37,6 +36,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Calendar;
+import java.util.List;
 
 public class WeatherObeliskBlockEntity extends MachineBlockEntity implements FluidTankUser {
 
@@ -107,7 +109,15 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
                     case LIGHTNING -> server.setWeatherParameters(0,
                             ServerLevel.THUNDER_DURATION.sample(server.getRandom()), true, true);
                     }
-                    FIREWORK.set(DataComponents.FIREWORKS, getRecipe().mode().getFireworks());
+                    Calendar calendar = Calendar.getInstance();
+                    int month = calendar.get(Calendar.MONTH);
+                    if (month == Calendar.JUNE) {
+                        FIREWORK.set(DataComponents.FIREWORKS, WeatherChangeRecipe.WeatherMode.SURPRISE);
+                    } else if (month == Calendar.MARCH && calendar.get(Calendar.DAY_OF_MONTH) == 31) {
+                        FIREWORK.set(DataComponents.FIREWORKS, WeatherChangeRecipe.WeatherMode.SURPRISE_2);
+                    } else {
+                        FIREWORK.set(DataComponents.FIREWORKS, getRecipe().mode().getFireworks());
+                    }
                     server.addFreshEntity(new FireworkRocketEntity(server, null, getBlockPos().getX() + 0.5,
                             getBlockPos().getY() + 1.1, getBlockPos().getZ() + 0.5, FIREWORK));
                 }
