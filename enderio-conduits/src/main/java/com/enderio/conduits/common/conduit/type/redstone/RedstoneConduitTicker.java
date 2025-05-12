@@ -39,12 +39,12 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
 
             // Fire block updates if the signal changed.
             if (context.isNew() || context.getSignal(channel) != context.getSignalLastTick(channel)) {
+
                 for (var insertConnection : network.insertConnections(channel)) {
                     level.updateNeighborsAt(insertConnection.node().pos(), ConduitBlocks.CONDUIT.get());
 
                     if (insertConnection.connectionConfig(RedstoneConduitConnectionConfig.TYPE).isStrongOutputSignal()) {
-                        level.updateNeighborsAtExceptFromFacing(insertConnection.connectedBlockPos(), ConduitBlocks.CONDUIT.get(),
-                            insertConnection.connectionSide().getOpposite());
+                        level.updateNeighborsAt(insertConnection.connectedBlockPos(), ConduitBlocks.CONDUIT.get());
                     }
                 }
             }
