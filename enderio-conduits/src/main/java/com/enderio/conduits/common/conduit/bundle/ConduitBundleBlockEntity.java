@@ -881,7 +881,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
             conduit.value().onConnectionsUpdated(node, level, getBlockPos(), connectedSides);
 
-            node.getNetwork().onNodeUpdated(node);
+            if (node.isLoaded()) {
+                node.getNetwork().onNodeUpdated(node);
+            }
         }
     }
 
