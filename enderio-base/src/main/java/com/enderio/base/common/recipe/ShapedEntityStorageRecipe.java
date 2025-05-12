@@ -1,5 +1,6 @@
 package com.enderio.base.common.recipe;
 
+import com.enderio.base.api.soul.SoulBoundUtils;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.core.common.recipes.WrappedShapedRecipe;
@@ -27,18 +28,11 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
     public ItemStack assemble(CraftingInput container, HolderLookup.Provider lookupProvider) {
         ItemStack result = getWrapped().assemble(container, lookupProvider);
 
-        // Move soul to result item
-        var resultSoulStorage = result.getCapability(EIOCapabilities.SoulBindable.ITEM);
-        if (resultSoulStorage != null) {
-            getItemStoringEntity(container).ifPresent(itemStack -> {
-                var inputSoulStorage = Objects
-                        .requireNonNull(itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM));
-
-                // TODO: what to do when this fails?
-                resultSoulStorage.bindSoul(inputSoulStorage.getBoundSoul());
-            });
-        }
-
+        getItemStoringEntity(container).ifPresent(itemStack -> {
+            var inputSoulStorage = Objects.requireNonNull(itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM));
+            SoulBoundUtils.tryBindSoul(result, inputSoulStorage.getBoundSoul());
+        });
+        
         return result;
     }
 

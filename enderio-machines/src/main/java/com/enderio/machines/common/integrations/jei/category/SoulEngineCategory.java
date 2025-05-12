@@ -4,6 +4,7 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.soul.Soul;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.machines.client.gui.screen.SoulEngineScreen;
 import com.enderio.machines.common.blocks.soul_engine.SoulEngineBlockEntity;
 import com.enderio.machines.common.init.MachineBlocks;
@@ -95,12 +96,7 @@ public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> 
                         .addItemStack(new ItemStack(SpawnEggItem.byId(value)));
             }
 
-            ItemStack stack = new ItemStack(EIOItems.SOUL_VIAL.get());
-            var soulStorage = stack.getCapability(EIOCapabilities.SoulBindable.ITEM);
-            if (soulStorage != null) {
-                soulStorage.bindSoul(Soul.of(recipe.entitytype()));
-            }
-
+            ItemStack stack = SoulVialItem.forSoul(Soul.of(recipe.entitytype()));
             builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStack(stack);
         }
 
