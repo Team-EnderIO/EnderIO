@@ -2,12 +2,17 @@ package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.conduits.api.network.node.IConduitNode;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
-public record EnergyConduitStorage(boolean isMutable, int transferRate, IConduitNode node) implements IEnergyStorage {
+public record EnergyConduitStorage(boolean isMutable, int transferRate, @Nullable IConduitNode node) implements IEnergyStorage {
 
     private static final long ENERGY_BUFFER_SCALER = 4;
 
     public long getLongMaxEnergyStored() {
+        if (node == null || !node.isLoaded()) {
+            return 0;
+        }
+
         // Capacity is transfer rate + nodeCount * transferRatePerTick / 2 (expanded).
         // This ensures at least the transfer rate of the cable is available, but
         // capacity doesn't grow outrageously.
@@ -24,6 +29,10 @@ public record EnergyConduitStorage(boolean isMutable, int transferRate, IConduit
     }
 
     public long getLongEnergyStored() {
+        if (node == null || !node.isLoaded()) {
+            return 0;
+        }
+
         var context = node.getNetwork().getContext(EnergyConduitNetworkContext.TYPE);
         if (context == null) {
             return 0;
@@ -34,7 +43,7 @@ public record EnergyConduitStorage(boolean isMutable, int transferRate, IConduit
 
     @Override
     public int receiveEnergy(int toReceive, boolean simulate) {
-        if (!canReceive()) {
+        if (node == null || !node.isLoaded() || !isMutable) {
             return 0;
         }
 
@@ -76,6 +85,6 @@ public record EnergyConduitStorage(boolean isMutable, int transferRate, IConduit
     // point.
     @Override
     public boolean canReceive() {
-        return node.getNetwork() != null && isMutable;
+        return true;
     }
 }

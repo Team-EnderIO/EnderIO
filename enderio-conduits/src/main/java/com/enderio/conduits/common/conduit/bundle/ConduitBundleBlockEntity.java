@@ -366,18 +366,13 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     @Nullable
-    private static <TCap, TContext> TCap getProxiedCapability(BlockCapability<TCap, TContext> capability,
-            ConduitBundleBlockEntity blockEntity, Holder<Conduit<?, ?>> conduit, @Nullable TContext context) {
-
+    private static <TCap, TContext> TCap getProxiedCapability(BlockCapability<TCap, TContext> capability, ConduitBundleBlockEntity blockEntity,
+        Holder<Conduit<?, ?>> conduit, @Nullable TContext context) {
         if (blockEntity.level == null) {
             return null;
         }
 
         var node = blockEntity.conduitNodes.get(conduit);
-        if (!node.isValid()) {
-            return null;
-        }
-
         return conduit.value().proxyCapability(blockEntity.level, node, capability, context);
     }
 

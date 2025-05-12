@@ -94,13 +94,13 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
-    public <TCap, TContext> @Nullable TCap proxyCapability(Level level, IConduitNode node,
+    public <TCap, TContext> @Nullable TCap proxyCapability(Level level, @Nullable IConduitNode node,
             BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
 
         if (Capabilities.EnergyStorage.BLOCK == capability && (context == null || context instanceof Direction)) {
             boolean isMutable = true;
 
-            if (context != null) {
+            if (node != null && context != null) {
                 Direction side = (Direction) context;
 
                 // No connection, no cap.
