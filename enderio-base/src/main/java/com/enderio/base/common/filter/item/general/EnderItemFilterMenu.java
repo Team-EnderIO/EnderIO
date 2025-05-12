@@ -39,13 +39,8 @@ public class EnderItemFilterMenu extends AbstractFilterMenu<EnderItemFilter> {
         this.type = type;
         this.clientItems = null;
 
-        this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot
-                .readOnly(() -> getFilterStack().getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY)
-                        .isDenyList()));
-
-        this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot
-                .readOnly(() -> getFilterStack().getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY)
-                        .shouldCompareComponents()));
+        this.isInvertedSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(() -> getFilter().isDenyList()));
+        this.shouldCompareComponentsSyncSlot = addSyncSlot(BoolSyncSlot.readOnly(() -> getFilter().shouldCompareComponents()));
 
         if (this.type.canFilterByDamage()) {
             this.damageFilterSyncSlot = addUpdatableSyncSlot(EnumSyncSlot.simple(DamageFilterMode.class,

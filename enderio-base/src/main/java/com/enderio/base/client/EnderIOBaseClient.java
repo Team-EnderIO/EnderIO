@@ -2,6 +2,7 @@ package com.enderio.base.client;
 
 import com.enderio.EnderIOBase;
 import com.enderio.base.api.EnderIO;
+import com.enderio.base.api.soul.SoulBoundUtils;
 import com.enderio.base.client.decorator.GlassIconDecorator;
 import com.enderio.base.client.paint.model.PaintedBlockGeometry;
 import com.enderio.base.client.particle.RangeParticle;
@@ -13,6 +14,7 @@ import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.init.EIOParticles;
+import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.core.client.item.FluidBarDecorator;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,17 +65,19 @@ public class EnderIOBaseClient {
     public static void clientSetup(FMLClientSetupEvent event) {
         TravelTargetRendering.init();
 
-        //switch to item model component in 1.21.2
-        ItemProperties.register(EIOItems.ENDERIOS.asItem(), EnderIO.loc("inverted"), new ClampedItemPropertyFunction() {
+        event.enqueueWork(() -> {
+            //switch to item model component in 1.21.2
+            ItemProperties.register(EIOItems.SOUL_VIAL.get(), SoulVialItem.FILLED_MODEL_PROPERTY,
+                (stack, level, player, seed) -> SoulBoundUtils.isBound(stack) ? 1 : 0);
 
-            @Override
-            public float unclampedCall(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity, int seed) {
-                Component name = itemStack.get(DataComponents.CUSTOM_NAME);
-                if (name != null && name.getContents() instanceof PlainTextContents literal && literal.text().equalsIgnoreCase("soiredne")) {
-                    return 1;
-                }
-                return 0;
-            }
+            ItemProperties.register(EIOItems.ENDERIOS.asItem(), EnderIO.loc("inverted"),
+                (ClampedItemPropertyFunction) (itemStack, clientLevel, livingEntity, seed) -> {
+                    Component name = itemStack.get(DataComponents.CUSTOM_NAME);
+                    if (name != null && name.getContents() instanceof PlainTextContents literal && literal.text().equalsIgnoreCase("soiredne")) {
+                        return 1;
+                    }
+                    return 0;
+                });
         });
     }
 

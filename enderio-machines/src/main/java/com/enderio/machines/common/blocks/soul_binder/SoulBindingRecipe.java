@@ -1,11 +1,10 @@
 package com.enderio.machines.common.blocks.soul_binder;
 
-import com.enderio.base.api.attachment.StoredEntityData;
 import com.enderio.base.api.network.MassiveStreamCodec;
-import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.api.soul.binding.ingredients.FilledSoulStorageIngredient;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.recipe.FluidRecipeInput;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blocks.base.MachineRecipe;
@@ -15,6 +14,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
@@ -48,6 +48,7 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
     @Override
     public List<OutputStack> craft(Input input, RegistryAccess registryAccess) {
         ItemStack vial = input.getItem(0);
+
         List<OutputStack> results = getResultStacks(registryAccess);
         ItemStack result = results.getFirst().getItem();
 
@@ -55,9 +56,11 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
             result.applyComponents(input.itemToBind.getComponents());
         }
 
-        var storedEntityData = vial.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
-        if (result.is(EIOTags.Items.ENTITY_STORAGE)) {
-            result.set(EIODataComponents.STORED_ENTITY, storedEntityData);
+        var vialSoulBindable = vial.getCapability(EIOCapabilities.SoulBindable.ITEM);
+        var resultSoulBinding = result.getCapability(EIOCapabilities.SoulBindable.ITEM);
+
+        if (vialSoulBindable != null && resultSoulBinding != null) {
+            resultSoulBinding.bindSoul(vialSoulBindable.getBoundSoul());
         }
 
         return results;
@@ -65,18 +68,17 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.copy()),
-                OutputStack.of(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance()));
+        return List.of(OutputStack.of(output.copy()), OutputStack.of(EIOItems.SOUL_VIAL.get().getDefaultInstance()));
     }
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY, Ingredient.of(EIOItems.FILLED_SOUL_VIAL), input);
+        return NonNullList.of(Ingredient.EMPTY, FilledSoulStorageIngredient.of(EIOItems.SOUL_VIAL), input);
     }
 
     @Override
     public boolean matches(Input recipeInput, Level pLevel) {
-        if (!recipeInput.getItem(0).is(EIOItems.FILLED_SOUL_VIAL.get())) {
+        if (!recipeInput.getItem(0).is(EIOItems.SOUL_VIAL.get())) {
             return false;
         }
 
@@ -84,20 +86,21 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
             return false;
         }
 
-        if (!recipeInput.getItem(0).has(EIODataComponents.STORED_ENTITY)) {
+        var soulBindable = recipeInput.getItem(0).getCapability(EIOCapabilities.SoulBindable.ITEM);
+        if (soulBindable == null || !soulBindable.hasSoul()) {
             return false;
         }
 
-        var storedEntityData = recipeInput.getItem(0).get(EIODataComponents.STORED_ENTITY);
-        if (storedEntityData.entityType().isEmpty()) {
+        var soul = soulBindable.getBoundSoul();
+        if (soul.isEmpty()) {
             return false;
         }
 
-        var storedEntityType = storedEntityData.entityType().get();
+        var entityType = Objects.requireNonNull(soul.entityType());
 
         if (soulData.isPresent()) { // is in the selected souldata
             if (SoulDataReloadListener.fromString(soulData.get())
-                    .matches(storedEntityData.entityType().get())
+                    .matches(soul.entityType())
                     .isEmpty()) {
                 return false;
             }
@@ -106,21 +109,14 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
         }
 
         if (mobCategory.isPresent()) {
-            // TODO: We can just call get(...) if we don't care about registry defaulting.
-            var entityTypeOptional = BuiltInRegistries.ENTITY_TYPE.getOptional(storedEntityType);
-            if (entityTypeOptional.isEmpty()) {
-                return false;
-            }
-
-            var entityType = entityTypeOptional.get();
-
             if (!entityType.getCategory().equals(mobCategory.get())) {
                 return false;
             }
         }
 
-        if (entityType.isPresent()) {
-            if (!storedEntityType.equals(entityType.get())) {
+        if (this.entityType.isPresent()) {
+            var entityTypeId = soul.entityTypeId();
+            if (!Objects.requireNonNull(entityTypeId).equals(this.entityType.get())) {
                 return false;
             }
         }

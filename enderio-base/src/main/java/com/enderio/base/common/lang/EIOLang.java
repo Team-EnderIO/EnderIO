@@ -208,8 +208,11 @@ public class EIOLang {
 
     // region Entity Storage
 
+    public static final MutableComponent TOOLTIP_SOULBOUND = addTranslation("gui", EnderIO.loc("soulbound"),
+            "Bound Soul: ");
+
     public static final MutableComponent TOOLTIP_NO_SOULBOUND = addTranslation("gui", EnderIO.loc("no_soulbound"),
-            "Bind a soul to the item to be able to use it");
+            "This item can have a soul bound to it.");
 
     // endregion
 

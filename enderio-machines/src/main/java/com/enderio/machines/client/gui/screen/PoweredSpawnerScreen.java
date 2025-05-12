@@ -112,16 +112,10 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
         String modeLabel = Objects.requireNonNull(MachineEnumLang.POWERED_SPAWNER_MODE.get(menu.getMode())).getString();
         guiGraphics.drawString(font, modeLabel, imageWidth / 2f - font.width(modeLabel) / 2f, 25, 0xFFFFFFFF, true);
 
-        Optional<ResourceLocation> rl = getMenu().getBlockEntity().getEntityType();
-        if (rl.isPresent()) {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(rl.get());
-            if (BuiltInRegistries.ENTITY_TYPE.getKey(type).equals(rl.get())) { // check we don't get the default pig
-                String name = type.getDescription().getString();
-                guiGraphics.drawString(font, name, imageWidth / 2f - font.width(name) / 2f, 65, 0xFFFFFFFF, true);
-            } else {
-                guiGraphics.drawString(font, rl.get().toString(),
-                        imageWidth / 2f - font.width(rl.get().toString()) / 2f, 65, 0xFFFFFFFF, true);
-            }
+        var entityType = getMenu().getBlockEntity().getEntityType();
+        if (entityType != null) {
+            String name = entityType.getDescription().getString();
+            guiGraphics.drawString(font, name, imageWidth / 2f - font.width(name) / 2f, 65, 0xFFFFFFFF, true);
         }
 
         super.renderLabels(guiGraphics, pMouseX, pMouseY);

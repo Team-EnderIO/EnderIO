@@ -2,10 +2,11 @@ package com.enderio.machines.common.blocks.powered_spawner;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.UseOnly;
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.particle.RangeParticleData;
@@ -37,6 +38,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -64,7 +66,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     // TODO: Config value?
     public static final int ACTION_RANGE = 4;
 
-    private StoredEntityData entityData = StoredEntityData.EMPTY;
+    private Soul boundSoul = Soul.EMPTY;
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
     private final MachineTaskHost taskHost;
 
@@ -111,25 +113,20 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     @Nullable
     private PoweredSpawnerTask createNewTask() {
         // Ensure we have a valid entity type.
-        if (getEntityType().isEmpty()) {
+        var entityType = getEntityType();
+        if (entityType == null) {
             setReason(SpawnerBlockedReason.UNKNOWN_MOB);
             return null;
         }
 
-        var entityTypeOpt = BuiltInRegistries.ENTITY_TYPE.getOptional(getEntityType().get());
-        if (entityTypeOpt.isEmpty()) {
-            setReason(SpawnerBlockedReason.UNKNOWN_MOB);
-            return null;
-        }
-
-        if (entityTypeOpt.get().is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
+        if (entityType.is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
             setReason(SpawnerBlockedReason.DISABLED);
             return null;
         }
 
         // Ensure output is free in capture mode
         if (mode == PoweredSpawnerMode.CAPTURE) {
-            if (!INPUT.getItemStack(this).is(EIOItems.EMPTY_SOUL_VIAL)) {
+            if (!INPUT.getItemStack(this).is(EIOItems.SOUL_VIAL)) {
                 setReason(SpawnerBlockedReason.INPUT_EMPTY);
                 return null;
             }
@@ -144,7 +141,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         int energyCost = MachinesConfig.COMMON.DEFAULT_SPAWN_ENERGY_COST.get();
         MobSpawnMode spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
 
-        var spawnDataOpt = SpawnerSoul.SPAWNER.matches(getEntityType().get());
+        var spawnDataOpt = SpawnerSoul.SPAWNER.matches(entityType);
         if (spawnDataOpt.isPresent()) {
             var data = spawnDataOpt.get();
             energyCost = data.power();
@@ -152,8 +149,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         }
 
         return switch (mode) {
-        case SPAWN -> new MobSpawnTask(this, energyCost, entityTypeOpt.get(), spawnType);
-        case CAPTURE -> new MobCaptureTask(this, energyCost, entityTypeOpt.get(), spawnType);
+        case SPAWN -> new MobSpawnTask(this, energyCost, entityType, spawnType);
+        case CAPTURE -> new MobCaptureTask(this, energyCost, entityType, spawnType);
         };
     }
 
@@ -226,11 +223,33 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .capacitor()
-                .inputSlot((i, stack) -> stack.is(EIOItems.EMPTY_SOUL_VIAL))
+                .inputSlot((i, stack) -> {
+                    var soulHandler = stack.getCapability(EIOCapabilities.SoulHandler.ITEM);
+                    return soulHandler != null && soulHandler.tryInsertSoul(getSoulForCapture(), true);
+                })
                 .slotAccess(INPUT)
                 .outputSlot()
                 .slotAccess(OUTPUT)
                 .build();
+    }
+
+    private Soul getSoulForCapture() {
+        var entityType = getEntityType();
+        if (entityType == null) {
+            return Soul.EMPTY;
+        }
+
+        MobSpawnMode spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
+
+        var spawnDataOpt = SpawnerSoul.SPAWNER.matches(entityType);
+        if (spawnDataOpt.isPresent()) {
+            spawnType = spawnDataOpt.get().spawnType();
+        }
+
+        return switch (spawnType) {
+            case NEW -> Soul.of(entityType);
+            case COPY -> getBoundSoul().copy();
+        };
     }
 
     @Override
@@ -254,16 +273,13 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     // endregion
 
-    public Optional<ResourceLocation> getEntityType() {
-        return entityData.entityType();
+    @Nullable
+    public EntityType<?> getEntityType() {
+        return boundSoul.hasEntity() ? boundSoul.entityType() : null;
     }
 
-    public void setEntityType(ResourceLocation entityType) {
-        entityData = StoredEntityData.of(entityType);
-    }
-
-    public StoredEntityData getEntityData() {
-        return entityData;
+    public Soul getBoundSoul() {
+        return boundSoul;
     }
 
     // TODO: I want a better way to handle this, but unsure what that could be.
@@ -293,7 +309,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
         // Sync entity storage in case we want to render the entity or something in
         // future :)
-        tag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.saveOptional(registries));
+        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(registries));
 
         if (mode != DEFAULT_MODE) {
             tag.put(MachineNBTKeys.MACHINE_MODE, mode.save(registries));
@@ -307,7 +323,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         super.loadAdditional(pTag, lookupProvider);
-        entityData = StoredEntityData.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+        boundSoul = Soul.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
 
         if (pTag.contains(MachineNBTKeys.MACHINE_MODE)) {
             this.mode = PoweredSpawnerMode.parse(lookupProvider,
@@ -331,7 +347,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
-        entityData = components.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
+        boundSoul = components.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
 
         // TODO: Ender IO 8 - remove.
         var actionRange = components.get(MachineDataComponents.ACTION_RANGE);
@@ -354,8 +370,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             components.set(MachineDataComponents.IS_RANGE_VISIBLE, true);
         }
 
-        if (entityData.hasEntity()) {
-            components.set(EIODataComponents.STORED_ENTITY, entityData);
+        if (boundSoul.hasEntity()) {
+            components.set(EIODataComponents.SOUL, boundSoul);
         }
     }
 

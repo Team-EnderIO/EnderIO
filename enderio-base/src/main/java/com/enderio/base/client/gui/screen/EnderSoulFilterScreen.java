@@ -1,12 +1,12 @@
 package com.enderio.base.client.gui.screen;
 
 import com.enderio.base.api.EnderIO;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.common.filter.AbstractFilterMenu;
-import com.enderio.base.common.filter.entity.EnderEntityFilterMenu;
-import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.filter.soul.EnderSoulFilterMenu;
+import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.filter.entity.EntityFilterSlot;
+import com.enderio.base.common.filter.soul.SoulFilterSlot;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
@@ -17,10 +17,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
-public class EnderEntityFilterScreen extends EnderContainerScreen<EnderEntityFilterMenu> {
+public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterMenu> {
 
     private static final int WIDTH = 183;
     private static final int HEIGHT = 199;
@@ -40,7 +41,7 @@ public class EnderEntityFilterScreen extends EnderContainerScreen<EnderEntityFil
 
     private final ResourceLocation backgroundTexture;
 
-    public EnderEntityFilterScreen(EnderEntityFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public EnderSoulFilterScreen(EnderSoulFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
 
         this.shouldRenderLabels = true;
@@ -78,8 +79,8 @@ public class EnderEntityFilterScreen extends EnderContainerScreen<EnderEntityFil
             addRenderableWidget(new ToggleIconButton(xPos, yPos, 16, 16,
                     (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
                     (b) -> b ? EIOLang.FILTER_MATCH_COMPONENTS : EIOLang.FILTER_IGNORE_COMPONENTS,
-                    getMenu()::shouldCompareComponents,
-                    (b) -> handleButtonPress(EnderEntityFilterMenu.SHOULD_COMPARE_TAGS_BUTTON_ID)));
+                    getMenu()::shouldCompareTags,
+                    (b) -> handleButtonPress(EnderSoulFilterMenu.SHOULD_COMPARE_TAGS_BUTTON_ID)));
 
             xPos -= 18;
         }
@@ -87,7 +88,7 @@ public class EnderEntityFilterScreen extends EnderContainerScreen<EnderEntityFil
         addRenderableWidget(
                 new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
                         (b) -> b ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
-                        (b) -> handleButtonPress(EnderEntityFilterMenu.IS_INVERTED_BUTTON_ID)));
+                        (b) -> handleButtonPress(EnderSoulFilterMenu.IS_INVERTED_BUTTON_ID)));
 
         xPos -= 18;
     }
@@ -101,15 +102,14 @@ public class EnderEntityFilterScreen extends EnderContainerScreen<EnderEntityFil
     protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot, @Nullable String countString) {
         super.renderSlotContents(guiGraphics, itemstack, slot, countString);
 
-        if (slot instanceof EntityFilterSlot entityFilterSlot) {
-            var entity = entityFilterSlot.getResource();
-            if (!entity.hasEntity()) {
+        if (slot instanceof SoulFilterSlot soulFilterSlot) {
+            var soul = soulFilterSlot.getResource();
+            if (!soul.hasEntity()) {
                 return;
             }
 
-            var vial = new ItemStack(EIOItems.FILLED_SOUL_VIAL.asItem());
-            vial.set(EIODataComponents.STORED_ENTITY, entity);
-            super.renderSlotContents(guiGraphics, vial, slot, countString);
+            ItemStack renderStack = getRenderStack(soul);
+            super.renderSlotContents(guiGraphics, renderStack, slot, countString);
         }
 
         super.renderSlotContents(guiGraphics, itemstack, slot, countString);
@@ -117,19 +117,32 @@ public class EnderEntityFilterScreen extends EnderContainerScreen<EnderEntityFil
 
     @Override
     protected boolean renderCustomTooltip(GuiGraphics guiGraphics, int x, int y) {
-        if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof EntityFilterSlot entityFilterSlot) {
-            var entity = entityFilterSlot.getResource();
-            if (!entity.hasEntity()) {
+        if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof SoulFilterSlot soulFilterSlot) {
+            var soul = soulFilterSlot.getResource();
+            if (!soul.hasEntity()) {
                 return true;
             }
 
-            var vial = new ItemStack(EIOItems.FILLED_SOUL_VIAL.asItem());
-            vial.set(EIODataComponents.STORED_ENTITY, entity);
-            guiGraphics.renderTooltip(font, getTooltipFromContainerItem(vial), vial.getTooltipImage(), vial, x, y);
+            ItemStack renderStack = getRenderStack(soul);
+            // TODO: Maybe add extra tooltip to show there is entity NBT?
+            guiGraphics.renderTooltip(font, getTooltipFromContainerItem(renderStack), renderStack.getTooltipImage(), renderStack, x, y);
             return true;
         }
 
         return super.renderCustomTooltip(guiGraphics, x, y);
+    }
+
+    private ItemStack getRenderStack(Soul soul) {
+        // Show spawn egg if available - this is easier to identify visually.
+        ItemStack renderItem;
+        var spawnEgg = SpawnEggItem.byId(soul.entityType());
+        if (spawnEgg != null) {
+            renderItem = spawnEgg.getDefaultInstance();
+        } else {
+            renderItem = SoulVialItem.forSoul(soul);
+        }
+
+        return renderItem;
     }
 
     @Override

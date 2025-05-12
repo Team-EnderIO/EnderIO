@@ -34,8 +34,6 @@ public class EIOTags {
         private static void init() {
         }
 
-        // TODO: use these for slot filtering again.
-        public static final TagKey<Item> ENTITY_STORAGE = tag("entity_storage");
         public static final TagKey<Item> GRINDING_BALLS = tag("grinding_balls");
 
         public static final TagKey<Item> HIDE_FACADES = tag("enderio/hide_facades");

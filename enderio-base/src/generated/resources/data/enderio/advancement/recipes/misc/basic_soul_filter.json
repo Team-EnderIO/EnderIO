@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:empty_soul_vial"
+            "items": "enderio:soul_vial"
           }
         ]
       },

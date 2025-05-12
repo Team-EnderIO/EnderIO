@@ -1,12 +1,15 @@
 package com.enderio.machines.common.integrations.jei.category;
 
+import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
+
 import com.enderio.base.api.EnderIO;
-import com.enderio.base.api.attachment.StoredEntityData;
-import com.enderio.base.common.init.EIODataComponents;
+import com.enderio.base.api.soul.Soul;
+import com.enderio.base.api.soul.SoulBoundUtils;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.integrations.jei.JEIUtils;
 import com.enderio.base.common.item.tool.SoulVialItem;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.client.gui.screen.SoulBinderScreen;
 import com.enderio.machines.common.blocks.soul_binder.SoulBindingRecipe;
 import com.enderio.machines.common.init.MachineBlocks;
@@ -15,6 +18,9 @@ import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.souldata.SoulData;
 import com.enderio.machines.common.souldata.SoulDataReloadListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -31,13 +37,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
-import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<SoulBindingRecipe>> {
     public static final RecipeType<RecipeHolder<SoulBindingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.NAMESPACE,
@@ -76,16 +75,13 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
         List<ItemStack> vials = new ArrayList<>();
         Optional<IFocus<ItemStack>> output = focuses.getItemStackFocuses(OUTPUT).findFirst();
         Optional<IFocus<ItemStack>> input = focuses.getItemStackFocuses(INPUT)
-                .filter(f -> f.getTypedValue().getItemStack().get().is(EIOItems.FILLED_SOUL_VIAL.asItem()))
+                .filter(f -> f.getTypedValue().getItemStack().get().is(EIOItems.SOUL_VIAL.asItem()))
                 .findFirst();
 
         if (input.isPresent()) {
             vials.add(input.get().getTypedValue().getIngredient());
         } else if (recipe.value().entityType().isPresent()) {
-            var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
-            SoulVialItem.setEntityType(item, recipe.value().entityType().get());
-
-            vials.add(item);
+            vials.add(SoulVialItem.forSoul(Soul.of(recipe.value().entityType().get())));
         } else if (recipe.value().mobCategory().isPresent()) {
 
             var allEntitiesOfCategory = BuiltInRegistries.ENTITY_TYPE.stream()
@@ -94,22 +90,16 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
                     .toList();
 
             for (ResourceLocation entity : allEntitiesOfCategory) {
-                var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
-                SoulVialItem.setEntityType(item, entity);
-                vials.add(item);
+                vials.add(SoulVialItem.forSoul(Soul.of(entity)));
             }
 
         } else if (recipe.value().soulData().isPresent()) {
             if (output.isPresent()) {
-                var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
-                if (output.get().getTypedValue().getItemStack().get().is(EIOTags.Items.ENTITY_STORAGE)) {
-                    StoredEntityData data = output.get()
-                            .getTypedValue()
-                            .getItemStack()
-                            .get()
-                            .get(EIODataComponents.STORED_ENTITY);
-                    SoulVialItem.setEntityType(item, data.entityType().get());
-                    vials.add(item);
+                var outputStack = output.get().getTypedValue().getIngredient();
+                var soul = SoulBoundUtils.getBoundSoul(outputStack);
+
+                if (soul.hasEntity()) {
+                    vials.add(SoulVialItem.forSoul(Soul.of(soul.entityType())));
                 }
             } else {
                 SoulDataReloadListener<? extends SoulData> soulDataReloadListener = SoulDataReloadListener
@@ -121,22 +111,16 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
                         .toList();
 
                 for (ResourceLocation entity : allEntitiesOfSoulData) {
-                    var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
-                    SoulVialItem.setEntityType(item, entity);
-                    vials.add(item);
+                    vials.add(SoulVialItem.forSoul(Soul.of(entity)));
                 }
             }
         } else {
             if (output.isPresent()) {
-                var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
-                if (output.get().getTypedValue().getItemStack().get().is(EIOTags.Items.ENTITY_STORAGE)) {
-                    StoredEntityData data = output.get()
-                            .getTypedValue()
-                            .getItemStack()
-                            .get()
-                            .get(EIODataComponents.STORED_ENTITY);
-                    SoulVialItem.setEntityType(item, data.entityType().get());
-                    vials.add(item);
+                var outputStack = output.get().getTypedValue().getIngredient();
+                var soul = SoulBoundUtils.getBoundSoul(outputStack);
+
+                if (soul.hasEntity()) {
+                    vials.add(SoulVialItem.forSoul(Soul.of(soul.entityType())));
                 }
             } else {
                 vials.addAll(SoulVialItem.getAllFilled());
@@ -151,24 +135,24 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
         var results = new ArrayList<ItemStack>();
 
         // If the output can take an entity type, then we add it
-        if (resultStack.is(EIOTags.Items.ENTITY_STORAGE)) {
+        if (SoulBoundUtils.canBindSoul(resultStack)) {
             for (ItemStack vial : vials) {
-                SoulVialItem.getEntityData(vial).flatMap(StoredEntityData::entityType).ifPresent(entityType -> {
+                var soul = SoulBoundUtils.getBoundSoul(vial);
+                if (!soul.isEmpty()) {
                     var result = resultStack.copy();
-                    if (result.is(EIOTags.Items.ENTITY_STORAGE)) {
-                        result.set(EIODataComponents.STORED_ENTITY, StoredEntityData.of(entityType));
+                    if (SoulBoundUtils.tryBindSoul(result, Soul.of(soul.entityType()))) {
                         results.add(result);
                     }
-                });
+                }
             }
         }
 
         // Fallback :(
-        if (results.size() == 0) {
+        if (results.isEmpty()) {
             results.add(resultStack);
         }
 
-        builder.addSlot(OUTPUT, 77, 4).addItemStack(new ItemStack(EIOItems.EMPTY_SOUL_VIAL.get()));
+        builder.addSlot(OUTPUT, 77, 4).addItemStack(new ItemStack(EIOItems.SOUL_VIAL.get()));
 
         builder.addSlot(OUTPUT, 99, 4).addItemStacks(results);
     }

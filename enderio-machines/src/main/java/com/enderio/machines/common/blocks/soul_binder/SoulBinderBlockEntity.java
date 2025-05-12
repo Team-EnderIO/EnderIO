@@ -6,9 +6,11 @@ import com.enderio.base.api.UseOnly;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
+import com.enderio.base.api.soul.SoulBoundUtils;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.machines.common.attachment.FluidTankUser;
@@ -101,9 +103,10 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
 
     @Override
     public MachineInventoryLayout createInventoryLayout() {
+        // TODO: Support for non-soul vial storages.
         return MachineInventoryLayout.builder()
                 .setStackLimit(1)
-                .inputSlot((slot, stack) -> stack.is(EIOItems.FILLED_SOUL_VIAL.get()))
+                .inputSlot((slot, stack) -> stack.is(EIOItems.SOUL_VIAL.get()) && SoulBoundUtils.isBound(stack))
                 .slotAccess(INPUT_SOUL)
                 .inputSlot(this::isValidInput)
                 .slotAccess(INPUT_OTHER)

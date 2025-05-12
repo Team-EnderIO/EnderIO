@@ -5,7 +5,7 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.common.filter.AbstractFilterItem;
-import com.enderio.base.common.filter.entity.EnderEntityFilterItem;
+import com.enderio.base.common.filter.soul.EnderSoulFilterItem;
 import com.enderio.base.common.filter.fluid.EnderFluidFilterItem;
 import com.enderio.base.common.filter.item.general.EnderItemFilterItem;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
@@ -27,6 +27,7 @@ import com.enderio.base.common.item.tool.TravelStaffItem;
 import com.enderio.base.common.item.tool.VoidVialItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.soul.SoulCapabilityProviders;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.regilite.holder.RegiliteItem;
@@ -291,7 +292,7 @@ public class EIOItems {
 
     public static final RegiliteItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEM_REGISTRY
             .registerItem("broken_spawner", BrokenSpawnerItem::new)
-            .addItemTags(EIOTags.Items.ENTITY_STORAGE)
+            .addCapability(EIOCapabilities.SoulBindable.ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER)
             .setModelProvider(ModelHelper::fakeBlockModel)
             .setTab(EIOCreativeTabs.MAIN)
             .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.getPossibleStacks()));
@@ -372,15 +373,18 @@ public class EIOItems {
 
     // region Items
 
-    public static final RegiliteItem<SoulVialItem> EMPTY_SOUL_VIAL = groupedItem("empty_soul_vial", SoulVialItem::new,
-            EIOCreativeTabs.SOULS);
-
-    public static final RegiliteItem<SoulVialItem> FILLED_SOUL_VIAL = ITEM_REGISTRY
-            .registerItem("filled_soul_vial", SoulVialItem::new, new Item.Properties().stacksTo(1))
-            .addItemTags(EIOTags.Items.ENTITY_STORAGE)
-            .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
-    // TODO .removeTab(CreativeModeTabs.SEARCH)
-    ;
+    // Soul vial uses a read-only ISoulBindable.
+    // This is because the soul vial is a storage which can be used for binding, but is not directly bound to.
+    public static final RegiliteItem<SoulVialItem> SOUL_VIAL = groupedItem("soul_vial", SoulVialItem::new,
+            EIOCreativeTabs.SOULS).setTab(EIOCreativeTabs.GEAR)
+                    .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
+                    .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get())
+                            .override()
+                            .predicate(SoulVialItem.FILLED_MODEL_PROPERTY, 1)
+                            .model(prov.basicItem(EnderIO.loc("soul_vial_filled")))
+                            .end())
+                    .addCapability(EIOCapabilities.SoulBindable.ITEM, SoulCapabilityProviders.READ_ONLY_COMPONENT_SOUL_BINDABLE_PROVIDER)
+                    .addCapability(EIOCapabilities.SoulHandler.ITEM, SoulCapabilityProviders.SINGLE_COMPONENT_SOUL_HANDLER_PROVIDER);
 
     public static final RegiliteItem<EnderiosItem> ENDERIOS = ITEM_REGISTRY
             .registerItem("enderios", EnderiosItem::new, new Item.Properties().stacksTo(1))
@@ -478,11 +482,11 @@ public class EIOItems {
             .addCapability(EIOCapabilities.FLUID_FILTER, EnderFluidFilterItem.FLUID_FILTER_PROVIDER)
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 
-    public static final RegiliteItem<EnderEntityFilterItem> BASIC_ENTITY_FILTER = ITEM_REGISTRY
+    public static final RegiliteItem<EnderSoulFilterItem> BASIC_SOUL_FILTER = ITEM_REGISTRY
             .registerItem("basic_soul_filter",
-                    props -> new EnderEntityFilterItem(props, EnderEntityFilterItem.Type.BASIC))
+                    props -> new EnderSoulFilterItem(props, EnderSoulFilterItem.Type.BASIC))
             .setTab(EIOCreativeTabs.GEAR)
-            .addCapability(EIOCapabilities.ENTITY_FILTER, EnderEntityFilterItem.ENTITY_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.SOUL_FILTER, EnderSoulFilterItem.ENTITY_FILTER_PROVIDER)
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 
     // endregion
@@ -540,13 +544,20 @@ public class EIOItems {
     // endregion
 
     public static void register(IEventBus bus) {
-        ENDERIOS.setModelProvider((prov, ctx) -> {});
+    	ENDERIOS.setModelProvider((prov, ctx) -> {});
+    
+        // XP rod rename
         ITEM_REGISTRY.addAlias(EnderIO.loc("experience_rod"), VOID_VIAL.getId());
 
+        // Unified soul vials
+        ITEM_REGISTRY.addAlias(EnderIO.loc("empty_soul_vial"), SOUL_VIAL.getId());
+        ITEM_REGISTRY.addAlias(EnderIO.loc("filled_soul_vial"), SOUL_VIAL.getId());
+
+		// Filter renames
         ITEM_REGISTRY.addAlias(EnderIO.loc("basic_filter"), BASIC_ITEM_FILTER.getId());
         ITEM_REGISTRY.addAlias(EnderIO.loc("advanced_filter"), ADVANCED_ITEM_FILTER.getId());
         ITEM_REGISTRY.addAlias(EnderIO.loc("fluid_filter"), BASIC_FLUID_FILTER.getId());
-        ITEM_REGISTRY.addAlias(EnderIO.loc("entity_filter"), BASIC_ENTITY_FILTER.getId());
+        ITEM_REGISTRY.addAlias(EnderIO.loc("entity_filter"), BASIC_SOUL_FILTER.getId());
 
         ITEM_REGISTRY.register(bus);
     }

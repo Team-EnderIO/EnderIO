@@ -1,6 +1,6 @@
 package com.enderio.base.common.loot;
 
-import com.enderio.base.api.attachment.StoredEntityData;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.tag.EIOTags;
@@ -40,9 +40,10 @@ public class BrokenSpawnerLootModifier extends LootModifier {
                     BaseSpawner spawner = spawnerBlockEntity.getSpawner();
                     CompoundTag entityTag = spawner.nextSpawnData.getEntityToSpawn();
 
-                    if (entityTag.contains(StoredEntityData.KEY_ID)) {
-                        ResourceLocation type = ResourceLocation.parse(entityTag.getString(StoredEntityData.KEY_ID));
-                        ItemStack brokenSpawner = BrokenSpawnerItem.forType(type);
+                    // TODO: should we be copying the entire entity tag?
+                    if (entityTag.contains(Soul.KEY_ID)) {
+                        ResourceLocation type = ResourceLocation.parse(entityTag.getString(Soul.KEY_ID));
+                        ItemStack brokenSpawner = BrokenSpawnerItem.forSoul(Soul.of(type));
                         generatedLoot.add(brokenSpawner);
                     }
                 }

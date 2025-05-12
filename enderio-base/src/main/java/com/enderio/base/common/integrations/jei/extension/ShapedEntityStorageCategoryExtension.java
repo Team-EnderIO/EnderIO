@@ -1,11 +1,19 @@
 package com.enderio.base.common.integrations.jei.extension;
 
-import com.enderio.base.api.attachment.StoredEntityData;
-import com.enderio.base.common.init.EIODataComponents;
+import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
+
+import com.enderio.base.api.soul.Soul;
+import com.enderio.base.api.soul.SoulBoundUtils;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.integrations.jei.EnderIOJEI;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.EntityCaptureUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.recipe.IFocus;
@@ -15,120 +23,101 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
-import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
-
 public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryExtension<ShapedEntityStorageRecipe> {
 
-    public ShapedEntityStorageCategoryExtension() {}
+    public ShapedEntityStorageCategoryExtension() {
+    }
 
     @Override
-    public void setRecipe(RecipeHolder<ShapedEntityStorageRecipe> recipeHolder, IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
+    public void setRecipe(RecipeHolder<ShapedEntityStorageRecipe> recipeHolder, IRecipeLayoutBuilder builder,
+            ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
 
         Optional<IFocus<ItemStack>> output = focuses.getItemStackFocuses(OUTPUT).findFirst();
-        Optional<IFocus<ItemStack>> input = focuses.getItemStackFocuses(INPUT).filter(f -> f.getTypedValue().getItemStack().get().is(EIOTags.Items.ENTITY_STORAGE)).findFirst();
+        Optional<IFocus<ItemStack>> input = focuses.getItemStackFocuses(INPUT)
+                .filter(f -> SoulBoundUtils.canBindSoul(f.getTypedValue().getIngredient()))
+                .findFirst();
+
         ShapedEntityStorageRecipe recipe = recipeHolder.value();
         ItemStack resultItem = EnderIOJEI.getResultItem(recipe);
-        List<List<ItemStack>> inputs = recipe.getIngredients().stream()
-            .map(ingredient ->
-                Arrays.stream(ingredient.getItems()).<ItemStack>mapMulti(
-                    (ingredientItem, consumer) -> consumer.accept(ingredientItem))
-                    .toList())
-            .toList();
+        List<List<ItemStack>> inputs = recipe.getIngredients()
+                .stream()
+                .map(ingredient -> Arrays.stream(ingredient.getItems())
+                        .<ItemStack>mapMulti((ingredientItem, consumer) -> consumer.accept(ingredientItem))
+                        .toList())
+                .toList();
         List<ItemStack> results = List.of(resultItem);
         boolean noData = true;
 
         if (input.isPresent()) {
-            StoredEntityData storedEntityData = input.get().getTypedValue().getIngredient().getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
-            if (storedEntityData != StoredEntityData.EMPTY) {
-                noData = false;
-                resultItem.set(EIODataComponents.STORED_ENTITY, storedEntityData);
-                inputs = recipe.getIngredients().stream()
-                    .map(ingredient ->
-                        Arrays.stream(ingredient.getItems()).<ItemStack>mapMulti((ingredientItem, consumer) -> {
-                            boolean hasStorage = ingredientItem.is(EIOTags.Items.ENTITY_STORAGE);
-                            if (hasStorage) {
-                                ItemStack item = ingredientItem.copy();
-                                if (item.is(EIOTags.Items.ENTITY_STORAGE)) {
-                                    item.set(EIODataComponents.STORED_ENTITY, storedEntityData);
-                                }
-                                consumer.accept(item);
-                            } else {
-                                consumer.accept(ingredientItem);
-                            }
-                        }).toList()
-                    ).toList();
+            var soul = SoulBoundUtils.getBoundSoul(input.get().getTypedValue().getIngredient());
+            if (soul != Soul.EMPTY) {
+                if (SoulBoundUtils.tryBindSoul(resultItem, soul)) {
+                    noData = false;
+
+                    inputs = recipe
+                        .getIngredients()
+                        .stream()
+                        .map(ingredient -> Arrays
+                            .stream(ingredient.getItems())
+                            .<ItemStack>mapMulti((ingredientItem, consumer) -> SoulBoundUtils.getBoundIfCapable(ingredientItem, soul).ifPresent(consumer))
+                            .toList())
+                        .toList();
+                }
             }
         } else if (output.isPresent()) {
             ItemStack itemStack = output.get().getTypedValue().getIngredient();
-            if (itemStack.is(EIOTags.Items.ENTITY_STORAGE)) {
+            var outputSoulBindable = itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
+
+            if (outputSoulBindable != null) {
                 results = List.of(itemStack);
-                StoredEntityData storedEntityData = itemStack.getOrDefault(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
-                if (storedEntityData != StoredEntityData.EMPTY) {
+                Soul soul = outputSoulBindable.getBoundSoul();
+
+                if (soul != Soul.EMPTY) {
                     noData = false;
-                    inputs = recipe.getIngredients().stream()
-                        .map(ingredient ->
-                            Arrays.stream(ingredient.getItems()).<ItemStack>mapMulti((ingredientItem, consumer) -> {
-                                boolean hasStorage = ingredientItem.is(EIOTags.Items.ENTITY_STORAGE);
-                                if (hasStorage) {
-                                    ItemStack item = ingredientItem.copy();
-                                    if (item.is(EIOTags.Items.ENTITY_STORAGE)) {
-                                        item.set(EIODataComponents.STORED_ENTITY, storedEntityData);
+                    inputs = recipe.getIngredients()
+                            .stream()
+                            .map(ingredient -> Arrays.stream(ingredient.getItems())
+                                    .<ItemStack>mapMulti((ingredientItem, consumer) -> SoulBoundUtils.getBoundIfCapable(ingredientItem, soul).ifPresent(consumer))
+                                    .toList())
+                            .toList();
+                }
+            }
+        }
+
+        if (noData) {
+            var capturableEntityTypes = EntityCaptureUtils.getCapturableEntityTypes();
+
+            results = new ArrayList<>(capturableEntityTypes.stream().map(entityType -> {
+                ItemStack result = resultItem.copy();
+                if (SoulBoundUtils.tryBindSoul(result, Soul.of(entityType))) {
+                    return Optional.of(result);
+                }
+
+                return Optional.<ItemStack>empty();
+            }).flatMap(Optional::stream).toList());
+
+            ItemStack result = resultItem.copy();
+            SoulBoundUtils.tryBindSoul(result, Soul.EMPTY);
+            results.add(result);
+
+            inputs = recipe.getIngredients()
+                    .stream()
+                    .map(ingredient -> Arrays.stream(ingredient.getItems())
+                            .<ItemStack>mapMulti((ingredientItem, consumer) -> {
+                                if (SoulBoundUtils.canBindSoul(ingredientItem)) {
+                                    for (var entityType : capturableEntityTypes) {
+                                        ItemStack item = ingredientItem.copy();
+                                        if (SoulBoundUtils.tryBindSoul(item, Soul.of(entityType))) {
+                                            consumer.accept(item);
+                                        }
                                     }
-                                    consumer.accept(item);
                                 } else {
                                     consumer.accept(ingredientItem);
                                 }
-                            }).toList()
-                        ).toList();
-                }
-            }
+                            })
+                            .toList())
+                    .toList();
         }
-
-        if (noData){
-            var allCapturableEntities = EntityCaptureUtils.getCapturableEntities();
-
-            results = new ArrayList<>(allCapturableEntities.stream().map(e -> {
-                ItemStack result = resultItem.copy();
-
-                if (result.is(EIOTags.Items.ENTITY_STORAGE)) {
-                    result.set(EIODataComponents.STORED_ENTITY, StoredEntityData.of(e));
-                }
-
-                return result;
-            }).toList());
-
-            ItemStack result = resultItem.copy();
-            if (result.is(EIOTags.Items.ENTITY_STORAGE)) {
-                result.set(EIODataComponents.STORED_ENTITY, StoredEntityData.EMPTY);
-            }
-            results.add(result);
-
-            inputs = recipe.getIngredients().stream()
-                .map(ingredient ->
-                    Arrays.stream(ingredient.getItems()).<ItemStack>mapMulti((ingredientItem, consumer) -> {
-                        boolean hasStorage = ingredientItem.is(EIOTags.Items.ENTITY_STORAGE);
-                        if (hasStorage) {
-                            for (ResourceLocation entity : allCapturableEntities) {
-                                ItemStack item = ingredientItem.copy();
-                                if (item.is(EIOTags.Items.ENTITY_STORAGE)) {
-                                    item.set(EIODataComponents.STORED_ENTITY, StoredEntityData.of(entity));
-                                }
-                                consumer.accept(item);
-                            }
-                        } else {
-                            consumer.accept(ingredientItem);
-                        }
-                    }).toList()
-                )
-                .toList();
-        }
-
 
         craftingGridHelper.createAndSetOutputs(builder, results);
         craftingGridHelper.createAndSetInputs(builder, inputs, getWidth(recipeHolder), getHeight(recipeHolder));

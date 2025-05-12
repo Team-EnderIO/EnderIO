@@ -1,8 +1,7 @@
 package com.enderio.machines.common.blocks.powered_spawner;
 
-import com.enderio.base.api.attachment.StoredEntityData;
-import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.api.soul.Soul;
+import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -23,7 +22,8 @@ public class MobCaptureTask extends PoweredSpawnerTask {
     public boolean isCompleted() {
         // Ensure we have an item to take from
         var inputStack = PoweredSpawnerBlockEntity.INPUT.getItemStack(blockEntity);
-        if (inputStack.isEmpty() || !inputStack.is(EIOItems.EMPTY_SOUL_VIAL)) {
+        var inputSoulHandler = inputStack.getCapability(EIOCapabilities.SoulHandler.ITEM);
+        if (inputStack.isEmpty() || inputSoulHandler == null || !inputSoulHandler.tryInsertSoul(getSoulForCapture(), true)) {
             return true;
         }
 
@@ -32,31 +32,64 @@ public class MobCaptureTask extends PoweredSpawnerTask {
 
     @Override
     protected void onTaskCompleted() {
-        // Ensure we have a vial to take
+        final Soul capturedSoul = getSoulForCapture();
+
+        // Ensure we have a storage to fill
         var inputStack = PoweredSpawnerBlockEntity.INPUT.getItemStack(blockEntity);
-        if (inputStack.isEmpty() || !inputStack.is(EIOItems.EMPTY_SOUL_VIAL)) {
+        if (inputStack.isEmpty()) {
+            // Nothing to put into the output, so give up.
+            isComplete = true;
             return;
         }
 
-        // Do not overwrite slot contents
-        if (!PoweredSpawnerBlockEntity.OUTPUT.getItemStack(blockEntity).isEmpty()) {
+        // Clone the input
+        var resultStack = inputStack.copyWithCount(1);
+        var resultSoulHandler = resultStack.getCapability(EIOCapabilities.SoulHandler.ITEM);
+        if (resultSoulHandler == null || !resultSoulHandler.tryInsertSoul(capturedSoul, true)) {
+            // Cannot insert soul into the input, so give up
+            isComplete = true;
+            return;
+        }
+
+        // Insert the soul.
+        if (!resultSoulHandler.tryInsertSoul(capturedSoul, false)) {
+            // Unknown failure, give up.
+            isComplete = true;
+            return;
+        }
+
+        // If we can add another, leave it in the input for the next task.
+        if (resultSoulHandler.tryInsertSoul(capturedSoul, true)) {
+            PoweredSpawnerBlockEntity.INPUT.setStackInSlot(blockEntity, resultStack);
+            isComplete = true;
+            return;
+        }
+
+        // Otherwise, try and put it into the output.
+        var currentOutputStack = PoweredSpawnerBlockEntity.OUTPUT.getItemStack(blockEntity);
+        if (!currentOutputStack.isEmpty() && !ItemStack.isSameItemSameComponents(currentOutputStack, resultStack)) {
             setBlockedReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OUTPUT_FULL);
             return;
         }
 
-        ItemStack filledStack = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get(), 1);
-
-        var entityTypeKey = BuiltInRegistries.ENTITY_TYPE.getKey(entityType());
-
-        switch (spawnMode()) {
-        case NEW -> filledStack.set(EIODataComponents.STORED_ENTITY, StoredEntityData.of(entityTypeKey));
-        case COPY -> filledStack.set(EIODataComponents.STORED_ENTITY, blockEntity.getEntityData());
+        if (currentOutputStack.isEmpty()) {
+            PoweredSpawnerBlockEntity.OUTPUT.setStackInSlot(blockEntity, resultStack);
+        } else {
+            resultStack.setCount(currentOutputStack.getCount() + 1);
+            PoweredSpawnerBlockEntity.OUTPUT.setStackInSlot(blockEntity, resultStack);
         }
 
-        PoweredSpawnerBlockEntity.OUTPUT.setStackInSlot(blockEntity, filledStack);
+        // Deduct input
         PoweredSpawnerBlockEntity.INPUT.setStackInSlot(blockEntity,
-                inputStack.copyWithCount(inputStack.getCount() - 1));
+            inputStack.copyWithCount(inputStack.getCount() - 1));
 
         isComplete = true;
+    }
+
+    private Soul getSoulForCapture() {
+        return switch (spawnMode()) {
+        case NEW -> blockEntity.getBoundSoul().copyOnlyType();
+        case COPY -> blockEntity.getBoundSoul().copy();
+        };
     }
 }

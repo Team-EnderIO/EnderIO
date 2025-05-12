@@ -22,31 +22,21 @@ public class EntityCaptureUtils {
     private static final ResourceLocation DRAGON = ResourceLocation.withDefaultNamespace("ender_dragon");
 
     @Nullable
-    private static List<ResourceLocation> capturableEntities = null;
+    private static List<EntityType<?>> capturableEntityTypes = null;
 
-    public static List<ResourceLocation> getCapturableEntities() {
-        if (capturableEntities == null) {
+    public static List<EntityType<?>> getCapturableEntityTypes() {
+        if (capturableEntityTypes == null) {
             //noinspection unchecked
-            var livingEntities = ImmutableList.copyOf(
+            capturableEntityTypes = ImmutableList.copyOf(
                 BuiltInRegistries.ENTITY_TYPE.stream()
                     .filter(DefaultAttributes::hasSupplier)
                     .map(entityType -> (EntityType<? extends LivingEntity>) entityType)
+                    .filter(entityType -> getCapturableStatus(entityType, null) == CapturableStatus.CAPTURABLE)
+                    .filter(entityType -> !BuiltInRegistries.ENTITY_TYPE.getKey(entityType).equals(DRAGON))
                     .collect(Collectors.toList()));
-
-            List<ResourceLocation> entities = new ArrayList<>();
-            for (EntityType<? extends LivingEntity> type : livingEntities) {
-                if (getCapturableStatus(type, null) == CapturableStatus.CAPTURABLE) {
-                    ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(type);
-                    if (!key.equals(DRAGON)) {
-                        entities.add(key);
-                    }
-                }
-            }
-
-            capturableEntities = ImmutableList.copyOf(entities);
         }
 
-        return capturableEntities;
+        return capturableEntityTypes;
     }
 
     public enum CapturableStatus {

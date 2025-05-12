@@ -85,7 +85,7 @@ public class MobSpawnTask extends PoweredSpawnerTask {
                 switch (spawnMode()) {
                 case COPY -> {
                     // TODO: Stop using BE to get entity tag data...
-                    entity = EntityType.loadEntityRecursive(blockEntity.getEntityData().getEntityTag(), level,
+                    entity = EntityType.loadEntityRecursive(blockEntity.getBoundSoul().getEntityTag(), level,
                             entity1 -> {
                                 entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
                                 return entity1;
