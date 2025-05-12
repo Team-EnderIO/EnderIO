@@ -7,7 +7,6 @@ import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
 import com.enderio.machines.client.rendering.blockentity.ObeliskBER;
-import com.enderio.machines.client.rendering.blockentity.XPObeliskBER;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
 import com.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
@@ -30,6 +29,7 @@ import com.enderio.machines.common.blocks.obelisks.attractor.AttractorObeliskBlo
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlockEntity;
+import com.enderio.machines.common.blocks.obelisks.weather.WeatherObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.blocks.painting.PaintingMachineBlockEntity;
 import com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity;
@@ -180,9 +180,8 @@ public class MachineBlockEntities {
                     .apply(MachineBlockEntities::fluidHandlerCapability);
 
     public static final RegiliteBlockEntity<XPObeliskBlockEntity> XP_OBELISK = register("xp_obelisk",
-            XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK).setRenderer(() -> XPObeliskBER::new)
-                    // TODO: Make XP Obelisk use the common base class :)
-                    // .setRenderer(() -> ObeliskBER.factory(EIOItems.EXPERIENCE_ROD::get))
+            XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK)
+                    .setRenderer(() -> ObeliskBER.factory(EIOItems.VOID_VIAL::get))
                     .apply(MachineBlockEntities::machineBlockEntityCapabilities)
                     .apply(MachineBlockEntities::fluidHandlerCapability);
 
@@ -209,6 +208,12 @@ public class MachineBlockEntities {
             "attractor_obelisk", AttractorObeliskBlockEntity::new, MachineBlocks.ATTRACTOR_OBELISK)
                     .setRenderer(() -> ObeliskBER.factory(EIOItems.ELECTROMAGNET::asItem))
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+
+    public static final RegiliteBlockEntity<WeatherObeliskBlockEntity> WEATHER_OBELISK = register("weather_obelisk",
+            WeatherObeliskBlockEntity::new, MachineBlocks.WEATHER_OBELISK)
+                    .setRenderer(() -> ObeliskBER.factory(() -> Items.FIREWORK_ROCKET))
+                    .apply(MachineBlockEntities::machineBlockEntityCapabilities)
+                    .apply(MachineBlockEntities::fluidHandlerCapability);
 
     public static final RegiliteBlockEntity<FarmingStationBlockEntity> FARMING_STATION = register("farming_station",
             FarmingStationBlockEntity::new, MachineBlocks.FARMING_STATION)

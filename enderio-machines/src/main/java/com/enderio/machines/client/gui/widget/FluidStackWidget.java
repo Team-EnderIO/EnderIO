@@ -3,8 +3,10 @@ package com.enderio.machines.client.gui.widget;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.machines.common.blocks.base.fluid.FluidStorageInfo;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
+import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -76,9 +78,9 @@ public class FluidStackWidget extends EIOWidget {
                     guiGraphics.pose().popPose();
                 }
             }
-            renderToolTip(guiGraphics, mouseX, mouseY);
         }
 
+        renderToolTip(guiGraphics, mouseX, mouseY);
         RenderSystem.disableDepthTest();
     }
 
@@ -93,10 +95,16 @@ public class FluidStackWidget extends EIOWidget {
 
             var storage = fluidStorageSupplier.get();
 
-            guiGraphics.renderTooltip(minecraft.font,
-                    Arrays.asList(storage.contents().getDisplayName().getVisualOrderText(),
-                            Component.literal(storage.contents().getAmount() + "mB").getVisualOrderText()),
-                    mouseX, mouseY);
+            if (storage.contents().isEmpty()) {
+                guiGraphics.renderComponentTooltip(minecraft.font, List.of(MachineLang.EMPTY_FLUID_TANK), mouseX,
+                        mouseY);
+            } else {
+                guiGraphics.renderTooltip(minecraft.font,
+                        Arrays.asList(storage.contents().getDisplayName().getVisualOrderText(),
+                                Component.literal(storage.contents().getAmount() + "mB").getVisualOrderText()),
+                        mouseX, mouseY);
+            }
+
         }
     }
 }

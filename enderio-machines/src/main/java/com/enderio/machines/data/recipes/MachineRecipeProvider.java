@@ -435,6 +435,19 @@ public class MachineRecipeProvider extends RecipeProvider {
                                 .hasItems(ItemPredicate.Builder.item().of(EIOItems.ENDER_CRYSTAL).build()))
                 .save(recipeOutput);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WEATHER_OBELISK.get())
+                .define('W', EIOItems.WEATHER_CRYSTAL)
+                .define('S', EIOTags.Items.INGOTS_SOULARIUM)
+                .define('E', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
+                .define('C', EIOBlocks.VOID_CHASSIS)
+                .pattern(" W ")
+                .pattern("ESE")
+                .pattern("SCS")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance
+                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.WEATHER_CRYSTAL).build()))
+                .save(recipeOutput);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.VAT.get())
                 .define('B', Blocks.BARREL)
                 .define('C', EIOBlocks.VOID_CHASSIS)

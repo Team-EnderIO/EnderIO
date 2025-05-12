@@ -1,0 +1,8 @@
+{
+  "type": "enderio:weather_change",
+  "fluid": {
+    "amount": 1000,
+    "id": "enderio:fluid_cloud_seed_still"
+  },
+  "mode": "rain"
+}

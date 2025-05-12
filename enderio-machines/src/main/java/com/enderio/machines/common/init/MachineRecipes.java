@@ -5,6 +5,7 @@ import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
 import com.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
 import com.enderio.machines.common.blocks.enchanter.EnchanterRecipe;
 import com.enderio.machines.common.blocks.fluid_tank.TankRecipe;
+import com.enderio.machines.common.blocks.obelisks.weather.WeatherChangeRecipe;
 import com.enderio.machines.common.blocks.painting.PaintingRecipe;
 import com.enderio.machines.common.blocks.sag_mill.SagMillingRecipe;
 import com.enderio.machines.common.blocks.slicer.SlicingRecipe;
@@ -42,6 +43,8 @@ public class MachineRecipes {
             "painting", PaintingRecipe.Serializer::new);
     public static final RecipeTypeSerializerPair<FermentingRecipe, FermentingRecipe.Serializer> VAT_FERMENTING = register(
             "vat_fermenting", FermentingRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<WeatherChangeRecipe, WeatherChangeRecipe.Serializer> WEATHER_CHANGE = register(
+            "weather_change", WeatherChangeRecipe.Serializer::new);
 
     private static <I extends Recipe<?>> DeferredHolder<RecipeType<?>, RecipeType<I>> registerType(String name) {
         return RECIPE_TYPES.register(name, () -> RecipeType.simple(EnderIO.loc(name)));
