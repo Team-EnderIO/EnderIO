@@ -38,6 +38,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     private ConduitNetworkContext<?> context;
 
     // Caches
+    private final boolean supportsCaching;
+    
     private boolean shouldRebuildCache = true;
     private boolean haveConnectionsChanged = true;
     private final Set<ConduitNode> nodesToAdd = Sets.newHashSet();
@@ -73,6 +75,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     public ConduitNetwork(Holder<Conduit<?, ?>> conduit, ConduitNode initialNode) {
         super(initialNode);
         this.conduit = conduit;
+        this.supportsCaching = conduit.value().ticker() != null;
     }
 
     // TODO: Only public for legacy deserialisation.
@@ -82,10 +85,12 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         super(nodes, edges);
         this.conduit = conduit;
         this.context = context.orElse(null);
+        this.supportsCaching = conduit.value().ticker() != null;
     }
 
     protected ConduitNetwork(Holder<Conduit<?, ?>> conduit) {
         this.conduit = conduit;
+        this.supportsCaching = conduit.value().ticker() != null;
     }
 
     public Holder<Conduit<?, ?>> conduit() {
@@ -127,59 +132,70 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
     public Collection<ConduitNode> loadedNodes() {
         ensureNotDiscarded();
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return Collections.unmodifiableCollection(loadedNodes);
     }
 
     public Collection<ConduitNode> blockEndpoints() {
         ensureNotDiscarded();
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return Collections.unmodifiableCollection(endpointConnections.keySet());
     }
 
     public Collection<ConduitBlockConnection> blockConnections() {
         ensureNotDiscarded();
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return Collections.unmodifiableCollection(endpointConnections.values());
     }
 
     // This is sorted
     public List<ConduitBlockConnection> blockConnectionsAccessibleFrom(ConduitBlockConnection connection) {
         ensureNotDiscarded();
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return accessibleBlockConnectionsMap.getOrDefault(connection, List.of());
     }
 
     public Set<DyeColor> allChannels() {
         ensureNotDiscarded();
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return allChannels;
     }
 
     public List<ConduitBlockConnection> insertConnections() {
         ensureNotDiscarded();
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return Collections.unmodifiableList(insertConnections);
     }
 
     public List<ConduitBlockConnection> insertConnections(DyeColor color) {
         ensureNotDiscarded();
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return insertConnectionsByChannel.get(color);
     }
 
     // This is sorted
     public List<ConduitBlockConnection> extractConnectionsFrom(ConduitBlockConnection insertConnection) {
         ensureNotDiscarded();
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return extractConnectionsByInsert.getOrDefault(insertConnection, List.of());
     }
 
     public List<ConduitBlockConnection> extractConnections() {
         ensureNotDiscarded();
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return Collections.unmodifiableList(extractConnections);
     }
 
     public List<ConduitBlockConnection> extractConnections(DyeColor color) {
         ensureNotDiscarded();
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return extractConnectionsByChannel.get(color);
     }
 
     // This is sorted
     public List<ConduitBlockConnection> insertConnectionsFrom(ConduitBlockConnection extractConnection) {
         ensureNotDiscarded();
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return insertConnectionsByExtract.getOrDefault(extractConnection, List.of());
     }
 
@@ -224,6 +240,11 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     public void beforeTicking() {
         ensureNotDiscarded();
 
+        // Shouldn't be called, but can't hurt to be safe.
+        if (!supportsCaching) {
+            return;
+        }
+
         if (shouldRebuildCache) {
             rebuildCache();
         } else {
@@ -255,7 +276,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     public void onNodeLoaded(ConduitNode node) {
         Preconditions.checkArgument(node.isLoaded(), "Node is not loaded!");
 
-        if (!shouldRebuildCache) {
+        if (supportsCaching && !shouldRebuildCache) {
             nodesToAdd.add(node);
         }
     }
@@ -263,7 +284,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     public void onNodeUnloaded(ConduitNode node) {
         Preconditions.checkArgument(!node.isLoaded(), "Node is still loaded!");
 
-        if (!shouldRebuildCache) {
+        if (supportsCaching && !shouldRebuildCache) {
             nodesToRemove.add(node);
         }
     }
@@ -271,12 +292,16 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     public void onNodeUpdated(ConduitNode node) {
         Preconditions.checkArgument(node.isLoaded(), "Node is not loaded!");
 
-        if (!shouldRebuildCache) {
+        if (supportsCaching && !shouldRebuildCache) {
             nodesToUpdate.add(node);
         }
     }
 
     public void onChunkTickStatusChanged(long chunk) {
+        if (!supportsCaching || shouldRebuildCache) {
+            return;
+        }
+
         for (var node : nodesByChunkPos.get(chunk)) {
             if (node.isLoaded()) {
                 nodesToAdd.add(node);
