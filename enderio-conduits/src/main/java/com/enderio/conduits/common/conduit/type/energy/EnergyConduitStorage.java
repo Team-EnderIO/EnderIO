@@ -29,7 +29,7 @@ public record EnergyConduitStorage(boolean isMutable, int transferRate, IConduit
             return 0;
         }
 
-        return Math.max(Math.min(getMaxEnergyStored(), context.energyStored()), 0);
+        return Math.max(Math.min(getLongMaxEnergyStored(), context.energyStored()), 0);
     }
 
     @Override
@@ -45,7 +45,7 @@ public record EnergyConduitStorage(boolean isMutable, int transferRate, IConduit
 
         int energyReceived = (int)Math.min(Math.min(getLongMaxEnergyStored() - getLongEnergyStored(), toReceive), Integer.MAX_VALUE);
         if (!simulate) {
-            context.setEnergyStored(getEnergyStored() + energyReceived);
+            context.setEnergyStored(getLongEnergyStored() + energyReceived);
         }
 
         return energyReceived;
