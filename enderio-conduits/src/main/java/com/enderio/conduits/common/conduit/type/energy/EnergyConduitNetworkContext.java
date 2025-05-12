@@ -11,45 +11,30 @@ import java.util.Set;
 public class EnergyConduitNetworkContext implements ConduitNetworkContext<EnergyConduitNetworkContext> {
 
     public static final MapCodec<EnergyConduitNetworkContext> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
-            .group(Codec.INT.fieldOf("energy_stored").forGetter(i -> i.energyStored),
-                    Codec.INT.fieldOf("rotating_index").forGetter(i -> i.rotatingIndex))
+            .group(Codec.LONG.fieldOf("energy_stored").forGetter(i -> i.energyStored))
             .apply(builder, EnergyConduitNetworkContext::new));
 
     public static ConduitNetworkContextType<EnergyConduitNetworkContext> TYPE = new ConduitNetworkContextType<>(CODEC,
             EnergyConduitNetworkContext::new);
 
-    private int energyStored = 0;
-    private int rotatingIndex = 0;
+    private long energyStored = 0;
 
     public EnergyConduitNetworkContext() {
     }
 
-    public EnergyConduitNetworkContext(int energyStored) {
+    public EnergyConduitNetworkContext(long energyStored) {
         this.energyStored = energyStored;
-    }
-
-    public EnergyConduitNetworkContext(int energyStored, int rotatingIndex) {
-        this.energyStored = energyStored;
-        this.rotatingIndex = rotatingIndex;
     }
 
     /**
      * @implNote Never trust the value stored here, always Min it with the capacity. When the graph splits, this will just be copied across all sides.
      */
-    public int energyStored() {
+    public long energyStored() {
         return energyStored;
     }
 
-    public void setEnergyStored(int energyStored) {
+    public void setEnergyStored(long energyStored) {
         this.energyStored = energyStored;
-    }
-
-    public int rotatingIndex() {
-        return rotatingIndex;
-    }
-
-    public void setRotatingIndex(int rotatingIndex) {
-        this.rotatingIndex = rotatingIndex;
     }
 
     @Override
@@ -68,7 +53,7 @@ public class EnergyConduitNetworkContext implements ConduitNetworkContext<Energy
 
         // Split stored energy based on the network size difference.
         float proportion = selfNetwork.nodeCount() / (float) totalNodes;
-        return new EnergyConduitNetworkContext((int) Math.floor(proportion * energyStored));
+        return new EnergyConduitNetworkContext((long)Math.floor(proportion * energyStored));
     }
 
     @Override

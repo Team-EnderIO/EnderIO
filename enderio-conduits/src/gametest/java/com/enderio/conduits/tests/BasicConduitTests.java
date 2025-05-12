@@ -1,4 +1,4 @@
-package com.enderio.conduits.server.tests;
+package com.enderio.conduits.tests;
 
 import com.enderio.conduits.common.init.Conduits;
 import net.minecraft.gametest.framework.GameTest;

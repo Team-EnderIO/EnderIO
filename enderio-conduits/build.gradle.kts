@@ -16,11 +16,33 @@ apply(from = rootProject.file("buildSrc/shared.gradle.kts"))
 // Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 
+configurations {
+    create("gametestAnnotationProcessor") {
+        extendsFrom(annotationProcessor.get())
+    }
+    create("gametestCompileOnly") {
+        extendsFrom(compileOnly.get())
+    }
+    create("gametestImplementation") {
+        extendsFrom(implementation.get())
+    }
+    create("gametestRuntimeOnly") {
+        extendsFrom(runtimeOnly.get())
+    }
+    create("gametestLocalRuntime") {
+        extendsFrom(runtimeOnly.get())
+    }
+}
+
 sourceSets {
     main {
         resources {
             srcDir("src/generated/resources")
         }
+    }
+    create("gametest") {
+        compileClasspath += sourceSets.main.get().output
+        runtimeClasspath += configurations.getByName("gametestLocalRuntime")
     }
 }
 
@@ -41,11 +63,6 @@ dependencies {
     api(project(":enderio-base"))
     accessTransformers(project(":enderio-base"))
 
-    // Neo test framework
-    implementation("net.neoforged:testframework:$neoForgeVersion") {
-        isTransitive = false
-    }
-
     // JEI
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge-api:$jeiVersion")
@@ -61,10 +78,27 @@ dependencies {
     // TODO: This isn't great.
     compileOnly(project(":enderio-machines"))
     add("localRuntime", project(":enderio-machines"))
+
+    // Setup gametests
+    add("gametestImplementation", "net.neoforged:testframework:$neoForgeVersion") {
+        isTransitive = false
+    }
 }
 
 neoForge {
     version = neoForgeVersion
+
+    addModdingDependenciesTo(sourceSets.getByName("gametest"))
+
+    mods {
+        create("enderio_conduits") {
+            sourceSet(sourceSets.getByName("main"))
+        }
+
+        create("enderio_conduits_tests") {
+            sourceSet(sourceSets.getByName("gametest"))
+        }
+    }
 
     runs {
         create("data") {
@@ -77,13 +111,36 @@ neoForge {
                     "--output", file("src/generated/resources").absolutePath,
                     "--existing", file("src/main/resources").absolutePath,
             )
+
+            loadedMods.set(listOf(mods.getByName("enderio_conduits")))
+        }
+
+        create("gameTestServer") {
+            type = "gameTestServer"
+
+            sourceSet = sourceSets.getByName("gametest")
+            loadedMods.set(listOf(mods.getByName("enderio_conduits"), mods.getByName("enderio_conduits_tests")))
         }
     }
+}
 
-    mods {
-        create("enderio_conduits") {
-            sourceSet(sourceSets.getByName("main"))
-        }
+// Gross hack for gametests for now.
+val minecraftVersionRange: String by project
+val neoForgeVersionRange: String by project
+val loaderVersionRange: String by project
+val replaceProperties = mapOf(
+        "mod_version" to project.version,
+        "mcversion" to minecraftVersionRange,
+        "neo_version" to neoForgeVersionRange,
+        "loader_version_range" to loaderVersionRange
+)
+
+tasks.withType<ProcessResources>().configureEach {
+    inputs.properties(replaceProperties)
+
+    filesMatching("META-INF/neoforge.mods.toml") {
+        expand(replaceProperties)
+        expand(mutableMapOf("project" to project))
     }
 }
 

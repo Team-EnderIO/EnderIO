@@ -1,6 +1,6 @@
-package com.enderio.conduits.server.tests.item;
+package com.enderio.conduits.tests.item;
 
-import com.enderio.conduits.server.tests.ConduitGameTestHelper;
+import com.enderio.conduits.tests.ConduitGameTestHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestInfo;

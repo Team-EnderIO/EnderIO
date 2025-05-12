@@ -10,6 +10,8 @@ import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
 import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.mojang.serialization.Codec;
+
+import java.util.Comparator;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -88,8 +90,16 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      */
     boolean hasMenu();
 
+    /**
+     * Proxy a capability to the conduit bundle block.
+     * @param level the level.
+     * @param node the node that is being queried for proxying. Will be null on the client.
+     * @param capability the capability being requested.
+     * @param context the context for the capability.
+     * @return the capability or null if it is not exposed.
+     */
     @Nullable
-    default <TCapability, TContext> TCapability proxyCapability(Level level, IConduitNode node,
+    default <TCapability, TContext> TCapability proxyCapability(Level level, @Nullable IConduitNode node,
             BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
         return null;
     }
@@ -142,6 +152,15 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
             ConduitBlockConnection connectionB) {
         return Integer.compare(refConnection.connectedBlockPos().distManhattan(connectionA.connectedBlockPos()),
                 refConnection.connectedBlockPos().distManhattan(connectionB.connectedBlockPos()));
+    }
+
+    /**
+     * Used to sort the general lists of connections that have no reference point.
+     * @return the comparator, or null for no sorting.
+     */
+    @Nullable
+    default Comparator<ConduitBlockConnection> getGeneralConnectionComparator() {
+        return null;
     }
 
     // endregion

@@ -2,9 +2,13 @@ package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.conduits.api.network.IConduitNetwork;
 import com.enderio.conduits.api.ticker.ConduitTicker;
+import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.apache.commons.compress.utils.Lists;
+
+import java.util.List;
 
 public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
 
@@ -15,12 +19,11 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
 
     @Override
     public void tick(ServerLevel level, EnergyConduit conduit, IConduitNetwork network) {
-        var inserts = network.insertConnections();
-        if (inserts.isEmpty()) {
+        var insertConnections = network.insertConnections();
+        if (insertConnections.isEmpty()) {
             return;
         }
 
-        final int transferRate = conduit.transferRatePerTick() * conduit.networkTickRate();
         EnergyConduitNetworkContext context = network.getContext(EnergyConduitNetworkContext.TYPE);
         if (context == null) {
             return;
@@ -30,30 +33,68 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
             return;
         }
 
-        // Revert overflow.
-        if (inserts.size() <= context.rotatingIndex()) {
-            context.setRotatingIndex(0);
-        }
+        // insert connections list is sorted by priority so we can just go until we find a change in priority group.
+        int currentPriority = insertConnections.getFirst().connectionConfig(EnergyConduitConnectionConfig.TYPE).priority();
+        List<Pair<IEnergyStorage, Integer>> insertHandlers = Lists.newArrayList();
+        for (var insertConnection : insertConnections) {
+            int priority = insertConnection.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority();
+            if (priority != currentPriority) {
+                // Distribute energy to everything in the previous priority group.
+                long energyInserted = distributeTo(insertHandlers, context.energyStored());
+                context.setEnergyStored(context.energyStored() - energyInserted);
 
-        int startingRotatingIndex = context.rotatingIndex();
-        for (int i = startingRotatingIndex; i < startingRotatingIndex + inserts.size(); i++) {
-            int insertIndex = i % inserts.size();
-            var sendingConnection = inserts.get(insertIndex);
+                if (context.energyStored() <= 0) {
+                    return;
+                }
 
-            IEnergyStorage insertHandler = sendingConnection.getSidedCapability(Capabilities.EnergyStorage.BLOCK);
-            if (insertHandler == null || !insertHandler.canReceive()) {
-                continue;
+                // Setup for this priority group.
+                insertHandlers.clear();
+                currentPriority = priority;
             }
 
-            int energyToInsert = Math.min(transferRate, Math.max(context.energyStored(), 0));
-            int energyInserted = insertHandler.receiveEnergy(energyToInsert, false);
+            IEnergyStorage insertHandler = insertConnection.getSidedCapability(Capabilities.EnergyStorage.BLOCK);
+            if (insertHandler != null && insertHandler.canReceive()) {
+                int receivableEnergy = insertHandler.receiveEnergy(Integer.MAX_VALUE, true);
+                if (receivableEnergy > 0) {
+                    insertHandlers.add(Pair.of(insertHandler, receivableEnergy));
+                }
+            }
+        }
+
+        // Final distribution if we still have handlers
+        if (!insertHandlers.isEmpty() && context.energyStored() > 0) {
+            // Distribute energy to everything in the previous priority group.
+            long energyInserted = distributeTo(insertHandlers, context.energyStored());
             context.setEnergyStored(context.energyStored() - energyInserted);
-            context.setRotatingIndex(insertIndex + 1);
-            if (context.energyStored() <= 0) {
-                // If we are out of energy then stop the loop so we start at the next
-                // index next time around to spread out any new energy
+        }
+    }
+
+    private long distributeTo(List<Pair<IEnergyStorage, Integer>> insertHandlers, long availableEnergy) {
+        // Try to fill smaller buffers first.
+        insertHandlers.sort((a, b) -> Integer.compare(b.right(), a.right()));
+
+        long energyRemaining = availableEnergy;
+        int toShareWith = insertHandlers.size();
+        for (var handler : insertHandlers) {
+            // If we have too little energy left, just give it to the first handler that will accept it all
+            int energyInserted;
+            if (energyRemaining < toShareWith) {
+                // If we're smaller than an int, we can just cast.
+                energyInserted = handler.left().receiveEnergy((int)energyRemaining, false);
+            } else {
+                // Don't insert more than INT_MAX :)
+                energyInserted = handler.left().receiveEnergy((int)Math.min(energyRemaining / toShareWith, Integer.MAX_VALUE), false);
+            }
+
+            // One less to share with now.
+            toShareWith--;
+
+            energyRemaining -= energyInserted;
+            if (energyRemaining <= 0) {
                 break;
             }
         }
+
+        return availableEnergy - energyRemaining;
     }
 }

@@ -1,4 +1,4 @@
-package com.enderio.conduits.server.tests.item;
+package com.enderio.conduits.tests.item;
 
 import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.conduits.EnderIOConduits;

@@ -36,21 +36,22 @@ public class Conduits {
     public static void bootstrap(BootstrapContext<Conduit<?, ?>> context) {
         // TODO: These rates are still up for change, but will refine through testing.
         context.register(ENERGY,
-                new EnergyConduit(EnderIO.loc("block/conduit/energy"), ConduitLang.ENERGY_CONDUIT, 1_000));
+                new EnergyConduit(EnderIO.loc("block/conduit/energy"), ConduitLang.ENERGY_CONDUIT, 6000));
         context.register(ENHANCED_ENERGY, new EnergyConduit(EnderIO.loc("block/conduit/enhanced_energy"),
-                ConduitLang.ENHANCED_ENERGY_CONDUIT, 12_000));
+                ConduitLang.ENHANCED_ENERGY_CONDUIT, 48_000));
         context.register(ENDER_ENERGY,
-                new EnergyConduit(EnderIO.loc("block/conduit/ender_energy"), ConduitLang.ENDER_ENERGY_CONDUIT, 48_000));
+                new EnergyConduit(EnderIO.loc("block/conduit/ender_energy"), ConduitLang.ENDER_ENERGY_CONDUIT, 384_000));
 
         context.register(REDSTONE, new RedstoneConduit(EnderIO.loc("block/conduit/redstone"),
                 EnderIO.loc("block/conduit/redstone_active"), ConduitLang.REDSTONE_CONDUIT));
 
+        // Fluid conduits tick every 5 ticks, so remember the transfer rate per tick will be *5 for each operation.
         context.register(FLUID,
-                new FluidConduit(EnderIO.loc("block/conduit/fluid"), ConduitLang.FLUID_CONDUIT, 50, false));
+                new FluidConduit(EnderIO.loc("block/conduit/fluid"), ConduitLang.FLUID_CONDUIT, 200, false));
         context.register(PRESSURIZED_FLUID, new FluidConduit(EnderIO.loc("block/conduit/pressurized_fluid"),
-                ConduitLang.PRESSURIZED_FLUID_CONDUIT, 100, false));
+                ConduitLang.PRESSURIZED_FLUID_CONDUIT, 1_000, false));
         context.register(ENDER_FLUID,
-                new FluidConduit(EnderIO.loc("block/conduit/ender_fluid"), ConduitLang.ENDER_FLUID_CONDUIT, 200, true));
+                new FluidConduit(EnderIO.loc("block/conduit/ender_fluid"), ConduitLang.ENDER_FLUID_CONDUIT, 8_000, true));
 
         context.register(ITEM, new ItemConduit(EnderIO.loc("block/conduit/item"), ConduitLang.ITEM_CONDUIT, 32, 20));
         context.register(ENHANCED_ITEM,
