@@ -1,6 +1,5 @@
-package com.enderio.conduits.server;
+package com.enderio.conduits.tests;
 
-import com.enderio.conduits.EnderIOConduits;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -16,11 +15,14 @@ import net.neoforged.testframework.conf.FrameworkConfiguration;
 import net.neoforged.testframework.impl.MutableTestFramework;
 import org.lwjgl.glfw.GLFW;
 
-@Mod(EnderIOConduits.MODULE_MOD_ID)
-public class EnderIOConduitsServer {
-    public EnderIOConduitsServer(IEventBus eventBus, ModContainer container) {
+@Mod(EnderIOConduitsTests.MOD_ID)
+public class EnderIOConduitsTests {
+
+    public static final String MOD_ID = "enderio_conduits_tests";
+
+    public EnderIOConduitsTests(IEventBus eventBus, ModContainer container) {
         final MutableTestFramework framework = FrameworkConfiguration
-                .builder(ResourceLocation.fromNamespaceAndPath(EnderIOConduits.MODULE_MOD_ID, "tests"))
+                .builder(ResourceLocation.fromNamespaceAndPath(MOD_ID, "tests"))
                 .clientConfiguration(() -> ClientConfiguration.builder()
                         .toggleOverlayKey(GLFW.GLFW_KEY_O)
                         .openManagerKey(GLFW.GLFW_KEY_M)

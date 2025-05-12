@@ -1,4 +1,4 @@
-package com.enderio.conduits.server.tests;
+package com.enderio.conduits.tests;
 
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
