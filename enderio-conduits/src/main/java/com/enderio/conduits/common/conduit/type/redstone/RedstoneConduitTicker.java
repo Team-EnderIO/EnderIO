@@ -42,9 +42,9 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
                 for (var insertConnection : network.insertConnections(channel)) {
                     level.updateNeighborsAt(insertConnection.node().pos(), ConduitBlocks.CONDUIT.get());
 
-                    if (insertConnection.connectionConfig(RedstoneConduitConnectionConfig.TYPE)
-                            .isStrongOutputSignal()) {
-                        level.updateNeighborsAt(insertConnection.connectedBlockPos(), ConduitBlocks.CONDUIT.get());
+                    if (insertConnection.connectionConfig(RedstoneConduitConnectionConfig.TYPE).isStrongOutputSignal()) {
+                        level.updateNeighborsAtExceptFromFacing(insertConnection.connectedBlockPos(), ConduitBlocks.CONDUIT.get(),
+                            insertConnection.connectionSide().getOpposite());
                     }
                 }
             }

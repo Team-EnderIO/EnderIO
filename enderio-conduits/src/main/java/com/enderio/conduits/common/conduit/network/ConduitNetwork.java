@@ -40,6 +40,9 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     // Caches
     private boolean shouldRebuildCache = true;
     private boolean haveConnectionsChanged = true;
+    private final Set<ConduitNode> nodesToAdd = Sets.newHashSet();
+    private final Set<ConduitNode> nodesToRemove = Sets.newHashSet();
+    private final Set<ConduitNode> nodesToUpdate = Sets.newHashSet();
 
     private final Multimap<Long, ConduitNode> nodesByChunkPos = HashMultimap.create();
 
@@ -223,6 +226,24 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
         if (shouldRebuildCache) {
             rebuildCache();
+        } else {
+            for (var node : nodesToRemove) {
+                removeLoadedNode(node);
+            }
+
+            for (var node : nodesToAdd) {
+                addLoadedNode(node);
+            }
+
+            for (var node : nodesToUpdate) {
+                // TODO: Better update strategy?
+                removeLoadedNode(node);
+                addLoadedNode(node);
+            }
+
+            nodesToRemove.clear();
+            nodesToAdd.clear();
+            nodesToUpdate.clear();
         }
 
         if (haveConnectionsChanged) {
@@ -234,54 +255,33 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     public void onNodeLoaded(ConduitNode node) {
         Preconditions.checkArgument(node.isLoaded(), "Node is not loaded!");
 
-        // If a full rebuild is scheduled, don't modify the cache
-        if (shouldRebuildCache) {
-            return;
+        if (!shouldRebuildCache) {
+            nodesToAdd.add(node);
         }
-
-        addLoadedNode(node);
     }
 
     public void onNodeUnloaded(ConduitNode node) {
         Preconditions.checkArgument(!node.isLoaded(), "Node is still loaded!");
 
-        // If a full rebuild is scheduled, don't modify the cache
-        if (shouldRebuildCache) {
-            return;
+        if (!shouldRebuildCache) {
+            nodesToRemove.add(node);
         }
-
-        removeLoadedNode(node);
     }
 
     public void onNodeUpdated(ConduitNode node) {
         Preconditions.checkArgument(node.isLoaded(), "Node is not loaded!");
 
-        if (shouldRebuildCache) {
-            return;
+        if (!shouldRebuildCache) {
+            nodesToUpdate.add(node);
         }
-
-        // If we've somehow missed this node, do the full works
-        if (!loadedNodes.contains(node)) {
-            addLoadedNode(node);
-        } else {
-            // TODO: is it worth writing more code to do a partial rebuild?
-            removeLoadedNode(node);
-            addLoadedNode(node);
-        }
-
-        // Update channel list
-        updateChannelList();
-
-        // Must re-sort in case ordering has changed.
-        haveConnectionsChanged = true;
     }
 
     public void onChunkTickStatusChanged(long chunk) {
         for (var node : nodesByChunkPos.get(chunk)) {
             if (node.isLoaded()) {
-                addLoadedNode(node);
+                nodesToAdd.add(node);
             } else {
-                removeLoadedNode(node);
+                nodesToRemove.add(node);
             }
         }
     }
@@ -436,6 +436,12 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
      * For other network mutations, partial cache modifications are supported.
      */
     private void rebuildCache() {
+        // Clear partial update lists
+        nodesToAdd.clear();
+        nodesToRemove.clear();
+        nodesToUpdate.clear();
+
+        // Clear all caches
         nodesByChunkPos.clear();
         loadedNodes.clear();
         endpointConnections.clear();
@@ -521,8 +527,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         }
 
         addNodeToPositionMaps(node, false);
-        if (node.isLoaded()) {
-            addLoadedNode(node);
+        if (node.isLoaded() && !shouldRebuildCache) {
+            nodesToAdd.add(node);
         }
     }
 
@@ -533,7 +539,9 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         }
 
         removeNodeFromPositionMaps(node);
-        removeLoadedNode(node);
+        if (!shouldRebuildCache) {
+            nodesToRemove.add(node);
+        }
     }
 
     @Override
