@@ -1,6 +1,5 @@
 {
   "block.enderio.conduit": "Conduit Bundle",
-  "gui.enderio.conduit.enabled": "Enabled",
   "gui.enderio.conduit.error.no_screen_type": "Error: No screen type defined",
   "gui.enderio.conduit.extract": "Extract",
   "gui.enderio.conduit.input": "Input",
@@ -44,13 +43,13 @@
   "item.enderio.redstone_xor_filter": "Redstone Xor Filter",
   "item.enderio.transparent_conduit_facade": "Transparent Conduit Facade",
   "item.enderio.transparent_hardened_conduit_facade": "Transparent Hardened Conduit Facade",
-  "tooltip.enderio.conduit.debug.tick_rate": "Graph Ticks: %s/sec",
+  "tooltip.enderio.conduit.debug.tick_rate": "Network Ticks: %s/sec",
   "tooltip.enderio.conduit.energy.rate": "Max Output %s µI/t",
   "tooltip.enderio.conduit.fluid.effective_rate": "Effective Rate: %s mB/t",
   "tooltip.enderio.conduit.fluid.multi": "Allows multiple fluids to be transported on the same line",
-  "tooltip.enderio.conduit.fluid.raw_rate": "Rate: %s mB/graph tick",
+  "tooltip.enderio.conduit.fluid.raw_rate": "Rate: %s mB/network tick",
   "tooltip.enderio.conduit.item.effective_rate": "Effective Rate: %s Items/sec",
-  "tooltip.enderio.conduit.item.raw_rate": "Rate: %s Items/graph tick",
+  "tooltip.enderio.conduit.item.raw_rate": "Rate: %s Items/network tick",
   "tooltip.enderio.conduit_facade.blast_resist": "Hardened: Resists breaking and explosions",
   "tooltip.enderio.conduit_facade.transparent": "Transparent: Hides conduits when painted with a translucent block"
 }
