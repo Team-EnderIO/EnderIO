@@ -1,5 +1,6 @@
 package com.enderio.conduits.api.network;
 
+import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.connection.config.IOConnectionConfig;
 import com.enderio.conduits.api.network.node.IConduitNode;
 import java.util.Collection;
@@ -82,7 +83,7 @@ public interface IConduitNetwork {
      * For this query to yield results, the conduit's connection config must be derived from {@link IOConnectionConfig}.
      *
      * @return all the sending connections across all channels.
-     * @implNote The list is in no specific order.
+     * @implNote The list can be sorted using {@link Conduit#getGeneralConnectionComparator()}, but is often unordered.
      */
     List<ConduitBlockConnection> insertConnections();
 
@@ -91,7 +92,7 @@ public interface IConduitNetwork {
      *
      * @param channel the channel to query for.
      * @return all the sending connections in the given {@code channel}.
-     * @implNote The list is in no specific order.
+     * @implNote The list can be sorted using {@link Conduit#getGeneralConnectionComparator()}, but is often unordered.
      */
     List<ConduitBlockConnection> insertConnections(DyeColor channel);
 
@@ -100,7 +101,7 @@ public interface IConduitNetwork {
      *
      * @param insertConnection the insert connection to query from.
      * @return all the receiving connections that are accessible to the {@code insertConnection}, in the conduit's specified order.
-     * @implNote The list is ordered by {@link com.enderio.conduits.api.Conduit#compareNodes(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
+     * @implNote The list is ordered by {@link Conduit#compareNodes(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
      */
     List<ConduitBlockConnection> extractConnectionsFrom(ConduitBlockConnection insertConnection);
 

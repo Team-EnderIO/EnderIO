@@ -4,6 +4,7 @@ import com.enderio.base.api.misc.RedstoneControl;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
+import com.enderio.conduits.api.network.ConduitBlockConnection;
 import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitTypes;
@@ -11,6 +12,8 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import java.util.Comparator;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,8 +30,6 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-// TODO: Redstone control isn't working properly - the cap needs to refuse input to the node if the connection being fed into is blocked by a redstone signal.
 
 public record EnergyConduit(ResourceLocation texture, Component description, int transferRatePerTick)
         implements Conduit<EnergyConduit, EnergyConduitConnectionConfig> {
@@ -83,6 +84,13 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
         IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK,
                 conduitPos.relative(direction), direction.getOpposite());
         return capability != null;
+    }
+
+    @Override
+    public Comparator<ConduitBlockConnection> getGeneralConnectionComparator() {
+        return (a, b) -> Integer.compare(
+            b.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority(),
+            a.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority());
     }
 
     @Override
@@ -144,7 +152,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     @Override
     public EnergyConduitConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
             DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
-        return new EnergyConduitConnectionConfig(isInsert, isExtract, redstoneControl, redstoneChannel);
+        return new EnergyConduitConnectionConfig(isInsert, isExtract, redstoneControl, redstoneChannel, 0);
     }
 
     @Override

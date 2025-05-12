@@ -1017,7 +1017,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
         if (level != null && !level.isClientSide()) {
             for (var node : conduitNodes.values()) {
-                node.onRedstoneChanged();
+                if (node.isLoaded()) {
+                    node.onRedstoneChanged();
+                }
             }
         }
     }

@@ -10,6 +10,8 @@ import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
 import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.mojang.serialization.Codec;
+
+import java.util.Comparator;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -142,6 +144,15 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
             ConduitBlockConnection connectionB) {
         return Integer.compare(refConnection.connectedBlockPos().distManhattan(connectionA.connectedBlockPos()),
                 refConnection.connectedBlockPos().distManhattan(connectionB.connectedBlockPos()));
+    }
+
+    /**
+     * Used to sort the general lists of connections that have no reference point.
+     * @return the comparator, or null for no sorting.
+     */
+    @Nullable
+    default Comparator<ConduitBlockConnection> getGeneralConnectionComparator() {
+        return null;
     }
 
     // endregion

@@ -5,7 +5,32 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public record EnergyConduitStorage(boolean isMutable, int transferRate, IConduitNode node) implements IEnergyStorage {
 
-    private static final int ENERGY_BUFFER_SCALER = 4;
+    private static final long ENERGY_BUFFER_SCALER = 4;
+
+    public long getLongMaxEnergyStored() {
+        // Capacity is transfer rate + nodeCount * transferRatePerTick / 2 (expanded).
+        // This ensures at least the transfer rate of the cable is available, but
+        // capacity doesn't grow outrageously.
+        int nodeCount = node.getNetwork().nodeCount();
+
+        // The maximum number of nodes before the network capacity is INT_MAX.
+        long maxNodesBeforeLimit = Long.MAX_VALUE / (transferRate() / ENERGY_BUFFER_SCALER) - ENERGY_BUFFER_SCALER;
+        if (nodeCount >= maxNodesBeforeLimit) {
+            return Long.MAX_VALUE;
+        }
+
+        // Always full transfer rate plus the extra buffer.
+        return transferRate() + nodeCount * (transferRate() / ENERGY_BUFFER_SCALER);
+    }
+
+    public long getLongEnergyStored() {
+        var context = node.getNetwork().getContext(EnergyConduitNetworkContext.TYPE);
+        if (context == null) {
+            return 0;
+        }
+
+        return Math.max(Math.min(getMaxEnergyStored(), context.energyStored()), 0);
+    }
 
     @Override
     public int receiveEnergy(int toReceive, boolean simulate) {
@@ -18,7 +43,7 @@ public record EnergyConduitStorage(boolean isMutable, int transferRate, IConduit
         // Cap to transfer rate.
         toReceive = Math.min(transferRate(), toReceive);
 
-        int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), toReceive);
+        int energyReceived = (int)Math.min(Math.min(getLongMaxEnergyStored() - getLongEnergyStored(), toReceive), Integer.MAX_VALUE);
         if (!simulate) {
             context.setEnergyStored(getEnergyStored() + energyReceived);
         }
@@ -33,29 +58,12 @@ public record EnergyConduitStorage(boolean isMutable, int transferRate, IConduit
 
     @Override
     public int getEnergyStored() {
-        var context = node.getNetwork().getContext(EnergyConduitNetworkContext.TYPE);
-        if (context == null) {
-            return 0;
-        }
-
-        return Math.max(Math.min(getMaxEnergyStored(), context.energyStored()), 0);
+        return (int)Math.min(getLongEnergyStored(), Integer.MAX_VALUE);
     }
 
     @Override
     public int getMaxEnergyStored() {
-        // Capacity is transfer rate + nodeCount * transferRatePerTick / 2 (expanded).
-        // This ensures at least the transfer rate of the cable is available, but
-        // capacity doesn't grow outrageously.
-        int nodeCount = node.getNetwork().nodeCount();
-
-        // The maximum number of nodes before the network capacity is INT_MAX.
-        int maxNodesBeforeLimit = Integer.MAX_VALUE / (transferRate() / ENERGY_BUFFER_SCALER) - ENERGY_BUFFER_SCALER;
-        if (nodeCount >= maxNodesBeforeLimit) {
-            return Integer.MAX_VALUE;
-        }
-
-        // Always full transfer rate plus the extra buffer.
-        return transferRate() + nodeCount * (transferRate() / ENERGY_BUFFER_SCALER);
+        return (int)Math.min(getLongMaxEnergyStored(), Integer.MAX_VALUE);
     }
 
     @Override

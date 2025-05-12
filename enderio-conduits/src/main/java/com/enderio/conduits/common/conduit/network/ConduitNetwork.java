@@ -45,6 +45,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
     private final Set<ConduitNode> loadedNodes = Sets.newHashSet();
 
+    // TODO: Separate this into a list and a multimap so we can sort all endpointConnections?
     private final SetMultimap<ConduitNode, ConduitBlockConnection> endpointConnections = HashMultimap.create();
     private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> accessibleBlockConnectionsMap = Maps
             .newHashMap();
@@ -409,6 +410,12 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     }
 
     private void sortConnectionLists() {
+        var basicConnectionComparator = conduit().value().getGeneralConnectionComparator();
+        if (basicConnectionComparator != null) {
+            insertConnections.sort(basicConnectionComparator);
+            extractConnections.sort(basicConnectionComparator);
+        }
+
         for (var entry : accessibleBlockConnectionsMap.entrySet()) {
             sortConnections(entry.getKey(), entry.getValue());
         }

@@ -126,11 +126,12 @@ public class ConduitNetworkSavedData extends SavedData {
     }
 
     public static void onNetworkDiscarded(ServerLevel level, ConduitNetwork network) {
+        Preconditions.checkArgument(network.isDiscarded(), "Network is not discarded!");
         get(level).onNetworkDiscarded(network);
     }
 
     private void onNetworkDiscarded(ConduitNetwork network) {
-        Preconditions.checkArgument(network.isDiscarded(), "Network is not discarded!");
+        // Allow empty or discarded networks here
         networks.remove(network.conduit(), network);
 
         for (var chunk : network.allChunks()) {
