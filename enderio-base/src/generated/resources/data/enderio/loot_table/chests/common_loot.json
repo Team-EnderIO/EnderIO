@@ -46,16 +46,6 @@
           "type": "minecraft:item",
           "conditions": [
             {
-              "chance": 0.5,
-              "condition": "minecraft:random_chance"
-            }
-          ],
-          "name": "enderio:wood_gear"
-        },
-        {
-          "type": "minecraft:item",
-          "conditions": [
-            {
               "chance": 0.15,
               "condition": "minecraft:random_chance"
             }

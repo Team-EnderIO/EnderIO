@@ -59,13 +59,13 @@ public class ItemRecipeProvider extends RecipeProvider {
 
     private void addTools(RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.YETA_WRENCH.get())
-                .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
-                .define('G', EIOTags.Items.GEARS_STONE)
+                .define('I', Tags.Items.INGOTS_COPPER)
+                .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
                 .pattern("I I")
                 .pattern(" G ")
                 .pattern(" I ")
                 .unlockedBy("has_ingredient",
-                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.COPPER_ALLOY_INGOT.get()))
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
                 .save(recipeOutput);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, EIOItems.COLD_FIRE_IGNITER.get())

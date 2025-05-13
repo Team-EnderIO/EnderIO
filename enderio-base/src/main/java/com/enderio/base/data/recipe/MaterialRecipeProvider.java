@@ -277,46 +277,6 @@ public class MaterialRecipeProvider extends RecipeProvider {
     }
 
     private void addGears(RecipeOutput recipeOutput) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.GEAR_WOOD.get())
-                .pattern(" S ")
-                .pattern("S S")
-                .pattern(" S ")
-                .define('S', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_ingredient",
-                        InventoryChangeTrigger.TriggerInstance
-                                .hasItems(ItemPredicate.Builder.item().of(Tags.Items.RODS_WOODEN).build()))
-                .save(recipeOutput);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.GEAR_WOOD.get())
-                .pattern("S S")
-                .pattern("   ")
-                .pattern("S S")
-                .define('S', Tags.Items.RODS_WOODEN)
-                .unlockedBy("has_ingredient",
-                        InventoryChangeTrigger.TriggerInstance
-                                .hasItems(ItemPredicate.Builder.item().of(Tags.Items.RODS_WOODEN).build()))
-                .save(recipeOutput, EnderIO.loc(EIOItems.GEAR_WOOD.getId().getPath() + "_corner"));
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.GEAR_STONE.get())
-                .pattern("NIN")
-                .pattern("I I")
-                .pattern("NIN")
-                .define('N', Tags.Items.RODS_WOODEN)
-                .define('I', Tags.Items.COBBLESTONES)
-                .unlockedBy("has_ingredient",
-                        InventoryChangeTrigger.TriggerInstance
-                                .hasItems(ItemPredicate.Builder.item().of(Tags.Items.COBBLESTONES).build()))
-                .save(recipeOutput);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.GEAR_STONE.get())
-                .pattern(" I ")
-                .pattern("IGI")
-                .pattern(" I ")
-                .define('I', Tags.Items.COBBLESTONES)
-                .define('G', EIOTags.Items.GEARS_WOOD)
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GEAR_WOOD.get()))
-                .save(recipeOutput, EnderIO.loc(EIOItems.GEAR_STONE.getId().getPath() + "_upgrade"));
-
         upgradeGear(recipeOutput, EIOItems.GEAR_IRON.get(), EIOItems.GRAINS_OF_INFINITY.get(), Tags.Items.INGOTS_IRON,
                 Tags.Items.NUGGETS_IRON);
         upgradeGear(recipeOutput, EIOItems.GEAR_ENERGIZED.get(), EIOTags.Items.GEARS_IRON,

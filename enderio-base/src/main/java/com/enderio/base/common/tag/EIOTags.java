@@ -91,8 +91,6 @@ public class EIOTags {
 
         public static final TagKey<Item> SILICON = commonTag("silicon");
         public static final TagKey<Item> GEARS = commonTag("gears");
-        public static final TagKey<Item> GEARS_WOOD = commonTag("gears/wood");
-        public static final TagKey<Item> GEARS_STONE = commonTag("gears/stone");
         public static final TagKey<Item> GEARS_IRON = commonTag("gears/iron");
         public static final TagKey<Item> GEARS_ENERGIZED = commonTag("gears/energized");
         public static final TagKey<Item> GEARS_VIBRANT = commonTag("gears/vibrant");

@@ -229,13 +229,6 @@ public class EIOItems {
 
     // region Gears
 
-    public static final RegiliteItem<MaterialItem> GEAR_WOOD = materialItem("wood_gear").setTranslation("Wooden Gear")
-            .addItemTags(EIOTags.Items.GEARS_WOOD);
-
-    public static final RegiliteItem<MaterialItem> GEAR_STONE = materialItem("stone_gear")
-            .setTranslation("Stone Compound Gear")
-            .addItemTags(EIOTags.Items.GEARS_STONE);
-
     public static final RegiliteItem<MaterialItem> GEAR_IRON = materialItem("iron_gear")
             .setTranslation("Infinity Bimetal Gear")
             .addItemTags(EIOTags.Items.GEARS_IRON);

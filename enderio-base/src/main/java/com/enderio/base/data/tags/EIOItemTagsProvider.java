@@ -80,8 +80,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
                 .addTag(EIOTags.Items.GEMS_WEATHER_CRYSTAL)
                 .addTag(EIOTags.Items.GEMS_PRESCIENT_CRYSTAL);
 
-        tag(EIOTags.Items.GEARS).addTag(EIOTags.Items.GEARS_WOOD)
-                .addTag(EIOTags.Items.GEARS_STONE)
+        tag(EIOTags.Items.GEARS)
                 .addTag(EIOTags.Items.GEARS_IRON)
                 .addTag(EIOTags.Items.GEARS_VIBRANT)
                 .addTag(EIOTags.Items.GEARS_ENERGIZED)

@@ -3,10 +3,10 @@
   "category": "equipment",
   "key": {
     "G": {
-      "tag": "c:gears/stone"
+      "tag": "c:dusts/grains_of_infinity"
     },
     "I": {
-      "tag": "c:ingots/copper_alloy"
+      "tag": "c:ingots/copper"
     }
   },
   "pattern": [

@@ -140,10 +140,11 @@ public class ItemRecipeProvider extends RecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(ArmoryItems.DARK_STEEL_UPGRADE_BLANK.get()))
                 .save(recipeOutput);
 
-        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_1, Ingredient.of(Items.TNT),
-                Ingredient.of(EIOTags.Items.GEARS_WOOD));
-        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_2, Ingredient.of(Items.TNT),
-                Ingredient.of(EIOTags.Items.GEARS_STONE));
+        // TODO:
+//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_1, Ingredient.of(Items.TNT),
+//                Ingredient.of(EIOTags.Items.GEARS_WOOD));
+//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_2, Ingredient.of(Items.TNT),
+//                Ingredient.of(EIOTags.Items.GEARS_STONE));
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1,
                 Ingredient.of(Items.GUNPOWDER));
         addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2,
