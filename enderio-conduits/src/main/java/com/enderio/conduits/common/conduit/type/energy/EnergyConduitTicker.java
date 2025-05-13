@@ -2,11 +2,11 @@ package com.enderio.conduits.common.conduit.type.energy;
 
 import com.enderio.conduits.api.network.IConduitNetwork;
 import com.enderio.conduits.api.ticker.ConduitTicker;
+import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import org.apache.commons.compress.utils.Lists;
 
 import java.util.List;
 
