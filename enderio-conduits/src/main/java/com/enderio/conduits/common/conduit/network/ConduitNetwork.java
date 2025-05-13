@@ -16,6 +16,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import net.minecraft.CrashReportCategory;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
@@ -631,4 +633,19 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     }
 
     // endregion
+
+    public void addCrashInfo(CrashReportCategory category) {
+        category.setDetail("ShouldRebuildCache", shouldRebuildCache);
+        category.setDetail("HaveConnectionsChanged", haveConnectionsChanged);
+        category.setDetail("NodeCount", nodeCount());
+        category.setDetail("LoadedNodeCount", loadedNodes.size());
+        category.setDetail("NodesByChunkPos", nodesByChunkPos.size());
+        category.setDetail("NodesToAdd", nodesToAdd.size());
+        category.setDetail("NodesToRemove", nodesToRemove.size());
+        category.setDetail("NodesToUpdate", nodesToUpdate.size());
+        category.setDetail("AllChannels", allChannels.size());
+        category.setDetail("InsertConnections", insertConnections.size());
+        category.setDetail("ExtractConnections", extractConnections.size());
+        category.setDetail("InsertConnectionsByChannel", insertConnectionsByChannel.size());
+    }
 }

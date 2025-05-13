@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
+import net.minecraft.CrashReport;
+import net.minecraft.ReportedException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -196,7 +199,14 @@ public class ConduitNetworkSavedData extends SavedData {
 
             int conduitId = conduitRegistry.getId(conduit.value());
             for (var network : networks.get(conduit)) {
-                tickNetwork(serverLevel, conduit, conduitId, ticker, network);
+                try {
+                    tickNetwork(serverLevel, conduit, conduitId, ticker, network);
+                } catch (Throwable t) {
+                    var report = CrashReport.forThrowable(t, "Ticking conduit network");
+                    var category = report.addCategory(conduit.getRegisteredName() + " network being ticked");
+                    network.addCrashInfo(category);
+                    throw new ReportedException(report);
+                }
             }
         }
     }
