@@ -104,7 +104,7 @@ public class FireCraftingHandler {
 
         for (var result : recipe.results()) {
             float dropChance = level.getRandom().nextFloat();
-            if (dropChance < result.chance()) {
+            if (dropChance >= result.chance()) {
                 continue;
             }
 
