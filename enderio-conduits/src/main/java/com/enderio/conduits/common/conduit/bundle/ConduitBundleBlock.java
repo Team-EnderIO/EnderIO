@@ -37,6 +37,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -57,7 +58,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.loading.FMLLoader;
 import org.jetbrains.annotations.Nullable;
 
-public class ConduitBundleBlock extends Block implements EntityBlock {
+public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
 
     private static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -96,8 +97,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos,
-            CollisionContext context) {
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return getBundleShape(level, pos, false);
     }
 
