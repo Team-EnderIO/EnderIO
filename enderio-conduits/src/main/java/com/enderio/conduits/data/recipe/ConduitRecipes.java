@@ -136,6 +136,17 @@ public class ConduitRecipes extends RecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.loc("enhanced_energy_conduit"));
 
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(enhancedEnergyConduit, 8))
+                .pattern("BBB")
+                .pattern("ICI")
+                .pattern("BBB")
+                .define('B', EIOItems.CONDUIT_BINDER)
+                .define('C', ConduitIngredient.of(energyConduit))
+                .define('I', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+                .save(recipeOutput, EnderIO.loc("enhanced_energy_conduit_upgrade"));
+
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(enderEnergyConduit, 8))
                 .pattern("BBB")
                 .pattern("III")
@@ -144,6 +155,17 @@ public class ConduitRecipes extends RecipeProvider {
                 .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.loc("ender_energy_conduit"));
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(enderEnergyConduit, 8))
+            .pattern("BBB")
+            .pattern("ICI")
+            .pattern("BBB")
+            .define('B', EIOItems.CONDUIT_BINDER)
+            .define('C', ConduitIngredient.of(enhancedEnergyConduit))
+            .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+            .save(recipeOutput, EnderIO.loc("ender_energy_conduit_upgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(redstoneConduit, 8))
                 .pattern("BBB")
