@@ -12,7 +12,7 @@
       }
     },
     {
-      "chance": 0.25,
+      "chance": 0.8,
       "item": {
         "count": 1,
         "id": "enderio:powdered_iron"

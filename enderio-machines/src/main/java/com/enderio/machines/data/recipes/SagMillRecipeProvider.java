@@ -313,15 +313,15 @@ public class SagMillRecipeProvider extends RecipeProvider {
 
     private void buildRawOreRecipes(RecipeOutput recipeOutput) {
         build("raw_iron", Ingredient.of(Tags.Items.RAW_MATERIALS_IRON),
-                List.of(output(POWDERED_IRON), output(POWDERED_IRON, 0.25f), output(EIOTags.Items.DUSTS_TIN, 0.05f)),
+                List.of(output(POWDERED_IRON), output(POWDERED_IRON, 0.8f), output(EIOTags.Items.DUSTS_TIN, 0.05f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
         build("raw_copper", Ingredient.of(Tags.Items.RAW_MATERIALS_COPPER), List.of(output(POWDERED_COPPER),
-                output(POWDERED_COPPER, 0.25f), output(EIOTags.Items.DUSTS_GOLD, 0.12f)), BASE_ENERGY_PER_OPERATION,
+                output(POWDERED_COPPER, 0.8f), output(EIOTags.Items.DUSTS_GOLD, 0.12f)), BASE_ENERGY_PER_OPERATION,
                 recipeOutput);
 
         build("raw_gold", Ingredient.of(Tags.Items.RAW_MATERIALS_GOLD),
-                List.of(output(POWDERED_GOLD), output(POWDERED_GOLD, 0.25f), output(EIOTags.Items.DUSTS_COPPER, 0.20f)),
+                List.of(output(POWDERED_GOLD), output(POWDERED_GOLD, 0.8f), output(EIOTags.Items.DUSTS_COPPER, 0.20f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
     }
 
