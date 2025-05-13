@@ -19,6 +19,7 @@ public class TagUtil {
      * - Then goes down the tag looking in the order of modid precedence (from EnderIO config).
      * - If we found nothing in our specified lists, we will pick the first present item.
      */
+    // TODO: Uses hardcoded enderio modid, clearly needs to live in base, not core.
     public static Optional<Item> getOptionalItem(TagKey<Item> tagKey) {
         Item preferredItem = AlmostUnifiedIntegration.getTagTargetItem(tagKey);
         if (preferredItem != null) {
@@ -36,7 +37,7 @@ public class TagUtil {
                 .stream()
                 .filter(itemHolder -> BuiltInRegistries.ITEM.getKey(itemHolder.value())
                         .getNamespace()
-                        .equals(EnderCore.MOD_ID))
+                        .equals("enderio"))
                 .map(Holder::value)
                 .findFirst();
 
