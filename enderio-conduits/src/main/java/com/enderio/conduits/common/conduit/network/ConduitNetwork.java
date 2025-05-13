@@ -39,7 +39,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
     // Caches
     private final boolean supportsCaching;
-    
+
     private boolean shouldRebuildCache = true;
     private boolean haveConnectionsChanged = true;
     private final Set<ConduitNode> nodesToAdd = Sets.newHashSet();
@@ -253,13 +253,23 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
             }
 
             for (var node : nodesToAdd) {
-                addLoadedNode(node);
+                // Guard shouldn't be necessary now, but it's safe.
+                if (node.isLoaded()) {
+                    addLoadedNode(node);
+                } else if (loadedNodes.contains(node)) {
+                    removeLoadedNode(node);
+                }
             }
 
             for (var node : nodesToUpdate) {
-                // TODO: Better update strategy?
-                removeLoadedNode(node);
-                addLoadedNode(node);
+                // Same guard here for sanity.
+                if (node.isLoaded()) {
+                    // TODO: Better update strategy?
+                    removeLoadedNode(node);
+                    addLoadedNode(node);
+                } else if (loadedNodes.contains(node)) {
+                    removeLoadedNode(node);
+                }
             }
 
             nodesToRemove.clear();
@@ -276,7 +286,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     public void onNodeLoaded(ConduitNode node) {
         Preconditions.checkArgument(node.isLoaded(), "Node is not loaded!");
 
-        if (supportsCaching && !shouldRebuildCache) {
+        if (supportsCaching && !shouldRebuildCache && !loadedNodes.contains(node)) {
             nodesToAdd.add(node);
         }
     }
@@ -286,13 +296,17 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
         if (supportsCaching && !shouldRebuildCache) {
             nodesToRemove.add(node);
+
+            // We're removing this node now, remove any other pending actions for it.
+            nodesToUpdate.remove(node);
+            nodesToAdd.remove(node);
         }
     }
 
     public void onNodeUpdated(ConduitNode node) {
         Preconditions.checkArgument(node.isLoaded(), "Node is not loaded!");
 
-        if (supportsCaching && !shouldRebuildCache) {
+        if (supportsCaching && !shouldRebuildCache && loadedNodes.contains(node)) {
             nodesToUpdate.add(node);
         }
     }
