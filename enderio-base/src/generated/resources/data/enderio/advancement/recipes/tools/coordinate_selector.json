@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:copper_alloy_ingot"
+            "items": "enderio:electrical_steel_ingot"
           }
         ]
       },

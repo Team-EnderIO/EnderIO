@@ -50,7 +50,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED).get())
-                .define('A', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('A', EIOTags.Items.INGOTS_ELECTRICAL_STEEL)
                 .define('C', EIOItems.DOUBLE_LAYER_CAPACITOR.get())
                 .define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
                 .pattern("ACA")
@@ -87,7 +87,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.VIBRANT).get())
-                .define('A', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('A', EIOTags.Items.INGOTS_ELECTRICAL_STEEL)
                 .define('O', EIOItems.OCTADIC_CAPACITOR.get())
                 .define('C', EIOTags.Items.GEMS_VIBRANT_CRYSTAL)
                 .pattern("AOA")
@@ -187,7 +187,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.IMPULSE_HOPPER.get())
-                .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('I', EIOTags.Items.INGOTS_ELECTRICAL_STEEL)
                 .define('R', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
                 .define('G', EIOTags.Items.GEARS_IRON)
                 .define('C', EIOBlocks.VOID_CHASSIS.get())
@@ -214,7 +214,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WIRED_CHARGER.get())
-                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('C', EIOTags.Items.INGOTS_ELECTRICAL_STEEL)
                 .define('V', EIOBlocks.VOID_CHASSIS.get())
                 .pattern("CCC")
                 .pattern("CVC")
@@ -261,7 +261,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.DRAIN.get())
-                .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('I', EIOTags.Items.INGOTS_ELECTRICAL_STEEL)
                 .define('V', EIOBlocks.VOID_CHASSIS)
                 .define('C', EIOTags.Items.CLEAR_GLASS)
                 .define('G', EIOTags.Items.GEARS_IRON)
@@ -354,7 +354,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .define('R', Tags.Items.DYES_RED)
                 .define('G', Tags.Items.DYES_GREEN)
                 .define('B', Tags.Items.DYES_BLUE)
-                .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('I', EIOTags.Items.INGOTS_ELECTRICAL_STEEL)
                 .define('C', EIOBlocks.VOID_CHASSIS)
                 .define('M', EIOTags.Items.GEARS_IRON)
                 .define('A', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
@@ -453,7 +453,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .define('B', Blocks.BARREL)
                 .define('C', EIOBlocks.VOID_CHASSIS)
                 .define('M', EIOTags.Items.GEARS_IRON)
-                .define('A', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('A', EIOTags.Items.INGOTS_ELECTRICAL_STEEL)
                 .define('R', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
                 .define('S', EIOTags.Items.INGOTS_DARK_STEEL)
                 .pattern("SBS")
@@ -465,7 +465,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WIRELESS_CHARGER.get())
-                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('C', EIOTags.Items.INGOTS_ELECTRICAL_STEEL)
                 .define('V', EIOBlocks.VOID_CHASSIS.get())
                 .define('E', EIOItems.ENDER_RESONATOR.get())
                 .pattern("CCC")
@@ -476,7 +476,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WIRELESS_CHARGER_ANTENNA.get())
-                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('C', EIOTags.Items.INGOTS_ELECTRICAL_STEEL)
                 .define('S', EIOTags.Items.INGOTS_PULSATING_ALLOY)
                 .define('E', EIOItems.ENDER_RESONATOR.get())
                 .pattern(" S ")
@@ -487,7 +487,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get())
-                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('C', EIOTags.Items.INGOTS_ELECTRICAL_STEEL)
                 .define('S', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
                 .define('E', EIOItems.SENTIENT_ENDER.get())
                 .pattern(" S ")

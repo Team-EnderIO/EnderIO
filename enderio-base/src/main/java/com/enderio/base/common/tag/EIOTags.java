@@ -68,7 +68,7 @@ public class EIOTags {
         public static final TagKey<Item> GEMS_PRESCIENT_CRYSTAL = commonTag("gems/prescient_crystal");
 
         public static final TagKey<Item> INGOTS_CONDUCTIVE_ALLOY = commonTag("ingots/conductive_alloy");
-        public static final TagKey<Item> INGOTS_COPPER_ALLOY = commonTag("ingots/copper_alloy");
+        public static final TagKey<Item> INGOTS_ELECTRICAL_STEEL = commonTag("ingots/electrical_steel");
         public static final TagKey<Item> INGOTS_DARK_STEEL = commonTag("ingots/dark_steel");
         public static final TagKey<Item> INGOTS_END_STEEL = commonTag("ingots/end_steel");
         public static final TagKey<Item> INGOTS_ENERGETIC_ALLOY = commonTag("ingots/energetic_alloy");
@@ -78,7 +78,7 @@ public class EIOTags {
         public static final TagKey<Item> INGOTS_VIBRANT_ALLOY = commonTag("ingots/vibrant_alloy");
 
         public static final TagKey<Item> NUGGETS_CONDUCTIVE_ALLOY = commonTag("nuggets/conductive_alloy");
-        public static final TagKey<Item> NUGGETS_COPPER_ALLOY = commonTag("nuggets/copper_alloy");
+        public static final TagKey<Item> NUGGETS_ELECTRICAL_STEEL = commonTag("nuggets/electrical_steel");
         public static final TagKey<Item> NUGGETS_DARK_STEEL = commonTag("nuggets/dark_steel");
         public static final TagKey<Item> NUGGETS_END_STEEL = commonTag("nuggets/end_steel");
         public static final TagKey<Item> NUGGETS_ENERGETIC_ALLOY = commonTag("nuggets/energetic_alloy");
@@ -105,7 +105,7 @@ public class EIOTags {
         public static final TagKey<Item> ELECTROMAGNET_BLACKLIST = tag("blacklists/electromagnet");
 
         public static final TagKey<Item> BLOCKS_CONDUCTIVE_ALLOY = commonTag("storage_blocks/conductive_alloy");
-        public static final TagKey<Item> BLOCKS_COPPER_ALLOY = commonTag("storage_blocks/copper_alloy");
+        public static final TagKey<Item> BLOCKS_ELECTRICAL_STEEL = commonTag("storage_blocks/electrical_steel");
         public static final TagKey<Item> BLOCKS_DARK_STEEL = commonTag("storage_blocks/dark_steel");
         public static final TagKey<Item> BLOCKS_END_STEEL = commonTag("storage_blocks/end_steel");
         public static final TagKey<Item> BLOCKS_ENERGETIC_ALLOY = commonTag("storage_blocks/energetic_alloy");
@@ -152,7 +152,7 @@ public class EIOTags {
         public static final TagKey<Block> CLEAR_GLASS = tag("glass_blocks/clear_glass");
 
         public static final TagKey<Block> BLOCKS_CONDUCTIVE_ALLOY = commonTag("storage_blocks/conductive_alloy");
-        public static final TagKey<Block> BLOCKS_COPPER_ALLOY = commonTag("storage_blocks/copper_alloy");
+        public static final TagKey<Block> BLOCKS_ELECTRICAL_STEEL = commonTag("storage_blocks/electrical_steel");
         public static final TagKey<Block> BLOCKS_DARK_STEEL = commonTag("storage_blocks/dark_steel");
         public static final TagKey<Block> BLOCKS_END_STEEL = commonTag("storage_blocks/end_steel");
         public static final TagKey<Block> BLOCKS_ENERGETIC_ALLOY = commonTag("storage_blocks/energetic_alloy");

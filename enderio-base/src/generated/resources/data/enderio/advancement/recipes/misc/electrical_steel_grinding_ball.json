@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:copper_alloy_ingot"
+            "items": "enderio:electrical_steel_ingot"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:copper_alloy_grinding_ball"
+        "recipe": "enderio:electrical_steel_grinding_ball"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:copper_alloy_grinding_ball"
+      "enderio:electrical_steel_grinding_ball"
     ]
   }
 }

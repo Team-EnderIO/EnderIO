@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "enderio:copper_alloy_block"
+          "name": "enderio:electrical_steel_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "enderio:blocks/copper_alloy_block"
+  "random_sequence": "enderio:blocks/electrical_steel_block"
 }

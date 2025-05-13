@@ -85,8 +85,8 @@ public class EIOBlocks {
 
     // region Alloy Blocks
 
-    public static final RegiliteBlock<Block> COPPER_ALLOY_BLOCK = metalBlock("copper_alloy_block", EIOTags.Blocks.BLOCKS_COPPER_ALLOY,
-        EIOTags.Items.BLOCKS_COPPER_ALLOY);
+    public static final RegiliteBlock<Block> ELECTRICAL_STEEL_BLOCK = metalBlock("electrical_steel_block", EIOTags.Blocks.BLOCKS_ELECTRICAL_STEEL,
+        EIOTags.Items.BLOCKS_ELECTRICAL_STEEL);
     public static final RegiliteBlock<Block> ENERGETIC_ALLOY_BLOCK = metalBlock("energetic_alloy_block", EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY,
         EIOTags.Items.BLOCKS_ENERGETIC_ALLOY);
     public static final RegiliteBlock<Block> VIBRANT_ALLOY_BLOCK = metalBlock("vibrant_alloy_block", EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY,
@@ -569,6 +569,9 @@ public class EIOBlocks {
     }
 
     public static void register(IEventBus bus) {
+
+        BLOCK_REGISTRY.addAlias(EnderIO.loc("copper_alloy_block"), ELECTRICAL_STEEL_BLOCK.getId());
+
         BLOCK_REGISTRY.register(bus);
         ITEM_REGISTRY.register(bus);
     }

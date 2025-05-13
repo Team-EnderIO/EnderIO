@@ -49,8 +49,8 @@ public class EIOItems {
 
     // region Alloys
 
-    public static final RegiliteItem<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot")
-            .addItemTags(EIOTags.Items.INGOTS_COPPER_ALLOY);
+    public static final RegiliteItem<MaterialItem> ELECTRICAL_STEEL_INGOT = materialItem("electrical_steel_ingot")
+            .addItemTags(EIOTags.Items.INGOTS_ELECTRICAL_STEEL);
     public static final RegiliteItem<MaterialItem> ENERGETIC_ALLOY_INGOT = materialItem("energetic_alloy_ingot")
             .addItemTags(EIOTags.Items.INGOTS_ENERGETIC_ALLOY);
     public static final RegiliteItem<MaterialItem> VIBRANT_ALLOY_INGOT = materialItem("vibrant_alloy_ingot")
@@ -68,8 +68,8 @@ public class EIOItems {
     public static final RegiliteItem<MaterialItem> END_STEEL_INGOT = materialItem("end_steel_ingot")
             .addItemTags(EIOTags.Items.INGOTS_END_STEEL);
 
-    public static final RegiliteItem<MaterialItem> COPPER_ALLOY_NUGGET = materialItem("copper_alloy_nugget")
-            .addItemTags(EIOTags.Items.NUGGETS_COPPER_ALLOY);
+    public static final RegiliteItem<MaterialItem> ELECTRICAL_STEEL_NUGGET = materialItem("electrical_steel_nugget")
+            .addItemTags(EIOTags.Items.NUGGETS_ELECTRICAL_STEEL);
     public static final RegiliteItem<MaterialItem> ENERGETIC_ALLOY_NUGGET = materialItem("energetic_alloy_nugget")
             .addItemTags(EIOTags.Items.NUGGETS_ENERGETIC_ALLOY);
     public static final RegiliteItem<MaterialItem> VIBRANT_ALLOY_NUGGET = materialItem("vibrant_alloy_nugget")
@@ -314,7 +314,7 @@ public class EIOItems {
     public static final RegiliteItem<MaterialItem> VIBRANT_ALLOY_BALL = grindingBall("vibrant_alloy_grinding_ball",
             new GrindingBallData(1.75F, 1.35F, 1.13F, 80000));
 
-    public static final RegiliteItem<MaterialItem> COPPER_ALLOY_BALL = grindingBall("copper_alloy_grinding_ball",
+    public static final RegiliteItem<MaterialItem> ELECTRICAL_STEEL_BALL = grindingBall("electrical_steel_grinding_ball",
             new GrindingBallData(1.2F, 1.65F, 0.8F, 40000));
 
     public static final RegiliteItem<MaterialItem> DARK_STEEL_BALL = grindingBall("dark_steel_grinding_ball",
@@ -551,6 +551,11 @@ public class EIOItems {
         ITEM_REGISTRY.addAlias(EnderIO.loc("advanced_filter"), ADVANCED_ITEM_FILTER.getId());
         ITEM_REGISTRY.addAlias(EnderIO.loc("fluid_filter"), BASIC_FLUID_FILTER.getId());
         ITEM_REGISTRY.addAlias(EnderIO.loc("entity_filter"), BASIC_SOUL_FILTER.getId());
+
+        // Electrical steel
+        ITEM_REGISTRY.addAlias(EnderIO.loc("copper_alloy_ingot"), ELECTRICAL_STEEL_INGOT.getId());
+        ITEM_REGISTRY.addAlias(EnderIO.loc("copper_alloy_nugget"), ELECTRICAL_STEEL_NUGGET.getId());
+        ITEM_REGISTRY.addAlias(EnderIO.loc("copper_alloy_grinding_ball"), ELECTRICAL_STEEL_BALL.getId());
 
         ITEM_REGISTRY.register(bus);
     }

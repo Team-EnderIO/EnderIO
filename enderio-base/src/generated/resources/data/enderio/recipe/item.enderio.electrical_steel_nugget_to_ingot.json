@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "N": {
-      "item": "enderio:copper_alloy_nugget"
+      "item": "enderio:electrical_steel_nugget"
     }
   },
   "pattern": [
@@ -13,6 +13,6 @@
   ],
   "result": {
     "count": 1,
-    "id": "enderio:copper_alloy_ingot"
+    "id": "enderio:electrical_steel_ingot"
   }
 }

@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "C": {
-      "tag": "c:ingots/copper_alloy"
+      "tag": "c:ingots/electrical_steel"
     },
     "E": {
       "item": "enderio:ender_resonator"

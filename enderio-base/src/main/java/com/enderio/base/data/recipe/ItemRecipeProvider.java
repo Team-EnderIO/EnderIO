@@ -76,20 +76,20 @@ public class ItemRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.COORDINATE_SELECTOR.get())
-                .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('I', EIOTags.Items.INGOTS_ELECTRICAL_STEEL)
                 .define('C', Items.COMPASS)
                 .define('E', Tags.Items.ENDER_PEARLS)
                 .pattern("IEI")
                 .pattern(" CI")
                 .pattern("  I")
                 .unlockedBy("has_ingredient",
-                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.COPPER_ALLOY_INGOT.get()))
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ELECTRICAL_STEEL_INGOT.get()))
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.ELECTROMAGNET.get())
                 .define('V', EIOTags.Items.GEMS_VIBRANT_CRYSTAL)
                 .define('C', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
-                .define('E', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('E', EIOTags.Items.INGOTS_ELECTRICAL_STEEL)
                 .pattern("CVC")
                 .pattern("C C")
                 .pattern("E E")

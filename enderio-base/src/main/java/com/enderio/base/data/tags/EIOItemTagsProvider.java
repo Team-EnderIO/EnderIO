@@ -42,7 +42,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
                 .addTag(EIOTags.Items.DUSTS_GRAINS_OF_THE_END);
 
         tag(Tags.Items.INGOTS).addTag(EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
-                .addTag(EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .addTag(EIOTags.Items.INGOTS_ELECTRICAL_STEEL)
                 .addTag(EIOTags.Items.INGOTS_DARK_STEEL)
                 .addTag(EIOTags.Items.INGOTS_END_STEEL)
                 .addTag(EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
@@ -52,7 +52,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
                 .addTag(EIOTags.Items.INGOTS_VIBRANT_ALLOY);
 
         tag(Tags.Items.NUGGETS).addTag(EIOTags.Items.NUGGETS_CONDUCTIVE_ALLOY)
-                .addTag(EIOTags.Items.NUGGETS_COPPER_ALLOY)
+                .addTag(EIOTags.Items.NUGGETS_ELECTRICAL_STEEL)
                 .addTag(EIOTags.Items.NUGGETS_DARK_STEEL)
                 .addTag(EIOTags.Items.NUGGETS_END_STEEL)
                 .addTag(EIOTags.Items.NUGGETS_ENERGETIC_ALLOY)
@@ -64,7 +64,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         tag(Tags.Items.STORAGE_BLOCKS).addTag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST)
                 .addTag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ)
                 .addTag(EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY)
-                .addTag(EIOTags.Items.BLOCKS_COPPER_ALLOY)
+                .addTag(EIOTags.Items.BLOCKS_ELECTRICAL_STEEL)
                 .addTag(EIOTags.Items.BLOCKS_DARK_STEEL)
                 .addTag(EIOTags.Items.BLOCKS_END_STEEL)
                 .addTag(EIOTags.Items.BLOCKS_ENERGETIC_ALLOY)

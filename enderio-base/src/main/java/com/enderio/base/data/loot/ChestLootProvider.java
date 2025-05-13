@@ -78,7 +78,7 @@ public class ChestLootProvider implements LootTableSubProvider {
             .lootPool()
             .name("Ender IO")
             .setRolls(UniformGenerator.between(0.0f, 2.0f))
-            .add(LootItem.lootTableItem(EIOItems.COPPER_ALLOY_INGOT.get())
+            .add(LootItem.lootTableItem(EIOItems.ELECTRICAL_STEEL_INGOT.get())
                 .when(LootItemRandomChanceCondition.randomChance(0.2f))
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f)))
             )

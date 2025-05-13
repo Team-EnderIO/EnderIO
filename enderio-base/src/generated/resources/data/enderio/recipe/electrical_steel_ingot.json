@@ -3,11 +3,11 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "enderio:copper_alloy_block"
+      "item": "enderio:electrical_steel_block"
     }
   ],
   "result": {
     "count": 9,
-    "id": "enderio:copper_alloy_ingot"
+    "id": "enderio:electrical_steel_ingot"
   }
 }

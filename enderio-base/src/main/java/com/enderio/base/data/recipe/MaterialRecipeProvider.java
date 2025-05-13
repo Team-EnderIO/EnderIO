@@ -120,8 +120,8 @@ public class MaterialRecipeProvider extends RecipeProvider {
     }
 
     private void addAlloys(RecipeOutput recipeOutput) {
-        makeMaterialRecipes(recipeOutput, EIOItems.COPPER_ALLOY_INGOT.get(), EIOItems.COPPER_ALLOY_NUGGET.get(),
-                EIOBlocks.COPPER_ALLOY_BLOCK.get());
+        makeMaterialRecipes(recipeOutput, EIOItems.ELECTRICAL_STEEL_INGOT.get(), EIOItems.ELECTRICAL_STEEL_NUGGET.get(),
+                EIOBlocks.ELECTRICAL_STEEL_BLOCK.get());
         makeMaterialRecipes(recipeOutput, EIOItems.ENERGETIC_ALLOY_INGOT.get(), EIOItems.ENERGETIC_ALLOY_NUGGET.get(),
                 EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
         makeMaterialRecipes(recipeOutput, EIOItems.VIBRANT_ALLOY_INGOT.get(), EIOItems.VIBRANT_ALLOY_NUGGET.get(),
@@ -302,8 +302,8 @@ public class MaterialRecipeProvider extends RecipeProvider {
                 EIOItems.ENERGETIC_ALLOY_INGOT.get());
         grindingBall(recipeOutput, EIOItems.VIBRANT_ALLOY_BALL.get(), EIOTags.Items.INGOTS_VIBRANT_ALLOY,
                 EIOItems.VIBRANT_ALLOY_INGOT.get());
-        grindingBall(recipeOutput, EIOItems.COPPER_ALLOY_BALL.get(), EIOTags.Items.INGOTS_COPPER_ALLOY,
-                EIOItems.COPPER_ALLOY_INGOT.get());
+        grindingBall(recipeOutput, EIOItems.ELECTRICAL_STEEL_BALL.get(), EIOTags.Items.INGOTS_ELECTRICAL_STEEL,
+                EIOItems.ELECTRICAL_STEEL_INGOT.get());
         grindingBall(recipeOutput, EIOItems.END_STEEL_BALL.get(), EIOTags.Items.INGOTS_END_STEEL,
                 EIOItems.END_STEEL_INGOT.get());
     }

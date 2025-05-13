@@ -47,8 +47,8 @@ public class AlloyRecipeProvider extends RecipeProvider {
                 List.of(SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1), SizedIngredient.of(Tags.Items.INGOTS_GOLD, 1),
                         SizedIngredient.of(Tags.Items.DUSTS_GLOWSTONE, 1)),
                 4800, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.COPPER_ALLOY_INGOT.get()),
-                List.of(SizedIngredient.of(Tags.Items.INGOTS_COPPER, 1), SizedIngredient.of(EIOTags.Items.SILICON, 1)),
+        build(new ItemStack(EIOItems.ELECTRICAL_STEEL_INGOT.get()),
+                List.of(SizedIngredient.of(Tags.Items.INGOTS_IRON, 1), SizedIngredient.of(EIOTags.Items.DUSTS_COAL, 1), SizedIngredient.of(EIOTags.Items.SILICON, 1)),
                 3200, 0.3f, recipeOutput);
         build(new ItemStack(EIOItems.VIBRANT_ALLOY_INGOT.get()),
                 List.of(SizedIngredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY, 1),
@@ -58,10 +58,8 @@ public class AlloyRecipeProvider extends RecipeProvider {
                 List.of(SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1), SizedIngredient.of(EIOTags.Items.SILICON, 1)),
                 3200, 0.3f, recipeOutput);
         build(new ItemStack(EIOItems.CONDUCTIVE_ALLOY_INGOT.get()),
-                List.of(SizedIngredient.of(EIOTags.Items.INGOTS_COPPER_ALLOY, 1),
-                        SizedIngredient.of(Tags.Items.INGOTS_IRON, 1),
-                        SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1)),
-                4800, 0.3f, recipeOutput);
+                List.of(SizedIngredient.of(Tags.Items.INGOTS_COPPER, 1), SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1)),
+                3200, 0.3f, recipeOutput);
         build(new ItemStack(EIOItems.PULSATING_ALLOY_INGOT.get()),
                 List.of(SizedIngredient.of(Tags.Items.INGOTS_IRON, 1), SizedIngredient.of(Tags.Items.ENDER_PEARLS, 1)),
                 4800, 0.3f, recipeOutput);

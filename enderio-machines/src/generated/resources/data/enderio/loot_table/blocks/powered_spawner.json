@@ -10,7 +10,7 @@
             {
               "function": "minecraft:copy_components",
               "include": [
-                "enderio:stored_entity",
+                "enderio:soul",
                 "enderio:energy",
                 "enderio:io_config",
                 "enderio:redstone_control",

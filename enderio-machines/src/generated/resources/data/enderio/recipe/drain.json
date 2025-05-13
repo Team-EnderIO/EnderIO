@@ -12,7 +12,7 @@
       "tag": "c:gears/iron"
     },
     "I": {
-      "tag": "c:ingots/copper_alloy"
+      "tag": "c:ingots/electrical_steel"
     },
     "V": {
       "item": "enderio:void_chassis"

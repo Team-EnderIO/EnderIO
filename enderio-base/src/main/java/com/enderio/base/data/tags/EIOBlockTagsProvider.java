@@ -20,7 +20,7 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         tag(Tags.Blocks.STORAGE_BLOCKS).addTag(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY)
-                .addTag(EIOTags.Blocks.BLOCKS_COPPER_ALLOY)
+                .addTag(EIOTags.Blocks.BLOCKS_ELECTRICAL_STEEL)
                 .addTag(EIOTags.Blocks.BLOCKS_DARK_STEEL)
                 .addTag(EIOTags.Blocks.BLOCKS_END_STEEL)
                 .addTag(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY)

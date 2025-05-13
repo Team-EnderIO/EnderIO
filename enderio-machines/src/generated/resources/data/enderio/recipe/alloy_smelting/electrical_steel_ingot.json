@@ -5,7 +5,11 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:ingots/copper"
+      "tag": "c:ingots/iron"
+    },
+    {
+      "count": 1,
+      "tag": "c:dusts/coal"
     },
     {
       "count": 1,
@@ -14,6 +18,6 @@
   ],
   "output": {
     "count": 1,
-    "id": "enderio:copper_alloy_ingot"
+    "id": "enderio:electrical_steel_ingot"
   }
 }

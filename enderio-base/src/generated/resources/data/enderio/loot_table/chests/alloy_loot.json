@@ -23,7 +23,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "enderio:copper_alloy_ingot"
+          "name": "enderio:electrical_steel_ingot"
         },
         {
           "type": "minecraft:item",
