@@ -423,7 +423,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.ATTRACTOR_OBELISK.get())
-                .define('M', EIOItems.ELECTROMAGNET)
+                .define('M', EIOTags.Items.GEMS_ENTICING_CRYSTAL)
                 .define('E', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
                 .define('G', EIOItems.GEAR_ENERGIZED)
                 .define('I', EIOTags.Items.INGOTS_SOULARIUM)
@@ -433,7 +433,7 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .pattern("ICI")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance
-                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.ENDER_CRYSTAL).build()))
+                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.ENTICING_CRYSTAL).build()))
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.WEATHER_OBELISK.get())
