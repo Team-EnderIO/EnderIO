@@ -44,9 +44,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
     private boolean shouldRebuildCache = true;
     private boolean haveConnectionsChanged = true;
-    private final Set<ConduitNode> nodesToAdd = Sets.newHashSet();
-    private final Set<ConduitNode> nodesToRemove = Sets.newHashSet();
-    private final Set<ConduitNode> nodesToUpdate = Sets.newHashSet();
+    private final Set<ConduitNode> dirtyNodes = Sets.newHashSet();
 
     private final Multimap<Long, ConduitNode> nodesByChunkPos = HashMultimap.create();
 
@@ -250,33 +248,18 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         if (shouldRebuildCache) {
             rebuildCache();
         } else {
-            for (var node : nodesToRemove) {
-                removeLoadedNode(node);
-            }
-
-            for (var node : nodesToAdd) {
-                // Guard shouldn't be necessary now, but it's safe.
+            for (var node : dirtyNodes) {
                 if (node.isLoaded()) {
+                    // Update nodes by removing and adding again.
+                    if (loadedNodes.contains(node)) {
+                        removeLoadedNode(node);
+                    }
+
                     addLoadedNode(node);
                 } else if (loadedNodes.contains(node)) {
                     removeLoadedNode(node);
                 }
             }
-
-            for (var node : nodesToUpdate) {
-                // Same guard here for sanity.
-                if (node.isLoaded()) {
-                    // TODO: Better update strategy?
-                    removeLoadedNode(node);
-                    addLoadedNode(node);
-                } else if (loadedNodes.contains(node)) {
-                    removeLoadedNode(node);
-                }
-            }
-
-            nodesToRemove.clear();
-            nodesToAdd.clear();
-            nodesToUpdate.clear();
         }
 
         if (haveConnectionsChanged) {
@@ -288,8 +271,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     public void onNodeLoaded(ConduitNode node) {
         Preconditions.checkArgument(node.isLoaded(), "Node is not loaded!");
 
-        if (supportsCaching && !shouldRebuildCache && !loadedNodes.contains(node)) {
-            nodesToAdd.add(node);
+        if (supportsCaching && !shouldRebuildCache) {
+            dirtyNodes.add(node);
         }
     }
 
@@ -297,19 +280,15 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         Preconditions.checkArgument(!node.isLoaded(), "Node is still loaded!");
 
         if (supportsCaching && !shouldRebuildCache) {
-            nodesToRemove.add(node);
-
-            // We're removing this node now, remove any other pending actions for it.
-            nodesToUpdate.remove(node);
-            nodesToAdd.remove(node);
+            dirtyNodes.add(node);
         }
     }
 
     public void onNodeUpdated(ConduitNode node) {
         Preconditions.checkArgument(node.isLoaded(), "Node is not loaded!");
 
-        if (supportsCaching && !shouldRebuildCache && loadedNodes.contains(node)) {
-            nodesToUpdate.add(node);
+        if (supportsCaching && !shouldRebuildCache) {
+            dirtyNodes.add(node);
         }
     }
 
@@ -318,13 +297,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
             return;
         }
 
-        for (var node : nodesByChunkPos.get(chunk)) {
-            if (node.isLoaded()) {
-                nodesToAdd.add(node);
-            } else {
-                nodesToRemove.add(node);
-            }
-        }
+        dirtyNodes.addAll(nodesByChunkPos.get(chunk));
     }
 
     // endregion
@@ -478,9 +451,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
      */
     private void rebuildCache() {
         // Clear partial update lists
-        nodesToAdd.clear();
-        nodesToRemove.clear();
-        nodesToUpdate.clear();
+        dirtyNodes.clear();
 
         // Clear all caches
         nodesByChunkPos.clear();
@@ -569,7 +540,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
         addNodeToPositionMaps(node, false);
         if (node.isLoaded() && !shouldRebuildCache) {
-            nodesToAdd.add(node);
+            dirtyNodes.add(node);
         }
     }
 
@@ -581,7 +552,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
         removeNodeFromPositionMaps(node);
         if (!shouldRebuildCache) {
-            nodesToRemove.add(node);
+            dirtyNodes.add(node);
         }
     }
 
@@ -640,9 +611,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         category.setDetail("NodeCount", nodeCount());
         category.setDetail("LoadedNodeCount", loadedNodes.size());
         category.setDetail("NodesByChunkPos", nodesByChunkPos.size());
-        category.setDetail("NodesToAdd", nodesToAdd.size());
-        category.setDetail("NodesToRemove", nodesToRemove.size());
-        category.setDetail("NodesToUpdate", nodesToUpdate.size());
+        category.setDetail("DirtNodes", dirtyNodes.size());
         category.setDetail("AllChannels", allChannels.size());
         category.setDetail("InsertConnections", insertConnections.size());
         category.setDetail("ExtractConnections", extractConnections.size());

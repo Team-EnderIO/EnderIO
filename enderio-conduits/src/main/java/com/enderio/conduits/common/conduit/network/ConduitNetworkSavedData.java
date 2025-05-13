@@ -36,7 +36,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.level.ChunkTicketLevelUpdatedEvent;
+import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -51,6 +51,8 @@ public class ConduitNetworkSavedData extends SavedData {
 
     private final Multimap<Long, ConduitNetwork> networksByChunk = HashMultimap.create();
     private final Multimap<ConduitNetwork, Long> chunksByNetwork = HashMultimap.create();
+
+    private final Map<Long, Boolean> tickingChunksMap = Maps.newHashMap();
 
     private final Map<Holder<Conduit<?, ?>>, Map<BlockPos, ConduitNode>> unloadedNodes = Maps.newHashMap();
 
@@ -67,6 +69,7 @@ public class ConduitNetworkSavedData extends SavedData {
 
     private ConduitNetworkSavedData(List<ConduitNetwork> networks) {
         for (ConduitNetwork network : networks) {
+            network.setOnChunkCoverageChanged(this::onNetworkChunksChanged);
             this.networks.put(network.conduit(), network);
 
             for (var node : network.nodes()) {
@@ -187,6 +190,15 @@ public class ConduitNetworkSavedData extends SavedData {
                 .toList() // avoid CME
                 .forEach(this::onNetworkDiscarded);
 
+        // Detect any chunk tick state changes
+        for (var chunkPos : networksByChunk.keySet()) {
+            boolean isTicking = serverLevel.shouldTickBlocksAt(chunkPos);
+            if (!tickingChunksMap.containsKey(chunkPos) || isTicking != tickingChunksMap.get(chunkPos)) {
+                tickingChunksMap.put(chunkPos, isTicking);
+                networksByChunk.get(chunkPos).forEach(n -> n.onChunkTickStatusChanged(chunkPos));
+            }
+        }
+
         Registry<Conduit<?, ?>> conduitRegistry = serverLevel.registryAccess()
                 .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT);
 
@@ -217,7 +229,7 @@ public class ConduitNetworkSavedData extends SavedData {
         int conduitTickRate = conduit.value().networkTickRate();
 
         // TODO: Offsets for networks so they don't all tick on the same tick.
-        if (serverLevel.getGameTime() % conduitTickRate == conduitId % conduitTickRate) {
+        if ((serverLevel.getGameTime()) % conduitTickRate == conduitId % conduitTickRate) {
             // Perform pre-tick network actions
             network.beforeTicking();
 
@@ -227,9 +239,10 @@ public class ConduitNetworkSavedData extends SavedData {
     }
 
     @SubscribeEvent
-    public static void onChunkTicketLevelUpdated(ChunkTicketLevelUpdatedEvent event) {
-        long chunkPos = event.getChunkPos();
-        get(event.getLevel()).networksByChunk.get(chunkPos).forEach(n -> n.onChunkTickStatusChanged(chunkPos));
+    public static void onChunkUnloaded(ChunkEvent.Unload event) {
+        if (event.getLevel() instanceof ServerLevel serverLevel) {
+            get(serverLevel).tickingChunksMap.remove(event.getChunk().getPos().toLong());
+        }
     }
 
     // region Legacy Serialization

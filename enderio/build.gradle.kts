@@ -101,6 +101,7 @@ neoForge {
 
         create("server") {
             server()
+            gameDirectory = project.file("runs/server")
         }
     }
 }

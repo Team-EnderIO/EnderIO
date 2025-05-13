@@ -285,7 +285,11 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
 
     private void ensureValid() {
         Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
-        Preconditions.checkState(isLoaded(), "Conduit node is not attached or in a loaded chunk.");
+        Preconditions.checkState(conduitBundle != null, "Conduit node is detached.");
+        Preconditions.checkState(conduitBundle.hasLevel(), "Conduit bundle is not attached to a level");
+        Preconditions.checkState(conduitBundle.getLevel().isLoaded(pos), "Conduit bundle is not loaded in a loaded chunk");
+        Preconditions.checkState(conduitBundle.getLevel().shouldTickBlocksAt(pos), "Conduit bundle is not in a ticking chunk");
+        Preconditions.checkState(isLoaded(), "Conduit node is not loaded - more specific error unavailable.");
     }
 
     private void tryCopyLegacyData() {
