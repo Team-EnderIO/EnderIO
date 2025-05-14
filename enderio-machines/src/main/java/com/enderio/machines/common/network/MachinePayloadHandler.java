@@ -8,6 +8,7 @@ import com.enderio.machines.common.souldata.FarmSoul;
 import com.enderio.machines.common.souldata.SolarSoul;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -78,29 +79,36 @@ public class MachinePayloadHandler {
 
         public void handleTransferItems(TransferItemsPacket packet, IPayloadContext context) {
             context.enqueueWork(() -> {
-
                 AbstractContainerMenu menu = context.player().containerMenu;
                 for (int i = packet.endslot(); i < menu.slots.size(); i++) {
                     for (int j = packet.startslot(); j < packet.endslot(); j++) {
-                        if (packet.stacks().get(j).isEmpty()) {
+                        int relative = j - packet.startslot();
+                        Slot recipeSlot = menu.getSlot(j);
+                        Slot invSlot = menu.getSlot(i);
+
+                        if (recipeSlot.getItem().isEmpty()) {
                             continue;
                         }
-                        if ((menu.getSlot(j).getItem().isEmpty() && packet.stacks().get(j).test(menu.getSlot(i).getItem()))
-                                || ItemStack.isSameItemSameComponents(menu.getSlot(i).getItem(), menu.getSlot(j).getItem())) {
+
+                        if ((recipeSlot.getItem().isEmpty() && packet.stacks().get(relative).test(invSlot.getItem()))
+                                || ItemStack.isSameItemSameComponents(invSlot.getItem(), recipeSlot.getItem())) {
                             if (packet.maxTransfer()) {
-                                int toTransfer = menu.getSlot(i).getItem().getMaxStackSize() - menu.getSlot(j).getItem().getCount();
-                                int actual = Math.min(menu.getSlot(i).getItem().getCount(), toTransfer);
+                                int toTransfer = invSlot.getItem().getMaxStackSize() - recipeSlot.getItem().getCount();
+                                int actual = Math.min(invSlot.getItem().getCount(), toTransfer);
+
                                 if (actual == 0) {
                                     break;
                                 }
-                                menu.getSlot(j).set(menu.getSlot(i).getItem().copyWithCount(actual +  menu.getSlot(j).getItem().getCount()));
-                                menu.getSlot(i).getItem().shrink(actual);
+
+                                recipeSlot.set(invSlot.getItem().copyWithCount(actual +  recipeSlot.getItem().getCount()));
+                                invSlot.getItem().shrink(actual);
+
                                 if (actual == toTransfer) {
                                     break;
                                 }
-                            } else if (menu.getSlot(j).getItem().isEmpty()) {
-                                menu.getSlot(j).set(menu.getSlot(i).getItem().copyWithCount(1));
-                                menu.getSlot(i).getItem().shrink(1);
+                            } else if (recipeSlot.getItem().isEmpty()) {
+                                recipeSlot.set(invSlot.getItem().copyWithCount(1));
+                                invSlot.getItem().shrink(1);
                                 break;
                             }
                         }

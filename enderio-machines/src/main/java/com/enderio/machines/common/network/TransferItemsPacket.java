@@ -13,7 +13,7 @@ public record TransferItemsPacket(List<Ingredient> stacks, int startslot, int en
 
     public static final Type<TransferItemsPacket> TYPE = new Type<>(EnderIO.loc("transfer_items"));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, TransferItemsPacket> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, TransferItemsPacket> STREAM_CODEC = StreamCodec.composite(
         Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()),
         TransferItemsPacket::stacks,
         ByteBufCodecs.INT,
