@@ -8,6 +8,7 @@ import com.enderio.machines.common.souldata.FarmSoul;
 import com.enderio.machines.common.souldata.SolarSoul;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -84,7 +85,8 @@ public class MachinePayloadHandler {
                         if (packet.stacks().get(j).isEmpty()) {
                             continue;
                         }
-                        if (packet.stacks().get(j).test(menu.getSlot(i).getItem())) {
+                        if ((menu.getSlot(j).getItem().isEmpty() && packet.stacks().get(j).test(menu.getSlot(i).getItem()))
+                                || ItemStack.isSameItemSameComponents(menu.getSlot(i).getItem(), menu.getSlot(j).getItem())) {
                             if (packet.maxTransfer()) {
                                 int toTransfer = menu.getSlot(i).getItem().getMaxStackSize() - menu.getSlot(j).getItem().getCount();
                                 int actual = Math.min(menu.getSlot(i).getItem().getCount(), toTransfer);
