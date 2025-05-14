@@ -7,6 +7,7 @@ import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.FarmSoul;
 import com.enderio.machines.common.souldata.SolarSoul;
 import com.enderio.machines.common.souldata.SpawnerSoul;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -70,6 +71,38 @@ public class MachinePayloadHandler {
                 if (EnderfaceBlockEntity.canPlayerInteractWithBlock(context.player(), level, pos)) {
                     var state = level.getBlockState(pos);
                     state.useWithoutItem(level, context.player(), packet.getHitResult());
+                }
+            });
+        }
+
+        public void handleTransferItems(TransferItemsPacket packet, IPayloadContext context) {
+            context.enqueueWork(() -> {
+
+                AbstractContainerMenu menu = context.player().containerMenu;
+                for (int i = packet.endslot(); i < menu.slots.size(); i++) {
+                    for (int j = packet.startslot(); j < packet.endslot(); j++) {
+                        if (packet.stacks().get(j).isEmpty()) {
+                            continue;
+                        }
+                        if (packet.stacks().get(j).test(menu.getSlot(i).getItem())) {
+                            if (packet.maxTransfer()) {
+                                int toTransfer = menu.getSlot(i).getItem().getMaxStackSize() - menu.getSlot(j).getItem().getCount();
+                                int actual = Math.min(menu.getSlot(i).getItem().getCount(), toTransfer);
+                                if (actual == 0) {
+                                    break;
+                                }
+                                menu.getSlot(j).set(menu.getSlot(i).getItem().copyWithCount(actual +  menu.getSlot(j).getItem().getCount()));
+                                menu.getSlot(i).getItem().shrink(actual);
+                                if (actual == toTransfer) {
+                                    break;
+                                }
+                            } else if (menu.getSlot(j).getItem().isEmpty()) {
+                                menu.getSlot(j).set(menu.getSlot(i).getItem().copyWithCount(1));
+                                menu.getSlot(i).getItem().shrink(1);
+                                break;
+                            }
+                        }
+                    }
                 }
             });
         }

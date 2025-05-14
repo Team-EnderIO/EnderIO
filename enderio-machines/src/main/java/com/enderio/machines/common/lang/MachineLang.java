@@ -71,7 +71,8 @@ public class MachineLang {
     public static final MutableComponent CATEGORY_SOUL_ENGINE = addTranslation("gui",
             EnderIO.loc("category.soul_engine"), "Soul Engine");
     public static final MutableComponent CATEGORY_VAT = addTranslation("gui", EnderIO.loc("category.vat"), "VAT");
-
+    public static final MutableComponent CATEGORY_WEATHER_CHANGE = addTranslation("gui",
+        EnderIO.loc("category.weather_change"), "Weather Obelisk");
     // endregion
 
     public static final MutableComponent TOO_MANY_MOB = addTranslation("gui", EnderIO.loc("spawner.too_many_mob"),
