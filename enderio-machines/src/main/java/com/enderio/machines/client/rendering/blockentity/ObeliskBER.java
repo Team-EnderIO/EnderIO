@@ -1,22 +1,24 @@
 package com.enderio.machines.client.rendering.blockentity;
 
-import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
-public class ObeliskBER implements BlockEntityRenderer<MachineBlockEntity> {
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+public class ObeliskBER implements BlockEntityRenderer<BlockEntity> {
 
     private final Supplier<Item> supplier;
 
@@ -24,13 +26,13 @@ public class ObeliskBER implements BlockEntityRenderer<MachineBlockEntity> {
         this.supplier = itemSupplier;
     }
 
-    public static <T extends MachineBlockEntity> Function<BlockEntityRendererProvider.Context, BlockEntityRenderer<? super T>> factory(
+    public static <T extends BlockEntity> Function<BlockEntityRendererProvider.Context, BlockEntityRenderer<? super T>> factory(
             Supplier<Item> itemSupplier) {
         return context -> new ObeliskBER(itemSupplier);
     }
 
     @Override
-    public void render(MachineBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer,
+    public void render(BlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer,
             int packedLight, int packedOverlay) {
         poseStack.pushPose();
         poseStack.translate(0.5, 0.75, 0.5);
@@ -42,6 +44,11 @@ public class ObeliskBER implements BlockEntityRenderer<MachineBlockEntity> {
         poseStack.mulPose(Axis.YP.rotationDegrees(-f1 + 180));
         ItemStack stack = new ItemStack(supplier.get());
         BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, blockEntity.getLevel(), null, 0);
+        if (stack.getItem() instanceof BlockItem) { //Blocks are in iso, let's correct that
+            poseStack.mulPose(Axis.YP.rotationDegrees(45));
+            poseStack.mulPose(Axis.XP.rotationDegrees(-30));
+            poseStack.scale(1.2f, 1.2f, 1.2f);
+        }
         minecraft.getItemRenderer()
                 .render(stack, ItemDisplayContext.GUI, true, poseStack, buffer, packedLight, packedOverlay, bakedmodel);
         poseStack.popPose();

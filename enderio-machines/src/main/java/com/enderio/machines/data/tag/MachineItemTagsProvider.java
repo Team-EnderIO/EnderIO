@@ -8,7 +8,6 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -32,20 +31,20 @@ public class MachineItemTagsProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        tag(MachineTags.ItemTags.CROPS, Tags.Items.CROPS);
-        tag(MachineTags.ItemTags.SEEDS, Tags.Items.SEEDS);
-        tag(MachineTags.ItemTags.MEAT, ItemTags.MEAT);
-        tag(MachineTags.ItemTags.EXPLOSIVES, Items.TNT, Items.FIREWORK_STAR, Items.FIREWORK_ROCKET, Items.FIRE_CHARGE);
-        tag(MachineTags.ItemTags.NATURAL_LIGHTS, Items.GLOWSTONE_DUST, Items.GLOWSTONE, Items.SEA_LANTERN,
-                Items.SEA_PICKLE, Items.GLOW_LICHEN, Items.GLOW_BERRIES, Items.GLOW_INK_SAC);
-        tag(MachineTags.ItemTags.SUNFLOWER, Items.SUNFLOWER);
-        tag(MachineTags.ItemTags.BLAZE_POWDER, Items.BLAZE_POWDER);
-        tag(MachineTags.ItemTags.AMETHYST, Items.AMETHYST_SHARD);
-        tag(MachineTags.ItemTags.PRISMARINE, Items.PRISMARINE_SHARD);
-        tag(MachineTags.ItemTags.CLOUD_COLD, Items.SNOW, Items.SNOW_BLOCK, Items.SNOWBALL, Items.ICE, Items.PACKED_ICE,
-                Items.BLUE_ICE);
-        tag(MachineTags.ItemTags.LIGHTNING_ROD, Items.LIGHTNING_ROD);
-        tag(MachineTags.ItemTags.WIND_CHARGES, Items.WIND_CHARGE);
+        tag(MachineTags.Items.CROPS, Tags.Items.CROPS);
+        tag(MachineTags.Items.SEEDS, Tags.Items.SEEDS);
+        tag(MachineTags.Items.MEAT, ItemTags.MEAT);
+        tag(MachineTags.Items.EXPLOSIVES, net.minecraft.world.item.Items.TNT, net.minecraft.world.item.Items.FIREWORK_STAR, net.minecraft.world.item.Items.FIREWORK_ROCKET, net.minecraft.world.item.Items.FIRE_CHARGE);
+        tag(MachineTags.Items.NATURAL_LIGHTS, net.minecraft.world.item.Items.GLOWSTONE_DUST, net.minecraft.world.item.Items.GLOWSTONE, net.minecraft.world.item.Items.SEA_LANTERN,
+                net.minecraft.world.item.Items.SEA_PICKLE, net.minecraft.world.item.Items.GLOW_LICHEN, net.minecraft.world.item.Items.GLOW_BERRIES, net.minecraft.world.item.Items.GLOW_INK_SAC);
+        tag(MachineTags.Items.SUNFLOWER, net.minecraft.world.item.Items.SUNFLOWER);
+        tag(MachineTags.Items.BLAZE_POWDER, net.minecraft.world.item.Items.BLAZE_POWDER);
+        tag(MachineTags.Items.AMETHYST, net.minecraft.world.item.Items.AMETHYST_SHARD);
+        tag(MachineTags.Items.PRISMARINE, net.minecraft.world.item.Items.PRISMARINE_SHARD);
+        tag(MachineTags.Items.CLOUD_COLD, net.minecraft.world.item.Items.SNOW, net.minecraft.world.item.Items.SNOW_BLOCK, net.minecraft.world.item.Items.SNOWBALL, net.minecraft.world.item.Items.ICE, net.minecraft.world.item.Items.PACKED_ICE,
+                net.minecraft.world.item.Items.BLUE_ICE);
+        tag(MachineTags.Items.LIGHTNING_ROD, net.minecraft.world.item.Items.LIGHTNING_ROD);
+        tag(MachineTags.Items.WIND_CHARGES, net.minecraft.world.item.Items.WIND_CHARGE);
 
         itemTags.forEach((key, list) -> {
             var holder = tag(key);

@@ -10,12 +10,12 @@ import net.minecraft.world.level.block.Block;
 public class MachineTags {
 
     public static void register() {
-        ItemTags.init();
+        Items.init();
         EntityTypes.init();
         Blocks.init();
     }
 
-    public static class ItemTags {
+    public static class Items {
 
         private static void init() {
         }
@@ -56,6 +56,7 @@ public class MachineTags {
         }
 
         public static TagKey<Block> RANGE_EXTENDER = create("range_extender");
+        public static final TagKey<Block> MIND_KILLER = create("mind_killer");
 
         private static TagKey<Block> create(String pName) {
             return TagKey.create(Registries.BLOCK, EnderIO.loc(pName));
