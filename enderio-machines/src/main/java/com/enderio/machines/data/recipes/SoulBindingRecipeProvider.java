@@ -8,6 +8,8 @@ import com.enderio.machines.common.blocks.soul_binder.SoulBindingRecipe;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.FarmSoul;
+
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
@@ -19,9 +21,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.InfestedBlock;
 import net.neoforged.neoforge.common.Tags;
 
 public class SoulBindingRecipeProvider extends RecipeProvider {
@@ -65,6 +71,11 @@ public class SoulBindingRecipeProvider extends RecipeProvider {
                 Ingredient.of(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)), 288000, 14, EntityType.PHANTOM,
                 recipeOutput);
 
+        InfestedBlock.BLOCK_BY_HOST_BLOCK.forEach((original, infested) -> buildInfested(infested, original, recipeOutput));
+    }
+
+    protected void buildInfested(ItemLike infestedItem, ItemLike original, RecipeOutput recipeOutput) {
+        build(infestedItem, Ingredient.of(original), 10000, 0, EntityType.SILVERFISH, recipeOutput);
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp,
