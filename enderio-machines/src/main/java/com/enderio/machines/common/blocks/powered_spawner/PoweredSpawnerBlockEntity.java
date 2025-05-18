@@ -6,11 +6,13 @@ import com.enderio.base.api.soul.Soul;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
+import com.enderio.base.api.soul.binding.ISoulBindable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.machines.common.MachineNBTKeys;
+import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
@@ -24,12 +26,14 @@ import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.lang.MachineLang;
+import com.enderio.machines.common.souldata.SoulDataReloadListener;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.enderio.machines.common.tag.MachineTags;
 import com.mojang.datafixers.util.Either;
 import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -46,10 +50,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.extensions.IOwnedSpawner;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IOwnedSpawner {
+public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IOwnedSpawner, ISoulBindable {
 
     public static final SingleSlotAccess INPUT = new SingleSlotAccess();
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
@@ -278,8 +284,25 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         return boundSoul.hasEntity() ? boundSoul.entityType() : null;
     }
 
+    @Override
     public Soul getBoundSoul() {
         return boundSoul;
+    }
+
+    @Override
+    public boolean canBind() {
+        return true;
+    }
+
+    @Override
+    public boolean isSoulValid(Soul soul) {
+        return SpawnerSoul.SPAWNER.matches(soul.entityTypeId()).isPresent();
+    }
+
+    @Override
+    public void bindSoul(Soul newSoul) {
+        this.boundSoul = newSoul;
+        taskHost.newTaskAvailable();
     }
 
     // TODO: I want a better way to handle this, but unsure what that could be.

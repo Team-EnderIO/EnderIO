@@ -8,6 +8,7 @@ import com.enderio.base.api.soul.binding.ComponentSoulBindable;
 import com.enderio.base.api.soul.binding.ISoulBindable;
 import com.enderio.base.api.soul.storage.ISoulHandler;
 import com.enderio.base.api.soul.storage.SingleComponentSoulHandler;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
@@ -149,6 +150,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
         if (player == null) {
             return InteractionResult.FAIL;
         }
+
         return releaseEntity(pContext.getLevel(), pContext.getItemInHand(), pContext.getClickedFace(),
                 pContext.getClickedPos(), emptyVial -> player.setItemInHand(pContext.getHand(), emptyVial));
     }

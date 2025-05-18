@@ -146,7 +146,8 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<PoweredSpawnerBlockEntity> POWERED_SPAWNER = register("powered_spawner",
             PoweredSpawnerBlockEntity::new, MachineBlocks.POWERED_SPAWNER)
-                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
+                    .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+                    .apply(MachineBlockEntities::soulBoundCapability);
 
     public static final Map<SolarPanelTier, RegiliteBlockEntity<SolarPanelBlockEntity>> SOLAR_PANELS = Util.make(() -> {
         Map<SolarPanelTier, RegiliteBlockEntity<SolarPanelBlockEntity>> map = new HashMap<>();
@@ -155,7 +156,8 @@ public class MachineBlockEntities {
                     register(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell",
                             (worldPosition, blockState) -> new SolarPanelBlockEntity(worldPosition, blockState, tier),
                             () -> MachineBlocks.SOLAR_PANELS.get(tier).get())
-                                    .apply(MachineBlockEntities::legacyPoweredMachineBlockEntityCapabilities));
+                                    .apply(MachineBlockEntities::legacyPoweredMachineBlockEntityCapabilities))
+            ;
         }
         return ImmutableMap.copyOf(map);
     });
@@ -177,7 +179,8 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<SoulEngineBlockEntity> SOUL_ENGINE = register("soul_engine",
             SoulEngineBlockEntity::new, MachineBlocks.SOUL_ENGINE)
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
-                    .apply(MachineBlockEntities::fluidHandlerCapability);
+                    .apply(MachineBlockEntities::fluidHandlerCapability)
+                    .apply(MachineBlockEntities::soulBoundCapability);
 
     public static final RegiliteBlockEntity<XPObeliskBlockEntity> XP_OBELISK = register("xp_obelisk",
             XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK)
@@ -218,7 +221,8 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<FarmingStationBlockEntity> FARMING_STATION = register("farming_station",
             FarmingStationBlockEntity::new, MachineBlocks.FARMING_STATION)
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
-                    .apply(MachineBlockEntities::fluidHandlerCapability);
+                    .apply(MachineBlockEntities::fluidHandlerCapability)
+                    .apply(MachineBlockEntities::soulBoundCapability);
 
     @SafeVarargs
     private static <B extends BlockEntity> RegiliteBlockEntity<B> register(String name,
@@ -252,6 +256,10 @@ public class MachineBlockEntities {
 
     private static void fluidHandlerCapability(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
         blockEntity.addCapability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
+    }
+
+    private static void soulBoundCapability(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
+        blockEntity.addCapability(EIOCapabilities.SoulBindable.BLOCK, MachineBlockEntity.SOUL_BINDABLE);
     }
 
     public static void register(IEventBus bus) {
