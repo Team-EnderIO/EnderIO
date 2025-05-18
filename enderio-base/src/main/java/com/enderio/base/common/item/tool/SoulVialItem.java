@@ -4,22 +4,12 @@ import com.enderio.EnderIOBase;
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.soul.Soul;
 import com.enderio.base.api.soul.SoulBoundUtils;
-import com.enderio.base.api.soul.binding.ComponentSoulBindable;
-import com.enderio.base.api.soul.binding.ISoulBindable;
-import com.enderio.base.api.soul.storage.ISoulHandler;
-import com.enderio.base.api.soul.storage.SingleComponentSoulHandler;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.EntityCaptureUtils;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
@@ -35,7 +25,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Wolf;
-import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
@@ -48,9 +38,14 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID)
 public class SoulVialItem extends Item implements AdvancedTooltipProvider {
@@ -267,7 +262,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
         }
 
         if (stack.is(EIOItems.SOUL_VIAL.get())) {
-            if (event.getTarget() instanceof AbstractChestedHorse || event.getTarget() instanceof Villager
+            if (event.getTarget() instanceof AbstractHorse || event.getTarget() instanceof Villager
                     || event.getTarget() instanceof WanderingTrader || event.getTarget() instanceof Wolf) {
                 stack.interactLivingEntity(event.getEntity(), (LivingEntity) event.getTarget(), event.getHand());
             }
