@@ -1305,6 +1305,10 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         // NEW: Save node data in case of need for recovery
         ListTag nodeData = new ListTag();
         for (Holder<Conduit<?, ?>> conduit : conduits) {
+            if (!conduitNodes.containsKey(conduit)) {
+                continue;
+            }
+
             var data = conduitNodes.get(conduit).getNodeData();
 
             if (data != null && data.type().isPersistent()) {
