@@ -132,7 +132,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
     }
 
     public boolean isLoaded() {
-        if (conduitBundle == null || conduit == null) {
+        if (!isValid() || conduitBundle == null || conduit == null) {
             return false;
         }
 
