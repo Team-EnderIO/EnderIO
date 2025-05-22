@@ -78,7 +78,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     @Override
     public boolean canBeReplacedBy(Holder<Conduit<?, ?>> otherConduit) {
         if (otherConduit.value().type() != type()) {
-            return true;
+            return false;
         }
 
         if (!(otherConduit.value() instanceof FluidConduit otherFluidConduit)) {
