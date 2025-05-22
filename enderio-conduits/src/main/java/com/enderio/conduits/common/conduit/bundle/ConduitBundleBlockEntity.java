@@ -498,6 +498,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                     newNode = new ConduitNode(conduit, getBlockPos(), oldNode.getNodeData());
                     conduit.value().onRemoved(oldNode, level, getBlockPos());
                     oldNode.getNetwork().remove(oldNode);
+                    oldNode.detach();
                 } else {
                     newNode = new ConduitNode(conduit, getBlockPos());
                 }
