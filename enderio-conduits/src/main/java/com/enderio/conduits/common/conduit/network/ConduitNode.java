@@ -110,11 +110,16 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
     }
 
     public void detach() {
-        // TODO: Review this condition...
-        Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
+        if (conduitBundle == null || conduit == null) {
+            return;
+        }
+
         this.conduitBundle = null;
         this.conduit = null;
-        network.onNodeUnloaded(this);
+
+        if (network != null) {
+            network.onNodeUnloaded(this);
+        }
     }
 
     public void onConfigChanged() {
