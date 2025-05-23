@@ -5,9 +5,9 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.common.filter.AbstractFilterItem;
-import com.enderio.base.common.filter.soul.EnderSoulFilterItem;
 import com.enderio.base.common.filter.fluid.EnderFluidFilterItem;
 import com.enderio.base.common.filter.item.general.EnderItemFilterItem;
+import com.enderio.base.common.filter.soul.EnderSoulFilterItem;
 import com.enderio.base.common.item.capacitors.CapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
@@ -32,16 +32,18 @@ import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
-import java.util.function.Function;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.Tags;
+
+import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class EIOItems {
@@ -383,6 +385,12 @@ public class EIOItems {
             .registerItem("enderios", EnderiosItem::new, new Item.Properties().stacksTo(1))
             .setTab(EIOCreativeTabs.MAIN)
             .setTranslation("\"Enderios\"");
+
+    public static final RegiliteItem<Item> EXP_FRUIT = ITEM_REGISTRY
+        .registerItem("exp_fruit", new Item.Properties().stacksTo(16)
+            .food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).build())
+        )
+        .setTab(EIOCreativeTabs.MAIN);
     // endregion
 
     // region Tools

@@ -16,6 +16,7 @@ import com.enderio.machines.client.gui.screen.PaintingMachineScreen;
 import com.enderio.machines.client.gui.screen.PoweredSpawnerScreen;
 import com.enderio.machines.client.gui.screen.RelocatorObeliskScreen;
 import com.enderio.machines.client.gui.screen.SagMillScreen;
+import com.enderio.machines.client.gui.screen.SculkSpreaderScreen;
 import com.enderio.machines.client.gui.screen.SlicerScreen;
 import com.enderio.machines.client.gui.screen.SoulBinderScreen;
 import com.enderio.machines.client.gui.screen.SoulEngineScreen;
@@ -44,6 +45,7 @@ import com.enderio.machines.common.blocks.obelisks.xp.XPObeliskMenu;
 import com.enderio.machines.common.blocks.painting.PaintingMachineMenu;
 import com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerMenu;
 import com.enderio.machines.common.blocks.sag_mill.SagMillMenu;
+import com.enderio.machines.common.blocks.sculkspreader.SculkSpreaderMenu;
 import com.enderio.machines.common.blocks.slicer.SlicerMenu;
 import com.enderio.machines.common.blocks.soul_binder.SoulBinderMenu;
 import com.enderio.machines.common.blocks.soul_engine.SoulEngineMenu;
@@ -119,6 +121,8 @@ public class MachineMenus {
             () -> VatScreen::new);
     public static final RegiliteMenu<WeatherObeliskMenu> WEATHER_OBELISK = MENU_REGISTRY.registerMenu("weather_obelisk",
             WeatherObeliskMenu::new, () -> WeatherObeliskScreen::new);
+    public static final RegiliteMenu<SculkSpreaderMenu> SCULK_SPREADER = MENU_REGISTRY.registerMenu("sculk_spreader",
+            SculkSpreaderMenu::new, () -> SculkSpreaderScreen::new);
 
     public static void register(IEventBus bus) {
         MENU_REGISTRY.register(bus);

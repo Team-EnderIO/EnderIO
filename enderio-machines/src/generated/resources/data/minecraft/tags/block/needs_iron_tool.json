@@ -30,6 +30,7 @@
     "enderio:aversion_obelisk",
     "enderio:relocator_obelisk",
     "enderio:attractor_obelisk",
-    "enderio:weather_obelisk"
+    "enderio:weather_obelisk",
+    "enderio:sculk_spreader"
   ]
 }

@@ -15,6 +15,7 @@ import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockE
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
+import com.enderio.machines.common.blocks.sculkspreader.SculkSpreaderBlockEntity;
 import com.enderio.machines.common.blocks.alloy.AlloySmelterBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
@@ -48,10 +49,6 @@ import com.enderio.machines.common.blocks.wireless_charger.WirelessChargerBlockE
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import com.google.common.collect.ImmutableMap;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.Supplier;
 import net.minecraft.Util;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -59,6 +56,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class MachineBlockEntities {
     private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIOMachines.REGILITE.blockEntityRegistry();
@@ -219,6 +221,10 @@ public class MachineBlockEntities {
             FarmingStationBlockEntity::new, MachineBlocks.FARMING_STATION)
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
                     .apply(MachineBlockEntities::fluidHandlerCapability);
+
+    public static final RegiliteBlockEntity<SculkSpreaderBlockEntity> SCULK_SPREADER = register("sculk_spreader", SculkSpreaderBlockEntity::new,
+            MachineBlocks.SCULK_SPREADER)
+                .apply(MachineBlockEntities::fluidHandlerCapability);
 
     @SafeVarargs
     private static <B extends BlockEntity> RegiliteBlockEntity<B> register(String name,

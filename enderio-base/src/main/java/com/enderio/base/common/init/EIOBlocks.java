@@ -15,6 +15,7 @@ import com.enderio.base.common.block.glass.GlassBlocks;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassIdentifier;
 import com.enderio.base.common.block.glass.GlassLighting;
+import com.enderio.base.common.block.plants.ExpPlant;
 import com.enderio.base.common.block.skull.EnderSkullBlock;
 import com.enderio.base.common.block.skull.WallEnderSkullBlock;
 import com.enderio.base.common.item.misc.EnderSkullBlockItem;
@@ -33,6 +34,7 @@ import com.enderio.base.common.paint.item.PaintedBlockItem;
 import com.enderio.base.common.paint.item.PaintedSlabBlockItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.loot.DecorLootTable;
+import com.enderio.base.data.loot.EIOLootTableProvider;
 import com.enderio.base.data.model.block.EIOBlockState;
 import com.enderio.regilite.data.RegiliteBlockLootProvider;
 import com.enderio.regilite.holder.RegiliteBlock;
@@ -530,6 +532,13 @@ public class EIOBlocks {
         .setTranslation("Industrial Insulation")
         .createBlockItem(ITEM_REGISTRY, item -> item
             .setTab(EIOCreativeTabs.BLOCKS)
+        );
+
+    public static final RegiliteBlock<ExpPlant> EXP_PLANT = BLOCK_REGISTRY
+        .registerBlock("exp_plant", ExpPlant::new, BlockBehaviour.Properties.of())
+        .setLootTable((p, b) -> EIOLootTableProvider.expPlant(p, b, EIOItems.EXP_FRUIT.get()))
+        .createBlockItem(ITEM_REGISTRY, item -> item
+            .setTab(EIOCreativeTabs.MAIN)
         );
 
     @SafeVarargs
