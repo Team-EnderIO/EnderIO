@@ -375,7 +375,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         var node = blockEntity.conduitNodes.get(conduit);
 
         // Forbid unloaded nodes from being queried
-        if (node == null || !node.isLoaded()) {
+        if (node != null && !node.isLoaded()) {
             return null;
         }
 
