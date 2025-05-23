@@ -66,25 +66,19 @@ public record RSConduit(ResourceLocation texture, Component description)
     @Override
     public void onCreated(IConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
         var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
-        if (!data.isInitialized()) {
-            data.initialize(node, level, pos);
-        }
+        data.initialize(node, level, pos);
     }
 
     @Override
     public void onRemoved(IConduitNode node, Level level, BlockPos pos) {
         var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
-        if (data.isInitialized()) {
-            data.remove(level);
-        }
+        data.remove(level);
     }
 
     @Override
     public void onConnectionsUpdated(IConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
         var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
-        if (data.isInitialized()) {
-            data.update(level, connectedSides);
-        }
+        data.update(level, connectedSides);
     }
 
     @Override
@@ -93,10 +87,8 @@ public record RSConduit(ResourceLocation texture, Component description)
 
         if (node != null && capability == RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability()) {
             var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
-            if (data.isInitialized()) {
-                // noinspection unchecked
-                return (TCapability) data.container;
-            }
+            // noinspection unchecked
+            return (TCapability) data.containerProvider;
         }
         return null;
     }

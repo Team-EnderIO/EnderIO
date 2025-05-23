@@ -9,59 +9,61 @@ import com.refinedmods.refinedstorage.common.api.RefinedStorageApi;
 import com.refinedmods.refinedstorage.common.api.support.network.ConnectionSink;
 import com.refinedmods.refinedstorage.common.api.support.network.InWorldNetworkNodeContainer;
 import com.refinedmods.refinedstorage.common.api.support.network.NetworkNodeContainerProvider;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class RSConduitNodeData implements NodeData {
     public static NodeDataType<RSConduitNodeData> TYPE = new NodeDataType<>(null, RSConduitNodeData::new);
 
-    public final NetworkNodeContainerProvider container;
-    private ConduitRSNode mainNode;
+    @Nullable
+    public NetworkNodeContainerProvider containerProvider;
 
-    public RSConduitNodeData() {
-        container = RefinedStorageApi.INSTANCE.createNetworkNodeContainerProvider();
-    }
-
-    public boolean isInitialized() {
-        return mainNode != null && !mainNode.isRemoved();
-    }
+    @Nullable
+    private ConduitRSNodeContainer mainNodeContainer;
 
     public void initialize(IConduitNode conduitNode, Level level, BlockPos pos) {
-        mainNode = new ConduitRSNode(level, pos);
+        containerProvider = RefinedStorageApi.INSTANCE.createNetworkNodeContainerProvider();
+        mainNodeContainer = new ConduitRSNodeContainer(level, pos);
 
-        // Gather initially connected sides.
-        mainNode.setConnectedSides(
-                Arrays.stream(Direction.values()).filter(conduitNode::isConnectedTo).collect(Collectors.toSet()));
+        mainNodeContainer.setConnectedSides(Arrays.stream(Direction.values()).filter(conduitNode::isConnectedTo).collect(Collectors.toSet()));
 
-        container.addContainer(mainNode);
-        container.initialize(level, () -> {
-        });
+        containerProvider.addContainer(mainNodeContainer);
+
+        containerProvider.initialize(level, () -> {});
         level.blockUpdated(pos, level.getBlockState(pos).getBlock());
 
         // TODO: is this necessary?
         var state = level.getBlockState(pos);
         state.updateNeighbourShapes(level, pos, Block.UPDATE_ALL);
 
-        container.update(level);
+        containerProvider.update(level);
     }
 
     public void update(Level level, Set<Direction> connectedSides) {
-        mainNode.setConnectedSides(connectedSides);
-        container.update(level);
+        if (containerProvider != null && mainNodeContainer != null) {
+            mainNodeContainer.setConnectedSides(connectedSides);
+            containerProvider.update(level);
+        }
     }
 
     public void remove(Level level) {
-        if (mainNode != null) {
-            mainNode.setRemoved(true);
-            container.remove(level);
-            mainNode = null;
+        if (containerProvider != null && mainNodeContainer != null) {
+            // Remove from RS networks
+            mainNodeContainer.setRemoved(true);
+            containerProvider.remove(level);
+
+            // Clear out the containers
+            containerProvider = null;
+            mainNodeContainer = null;
         }
     }
 
@@ -70,16 +72,16 @@ public class RSConduitNodeData implements NodeData {
         return TYPE;
     }
 
-    public static class ConduitRSNode implements InWorldNetworkNodeContainer {
+    public static class ConduitRSNodeContainer implements InWorldNetworkNodeContainer {
 
         private final BlockState blockState;
         private final GlobalPos globalPos;
         private final NetworkNode node;
 
-        private Set<Direction> connectedSides;
+        private Set<Direction> connectedSides = Set.of();
         private boolean removed;
 
-        public ConduitRSNode(Level level, BlockPos pos) {
+        public ConduitRSNodeContainer(Level level, BlockPos pos) {
             this.blockState = level.getBlockState(pos);
             this.globalPos = GlobalPos.of(level.dimension(), pos);
             // TODO: Config for energy use of RS conduits? Either on the conduit or in mod
@@ -129,8 +131,7 @@ public class RSConduitNodeData implements NodeData {
         @Override
         public void addOutgoingConnections(ConnectionSink connectionSink) {
             for (Direction direction : connectedSides) {
-                connectionSink.tryConnectInSameDimension(this.globalPos.pos().relative(direction),
-                        direction.getOpposite());
+                connectionSink.tryConnectInSameDimension(this.globalPos.pos().relative(direction), direction.getOpposite());
             }
         }
 
