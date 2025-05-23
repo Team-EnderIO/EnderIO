@@ -23,9 +23,14 @@ public interface IConduitNode {
     BlockPos pos();
 
     /**
-     * @return whether the node is in a loaded and ticking chunk, and is attached correctly to its bundle.
+     * @return whether the node is in a loaded chunk, and is attached correctly to its bundle.
      */
     boolean isLoaded();
+
+    /**
+     * @return whether the node is in a loaded and ticking chunk, and is attached correctly to its bundle.
+     */
+    boolean isTicking();
 
     /**
      * Mark the node as dirty, this will cause node data to be saved and will trigger a sync of any data to clients.
@@ -78,6 +83,7 @@ public interface IConduitNode {
      * @param capability the desired capability.
      * @param side the side to query for a neighboring capability.
      * @return the capability or null if it is not available.
+     * @throws IllegalStateException if this node is not loaded
      */
     @Nullable
     <TCapability> TCapability getNeighborSidedCapability(BlockCapability<TCapability, Direction> capability,
@@ -89,6 +95,7 @@ public interface IConduitNode {
      * @param capability the desired capability.
      * @param side the side to query for a neighboring capability.
      * @return the capability or null if it is not available.
+     * @throws IllegalStateException if this node is not loaded
      */
     @Nullable
     <TCapability> TCapability getNeighborVoidCapability(BlockCapability<TCapability, Void> capability, Direction side);
@@ -96,24 +103,28 @@ public interface IConduitNode {
     /**
      * @param signalColor the redstone conduit signal color to check for, or null for in-world signal only.
      * @return whether there is a redstone signal.
+     * @throws IllegalStateException if this node is not loaded
      */
     boolean hasRedstoneSignal(@Nullable DyeColor signalColor);
 
     /**
      * @param side side to check for.
      * @return whether this node is connected to a block on this {@code side}.
+     * @throws IllegalStateException if this node is not loaded
      */
     boolean isConnectedToBlock(Direction side);
 
     /**
      * @param side side to check for.
      * @return whether this node is connected to a block or another conduit on this {@code side}.
+     * @throws IllegalStateException if this node is not loaded
      */
     boolean isConnectedTo(Direction side);
 
     /**
      * @param side the connection to query.
      * @return the configuration for this connection, untyped.
+     * @throws IllegalStateException if this node is not loaded
      */
     ConnectionConfig getConnectionConfig(Direction side);
 
@@ -121,6 +132,7 @@ public interface IConduitNode {
      * @param side the connection to query.
      * @param type the type of configuration to get.
      * @return the configuration for this connection.
+     * @throws IllegalStateException if this node is not loaded
      * @throws IllegalStateException if the type requested does not match the stored type.
      */
     <T extends ConnectionConfig> T getConnectionConfig(Direction side, ConnectionConfigType<T> type);
@@ -128,6 +140,7 @@ public interface IConduitNode {
     /**
      * @param side connection side to get an inventory for.
      * @return the inventory for the desired connection.
+     * @throws IllegalStateException if this node is not loaded
      * @throws IllegalStateException if this node has no inventory.
      */
     IItemHandlerModifiable getInventory(Direction side);

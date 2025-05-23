@@ -887,10 +887,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                     .collect(Collectors.toSet());
 
             conduit.value().onConnectionsUpdated(node, level, getBlockPos(), connectedSides);
-
-            if (node.isLoaded()) {
-                node.getNetwork().onNodeUpdated(node);
-            }
+            node.getNetwork().onNodeUpdated(node);
         }
     }
 
@@ -1021,9 +1018,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
         if (level != null && !level.isClientSide()) {
             for (var node : conduitNodes.values()) {
-                if (node.isLoaded()) {
-                    node.onRedstoneChanged();
-                }
+                node.onRedstoneChanged();
             }
         }
     }

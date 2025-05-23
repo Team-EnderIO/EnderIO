@@ -52,7 +52,7 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
 
         // Mark all nodes as dirty if the active state changes (update block models).
         if (context.isNew() || context.isActive() != isActiveBeforeTick) {
-            for (var node : network.loadedNodes()) {
+            for (var node : network.tickingNodes()) {
                 node.markDirty();
             }
         }

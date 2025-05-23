@@ -101,11 +101,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
         Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
         this.conduitBundle = conduitBundle;
         this.conduit = conduit;
-
-        if (isLoaded()) {
-            network.onNodeLoaded(this);
-        }
-
+        network.onNodeUpdated(this);
         tryCopyLegacyData();
     }
 
@@ -118,37 +114,45 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
         this.conduit = null;
 
         if (network != null) {
-            network.onNodeUnloaded(this);
+            network.onNodeUpdated(this);
         }
     }
 
     public void onConfigChanged() {
-        Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
-        network.onNodeUpdated(this);
+        if (network != null) {
+            network.onNodeUpdated(this);
+        }
     }
 
     public void onRedstoneChanged() {
-        Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
-        network.onNodeUpdated(this);
+        if (network != null) {
+            network.onNodeUpdated(this);
+        }
     }
 
+    @Override
     public BlockPos pos() {
         return pos;
     }
 
+    @Override
     public boolean isLoaded() {
         if (!isValid() || conduitBundle == null || conduit == null) {
             return false;
         }
 
-        return conduitBundle.hasLevel() && conduitBundle.getLevel().isLoaded(pos)
-                && conduitBundle.getLevel().shouldTickBlocksAt(pos);
+        return conduitBundle.hasLevel() && conduitBundle.getLevel().isLoaded(pos);
     }
 
+    @Override
+    public boolean isTicking() {
+        return isLoaded() && conduitBundle.getLevel().shouldTickBlocksAt(pos);
+    }
+
+    @Override
     public void markDirty() {
         // No-op if we're loading chunks, just in case.
         if (isLoaded()) {
-            ensureValid();
             // noinspection DataFlowIssue
             conduitBundle.markNodesDirty();
         }
@@ -156,15 +160,18 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
 
     // region Node Data
 
+    @Override
     public boolean hasNodeData(NodeDataType<?> type) {
         return nodeData != null && nodeData.type() == type;
     }
 
+    @Override
     @Nullable
     public NodeData getNodeData() {
         return nodeData;
     }
 
+    @Override
     @Nullable
     public <D extends NodeData> D getNodeData(NodeDataType<D> type) {
         if (nodeData != null && type == nodeData.type()) {
@@ -175,6 +182,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
         return null;
     }
 
+    @Override
     public <D extends NodeData> D getOrCreateNodeData(NodeDataType<D> type) {
         if (nodeData != null && type == nodeData.type()) {
             // noinspection unchecked
@@ -186,6 +194,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
         return (D) nodeData;
     }
 
+    @Override
     public <D extends NodeData> void setNodeData(@Nullable D data) {
         nodeData = data;
     }
@@ -194,6 +203,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
 
     // region World Interaction
 
+    @Override
     public <TCapability> TCapability getNeighborSidedCapability(BlockCapability<TCapability, Direction> capability,
             Direction side) {
         ensureValid();
@@ -201,6 +211,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
         return conduitBundle.getNeighborSidedCapability(conduit, capability, side);
     }
 
+    @Override
     public <TCapability> TCapability getNeighborVoidCapability(BlockCapability<TCapability, Void> capability,
             Direction side) {
         ensureValid();
@@ -208,6 +219,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
         return conduitBundle.getNeighborVoidCapability(conduit, capability, side);
     }
 
+    @Override
     public boolean hasRedstoneSignal(@Nullable DyeColor signalColor) {
         ensureValid();
         // noinspection DataFlowIssue
@@ -218,40 +230,39 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
 
     // region Connections
 
+    @Override
     public boolean isConnectedToBlock(Direction side) {
         ensureValid();
         // noinspection DataFlowIssue
         return conduitBundle.getConnectionStatus(conduit, side).isEndpoint();
     }
 
+    @Override
     public boolean isConnectedTo(Direction side) {
         ensureValid();
         // noinspection DataFlowIssue
         return conduitBundle.getConnectionStatus(conduit, side).isConnected();
     }
 
+    @Override
     public ConnectionConfig getConnectionConfig(Direction side) {
         ensureValid();
         // noinspection DataFlowIssue
         return conduitBundle.getConnectionConfig(conduit, side);
     }
 
+    @Override
     public <T extends ConnectionConfig> T getConnectionConfig(Direction side, ConnectionConfigType<T> type) {
         ensureValid();
         // noinspection DataFlowIssue
         return conduitBundle.getConnectionConfig(conduit, side, type);
     }
 
-    public void setConnectionConfig(Direction side, ConnectionConfig connectionConfig) {
-        ensureValid();
-        // noinspection DataFlowIssue
-        conduitBundle.setConnectionConfig(conduit, side, connectionConfig);
-    }
-
     // endregion
 
     // region Inventory
 
+    @Override
     public IItemHandlerModifiable getInventory(Direction side) {
         ensureValid();
 
@@ -293,7 +304,6 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
         Preconditions.checkState(conduitBundle != null, "Conduit node is detached.");
         Preconditions.checkState(conduitBundle.hasLevel(), "Conduit bundle is not attached to a level");
         Preconditions.checkState(conduitBundle.getLevel().isLoaded(pos), "Conduit bundle is not loaded in a loaded chunk");
-        Preconditions.checkState(conduitBundle.getLevel().shouldTickBlocksAt(pos), "Conduit bundle is not in a ticking chunk");
         Preconditions.checkState(isLoaded(), "Conduit node is not loaded - more specific error unavailable.");
     }
 

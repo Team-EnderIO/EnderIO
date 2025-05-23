@@ -66,7 +66,7 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
         if (!conduit.isMultiFluid()) {
             if (context != null && !context.lockedFluid().equals(context.lastLockedFluid())) {
                 context.clearLastLockedFluid();
-                for (var node : network.loadedNodes()) {
+                for (var node : network.tickingNodes()) {
                     node.markDirty();
                 }
             }
