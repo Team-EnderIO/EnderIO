@@ -30,6 +30,10 @@ public class RSConduitNodeData implements NodeData {
     @Nullable
     private ConduitRSNodeContainer mainNodeContainer;
 
+    public boolean isAccessible() {
+        return containerProvider != null && mainNodeContainer != null && !mainNodeContainer.isRemoved();
+    }
+
     public void initialize(IConduitNode conduitNode, Level level, BlockPos pos) {
         containerProvider = RefinedStorageApi.INSTANCE.createNetworkNodeContainerProvider();
         mainNodeContainer = new ConduitRSNodeContainer(level, pos);

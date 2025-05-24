@@ -87,8 +87,10 @@ public record RSConduit(ResourceLocation texture, Component description)
 
         if (node != null && capability == RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability()) {
             var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
-            // noinspection unchecked
-            return (TCapability) data.containerProvider;
+            if (data.isAccessible()) {
+                // noinspection unchecked
+                return (TCapability) data.containerProvider;
+            }
         }
         return null;
     }
