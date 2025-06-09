@@ -58,7 +58,7 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
         if (!conduit.isMultiChemical()) {
             if (context != null && !context.lockedChemical().equals(context.lastLockedChemical())) {
                 context.clearLastLockedChemical();
-                for (var node : network.loadedNodes()) {
+                for (var node : network.tickingNodes()) {
                     node.markDirty();
                 }
             }

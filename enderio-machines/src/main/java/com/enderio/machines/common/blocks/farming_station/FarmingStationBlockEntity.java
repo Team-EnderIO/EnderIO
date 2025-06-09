@@ -9,6 +9,7 @@ import com.enderio.base.api.farm.FarmTaskManager;
 import com.enderio.base.api.farm.FarmingStation;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.api.soul.Soul;
+import com.enderio.base.api.soul.binding.ISoulBindable;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.common.MachineNBTKeys;
@@ -62,7 +63,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingStation {
+public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingStation, ISoulBindable {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.FARM_CAPACITY);
@@ -419,8 +420,25 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         return boundSoul.hasEntity() ? boundSoul.entityType() : null;
     }
 
-    public void setEntityType(ResourceLocation entityType) {
-        boundSoul = Soul.of(entityType);
+    @Override
+    public Soul getBoundSoul() {
+        return boundSoul;
+    }
+
+    @Override
+    public boolean canBind() {
+        return true;
+    }
+
+    @Override
+    public boolean isSoulValid(Soul soul) {
+        return FarmSoul.FARM.matches(soul.entityTypeId()).isPresent();
+    }
+
+    @Override
+    public void bindSoul(Soul newSoul) {
+        this.boundSoul = newSoul;
+        this.soulData = FarmSoul.FARM.matches(newSoul.entityTypeId()).get();
     }
 
     @SubscribeEvent

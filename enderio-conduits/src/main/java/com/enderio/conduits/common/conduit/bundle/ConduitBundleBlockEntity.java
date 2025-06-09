@@ -373,6 +373,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         var node = blockEntity.conduitNodes.get(conduit);
+
+        // Forbid unloaded nodes from being queried
+        if (node != null && !node.isLoaded()) {
+            return null;
+        }
+
         return conduit.value().proxyCapability(blockEntity.level, node, capability, context);
     }
 
@@ -498,6 +504,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                     newNode = new ConduitNode(conduit, getBlockPos(), oldNode.getNodeData());
                     conduit.value().onRemoved(oldNode, level, getBlockPos());
                     oldNode.getNetwork().remove(oldNode);
+                    oldNode.detach();
                 } else {
                     newNode = new ConduitNode(conduit, getBlockPos());
                 }
@@ -880,10 +887,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                     .collect(Collectors.toSet());
 
             conduit.value().onConnectionsUpdated(node, level, getBlockPos(), connectedSides);
-
-            if (node.isLoaded()) {
-                node.getNetwork().onNodeUpdated(node);
-            }
+            node.getNetwork().onNodeUpdated(node);
         }
     }
 
@@ -1014,9 +1018,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
         if (level != null && !level.isClientSide()) {
             for (var node : conduitNodes.values()) {
-                if (node.isLoaded()) {
-                    node.onRedstoneChanged();
-                }
+                node.onRedstoneChanged();
             }
         }
     }
@@ -1298,6 +1300,10 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         // NEW: Save node data in case of need for recovery
         ListTag nodeData = new ListTag();
         for (Holder<Conduit<?, ?>> conduit : conduits) {
+            if (!conduitNodes.containsKey(conduit)) {
+                continue;
+            }
+
             var data = conduitNodes.get(conduit).getNodeData();
 
             if (data != null && data.type().isPersistent()) {

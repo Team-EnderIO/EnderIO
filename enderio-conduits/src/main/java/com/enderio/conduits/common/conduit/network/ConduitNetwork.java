@@ -48,7 +48,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
     private final Multimap<Long, ConduitNode> nodesByChunkPos = HashMultimap.create();
 
-    private final Set<ConduitNode> loadedNodes = Sets.newHashSet();
+    private final Set<ConduitNode> tickingNodes = Sets.newHashSet();
 
     // TODO: Separate this into a list and a multimap so we can sort all endpointConnections?
     private final SetMultimap<ConduitNode, ConduitBlockConnection> endpointConnections = HashMultimap.create();
@@ -130,10 +130,10 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         return Set.of();
     }
 
-    public Collection<ConduitNode> loadedNodes() {
+    public Collection<ConduitNode> tickingNodes() {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
-        return Collections.unmodifiableCollection(loadedNodes);
+        return Collections.unmodifiableCollection(tickingNodes);
     }
 
     public Collection<ConduitNode> blockEndpoints() {
@@ -249,15 +249,15 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
             rebuildCache();
         } else {
             for (var node : dirtyNodes) {
-                if (node.isLoaded()) {
+                if (node.isTicking()) {
                     // Update nodes by removing and adding again.
-                    if (loadedNodes.contains(node)) {
-                        removeLoadedNode(node);
+                    if (tickingNodes.contains(node)) {
+                        removeTickingNode(node);
                     }
 
-                    addLoadedNode(node);
-                } else if (loadedNodes.contains(node)) {
-                    removeLoadedNode(node);
+                    addTickingNode(node);
+                } else if (tickingNodes.contains(node)) {
+                    removeTickingNode(node);
                 }
             }
         }
@@ -268,25 +268,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         }
     }
 
-    public void onNodeLoaded(ConduitNode node) {
-        Preconditions.checkArgument(node.isLoaded(), "Node is not loaded!");
-
-        if (supportsCaching && !shouldRebuildCache) {
-            dirtyNodes.add(node);
-        }
-    }
-
-    public void onNodeUnloaded(ConduitNode node) {
-        Preconditions.checkArgument(!node.isLoaded(), "Node is still loaded!");
-
-        if (supportsCaching && !shouldRebuildCache) {
-            dirtyNodes.add(node);
-        }
-    }
-
     public void onNodeUpdated(ConduitNode node) {
-        Preconditions.checkArgument(node.isLoaded(), "Node is not loaded!");
-
         if (supportsCaching && !shouldRebuildCache) {
             dirtyNodes.add(node);
         }
@@ -304,8 +286,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
     // region Caching Logic
 
-    private void addLoadedNode(ConduitNode node) {
-        loadedNodes.add(node);
+    private void addTickingNode(ConduitNode node) {
+        tickingNodes.add(node);
 
         for (var side : Direction.values()) {
             if (!node.isConnectedToBlock(side)) {
@@ -374,12 +356,12 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         }
     }
 
-    private void removeLoadedNode(ConduitNode node) {
-        if (!loadedNodes.contains(node)) {
+    private void removeTickingNode(ConduitNode node) {
+        if (!tickingNodes.contains(node)) {
             return;
         }
 
-        loadedNodes.remove(node);
+        tickingNodes.remove(node);
 
         // Remove connections from any maps
         for (var connection : endpointConnections.get(node)) {
@@ -455,7 +437,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
         // Clear all caches
         nodesByChunkPos.clear();
-        loadedNodes.clear();
+        tickingNodes.clear();
         endpointConnections.clear();
         accessibleBlockConnectionsMap.clear();
         insertConnections.clear();
@@ -465,13 +447,13 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         insertConnectionsByExtract.clear();
         extractConnectionsByInsert.clear();
 
-        // Add each loaded node into the caches.
+        // Add each ticking node into the caches.
         for (var node : nodes()) {
             // Put nodes into the position map.
             addNodeToPositionMaps(node, true);
 
-            if (node.isLoaded()) {
-                addLoadedNode(node);
+            if (node.isTicking()) {
+                addTickingNode(node);
             }
         }
 
@@ -539,9 +521,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         }
 
         addNodeToPositionMaps(node, false);
-        if (node.isLoaded() && !shouldRebuildCache) {
-            dirtyNodes.add(node);
-        }
+        dirtyNodes.add(node);
     }
 
     @Override
@@ -609,12 +589,11 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         category.setDetail("ShouldRebuildCache", shouldRebuildCache);
         category.setDetail("HaveConnectionsChanged", haveConnectionsChanged);
         category.setDetail("NodeCount", nodeCount());
-        category.setDetail("LoadedNodeCount", loadedNodes.size());
+        category.setDetail("TickingNodeCount", tickingNodes.size());
         category.setDetail("NodesByChunkPos", nodesByChunkPos.size());
         category.setDetail("DirtNodes", dirtyNodes.size());
         category.setDetail("AllChannels", allChannels.size());
         category.setDetail("InsertConnections", insertConnections.size());
         category.setDetail("ExtractConnections", extractConnections.size());
-        category.setDetail("InsertConnectionsByChannel", insertConnectionsByChannel.size());
     }
 }

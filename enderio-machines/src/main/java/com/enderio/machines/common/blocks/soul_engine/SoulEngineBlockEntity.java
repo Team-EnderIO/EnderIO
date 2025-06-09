@@ -6,6 +6,7 @@ import com.enderio.base.api.capacitor.FixedScalable;
 import com.enderio.base.api.capacitor.LinearScalable;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
+import com.enderio.base.api.soul.binding.ISoulBindable;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.MachineNBTKeys;
@@ -53,7 +54,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
-public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser {
+public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser, ISoulBindable {
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
@@ -109,6 +110,27 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     @Nullable
     public EntityType<?> getEntityType() {
         return boundSoul.hasEntity() ? boundSoul.entityType() : null;
+    }
+
+    @Override
+    public Soul getBoundSoul() {
+        return boundSoul;
+    }
+
+    @Override
+    public boolean canBind() {
+        return true;
+    }
+
+    @Override
+    public boolean isSoulValid(Soul soul) {
+        return EngineSoul.ENGINE.matches(soul.entityTypeId()).isPresent();
+    }
+
+    @Override
+    public void bindSoul(Soul newSoul) {
+        this.boundSoul = newSoul;
+        this.soulData = EngineSoul.ENGINE.matches(newSoul.entityTypeId()).get();
     }
 
     @Override

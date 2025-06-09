@@ -1,6 +1,6 @@
 package com.enderio.conduits.client;
 
-import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
+import com.enderio.conduits.client.model.conduit.facades.ClientFacadeVisibility;
 import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.longs.LongSet;
@@ -44,7 +44,7 @@ public class ConduitFacadeRendering {
         if (facades.isEmpty())
             return;
 
-        event.addRenderer(new FacadeRenderer(facades, FacadeHelper.areFacadesVisible()));
+        event.addRenderer(new FacadeRenderer(facades, ClientFacadeVisibility.areFacadesVisible()));
     }
 
     private static class FacadeRenderer implements AddSectionGeometryEvent.AdditionalSectionRenderer {
