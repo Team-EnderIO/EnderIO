@@ -21,7 +21,7 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import java.util.List;
 import java.util.UUID;
 
-@EventBusSubscriber
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
 public class MobSpawnTask extends PoweredSpawnerTask {
 
     private float efficiency = 1;
