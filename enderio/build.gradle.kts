@@ -21,6 +21,7 @@ val jeiVersion: String by project
 val cctMinecraftVersion: String by project
 val cctVersion: String by project
 val stitchVersion: String by project
+val patchouliVersion: String by project
 val ae2Version: String by project
 val refinedstorageVersion: String by project
 val jadeFileId: String by project
@@ -78,7 +79,7 @@ dependencies {
     ////runtimeOnly("curse.maven:fluxnetworks-248020:4651164")
 
     // Patchouli
-    //runtimeOnly("vazkii.patchouli:Patchouli:${patchouli_version}")
+    runtimeOnly("vazkii.patchouli:Patchouli:${patchouliVersion}")
 
     // Mekanism
     runtimeOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}")

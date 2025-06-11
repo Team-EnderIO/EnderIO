@@ -17,6 +17,7 @@ sourceSets {
     main {
         resources {
             srcDir("src/generated/resources")
+            srcDir("src/main/resources")
         }
     }
 }
@@ -24,6 +25,7 @@ sourceSets {
 val regiliteVersion: String by project
 val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
+val patchouliVersion: String by project
 
 dependencies {
     api("com.enderio:Regilite:$regiliteVersion")
@@ -35,6 +37,9 @@ dependencies {
     // JEI
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge-api:$jeiVersion")
+
+    // Patchouli
+    compileOnly("vazkii.patchouli:Patchouli:${patchouliVersion}:api")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
