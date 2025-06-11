@@ -277,14 +277,18 @@ public class MaterialRecipeProvider extends RecipeProvider {
     }
 
     private void addGears(RecipeOutput recipeOutput) {
-        upgradeGear(recipeOutput, EIOItems.GEAR_IRON.get(), EIOItems.GRAINS_OF_INFINITY.get(), Tags.Items.INGOTS_IRON,
-                Tags.Items.NUGGETS_IRON);
-        upgradeGear(recipeOutput, EIOItems.GEAR_ENERGIZED.get(), EIOTags.Items.GEARS_IRON,
-                EIOItems.ENERGETIC_ALLOY_INGOT.get(), EIOItems.ENERGETIC_ALLOY_NUGGET.get());
-        upgradeGear(recipeOutput, EIOItems.GEAR_VIBRANT.get(), EIOTags.Items.GEARS_ENERGIZED,
-                EIOItems.VIBRANT_ALLOY_INGOT.get(), EIOItems.VIBRANT_ALLOY_NUGGET.get());
-        upgradeGear(recipeOutput, EIOItems.GEAR_DARK_STEEL.get(), EIOTags.Items.GEARS_IRON,
-                EIOItems.DARK_STEEL_INGOT.get(), EIOItems.DARK_STEEL_NUGGET.get());
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.GEAR_IRON.get())
+            .pattern(" I ")
+            .pattern("I I")
+            .pattern(" I ")
+            .define('I', Tags.Items.INGOTS_IRON)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.IRON_INGOT))
+            .save(recipeOutput);
+
+        upgradeGear(recipeOutput, EIOItems.GEAR_DARK_STEEL.get(), EIOTags.Items.GEARS_IRON, EIOItems.DARK_STEEL_INGOT.get());
+
+        upgradeGear(recipeOutput, EIOItems.GEAR_ENERGIZED.get(), EIOTags.Items.GEARS_IRON, EIOItems.ENERGETIC_ALLOY_INGOT.get());
+        upgradeGear(recipeOutput, EIOItems.GEAR_VIBRANT.get(), EIOTags.Items.GEARS_ENERGIZED, EIOItems.VIBRANT_ALLOY_INGOT.get());
     }
 
     private void addGrindingBalls(RecipeOutput recipeOutput) {
@@ -348,29 +352,14 @@ public class MaterialRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void upgradeGear(RecipeOutput recipeOutput, Item resultGear, TagKey<Item> inputGear, ItemLike cross,
-            ItemLike corner) {
+    private void upgradeGear(RecipeOutput recipeOutput, Item resultGear, TagKey<Item> inputGear, ItemLike cross) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, resultGear)
-                .pattern("NIN")
+                .pattern(" I ")
                 .pattern("IGI")
-                .pattern("NIN")
-                .define('N', corner)
+                .pattern(" I ")
                 .define('I', cross)
                 .define('G', inputGear)
                 .unlockedBy("has_ingredient", has(inputGear))
-                .save(recipeOutput);
-    }
-
-    private void upgradeGear(RecipeOutput recipeOutput, Item resultGear, ItemLike inputGear, TagKey<Item> cross,
-            TagKey<Item> corner) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, resultGear)
-                .pattern("NIN")
-                .pattern("IGI")
-                .pattern("NIN")
-                .define('N', corner)
-                .define('I', cross)
-                .define('G', inputGear)
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(inputGear))
                 .save(recipeOutput);
     }
 

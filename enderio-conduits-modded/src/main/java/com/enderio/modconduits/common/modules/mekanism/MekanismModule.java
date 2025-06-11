@@ -6,6 +6,7 @@ import com.enderio.base.common.filter.item.general.EnderItemFilterItem;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitType;
 import com.enderio.conduits.api.EnderIOConduitsRegistries;
@@ -60,6 +61,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -223,6 +225,17 @@ public class MekanismModule implements ConduitCommonModule {
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApiImpl.INSTANCE.getConduitItem(chemicalConduit, 3))
                 .pattern("BBB")
+                .pattern("IGI")
+                .pattern("BBB")
+                .define('B', EIOItems.CONDUIT_BINDER)
+                .define('I', EIOTags.Items.INGOTS_STEEL)
+                .define('G', Tags.Items.GLASS_BLOCKS)
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+                .save(mekRecipeOutput, EnderIO.loc("mek_basic_pressurized_tube"));
+
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApiImpl.INSTANCE.getConduitItem(chemicalConduit, 3))
+                .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
@@ -230,7 +243,7 @@ public class MekanismModule implements ConduitCommonModule {
                         BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID,
                                 "basic_pressurized_tube")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(mekRecipeOutput, EnderIO.loc("mek_basic_pressurized_tube"));
+                .save(mekRecipeOutput, EnderIO.loc("convert_mek_basic_pressurized_tube"));
 
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.BUILDING_BLOCKS,
@@ -243,7 +256,7 @@ public class MekanismModule implements ConduitCommonModule {
                         BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID,
                                 "advanced_pressurized_tube")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(mekRecipeOutput, EnderIO.loc("mek_advanced_pressurized_tube"));
+                .save(mekRecipeOutput, EnderIO.loc("convert_mek_advanced_pressurized_tube"));
 
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApiImpl.INSTANCE.getConduitItem(enderChemicalConduit, 3))
@@ -255,7 +268,7 @@ public class MekanismModule implements ConduitCommonModule {
                         BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID,
                                 "elite_pressurized_tube")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(mekRecipeOutput, EnderIO.loc("mek_elite_pressurized_tube"));
+                .save(mekRecipeOutput, EnderIO.loc("convert_mek_elite_pressurized_tube"));
 
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.BUILDING_BLOCKS,

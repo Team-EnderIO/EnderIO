@@ -11,16 +11,13 @@
     "B": {
       "item": "enderio:conduit_binder"
     },
-    "G": {
-      "tag": "c:glass_blocks"
-    },
     "I": {
-      "tag": "c:ingots/steel"
+      "item": "mekanism:basic_pressurized_tube"
     }
   },
   "pattern": [
     "BBB",
-    "IGI",
+    "III",
     "BBB"
   ],
   "result": {

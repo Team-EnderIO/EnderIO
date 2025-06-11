@@ -77,6 +77,9 @@ public class EIOTags {
         public static final TagKey<Item> INGOTS_SOULARIUM = commonTag("ingots/soularium");
         public static final TagKey<Item> INGOTS_VIBRANT_ALLOY = commonTag("ingots/vibrant_alloy");
 
+        // Compat
+        public static final TagKey<Item> INGOTS_STEEL = commonTag("ingots/steel");
+
         public static final TagKey<Item> NUGGETS_CONDUCTIVE_ALLOY = commonTag("nuggets/conductive_alloy");
         public static final TagKey<Item> NUGGETS_ELECTRICAL_STEEL = commonTag("nuggets/electrical_steel");
         public static final TagKey<Item> NUGGETS_DARK_STEEL = commonTag("nuggets/dark_steel");

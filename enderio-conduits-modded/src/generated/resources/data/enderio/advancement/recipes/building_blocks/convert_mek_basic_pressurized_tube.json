@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:mek_advanced_pressurized_tube"
+        "recipe": "enderio:convert_mek_basic_pressurized_tube"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -32,7 +32,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:mek_advanced_pressurized_tube"
+      "enderio:convert_mek_basic_pressurized_tube"
     ]
   }
 }

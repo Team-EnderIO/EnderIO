@@ -1,11 +1,17 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_ingredient": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:iron_ingot"
+            "items": "enderio:conduit_binder"
           }
         ]
       },
@@ -13,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:iron_gear"
+        "recipe": "enderio:convert_mek_advanced_pressurized_tube"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +32,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:iron_gear"
+      "enderio:convert_mek_advanced_pressurized_tube"
     ]
   }
 }

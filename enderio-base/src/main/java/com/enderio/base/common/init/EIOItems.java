@@ -230,7 +230,7 @@ public class EIOItems {
     // region Gears
 
     public static final RegiliteItem<MaterialItem> GEAR_IRON = materialItem("iron_gear")
-            .setTranslation("Infinity Bimetal Gear")
+            .setTranslation("Iron Gear")
             .addItemTags(EIOTags.Items.GEARS_IRON);
 
     public static final RegiliteItem<MaterialItem> GEAR_ENERGIZED = materialItem("energized_gear")

@@ -1,0 +1,28 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/steel"
+      }
+    }
+  ],
+  "type": "enderio:alloy_smelting",
+  "energy": 3200,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "tag": "c:ingots/steel"
+    },
+    {
+      "count": 1,
+      "tag": "c:silicon"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "enderio:electrical_steel_ingot"
+  }
+}
