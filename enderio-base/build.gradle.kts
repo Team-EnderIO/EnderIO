@@ -17,7 +17,6 @@ sourceSets {
     main {
         resources {
             srcDir("src/generated/resources")
-            srcDir("src/main/resources")
         }
     }
 }
