@@ -1,0 +1,20 @@
+{
+    "name": "Grains of Infinity",
+    "icon": "enderio:grains_of_infinity",
+    "category": "enderio:getting_started",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "$(item)Grains of Infinity$() are tiny fragments of that eternity which lies beneath the bedrock of the world. They are an important crafting ingredient used in most machines.$(br2) To obtain them, light bedrock on fire and stand back."
+        },
+        {
+            "type": "patchouli:image",
+            "images": [
+                "enderio:textures/guide/grain_craft_1.png",
+                "enderio:textures/images/grain_craft_2.png"
+            ],
+            "border": true,
+            "text": "The Buzz Lightyear reference is optional."
+        }
+    ]
+}

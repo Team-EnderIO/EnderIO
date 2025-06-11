@@ -1,0 +1,12 @@
+{
+    "type": "patchouli:shapeless_book_recipe",
+    "ingredients": [
+        {
+            "item": "minecraft:book"
+        },
+        {
+            "item": "enderio:grains_of_infinity"
+        }
+    ],
+    "book": "enderio:guide"
+}
