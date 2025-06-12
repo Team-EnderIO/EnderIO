@@ -1,0 +1,22 @@
+{
+    "name": "Machine Components",
+    "icon": "enderio:void_chassis",
+    "category": "enderio:getting_started",
+    "pages": [
+        "Even the simplest machines require more advanced materials than the natural world can provide. Combining iron with $(item)Grains of Infinity$() does the job nicely.",
+        {
+            "type": "patchouli:crafting",
+            "recipe": "enderio:void_chassis",
+            "text":  "$The $(item)Void Chassis$() can be used as a basic framework for many different kinds of machines"
+        }, 
+        {
+            "type": "patchouli:spotlight",
+            "item": "enderio:iron_gear",
+            "text": "The $(item)Infinity Bimetal Gear$() may also come in useful."
+        },
+        {
+            "type": "patchouli:crafting",
+            "recipe": "enderio:iron_gear"
+        }
+    ]
+}
