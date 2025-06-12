@@ -1,0 +1,17 @@
+{
+    "name": "Stirling Generator",
+    "icon": "enderio:stirling_generator",
+    "category": "enderio:basics",
+    "pages": [
+        {
+            "type": "patchouli:spotlight",
+            "item": "enderio:stirling_generator",
+            "text": "Crafting a $(item)Void Chassis$() with a furnace, some deepslate, and obsidian creates the $(item)Stirling Generator$(), an early-game source of energy. $(br2)The generator burns fuel like a furnace to generate μI. Improved capacitors will increase the generation rate and decrease fuel consumption."
+        },
+        {
+            "type": "patchouli:crafting",
+            "recipe": "enderio:stirling_generator",
+            "text": "Despite the name, does not generate Scottish cities."
+        }
+    ]
+}
