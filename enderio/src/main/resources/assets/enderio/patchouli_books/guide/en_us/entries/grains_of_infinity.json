@@ -4,8 +4,10 @@
     "category": "enderio:getting_started",
     "pages": [
         {
-            "type": "patchouli:text",
-            "text": "$(item)Grains of Infinity$() are tiny fragments of that eternity which lies beneath the bedrock of the world. They are an important crafting ingredient used in most machines.$(br2) To obtain them, light bedrock or deepslate on fire and stand back."
+            "type": "patchouli:spotlight",
+            "item": "enderio:grains_of_infinity",
+            "text": "$(item)Grains of Infinity$() are tiny fragments of that eternity which lies beneath the bedrock of the world. They are an important crafting ingredient used in most machines.$(br2) To obtain them, light bedrock or deepslate on fire and stand back.",
+            "link_recipe": true
         },
         {
             "type": "patchouli:image",
