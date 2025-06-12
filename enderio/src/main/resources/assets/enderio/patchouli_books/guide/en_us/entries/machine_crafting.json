@@ -1,7 +1,7 @@
 {
     "name": "Machine Components",
     "icon": "enderio:void_chassis",
-    "category": "enderio:getting_started",
+    "category": "enderio:basics",
     "pages": [
         "Even the simplest machines require more advanced materials than the natural world can provide. Combining iron with $(item)Grains of Infinity$() does the job nicely.",
         {

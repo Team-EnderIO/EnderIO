@@ -1,7 +1,7 @@
 {
     "name": "Capacitors",
     "icon": "enderio:basic_capacitor",
-    "category": "enderio:getting_started",
+    "category": "enderio:basics",
     "pages": [
         "$(thing)Machines$() require a $(item)capacitor$() to operate. $(br2)Capacitors control the speed of the machine and store energy as μI. Better capacitors will increase a machine's speed and energy capacity. $(br2)To install a capacitor, right-click on a machine with the capacitor in your hand.",
         {

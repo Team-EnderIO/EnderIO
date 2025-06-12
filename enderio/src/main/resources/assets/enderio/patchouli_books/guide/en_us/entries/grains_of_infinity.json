@@ -1,7 +1,7 @@
 {
     "name": "Grains of Infinity",
     "icon": "enderio:grains_of_infinity",
-    "category": "enderio:getting_started",
+    "category": "enderio:basics",
     "pages": [
         {
             "type": "patchouli:spotlight",
