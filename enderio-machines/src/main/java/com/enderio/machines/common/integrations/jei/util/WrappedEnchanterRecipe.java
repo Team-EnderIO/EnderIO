@@ -39,7 +39,7 @@ public class WrappedEnchanterRecipe implements Recipe<EnchanterRecipe.Input> {
 
     public List<ItemStack> getLapis() {
         return Arrays.stream(Ingredient.of(Tags.Items.GEMS_LAPIS).getItems())
-                .peek(item -> item.setCount(recipe.value().getLapisForLevel(level)))
+                .peek(item -> item.copyWithCount(recipe.value().getLapisForLevel(level)))
                 .toList();
     }
 
