@@ -47,11 +47,11 @@ public class Conduits {
 
         // Fluid conduits tick every 5 ticks, so remember the transfer rate per tick will be *5 for each operation.
         context.register(FLUID,
-                new FluidConduit(EnderIO.loc("block/conduit/fluid"), ConduitLang.FLUID_CONDUIT, 200, false));
+                new FluidConduit(EnderIO.loc("block/conduit/fluid"), ConduitLang.FLUID_CONDUIT, 200, false, false));
         context.register(PRESSURIZED_FLUID, new FluidConduit(EnderIO.loc("block/conduit/pressurized_fluid"),
-                ConduitLang.PRESSURIZED_FLUID_CONDUIT, 1_000, false));
+                ConduitLang.PRESSURIZED_FLUID_CONDUIT, 1_000, false, true));
         context.register(ENDER_FLUID,
-                new FluidConduit(EnderIO.loc("block/conduit/ender_fluid"), ConduitLang.ENDER_FLUID_CONDUIT, 8_000, true));
+                new FluidConduit(EnderIO.loc("block/conduit/ender_fluid"), ConduitLang.ENDER_FLUID_CONDUIT, 8_000, true, true));
 
         context.register(ITEM, new ItemConduit(EnderIO.loc("block/conduit/item"), ConduitLang.ITEM_CONDUIT, 32, 20));
         context.register(ENHANCED_ITEM,

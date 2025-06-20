@@ -235,7 +235,8 @@ public class ConduitMenu extends BaseEnderMenu {
     public void broadcastChanges() {
         super.broadcastChanges();
 
-        if (getPlayerInventory().player instanceof ServerPlayer serverPlayer) {
+        // Belt & Braces check to ensure the menu is in a valid state before accessing connections
+        if (getPlayerInventory().player instanceof ServerPlayer serverPlayer && stillValid(serverPlayer)) {
             if (!Objects.equals(connectionConfig(), remoteConnectionConfig)) {
                 PacketDistributor.sendToPlayer(serverPlayer,
                         new SetConduitConnectionConfigPacket(containerId, connectionConfig()));
