@@ -83,6 +83,7 @@ dependencies {
     add("gametestImplementation", "net.neoforged:testframework:$neoForgeVersion") {
         isTransitive = false
     }
+    add("gametestRuntimeOnly", project(":enderio-machines"))
 }
 
 neoForge {
