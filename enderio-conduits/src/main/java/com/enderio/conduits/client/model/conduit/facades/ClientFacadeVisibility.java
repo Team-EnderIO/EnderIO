@@ -19,20 +19,6 @@ public class ClientFacadeVisibility {
     private static boolean FACADES_VISIBLE = true;
 
     @EnsureSide(EnsureSide.Side.CLIENT)
-    public static void setFacadesVisible(boolean visible) {
-        if (visible != FACADES_VISIBLE) {
-            RenderSystem.recordRenderCall(() -> {
-                ConduitBundleBlockEntity.CHUNK_FACADES.keySet().forEach((section) -> {
-                    Minecraft.getInstance().levelRenderer.setSectionDirty(SectionPos.x(section), SectionPos.y(section),
-                            SectionPos.z(section));
-                });
-            });
-        }
-
-        FACADES_VISIBLE = visible;
-    }
-
-    @EnsureSide(EnsureSide.Side.CLIENT)
     public static boolean areFacadesVisible() {
         return FACADES_VISIBLE;
     }
@@ -41,5 +27,18 @@ public class ClientFacadeVisibility {
     public static void onTick(PlayerTickEvent.Pre event) {
         // Update every tick on the client.
         setFacadesVisible(FacadeUtil.areFacadesVisible(event.getEntity()));
+    }
+
+    private static void setFacadesVisible(boolean visible) {
+        if (visible != FACADES_VISIBLE) {
+            RenderSystem.recordRenderCall(() -> {
+                ConduitBundleBlockEntity.CHUNK_FACADES.keySet().forEach((section) -> {
+                    Minecraft.getInstance().levelRenderer.setSectionDirty(SectionPos.x(section), SectionPos.y(section),
+                        SectionPos.z(section));
+                });
+            });
+        }
+
+        FACADES_VISIBLE = visible;
     }
 }
