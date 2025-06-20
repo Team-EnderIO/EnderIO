@@ -1,6 +1,5 @@
 {
   "type": "enderio:soul_binding",
-  "copyInputComponents": false,
   "energy": 51200,
   "entity_type": "minecraft:witch",
   "experience": 4,
