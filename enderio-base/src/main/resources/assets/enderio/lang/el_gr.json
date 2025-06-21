@@ -268,7 +268,7 @@
   "gui.enderio.ioconfig.pull": "Εισαγωγή",
   "gui.enderio.ioconfig.push": "Εξαγωγή",
   "gui.enderio.max_range": "Maximum Range",
-  "gui.enderio.no_soulbound": "This item can have a soul bound to it.",
+  "gui.enderio.no_soulbound": "Bind a soul to the item to be able to use it",
   "gui.enderio.nocap.desc": "Τοποθετήστε έναν πυκνωτή για να ξεκινήσει το μηχάνημά!",
   "gui.enderio.nocap.title": "Ο πυκνωτής λείπει",
   "gui.enderio.ok": "Ok",
