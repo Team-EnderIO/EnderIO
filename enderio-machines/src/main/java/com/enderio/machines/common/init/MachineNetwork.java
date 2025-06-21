@@ -8,6 +8,7 @@ import com.enderio.machines.common.network.MachinePayloadHandler;
 import com.enderio.machines.common.network.PoweredSpawnerSoulPacket;
 import com.enderio.machines.common.network.SolarSoulPacket;
 import com.enderio.machines.common.network.SoulEngineSoulPacket;
+import com.enderio.machines.common.network.TransferItemsPacket;
 import com.enderio.machines.common.network.UpdateCrafterTemplatePacket;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.FarmSoul;
@@ -51,5 +52,8 @@ public class MachineNetwork {
 
         registrar.playToServer(EnderfaceInteractPacket.TYPE, EnderfaceInteractPacket.STREAM_CODEC,
                 MachinePayloadHandler.Server.getInstance()::handleEnderfaceInteract);
+
+        registrar.playToServer(TransferItemsPacket.TYPE, TransferItemsPacket.STREAM_CODEC,
+            MachinePayloadHandler.Server.getInstance()::handleTransferItems);
     }
 }

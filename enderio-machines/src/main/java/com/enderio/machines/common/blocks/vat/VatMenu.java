@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class VatMenu extends MachineMenu<VatBlockEntity> {
     public static final int INPUTS_INDEX = 0;
-    public static final int INPUT_COUNT = 2;
+    public static final int INPUT_COUNT = 2 + 1; //items + fluid
     public static final int LAST_INDEX = 1;
 
     public static final int MOVE_TO_OUTPUT_TANK_BUTTON_ID = 0;
