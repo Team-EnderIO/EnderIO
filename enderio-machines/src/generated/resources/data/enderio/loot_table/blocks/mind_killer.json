@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "enderio:wireless_charger_antenna"
+          "name": "enderio:mind_killer"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "enderio:blocks/wireless_charger_antenna"
+  "random_sequence": "enderio:blocks/mind_killer"
 }

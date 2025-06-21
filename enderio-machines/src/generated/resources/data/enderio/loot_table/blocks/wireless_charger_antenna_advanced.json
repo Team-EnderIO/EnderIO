@@ -3,15 +3,14 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "minecraft:copy_components",
-              "source": "block_entity"
-            }
-          ],
           "name": "enderio:wireless_charger_antenna_advanced"
         }
       ],

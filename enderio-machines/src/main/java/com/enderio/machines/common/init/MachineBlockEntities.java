@@ -32,6 +32,7 @@ import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlo
 import com.enderio.machines.common.blocks.obelisks.weather.WeatherObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.xp.XPObeliskBlockEntity;
 import com.enderio.machines.common.blocks.painting.PaintingMachineBlockEntity;
+import com.enderio.machines.common.blocks.powered_spawner.MindKillerBlockEntity;
 import com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.blocks.sag_mill.SagMillBlockEntity;
 import com.enderio.machines.common.blocks.slicer.SlicerBlockEntity;
@@ -48,10 +49,6 @@ import com.enderio.machines.common.blocks.wireless_charger.WirelessChargerBlockE
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import com.google.common.collect.ImmutableMap;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.Supplier;
 import net.minecraft.Util;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -59,6 +56,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class MachineBlockEntities {
     private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIOMachines.REGILITE.blockEntityRegistry();
@@ -223,6 +225,10 @@ public class MachineBlockEntities {
                     .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
                     .apply(MachineBlockEntities::fluidHandlerCapability)
                     .apply(MachineBlockEntities::soulBoundCapability);
+
+    public static final RegiliteBlockEntity<MindKillerBlockEntity> MIND_KILLER = BLOCK_ENTITY_REGISTRY.registerBlockEntity("mind_killer",
+        MindKillerBlockEntity::new, MachineBlocks.MIND_KILLER)
+                    .setRenderer(() -> ObeliskBER.factory(() -> Items.ZOMBIE_HEAD)); //TODO Custom model and BER maybe?
 
     @SafeVarargs
     private static <B extends BlockEntity> RegiliteBlockEntity<B> register(String name,

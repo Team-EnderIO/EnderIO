@@ -10,7 +10,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.data.DataMapProvider;
 
 public class ReagentProvider extends DataMapProvider {
@@ -22,25 +21,25 @@ public class ReagentProvider extends DataMapProvider {
     }
 
     protected void gather() {
-        reagent(Items.SUGAR_CANE, MachineTags.ItemTags.CROPS, 0.5D);
+        reagent(net.minecraft.world.item.Items.SUGAR_CANE, MachineTags.Items.CROPS, 0.5D);
 
-        reagent(Items.GLOWSTONE_DUST, MachineTags.ItemTags.NATURAL_LIGHTS, 0.25D);
-        reagent(Items.SEA_PICKLE, MachineTags.ItemTags.NATURAL_LIGHTS, 0.25D);
-        reagent(Items.GLOW_INK_SAC, MachineTags.ItemTags.NATURAL_LIGHTS, 0.5D);
-        reagent(Items.GLOW_LICHEN, MachineTags.ItemTags.NATURAL_LIGHTS, 0.20D);
-        reagent(Items.GLOW_BERRIES, MachineTags.ItemTags.NATURAL_LIGHTS, 0.15D);
+        reagent(net.minecraft.world.item.Items.GLOWSTONE_DUST, MachineTags.Items.NATURAL_LIGHTS, 0.25D);
+        reagent(net.minecraft.world.item.Items.SEA_PICKLE, MachineTags.Items.NATURAL_LIGHTS, 0.25D);
+        reagent(net.minecraft.world.item.Items.GLOW_INK_SAC, MachineTags.Items.NATURAL_LIGHTS, 0.5D);
+        reagent(net.minecraft.world.item.Items.GLOW_LICHEN, MachineTags.Items.NATURAL_LIGHTS, 0.20D);
+        reagent(net.minecraft.world.item.Items.GLOW_BERRIES, MachineTags.Items.NATURAL_LIGHTS, 0.15D);
 
-        reagent(Items.FIRE_CHARGE, MachineTags.ItemTags.EXPLOSIVES, 0.5D);
-        reagent(Items.FIREWORK_STAR, MachineTags.ItemTags.EXPLOSIVES, 0.4D);
-        reagent(Items.FIREWORK_ROCKET, MachineTags.ItemTags.EXPLOSIVES, 0.4D);
-        reagent(Items.GUNPOWDER, MachineTags.ItemTags.EXPLOSIVES, 0.25D);
+        reagent(net.minecraft.world.item.Items.FIRE_CHARGE, MachineTags.Items.EXPLOSIVES, 0.5D);
+        reagent(net.minecraft.world.item.Items.FIREWORK_STAR, MachineTags.Items.EXPLOSIVES, 0.4D);
+        reagent(net.minecraft.world.item.Items.FIREWORK_ROCKET, MachineTags.Items.EXPLOSIVES, 0.4D);
+        reagent(net.minecraft.world.item.Items.GUNPOWDER, MachineTags.Items.EXPLOSIVES, 0.25D);
 
-        reagent(Items.TORCHFLOWER, MachineTags.ItemTags.SUNFLOWER, 1.2D);
+        reagent(net.minecraft.world.item.Items.TORCHFLOWER, MachineTags.Items.SUNFLOWER, 1.2D);
 
-        reagent(Items.SNOW, MachineTags.ItemTags.CLOUD_COLD, 0.12D);
-        reagent(Items.SNOWBALL, MachineTags.ItemTags.CLOUD_COLD, 0.11D);
-        reagent(Items.PACKED_ICE, MachineTags.ItemTags.CLOUD_COLD, 9D);
-        reagent(Items.BLUE_ICE, MachineTags.ItemTags.CLOUD_COLD, 81D);
+        reagent(net.minecraft.world.item.Items.SNOW, MachineTags.Items.CLOUD_COLD, 0.12D);
+        reagent(net.minecraft.world.item.Items.SNOWBALL, MachineTags.Items.CLOUD_COLD, 0.11D);
+        reagent(net.minecraft.world.item.Items.PACKED_ICE, MachineTags.Items.CLOUD_COLD, 9D);
+        reagent(net.minecraft.world.item.Items.BLUE_ICE, MachineTags.Items.CLOUD_COLD, 81D);
 
         var builder = builder(VatReagent.DATA_MAP);
         dataMap.forEach((item, map) -> {

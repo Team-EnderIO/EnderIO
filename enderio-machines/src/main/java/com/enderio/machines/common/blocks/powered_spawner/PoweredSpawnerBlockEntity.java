@@ -2,17 +2,16 @@ package com.enderio.machines.common.blocks.powered_spawner;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.UseOnly;
-import com.enderio.base.api.soul.Soul;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
+import com.enderio.base.api.soul.Soul;
 import com.enderio.base.api.soul.binding.ISoulBindable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
@@ -26,17 +25,12 @@ import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.souldata.SoulDataReloadListener;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.enderio.machines.common.tag.MachineTags;
 import com.mojang.datafixers.util.Either;
-import java.util.Objects;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -50,13 +44,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.extensions.IOwnedSpawner;
-import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IOwnedSpawner, ISoulBindable {
+import java.util.Objects;
 
+public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IOwnedSpawner, ISoulBindable {
     public static final SingleSlotAccess INPUT = new SingleSlotAccess();
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
 
@@ -77,6 +70,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     private final MachineTaskHost taskHost;
 
     private boolean isRangeVisible = false;
+    private boolean mindKiller = false;
 
     public PoweredSpawnerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
@@ -216,6 +210,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     public void onLoad() {
         super.onLoad();
         taskHost.onLevelReady();
+        mindKiller = level.getBlockState(worldPosition.above()).is(MachineTags.Blocks.MIND_KILLER);
     }
 
     @Override
@@ -403,6 +398,18 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         super.removeComponentsFromTag(tag);
         tag.remove(MachineNBTKeys.IS_RANGE_VISIBLE);
         tag.remove(MachineNBTKeys.ENTITY_STORAGE);
+    }
+
+    @Override
+    public void neighborChanged(Block neighborBlock, BlockPos neighborPos) {
+        super.neighborChanged(neighborBlock, neighborPos);
+        if (level != null && !level.isClientSide() && getBlockPos().above().equals(neighborPos)) {
+            mindKiller = level.getBlockState(neighborPos).is(MachineTags.Blocks.MIND_KILLER);
+        }
+    }
+
+    public boolean hasMindKiller() {
+        return this.mindKiller;
     }
 
     // endregion
