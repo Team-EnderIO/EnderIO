@@ -14,7 +14,7 @@ public record UpdateCrafterTemplatePacket(List<ItemStack> recipeInputs) implemen
 
     public static final Type<UpdateCrafterTemplatePacket> TYPE = new Type<>(EnderIO.loc("update_crafter_template"));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, UpdateCrafterTemplatePacket> STREAM_CODEC =
+    public static final StreamCodec<RegistryFriendlyByteBuf, UpdateCrafterTemplatePacket> STREAM_CODEC =
         ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list())
             .map(UpdateCrafterTemplatePacket::new, UpdateCrafterTemplatePacket::recipeInputs);
 

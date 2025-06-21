@@ -53,15 +53,13 @@ public class PoweredSpawnerMenu extends PoweredMachineMenu<PoweredSpawnerBlockEn
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
-        // noinspection DuplicatedCode
-        var blockEntity = getBlockEntity();
-        switch (id) {
-        case VISIBILITY_BUTTON_ID:
+        if (id == VISIBILITY_BUTTON_ID) {
+            var blockEntity = getBlockEntity();
             blockEntity.setIsRangeVisible(!isRangeVisible());
             return true;
-        default:
-            return false;
         }
+
+        return super.clickMenuButton(player, id);
     }
 
     public float getSpawnProgress() {

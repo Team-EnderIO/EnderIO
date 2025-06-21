@@ -546,33 +546,22 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     @Override
     public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side,
             @Nullable BlockState queryState, @Nullable BlockPos queryPos) {
-
         Optional<Block> facade = getFacadeBlock(level, pos);
-        if (facade.isPresent()) {
-            return facade.get().defaultBlockState();
-        }
-
-        return super.getAppearance(state, level, pos, side, queryState, queryPos);
+        return facade.map(Block::defaultBlockState).orElseGet(() -> super.getAppearance(state, level, pos, side, queryState, queryPos));
     }
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         Optional<Block> facade = getFacadeBlock(level, pos);
-        if (facade.isPresent()) {
-            return facade.get().getLightEmission(facade.get().defaultBlockState(), level, pos);
-        }
-
-        return super.getLightEmission(state, level, pos);
+        return facade.map(block -> block.getLightEmission(block.defaultBlockState(), level, pos)).orElseGet(() -> super.getLightEmission(state, level, pos));
     }
 
     @Override
     public float getFriction(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
         Optional<Block> facade = getFacadeBlock(level, pos);
-        if (facade.isPresent()) {
-            return facade.get().getFriction(facade.get().defaultBlockState(), level, pos, entity);
-        }
-
-        return super.getFriction(state, level, pos, entity);
+        return facade
+            .map(block -> block.getFriction(block.defaultBlockState(), level, pos, entity))
+            .orElseGet(() -> super.getFriction(state, level, pos, entity));
     }
 
     @Override

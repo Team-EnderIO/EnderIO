@@ -12,7 +12,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
 public class RelocatorObeliskManager extends ObeliskAreaManager<RelocatorObeliskBlockEntity> {
 
     public static RelocatorObeliskManager getManager(ServerLevel serverLevel) {

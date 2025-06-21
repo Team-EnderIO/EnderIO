@@ -5,7 +5,7 @@ import appeng.api.networking.IGridNodeListener;
 
 public record GridNodeListener() implements IGridNodeListener<MEConduitNodeData> {
 
-    public static GridNodeListener INSTANCE = new GridNodeListener();
+    public static final GridNodeListener INSTANCE = new GridNodeListener();
 
     @Override
     public void onSaveChanges(MEConduitNodeData nodeOwner, IGridNode node) {

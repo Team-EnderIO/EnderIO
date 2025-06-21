@@ -17,7 +17,7 @@ public record SoulEngineSoulPacket(Map<ResourceLocation, EngineSoul.SoulData> ma
 
     public static final Type<SoulEngineSoulPacket> TYPE = new Type<>(EnderIO.loc("soul_engine_soul"));
 
-    public static StreamCodec<ByteBuf, SoulEngineSoulPacket> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, SoulEngineSoulPacket> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, EngineSoul.STREAM_CODEC),
         SoulEngineSoulPacket::map,
         SoulEngineSoulPacket::new

@@ -27,7 +27,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public class TravelStaffItem extends Item implements AdvancedTooltipProvider, CreativeTabVariants {
 
-    public static ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (stack,
+    public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (stack,
             v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY.get(), TravelStaffItem.getMaxEnergy());
 
     public TravelStaffItem(Properties properties) {

@@ -17,16 +17,16 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class LaserIOIntegration implements Integration {
 
-    public static ICapabilityProvider<ItemStack, Void, ItemFilter> CARD_ITEM_FILTER_PROVIDER = (stack,
+    public static final ICapabilityProvider<ItemStack, Void, ItemFilter> CARD_ITEM_FILTER_PROVIDER = (stack,
             v) -> new LaserItemFilter(BaseCard.getFilter(stack));
 
-    public static ICapabilityProvider<ItemStack, Void, ItemFilter> ITEM_FILTER_PROVIDER = (stack,
+    public static final ICapabilityProvider<ItemStack, Void, ItemFilter> ITEM_FILTER_PROVIDER = (stack,
             v) -> new LaserItemFilter(stack);
 
-    public static ICapabilityProvider<ItemStack, Void, FluidFilter> CARD_FLUID_FILTER_PROVIDER = (stack,
+    public static final ICapabilityProvider<ItemStack, Void, FluidFilter> CARD_FLUID_FILTER_PROVIDER = (stack,
             v) -> new LaserFluidFilter(BaseCard.getFilter(stack));
 
-    public static ICapabilityProvider<ItemStack, Void, FluidFilter> FLUID_FILTER_PROVIDER = (stack,
+    public static final ICapabilityProvider<ItemStack, Void, FluidFilter> FLUID_FILTER_PROVIDER = (stack,
             v) -> new LaserFluidFilter(stack);
 
     public static final IntegrationWrapper<MekansimIntegration> MEK_LASER_IO_INTEGRATION = IntegrationManager

@@ -19,10 +19,10 @@ public record ChemicalConduitConnectionConfig(boolean isInsert, DyeColor insertC
         DyeColor extractChannel, RedstoneControl extractRedstoneControl, DyeColor extractRedstoneChannel)
         implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
-    public static ChemicalConduitConnectionConfig DEFAULT = new ChemicalConduitConnectionConfig(false, DyeColor.GREEN,
+    public static final ChemicalConduitConnectionConfig DEFAULT = new ChemicalConduitConnectionConfig(false, DyeColor.GREEN,
             true, DyeColor.GREEN, RedstoneControl.NEVER_ACTIVE, DyeColor.RED);
 
-    public static MapCodec<ChemicalConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+    public static final MapCodec<ChemicalConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(Codec.BOOL.fieldOf("is_insert").forGetter(ChemicalConduitConnectionConfig::isInsert),
                     DyeColor.CODEC.fieldOf("insert_channel").forGetter(ChemicalConduitConnectionConfig::insertChannel),
                     Codec.BOOL.fieldOf("is_extract").forGetter(ChemicalConduitConnectionConfig::isExtract),
@@ -35,7 +35,7 @@ public record ChemicalConduitConnectionConfig(boolean isInsert, DyeColor insertC
             .apply(instance, ChemicalConduitConnectionConfig::new));
 
     // @formatter:off
-    public static StreamCodec<ByteBuf, ChemicalConduitConnectionConfig> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, ChemicalConduitConnectionConfig> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.BOOL,
         ChemicalConduitConnectionConfig::isInsert,
         DyeColor.STREAM_CODEC,
@@ -51,7 +51,7 @@ public record ChemicalConduitConnectionConfig(boolean isInsert, DyeColor insertC
         ChemicalConduitConnectionConfig::new);
     // @formatter:on
 
-    public static ConnectionConfigType<ChemicalConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
+    public static final ConnectionConfigType<ChemicalConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
             STREAM_CODEC.cast(), () -> DEFAULT);
 
     @Override

@@ -17,7 +17,7 @@ public record PoweredSpawnerSoulPacket(Map<ResourceLocation, SpawnerSoul.SoulDat
 
     public static final Type<PoweredSpawnerSoulPacket> TYPE = new Type<>(EnderIO.loc("powered_spawner_soul"));
 
-    public static StreamCodec<ByteBuf, PoweredSpawnerSoulPacket> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, PoweredSpawnerSoulPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, SpawnerSoul.STREAM_CODEC),
             PoweredSpawnerSoulPacket::map, PoweredSpawnerSoulPacket::new);
 

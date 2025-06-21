@@ -18,7 +18,7 @@ public final class MEConduitNodeData implements NodeData, IInWorldGridNodeHost {
             .group(CompoundTag.CODEC.fieldOf("main_node").forGetter(MEConduitNodeData::saveMainNode))
             .apply(instance, MEConduitNodeData::new));
 
-    public static NodeDataType<MEConduitNodeData> TYPE = new NodeDataType<>(CODEC, MEConduitNodeData::new);
+    public static final NodeDataType<MEConduitNodeData> TYPE = new NodeDataType<>(CODEC, MEConduitNodeData::new);
 
     @Nullable
     private IManagedGridNode mainNode = null;

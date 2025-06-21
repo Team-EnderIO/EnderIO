@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 public record MEConduit(ResourceLocation texture, Component description, AEColor color, boolean isDense)
         implements Conduit<MEConduit, MEConduitConnectionConfig> {
 
-    public static MapCodec<MEConduit> CODEC = RecordCodecBuilder
+    public static final MapCodec<MEConduit> CODEC = RecordCodecBuilder
             .mapCodec(builder -> builder
                     .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(MEConduit::texture),
                             ComponentSerialization.CODEC.fieldOf("description").forGetter(MEConduit::description),

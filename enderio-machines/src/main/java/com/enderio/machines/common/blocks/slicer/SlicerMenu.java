@@ -9,9 +9,9 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
 public class SlicerMenu extends PoweredMachineMenu<SlicerBlockEntity> {
-    public static int INPUTS_INDEX = 3;
-    public static int INPUT_COUNT = 6;
-    public static int LAST_INDEX = 9;
+    public static final int INPUTS_INDEX = 3;
+    public static final int INPUT_COUNT = 6;
+    public static final int LAST_INDEX = 9;
 
     private final FloatSyncSlot craftingProgressSlot;
 

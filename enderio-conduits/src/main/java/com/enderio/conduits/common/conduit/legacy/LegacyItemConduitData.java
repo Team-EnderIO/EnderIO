@@ -21,18 +21,18 @@ import org.jetbrains.annotations.Nullable;
 @Deprecated(since = "8.0.0")
 public class LegacyItemConduitData implements ConduitData<LegacyItemConduitData> {
 
-    public static MapCodec<LegacyItemConduitData> CODEC = RecordCodecBuilder
+    public static final MapCodec<LegacyItemConduitData> CODEC = RecordCodecBuilder
             .mapCodec(instance -> instance.group(Codec.unboundedMap(Direction.CODEC, ItemSidedData.CODEC)
                     .fieldOf("item_sided_data")
                     .forGetter(i -> i.itemSidedData)).apply(instance, LegacyItemConduitData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, LegacyItemConduitData> STREAM_CODEC = ByteBufCodecs
+    public static final StreamCodec<RegistryFriendlyByteBuf, LegacyItemConduitData> STREAM_CODEC = ByteBufCodecs
             .map(i -> (Map<Direction, ItemSidedData>) new HashMap<Direction, ItemSidedData>(i), Direction.STREAM_CODEC,
                     ItemSidedData.STREAM_CODEC)
             .map(LegacyItemConduitData::new, i -> i.itemSidedData)
             .cast();
 
-    public Map<Direction, ItemSidedData> itemSidedData;
+    public final Map<Direction, ItemSidedData> itemSidedData;
 
     public LegacyItemConduitData() {
         itemSidedData = new HashMap<>(Direction.values().length);
@@ -100,7 +100,7 @@ public class LegacyItemConduitData implements ConduitData<LegacyItemConduitData>
 
     public static class ItemSidedData {
 
-        public static Codec<ItemSidedData> CODEC = RecordCodecBuilder
+        public static final Codec<ItemSidedData> CODEC = RecordCodecBuilder
                 .create(instance -> instance
                         .group(Codec.BOOL.fieldOf("is_round_robin").forGetter(i -> i.isRoundRobin),
                                 Codec.INT.fieldOf("rotating_index").forGetter(i -> i.rotatingIndex),
@@ -108,11 +108,11 @@ public class LegacyItemConduitData implements ConduitData<LegacyItemConduitData>
                                 Codec.INT.fieldOf("priority").forGetter(i -> i.priority))
                         .apply(instance, ItemSidedData::new));
 
-        public static StreamCodec<ByteBuf, ItemSidedData> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.BOOL,
+        public static final StreamCodec<ByteBuf, ItemSidedData> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.BOOL,
                 i -> i.isRoundRobin, ByteBufCodecs.BOOL, i -> i.isSelfFeed, ByteBufCodecs.INT, i -> i.priority,
                 ItemSidedData::new);
 
-        public static ItemSidedData EMPTY = new ItemSidedData(false, 0, false, 0);
+        public static final ItemSidedData EMPTY = new ItemSidedData(false, 0, false, 0);
 
         public boolean isRoundRobin = false;
         public int rotatingIndex = 0;

@@ -14,9 +14,9 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
-    public static int INPUTS_INDEX = 0;
-    public static int INPUT_COUNT = 3;
-    public static int LAST_INDEX = 3;
+    public static final int INPUTS_INDEX = 0;
+    public static final int INPUT_COUNT = 3;
+    public static final int LAST_INDEX = 3;
 
     public EnchanterMenu(int containerId, Inventory inventory, EnchanterBlockEntity blockEntity) {
         super(MachineMenus.ENCHANTER.get(), containerId, inventory, blockEntity);

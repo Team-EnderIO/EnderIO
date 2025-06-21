@@ -20,11 +20,11 @@ public class MachineTags {
         private static void init() {
         }
 
-        public static TagKey<Item> SEEDS = create("seeds");
-        public static TagKey<Item> CROPS = create("crops");
-        public static TagKey<Item> MEAT = create("meat");
-        public static TagKey<Item> EXPLOSIVES = create("explosives");
-        public static TagKey<Item> BLAZE_POWDER = create("blaze_powder");
+        public static final TagKey<Item> SEEDS = create("seeds");
+        public static final TagKey<Item> CROPS = create("crops");
+        public static final TagKey<Item> MEAT = create("meat");
+        public static final TagKey<Item> EXPLOSIVES = create("explosives");
+        public static final TagKey<Item> BLAZE_POWDER = create("blaze_powder");
         public static final TagKey<Item> NATURAL_LIGHTS = create("natural_lights");
         public static final TagKey<Item> SUNFLOWER = create("sunflower");
         public static final TagKey<Item> AMETHYST = create("amethyst");
@@ -43,7 +43,7 @@ public class MachineTags {
         private static void init() {
         }
 
-        public static TagKey<EntityType<?>> SPAWNER_BLACKLIST = create("spawner_blacklist");
+        public static final TagKey<EntityType<?>> SPAWNER_BLACKLIST = create("spawner_blacklist");
 
         private static TagKey<EntityType<?>> create(String pName) {
             return TagKey.create(Registries.ENTITY_TYPE, EnderIO.loc(pName));
@@ -55,7 +55,7 @@ public class MachineTags {
         private static void init() {
         }
 
-        public static TagKey<Block> RANGE_EXTENDER = create("range_extender");
+        public static final TagKey<Block> RANGE_EXTENDER = create("range_extender");
         public static final TagKey<Block> MIND_KILLER = create("mind_killer");
 
         private static TagKey<Block> create(String pName) {

@@ -8,9 +8,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record SyncTravelDataPacket(CompoundTag data) implements CustomPacketPayload {
-    public static Type<SyncTravelDataPacket> TYPE = new Type<>(EnderIO.loc("sync_travel_data"));
+    public static final Type<SyncTravelDataPacket> TYPE = new Type<>(EnderIO.loc("sync_travel_data"));
 
-    public static StreamCodec<ByteBuf, SyncTravelDataPacket> STREAM_CODEC =
+    public static final StreamCodec<ByteBuf, SyncTravelDataPacket> STREAM_CODEC =
         ByteBufCodecs.COMPOUND_TAG.map(SyncTravelDataPacket::new, SyncTravelDataPacket::data);
 
     @Override

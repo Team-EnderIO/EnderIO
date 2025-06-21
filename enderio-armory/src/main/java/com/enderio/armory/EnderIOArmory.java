@@ -41,13 +41,13 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
-@EventBusSubscriber(modid = EnderIOArmory.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = EnderIOArmory.MODULE_MOD_ID)
 @Mod(EnderIOArmory.MODULE_MOD_ID)
 public class EnderIOArmory {
 
     public static final String MODULE_MOD_ID = "enderio_armory";
 
-    public static Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
+    public static final Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
 
     public EnderIOArmory(IEventBus modEventBus, ModContainer modContainer) {
         // Register config files

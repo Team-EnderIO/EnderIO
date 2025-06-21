@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Deprecated(since = "8.0.0")
 public class LegacyRedstoneConduitData implements ConduitData<LegacyRedstoneConduitData> {
 
-    public static MapCodec<LegacyRedstoneConduitData> CODEC = RecordCodecBuilder
+    public static final MapCodec<LegacyRedstoneConduitData> CODEC = RecordCodecBuilder
             .mapCodec(
                     instance -> instance
                             .group(Codec.BOOL.fieldOf("is_active").forGetter(i -> i.isActive),
@@ -29,7 +29,7 @@ public class LegacyRedstoneConduitData implements ConduitData<LegacyRedstoneCond
                                             .forGetter(i -> i.activeColors))
                             .apply(instance, LegacyRedstoneConduitData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, LegacyRedstoneConduitData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, LegacyRedstoneConduitData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, r -> r.isActive,
             ByteBufCodecs.map(HashMap::new, DyeColor.STREAM_CODEC, ByteBufCodecs.INT), r -> r.activeColors,
             LegacyRedstoneConduitData::new);

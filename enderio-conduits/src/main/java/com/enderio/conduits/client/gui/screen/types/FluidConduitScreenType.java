@@ -13,10 +13,12 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -37,6 +39,33 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
     private static final ResourceLocation ICON_SELF_FEED_ENABLED = EnderIO.loc("icon/self_feed_enabled");
     private static final ResourceLocation ICON_SELF_FEED_DISABLED = EnderIO.loc("icon/self_feed_disabled");
 
+    private static final ResourceLocation ICON_INCREASE = EnderIO.loc("icon/increase");
+    private static final ResourceLocation ICON_DECREASE = EnderIO.loc("icon/decrease");
+
+    @Override
+    public void renderLabels(ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics, int startX, int startY, Font font,
+        int mouseX, int mouseY) {
+        super.renderLabels(dataAccess, guiGraphics, startX, startY, font, mouseX, mouseY);
+
+        if (dataAccess.conduit() instanceof FluidConduit fluidConduit && fluidConduit.doesSupportPriority()) {
+            String priority = String.valueOf(dataAccess.getConnectionConfig().insertPriority());
+            guiGraphics.drawString(font, ConduitLang.CONDUIT_PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, 0x000000, false);
+            guiGraphics.drawString(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, 0x000000, false);
+        }
+    }
+
+    private int getIncrement() {
+        if (Screen.hasControlDown()) {
+            return 100;
+        }
+
+        if (Screen.hasShiftDown()) {
+            return 10;
+        }
+
+        return 1;
+    }
+
     @Override
     public void createLeftWidgets(ConduitScreenHelper screen, int startX, int startY,
             ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess) {
@@ -54,6 +83,14 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         }
 
         screen.addFilterConfigureButton(startX + 1, startY + 82, FluidConduit.INSERT_FILTER_SLOT);
+
+        // Priority up/down
+        if (dataAccess.conduit() instanceof FluidConduit fluidConduit && fluidConduit.doesSupportPriority()) {
+            screen.addIconButton(startX + 70, startY + 38, 9, 9, Component.empty(), ICON_INCREASE,
+                () -> dataAccess.updateConnectionConfig(config -> config.withPriority(config.insertPriority() + getIncrement())));
+            screen.addIconButton(startX + 70, startY + 38 + 9, 9, 9, Component.empty(), ICON_DECREASE,
+                () -> dataAccess.updateConnectionConfig(config -> config.withPriority(config.insertPriority() - getIncrement())));
+        }
     }
 
     @Override

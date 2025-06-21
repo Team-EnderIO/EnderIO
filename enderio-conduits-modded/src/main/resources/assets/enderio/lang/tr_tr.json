@@ -1,5 +1,8 @@
 {
-  "item.enderio.chemical_filter": "Chemical Filter",
+  "gui.enderio.chemical_conduit.change_fluid1": "Kilitli Kimyasal:",
+  "gui.enderio.chemical_conduit.change_fluid2": "Sıfırlamak için tıkla!",
+  "gui.enderio.chemical_conduit.change_fluid3": "Kimyasal: %s",
+  "item.enderio.basic_chemical_filter": "Basit Kimyasal Filtresi",
   "item.enderio.conduit.chemical": "Kimyasal Oluğu",
   "item.enderio.conduit.chemical.multi": "Birden fazla kimyasal türünün aynı hat üzerinde taşınmasına izin verir",
   "item.enderio.conduit.dense_me": "Yoğun ME Oluk",

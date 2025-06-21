@@ -31,10 +31,10 @@ public class EIOLootModifiers {
     public static DeferredHolder<MapCodec<? extends IGlobalLootModifier>, MapCodec<BrokenSpawnerLootModifier>> BROKEN_SPAWNER_SERIALIZER = SERIALIZERS
             .register("broken_spawner", () -> BrokenSpawnerLootModifier.CODEC);
 
-    public static DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<SetLootCapacitorFunction>> SET_LOOT_CAPACITOR = FUNCTIONS
+    public static final DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<SetLootCapacitorFunction>> SET_LOOT_CAPACITOR = FUNCTIONS
             .register("set_loot_capacitor", () -> new LootItemFunctionType<>(SetLootCapacitorFunction.CODEC));
 
-    public static DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<CopyPaintFunction>> COPY_PAINT = FUNCTIONS
+    public static final DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<CopyPaintFunction>> COPY_PAINT = FUNCTIONS
             .register("copy_paint", () -> new LootItemFunctionType<>(CopyPaintFunction.CODEC));
 
     public static void register(IEventBus bus) {

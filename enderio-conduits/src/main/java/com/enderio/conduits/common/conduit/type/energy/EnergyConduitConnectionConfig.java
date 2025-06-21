@@ -19,10 +19,10 @@ import net.minecraft.world.item.DyeColor;
 public record EnergyConduitConnectionConfig(boolean isInsert, boolean isExtract, RedstoneControl extractRedstoneControl,
         DyeColor extractRedstoneChannel, int priority) implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
-    public static EnergyConduitConnectionConfig DEFAULT = new EnergyConduitConnectionConfig(true, true,
+    public static final EnergyConduitConnectionConfig DEFAULT = new EnergyConduitConnectionConfig(true, true,
             RedstoneControl.ALWAYS_ACTIVE, DyeColor.RED, 0);
 
-    public static MapCodec<EnergyConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+    public static final MapCodec<EnergyConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(Codec.BOOL.fieldOf("is_insert").forGetter(EnergyConduitConnectionConfig::isInsert),
                     Codec.BOOL.fieldOf("is_extract").forGetter(EnergyConduitConnectionConfig::isExtract),
                     RedstoneControl.CODEC.fieldOf("extract_redstone_control")
@@ -32,7 +32,7 @@ public record EnergyConduitConnectionConfig(boolean isInsert, boolean isExtract,
                 Codec.INT.optionalFieldOf("priority", 0).forGetter(EnergyConduitConnectionConfig::priority))
             .apply(instance, EnergyConduitConnectionConfig::new));
 
-    public static StreamCodec<ByteBuf, EnergyConduitConnectionConfig> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, EnergyConduitConnectionConfig> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, EnergyConduitConnectionConfig::isInsert, ByteBufCodecs.BOOL,
             EnergyConduitConnectionConfig::isExtract, RedstoneControl.STREAM_CODEC,
             EnergyConduitConnectionConfig::extractRedstoneControl, DyeColor.STREAM_CODEC,

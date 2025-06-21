@@ -1,8 +1,10 @@
 package com.enderio.machines.common.integrations.jei.util;
 
 import com.enderio.machines.common.blocks.enchanter.EnchanterRecipe;
+
 import java.util.Arrays;
 import java.util.List;
+
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
@@ -30,17 +32,11 @@ public class WrappedEnchanterRecipe implements Recipe<EnchanterRecipe.Input> {
     }
 
     public List<ItemStack> getInputs() {
-        return Arrays.stream(recipe.value().input().getItems()).map(item -> {
-            var copy = item.copy();
-            copy.setCount(copy.getCount() * level);
-            return copy;
-        }).toList();
+        return Arrays.stream(recipe.value().input().getItems()).map(item -> item.copyWithCount(item.getCount() * level)).toList();
     }
 
     public List<ItemStack> getLapis() {
-        return Arrays.stream(Ingredient.of(Tags.Items.GEMS_LAPIS).getItems())
-                .peek(item -> item.setCount(recipe.value().getLapisForLevel(level)))
-                .toList();
+        return Arrays.stream(Ingredient.of(Tags.Items.GEMS_LAPIS).getItems()).map(item -> item.copyWithCount(recipe.value().getLapisForLevel(level))).toList();
     }
 
     public ItemStack getBook() {

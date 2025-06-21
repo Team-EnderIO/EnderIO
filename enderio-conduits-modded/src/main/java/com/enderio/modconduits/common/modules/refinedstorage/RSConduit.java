@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 public record RSConduit(ResourceLocation texture, Component description)
         implements Conduit<RSConduit, RSConduitConnectionConfig> {
-    public static MapCodec<RSConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
+    public static final MapCodec<RSConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
             .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(RSConduit::texture),
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(RSConduit::description))
             .apply(builder, RSConduit::new));

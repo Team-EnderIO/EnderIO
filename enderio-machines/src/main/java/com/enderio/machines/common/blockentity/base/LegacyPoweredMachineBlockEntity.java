@@ -384,7 +384,6 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
         components.set(MachineDataComponents.REDSTONE_CONTROL, getData(MachineAttachments.REDSTONE_CONTROL));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void removeComponentsFromTag(CompoundTag tag) {
         super.removeComponentsFromTag(tag);

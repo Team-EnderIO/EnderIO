@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RSConduitNodeData implements NodeData {
-    public static NodeDataType<RSConduitNodeData> TYPE = new NodeDataType<>(null, RSConduitNodeData::new);
+    public static final NodeDataType<RSConduitNodeData> TYPE = new NodeDataType<>(null, RSConduitNodeData::new);
 
     @Nullable
     public NetworkNodeContainerProvider containerProvider;

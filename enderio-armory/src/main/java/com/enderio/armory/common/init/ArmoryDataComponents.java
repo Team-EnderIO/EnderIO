@@ -16,23 +16,23 @@ public class ArmoryDataComponents {
     private static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPES = DeferredRegister
             .create(Registries.DATA_COMPONENT_TYPE, EnderIO.NAMESPACE);
 
-    public static Supplier<DataComponentType<DarkSteelCapability.DarkSteelItemUpgrades>> DARK_STEEL_ITEM_UPGRADES = saved(
+    public static final Supplier<DataComponentType<DarkSteelCapability.DarkSteelItemUpgrades>> DARK_STEEL_ITEM_UPGRADES = saved(
             "dark_steel_upgrades", ITEM_UPGRADES_CODEC);
 
     /**
      * Used to ensure any equipped dark steel items have their ItemAttributeModifierEvent event fired so they can update
      * any attribute modifiers when energy is lost or regained
      */
-    public static Supplier<DataComponentType<Boolean>> DARK_STEEL_ITEM_HAS_ENERGY = saved("dark_steel_item_has_energy",
+    public static final Supplier<DataComponentType<Boolean>> DARK_STEEL_ITEM_HAS_ENERGY = saved("dark_steel_item_has_energy",
             Codec.BOOL);
 
-    public static Supplier<DataComponentType<Boolean>> DARK_STEEL_FLIGHT_ACTIVE = saved("dark_steel_flight_active",
+    public static final Supplier<DataComponentType<Boolean>> DARK_STEEL_FLIGHT_ACTIVE = saved("dark_steel_flight_active",
             Codec.BOOL);
 
-    public static Supplier<DataComponentType<Boolean>> DARK_STEEL_NIGHT_VISION_ACTIVE = saved(
+    public static final Supplier<DataComponentType<Boolean>> DARK_STEEL_NIGHT_VISION_ACTIVE = saved(
             "dark_steel_nightvision_active", Codec.BOOL);
 
-    public static Supplier<DataComponentType<Integer>> DARK_STEEL_SOLAR_CHARGE_INDEX = saved(
+    public static final Supplier<DataComponentType<Integer>> DARK_STEEL_SOLAR_CHARGE_INDEX = saved(
             "dark_steel_solar_charge_index", Codec.INT);
 
     private static <T> Supplier<DataComponentType<T>> saved(String name, Codec<T> codec) {

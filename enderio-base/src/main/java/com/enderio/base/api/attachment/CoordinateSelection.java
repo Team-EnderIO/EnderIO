@@ -16,14 +16,14 @@ import net.minecraft.world.level.Level;
 
 public record CoordinateSelection(ResourceKey<Level> level, BlockPos pos) {
 
-    public static Codec<CoordinateSelection> CODEC = RecordCodecBuilder.create(
+    public static final Codec<CoordinateSelection> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             ResourceKey.codec(Registries.DIMENSION).fieldOf("Level").forGetter(CoordinateSelection::level),
             BlockPos.CODEC.fieldOf("Pos").forGetter(CoordinateSelection::pos)
         ).apply(instance, CoordinateSelection::new)
     );
 
-    public static StreamCodec<ByteBuf, CoordinateSelection> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, CoordinateSelection> STREAM_CODEC = StreamCodec.composite(
         ResourceKey.streamCodec(Registries.DIMENSION),
         CoordinateSelection::level,
         BlockPos.STREAM_CODEC,

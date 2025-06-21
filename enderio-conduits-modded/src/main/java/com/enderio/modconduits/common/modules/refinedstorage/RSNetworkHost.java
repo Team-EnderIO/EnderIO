@@ -21,7 +21,7 @@ public class RSNetworkHost extends NetworkNodeContainerProviderImpl implements C
             .of(RSNetworkHost::new)
             .cast();
 
-    private int i = 0;
+    private final int i = 0;
 
     public RSNetworkHost() {
         super();

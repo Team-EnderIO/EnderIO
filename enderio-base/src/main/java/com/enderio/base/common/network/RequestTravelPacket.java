@@ -9,9 +9,9 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record RequestTravelPacket(BlockPos pos) implements CustomPacketPayload {
 
-    public static Type<RequestTravelPacket> TYPE = new Type<>(EnderIO.loc("request_travel"));
+    public static final Type<RequestTravelPacket> TYPE = new Type<>(EnderIO.loc("request_travel"));
 
-    public static StreamCodec<ByteBuf, RequestTravelPacket> STREAM_CODEC =
+    public static final StreamCodec<ByteBuf, RequestTravelPacket> STREAM_CODEC =
         BlockPos.STREAM_CODEC.map(RequestTravelPacket::new, RequestTravelPacket::pos);
 
     public RequestTravelPacket(FriendlyByteBuf buf) {

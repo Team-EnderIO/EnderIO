@@ -18,10 +18,10 @@ import net.minecraft.world.item.DyeColor;
 public record HeatConduitConnectionConfig(boolean isInsert, boolean isExtract, RedstoneControl extractRedstoneControl,
         DyeColor extractRedstoneChannel) implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
-    public static HeatConduitConnectionConfig DEFAULT = new HeatConduitConnectionConfig(true, true,
+    public static final HeatConduitConnectionConfig DEFAULT = new HeatConduitConnectionConfig(true, true,
             RedstoneControl.ALWAYS_ACTIVE, DyeColor.RED);
 
-    public static MapCodec<HeatConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
+    public static final MapCodec<HeatConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
             .group(Codec.BOOL.fieldOf("is_insert").forGetter(HeatConduitConnectionConfig::isInsert),
                     Codec.BOOL.fieldOf("is_extract").forGetter(HeatConduitConnectionConfig::isExtract),
                     RedstoneControl.CODEC.fieldOf("extract_redstone_control")
@@ -31,7 +31,7 @@ public record HeatConduitConnectionConfig(boolean isInsert, boolean isExtract, R
             .apply(inst, HeatConduitConnectionConfig::new));
 
     // @formatter:off
-    public static StreamCodec<ByteBuf, HeatConduitConnectionConfig> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, HeatConduitConnectionConfig> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.BOOL,
         HeatConduitConnectionConfig::isInsert,
         ByteBufCodecs.BOOL,
@@ -43,7 +43,7 @@ public record HeatConduitConnectionConfig(boolean isInsert, boolean isExtract, R
         HeatConduitConnectionConfig::new);
     // @formatter:on
 
-    public static ConnectionConfigType<HeatConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
+    public static final ConnectionConfigType<HeatConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
             STREAM_CODEC.cast(), () -> DEFAULT);
 
     @Override

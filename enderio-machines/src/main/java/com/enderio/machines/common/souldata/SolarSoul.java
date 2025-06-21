@@ -16,7 +16,7 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
 import java.util.Optional;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
 public class SolarSoul {
 
     public record SoulData(ResourceLocation entitytype, boolean daytime, boolean nighttime, Optional<ResourceKey<Level>> level) implements com.enderio.machines.common.souldata.SoulData {
@@ -27,7 +27,7 @@ public class SolarSoul {
         }
     }
 
-    public static Codec<SoulData> CODEC = RecordCodecBuilder.create(instance ->
+    public static final Codec<SoulData> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
             ResourceLocation.CODEC.fieldOf("entity").forGetter(SoulData::entitytype),
             Codec.BOOL.fieldOf("daytime").forGetter(SoulData::daytime),
@@ -35,7 +35,7 @@ public class SolarSoul {
             ResourceKey.codec(Registries.DIMENSION).optionalFieldOf("level").forGetter(SoulData::level)
             ).apply(instance, SoulData::new));
 
-    public static StreamCodec<ByteBuf, SoulData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, SoulData> STREAM_CODEC = StreamCodec.composite(
         ResourceLocation.STREAM_CODEC,
         SoulData::entitytype,
         ByteBufCodecs.BOOL,

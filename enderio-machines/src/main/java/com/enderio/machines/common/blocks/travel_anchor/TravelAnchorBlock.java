@@ -13,7 +13,6 @@ public class TravelAnchorBlock<T extends TravelAnchorBlockEntity> extends Machin
         super(blockEntityType, props);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (level.getBlockEntity(pos) instanceof TravelAnchorBlockEntity anchorBlock) {

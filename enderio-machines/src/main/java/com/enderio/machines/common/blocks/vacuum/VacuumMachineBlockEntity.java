@@ -36,9 +36,9 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     private static final double COLLISION_DISTANCE_SQ = 1 * 1;
     protected static final double SPEED = 0.025;
     protected static final double SPEED_4 = SPEED * 4;
-    private List<WeakReference<T>> entities = new ArrayList<>();
-    private Class<T> targetClass;
-    public static SingleSlotAccess FILTER = new SingleSlotAccess();
+    private final List<WeakReference<T>> entities = new ArrayList<>();
+    private final Class<T> targetClass;
+    public static final SingleSlotAccess FILTER = new SingleSlotAccess();
 
     private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);
 
