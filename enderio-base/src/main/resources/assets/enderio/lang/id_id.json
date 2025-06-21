@@ -268,7 +268,7 @@
   "gui.enderio.ioconfig.pull": "Tarik",
   "gui.enderio.ioconfig.push": "Dorong",
   "gui.enderio.max_range": "Maximum Range",
-  "gui.enderio.no_soulbound": "Bind a soul to the item to be able to use it",
+  "gui.enderio.no_soulbound": "This item can have a soul bound to it.",
   "gui.enderio.nocap.desc": "Masukkan kapasitor apapun agar \n mesin ini dapat bekerja!",
   "gui.enderio.nocap.title": "Kapasitor Hilang",
   "gui.enderio.ok": "Ok",
