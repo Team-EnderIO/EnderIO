@@ -268,7 +268,7 @@
   "gui.enderio.ioconfig.pull": "Importer",
   "gui.enderio.ioconfig.push": "Exporter",
   "gui.enderio.max_range": "Maximum Range",
-  "gui.enderio.no_soulbound": "Bind a soul to the item to be able to use it",
+  "gui.enderio.no_soulbound": "This item can have a soul bound to it.",
   "gui.enderio.nocap.desc": "Insérer n'importe quel condensateur pour faire fonctionner la machine!",
   "gui.enderio.nocap.title": "Condensateur manquant",
   "gui.enderio.ok": "Ok",
