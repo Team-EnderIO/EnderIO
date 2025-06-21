@@ -16,7 +16,7 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
 import java.util.Optional;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
 public class SolarSoul {
 
     public record SoulData(ResourceLocation entitytype, boolean daytime, boolean nighttime, Optional<ResourceKey<Level>> level) implements com.enderio.machines.common.souldata.SoulData {

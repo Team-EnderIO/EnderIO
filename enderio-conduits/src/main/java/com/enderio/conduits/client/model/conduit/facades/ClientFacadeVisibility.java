@@ -13,7 +13,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 // TODO: In future, support hiding specific conduit types too.
 // TODO: Move to client package.
-@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
+@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID, value = Dist.CLIENT)
 public class ClientFacadeVisibility {
 
     private static boolean FACADES_VISIBLE = true;
