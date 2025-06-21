@@ -93,7 +93,7 @@
   "enderio_machines.configuration.usage": "Tüketim Hızı (µI/t)",
   "enderio_machines.configuration.vacuumChestRangeColor": "Vakumlu Sandık Menzil Rengi",
   "enderio_machines.configuration.vacuumXpRangeColor": "TP Vakumu Menzil Rengi",
-  "enderio_machines.configuration.vanillaItemEnergy": "Vanilla Eritme Tüketimi",
+  "enderio_machines.configuration.vanillaItemEnergy": "Vanilla Smelting Consumption",
   "enderio_machines.configuration.vibrant": "Titreşen",
   "enderio_machines.configuration.vibrantRangeExtension": "Titreşen Anten menzil genişletmesi",
   "enderio_machines.configuration.wiredCharger": "Kablolu Şarj Cihazı",
