@@ -268,7 +268,7 @@
   "gui.enderio.ioconfig.pull": "Ziehen",
   "gui.enderio.ioconfig.push": "Drücken",
   "gui.enderio.max_range": "Maximum Range",
-  "gui.enderio.no_soulbound": "Bind a soul to the item to be able to use it",
+  "gui.enderio.no_soulbound": "This item can have a soul bound to it.",
   "gui.enderio.nocap.desc": "Füge irgendeinen Kondensator ein,\ndamit diese Maschine funktioniert!",
   "gui.enderio.nocap.title": "Kondensator fehlt",
   "gui.enderio.ok": "Ok",
