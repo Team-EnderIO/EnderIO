@@ -10,9 +10,9 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
 public class SagMillMenu extends PoweredMachineMenu<SagMillBlockEntity> {
-    public static int INPUTS_INDEX = 1;
-    public static int INPUT_COUNT = 1;
-    public static int LAST_INDEX = 6;
+    public static final int INPUTS_INDEX = 1;
+    public static final int INPUT_COUNT = 1;
+    public static final int LAST_INDEX = 6;
 
     private final FloatSyncSlot craftingProgressSlot;
     private final FloatSyncSlot grindingBallDamageSlot;

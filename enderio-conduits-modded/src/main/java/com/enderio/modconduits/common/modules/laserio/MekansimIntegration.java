@@ -13,10 +13,10 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 public class MekansimIntegration implements Integration {
 
-    public static ICapabilityProvider<ItemStack, Void, ChemicalFilter> CARD_CHEMICAL_FILTER_PROVIDER = (stack,
+    public static final ICapabilityProvider<ItemStack, Void, ChemicalFilter> CARD_CHEMICAL_FILTER_PROVIDER = (stack,
             v) -> new LaserChemicalFilter(BaseCard.getFilter(stack));
 
-    public static ICapabilityProvider<ItemStack, Void, ChemicalFilter> CHEMICAL_FILTER_PROVIDER = (stack,
+    public static final ICapabilityProvider<ItemStack, Void, ChemicalFilter> CHEMICAL_FILTER_PROVIDER = (stack,
             v) -> new LaserChemicalFilter(stack);
 
     @Override

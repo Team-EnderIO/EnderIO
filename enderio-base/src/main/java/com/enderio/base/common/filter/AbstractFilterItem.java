@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 
 public abstract class AbstractFilterItem<T> extends Item implements FilterMenuProvider {
 
-    public static ICapabilityProvider<ItemStack, Void, FilterMenuProvider> FILTER_MENU_PROVIDER = (stack, v) -> (AbstractFilterItem<?>) stack.getItem();
+    public static final ICapabilityProvider<ItemStack, Void, FilterMenuProvider> FILTER_MENU_PROVIDER = (stack, v) -> (AbstractFilterItem<?>) stack.getItem();
 
     public AbstractFilterItem(Properties properties) {
         super(properties);

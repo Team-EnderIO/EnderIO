@@ -36,7 +36,7 @@ public interface MachineRecipe<T extends RecipeInput> extends Recipe<T> {
     List<OutputStack> getResultStacks(RegistryAccess registryAccess);
 
     /**
-     * @deprecated Replaced by {@link #craft(Container, RegistryAccess)} to support multiple outputs and output types.
+     * @deprecated Replaced by {@link #craft(T, RegistryAccess)} to support multiple outputs and output types.
      */
     @Deprecated
     @Override

@@ -45,11 +45,6 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         this(inputs, output, energy, experience, false);
     }
 
-    private AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience,
-            Optional<Boolean> isSmelting) {
-        this(inputs, output, energy, experience, isSmelting.orElse(false));
-    }
-
     public List<SizedIngredient> inputs() {
         return inputs;
     }
@@ -199,14 +194,13 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     }
 
     public static class Serializer implements RecipeSerializer<AlloySmeltingRecipe> {
-        // Uses Optional for isSmelting to avoid polluting recipe generation.
+        // Uses optional field for isSmelting to avoid polluting recipe generation.
         public static final MapCodec<AlloySmeltingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
                 .group(SizedIngredient.FLAT_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs),
                         ItemStack.CODEC.fieldOf("output").forGetter(AlloySmeltingRecipe::output),
                         Codec.INT.fieldOf("energy").forGetter(AlloySmeltingRecipe::energy),
                         Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience),
-                        Codec.BOOL.optionalFieldOf("is_smelting")
-                                .forGetter(r -> r.isSmelting() ? Optional.of(r.isSmelting()) : Optional.empty()))
+                        Codec.BOOL.optionalFieldOf("is_smelting", false).forGetter(AlloySmeltingRecipe::isSmelting))
                 .apply(inst, AlloySmeltingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmeltingRecipe> STREAM_CODEC = StreamCodec

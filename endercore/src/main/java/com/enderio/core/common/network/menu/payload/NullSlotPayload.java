@@ -5,7 +5,7 @@ import net.minecraft.network.codec.StreamCodec;
 
 public record NullSlotPayload() implements SlotPayload {
 
-    public static StreamCodec<RegistryFriendlyByteBuf, NullSlotPayload> STREAM_CODEC = StreamCodec.of((buf, val) -> {
+    public static final StreamCodec<RegistryFriendlyByteBuf, NullSlotPayload> STREAM_CODEC = StreamCodec.of((buf, val) -> {
     }, (buf) -> new NullSlotPayload());
 
     @Override

@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class RedstoneCountFilter implements RedstoneInsertFilter {
 
-    public static Component INSTANCE = new Component(DyeColor.GREEN, 8, 0, false);
+    public static final Component INSTANCE = new Component(DyeColor.GREEN, 8, 0, false);
     private final ItemStack stack;
 
     public RedstoneCountFilter(ItemStack stack) {

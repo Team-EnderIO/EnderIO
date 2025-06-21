@@ -37,7 +37,7 @@ public record CapacitorData(float base, Map<CapacitorModifier, Float> modifiers)
         CapacitorData::new
     );
 
-    public static CapacitorData NONE = simple(0.0f);
+    public static final CapacitorData NONE = simple(0.0f);
 
     public static CapacitorData simple(float base) {
         return new CapacitorData(base, Map.of());

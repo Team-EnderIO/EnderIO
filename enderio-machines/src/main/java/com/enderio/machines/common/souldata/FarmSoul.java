@@ -29,7 +29,7 @@ public class FarmSoul {
                     Codec.FLOAT.optionalFieldOf("power", 1f).forGetter(FarmSoul.SoulData::power))
             .apply(soulDataInstance, FarmSoul.SoulData::new));
 
-    public static StreamCodec<ByteBuf, FarmSoul.SoulData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, FarmSoul.SoulData> STREAM_CODEC = StreamCodec.composite(
             ResourceLocation.STREAM_CODEC, FarmSoul.SoulData::entitytype, ByteBufCodecs.FLOAT,
             FarmSoul.SoulData::bonemeal, ByteBufCodecs.INT, FarmSoul.SoulData::seeds, ByteBufCodecs.FLOAT,
             FarmSoul.SoulData::power, FarmSoul.SoulData::new);

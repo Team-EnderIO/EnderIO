@@ -38,7 +38,7 @@ public class SpawnerSoul {
                     MobSpawnMode.CODEC.fieldOf("type").forGetter(SoulData::spawnType))
             .apply(soulDataInstance, SoulData::new));
 
-    public static StreamCodec<ByteBuf, SoulData> STREAM_CODEC = StreamCodec.composite(ResourceLocation.STREAM_CODEC,
+    public static final StreamCodec<ByteBuf, SoulData> STREAM_CODEC = StreamCodec.composite(ResourceLocation.STREAM_CODEC,
             SoulData::entityType, ByteBufCodecs.INT, SoulData::power, MobSpawnMode.STREAM_CODEC, SoulData::spawnType,
             SoulData::new);
 

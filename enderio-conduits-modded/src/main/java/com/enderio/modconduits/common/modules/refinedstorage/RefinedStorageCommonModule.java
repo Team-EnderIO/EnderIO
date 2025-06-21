@@ -37,7 +37,7 @@ public class RefinedStorageCommonModule implements ConduitCommonModule {
     private static final ModLoadedCondition CONDITION = new ModLoadedCondition(ModuleModIds.REFINED_STORAGE);
 
     public static class ConduitKeys {
-        public static ResourceKey<Conduit<?, ?>> RS = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+        public static final ResourceKey<Conduit<?, ?>> RS = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
                 EnderIO.loc("rs"));
     }
 

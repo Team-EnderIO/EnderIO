@@ -30,7 +30,7 @@ public class EngineSoul {
            Codec.INT.fieldOf("tick/mb").forGetter(SoulData::tickpermb))
            .apply(soulDataInstance, SoulData::new));
 
-    public static StreamCodec<ByteBuf, SoulData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, SoulData> STREAM_CODEC = StreamCodec.composite(
         ResourceLocation.STREAM_CODEC,
         SoulData::entitytype,
         ByteBufCodecs.STRING_UTF8,

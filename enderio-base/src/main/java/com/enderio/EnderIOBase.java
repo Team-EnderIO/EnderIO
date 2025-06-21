@@ -77,7 +77,7 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 public class EnderIOBase {
     public static final String MODULE_MOD_ID = "enderio_base";
 
-    public static Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
+    public static final Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
 
     public static IEventBus modEventBus;
     public static ModContainer modContainer;

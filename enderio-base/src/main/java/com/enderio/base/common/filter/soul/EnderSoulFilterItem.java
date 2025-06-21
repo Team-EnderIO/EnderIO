@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 
 public class EnderSoulFilterItem extends AbstractFilterItem<EnderSoulFilter> {
 
-    public static ICapabilityProvider<ItemStack, Void, SoulFilter> ENTITY_FILTER_PROVIDER = (stack, v) -> stack
+    public static final ICapabilityProvider<ItemStack, Void, SoulFilter> ENTITY_FILTER_PROVIDER = (stack, v) -> stack
             .getOrDefault(EIODataComponents.SOUL_FILTER, EnderSoulFilter.EMPTY);
 
     private final Type type;

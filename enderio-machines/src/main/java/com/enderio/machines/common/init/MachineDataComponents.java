@@ -20,35 +20,30 @@ public class MachineDataComponents {
     private static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPES = DeferredRegister
             .create(Registries.DATA_COMPONENT_TYPE, EnderIO.NAMESPACE);
 
-    public static Supplier<DataComponentType<IOConfig>> IO_CONFIG = savedAndSynced("io_config", IOConfig.CODEC,
+    public static final Supplier<DataComponentType<IOConfig>> IO_CONFIG = savedAndSynced("io_config", IOConfig.CODEC,
             IOConfig.STREAM_CODEC);
 
-    public static Supplier<DataComponentType<RedstoneControl>> REDSTONE_CONTROL = savedAndSynced("redstone_control",
+    public static final Supplier<DataComponentType<RedstoneControl>> REDSTONE_CONTROL = savedAndSynced("redstone_control",
             RedstoneControl.CODEC, RedstoneControl.STREAM_CODEC);
 
-    public static Supplier<DataComponentType<ActionRange>> ACTION_RANGE = savedAndSynced("action_range",
+    public static final Supplier<DataComponentType<ActionRange>> ACTION_RANGE = savedAndSynced("action_range",
             ActionRange.CODEC, ActionRange.STREAM_CODEC);
 
-    public static Supplier<DataComponentType<Boolean>> IS_RANGE_VISIBLE = savedAndSynced("is_range_visible", Codec.BOOL,
+    public static final Supplier<DataComponentType<Boolean>> IS_RANGE_VISIBLE = savedAndSynced("is_range_visible", Codec.BOOL,
             ByteBufCodecs.BOOL);
 
     // region Machine-Specific
 
-    public static Supplier<DataComponentType<AlloySmelterMode>> ALLOY_SMELTER_MODE = saved("alloy_smelter_mode",
+    public static final Supplier<DataComponentType<AlloySmelterMode>> ALLOY_SMELTER_MODE = saved("alloy_smelter_mode",
             AlloySmelterMode.CODEC);
-    public static Supplier<DataComponentType<Integer>> ALLOY_SMELTER_PROCESSED_INPUTS = saved(
+    public static final Supplier<DataComponentType<Integer>> ALLOY_SMELTER_PROCESSED_INPUTS = saved(
             "alloy_smelter_processed_inputs", Codec.INT);
-
-    public static Supplier<DataComponentType<Integer>> PRIMITIVE_ALLOY_SMELTER_BURN_TIME = saved(
-            "primitive_alloy_smelter_burn_time", Codec.INT);
-    public static Supplier<DataComponentType<Integer>> PRIMITIVE_ALLOY_SMELTER_BURN_DURATION = saved(
-            "primitive_alloy_smelter_burn_duration", Codec.INT);
 
     // Could use the GRINDING_BALL component, but then you could use a sag mill as a
     // grinding ball :P
-    public static Supplier<DataComponentType<GrindingBallData>> SAG_MILL_GRINDING_BALL = saved("sag_mill_grinding_ball",
+    public static final Supplier<DataComponentType<GrindingBallData>> SAG_MILL_GRINDING_BALL = saved("sag_mill_grinding_ball",
             GrindingBallData.CODEC);
-    public static Supplier<DataComponentType<Integer>> SAG_MILL_GRINDING_BALL_DAMAGE = saved(
+    public static final Supplier<DataComponentType<Integer>> SAG_MILL_GRINDING_BALL_DAMAGE = saved(
             "sag_mill_grinding_ball_damage", Codec.INT);
 
     // endregion

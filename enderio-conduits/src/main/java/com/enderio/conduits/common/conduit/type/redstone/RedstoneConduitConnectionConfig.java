@@ -14,10 +14,10 @@ import net.minecraft.world.item.DyeColor;
 public record RedstoneConduitConnectionConfig(boolean isInsert, DyeColor insertChannel, boolean isExtract,
         DyeColor extractChannel, boolean isStrongOutputSignal) implements IOConnectionConfig {
 
-    public static RedstoneConduitConnectionConfig DEFAULT = new RedstoneConduitConnectionConfig(false, DyeColor.GREEN,
+    public static final RedstoneConduitConnectionConfig DEFAULT = new RedstoneConduitConnectionConfig(false, DyeColor.GREEN,
             true, DyeColor.RED, false);
 
-    public static MapCodec<RedstoneConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+    public static final MapCodec<RedstoneConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(Codec.BOOL.fieldOf("is_insert").forGetter(RedstoneConduitConnectionConfig::isInsert),
                     DyeColor.CODEC.fieldOf("insert_channel").forGetter(RedstoneConduitConnectionConfig::insertChannel),
                     Codec.BOOL.fieldOf("is_extract").forGetter(RedstoneConduitConnectionConfig::isExtract),
@@ -27,14 +27,14 @@ public record RedstoneConduitConnectionConfig(boolean isInsert, DyeColor insertC
                             .forGetter(RedstoneConduitConnectionConfig::isStrongOutputSignal))
             .apply(instance, RedstoneConduitConnectionConfig::new));
 
-    public static StreamCodec<ByteBuf, RedstoneConduitConnectionConfig> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, RedstoneConduitConnectionConfig> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, RedstoneConduitConnectionConfig::isInsert, DyeColor.STREAM_CODEC,
             RedstoneConduitConnectionConfig::insertChannel, ByteBufCodecs.BOOL,
             RedstoneConduitConnectionConfig::isExtract, DyeColor.STREAM_CODEC,
             RedstoneConduitConnectionConfig::extractChannel, ByteBufCodecs.BOOL,
             RedstoneConduitConnectionConfig::isStrongOutputSignal, RedstoneConduitConnectionConfig::new);
 
-    public static ConnectionConfigType<RedstoneConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
+    public static final ConnectionConfigType<RedstoneConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
             STREAM_CODEC.cast(), () -> DEFAULT);
 
     @Override

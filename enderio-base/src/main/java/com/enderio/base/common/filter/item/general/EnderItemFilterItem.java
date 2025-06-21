@@ -21,7 +21,7 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
 public class EnderItemFilterItem extends AbstractFilterItem<EnderItemFilter> {
 
-    public static ICapabilityProvider<ItemStack, Void, ItemFilter> ITEM_FILTER_PROVIDER = (stack, v) -> stack
+    public static final ICapabilityProvider<ItemStack, Void, ItemFilter> ITEM_FILTER_PROVIDER = (stack, v) -> stack
             .getOrDefault(EIODataComponents.ITEM_FILTER, EnderItemFilter.EMPTY);
 
     private final Type type;

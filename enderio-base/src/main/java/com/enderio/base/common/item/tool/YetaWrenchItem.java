@@ -71,20 +71,14 @@ public class YetaWrenchItem extends Item {
 
     private static BlockState getNextState(UseOnContext pContext, BlockState state,
             Either<DirectionProperty, EnumProperty<Direction.Axis>> property) {
-        return handleProperties(pContext, state, property.left(), property.right());
-    }
 
-    private static BlockState handleProperties(UseOnContext pContext, BlockState state,
-            Optional<DirectionProperty> directionProperty, Optional<EnumProperty<Direction.Axis>> axisProperty) {
-        if (directionProperty.isPresent()) {
-            return handleProperty(pContext, state, directionProperty.get());
+        if (property.left().isPresent()) {
+            return handleProperty(pContext, state, property.left().get());
+        } else if (property.right().isPresent()) {
+            return handleProperty(pContext, state, property.right().get());
+        } else {
+            throw new IllegalArgumentException("property must either be a Direction or Axis property.");
         }
-
-        if (axisProperty.isPresent()) {
-            return handleProperty(pContext, state, axisProperty.get());
-        }
-
-        throw new IllegalArgumentException("At least one Optional should be set");
     }
 
     private static <T extends Comparable<T>> BlockState handleProperty(UseOnContext pContext, BlockState state,

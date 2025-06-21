@@ -66,7 +66,7 @@ import net.neoforged.neoforge.event.AddPackFindersEvent;
 public class EnderIOMachines {
     public static final String MODULE_MOD_ID = "enderio_machines";
 
-    public static Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
+    public static final Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
 
     public EnderIOMachines(IEventBus modEventBus, ModContainer modContainer) {
         // Register machine config

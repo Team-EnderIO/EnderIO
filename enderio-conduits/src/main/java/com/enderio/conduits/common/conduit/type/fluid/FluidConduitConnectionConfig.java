@@ -20,10 +20,10 @@ public record FluidConduitConnectionConfig(boolean isInsert, DyeColor insertChan
         DyeColor extractChannel, RedstoneControl extractRedstoneControl, DyeColor extractRedstoneChannel, int insertPriority)
         implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
-    public static FluidConduitConnectionConfig DEFAULT = new FluidConduitConnectionConfig(false, DyeColor.GREEN, true,
+    public static final FluidConduitConnectionConfig DEFAULT = new FluidConduitConnectionConfig(false, DyeColor.GREEN, true,
             DyeColor.GREEN, RedstoneControl.NEVER_ACTIVE, DyeColor.RED, 0);
 
-    public static MapCodec<FluidConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+    public static final MapCodec<FluidConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(Codec.BOOL.fieldOf("is_insert").forGetter(FluidConduitConnectionConfig::isInsert),
                     DyeColor.CODEC.fieldOf("insert_channel").forGetter(FluidConduitConnectionConfig::insertChannel),
                     Codec.BOOL.fieldOf("is_extract").forGetter(FluidConduitConnectionConfig::isExtract),
@@ -37,7 +37,7 @@ public record FluidConduitConnectionConfig(boolean isInsert, DyeColor insertChan
             .apply(instance, FluidConduitConnectionConfig::new));
 
     // @formatter:off
-    public static StreamCodec<ByteBuf, FluidConduitConnectionConfig> STREAM_CODEC = MassiveStreamCodec.composite(
+    public static final StreamCodec<ByteBuf, FluidConduitConnectionConfig> STREAM_CODEC = MassiveStreamCodec.composite(
         ByteBufCodecs.BOOL,
         FluidConduitConnectionConfig::isInsert,
         DyeColor.STREAM_CODEC,
@@ -55,7 +55,7 @@ public record FluidConduitConnectionConfig(boolean isInsert, DyeColor insertChan
         FluidConduitConnectionConfig::new);
     // @formatter:on
 
-    public static ConnectionConfigType<FluidConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
+    public static final ConnectionConfigType<FluidConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
             STREAM_CODEC.cast(), () -> DEFAULT);
 
     @Override

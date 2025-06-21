@@ -12,25 +12,25 @@ import net.minecraft.resources.ResourceKey;
 
 public class Conduits {
 
-    public static ResourceKey<Conduit<?, ?>> ENERGY = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static final ResourceKey<Conduit<?, ?>> ENERGY = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
             EnderIO.loc("energy"));
-    public static ResourceKey<Conduit<?, ?>> ENHANCED_ENERGY = ResourceKey
+    public static final ResourceKey<Conduit<?, ?>> ENHANCED_ENERGY = ResourceKey
             .create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIO.loc("enhanced_energy"));
-    public static ResourceKey<Conduit<?, ?>> ENDER_ENERGY = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static final ResourceKey<Conduit<?, ?>> ENDER_ENERGY = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
             EnderIO.loc("ender_energy"));
-    public static ResourceKey<Conduit<?, ?>> REDSTONE = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static final ResourceKey<Conduit<?, ?>> REDSTONE = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
             EnderIO.loc("redstone"));
-    public static ResourceKey<Conduit<?, ?>> FLUID = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static final ResourceKey<Conduit<?, ?>> FLUID = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
             EnderIO.loc("fluid"));
-    public static ResourceKey<Conduit<?, ?>> PRESSURIZED_FLUID = ResourceKey
+    public static final ResourceKey<Conduit<?, ?>> PRESSURIZED_FLUID = ResourceKey
             .create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIO.loc("pressurized_fluid"));
-    public static ResourceKey<Conduit<?, ?>> ENDER_FLUID = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static final ResourceKey<Conduit<?, ?>> ENDER_FLUID = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
             EnderIO.loc("ender_fluid"));
-    public static ResourceKey<Conduit<?, ?>> ITEM = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static final ResourceKey<Conduit<?, ?>> ITEM = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
             EnderIO.loc("item"));
-    public static ResourceKey<Conduit<?, ?>> ENHANCED_ITEM = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static final ResourceKey<Conduit<?, ?>> ENHANCED_ITEM = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
             EnderIO.loc("enhanced_item"));
-    public static ResourceKey<Conduit<?, ?>> ENDER_ITEM = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static final ResourceKey<Conduit<?, ?>> ENDER_ITEM = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
             EnderIO.loc("ender_item"));
 
     public static void bootstrap(BootstrapContext<Conduit<?, ?>> context) {

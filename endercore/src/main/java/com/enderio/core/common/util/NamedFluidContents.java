@@ -11,11 +11,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public record NamedFluidContents(ImmutableMap<String, FluidStack> fluidMap) {
-    public static Codec<NamedFluidContents> CODEC = Codec.unboundedMap(Codec.STRING, FluidStack.OPTIONAL_CODEC)
+    public static final Codec<NamedFluidContents> CODEC = Codec.unboundedMap(Codec.STRING, FluidStack.OPTIONAL_CODEC)
             .xmap(contents -> new NamedFluidContents(ImmutableMap.copyOf(contents)), NamedFluidContents::fluidMap);
 
     // @formatter:off
-    public static StreamCodec<RegistryFriendlyByteBuf, NamedFluidContents> STREAM_CODEC = ByteBufCodecs.map(
+    public static final StreamCodec<RegistryFriendlyByteBuf, NamedFluidContents> STREAM_CODEC = ByteBufCodecs.map(
         HashMap::new, ByteBufCodecs.STRING_UTF8, FluidStack.OPTIONAL_STREAM_CODEC)
         .map(contents -> new NamedFluidContents(ImmutableMap.copyOf(contents)), i -> new HashMap<>(i.fluidMap()));
     // @formatter:on

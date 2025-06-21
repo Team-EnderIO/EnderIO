@@ -8,9 +8,9 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record NightVisionEnabledPacket(boolean enabled) implements CustomPacketPayload {
 
-    public static Type<NightVisionEnabledPacket> TYPE = new Type<>(EnderIO.loc("nightvision_upgrade_enabled"));
+    public static final Type<NightVisionEnabledPacket> TYPE = new Type<>(EnderIO.loc("nightvision_upgrade_enabled"));
 
-    public static StreamCodec<ByteBuf, NightVisionEnabledPacket> STREAM_CODEC = StreamCodec
+    public static final StreamCodec<ByteBuf, NightVisionEnabledPacket> STREAM_CODEC = StreamCodec
             .composite(ByteBufCodecs.BOOL, NightVisionEnabledPacket::enabled, NightVisionEnabledPacket::new);
 
     @Override

@@ -11,16 +11,16 @@ import net.minecraft.network.codec.StreamCodec;
 
 public record RSConduitConnectionConfig(boolean isConnected) implements ConnectionConfig {
 
-    public static RSConduitConnectionConfig DEFAULT = new RSConduitConnectionConfig(true);
+    public static final RSConduitConnectionConfig DEFAULT = new RSConduitConnectionConfig(true);
 
-    public static MapCodec<RSConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(
+    public static final MapCodec<RSConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(
             inst -> inst.group(Codec.BOOL.fieldOf("isConnected").forGetter(RSConduitConnectionConfig::isConnected))
                     .apply(inst, RSConduitConnectionConfig::new));
 
-    public static StreamCodec<ByteBuf, RSConduitConnectionConfig> STREAM_CODEC = ByteBufCodecs.BOOL
+    public static final StreamCodec<ByteBuf, RSConduitConnectionConfig> STREAM_CODEC = ByteBufCodecs.BOOL
             .map(RSConduitConnectionConfig::new, RSConduitConnectionConfig::isConnected);
 
-    public static ConnectionConfigType<RSConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
+    public static final ConnectionConfigType<RSConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
             STREAM_CODEC.cast(), () -> DEFAULT);
 
     @Override

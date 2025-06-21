@@ -34,14 +34,14 @@ public final class NetworkDataSlot<T> {
     private final Consumer<T> setter;
     private int lastHash;
 
-    public static CodecType<String> STRING = new CodecType<>(Codec.STRING, ByteBufCodecs.STRING_UTF8.cast());
-    public static CodecType<Boolean> BOOL = new CodecType<>(Codec.BOOL, ByteBufCodecs.BOOL.cast());
-    public static CodecType<Integer> INT = new CodecType<>(Codec.INT, ByteBufCodecs.INT.cast());
-    public static CodecType<Long> LONG = new CodecType<>(Codec.LONG, ByteBufCodecs.VAR_LONG.cast());
-    public static CodecType<Float> FLOAT = new CodecType<>(Codec.FLOAT, ByteBufCodecs.FLOAT.cast());
-    public static CodecType<ResourceLocation> RESOURCE_LOCATION = new CodecType<>(ResourceLocation.CODEC,
+    public static final CodecType<String> STRING = new CodecType<>(Codec.STRING, ByteBufCodecs.STRING_UTF8.cast());
+    public static final CodecType<Boolean> BOOL = new CodecType<>(Codec.BOOL, ByteBufCodecs.BOOL.cast());
+    public static final CodecType<Integer> INT = new CodecType<>(Codec.INT, ByteBufCodecs.INT.cast());
+    public static final CodecType<Long> LONG = new CodecType<>(Codec.LONG, ByteBufCodecs.VAR_LONG.cast());
+    public static final CodecType<Float> FLOAT = new CodecType<>(Codec.FLOAT, ByteBufCodecs.FLOAT.cast());
+    public static final CodecType<ResourceLocation> RESOURCE_LOCATION = new CodecType<>(ResourceLocation.CODEC,
             ResourceLocation.STREAM_CODEC.cast());
-    public static CodecType<FluidStack> FLUID_STACK = new CodecType<>(FluidStack.OPTIONAL_CODEC,
+    public static final CodecType<FluidStack> FLUID_STACK = new CodecType<>(FluidStack.OPTIONAL_CODEC,
             FluidStack.OPTIONAL_STREAM_CODEC, stack -> stack.hashCode() * 31 + stack.getAmount());
 
     public NetworkDataSlot(Type<T> type, Supplier<T> getter, Consumer<T> setter) {

@@ -10,9 +10,9 @@ public class FarmTaskManager {
     private final ArrayList<TaskEntry> tasks = new ArrayList<>();
     private static ImmutableList<FarmTask> TASKS_IMMUTABLE;
 
-    public static int PLANT = 1;
-    public static int BONEMEAL = 3;
-    public static int HARVEST = 5;
+    public static final int PLANT = 1;
+    public static final int BONEMEAL = 3;
+    public static final int HARVEST = 5;
 
     private FarmTaskManager() {
 

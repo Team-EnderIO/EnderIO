@@ -9,9 +9,9 @@ import org.jetbrains.annotations.Nullable;
 
 public record TravelTargetUpdatedPacket(@Nullable TravelTarget target) implements CustomPacketPayload {
 
-    public static Type<TravelTargetUpdatedPacket> TYPE = new Type<>(EnderIO.loc("add_travel_target"));
+    public static final Type<TravelTargetUpdatedPacket> TYPE = new Type<>(EnderIO.loc("add_travel_target"));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, TravelTargetUpdatedPacket> STREAM_CODEC = TravelTarget.STREAM_CODEC
+    public static final StreamCodec<RegistryFriendlyByteBuf, TravelTargetUpdatedPacket> STREAM_CODEC = TravelTarget.STREAM_CODEC
         .map(TravelTargetUpdatedPacket::new, TravelTargetUpdatedPacket::target);
 
     @Override

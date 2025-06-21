@@ -20,12 +20,12 @@ public abstract class IOConduitScreenType<U extends IOConnectionConfig> extends 
     protected static final int RIGHT_START_X = PADDED_SLOT_SIZE * 5;
 
     // Titles default to perfect position to be alongside a checkbox.
-    protected int leftTitleX = PADDED_SLOT_SIZE;
-    protected int leftTitleY = 4;
+    protected final int leftTitleX = PADDED_SLOT_SIZE;
+    protected final int leftTitleY = 4;
     protected Component leftTitle = ConduitLang.CONDUIT_INSERT;
 
-    protected int rightTitleX = RIGHT_START_X + PADDED_SLOT_SIZE;
-    protected int rightTitleY = 4;
+    protected final int rightTitleX = RIGHT_START_X + PADDED_SLOT_SIZE;
+    protected final int rightTitleY = 4;
     protected Component rightTitle = ConduitLang.CONDUIT_EXTRACT;
 
     @Override

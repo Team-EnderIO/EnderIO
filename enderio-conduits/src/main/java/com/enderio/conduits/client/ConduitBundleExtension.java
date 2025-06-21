@@ -22,7 +22,7 @@ import java.util.Optional;
 
 public class ConduitBundleExtension implements IClientBlockExtensions {
 
-    public static ConduitBundleExtension INSTANCE = new ConduitBundleExtension();
+    public static final ConduitBundleExtension INSTANCE = new ConduitBundleExtension();
 
     private ConduitBundleExtension() {
     }

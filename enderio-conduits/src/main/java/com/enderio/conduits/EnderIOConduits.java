@@ -35,7 +35,7 @@ public class EnderIOConduits {
 
     public static final String MODULE_MOD_ID = "enderio_conduits";
 
-    public static Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
+    public static final Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
 
     public EnderIOConduits(IEventBus modEventBus, ModContainer modContainer) {
         Conduits.register();

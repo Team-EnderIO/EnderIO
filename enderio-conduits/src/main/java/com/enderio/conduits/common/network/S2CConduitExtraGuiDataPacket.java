@@ -12,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
 public record S2CConduitExtraGuiDataPacket(int containerId, @Nullable CompoundTag extraGuiData)
         implements CustomPacketPayload {
 
-    public static Type<S2CConduitExtraGuiDataPacket> TYPE = new Type<>(EnderIO.loc("conduit_extra_gui_data"));
+    public static final Type<S2CConduitExtraGuiDataPacket> TYPE = new Type<>(EnderIO.loc("conduit_extra_gui_data"));
 
-    public static StreamCodec<ByteBuf, S2CConduitExtraGuiDataPacket> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, S2CConduitExtraGuiDataPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, S2CConduitExtraGuiDataPacket::containerId,
             ByteBufCodecs.optional(ByteBufCodecs.COMPOUND_TAG).map(opt -> opt.orElse(null), Optional::ofNullable),
             S2CConduitExtraGuiDataPacket::extraGuiData, S2CConduitExtraGuiDataPacket::new);

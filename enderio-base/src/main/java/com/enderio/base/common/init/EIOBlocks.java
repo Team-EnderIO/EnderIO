@@ -384,7 +384,7 @@ public class EIOBlocks {
     public static final RegiliteBlock<SinglePaintedBlock> PAINTED_GLOWSTONE = paintedBlock("painted_glowstone", SinglePaintedBlock::new,
         Blocks.GLOWSTONE);
 
-    public static RegiliteBlock<PaintedWallBlock> PAINTED_WALL = paintedBlock("painted_wall", PaintedWallBlock::new, Blocks.COBBLESTONE_WALL,
+    public static final RegiliteBlock<PaintedWallBlock> PAINTED_WALL = paintedBlock("painted_wall", PaintedWallBlock::new, Blocks.COBBLESTONE_WALL,
         BlockTags.WALLS, BlockTags.MINEABLE_WITH_PICKAXE);
 
     // endregion

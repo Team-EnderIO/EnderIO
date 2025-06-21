@@ -1673,12 +1673,11 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     // Matches the same data format as the original conduit bundle.
     // Enables us to convert between the new and old formats easily.
-    @SuppressWarnings("removal")
     private record LegacyConduitBundle(BlockPos pos, List<Holder<Conduit<?, ?>>> conduits,
             Map<Direction, ConduitConnection> connections, ItemStack facadeItem,
             Map<Holder<Conduit<?, ?>>, ConduitNode> conduitNodes) {
 
-        public static Codec<LegacyConduitBundle> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        public static final Codec<LegacyConduitBundle> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 BlockPos.CODEC.fieldOf("pos").forGetter(i -> i.pos),
                 Conduit.CODEC.listOf().fieldOf("conduits").forGetter(i -> i.conduits),
                 Codec.unboundedMap(Direction.CODEC, ConduitConnection.CODEC)
@@ -1696,7 +1695,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
         public static final class ConduitConnection {
 
-            public static Codec<ConduitConnection> CODEC = ConnectionState.CODEC.listOf(0, MAX_CONDUITS)
+            public static final Codec<ConduitConnection> CODEC = ConnectionState.CODEC.listOf(0, MAX_CONDUITS)
                     .xmap(ConduitConnection::new, i -> Arrays.stream(i.connectionStates).toList());
 
             private final ConnectionState[] connectionStates = Util.make(() -> {
@@ -1722,7 +1721,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    @SuppressWarnings("removal")
     private void loadFromLegacyBundle(LegacyConduitBundle bundle) {
         // Copy the conduit list
         conduits = new ArrayList<>();
