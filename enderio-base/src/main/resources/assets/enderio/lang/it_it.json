@@ -268,7 +268,7 @@
   "gui.enderio.ioconfig.pull": "Tira",
   "gui.enderio.ioconfig.push": "Spingi",
   "gui.enderio.max_range": "Maximum Range",
-  "gui.enderio.no_soulbound": "Associa un'anima all'oggetto per poterlo usare",
+  "gui.enderio.no_soulbound": "This item can have a soul bound to it.",
   "gui.enderio.nocap.desc": "Inserisci qualsiasi condensatore in modo che \n questa macchina possa funzionare!",
   "gui.enderio.nocap.title": "Condensatore mancante",
   "gui.enderio.ok": "Ok",
