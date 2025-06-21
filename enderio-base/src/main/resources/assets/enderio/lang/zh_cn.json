@@ -268,7 +268,7 @@
   "gui.enderio.ioconfig.pull": "输入端",
   "gui.enderio.ioconfig.push": "输出端",
   "gui.enderio.max_range": "Maximum Range",
-  "gui.enderio.no_soulbound": "在物品状态下绑定灵魂才能使用",
+  "gui.enderio.no_soulbound": "This item can have a soul bound to it.",
   "gui.enderio.nocap.desc": "插入电容\n机器才能工作！",
   "gui.enderio.nocap.title": "缺少电容",
   "gui.enderio.ok": "OK",
