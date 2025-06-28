@@ -12,6 +12,7 @@ import com.enderio.machines.client.gui.screen.FarmingStationScreen;
 import com.enderio.machines.client.gui.screen.FluidTankScreen;
 import com.enderio.machines.client.gui.screen.ImpulseHopperScreen;
 import com.enderio.machines.client.gui.screen.InhibitorObeliskScreen;
+import com.enderio.machines.client.gui.screen.NiardScreen;
 import com.enderio.machines.client.gui.screen.PaintingMachineScreen;
 import com.enderio.machines.client.gui.screen.PoweredSpawnerScreen;
 import com.enderio.machines.client.gui.screen.RelocatorObeliskScreen;
@@ -35,6 +36,7 @@ import com.enderio.machines.common.blocks.enchanter.EnchanterMenu;
 import com.enderio.machines.common.blocks.farming_station.FarmingStationMenu;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankMenu;
 import com.enderio.machines.common.blocks.impulse_hopper.ImpulseHopperMenu;
+import com.enderio.machines.common.blocks.niard.NiardMenu;
 import com.enderio.machines.common.blocks.obelisks.attractor.AttractorObeliskMenu;
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskMenu;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskMenu;
@@ -91,6 +93,8 @@ public class MachineMenus {
             () -> CrafterScreen::new);
     public static final RegiliteMenu<DrainMenu> DRAIN = MENU_REGISTRY.registerMenu("drain", DrainMenu::new,
             () -> DrainScreen::new);
+    public static final RegiliteMenu<NiardMenu> NIARD = MENU_REGISTRY.registerMenu("niard", NiardMenu::new,
+        () -> NiardScreen::new);
     public static final RegiliteMenu<WiredChargerMenu> WIRED_CHARGER = MENU_REGISTRY.registerMenu("wired_charger",
             WiredChargerMenu::new, () -> WiredChargerScreen::new);
     public static final RegiliteMenu<WirelessChargerMenu> WIRELESS_CHARGER = MENU_REGISTRY

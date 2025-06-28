@@ -25,6 +25,7 @@ import com.enderio.machines.common.blocks.enderface.EnderfaceBlockEntity;
 import com.enderio.machines.common.blocks.farming_station.FarmingStationBlockEntity;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
 import com.enderio.machines.common.blocks.impulse_hopper.ImpulseHopperBlockEntity;
+import com.enderio.machines.common.blocks.niard.NiardBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.attractor.AttractorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
@@ -128,6 +129,10 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<DrainBlockEntity> DRAIN = register("drain", DrainBlockEntity::new,
             MachineBlocks.DRAIN).apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
                     .apply(MachineBlockEntities::fluidHandlerCapability);
+
+    public static final RegiliteBlockEntity<NiardBlockEntity> NIARD = register("niard", NiardBlockEntity::new,
+        MachineBlocks.NIARD).apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+        .apply(MachineBlockEntities::fluidHandlerCapability);
 
     public static final RegiliteBlockEntity<SoulBinderBlockEntity> SOUL_BINDER = register("soul_binder",
             SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER)

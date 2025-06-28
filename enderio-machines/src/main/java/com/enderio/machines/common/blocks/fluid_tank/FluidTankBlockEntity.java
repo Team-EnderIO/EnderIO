@@ -2,7 +2,6 @@ package com.enderio.machines.common.blocks.fluid_tank;
 
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
@@ -15,8 +14,6 @@ import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -25,9 +22,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
@@ -36,12 +31,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 // TODO: Rewrite this with tasks?
 //       Could implement a task for each thing it currently has in the If's
@@ -216,75 +213,20 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         return TANK.getTank(this);
     }
 
-    // TODO: enable fluid tanks to receive stackable fluid containers
-    private void fillInternal() {
-        ItemStack inputItem = FLUID_FILL_INPUT.getItemStack(this);
-        ItemStack outputItem = FLUID_FILL_OUTPUT.getItemStack(this);
 
-        if (!inputItem.isEmpty()) {
-            if (inputItem.getItem() instanceof BucketItem filledBucket) {
-                if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET
-                        && outputItem.getCount() < outputItem.getMaxStackSize())) {
-                    int filled = TANK.fill(this, new FluidStack(filledBucket.content, FluidType.BUCKET_VOLUME),
-                            IFluidHandler.FluidAction.SIMULATE);
-                    if (filled == FluidType.BUCKET_VOLUME) {
-                        TANK.fill(this, new FluidStack(filledBucket.content, FluidType.BUCKET_VOLUME),
-                                IFluidHandler.FluidAction.EXECUTE);
-                        inputItem.shrink(1);
-                        FLUID_FILL_OUTPUT.insertItem(this, Items.BUCKET.getDefaultInstance(), false);
-                    }
-                }
-            } else {
-                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.FluidHandler.ITEM);
-                if (fluidHandlerItem != null && outputItem.isEmpty()) {
-                    int filled = FluidUtil
-                            .tryFluidTransfer(getFluidHandler(), fluidHandlerItem, TANK.getFluidAmount(this), true)
-                            .getAmount();
-                    if (filled > 0) {
-                        FLUID_FILL_OUTPUT.setStackInSlot(this, fluidHandlerItem.getContainer());
-                        FLUID_FILL_INPUT.setStackInSlot(this, ItemStack.EMPTY);
-                    }
-                }
-            }
-        }
+    private void fillInternal() {
+        InternalTankTasks.fillInternal(this, TANK, FLUID_FILL_INPUT, FLUID_FILL_OUTPUT);
+    }
+
+    private void drainInternal() {
+        InternalTankTasks.drainInternal(this, TANK, FLUID_DRAIN_INPUT, FLUID_DRAIN_OUTPUT);
+    }
+
+    private void tryMendTool() {
+        InternalTankTasks.tryMendTool(this, TANK, FLUID_DRAIN_INPUT, FLUID_FILL_INPUT);
     }
 
     // endregion
-
-    // TODO: enable fluid tanks to receive stackable fluid containers
-    private void drainInternal() {
-        ItemStack inputItem = FLUID_DRAIN_INPUT.getItemStack(this);
-        ItemStack outputItem = FLUID_DRAIN_OUTPUT.getItemStack(this);
-        if (!inputItem.isEmpty()) {
-            if (inputItem.getItem() == Items.BUCKET) {
-                if (!TANK.getFluid(this).isEmpty()) {
-                    FluidStack stack = TANK.drain(this, FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
-                    if (stack.getAmount() == FluidType.BUCKET_VOLUME
-                            && (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket()
-                                    && outputItem.getCount() < outputItem.getMaxStackSize()))) {
-                        TANK.drain(this, FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
-                        inputItem.shrink(1);
-                        if (outputItem.isEmpty()) {
-                            FLUID_DRAIN_OUTPUT.setStackInSlot(this, stack.getFluid().getBucket().getDefaultInstance());
-                        } else {
-                            outputItem.grow(1);
-                        }
-                    }
-                }
-            } else {
-                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.FluidHandler.ITEM);
-                if (fluidHandlerItem != null && outputItem.isEmpty()) {
-                    int filled = FluidUtil
-                            .tryFluidTransfer(fluidHandlerItem, getFluidHandler(), TANK.getFluidAmount(this), true)
-                            .getAmount();
-                    if (filled > 0) {
-                        FLUID_DRAIN_OUTPUT.setStackInSlot(this, fluidHandlerItem.getContainer());
-                        FLUID_DRAIN_INPUT.setStackInSlot(this, ItemStack.EMPTY);
-                    }
-                }
-            }
-        }
-    }
 
     private void tryTankRecipe() {
         currentRecipe.ifPresent(recipe -> {
@@ -326,35 +268,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
             default -> throw new NotImplementedException();
             }
         });
-    }
-
-    private void tryMendTool() {
-        FluidStack fluid = TANK.getFluid(this);
-
-        if (!fluid.isEmpty() && fluid.is(EIOTags.Fluids.EXPERIENCE)
-                && FLUID_DRAIN_OUTPUT.getItemStack(this).isEmpty()) {
-            ItemStack tool = FLUID_DRAIN_INPUT.getItemStack(this);
-
-            var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-            var mendingEnchantment = enchantmentsRecipe.getOrThrow(Enchantments.MENDING);
-
-            if (tool.isDamageableItem() && tool.getEnchantmentLevel(mendingEnchantment) > 0) {
-
-                ItemStack repairedTool = tool.copy();
-
-                int damage = tool.getDamageValue();
-                int xpAmount = (int) Math.floor(damage / tool.getXpRepairRatio());
-                int fluidAmount = xpAmount * ExperienceUtil.EXP_TO_FLUID;
-
-                FluidStack drainedXp = TANK.drain(this, fluidAmount, IFluidHandler.FluidAction.EXECUTE);
-                int repairAmount = (int) Math
-                        .floor(drainedXp.getAmount() * tool.getXpRepairRatio() / ExperienceUtil.EXP_TO_FLUID);
-                repairedTool.setDamageValue(Math.max(0, damage - repairAmount));
-
-                FLUID_DRAIN_INPUT.setStackInSlot(this, ItemStack.EMPTY);
-                FLUID_DRAIN_OUTPUT.setStackInSlot(this, repairedTool);
-            }
-        }
     }
 
     private void onTankContentsChanged() {

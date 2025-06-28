@@ -27,6 +27,7 @@ import com.enderio.machines.common.blocks.enchanter.EnchanterBlock;
 import com.enderio.machines.common.blocks.enderface.EnderfaceBlock;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlock;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockItem;
+import com.enderio.machines.common.blocks.niard.NiardBlock;
 import com.enderio.machines.common.blocks.obelisks.attractor.AttractorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
@@ -286,6 +287,10 @@ public class MachineBlocks {
 
     public static final RegiliteBlock<ProgressMachineBlock<?>> DRAIN = progressMachine("drain",
             () -> MachineBlockEntities.DRAIN);
+
+    public static final RegiliteBlock<NiardBlock> NIARD = baseMachine(BLOCK_REGISTRY.registerBlock("niard",
+            props -> new NiardBlock(MachineBlockEntities.NIARD, props), BlockBehaviour.Properties.of().strength(2.5f, 8)),
+        MachineModelUtil::machineBlock);
 
     public static final RegiliteBlock<VatBlock> VAT = baseMachine(BLOCK_REGISTRY.registerBlock("vat",
             props -> new VatBlock(MachineBlockEntities.VAT, props), BlockBehaviour.Properties.of().strength(2.5f, 8)),
