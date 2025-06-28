@@ -290,7 +290,7 @@ public class MachineBlocks {
 
     public static final RegiliteBlock<NiardBlock> NIARD = baseMachine(BLOCK_REGISTRY.registerBlock("niard",
             props -> new NiardBlock(MachineBlockEntities.NIARD, props), BlockBehaviour.Properties.of().strength(2.5f, 8)),
-        MachineModelUtil::machineBlock);
+        MachineModelUtil::machineBlock).setTranslation("Niard");
 
     public static final RegiliteBlock<VatBlock> VAT = baseMachine(BLOCK_REGISTRY.registerBlock("vat",
             props -> new VatBlock(MachineBlockEntities.VAT, props), BlockBehaviour.Properties.of().strength(2.5f, 8)),
