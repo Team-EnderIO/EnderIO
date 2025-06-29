@@ -8,7 +8,6 @@ import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;
-import com.enderio.machines.common.blocks.drain.DrainMenu;
 import com.enderio.machines.common.blocks.niard.NiardMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -36,12 +35,12 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
 
         addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 2 * 16 + 2,
             EIOLang.HIDE_RANGE, EIOLang.SHOW_RANGE, menu::isRangeVisible,
-            (ignore) -> handleButtonPress(DrainMenu.VISIBILITY_BUTTON_ID)));
+            (ignore) -> handleButtonPress(NiardMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(EIOCommonWidgets.createRangeIncrease(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2,
-            (b) -> handleButtonPress(DrainMenu.INCREASE_BUTTON_ID)));
+            (b) -> handleButtonPress(NiardMenu.INCREASE_BUTTON_ID)));
         addRenderableWidget(EIOCommonWidgets.createRangeDecrease(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2 + 8,
-            (b) -> handleButtonPress(DrainMenu.DECREASE_BUTTON_ID)));
+            (b) -> handleButtonPress(NiardMenu.DECREASE_BUTTON_ID)));
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
     }

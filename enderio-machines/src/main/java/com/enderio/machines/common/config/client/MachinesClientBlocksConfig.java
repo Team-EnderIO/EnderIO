@@ -26,7 +26,7 @@ public class MachinesClientBlocksConfig {
         DRAIN_RANGE_COLOR = builder.comment("The color of the range box of the Drain")
                 .define("drainRangeColor", "FFA500");
         NIARD_RANGE_COLOR = builder.comment("The color of the range box of the Niard")
-            .define("drainRangeColor", "FFA500");
+            .define("niardRangeColor", "FFA500");
         INHIBITOR_RANGE_COLOR = builder.comment("The color of the range box of the Inhibitor Obelisk")
                 .define("inhibitorRangeColor", "8B0000");
         RELOCATOR_RANGE_COLOR = builder.comment("The color of the range box of the Relocator Obelisk")

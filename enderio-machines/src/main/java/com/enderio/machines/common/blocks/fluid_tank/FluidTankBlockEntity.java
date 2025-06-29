@@ -223,7 +223,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     }
 
     private void tryMendTool() {
-        InternalTankTasks.tryMendTool(this, TANK, FLUID_DRAIN_INPUT, FLUID_FILL_INPUT);
+        InternalTankTasks.tryMendTool(this, TANK, FLUID_DRAIN_INPUT, FLUID_DRAIN_OUTPUT);
     }
 
     // endregion
