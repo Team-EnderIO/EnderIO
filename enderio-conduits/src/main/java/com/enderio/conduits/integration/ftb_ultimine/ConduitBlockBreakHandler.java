@@ -38,6 +38,9 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
     // TODO: Not fully tested
     @Override
     public Result breakBlock(Player player, BlockPos pos, BlockState state, Shape shape, BlockHitResult hitResult) {
+        // Note: Success means we've performed our actions (if any).
+        //       Returning PASS means Ultimine will destroy the block for us.
+
         // TODO: Find a way to share more logic with ConduitBundleBlock...
         var level = player.level();
         BlockPos originPos = hitResult.getBlockPos();
@@ -71,9 +74,14 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
             return Result.PASS;
         }
 
+        // Attempt to apply operations
         if (operation instanceof FacadeBreakOperation facadeOperation) {
-            if (!targetConduitBundle.hasFacade() || !targetConduitBundle.getFacadeBlock().defaultBlockState().is(facadeOperation.facadeBlock)) {
-                return Result.PASS;
+            if (!targetConduitBundle.hasFacade()) {
+                return Result.SUCCESS;
+            }
+
+            if (!targetConduitBundle.getFacadeBlock().defaultBlockState().is(facadeOperation.facadeBlock)) {
+                return Result.SUCCESS;
             }
 
             // Drop the facade item
@@ -94,7 +102,7 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
             }
         } else if (operation instanceof ConduitBreakOperation conduitOperation) {
             if (!targetConduitBundle.hasConduitStrict(conduitOperation.conduit)) {
-                return Result.PASS;
+                return Result.SUCCESS;
             }
 
             if (level.isClientSide) {

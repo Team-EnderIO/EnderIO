@@ -1452,6 +1452,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
             if (tag.contains(FACADE_PROVIDER_KEY)) {
                 facadeProvider = ItemStack.parseOptional(registries, tag.getCompound(FACADE_PROVIDER_KEY));
+            } else {
+                facadeProvider = ItemStack.EMPTY;
             }
         }
 
