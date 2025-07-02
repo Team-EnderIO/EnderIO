@@ -90,7 +90,7 @@
   "enderio_machines.configuration.spawnAmount": "Doğma Miktarı",
   "enderio_machines.configuration.spawnType": "Doğma Türü",
   "enderio_machines.configuration.stirlingGenerator": "Stirling Jeneratörü",
-  "enderio_machines.configuration.throttleEnergyUsage": "Throttle Energy Use",
+  "enderio_machines.configuration.throttleEnergyUsage": "Enerji Kullanımını Ayarla",
   "enderio_machines.configuration.usage": "Tüketim Hızı (µI/t)",
   "enderio_machines.configuration.vacuumChestRangeColor": "Vakumlu Sandık Menzil Rengi",
   "enderio_machines.configuration.vacuumXpRangeColor": "TP Vakumu Menzil Rengi",
