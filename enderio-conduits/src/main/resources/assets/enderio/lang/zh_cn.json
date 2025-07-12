@@ -17,7 +17,7 @@
   "gui.enderio.round_robin.enabled": "Round Robin Enabled",
   "gui.enderio.self_feed.disabled": "Self Feed Disabled",
   "gui.enderio.self_feed.enabled": "Self Feed Enabled",
-  "item.enderio.conduit": "<MISSING> Conduit",
+  "item.enderio.conduit": "<MISSING>导管",
   "item.enderio.conduit.ender_energy": "末影能量导管",
   "item.enderio.conduit.ender_fluid": "末影流体导管",
   "item.enderio.conduit.ender_item": "末影物品导管",
