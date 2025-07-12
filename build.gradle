@@ -250,7 +250,7 @@ dependencies {
     localRuntime fg.deobf("maven.modrinth:spark:Yp6s4wsw")
 
     // Athena ctm - renamed to "Stitch"
-    localRuntime fg.deobf("maven.modrinth:stitch:X6GdUrpW")
+    localRuntime fg.deobf("maven.modrinth:athena-mod:X6GdUrpW")
 
     // AE2
     compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
