@@ -76,13 +76,15 @@ The Ender IO Team are official Akliz partners! Akliz provides high-performance g
 |-------------------|---------------------| -------------- |
 | 1.21.1            | 8.x                 | 🚧             |
 | 1.21.1            | 7.x                 | ❌             |
-| 1.20.1            | 6.x                 | ✳️             |
+| 1.20.1            | 6.x                 | ❌*            |
 | < 1.20.1          | < 6.x               | ❌             |
 
 - ❌ - Not Supported; no bug fixes or new features.
 - 🚧 - Work in Progress; not ready for release.
 - ✳️ - Long Term Support; receives changes through backports only.
 - ✅ - In Support; the active version, receiving all bugfixes and features directly.
+
+\* accepting maintenance PRs from the community, where applicable.
 
 <!-- GETTING STARTED -->
 ## Getting Started
