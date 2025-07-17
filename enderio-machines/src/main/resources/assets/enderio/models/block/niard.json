@@ -1,5 +1,6 @@
 {
   "parent": "minecraft:block/cube",
+  "render_type": "minecraft:cutout",
   "textures": {
     "down": "enderio:block/machine_bottom",
     "east": "enderio:block/machine_side",

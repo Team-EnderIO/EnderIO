@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
+import com.enderio.machines.client.rendering.blockentity.NiardBER;
 import com.enderio.machines.client.rendering.blockentity.ObeliskBER;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
@@ -131,8 +132,10 @@ public class MachineBlockEntities {
                     .apply(MachineBlockEntities::fluidHandlerCapability);
 
     public static final RegiliteBlockEntity<NiardBlockEntity> NIARD = register("niard", NiardBlockEntity::new,
-        MachineBlocks.NIARD).apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
-        .apply(MachineBlockEntities::fluidHandlerCapability);
+        MachineBlocks.NIARD)
+            .setRenderer(() -> NiardBER::new)
+            .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .apply(MachineBlockEntities::fluidHandlerCapability);
 
     public static final RegiliteBlockEntity<SoulBinderBlockEntity> SOUL_BINDER = register("soul_binder",
             SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER)

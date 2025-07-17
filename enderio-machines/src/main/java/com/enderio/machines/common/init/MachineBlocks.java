@@ -289,7 +289,16 @@ public class MachineBlocks {
             () -> MachineBlockEntities.DRAIN);
 
     public static final RegiliteBlock<NiardBlock> NIARD = baseMachine(BLOCK_REGISTRY.registerBlock("niard",
-            props -> new NiardBlock(MachineBlockEntities.NIARD, props), BlockBehaviour.Properties.of().strength(2.5f, 8)),
+            props -> new NiardBlock(MachineBlockEntities.NIARD, props),
+            BlockBehaviour.Properties.of()
+                .strength(2.5f, 8)
+                .isViewBlocking((pState, pLevel, pPos) -> false)
+                .noOcclusion()
+            )
+            .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+            .setLootTable(MachinesLootTable::copyComponents)
+            .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+                prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName())))),
         MachineModelUtil::machineBlock).setTranslation("Niard");
 
     public static final RegiliteBlock<VatBlock> VAT = baseMachine(BLOCK_REGISTRY.registerBlock("vat",

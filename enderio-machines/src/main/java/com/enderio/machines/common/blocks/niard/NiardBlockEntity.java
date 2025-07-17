@@ -64,6 +64,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     private static final int TANK_CAPACITY = 4 * FluidType.BUCKET_VOLUME;
 
     private static final int ENERGY_PER_BUCKET = 1_500;
+    private static final int BASE_IDLE_TICKS = 40;
 
     public static final SingleSlotAccess FLUID_FILL_INPUT = new SingleSlotAccess();
     public static final SingleSlotAccess FLUID_FILL_OUTPUT = new SingleSlotAccess();
@@ -80,8 +81,13 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     @Override
     public void serverTick() {
         if (isActive()) {
-            fillTank();
-            tryPlaceFluid();
+            if (canAct()) {
+                fillTank();
+            }
+
+            if (canAct((int) (BASE_IDLE_TICKS / getCapacitorData().base()))) {
+                tryPlaceFluid();
+            }
         }
 
         super.serverTick();
@@ -133,7 +139,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
 
     @Override
     public boolean isActive() {
-        return hasEnergy() && canAct(5);
+        return hasEnergy();
     }
 
     @Override
@@ -270,6 +276,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     @Override
     protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditionalSynced(tag, registries);
+        saveTank(registries, tag);
 
         if (!actionRange.equals(DEFAULT_RANGE)) {
             tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save(registries));
@@ -295,5 +302,4 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     // endregion
-
 }
