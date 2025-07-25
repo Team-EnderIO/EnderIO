@@ -20,6 +20,7 @@ import com.enderio.machines.client.gui.screen.SlicerScreen;
 import com.enderio.machines.client.gui.screen.SoulBinderScreen;
 import com.enderio.machines.client.gui.screen.SoulEngineScreen;
 import com.enderio.machines.client.gui.screen.StirlingGeneratorScreen;
+import com.enderio.machines.client.gui.screen.TransceiverScreen;
 import com.enderio.machines.client.gui.screen.TravelAnchorScreen;
 import com.enderio.machines.client.gui.screen.VacuumChestScreen;
 import com.enderio.machines.client.gui.screen.VatScreen;
@@ -55,6 +56,7 @@ import com.enderio.machines.common.blocks.vat.VatMenu;
 import com.enderio.machines.common.blocks.wired_charger.WiredChargerMenu;
 import com.enderio.machines.common.blocks.wireless_charger.WirelessChargerMenu;
 import com.enderio.machines.common.menu.CapacitorBankMenu;
+import com.enderio.machines.common.transceiver.TransceiverMenu;
 import com.enderio.regilite.holder.RegiliteMenu;
 import com.enderio.regilite.registry.MenuRegistry;
 import net.neoforged.bus.api.IEventBus;
@@ -119,6 +121,8 @@ public class MachineMenus {
             () -> VatScreen::new);
     public static final RegiliteMenu<WeatherObeliskMenu> WEATHER_OBELISK = MENU_REGISTRY.registerMenu("weather_obelisk",
             WeatherObeliskMenu::new, () -> WeatherObeliskScreen::new);
+    public static final RegiliteMenu<TransceiverMenu> TRANSCEIVER = MENU_REGISTRY.registerMenu("transceiver",
+        TransceiverMenu::new, () -> TransceiverScreen::new);
 
     public static void register(IEventBus bus) {
         MENU_REGISTRY.register(bus);

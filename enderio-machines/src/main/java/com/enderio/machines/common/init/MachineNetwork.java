@@ -10,6 +10,9 @@ import com.enderio.machines.common.network.SolarSoulPacket;
 import com.enderio.machines.common.network.SoulEngineSoulPacket;
 import com.enderio.machines.common.network.TransferItemsPacket;
 import com.enderio.machines.common.network.UpdateCrafterTemplatePacket;
+import com.enderio.machines.common.network.transceiver.AddChannelPacket;
+import com.enderio.machines.common.network.transceiver.ChannelsSyncPacket;
+import com.enderio.machines.common.network.transceiver.RemoveChannelPacket;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.FarmSoul;
 import com.enderio.machines.common.souldata.SolarSoul;
@@ -41,8 +44,12 @@ public class MachineNetwork {
 
         registrar.playToClient(FarmStationSoulPacket.TYPE, FarmStationSoulPacket.STREAM_CODEC,
                 MachinePayloadHandler.Client.getInstance()::handleFarmingStationSoul);
+
         registrar.playToClient(SolarSoulPacket.TYPE, SolarSoulPacket.STREAM_CODEC,
                 MachinePayloadHandler.Client.getInstance()::handleSolarSoul);
+
+        registrar.playToClient(ChannelsSyncPacket.TYPE, ChannelsSyncPacket.STREAM_CODEC,
+            MachinePayloadHandler.Client.getInstance()::handleChannelsSync);
 
         registrar.playToServer(UpdateCrafterTemplatePacket.TYPE, UpdateCrafterTemplatePacket.STREAM_CODEC,
                 MachinePayloadHandler.Server.getInstance()::updateCrafterTemplate);
@@ -55,5 +62,11 @@ public class MachineNetwork {
 
         registrar.playToServer(TransferItemsPacket.TYPE, TransferItemsPacket.STREAM_CODEC,
             MachinePayloadHandler.Server.getInstance()::handleTransferItems);
+
+        registrar.playToServer(AddChannelPacket.TYPE, AddChannelPacket.STREAM_CODEC,
+            MachinePayloadHandler.Server.getInstance()::handleAddChannel);
+
+        registrar.playToServer(RemoveChannelPacket.TYPE, RemoveChannelPacket.STREAM_CODEC,
+            MachinePayloadHandler.Server.getInstance()::handleRemoveChannel);
     }
 }

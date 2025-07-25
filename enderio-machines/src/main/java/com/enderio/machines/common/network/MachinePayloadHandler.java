@@ -1,15 +1,23 @@
 package com.enderio.machines.common.network;
 
+import com.enderio.machines.client.gui.screen.TransceiverScreen;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.blocks.crafter.CrafterMenu;
 import com.enderio.machines.common.blocks.enderface.EnderfaceBlockEntity;
+import com.enderio.machines.common.network.transceiver.AddChannelPacket;
+import com.enderio.machines.common.network.transceiver.ChannelsSyncPacket;
+import com.enderio.machines.common.network.transceiver.RemoveChannelPacket;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.FarmSoul;
 import com.enderio.machines.common.souldata.SolarSoul;
 import com.enderio.machines.common.souldata.SpawnerSoul;
+import com.enderio.machines.common.transceiver.Channel;
+import com.enderio.machines.common.transceiver.ChannelSavedData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -36,6 +44,15 @@ public class MachinePayloadHandler {
         public void handleSolarSoul(SolarSoulPacket packet, IPayloadContext context) {
             context.enqueueWork(() -> SolarSoul.SOLAR.map = packet.map());
         }
+
+        public void handleChannelsSync(ChannelsSyncPacket packet, IPayloadContext context) {
+            context.enqueueWork(() -> {
+                if (Minecraft.getInstance().screen instanceof TransceiverScreen screen) {
+                    screen.getMenu().setChannelList(packet.channels());
+                }
+            });
+        }
+
     }
 
     public static class Server {
@@ -116,5 +133,33 @@ public class MachinePayloadHandler {
                 }
             });
         }
+
+        public void handleAddChannel(AddChannelPacket packet, IPayloadContext context) {
+            context.enqueueWork(() -> {
+                Level level = context.player().level();
+
+                Channel channel = new Channel(
+                    packet.name(),
+                    packet.owner(),
+                    packet.channelType(),
+                    packet.isPrivate()
+                );
+
+                ChannelSavedData data = ChannelSavedData.get(level);
+                data.addChannel(channel);
+            });
+        }
+
+        public void handleRemoveChannel(RemoveChannelPacket removeChannelPacket, IPayloadContext context) {
+            context.enqueueWork(() -> {
+                Level level = context.player().level();
+
+                Channel channel = removeChannelPacket.channel();
+
+                ChannelSavedData data = ChannelSavedData.get(level);
+                data.removeChannel(channel);
+            });
+        }
+
     }
 }
