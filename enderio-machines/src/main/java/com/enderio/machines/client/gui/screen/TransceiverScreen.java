@@ -11,7 +11,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -23,7 +22,7 @@ public class TransceiverScreen extends MachineScreen<TransceiverMenu> {
 
     private static final int WIDTH = 255;
     private static final int HEIGHT = 166;
-    private static final int TAB_BUTTON_SIZE = 16;
+    private static final int TAB_BUTTON_SIZE = 12;
     private static final int TAB_BUTTON_SPACING = 20;
 
     public TransceiverScreen(TransceiverMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -35,15 +34,15 @@ public class TransceiverScreen extends MachineScreen<TransceiverMenu> {
     @Override
     protected void init() {
         super.init();
-        updateWidgetVisibility();
+        refreshWidgets();
     }
 
     private void switchToTab(ChannelType newType) {
         menu.setSelectedType(newType);
-        updateWidgetVisibility();
+        refreshWidgets();
     }
 
-    private void updateWidgetVisibility() {
+    private void refreshWidgets() {
         clearWidgets();
         addTabButtons();
 
@@ -122,33 +121,6 @@ public class TransceiverScreen extends MachineScreen<TransceiverMenu> {
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        if (isGeneralTab()) {
-            guiGraphics.blit(TRANSCEIVER_GENERAL_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-        }
-    }
-
-    private boolean isGeneralTab() {
-        return menu.getSelectedType() == null;
-    }
-
-    @Override
-    public void renderSlot(GuiGraphics guiGraphics, Slot slot) {
-        if (isGeneralTab()) {
-            super.renderSlot(guiGraphics, slot);
-        }
-    }
-
-    @Override
-    protected void renderSlotHighlight(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY, float partialTick) {
-        if (isGeneralTab()) {
-            super.renderSlotHighlight(guiGraphics, slot, mouseX, mouseY, partialTick);
-        }
-    }
-
-    @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        if (isGeneralTab()) {
-            super.renderLabels(guiGraphics, mouseX, mouseY);
-        }
+        guiGraphics.blit(TRANSCEIVER_GENERAL_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 }

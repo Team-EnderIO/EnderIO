@@ -13,6 +13,7 @@ import com.enderio.machines.common.transceiver.ChannelListWidget;
 import com.enderio.machines.common.transceiver.ChannelType;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
@@ -107,7 +108,7 @@ public class ChannelSelectWidget extends EIOWidget {
 
 
     private ChannelListWidget createChannelListWidget(Set<Channel> channels, int x, int y, int width, int height) {
-        ChannelListWidget widget = new ChannelListWidget(Minecraft.getInstance(), width, height, 0, 20);
+        ChannelListWidget widget = new ChannelListWidget(Minecraft.getInstance(), width, height, 0, 17);
         widget.setPosition(x, y);
         widget.setChannels(channels);
         return widget;
@@ -284,6 +285,11 @@ public class ChannelSelectWidget extends EIOWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.blit(BACKGROUND_TEXTURE, getX(), getY(), 0, 0, getWidth(), getHeight());
+
+        Font font = Minecraft.getInstance().font;
+        guiGraphics.drawCenteredString(font, EIOLang.AVAILABLE, getX() + 59, getY() + 36, 0xFFFFFFFF);
+        guiGraphics.drawCenteredString(font, EIOLang.SEND, getX() + 199, getY() + 36, 0xFFFFFFFF);
+        guiGraphics.drawCenteredString(font, EIOLang.RECEIVE, getX() + 199, getY() + 92, 0xFFFFFFFF);
     }
 
     public List<AbstractWidget> getChildren() {

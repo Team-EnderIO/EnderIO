@@ -1,6 +1,7 @@
 package com.enderio.machines.common.transceiver;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -67,6 +68,21 @@ public class ChannelListWidget extends AbstractSelectionList<ChannelListWidget.E
         }
     }
 
+    @Override
+    protected void renderListBackground(GuiGraphics guiGraphics) {
+        int x = this.getX();
+        int y = this.getY();
+        int width = this.getWidth();
+        int height = this.getHeight();
+
+        guiGraphics.fill(x, y, x + width, y + height, 0xFF1A1A1A);
+
+        guiGraphics.fill(x, y, x + width, y + 1, 0xFF404040); // Top
+        guiGraphics.fill(x, y + height - 1, x + width, y + height, 0xFF404040); // Bottom
+        guiGraphics.fill(x, y, x + 1, y + height, 0xFF404040); // Left
+        guiGraphics.fill(x + width - 1, y, x + width, y + height, 0xFF404040); // Right
+    }
+
     public class Entry extends AbstractSelectionList.Entry<Entry> {
         private final Channel channel;
 
@@ -85,10 +101,12 @@ public class ChannelListWidget extends AbstractSelectionList<ChannelListWidget.E
                 bgColor = 0xFF202020;
             }
 
-            guiGraphics.fill(x, y, x + entryWidth, y + entryHeight, bgColor);
+            guiGraphics.fill(x, y, x + entryWidth - 4, y + entryHeight, bgColor);
 
             int textColor =  0xFFE0E0E0;
-            guiGraphics.drawString(Minecraft.getInstance().font, channel.name(), x, y + 6, textColor);
+
+            Font font = Minecraft.getInstance().font;
+            guiGraphics.drawString(font, channel.name(), x, y + (entryHeight - font.lineHeight)/2, textColor);
         }
 
         @Override

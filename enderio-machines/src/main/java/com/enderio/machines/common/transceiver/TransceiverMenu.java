@@ -1,5 +1,6 @@
 package com.enderio.machines.common.transceiver;
 
+import com.enderio.core.common.network.menu.BoolSyncSlot;
 import com.enderio.machines.common.blocks.base.menu.MachineSlot;
 import com.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -18,9 +19,9 @@ public class TransceiverMenu extends PoweredMachineMenu<TransceiverBlockEntity> 
     private TransceiverBlockEntity blockEntity;
     private ChannelList channelList = new ChannelList();
     private boolean isPrivate = false;
-    private boolean needChannelSync = true;
-
     private ChannelType selectedType;
+
+    private BoolSyncSlot syncSlotNeedChannelSync;
 
     public TransceiverMenu(int pContainerId, Inventory inventory, TransceiverBlockEntity blockEntity) {
         super(MachineMenus.TRANSCEIVER.get(), pContainerId, inventory, blockEntity);
@@ -41,6 +42,9 @@ public class TransceiverMenu extends PoweredMachineMenu<TransceiverBlockEntity> 
         addOutputSlots();
 
         addPlayerInventorySlots(47, 86);
+
+        this.syncSlotNeedChannelSync = addUpdatableSyncSlot(BoolSyncSlot.standalone());
+        syncSlotNeedChannelSync.set(true);
     }
 
     private void addInputSlots() {
@@ -72,11 +76,12 @@ public class TransceiverMenu extends PoweredMachineMenu<TransceiverBlockEntity> 
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-        if (needChannelSync) {
+
+        if (syncSlotNeedChannelSync.get()) {
             ChannelList serverChannels = ChannelSavedData.get(Objects.requireNonNull(blockEntity.getLevel())).getChannelList();
             PacketDistributor.sendToPlayer((ServerPlayer) getPlayerInventory().player, new ChannelsSyncPacket(serverChannels));
 
-            needChannelSync = false;
+            setSyncSlotNeedChannelSync(false);
         }
     }
 
@@ -95,6 +100,11 @@ public class TransceiverMenu extends PoweredMachineMenu<TransceiverBlockEntity> 
 
     public void setSelectedType(ChannelType selectedType) {
         this.selectedType = selectedType;
+    }
+
+    public void setSyncSlotNeedChannelSync(boolean value) {
+        syncSlotNeedChannelSync.set(value);
+        updateSlot(syncSlotNeedChannelSync);
     }
 
 }
