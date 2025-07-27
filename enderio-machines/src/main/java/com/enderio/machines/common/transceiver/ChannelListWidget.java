@@ -25,7 +25,7 @@ public class ChannelListWidget extends AbstractSelectionList<ChannelListWidget.E
 
         for (Channel channel : channels) {
             String playerName = Minecraft.getInstance().player.getName().getString();
-            if (channel.canDisplay(playerName)) {
+            if (channel.canBeDisplayed(playerName)) {
                 this.addEntry(new Entry(channel));
             }
         }

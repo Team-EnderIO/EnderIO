@@ -9,21 +9,34 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ChannelList extends EnumMap<ChannelType, LinkedHashSet<Channel>> {
 
-    public static final Codec<ChannelList> CODEC = Codec.unboundedMap(ChannelType.CODEC, Channel.CODEC.listOf()
-        .xmap(LinkedHashSet::new, ArrayList::new))
+    public static final Codec<ChannelList> CODEC = Codec.unboundedMap(
+            ChannelType.CODEC,
+            Channel.CODEC.listOf()
+        )
         .xmap(
-        map -> {
-            ChannelList cl = new ChannelList();
-            cl.putAll(map);
-            return cl;
-        }, HashMap::new
-    );
+            map -> {
+                ChannelList cl = new ChannelList();
+                map.forEach((type, list) -> cl.get(type).addAll(list));
+                return cl;
+            },
+            cl -> {
+                Map<ChannelType, List<Channel>> serializedMap = cl.entrySet().stream()
+                    .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> new ArrayList<>(e.getValue())
+                    ));
+                return serializedMap;
+            }
+        );
+
 
     public static final StreamCodec<ByteBuf, ChannelList> STREAM_CODEC = StreamCodec.of(
         (buf, channels) -> {

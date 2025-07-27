@@ -12,7 +12,9 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -34,6 +36,8 @@ public class TransceiverBlockEntity extends PoweredMachineBlockEntity {
     
     private static final String SEND_CHANNELS_TAG = "send_channels";
     private static final String RECEIVE_CHANNELS_TAG = "receive_channels";
+
+    private boolean isRegistered = false;
 
     //todo fluid
 
@@ -63,6 +67,19 @@ public class TransceiverBlockEntity extends PoweredMachineBlockEntity {
         return new TransceiverMenu(containerId, playerInventory, this);
     }
 
+    @Override
+    public void serverTick() {
+        if (canAct()) {
+            for (Channel channel : sendChannels.getChannels(ChannelType.ENERGY)) {
+                TransceiverRegistry.INSTANCE.sendPower(this, 100, channel);
+            }
+
+            for (Channel channel : sendChannels.getChannels(ChannelType.ITEM)) {
+                TransceiverRegistry.INSTANCE.sendItems(this, channel);
+            }
+        }
+    }
+
     public ChannelList getSendChannels() {
         return sendChannels;
     }
@@ -71,32 +88,121 @@ public class TransceiverBlockEntity extends PoweredMachineBlockEntity {
         return receiveChannels;
     }
 
+    public void addSendChannel(Channel channel) {
+        sendChannels.addChannel(channel);
+        TransceiverRegistry.INSTANCE.addSubscription(channel, this);
+        setChanged();
+    }
+
+    public void deleteSendChannel(Channel channel) {
+        sendChannels.removeChannel(channel);
+        TransceiverRegistry.INSTANCE.deleteSubscription(channel, this);
+        setChanged();
+    }
+
+    public void addReceiveChannel(Channel channel) {
+        receiveChannels.addChannel(channel);
+        TransceiverRegistry.INSTANCE.addSubscription(channel, this);
+        setChanged();
+    }
+
+    public void deleteReceiveChannel(Channel channel) {
+        receiveChannels.removeChannel(channel);
+        TransceiverRegistry.INSTANCE.deleteSubscription(channel, this);
+        setChanged();
+    }
+
+
+    @Override
+    public void setRemoved() {
+        if (isRegistered) {
+            TransceiverRegistry.INSTANCE.unregister(this);
+        }
+
+        super.setRemoved();
+    }
+
+
+    @Override
+    public void onChunkUnloaded() {
+        if (isRegistered) {
+            TransceiverRegistry.INSTANCE.unregister(this);
+        }
+
+        super.onChunkUnloaded();
+    }
+
 
     // region Serialization
+
 
     @Override
     public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         super.saveAdditional(pTag, lookupProvider);
 
-        var ctx = lookupProvider.createSerializationContext(NbtOps.INSTANCE);
-
-        ChannelList.CODEC.encodeStart(ctx, this.sendChannels).ifSuccess(tag -> pTag.put(SEND_CHANNELS_TAG, tag));
-        ChannelList.CODEC.encodeStart(ctx, this.receiveChannels).ifSuccess(tag -> pTag.put(RECEIVE_CHANNELS_TAG, tag));
+        pTag.put(SEND_CHANNELS_TAG, this.sendChannels.save(lookupProvider));
+        pTag.put(RECEIVE_CHANNELS_TAG, this.receiveChannels.save(lookupProvider));
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
 
-        var ctx = lookupProvider.createSerializationContext(NbtOps.INSTANCE);
-
-        if (pTag.contains(SEND_CHANNELS_TAG)) {
-            ChannelList.CODEC.parse(ctx, pTag.get(SEND_CHANNELS_TAG)).ifSuccess(list -> sendChannels = list);
+        if (tag.contains(SEND_CHANNELS_TAG, Tag.TAG_COMPOUND)) {
+            Tag sendChannelsTag = tag.get(SEND_CHANNELS_TAG);
+            if (sendChannelsTag != null) {
+                this.sendChannels = ChannelList.parse(lookupProvider, sendChannelsTag);
+            }
         }
 
-        if (pTag.contains(RECEIVE_CHANNELS_TAG)) {
-            ChannelList.CODEC.parse(ctx, pTag.get(RECEIVE_CHANNELS_TAG)).ifSuccess(list -> receiveChannels = list);
+        if (tag.contains(RECEIVE_CHANNELS_TAG, Tag.TAG_COMPOUND)) {
+            Tag receiveChannelsTag = tag.get(RECEIVE_CHANNELS_TAG);
+            if (receiveChannelsTag != null) {
+                this.receiveChannels = ChannelList.parse(lookupProvider, receiveChannelsTag);
+            }
+        }
+
+        if (!isRegistered) {
+            TransceiverRegistry.INSTANCE.register(this);
+            isRegistered = true;
         }
     }
-    // endregion
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
+        CompoundTag tag = super.getUpdateTag(lookupProvider);
+        tag.put(SEND_CHANNELS_TAG, sendChannels.save(lookupProvider));
+        tag.put(RECEIVE_CHANNELS_TAG, receiveChannels.save(lookupProvider));
+
+        return tag;
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        super.onDataPacket(net, pkt, lookupProvider);
+
+        CompoundTag tag = pkt.getTag();
+        if (tag != null) {
+            if (tag.contains(SEND_CHANNELS_TAG, Tag.TAG_COMPOUND)) {
+                Tag sendChannelsSubTag = tag.get(SEND_CHANNELS_TAG);
+                if (sendChannelsSubTag != null) {
+                    this.sendChannels = ChannelList.parse(lookupProvider, sendChannelsSubTag);
+                }
+            }
+
+            if (tag.contains(RECEIVE_CHANNELS_TAG, Tag.TAG_COMPOUND)) {
+                Tag receiveChannelsSubTag = tag.get(RECEIVE_CHANNELS_TAG);
+                if (receiveChannelsSubTag != null) {
+                    this.receiveChannels = ChannelList.parse(lookupProvider, receiveChannelsSubTag);
+                }
+            }
+        }
+    }
 }
+
+

@@ -5,7 +5,7 @@ import com.enderio.machines.common.blocks.base.menu.MachineSlot;
 import com.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.network.transceiver.ChannelsSyncPacket;
+import com.enderio.machines.common.network.transceiver.GlobalChannelsSyncPacket;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -79,7 +79,7 @@ public class TransceiverMenu extends PoweredMachineMenu<TransceiverBlockEntity> 
 
         if (syncSlotNeedChannelSync.get()) {
             ChannelList serverChannels = ChannelSavedData.get(Objects.requireNonNull(blockEntity.getLevel())).getChannelList();
-            PacketDistributor.sendToPlayer((ServerPlayer) getPlayerInventory().player, new ChannelsSyncPacket(serverChannels));
+            PacketDistributor.sendToPlayer((ServerPlayer) getPlayerInventory().player, new GlobalChannelsSyncPacket(serverChannels));
 
             setSyncSlotNeedChannelSync(false);
         }

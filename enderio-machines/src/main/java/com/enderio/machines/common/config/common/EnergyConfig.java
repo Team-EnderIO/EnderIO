@@ -232,9 +232,9 @@ public class EnergyConfig {
 
         builder.push("transceiver");
         TRANSCEIVER_CAPACITY = builder.comment("The base energy capacity in uI.")
-            .defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
+            .defineInRange("capacity", 250_000, 1, Integer.MAX_VALUE);
         TRANSCEIVER_USAGE = builder.comment("The base energy consumption in uI/t.")
-            .defineInRange("usage", 20, 1, Integer.MAX_VALUE);
+            .defineInRange("usage", 10000, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();

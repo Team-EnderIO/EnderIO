@@ -6,11 +6,12 @@ import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import com.enderio.machines.client.gui.screen.TransceiverScreen;
-import com.enderio.machines.common.network.transceiver.AddChannelPacket;
-import com.enderio.machines.common.network.transceiver.RemoveChannelPacket;
+import com.enderio.machines.common.network.transceiver.AddRemoveGlobalChannelPacket;
+import com.enderio.machines.common.network.transceiver.AddRemoveTransceiverChannelPacket;
 import com.enderio.machines.common.transceiver.Channel;
 import com.enderio.machines.common.transceiver.ChannelListWidget;
 import com.enderio.machines.common.transceiver.ChannelType;
+import com.enderio.machines.common.transceiver.TransceiverBlockEntity;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -154,22 +155,26 @@ public class ChannelSelectWidget extends EIOWidget {
         return new ChannelOperations() {
             @Override
             public void addSendChannel(Channel channel) {
-                screen.getMenu().getBlockEntity().sendChannels.addChannel(channel);
+                TransceiverBlockEntity blockEntity = screen.getMenu().getBlockEntity();
+                PacketDistributor.sendToServer(new AddRemoveTransceiverChannelPacket(blockEntity.getBlockPos(), channel, true, true, false));
             }
 
             @Override
             public void removeSendChannel(Channel channel) {
-                screen.getMenu().getBlockEntity().sendChannels.removeChannel(channel);
+                TransceiverBlockEntity blockEntity = screen.getMenu().getBlockEntity();
+                PacketDistributor.sendToServer(new AddRemoveTransceiverChannelPacket(blockEntity.getBlockPos(), channel, false, true, false));
             }
 
             @Override
             public void addReceiveChannel(Channel channel) {
-                screen.getMenu().getBlockEntity().receiveChannels.addChannel(channel);
+                TransceiverBlockEntity blockEntity = screen.getMenu().getBlockEntity();
+                PacketDistributor.sendToServer(new AddRemoveTransceiverChannelPacket(blockEntity.getBlockPos(), channel, true, false, true));
             }
 
             @Override
             public void removeReceiveChannel(Channel channel) {
-                screen.getMenu().getBlockEntity().receiveChannels.removeChannel(channel);
+                TransceiverBlockEntity blockEntity = screen.getMenu().getBlockEntity();
+                PacketDistributor.sendToServer(new AddRemoveTransceiverChannelPacket(blockEntity.getBlockPos(), channel, false, false, true));
             }
 
             @Override
@@ -254,7 +259,7 @@ public class ChannelSelectWidget extends EIOWidget {
             ChannelType type = channelOps.getSelectedType();
 
             Channel channel = new Channel(channelName, playerName, type, isPrivate);
-            PacketDistributor.sendToServer(new AddChannelPacket(channelName, playerName, type, isPrivate));
+            PacketDistributor.sendToServer(new AddRemoveGlobalChannelPacket(channel, true));
 
             availableChannelsWidget.addChannel(channel);
             channelNameBox.setValue("");
@@ -275,7 +280,7 @@ public class ChannelSelectWidget extends EIOWidget {
         }
 
         try {
-            PacketDistributor.sendToServer(new RemoveChannelPacket(channel));
+            PacketDistributor.sendToServer(new AddRemoveGlobalChannelPacket(channel, false));
             availableChannelsWidget.removeChannelEntry(selectedEntry, channel);
         } catch (Exception e) {
             LOGGER.error("Failed to delete channel {}", channel.name());
@@ -298,5 +303,16 @@ public class ChannelSelectWidget extends EIOWidget {
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput output) {
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (channelNameBox.isFocused()) {
+            if (channelNameBox.keyPressed(keyCode, scanCode, modifiers) || channelNameBox.canConsumeInput()) {
+                return true;
+            }
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 }

@@ -47,7 +47,7 @@ public record Channel(String name, String owner, ChannelType type, boolean isPri
         return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
     }
 
-    public boolean canDisplay(String playerName) {
+    public boolean canBeDisplayed(String playerName) {
         return !isPrivate || owner.equals(playerName);
     }
 }

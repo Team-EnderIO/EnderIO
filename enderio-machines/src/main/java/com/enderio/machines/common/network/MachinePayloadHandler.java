@@ -4,20 +4,24 @@ import com.enderio.machines.client.gui.screen.TransceiverScreen;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.machines.common.blocks.crafter.CrafterMenu;
 import com.enderio.machines.common.blocks.enderface.EnderfaceBlockEntity;
-import com.enderio.machines.common.network.transceiver.AddChannelPacket;
-import com.enderio.machines.common.network.transceiver.ChannelsSyncPacket;
-import com.enderio.machines.common.network.transceiver.RemoveChannelPacket;
+import com.enderio.machines.common.network.transceiver.AddRemoveGlobalChannelPacket;
+import com.enderio.machines.common.network.transceiver.AddRemoveTransceiverChannelPacket;
+import com.enderio.machines.common.network.transceiver.GlobalChannelsSyncPacket;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.FarmSoul;
 import com.enderio.machines.common.souldata.SolarSoul;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.enderio.machines.common.transceiver.Channel;
 import com.enderio.machines.common.transceiver.ChannelSavedData;
+import com.enderio.machines.common.transceiver.TransceiverBlockEntity;
+import com.enderio.machines.common.transceiver.TransceiverRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -45,7 +49,7 @@ public class MachinePayloadHandler {
             context.enqueueWork(() -> SolarSoul.SOLAR.map = packet.map());
         }
 
-        public void handleChannelsSync(ChannelsSyncPacket packet, IPayloadContext context) {
+        public void handleChannelsSync(GlobalChannelsSyncPacket packet, IPayloadContext context) {
             context.enqueueWork(() -> {
                 if (Minecraft.getInstance().screen instanceof TransceiverScreen screen) {
                     screen.getMenu().setChannelList(packet.channels());
@@ -134,32 +138,54 @@ public class MachinePayloadHandler {
             });
         }
 
-        public void handleAddChannel(AddChannelPacket packet, IPayloadContext context) {
+        public void handleAddRemoveGlobalChannel(AddRemoveGlobalChannelPacket packet, IPayloadContext context) {
             context.enqueueWork(() -> {
                 Level level = context.player().level();
+                Channel channel = packet.channel();
 
-                Channel channel = new Channel(
-                    packet.name(),
-                    packet.owner(),
-                    packet.channelType(),
-                    packet.isPrivate()
-                );
+                if (packet.isAdd()) {
+                    ChannelSavedData data = ChannelSavedData.get(level);
+                    data.addChannel(channel);
+                } else {
+                    ChannelSavedData data = ChannelSavedData.get(level);
+                    data.removeChannel(channel);
 
-                ChannelSavedData data = ChannelSavedData.get(level);
-                data.addChannel(channel);
+                    // Delete all of existing instances of this channel in loaded transceivers
+                    TransceiverRegistry.INSTANCE.deleteChannel(channel);
+                }
             });
         }
 
-        public void handleRemoveChannel(RemoveChannelPacket removeChannelPacket, IPayloadContext context) {
+        public void handleAddRemoveTransceiverChannel(AddRemoveTransceiverChannelPacket packet, IPayloadContext context) {
             context.enqueueWork(() -> {
                 Level level = context.player().level();
 
-                Channel channel = removeChannelPacket.channel();
+                BlockPos pos = packet.pos();
+                BlockEntity blockEntity = level.getBlockEntity(pos);
 
-                ChannelSavedData data = ChannelSavedData.get(level);
-                data.removeChannel(channel);
+                if (blockEntity instanceof TransceiverBlockEntity transceiverBlockEntity) {
+                    Channel channel = packet.channel();
+
+                    if (packet.isAdd()) {
+                        if (packet.isSend()) {
+                            transceiverBlockEntity.addSendChannel(channel);
+                        }
+                        if (packet.isReceive()) {
+                            transceiverBlockEntity.addReceiveChannel(channel);
+                        }
+                    } else {
+                        if (packet.isSend()) {
+                            transceiverBlockEntity.deleteSendChannel(channel);
+                        }
+                        if (packet.isReceive()) {
+                            transceiverBlockEntity.deleteReceiveChannel(channel);
+                        }
+                    }
+
+                    transceiverBlockEntity.setChanged();
+                    level.sendBlockUpdated(pos, transceiverBlockEntity.getBlockState(), transceiverBlockEntity.getBlockState(), Block.UPDATE_ALL);
+                }
             });
         }
-
     }
 }

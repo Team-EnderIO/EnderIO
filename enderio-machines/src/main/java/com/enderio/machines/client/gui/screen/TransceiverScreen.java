@@ -3,6 +3,7 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.base.api.EnderIO;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
+import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.ChannelSelectWidget;
 import com.enderio.machines.common.transceiver.Channel;
 import com.enderio.machines.common.transceiver.ChannelType;
@@ -48,6 +49,9 @@ public class TransceiverScreen extends MachineScreen<TransceiverMenu> {
 
         if (menu.getSelectedType() != null) {
             createChannelSelectWidget();
+        } else {
+            addRenderableOnly(new CapacitorEnergyWidget(11 + leftPos, 14 + topPos, 9, 58, menu::getEnergyStorage,
+                menu::isCapacitorInstalled));
         }
     }
 
