@@ -33,7 +33,7 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
         //       Returning PASS means Ultimine will destroy the block for us.
         var level = player.level();
         var blockEntity = level.getBlockEntity(pos);
-        if (!state.is(ConduitBlocks.CONDUIT) &&
+        if (!state.is(ConduitBlocks.CONDUIT) ||
             !(blockEntity instanceof ConduitBundleBlockEntity)) {
             return Result.PASS;
         }

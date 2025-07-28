@@ -17,10 +17,12 @@ import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
 import com.enderio.conduits.integration.ftb_ultimine.ConduitBlockBreakHandler;
+import com.enderio.conduits.integration.ftb_ultimine.ConduitBlockSelectionHandler;
 import com.enderio.regilite.Regilite;
 import java.util.Set;
 
 import dev.ftb.mods.ftbultimine.api.blockbreaking.RegisterBlockBreakHandlerEvent;
+import dev.ftb.mods.ftbultimine.api.blockselection.RegisterBlockSelectionHandlerEvent;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.IEventBus;
@@ -55,6 +57,7 @@ public class EnderIOConduits {
         REGILITE.register(modEventBus);
 
         if (ModList.get().isLoaded("ftbultimine")) {
+            RegisterBlockSelectionHandlerEvent.REGISTER.register(registry -> registry.registerHandler(ConduitBlockSelectionHandler.INSTANCE));
             RegisterBlockBreakHandlerEvent.REGISTER.register(registry -> registry.registerHandler(ConduitBlockBreakHandler.INSTANCE));
         }
     }
