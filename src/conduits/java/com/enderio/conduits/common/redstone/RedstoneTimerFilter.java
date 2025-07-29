@@ -31,14 +31,14 @@ public class RedstoneTimerFilter implements RedstoneExtractFilter {
         return 0;
     }
 
-    public int getMaxTicks() {
-        CompoundTag tag = stack.getOrCreateTag();
-        return tag.contains(KEY_TICKS) ? tag.getInt(KEY_TICKS) : 20;
-    }
-
     public int getTicks() {
         CompoundTag tag = stack.getOrCreateTag();
-        return tag.contains(KEY_MAX_TICKS) ? tag.getInt(KEY_MAX_TICKS) : 0;
+        return tag.contains(KEY_TICKS) ? tag.getInt(KEY_TICKS) : 0;
+    }
+
+    public int getMaxTicks() {
+        CompoundTag tag = stack.getOrCreateTag();
+        return tag.contains(KEY_MAX_TICKS) ? tag.getInt(KEY_MAX_TICKS) : 20;
     }
 
     public void setTimer(int ticks, int maxTicks) {

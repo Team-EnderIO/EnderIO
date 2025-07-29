@@ -13,6 +13,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitData, IItemHandler> {
@@ -28,17 +29,20 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
         ConduitGraph<ItemConduitData> graph,
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
+        inserts.sort(Comparator.comparingInt((CapabilityConnection conn) -> conn.data.compute(conn.direction).getPriority()).reversed());
+
         toNextExtract:
         for (CapabilityConnection extract: extracts) {
             IItemHandler extractHandler = extract.capability;
             int extracted = 0;
 
+            int speed = 4;
+            if (extract.upgrade instanceof ExtractionSpeedUpgrade speedUpgrade) {
+                speed *= (int) Math.pow(2, speedUpgrade.tier());
+            }
+
             nextItem:
             for (int i = 0; i < extractHandler.getSlots(); i++) {
-                int speed = 4;
-                if (extract.upgrade instanceof ExtractionSpeedUpgrade speedUpgrade) {
-                    speed *= (int) Math.pow(2, speedUpgrade.tier());
-                }
 
                 ItemStack extractedItem = extractHandler.extractItem(i, speed - extracted, true);
                 if (extractedItem.isEmpty()) {
@@ -77,10 +81,12 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
                     }
 
                     ItemStack notInserted = ItemHandlerHelper.insertItem(insert.capability, extractedItem, false);
-                    if (notInserted.getCount() < extractedItem.getCount()) {
-                        extracted += extractedItem.getCount() - notInserted.getCount();
-                        extractHandler.extractItem(i, extracted, false);
-                        if (extracted >= speed) {
+                    int successfullyInserted = extractedItem.getCount() - notInserted.getCount();
+
+                    if (successfullyInserted > 0) {
+                        extracted += successfullyInserted;
+                        extractHandler.extractItem(i, successfullyInserted, false);
+                        if (extracted >= speed || isEmpty(extractHandler, i + 1)) {
                             if (sidedExtractData.isRoundRobin) {
                                 sidedExtractData.rotatingIndex = insertIndex + 1;
                             }
@@ -92,6 +98,16 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
                 }
             }
         }
+    }
+
+    private boolean isEmpty(IItemHandler itemHandler, int afterIndex) {
+        for (var i = afterIndex; i < itemHandler.getSlots(); i++) {
+            if (!itemHandler.getStackInSlot(i).isEmpty()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override

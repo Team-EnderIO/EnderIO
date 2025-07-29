@@ -116,6 +116,7 @@ public class MachinesJEI implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
+        registration.registerSubtypeInterpreter(MachineBlocks.POWERED_SPAWNER.asItem(), new EntityStorageSubtypeInterpreter());
         registration.registerSubtypeInterpreter(MachineBlocks.SOUL_ENGINE.asItem(), new EntityStorageSubtypeInterpreter());
     }
 

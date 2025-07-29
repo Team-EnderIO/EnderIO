@@ -81,7 +81,7 @@ public class ExperienceUtil {
      */
     public static ExperienceLevel getLevelFromFluidWithLeftover(int fluidAmount, int startLevel, int stopLevel) {
         ExperienceLevel res = getLevelForExpWithLeftover(fluidAmount/ EXP_TO_FLUID, startLevel, stopLevel);
-        return new ExperienceLevel(res.level(), res.experience() + (fluidAmount % EXP_TO_FLUID)); //add leftover
+        return new ExperienceLevel(res.level(), res.experience());
     }
 
     /**

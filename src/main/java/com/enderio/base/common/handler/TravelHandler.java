@@ -86,7 +86,7 @@ public class TravelHandler {
     }
 
     public static boolean blockTeleport(Level level, Player player, boolean sendToServer) {
-        return getAnchorTarget(player)
+        return getTeleportAnchorTarget(player)
             .filter(iTravelTarget -> blockTeleportTo(level, player, iTravelTarget, sendToServer)).isPresent();
     }
 
@@ -207,13 +207,13 @@ public class TravelHandler {
         return null;
     }
 
-    public static Optional<ITravelTarget> getAnchorTarget(Player player) {
+    public static Optional<ITravelTarget> getTeleportAnchorTarget(Player player) {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
         return TravelSavedData
             .getTravelData(player.level())
             .getTravelTargetsInItemRange(player.blockPosition())
-            .filter(target -> target.canTravelTo())
+            .filter(target -> target.canTeleportTo())
             .filter(target -> target.getPos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
             .filter(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
             .filter(target -> isTeleportPositionClear(player.level(), target.getPos()).isPresent())
@@ -245,7 +245,7 @@ public class TravelHandler {
             .stream()
             .filter(target -> target.getPos().getX() == anchorX && target.getPos().getZ() == anchorZ)
             .filter(target -> target.getPos().getY() > lowerY && target.getPos().getY() < upperY)
-            .filter(target -> target.canTravelTo())
+            .filter(target -> target.canJumpTo())
             .filter(target -> isTeleportPositionClear(player.level(), target.getPos()).isPresent())
             .min(Comparator.comparingDouble(target -> Math.abs(target.getPos().getY() - anchorY)));
     }

@@ -6,7 +6,6 @@ import com.enderio.api.misc.ApiLang;
 import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.core.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.DyeColor;
@@ -208,10 +207,17 @@ public class EIOLang {
         "Make others think you are richer");
 
     // endregion
+    
+    // region KeyBindings
+    public static final Component KEYBINDING_CATEGORY = REGISTRATE.addLang("keybinding", EnderIO.loc("category"), "EnderIO");
+    public static final Component KEYBINDING_PROBE_MODE = REGISTRATE.addLang("keybinding", EnderIO.loc("probe_mode"), "Change Probe Mode");
+    
+    // endregion
 
     // region Misc Tooltips
 
     public static final MutableComponent SHOW_DETAIL_TOOLTIP = REGISTRATE.addLang("tooltip", EnderIO.loc("gui.show_advanced_tooltip"), "<Hold Shift>");
+    public static final Component CONDUIT_PROBE_PROBE_TOOLTIP = REGISTRATE.addLang("tooltip", EnderIO.loc("conduit_probe.mode"), "Mode: %1$s");
 
     // endregion
     

@@ -26,6 +26,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
@@ -33,10 +36,17 @@ import org.jetbrains.annotations.Nullable;
 public class MachineBlock extends BaseEntityBlock {
     private final BlockEntityEntry<? extends MachineBlockEntity> blockEntityType;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    private static final VoxelShape DEFAULT_SHAPE = Shapes.box(0.0, 0.0, 0.0, 1.0, 1.0, 1.0); // Full block shape
+    private final VoxelShape shape;
 
     public MachineBlock(Properties properties, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
+        this(properties, blockEntityType, DEFAULT_SHAPE);
+    }
+
+    public MachineBlock(Properties properties, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType, VoxelShape shape) {
         super(properties);
         this.blockEntityType = blockEntityType;
+        this.shape = shape;
         BlockState any = this.getStateDefinition().any();
         this.registerDefaultState(any.hasProperty(FACING) ? any.setValue(FACING, Direction.NORTH) : any);
     }
@@ -156,5 +166,15 @@ public class MachineBlock extends BaseEntityBlock {
             return machineBlock.getLightEmission();
         }
         return super.getLightEmission(state, level, pos);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return shape;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return shape;
     }
 }

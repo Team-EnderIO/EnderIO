@@ -34,7 +34,7 @@ public class RenderTravelTargets {
         boolean itemTeleport = TravelHandler.canItemTeleport(player);
         TravelSavedData data = TravelSavedData.getTravelData(Minecraft.getInstance().level);
         @Nullable
-        ITravelTarget activeTarget = TravelHandler.getAnchorTarget(player).orElse(null);
+        ITravelTarget activeTarget = TravelHandler.getTeleportAnchorTarget(player).orElse(null);
         for (ITravelTarget target : data.getTravelTargets()) {
             double range = itemTeleport ? target.getItem2BlockRange() : target.getBlock2BlockRange();
             double distanceSquared = target.getPos().distToCenterSqr(player.position());

@@ -1,0 +1,20 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "enderio:item/conduit_probe_probe",
+      "predicate": {
+        "enderio:conduit_probe_state": 0.0
+      }
+    },
+    {
+      "model": "enderio:item/conduit_probe_copy",
+      "predicate": {
+        "enderio:conduit_probe_state": 1.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "enderio:item/conduit_probe_probe"
+  }
+}

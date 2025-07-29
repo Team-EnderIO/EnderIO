@@ -22,7 +22,17 @@ public interface ConduitTicker<T extends ConduitData<T>> {
     }
 
     // TODO: I'd argue this goes into ConduitType, and then you can use getTicker() if you need additional context from it.
+    /**
+     * @return if the conduit can automatically connect to a neighbor block
+     */
     boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction);
+
+    /**
+     * @return if the conduit is allowed to have a forced connection (with the wrench) but won't necessarily connect when placed
+     */
+    default boolean canForceConnect(Level level, BlockPos conduitPos, Direction direction) {
+        return canConnectTo(level, conduitPos, direction);
+    }
 
     /**
      *

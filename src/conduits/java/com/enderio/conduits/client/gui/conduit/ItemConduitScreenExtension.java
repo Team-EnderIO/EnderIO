@@ -6,6 +6,7 @@ import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
 import com.enderio.core.client.gui.widgets.CheckBox;
+import com.enderio.core.client.gui.widgets.MultiIconButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Direction;
@@ -24,6 +25,28 @@ public class ItemConduitScreenExtension implements ConduitScreenExtension<ItemCo
     public List<AbstractWidget> createWidgets(Screen screen, Supplier<ItemConduitData> conduitDataSupplier,
         UpdateExtendedData<ItemConduitData> updateConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         List<AbstractWidget> widgets = new ArrayList<>();
+
+        widgets.add(MultiIconButton.createAddButton(
+            widgetsStart.add(70, 4 + 4 + 8 + 16 + 8),
+            () -> conduitDataSupplier.get().get(direction.get()).getPriority(),
+            integer -> {
+                updateConduitData.update(data -> {
+                    var sideData = data.compute(direction.get());
+                    sideData.setPriority(integer);
+                    return data;
+                });
+            }));
+
+        widgets.add(MultiIconButton.createMinusButton(
+            widgetsStart.add(70, 4 + 4 + 8 + 16 + 16),
+            () -> conduitDataSupplier.get().get(direction.get()).getPriority(),
+            integer -> {
+                updateConduitData.update(data -> {
+                    var sideData = data.compute(direction.get());
+                    sideData.setPriority(integer);
+                    return data;
+                });
+            }));
 
         widgets.add(new CheckBox(
             ROUND_ROBIN_ICON,

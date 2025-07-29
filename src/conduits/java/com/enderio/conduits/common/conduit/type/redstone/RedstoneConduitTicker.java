@@ -23,11 +23,19 @@ import java.util.Map;
 public class RedstoneConduitTicker implements IOAwareConduitTicker<RedstoneConduitData> {
 
     private final Map<ColorControl, Integer> activeColors = new EnumMap<>(ColorControl.class);
+
     @Override
     public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
         BlockPos neighbor = conduitPos.relative(direction);
         BlockState blockState = level.getBlockState(neighbor);
         return blockState.is(ConduitTags.Blocks.REDSTONE_CONNECTABLE) || blockState.canRedstoneConnectTo(level, neighbor, direction);
+    }
+
+    @Override
+    public boolean canForceConnect(Level level, BlockPos conduitPos, Direction direction) {
+        BlockPos neighbor = conduitPos.relative(direction);
+        BlockState blockState = level.getBlockState(neighbor);
+        return !blockState.isAir();
     }
 
     @Override

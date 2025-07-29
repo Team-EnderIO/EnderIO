@@ -1,6 +1,8 @@
 package com.enderio.base.common.init;
 
 import com.enderio.base.common.network.AddTravelTargetPacket;
+import com.enderio.base.common.network.C2SSetFluidFilterSlot;
+import com.enderio.base.common.network.C2SSetItemFilterSlot;
 import com.enderio.base.common.network.FilterUpdatePacket;
 import com.enderio.base.common.network.RemoveTravelTargetPacket;
 import com.enderio.base.common.network.RequestTravelPacket;
@@ -20,6 +22,8 @@ public class EIOPackets {
         CoreNetwork.registerPacket(new RemoveTravelTargetPacket.Handler(), RemoveTravelTargetPacket.class);
         CoreNetwork.registerPacket(new RequestTravelPacket.Handler(), RequestTravelPacket.class);
         CoreNetwork.registerPacket(new FilterUpdatePacket.Handler(), FilterUpdatePacket.class);
+        CoreNetwork.registerPacket(new C2SSetItemFilterSlot.Handler(), C2SSetItemFilterSlot.class);
+        CoreNetwork.registerPacket(new C2SSetFluidFilterSlot.Handler(), C2SSetFluidFilterSlot.class);
 
     }
 }

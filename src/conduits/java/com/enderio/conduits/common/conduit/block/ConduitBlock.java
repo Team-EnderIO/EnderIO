@@ -1,20 +1,21 @@
 package com.enderio.conduits.common.conduit.block;
 
 import com.enderio.api.conduit.ConduitType;
-import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.conduits.common.conduit.ConduitGraphObject;
 import com.enderio.api.integration.IntegrationManager;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.conduits.common.conduit.ConduitBundle;
-import com.enderio.conduits.common.conduit.RightClickAction;
-import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
-import com.enderio.conduits.common.conduit.connection.ConnectionState;
-import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
-import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
-import com.enderio.conduits.common.init.EIOConduitTypes;
-import com.enderio.conduits.common.network.ConduitSavedData;
+import com.enderio.conduits.common.conduit.ConduitBundle;
+import com.enderio.conduits.common.conduit.ConduitGraphObject;
+import com.enderio.conduits.common.conduit.RightClickAction;
+import com.enderio.conduits.common.conduit.connection.ConnectionState;
+import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
+import com.enderio.conduits.common.conduit.connection.StaticConnectionStates;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitData;
+import com.enderio.conduits.common.init.ConduitBlockEntities;
+import com.enderio.conduits.common.init.EIOConduitTypes;
+import com.enderio.conduits.common.items.ConduitProbeItem;
+import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.conduits.common.redstone.RedstoneInsertFilter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -152,7 +153,12 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ConduitBlockEntity conduit) {
             if (!player.getItemInHand(hand).isEmpty()) {
-                Optional<InteractionResult> interactionResult = addConduit(conduit, player, player.getItemInHand(hand), level.isClientSide());
+                Optional<InteractionResult> interactionResult = handleProbe(player.getItemInHand(hand));
+                if (interactionResult.isPresent()) {
+                    return interactionResult.get();
+                }
+                
+                interactionResult = addConduit(conduit, player, player.getItemInHand(hand), level.isClientSide());
                 if (interactionResult.isPresent()) {
                     return interactionResult.get();
                 }
@@ -179,6 +185,14 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         }
 
         return super.use(state, level, pos, player, hand, hit);
+    }
+
+    private Optional<InteractionResult> handleProbe(ItemStack stack) {
+        if (!(stack.getItem() instanceof ConduitProbeItem)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(InteractionResult.FAIL);
     }
 
     private Optional<InteractionResult> addConduit(ConduitBlockEntity conduit, Player player, ItemStack stack, boolean isClientSide) {
@@ -262,7 +276,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             } else {
                 ConnectionState connectionState = conduit.getBundle().getConnectionState(hit.getDirection(), type);
                 if (!connectionState.isConnection()) {
-                    conduit.tryConnectTo(hit.getDirection(), type, true, true);
+                    conduit.tryConnectTo(hit.getDirection(), type, true, true, true);
                 }
             }
 
@@ -280,16 +294,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
             @Nullable ConduitType<?> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
             if (type != null) {
-                conduit.removeTypeAndDelete(type);
-                if (event.getLevel() instanceof ServerLevel serverLevel) {
-                    Inventory inventory = event.getEntity().getInventory();
-                    inventory.placeItemBackInInventory(new ItemStack(type.getConduitItem()));
-
-                    ServerPlayer player = (ServerPlayer) event.getEntity();
-                    event.getLevel().playSound(null, event.getPos(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2f,
-                        ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                }
-
+                conduit.removeTypeAndDelete(event.getEntity(), type);
                 event.setCanceled(true);
             }
         }

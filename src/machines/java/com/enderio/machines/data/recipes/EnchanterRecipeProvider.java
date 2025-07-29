@@ -63,7 +63,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
         build(Enchantments.SWEEPING_EDGE, CountedIngredient.of(8, Tags.Items.INGOTS_IRON), 1, pFinishedRecipeConsumer);
         //new
         build(Enchantments.CHANNELING, CountedIngredient.of(Items.LIGHTNING_ROD), 1, pFinishedRecipeConsumer);
-        build(Enchantments.IMPALING, CountedIngredient.of(8, Tags.Items.INGOTS_IRON), 1, pFinishedRecipeConsumer);
+        build(Enchantments.IMPALING, CountedIngredient.of(Tags.Items.STORAGE_BLOCKS_IRON), 1, pFinishedRecipeConsumer);
         build(Enchantments.LOYALTY, CountedIngredient.of(Items.LEAD), 1, pFinishedRecipeConsumer);
         build(Enchantments.MULTISHOT, CountedIngredient.of(16, ItemTags.ARROWS), 1, pFinishedRecipeConsumer);//TODO
         build(Enchantments.PIERCING, CountedIngredient.of(8, Tags.Items.GEMS_PRISMARINE), 1, pFinishedRecipeConsumer);

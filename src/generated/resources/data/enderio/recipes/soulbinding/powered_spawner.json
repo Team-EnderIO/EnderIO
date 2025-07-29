@@ -1,0 +1,11 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 288000,
+  "exp": 8,
+  "input": {
+    "item": "enderio:powered_spawner"
+  },
+  "output": {
+    "item": "enderio:powered_spawner"
+  }
+}

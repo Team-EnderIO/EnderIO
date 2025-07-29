@@ -4,10 +4,9 @@ import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitItemFactory;
 import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.filter.ResourceFilter;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.common.conduit.upgrade.SpeedUpgradeItem;
-import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
+import com.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.conduits.common.redstone.RedstoneANDFilter;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneFilterItem;
@@ -21,7 +20,7 @@ import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
 import com.enderio.conduits.common.redstone.RedstoneXNORFilter;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
-import net.minecraft.util.Unit;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -87,6 +86,28 @@ public class ConduitItems {
         stack -> RedstoneSensorFilter.INSTANCE, null);
     public static final ItemEntry<RedstoneFilterItem> TIMER_FILTER = createRedstoneFilter("redstone_timer_filter", "Redstone Timer Filter",
         RedstoneTimerFilter::new, ConduitMenus.REDSTONE_TIMER_FILTER::get);
+    
+    public static final ItemEntry<ConduitProbeItem> CONDUIT_PROBE = REGISTRATE
+        .item("conduit_probe", ConduitProbeItem::new)
+        .lang("Conduit Probe")
+        .model((ctx, prov) -> {
+            ResourceLocation generatedItem = new ResourceLocation("item/generated");
+            prov
+                .withExistingParent(ctx.getName(), generatedItem)
+                .texture("layer0", EnderIO.loc("item/conduit_probe_probe"))
+                .override()
+                .predicate(EnderIO.loc("conduit_probe_state"), ConduitProbeItem.State.PROBE.ordinal())
+                .model(prov.withExistingParent("conduit_probe_probe", generatedItem)
+                    .texture("layer0", EnderIO.loc("item/conduit_probe_probe")))
+                .end()
+                .override()
+                .predicate(EnderIO.loc("conduit_probe_state"), ConduitProbeItem.State.COPY_PASTE.ordinal())
+                .model(prov.withExistingParent("conduit_probe_copy", generatedItem)
+                    .texture("layer0", EnderIO.loc("item/conduit_probe_copy")))
+                .end();
+        })
+        .tab(EIOCreativeTabs.GEAR)
+        .register();
 
     private static ItemEntry<Item> createConduitItem(Supplier<? extends ConduitType<?>> type, String itemName) {
         return REGISTRATE.item(itemName + "_conduit",

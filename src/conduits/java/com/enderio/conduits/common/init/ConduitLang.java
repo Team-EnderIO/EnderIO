@@ -14,6 +14,7 @@ public class ConduitLang {
 
     public static final Component CONDUIT_INSERT = REGISTRATE.addLang("gui", EnderIO.loc("conduit.insert"), "Insert");
     public static final Component CONDUIT_EXTRACT = REGISTRATE.addLang("gui", EnderIO.loc("conduit.extract"), "Extract");
+    public static final Component CONDUIT_PRIORITY = REGISTRATE.addLang("gui", EnderIO.loc("conduit.priority"), "Priority");
 
     public static void register() {
     }

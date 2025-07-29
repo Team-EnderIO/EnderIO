@@ -36,6 +36,8 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
 
 import java.util.HashMap;
@@ -45,6 +47,7 @@ import java.util.function.Supplier;
 
 public class MachineBlocks {
     private static final Registrate REGISTRATE = EnderIO.registrate();
+    private static final VoxelShape OBELISK_SHAPE = Shapes.box(0.32, 0.0, 0.32, 0.68, 0.375, 0.68); // Obelisk's Custom Voxel Shape
 
     public static final BlockEntry<MachineBlock> FLUID_TANK = REGISTRATE
         .block("fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.FLUID_TANK))
@@ -223,7 +226,7 @@ public class MachineBlocks {
         .register();
 
     public static final BlockEntry<MachineBlock> XP_OBELISK = REGISTRATE
-        .block("xp_obelisk", props -> new MachineBlock(props, MachineBlockEntities.XP_OBELISK))
+        .block("xp_obelisk", props -> new MachineBlock(props, MachineBlockEntities.XP_OBELISK, OBELISK_SHAPE))
         .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
         .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
@@ -235,7 +238,7 @@ public class MachineBlocks {
         .register();
 
     public static final BlockEntry<MachineBlock> AVERSION_OBELISK = REGISTRATE
-        .block("aversion_obelisk", props -> new MachineBlock(props, MachineBlockEntities.AVERSION_OBELISK))
+        .block("aversion_obelisk", props -> new MachineBlock(props, MachineBlockEntities.AVERSION_OBELISK, OBELISK_SHAPE))
         .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
         .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)

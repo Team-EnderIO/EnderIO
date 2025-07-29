@@ -45,6 +45,7 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
         build(EIOItems.FRANK_N_ZOMBIE, Ingredient.of(EIOItems.Z_LOGIC_CONTROLLER), 51200, 4, EntityType.ZOMBIE, pFinishedRecipeConsumer);
         build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 51200, 4, EntityType.WITCH, pFinishedRecipeConsumer);
         build(EIOItems.BROKEN_SPAWNER, Ingredient.of(EIOItems.BROKEN_SPAWNER), 288000, 8, pFinishedRecipeConsumer);
+        build(MachineBlocks.POWERED_SPAWNER, Ingredient.of(MachineBlocks.POWERED_SPAWNER), 288000, 8, pFinishedRecipeConsumer);
         build(MachineBlocks.SOUL_ENGINE, Ingredient.of(MachineBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME, pFinishedRecipeConsumer);
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityType.VILLAGER, pFinishedRecipeConsumer);
         build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.MONSTER, pFinishedRecipeConsumer);

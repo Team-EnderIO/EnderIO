@@ -36,6 +36,7 @@ public class ConduitRecipes extends RecipeProvider {
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> pWriter) {
         buildUpgradeRecipes(pWriter);
+        buildUtilityRecipes(pWriter);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitItems.ITEM, 8)
             .pattern("BBB")
@@ -299,5 +300,19 @@ public class ConduitRecipes extends RecipeProvider {
             .requires(Ingredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY), 2)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ENERGETIC_ALLOY_INGOT))
             .save(pWriter, EnderIO.loc("extraction_speed_upgrade_3_upgrade"));
+    }
+    
+    private void buildUtilityRecipes(Consumer<FinishedRecipe> pWriter) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.CONDUIT_PROBE)
+            .pattern("ARA")
+            .pattern("PCP")
+            .pattern("RIR")
+            .define('P', Tags.Items.GLASS_PANES)
+            .define('I', ConduitItems.ENERGY)
+            .define('A', EIOItems.CONDUCTIVE_ALLOY_INGOT)
+            .define('C', Items.COMPARATOR)
+            .define('R', ConduitItems.REDSTONE)
+            .unlockedBy("has_ingrediant", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUCTIVE_ALLOY_INGOT))
+            .save(pWriter);
     }
 }

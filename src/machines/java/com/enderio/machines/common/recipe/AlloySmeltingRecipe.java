@@ -37,6 +37,10 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     private final boolean isSmelting;
 
     public AlloySmeltingRecipe(ResourceLocation id, List<CountedIngredient> inputs, ItemStack output, int energy, float experience, boolean isSmelting) {
+        if (isSmelting && inputs.size() > 1) {
+            throw new IllegalArgumentException("More than one smelting ingredient given");
+        }
+        
         this.id = id;
         this.inputs = inputs;
         this.output = output;
@@ -79,7 +83,32 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
 
     @Override
     public boolean matches(ContainerWrapper container, Level level) {
-        boolean[] matched = new boolean[3];
+        if (inputs.isEmpty()) {
+            return false;
+        }
+
+        // Simpler smelting match logic
+        if (isSmelting) {
+            int emptyCount = 0;
+
+            for (int i = 0; i < 3; i++) {
+                var slotItem = container.getItem(i);
+
+                if (slotItem.isEmpty()) {
+                    emptyCount++;
+                    continue;
+                }
+
+                if (!inputs.get(0).test(slotItem)) {
+                    return false;
+                }
+            }
+
+            return emptyCount < 3;
+        }
+
+        // Trace which input items are matched, and which slots have been used for matching.
+        boolean[] matchedInputs = new boolean[3];
         var slotAccess = container.getSlotAccess();
 
         // Iterate over the slots
@@ -87,7 +116,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
             // Iterate over the inputs
             for (int j = 0; j < 3; j++) {
                 // If this ingredient has been matched already, continue
-                if (matched[j]) {
+                if (matchedInputs[j]) {
                     continue;
                 }
 
@@ -96,18 +125,20 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
                 if (j < inputs.size()) {
                     // If we expect an input, test we have a match for it.
                     if (inputs.get(j).test(slotItem)) {
-                        matched[j] = true;
+                        matchedInputs[j] = true;
+                        break;
                     }
                 } else if (slotItem.isEmpty()) {
                     // If we don't expect an input, make sure we have a blank for it.
-                    matched[j] = true;
+                    matchedInputs[j] = true;
+                    break;
                 }
             }
         }
 
         // If we matched all our ingredients, we win!
         for (int i = 0; i < 3; i++) {
-            if (!matched[i]) {
+            if (!matchedInputs[i]) {
                 return false;
             }
         }
@@ -119,7 +150,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     public List<OutputStack> craft(ContainerWrapper container, RegistryAccess registryAccess) {
         ItemStack outputStack = output.copy();
         if (isSmelting) {
-            outputStack.setCount(container.inputsTaken);
+            outputStack.setCount(outputStack.getCount() * container.inputsTaken);
         }
 
         return List.of(OutputStack.of(outputStack));
