@@ -1,6 +1,5 @@
 package com.enderio.conduits.integration.ftb_ultimine;
 
-import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.client.model.conduit.facades.FacadeUtil;
 import com.enderio.conduits.client.particle.ConduitBreakParticle;
@@ -17,28 +16,24 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.fml.common.EventBusSubscriber;
 
 import java.util.Map;
 
 public enum ConduitBlockBreakHandler implements BlockBreakHandler {
     INSTANCE;
 
-    private Map<Player, BreakOperation> breakOperations = Maps.newHashMap();
+    private final Map<Player, BreakOperation> breakOperations = Maps.newHashMap();
 
-    // TODO: Not fully tested
     @Override
     public Result breakBlock(Player player, BlockPos pos, BlockState state, Shape shape, BlockHitResult hitResult) {
         // Note: Success means we've performed our actions (if any).
-        //       Returning PASS means Ultimine will destroy the block for us.
+        //       Returning PASS means it's not our block.
         var level = player.level();
         var blockEntity = level.getBlockEntity(pos);
         if (!state.is(ConduitBlocks.CONDUIT) ||
-            !(blockEntity instanceof ConduitBundleBlockEntity)) {
+            !(blockEntity instanceof ConduitBundleBlockEntity conduitBundle)) {
             return Result.PASS;
         }
-
-        var conduitBundle = (ConduitBundleBlockEntity)blockEntity;
 
         // TODO: Find a way to share more logic with ConduitBundleBlock...
         BlockPos originPos = hitResult.getBlockPos();
@@ -62,25 +57,25 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
 
         // Get operation
         BreakOperation operation = breakOperations.get(player);
-        if (operation == null) {
+        switch (operation) {
+        case null -> {
             return Result.FAIL;
         }
 
         // Attempt to apply operations
-        if (operation instanceof FacadeBreakOperation facadeOperation) {
+        case FacadeBreakOperation(Block facadeBlock) -> {
             if (!conduitBundle.hasFacade()) {
                 return Result.SUCCESS;
             }
 
-            if (!conduitBundle.getFacadeBlock().defaultBlockState().is(facadeOperation.facadeBlock)) {
+            if (!conduitBundle.getFacadeBlock().defaultBlockState().is(facadeBlock)) {
                 return Result.SUCCESS;
             }
 
             // Drop the facade item
-            // TODO: Drop it at the origin pos...
             if (!level.isClientSide()) {
                 if (!player.getAbilities().instabuild) {
-                    conduitBundle.dropFacadeItem();
+                    conduitBundle.dropFacadeItem(originPos);
                 }
             }
 
@@ -92,16 +87,20 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
             if (lightLevelBefore != level.getLightEmission(pos)) {
                 level.getLightEngine().checkBlock(pos);
             }
-        } else if (operation instanceof ConduitBreakOperation conduitOperation) {
-            if (!conduitBundle.hasConduitStrict(conduitOperation.conduit)) {
+        }
+        case ConduitBreakOperation(Holder<Conduit<?, ?>> conduit) -> {
+            if (!conduitBundle.hasConduitStrict(conduit)) {
                 return Result.SUCCESS;
             }
 
             if (level.isClientSide) {
-                ConduitBreakParticle.addDestroyEffects(pos, state, conduitOperation.conduit.value());
+                ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
             }
 
-            conduitBundle.removeConduit(conduitOperation.conduit, player);
+            conduitBundle.removeConduit(conduit, player, originPos);
+        }
+        default -> {
+        }
         }
 
         if (conduitBundle.isEmpty()) {
@@ -121,19 +120,6 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
     private sealed interface BreakOperation {
     }
 
-    private static final class FacadeBreakOperation implements BreakOperation {
-        private final Block facadeBlock;
-
-        private FacadeBreakOperation(Block facadeBlock) {
-            this.facadeBlock = facadeBlock;
-        }
-    }
-
-    private static final class ConduitBreakOperation implements BreakOperation {
-        private final Holder<Conduit<?, ?>> conduit;
-
-        private ConduitBreakOperation(Holder<Conduit<?, ?>> conduit) {
-            this.conduit = conduit;
-        }
-    }
+    private record FacadeBreakOperation(Block facadeBlock) implements BreakOperation {}
+    private record ConduitBreakOperation(Holder<Conduit<?, ?>> conduit) implements BreakOperation {}
 }

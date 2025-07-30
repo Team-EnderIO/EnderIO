@@ -4,12 +4,10 @@ import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.client.model.conduit.facades.FacadeUtil;
 import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitBlocks;
-import dev.ftb.mods.ftbultimine.api.blockbreaking.BlockBreakHandler;
 import dev.ftb.mods.ftbultimine.api.blockselection.BlockSelectionHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 
@@ -17,9 +15,8 @@ public enum ConduitBlockSelectionHandler implements BlockSelectionHandler {
     INSTANCE;
 
     @Override
-    public Result customSelectionCheck(Level level, BlockPos origPos, BlockPos pos, BlockState origState, BlockState state) {
-        // TEMP...
-        Player player = level.players().getFirst();
+    public Result customSelectionCheck(Player player, BlockPos origPos, BlockPos pos, BlockState origState, BlockState state) {
+        var level = player.level();
 
         var origBlockEntity = level.getBlockEntity(origPos);
         if (!state.is(ConduitBlocks.CONDUIT) ||
@@ -33,7 +30,6 @@ public enum ConduitBlockSelectionHandler implements BlockSelectionHandler {
             return Result.PASS;
         }
 
-        // TODO: need access to the player
         if (origConduitBundle.hasFacade() && FacadeUtil.areFacadesVisible(player)) {
             if (!conduitBundle.hasFacade()) {
                 return Result.FALSE;
@@ -47,6 +43,7 @@ public enum ConduitBlockSelectionHandler implements BlockSelectionHandler {
             return Result.FALSE;
         }
 
+        // Find the aimed conduit
         HitResult hitResult = player.pick(player.blockInteractionRange() + 5, 1, false);
 
         // We're breaking a conduit, make sure the network is shared
