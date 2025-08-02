@@ -18,6 +18,7 @@ import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
 import com.enderio.conduits.integration.ftb_ultimine.ConduitBlockBreakHandler;
 import com.enderio.conduits.integration.ftb_ultimine.ConduitBlockSelectionHandler;
+import com.enderio.conduits.integration.ftb_ultimine.FTBUltimineCompat;
 import com.enderio.regilite.Regilite;
 import java.util.Set;
 
@@ -57,8 +58,7 @@ public class EnderIOConduits {
         REGILITE.register(modEventBus);
 
         if (ModList.get().isLoaded("ftbultimine")) {
-            RegisterBlockSelectionHandlerEvent.REGISTER.register(registry -> registry.registerHandler(ConduitBlockSelectionHandler.INSTANCE));
-            RegisterBlockBreakHandlerEvent.REGISTER.register(registry -> registry.registerHandler(ConduitBlockBreakHandler.INSTANCE));
+            FTBUltimineCompat.init();
         }
     }
 
