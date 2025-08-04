@@ -60,6 +60,22 @@ repositories {
         }
 
         maven {
+            name = "FTB Maven"
+            url = uri("https://maven.ftb.dev/releases")
+            content {
+                includeGroup("dev.ftb.mods")
+            }
+        }
+
+        maven {
+            name = "Architectury Maven"
+            url = uri("https://maven.architectury.dev/")
+            content {
+                includeGroup("dev.architectury")
+            }
+        }
+
+        maven {
             url = uri("https://maven.pkg.github.com/refinedmods/refinedstorage2")
             credentials {
                 username = "anything"

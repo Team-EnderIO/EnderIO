@@ -28,6 +28,7 @@ val mekanismMinecraftVersion: String by project
 val mekanismVersion: String by project
 val curseforge_laserio_id: String by project
 val curseforge_laserio_file: String by project
+val ftbUltimineVersion: String by project
 
 dependencies {
     // Include modules
@@ -73,6 +74,9 @@ dependencies {
 
     // Jade
     runtimeOnly("curse.maven:jade-324717:${jadeFileId}")
+
+    // FTB Ultimine Addon
+    runtimeOnly("dev.ftb.mods:ftb-ultimine-neoforge:${ftbUltimineVersion}")
 
     //fluxnetworks
     ////runtimeOnly("curse.maven:fluxnetworks-248020:4651164")
