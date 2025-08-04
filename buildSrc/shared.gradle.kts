@@ -68,14 +68,6 @@ repositories {
         }
 
         maven {
-            name = "FTB Maven Snaphsots"
-            url = uri("https://maven.ftb.dev/snapshots")
-            content {
-                includeGroup("dev.ftb.mods")
-            }
-        }
-
-        maven {
             name = "Architectury Maven"
             url = uri("https://maven.architectury.dev/")
             content {

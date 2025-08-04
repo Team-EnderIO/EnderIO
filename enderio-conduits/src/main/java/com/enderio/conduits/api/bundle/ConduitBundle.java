@@ -52,7 +52,7 @@ public interface ConduitBundle {
      * Remove a conduit from the bundle.
      * @throws IllegalArgumentException if this conduit is not present (in dev only).
      */
-    // TODO: Add a drop item nullable consumer? Could be a nice way to handle customising drops?
+    // TODO GH-1115: Add a drop item nullable consumer? Could be a nice way to handle customising drops?
     void removeConduit(Holder<Conduit<?, ?>> conduit, @Nullable Player player);
 
     /**

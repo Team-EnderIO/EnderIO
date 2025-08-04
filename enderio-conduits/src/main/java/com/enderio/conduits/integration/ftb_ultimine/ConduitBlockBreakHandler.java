@@ -2,10 +2,8 @@ package com.enderio.conduits.integration.ftb_ultimine;
 
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.client.model.conduit.facades.FacadeUtil;
-import com.enderio.conduits.client.particle.ConduitBreakParticle;
 import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitBlocks;
-import com.google.common.collect.Maps;
 import dev.ftb.mods.ftbultimine.api.blockbreaking.BlockBreakHandler;
 import dev.ftb.mods.ftbultimine.api.shape.Shape;
 import net.minecraft.core.BlockPos;
@@ -17,15 +15,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public enum ConduitBlockBreakHandler implements BlockBreakHandler {
     INSTANCE;
 
-    private final Map<Player, BreakOperation> breakOperations = Maps.newHashMap();
+    // Should only ever happen from the main thread, but it cannot hurt to protect against.
+    private final ConcurrentHashMap<Player, BreakOperation> breakOperations = new ConcurrentHashMap<>();
 
     @Override
     public Result breakBlock(Player player, BlockPos pos, BlockState state, Shape shape, BlockHitResult hitResult) {
+        // Now that we have filtering in the selection handler, instead of returning SUCCESS for invalid bundles we should FAIL.
+
         // Note: Success means we've performed our actions (if any).
         //       Returning PASS means it's not our block.
         var level = player.level();
@@ -35,7 +36,7 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
             return Result.PASS;
         }
 
-        // TODO: Find a way to share more logic with ConduitBundleBlock...
+        // TODO GH-1116: Find a way to share more logic with ConduitBundleBlock...
         BlockPos originPos = hitResult.getBlockPos();
 
         // Origin bundle breaking, capture necessary context.
@@ -65,22 +66,19 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
         // Attempt to apply operations
         case FacadeBreakOperation(Block facadeBlock) -> {
             if (!conduitBundle.hasFacade()) {
-                return Result.SUCCESS;
+                return Result.FAIL;
             }
 
             if (!conduitBundle.getFacadeBlock().defaultBlockState().is(facadeBlock)) {
-                return Result.SUCCESS;
+                return Result.FAIL;
             }
 
             // Drop the facade item
-            if (!level.isClientSide()) {
-                if (!player.getAbilities().instabuild) {
-                    conduitBundle.dropFacadeItem(originPos);
-                }
+            if (!player.getAbilities().instabuild) {
+                conduitBundle.dropFacadeItem(originPos);
             }
 
             int lightLevelBefore = level.getLightEmission(pos);
-
             conduitBundle.setFacadeProvider(ItemStack.EMPTY);
 
             // Handle light update
@@ -90,16 +88,10 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
         }
         case ConduitBreakOperation(Holder<Conduit<?, ?>> conduit) -> {
             if (!conduitBundle.hasConduitStrict(conduit)) {
-                return Result.SUCCESS;
-            }
-
-            if (level.isClientSide) {
-                ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
+                return Result.FAIL;
             }
 
             conduitBundle.removeConduit(conduit, player, originPos);
-        }
-        default -> {
         }
         }
 
