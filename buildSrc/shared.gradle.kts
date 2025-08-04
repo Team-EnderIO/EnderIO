@@ -126,6 +126,7 @@ val loaderVersionRange: String by project
 val mekanismVersionRange: String by project
 val ae2VersionRange: String by project
 val refinedstorageVersionRange: String by project
+val ftbUltimineVersionRange: String by project
 
 val replaceProperties = mapOf(
         "mod_version" to project.version,
@@ -135,6 +136,7 @@ val replaceProperties = mapOf(
         "mekanism_version_range" to mekanismVersionRange,
         "ae2_version_range" to ae2VersionRange,
         "refinedstorage_version_range" to refinedstorageVersionRange,
+        "ftbUltimine_version_range" to ftbUltimineVersionRange,
 )
 
 tasks.withType<ProcessResources>().configureEach {
