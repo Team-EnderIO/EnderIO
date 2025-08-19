@@ -451,6 +451,18 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     }
 
     @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock())) {
+            // Not a conduit anymore, destroy all the connections
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof ConduitBlockEntity conduit) {
+                conduit.destroyAllConnections();
+            }
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         HitResult hit = player.pick(player.getBlockReach() + 5, 1, false);
         BlockEntity be = level.getBlockEntity(pos);
