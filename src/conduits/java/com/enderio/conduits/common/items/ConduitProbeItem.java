@@ -97,7 +97,7 @@ public class ConduitProbeItem extends Item {
         bundle.getTypes().forEach(conduitType -> {
             ConnectionState connectionState = bundle.getConnectionState(face, conduitType);
             CompoundTag typeTag = new CompoundTag();
-            if (connectionState.isConnection() && connectionState instanceof DynamicConnectionState dynamic) {
+            if (connectionState instanceof DynamicConnectionState dynamic) {
                 typeTag.putBoolean(IS_INSERT, dynamic.isInsert());
                 typeTag.putBoolean(IS_EXTRACT, dynamic.isExtract());
                 typeTag.putInt(INSERT_CHANNEL, dynamic.insertChannel().ordinal());
@@ -136,7 +136,6 @@ public class ConduitProbeItem extends Item {
         });
         conduitBlock.setChanged();
         conduitBlock.updateClient();
-        conduitBlock.updateEmptyDynConnection();
     }
 
     @Override
