@@ -523,7 +523,10 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
         public void connectTo(Level level, BlockPos pos, ConduitGraphObject<?> conduitGraphObject, Direction direction, ConduitType<?> type, int typeIndex, boolean end) {
             if (end) {
-                var state = DynamicConnectionState.defaultConnection(level, pos, direction, type);
+                DynamicConnectionState state = DynamicConnectionState.defaultConnection(level, pos, direction, type);
+                if (connectionStates[typeIndex] instanceof DynamicConnectionState dyn) {
+                    state = state.withItems(dyn);
+                }
                 connectionStates[typeIndex] = state;
                 ConduitBlockEntity.pushIOState(direction, conduitGraphObject, state);
             } else {
@@ -558,7 +561,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         }
 
         public boolean isEnd() {
-            return Arrays.stream(connectionStates).anyMatch(DynamicConnectionState.class::isInstance);
+            return Arrays.stream(connectionStates).anyMatch(state -> state.isConnection() && state instanceof DynamicConnectionState);
         }
 
         public List<ConduitType<?>> getConnectedTypes(ConduitBundle bundle) {

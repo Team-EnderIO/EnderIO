@@ -134,10 +134,5 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
     @Override
     public void removed(Player player) {
         super.removed(player);
-        if (getBlockEntity() != null
-            && player instanceof ServerPlayer serverPlayer
-            && serverPlayer.serverLevel().players().stream().filter(p -> p != player).noneMatch(p -> p.containerMenu instanceof ConduitMenu)) {
-            getBlockEntity().updateEmptyDynConnection();
-        }
     }
 }
