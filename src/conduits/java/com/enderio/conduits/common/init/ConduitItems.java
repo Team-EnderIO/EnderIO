@@ -18,6 +18,7 @@ import com.enderio.conduits.common.redstone.RedstoneSensorFilter;
 import com.enderio.conduits.common.redstone.RedstoneTLatchFilter;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
 import com.enderio.conduits.common.redstone.RedstoneXNORFilter;
+import com.enderio.conduits.common.redstone.RedstoneXORFilter;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.resources.ResourceLocation;
@@ -75,7 +76,7 @@ public class ConduitItems {
     public static final ItemEntry<RedstoneFilterItem> NAND_FILTER = createRedstoneFilter("redstone_nand_filter", "Redstone NAND Filter",
         RedstoneNANDFilter::new, ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get);
     public static final ItemEntry<RedstoneFilterItem> XOR_FILTER = createRedstoneFilter("redstone_xor_filter", "Redstone XOR Filter",
-        RedstoneXNORFilter::new, ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get);
+        RedstoneXORFilter::new, ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get);
     public static final ItemEntry<RedstoneFilterItem> XNOR_FILTER = createRedstoneFilter("redstone_xnor_filter", "Redstone XNOR Filter",
         RedstoneXNORFilter::new, ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get);
     public static final ItemEntry<RedstoneFilterItem> TLATCH_FILTER = createRedstoneFilter("redstone_toggle_filter", "Redstone Toggle Filter",

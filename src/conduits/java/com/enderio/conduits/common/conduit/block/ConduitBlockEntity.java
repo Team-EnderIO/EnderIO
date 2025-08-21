@@ -364,6 +364,15 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return shouldRemove;
     }
 
+    public void destroyAllConnections() {
+        var typesToRemove = List.copyOf(bundle.getTypes());
+        for (var type : typesToRemove) {
+            bundle.removeType(level, type);
+            removeNeighborConnections(type);
+        }
+        updateShape();
+    }
+
     public void dropConnection(DynamicConnectionState dyn) {
         for (SlotType slotType : SlotType.values()) {
             ItemStack item = dyn.getItem(slotType);

@@ -70,4 +70,8 @@ public class FluidConduitType extends TieredConduit<FluidConduitData> {
             tooltipAdder.accept(ConduitLang.MULTI_FLUID_TOOLTIP);
         }
     }
+
+    public boolean isMultiFluid() {
+        return isMultiFluid;
+    }
 }

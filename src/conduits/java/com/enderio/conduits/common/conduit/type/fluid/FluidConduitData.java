@@ -2,9 +2,13 @@ package com.enderio.conduits.common.conduit.type.fluid;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitData;
+import com.enderio.api.conduit.ConduitType;
 import com.enderio.conduits.ConduitNBTKeys;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -14,7 +18,7 @@ import java.util.Objects;
 
 public class FluidConduitData implements ConduitData<FluidConduitData> {
 
-    public final boolean isMultiFluid;
+    public boolean isMultiFluid;
 
     @Nullable
     private Fluid lockedFluid = null;
@@ -39,6 +43,17 @@ public class FluidConduitData implements ConduitData<FluidConduitData> {
 
     public void setShouldReset(boolean shouldReset) {
         this.shouldReset = shouldReset;
+    }
+
+    @Override
+    public void onCreated(ConduitType<?> type, Level level, BlockPos pos, @Nullable Player player) {
+        if (type instanceof FluidConduitType fluidType) {
+            this.isMultiFluid = fluidType.isMultiFluid();
+            if (this.isMultiFluid) {
+                // remove locked fluid
+                setShouldReset(true);
+            }
+        }
     }
 
     @Override
