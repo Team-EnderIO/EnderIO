@@ -7,7 +7,7 @@ import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
-import com.enderio.conduits.common.conduit.type.item.ItemConduitData;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitData.ItemSidedData;
 import com.enderio.conduits.common.conduit.type.item.ItemConduitType;
 import com.enderio.conduits.common.network.C2SSyncProbeState;
 import com.enderio.conduits.common.util.InteractionUtil;
@@ -111,7 +111,7 @@ public class ConduitProbeItem extends Item {
                 typeTag.putInt(REDSTONE_CHANNEL, dynamic.redstoneChannel().ordinal());
 
                 if (conduitType instanceof ItemConduitType itemConduitType) {
-                    ItemConduitData.ItemSidedData sidedData = bundle.getNodeFor(itemConduitType).getConduitData().get(face);
+                    ItemSidedData sidedData = bundle.getNodeFor(itemConduitType).getConduitData().get(face);
                     typeTag.putBoolean(ROUND_ROBIN, sidedData.isRoundRobin);
                     typeTag.putBoolean(SELF_FEED, sidedData.isSelfFeed);
                     typeTag.putInt(PRIORITY, sidedData.getPriority());
@@ -147,7 +147,7 @@ public class ConduitProbeItem extends Item {
             conduitBlock.handleConnectionStateUpdate(face, conduitType, newState);
 
             if (conduitType instanceof ItemConduitType itemConduitType && typeTag.contains(ROUND_ROBIN)) {
-                ItemConduitData.ItemSidedData sidedData = bundle.getNodeFor(itemConduitType).getConduitData().compute(face);
+                ItemSidedData sidedData = bundle.getNodeFor(itemConduitType).getConduitData().compute(face);
                 sidedData.isRoundRobin = typeTag.getBoolean(ROUND_ROBIN);
                 sidedData.isSelfFeed = typeTag.getBoolean(SELF_FEED);
                 sidedData.setPriority(typeTag.getInt(PRIORITY));
