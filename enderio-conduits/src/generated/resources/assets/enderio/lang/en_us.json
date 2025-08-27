@@ -29,6 +29,7 @@
   "item.enderio.conduit.pressurized_fluid": "Pressurized Fluid Conduit",
   "item.enderio.conduit.redstone": "Redstone Conduit",
   "item.enderio.conduit_facade": "Conduit Facade",
+  "item.enderio.conduit_probe": "Conduit Probe",
   "item.enderio.hardened_conduit_facade": "Hardened Conduit Facade",
   "item.enderio.redstone_and_filter": "Redstone And Filter",
   "item.enderio.redstone_counting_filter": "Redstone Counting Filter",
@@ -51,5 +52,6 @@
   "tooltip.enderio.conduit.item.effective_rate": "Effective Rate: %s Items/sec",
   "tooltip.enderio.conduit.item.raw_rate": "Rate: %s Items/network tick",
   "tooltip.enderio.conduit_facade.blast_resist": "Hardened: Resists breaking and explosions",
-  "tooltip.enderio.conduit_facade.transparent": "Transparent: Hides conduits when painted with a translucent block"
+  "tooltip.enderio.conduit_facade.transparent": "Transparent: Hides conduits when painted with a translucent block",
+  "tooltip.enderio.conduit_probe.mode": "Mode: %s"
 }

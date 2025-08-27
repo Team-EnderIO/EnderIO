@@ -94,6 +94,9 @@ public class ConduitLang {
     public static final MutableComponent BLAST_RESIST_FACADE_TOOLTIP = addTranslation("tooltip",
             EnderIO.loc("conduit_facade.blast_resist"), "Hardened: Resists breaking and explosions");
 
+    public static final MutableComponent CONDUIT_PROBE_MODE_TOOLTIP = addTranslation("tooltip",
+            EnderIO.loc("conduit_probe.mode"), "Mode: %s");
+
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
         return EnderIOConduits.REGILITE.addTranslation(prefix, id, translation);
     }

@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.init;
 
+import com.enderio.base.api.EnderIO;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.api.ConduitCapabilities;
@@ -12,11 +13,13 @@ import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneFilterItem;
 import com.enderio.conduits.common.redstone.RedstoneTLatchFilter;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
+import com.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.conduits.data.model.FacadeItemModelBuilder;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
 import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.bus.api.IEventBus;
@@ -101,6 +104,11 @@ public class ConduitItems {
                         properties -> new RedstoneFilterItem(properties.component(type, defaultValue), menu))
                 .setTab(EIOCreativeTabs.CONDUITS);
     }
+
+    public static final RegiliteItem<ConduitProbeItem> CONDUIT_PROBE = ITEM_REGISTRY
+        .registerItem("conduit_probe", props -> new ConduitProbeItem(props))
+        .setModelProvider((prov, ctx) -> {})
+        .setTab(EIOCreativeTabs.CONDUITS);
 
     public static void register(IEventBus bus) {
         ITEM_REGISTRY.register(bus);

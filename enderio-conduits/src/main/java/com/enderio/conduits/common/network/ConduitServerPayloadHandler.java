@@ -1,11 +1,12 @@
 package com.enderio.conduits.common.network;
 
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitNetworkContext;
+import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
@@ -82,6 +83,21 @@ public class ConduitServerPayloadHandler {
                 if (!context.player().isSpectator() && context.player().containerMenu instanceof ConduitMenu menu) {
                     menu.tryOpenFilterMenu(packet.slot());
                 }
+            }
+        });
+    }
+
+    public void handle(C2SSyncProbeStatePacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            ItemStack heldMainHand = context.player().getMainHandItem();
+            ItemStack heldOffHand = context.player().getOffhandItem();
+            
+            // Update the state on whichever hand has the probe item
+            if (heldMainHand.getItem() instanceof ConduitProbeItem) {
+                heldMainHand.set(ConduitComponents.PROBE_STATE, packet.state());
+            }
+            if (heldOffHand.getItem() instanceof ConduitProbeItem) {
+                heldOffHand.set(ConduitComponents.PROBE_STATE, packet.state());
             }
         });
     }

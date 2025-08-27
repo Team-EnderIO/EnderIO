@@ -7,6 +7,7 @@ import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneTLatchFilter;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
+import com.enderio.conduits.common.items.ConduitProbeItem;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
@@ -85,6 +86,16 @@ public class ConduitComponents {
             .registerComponentType("redstone_xor_filter",
                     builder -> builder.persistent(DoubleRedstoneChannel.Component.CODEC)
                             .networkSynchronized(DoubleRedstoneChannel.Component.STREAM_CODEC));
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ConduitProbeItem.ProbeConfigData>> PROBE_CONFIG = DATA_COMPONENT_TYPES
+            .registerComponentType("probe_config",
+                    builder -> builder.persistent(ConduitProbeItem.ProbeConfigData.CODEC)
+                            .networkSynchronized(ConduitProbeItem.ProbeConfigData.STREAM_CODEC));
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ConduitProbeItem.State>> PROBE_STATE = DATA_COMPONENT_TYPES
+            .registerComponentType("probe_state",
+                    builder -> builder.persistent(ConduitProbeItem.State.CODEC)
+                            .networkSynchronized(ConduitProbeItem.State.STREAM_CODEC));
 
     public static void register(IEventBus bus) {
         DATA_COMPONENT_TYPES.register(bus);

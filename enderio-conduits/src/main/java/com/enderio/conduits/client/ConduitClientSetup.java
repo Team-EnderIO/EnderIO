@@ -13,6 +13,8 @@ import com.enderio.conduits.client.model.conduit.ConduitItemModelLoader;
 import com.enderio.conduits.client.model.conduit.bundle.ConduitBundleGeometry;
 import com.enderio.conduits.client.model.conduit.facades.FacadeItemGeometry;
 import com.enderio.conduits.client.model.conduit.modifier.ConduitModelModifiers;
+import com.enderio.conduits.common.init.ConduitItems;
+import com.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.conduits.client.model.conduit.modifier.FluidConduitModelModifier;
 import com.enderio.conduits.client.model.conduit.modifier.RedstoneConduitModelModifier;
 import com.enderio.conduits.common.init.ConduitBlocks;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -53,6 +56,15 @@ public class ConduitClientSetup {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
         ConduitScreenTypes.init();
+        
+        event.enqueueWork(() -> {
+            // Register item property for conduit probe state switching
+            ItemProperties.register(ConduitItems.CONDUIT_PROBE.get(), EnderIO.loc("probe_state"),
+                (stack, level, player, seed) -> {
+                    ConduitProbeItem.State state = ConduitProbeItem.getState(stack);
+                    return state == ConduitProbeItem.State.COPY_PASTE ? 1.0f : 0.0f;
+                });
+        });
     }
 
     @SubscribeEvent
