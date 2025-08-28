@@ -7,6 +7,8 @@ import com.enderio.conduits.common.conduit.ConduitBundle;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.enderio.conduits.common.conduit.connection.ConnectionState;
 import com.enderio.conduits.common.conduit.connection.DynamicConnectionState;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitData.ItemSidedData;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitType;
 import com.enderio.conduits.common.network.C2SSyncProbeState;
 import com.enderio.conduits.common.util.InteractionUtil;
 import com.enderio.core.common.network.CoreNetwork;
@@ -37,6 +39,9 @@ public class ConduitProbeItem extends Item {
     public static final String EXTRACT_CHANNEL = "EXTRACT_CHANNEL";
     public static final String REDSTONE_CONTROL = "REDSTONE_CONTROL";
     public static final String REDSTONE_CHANNEL = "REDSTONE_CHANNEL";
+    public static final String ROUND_ROBIN = "ROUND_ROBIN";
+    public static final String SELF_FEED = "SELF_FEED";
+    public static final String PRIORITY = "PRIORITY";
     
     public ConduitProbeItem(Properties properties) {
         super(properties);
@@ -104,6 +109,13 @@ public class ConduitProbeItem extends Item {
                 typeTag.putInt(EXTRACT_CHANNEL, dynamic.extractChannel().ordinal());
                 typeTag.putInt(REDSTONE_CONTROL, dynamic.control().ordinal());
                 typeTag.putInt(REDSTONE_CHANNEL, dynamic.redstoneChannel().ordinal());
+
+                if (conduitType instanceof ItemConduitType itemConduitType) {
+                    ItemSidedData sidedData = bundle.getNodeFor(itemConduitType).getConduitData().get(face);
+                    typeTag.putBoolean(ROUND_ROBIN, sidedData.isRoundRobin);
+                    typeTag.putBoolean(SELF_FEED, sidedData.isSelfFeed);
+                    typeTag.putInt(PRIORITY, sidedData.getPriority());
+                }
             } else {
                 typeTag.putBoolean(IS_INSERT, false);
                 typeTag.putBoolean(IS_EXTRACT, false);
@@ -133,6 +145,13 @@ public class ConduitProbeItem extends Item {
                 wasConnected ? connectionState.filterExtract() : ItemStack.EMPTY, wasConnected ? connectionState.upgradeExtract() : ItemStack.EMPTY
             );
             conduitBlock.handleConnectionStateUpdate(face, conduitType, newState);
+
+            if (conduitType instanceof ItemConduitType itemConduitType && typeTag.contains(ROUND_ROBIN)) {
+                ItemSidedData sidedData = bundle.getNodeFor(itemConduitType).getConduitData().compute(face);
+                sidedData.isRoundRobin = typeTag.getBoolean(ROUND_ROBIN);
+                sidedData.isSelfFeed = typeTag.getBoolean(SELF_FEED);
+                sidedData.setPriority(typeTag.getInt(PRIORITY));
+            }
         });
         conduitBlock.setChanged();
         conduitBlock.updateClient();
