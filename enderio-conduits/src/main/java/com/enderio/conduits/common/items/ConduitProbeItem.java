@@ -4,9 +4,18 @@ import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.network.C2SSyncProbeStatePacket;
+import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.conduits.api.connection.config.ConnectionConfig;
+import com.enderio.conduits.api.connection.config.IOConnectionConfig;
+import com.enderio.conduits.api.connection.config.RedstoneSensitiveConnectionConfig;
+import com.enderio.conduits.common.conduit.type.item.ItemConduitConnectionConfig;
+import com.enderio.conduits.common.conduit.type.fluid.FluidConduitConnectionConfig;
+import com.enderio.conduits.common.conduit.type.energy.EnergyConduitConnectionConfig;
+import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitConnectionConfig;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -17,6 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipContext;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -64,7 +74,7 @@ public class ConduitProbeItem extends Item {
 
     private void handleCopy(ConduitBundleBlockEntity conduitBlock, Direction face, ItemStack itemStack) {
         // Create probe config data
-        ProbeConfigData configData = new ProbeConfigData(new HashMap<>(), true, true);
+        ProbeConfigData configData = new ProbeConfigData(new HashMap<>());
 
         // Get conduits and copy conduit data
         var conduits = conduitBlock.getConduits();
@@ -73,21 +83,42 @@ public class ConduitProbeItem extends Item {
         }
 
         conduits.forEach(conduitType -> {
-            var connectionState = conduitBlock.getConnectionConfig(conduitType, face);
+            ConnectionConfig connectionConfig = conduitBlock.getConnectionConfig(conduitType, face);
             CompoundTag typeTag = new CompoundTag();
 
-            if (connectionState != null) {
-                // Copy connection state data
-                typeTag.putBoolean("is_insert", connectionState.isConnected());
-                typeTag.putBoolean("is_extract", connectionState.isConnected());
-                // Add more data copying as needed
-            } else {
-                typeTag.putBoolean("is_insert", false);
-                typeTag.putBoolean("is_extract", false);
+            if (connectionConfig instanceof IOConnectionConfig ioConfig) {
+                typeTag.putBoolean("is_insert", ioConfig.isInsert());
+                typeTag.putBoolean("is_extract", ioConfig.isExtract());
+                typeTag.putInt("insert_channel", ioConfig.insertChannel().ordinal());
+                typeTag.putInt("extract_channel", ioConfig.extractChannel().ordinal());
+
+                if (ioConfig instanceof ItemConduitConnectionConfig itemConfig) {
+                    typeTag.putBoolean("is_round_robin", itemConfig.isRoundRobin());
+                    typeTag.putBoolean("is_self_feed", itemConfig.isSelfFeed());
+                    typeTag.putInt("priority", itemConfig.priority());
+                }
+                else if (ioConfig instanceof FluidConduitConnectionConfig fluidConfig) {
+                    typeTag.putInt("insert_priority", fluidConfig.insertPriority());
+                }
+                else if (ioConfig instanceof EnergyConduitConnectionConfig energyConfig) {
+                    typeTag.putInt("priority", energyConfig.priority());
+                }
+                else if (ioConfig instanceof RedstoneConduitConnectionConfig redstoneConfig) {
+                    typeTag.putBoolean("is_strong_output_signal", redstoneConfig.isStrongOutputSignal());
+                }
+            }
+            // TODO: Check if AE2/RS conduits are capable of being disconnected manually
+            // else {
+            //     typeTag.putBoolean("is_connected", connectionConfig.isConnected());
+            // }
+
+            if (connectionConfig instanceof RedstoneSensitiveConnectionConfig redstoneSensitiveConfig) {
+                typeTag.putInt("extract_redstone_control", redstoneSensitiveConfig.extractRedstoneControl().ordinal());
+                typeTag.putInt("extract_redstone_channel", redstoneSensitiveConfig.extractRedstoneChannel().ordinal());
             }
 
             ResourceLocation conduitKey = ResourceLocation.parse(conduitType.getRegisteredName());
-            configData.conduitData().put(conduitKey, typeTag);
+            configData.conduitData().put(conduitKey, typeTag);            
         });
 
         // Store the config data in the item stack
@@ -128,14 +159,7 @@ public class ConduitProbeItem extends Item {
             System.out.println("wrong item, no hover");
             return;
         }
-
-        // StringBuilder builder = new StringBuilder();
-        // for (String s : getState(stack).toString().toLowerCase().split("_")) {
-        //     builder.append(StringUtils.capitalize(s));
-        //     builder.append(" ");
-        // }
-        // builder.deleteCharAt(builder.length() - 1);
-        tooltipComponents.add(ConduitLang.CONDUIT_PROBE_MODE_TOOLTIP);
+        tooltipComponents.add(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MODE_TOOLTIP, Component.literal(getStateText(getState(stack)))));
 
         // Add info about stored data if any
         ProbeConfigData configData = stack.get(ConduitComponents.PROBE_CONFIG);
@@ -163,7 +187,14 @@ public class ConduitProbeItem extends Item {
         State newState = State.values()[(currentState.ordinal() + 1) % State.values().length];
         setState(stack, newState, syncToServer);
 
-        System.out.println(String.format("switch state to %s", newState));
+        System.out.println(String.format("switch state to %s", getStateText(newState)));
+    }
+
+    public static String getStateText(State state) {
+        return switch (state) {
+            case PROBE -> ConduitLang.CONDUIT_PROBE_STATE_PROBE.getString();
+            case COPY_PASTE -> ConduitLang.CONDUIT_PROBE_STATE_COPY_PASTE.getString();
+        };
     }
 
     public enum State {
@@ -180,24 +211,18 @@ public class ConduitProbeItem extends Item {
             .cast();
     }
 
-    public record ProbeConfigData(Map<ResourceLocation, CompoundTag> conduitData, boolean isCopyMode, boolean includeFilters) {
+    public record ProbeConfigData(Map<ResourceLocation, CompoundTag> conduitData) {
         public static final Codec<ProbeConfigData> CODEC = RecordCodecBuilder.create(
             componentInstance -> componentInstance
                 .group(
                     Codec.unboundedMap(ResourceLocation.CODEC, CompoundTag.CODEC)
                         .fieldOf("conduit_data")
-                        .forGetter(ProbeConfigData::conduitData),
-                    Codec.BOOL.fieldOf("is_copy_mode").forGetter(ProbeConfigData::isCopyMode),
-                    Codec.BOOL.fieldOf("include_filters").forGetter(ProbeConfigData::includeFilters))
+                        .forGetter(ProbeConfigData::conduitData))
                 .apply(componentInstance, ProbeConfigData::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, ProbeConfigData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, ByteBufCodecs.COMPOUND_TAG),
             ProbeConfigData::conduitData,
-            ByteBufCodecs.BOOL,
-            ProbeConfigData::isCopyMode,
-            ByteBufCodecs.BOOL,
-            ProbeConfigData::includeFilters,
             ProbeConfigData::new);
     }
 }

@@ -96,6 +96,10 @@ public class ConduitLang {
 
     public static final MutableComponent CONDUIT_PROBE_MODE_TOOLTIP = addTranslation("tooltip",
             EnderIO.loc("conduit_probe.mode"), "Mode: %s");
+    public static final Component CONDUIT_PROBE_STATE_PROBE = addTranslation("tooltip",
+            EnderIO.loc("conduit_probe.state.probe"), "Probe");
+    public static final Component CONDUIT_PROBE_STATE_COPY_PASTE = addTranslation("tooltip",
+            EnderIO.loc("conduit_probe.state.copy_paste"), "Copy/Paste");
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
         return EnderIOConduits.REGILITE.addTranslation(prefix, id, translation);
