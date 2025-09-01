@@ -6,12 +6,10 @@ import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.network.C2SSyncProbeStatePacket;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
-import com.enderio.conduits.api.Conduit;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -25,11 +23,12 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.apache.commons.lang3.tuple.Pair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ConduitProbeItem extends Item {
 
@@ -67,6 +66,8 @@ public class ConduitProbeItem extends Item {
         return super.onItemUseFirst(stack, pContext);
     }
 
+    private static final Set<String> SKIP_FIELDS = Set.of("DEFAULT", "CODEC", "STREAM_CODEC", "TYPE");
+
     private void handleCopy(ConduitBundleBlockEntity conduitBlock, Direction face, ItemStack itemStack, Player player) {
         ProbeConfigData configData = new ProbeConfigData(new HashMap<>());
 
@@ -81,14 +82,28 @@ public class ConduitProbeItem extends Item {
         itemStack.set(ConduitComponents.PROBE_CONFIG, configData);
         if (!configData.conduitData().isEmpty()) {
             StringBuilder sb = new StringBuilder();
+            // sb.append("\n");
             configData.conduitData().forEach((conduitKey, connectionConfig) -> {
                 String conduitName = conduitKeyToDisplayName(conduitKey);
-                sb.append(conduitName + " " + connectionConfig + "\n\n");
+                sb.append("\n" + conduitName + ":\n");
+
+                for (var field : connectionConfig.getClass().getDeclaredFields()) {
+                    if (SKIP_FIELDS.contains(field.getName())) continue;
+                    sb.append(" - " + field.getName() + ": ");
+                    try {
+                        field.setAccessible(true);
+                        Object value = field.get(connectionConfig);
+                        sb.append(value);
+                    } catch (IllegalAccessException e) {
+                        sb.append(": <unable to access>");
+                    }
+                    sb.append("\n");
+                }
             });
             player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_COPIED, sb.toString()));
         }
     }
-    
+
     public void handlePaste(ConduitBundleBlockEntity conduitBlock, Direction face, ItemStack itemStack, Player player) {
         ProbeConfigData configData = itemStack.get(ConduitComponents.PROBE_CONFIG);
         if (configData == null) return;
