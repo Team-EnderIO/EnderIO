@@ -38,24 +38,4 @@ public class InputEventListener {
             event.setCanceled(cancelScroll);
         }
     }
-    
-    @SubscribeEvent
-    public static void inputEvent(InputEvent.Key event) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) {
-            return;
-        }
-
-        ItemStack heldMainHand = player.getMainHandItem();
-        ItemStack heldOffHand = player.getOffhandItem();
-        
-        // if (KeyBindings.MODE_CHANGE.consumeClick()) {
-        //     if (heldMainHand.getItem() instanceof ConduitProbeItem) {
-        //         ConduitProbeItem.switchState(heldMainHand, true);
-        //     }
-        //     if (heldOffHand.getItem() instanceof ConduitProbeItem) {
-        //         ConduitProbeItem.switchState(heldOffHand, true);
-        //     }
-        // }
-    }
 }

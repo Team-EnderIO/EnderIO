@@ -187,7 +187,7 @@ public class ConduitRecipes extends RecipeProvider {
                 .define('C', Items.COMPARATOR)
                 .define('R', ConduitIngredient.of(redstoneConduit))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(recipeOutput);
+                .save(recipeOutput, EnderIO.loc("conduit_probe"));
     }
 
     private void buildFilterErasureRecipes(RecipeOutput recipeOutput) {
