@@ -53,5 +53,7 @@
   "tooltip.enderio.conduit.item.raw_rate": "Rate: %s Items/network tick",
   "tooltip.enderio.conduit_facade.blast_resist": "Hardened: Resists breaking and explosions",
   "tooltip.enderio.conduit_facade.transparent": "Transparent: Hides conduits when painted with a translucent block",
-  "tooltip.enderio.conduit_probe.mode": "Mode: %s"
+  "tooltip.enderio.conduit_probe.mode": "Mode: %s",
+  "tooltip.enderio.conduit_probe.state.copy_paste": "Copy/Paste",
+  "tooltip.enderio.conduit_probe.state.probe": "Probe"
 }

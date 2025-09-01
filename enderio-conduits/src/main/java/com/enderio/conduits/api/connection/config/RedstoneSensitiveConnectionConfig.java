@@ -16,15 +16,4 @@ public interface RedstoneSensitiveConnectionConfig {
      * @return the redstone signal(s) this conduit is sensitive to.
      */
     List<DyeColor> getRedstoneSignalColors();
-
-    /**
-     * @return the redstone control mode for taking resources from the connected block
-     */
-    RedstoneControl extractRedstoneControl();
-
-    /**
-     * @apiNote this may overlap with getRedstoneSignalColors() when it is implemented - use that instead
-     * @return the redstone signal color this connection is sensitive to for taking resources from the connected block
-     */
-    DyeColor extractRedstoneChannel();
 }

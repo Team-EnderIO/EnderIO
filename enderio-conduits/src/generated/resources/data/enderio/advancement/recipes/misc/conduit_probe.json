@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_ingrediant": {
+    "has_ingredient": {
       "conditions": {
         "items": [
           {
-            "items": "enderio:conductive_alloy_ingot"
+            "items": "enderio:conduit_binder"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_ingrediant"
+      "has_ingredient"
     ]
   ],
   "rewards": {
