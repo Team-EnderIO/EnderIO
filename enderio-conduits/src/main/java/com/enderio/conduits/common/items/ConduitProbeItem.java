@@ -68,12 +68,8 @@ public class ConduitProbeItem extends Item {
         ProbeConfigData configData = new ProbeConfigData(new HashMap<>());
 
         var conduits = conduitBlock.getConduits();
-        System.out.println(face);
-
         conduits.forEach(conduitType -> {
             ConnectionConfig connectionConfig = conduitBlock.getConnectionConfig(conduitType, face);
-
-            System.out.println(connectionConfig);
             if (connectionConfig != null) {
                 ResourceLocation conduitKey = ResourceLocation.parse(conduitType.getRegisteredName());
                 configData.conduitData().put(conduitKey, connectionConfig);
@@ -84,7 +80,7 @@ public class ConduitProbeItem extends Item {
     
     public void handlePaste(ConduitBundleBlockEntity conduitBlock, Direction face, ItemStack itemStack) {
         ProbeConfigData configData = itemStack.get(ConduitComponents.PROBE_CONFIG);
-        if (configData == null || configData.conduitData().isEmpty()) {
+        if (configData == null) {
             return;
         }
 
@@ -108,7 +104,7 @@ public class ConduitProbeItem extends Item {
         tooltipComponents.add(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MODE_TOOLTIP, getStateText(getState(stack))));
         ProbeConfigData configData = stack.get(ConduitComponents.PROBE_CONFIG);
         if (configData != null && !configData.conduitData().isEmpty()) {
-            tooltipComponents.add(Component.literal("Contains copied conduit data").withStyle(ChatFormatting.GRAY));
+            tooltipComponents.add(ConduitLang.CONDUIT_PROBE_CONTAINS_COPIED.withStyle(ChatFormatting.GRAY));
         }
     }
 

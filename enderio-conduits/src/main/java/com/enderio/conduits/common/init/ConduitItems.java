@@ -106,7 +106,7 @@ public class ConduitItems {
     }
 
     public static final RegiliteItem<ConduitProbeItem> CONDUIT_PROBE = ITEM_REGISTRY
-        .registerItem("conduit_probe", props -> new ConduitProbeItem(props))
+        .registerItem("conduit_probe", props -> new ConduitProbeItem(props.stacksTo(1)))
         .setModelProvider((prov, ctx) -> {})
         .setTab(EIOCreativeTabs.CONDUITS);
 
