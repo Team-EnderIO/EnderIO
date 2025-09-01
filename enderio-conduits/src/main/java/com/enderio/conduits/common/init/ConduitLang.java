@@ -96,12 +96,18 @@ public class ConduitLang {
 
     public static final MutableComponent CONDUIT_PROBE_MODE_TOOLTIP = addTranslation("tooltip",
             EnderIO.loc("conduit_probe.mode"), "Mode: %s");
+    public static final MutableComponent CONDUIT_PROBE_CONTAINS_COPIED = addTranslation("tooltip",
+            EnderIO.loc("conduit_probe.mode.contains_copied"), "Contains copied conduit data:");
     public static final MutableComponent CONDUIT_PROBE_STATE_PROBE = addTranslation("tooltip",
             EnderIO.loc("conduit_probe.state.probe"), "Probe");
     public static final MutableComponent CONDUIT_PROBE_STATE_COPY_PASTE = addTranslation("tooltip",
             EnderIO.loc("conduit_probe.state.copy_paste"), "Copy/Paste");
-            public static final MutableComponent CONDUIT_PROBE_CONTAINS_COPIED = addTranslation("tooltip",
-            EnderIO.loc("conduit_probe.contains_copied"), "Contains copied conduit data");
+    public static final MutableComponent CONDUIT_PROBE_MESSAGE_SWITCHED_MODE = addTranslation("gui",
+            EnderIO.loc("conduit_probe.message.switched_mode"), "Switched conduit probe mode to %s");
+    public static final MutableComponent CONDUIT_PROBE_MESSAGE_COPIED = addTranslation("gui",
+            EnderIO.loc("conduit_probe.message.copied"), "Copied data: %s");
+    public static final MutableComponent CONDUIT_PROBE_MESSAGE_PASTED = addTranslation("gui",
+            EnderIO.loc("conduit_probe.message.pasted"), "Pasted data: %s");
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
         return EnderIOConduits.REGILITE.addTranslation(prefix, id, translation);

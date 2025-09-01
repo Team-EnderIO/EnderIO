@@ -6,15 +6,18 @@ import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.network.C2SSyncProbeStatePacket;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
+import com.enderio.conduits.api.Conduit;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +25,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.PacketDistributor;
-
+import org.apache.commons.lang3.tuple.Pair;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +40,8 @@ public class ConduitProbeItem extends Item {
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext pContext) {
         BlockEntity block = pContext.getLevel().getBlockEntity(pContext.getClickedPos());
+        Player player = pContext.getPlayer();
+        if (player == null) return super.onItemUseFirst(stack, pContext);
 
         if (block instanceof ConduitBundleBlockEntity conduit) {
             if (pContext.getLevel().isClientSide()) return InteractionResult.SUCCESS;
@@ -46,16 +52,13 @@ public class ConduitProbeItem extends Item {
                 switch (getState(stack)) {
                     case COPY_PASTE -> {
                         if (pContext.isSecondaryUseActive()) {
-                            handleCopy(conduit, face, stack);
+                            handleCopy(conduit, face, stack, player);
                         } else {
-                            handlePaste(conduit, face, stack);
+                            handlePaste(conduit, face, stack, player);
                         }
                     }
                     case PROBE -> {
-                        var player = pContext.getPlayer();
-                        if (player != null) {
-                            player.sendSystemMessage(Component.literal("This feature isn't implemented yet.").withStyle(ChatFormatting.RED));
-                        }
+                        player.sendSystemMessage(Component.literal("This feature isn't implemented yet.").withStyle(ChatFormatting.RED));
                     }
                 }
                 return InteractionResult.SUCCESS;
@@ -64,35 +67,47 @@ public class ConduitProbeItem extends Item {
         return super.onItemUseFirst(stack, pContext);
     }
 
-    private void handleCopy(ConduitBundleBlockEntity conduitBlock, Direction face, ItemStack itemStack) {
+    private void handleCopy(ConduitBundleBlockEntity conduitBlock, Direction face, ItemStack itemStack, Player player) {
         ProbeConfigData configData = new ProbeConfigData(new HashMap<>());
 
         var conduits = conduitBlock.getConduits();
-        conduits.forEach(conduitType -> {
-            ConnectionConfig connectionConfig = conduitBlock.getConnectionConfig(conduitType, face);
+        conduits.forEach(conduit -> {
+            ConnectionConfig connectionConfig = conduitBlock.getConnectionConfig(conduit, face);
             if (connectionConfig != null) {
-                ResourceLocation conduitKey = ResourceLocation.parse(conduitType.getRegisteredName());
+                ResourceLocation conduitKey = ResourceLocation.parse(conduit.getRegisteredName());
                 configData.conduitData().put(conduitKey, connectionConfig);
             }
         });
         itemStack.set(ConduitComponents.PROBE_CONFIG, configData);
+        if (!configData.conduitData().isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            configData.conduitData().forEach((conduitKey, connectionConfig) -> {
+                String conduitName = conduitKeyToDisplayName(conduitKey);
+                sb.append(conduitName + " " + connectionConfig + "\n\n");
+            });
+            player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_COPIED, sb.toString()));
+        }
     }
     
-    public void handlePaste(ConduitBundleBlockEntity conduitBlock, Direction face, ItemStack itemStack) {
+    public void handlePaste(ConduitBundleBlockEntity conduitBlock, Direction face, ItemStack itemStack, Player player) {
         ProbeConfigData configData = itemStack.get(ConduitComponents.PROBE_CONFIG);
-        if (configData == null) {
-            return;
-        }
+        if (configData == null) return;
 
+        List<String> pastedConduits = new ArrayList<String>();
         var conduits = conduitBlock.getConduits();
-        for (var conduit : conduits) {
+        conduits.forEach(conduit -> {
             ResourceLocation conduitKey = ResourceLocation.parse(conduit.getRegisteredName());
             ConnectionConfig storedConfig = configData.conduitData().get(conduitKey);
             if (storedConfig != null) {
                 conduitBlock.setConnectionConfig(conduit, face, storedConfig);
+                pastedConduits.add(conduitKeyToDisplayName(conduitKey));
             }
-        }
+        });
 
+        if (!pastedConduits.isEmpty()) {
+            String pastedConduitsString = String.join(", ", pastedConduits);
+            player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_PASTED, pastedConduitsString));
+        }
         conduitBlock.setChanged();
         conduitBlock.updateShape();
     }
@@ -104,7 +119,11 @@ public class ConduitProbeItem extends Item {
         tooltipComponents.add(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MODE_TOOLTIP, getStateText(getState(stack))));
         ProbeConfigData configData = stack.get(ConduitComponents.PROBE_CONFIG);
         if (configData != null && !configData.conduitData().isEmpty()) {
+            
             tooltipComponents.add(ConduitLang.CONDUIT_PROBE_CONTAINS_COPIED.withStyle(ChatFormatting.GRAY));
+            configData.conduitData().keySet().forEach(conduitKey -> {
+                tooltipComponents.add(Component.literal("- " + conduitKeyToDisplayName(conduitKey)).withStyle(ChatFormatting.DARK_GRAY));
+            });
         }
     }
 
@@ -119,12 +138,11 @@ public class ConduitProbeItem extends Item {
         }
     }
 
-    public static void switchState(ItemStack stack, boolean syncToServer) {
+    public static void switchState(ItemStack stack, Player player, boolean syncToServer) {
         State currentState = getState(stack);
         State newState = State.values()[(currentState.ordinal() + 1) % State.values().length];
         setState(stack, newState, syncToServer);
-
-        System.out.println(String.format("switch state to %s", getStateText(newState)));
+        player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_SWITCHED_MODE, getStateText(newState)));
     }
 
     public static Component getStateText(State state) {
@@ -132,6 +150,11 @@ public class ConduitProbeItem extends Item {
             case PROBE -> ConduitLang.CONDUIT_PROBE_STATE_PROBE;
             case COPY_PASTE -> ConduitLang.CONDUIT_PROBE_STATE_COPY_PASTE;
         };
+    }
+
+    private String conduitKeyToDisplayName(ResourceLocation conduitKey) {
+        String translationKey = "item." + conduitKey.getNamespace() + ".conduit." + conduitKey.getPath();
+        return Component.translatable(translationKey).getString();
     }
 
     public enum State {

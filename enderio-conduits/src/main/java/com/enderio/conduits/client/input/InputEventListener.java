@@ -28,11 +28,11 @@ public class InputEventListener {
         if (Math.abs(event.getScrollDeltaY()) > 0 && player.isShiftKeyDown()) {
             boolean cancelScroll = false;
             if (heldMainHand.getItem() instanceof ConduitProbeItem) {
-                ConduitProbeItem.switchState(heldMainHand, true);
+                ConduitProbeItem.switchState(heldMainHand, player, true);
                 cancelScroll = true;
             }
             if (heldOffHand.getItem() instanceof ConduitProbeItem) {
-                ConduitProbeItem.switchState(heldOffHand, true);
+                ConduitProbeItem.switchState(heldOffHand, player, true);
                 cancelScroll = true;
             }
             event.setCanceled(cancelScroll);
