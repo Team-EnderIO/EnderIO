@@ -76,7 +76,18 @@ public class ConduitProbeItem extends Item {
             ConnectionConfig connectionConfig = conduitBlock.getConnectionConfig(conduit, face);
             if (connectionConfig != null) {
                 ResourceLocation conduitKey = ResourceLocation.parse(conduit.getRegisteredName());
-                configData.conduitData().put(conduitKey, connectionConfig);
+                var ops = net.minecraft.resources.RegistryOps.create(
+                    net.minecraft.nbt.NbtOps.INSTANCE,
+                    conduitBlock.getLevel().registryAccess()
+                );
+                var nbt = ConnectionConfig.GENERIC_CODEC
+                    .encodeStart(ops, connectionConfig)
+                    .result();
+                nbt.flatMap(tag -> ConnectionConfig.GENERIC_CODEC
+                        .parse(ops, tag)
+                        .result()
+                )
+                .ifPresent(cloned -> configData.conduitData().put(conduitKey, cloned));
             }
         });
         itemStack.set(ConduitComponents.PROBE_CONFIG, configData);
