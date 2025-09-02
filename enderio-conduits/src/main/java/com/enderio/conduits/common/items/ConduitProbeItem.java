@@ -12,6 +12,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -91,15 +92,16 @@ public class ConduitProbeItem extends Item {
             }
         });
         itemStack.set(ConduitComponents.PROBE_CONFIG, configData);
+
         if (!configData.conduitData().isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            // sb.append("\n");
+            MutableComponent message = Component.empty();
             configData.conduitData().forEach((conduitKey, connectionConfig) -> {
                 String conduitName = conduitKeyToDisplayName(conduitKey);
-                sb.append("\n" + conduitName + ":\n");
+                message.append(Component.literal("\n" + conduitName + ":\n").withStyle(ChatFormatting.UNDERLINE));
 
                 for (var field : connectionConfig.getClass().getDeclaredFields()) {
                     if (SKIP_FIELDS.contains(field.getName())) continue;
+                    StringBuilder sb = new StringBuilder();
                     sb.append(" - " + field.getName() + ": ");
                     try {
                         field.setAccessible(true);
@@ -109,9 +111,10 @@ public class ConduitProbeItem extends Item {
                         sb.append(": <unable to access>");
                     }
                     sb.append("\n");
+                    message.append(Component.literal(sb.toString()).withStyle(ChatFormatting.GRAY));
                 }
             });
-            player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_COPIED, sb.toString()));
+            player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_COPIED, message));
         }
     }
 
