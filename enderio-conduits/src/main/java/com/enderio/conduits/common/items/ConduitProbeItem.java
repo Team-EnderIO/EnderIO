@@ -131,7 +131,7 @@ public class ConduitProbeItem extends Item {
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
 
-        tooltipComponents.add(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MODE_TOOLTIP, getState(stack).getStateText()));
+        tooltipComponents.add(TooltipUtil.styledWithArgs(ConduitLang.CONDUIT_PROBE_MODE_TOOLTIP, getState(stack).getStateText()));
         ProbeConfigData configData = stack.get(ConduitComponents.PROBE_CONFIG);
         if (configData != null && !configData.conduitData().isEmpty()) {
             
