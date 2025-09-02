@@ -13,7 +13,7 @@
       "conduit_type": "enderio:item"
     },
     "P": {
-      "tag": "c:glass_blocks/clear"
+      "tag": "c:glass_blocks"
     },
     "R": {
       "type": "enderio:conduit",
