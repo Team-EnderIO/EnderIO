@@ -101,9 +101,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     @Override
     public void onClick(double pMouseX, double pMouseY) {
-        if (isExpanded) {
-            selectNext(mouseButton != InputConstants.MOUSE_BUTTON_RIGHT);
-        } else {
+        selectNext(mouseButton != InputConstants.MOUSE_BUTTON_RIGHT);
+        if (!isExpanded) {
             isExpanded = true;
             Minecraft.getInstance().pushGuiLayer(selection);
         }
