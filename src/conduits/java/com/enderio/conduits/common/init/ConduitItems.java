@@ -108,6 +108,7 @@ public class ConduitItems {
                 .end();
         })
         .tab(EIOCreativeTabs.GEAR)
+        .properties(props -> props.stacksTo(1))
         .register();
 
     private static ItemEntry<Item> createConduitItem(Supplier<? extends ConduitType<?>> type, String itemName) {
