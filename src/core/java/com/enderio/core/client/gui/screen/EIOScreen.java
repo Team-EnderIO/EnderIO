@@ -81,13 +81,14 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         tooltips.clear();
+        System.out.println("Rendering background with image: " + getBackgroundImage());
         guiGraphics.blit(getBackgroundImage(), getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
     }
 
     @Override
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
         if (pKeyCode == 256) { //ESC has priority
-            Minecraft.getInstance().player.closeContainer();
+            closeContainer();
         }
         for (EditBox editBox : editBoxList) {
             if (editBox.keyPressed(pKeyCode, pScanCode, pModifiers) || editBox.canConsumeInput()) {
@@ -159,5 +160,12 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     public void addTooltip(LateTooltipData data) {
         tooltips.add(data);
+    }
+
+    protected void closeContainer() {
+        var player = Minecraft.getInstance().player;
+        if (player != null) {
+            player.closeContainer();
+        }
     }
 }

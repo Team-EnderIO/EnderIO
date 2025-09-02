@@ -5,6 +5,8 @@ import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.conduits.common.menu.RedstoneTimerFilterMenu;
 import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.client.gui.widgets.EIOImageButton;
+
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -15,6 +17,7 @@ public class RedstoneTimerFilterScreen extends EIOScreen<RedstoneTimerFilterMenu
 
     private static final Vector2i BG_SIZE = new Vector2i(183,201);
     private static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/40/item_filter.png");
+    private static final ResourceLocation BACK_TEXTURE = EnderIO.loc("textures/gui/icons/back.png");
 
     public RedstoneTimerFilterScreen(RedstoneTimerFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -35,6 +38,7 @@ public class RedstoneTimerFilterScreen extends EIOScreen<RedstoneTimerFilterMenu
             .pos(this.leftPos + 60, this.topPos + 41)
             .size(60, 20)
             .build());
+        addRenderableWidget(new EIOImageButton(this, getGuiLeft() + 3, getGuiTop() + 3, 16, 16, 0, 0, 0, BACK_TEXTURE, button -> closeContainer()));
     }
 
     @Override
