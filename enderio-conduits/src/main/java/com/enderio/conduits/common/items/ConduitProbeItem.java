@@ -131,7 +131,7 @@ public class ConduitProbeItem extends Item {
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
 
-        tooltipComponents.add(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MODE_TOOLTIP, getStateText(getState(stack))));
+        tooltipComponents.add(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MODE_TOOLTIP, getState(stack).getStateText()));
         ProbeConfigData configData = stack.get(ConduitComponents.PROBE_CONFIG);
         if (configData != null && !configData.conduitData().isEmpty()) {
             
@@ -157,14 +157,7 @@ public class ConduitProbeItem extends Item {
         State currentState = getState(stack);
         State newState = State.values()[(currentState.ordinal() + 1) % State.values().length];
         setState(stack, newState, syncToServer);
-        player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_SWITCHED_MODE, getStateText(newState)));
-    }
-
-    public static Component getStateText(State state) {
-        return switch (state) {
-            case PROBE -> ConduitLang.CONDUIT_PROBE_STATE_PROBE;
-            case COPY_PASTE -> ConduitLang.CONDUIT_PROBE_STATE_COPY_PASTE;
-        };
+        player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_SWITCHED_MODE, newState.getStateText()));
     }
 
     private String conduitKeyToDisplayName(ResourceLocation conduitKey) {
@@ -175,6 +168,13 @@ public class ConduitProbeItem extends Item {
     public enum State {
         PROBE,
         COPY_PASTE;
+
+        public Component getStateText() {
+            return switch (this) {
+                case PROBE -> ConduitLang.CONDUIT_PROBE_STATE_PROBE;
+                case COPY_PASTE -> ConduitLang.CONDUIT_PROBE_STATE_COPY_PASTE;
+            };
+        }
 
         public static final Codec<State> CODEC = Codec.STRING.xmap(
             State::valueOf,
