@@ -217,7 +217,18 @@ public class EIOLang {
     // region Misc Tooltips
 
     public static final MutableComponent SHOW_DETAIL_TOOLTIP = REGISTRATE.addLang("tooltip", EnderIO.loc("gui.show_advanced_tooltip"), "<Hold Shift>");
-    public static final Component CONDUIT_PROBE_PROBE_TOOLTIP = REGISTRATE.addLang("tooltip", EnderIO.loc("conduit_probe.mode"), "Mode: %1$s");
+
+    // endregion
+
+    // region Conduit Probe
+
+    public static final MutableComponent CONDUIT_PROBE_MODE = REGISTRATE.addLang("tooltip", EnderIO.loc("conduit_probe.mode"), "Mode: %s");
+    public static final Component CONDUIT_PROBE_PROBE = REGISTRATE.addLang("tooltip", EnderIO.loc("conduit_probe.mode.probe"), "Probe");
+    public static final Component CONDUIT_PROBE_COPY_PASTE = REGISTRATE.addLang("tooltip", EnderIO.loc("conduit_probe.mode.copy_paste"), "Copy/Paste");
+    public static final MutableComponent CONDUIT_PROBE_CONTAINS_COPIED = REGISTRATE.addLang("tooltip", EnderIO.loc("conduit_probe.mode.contains_copied"), "Contains copied conduit data:");
+    public static final MutableComponent CONDUIT_PROBE_SWITCHED_MODE = REGISTRATE.addLang("gui", EnderIO.loc("conduit_probe.mode.switched"), "Switched conduit probe mode to %s");
+    public static final MutableComponent CONDUIT_PROBE_MESSAGE_COPIED = REGISTRATE.addLang("gui", EnderIO.loc("conduit_probe.message.copied"), "Copied data: %s");
+    public static final MutableComponent CONDUIT_PROBE_MESSAGE_PASTED = REGISTRATE.addLang("gui", EnderIO.loc("conduit_probe.message.pasted"), "Pasted data: %s");
 
     // endregion
     
