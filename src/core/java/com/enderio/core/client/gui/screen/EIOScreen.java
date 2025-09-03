@@ -81,7 +81,6 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         tooltips.clear();
-        System.out.println("Rendering background with image: " + getBackgroundImage());
         guiGraphics.blit(getBackgroundImage(), getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
     }
 
