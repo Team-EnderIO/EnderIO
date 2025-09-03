@@ -26,7 +26,7 @@ public class RedstoneTimerFilterScreen extends EIOScreen<RedstoneTimerFilterMenu
     @Override
     protected void init() {
         super.init();
-        EditBox pWidget = new EditBox(this.font, this.leftPos + 60, this.topPos + 20, 60, 20, Component.literal("" + getMenu().getFilter().getMaxTicks())) {
+        EditBox pWidget = new EditBox(this.font, this.leftPos + 65, this.topPos + 40, 60, 20, Component.literal("" + getMenu().getFilter().getMaxTicks())) {
             @Override
             public boolean charTyped(char pCodePoint, int pModifiers) {
                 return Character.isDigit(pCodePoint) && super.charTyped(pCodePoint, pModifiers);
@@ -35,7 +35,7 @@ public class RedstoneTimerFilterScreen extends EIOScreen<RedstoneTimerFilterMenu
         pWidget.setValue("" + getMenu().getFilter().getMaxTicks());
         addRenderableWidget(pWidget);
         addRenderableWidget(Button.builder(EIOLang.CONFIRM, pButton -> getMenu().setTimer(pWidget.getValue()))
-            .pos(this.leftPos + 60, this.topPos + 41)
+            .pos(this.leftPos + 65, this.topPos + 62)
             .size(60, 20)
             .build());
         addRenderableWidget(new EIOImageButton(this, getGuiLeft() + 3, getGuiTop() + 3, 16, 16, 0, 0, 0, BACK_TEXTURE, button -> closeContainer()));
