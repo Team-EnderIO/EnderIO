@@ -1,7 +1,7 @@
 package com.enderio.core.client.gui.widgets;
 
-import com.enderio.api.misc.Vector2i;
 import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.EnderCore;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.network.chat.Component;
@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 public class EIOImageButton extends ImageButton {
 
     private final EIOScreen<?> addedOn;
+    private static final ResourceLocation BUTTON_TEXTURE = EnderCore.loc("textures/gui/checkbox.png");
 
     public EIOImageButton(EIOScreen<?> addedOn, int x, int y, int width, int height, int xTexStart, int yTexStart, ResourceLocation resourceLocation,
         OnPress onPress) {
@@ -39,7 +40,7 @@ public class EIOImageButton extends ImageButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        addedOn.renderSimpleArea(guiGraphics, new Vector2i(getX(), getY()), new Vector2i(getX() + getWidth(), getY() + getHeight()));
+        guiGraphics.blit(BUTTON_TEXTURE, getX(), getY(), this.width, this.height, this.isHovered ? 28 : 0, 0, 14, 14, 256, 256);
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
     }
 }

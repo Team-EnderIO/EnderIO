@@ -1,6 +1,7 @@
 package com.enderio.core.client.gui.widgets;
 
 import com.enderio.api.misc.Vector2i;
+import com.enderio.core.EnderCore;
 import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
@@ -19,6 +20,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ToggleImageButton<U extends Screen & IEnderScreen> extends AbstractWidget {
+
+    private static final ResourceLocation BUTTON_TEXTURE = EnderCore.loc("textures/gui/checkbox.png");
 
     private final U addedOn;
 
@@ -61,8 +64,7 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float partialTick) {
-        Vector2i pos = new Vector2i(getX(), getY());
-        addedOn.renderSimpleArea(guiGraphics, pos, pos.add(new Vector2i(width, height)));
+        guiGraphics.blit(BUTTON_TEXTURE, getX(), getY(), this.width, this.height, this.isHovered ? 28 : 0, 0, 14, 14, 256, 256);
 
         // Coordinates based on whether toggledOn or not
         int xTex = this.xTexStart;

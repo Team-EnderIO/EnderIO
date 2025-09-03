@@ -2,6 +2,7 @@ package com.enderio.core.client.gui.widgets;
 
 import com.enderio.api.misc.IIcon;
 import com.enderio.api.misc.Vector2i;
+import com.enderio.core.EnderCore;
 import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.enderio.core.client.gui.screen.IFullScreenListener;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -17,6 +18,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -28,6 +30,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnderScreen> extends AbstractWidget implements IFullScreenListener {
+
+    private static final ResourceLocation BUTTON_TEXTURE = EnderCore.loc("textures/gui/checkbox.png");
 
     private final Supplier<T> getter;
     private final Consumer<T> setter;
@@ -73,8 +77,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         for (SelectionWidget widget : icons.values()) {
             topLeft = topLeft.withX(Math.min(topLeft.x(), widget.getX()));
             topLeft = topLeft.withY(Math.min(topLeft.y(), widget.getY()));
-            bottomRight = bottomRight.withX(Math.max(bottomRight.x(), widget.getX() + widget.getWidth()));
-            bottomRight = bottomRight.withY(Math.max(bottomRight.y(), widget.getY() + widget.getHeight()));
+            bottomRight = bottomRight.withX(Math.max(bottomRight.x(), widget.getX() + widget.getWidth() - 2));
+            bottomRight = bottomRight.withY(Math.max(bottomRight.y(), widget.getY() + widget.getHeight() - 2));
         }
         expandTopLeft = topLeft.expand(-SPACE_BETWEEN_ELEMENTS);
         expandBottomRight = bottomRight.expand(SPACE_BETWEEN_ELEMENTS);
@@ -138,7 +142,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         }
 
         T icon = getter.get();
-        addedOn.renderIconBackground(guiGraphics, new Vector2i(getX(), getY()), icon);
+        guiGraphics.blit(BUTTON_TEXTURE, getX(), getY(), icon.getIconSize().x(), icon.getIconSize().y(), (this.isHovered || this.isExpanded) ? 28 : 0, 0, 14, 14, 256, 256);
         IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()), icon);
 
         if (isHoveredOrFocused() && tooltipDisplayCache != getter.get()) {
@@ -261,10 +265,10 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         @Override
         public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
             if (getter.get() != value) {
-                selection.renderIconBackground(guiGraphics, new Vector2i(getX(), getY()), value);
+                guiGraphics.blit(BUTTON_TEXTURE, getX(), getY(), value.getRenderSize().x(), value.getRenderSize().y(), this.isHovered ? 28 : 0, 0, 14, 14, 256, 256);
             } else {
                 guiGraphics.fill(getX(), getY(),getX() + width - 2,getY() + height - 2, 0xFF0020FF);
-                guiGraphics.fill(getX() +1, getY()+1, getX() + width - 3, getY() + height - 3, 0xFF8B8B8B);
+                guiGraphics.fill(getX() +1, getY()+1, getX() + width - 3, getY() + height - 3, 0xFF5A8A9A);
             }
             IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()), value);
 
