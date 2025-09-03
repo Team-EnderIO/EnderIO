@@ -139,7 +139,7 @@ public class ConduitProbeItem extends Item {
             }
             conduitData.put(conduitKey, typeTag);
 
-            message.append(Component.literal("\n" + conduitKeyToDisplayName(conduitKey) + ":\n").withStyle(ChatFormatting.UNDERLINE));
+            message.append(Component.literal("\n" + conduitKeyToDisplayName(conduitKey).getString() + ":\n").withStyle(ChatFormatting.UNDERLINE));
             typeTag.getAllKeys().forEach(key -> {
                 StringBuilder sb = new StringBuilder();
                 sb.append(" - " + key + ": ");
@@ -192,7 +192,7 @@ public class ConduitProbeItem extends Item {
                 sidedData.isSelfFeed = typeTag.getBoolean(SELF_FEED);
                 sidedData.setPriority(typeTag.getInt(PRIORITY));
             }
-            pastedConduits.add(conduitKeyToDisplayName(conduitKey));
+            pastedConduits.add(conduitKeyToDisplayName(conduitKey).getString());
         });
 
         if (!pastedConduits.isEmpty()) {
@@ -213,8 +213,7 @@ public class ConduitProbeItem extends Item {
         if (tag != null && (tag.get(CONDUIT_DATA) instanceof CompoundTag conduitData) && !conduitData.getAllKeys().isEmpty()) {
             tooltipComponents.add(EIOLang.CONDUIT_PROBE_CONTAINS_COPIED.withStyle(ChatFormatting.GRAY));
             conduitData.getAllKeys().forEach(conduitKey -> {
-                String displayName = conduitKeyToDisplayName(conduitKey);
-                tooltipComponents.add(Component.literal("- " + displayName).withStyle(ChatFormatting.DARK_GRAY));
+                tooltipComponents.add(Component.literal("- " + conduitKeyToDisplayName(conduitKey).getString()).withStyle(ChatFormatting.DARK_GRAY));
             });
         }
 
@@ -222,9 +221,9 @@ public class ConduitProbeItem extends Item {
     }
 
     // Can't use ResourceLocation because of backwards compatibility of conduitData
-    private String conduitKeyToDisplayName(String conduitKey) {
+    private Component conduitKeyToDisplayName(String conduitKey) {
         String translationKey = "item." + conduitKey.replace(":", ".");
-        return Component.translatable(translationKey).getString();
+        return Component.translatable(translationKey);
     }
 
     public enum State {
