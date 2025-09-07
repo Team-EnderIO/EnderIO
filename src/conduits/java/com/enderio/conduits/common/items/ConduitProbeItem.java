@@ -79,7 +79,9 @@ public class ConduitProbeItem extends Item {
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         BlockEntity block = context.getLevel().getBlockEntity(context.getClickedPos());
         Player player = context.getPlayer();
-        if (player == null) return InteractionResult.FAIL;
+        if (player == null) {
+            return InteractionResult.FAIL;
+        }
 
         if (block instanceof ConduitBlockEntity conduit) {
             if (context.getLevel().isClientSide()) return InteractionResult.SUCCESS;
@@ -170,7 +172,9 @@ public class ConduitProbeItem extends Item {
         bundle.getTypes().forEach(conduit -> {
             String conduitKey = ConduitType.getKey(conduit).toString();
             CompoundTag typeTag = conduitData.getCompound(conduitKey);
-            if (typeTag == null || typeTag.isEmpty()) return;
+            if (typeTag == null || typeTag.isEmpty()) {
+                return;
+            }
 
             ConnectionState prevConnectionState = bundle.getConnectionState(face, conduit);
             DynamicConnectionState connectionState = null;
@@ -205,7 +209,9 @@ public class ConduitProbeItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
-        if (!(stack.getItem() instanceof ConduitProbeItem)) return;
+        if (!(stack.getItem() instanceof ConduitProbeItem)) {
+            return;
+        }
 
         tooltipComponents.add(TooltipUtil.styledWithArgs(EIOLang.CONDUIT_PROBE_MODE, ConduitProbeItem.getState(stack).getStateText()));
 
