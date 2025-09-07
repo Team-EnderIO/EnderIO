@@ -82,10 +82,15 @@ public class ConduitProbeItem extends Item {
         if (player == null) {
             return InteractionResult.FAIL;
         }
+        if (!(block instanceof ConduitBlockEntity)) {
+            return super.onItemUseFirst(stack, context);
+        }
+        if (context.getLevel().isClientSide()) {
+            return InteractionResult.SUCCESS;
+        }
 
-        if (block instanceof ConduitBlockEntity conduit) {
-            if (context.getLevel().isClientSide()) return InteractionResult.SUCCESS;
-            switch (getState(stack)) {
+        ConduitBlockEntity conduit = (ConduitBlockEntity) block;
+        switch (getState(stack)) {
             case COPY_PASTE -> {
                 if (context.isSecondaryUseActive()) {
                     handleCopy(conduit,
@@ -102,10 +107,8 @@ public class ConduitProbeItem extends Item {
             case PROBE -> {
                 player.sendSystemMessage(Component.literal("This feature isn't implemented yet.").withStyle(ChatFormatting.RED));
             }
-            }
-            return InteractionResult.SUCCESS;
         }
-        return super.onItemUseFirst(stack, context);
+        return InteractionResult.SUCCESS;
     }
 
     private void handleCopy(ConduitBlockEntity conduitBlock, Direction face, ItemStack itemStack, Player player) {
