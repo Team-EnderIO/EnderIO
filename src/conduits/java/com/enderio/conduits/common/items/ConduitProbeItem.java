@@ -82,14 +82,13 @@ public class ConduitProbeItem extends Item {
         if (player == null) {
             return InteractionResult.FAIL;
         }
-        if (!(block instanceof ConduitBlockEntity)) {
-            return super.onItemUseFirst(stack, context);
-        }
         if (context.getLevel().isClientSide()) {
             return InteractionResult.SUCCESS;
         }
+        if (!(block instanceof ConduitBlockEntity conduit)) {
+            return super.onItemUseFirst(stack, context);
+        }
 
-        ConduitBlockEntity conduit = (ConduitBlockEntity) block;
         switch (getState(stack)) {
             case COPY_PASTE -> {
                 if (context.isSecondaryUseActive()) {
