@@ -27,6 +27,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,19 +108,9 @@ public class ConduitProbeItem extends Item {
                 String conduitName = conduitKeyToDisplayName(conduitKey);
                 message.append(Component.literal("\n" + conduitName + ":\n").withStyle(ChatFormatting.UNDERLINE));
 
-                for (var field : connectionConfig.getClass().getDeclaredFields()) {
+                for (Field field : connectionConfig.getClass().getDeclaredFields()) {
                     if (SKIP_FIELDS.contains(field.getName())) continue;
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(" - " + field.getName() + ": ");
-                    try {
-                        field.setAccessible(true);
-                        Object value = field.get(connectionConfig);
-                        sb.append(value);
-                    } catch (IllegalAccessException e) {
-                        sb.append(": <unable to access>");
-                    }
-                    sb.append("\n");
-                    message.append(Component.literal(sb.toString()).withStyle(ChatFormatting.GRAY));
+                    message.append(createFieldTextComponent(field, connectionConfig));
                 }
             });
             player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_COPIED, message));
@@ -187,6 +178,20 @@ public class ConduitProbeItem extends Item {
     private String conduitKeyToDisplayName(ResourceLocation conduitKey) {
         String translationKey = "item." + conduitKey.getNamespace() + ".conduit." + conduitKey.getPath();
         return Component.translatable(translationKey).getString();
+    }
+
+    private Component createFieldTextComponent(Field field, ConnectionConfig connectionConfig) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" - " + field.getName() + ": ");
+        try {
+            field.setAccessible(true);
+            Object value = field.get(connectionConfig);
+            sb.append(value);
+        } catch (IllegalAccessException e) {
+            sb.append(": <unable to access>");
+        }
+        sb.append("\n");
+        return Component.literal(sb.toString()).withStyle(ChatFormatting.GRAY);
     }
 
     public enum State {
