@@ -10,11 +10,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionResult;
@@ -30,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Optional;
 
 public class ConduitProbeItem extends Item {
 
@@ -41,30 +44,35 @@ public class ConduitProbeItem extends Item {
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext pContext) {
         BlockEntity block = pContext.getLevel().getBlockEntity(pContext.getClickedPos());
         Player player = pContext.getPlayer();
-        if (player == null) return super.onItemUseFirst(stack, pContext);
+        if (player == null) {
+            return super.onItemUseFirst(stack, pContext);
+        }
+        if (pContext.getLevel().isClientSide()) {
+            return InteractionResult.SUCCESS;
+        }
+        if (!(block instanceof ConduitBundleBlockEntity conduit)) {
+            return super.onItemUseFirst(stack, pContext);
+        }
 
-        if (block instanceof ConduitBundleBlockEntity conduit) {
-            if (pContext.getLevel().isClientSide()) return InteractionResult.SUCCESS;
+        var conduitConnection = conduit.getShape().getConnectionFromHit(pContext.getClickedPos(), pContext.getHitResult());
+        if (conduitConnection == null) {
+            return InteractionResult.FAIL;
+        }
 
-            var conduitConnection = conduit.getShape().getConnectionFromHit(pContext.getClickedPos(), pContext.getHitResult());
-            if (conduitConnection != null) {
-                Direction face = conduitConnection.getFirst();
-                switch (getState(stack)) {
-                    case COPY_PASTE -> {
-                        if (pContext.isSecondaryUseActive()) {
-                            handleCopy(conduit, face, stack, player);
-                        } else {
-                            handlePaste(conduit, face, stack, player);
-                        }
-                    }
-                    case PROBE -> {
-                        player.sendSystemMessage(Component.literal("This feature isn't implemented yet.").withStyle(ChatFormatting.RED));
-                    }
+        Direction face = conduitConnection.getFirst();
+        switch (getState(stack)) {
+            case COPY_PASTE -> {
+                if (pContext.isSecondaryUseActive()) {
+                    handleCopy(conduit, face, stack, player);
+                } else {
+                    handlePaste(conduit, face, stack, player);
                 }
-                return InteractionResult.SUCCESS;
+            }
+            case PROBE -> {
+                player.sendSystemMessage(Component.literal("This feature isn't implemented yet.").withStyle(ChatFormatting.RED));
             }
         }
-        return super.onItemUseFirst(stack, pContext);
+        return InteractionResult.SUCCESS;
     }
 
     private static final Set<String> SKIP_FIELDS = Set.of("DEFAULT", "CODEC", "STREAM_CODEC", "TYPE");
@@ -77,11 +85,11 @@ public class ConduitProbeItem extends Item {
             ConnectionConfig connectionConfig = conduitBlock.getConnectionConfig(conduit, face);
             if (connectionConfig != null) {
                 ResourceLocation conduitKey = ResourceLocation.parse(conduit.getRegisteredName());
-                var ops = net.minecraft.resources.RegistryOps.create(
+                RegistryOps<Tag> ops = net.minecraft.resources.RegistryOps.create(
                     net.minecraft.nbt.NbtOps.INSTANCE,
                     conduitBlock.getLevel().registryAccess()
                 );
-                var nbt = ConnectionConfig.GENERIC_CODEC
+                Optional<Tag> nbt = ConnectionConfig.GENERIC_CODEC
                     .encodeStart(ops, connectionConfig)
                     .result();
                 nbt.flatMap(tag -> ConnectionConfig.GENERIC_CODEC
@@ -120,7 +128,9 @@ public class ConduitProbeItem extends Item {
 
     public void handlePaste(ConduitBundleBlockEntity conduitBlock, Direction face, ItemStack itemStack, Player player) {
         ProbeConfigData configData = itemStack.get(ConduitComponents.PROBE_CONFIG);
-        if (configData == null) return;
+        if (configData == null) {
+            return;
+        }
 
         List<String> pastedConduits = new ArrayList<String>();
         var conduits = conduitBlock.getConduits();
