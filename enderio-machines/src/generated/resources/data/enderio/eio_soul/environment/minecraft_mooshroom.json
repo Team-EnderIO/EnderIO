@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:mooshroom",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:biome",
+      "biomes": [
+        "minecraft:mushroom_fields"
+      ]
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:surface",
+      "heightmap": "MOTION_BLOCKING"
+    }
+  },
+  "weight": 100
+}

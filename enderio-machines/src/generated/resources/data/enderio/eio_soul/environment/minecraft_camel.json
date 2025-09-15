@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:camel",
+  "potPos": {
+    "type": "enderio:biome",
+    "biomes": "#c:is_desert"
+  },
+  "weight": 10
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:frog",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:biome",
+      "biomes": "#c:is_swamp"
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:surface",
+      "heightmap": "MOTION_BLOCKING"
+    }
+  },
+  "weight": 20
+}

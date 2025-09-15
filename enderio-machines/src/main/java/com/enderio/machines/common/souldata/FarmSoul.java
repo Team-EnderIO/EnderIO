@@ -1,6 +1,7 @@
 package com.enderio.machines.common.souldata;
 
 import com.enderio.machines.EnderIOMachines;
+import com.enderio.machines.common.soulpot.SoulDataReloadListener;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -15,7 +16,7 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 public class FarmSoul {
 
     public record SoulData(ResourceLocation entitytype, float bonemeal, int seeds, float power)
-            implements com.enderio.machines.common.souldata.SoulData {
+            implements com.enderio.machines.common.soulpot.SoulData {
         @Override
         public ResourceLocation getKey() {
             return entitytype();
@@ -35,7 +36,7 @@ public class FarmSoul {
             FarmSoul.SoulData::power, FarmSoul.SoulData::new);
 
     public static final String NAME = "farm";
-    public static final SoulDataReloadListener<FarmSoul.SoulData> FARM = new SoulDataReloadListener<>(NAME, CODEC);
+    public static final SoulDataReloadListener<SoulData> FARM = new SoulDataReloadListener<>(NAME, CODEC);
 
     @SubscribeEvent
     public static void addResource(AddReloadListenerEvent event) {

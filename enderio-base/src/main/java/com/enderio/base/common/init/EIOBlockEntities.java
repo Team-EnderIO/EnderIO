@@ -2,6 +2,7 @@ package com.enderio.base.common.init;
 
 import com.enderio.EnderIOBase;
 import com.enderio.base.common.blockentity.EnderSkullBlockEntity;
+import com.enderio.base.common.blockentity.SoulPotBlockEntity;
 import com.enderio.base.common.paint.blockentity.DoublePaintedBlockEntity;
 import com.enderio.base.common.paint.blockentity.SinglePaintedBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
@@ -27,6 +28,8 @@ public class EIOBlockEntities {
 
     public static final RegiliteBlockEntity<DoublePaintedBlockEntity> DOUBLE_PAINTED = BLOCK_ENTITY_REGISTRY
         .registerBlockEntity("double_painted", DoublePaintedBlockEntity::new, EIOBlocks.PAINTED_SLAB);
+    public static final RegiliteBlockEntity<SoulPotBlockEntity> SOUL_POT = BLOCK_ENTITY_REGISTRY
+        .registerBlockEntity("soul_pot", SoulPotBlockEntity::new, EIOBlocks.SOUL_POT);
 
     public static final RegiliteBlockEntity<EnderSkullBlockEntity> ENDER_SKULL = BLOCK_ENTITY_REGISTRY
         .registerBlockEntity("ender_skull", EnderSkullBlockEntity::new, EIOBlocks.WALL_ENDERMAN_HEAD, EIOBlocks.ENDERMAN_HEAD);

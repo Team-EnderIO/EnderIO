@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:zombie",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:logic",
+      "first": {
+        "type": "enderio:logic",
+        "first": {
+          "type": "enderio:light",
+          "isMin": false,
+          "level": 0
+        },
+        "logic": "AND",
+        "second": {
+          "type": "enderio:biome",
+          "biomes": "#minecraft:is_overworld"
+        }
+      },
+      "logic": "AND",
+      "second": {
+        "type": "enderio:biome",
+        "biomes": {
+          "type": "neoforge:not",
+          "value": "#c:no_default_monsters"
+        }
+      }
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:biome",
+      "biomes": {
+        "type": "neoforge:not",
+        "value": "#c:is_aquatic"
+      }
+    }
+  },
+  "weight": 20
+}

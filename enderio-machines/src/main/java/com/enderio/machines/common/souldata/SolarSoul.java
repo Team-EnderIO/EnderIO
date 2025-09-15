@@ -1,6 +1,7 @@
 package com.enderio.machines.common.souldata;
 
 import com.enderio.machines.EnderIOMachines;
+import com.enderio.machines.common.soulpot.SoulDataReloadListener;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -19,7 +20,7 @@ import java.util.Optional;
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
 public class SolarSoul {
 
-    public record SoulData(ResourceLocation entitytype, boolean daytime, boolean nighttime, Optional<ResourceKey<Level>> level) implements com.enderio.machines.common.souldata.SoulData {
+    public record SoulData(ResourceLocation entitytype, boolean daytime, boolean nighttime, Optional<ResourceKey<Level>> level) implements com.enderio.machines.common.soulpot.SoulData {
 
         @Override
         public ResourceLocation getKey() {

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:magma_cube",
+  "potPos": {
+    "type": "enderio:biome",
+    "biomes": [
+      "minecraft:basalt_deltas"
+    ]
+  },
+  "weight": 15
+}

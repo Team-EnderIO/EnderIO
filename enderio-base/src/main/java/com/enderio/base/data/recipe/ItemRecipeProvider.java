@@ -2,6 +2,7 @@ package com.enderio.base.data.recipe;
 
 import com.enderio.base.api.EnderIO;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.recipe.SoulPotCrafting;
 import com.enderio.base.common.tag.EIOTags;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -13,6 +14,7 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.neoforged.neoforge.common.Tags;
 
 public class ItemRecipeProvider extends RecipeProvider {
@@ -26,6 +28,7 @@ public class ItemRecipeProvider extends RecipeProvider {
         addTools(recipeOutput);
         addGliders(recipeOutput);
         eraseFilterRecipes(recipeOutput);
+        recipeOutput.accept(EnderIO.loc("soul_pot"), new SoulPotCrafting(CraftingBookCategory.MISC), null);
     }
 
     private void addGliders(RecipeOutput recipeOutput) {

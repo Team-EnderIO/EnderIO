@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:pufferfish",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:block",
+      "blocks": "minecraft:water",
+      "height": 3,
+      "range": 3
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:biome",
+      "biomes": "#c:is_aquatic"
+    }
+  },
+  "weight": 10
+}

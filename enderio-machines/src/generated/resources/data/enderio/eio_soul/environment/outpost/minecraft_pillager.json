@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:pillager",
+  "potPos": {
+    "type": "enderio:structure",
+    "structures": [
+      "minecraft:pillager_outpost"
+    ]
+  },
+  "weight": 20
+}

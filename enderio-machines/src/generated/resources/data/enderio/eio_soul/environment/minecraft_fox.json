@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:fox",
+  "potPos": {
+    "type": "enderio:biome",
+    "biomes": "#minecraft:is_taiga"
+  },
+  "weight": 15
+}

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:piglin_brute",
+  "potPos": {
+    "type": "enderio:structure",
+    "structures": [
+      "minecraft:bastion_remnant"
+    ]
+  },
+  "weight": 7
+}

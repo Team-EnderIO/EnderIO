@@ -2,6 +2,7 @@ package com.enderio.machines.common.souldata;
 
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.common.blocks.powered_spawner.MobSpawnMode;
+import com.enderio.machines.common.soulpot.SoulDataReloadListener;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -25,7 +26,7 @@ public class SpawnerSoul {
      * @param spawnType way to spawn the mob
      */
     public record SoulData(ResourceLocation entityType, int power, MobSpawnMode spawnType)
-            implements com.enderio.machines.common.souldata.SoulData {
+            implements com.enderio.machines.common.soulpot.SoulData {
         @Override
         public ResourceLocation getKey() {
             return entityType();

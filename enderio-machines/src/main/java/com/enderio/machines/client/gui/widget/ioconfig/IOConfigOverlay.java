@@ -178,12 +178,12 @@ public class IOConfigOverlay extends BaseOverlay {
     }
 
     private static Vec3 transform(Vec3 vec, Matrix4f transform) {
-        // Move vector to a (0,0,0) origin as the transformation matrix expects
+        // Move vector to a (0,0,0) potPos as the transformation matrix expects
         Vector4f vec4 = new Vector4f((float) (vec.x - RAY_ORIGIN.x), (float) (vec.y - RAY_ORIGIN.y),
                 (float) (vec.z - RAY_ORIGIN.z), 1F);
         // Apply the transformation matrix
         vec4.mul(transform);
-        // Move transformed vector back to the actual origin
+        // Move transformed vector back to the actual potPos
         return new Vec3(vec4.x() + RAY_ORIGIN.x, vec4.y() + RAY_ORIGIN.y, vec4.z() + RAY_ORIGIN.z);
     }
 

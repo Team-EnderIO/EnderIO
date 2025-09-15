@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:cat",
+  "potPos": {
+    "type": "enderio:structure",
+    "structures": "#minecraft:village"
+  },
+  "weight": 5
+}

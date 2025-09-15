@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:shulker",
+  "potPos": {
+    "type": "enderio:structure",
+    "structures": [
+      "minecraft:end_city"
+    ]
+  },
+  "weight": 15
+}

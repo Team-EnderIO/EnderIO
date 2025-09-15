@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:polar_bear",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:surface",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:biome",
+      "biomes": "#minecraft:polar_bears_spawn_on_alternate_blocks"
+    }
+  },
+  "weight": 25
+}

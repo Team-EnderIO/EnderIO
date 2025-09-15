@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:enderman",
+  "potPos": {
+    "type": "enderio:biome",
+    "biomes": "#minecraft:is_end"
+  },
+  "weight": 20
+}

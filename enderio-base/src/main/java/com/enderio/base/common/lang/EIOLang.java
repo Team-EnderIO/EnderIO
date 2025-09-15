@@ -148,6 +148,14 @@ public class EIOLang {
     public static final Component CONFIRM = addTranslation("gui", EnderIO.loc("confirm"), "Confirm");
 
     // endregion
+    // region soul pot
+
+    public static final Component NO_SOULS = addTranslation("message", EnderIO.loc("no_souls"), "This seems to be a very soulless place.");
+    public static final Component CATCHING = addTranslation("message", EnderIO.loc("catching"), "A being tries to escape the pull of this block.");
+    public static final Component CAUGHT = addTranslation("message", EnderIO.loc("caught"), "A dark energy is present. Something was caught here!");
+    public static final Component TOO_MANY_POTS = addTranslation("message", EnderIO.loc("too_many_pots"), "Too many forces seem to pull the souls apart");
+
+    // endregion
 
     // region Graves
 

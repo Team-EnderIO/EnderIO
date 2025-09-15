@@ -1,6 +1,7 @@
 package com.enderio.machines.common.souldata;
 
 import com.enderio.machines.EnderIOMachines;
+import com.enderio.machines.common.soulpot.SoulDataReloadListener;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -15,7 +16,7 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 public class EngineSoul {
 
     // TODO: 20.6: May be able to use FluidIngredient
-    public record SoulData(ResourceLocation entitytype, String fluid, int powerpermb, int tickpermb) implements com.enderio.machines.common.souldata.SoulData {
+    public record SoulData(ResourceLocation entitytype, String fluid, int powerpermb, int tickpermb) implements com.enderio.machines.common.soulpot.SoulData {
         @Override
         public ResourceLocation getKey() {
             return entitytype();

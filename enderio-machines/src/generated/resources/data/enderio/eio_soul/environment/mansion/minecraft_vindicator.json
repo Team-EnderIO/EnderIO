@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:vindicator",
+  "potPos": {
+    "type": "enderio:structure",
+    "structures": [
+      "minecraft:mansion"
+    ]
+  },
+  "weight": 6
+}

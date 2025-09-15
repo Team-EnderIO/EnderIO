@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:squid",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:biome",
+      "biomes": "#c:is_aquatic"
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:logic",
+      "first": {
+        "type": "enderio:height",
+        "height": 50,
+        "isMin": true
+      },
+      "logic": "AND",
+      "second": {
+        "type": "enderio:height",
+        "height": 63,
+        "isMin": false
+      }
+    }
+  },
+  "weight": 25
+}

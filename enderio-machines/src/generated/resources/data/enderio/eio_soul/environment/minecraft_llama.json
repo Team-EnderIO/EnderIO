@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:llama",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:biome",
+      "biomes": "#minecraft:is_hill"
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:surface",
+      "heightmap": "MOTION_BLOCKING"
+    }
+  },
+  "weight": 10
+}

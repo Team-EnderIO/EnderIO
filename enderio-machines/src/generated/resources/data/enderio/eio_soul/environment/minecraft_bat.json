@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:bat",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:light",
+      "isMin": false,
+      "level": 3
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:not",
+      "potPos": {
+        "type": "enderio:surface",
+        "heightmap": "MOTION_BLOCKING"
+      }
+    }
+  },
+  "weight": 7
+}

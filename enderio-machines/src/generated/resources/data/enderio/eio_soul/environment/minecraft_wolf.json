@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:wolf",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:surface",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:biome",
+      "biomes": "#c:is_taiga"
+    }
+  },
+  "weight": 5
+}

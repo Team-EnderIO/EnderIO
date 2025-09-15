@@ -11,6 +11,7 @@ import com.enderio.base.common.block.ReinforcedObsidianBlock;
 import com.enderio.base.common.block.ResettingLeverBlock;
 import com.enderio.base.common.block.SilentPressurePlateBlock;
 import com.enderio.base.common.block.SilentWeightedPressurePlateBlock;
+import com.enderio.base.common.block.SoulCatchingPotBlock;
 import com.enderio.base.common.block.glass.GlassBlocks;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassIdentifier;
@@ -39,6 +40,7 @@ import com.enderio.regilite.holder.RegiliteBlock;
 import com.enderio.regilite.registry.BlockRegistry;
 import com.enderio.regilite.registry.ItemRegistry;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -55,6 +57,7 @@ import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.WeightedPressurePlateBlock;
+import net.minecraft.world.level.block.entity.PotDecorations;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -116,6 +119,19 @@ public class EIOBlocks {
 
     // Soularium + soul/nether
     public static final RegiliteBlock<Block> ENSOULED_CHASSIS = chassisBlock("ensouled_chassis");
+    public static final RegiliteBlock<SoulCatchingPotBlock> SOUL_POT = BLOCK_REGISTRY
+        .registerBlock("soul_pot", SoulCatchingPotBlock::new, BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6))
+        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+            prov.models().withExistingParent("soul_pot", "decorated_pot").renderType(prov.mcLoc("translucent"))))
+        .addBlockTags(
+            BlockTags.NEEDS_STONE_TOOL,
+            BlockTags.MINEABLE_WITH_PICKAXE
+        )
+        .setLootTable(RegiliteBlockLootProvider::noDrop)
+        .createBlockItem(ITEM_REGISTRY, item -> item
+            .setTab(EIOCreativeTabs.BLOCKS)
+            .setModelProvider((prov, ctx) -> {})
+        );
 
     // Ensnared + Some kind of other material
     // This is for machines that require a bound soul

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:breeze",
+  "potPos": {
+    "type": "enderio:structure",
+    "structures": [
+      "minecraft:trial_chambers"
+    ]
+  },
+  "weight": 60
+}
