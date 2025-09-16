@@ -108,8 +108,8 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     @Override
     public Vector2i getInventorySlotPosition(int slot) {
         return switch (slot) {
-        case EXTRACT_FILTER_SLOT -> new Vector2i(113, 71);
-        case INSERT_FILTER_SLOT -> new Vector2i(23, 71);
+        case EXTRACT_FILTER_SLOT -> new Vector2i(23, 71);
+        case INSERT_FILTER_SLOT -> new Vector2i(113, 71);
         default -> throw new IndexOutOfBoundsException();
         };
     }
