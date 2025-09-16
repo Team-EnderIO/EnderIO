@@ -4,12 +4,12 @@ import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
+import com.enderio.core.client.gui.widgets.MultiIconButton;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.common.menu.AversionObeliskMenu;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,7 +20,6 @@ public class AversionObeliskScreen extends MachineScreen<AversionObeliskMenu> {
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
-    private static final ResourceLocation BUTTONS = EnderIO.loc("textures/gui/icons/buttons.png");
     private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
 
     public AversionObeliskScreen(AversionObeliskMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -39,12 +38,18 @@ public class AversionObeliskScreen extends MachineScreen<AversionObeliskMenu> {
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 6 - 16, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
-
         addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 2*16 + 2, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
-        addRenderableWidget(new ImageButton(leftPos + imageWidth - 2*16, topPos + 2 + 16*2, 8, 8, 8, 0, 16, BUTTONS, (b) -> menu.getBlockEntity().increaseRange()));
-        addRenderableWidget(new ImageButton(leftPos + imageWidth - 2*16, topPos + 2 + 16*2 + 8, 8, 8, 8, 8, 16, BUTTONS, (b) -> menu.getBlockEntity().decreaseRange()));
+
+        addRenderableWidget(MultiIconButton.createAddButton(
+            new Vector2i(leftPos + imageWidth - 2*16, topPos + 2 + 16*2), 
+            () -> menu.getBlockEntity().getRange(), 
+            range -> menu.getBlockEntity().increaseRange()));
+        addRenderableWidget(MultiIconButton.createMinusButton(
+            new Vector2i(leftPos + imageWidth - 2*16, topPos + 2 + 16*2 + 8), 
+            () -> menu.getBlockEntity().getRange(), 
+            range -> menu.getBlockEntity().decreaseRange()));
 
         addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
     }

@@ -2,11 +2,13 @@ package com.enderio.conduits.common.network;
 
 import com.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.core.common.network.Packet;
+import com.enderio.core.common.util.TooltipUtil;
+
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
+import com.enderio.base.common.lang.EIOLang;
 
 import java.util.Optional;
 
@@ -36,7 +38,7 @@ public class C2SSyncProbeState implements Packet {
                 probeStack = context.getSender().getOffhandItem();
             }
             ConduitProbeItem.setState(probeStack, state, false);
-            context.getSender().sendSystemMessage(Component.literal("Changed probe to " + state));
+            context.getSender().sendSystemMessage(TooltipUtil.withArgs(EIOLang.CONDUIT_PROBE_SWITCHED_MODE, state.getStateText()));
         });
         context.setPacketHandled(true);
     }

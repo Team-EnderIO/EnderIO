@@ -1,9 +1,9 @@
 package com.enderio.machines.client.gui.widget.ioconfig;
 
 import com.enderio.EnderIO;
-import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.EnderCore;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.machines.common.menu.MachineMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> extends AbstractWidget {
     private static final int RENDERER_HEIGHT = 80;
     public static final ResourceLocation IOCONFIG = EnderIO.loc("textures/gui/icons/io_config.png");
+    private static final ResourceLocation BUTTON_TEXTURE = EnderCore.loc("textures/gui/checkbox.png");
     private static final Inset INSET_ZERO = new Inset(0, 0, 0, 0);
     private final IOConfigWidget<U> configRenderer;
     private final ImageButton neighbourButton;
@@ -62,8 +63,7 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        Vector2i pos = new Vector2i(getX(), getY());
-        addedOn.renderSimpleArea(guiGraphics, pos, pos.add(new Vector2i(width, height)));
+        guiGraphics.blit(BUTTON_TEXTURE, getX(), getY(), this.width, this.height, this.isHovered ? 28 : 0, 0, 14, 14, 256, 256);
 
         RenderSystem.enableDepthTest();
         guiGraphics.blit(IOCONFIG, this.getX(), this.getY(), 0, 0, this.width, this.height, 48, 32);

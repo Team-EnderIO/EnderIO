@@ -8,6 +8,7 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.EntityFilterMenu;
 import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.client.gui.widgets.EIOImageButton;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.enderio.core.common.capability.EntityFilterCapability;
 import net.minecraft.client.gui.GuiGraphics;
@@ -25,6 +26,7 @@ public class EntityFilterScreen extends EIOScreen<EntityFilterMenu> {
     private static ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/40/item_filter.png");
     private static final ResourceLocation BLACKLIST_TEXTURE = EnderIO.loc("textures/gui/icons/blacklist.png");
     private static final ResourceLocation NBT_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
+    private static final ResourceLocation BACK_TEXTURE = EnderIO.loc("textures/gui/icons/back.png");
 
     public EntityFilterScreen(EntityFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -41,7 +43,7 @@ public class EntityFilterScreen extends EIOScreen<EntityFilterMenu> {
         super.init();
         addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36, 16, 16, 0, 0, 16, 0, NBT_TEXTURE, getMenu().getFilter()::isNbt, getMenu()::setNbt, () -> getMenu().getFilter().isNbt() ? EIOLang.NBT_FILTER : EIOLang.NO_NBT_FILTER));
         addRenderableWidget(new ToggleImageButton<>(this, getGuiLeft() + 110,getGuiTop() + 36 + 20, 16, 16, 0, 0, 16, 0, BLACKLIST_TEXTURE, getMenu().getFilter()::isInvert, getMenu()::setInverted, () -> getMenu().getFilter().isInvert() ? EIOLang.BLACKLIST_FILTER : EIOLang.WHITELIST_FILTER));
-
+        addRenderableWidget(new EIOImageButton(this, getGuiLeft() + 3, getGuiTop() + 3, 16, 16, 0, 0, 0, BACK_TEXTURE, button -> closeContainer()));
     }
 
     @Override
