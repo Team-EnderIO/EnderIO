@@ -9,10 +9,10 @@ import net.minecraft.world.item.ItemStack;
 
 public record C2SSetItemFilterSlot(int containerId, int slotIndex, ItemStack itemStack) implements CustomPacketPayload {
 
-    public static CustomPacketPayload.Type<C2SSetItemFilterSlot> TYPE = new CustomPacketPayload.Type<>(
+    public static final CustomPacketPayload.Type<C2SSetItemFilterSlot> TYPE = new CustomPacketPayload.Type<>(
         EnderIO.loc("set_item_filter_slot"));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, C2SSetItemFilterSlot> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, C2SSetItemFilterSlot> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, C2SSetItemFilterSlot::containerId, ByteBufCodecs.INT, C2SSetItemFilterSlot::slotIndex,
             ItemStack.STREAM_CODEC, C2SSetItemFilterSlot::itemStack, C2SSetItemFilterSlot::new);
 

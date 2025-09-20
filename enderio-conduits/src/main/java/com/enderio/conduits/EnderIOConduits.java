@@ -16,26 +16,33 @@ import com.enderio.conduits.common.init.Conduits;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
+import com.enderio.conduits.integration.ftb_ultimine.ConduitBlockBreakHandler;
+import com.enderio.conduits.integration.ftb_ultimine.ConduitBlockSelectionHandler;
+import com.enderio.conduits.integration.ftb_ultimine.FTBUltimineCompat;
 import com.enderio.regilite.Regilite;
 import java.util.Set;
+
+import dev.ftb.mods.ftbultimine.api.blockbreaking.RegisterBlockBreakHandlerEvent;
+import dev.ftb.mods.ftbultimine.api.blockselection.RegisterBlockSelectionHandlerEvent;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
-@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID)
 @Mod(EnderIOConduits.MODULE_MOD_ID)
 public class EnderIOConduits {
 
     public static final String MODULE_MOD_ID = "enderio_conduits";
 
-    public static Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
+    public static final Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
 
     public EnderIOConduits(IEventBus modEventBus, ModContainer modContainer) {
         Conduits.register();
@@ -49,6 +56,10 @@ public class EnderIOConduits {
         Integrations.register();
         ConduitLang.register();
         REGILITE.register(modEventBus);
+
+        if (ModList.get().isLoaded("ftbultimine")) {
+            FTBUltimineCompat.init();
+        }
     }
 
     @SubscribeEvent

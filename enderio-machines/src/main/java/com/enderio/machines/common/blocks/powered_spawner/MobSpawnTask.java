@@ -1,7 +1,6 @@
 package com.enderio.machines.common.blocks.powered_spawner;
 
 import com.enderio.machines.common.config.MachinesConfig;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -12,9 +11,17 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
+import java.util.List;
+import java.util.UUID;
+
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
 public class MobSpawnTask extends PoweredSpawnerTask {
 
     private float efficiency = 1;
@@ -81,13 +88,14 @@ public class MobSpawnTask extends PoweredSpawnerTask {
                     + 0.5D;
 
             if (level.noCollision(entityType().getSpawnAABB(x, y, z))) {
-                Entity entity = null;
+                Entity entity;
                 switch (spawnMode()) {
                 case COPY -> {
                     // TODO: Stop using BE to get entity tag data...
                     entity = EntityType.loadEntityRecursive(blockEntity.getBoundSoul().getEntityTag(), level,
                             entity1 -> {
                                 entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
+                                entity1.setUUID(UUID.randomUUID());
                                 return entity1;
                             });
                 }
@@ -107,12 +115,16 @@ public class MobSpawnTask extends PoweredSpawnerTask {
                 }
 
                 if (entity instanceof Mob mob) { // based on vanilla spawner
+                    if (blockEntity.hasMindKiller()) {
+                        mob.setNoAi(true);
+                        mob.getPersistentData().putBoolean("enderio:movable", true);
+                    }
                     FinalizeSpawnEvent event = EventHooks.finalizeMobSpawnSpawner(mob, level,
                             level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, blockEntity, false);
                     if (event.isSpawnCancelled()) {
                         setBlockedReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
                         continue;
-                    } else {
+                    } else if(spawnMode() != MobSpawnMode.COPY){
                         EventHooks.finalizeMobSpawn(mob, level, event.getDifficulty(), event.getSpawnType(),
                                 event.getSpawnData());
                     }
@@ -132,6 +144,18 @@ public class MobSpawnTask extends PoweredSpawnerTask {
                 // Successfully spawned!
                 setBlockedReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE);
                 isComplete = true;
+            }
+        }
+    }
+
+    //Credit to Shadows-of-Fire for providing this workaround https://github.com/Shadows-of-Fire/Apothic-Spawners/blob/1.21/src/main/java/dev/shadowsoffire/apothic_spawners/ASEvents.java#L120
+    @SubscribeEvent
+    public static void tickNoAIMobs(EntityTickEvent.Pre e) {
+        if (e.getEntity() instanceof Mob mob) {
+            if (!mob.level().isClientSide() && mob.isNoAi() && mob.getPersistentData().getBoolean("enderio:movable")) {
+                mob.setNoAi(false);
+                mob.travel(new Vec3(mob.xxa, mob.yya, mob.zza));
+                mob.setNoAi(true);
             }
         }
     }

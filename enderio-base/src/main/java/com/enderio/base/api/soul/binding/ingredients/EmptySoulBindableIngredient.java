@@ -2,12 +2,11 @@ package com.enderio.base.api.soul.binding.ingredients;
 
 import com.enderio.base.api.soul.Soul;
 import com.enderio.base.api.soul.SoulBoundUtils;
+import com.enderio.base.api.soul.storage.ISoulHandler;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOIngredientTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.stream.Stream;
-
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -18,6 +17,8 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
+
+import java.util.stream.Stream;
 
 public class EmptySoulBindableIngredient implements ICustomIngredient {
 
@@ -38,6 +39,11 @@ public class EmptySoulBindableIngredient implements ICustomIngredient {
         // Attempt to get the unbound item.
         var stack = item.getDefaultInstance();
         if (!SoulBoundUtils.canBindSoul(stack)) {
+            ISoulHandler soulHandler = stack.getCapability(EIOCapabilities.SoulHandler.ITEM);
+            if (soulHandler != null && soulHandler.tryInsertSoul(Soul.EMPTY, true)) { //Can't bind a soul, but can store one
+                itemStack = stack;
+                return;
+            }
             itemStack = new ItemStack(Blocks.BARRIER);
             itemStack.set(DataComponents.CUSTOM_NAME, Component.literal("Item cannot be bound: " + stack.getHoverName()));
         } else if (SoulBoundUtils.tryBindSoul(stack, Soul.EMPTY)) {

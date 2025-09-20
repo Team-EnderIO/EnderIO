@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 
 public class EnderChemicalFilterItem extends AbstractFilterItem<EnderChemicalFilter> {
 
-    public static ICapabilityProvider<ItemStack, Void, ChemicalFilter> CHEMICAL_FILTER_PROVIDER = (stack, v) -> stack
+    public static final ICapabilityProvider<ItemStack, Void, ChemicalFilter> CHEMICAL_FILTER_PROVIDER = (stack, v) -> stack
         .getOrDefault(MekanismModule.CHEMICAL_FILTER, EnderChemicalFilter.EMPTY);
 
     private final Type type;

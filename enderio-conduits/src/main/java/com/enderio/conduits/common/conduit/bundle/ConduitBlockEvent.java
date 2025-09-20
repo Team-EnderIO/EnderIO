@@ -10,7 +10,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID)
 public class ConduitBlockEvent {
 
     // Opening the conduit GUI allows spectators to open conduit gui while still

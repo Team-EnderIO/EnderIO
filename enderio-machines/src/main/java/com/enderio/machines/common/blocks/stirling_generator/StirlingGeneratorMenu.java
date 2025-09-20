@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class StirlingGeneratorMenu extends PoweredMachineMenu<StirlingGeneratorBlockEntity> {
 
-    private FloatSyncSlot burnProgressSlot;
+    private final FloatSyncSlot burnProgressSlot;
 
     public StirlingGeneratorMenu(int pContainerId, Inventory inventory, StirlingGeneratorBlockEntity blockEntity) {
         super(MachineMenus.STIRLING_GENERATOR.get(), pContainerId, inventory, blockEntity);

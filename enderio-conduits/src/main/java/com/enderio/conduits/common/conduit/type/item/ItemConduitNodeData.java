@@ -15,12 +15,12 @@ import net.minecraft.core.Direction;
  */
 public final class ItemConduitNodeData implements NodeData {
 
-    public static MapCodec<ItemConduitNodeData> CODEC = RecordCodecBuilder
+    public static final MapCodec<ItemConduitNodeData> CODEC = RecordCodecBuilder
             .mapCodec(instance -> instance.group(Codec.unboundedMap(Direction.CODEC, Codec.INT)
                     .fieldOf("round_robin_indexes")
                     .forGetter(i -> i.roundRobinIndexes)).apply(instance, ItemConduitNodeData::new));
 
-    public static NodeDataType<ItemConduitNodeData> TYPE = new NodeDataType<>(ItemConduitNodeData.CODEC,
+    public static final NodeDataType<ItemConduitNodeData> TYPE = new NodeDataType<>(ItemConduitNodeData.CODEC,
             ItemConduitNodeData::new);
     private final Map<Direction, Integer> roundRobinIndexes;
 

@@ -15,7 +15,7 @@ public record SolarSoulPacket(Map<ResourceLocation, SolarSoul.SoulData> map) imp
 
     public static final Type<SolarSoulPacket> TYPE = new Type<>(EnderIO.loc("solar_soul"));
 
-    public static StreamCodec<ByteBuf, SolarSoulPacket> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, SolarSoulPacket> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, SolarSoul.STREAM_CODEC),
         SolarSoulPacket::map,
         SolarSoulPacket::new

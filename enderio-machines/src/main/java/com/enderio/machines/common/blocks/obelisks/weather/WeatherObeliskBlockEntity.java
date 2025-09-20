@@ -17,8 +17,6 @@ import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
-import java.util.Calendar;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -39,12 +37,16 @@ import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Calendar;
+import java.util.List;
+
 public class WeatherObeliskBlockEntity extends MachineBlockEntity implements FluidTankUser {
 
     public static final ItemStack FIREWORK = new ItemStack(Items.FIREWORK_ROCKET, 1);
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
     public static final SingleSlotAccess ROCKET = new SingleSlotAccess();
+    public static final int TANK_CAPACITY = 3000;
     private final CraftingMachineTaskHost<WeatherChangeRecipe, WeatherChangeRecipe.Input> craftingTaskHost;
 
     public WeatherObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
@@ -146,7 +148,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
 
     @Override
     public MachineTankLayout getTankLayout() {
-        return MachineTankLayout.builder().tank(TANK, 3000).build();
+        return MachineTankLayout.builder().tank(TANK, TANK_CAPACITY).build();
     }
 
     @Override

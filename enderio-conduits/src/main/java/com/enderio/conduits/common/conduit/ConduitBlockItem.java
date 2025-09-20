@@ -32,7 +32,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.jetbrains.annotations.Nullable;
 
-@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID)
 public class ConduitBlockItem extends BlockItem {
 
     public ConduitBlockItem(Block block, Properties properties) {

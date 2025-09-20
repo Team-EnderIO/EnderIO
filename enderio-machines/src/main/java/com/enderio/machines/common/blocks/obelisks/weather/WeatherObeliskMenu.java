@@ -12,6 +12,9 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class WeatherObeliskMenu extends MachineMenu<WeatherObeliskBlockEntity> {
 
+    public static final int INPUTS_INDEX = 0;
+    public static final int INPUT_COUNT = 1 + 1; //item + fluid
+    public static final int LAST_INDEX = 0;
     private final FluidStorageSyncSlot tank;
     private final FloatSyncSlot craftingProgressSlot;
 

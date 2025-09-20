@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 
 public class EnderChemicalFilterMenu extends AbstractFilterMenu<EnderChemicalFilter> {
 
-    public static int IS_INVERTED_BUTTON_ID = 1;
+    public static final int IS_INVERTED_BUTTON_ID = 1;
 
     public final EnderChemicalFilterItem.Type type;
 

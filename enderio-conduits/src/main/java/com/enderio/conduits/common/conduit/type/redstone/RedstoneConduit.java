@@ -32,7 +32,7 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
 
-    public static MapCodec<RedstoneConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
+    public static final MapCodec<RedstoneConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
             .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(RedstoneConduit::texture),
                     ResourceLocation.CODEC.fieldOf("active_texture").forGetter(RedstoneConduit::activeTexture),
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(RedstoneConduit::description))
@@ -108,8 +108,8 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     @Override
     public Vector2i getInventorySlotPosition(int slot) {
         return switch (slot) {
-        case EXTRACT_FILTER_SLOT -> new Vector2i(113, 71);
-        case INSERT_FILTER_SLOT -> new Vector2i(23, 71);
+        case EXTRACT_FILTER_SLOT -> new Vector2i(23, 71);
+        case INSERT_FILTER_SLOT -> new Vector2i(113, 71);
         default -> throw new IndexOutOfBoundsException();
         };
     }

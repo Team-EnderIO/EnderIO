@@ -11,12 +11,12 @@ import mekanism.api.chemical.Chemical;
 
 public class ChemicalConduitNetworkContext implements ConduitNetworkContext<ChemicalConduitNetworkContext> {
 
-    public static MapCodec<ChemicalConduitNetworkContext> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+    public static final MapCodec<ChemicalConduitNetworkContext> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(Chemical.CODEC.optionalFieldOf("locked_chemical", MekanismAPI.EMPTY_CHEMICAL)
                     .forGetter(ChemicalConduitNetworkContext::lockedChemical))
             .apply(instance, ChemicalConduitNetworkContext::new));
 
-    public static ConduitNetworkContextType<ChemicalConduitNetworkContext> TYPE = new ConduitNetworkContextType<>(CODEC,
+    public static final ConduitNetworkContextType<ChemicalConduitNetworkContext> TYPE = new ConduitNetworkContextType<>(CODEC,
             ChemicalConduitNetworkContext::new);
 
     private Chemical lockedChemical;

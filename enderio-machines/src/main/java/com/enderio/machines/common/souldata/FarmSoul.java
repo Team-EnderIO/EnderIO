@@ -1,5 +1,6 @@
 package com.enderio.machines.common.souldata;
 
+import com.enderio.machines.EnderIOMachines;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -10,7 +11,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
 public class FarmSoul {
 
     public record SoulData(ResourceLocation entitytype, float bonemeal, int seeds, float power)
@@ -28,7 +29,7 @@ public class FarmSoul {
                     Codec.FLOAT.optionalFieldOf("power", 1f).forGetter(FarmSoul.SoulData::power))
             .apply(soulDataInstance, FarmSoul.SoulData::new));
 
-    public static StreamCodec<ByteBuf, FarmSoul.SoulData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, FarmSoul.SoulData> STREAM_CODEC = StreamCodec.composite(
             ResourceLocation.STREAM_CODEC, FarmSoul.SoulData::entitytype, ByteBufCodecs.FLOAT,
             FarmSoul.SoulData::bonemeal, ByteBufCodecs.INT, FarmSoul.SoulData::seeds, ByteBufCodecs.FLOAT,
             FarmSoul.SoulData::power, FarmSoul.SoulData::new);

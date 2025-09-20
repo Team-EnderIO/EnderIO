@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public record GrindingBallData(float outputMultiplier, float bonusMultiplier, float powerUse, int durability) {
 
-    public static Codec<GrindingBallData> CODEC = RecordCodecBuilder.create(
+    public static final Codec<GrindingBallData> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             Codec.FLOAT.fieldOf("OutputMultiplier").forGetter(GrindingBallData::outputMultiplier),
             Codec.FLOAT.fieldOf("BonusMultiplier").forGetter(GrindingBallData::bonusMultiplier),
@@ -25,7 +25,7 @@ public record GrindingBallData(float outputMultiplier, float bonusMultiplier, fl
         ).apply(instance, GrindingBallData::new)
     );
 
-    public static StreamCodec<ByteBuf, GrindingBallData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, GrindingBallData> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.FLOAT,
         GrindingBallData::outputMultiplier,
         ByteBufCodecs.FLOAT,
@@ -37,7 +37,7 @@ public record GrindingBallData(float outputMultiplier, float bonusMultiplier, fl
         GrindingBallData::new
     );
 
-    public static GrindingBallData IDENTITY = new GrindingBallData(1.0f, 1.0f, 1.0f, 0);
+    public static final GrindingBallData IDENTITY = new GrindingBallData(1.0f, 1.0f, 1.0f, 0);
 
     public boolean isIdentity() {
         return this.equals(IDENTITY);

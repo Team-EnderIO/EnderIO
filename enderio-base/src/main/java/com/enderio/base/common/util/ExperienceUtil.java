@@ -5,14 +5,13 @@ import net.minecraft.world.entity.player.Player;
 public class ExperienceUtil {
 
     // 1 exp = 20 mb
-    public static int EXP_TO_FLUID = 20;
+    public static final int EXP_TO_FLUID = 20;
 
     /**
      * Vanilla way of calculating experience points required for level up.
      * @param currentLevel - the current level of player. The level up cost depends on currentLevel and not on the level you are trying to reach
      * @return experience - experience cost to level up
      */
-
     public static int getXpNeededForNextLevel(int currentLevel) {
         if (currentLevel >= 30) {
             return 112 + (currentLevel - 30) * 9;

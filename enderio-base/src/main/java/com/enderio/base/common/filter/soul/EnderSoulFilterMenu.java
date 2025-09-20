@@ -18,8 +18,8 @@ import java.util.function.Supplier;
 
 public class EnderSoulFilterMenu extends AbstractFilterMenu<EnderSoulFilter> {
 
-    public static int IS_INVERTED_BUTTON_ID = 1;
-    public static int SHOULD_COMPARE_TAGS_BUTTON_ID = 2;
+    public static final int IS_INVERTED_BUTTON_ID = 1;
+    public static final int SHOULD_COMPARE_TAGS_BUTTON_ID = 2;
 
     public final EnderSoulFilterItem.Type type;
 

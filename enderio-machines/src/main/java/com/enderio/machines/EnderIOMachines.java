@@ -61,12 +61,12 @@ import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
 @Mod(EnderIOMachines.MODULE_MOD_ID)
 public class EnderIOMachines {
     public static final String MODULE_MOD_ID = "enderio_machines";
 
-    public static Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
+    public static final Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
 
     public EnderIOMachines(IEventBus modEventBus, ModContainer modContainer) {
         // Register machine config

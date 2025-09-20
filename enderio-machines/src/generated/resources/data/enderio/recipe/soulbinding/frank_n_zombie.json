@@ -1,6 +1,5 @@
 {
   "type": "enderio:soul_binding",
-  "copyInputComponents": false,
   "energy": 51200,
   "entity_type": "minecraft:zombie",
   "experience": 4,

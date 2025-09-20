@@ -24,15 +24,15 @@ public record IOConfig(Map<Direction, IOMode> modes) {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static Codec<IOConfig> CODEC = RecordCodecBuilder.create(instance -> instance
+    public static final Codec<IOConfig> CODEC = RecordCodecBuilder.create(instance -> instance
             .group(Codec.unboundedMap(Direction.CODEC, IOMode.CODEC).fieldOf("Modes").forGetter(IOConfig::modes))
             .apply(instance, IOConfig::new));
 
-    public static StreamCodec<ByteBuf, IOConfig> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, IOConfig> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(c -> new EnumMap<>(Direction.class), Direction.STREAM_CODEC, IOMode.STREAM_CODEC),
             IOConfig::modes, IOConfig::new);
 
-    public static NetworkDataSlot.CodecType<IOConfig> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(CODEC,
+    public static final NetworkDataSlot.CodecType<IOConfig> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(CODEC,
             STREAM_CODEC.cast());
 
     public static IOConfig copyOf(IOConfig other) {

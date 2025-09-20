@@ -7,7 +7,7 @@ import com.enderio.conduits.api.model.ConduitModelModifier;
 import com.enderio.conduits.client.model.BoxTextureQuadTransformer;
 import com.enderio.conduits.client.model.ColorQuadTransformer;
 import com.enderio.conduits.client.model.ConduitTextureEmissiveQuadTransformer;
-import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
+import com.enderio.conduits.client.model.conduit.facades.ClientFacadeVisibility;
 import com.enderio.conduits.client.model.conduit.modifier.ConduitModelModifiers;
 import com.enderio.conduits.common.Area;
 import com.enderio.conduits.common.conduit.OffsetHelper;
@@ -56,7 +56,7 @@ public class ConduitBundleModel implements IDynamicBakedModel {
 
         if (bundleState != null) {
             // If the facade should hide the conduits, escape early.
-            if (FacadeHelper.areFacadesVisible() && bundleState.hasFacade() && bundleState.doesFacadeHideConduits()) {
+            if (ClientFacadeVisibility.areFacadesVisible() && bundleState.hasFacade() && bundleState.doesFacadeHideConduits()) {
                 return quads;
             }
 
@@ -311,7 +311,7 @@ public class ConduitBundleModel implements IDynamicBakedModel {
             return ModelHelper.getMissingTexture();
         }
 
-        if (bundleState.hasFacade() && FacadeHelper.areFacadesVisible()) {
+        if (bundleState.hasFacade() && ClientFacadeVisibility.areFacadesVisible()) {
             return Minecraft.getInstance()
                     .getBlockRenderer()
                     .getBlockModel(bundleState.facade())

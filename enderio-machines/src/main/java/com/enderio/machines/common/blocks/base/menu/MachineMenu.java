@@ -27,7 +27,7 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
 
     @Nullable
     private final EnumSyncSlot<RedstoneControl> redstoneControlSlot;
-    private MachineStatesSyncSlot statesSyncSlot;
+    private final MachineStatesSyncSlot statesSyncSlot;
 
     protected MachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory, T blockEntity) {
         super(menuType, containerId, playerInventory, blockEntity);

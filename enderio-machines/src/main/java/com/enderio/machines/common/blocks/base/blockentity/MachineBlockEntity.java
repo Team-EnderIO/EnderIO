@@ -5,6 +5,7 @@ import com.enderio.base.api.capability.SideConfig;
 import com.enderio.base.api.io.IOConfigurable;
 import com.enderio.base.api.io.IOMode;
 import com.enderio.base.api.misc.RedstoneControl;
+import com.enderio.base.api.soul.binding.ISoulBindable;
 import com.enderio.base.common.block.EIOBlockEntity;
 import com.enderio.base.common.blockentity.Wrenchable;
 import com.enderio.machines.common.MachineNBTKeys;
@@ -67,6 +68,9 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER = (be,
             side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
+
+    public static final ICapabilityProvider<MachineBlockEntity, Void, ISoulBindable> SOUL_BINDABLE = (be, ctx)
+        -> be instanceof ISoulBindable bindable ? bindable : null;
 
     private static final ModelProperty<IOConfigurable> IO_CONFIG_PROPERTY = LegacyMachineBlockEntity.IO_CONFIG_PROPERTY;
 

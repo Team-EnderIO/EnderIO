@@ -43,7 +43,7 @@ public class OffsetHelper {
      *  738
      */
 
-    public static Map<Integer, Vector2i> positions = Util.make(() -> {
+    public static final Map<Integer, Vector2i> positions = Util.make(() -> {
         Map<Integer, Vector2i> positions = new HashMap<>();
         positions.put(1, new Vector2i(0, -1));
         positions.put(2, new Vector2i(-1, 0));

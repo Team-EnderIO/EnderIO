@@ -2,6 +2,7 @@ package com.enderio.machines.common.integrations.jei;
 
 import com.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
 import com.enderio.machines.common.blocks.fluid_tank.TankRecipe;
+import com.enderio.machines.common.blocks.obelisks.weather.WeatherChangeRecipe;
 import com.enderio.machines.common.blocks.sag_mill.SagMillingRecipe;
 import com.enderio.machines.common.blocks.slicer.SlicingRecipe;
 import com.enderio.machines.common.blocks.soul_binder.SoulBindingRecipe;
@@ -9,13 +10,14 @@ import com.enderio.machines.common.blocks.vat.FermentingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.jei.util.WrappedEnchanterRecipe;
 import com.enderio.machines.common.souldata.EngineSoul;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class MachineJEIRecipes {
     private final RecipeManager recipeManager;
@@ -65,5 +67,9 @@ public class MachineJEIRecipes {
 
     public List<RecipeHolder<FermentingRecipe>> getVATRecipes() {
         return recipeManager.getAllRecipesFor(MachineRecipes.VAT_FERMENTING.type().get());
+    }
+
+    public List<RecipeHolder<WeatherChangeRecipe>> getWeatherRecipes() {
+        return recipeManager.getAllRecipesFor(MachineRecipes.WEATHER_CHANGE.type().get());
     }
 }

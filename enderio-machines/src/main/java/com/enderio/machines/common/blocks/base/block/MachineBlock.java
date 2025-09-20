@@ -1,13 +1,19 @@
 package com.enderio.machines.common.blocks.base.block;
 
+import com.enderio.base.api.soul.Soul;
+import com.enderio.base.api.soul.binding.ISoulBindable;
+import com.enderio.base.api.soul.storage.ISoulHandler;
 import com.enderio.base.common.block.EIOEntityBlock;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.mojang.serialization.MapCodec;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -97,5 +103,28 @@ public class MachineBlock<T extends MachineBlockEntity> extends EIOEntityBlock<T
         if (placer instanceof Player player && level.getBlockEntity(pos) instanceof MachineBlockEntity machine) {
             machine.setMachineOwner(player.getUUID());
         }
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
+        BlockHitResult hitResult) {
+        if (!player.getAbilities().instabuild) {
+            return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        }
+
+        ISoulBindable soulBindable = level.getCapability(EIOCapabilities.SoulBindable.BLOCK, pos);
+        if (soulBindable != null && soulBindable.canBind()) {
+            ISoulHandler soulHandler = stack.getCapability(EIOCapabilities.SoulHandler.ITEM);
+            if (soulHandler != null) {
+                for (int i = 0; i < soulHandler.getSlots(); i++) {
+                    Soul soul = soulHandler.getSoulInSlot(i);
+                    if (soulBindable.isSoulValid(soul)) {
+                        soulBindable.bindSoul(soul.copy());
+                        return ItemInteractionResult.SUCCESS;
+                    }
+                }
+            }
+        }
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 }

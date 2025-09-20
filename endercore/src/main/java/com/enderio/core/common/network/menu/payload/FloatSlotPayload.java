@@ -10,7 +10,7 @@ public class FloatSlotPayload implements SlotPayload {
             .map(FloatSlotPayload::new, FloatSlotPayload::value)
             .cast();
 
-    private float value;
+    private final float value;
 
     public FloatSlotPayload(float value) {
         this.value = value;

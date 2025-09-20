@@ -11,9 +11,9 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
 public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
-    public static int INPUTS_INDEX = 1;
-    public static int INPUT_COUNT = 2;
-    public static int LAST_INDEX = 4;
+    public static final int INPUTS_INDEX = 1;
+    public static final int INPUT_COUNT = 2;
+    public static final int LAST_INDEX = 4;
 
     private final FloatSyncSlot craftingProgressSlot;
     private final FluidStorageSyncSlot tankSyncSlot;

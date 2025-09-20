@@ -34,6 +34,7 @@ import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlo
 import com.enderio.machines.common.blocks.obelisks.relocator.RelocatorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.weather.WeatherObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.xp.XPObeliskBlockEntity;
+import com.enderio.machines.common.blocks.powered_spawner.MindKillerBlock;
 import com.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.blocks.soul_engine.SoulEngineBlockEntity;
 import com.enderio.machines.common.blocks.travel_anchor.PaintedTravelAnchorBlock;
@@ -199,6 +200,17 @@ public class MachineBlocks {
                             new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)),
                     item -> item.setTab(EIOCreativeTabs.MACHINES)
                             .addCapability(EIOCapabilities.SoulBindable.ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER));
+
+    public static final RegiliteBlock<MindKillerBlock> MIND_KILLER =  BLOCK_REGISTRY
+            .registerBlock("mind_killer", MindKillerBlock::new,
+                BlockBehaviour.Properties.of()
+                    .strength(2.5f, 8)
+                    .isViewBlocking((pState, pLevel, pPos) -> false)
+                    .noOcclusion())
+            .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, MachineTags.Blocks.MIND_KILLER)
+            .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
+                prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
     public static final RegiliteBlock<MachineBlock<VacuumChestBlockEntity>> VACUUM_CHEST = BLOCK_REGISTRY
             .registerBlock("vacuum_chest", p -> new MachineBlock<>(MachineBlockEntities.VACUUM_CHEST::get, p),
@@ -448,7 +460,6 @@ public class MachineBlocks {
                                 .strength(2.5f, 8)
                                 .isViewBlocking((pState, pLevel, pPos) -> false)
                                 .noOcclusion())
-                .setLootTable(MachinesLootTable::copyComponents)
                 .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE,
                         MachineTags.Blocks.RANGE_EXTENDER)
                 .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),

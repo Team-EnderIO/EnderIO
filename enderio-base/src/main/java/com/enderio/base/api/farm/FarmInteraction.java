@@ -1,5 +1,5 @@
 package com.enderio.base.api.farm;
 
 public enum FarmInteraction {
-    FINISHED, POWERED, BLOCKED, IGNORED;
+    FINISHED, POWERED, BLOCKED, IGNORED
 }

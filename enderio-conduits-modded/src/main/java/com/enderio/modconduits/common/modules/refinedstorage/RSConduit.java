@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 public record RSConduit(ResourceLocation texture, Component description)
         implements Conduit<RSConduit, RSConduitConnectionConfig> {
-    public static MapCodec<RSConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
+    public static final MapCodec<RSConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
             .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(RSConduit::texture),
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(RSConduit::description))
             .apply(builder, RSConduit::new));
@@ -66,25 +66,19 @@ public record RSConduit(ResourceLocation texture, Component description)
     @Override
     public void onCreated(IConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
         var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
-        if (!data.isInitialized()) {
-            data.initialize(node, level, pos);
-        }
+        data.initialize(node, level, pos);
     }
 
     @Override
     public void onRemoved(IConduitNode node, Level level, BlockPos pos) {
         var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
-        if (data.isInitialized()) {
-            data.remove(level);
-        }
+        data.remove(level);
     }
 
     @Override
     public void onConnectionsUpdated(IConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
         var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
-        if (data.isInitialized()) {
-            data.update(level, connectedSides);
-        }
+        data.update(level, connectedSides);
     }
 
     @Override
@@ -93,9 +87,9 @@ public record RSConduit(ResourceLocation texture, Component description)
 
         if (node != null && capability == RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability()) {
             var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
-            if (data.isInitialized()) {
+            if (data.isAccessible()) {
                 // noinspection unchecked
-                return (TCapability) data.container;
+                return (TCapability) data.containerProvider;
             }
         }
         return null;

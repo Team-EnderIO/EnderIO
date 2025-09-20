@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ChemicalConduitData implements ConduitData<ChemicalConduitData> {
 
-    public static MapCodec<ChemicalConduitData> CODEC = RecordCodecBuilder
+    public static final MapCodec<ChemicalConduitData> CODEC = RecordCodecBuilder
             .mapCodec(
                     instance -> instance
                             .group(Codec.BOOL.fieldOf("should_reset").forGetter(i -> i.shouldReset),
@@ -24,7 +24,7 @@ public class ChemicalConduitData implements ConduitData<ChemicalConduitData> {
                                             .forGetter(i -> i.lockedChemical))
                             .apply(instance, ChemicalConduitData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, ChemicalConduitData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, ChemicalConduitData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, i -> i.shouldReset, ChemicalStack.OPTIONAL_STREAM_CODEC, i -> i.lockedChemical,
             ChemicalConduitData::new);
 

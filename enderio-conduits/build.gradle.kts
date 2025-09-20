@@ -52,6 +52,7 @@ val jeiVersion: String by project
 val cctMinecraftVersion: String by project
 val cctVersion: String by project
 val jadeFileId: String by project
+val ftbUltimineVersion: String by project
 
 configurations {
     runtimeClasspath.get().extendsFrom(create("localRuntime"))
@@ -74,6 +75,9 @@ dependencies {
     // Jade for addon
     compileOnly("curse.maven:jade-324717:${jadeFileId}")
 
+    // FTB Ultimine Addon
+    compileOnly("dev.ftb.mods:ftb-ultimine-neoforge:${ftbUltimineVersion}")
+
     // For painting recipe.
     // TODO: This isn't great.
     compileOnly(project(":enderio-machines"))
@@ -83,6 +87,7 @@ dependencies {
     add("gametestImplementation", "net.neoforged:testframework:$neoForgeVersion") {
         isTransitive = false
     }
+    add("gametestRuntimeOnly", project(":enderio-machines"))
 }
 
 neoForge {

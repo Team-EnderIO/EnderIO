@@ -40,7 +40,7 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
 
-    public static MapCodec<ChemicalConduit> CODEC = RecordCodecBuilder
+    public static final MapCodec<ChemicalConduit> CODEC = RecordCodecBuilder
             .mapCodec(
                     builder -> builder
                             .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ChemicalConduit::texture),

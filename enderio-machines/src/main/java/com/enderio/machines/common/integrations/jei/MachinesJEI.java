@@ -9,13 +9,13 @@ import com.enderio.machines.client.gui.screen.SagMillScreen;
 import com.enderio.machines.client.gui.screen.SlicerScreen;
 import com.enderio.machines.client.gui.screen.SoulBinderScreen;
 import com.enderio.machines.client.gui.screen.VatScreen;
+import com.enderio.machines.client.gui.screen.WeatherObeliskScreen;
 import com.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.machines.common.blocks.alloy.AlloySmelterMenu;
 import com.enderio.machines.common.blocks.enchanter.EnchanterMenu;
 import com.enderio.machines.common.blocks.sag_mill.SagMillMenu;
 import com.enderio.machines.common.blocks.slicer.SlicerMenu;
 import com.enderio.machines.common.blocks.soul_binder.SoulBinderMenu;
-import com.enderio.machines.common.blocks.vat.VatMenu;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.integrations.jei.category.AlloySmeltingCategory;
@@ -26,7 +26,11 @@ import com.enderio.machines.common.integrations.jei.category.SoulBindingCategory
 import com.enderio.machines.common.integrations.jei.category.SoulEngineCategory;
 import com.enderio.machines.common.integrations.jei.category.TankCategory;
 import com.enderio.machines.common.integrations.jei.category.VATCategory;
+import com.enderio.machines.common.integrations.jei.category.WeatherChangeCategory;
 import com.enderio.machines.common.integrations.jei.transfer.CrafterRecipeTransferHandler;
+import com.enderio.machines.common.integrations.jei.transfer.FluidTankTransferHelper;
+import com.enderio.machines.common.integrations.jei.transfer.VATTransferHelper;
+import com.enderio.machines.common.integrations.jei.transfer.WeatherObeliskTransferHelper;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -58,6 +62,7 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.PRESSURIZED_FLUID_TANK.get()), TankCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SOUL_ENGINE.get()), SoulEngineCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.VAT.get()), VATCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.WEATHER_OBELISK.get()), WeatherChangeCategory.TYPE);
     }
 
     @Override
@@ -70,6 +75,7 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipeCategories(new TankCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new SoulEngineCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new VATCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new WeatherChangeCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -84,6 +90,7 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipes(TankCategory.TYPE, recipes.getTankRecipes());
         registration.addRecipes(SoulEngineCategory.TYPE, recipes.getMobGeneratorRecipes());
         registration.addRecipes(VATCategory.TYPE, recipes.getVATRecipes());
+        registration.addRecipes(WeatherChangeCategory.TYPE, recipes.getWeatherRecipes());
     }
 
     @Override
@@ -106,11 +113,16 @@ public class MachinesJEI implements IModPlugin {
                 SoulBindingCategory.TYPE, SoulBinderMenu.INPUTS_INDEX, SoulBinderMenu.INPUT_COUNT,
                 SoulBinderMenu.LAST_INDEX + 1, 36);
 
-        registration.addRecipeTransferHandler(VatMenu.class, MachineMenus.VAT.get(), VATCategory.TYPE,
-                VatMenu.INPUTS_INDEX, VatMenu.INPUT_COUNT, VatMenu.LAST_INDEX + 1, 36);
+        registration.addRecipeTransferHandler(new VATTransferHelper(registration.getTransferHelper()), VATCategory.TYPE);
 
         registration.addRecipeTransferHandler(new CrafterRecipeTransferHandler(registration.getTransferHelper()),
                 RecipeTypes.CRAFTING);
+
+        registration.addRecipeTransferHandler(new WeatherObeliskTransferHelper(registration.getTransferHelper()), WeatherChangeCategory.TYPE);
+
+        registration.addRecipeTransferHandler(new FluidTankTransferHelper(registration.getTransferHelper()), TankCategory.TYPE);
+
+
     }
 
     @Override
@@ -146,6 +158,7 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipeClickArea(SlicerScreen.class, 98, 61, 24, 16, SlicingRecipeCategory.TYPE);
         registration.addRecipeClickArea(SoulBinderScreen.class, 80, 34, 24, 17, SoulBindingCategory.TYPE);
         registration.addRecipeClickArea(VatScreen.class, 75, 33, 28, 30, VATCategory.TYPE);
+        registration.addRecipeClickArea(WeatherObeliskScreen.class, 80, 27, 14, 34, WeatherChangeCategory.TYPE);
 
         registration.addGhostIngredientHandler(MachineScreen.class, new MachinesGhostSlotHandler());
     }

@@ -12,11 +12,11 @@ public class RedstoneConduitNetworkContext implements ConduitNetworkContext<Reds
 
     // Redstone context is not saved as it is recalculated every graph tick if the
     // network is active.
-    public static ConduitNetworkContextType<RedstoneConduitNetworkContext> TYPE = new ConduitNetworkContextType<>(null,
+    public static final ConduitNetworkContextType<RedstoneConduitNetworkContext> TYPE = new ConduitNetworkContextType<>(null,
             RedstoneConduitNetworkContext::new);
 
     private boolean isActive;
-    private Map<DyeColor, Integer> previousChannelSignals = new HashMap<>();
+    private final Map<DyeColor, Integer> previousChannelSignals = new HashMap<>();
     private Map<DyeColor, Integer> channelSignals = new HashMap<>();
 
     private NewNetworkDelay newNetworkDelay = NewNetworkDelay.NEW;

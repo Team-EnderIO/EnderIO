@@ -22,7 +22,7 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
     public static final EnderSoulFilter EMPTY = new EnderSoulFilter(0);
 
     // TODO: 1.22 Rename fields.
-    public static Codec<EnderSoulFilter> CODEC = RecordCodecBuilder.create(
+    public static final Codec<EnderSoulFilter> CODEC = RecordCodecBuilder.create(
         componentInstance -> componentInstance
             .group(
                 OrderedListCodec.create(256, Soul.CODEC, Soul.EMPTY)

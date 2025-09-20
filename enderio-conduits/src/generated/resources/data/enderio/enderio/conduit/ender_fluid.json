@@ -3,6 +3,7 @@
   "description": {
     "translate": "item.enderio.conduit.ender_fluid"
   },
+  "does_support_priority": true,
   "is_multi_fluid": true,
   "texture": "enderio:block/conduit/ender_fluid",
   "transfer_rate": 8000

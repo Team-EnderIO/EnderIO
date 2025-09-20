@@ -13,9 +13,9 @@ public class EIOCriterions {
     private static final DeferredRegister<CriterionTrigger<?>> TRIGGERS = DeferredRegister
             .create(Registries.TRIGGER_TYPE, EnderIO.NAMESPACE);
 
-    public static DeferredHolder<CriterionTrigger<?>, UseGliderTrigger> USE_GLIDER = TRIGGERS.register("use_glider",
+    public static final DeferredHolder<CriterionTrigger<?>, UseGliderTrigger> USE_GLIDER = TRIGGERS.register("use_glider",
             UseGliderTrigger::new);
-    public static DeferredHolder<CriterionTrigger<?>, PaintingTrigger> PAINTING_TRIGGER = TRIGGERS.register("painting",
+    public static final DeferredHolder<CriterionTrigger<?>, PaintingTrigger> PAINTING_TRIGGER = TRIGGERS.register("painting",
             PaintingTrigger::new);
 
     public static void register(IEventBus modEventBus) {

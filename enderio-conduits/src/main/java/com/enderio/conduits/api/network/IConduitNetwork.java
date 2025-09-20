@@ -53,7 +53,7 @@ public interface IConduitNetwork {
     /**
      * @return all nodes that are in loaded and ticking chunks.
      */
-    Collection<? extends IConduitNode> loadedNodes();
+    Collection<? extends IConduitNode> tickingNodes();
 
     /**
      * @return all nodes that are loaded, ticking, and are connected to a block.

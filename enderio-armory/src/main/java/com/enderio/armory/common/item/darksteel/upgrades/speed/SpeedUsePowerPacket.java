@@ -8,9 +8,9 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record SpeedUsePowerPacket(int energyUse) implements CustomPacketPayload {
 
-    public static Type<SpeedUsePowerPacket> TYPE = new Type<>(EnderIO.loc("speed_upgrade_use_energy"));
+    public static final Type<SpeedUsePowerPacket> TYPE = new Type<>(EnderIO.loc("speed_upgrade_use_energy"));
 
-    public static StreamCodec<ByteBuf, SpeedUsePowerPacket> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.INT,
+    public static final StreamCodec<ByteBuf, SpeedUsePowerPacket> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.INT,
             SpeedUsePowerPacket::energyUse, SpeedUsePowerPacket::new);
 
     @Override

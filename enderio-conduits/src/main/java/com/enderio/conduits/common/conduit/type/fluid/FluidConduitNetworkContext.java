@@ -12,13 +12,13 @@ import net.minecraft.world.level.material.Fluids;
 
 public class FluidConduitNetworkContext implements ConduitNetworkContext<FluidConduitNetworkContext> {
 
-    public static MapCodec<FluidConduitNetworkContext> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+    public static final MapCodec<FluidConduitNetworkContext> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(BuiltInRegistries.FLUID.byNameCodec()
                     .optionalFieldOf("locked_fluid", Fluids.EMPTY)
                     .forGetter(FluidConduitNetworkContext::lockedFluid))
             .apply(instance, FluidConduitNetworkContext::new));
 
-    public static ConduitNetworkContextType<FluidConduitNetworkContext> TYPE = new ConduitNetworkContextType<>(CODEC,
+    public static final ConduitNetworkContextType<FluidConduitNetworkContext> TYPE = new ConduitNetworkContextType<>(CODEC,
             FluidConduitNetworkContext::new);
 
     private Fluid lockedFluid;

@@ -34,8 +34,9 @@ import net.minecraft.world.phys.Vec3;
 public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEntity> {
 
     public static final RenderType RENDERTYPE = RenderType.entityCutoutNoCullZOffset(ResourceLocation.withDefaultNamespace("textures/entity/enderman/enderman.png"));
-    EnderSkullModel skullmodelbase;
-    public static ModelLayerLocation ENDER_SKULL = new ModelLayerLocation(ResourceLocation.withDefaultNamespace("enderman_head"), "main");
+    public static final ModelLayerLocation ENDER_SKULL = new ModelLayerLocation(ResourceLocation.withDefaultNamespace("enderman_head"), "main");
+
+    private final EnderSkullModel skullmodelbase;
 
     public EnderSkullRenderer(BlockEntityRendererProvider.Context context) {
         skullmodelbase = new EnderSkullModel(context.getModelSet().bakeLayer(ENDER_SKULL));

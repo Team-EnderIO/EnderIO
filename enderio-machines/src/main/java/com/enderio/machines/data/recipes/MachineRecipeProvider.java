@@ -10,9 +10,6 @@ import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.regilite.holder.RegiliteBlock;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.Util;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -28,6 +25,10 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class MachineRecipeProvider extends RecipeProvider {
 
@@ -496,6 +497,16 @@ public class MachineRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SENTIENT_ENDER.get()))
                 .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.MIND_KILLER.get())
+            .define('S', EIOTags.Items.INGOTS_SOULARIUM)
+            .define('Z', EIOItems.ZOMBIE_ELECTRODE)
+            .define('E', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
+            .pattern(" Z ")
+            .pattern("SES")
+            .unlockedBy("has_ingredient",
+                InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ZOMBIE_ELECTRODE.get()))
+            .save(recipeOutput);
 
         // TODO: Enable once the block detector has a model.
         /*

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Deprecated(since = "8.0.0")
 public class ConduitDataContainer implements ConduitDataAccessor {
 
-    public static Codec<ConduitDataContainer> CODEC = ExtraCodecs.optionalEmptyMap(ConduitData.CODEC)
+    public static final Codec<ConduitDataContainer> CODEC = ExtraCodecs.optionalEmptyMap(ConduitData.CODEC)
             .xmap(ConduitDataContainer::new, i -> Optional.ofNullable(i.data));
 
     @Nullable

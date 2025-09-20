@@ -48,7 +48,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 import org.joml.Vector4f;
 
-@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class ExplosiveUpgradeHandler {
 
     private static final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_BREAK_POWER_USE = ArmoryConfig.COMMON.EXPLOSIVE_ENERGY_PER_EXPLODED_BLOCK;

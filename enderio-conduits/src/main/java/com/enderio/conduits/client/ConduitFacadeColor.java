@@ -1,7 +1,7 @@
 package com.enderio.conduits.client;
 
 import com.enderio.base.common.init.EIODataComponents;
-import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
+import com.enderio.conduits.client.model.conduit.facades.ClientFacadeVisibility;
 import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
@@ -28,7 +28,7 @@ public class ConduitFacadeColor implements BlockColor, ItemColor {
                 if (conduitBundleBlock.hasFacade()) {
                     var facade = conduitBundleBlock.getFacadeBlock();
 
-                    if (FacadeHelper.areFacadesVisible()) {
+                    if (ClientFacadeVisibility.areFacadesVisible()) {
                         int color = Minecraft.getInstance()
                                 .getBlockColors()
                                 .getColor(facade.defaultBlockState(), level, pos, tintIndex);

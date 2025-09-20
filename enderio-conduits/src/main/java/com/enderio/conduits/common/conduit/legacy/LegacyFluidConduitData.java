@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Deprecated(since = "8.0.0")
 public class LegacyFluidConduitData implements ConduitData<LegacyFluidConduitData> {
 
-    public static MapCodec<LegacyFluidConduitData> CODEC = RecordCodecBuilder
+    public static final MapCodec<LegacyFluidConduitData> CODEC = RecordCodecBuilder
             .mapCodec(
                     instance -> instance
                             .group(Codec.BOOL.fieldOf("should_reset").forGetter(i -> i.shouldReset),
@@ -29,7 +29,7 @@ public class LegacyFluidConduitData implements ConduitData<LegacyFluidConduitDat
                                             .forGetter(i -> i.lockedFluid))
                             .apply(instance, LegacyFluidConduitData::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, LegacyFluidConduitData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, LegacyFluidConduitData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, i -> i.shouldReset, ByteBufCodecs.registry(Registries.FLUID), i -> i.lockedFluid,
             LegacyFluidConduitData::new);
 
@@ -39,7 +39,6 @@ public class LegacyFluidConduitData implements ConduitData<LegacyFluidConduitDat
     public LegacyFluidConduitData() {
     }
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public LegacyFluidConduitData(boolean shouldReset, Fluid fluid) {
         this.shouldReset = shouldReset;
         this.lockedFluid = fluid;

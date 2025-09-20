@@ -8,9 +8,9 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record TravelEndabledUpdatePacket(boolean enabled) implements CustomPacketPayload {
 
-    public static Type<TravelEndabledUpdatePacket> TYPE = new Type<>(EnderIO.loc("travel_status_update"));
+    public static final Type<TravelEndabledUpdatePacket> TYPE = new Type<>(EnderIO.loc("travel_status_update"));
 
-    public static StreamCodec<ByteBuf, TravelEndabledUpdatePacket> STREAM_CODEC = StreamCodec
+    public static final StreamCodec<ByteBuf, TravelEndabledUpdatePacket> STREAM_CODEC = StreamCodec
             .composite(ByteBufCodecs.BOOL, TravelEndabledUpdatePacket::enabled, TravelEndabledUpdatePacket::new);
 
     @Override

@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class RedstoneTLatchFilter implements RedstoneInsertFilter {
 
-    public static Component INSTANCE = new Component(false, true);
+    public static final Component INSTANCE = new Component(false, true);
     private final ItemStack stack;
 
     public RedstoneTLatchFilter(ItemStack stack) {

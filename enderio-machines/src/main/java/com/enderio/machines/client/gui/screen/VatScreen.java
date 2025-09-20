@@ -11,8 +11,10 @@ import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.blocks.vat.FermentingRecipe;
 import com.enderio.machines.common.blocks.vat.VatMenu;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
+import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -58,10 +60,12 @@ public class VatScreen extends MachineScreen<VatMenu> {
 
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
-        addRenderableWidget(new ImageButton(leftPos + 29, topPos + 62, 16, 16, MOVE_SPRITES,
-                (b) -> handleButtonPress(VatMenu.MOVE_TO_OUTPUT_TANK_BUTTON_ID)));
-        addRenderableWidget(new ImageButton(leftPos + 131, topPos + 62, 16, 16, VOID_SPRITES,
-                (b) -> handleButtonPress(VatMenu.DUMP_OUTPUT_TANK_BUTTON_ID)));
+        ImageButton transfer = new ImageButton(leftPos + 29, topPos + 62, 16, 16, MOVE_SPRITES, (b) -> handleButtonPress(VatMenu.MOVE_TO_OUTPUT_TANK_BUTTON_ID));
+        transfer.setTooltip(Tooltip.create(MachineLang.TRANSFER_TANK));
+        addRenderableWidget(transfer);
+        ImageButton dump = new ImageButton(leftPos + 131, topPos + 62, 16, 16, VOID_SPRITES, (b) -> handleButtonPress(VatMenu.DUMP_OUTPUT_TANK_BUTTON_ID));
+        dump.setTooltip(Tooltip.create(MachineLang.DUMP_TANK));
+        addRenderableWidget(dump);
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 83, 162, 76);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);

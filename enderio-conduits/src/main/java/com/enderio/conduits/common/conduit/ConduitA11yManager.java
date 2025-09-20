@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A11Y tools for conduit block behaviours.
  */
-@EventBusSubscriber(/* value = Dist.CLIENT, */modid = EnderIOConduits.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(/* value = Dist.CLIENT, */modid = EnderIOConduits.MODULE_MOD_ID)
 public class ConduitA11yManager {
 
     private static Holder<Conduit<?, ?>> heldConduit;

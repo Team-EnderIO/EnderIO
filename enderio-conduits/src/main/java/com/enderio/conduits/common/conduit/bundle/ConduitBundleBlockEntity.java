@@ -583,6 +583,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     @Override
     public void removeConduit(Holder<Conduit<?, ?>> conduit, @Nullable Player player) {
+        removeConduit(conduit, player, getBlockPos());
+    }
+
+    // Intended for internal use
+    // TODO: Can this be done better?
+    public void removeConduit(Holder<Conduit<?, ?>> conduit, @Nullable Player player, BlockPos dropItemPos) {
         if (level == null) {
             return;
         }
@@ -600,9 +606,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         // Drop the conduit and it's inventory items.
         if (!level.isClientSide()) {
             if (player != null && !player.getAbilities().instabuild) {
-                dropItem(ConduitBlockItem.getStackFor(conduit, 1));
+                dropItem(ConduitBlockItem.getStackFor(conduit, 1), dropItemPos);
                 for (Direction side : Direction.values()) {
-                    dropConnectionItems(conduit, side);
+                    dropConnectionItems(conduit, side, dropItemPos);
                 }
             }
         }
@@ -671,8 +677,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     private void dropItem(ItemStack stack) {
+        dropItem(stack, getBlockPos());
+    }
+
+    private void dropItem(ItemStack stack, BlockPos pos) {
         if (level != null) {
-            level.addFreshEntity(new ItemEntity(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(),
+            level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(),
                     stack.copy()));
         }
     }
@@ -887,10 +897,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                     .collect(Collectors.toSet());
 
             conduit.value().onConnectionsUpdated(node, level, getBlockPos(), connectedSides);
-
-            if (node.isLoaded()) {
-                node.getNetwork().onNodeUpdated(node);
-            }
+            node.getNetwork().onNodeUpdated(node);
         }
     }
 
@@ -928,7 +935,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    private void dropConnectionItems(Holder<Conduit<?, ?>> conduit, Direction side) {
+    private void dropConnectionItems(Holder<Conduit<?, ?>> conduit, Direction side, BlockPos pos) {
         var inventory = getConnectionInventory(conduit, side);
         if (inventory == null) {
             return;
@@ -937,7 +944,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         for (int i = 0; i < inventory.getSlots(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                dropItem(stack);
+                dropItem(stack, pos);
                 inventory.setStackInSlot(i, ItemStack.EMPTY);
             }
         }
@@ -1021,9 +1028,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
         if (level != null && !level.isClientSide()) {
             for (var node : conduitNodes.values()) {
-                if (node.isLoaded()) {
-                    node.onRedstoneChanged();
-                }
+                node.onRedstoneChanged();
             }
         }
     }
@@ -1112,6 +1117,10 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     public void dropFacadeItem() {
         dropItem(facadeProvider);
+    }
+
+    public void dropFacadeItem(BlockPos pos) {
+        dropItem(facadeProvider, pos);
     }
 
     // endregion
@@ -1457,6 +1466,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
             if (tag.contains(FACADE_PROVIDER_KEY)) {
                 facadeProvider = ItemStack.parseOptional(registries, tag.getCompound(FACADE_PROVIDER_KEY));
+            } else {
+                facadeProvider = ItemStack.EMPTY;
             }
         }
 
@@ -1678,12 +1689,11 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     // Matches the same data format as the original conduit bundle.
     // Enables us to convert between the new and old formats easily.
-    @SuppressWarnings("removal")
     private record LegacyConduitBundle(BlockPos pos, List<Holder<Conduit<?, ?>>> conduits,
             Map<Direction, ConduitConnection> connections, ItemStack facadeItem,
             Map<Holder<Conduit<?, ?>>, ConduitNode> conduitNodes) {
 
-        public static Codec<LegacyConduitBundle> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        public static final Codec<LegacyConduitBundle> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 BlockPos.CODEC.fieldOf("pos").forGetter(i -> i.pos),
                 Conduit.CODEC.listOf().fieldOf("conduits").forGetter(i -> i.conduits),
                 Codec.unboundedMap(Direction.CODEC, ConduitConnection.CODEC)
@@ -1701,7 +1711,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
         public static final class ConduitConnection {
 
-            public static Codec<ConduitConnection> CODEC = ConnectionState.CODEC.listOf(0, MAX_CONDUITS)
+            public static final Codec<ConduitConnection> CODEC = ConnectionState.CODEC.listOf(0, MAX_CONDUITS)
                     .xmap(ConduitConnection::new, i -> Arrays.stream(i.connectionStates).toList());
 
             private final ConnectionState[] connectionStates = Util.make(() -> {
@@ -1727,7 +1737,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    @SuppressWarnings("removal")
     private void loadFromLegacyBundle(LegacyConduitBundle bundle) {
         // Copy the conduit list
         conduits = new ArrayList<>();

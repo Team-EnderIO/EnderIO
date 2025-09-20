@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
 
-    public static int BACK_BUTTON_ID = 0;
+    public static final int BACK_BUTTON_ID = 0;
 
     @Nullable
     private final FilterAccess filterAccess;

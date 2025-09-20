@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": {
+      "tag": "c:ingots/energetic_alloy"
+    },
+    "S": {
+      "tag": "c:ingots/soularium"
+    },
+    "Z": {
+      "item": "enderio:zombie_electrode"
+    }
+  },
+  "pattern": [
+    " Z ",
+    "SES"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:mind_killer"
+  }
+}

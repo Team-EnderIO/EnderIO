@@ -1,6 +1,5 @@
 {
   "type": "enderio:soul_binding",
-  "copyInputComponents": false,
   "energy": 288000,
   "entity_type": "minecraft:phantom",
   "experience": 14,

@@ -201,8 +201,8 @@ public class EIOLang {
     public static final MutableComponent NOCAP_DESC = addTranslation("gui", EnderIO.loc("nocap.desc"),
             "Insert any capacitor so \n this machine can work!");
 
-    public static Component VISIBLE = addTranslation("gui", EnderIO.loc("visible.true"), "Visible");
-    public static Component NOT_VISIBLE = addTranslation("gui", EnderIO.loc("visible.false"), "Hidden");
+    public static final Component VISIBLE = addTranslation("gui", EnderIO.loc("visible.true"), "Visible");
+    public static final Component NOT_VISIBLE = addTranslation("gui", EnderIO.loc("visible.false"), "Hidden");
 
     // endregion
 

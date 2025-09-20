@@ -44,7 +44,7 @@ import org.slf4j.Logger;
 @EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID)
 public class ConduitNetworkSavedData extends SavedData {
 
-    public static Codec<ConduitNetworkSavedData> CODEC = ConduitNetwork.CODEC.listOf()
+    public static final Codec<ConduitNetworkSavedData> CODEC = ConduitNetwork.CODEC.listOf()
             .xmap(ConduitNetworkSavedData::new, ConduitNetworkSavedData::getNetworks);
 
     private final Multimap<Holder<Conduit<?, ?>>, ConduitNetwork> networks = HashMultimap.create();

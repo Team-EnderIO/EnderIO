@@ -39,7 +39,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
         implements RangedActor {
 
     private @Nullable AABB aabb;
-    public static SingleSlotAccess FILTER = new SingleSlotAccess();
+    public static final SingleSlotAccess FILTER = new SingleSlotAccess();
 
     private static final ActionRange DEFAULT_RANGE = new ActionRange(0, false);
 

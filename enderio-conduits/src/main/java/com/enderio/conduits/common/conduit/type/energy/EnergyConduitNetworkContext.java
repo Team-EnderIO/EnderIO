@@ -14,7 +14,7 @@ public class EnergyConduitNetworkContext implements ConduitNetworkContext<Energy
             .group(Codec.LONG.fieldOf("energy_stored").forGetter(i -> i.energyStored))
             .apply(builder, EnergyConduitNetworkContext::new));
 
-    public static ConduitNetworkContextType<EnergyConduitNetworkContext> TYPE = new ConduitNetworkContextType<>(CODEC,
+    public static final ConduitNetworkContextType<EnergyConduitNetworkContext> TYPE = new ConduitNetworkContextType<>(CODEC,
             EnergyConduitNetworkContext::new);
 
     private long energyStored = 0;

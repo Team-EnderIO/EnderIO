@@ -10,9 +10,9 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
 public class AlloySmelterMenu extends PoweredMachineMenu<AlloySmelterBlockEntity> {
-    public static int INPUTS_INDEX = 1;
-    public static int INPUT_COUNT = 3;
-    public static int LAST_INDEX = 4;
+    public static final int INPUTS_INDEX = 1;
+    public static final int INPUT_COUNT = 3;
+    public static final int LAST_INDEX = 4;
 
     private final FloatSyncSlot progressSlot;
     private final EnumSyncSlot<AlloySmelterMode> modeSlot;

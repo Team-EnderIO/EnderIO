@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class EnderIOSelfIntegration implements Integration {
 
-    private GliderMovementInfo info = new GliderMovementInfo(0.01d, 1d, -0.05d, this);
+    private final GliderMovementInfo info = new GliderMovementInfo(0.01d, 1d, -0.05d, this);
 
     public static final EnderIOSelfIntegration INSTANCE = new EnderIOSelfIntegration();
     @Override

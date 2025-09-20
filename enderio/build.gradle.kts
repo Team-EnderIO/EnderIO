@@ -20,7 +20,7 @@ val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
 val cctMinecraftVersion: String by project
 val cctVersion: String by project
-val stitchVersion: String by project
+val athenaVersion: String by project
 val ae2Version: String by project
 val refinedstorageVersion: String by project
 val jadeFileId: String by project
@@ -28,6 +28,7 @@ val mekanismMinecraftVersion: String by project
 val mekanismVersion: String by project
 val curseforge_laserio_id: String by project
 val curseforge_laserio_file: String by project
+val ftbUltimineVersion: String by project
 
 dependencies {
     // Include modules
@@ -51,7 +52,7 @@ dependencies {
 //    runtimeOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge:$cctVersion")
 
     //Athena ctm
-    runtimeOnly("maven.modrinth:stitch:${stitchVersion}")
+    runtimeOnly("maven.modrinth:athena-ctm:${athenaVersion}")
 
     // AE2
     runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
@@ -73,6 +74,9 @@ dependencies {
 
     // Jade
     runtimeOnly("curse.maven:jade-324717:${jadeFileId}")
+
+    // FTB Ultimine Addon
+    runtimeOnly("dev.ftb.mods:ftb-ultimine-neoforge:${ftbUltimineVersion}")
 
     //fluxnetworks
     ////runtimeOnly("curse.maven:fluxnetworks-248020:4651164")
@@ -101,7 +105,7 @@ neoForge {
 
         create("server") {
             server()
-            gameDirectory = project.file("runs/server")
+            gameDirectory = project.file("run/server")
         }
     }
 }
@@ -169,11 +173,11 @@ if (getReleaseType() != null) {
             setJavaVersions(JavaVersion.VERSION_21)
 
             curseDepends {
-                optional("jei", /*"patchouli",*/ "stitch", "applied-energistics-2", "mekanism", "cc-tweaked")
+                optional("jei", /*"patchouli",*/ "athena", "applied-energistics-2", "mekanism", "cc-tweaked")
             }
 
             modrinthDepends {
-                optional("jei", "stitch", "ae2", "mekanism", "cc-tweaked")
+                optional("jei", "athena-ctm", "ae2", "mekanism", "cc-tweaked")
             }
         }
     } else {

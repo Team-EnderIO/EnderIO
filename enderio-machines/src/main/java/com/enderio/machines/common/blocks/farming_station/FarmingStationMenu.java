@@ -56,7 +56,6 @@ public class FarmingStationMenu extends PoweredMachineMenu<FarmingStationBlockEn
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
-        // noinspection DuplicatedCode
         var blockEntity = getBlockEntity();
         if (id == VISIBILITY_BUTTON_ID) {
             blockEntity.setRangeVisible(!isRangeVisible());

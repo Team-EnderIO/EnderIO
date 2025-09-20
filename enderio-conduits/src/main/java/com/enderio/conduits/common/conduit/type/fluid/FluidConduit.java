@@ -8,6 +8,7 @@ import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
 import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
+import com.enderio.conduits.api.network.ConduitBlockConnection;
 import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
 import com.enderio.conduits.common.init.ConduitLang;
@@ -40,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
 public record FluidConduit(ResourceLocation texture, Component description, int transferRatePerTick,
-        boolean isMultiFluid) implements Conduit<FluidConduit, FluidConduitConnectionConfig> {
+        boolean isMultiFluid, boolean doesSupportPriority) implements Conduit<FluidConduit, FluidConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
@@ -52,7 +53,8 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
                                     ComponentSerialization.CODEC.fieldOf("description")
                                             .forGetter(FluidConduit::description),
                                     Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduit::transferRatePerTick),
-                                    Codec.BOOL.fieldOf("is_multi_fluid").forGetter(FluidConduit::isMultiFluid))
+                                    Codec.BOOL.fieldOf("is_multi_fluid").forGetter(FluidConduit::isMultiFluid),
+                                Codec.BOOL.optionalFieldOf("does_support_priority", false).forGetter(FluidConduit::doesSupportPriority))
                             .apply(builder, FluidConduit::new));
 
     @Override
@@ -68,6 +70,19 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     @Override
     public boolean hasMenu() {
         return true;
+    }
+
+    @Override
+    public int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA, ConduitBlockConnection connectionB) {
+        if (doesSupportPriority()) {
+            int priorityA = connectionA.connectionConfig(FluidConduitConnectionConfig.TYPE).insertPriority();
+            int priorityB = connectionB.connectionConfig(FluidConduitConnectionConfig.TYPE).insertPriority();
+            if (priorityA != priorityB) {
+                return Integer.compare(priorityB, priorityA);
+            }
+        }
+
+        return Conduit.super.compareNodes(refConnection, connectionA, connectionB);
     }
 
     @Override
@@ -138,7 +153,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     public FluidConduitConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
             DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
         return new FluidConduitConnectionConfig(isInsert, inputChannel, isExtract, outputChannel, redstoneControl,
-                redstoneChannel);
+                redstoneChannel, 0);
     }
 
     @Override

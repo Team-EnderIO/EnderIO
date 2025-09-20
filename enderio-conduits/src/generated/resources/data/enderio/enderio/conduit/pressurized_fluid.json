@@ -3,6 +3,7 @@
   "description": {
     "translate": "item.enderio.conduit.pressurized_fluid"
   },
+  "does_support_priority": true,
   "is_multi_fluid": false,
   "texture": "enderio:block/conduit/pressurized_fluid",
   "transfer_rate": 1000

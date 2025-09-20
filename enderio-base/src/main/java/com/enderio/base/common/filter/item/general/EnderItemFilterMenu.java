@@ -19,8 +19,8 @@ import java.util.function.Supplier;
 
 public class EnderItemFilterMenu extends AbstractFilterMenu<EnderItemFilter> {
 
-    public static int IS_INVERTED_BUTTON_ID = 1;
-    public static int SHOULD_COMPARE_COMPONENTS_BUTTON_ID = 2;
+    public static final int IS_INVERTED_BUTTON_ID = 1;
+    public static final int SHOULD_COMPARE_COMPONENTS_BUTTON_ID = 2;
 
     public final EnderItemFilterItem.Type type;
 

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 public record EnderItemFilter(NonNullList<ItemStack> matches, boolean isDenyList, boolean shouldCompareComponents,
         DamageFilterMode damageFilterMode) implements ItemFilter {
 
-    public static EnderItemFilter EMPTY = new EnderItemFilter(0);
+    public static final EnderItemFilter EMPTY = new EnderItemFilter(0);
 
     // TODO: 1.22: Change field names
     public static final Codec<EnderItemFilter> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance

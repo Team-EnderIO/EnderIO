@@ -20,7 +20,7 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
  * This is needed, so upgrading conduits doesn't require shifting of types, but just recalculating the current connection
  */
 @SuppressWarnings("unused")
-@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID)
 public class ConduitSorter {
     private static final List<Holder<Conduit<?, ?>>> SORTED_CONDUITS = new ArrayList<>();
 

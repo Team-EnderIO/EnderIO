@@ -27,7 +27,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
-@EventBusSubscriber(modid = ModdedConduits.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ModdedConduits.MODULE_MOD_ID)
 @Mod(ModdedConduits.MODULE_MOD_ID)
 public class ModdedConduits {
     public static final String MODULE_MOD_ID = "enderio_conduits_modded";

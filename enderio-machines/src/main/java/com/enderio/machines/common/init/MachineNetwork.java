@@ -8,6 +8,7 @@ import com.enderio.machines.common.network.MachinePayloadHandler;
 import com.enderio.machines.common.network.PoweredSpawnerSoulPacket;
 import com.enderio.machines.common.network.SolarSoulPacket;
 import com.enderio.machines.common.network.SoulEngineSoulPacket;
+import com.enderio.machines.common.network.TransferItemsPacket;
 import com.enderio.machines.common.network.UpdateCrafterTemplatePacket;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.FarmSoul;
@@ -18,7 +19,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
 public class MachineNetwork {
     private static final String PROTOCOL_VERSION = "1.0";
 
@@ -51,5 +52,8 @@ public class MachineNetwork {
 
         registrar.playToServer(EnderfaceInteractPacket.TYPE, EnderfaceInteractPacket.STREAM_CODEC,
                 MachinePayloadHandler.Server.getInstance()::handleEnderfaceInteract);
+
+        registrar.playToServer(TransferItemsPacket.TYPE, TransferItemsPacket.STREAM_CODEC,
+            MachinePayloadHandler.Server.getInstance()::handleTransferItems);
     }
 }

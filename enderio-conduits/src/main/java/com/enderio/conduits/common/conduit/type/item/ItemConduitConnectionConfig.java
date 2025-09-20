@@ -21,10 +21,10 @@ public record ItemConduitConnectionConfig(boolean isInsert, DyeColor insertChann
         boolean isRoundRobin, boolean isSelfFeed, int priority)
         implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {
 
-    public static ItemConduitConnectionConfig DEFAULT = new ItemConduitConnectionConfig(false, DyeColor.GREEN, true,
+    public static final ItemConduitConnectionConfig DEFAULT = new ItemConduitConnectionConfig(false, DyeColor.GREEN, true,
             DyeColor.GREEN, RedstoneControl.NEVER_ACTIVE, DyeColor.RED, false, false, 0);
 
-    public static MapCodec<ItemConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+    public static final MapCodec<ItemConduitConnectionConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(Codec.BOOL.fieldOf("is_insert").forGetter(ItemConduitConnectionConfig::isInsert),
                     DyeColor.CODEC.fieldOf("insert_channel").forGetter(ItemConduitConnectionConfig::insertChannel),
                     Codec.BOOL.fieldOf("is_extract").forGetter(ItemConduitConnectionConfig::isExtract),
@@ -38,7 +38,7 @@ public record ItemConduitConnectionConfig(boolean isInsert, DyeColor insertChann
                     Codec.INT.fieldOf("priority").forGetter(ItemConduitConnectionConfig::priority))
             .apply(instance, ItemConduitConnectionConfig::new));
 
-    public static StreamCodec<ByteBuf, ItemConduitConnectionConfig> STREAM_CODEC = MassiveStreamCodec.composite(
+    public static final StreamCodec<ByteBuf, ItemConduitConnectionConfig> STREAM_CODEC = MassiveStreamCodec.composite(
             ByteBufCodecs.BOOL, ItemConduitConnectionConfig::isInsert, DyeColor.STREAM_CODEC,
             ItemConduitConnectionConfig::insertChannel, ByteBufCodecs.BOOL, ItemConduitConnectionConfig::isExtract,
             DyeColor.STREAM_CODEC, ItemConduitConnectionConfig::extractChannel, RedstoneControl.STREAM_CODEC,
@@ -47,7 +47,7 @@ public record ItemConduitConnectionConfig(boolean isInsert, DyeColor insertChann
             ItemConduitConnectionConfig::isRoundRobin, ByteBufCodecs.BOOL, ItemConduitConnectionConfig::isSelfFeed,
             ByteBufCodecs.INT, ItemConduitConnectionConfig::priority, ItemConduitConnectionConfig::new);
 
-    public static ConnectionConfigType<ItemConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
+    public static final ConnectionConfigType<ItemConduitConnectionConfig> TYPE = new ConnectionConfigType<>(CODEC,
             STREAM_CODEC.cast(), () -> DEFAULT);
 
     @Override

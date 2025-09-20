@@ -26,7 +26,7 @@ public record DynamicConnectionState(boolean isInsert, DyeColor insertChannel, b
         @UseOnly(LogicalSide.SERVER) ItemStack filterInsert, @UseOnly(LogicalSide.SERVER) ItemStack filterExtract,
         @UseOnly(LogicalSide.SERVER) ItemStack upgradeExtract) implements ConnectionState {
 
-    public static Codec<DynamicConnectionState> CODEC = RecordCodecBuilder.create(instance -> instance
+    public static final Codec<DynamicConnectionState> CODEC = RecordCodecBuilder.create(instance -> instance
             .group(Codec.BOOL.fieldOf("is_insert").forGetter(DynamicConnectionState::isInsert),
                     DyeColor.CODEC.fieldOf("insert_channel").forGetter(DynamicConnectionState::insertChannel),
                     Codec.BOOL.fieldOf("is_extract").forGetter(DynamicConnectionState::isExtract),
@@ -39,7 +39,7 @@ public record DynamicConnectionState(boolean isInsert, DyeColor insertChannel, b
                             .forGetter(DynamicConnectionState::upgradeExtract))
             .apply(instance, DynamicConnectionState::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, DynamicConnectionState> STREAM_CODEC = MassiveStreamCodec
+    public static final StreamCodec<RegistryFriendlyByteBuf, DynamicConnectionState> STREAM_CODEC = MassiveStreamCodec
             .composite(ByteBufCodecs.BOOL, DynamicConnectionState::isInsert, DyeColor.STREAM_CODEC,
                     DynamicConnectionState::insertChannel, ByteBufCodecs.BOOL, DynamicConnectionState::isExtract,
                     DyeColor.STREAM_CODEC, DynamicConnectionState::extractChannel, RedstoneControl.STREAM_CODEC,

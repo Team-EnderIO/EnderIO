@@ -20,33 +20,33 @@ import java.util.function.Supplier;
 public class RedstoneFilterItem extends Item {
 
     // Insert filters
-    public static ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> AND_FILTER_PROVIDER =
+    public static final ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> AND_FILTER_PROVIDER =
         (stack, v) -> new RedstoneANDFilter(stack);
-    public static ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> COUNT_FILTER_PROVIDER =
+    public static final ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> COUNT_FILTER_PROVIDER =
         (stack, v) -> new RedstoneCountFilter(stack);
-    public static ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> NAND_FILTER_PROVIDER =
+    public static final ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> NAND_FILTER_PROVIDER =
         (stack, v) -> new RedstoneNANDFilter(stack);
-    public static ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> NOR_FILTER_PROVIDER =
+    public static final ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> NOR_FILTER_PROVIDER =
         (stack, v) -> new RedstoneNORFilter(stack);
-    public static ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> OR_FILTER_PROVIDER =
+    public static final ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> OR_FILTER_PROVIDER =
         (stack, v) -> new RedstoneORFilter(stack);
-    public static ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> TLATCH_FILTER_PROVIDER =
+    public static final ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> TLATCH_FILTER_PROVIDER =
         (stack, v) -> new RedstoneTLatchFilter(stack);
-    public static ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> XNOR_FILTER_PROVIDER =
+    public static final ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> XNOR_FILTER_PROVIDER =
         (stack, v) -> new RedstoneXNORFilter(stack);
-    public static ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> XOR_FILTER_PROVIDER =
+    public static final ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> XOR_FILTER_PROVIDER =
         (stack, v) -> new RedstoneXORFilter(stack);
 
     // Extract filters
-    public static ICapabilityProvider<ItemStack, Void, RedstoneExtractFilter> SENSOR_FILTER_PROVIDER =
+    public static final ICapabilityProvider<ItemStack, Void, RedstoneExtractFilter> SENSOR_FILTER_PROVIDER =
         (stack, v) -> RedstoneSensorFilter.INSTANCE;
-    public static ICapabilityProvider<ItemStack, Void, RedstoneExtractFilter> TIMER_FILTER_PROVIDER =
+    public static final ICapabilityProvider<ItemStack, Void, RedstoneExtractFilter> TIMER_FILTER_PROVIDER =
         (stack, v) -> new RedstoneTimerFilter(stack);
 
     // Insert & Extract filters
-    public static ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> NOT_FILTER_PROVIDER_INSERT =
+    public static final ICapabilityProvider<ItemStack, Void, RedstoneInsertFilter> NOT_FILTER_PROVIDER_INSERT =
         (stack, v) -> RedstoneNOTFilter.INSTANCE;
-    public static ICapabilityProvider<ItemStack, Void, RedstoneExtractFilter> NOT_FILTER_PROVIDER_EXTRACT =
+    public static final ICapabilityProvider<ItemStack, Void, RedstoneExtractFilter> NOT_FILTER_PROVIDER_EXTRACT =
         (stack, v) -> RedstoneNOTFilter.INSTANCE;
 
     @Nullable

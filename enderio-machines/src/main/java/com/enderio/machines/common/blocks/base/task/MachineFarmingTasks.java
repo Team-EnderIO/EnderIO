@@ -29,7 +29,9 @@ import net.minecraft.world.phys.AABB;
 
 public class MachineFarmingTasks {
 
-    public static FarmTask PLANT_CROP = (soil, farmBlockEntity) -> {
+    // TODO: These should probably just be concrete class implementations.
+
+    public static final FarmTask PLANT_CROP = (soil, farmBlockEntity) -> {
         ItemStack seeds = farmBlockEntity.getSeedsForPos(soil);
         if (seeds.isEmpty() || farmBlockEntity.getLevel().getBlockState(soil).isAir()) {
             return FarmInteraction.BLOCKED;
@@ -76,7 +78,7 @@ public class MachineFarmingTasks {
         return FarmInteraction.IGNORED;
     };
 
-    public static FarmTask PLANT_BLOCK = (soil, farmBlockEntity) -> {
+    public static final FarmTask PLANT_BLOCK = (soil, farmBlockEntity) -> {
         ItemStack seeds = farmBlockEntity.getSeedsForPos(soil);
         if (seeds.isEmpty() || farmBlockEntity.getLevel().getBlockState(soil).isAir()) {
             return FarmInteraction.BLOCKED;
@@ -97,7 +99,7 @@ public class MachineFarmingTasks {
         return FarmInteraction.IGNORED;
     };
 
-    public static FarmTask PLANT_SAPLING = (soil, farmBlockEntity) -> {
+    public static final FarmTask PLANT_SAPLING = (soil, farmBlockEntity) -> {
         ItemStack seeds = farmBlockEntity.getSeedsForPos(soil);
         if (seeds.isEmpty() || farmBlockEntity.getLevel().getBlockState(soil).isAir()) {
             return FarmInteraction.BLOCKED;
@@ -117,7 +119,7 @@ public class MachineFarmingTasks {
         return FarmInteraction.IGNORED;
     };
 
-    public static FarmTask PLANT_NETHER_WART = (soil, farmBlockEntity) -> {
+    public static final FarmTask PLANT_NETHER_WART = (soil, farmBlockEntity) -> {
         ItemStack seeds = farmBlockEntity.getSeedsForPos(soil);
         if (seeds.isEmpty() || farmBlockEntity.getLevel().getBlockState(soil).isAir()) {
             return FarmInteraction.BLOCKED;
@@ -137,7 +139,7 @@ public class MachineFarmingTasks {
         return FarmInteraction.IGNORED;
     };
 
-    public static FarmTask BONEMEAL = (soil, farmBlockEntity) -> {
+    public static final FarmTask BONEMEAL = (soil, farmBlockEntity) -> {
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
         if (plant.getBlock() instanceof BonemealableBlock bonemealableBlock) {
@@ -154,7 +156,7 @@ public class MachineFarmingTasks {
         return FarmInteraction.IGNORED;
     };
 
-    public static FarmTask HARVEST_CROP = (soil, farmBlockEntity) -> {
+    public static final FarmTask HARVEST_CROP = (soil, farmBlockEntity) -> {
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
         BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
@@ -186,7 +188,7 @@ public class MachineFarmingTasks {
         return FarmInteraction.IGNORED;
     };
 
-    public static FarmTask HARVEST_PITCHER = (soil, farmBlockEntity) -> { // TODO no general 2 block crop?
+    public static final FarmTask HARVEST_PITCHER = (soil, farmBlockEntity) -> { // TODO no general 2 block crop?
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
         BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
@@ -219,7 +221,7 @@ public class MachineFarmingTasks {
         return FarmInteraction.IGNORED;
     };
 
-    public static FarmTask HARVEST_FLOWER = (soil, farmBlockEntity) -> { // TorchFlower
+    public static final FarmTask HARVEST_FLOWER = (soil, farmBlockEntity) -> { // TorchFlower
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
         BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
@@ -249,7 +251,7 @@ public class MachineFarmingTasks {
         return FarmInteraction.IGNORED;
     };
 
-    public static FarmTask HARVEST_STEM_CROPS = (soil, farmBlockEntity) -> {
+    public static final FarmTask HARVEST_STEM_CROPS = (soil, farmBlockEntity) -> {
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
         BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
@@ -280,7 +282,7 @@ public class MachineFarmingTasks {
         return FarmInteraction.IGNORED;
     };
 
-    public static FarmTask HARVEST_BLOCK = (soil, farmBlockEntity) -> {
+    public static final FarmTask HARVEST_BLOCK = (soil, farmBlockEntity) -> {
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
         BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
@@ -318,7 +320,7 @@ public class MachineFarmingTasks {
         return FarmInteraction.IGNORED;
     };
 
-    public static FarmTask HARVEST_TREE = (soil, farmBlockEntity) -> {
+    public static final FarmTask HARVEST_TREE = (soil, farmBlockEntity) -> {
         BlockPos bottom = soil.above();
         BlockState bottomState = farmBlockEntity.getLevel().getBlockState(bottom);
         AABB range = new AABB(farmBlockEntity.getPosition()).inflate(farmBlockEntity.getFarmingRange());
@@ -359,7 +361,7 @@ public class MachineFarmingTasks {
         return FarmInteraction.IGNORED;
     };
 
-    public static FarmTask HARVEST_NETHER_WART = (soil, farmBlockEntity) -> {
+    public static final FarmTask HARVEST_NETHER_WART = (soil, farmBlockEntity) -> {
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
         BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);

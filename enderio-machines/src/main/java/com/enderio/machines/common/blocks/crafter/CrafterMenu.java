@@ -11,9 +11,9 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class CrafterMenu extends PoweredMachineMenu<CrafterBlockEntity> {
 
-    public static int INPUTS_INDEX = 11;
-    public static int INPUT_COUNT = 9;
-    public static int LAST_INDEX = 20;
+    public static final int INPUTS_INDEX = 11;
+    public static final int INPUT_COUNT = 9;
+    public static final int LAST_INDEX = 20;
 
     public CrafterMenu(int containerId, Inventory inventory, CrafterBlockEntity blockEntity) {
         super(MachineMenus.CRAFTER.get(), containerId, inventory, blockEntity);

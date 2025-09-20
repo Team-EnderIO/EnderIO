@@ -8,10 +8,10 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record FlightEnabledPacket(boolean enabled) implements CustomPacketPayload {
 
-    public static CustomPacketPayload.Type<FlightEnabledPacket> TYPE = new CustomPacketPayload.Type<>(
+    public static final CustomPacketPayload.Type<FlightEnabledPacket> TYPE = new CustomPacketPayload.Type<>(
             EnderIO.loc("flight_upgrade_enabled"));
 
-    public static StreamCodec<ByteBuf, FlightEnabledPacket> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.BOOL,
+    public static final StreamCodec<ByteBuf, FlightEnabledPacket> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.BOOL,
             FlightEnabledPacket::enabled, FlightEnabledPacket::new);
 
     @Override

@@ -15,7 +15,7 @@ public record FarmStationSoulPacket(Map<ResourceLocation, FarmSoul.SoulData> map
 
     public static final Type<FarmStationSoulPacket> TYPE = new Type<>(EnderIO.loc("farm_soul"));
 
-    public static StreamCodec<ByteBuf, FarmStationSoulPacket> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, FarmStationSoulPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, FarmSoul.STREAM_CODEC),
             FarmStationSoulPacket::map, FarmStationSoulPacket::new);
 

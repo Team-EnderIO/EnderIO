@@ -80,9 +80,9 @@ public class AE2ConduitsModule implements ConduitCommonModule {
         return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
     }
 
-    public static ResourceKey<Conduit<?, ?>> NORMAL = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static final ResourceKey<Conduit<?, ?>> NORMAL = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
             EnderIO.loc("me"));
-    public static ResourceKey<Conduit<?, ?>> DENSE = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static final ResourceKey<Conduit<?, ?>> DENSE = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
             EnderIO.loc("dense_me"));
 
     private static final TagKey<Item> COVERED_DENSE_CABLE = ItemTags

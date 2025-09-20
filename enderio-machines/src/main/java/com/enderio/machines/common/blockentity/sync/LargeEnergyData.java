@@ -11,14 +11,14 @@ import net.minecraft.network.codec.StreamCodec;
 
 @Deprecated(forRemoval = true, since = "7.1")
 public record LargeEnergyData(long energyStored, long maxEnergyStored) {
-    public static Codec<LargeEnergyData> CODEC = RecordCodecBuilder.create(
+    public static final Codec<LargeEnergyData> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             Codec.LONG.fieldOf("EnergyStored").forGetter(LargeEnergyData::energyStored),
             Codec.LONG.fieldOf("MaxEnergyStored").forGetter(LargeEnergyData::maxEnergyStored)
         ).apply(instance, LargeEnergyData::new)
     );
 
-    public static StreamCodec<ByteBuf, LargeEnergyData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, LargeEnergyData> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.VAR_LONG,
         LargeEnergyData::energyStored,
         ByteBufCodecs.VAR_LONG,

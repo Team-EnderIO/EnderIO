@@ -6,7 +6,7 @@ import net.minecraft.core.Direction;
 
 public record DumbIOConfigurable(IOConfig config) implements IOConfigurable {
 
-    public static DumbIOConfigurable DISABLED = new DumbIOConfigurable(IOConfig.of(IOMode.DISABLED));
+    public static final DumbIOConfigurable DISABLED = new DumbIOConfigurable(IOConfig.of(IOMode.DISABLED));
 
     @Override
     public IOMode getIOMode(Direction side) {

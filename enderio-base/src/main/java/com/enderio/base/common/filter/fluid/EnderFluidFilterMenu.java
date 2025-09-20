@@ -18,8 +18,8 @@ import java.util.function.Supplier;
 
 public class EnderFluidFilterMenu extends AbstractFilterMenu<EnderFluidFilter> {
 
-    public static int IS_INVERTED_BUTTON_ID = 1;
-    public static int SHOULD_COMPARE_COMPONENTS_BUTTON_ID = 2;
+    public static final int IS_INVERTED_BUTTON_ID = 1;
+    public static final int SHOULD_COMPARE_COMPONENTS_BUTTON_ID = 2;
 
     public final EnderFluidFilterItem.Type type;
 

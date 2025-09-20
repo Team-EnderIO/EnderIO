@@ -11,7 +11,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
 public class EngineSoul {
 
     // TODO: 20.6: May be able to use FluidIngredient
@@ -30,7 +30,7 @@ public class EngineSoul {
            Codec.INT.fieldOf("tick/mb").forGetter(SoulData::tickpermb))
            .apply(soulDataInstance, SoulData::new));
 
-    public static StreamCodec<ByteBuf, SoulData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, SoulData> STREAM_CODEC = StreamCodec.composite(
         ResourceLocation.STREAM_CODEC,
         SoulData::entitytype,
         ByteBufCodecs.STRING_UTF8,

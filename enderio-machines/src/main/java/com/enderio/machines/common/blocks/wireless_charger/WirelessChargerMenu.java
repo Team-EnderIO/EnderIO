@@ -47,7 +47,6 @@ public class WirelessChargerMenu extends PoweredMachineMenu<WirelessChargerBlock
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
-        // noinspection DuplicatedCode
         var blockEntity = getBlockEntity();
         return switch (id) {
         case INCREASE_BUTTON_ID -> {

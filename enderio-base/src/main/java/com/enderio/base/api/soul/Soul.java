@@ -30,18 +30,18 @@ public record Soul(CompoundTag entityTag) {
      */
     public static final String KEY_ID = "id";
 
-    public static Codec<Soul> CODEC = RecordCodecBuilder.create(
+    public static final Codec<Soul> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             CompoundTag.CODEC.fieldOf("entityTag").forGetter(Soul::entityTag)
         ).apply(instance, Soul::new));
 
-    public static StreamCodec<ByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.COMPOUND_TAG,
         Soul::getEntityTag,
         Soul::new
     );
 
-    public static StreamCodec<ByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
+    public static final StreamCodec<ByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
         @Override
         public Soul decode(ByteBuf byteBuf) {
             boolean hasEntity = byteBuf.readBoolean();

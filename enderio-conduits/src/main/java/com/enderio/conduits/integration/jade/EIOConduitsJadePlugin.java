@@ -1,7 +1,8 @@
 package com.enderio.conduits.integration.jade;
 
 import com.enderio.conduits.api.bundle.ConduitBundle;
-import com.enderio.conduits.client.model.conduit.facades.FacadeHelper;
+import com.enderio.conduits.client.model.conduit.facades.ClientFacadeVisibility;
+import com.enderio.conduits.client.model.conduit.facades.FacadeUtil;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IWailaClientRegistration;
@@ -22,7 +23,7 @@ public class EIOConduitsJadePlugin implements IWailaPlugin {
         registration.addRayTraceCallback((hitResult, accessor, originalAccessor) -> {
             if (accessor instanceof BlockAccessor blockAccessor) {
                 if (blockAccessor.getBlockEntity() instanceof ConduitBundle conduitBundle && conduitBundle.hasFacade()
-                        && FacadeHelper.areFacadesVisible()) {
+                        && FacadeUtil.areFacadesVisible(blockAccessor.getPlayer())) {
                     return registration.blockAccessor()
                             .from(blockAccessor)
                             .blockState(conduitBundle.getFacadeBlock().defaultBlockState())

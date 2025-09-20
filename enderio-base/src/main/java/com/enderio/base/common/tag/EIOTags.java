@@ -193,7 +193,7 @@ public class EIOTags {
         private static void init() {
         }
 
-        public static TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = tag("soul_vial_blacklist");
+        public static final TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = tag("soul_vial_blacklist");
 
         private static TagKey<EntityType<?>> tag(String pName) {
             return TagKey.create(Registries.ENTITY_TYPE, EnderIO.loc(pName));
