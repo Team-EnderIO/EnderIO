@@ -113,23 +113,8 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
                     return null;
                 }
 
-                if (config.extractRedstoneControl() == RedstoneControl.NEVER_ACTIVE) {
-                    isMutable = false;
-                } else if (config.extractRedstoneControl() != RedstoneControl.ALWAYS_ACTIVE) {
-                    boolean hasRedstone = node.hasRedstoneSignal(config.extractRedstoneChannel());
-                    if (!hasRedstone) {
-                        for (Direction direction : Direction.values()) {
-                            if (level.getSignal(node.pos().relative(direction), direction.getOpposite()) > 0) {
-                                hasRedstone = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!hasRedstone) {
-                        isMutable = false;
-                    }
-                }
+                boolean hasRedstoneSignal = node.hasRedstoneSignal(config.extractRedstoneChannel());
+                isMutable = config.extractRedstoneControl().isActive(hasRedstoneSignal);
             }
 
             // noinspection unchecked
