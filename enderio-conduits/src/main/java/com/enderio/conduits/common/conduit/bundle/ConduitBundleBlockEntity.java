@@ -1483,7 +1483,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             for (int i = 0; i < list.size(); i++) {
                 var nodeTag = list.getCompound(i);
                 var conduitParseResult = Conduit.CODEC.parse(serializationContext, nodeTag.get("Conduit"));
-
                 if (conduitParseResult.isError()) {
                     continue;
                 }

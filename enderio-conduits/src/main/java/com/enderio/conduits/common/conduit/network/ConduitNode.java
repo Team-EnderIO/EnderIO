@@ -189,7 +189,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
             return (D) nodeData;
         }
 
-        nodeData = type.factory().get();
+        nodeData = type.create();
         // noinspection unchecked
         return (D) nodeData;
     }
