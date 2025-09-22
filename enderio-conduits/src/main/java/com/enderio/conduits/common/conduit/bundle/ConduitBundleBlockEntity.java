@@ -136,6 +136,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     @Nullable
     public Direction primaryConnectionSide;
 
+    // TODO: Temporary fix for GH-1140
+    private boolean isLoading = false;
+
     public ConduitBundleBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(ConduitBlockEntities.CONDUIT.get(), worldPosition, blockState);
     }
@@ -194,6 +197,10 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
      * Fire all relevant updates when the conduits or connections change.
      */
     private void bundleChanged() {
+        if (isLoading) {
+            return;
+        }
+
         level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
         level.updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
         level.invalidateCapabilities(getBlockPos());
@@ -1198,7 +1205,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
         // TODO: Do this in clear removed instead?
         if (!level.isClientSide()) {
+            isLoading = true;
             loadFromSavedData();
+            isLoading = false;
         }
     }
 
