@@ -88,6 +88,14 @@ dependencies {
         isTransitive = false
     }
     add("gametestRuntimeOnly", project(":enderio-machines"))
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("net.neoforged:testframework:$neoForgeVersion")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 neoForge {
@@ -126,6 +134,11 @@ neoForge {
             sourceSet = sourceSets.getByName("gametest")
             loadedMods.set(listOf(mods.getByName("enderio_conduits"), mods.getByName("enderio_conduits_tests")))
         }
+    }
+
+    unitTest {
+        enable()
+        testedMod = mods["enderio_conduits"]
     }
 }
 
