@@ -193,6 +193,8 @@ public class EIOTags {
         private static void init() {
         }
 
+        // TODO: 1.22: Rename allow/deny list.
+        public static final TagKey<EntityType<?>> SOUL_VIAL_WHITELIST = tag("soul_vial_whitelist");
         public static final TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = tag("soul_vial_blacklist");
 
         private static TagKey<EntityType<?>> tag(String pName) {

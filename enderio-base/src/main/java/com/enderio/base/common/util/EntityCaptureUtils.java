@@ -71,7 +71,9 @@ public class EntityCaptureUtils {
             return CapturableStatus.INCOMPATIBLE;
         }
 
-        if (type.is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST)) {
+        // Whitelist takes precedence over blacklist
+        // This allows easier allowing of restricted mobs than removing from tags.
+        if (type.is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST) && !type.is(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST)) {
             return CapturableStatus.BLACKLISTED;
         }
 

@@ -22,5 +22,7 @@ public class EIOEntityTagsProvider extends EntityTypeTagsProvider {
         this.tag(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST)
                 .add(EntityType.WARDEN)
                 .addTag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED);
+
+        this.tag(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST);
     }
 }
