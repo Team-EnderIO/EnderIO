@@ -174,7 +174,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
         //noinspection unchecked
         EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils
-                .getCapturableStatus((EntityType<? extends LivingEntity>) entity.getType(), entity);
+                .getCapturableStatus((EntityType<? extends LivingEntity>) entity.getType());
         if (status != EntityCaptureUtils.CapturableStatus.CAPTURABLE) {
             displayCallback.accept(status.errorMessage());
             return Optional.empty();

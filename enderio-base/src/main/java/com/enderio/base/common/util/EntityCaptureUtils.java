@@ -13,7 +13,6 @@ import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +30,7 @@ public class EntityCaptureUtils {
                 BuiltInRegistries.ENTITY_TYPE.stream()
                     .filter(DefaultAttributes::hasSupplier)
                     .map(entityType -> (EntityType<? extends LivingEntity>) entityType)
-                    .filter(entityType -> getCapturableStatus(entityType, null) == CapturableStatus.CAPTURABLE)
+                    .filter(entityType -> getCapturableStatus(entityType) == CapturableStatus.CAPTURABLE)
                     .filter(entityType -> !BuiltInRegistries.ENTITY_TYPE.getKey(entityType).equals(DRAGON))
                     .collect(Collectors.toList()));
         }
@@ -58,12 +57,11 @@ public class EntityCaptureUtils {
 
     /**
      * @param type EntityType to be checked
-     * @param entity The specific entity to be used or null if general information is wanted
      * @return the status on how this entity should be handled for capture
      */
-    public static CapturableStatus getCapturableStatus(EntityType<? extends LivingEntity> type, @Nullable Entity entity) {
+    public static CapturableStatus getCapturableStatus(EntityType<? extends LivingEntity> type) {
         //Do we keep this special case?
-        if (entity != null && isBlacklistedBoss(entity)) {
+        if (isBlacklistedBoss(type)) {
             return CapturableStatus.BOSS;
         }
 
@@ -81,6 +79,10 @@ public class EntityCaptureUtils {
     }
 
     public static boolean isBlacklistedBoss(Entity entity) {
-        return entity.getType().is(Tags.EntityTypes.BOSSES);
+        return isBlacklistedBoss(entity.getType());
+    }
+
+    public static boolean isBlacklistedBoss(EntityType<?> entityType) {
+        return entityType.is(Tags.EntityTypes.BOSSES);
     }
 }

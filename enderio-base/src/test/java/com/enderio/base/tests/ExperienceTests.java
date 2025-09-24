@@ -1,4 +1,4 @@
-package com.enderio.base;
+package com.enderio.base.tests;
 
 import com.enderio.base.common.util.ExperienceUtil;
 import org.junit.jupiter.api.Assertions;
