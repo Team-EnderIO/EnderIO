@@ -1,10 +1,10 @@
-package com.enderio.base.tests;
+package com.enderio.base.tests.util;
 
 import com.enderio.base.common.util.ExperienceUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ExperienceTests {
+public class ExperienceUtilityTests {
 
     @Test
     public void testGetXpNeededForNextLevel() {
