@@ -24,6 +24,8 @@ import org.slf4j.Logger;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Represents a stored soul, derived from a {@link LivingEntity}.
@@ -160,7 +162,8 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
     }
 
     private static boolean isSameTag(CompoundTag tag1, CompoundTag tag2) {
-        for (var key : tag1.getAllKeys()) {
+        var allKeys = Stream.concat(tag1.getAllKeys().stream(), tag2.getAllKeys().stream()).collect(Collectors.toSet());
+        for (var key : allKeys) {
             if (IGNORED_KEYS.contains(key) ||
                 IGNORED_KEYS_DURING_COMPARISON.contains(key)) {
                 continue;
