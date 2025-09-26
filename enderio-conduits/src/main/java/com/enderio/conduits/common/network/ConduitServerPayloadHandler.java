@@ -91,11 +91,11 @@ public class ConduitServerPayloadHandler {
 
     public void handle(C2SSyncProbeStatePacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            ItemStack heldStack = context.player().getItemInHand(packet.interactionHand());
+            ItemStack heldStack = context.player().getMainHandItem();
 
             // Sanity check before updating item
             if (heldStack.is(ConduitItems.CONDUIT_PROBE)) {
-                ConduitProbeItem.setState(context.player(), packet.interactionHand(), packet.state());
+                ConduitProbeItem.setState(context.player(), heldStack, packet.state());
             }
         });
     }

@@ -25,15 +25,11 @@ public class InputEventListener {
 
         // Supports vertical and horizontal scrolling
         if ((event.getScrollDeltaX() != 0 || event.getScrollDeltaY() != 0) && player.isShiftKeyDown()) {
-            boolean cancelScroll = false;
-            if (player.getMainHandItem().is(ConduitItems.CONDUIT_PROBE)) {
-                ConduitProbeItem.switchState(player, InteractionHand.MAIN_HAND);
-                cancelScroll = true;
-            } else if (player.getOffhandItem().is(ConduitItems.CONDUIT_PROBE)) {
-                ConduitProbeItem.switchState(player, InteractionHand.OFF_HAND);
-                cancelScroll = true;
+            ItemStack mainHandStack = player.getMainHandItem();
+            if (mainHandStack.is(ConduitItems.CONDUIT_PROBE)) {
+                ConduitProbeItem.switchState(player, mainHandStack);
+                event.setCanceled(true);
             }
-            event.setCanceled(cancelScroll);
         }
     }
 }

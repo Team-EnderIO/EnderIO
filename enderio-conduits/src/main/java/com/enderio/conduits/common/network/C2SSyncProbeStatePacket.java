@@ -9,24 +9,18 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Interaction;
 
-public record C2SSyncProbeStatePacket(ConduitProbeItem.State state, boolean isMainHand) implements CustomPacketPayload {
+public record C2SSyncProbeStatePacket(ConduitProbeItem.State state) implements CustomPacketPayload {
 
     public static final Type<C2SSyncProbeStatePacket> TYPE = new Type<>(EnderIO.loc("sync_probe_state"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, C2SSyncProbeStatePacket> STREAM_CODEC = StreamCodec.composite(
         ConduitProbeItem.State.STREAM_CODEC,
         C2SSyncProbeStatePacket::state,
-        ByteBufCodecs.BOOL,
-        C2SSyncProbeStatePacket::isMainHand,
         C2SSyncProbeStatePacket::new
     );
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
-    }
-
-    public InteractionHand interactionHand() {
-        return isMainHand() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
     }
 }

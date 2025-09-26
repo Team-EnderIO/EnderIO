@@ -164,29 +164,27 @@ public class ConduitProbeItem extends Item {
         return stack.getOrDefault(ConduitComponents.PROBE_STATE, State.PROBE);
     }
     
-    public static void setState(Player player, InteractionHand hand, State state) {
-        var stack = player.getItemInHand(hand);
+    public static void setState(Player player, ItemStack stack, State state) {
         if (!stack.is(ConduitItems.CONDUIT_PROBE)) {
-            throw new IllegalArgumentException("Invalid item in hand " + hand);
+            throw new IllegalArgumentException("Invalid item passed to setState.");
         }
 
         stack.set(ConduitComponents.PROBE_STATE, state);
 
         if (player.level().isClientSide()) {
-            PacketDistributor.sendToServer(new C2SSyncProbeStatePacket(state, hand == InteractionHand.MAIN_HAND));
+            PacketDistributor.sendToServer(new C2SSyncProbeStatePacket(state));
         }
     }
 
-    public static void switchState(Player player, InteractionHand hand) {
-        var stack = player.getItemInHand(hand);
+    public static void switchState(Player player, ItemStack stack) {
         if (!stack.is(ConduitItems.CONDUIT_PROBE)) {
-            throw new IllegalArgumentException("Invalid item in hand " + hand);
+            throw new IllegalArgumentException("Invalid item passed to switchState.");
         }
 
         State currentState = getState(stack);
         State newState = State.values()[(currentState.ordinal() + 1) % State.values().length];
 
-        setState(player, hand, newState);
+        setState(player, stack, newState);
         player.displayClientMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_SWITCHED_MODE, newState.getStateText()), true);
     }
 
