@@ -126,13 +126,11 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
     }
 
     public static Soul of(ResourceLocation entityType) {
-        CompoundTag tag = new CompoundTag();
-        tag.putString(Entity.ID_TAG, entityType.toString());
-        return new Soul(tag);
+        return of(BuiltInRegistries.ENTITY_TYPE.get(entityType));
     }
 
     public static Soul of(EntityType<?> entityType) {
-        return of(BuiltInRegistries.ENTITY_TYPE.getKey(entityType));
+        return new Soul(entityType, new CompoundTag());
     }
 
     public static boolean isSameEntity(Soul soul1, Soul soul2) {
@@ -207,7 +205,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
             return EMPTY;
         }
 
-        return new Soul(entityTag.copy());
+        return new Soul(entityType(), entityTag.copy());
     }
 
     public Soul copyOnlyType() {

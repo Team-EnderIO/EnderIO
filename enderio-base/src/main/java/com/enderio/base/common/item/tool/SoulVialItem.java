@@ -299,7 +299,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             Direction dispenserDirection = source.state().getValue(DispenserBlock.FACING);
             AtomicReference<ItemStack> resultStack = new AtomicReference<>();
             releaseEntity(source.level(), stack, dispenserDirection, source.pos(),
-                () -> this.consumeWithRemainder(source, stack, EIOItems.SOUL_VIAL.get().getDefaultInstance()));
+                () -> resultStack.set(this.consumeWithRemainder(source, stack, EIOItems.SOUL_VIAL.get().getDefaultInstance())));
 
             if (resultStack.get() != null) {
                 return resultStack.get();
