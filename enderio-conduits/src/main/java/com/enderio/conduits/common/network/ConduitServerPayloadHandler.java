@@ -5,11 +5,13 @@ import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitNetworkContext;
 import com.enderio.conduits.common.init.ConduitComponents;
+import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -89,15 +91,11 @@ public class ConduitServerPayloadHandler {
 
     public void handle(C2SSyncProbeStatePacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            ItemStack heldMainHand = context.player().getMainHandItem();
-            ItemStack heldOffHand = context.player().getOffhandItem();
-            
-            // Update the state on whichever hand has the probe item
-            if (heldMainHand.getItem() instanceof ConduitProbeItem) {
-                heldMainHand.set(ConduitComponents.PROBE_STATE, packet.state());
-            }
-            if (heldOffHand.getItem() instanceof ConduitProbeItem) {
-                heldOffHand.set(ConduitComponents.PROBE_STATE, packet.state());
+            ItemStack heldStack = context.player().getItemInHand(packet.interactionHand());
+
+            // Sanity check before updating item
+            if (heldStack.is(ConduitItems.CONDUIT_PROBE)) {
+                ConduitProbeItem.setState(context.player(), packet.interactionHand(), packet.state());
             }
         });
     }

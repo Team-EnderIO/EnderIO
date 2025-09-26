@@ -1,9 +1,11 @@
 package com.enderio.conduits.client.input;
 
 import com.enderio.conduits.EnderIOConduits;
+import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.items.ConduitProbeItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -20,18 +22,15 @@ public class InputEventListener {
         if (player == null) {
             return;
         }
-        
-        ItemStack heldMainHand = player.getMainHandItem();
-        ItemStack heldOffHand = player.getOffhandItem();
-        
-        if (event.getScrollDeltaY() != 0 && player.isShiftKeyDown()) {
+
+        // Supports vertical and horizontal scrolling
+        if ((event.getScrollDeltaX() != 0 || event.getScrollDeltaY() != 0) && player.isShiftKeyDown()) {
             boolean cancelScroll = false;
-            if (heldMainHand.getItem() instanceof ConduitProbeItem) {
-                ConduitProbeItem.switchState(heldMainHand, player, true);
+            if (player.getMainHandItem().is(ConduitItems.CONDUIT_PROBE)) {
+                ConduitProbeItem.switchState(player, InteractionHand.MAIN_HAND);
                 cancelScroll = true;
-            }
-            else if (heldOffHand.getItem() instanceof ConduitProbeItem) {
-                ConduitProbeItem.switchState(heldOffHand, player, true);
+            } else if (player.getOffhandItem().is(ConduitItems.CONDUIT_PROBE)) {
+                ConduitProbeItem.switchState(player, InteractionHand.OFF_HAND);
                 cancelScroll = true;
             }
             event.setCanceled(cancelScroll);

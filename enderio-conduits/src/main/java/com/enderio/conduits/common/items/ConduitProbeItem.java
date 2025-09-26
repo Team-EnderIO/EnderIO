@@ -2,6 +2,7 @@ package com.enderio.conduits.common.items;
 
 import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitComponents;
+import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.network.C2SSyncProbeStatePacket;
 import com.enderio.core.common.util.TooltipUtil;
@@ -18,6 +19,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
@@ -161,18 +164,30 @@ public class ConduitProbeItem extends Item {
         return stack.getOrDefault(ConduitComponents.PROBE_STATE, State.PROBE);
     }
     
-    public static void setState(ItemStack stack, State state, boolean syncToServer) {
+    public static void setState(Player player, InteractionHand hand, State state) {
+        var stack = player.getItemInHand(hand);
+        if (!stack.is(ConduitItems.CONDUIT_PROBE)) {
+            throw new IllegalArgumentException("Invalid item in hand " + hand);
+        }
+
         stack.set(ConduitComponents.PROBE_STATE, state);
-        if (syncToServer) {
-            PacketDistributor.sendToServer(new C2SSyncProbeStatePacket(state));
+
+        if (player.level().isClientSide()) {
+            PacketDistributor.sendToServer(new C2SSyncProbeStatePacket(state, hand == InteractionHand.MAIN_HAND));
         }
     }
 
-    public static void switchState(ItemStack stack, Player player, boolean syncToServer) {
+    public static void switchState(Player player, InteractionHand hand) {
+        var stack = player.getItemInHand(hand);
+        if (!stack.is(ConduitItems.CONDUIT_PROBE)) {
+            throw new IllegalArgumentException("Invalid item in hand " + hand);
+        }
+
         State currentState = getState(stack);
         State newState = State.values()[(currentState.ordinal() + 1) % State.values().length];
-        setState(stack, newState, syncToServer);
-        player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_SWITCHED_MODE, newState.getStateText()));
+
+        setState(player, hand, newState);
+        player.displayClientMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_SWITCHED_MODE, newState.getStateText()), true);
     }
 
     private String conduitKeyToDisplayName(ResourceLocation conduitKey) {
