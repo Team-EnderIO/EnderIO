@@ -47,8 +47,8 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
         this(NonNullList.withSize(size, Soul.EMPTY), false, false);
     }
 
-    public EnderSoulFilter(List<Soul> matches, boolean isDenyList, boolean shouldCompareComponents) {
-        this(NonNullList.withSize(matches.size(), Soul.EMPTY), isDenyList, shouldCompareComponents);
+    public EnderSoulFilter(List<Soul> matches, boolean isDenyList, boolean shouldCompareTags) {
+        this(NonNullList.withSize(matches.size(), Soul.EMPTY), isDenyList, shouldCompareTags);
 
         for (int i = 0; i < matches.size(); i++) {
             this.matches.set(i, matches.get(i));
