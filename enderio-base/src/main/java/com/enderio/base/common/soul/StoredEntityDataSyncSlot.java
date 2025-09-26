@@ -72,6 +72,7 @@ public abstract class StoredEntityDataSyncSlot implements SyncSlot {
             return ChangeType.NONE;
         }
 
+        lastValue = currentValue;
         return ChangeType.FULL;
     }
 
