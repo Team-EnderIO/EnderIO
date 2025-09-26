@@ -3,12 +3,13 @@ package com.enderio.base.api.soul;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Bee;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -27,21 +29,77 @@ import java.util.Optional;
  * Represents a stored soul, derived from a {@link LivingEntity}.
  * @param entityTag the entity's NBT tag.
  */
-public record Soul(CompoundTag entityTag) {
-    public static final Codec<Soul> CODEC = RecordCodecBuilder.create(
+public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
+    private static final Codec<Soul> NEW_CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity_type").forGetter(Soul::entityType),
+            CompoundTag.CODEC.fieldOf("entity_tag").forGetter(Soul::entityTag)
+        ).apply(instance, Soul::new));
+
+    private static final Codec<Soul> OLD_CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             CompoundTag.CODEC.fieldOf("entityTag").forGetter(Soul::entityTag)
         ).apply(instance, Soul::new));
 
-    public static final StreamCodec<ByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
+    public static final Codec<Soul> CODEC = Codec.withAlternative(NEW_CODEC, OLD_CODEC);
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.registry(Registries.ENTITY_TYPE),
+        Soul::entityType,
         ByteBufCodecs.COMPOUND_TAG,
-        Soul::getEntityTag,
+        Soul::entityTag,
         Soul::new
     );
 
-    public static final StreamCodec<ByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
+    // Keys that should not be compared or saved
+    // Note be careful adding new things to this list - it will affect saves.
+    private static final List<String> IGNORED_KEYS = List.of(
+        Entity.ID_TAG, // We store the entity type separately to the entity data.
+        "Air",
+        "Brain",
+        "DeathTime",
+        "FallDistance",
+        "FallFlying",
+        "HurtByTimestamp",
+        "HurtTime",
+        "Motion",
+        "OnGround",
+        "PortalCooldown",
+        "Pos",
+        "Rotation",
+        "SleepingX",
+        "SleepingY",
+        "SleepingZ",
+        Leashable.LEASH_TAG,
+        Entity.UUID_TAG
+    );
+
+    // Do not compare obviously unreasonable NBT Keys
+    private static final List<String> IGNORED_KEYS_DURING_COMPARISON = List.of(
+        // TODO: need to check for any other tags that should be ignored.
+        // Perhaps make this configurable?
+        Bee.TAG_CANNOT_ENTER_HIVE_TICKS,
+        Bee.TAG_TICKS_SINCE_POLLINATION,
+        Bee.TAG_CROPS_GROWN_SINCE_POLLINATION,
+        Bee.TAG_HIVE_POS,
+        LivingEntity.PASSENGERS_TAG
+    );
+
+    public Soul {
+        // Remove tags we don't want
+        IGNORED_KEYS.forEach(entityTag::remove);
+    }
+
+    // Legacy data support.
+    private Soul(CompoundTag tag) {
+        // Note: doesn't remove ID from the tag to ensure backwards compatibility.
+        // TODO: 1.22 - remove this.
+        this(BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(tag.getString(Entity.ID_TAG))), tag);
+    }
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
         @Override
-        public Soul decode(ByteBuf byteBuf) {
+        public Soul decode(RegistryFriendlyByteBuf byteBuf) {
             boolean hasEntity = byteBuf.readBoolean();
             if (!hasEntity) {
                 return EMPTY;
@@ -51,7 +109,7 @@ public record Soul(CompoundTag entityTag) {
         }
 
         @Override
-        public void encode(ByteBuf o, Soul soul) {
+        public void encode(RegistryFriendlyByteBuf o, Soul soul) {
             o.writeBoolean(soul.hasEntity());
             if (soul.hasEntity()) {
                 STREAM_CODEC.encode(o, soul);
@@ -63,11 +121,7 @@ public record Soul(CompoundTag entityTag) {
 
     public static Soul of(LivingEntity entity) {
         var entityTag = new CompoundTag();
-        if (!serializeEntity(entity, entityTag)) {
-            // Cannot serialize!
-            return Soul.EMPTY;
-        }
-
+        entity.saveWithoutId(entityTag);
         return new Soul(entityTag);
     }
 
@@ -94,7 +148,7 @@ public record Soul(CompoundTag entityTag) {
     }
 
     public static boolean isSameEntitySameTag(Soul soul1, Soul soul2) {
-        return isSameTag(soul1.getEntityTag(), soul2.getEntityTag());
+        return isSameTag(soul1.entityTag(), soul2.entityTag());
     }
 
     public static boolean isSameEntitySameTag(Soul soul, LivingEntity livingEntity) {
@@ -103,11 +157,8 @@ public record Soul(CompoundTag entityTag) {
         }
 
         var entityTagToCompare = new CompoundTag();
-        if (!serializeEntity(livingEntity, entityTagToCompare)) {
-            return false;
-        }
-
-        return isSameTag(soul.getEntityTag(), entityTagToCompare);
+        livingEntity.saveWithoutId(entityTagToCompare);
+        return isSameTag(soul.entityTag(), entityTagToCompare);
     }
 
     private static boolean isSameTag(CompoundTag tag1, CompoundTag tag2) {
@@ -126,21 +177,11 @@ public record Soul(CompoundTag entityTag) {
     }
 
     public boolean hasEntity() {
-        if (!entityTag.contains(Entity.ID_TAG)) {
-            return false;
-        }
-
-        var id = ResourceLocation.tryParse(entityTag.getString(Entity.ID_TAG));
-        if (id == null) {
-            return false;
-        }
-
-        var entityType = BuiltInRegistries.ENTITY_TYPE.getOptional(id);
-        return entityType.isPresent();
+        return entityType != null;
     }
 
     public boolean isEmpty() {
-        return !hasEntity();
+        return entityType == null;
     }
 
     /**
@@ -152,19 +193,13 @@ public record Soul(CompoundTag entityTag) {
             throw new IllegalStateException("Cannot get Entity Type ID from empty StoredEntityData");
         }
 
-        return ResourceLocation.parse(entityTag.getString(Entity.ID_TAG));
+        return BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
     }
 
-    /**
-     * @throws IllegalStateException if the soul is empty.
-     * @return
-     */
-    public EntityType<?> entityType() {
-        return BuiltInRegistries.ENTITY_TYPE.get(entityTypeId());
-    }
-
-    public CompoundTag getEntityTag() {
-        return entityTag;
+    public CompoundTag getEntityTagWithId() {
+        var tag = entityTag.copy();
+        tag.putString(Entity.ID_TAG, entityTypeId().toString());
+        return tag;
     }
 
     public Soul copy() {
@@ -204,51 +239,5 @@ public record Soul(CompoundTag entityTag) {
 
     public static Soul parseOptional(HolderLookup.Provider lookupProvider, CompoundTag tag) {
         return tag.isEmpty() ? EMPTY : parse(lookupProvider, tag).orElse(EMPTY);
-    }
-
-    // Keys that should not be compared or saved
-    private static final List<String> IGNORED_KEYS = List.of(
-        "Air",
-        "Brain",
-        "DeathTime",
-        "FallDistance",
-        "FallFlying",
-        "HurtByTimestamp",
-        "HurtTime",
-        "Motion",
-        "OnGround",
-        "PortalCooldown",
-        "Pos",
-        "Rotation",
-        "SleepingX",
-        "SleepingY",
-        "SleepingZ",
-        Leashable.LEASH_TAG,
-        Entity.UUID_TAG
-    );
-
-    // Do not compare obviously unreasonable NBT Keys
-    private static final List<String> IGNORED_KEYS_DURING_COMPARISON = List.of(
-        // TODO: need to check for any other tags that should be ignored.
-        // Perhaps make this configurable?
-        Bee.TAG_CANNOT_ENTER_HIVE_TICKS,
-        Bee.TAG_TICKS_SINCE_POLLINATION,
-        Bee.TAG_CROPS_GROWN_SINCE_POLLINATION,
-        Bee.TAG_HIVE_POS,
-        LivingEntity.PASSENGERS_TAG
-    );
-
-    private static boolean serializeEntity(Entity entity, CompoundTag tag) {
-        var encodeId = entity.getEncodeId();
-        if (encodeId == null) {
-            // Cannot encode!
-            return false;
-        }
-
-        var entityTag = new CompoundTag();
-        entityTag.putString(Entity.ID_TAG, encodeId);
-        entity.saveWithoutId(entityTag);
-        IGNORED_KEYS.forEach(entityTag::remove);
-        return true;
     }
 }

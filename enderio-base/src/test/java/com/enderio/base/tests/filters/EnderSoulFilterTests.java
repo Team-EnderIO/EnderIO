@@ -32,9 +32,8 @@ public class EnderSoulFilterTests {
     @Test
     public void testBasicAllowFilterWithComponentComparison() {
         CompoundTag tag = new CompoundTag();
-        tag.putString(Entity.ID_TAG, BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ALLAY).toString());
         tag.putInt("Health", 20);
-        var soulWithHealth = new Soul(tag);
+        var soulWithHealth = new Soul(EntityType.ALLAY, tag);
 
         var filter = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, soulWithHealth), false, true);
 

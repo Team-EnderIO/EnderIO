@@ -32,7 +32,7 @@ public class SpawnEggSoulHandler implements ISoulHandler {
         // Get custom entity data
         var customEntityData = spawnEgg.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY);
         if (!customEntityData.isEmpty()) {
-            return new Soul(customEntityData.copyTag());
+            return new Soul(spawnEggItem.getType(spawnEgg), customEntityData.copyTag());
         }
 
         return Soul.of(spawnEggItem.getType(spawnEgg));
