@@ -5,6 +5,7 @@ import com.enderio.base.common.filter.soul.EnderSoulFilter;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ public class EnderSoulFilterTests {
     @Test
     public void testBasicAllowFilterWithComponentComparison() {
         CompoundTag tag = new CompoundTag();
-        tag.putString(Soul.KEY_ID, BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ALLAY).toString());
+        tag.putString(Entity.ID_TAG, BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ALLAY).toString());
         tag.putInt("Health", 20);
         var soulWithHealth = new Soul(tag);
 

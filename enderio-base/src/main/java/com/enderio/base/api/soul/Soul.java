@@ -12,9 +12,11 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.common.extensions.IEntityExtension;
+import net.minecraft.world.entity.animal.Bee;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -26,11 +28,6 @@ import java.util.Optional;
  * @param entityTag the entity's NBT tag.
  */
 public record Soul(CompoundTag entityTag) {
-    /**
-     * Should match key from {@link IEntityExtension#serializeNBT(HolderLookup.Provider)}.
-     */
-    public static final String KEY_ID = "id";
-
     public static final Codec<Soul> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             CompoundTag.CODEC.fieldOf("entityTag").forGetter(Soul::entityTag)
@@ -65,12 +62,22 @@ public record Soul(CompoundTag entityTag) {
     public static final Soul EMPTY = new Soul(new CompoundTag());
 
     public static Soul of(LivingEntity entity) {
-        return new Soul(sanitizeEntityTag(entity.serializeNBT(entity.level().registryAccess())));
+        var encodeId = entity.getEncodeId();
+        if (encodeId == null) {
+            // Cannot encode!
+            return Soul.EMPTY;
+        }
+
+        var entityTag = new CompoundTag();
+        entityTag.putString(Entity.ID_TAG, encodeId);
+        entity.saveWithoutId(entityTag);
+        IGNORED_KEYS.forEach(entityTag::remove);
+        return new Soul(entityTag);
     }
 
     public static Soul of(ResourceLocation entityType) {
         CompoundTag tag = new CompoundTag();
-        tag.putString(KEY_ID, entityType.toString());
+        tag.putString(Entity.ID_TAG, entityType.toString());
         return new Soul(tag);
     }
 
@@ -103,24 +110,10 @@ public record Soul(CompoundTag entityTag) {
         return isSameTag(soul.getEntityTag(), entityTag);
     }
 
-    // Do not compare obviously unreasonable NBT Keys
-    private static final List<String> IGNORED_KEYS = List.of(
-        "Pos",
-        "Air",
-        "OnGround",
-        "Rotation",
-        "FallFlying",
-        "UUID",
-        "Motion",
-        "Brain",
-        "HurtByTimestamp",
-        "PortalCooldown",
-        "FallDistance"
-    );
-
     private static boolean isSameTag(CompoundTag tag1, CompoundTag tag2) {
         for (var key : tag1.getAllKeys()) {
-            if (IGNORED_KEYS.contains(key)) {
+            if (IGNORED_KEYS.contains(key) ||
+                IGNORED_KEYS_DURING_COMPARISON.contains(key)) {
                 continue;
             }
 
@@ -133,11 +126,11 @@ public record Soul(CompoundTag entityTag) {
     }
 
     public boolean hasEntity() {
-        if (!entityTag.contains(KEY_ID)) {
+        if (!entityTag.contains(Entity.ID_TAG)) {
             return false;
         }
 
-        var id = ResourceLocation.tryParse(entityTag.getString(KEY_ID));
+        var id = ResourceLocation.tryParse(entityTag.getString(Entity.ID_TAG));
         if (id == null) {
             return false;
         }
@@ -159,7 +152,7 @@ public record Soul(CompoundTag entityTag) {
             throw new IllegalStateException("Cannot get Entity Type ID from empty StoredEntityData");
         }
 
-        return ResourceLocation.parse(entityTag.getString(KEY_ID));
+        return ResourceLocation.parse(entityTag.getString(Entity.ID_TAG));
     }
 
     /**
@@ -213,13 +206,35 @@ public record Soul(CompoundTag entityTag) {
         return tag.isEmpty() ? EMPTY : parse(lookupProvider, tag).orElse(EMPTY);
     }
 
-    private static CompoundTag sanitizeEntityTag(CompoundTag tag) {
-        tag.remove("Pos");
-        tag.remove("Air");
-        tag.remove("OnGround");
-        tag.remove("Rotation");
-        tag.remove("UUID");
-        tag.remove("Motion");
-        return tag;
-    }
+    // Keys that should not be compared or saved
+    private static final List<String> IGNORED_KEYS = List.of(
+        "Air",
+        "Brain",
+        "DeathTime",
+        "FallDistance",
+        "FallFlying",
+        "HurtByTimestamp",
+        "HurtTime",
+        "Motion",
+        "OnGround",
+        "PortalCooldown",
+        "Pos",
+        "Rotation",
+        "SleepingX",
+        "SleepingY",
+        "SleepingZ",
+        Leashable.LEASH_TAG,
+        Entity.UUID_TAG
+    );
+
+    // Do not compare obviously unreasonable NBT Keys
+    private static final List<String> IGNORED_KEYS_DURING_COMPARISON = List.of(
+        // TODO: need to check for any other tags that should be ignored.
+        // Perhaps make this configurable?
+        Bee.TAG_CANNOT_ENTER_HIVE_TICKS,
+        Bee.TAG_TICKS_SINCE_POLLINATION,
+        Bee.TAG_CROPS_GROWN_SINCE_POLLINATION,
+        Bee.TAG_HIVE_POS,
+        LivingEntity.PASSENGERS_TAG
+    );
 }
