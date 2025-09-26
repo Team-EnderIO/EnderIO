@@ -24,6 +24,7 @@ import com.enderio.conduits.common.conduit.legacy.StaticConnectionStates;
 import com.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.conduits.common.conduit.network.ConduitNetworkSavedData;
 import com.enderio.conduits.common.conduit.network.ConduitNode;
+import com.enderio.conduits.common.conduit.network.IConduitNodeAttachment;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
@@ -83,7 +84,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class ConduitBundleBlockEntity extends EnderBlockEntity
-        implements ConduitBundle, Wrenchable, ConduitMenu.ConnectionAccessor {
+        implements ConduitBundle, Wrenchable, ConduitMenu.ConnectionAccessor, IConduitNodeAttachment {
 
     public static final int MAX_CONDUITS = 9;
 

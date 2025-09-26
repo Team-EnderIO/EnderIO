@@ -52,8 +52,8 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
     private ConduitNetwork network;
 
     @Nullable
-    private ConduitBundleBlockEntity conduitBundle;
-    @Nullable
+    private IConduitNodeAttachment conduitBundle;
+
     private Holder<Conduit<?, ?>> conduit;
 
     public ConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
@@ -97,7 +97,7 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
         }
     }
 
-    public void attach(ConduitBundleBlockEntity conduitBundle, Holder<Conduit<?, ?>> conduit) {
+    public void attach(IConduitNodeAttachment conduitBundle, Holder<Conduit<?, ?>> conduit) {
         Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
         this.conduitBundle = conduitBundle;
         this.conduit = conduit;

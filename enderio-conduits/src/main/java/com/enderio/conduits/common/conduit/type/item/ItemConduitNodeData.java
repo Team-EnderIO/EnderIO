@@ -8,6 +8,8 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
 import net.minecraft.core.Direction;
 
 /**
@@ -43,5 +45,18 @@ public final class ItemConduitNodeData implements NodeData {
 
     public void setIndex(Direction side, int index) {
         roundRobinIndexes.put(side, index);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ItemConduitNodeData other)) {
+            return false;
+        }
+        return Objects.equals(roundRobinIndexes, other.roundRobinIndexes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(roundRobinIndexes);
     }
 }
