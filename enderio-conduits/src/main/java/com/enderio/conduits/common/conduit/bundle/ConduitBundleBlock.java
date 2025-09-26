@@ -9,6 +9,7 @@ import com.enderio.conduits.client.model.conduit.facades.ClientFacadeVisibility;
 import com.enderio.conduits.client.model.conduit.facades.FacadeUtil;
 import com.enderio.conduits.client.particle.ConduitBreakParticle;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
+import com.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduit;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkContext;
@@ -19,9 +20,11 @@ import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -331,7 +334,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     // endregion
 
-    // region Item Interactions
+    // region Interactions
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
@@ -342,8 +345,6 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             if (result != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
                 return result;
             }
-
-            // TODO: Yeta wrench handling
 
             result = addFacade(stack, level, pos, player, conduitBundle);
             if (result != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
@@ -433,6 +434,27 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
         level.gameEvent(GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(player, blockState));
 
         return ItemInteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle) {
+            // TODO: The connection shouldn't include the plate.. if we hit the plate open
+            // the first conduit?
+            var conduitConnection = conduitBundle.getShape().getConnectionFromHit(pos, hitResult);
+
+            if (conduitConnection != null) {
+                if (conduitBundle.canOpenScreen(conduitConnection.getSecond(), conduitConnection.getFirst())) {
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        ConduitMenu.openConduitMenu(serverPlayer, conduitBundle, conduitConnection.getFirst(), conduitConnection.getSecond());
+                    }
+
+                    return InteractionResult.sidedSuccess(level.isClientSide());
+                }
+            }
+        }
+
+        return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 
     // endregion
