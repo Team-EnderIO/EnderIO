@@ -62,16 +62,12 @@ public record Soul(CompoundTag entityTag) {
     public static final Soul EMPTY = new Soul(new CompoundTag());
 
     public static Soul of(LivingEntity entity) {
-        var encodeId = entity.getEncodeId();
-        if (encodeId == null) {
-            // Cannot encode!
+        var entityTag = new CompoundTag();
+        if (!serializeEntity(entity, entityTag)) {
+            // Cannot serialize!
             return Soul.EMPTY;
         }
 
-        var entityTag = new CompoundTag();
-        entityTag.putString(Entity.ID_TAG, encodeId);
-        entity.saveWithoutId(entityTag);
-        IGNORED_KEYS.forEach(entityTag::remove);
         return new Soul(entityTag);
     }
 
@@ -101,13 +97,17 @@ public record Soul(CompoundTag entityTag) {
         return isSameTag(soul1.getEntityTag(), soul2.getEntityTag());
     }
 
-    public static boolean isSameEntitySameTag(Soul soul, LivingEntity livingEntity, HolderLookup.Provider registries) {
+    public static boolean isSameEntitySameTag(Soul soul, LivingEntity livingEntity) {
         if (!isSameEntity(soul, livingEntity)) {
             return false;
         }
 
-        var entityTag = livingEntity.serializeNBT(registries);
-        return isSameTag(soul.getEntityTag(), entityTag);
+        var entityTagToCompare = new CompoundTag();
+        if (!serializeEntity(livingEntity, entityTagToCompare)) {
+            return false;
+        }
+
+        return isSameTag(soul.getEntityTag(), entityTagToCompare);
     }
 
     private static boolean isSameTag(CompoundTag tag1, CompoundTag tag2) {
@@ -237,4 +237,18 @@ public record Soul(CompoundTag entityTag) {
         Bee.TAG_HIVE_POS,
         LivingEntity.PASSENGERS_TAG
     );
+
+    private static boolean serializeEntity(Entity entity, CompoundTag tag) {
+        var encodeId = entity.getEncodeId();
+        if (encodeId == null) {
+            // Cannot encode!
+            return false;
+        }
+
+        var entityTag = new CompoundTag();
+        entityTag.putString(Entity.ID_TAG, encodeId);
+        entity.saveWithoutId(entityTag);
+        IGNORED_KEYS.forEach(entityTag::remove);
+        return true;
+    }
 }
