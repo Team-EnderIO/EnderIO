@@ -119,7 +119,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     public ItemConduitConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
             DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
         return new ItemConduitConnectionConfig(isInsert, inputChannel, isExtract, outputChannel, redstoneControl,
-                redstoneChannel, false, false, 0);
+                redstoneChannel, RedstoneControl.ALWAYS_ACTIVE, DyeColor.RED, false, false, 0);
     }
 
     @Override
@@ -158,7 +158,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     public Vector2i getInventorySlotPosition(int slot) {
         return switch (slot) {
         case EXTRACT_FILTER_SLOT -> new Vector2i(113, 71);
-        case INSERT_FILTER_SLOT -> new Vector2i(23, 71);
+        case INSERT_FILTER_SLOT -> new Vector2i(23, 71 + 16 + 2);
         default -> throw new IndexOutOfBoundsException();
         };
     }

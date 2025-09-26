@@ -30,8 +30,8 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
         super.renderLabels(dataAccess, guiGraphics, startX, startY, font, mouseX, mouseY);
 
         String priority = String.valueOf(dataAccess.getConnectionConfig().priority());
-        guiGraphics.drawString(font, ConduitLang.CONDUIT_PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, 0x000000, false);
-        guiGraphics.drawString(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, 0x000000, false);
+        guiGraphics.drawString(font, ConduitLang.CONDUIT_PRIORITY, startX, startY + 56 + 6, 0x000000, false);
+        guiGraphics.drawString(font, priority, startX + 68 - font.width(priority), startY + 56 + 6, 0x000000, false);
 
         // TODO: Show redstone signal indicators using the extra NBT payload.
     }
@@ -58,13 +58,28 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
                 () -> dataAccess.getConnectionConfig().insertChannel(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withInsertChannel(value)));
 
-        screen.addFilterConfigureButton(startX + 1, startY + 82, ItemConduit.INSERT_FILTER_SLOT);
+        var insertSlotPos = dataAccess.conduit().getInventorySlotPosition(ItemConduit.INSERT_FILTER_SLOT);
+        screen.addFilterConfigureButton(startX - USABLE_START_X + insertSlotPos.x + 18, startY - USABLE_START_Y + insertSlotPos.y, ItemConduit.INSERT_FILTER_SLOT);
+
+        // Redstone control
+        var redstoneChannelWidget = screen.addColorPicker(startX + 16 + 4, startY + 40, ConduitLang.REDSTONE_CHANNEL,
+            () -> dataAccess.getConnectionConfig().insertRedstoneChannel(),
+            value -> dataAccess.updateConnectionConfig(config -> config.withInsertRedstoneChannel(value)));
+
+        // Only show the redstone widget when redstone control is sensitive to signals.
+        screen.addPreRenderAction(() -> redstoneChannelWidget.visible = dataAccess.getConnectionConfig()
+            .insertRedstoneControl()
+            .isRedstoneSensitive());
+
+        screen.addRedstoneControlPicker(startX, startY + 40, EIOLang.REDSTONE_MODE,
+            () -> dataAccess.getConnectionConfig().insertRedstoneControl(),
+            value -> dataAccess.updateConnectionConfig(config -> config.withInsertRedstoneControl(value)));
 
         // Priority up/down
-        screen.addIconButton(startX + 70, startY + 38, 9, 9, Component.empty(), ICON_INCREASE, () -> dataAccess
-                .updateConnectionConfig(config -> config.withPriority(config.priority() + getIncrement())));
-        screen.addIconButton(startX + 70, startY + 38 + 9, 9, 9, Component.empty(), ICON_DECREASE, () -> dataAccess
-                .updateConnectionConfig(config -> config.withPriority(config.priority() - getIncrement())));
+        screen.addIconButton(startX + 70, startY + 40 + 16, 9, 9, Component.empty(), ICON_INCREASE, () -> dataAccess
+            .updateConnectionConfig(config -> config.withPriority(config.priority() + getIncrement())));
+        screen.addIconButton(startX + 70, startY + 40 + 16 + 9, 9, 9, Component.empty(), ICON_DECREASE, () -> dataAccess
+            .updateConnectionConfig(config -> config.withPriority(config.priority() - getIncrement())));
     }
 
     @Override

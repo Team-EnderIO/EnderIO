@@ -8,8 +8,8 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Experimental
 public abstract class ConduitScreenType<U extends ConnectionConfig> {
     // Used for startX, startY
-    private static final int USABLE_START_X = 22;
-    private static final int USABLE_START_Y = 7;
+    protected static final int USABLE_START_X = 22;
+    protected static final int USABLE_START_Y = 7;
 
     protected static final int SLOT_SIZE = 16;
     protected static final int PADDED_SLOT_SIZE = SLOT_SIZE + 2;
