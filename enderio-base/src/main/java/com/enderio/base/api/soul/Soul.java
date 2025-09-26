@@ -84,7 +84,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
         Bee.TAG_TICKS_SINCE_POLLINATION,
         Bee.TAG_CROPS_GROWN_SINCE_POLLINATION,
         Bee.TAG_HIVE_POS,
-        LivingEntity.PASSENGERS_TAG
+        Entity.PASSENGERS_TAG
     );
 
     public Soul {
@@ -119,12 +119,12 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
         }
     };
 
-    public static final Soul EMPTY = new Soul(new CompoundTag());
+    public static final Soul EMPTY = new Soul(null, new CompoundTag());
 
     public static Soul of(LivingEntity entity) {
         var entityTag = new CompoundTag();
         entity.saveWithoutId(entityTag);
-        return new Soul(entityTag);
+        return new Soul(entity.getType(), entityTag);
     }
 
     public static Soul of(ResourceLocation entityType) {
