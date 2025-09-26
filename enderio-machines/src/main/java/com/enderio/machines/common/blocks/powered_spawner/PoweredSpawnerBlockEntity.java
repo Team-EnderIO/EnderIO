@@ -42,6 +42,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -133,9 +134,10 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
                 return null;
             }
 
-            if (!OUTPUT.getItemStack(this).isEmpty()) {
-                var boundSoul = SoulBoundUtils.getBoundSoul(OUTPUT.getItemStack(this));
-                if (!Soul.isSameEntitySameTag(boundSoul, getSoulForCapture())) {
+            var outputSlotStack = OUTPUT.getItemStack(this);
+            if (!outputSlotStack.isEmpty()) {
+                var potentialSoulVial = SoulVialItem.forSoul(getSoulForCapture());
+                if (!ItemStack.isSameItemSameComponents(potentialSoulVial, outputSlotStack)) {
                     setReason(SpawnerBlockedReason.OUTPUT_FULL);
                     return null;
                 }
