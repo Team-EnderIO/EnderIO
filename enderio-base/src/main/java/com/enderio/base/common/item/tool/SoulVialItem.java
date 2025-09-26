@@ -108,24 +108,24 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     // region Interactions
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget,
-            InteractionHand pUsedHand) {
-        if (pPlayer.level().isClientSide) {
+    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget,
+            InteractionHand usedHand) {
+        if (player.level().isClientSide) {
             return InteractionResult.FAIL;
         }
 
-        Optional<ItemStack> itemStack = catchEntity(pStack, pInteractionTarget,
-                component -> pPlayer.displayClientMessage(component, true));
+        Optional<ItemStack> itemStack = catchEntity(stack, interactionTarget,
+                component -> player.displayClientMessage(component, true));
         if (itemStack.isPresent()) {
             ItemStack filledVial = itemStack.get();
-            ItemStack hand = pPlayer.getItemInHand(pUsedHand);
+            ItemStack hand = player.getItemInHand(usedHand);
             if (hand.isEmpty()) {
                 hand.setCount(1); // Forge will fire the destroyItemEvent and vanilla replaces it to
                                   // ItemStack.EMPTY if this isn't done
-                pPlayer.setItemInHand(pUsedHand, filledVial);
+                player.setItemInHand(usedHand, filledVial);
             } else {
-                if (!pPlayer.addItem(filledVial)) {
-                    pPlayer.drop(filledVial, false);
+                if (!player.addItem(filledVial)) {
+                    player.drop(filledVial, false);
                 }
             }
             return InteractionResult.SUCCESS;
@@ -134,20 +134,25 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext pContext) {
-        if (pContext.getLevel().isClientSide) {
+    public InteractionResult useOn(UseOnContext context) {
+        if (context.getLevel().isClientSide) {
             return InteractionResult.FAIL;
         }
 
-        Player player = pContext.getPlayer();
+        Player player = context.getPlayer();
 
         // Only players may use the soul vial
         if (player == null) {
             return InteractionResult.FAIL;
         }
 
-        return releaseEntity(pContext.getLevel(), pContext.getItemInHand(), pContext.getClickedFace(),
-                pContext.getClickedPos(), emptyVial -> player.setItemInHand(pContext.getHand(), emptyVial));
+        return releaseEntity(context.getLevel(), context.getItemInHand(), context.getClickedFace(), context.getClickedPos(), () -> {
+            context.getItemInHand().shrink(1);
+            var emptyVial = EIOItems.SOUL_VIAL.get().getDefaultInstance();
+            if (!player.addItem(emptyVial)) {
+                player.drop(emptyVial, false);
+            }
+        });
     }
 
     /**
@@ -199,7 +204,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     }
 
     private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos,
-            Consumer<ItemStack> emptyVialSetter) {
+            Runnable vialConsumed) {
         var storedSoul = filledVial.get(EIODataComponents.SOUL);
 
         if (storedSoul != null && storedSoul.hasEntity()) {
@@ -220,7 +225,8 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
                 ent.setYRot(rotation);
                 level.addFreshEntity(ent);
             });
-            emptyVialSetter.accept(EIOItems.SOUL_VIAL.get().getDefaultInstance());
+
+            vialConsumed.run();
         }
 
         return InteractionResult.SUCCESS;
@@ -261,7 +267,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             stack = stack.copy();
         }
 
-        if (stack.is(EIOItems.SOUL_VIAL.get())) {
+        if (stack.is(EIOItems.SOUL_VIAL)) {
             if (event.getTarget() instanceof AbstractHorse || event.getTarget() instanceof Villager
                     || event.getTarget() instanceof WanderingTrader || event.getTarget() instanceof Wolf) {
                 stack.interactLivingEntity(event.getEntity(), (LivingEntity) event.getTarget(), event.getHand());
@@ -291,10 +297,12 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
         private ItemStack release(BlockSource source, ItemStack stack) {
             Direction dispenserDirection = source.state().getValue(DispenserBlock.FACING);
-            AtomicReference<ItemStack> emptyVial = new AtomicReference<>();
-            releaseEntity(source.level(), stack, dispenserDirection, source.pos(), emptyVial::set);
-            if (emptyVial.get() != null) {
-                return emptyVial.get();
+            AtomicReference<ItemStack> resultStack = new AtomicReference<>();
+            releaseEntity(source.level(), stack, dispenserDirection, source.pos(),
+                () -> this.consumeWithRemainder(source, stack, EIOItems.SOUL_VIAL.get().getDefaultInstance()));
+
+            if (resultStack.get() != null) {
+                return resultStack.get();
             } else {
                 this.setSuccess(false);
                 return stack;
@@ -308,8 +316,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
                     living -> !(living instanceof Player))) {
 
                 // Copy, consumeWithRemainder will shrink the stack.
-                Optional<ItemStack> filledVial = catchEntity(stack.copy(), livingentity, component -> {
-                });
+                Optional<ItemStack> filledVial = catchEntity(stack.copy(), livingentity, component -> {});
                 if (filledVial.isPresent()) {
                     return this.consumeWithRemainder(source, stack, filledVial.get());
                 }
