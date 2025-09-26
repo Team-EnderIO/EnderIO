@@ -17,6 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.extensions.IEntityExtension;
 import org.slf4j.Logger;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -64,7 +65,7 @@ public record Soul(CompoundTag entityTag) {
     public static final Soul EMPTY = new Soul(new CompoundTag());
 
     public static Soul of(LivingEntity entity) {
-        return new Soul(entity.serializeNBT(entity.level().registryAccess()));
+        return new Soul(sanitizeEntityTag(entity.serializeNBT(entity.level().registryAccess())));
     }
 
     public static Soul of(ResourceLocation entityType) {
@@ -90,7 +91,7 @@ public record Soul(CompoundTag entityTag) {
     }
 
     public static boolean isSameEntitySameTag(Soul soul1, Soul soul2) {
-        return Objects.equals(soul1.getEntityTag(), soul2.getEntityTag());
+        return isSameTag(soul1.getEntityTag(), soul2.getEntityTag());
     }
 
     public static boolean isSameEntitySameTag(Soul soul, LivingEntity livingEntity, HolderLookup.Provider registries) {
@@ -99,7 +100,36 @@ public record Soul(CompoundTag entityTag) {
         }
 
         var entityTag = livingEntity.serializeNBT(registries);
-        return Objects.equals(soul.getEntityTag(), entityTag);
+        return isSameTag(soul.getEntityTag(), entityTag);
+    }
+
+    // Do not compare obviously unreasonable NBT Keys
+    private static final List<String> IGNORED_KEYS = List.of(
+        "Pos",
+        "Air",
+        "OnGround",
+        "Rotation",
+        "FallFlying",
+        "UUID",
+        "Motion",
+        "Brain",
+        "HurtByTimestamp",
+        "PortalCooldown",
+        "FallDistance"
+    );
+
+    private static boolean isSameTag(CompoundTag tag1, CompoundTag tag2) {
+        for (var key : tag1.getAllKeys()) {
+            if (IGNORED_KEYS.contains(key)) {
+                continue;
+            }
+
+            if (!Objects.equals(tag1.get(key), tag2.get(key))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public boolean hasEntity() {
@@ -181,5 +211,15 @@ public record Soul(CompoundTag entityTag) {
 
     public static Soul parseOptional(HolderLookup.Provider lookupProvider, CompoundTag tag) {
         return tag.isEmpty() ? EMPTY : parse(lookupProvider, tag).orElse(EMPTY);
+    }
+
+    private static CompoundTag sanitizeEntityTag(CompoundTag tag) {
+        tag.remove("Pos");
+        tag.remove("Air");
+        tag.remove("OnGround");
+        tag.remove("Rotation");
+        tag.remove("UUID");
+        tag.remove("Motion");
+        return tag;
     }
 }
