@@ -6,10 +6,12 @@ import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.api.capacitor.QuadraticScalable;
 import com.enderio.base.api.io.energy.EnergyIOMode;
 import com.enderio.base.api.soul.Soul;
+import com.enderio.base.api.soul.SoulBoundUtils;
 import com.enderio.base.api.soul.binding.ISoulBindable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIODataComponents;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
@@ -132,8 +134,11 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             }
 
             if (!OUTPUT.getItemStack(this).isEmpty()) {
-                setReason(SpawnerBlockedReason.OUTPUT_FULL);
-                return null;
+                var boundSoul = SoulBoundUtils.getBoundSoul(OUTPUT.getItemStack(this));
+                if (!Soul.isSameEntitySameTag(boundSoul, getSoulForCapture())) {
+                    setReason(SpawnerBlockedReason.OUTPUT_FULL);
+                    return null;
+                }
             }
         }
 
