@@ -25,6 +25,7 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
 public class ConduitRecipes extends RecipeProvider {
@@ -157,15 +158,15 @@ public class ConduitRecipes extends RecipeProvider {
                 .save(recipeOutput, EnderIO.loc("ender_energy_conduit"));
 
         ShapedRecipeBuilder
-            .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(enderEnergyConduit, 8))
-            .pattern("BBB")
-            .pattern("ICI")
-            .pattern("BBB")
-            .define('B', EIOItems.CONDUIT_BINDER)
-            .define('C', ConduitIngredient.of(enhancedEnergyConduit))
-            .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-            .save(recipeOutput, EnderIO.loc("ender_energy_conduit_upgrade"));
+                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(enderEnergyConduit, 8))
+                .pattern("BBB")
+                .pattern("ICI")
+                .pattern("BBB")
+                .define('B', EIOItems.CONDUIT_BINDER)
+                .define('C', ConduitIngredient.of(enhancedEnergyConduit))
+                .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+                .save(recipeOutput, EnderIO.loc("ender_energy_conduit_upgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(redstoneConduit, 8))
                 .pattern("BBB")
@@ -176,6 +177,17 @@ public class ConduitRecipes extends RecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.loc("redstone_conduit"));
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.CONDUIT_PROBE)
+                .pattern("ARA")
+                .pattern("PCP")
+                .pattern("RIR")
+                .define('P', Tags.Items.GLASS_BLOCKS)
+                .define('I', ConduitIngredient.of(itemConduit))
+                .define('A', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
+                .define('C', Items.COMPARATOR)
+                .define('R', ConduitIngredient.of(redstoneConduit))
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+                .save(recipeOutput, EnderIO.loc("conduit_probe"));
     }
 
     private void buildFilterErasureRecipes(RecipeOutput recipeOutput) {
@@ -368,4 +380,5 @@ public class ConduitRecipes extends RecipeProvider {
                 new PaintingRecipe(input, output.asItem().getDefaultInstance()), null,
                 new ModLoadedCondition(EnderIOMachines.MODULE_MOD_ID));
     }
+
 }

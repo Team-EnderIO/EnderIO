@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/conductive_alloy"
+    },
+    "C": {
+      "item": "minecraft:comparator"
+    },
+    "I": {
+      "type": "enderio:conduit",
+      "conduit_type": "enderio:item"
+    },
+    "P": {
+      "tag": "c:glass_blocks"
+    },
+    "R": {
+      "type": "enderio:conduit",
+      "conduit_type": "enderio:redstone"
+    }
+  },
+  "pattern": [
+    "ARA",
+    "PCP",
+    "RIR"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:conduit_probe"
+  }
+}

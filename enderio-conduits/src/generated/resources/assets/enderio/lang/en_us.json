@@ -9,6 +9,9 @@
   "gui.enderio.conduit.redstone.signal_color": "Signal Color",
   "gui.enderio.conduit.redstone.strong_signal": "Strong Signal",
   "gui.enderio.conduit_channel": "Channel",
+  "gui.enderio.conduit_probe.message.copied": "Copied data: %s",
+  "gui.enderio.conduit_probe.message.pasted": "Pasted data: %s",
+  "gui.enderio.conduit_probe.message.switched_mode": "Switched conduit probe mode to %s",
   "gui.enderio.fluid_conduit.change_fluid1": "Locked Fluid:",
   "gui.enderio.fluid_conduit.change_fluid2": "Click to reset!",
   "gui.enderio.fluid_conduit.change_fluid3": "Fluid: %s",
@@ -29,6 +32,7 @@
   "item.enderio.conduit.pressurized_fluid": "Pressurized Fluid Conduit",
   "item.enderio.conduit.redstone": "Redstone Conduit",
   "item.enderio.conduit_facade": "Conduit Facade",
+  "item.enderio.conduit_probe": "Conduit Probe",
   "item.enderio.hardened_conduit_facade": "Hardened Conduit Facade",
   "item.enderio.redstone_and_filter": "Redstone And Filter",
   "item.enderio.redstone_counting_filter": "Redstone Counting Filter",
@@ -51,5 +55,9 @@
   "tooltip.enderio.conduit.item.effective_rate": "Effective Rate: %s Items/sec",
   "tooltip.enderio.conduit.item.raw_rate": "Rate: %s Items/network tick",
   "tooltip.enderio.conduit_facade.blast_resist": "Hardened: Resists breaking and explosions",
-  "tooltip.enderio.conduit_facade.transparent": "Transparent: Hides conduits when painted with a translucent block"
+  "tooltip.enderio.conduit_facade.transparent": "Transparent: Hides conduits when painted with a translucent block",
+  "tooltip.enderio.conduit_probe.mode": "Mode: %s",
+  "tooltip.enderio.conduit_probe.mode.contains_copied": "Contains copied conduit data:",
+  "tooltip.enderio.conduit_probe.state.copy_paste": "Copy/Paste",
+  "tooltip.enderio.conduit_probe.state.probe": "Probe"
 }
