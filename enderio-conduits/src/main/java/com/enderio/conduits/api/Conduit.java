@@ -10,11 +10,6 @@ import com.enderio.conduits.api.network.node.IConduitNode;
 import com.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
 import com.enderio.conduits.api.ticker.ConduitTicker;
 import com.mojang.serialization.Codec;
-
-import java.util.Comparator;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -36,6 +31,11 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
+
+import java.util.Comparator;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, TConnectionConfig extends ConnectionConfig>
         extends Comparable<TConduit>, TooltipProvider {
@@ -106,21 +106,21 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     // region Conduit Checks
 
-    default boolean canBeInSameBundle(Holder<Conduit<?, ?>> otherConduit) {
-        // Disallow conduits of the same type to exist in the same bundle by default.
-        return otherConduit.value().type() != type();
-    }
-
-    default boolean canBeReplacedBy(Holder<Conduit<?, ?>> otherConduit) {
+    /**
+     * @param otherConduit the conduit to be replaced.
+     * @return whether this conduit can replace the other.
+     */
+    default boolean canReplaceConduit(TConduit otherConduit) {
         return false;
     }
 
     /**
+     * @implNote This method should be symmetrical, i.e.: `a.canConnectToConduit(b) == b.canConnectToConduit(a)`
      * @return true if both conduits are compatible and thus can connect.
      */
-    default boolean canConnectToConduit(Holder<Conduit<?, ?>> other) {
+    default boolean canConnectToConduit(TConduit other) {
         // By default only allow a conduit to connect to an exact match.
-        return this.equals(other.value());
+        return this.equals(other);
     }
 
     /**
@@ -235,6 +235,10 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     // region Custom Data Sync
 
+    /**
+     * Create a custom tag for syncing data from node data or network context to the client for extra GUI behaviour.
+     * @return custom sync data.
+     */
     @Nullable
     default CompoundTag getExtraGuiData(ConduitBundle conduitBundle, IConduitNode node, Direction side) {
         return null;

@@ -6,6 +6,7 @@ import com.enderio.conduits.ConduitNBTKeys;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.ConduitType;
+import com.enderio.conduits.api.ConduitUtility;
 import com.enderio.conduits.api.bundle.AddConduitResult;
 import com.enderio.conduits.api.bundle.ConduitBundle;
 import com.enderio.conduits.api.bundle.SlotType;
@@ -396,7 +397,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     @Override
     public boolean hasCompatibleConduit(Holder<Conduit<?, ?>> conduit) {
-        return conduits.stream().anyMatch(c -> c.value().canConnectToConduit(conduit) && conduit.value().canConnectToConduit(c));
+        return conduits.stream().anyMatch(c -> ConduitUtility.canConnectConduits(conduit, c));
     }
 
     @Override
@@ -417,9 +418,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     @Override
     public @Nullable Holder<Conduit<?, ?>> getCompatibleConduit(Holder<Conduit<?, ?>> neighbourConduit) {
         return conduits.stream()
-            .filter(c ->
-                c.value().canConnectToConduit(neighbourConduit) &&
-                neighbourConduit.value().canConnectToConduit(c))
+            .filter(c -> ConduitUtility.canConnectConduits(c, neighbourConduit))
             .findFirst()
             .orElse(null);
     }
@@ -441,7 +440,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
      */
     private Optional<Holder<Conduit<?, ?>>> findReplacementCandidate(Holder<Conduit<?, ?>> possibleReplacement) {
         return conduits.stream()
-                .filter(existingConduit -> existingConduit.value().canBeReplacedBy(possibleReplacement))
+                .filter(existingConduit -> ConduitUtility.canConduitReplace(possibleReplacement, existingConduit))
                 .findFirst();
     }
 
@@ -450,12 +449,10 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
      * @return whether the provided conduit is compatible with the other conduits in the bundle.
      */
     private boolean isConduitCompatibleWithExisting(Holder<Conduit<?, ?>> conduit) {
-        // Ensure the incoming conduit can exist with other conduits *and* cannot connect to any 
+        // Ensure the incoming conduit can exist with other conduits *and* cannot connect to any inside the bundle
         return conduits.stream().allMatch(existingConduit ->
-            existingConduit.value().canBeInSameBundle(conduit) &&
-            !existingConduit.value().canConnectToConduit(conduit) &&
-            conduit.value().canBeInSameBundle(existingConduit) &&
-            !conduit.value().canConnectToConduit(existingConduit));
+            existingConduit.value().type() != conduit.value().type() &&
+            !ConduitUtility.canConnectConduits(conduit, existingConduit));
     }
 
     @Override
@@ -592,8 +589,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         if (result instanceof AddConduitResult.Upgrade(Holder<Conduit<?, ?>> replacedConduit) &&
-            !replacedConduit.value().canConnectToConduit(conduit) &&
-            !conduit.value().canConnectToConduit(replacedConduit)) {
+            !ConduitUtility.canConnectConduits(conduit, replacedConduit)) {
             removeNeighborConnections(replacedConduit);
         }
 
@@ -944,7 +940,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     private void disconnect(Holder<Conduit<?, ?>> conduit, Direction side) {
         boolean hasChanged = false;
         for (var c : conduits) {
-            if (c.value().canConnectToConduit(conduit) && conduit.value().canConnectToConduit(c)) {
+            if (ConduitUtility.canConnectConduits(conduit, c)) {
                 conduitConnections.computeIfAbsent(c, ConnectionContainer::new)
                         .setStatus(side, ConnectionStatus.DISCONNECTED);
                 onConnectionsUpdated(c);

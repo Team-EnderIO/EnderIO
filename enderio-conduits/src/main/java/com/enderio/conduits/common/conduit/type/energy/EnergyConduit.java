@@ -66,12 +66,8 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
-    public boolean canBeReplacedBy(Holder<Conduit<?, ?>> otherConduit) {
-        if (!(otherConduit.value() instanceof EnergyConduit otherEnergyConduit)) {
-            return false;
-        }
-
-        return compareTo(otherEnergyConduit) < 0;
+    public boolean canReplaceConduit(EnergyConduit otherConduit) {
+        return compareTo(otherConduit) > 0;
     }
 
     @Override
