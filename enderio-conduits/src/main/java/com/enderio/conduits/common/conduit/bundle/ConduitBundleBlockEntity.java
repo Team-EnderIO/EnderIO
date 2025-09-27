@@ -837,10 +837,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 return false;
             }
 
-            // Gated behind hasServerConnectionChecks to ensure conduit devs do not forget
-            // to override both.
-            if (!compatibleConduit.value().canConnectConduits(conduitNodes.get(compatibleConduit), otherNode) ||
-                !conduit.value().canConnectConduits(otherNode, conduitNodes.get(compatibleConduit))) {
+            // Gated behind hasServerConnectionChecks to ensure conduit devs do not forget to override both.
+            if (!compatibleConduit.value().canConnectConduits(conduitNodes.get(compatibleConduit), otherNode)) {
                 return false;
             }
         }

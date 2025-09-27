@@ -136,6 +136,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     /**
      * This can be used to prevent connection between nodes with incompatible data.
      * @apiNote Not called by the server if {@link #hasServerConnectionChecks()} does not return true.
+     * @implNote This method must be symmetrical, it will only be checked once for two pairs of nodes and conduits.
      * @return true if both nodes are compatible.
      */
     default boolean canConnectConduits(IConduitNode selfNode, IConduitNode otherNode) {
