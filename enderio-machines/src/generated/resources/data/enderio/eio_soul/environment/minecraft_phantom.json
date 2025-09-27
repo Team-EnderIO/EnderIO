@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:phantom",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:logic",
+      "first": {
+        "type": "enderio:surface",
+        "heightmap": "MOTION_BLOCKING"
+      },
+      "logic": "AND",
+      "second": {
+        "type": "enderio:height",
+        "height": 90,
+        "isMin": true
+      }
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:biome",
+      "biomes": "#minecraft:is_overworld"
+    }
+  },
+  "weight": 40
+}

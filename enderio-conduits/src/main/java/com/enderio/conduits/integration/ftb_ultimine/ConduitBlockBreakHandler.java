@@ -52,7 +52,7 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
                 breakOperations.put(player, new ConduitBreakOperation(conduit));
             }
 
-            // Allow the origin bundle to make its own decisions
+            // Allow the potPos bundle to make its own decisions
             return Result.PASS;
         }
 

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:cave_spider",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:light",
+      "isMin": false,
+      "level": 0
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:structure",
+      "structures": "#minecraft:mineshaft"
+    }
+  },
+  "weight": 30
+}

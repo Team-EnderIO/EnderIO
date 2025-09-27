@@ -118,7 +118,7 @@ public class EnderIOMachines {
         provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(),
                 new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
         var b = new MachineBlockTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper());

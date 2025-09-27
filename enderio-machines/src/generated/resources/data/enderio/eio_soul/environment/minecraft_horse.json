@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:horse",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:surface",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:biome",
+      "biomes": "#minecraft:is_overworld"
+    }
+  },
+  "weight": 3
+}

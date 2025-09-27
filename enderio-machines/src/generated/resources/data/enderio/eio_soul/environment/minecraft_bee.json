@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:bee",
+  "potPos": {
+    "type": "enderio:block",
+    "blocks": "minecraft:beehives",
+    "height": 5,
+    "range": 3
+  },
+  "weight": 35
+}

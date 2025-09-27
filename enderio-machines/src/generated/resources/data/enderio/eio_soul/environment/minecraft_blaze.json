@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blaze",
+  "potPos": {
+    "type": "enderio:structure",
+    "structures": [
+      "minecraft:fortress"
+    ]
+  },
+  "weight": 15
+}

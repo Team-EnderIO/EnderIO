@@ -6,7 +6,9 @@ import com.enderio.base.api.soul.SoulBoundUtils;
 import com.enderio.base.client.decorator.GlassIconDecorator;
 import com.enderio.base.client.paint.model.PaintedBlockGeometry;
 import com.enderio.base.client.particle.RangeParticle;
+import com.enderio.base.client.renderer.SoulPotBEWLR;
 import com.enderio.base.client.renderer.block.EnderSkullRenderer;
+import com.enderio.base.client.renderer.block.SoulPotRenderer;
 import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
 import com.enderio.base.client.travel.TravelTargetRendering;
 import com.enderio.base.common.block.skull.EnderSkullBlock;
@@ -15,13 +17,14 @@ import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.init.EIOParticles;
 import com.enderio.base.common.item.tool.SoulVialItem;
+import com.enderio.base.common.particle.SoulParticle;
 import com.enderio.core.client.item.FluidBarDecorator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
@@ -33,9 +36,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -46,9 +47,11 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.common.util.Lazy;
 
 @EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID, value = Dist.CLIENT)
 @Mod(value = EnderIOBase.MODULE_MOD_ID, dist = Dist.CLIENT)
@@ -59,6 +62,20 @@ public class EnderIOBaseClient {
 
     public EnderIOBaseClient(ModContainer modContainer) {
         modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    }
+
+
+    @SubscribeEvent
+    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        event.registerItem(new IClientItemExtensions() {
+            // Minecraft can be null during datagen
+            final Lazy<BlockEntityWithoutLevelRenderer> renderer = Lazy.of(() -> SoulPotBEWLR.INSTANCE);
+
+            @Override
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return renderer.get();
+            }
+        }, EIOBlocks.SOUL_POT.asItem());
     }
 
     @SubscribeEvent
@@ -137,6 +154,7 @@ public class EnderIOBaseClient {
     @SubscribeEvent
     public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
+        event.registerSpriteSet(EIOParticles.SOUL_PARTICLE.get(), SoulParticle.Provider::new);
     }
 
     private static Optional<Item> findGliderForModelRL(ResourceLocation rl) {
@@ -153,6 +171,7 @@ public class EnderIOBaseClient {
     @SubscribeEvent
     public static void modelRenderer(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(EIOBlockEntities.ENDER_SKULL.get(), EnderSkullRenderer::new);
+        event.registerBlockEntityRenderer(EIOBlockEntities.SOUL_POT.get(), SoulPotRenderer::new);
     }
 
     @SubscribeEvent

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:strider",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:biome",
+      "biomes": "#minecraft:is_nether"
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:block",
+      "blocks": "minecraft:lava",
+      "height": 5,
+      "range": 5
+    }
+  },
+  "weight": 8
+}

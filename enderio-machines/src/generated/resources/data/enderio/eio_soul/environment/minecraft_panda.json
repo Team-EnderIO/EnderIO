@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:panda",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:surface",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:biome",
+      "biomes": "#minecraft:is_jungle"
+    }
+  },
+  "weight": 15
+}

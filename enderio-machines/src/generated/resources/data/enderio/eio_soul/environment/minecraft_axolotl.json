@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:axolotl",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:biome",
+      "biomes": [
+        "minecraft:lush_caves"
+      ]
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:block",
+      "blocks": "minecraft:water",
+      "height": 3,
+      "range": 3
+    }
+  },
+  "weight": 40
+}

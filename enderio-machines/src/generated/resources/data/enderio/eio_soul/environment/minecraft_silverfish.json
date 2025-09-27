@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:silverfish",
+  "potPos": {
+    "type": "enderio:block",
+    "blocks": "minecraft:infested_stone",
+    "height": 5,
+    "range": 6
+  },
+  "weight": 20
+}

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:hoglin",
+  "potPos": {
+    "type": "enderio:biome",
+    "biomes": [
+      "minecraft:crimson_forest"
+    ]
+  },
+  "weight": 10
+}

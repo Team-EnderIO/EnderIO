@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:bee",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:biome",
+      "biomes": [
+        "minecraft:birch_forest"
+      ]
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:surface",
+      "heightmap": "MOTION_BLOCKING"
+    }
+  },
+  "weight": 3
+}

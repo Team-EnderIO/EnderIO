@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:drowned",
+  "potPos": {
+    "type": "enderio:logic",
+    "first": {
+      "type": "enderio:light",
+      "isMin": false,
+      "level": 0
+    },
+    "logic": "AND",
+    "second": {
+      "type": "enderio:biome",
+      "biomes": "#c:is_aquatic"
+    }
+  },
+  "weight": 20
+}

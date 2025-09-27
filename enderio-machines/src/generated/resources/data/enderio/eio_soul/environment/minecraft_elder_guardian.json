@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:elder_guardian",
+  "potPos": {
+    "type": "enderio:structure",
+    "structures": [
+      "minecraft:monument"
+    ]
+  },
+  "weight": 1
+}

@@ -1,4 +1,4 @@
-package com.enderio.machines.common.souldata;
+package com.enderio.machines.common.soulpot;
 
 import net.minecraft.resources.ResourceLocation;
 

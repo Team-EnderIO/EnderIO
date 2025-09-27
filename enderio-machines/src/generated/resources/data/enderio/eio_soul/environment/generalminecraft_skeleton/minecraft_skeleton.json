@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:skeleton",
+  "potPos": {
+    "type": "enderio:structure",
+    "structures": [
+      "minecraft:fortress"
+    ]
+  },
+  "weight": 5
+}

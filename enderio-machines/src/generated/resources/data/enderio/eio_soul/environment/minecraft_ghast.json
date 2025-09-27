@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:ghast",
+  "potPos": {
+    "type": "enderio:biome",
+    "biomes": "#minecraft:is_nether"
+  },
+  "weight": 5
+}

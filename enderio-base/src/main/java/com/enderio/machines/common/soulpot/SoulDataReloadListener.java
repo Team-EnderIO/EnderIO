@@ -18,7 +18,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-package com.enderio.machines.common.souldata;
+package com.enderio.machines.common.soulpot;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -42,7 +42,6 @@ import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 /**
@@ -93,7 +92,7 @@ public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResour
         Map<ResourceLocation, T> newMap = new HashMap<>();
 
         for (Map.Entry<ResourceLocation, JsonElement> element : pObject.entrySet()) {
-            codec.decode(JsonOps.INSTANCE, element.getValue())
+            codec.decode(getRegistryLookup().createSerializationContext(JsonOps.INSTANCE), element.getValue())
                     .ifSuccess(result -> newMap.put(result.getFirst().getKey(), result.getFirst())) // store the key
                                                                                                     // from the
                                                                                                     // ISoulData
