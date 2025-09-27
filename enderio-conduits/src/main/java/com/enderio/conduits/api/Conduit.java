@@ -107,7 +107,8 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     // region Conduit Checks
 
     default boolean canBeInSameBundle(Holder<Conduit<?, ?>> otherConduit) {
-        return true;
+        // Disallow conduits of the same type to exist in the same bundle by default.
+        return otherConduit.value().type() != type();
     }
 
     default boolean canBeReplacedBy(Holder<Conduit<?, ?>> otherConduit) {
@@ -115,9 +116,10 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     }
 
     /**
-     * @return true if both types are compatible
+     * @return true if both conduits are compatible and thus can connect.
      */
     default boolean canConnectToConduit(Holder<Conduit<?, ?>> other) {
+        // By default only allow a conduit to connect to an exact match.
         return this.equals(other.value());
     }
 

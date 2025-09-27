@@ -7,7 +7,6 @@ import com.enderio.conduits.api.connection.config.ConnectionConfig;
 import com.enderio.conduits.api.connection.config.ConnectionConfigType;
 import com.enderio.conduits.api.facade.FacadeType;
 import com.enderio.conduits.api.network.node.IConduitNode;
-import java.util.List;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -17,6 +16,9 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Access into a conduit bundle.
@@ -50,10 +52,12 @@ public interface ConduitBundle {
 
     /**
      * Remove a conduit from the bundle.
+     * @param conduit The conduit to remove from the bundle.
+     * @param player The player removing the conduit (can be null).
+     * @param droppedItemConsumer A consumer which handles items created during conduit removal, includes the conduit item itself and any items in the connection inventory. Only called on Server.
      * @throws IllegalArgumentException if this conduit is not present (in dev only).
      */
-    // TODO GH-1115: Add a drop item nullable consumer? Could be a nice way to handle customising drops?
-    void removeConduit(Holder<Conduit<?, ?>> conduit, @Nullable Player player);
+    void removeConduit(Holder<Conduit<?, ?>> conduit, @Nullable Player player, @Nullable Consumer<ItemStack> droppedItemConsumer);
 
     /**
      * @throws IllegalArgumentException if the conduit is not present.
@@ -82,15 +86,24 @@ public interface ConduitBundle {
     /**
      * @implNote compare conduits using {@link Conduit#canConnectToConduit(Holder)}
      * @param conduit the conduit to check for
-     * @return whether the bundle has this conduit, or another which is compatible.
+     * @return whether the bundle has any conduit which can connect to the provided conduit.
      */
-    boolean hasConduitByType(Holder<Conduit<?, ?>> conduit);
+    boolean hasCompatibleConduit(Holder<Conduit<?, ?>> conduit);
 
     // TODO: Docs
-    boolean hasConduitByType(ConduitType<?> conduitType);
+    boolean hasConduitOfType(ConduitType<?> conduitType);
 
     // TODO: Docs
+    @Nullable
     Holder<Conduit<?, ?>> getConduitByType(ConduitType<?> conduitType);
+
+    /**
+     * Get a conduit that is compatible with the given neighbouring conduit.
+     * @param neighbourConduit the conduit to find a compatible conduit in this bundle for.
+     * @return a compatible conduit, or null.
+     */
+    @Nullable
+    Holder<Conduit<?, ?>> getCompatibleConduit(Holder<Conduit<?, ?>> neighbourConduit);
 
     /**
      * @param conduit the conduit to check for

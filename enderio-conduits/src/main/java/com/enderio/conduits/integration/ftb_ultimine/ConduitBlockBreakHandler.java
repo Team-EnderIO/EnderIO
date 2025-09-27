@@ -8,8 +8,10 @@ import dev.ftb.mods.ftbultimine.api.blockbreaking.BlockBreakHandler;
 import dev.ftb.mods.ftbultimine.api.shape.Shape;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -75,7 +77,7 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
 
             // Drop the facade item
             if (!player.getAbilities().instabuild) {
-                conduitBundle.dropFacadeItem(originPos);
+                dropItem(level, originPos, conduitBundle.getFacadeProvider());
             }
 
             int lightLevelBefore = level.getLightEmission(pos);
@@ -91,7 +93,7 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
                 return Result.FAIL;
             }
 
-            conduitBundle.removeConduit(conduit, player, originPos);
+            conduitBundle.removeConduit(conduit, player, droppedStack -> dropItem(level, originPos, droppedStack));
         }
         }
 
@@ -102,6 +104,10 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
         }
 
         return Result.SUCCESS;
+    }
+
+    private void dropItem(Level level, BlockPos pos, ItemStack stack) {
+        level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), stack.copy()));
     }
 
     @Override

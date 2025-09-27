@@ -66,11 +66,6 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
-    public boolean canBeInSameBundle(Holder<Conduit<?, ?>> otherConduit) {
-        return !(otherConduit.value() instanceof EnergyConduit);
-    }
-
-    @Override
     public boolean canBeReplacedBy(Holder<Conduit<?, ?>> otherConduit) {
         if (!(otherConduit.value() instanceof EnergyConduit otherEnergyConduit)) {
             return false;
