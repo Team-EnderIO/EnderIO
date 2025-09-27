@@ -215,7 +215,6 @@ public class SoulCatchingPotBlock extends Block implements EntityBlock, SimpleWa
         BlockPos[] candidates = collectPositions(pos, level);
         if (candidates.length == 0)
             return;
-
         createParticle(pos, candidates[random.nextInt(candidates.length)], level);
     }
 

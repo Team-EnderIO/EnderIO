@@ -21,7 +21,7 @@ import java.util.Set;
 
 public record SoulParticleData(BlockPos potPos, BlockPos target) implements ParticleOptions {
 
-    public static final int LIFETIME = 50;
+    public static final int LIFETIME = 70;
 
     public static final MapCodec<SoulParticleData> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
