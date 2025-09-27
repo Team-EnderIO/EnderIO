@@ -5,7 +5,6 @@ import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.ConduitRedstoneSignalAware;
 import com.enderio.conduits.api.bundle.AddConduitResult;
 import com.enderio.conduits.api.connection.ConnectionStatus;
-import com.enderio.conduits.client.model.conduit.facades.ClientFacadeVisibility;
 import com.enderio.conduits.client.model.conduit.facades.FacadeUtil;
 import com.enderio.conduits.client.particle.ConduitBreakParticle;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
@@ -16,19 +15,17 @@ import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkC
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitTypes;
-import java.util.Optional;
+import com.enderio.conduits.common.network.C2SBreakConduitPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -62,7 +59,10 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
 
@@ -262,12 +262,10 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest,
             FluidState fluid) {
-        // TODO: Destroying the last conduit in the block has a laggy disconnect for the
-        // neighbours...
-
-        HitResult hit = player.pick(player.blockInteractionRange() + 5, 1, false);
-
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle) {
+            // Handle facade (on both logical sides)
+            // it's simpler than adding another packet because we don't need additional info.
+            // If/when we implement A11Y functionalities however, we should make this client-only.
             if (conduitBundle.hasFacade() && FacadeUtil.areFacadesVisible(player)) {
                 if (!level.isClientSide()) {
                     if (!player.getAbilities().instabuild) {
@@ -276,62 +274,65 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                 }
 
                 int lightLevelBefore = level.getLightEmission(pos);
-
                 conduitBundle.setFacadeProvider(ItemStack.EMPTY);
 
                 // Handle light update
                 if (lightLevelBefore != level.getLightEmission(pos)) {
                     level.getLightEngine().checkBlock(pos);
                 }
-            } else {
-                // TODO: accessibility feature flag
-                Holder<Conduit<?, ?>> conduit = null;
-//                if (true) {
-//                    // If the player is holding a conduit and this flag is enabled, they purposely want to break the held conduit.
-//                    conduit = ConduitA11yManager.getHeldConduit();
-//
-//                    // If we don't have the held conduit, exit now.
-//                    if (conduit != null && !conduitBundle.hasConduitStrict(conduit)) {
-//                        level.playSound(player, pos, SoundEvents.GENERIC_SMALL_FALL, SoundSource.BLOCKS, 1F, 1F);
-//                        return false;
-//                    }
-//
-//                    // TODO: If we adopt the strategy of only showing a bigger box when we're holding a conduit, we need to
-//                    // fire a packet to the server because we can't read whether the player is using the accessibility option on the server.
-//
-//                    // TODO: It could also be possible to leave this in? Idk if this would accidentally fire if the client state is up to date...
-//                }
-
-                if (conduit == null) {
-                    conduit = conduitBundle.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
-                }
-
-                if (conduit == null) {
-                    if (!conduitBundle.getConduits().isEmpty()) {
-                        level.playSound(player, pos, SoundEvents.GENERIC_SMALL_FALL, SoundSource.BLOCKS, 1F, 1F);
-                        return false;
-                    }
-
-                    return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-                }
-
-                if (level.isClientSide) {
-                    ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
-                }
-
-                conduitBundle.removeConduit(conduit, player, droppedItem ->
-                    level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), droppedItem.copy())));
+                return false;
             }
 
+            // Only handle conduit breaking on the client.
+            // Server will receive a packet from the client.
+            if (!level.isClientSide()) {
+                return false;
+            }
+
+//            if (true) {
+//                // If the player is holding a conduit and this flag is enabled, they purposely want to break the held conduit.
+//                conduit = ConduitA11yManager.getHeldConduit();
+//
+//                // If we don't have the held conduit, exit now.
+//                if (conduit != null && !conduitBundle.hasConduitStrict(conduit)) {
+//                    level.playSound(player, pos, SoundEvents.GENERIC_SMALL_FALL, SoundSource.BLOCKS, 1F, 1F);
+//                    return false;
+//                }
+//
+//                // TODO: If we adopt the strategy of only showing a bigger box when we're holding a conduit, we need to
+//                // fire a packet to the server because we can't read whether the player is using the accessibility option on the server.
+//
+//                // TODO: It could also be possible to leave this in? Idk if this would accidentally fire if the client state is up to date...
+//                }
+
+            // Find the conduit to be removed.
+            Holder<Conduit<?, ?>> conduit = null;
+            if (conduitBundle.getConduits().size() == 1) {
+                conduit = conduitBundle.getConduits().getFirst();
+            } else if (conduitBundle.getConduits().size() > 1) {
+                HitResult hit = player.pick(player.blockInteractionRange() + 5, 0.0f, false);
+                conduit = conduitBundle.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
+            }
+
+            // Remove the conduit locally
+            if (conduit != null) {
+                // Remove the conduit
+                ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
+
+                conduitBundle.removeConduit(conduit, player, droppedItem -> {});
+
+                // Ask the server to remove the conduit
+                PacketDistributor.sendToServer(new C2SBreakConduitPacket(pos, conduit));
+            }
+
+            // If the bundle is empty, destroy the block.
             if (conduitBundle.isEmpty()) {
                 return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-            } else {
-                level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
-                return false;
             }
         }
 
-        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        // Never default break.
+        return false;
     }
 
     // endregion

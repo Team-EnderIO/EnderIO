@@ -2,6 +2,7 @@ package com.enderio.conduits.common.network;
 
 import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.bundle.ConduitBundle;
+import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.conduits.common.conduit.type.fluid.FluidConduitNetworkContext;
 import com.enderio.conduits.common.init.ConduitComponents;
@@ -12,6 +13,7 @@ import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -96,6 +98,36 @@ public class ConduitServerPayloadHandler {
             // Sanity check before updating item
             if (heldStack.is(ConduitItems.CONDUIT_PROBE)) {
                 ConduitProbeItem.setState(context.player(), heldStack, packet.state());
+            }
+        });
+    }
+
+    public void handle(C2SBreakConduitPacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var player = context.player();
+            var level = player.level();
+            var pos = packet.pos();
+
+            // Ensure player can break this block
+            if (!player.canInteractWithBlock(pos, 1.0)) {
+                return;
+            }
+
+            var blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof ConduitBundleBlockEntity conduitBundle) {
+                // Check for safety.
+                if (!conduitBundle.hasConduitStrict(packet.conduit())) {
+                    return;
+                }
+
+                // Remove the conduit from the bundle
+                conduitBundle.removeConduit(packet.conduit(), player, droppedItem ->
+                    level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), droppedItem.copy())));
+
+                // If the bundle is empty, destroy it.
+                if (conduitBundle.isEmpty()) {
+                    level.removeBlock(pos, false);
+                }
             }
         });
     }

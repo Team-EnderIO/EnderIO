@@ -40,6 +40,9 @@ public class ConduitNetwork {
         
         registrar.playToServer(C2SSyncProbeStatePacket.TYPE, C2SSyncProbeStatePacket.STREAM_CODEC,
                 ConduitServerPayloadHandler.getInstance()::handle);
+
+        registrar.playToServer(C2SBreakConduitPacket.TYPE, C2SBreakConduitPacket.STREAM_CODEC,
+                ConduitServerPayloadHandler.getInstance()::handle);
     }
 
 }
