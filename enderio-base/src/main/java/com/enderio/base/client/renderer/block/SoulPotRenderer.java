@@ -39,7 +39,7 @@ public class SoulPotRenderer implements BlockEntityRenderer<SoulPotBlockEntity> 
         if (soulPot.getCaughtEntity() != null) {
             decoratedPotBlockEntity.lastWobbleStyle = DecoratedPotBlockEntity.WobbleStyle.POSITIVE;
             long gameTime = Minecraft.getInstance().level.getGameTime();
-            decoratedPotBlockEntity.wobbleStartedAtTick = gameTime - gameTime % DecoratedPotBlockEntity.WobbleStyle.POSITIVE.duration;
+            decoratedPotBlockEntity.wobbleStartedAtTick = gameTime - (gameTime + soulPot.getBlockPos().hashCode()) % DecoratedPotBlockEntity.WobbleStyle.POSITIVE.duration;
         }
         decoratedPotBlockEntity.setLevel(soulPot.getLevel());
         decoratedPotBlockEntity.loadCustomOnly(tag, Minecraft.getInstance().level.registryAccess());
