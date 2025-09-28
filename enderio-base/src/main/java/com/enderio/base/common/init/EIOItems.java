@@ -5,6 +5,7 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
 import com.enderio.base.common.filter.AbstractFilterItem;
+import com.enderio.base.common.filter.item.mod_id.ModIdItemFilterItem;
 import com.enderio.base.common.filter.soul.EnderSoulFilterItem;
 import com.enderio.base.common.filter.fluid.EnderFluidFilterItem;
 import com.enderio.base.common.filter.item.general.EnderItemFilterItem;
@@ -423,19 +424,6 @@ public class EIOItems {
     public static final RegiliteItem<ColdFireIgniter> COLD_FIRE_IGNITER = ITEM_REGISTRY
             .registerItem("cold_fire_igniter", ColdFireIgniter::new)
             .setTab(EIOCreativeTabs.GEAR, modifier -> EIOItems.COLD_FIRE_IGNITER.get().addAllVariants(modifier)) // TODO:
-                                                                                                                 // Might
-                                                                                                                 // PR
-                                                                                                                 // this
-                                                                                                                 // to
-                                                                                                                 // ITEM_REGISTRY
-                                                                                                                 // so
-                                                                                                                 // its
-                                                                                                                 // nicer,
-                                                                                                                 // but
-                                                                                                                 // I
-                                                                                                                 // like
-                                                                                                                 // the
-                                                                                                                 // footprint.
             .addCapability(Capabilities.FluidHandler.ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER);
 
     // endregion
@@ -466,6 +454,12 @@ public class EIOItems {
                     props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.BIG_ADVANCED))
             .setTab(EIOCreativeTabs.GEAR)
             .addCapability(EIOCapabilities.ITEM_FILTER, EnderItemFilterItem.ITEM_FILTER_PROVIDER)
+            .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
+
+    public static final RegiliteItem<ModIdItemFilterItem> MOD_ID_ITEM_FILTER = ITEM_REGISTRY
+            .registerItem("mod_item_filter", ModIdItemFilterItem::new)
+            .setTab(EIOCreativeTabs.GEAR)
+            .addCapability(EIOCapabilities.ITEM_FILTER, ModIdItemFilterItem.ITEM_FILTER_PROVIDER)
             .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 
     public static final RegiliteItem<EnderFluidFilterItem> BASIC_FLUID_FILTER = ITEM_REGISTRY

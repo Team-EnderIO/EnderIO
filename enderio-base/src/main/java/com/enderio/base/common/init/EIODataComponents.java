@@ -5,6 +5,7 @@ import com.enderio.base.api.attachment.CoordinateSelection;
 import com.enderio.base.api.soul.Soul;
 import com.enderio.base.api.capacitor.CapacitorData;
 import com.enderio.base.api.grindingball.GrindingBallData;
+import com.enderio.base.common.filter.item.mod_id.ModIdItemFilter;
 import com.enderio.base.common.filter.soul.EnderSoulFilter;
 import com.enderio.base.common.filter.fluid.EnderFluidFilter;
 import com.enderio.base.common.filter.item.general.EnderItemFilter;
@@ -68,10 +69,10 @@ public class EIODataComponents {
 //            .registerComponentType("existing_item_stack_filter",
 //                    builder -> builder.persistent(ExistingItemStackFilter.CODEC)
 //                            .networkSynchronized(ExistingItemStackFilter.STREAM_CODEC));
-//
-//    public static final Supplier<DataComponentType<ModIdItemStackFilter>> MOD_ID_ITEM_STACK_FILTER = DATA_COMPONENT_TYPES
-//            .registerComponentType("mod_id_item_stack_filter", builder -> builder.persistent(ModIdItemStackFilter.CODEC)
-//                    .networkSynchronized(ModIdItemStackFilter.STREAM_CODEC));
+
+    public static final Supplier<DataComponentType<ModIdItemFilter>> MOD_ID_ITEM_FILTER = DATA_COMPONENT_TYPES
+            .registerComponentType("mod_id_item_filter", builder -> builder.persistent(ModIdItemFilter.CODEC)
+                    .networkSynchronized(ModIdItemFilter.STREAM_CODEC));
 
     public static final Supplier<DataComponentType<EnderFluidFilter>> FLUID_FILTER = DATA_COMPONENT_TYPES
             .registerComponentType("fluid_filter", builder -> builder.persistent(EnderFluidFilter.CODEC)

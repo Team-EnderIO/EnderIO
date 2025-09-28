@@ -1,6 +1,7 @@
 package com.enderio.base.common.filter.item.mod_id;
 
 import com.enderio.base.api.filter.ItemFilter;
+import com.enderio.base.common.filter.item.general.DamageFilterMode;
 import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -15,6 +16,9 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 public record ModIdItemFilter(NonNullList<ItemStack> examples, boolean isDenyList) implements ItemFilter {
+
+    public static final ModIdItemFilter EMPTY = new ModIdItemFilter(0);
+
     public static final Codec<ModIdItemFilter> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
             .group(OrderedListCodec.create(256, ItemStack.OPTIONAL_CODEC, ItemStack.EMPTY)
                     .fieldOf("examples")
@@ -25,6 +29,10 @@ public record ModIdItemFilter(NonNullList<ItemStack> examples, boolean isDenyLis
     public static final StreamCodec<RegistryFriendlyByteBuf, ModIdItemFilter> STREAM_CODEC = StreamCodec.composite(
             ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)), ModIdItemFilter::examples,
             ByteBufCodecs.BOOL, ModIdItemFilter::isDenyList, ModIdItemFilter::new);
+
+    public ModIdItemFilter(int size) {
+        this(NonNullList.withSize(size, ItemStack.EMPTY), false);
+    }
 
     public ModIdItemFilter(List<ItemStack> examples, boolean isDenyList) {
         this(NonNullList.withSize(examples.size(), ItemStack.EMPTY), isDenyList);
