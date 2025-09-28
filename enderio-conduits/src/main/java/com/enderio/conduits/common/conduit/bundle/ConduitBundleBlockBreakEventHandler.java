@@ -33,6 +33,11 @@ public class ConduitBundleBlockBreakEventHandler {
             return;
         }
 
+        // Ensure block is broken before breaking it :P
+        if (!player.getAbilities().instabuild && blockState.getDestroyProgress(player, level, pos) < 1.0F) {
+            return;
+        }
+
         // Cancel event for conduit, we control breaking from here on out.
         event.setCanceled(true);
 
