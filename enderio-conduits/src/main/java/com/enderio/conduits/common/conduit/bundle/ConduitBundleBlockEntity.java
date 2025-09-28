@@ -297,7 +297,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
         var player = context.getPlayer();
         if (player != null && player.isSteppingCarefully()) {
-            removeConduit(conduit, player, this::dropItem);
+            removeConduit(conduit, droppedItem -> {
+                if (!player.getAbilities().instabuild) {
+                    dropItem(droppedItem);
+                }
+            });
+
             if (isEmpty()) {
                 level.setBlock(getBlockPos(), getBlockState().getFluidState().createLegacyBlock(),
                         level.isClientSide ? Block.UPDATE_ALL_IMMEDIATE : Block.UPDATE_ALL);
@@ -598,7 +603,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     @Override
-    public void removeConduit(Holder<Conduit<?, ?>> conduit, @Nullable Player player, @Nullable Consumer<ItemStack> droppedItemConsumer) {
+    public void removeConduit(Holder<Conduit<?, ?>> conduit, @Nullable Consumer<ItemStack> droppedItemConsumer) {
         if (level == null) {
             return;
         }
@@ -614,7 +619,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         // Drop the conduit and it's inventory items.
-        if (!level.isClientSide() && droppedItemConsumer != null && player != null && !player.getAbilities().instabuild) {
+        if (!level.isClientSide() && droppedItemConsumer != null) {
             // Drop the conduit item.
             droppedItemConsumer.accept(ConduitBlockItem.getStackFor(conduit, 1));
 
@@ -700,13 +705,14 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     private void dropItem(ItemStack stack) {
         if (level != null) {
-            level.addFreshEntity(new ItemEntity(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), stack.copy()));
+            var center = getBlockPos().getCenter();
+            level.addFreshEntity(new ItemEntity(level, center.x, center.y, center.z, stack.copy()));
         }
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)
     public ConduitNode getConduitNode(Holder<Conduit<?, ?>> conduit) {
-        if (!hasCompatibleConduit(conduit)) {
+        if (!hasConduitStrict(conduit)) {
             throw new IllegalStateException("Conduit not found in bundle.");
         }
 
@@ -1292,7 +1298,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         if (!isChunkUnload) {
             var allConduits = List.copyOf(getConduits());
             for (var conduit : allConduits) {
-                removeConduit(conduit, null, this::dropItem);
+                removeConduit(conduit, this::dropItem);
             }
 
             setFacadeProvider(ItemStack.EMPTY);

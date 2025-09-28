@@ -12,10 +12,14 @@ import com.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.conduits.common.redstone.RedstoneTimerFilter;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ConduitServerPayloadHandler {
@@ -104,7 +108,7 @@ public class ConduitServerPayloadHandler {
 
     public void handle(C2SBreakConduitPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            var player = context.player();
+            var player = (ServerPlayer)context.player();
             var level = player.level();
             var pos = packet.pos();
 
@@ -113,6 +117,7 @@ public class ConduitServerPayloadHandler {
                 return;
             }
 
+            var blockstate = level.getBlockState(pos);
             var blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof ConduitBundleBlockEntity conduitBundle) {
                 // Check for safety.
@@ -120,9 +125,63 @@ public class ConduitServerPayloadHandler {
                     return;
                 }
 
+                // Fire block break event.
+                BlockEvent.BreakEvent event = CommonHooks.fireBlockBreak(level, player.gameMode.getGameModeForPlayer(), player, pos, blockstate);
+                if (event.isCanceled()) {
+                    // Send block info back to the client.
+                    player.connection.send(new ClientboundBlockUpdatePacket(pos, blockstate));
+                    return;
+                }
+
                 // Remove the conduit from the bundle
-                conduitBundle.removeConduit(packet.conduit(), player, droppedItem ->
-                    level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), droppedItem.copy())));
+                conduitBundle.removeConduit(packet.conduit(), droppedItem -> {
+                    if (!player.getAbilities().instabuild) {
+                        var center = pos.getCenter();
+                        level.addFreshEntity(new ItemEntity(level, center.x, center.y, center.z, droppedItem.copy()));
+                    }
+                });
+
+                // If the bundle is empty, destroy it.
+                if (conduitBundle.isEmpty()) {
+                    level.removeBlock(pos, false);
+                }
+            }
+        });
+    }
+
+    public void handle(C2SRemoveConduitFacadePacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var player = (ServerPlayer)context.player();
+            var level = player.level();
+            var pos = packet.pos();
+
+            // Ensure player can break this block
+            if (!player.canInteractWithBlock(pos, 1.0)) {
+                return;
+            }
+
+            var blockState = level.getBlockState(pos);
+            var blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof ConduitBundleBlockEntity conduitBundle) {
+                // Fire block break event.
+                BlockEvent.BreakEvent event = CommonHooks.fireBlockBreak(level, player.gameMode.getGameModeForPlayer(), player, pos, blockState);
+                if (event.isCanceled()) {
+                    // Send block info back to the client.
+                    player.connection.send(new ClientboundBlockUpdatePacket(pos, blockState));
+                    return;
+                }
+
+                if (!player.getAbilities().instabuild) {
+                    conduitBundle.dropFacadeItem();
+                }
+
+                int lightLevelBefore = level.getLightEmission(pos);
+                conduitBundle.setFacadeProvider(ItemStack.EMPTY);
+
+                // Handle light update
+                if (lightLevelBefore != level.getLightEmission(pos)) {
+                    level.getLightEngine().checkBlock(pos);
+                }
 
                 // If the bundle is empty, destroy it.
                 if (conduitBundle.isEmpty()) {

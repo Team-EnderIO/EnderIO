@@ -42,6 +42,7 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
         BlockPos originPos = hitResult.getBlockPos();
 
         // Origin bundle breaking, capture necessary context.
+        // Once captured, perform the operation against the origin bundle.
         if (pos.equals(originPos)) {
             if (conduitBundle.hasFacade() && FacadeUtil.areFacadesVisible(player)) {
                 breakOperations.put(player, new FacadeBreakOperation(conduitBundle.getFacadeBlock()));
@@ -53,9 +54,6 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
 
                 breakOperations.put(player, new ConduitBreakOperation(conduit));
             }
-
-            // Allow the origin bundle to make its own decisions
-            return Result.PASS;
         }
 
         // Get operation
@@ -93,7 +91,11 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
                 return Result.FAIL;
             }
 
-            conduitBundle.removeConduit(conduit, player, droppedStack -> dropItem(level, originPos, droppedStack));
+            conduitBundle.removeConduit(conduit, droppedStack -> {
+                if (!player.getAbilities().instabuild) {
+                    dropItem(level, originPos, droppedStack);
+                }
+            });
         }
         }
 
@@ -107,7 +109,8 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
     }
 
     private void dropItem(Level level, BlockPos pos, ItemStack stack) {
-        level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), stack.copy()));
+        var center = pos.getCenter();
+        level.addFreshEntity(new ItemEntity(level, center.x, center.y, center.z, stack.copy()));
     }
 
     @Override

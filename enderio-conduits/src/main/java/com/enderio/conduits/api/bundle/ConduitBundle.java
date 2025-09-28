@@ -53,11 +53,10 @@ public interface ConduitBundle {
     /**
      * Remove a conduit from the bundle.
      * @param conduit The conduit to remove from the bundle.
-     * @param player The player removing the conduit (can be null).
      * @param droppedItemConsumer A consumer which handles items created during conduit removal, includes the conduit item itself and any items in the connection inventory. Only called on Server.
      * @throws IllegalArgumentException if this conduit is not present (in dev only).
      */
-    void removeConduit(Holder<Conduit<?, ?>> conduit, @Nullable Player player, @Nullable Consumer<ItemStack> droppedItemConsumer);
+    void removeConduit(Holder<Conduit<?, ?>> conduit, @Nullable Consumer<ItemStack> droppedItemConsumer);
 
     /**
      * @throws IllegalArgumentException if the conduit is not present.
