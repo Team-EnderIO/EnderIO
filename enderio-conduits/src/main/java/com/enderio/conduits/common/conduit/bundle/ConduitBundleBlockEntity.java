@@ -1503,6 +1503,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         ensureModelsAreCorrect();
     }
 
+    // This method ensures that any missing client-side connections render properly after
+    // the possibility of a block break cancellation rolls back a removed conduit.
     private void ensureModelsAreCorrect() {
         if (level == null || !level.isClientSide()) {
             return;

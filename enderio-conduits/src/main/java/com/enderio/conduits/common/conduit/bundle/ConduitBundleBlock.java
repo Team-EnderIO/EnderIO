@@ -269,8 +269,8 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
         // If this is a simple block break, handle it now.
         // We do this so that if the server vetoes the block break, the block entity data is in tact.
-        // If a break goes through, onRemoved removes the conduit and drops all the items.
-        if ((conduitBundle.getConduits().size() == 1 && !conduitBundle.hasFacade()) ||
+        if (conduitBundle.isEmpty() ||
+            (conduitBundle.getConduits().size() == 1 && !conduitBundle.hasFacade()) ||
             (conduitBundle.getConduits().isEmpty() && conduitBundle.hasFacade())) {
 
             if (level.isClientSide()) {
@@ -280,12 +280,19 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                 } else {
                     // TODO: Facade particles?
                 }
-            } else if (!player.getAbilities().instabuild) {
-                for (var conduit : conduitBundle.getConduits()) {
-                    conduitBundle.removeConduit(conduit, droppedItem -> popResource(level, pos, droppedItem));
+            } else {
+                // Duplicate list to avoid concurrent modification
+                var conduits = conduitBundle.getConduits().stream().toList();
+                for (var conduit : conduits) {
+                    conduitBundle.removeConduit(conduit, droppedItem -> {
+                        if (!player.getAbilities().instabuild) {
+                            popResource(level, pos, droppedItem);
+                        }
+                    });
                 }
 
-                if (!conduitBundle.getFacadeProvider().isEmpty()) {
+                if (!conduitBundle.getFacadeProvider().isEmpty() &&
+                    !player.getAbilities().instabuild) {
                     popResource(level, pos, conduitBundle.getFacadeProvider());
                 }
             }
