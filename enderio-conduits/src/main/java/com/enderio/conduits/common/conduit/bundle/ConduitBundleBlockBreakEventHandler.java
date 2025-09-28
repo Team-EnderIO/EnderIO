@@ -1,24 +1,19 @@
-package com.enderio.conduits.common.conduit;
+package com.enderio.conduits.common.conduit.bundle;
 
 import com.enderio.conduits.EnderIOConduits;
 import com.enderio.conduits.api.Conduit;
 import com.enderio.conduits.client.model.conduit.facades.FacadeUtil;
 import com.enderio.conduits.client.particle.ConduitBreakParticle;
-import com.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.network.C2SBreakConduitPacket;
 import com.enderio.conduits.common.network.C2SRemoveConduitFacadePacket;
 import net.minecraft.core.Holder;
-import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID)
@@ -76,7 +71,9 @@ public class ConduitBundleBlockBreakEventHandler {
                 conduit = conduitBundle.getConduits().getFirst();
             } else if (conduitBundle.getConduits().size() > 1) {
                 HitResult hit = player.pick(player.blockInteractionRange() + 5, 0.0f, false);
-                conduit = conduitBundle.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
+                if (hit.getType() == HitResult.Type.BLOCK) {
+                    conduit = conduitBundle.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
+                }
             }
 
 //            if (true) {

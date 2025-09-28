@@ -258,7 +258,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             }
         }
     }
-    
+
     // endregion
 
     // region Interactions
