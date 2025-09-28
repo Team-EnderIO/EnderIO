@@ -1179,7 +1179,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         updateShape();
-        updateModel();
+        ensureModelsAreCorrect();
     }
 
     @Override
@@ -1499,6 +1499,35 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 lazyNodeData.put(conduitParseResult.getOrThrow(), dataParseResult.getOrThrow());
             }
         }
+
+        ensureModelsAreCorrect();
+    }
+
+    private void ensureModelsAreCorrect() {
+        if (level == null || !level.isClientSide()) {
+            return;
+        }
+
+        // Ensure neighbors remain connected if they should be.
+        // This is to handle canceled conduit removals from the server
+        for (Direction side : Direction.values()) {
+            if (!(level.getBlockEntity(getBlockPos().relative(side)) instanceof ConduitBundleBlockEntity neighbourConduitBundle)) {
+                continue;
+            }
+
+            for (var conduit : conduits) {
+                var currentStatus = getConnectionStatus(conduit, side);
+                var neighborStatus = neighbourConduitBundle.getConnectionStatus(conduit, side.getOpposite());
+
+                if (currentStatus == ConnectionStatus.CONNECTED_CONDUIT &&
+                    neighborStatus == ConnectionStatus.DISCONNECTED) {
+                    neighbourConduitBundle.connectConduit(conduit, side.getOpposite());
+                }
+            }
+        }
+
+        // Ensure model is up to date
+        updateModel();
     }
 
     // endregion

@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -128,8 +129,8 @@ public class ConduitServerPayloadHandler {
                 // Fire block break event.
                 BlockEvent.BreakEvent event = CommonHooks.fireBlockBreak(level, player.gameMode.getGameModeForPlayer(), player, pos, blockstate);
                 if (event.isCanceled()) {
-                    // Send block info back to the client.
-                    player.connection.send(new ClientboundBlockUpdatePacket(pos, blockstate));
+                    // Send block entity data back
+                    level.sendBlockUpdated(pos, blockstate, blockstate, Block.UPDATE_ALL);
                     return;
                 }
 
@@ -166,8 +167,8 @@ public class ConduitServerPayloadHandler {
                 // Fire block break event.
                 BlockEvent.BreakEvent event = CommonHooks.fireBlockBreak(level, player.gameMode.getGameModeForPlayer(), player, pos, blockState);
                 if (event.isCanceled()) {
-                    // Send block info back to the client.
-                    player.connection.send(new ClientboundBlockUpdatePacket(pos, blockState));
+                    // Send block entity data back
+                    level.sendBlockUpdated(pos, blockState, blockState, Block.UPDATE_ALL);
                     return;
                 }
 
