@@ -186,7 +186,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
 
         CompoundTag tag = new CompoundTag();
         tag.putBoolean("HasRedstoneSignal", node.hasRedstoneSignal(config.extractRedstoneChannel()));
-        tag.putBoolean("HasRedstoneConduit", conduitBundle.hasConduitByType(ConduitTypes.REDSTONE.get()));
+        tag.putBoolean("HasRedstoneConduit", conduitBundle.hasConduitOfType(ConduitTypes.REDSTONE.get()));
         return tag;
     }
 

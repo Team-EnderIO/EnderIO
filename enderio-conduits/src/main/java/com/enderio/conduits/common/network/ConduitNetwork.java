@@ -8,7 +8,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 @EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID)
 public class ConduitNetwork {
-    private static final String PROTOCOL_VERSION = "1.0";
+    private static final String PROTOCOL_VERSION = "2";
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
@@ -39,6 +39,12 @@ public class ConduitNetwork {
                 ConduitServerPayloadHandler.getInstance()::handle);
         
         registrar.playToServer(C2SSyncProbeStatePacket.TYPE, C2SSyncProbeStatePacket.STREAM_CODEC,
+                ConduitServerPayloadHandler.getInstance()::handle);
+
+        registrar.playToServer(C2SBreakConduitPacket.TYPE, C2SBreakConduitPacket.STREAM_CODEC,
+                ConduitServerPayloadHandler.getInstance()::handle);
+
+        registrar.playToServer(C2SRemoveConduitFacadePacket.TYPE, C2SRemoveConduitFacadePacket.STREAM_CODEC,
                 ConduitServerPayloadHandler.getInstance()::handle);
     }
 

@@ -73,21 +73,8 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     }
 
     @Override
-    public boolean canBeInSameBundle(Holder<Conduit<?, ?>> otherConduit) {
-        return otherConduit.value().type() != type();
-    }
-
-    @Override
-    public boolean canBeReplacedBy(Holder<Conduit<?, ?>> otherConduit) {
-        if (otherConduit.value().type() != type()) {
-            return false;
-        }
-
-        if (!(otherConduit.value() instanceof ChemicalConduit otherChemicalConduit)) {
-            return false;
-        }
-
-        return compareTo(otherChemicalConduit) < 0;
+    public boolean canReplaceConduit(ChemicalConduit otherConduit) {
+        return compareTo(otherConduit) > 0;
     }
 
     @Override

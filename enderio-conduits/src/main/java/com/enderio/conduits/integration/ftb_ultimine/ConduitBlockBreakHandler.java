@@ -8,8 +8,10 @@ import dev.ftb.mods.ftbultimine.api.blockbreaking.BlockBreakHandler;
 import dev.ftb.mods.ftbultimine.api.shape.Shape;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -40,6 +42,7 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
         BlockPos originPos = hitResult.getBlockPos();
 
         // Origin bundle breaking, capture necessary context.
+        // Once captured, perform the operation against the origin bundle.
         if (pos.equals(originPos)) {
             if (conduitBundle.hasFacade() && FacadeUtil.areFacadesVisible(player)) {
                 breakOperations.put(player, new FacadeBreakOperation(conduitBundle.getFacadeBlock()));
@@ -51,9 +54,6 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
 
                 breakOperations.put(player, new ConduitBreakOperation(conduit));
             }
-
-            // Allow the origin bundle to make its own decisions
-            return Result.PASS;
         }
 
         // Get operation
@@ -75,7 +75,7 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
 
             // Drop the facade item
             if (!player.getAbilities().instabuild) {
-                conduitBundle.dropFacadeItem(originPos);
+                dropItem(level, originPos, conduitBundle.getFacadeProvider());
             }
 
             int lightLevelBefore = level.getLightEmission(pos);
@@ -91,7 +91,11 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
                 return Result.FAIL;
             }
 
-            conduitBundle.removeConduit(conduit, player, originPos);
+            conduitBundle.removeConduit(conduit, droppedStack -> {
+                if (!player.getAbilities().instabuild) {
+                    dropItem(level, originPos, droppedStack);
+                }
+            });
         }
         }
 
@@ -102,6 +106,11 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
         }
 
         return Result.SUCCESS;
+    }
+
+    private void dropItem(Level level, BlockPos pos, ItemStack stack) {
+        var center = pos.getCenter();
+        level.addFreshEntity(new ItemEntity(level, center.x, center.y, center.z, stack.copy()));
     }
 
     @Override

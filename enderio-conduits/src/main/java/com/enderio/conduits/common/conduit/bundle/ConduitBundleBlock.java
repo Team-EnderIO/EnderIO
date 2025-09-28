@@ -5,7 +5,6 @@ import com.enderio.conduits.api.ConduitCapabilities;
 import com.enderio.conduits.api.ConduitRedstoneSignalAware;
 import com.enderio.conduits.api.bundle.AddConduitResult;
 import com.enderio.conduits.api.connection.ConnectionStatus;
-import com.enderio.conduits.client.model.conduit.facades.ClientFacadeVisibility;
 import com.enderio.conduits.client.model.conduit.facades.FacadeUtil;
 import com.enderio.conduits.client.particle.ConduitBreakParticle;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
@@ -16,12 +15,12 @@ import com.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkC
 import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.conduits.common.init.ConduitTypes;
-import java.util.Optional;
+import com.enderio.conduits.common.network.C2SBreakConduitPacket;
+import com.enderio.conduits.common.network.C2SRemoveConduitFacadePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -61,7 +60,10 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
 
@@ -259,77 +261,86 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest,
-            FluidState fluid) {
-        // TODO: Destroying the last conduit in the block has a laggy disconnect for the
-        // neighbours...
-
-        HitResult hit = player.pick(player.blockInteractionRange() + 5, 1, false);
-
-        if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle) {
-            if (conduitBundle.hasFacade() && FacadeUtil.areFacadesVisible(player)) {
-                if (!level.isClientSide()) {
-                    if (!player.getAbilities().instabuild) {
-                        conduitBundle.dropFacadeItem();
-                    }
-                }
-
-                int lightLevelBefore = level.getLightEmission(pos);
-
-                conduitBundle.setFacadeProvider(ItemStack.EMPTY);
-
-                // Handle light update
-                if (lightLevelBefore != level.getLightEmission(pos)) {
-                    level.getLightEngine().checkBlock(pos);
-                }
-            } else {
-                // TODO: accessibility feature flag
-                Holder<Conduit<?, ?>> conduit = null;
-//                if (true) {
-//                    // If the player is holding a conduit and this flag is enabled, they purposely want to break the held conduit.
-//                    conduit = ConduitA11yManager.getHeldConduit();
-//
-//                    // If we don't have the held conduit, exit now.
-//                    if (conduit != null && !conduitBundle.hasConduitStrict(conduit)) {
-//                        level.playSound(player, pos, SoundEvents.GENERIC_SMALL_FALL, SoundSource.BLOCKS, 1F, 1F);
-//                        return false;
-//                    }
-//
-//                    // TODO: If we adopt the strategy of only showing a bigger box when we're holding a conduit, we need to
-//                    // fire a packet to the server because we can't read whether the player is using the accessibility option on the server.
-//
-//                    // TODO: It could also be possible to leave this in? Idk if this would accidentally fire if the client state is up to date...
-//                }
-
-                if (conduit == null) {
-                    conduit = conduitBundle.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
-                }
-
-                if (conduit == null) {
-                    if (!conduitBundle.getConduits().isEmpty()) {
-                        level.playSound(player, pos, SoundEvents.GENERIC_SMALL_FALL, SoundSource.BLOCKS, 1F, 1F);
-                        return false;
-                    }
-
-                    return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-                }
-
-                if (level.isClientSide) {
-                    ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
-                }
-
-                conduitBundle.removeConduit(conduit, player);
-            }
-
-            if (conduitBundle.isEmpty()) {
-                return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-            } else {
-                level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
-                return false;
-            }
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        if (!(level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle)) {
+            // TODO: Should we allow it to break?
+            return false;
         }
 
-        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        // If this is a simple block break, handle it now.
+        // We do this so that if the server vetoes the block break, the block entity data is in tact.
+        if (conduitBundle.isEmpty() ||
+            (conduitBundle.getConduits().size() == 1 && !conduitBundle.hasFacade()) ||
+            (conduitBundle.getConduits().isEmpty() && conduitBundle.hasFacade())) {
+
+            if (level.isClientSide()) {
+                if (!conduitBundle.getConduits().isEmpty()) {
+                    var conduit = conduitBundle.getConduits().getFirst();
+                    ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
+                } else {
+                    // TODO: Facade particles?
+                }
+            } else {
+                // Duplicate list to avoid concurrent modification
+                var conduits = conduitBundle.getConduits().stream().toList();
+                for (var conduit : conduits) {
+                    conduitBundle.removeConduit(conduit, droppedItem -> {
+                        if (!player.getAbilities().instabuild) {
+                            popResource(level, pos, droppedItem);
+                        }
+                    });
+                }
+
+                if (!conduitBundle.getFacadeProvider().isEmpty() &&
+                    !player.getAbilities().instabuild) {
+                    popResource(level, pos, conduitBundle.getFacadeProvider());
+                }
+            }
+
+            return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        }
+
+        // Handle all other break types over the network.
+        // If any of these are cancelled, updated block entity data can be sent without issue.
+        if (!level.isClientSide()) {
+            return false;
+        }
+
+        // Remove facade, if visible
+        if (conduitBundle.hasFacade() && FacadeUtil.areFacadesVisible(player)) {
+            int lightLevelBefore = level.getLightEmission(pos);
+            conduitBundle.setFacadeProvider(ItemStack.EMPTY);
+
+            // Handle light update
+            if (lightLevelBefore != level.getLightEmission(pos)) {
+                level.getLightEngine().checkBlock(pos);
+            }
+
+            // Ask the server to remove the facade
+            PacketDistributor.sendToServer(new C2SRemoveConduitFacadePacket(pos));
+        } else {
+            Holder<Conduit<?, ?>> conduit = null;
+
+            // More than 1 conduit, find it and remove it - do not destroy bundle.
+            HitResult hit = player.pick(player.blockInteractionRange() + 5, 0.0f, false);
+            if (hit.getType() == HitResult.Type.BLOCK) {
+                conduit = conduitBundle.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
+            }
+
+            // No hit, no break.
+            if (conduit == null) {
+                return false;
+            }
+
+            ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
+
+            conduitBundle.removeConduit(conduit, droppedItem -> {});
+
+            // Ask the server to remove the conduit
+            PacketDistributor.sendToServer(new C2SBreakConduitPacket(pos, conduit));
+        }
+
+        return false;
     }
 
     // endregion

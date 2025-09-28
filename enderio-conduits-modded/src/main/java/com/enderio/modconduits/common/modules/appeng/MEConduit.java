@@ -67,9 +67,8 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
     }
 
     @Override
-    public boolean canConnectToConduit(Holder<Conduit<?, ?>> other) {
-        return other.value().type() == type() && other.value() instanceof MEConduit otherConduit
-                && otherConduit.color == color;
+    public boolean canConnectToConduit(MEConduit other) {
+        return other.color == color;
     }
 
     @Override
