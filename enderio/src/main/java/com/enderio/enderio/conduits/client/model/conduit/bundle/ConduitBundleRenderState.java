@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.client.model.conduit.bundle;
 
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.bundle.ConduitBundle;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.conduits.client.model.conduit.modifier.ConduitModelModifiers;
 import com.enderio.enderio.conduits.common.conduit.OffsetHelper;
 import java.util.HashMap;

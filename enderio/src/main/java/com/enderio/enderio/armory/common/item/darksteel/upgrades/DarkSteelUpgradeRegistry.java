@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelUpgrade;
+import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
@@ -37,7 +37,7 @@ public final class DarkSteelUpgradeRegistry {
         return INST;
     }
 
-    private final Map<String, Supplier<IDarkSteelUpgrade>> registeredUpgrades = new HashMap<>();
+    private final Map<String, Supplier<DarkSteelUpgrade>> registeredUpgrades = new HashMap<>();
 
     private final Map<TagKey<Item>, Set<String>> upgradeSupport = new HashMap<>();
 
@@ -58,12 +58,12 @@ public final class DarkSteelUpgradeRegistry {
         registerUpgrade(SolarUpgrade::new);
     }
 
-    public void registerUpgrade(Supplier<IDarkSteelUpgrade> upgrade) {
+    public void registerUpgrade(Supplier<DarkSteelUpgrade> upgrade) {
         registeredUpgrades.put(upgrade.get().getName(), upgrade);
     }
 
-    public Optional<IDarkSteelUpgrade> createUpgrade(String name) {
-        Supplier<IDarkSteelUpgrade> val = registeredUpgrades.get(name);
+    public Optional<DarkSteelUpgrade> createUpgrade(String name) {
+        Supplier<DarkSteelUpgrade> val = registeredUpgrades.get(name);
         if (val == null) {
             return Optional.empty();
         }
@@ -86,9 +86,9 @@ public final class DarkSteelUpgradeRegistry {
         return Collections.unmodifiableSet(result);
     }
 
-    public Collection<IDarkSteelUpgrade> createAllUpgradesForItem(ItemStack stack) {
+    public Collection<DarkSteelUpgrade> createAllUpgradesForItem(ItemStack stack) {
         Set<String> upgradeNames = getUpgradesForItem(stack);
-        final List<IDarkSteelUpgrade> result = new ArrayList<>();
+        final List<DarkSteelUpgrade> result = new ArrayList<>();
         upgradeNames.forEach(s -> createUpgrade(s).ifPresent(result::add));
         return result;
     }

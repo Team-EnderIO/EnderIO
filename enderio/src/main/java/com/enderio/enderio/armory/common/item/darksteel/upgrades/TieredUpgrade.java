@@ -1,13 +1,13 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.enderio.armory.api.capability.IUpgradeTier;
+import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
+import com.enderio.enderio.api.armory.capability.UpgradeTier;
 import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 
-public abstract class TieredUpgrade<T extends IUpgradeTier> implements IDarkSteelUpgrade {
+public abstract class TieredUpgrade<T extends UpgradeTier> implements DarkSteelUpgrade {
 
     public static final String TIER_KEY = "tier";
 
@@ -25,17 +25,17 @@ public abstract class TieredUpgrade<T extends IUpgradeTier> implements IDarkStee
     }
 
     @Override
-    public Optional<? extends IDarkSteelUpgrade> getNextTier() {
+    public Optional<? extends DarkSteelUpgrade> getNextTier() {
         return getUpgradeForTier(tier.getLevel() + 1);
     }
 
     @Override
-    public Optional<? extends IUpgradeTier> getTier() {
+    public Optional<? extends UpgradeTier> getTier() {
         return Optional.of(tier);
     }
 
     @Override
-    public boolean isValidUpgrade(IDarkSteelUpgrade upgrade) {
+    public boolean isValidUpgrade(DarkSteelUpgrade upgrade) {
         if (getName().equals(upgrade.getName()) && upgrade instanceof TieredUpgrade<?> up) {
             return up.tier.getLevel() == tier.getLevel() + 1;
         }
@@ -67,7 +67,7 @@ public abstract class TieredUpgrade<T extends IUpgradeTier> implements IDarkStee
         }
     }
 
-    protected Optional<? extends IDarkSteelUpgrade> getUpgradeForTier(int level) {
+    protected Optional<? extends DarkSteelUpgrade> getUpgradeForTier(int level) {
         return getTier(level).map(upgradeTier -> upgradeTier.getFactory().get());
     }
 

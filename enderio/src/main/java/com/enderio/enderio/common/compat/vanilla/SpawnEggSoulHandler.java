@@ -1,13 +1,13 @@
 package com.enderio.enderio.common.compat.vanilla;
 
 import com.enderio.enderio.api.soul.Soul;
-import com.enderio.enderio.api.soul.storage.ISoulHandler;
+import com.enderio.enderio.api.soul.storage.SoulHandler;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.component.CustomData;
 
-public class SpawnEggSoulHandler implements ISoulHandler {
+public class SpawnEggSoulHandler implements SoulHandler {
     private final ItemStack spawnEgg;
 
     public SpawnEggSoulHandler(ItemStack spawnEgg) {

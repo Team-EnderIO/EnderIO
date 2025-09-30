@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.filter.soul;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.Soul;
-import com.enderio.enderio.common.init.EIOCapabilities;
 import com.enderio.enderio.common.filter.FilterSlot;
 
 import java.util.Optional;
@@ -23,7 +23,7 @@ public class SoulFilterSlot extends FilterSlot<Soul> {
 
     @Override
     public Optional<Soul> getResourceFrom(ItemStack itemStack) {
-        var soulBindable = itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
+        var soulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable != null) {
             return Optional.of(soulBindable.getBoundSoul());
         }

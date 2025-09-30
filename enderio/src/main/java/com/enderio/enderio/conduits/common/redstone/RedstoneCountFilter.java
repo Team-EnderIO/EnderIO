@@ -1,5 +1,7 @@
 package com.enderio.enderio.conduits.common.redstone;
 
+import com.enderio.enderio.api.conduits.redstone.RedstoneFilterContext;
+import com.enderio.enderio.api.filter.RedstoneInsertFilter;
 import com.enderio.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkContext;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.enderio.conduits.common.network.CountFilterPacket;
@@ -12,6 +14,8 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.function.Function;
+
 public class RedstoneCountFilter implements RedstoneInsertFilter {
 
     public static final Component INSTANCE = new Component(DyeColor.GREEN, 8, 0, false);
@@ -22,7 +26,7 @@ public class RedstoneCountFilter implements RedstoneInsertFilter {
     }
 
     @Override
-    public int getOutputSignal(RedstoneConduitNetworkContext context, DyeColor control) {
+    public int getOutputSignal(RedstoneFilterContext context, DyeColor control) {
         DyeColor channel = getChannel();
         int maxCount = getMaxCount();
         boolean deactivated = isDeactivated();

@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.speed;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelCapability;
+import com.enderio.enderio.api.armory.capability.DarkSteelCapability;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.enderio.armory.common.init.ArmoryCapabilities;
@@ -89,8 +89,7 @@ public class SpeedUpgrade extends TieredUpgrade<SpeedUpgradeTier> {
         if (!legs.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_LEGGINGS)) {
             return;
         }
-        @Nullable
-        IDarkSteelCapability cap = legs.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+        @Nullable DarkSteelCapability cap = legs.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
         if (cap == null) {
             return;
         }

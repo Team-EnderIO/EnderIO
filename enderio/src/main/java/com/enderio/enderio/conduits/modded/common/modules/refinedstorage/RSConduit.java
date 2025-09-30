@@ -1,10 +1,10 @@
 package com.enderio.enderio.conduits.modded.common.modules.refinedstorage;
 
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.ConduitType;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.enderio.conduits.api.network.node.IConduitNode;
-import com.enderio.enderio.conduits.api.ticker.ConduitTicker;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
+import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.refinedmods.refinedstorage.neoforge.RefinedStorageNeoForgeApiImpl;

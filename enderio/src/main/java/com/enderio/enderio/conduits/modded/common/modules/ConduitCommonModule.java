@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.modded.common.modules;
 
-import com.enderio.enderio.conduits.api.Conduit;
+import com.enderio.enderio.api.conduits.Conduit;
 import java.util.function.BiConsumer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeOutput;

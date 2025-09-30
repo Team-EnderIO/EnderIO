@@ -9,7 +9,7 @@ import com.enderio.enderio.api.farm.FarmTaskManager;
 import com.enderio.enderio.api.farm.FarmingStation;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.api.soul.Soul;
-import com.enderio.enderio.api.soul.binding.ISoulBindable;
+import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.MachineNBTKeys;
@@ -62,7 +62,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingStation, ISoulBindable {
+public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingStation, SoulBindable {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.FARM_CAPACITY);

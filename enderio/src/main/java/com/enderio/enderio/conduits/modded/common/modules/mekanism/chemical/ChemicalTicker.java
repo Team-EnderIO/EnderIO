@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.modded.common.modules.mekanism.chemical;
 
-import com.enderio.enderio.conduits.api.network.ConduitBlockConnection;
-import com.enderio.enderio.conduits.api.network.IConduitNetwork;
-import com.enderio.enderio.conduits.api.ticker.ConduitTicker;
+import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
+import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.MekanismModule;
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
 
     @Override
-    public void tick(ServerLevel level, ChemicalConduit conduit, IConduitNetwork network) {
+    public void tick(ServerLevel level, ChemicalConduit conduit, ConduitNetwork network) {
         final long transferRate = conduit.transferRatePerTick() * conduit.networkTickRate();
         var context = network.getOrCreateContext(ChemicalConduitNetworkContext.TYPE);
 

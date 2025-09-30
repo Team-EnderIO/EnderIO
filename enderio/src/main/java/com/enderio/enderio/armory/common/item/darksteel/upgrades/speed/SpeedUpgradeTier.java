@@ -1,7 +1,7 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.speed;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.enderio.armory.api.capability.IUpgradeTier;
+import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
+import com.enderio.enderio.api.armory.capability.UpgradeTier;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.enderio.api.EnderIO;
@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-public enum SpeedUpgradeTier implements IUpgradeTier {
+public enum SpeedUpgradeTier implements UpgradeTier {
 
     ONE(ArmoryConfig.COMMON.SPEED_I_BOOST, ArmoryConfig.COMMON.SPEED_ACTIVATION_COST_I, ArmoryLang.DS_UPGRADE_SPEED_I),
     TWO(ArmoryConfig.COMMON.SPEED_II_BOOST, ArmoryConfig.COMMON.SPEED_ACTIVATION_COST_II,
@@ -19,7 +19,7 @@ public enum SpeedUpgradeTier implements IUpgradeTier {
     THREE(ArmoryConfig.COMMON.SPEED_III_BOOST, ArmoryConfig.COMMON.SPEED_ACTIVATION_COST_III,
             ArmoryLang.DS_UPGRADE_SPEED_III);
 
-    private final Supplier<IDarkSteelUpgrade> factory;
+    private final Supplier<DarkSteelUpgrade> factory;
     private final ModConfigSpec.ConfigValue<Double> magnitude;
     private final ModConfigSpec.ConfigValue<Integer> activationCost;
     private final Component displayName;
@@ -34,7 +34,7 @@ public enum SpeedUpgradeTier implements IUpgradeTier {
     }
 
     @Override
-    public Supplier<IDarkSteelUpgrade> getFactory() {
+    public Supplier<DarkSteelUpgrade> getFactory() {
         return factory;
     }
 

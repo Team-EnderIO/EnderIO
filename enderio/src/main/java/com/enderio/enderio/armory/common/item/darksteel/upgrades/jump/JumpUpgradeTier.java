@@ -1,20 +1,20 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.jump;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.enderio.armory.api.capability.IUpgradeTier;
+import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
+import com.enderio.enderio.api.armory.capability.UpgradeTier;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import java.util.function.Supplier;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-public enum JumpUpgradeTier implements IUpgradeTier {
+public enum JumpUpgradeTier implements UpgradeTier {
     ONE(ArmoryConfig.COMMON.JUMP_COUNT_I, ArmoryConfig.COMMON.JUMP_ACTIVATION_COST_I, ArmoryLang.DS_UPGRADE_JUMP_I,
             ArmoryLang.DS_UPGRADE_JUMP_I_DESCRIPTION),
     TWO(ArmoryConfig.COMMON.JUMP_COUNT_II, ArmoryConfig.COMMON.JUMP_ACTIVATION_COST_II, ArmoryLang.DS_UPGRADE_JUMP_II,
             ArmoryLang.DS_UPGRADE_JUMP_II_DESCRIPTION);
 
-    private final Supplier<IDarkSteelUpgrade> factory;
+    private final Supplier<DarkSteelUpgrade> factory;
     private final ModConfigSpec.ConfigValue<Integer> numJumps;
     private final ModConfigSpec.ConfigValue<Integer> activationCost;
     private final Component displayName;
@@ -34,7 +34,7 @@ public enum JumpUpgradeTier implements IUpgradeTier {
     }
 
     @Override
-    public Supplier<IDarkSteelUpgrade> getFactory() {
+    public Supplier<DarkSteelUpgrade> getFactory() {
         return factory;
     }
 

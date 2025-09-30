@@ -1,10 +1,10 @@
 package com.enderio.enderio.conduits.common.conduit.menu;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.UseOnly;
-import com.enderio.enderio.common.init.EIOCapabilities;
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfig;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfigType;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.enderio.conduits.common.network.C2SOpenConduitFilterMenu;
@@ -221,7 +221,7 @@ public class ConduitMenu extends BaseEnderMenu {
     public void tryOpenFilterMenu(int slot) {
         if (getPlayerInventory().player instanceof ServerPlayer serverPlayer) {
             var stack = conduitInventory.getStackInSlot(slot);
-            var menuProvider = stack.getCapability(EIOCapabilities.FILTER_MENU_PROVIDER);
+            var menuProvider = stack.getCapability(EnderIOCapabilities.FILTER_MENU_PROVIDER);
             if (menuProvider != null) {
                 menuProvider.openMenu(serverPlayer, conduitInventory, slot, () -> openConduitMenu(serverPlayer,
                         (ConduitBundleBlockEntity) connectionAccessor, side, conduit));

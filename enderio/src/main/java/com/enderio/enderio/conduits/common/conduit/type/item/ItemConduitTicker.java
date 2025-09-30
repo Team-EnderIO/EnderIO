@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.common.conduit.type.item;
 
-import com.enderio.enderio.common.init.EIOCapabilities;
-import com.enderio.enderio.conduits.api.network.IConduitNetwork;
-import com.enderio.enderio.conduits.api.ticker.ConduitTicker;
+import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
+import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +15,7 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
     public static final ItemConduitTicker INSTANCE = new ItemConduitTicker();
 
     @Override
-    public void tick(ServerLevel level, ItemConduit conduit, IConduitNetwork network) {
+    public void tick(ServerLevel level, ItemConduit conduit, ConduitNetwork network) {
         for (var channel : network.allChannels()) {
             toNextExtract: for (var extractConnection : network.extractConnections(channel)) {
                 var insertConnections = network.insertConnectionsFrom(extractConnection);
@@ -36,7 +36,7 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                 // Get extraction filter
                 var extractFilter = extractConnection.inventory()
                         .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
-                        .getCapability(EIOCapabilities.ITEM_FILTER);
+                        .getCapability(EnderIOCapabilities.ITEM_FILTER);
 
                 int extracted = 0;
                 int speed = conduit.transferRatePerCycle();
@@ -80,7 +80,7 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
 
                         var insertFilter = insertConnection.inventory()
                                 .getStackInSlot(ItemConduit.INSERT_FILTER_SLOT)
-                                .getCapability(EIOCapabilities.ITEM_FILTER);
+                                .getCapability(EnderIOCapabilities.ITEM_FILTER);
 
                         ItemStack itemToInsert = extractedItem.copy();
                         if (insertFilter != null) {

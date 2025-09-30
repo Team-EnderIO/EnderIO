@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.modded.client.modules.mekanism.models;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.model.ConduitModelModifier;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
 import com.enderio.core.client.RenderUtil;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.chemical.ChemicalConduit;
 import java.util.List;

@@ -3,9 +3,9 @@ package com.enderio.enderio.common.integrations.jei.extension;
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
-import com.enderio.enderio.common.init.EIOCapabilities;
 import com.enderio.enderio.common.integrations.jei.EnderIOJEI;
 import com.enderio.enderio.common.recipe.ShapedEntityStorageRecipe;
 import com.enderio.enderio.common.util.EntityCaptureUtils;
@@ -64,7 +64,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
             }
         } else if (output.isPresent()) {
             ItemStack itemStack = output.get().getTypedValue().getIngredient();
-            var outputSoulBindable = itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
+            var outputSoulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
 
             if (outputSoulBindable != null) {
                 results = List.of(itemStack);

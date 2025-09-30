@@ -6,7 +6,7 @@ import com.enderio.enderio.api.capacitor.FixedScalable;
 import com.enderio.enderio.api.capacitor.LinearScalable;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.enderio.api.soul.binding.ISoulBindable;
+import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.machines.common.MachineNBTKeys;
@@ -53,7 +53,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
-public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser, ISoulBindable {
+public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser, SoulBindable {
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);

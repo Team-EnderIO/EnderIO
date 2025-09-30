@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.tests;
 
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.EnderIOConduitsRegistries;
-import com.enderio.enderio.conduits.api.network.IConduitNetwork;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.mojang.authlib.GameProfile;
@@ -108,7 +108,7 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
     public void assertAllNetworksMatch(Holder<Conduit<?, ?>> conduit, int startX, int startY, int startZ, int endX,
             int endY, int endZ, boolean allowMissingBundles) {
         boolean foundFirstNetwork = false;
-        IConduitNetwork network = null;
+        ConduitNetwork network = null;
 
         for (int x = startX; x <= endX; x++) {
             for (int y = startY; y <= endY; y++) {

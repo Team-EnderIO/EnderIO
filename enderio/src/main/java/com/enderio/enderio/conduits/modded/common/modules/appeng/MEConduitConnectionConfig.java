@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.modded.common.modules.appeng;
 
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfig;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfigType;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

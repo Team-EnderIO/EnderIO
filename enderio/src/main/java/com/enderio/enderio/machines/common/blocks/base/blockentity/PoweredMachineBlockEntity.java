@@ -46,8 +46,8 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     private final PoweredMachineEnergyStorage energyStorage;
 
     public PoweredMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
-            boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
-            CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
+                                     boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
+                                     CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
         super(type, worldPosition, blockState, isIoConfigMutable);
 
         this.capacitorSupport = capacitorSupport;

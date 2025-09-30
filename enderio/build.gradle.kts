@@ -19,6 +19,22 @@ java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 println("Building Ender IO version ${project.version}")
 
 configurations {
+    create("apiAnnotationProcessor") {
+        extendsFrom(annotationProcessor.get())
+    }
+    create("apiCompileOnly") {
+        extendsFrom(compileOnly.get())
+    }
+    create("apiImplementation") {
+        extendsFrom(implementation.get())
+    }
+    create("apiRuntimeOnly") {
+        extendsFrom(runtimeOnly.get())
+    }
+    create("apiLocalRuntime") {
+        extendsFrom(runtimeOnly.get())
+    }
+
     create("gametestAnnotationProcessor") {
         extendsFrom(annotationProcessor.get())
     }
@@ -37,13 +53,22 @@ configurations {
 }
 
 sourceSets {
+    create("api") {
+    }
+
     main {
+        compileClasspath += sourceSets["api"].output
         resources {
             srcDir("src/generated/resources")
         }
     }
 
+    test {
+        compileClasspath += sourceSets["api"].output
+    }
+
     create("gametest") {
+        compileClasspath += sourceSets["api"].output
         compileClasspath += sourceSets.main.get().output
         runtimeClasspath += configurations.getByName("gametestLocalRuntime")
     }
@@ -164,10 +189,12 @@ neoForge {
         publish(project.file("src/main/resources/META-INF/accesstransformer.cfg"))
     }
 
+    addModdingDependenciesTo(sourceSets.getByName("api"))
     addModdingDependenciesTo(sourceSets.getByName("gametest"))
 
     mods {
         create("enderio") {
+            sourceSet(sourceSets.getByName("api"))
             sourceSet(sourceSets.getByName("main"))
         }
 
@@ -240,15 +267,13 @@ tasks.withType<Jar> {
 tasks.register<Jar>("apiJar") {
     archiveClassifier.set("api")
 
-    from(sourceSets["main"].output)
-    from(sourceSets["main"].allJava)
-
-    include("com/enderio/api/**")
-    include("com/enderio/*/api/**")
+    from(sourceSets["api"].output)
+    from(sourceSets["api"].allJava)
 }
 
 tasks.register<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
+    from(sourceSets["api"].allJava)
     from(sourceSets["main"].allJava)
 }
 

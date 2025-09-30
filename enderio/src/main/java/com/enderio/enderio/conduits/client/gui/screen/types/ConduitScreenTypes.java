@@ -1,10 +1,10 @@
 package com.enderio.enderio.conduits.client.gui.screen.types;
 
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.ConduitType;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfig;
-import com.enderio.enderio.conduits.api.screen.ConduitScreenType;
-import com.enderio.enderio.conduits.api.screen.RegisterConduitScreenTypesEvent;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
+import com.enderio.enderio.api.conduits.screen.ConduitScreenType;
+import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import java.util.Map;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.neoforged.fml.ModLoader;

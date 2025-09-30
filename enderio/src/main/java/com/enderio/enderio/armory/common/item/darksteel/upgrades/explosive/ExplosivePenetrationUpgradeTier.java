@@ -1,21 +1,21 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.explosive;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.enderio.armory.api.capability.IUpgradeTier;
+import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
+import com.enderio.enderio.api.armory.capability.UpgradeTier;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import java.util.function.Supplier;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-public enum ExplosivePenetrationUpgradeTier implements IUpgradeTier {
+public enum ExplosivePenetrationUpgradeTier implements UpgradeTier {
 
     ONE(ArmoryConfig.COMMON.EXPLOSIVE_PENETRATION_I, ArmoryConfig.COMMON.EXPLOSIVE_PENETRATION_ACTIVATION_COST_I,
             ArmoryLang.DS_UPGRADE_EXPLOSIVE_PENETRATION_I),
     TWO(ArmoryConfig.COMMON.EXPLOSIVE_PENETRATION_II, ArmoryConfig.COMMON.EXPLOSIVE_PENETRATION_ACTIVATION_COST_II,
             ArmoryLang.DS_UPGRADE_EXPLOSIVE_PENETRATION_II);
 
-    private final Supplier<IDarkSteelUpgrade> factory;
+    private final Supplier<DarkSteelUpgrade> factory;
     private final ModConfigSpec.ConfigValue<Integer> magnitude;
     private final ModConfigSpec.ConfigValue<Integer> activationCost;
     private final Component displayName;
@@ -32,7 +32,7 @@ public enum ExplosivePenetrationUpgradeTier implements IUpgradeTier {
         return magnitude;
     }
 
-    public Supplier<IDarkSteelUpgrade> getFactory() {
+    public Supplier<DarkSteelUpgrade> getFactory() {
         return factory;
     }
 

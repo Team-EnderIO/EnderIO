@@ -1,5 +1,7 @@
 package com.enderio.enderio.conduits.common.redstone;
 
+import com.enderio.enderio.api.conduits.redstone.RedstoneFilterContext;
+import com.enderio.enderio.api.filter.RedstoneInsertFilter;
 import com.enderio.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkContext;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
 import net.minecraft.world.item.DyeColor;
@@ -12,7 +14,7 @@ public class RedstoneNORFilter extends DoubleRedstoneChannel implements Redstone
     }
 
     @Override
-    public int getOutputSignal(RedstoneConduitNetworkContext context, DyeColor control) {
+    public int getOutputSignal(RedstoneFilterContext context, DyeColor control) {
         boolean b = context.isActive(getFirstChannel()) || context.isActive(getSecondChannel());
         return b ? 0 : 15;
     }

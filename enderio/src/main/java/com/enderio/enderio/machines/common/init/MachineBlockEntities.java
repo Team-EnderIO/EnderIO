@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.init;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.common.init.EIOBlocks;
-import com.enderio.enderio.common.init.EIOCapabilities;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
@@ -246,12 +246,12 @@ public class MachineBlockEntities {
 
     private static void legacyMachineBlockEntityCapabilities(
             RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntity) {
-        blockEntity.addCapability(EIOCapabilities.SideConfig.BLOCK, LegacyMachineBlockEntity.SIDE_CONFIG_PROVIDER);
+        blockEntity.addCapability(EnderIOCapabilities.SIDE_CONFIG, LegacyMachineBlockEntity.SIDE_CONFIG_PROVIDER);
         blockEntity.addCapability(Capabilities.ItemHandler.BLOCK, LegacyMachineBlockEntity.ITEM_HANDLER_PROVIDER);
     }
 
     private static void machineBlockEntityCapabilities(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
-        blockEntity.addCapability(EIOCapabilities.SideConfig.BLOCK, MachineBlockEntity.SIDE_CONFIG_PROVIDER);
+        blockEntity.addCapability(EnderIOCapabilities.SIDE_CONFIG, MachineBlockEntity.SIDE_CONFIG_PROVIDER);
         blockEntity.addCapability(Capabilities.ItemHandler.BLOCK, MachineBlockEntity.ITEM_HANDLER_PROVIDER);
     }
 
@@ -273,7 +273,7 @@ public class MachineBlockEntities {
     }
 
     private static void soulBoundCapability(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntity) {
-        blockEntity.addCapability(EIOCapabilities.SoulBindable.BLOCK, MachineBlockEntity.SOUL_BINDABLE);
+        blockEntity.addCapability(EnderIOCapabilities.SOUL_BINDABLE_BLOCK, MachineBlockEntity.SOUL_BINDABLE);
     }
 
     public static void register(IEventBus bus) {

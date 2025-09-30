@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.common.item.darksteel;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelUpgrade;
+import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.init.ArmoryFeatureFlags;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
@@ -30,10 +30,10 @@ public interface IDarkSteelItem extends AdvancedTooltipProvider, CreativeTabVari
 
     default ItemStack createFullyUpgradedStack(Item item) {
         ItemStack is = new ItemStack(item);
-        Collection<? extends IDarkSteelUpgrade> ups = DarkSteelUpgradeRegistry.instance().createAllUpgradesForItem(is);
-        for (IDarkSteelUpgrade upgrade : ups) {
-            IDarkSteelUpgrade maxTier = upgrade;
-            Optional<? extends IDarkSteelUpgrade> nextTier = maxTier.getNextTier();
+        Collection<? extends DarkSteelUpgrade> ups = DarkSteelUpgradeRegistry.instance().createAllUpgradesForItem(is);
+        for (DarkSteelUpgrade upgrade : ups) {
+            DarkSteelUpgrade maxTier = upgrade;
+            Optional<? extends DarkSteelUpgrade> nextTier = maxTier.getNextTier();
             while (nextTier.isPresent()) {
                 maxTier = nextTier.get();
                 nextTier = maxTier.getNextTier();
@@ -76,7 +76,7 @@ public interface IDarkSteelItem extends AdvancedTooltipProvider, CreativeTabVari
     default void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips, boolean isDetailed) {
         var upgrades = DarkSteelHelper.getUpgrades(itemStack);
         upgrades.stream()
-                .sorted(Comparator.comparing(IDarkSteelUpgrade::getName))
+                .sorted(Comparator.comparing(DarkSteelUpgrade::getName))
                 .forEach(upgrade -> tooltips.add(1,
                         upgrade.getDisplayName().copy().withStyle(ChatFormatting.DARK_AQUA)));
     }
@@ -86,7 +86,7 @@ public interface IDarkSteelItem extends AdvancedTooltipProvider, CreativeTabVari
         if (!availUpgrades.isEmpty()) {
             tooltips.add(ArmoryLang.DS_UPGRADE_AVAILABLE.copy().withStyle(ChatFormatting.YELLOW));
             availUpgrades.stream()
-                    .sorted(Comparator.comparing(IDarkSteelUpgrade::getName))
+                    .sorted(Comparator.comparing(DarkSteelUpgrade::getName))
                     .forEach(upgrade -> tooltips.add(Component.literal(" " + upgrade.getDisplayName().getString())
                             .withStyle(ChatFormatting.DARK_AQUA, ChatFormatting.ITALIC)));
         }

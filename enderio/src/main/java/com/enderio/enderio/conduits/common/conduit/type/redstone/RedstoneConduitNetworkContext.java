@@ -1,14 +1,16 @@
 package com.enderio.enderio.conduits.common.conduit.type.redstone;
 
-import com.enderio.enderio.conduits.api.network.ConduitNetworkContext;
-import com.enderio.enderio.conduits.api.network.ConduitNetworkContextType;
-import com.enderio.enderio.conduits.api.network.IConduitNetwork;
+import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
+import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import com.enderio.enderio.api.conduits.redstone.RedstoneFilterContext;
 import net.minecraft.world.item.DyeColor;
 
-public class RedstoneConduitNetworkContext implements ConduitNetworkContext<RedstoneConduitNetworkContext> {
+public class RedstoneConduitNetworkContext implements ConduitNetworkContext<RedstoneConduitNetworkContext>, RedstoneFilterContext {
 
     // Redstone context is not saved as it is recalculated every graph tick if the
     // network is active.
@@ -80,8 +82,8 @@ public class RedstoneConduitNetworkContext implements ConduitNetworkContext<Reds
     }
 
     @Override
-    public RedstoneConduitNetworkContext split(IConduitNetwork selfNetwork,
-            Set<? extends IConduitNetwork> allNetworks) {
+    public RedstoneConduitNetworkContext split(ConduitNetwork selfNetwork,
+            Set<? extends ConduitNetwork> allNetworks) {
         return copy();
     }
 

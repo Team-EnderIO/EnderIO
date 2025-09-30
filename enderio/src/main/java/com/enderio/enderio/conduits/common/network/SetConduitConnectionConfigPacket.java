@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.common.network;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfig;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

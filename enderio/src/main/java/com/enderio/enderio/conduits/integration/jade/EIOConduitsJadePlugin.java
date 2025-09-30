@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.integration.jade;
 
-import com.enderio.enderio.conduits.api.bundle.ConduitBundle;
+import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.conduits.client.model.conduit.facades.FacadeUtil;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import snownee.jade.api.BlockAccessor;

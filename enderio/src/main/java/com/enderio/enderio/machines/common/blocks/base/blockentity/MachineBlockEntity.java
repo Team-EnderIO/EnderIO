@@ -5,7 +5,7 @@ import com.enderio.enderio.api.capability.SideConfig;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.misc.RedstoneControl;
-import com.enderio.enderio.api.soul.binding.ISoulBindable;
+import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.common.block.EIOBlockEntity;
 import com.enderio.enderio.common.blockentity.Wrenchable;
 import com.enderio.enderio.machines.common.MachineNBTKeys;
@@ -64,13 +64,13 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
         implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = (be,
-            side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
+                                                                                                                side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER = (be,
             side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
 
-    public static final ICapabilityProvider<MachineBlockEntity, Void, ISoulBindable> SOUL_BINDABLE = (be, ctx)
-        -> be instanceof ISoulBindable bindable ? bindable : null;
+    public static final ICapabilityProvider<MachineBlockEntity, Void, SoulBindable> SOUL_BINDABLE = (be, ctx)
+        -> be instanceof SoulBindable bindable ? bindable : null;
 
     private static final ModelProperty<IOConfigurable> IO_CONFIG_PROPERTY = LegacyMachineBlockEntity.IO_CONFIG_PROPERTY;
 

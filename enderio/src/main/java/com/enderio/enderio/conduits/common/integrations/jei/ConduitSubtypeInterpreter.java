@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.integrations.jei;
 
-import com.enderio.enderio.conduits.api.Conduit;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
 import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;

@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.client.model.conduit.modifier;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.model.ConduitModelModifier;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
 import com.enderio.enderio.conduits.common.conduit.type.fluid.FluidConduit;
 import com.enderio.core.client.RenderUtil;
 import java.util.List;

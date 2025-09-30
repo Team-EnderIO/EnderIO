@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.common.conduit.bundle;
 
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.bundle.ConduitBundle;
-import com.enderio.enderio.conduits.api.connection.ConnectionStatus;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
+import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.conduits.common.Area;
 import com.enderio.enderio.conduits.common.conduit.OffsetHelper;
 import com.mojang.datafixers.util.Pair;

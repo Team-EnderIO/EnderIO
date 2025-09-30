@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.jump;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelCapability;
+import com.enderio.enderio.api.armory.capability.DarkSteelCapability;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.enderio.armory.common.init.ArmoryCapabilities;
@@ -70,8 +70,7 @@ public class JumpUpgrade extends TieredUpgrade<JumpUpgradeTier> {
         if (!boots.is(ArmoryTags.Items.DARK_STEEL_UPGRADEABLE_BOOTS)) {
             return;
         }
-        @Nullable
-        IDarkSteelCapability cap = boots.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+        @Nullable DarkSteelCapability cap = boots.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
         if (cap == null) {
             return;
         }

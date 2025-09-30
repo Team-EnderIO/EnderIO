@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelUpgrade;
+import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.enderio.armory.common.tag.ArmoryTags;
@@ -16,7 +16,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 
-public class StepAssistUpgrade implements IDarkSteelUpgrade {
+public class StepAssistUpgrade implements DarkSteelUpgrade {
 
     public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "step_assist";
 

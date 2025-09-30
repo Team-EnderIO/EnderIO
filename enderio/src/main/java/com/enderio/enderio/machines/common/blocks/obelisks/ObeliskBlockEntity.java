@@ -1,11 +1,11 @@
 package com.enderio.enderio.machines.common.blocks.obelisks;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorScalable;
 import com.enderio.enderio.api.filter.SoulFilter;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.enderio.common.init.EIOCapabilities;
 import com.enderio.enderio.machines.common.MachineNBTKeys;
 import com.enderio.enderio.machines.common.attachment.ActionRange;
 import com.enderio.enderio.machines.common.attachment.RangedActor;
@@ -46,8 +46,8 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
     private ActionRange actionRange = DEFAULT_RANGE;
 
     public ObeliskBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
-            boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
-            CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
+                              boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
+                              CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
         super(type, worldPosition, blockState, isIoConfigMutable, capacitorSupport, energyIOMode,
                 scalableEnergyCapacity, scalableMaxEnergyUse);
     }
@@ -102,7 +102,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
 
     @Nullable
     protected SoulFilter getSoulFilter() {
-        return FILTER.getItemStack(this).getCapability(EIOCapabilities.SOUL_FILTER);
+        return FILTER.getItemStack(this).getCapability(EnderIOCapabilities.SOUL_FILTER);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.recipe;
 
-import com.enderio.enderio.conduits.api.Conduit;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;

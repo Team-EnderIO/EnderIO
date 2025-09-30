@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.modded.common.modules.mekanism.chemical;
 
-import com.enderio.enderio.conduits.api.network.node.NodeData;
-import com.enderio.enderio.conduits.api.network.node.legacy.ConduitData;
-import com.enderio.enderio.conduits.api.network.node.legacy.ConduitDataType;
+import com.enderio.enderio.api.conduits.network.node.NodeData;
+import com.enderio.enderio.api.conduits.network.node.legacy.ConduitData;
+import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.MekanismModule;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;

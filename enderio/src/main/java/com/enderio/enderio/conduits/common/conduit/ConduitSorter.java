@@ -1,9 +1,9 @@
 package com.enderio.enderio.conduits.common.conduit;
 
 import com.enderio.enderio.conduits.EnderIOConduits;
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.ConduitType;
-import com.enderio.enderio.conduits.api.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

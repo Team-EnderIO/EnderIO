@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.integration.ftb_ultimine;
 
-import com.enderio.enderio.conduits.api.Conduit;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.client.model.conduit.facades.FacadeUtil;
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;

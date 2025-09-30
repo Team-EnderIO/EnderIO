@@ -1,7 +1,6 @@
 package com.enderio.enderio.armory.common.capability;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelCapability;
-import com.enderio.enderio.armory.api.capability.IDarkSteelUpgrade;
+import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
@@ -19,11 +18,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import org.jetbrains.annotations.Nullable;
 
-public class DarkSteelCapability implements IDarkSteelCapability {
+public class DarkSteelCapability implements com.enderio.enderio.api.armory.capability.DarkSteelCapability {
 
     private final ItemStack onStack;
 
-    private final Map<String, IDarkSteelUpgrade> upgrades = new HashMap<>();
+    private final Map<String, DarkSteelUpgrade> upgrades = new HashMap<>();
 
     public DarkSteelCapability(ItemStack onStack) {
         this.onStack = onStack;
@@ -31,7 +30,7 @@ public class DarkSteelCapability implements IDarkSteelCapability {
         DarkSteelItemUpgrades tmp = onStack.get(ArmoryDataComponents.DARK_STEEL_ITEM_UPGRADES);
         if (tmp != null) {
             for (UpgradeData data : tmp.upgradesData) {
-                IDarkSteelUpgrade up = createUpgrade(data.upgradeName, data.data.copyTag());
+                DarkSteelUpgrade up = createUpgrade(data.upgradeName, data.data.copyTag());
                 if (up != null) {
                     upgrades.put(up.getName(), up);
                 }
@@ -40,7 +39,7 @@ public class DarkSteelCapability implements IDarkSteelCapability {
     }
 
     @Override
-    public void addUpgrade(IDarkSteelUpgrade upgrade) {
+    public void addUpgrade(DarkSteelUpgrade upgrade) {
         removeUpgradeInSlot(upgrade.getSlot());
         upgrades.put(upgrade.getName(), upgrade);
         upgrade.onAddedToItem(onStack);
@@ -53,18 +52,18 @@ public class DarkSteelCapability implements IDarkSteelCapability {
             return;
         }
 
-        IDarkSteelUpgrade upgrade = upgrades.remove(name);
+        DarkSteelUpgrade upgrade = upgrades.remove(name);
         upgrade.onRemovedFromItem(onStack);
         updateComponent();
     }
 
     @Override
-    public boolean canApplyUpgrade(IDarkSteelUpgrade upgrade) {
+    public boolean canApplyUpgrade(DarkSteelUpgrade upgrade) {
         if (upgrades.isEmpty()) {
             return EmpoweredUpgrade.NAME.equals(upgrade.getName()) && upgrade.isBaseTier();
         }
 
-        Optional<IDarkSteelUpgrade> existing = getUpgrade(upgrade.getName());
+        Optional<DarkSteelUpgrade> existing = getUpgrade(upgrade.getName());
         if (existing.isPresent()) {
             return existing.get().isValidUpgrade(upgrade);
         }
@@ -75,17 +74,17 @@ public class DarkSteelCapability implements IDarkSteelCapability {
     }
 
     @Override
-    public <T extends IDarkSteelUpgrade> Optional<T> getUpgradeAs(String upgradeName, Class<T> as) {
+    public <T extends DarkSteelUpgrade> Optional<T> getUpgradeAs(String upgradeName, Class<T> as) {
         return getUpgrade(upgradeName).filter(as::isInstance).map(as::cast);
     }
 
     @Override
-    public Optional<IDarkSteelUpgrade> getUpgrade(String upgrade) {
+    public Optional<DarkSteelUpgrade> getUpgrade(String upgrade) {
         return Optional.ofNullable(upgrades.get(upgrade));
     }
 
     @Override
-    public Collection<IDarkSteelUpgrade> getUpgrades() {
+    public Collection<DarkSteelUpgrade> getUpgrades() {
         return upgrades.values();
     }
 
@@ -95,11 +94,11 @@ public class DarkSteelCapability implements IDarkSteelCapability {
     }
 
     @Override
-    public Collection<IDarkSteelUpgrade> getUpgradesApplicable() {
+    public Collection<DarkSteelUpgrade> getUpgradesApplicable() {
         if (upgrades.isEmpty()) {
             return List.of(EmpoweredUpgradeTier.ONE.getFactory().get());
         }
-        final List<IDarkSteelUpgrade> result = new ArrayList<>();
+        final List<DarkSteelUpgrade> result = new ArrayList<>();
         upgrades.values().forEach(upgrade -> upgrade.getNextTier().ifPresent(result::add));
         DarkSteelUpgradeRegistry.instance().createAllUpgradesForItem(onStack).forEach(upgrade -> {
             if (!hasUpgrade(upgrade.getName())) {
@@ -111,7 +110,7 @@ public class DarkSteelCapability implements IDarkSteelCapability {
 
     private void updateComponent() {
         List<UpgradeData> newData = new ArrayList<>();
-        for (IDarkSteelUpgrade up : upgrades.values()) {
+        for (DarkSteelUpgrade up : upgrades.values()) {
             UpgradeData d = new UpgradeData(up.getName(), CustomData.of(up.serializeNBT()));
             newData.add(d);
         }
@@ -119,8 +118,8 @@ public class DarkSteelCapability implements IDarkSteelCapability {
     }
 
     @javax.annotation.Nullable
-    private IDarkSteelUpgrade createUpgrade(String name, CompoundTag data) {
-        Optional<IDarkSteelUpgrade> upgrade = DarkSteelUpgradeRegistry.instance().createUpgrade(name);
+    private DarkSteelUpgrade createUpgrade(String name, CompoundTag data) {
+        Optional<DarkSteelUpgrade> upgrade = DarkSteelUpgradeRegistry.instance().createUpgrade(name);
         if (upgrade.isPresent()) {
             upgrade.get().deserializeNBT(data);
             return upgrade.get();

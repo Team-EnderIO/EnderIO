@@ -1,9 +1,9 @@
 package com.enderio.enderio.machines.common.init;
 
 import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.client.paint.PaintedBlockColor;
-import com.enderio.enderio.common.init.EIOCapabilities;
 import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.paint.item.PaintedBlockItem;
@@ -199,7 +199,7 @@ public class MachineBlocks {
                     b -> new BlockItem(b,
                             new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)),
                     item -> item.setTab(EIOCreativeTabs.MACHINES)
-                            .addCapability(EIOCapabilities.SoulBindable.ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER));
+                            .addCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER));
 
     public static final RegiliteBlock<MindKillerBlock> MIND_KILLER =  BLOCK_REGISTRY
             .registerBlock("mind_killer", MindKillerBlock::new,
@@ -283,7 +283,7 @@ public class MachineBlocks {
                     b -> new BlockItem(b,
                             new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)),
                     item -> item.setTab(EIOCreativeTabs.MACHINES)
-                            .addCapability(EIOCapabilities.SoulBindable.ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER));
+                            .addCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER));
 
     public static final RegiliteBlock<ProgressMachineBlock<?>> DRAIN = progressMachine("drain",
             () -> MachineBlockEntities.DRAIN);
@@ -435,7 +435,7 @@ public class MachineBlocks {
                 .createBlockItem(ITEM_REGISTRY,
                         item -> item.setModelProvider((prov, ctx) -> MachineModelUtil.solarPanel(prov, ctx, tier))
                                 .setTab(EIOCreativeTabs.MACHINES)
-                                .addCapability(EIOCapabilities.SoulBindable.ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER));
+                                .addCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER));
     }
 
     private static RegiliteBlock<CapacitorBankBlock> capacitorBank(String name,

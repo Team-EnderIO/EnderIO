@@ -1,5 +1,7 @@
 package com.enderio.enderio.conduits.common.redstone;
 
+import com.enderio.enderio.api.filter.RedstoneExtractFilter;
+import com.enderio.enderio.api.filter.RedstoneInsertFilter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;

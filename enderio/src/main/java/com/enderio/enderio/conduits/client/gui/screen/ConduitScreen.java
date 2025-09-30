@@ -1,15 +1,15 @@
 package com.enderio.enderio.conduits.client.gui.screen;
 
 import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.misc.RedstoneControl;
 import com.enderio.enderio.client.gui.widget.DyeColorPickerWidget;
 import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
-import com.enderio.enderio.common.init.EIOCapabilities;
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfig;
-import com.enderio.enderio.conduits.api.screen.ConduitMenuDataAccess;
-import com.enderio.enderio.conduits.api.screen.ConduitScreenHelper;
-import com.enderio.enderio.conduits.api.screen.ConduitScreenType;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
+import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
+import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
+import com.enderio.enderio.api.conduits.screen.ConduitScreenType;
 import com.enderio.enderio.conduits.client.gui.ConduitSelectionButton;
 import com.enderio.enderio.conduits.client.gui.screen.types.ConduitScreenTypes;
 import com.enderio.enderio.conduits.common.conduit.menu.ConduitMenu;
@@ -216,7 +216,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
             addPreRenderAction(() -> {
                 var inventory = menu.getConduitInventory();
                 widget.visible = inventory != null
-                        && inventory.getStackInSlot(slot).getCapability(EIOCapabilities.FILTER_MENU_PROVIDER) != null;
+                        && inventory.getStackInSlot(slot).getCapability(EnderIOCapabilities.FILTER_MENU_PROVIDER) != null;
             });
             return widget;
         }

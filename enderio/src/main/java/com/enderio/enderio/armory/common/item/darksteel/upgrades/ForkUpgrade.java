@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelUpgrade;
+import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.armory.common.init.ArmoryItems;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Tool;
 
-public class ForkUpgrade implements IDarkSteelUpgrade {
+public class ForkUpgrade implements DarkSteelUpgrade {
 
     public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "fork";
 

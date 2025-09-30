@@ -1,14 +1,14 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.empowered;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelUpgrade;
-import com.enderio.enderio.armory.api.capability.IUpgradeTier;
+import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
+import com.enderio.enderio.api.armory.capability.UpgradeTier;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import java.util.function.Supplier;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-public enum EmpoweredUpgradeTier implements IUpgradeTier {
+public enum EmpoweredUpgradeTier implements UpgradeTier {
 
     ONE(ArmoryConfig.COMMON.EMPOWERED_MAX_ENERGY_I, ArmoryConfig.COMMON.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I,
             ArmoryConfig.COMMON.EMPOWERED_ATTACK_DAMAGE_INCREASE_I,
@@ -27,7 +27,7 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
             ArmoryConfig.COMMON.EMPOWERED_ATTACK_SPEED_INCREASE_IV, ArmoryConfig.COMMON.EMPOWERED_MOB_HEAD_CHANCE_IV,
             ArmoryConfig.COMMON.EMPOWERED_ACTIVATION_COST_IV, ArmoryLang.DS_UPGRADE_EMPOWERED_IV);
 
-    private final Supplier<IDarkSteelUpgrade> factory;
+    private final Supplier<DarkSteelUpgrade> factory;
     private final ModConfigSpec.ConfigValue<Integer> maxStorage;
     private final ModConfigSpec.ConfigValue<Double> damageAbsorptionChance;
     private final ModConfigSpec.ConfigValue<Integer> activationCost;
@@ -67,7 +67,7 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
         return attackSpeedIncrease.get();
     }
 
-    public Supplier<IDarkSteelUpgrade> getFactory() {
+    public Supplier<DarkSteelUpgrade> getFactory() {
         return factory;
     }
 

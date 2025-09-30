@@ -2,12 +2,12 @@ package com.enderio.enderio.conduits.modded.common.modules.laserio;
 
 import com.direwolf20.laserio.common.items.cards.BaseCard;
 import com.direwolf20.laserio.setup.Registration;
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.integration.Integration;
 import com.enderio.enderio.api.integration.IntegrationManager;
 import com.enderio.enderio.api.integration.IntegrationWrapper;
 import com.enderio.enderio.api.filter.FluidFilter;
 import com.enderio.enderio.api.filter.ItemFilter;
-import com.enderio.enderio.common.init.EIOCapabilities;
 import com.enderio.enderio.conduits.modded.common.ModdedConduits;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
@@ -40,11 +40,11 @@ public class LaserIOIntegration implements Integration {
     @SubscribeEvent
     public void registerCapEvent(RegisterCapabilitiesEvent event) {
         // Register cards
-        event.registerItem(EIOCapabilities.ITEM_FILTER, CARD_ITEM_FILTER_PROVIDER, Registration.Card_Item.get());
-        event.registerItem(EIOCapabilities.FLUID_FILTER, CARD_FLUID_FILTER_PROVIDER, Registration.Card_Fluid.get());
+        event.registerItem(EnderIOCapabilities.ITEM_FILTER, CARD_ITEM_FILTER_PROVIDER, Registration.Card_Item.get());
+        event.registerItem(EnderIOCapabilities.FLUID_FILTER, CARD_FLUID_FILTER_PROVIDER, Registration.Card_Fluid.get());
 
         // Register raw filters
-        event.registerItem(EIOCapabilities.ITEM_FILTER, ITEM_FILTER_PROVIDER, Registration.Filter_Basic.get());
-        event.registerItem(EIOCapabilities.FLUID_FILTER, FLUID_FILTER_PROVIDER, Registration.Filter_Basic.get());
+        event.registerItem(EnderIOCapabilities.ITEM_FILTER, ITEM_FILTER_PROVIDER, Registration.Filter_Basic.get());
+        event.registerItem(EnderIOCapabilities.FLUID_FILTER, FLUID_FILTER_PROVIDER, Registration.Filter_Basic.get());
     }
 }

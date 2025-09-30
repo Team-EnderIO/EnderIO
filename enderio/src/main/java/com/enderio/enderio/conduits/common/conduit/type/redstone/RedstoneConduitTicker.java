@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.common.conduit.type.redstone;
 
-import com.enderio.enderio.conduits.api.ConduitCapabilities;
-import com.enderio.enderio.conduits.api.network.IConduitNetwork;
-import com.enderio.enderio.conduits.api.ticker.ConduitTicker;
+import com.enderio.enderio.api.conduits.ConduitCapabilities;
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
+import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import net.minecraft.server.level.ServerLevel;
 
@@ -11,7 +11,7 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
     public static final RedstoneConduitTicker INSTANCE = new RedstoneConduitTicker();
 
     @Override
-    public void tick(ServerLevel level, RedstoneConduit conduit, IConduitNetwork network) {
+    public void tick(ServerLevel level, RedstoneConduit conduit, ConduitNetwork network) {
         var context = network.getOrCreateContext(RedstoneConduitNetworkContext.TYPE);
         boolean isActiveBeforeTick = context.isActive();
         context.nextTick();

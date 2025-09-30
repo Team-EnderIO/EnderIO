@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.common.conduit.facades;
 
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.conduits.api.ConduitCapabilities;
+import com.enderio.enderio.api.conduits.ConduitCapabilities;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import java.util.List;

@@ -2,11 +2,11 @@ package com.enderio.enderio.conduits.common.conduit.type.item;
 
 import com.enderio.enderio.api.misc.RedstoneControl;
 import com.enderio.enderio.api.network.MassiveStreamCodec;
-import com.enderio.enderio.conduits.api.ConduitRedstoneSignalAware;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfig;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.enderio.conduits.api.connection.config.IOConnectionConfig;
-import com.enderio.enderio.conduits.api.connection.config.RedstoneSensitiveConnectionConfig;
+import com.enderio.enderio.api.conduits.ConduitRedstoneSignalAware;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
+import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
+import com.enderio.enderio.api.conduits.connection.config.RedstoneSensitiveConnectionConfig;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

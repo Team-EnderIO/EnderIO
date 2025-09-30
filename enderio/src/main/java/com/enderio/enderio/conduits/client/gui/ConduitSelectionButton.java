@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.client.gui;
 
-import com.enderio.enderio.conduits.api.Conduit;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.client.gui.screen.ConduitScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.List;

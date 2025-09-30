@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.modded.common.modules.mekanism.chemical;
 
-import com.enderio.enderio.conduits.api.network.ConduitNetworkContext;
-import com.enderio.enderio.conduits.api.network.ConduitNetworkContextType;
-import com.enderio.enderio.conduits.api.network.IConduitNetwork;
+import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
+import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Set;
@@ -64,8 +64,8 @@ public class ChemicalConduitNetworkContext implements ConduitNetworkContext<Chem
     }
 
     @Override
-    public ChemicalConduitNetworkContext split(IConduitNetwork selfNetwork,
-            Set<? extends IConduitNetwork> allNetworks) {
+    public ChemicalConduitNetworkContext split(ConduitNetwork selfNetwork,
+            Set<? extends ConduitNetwork> allNetworks) {
         return new ChemicalConduitNetworkContext(lockedChemical);
     }
 

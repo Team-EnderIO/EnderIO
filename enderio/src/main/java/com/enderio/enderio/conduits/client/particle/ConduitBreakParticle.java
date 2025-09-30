@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.client.particle;
 
-import com.enderio.enderio.conduits.api.Conduit;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitShape;
 import java.util.List;
 import net.minecraft.client.Minecraft;

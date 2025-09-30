@@ -1,9 +1,9 @@
 package com.enderio.enderio.conduits.modded.common.modules.refinedstorage;
 
 import com.enderio.enderio.api.network.DumbStreamCodec;
-import com.enderio.enderio.conduits.api.network.node.NodeData;
-import com.enderio.enderio.conduits.api.network.node.legacy.ConduitData;
-import com.enderio.enderio.conduits.api.network.node.legacy.ConduitDataType;
+import com.enderio.enderio.api.conduits.network.node.NodeData;
+import com.enderio.enderio.api.conduits.network.node.legacy.ConduitData;
+import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

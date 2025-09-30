@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.common.init;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.facade.FacadeType;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.enderio.conduits.common.redstone.RedstoneTLatchFilter;

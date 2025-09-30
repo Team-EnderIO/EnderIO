@@ -1,13 +1,13 @@
 package com.enderio.enderio.conduits.common.conduit.type.redstone;
 
 import com.enderio.enderio.api.misc.RedstoneControl;
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.ConduitCapabilities;
-import com.enderio.enderio.conduits.api.ConduitType;
-import com.enderio.enderio.conduits.api.bundle.ConduitBundle;
-import com.enderio.enderio.conduits.api.bundle.SlotType;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.enderio.conduits.api.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitCapabilities;
+import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
+import com.enderio.enderio.api.conduits.bundle.SlotType;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
+import com.enderio.enderio.api.conduits.network.node.IConduitNode;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.enderio.conduits.common.tag.ConduitTags;
 import com.mojang.serialization.MapCodec;

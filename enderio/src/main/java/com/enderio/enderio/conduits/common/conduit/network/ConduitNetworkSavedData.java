@@ -1,11 +1,11 @@
 package com.enderio.enderio.conduits.common.conduit.network;
 
 import com.enderio.enderio.conduits.EnderIOConduits;
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.EnderIOConduitsRegistries;
-import com.enderio.enderio.conduits.api.network.ConduitNetworkContext;
-import com.enderio.enderio.conduits.api.network.ConduitNetworkContextType;
-import com.enderio.enderio.conduits.api.ticker.ConduitTicker;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
+import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
+import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.enderio.core.common.graph.Network;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;

@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.modded.client.modules.mekanism;
 
-import com.enderio.enderio.conduits.api.model.RegisterConduitModelModifiersEvent;
-import com.enderio.enderio.conduits.api.screen.RegisterConduitScreenTypesEvent;
+import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
+import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.conduits.modded.client.ConduitClientModule;
 import com.enderio.enderio.conduits.modded.client.modules.mekanism.models.ChemicalConduitModelModifier;
 import com.enderio.enderio.conduits.modded.client.modules.mekanism.screens.ChemicalConduitScreenType;

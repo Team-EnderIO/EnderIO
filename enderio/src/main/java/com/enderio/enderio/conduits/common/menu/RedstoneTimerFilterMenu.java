@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.menu;
 
-import com.enderio.enderio.conduits.api.ConduitCapabilities;
+import com.enderio.enderio.api.conduits.ConduitCapabilities;
 import com.enderio.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.enderio.conduits.common.network.TimerFilterPacket;
 import com.enderio.enderio.conduits.common.redstone.RedstoneTimerFilter;

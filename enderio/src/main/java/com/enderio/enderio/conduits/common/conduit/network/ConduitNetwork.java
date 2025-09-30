@@ -1,12 +1,11 @@
 package com.enderio.enderio.conduits.common.conduit.network;
 
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.connection.config.IOConnectionConfig;
-import com.enderio.enderio.conduits.api.network.ConduitBlockConnection;
-import com.enderio.enderio.conduits.api.network.ConduitNetworkContext;
-import com.enderio.enderio.conduits.api.network.ConduitNetworkContextType;
-import com.enderio.enderio.conduits.api.network.IConduitNetwork;
-import com.enderio.enderio.conduits.api.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
+import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
+import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
+import com.enderio.enderio.api.conduits.network.node.IConduitNode;
 import com.enderio.core.common.graph.Network;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
@@ -24,7 +23,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.Nullable;
 
-public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> implements IConduitNetwork {
+public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> implements com.enderio.enderio.api.conduits.network.ConduitNetwork {
 
     public static final Codec<ConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance
             .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit),
@@ -32,7 +31,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
                             .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
                                     : Optional.of(i.context)))
             .and(graphCodec(instance, ConduitNode.CODEC))
-            .apply(instance, ConduitNetwork::new));
+            .apply(instance, com.enderio.enderio.conduits.common.conduit.network.ConduitNetwork::new));
 
     private final Holder<Conduit<?, ?>> conduit;
 

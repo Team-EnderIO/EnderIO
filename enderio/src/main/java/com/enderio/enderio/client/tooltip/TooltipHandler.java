@@ -1,9 +1,9 @@
 package com.enderio.enderio.client.tooltip;
 
 import com.enderio.EnderIOBase;
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
-import com.enderio.enderio.common.init.EIOCapabilities;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
@@ -85,7 +85,7 @@ public class TooltipHandler {
     // region Soul Storage
 
     private static void addSoulBindableTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
-        var soulBindable = itemStack.getCapability(EIOCapabilities.SoulBindable.ITEM);
+        var soulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable != null && soulBindable.canBind()) {
             var soul = soulBindable.getBoundSoul();
 

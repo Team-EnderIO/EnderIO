@@ -1,9 +1,9 @@
 package com.enderio.enderio.conduits.client.model.conduit.bundle;
 
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfig;
-import com.enderio.enderio.conduits.api.connection.config.IOConnectionConfig;
-import com.enderio.enderio.conduits.api.connection.config.RedstoneSensitiveConnectionConfig;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
+import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
+import com.enderio.enderio.api.conduits.connection.config.RedstoneSensitiveConnectionConfig;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;

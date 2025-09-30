@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.modded.common.modules.mekanism.heat;
 
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.ConduitType;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfigType;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.MekanismModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

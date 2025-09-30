@@ -1,5 +1,6 @@
 package com.enderio.enderio.conduits.common.redstone;
 
+import com.enderio.enderio.api.filter.RedstoneExtractFilter;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -12,7 +13,7 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class RedstoneTimerFilter implements RedstoneExtractFilter{
+public class RedstoneTimerFilter implements RedstoneExtractFilter {
 
     public static final Component INSTANCE = new Component(0, 20);
     private final ItemStack stack;

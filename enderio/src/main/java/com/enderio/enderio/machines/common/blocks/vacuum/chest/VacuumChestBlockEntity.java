@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.blocks.vacuum.chest;
 
-import com.enderio.enderio.common.init.EIOCapabilities;
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout.Builder;
 import com.enderio.enderio.machines.common.blocks.vacuum.VacuumMachineBlockEntity;
@@ -31,7 +31,7 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
         return extractableGUISlot(MachineInventoryLayout.builder(), 27)
                 .slot(slot -> slot.guiInsert()
                         .guiExtract()
-                        .filter((i, s) -> s.getCapability(EIOCapabilities.ITEM_FILTER) != null))
+                        .filter((i, s) -> s.getCapability(EnderIOCapabilities.ITEM_FILTER) != null))
                 .slotAccess(FILTER)
                 .build();
     }
@@ -42,7 +42,7 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
             ItemStack itemToReceive = entity.getItem().copy();
 
             // Enable the filter to adjust the amount to accept (limited item filter)
-            var filter = FILTER.getItemStack(this).getCapability(EIOCapabilities.ITEM_FILTER);
+            var filter = FILTER.getItemStack(this).getCapability(EnderIOCapabilities.ITEM_FILTER);
             if (filter != null) {
                 itemToReceive = filter.test(getInventory(), itemToReceive);
             }
@@ -69,7 +69,7 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
 
     @Override
     public Predicate<ItemEntity> getFilter() {
-        var filter = FILTER.getItemStack(this).getCapability(EIOCapabilities.ITEM_FILTER);
+        var filter = FILTER.getItemStack(this).getCapability(EnderIOCapabilities.ITEM_FILTER);
         if (filter != null) {
             return itemEntity -> !filter.test(getInventory(), itemEntity.getItem()).isEmpty();
         }

@@ -1,12 +1,12 @@
 package com.enderio.enderio.conduits.common.init;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.conduits.api.ConduitType;
-import com.enderio.enderio.conduits.api.EnderIOConduitsRegistries;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.enderio.conduits.api.network.ConduitNetworkContextType;
-import com.enderio.enderio.conduits.api.network.node.NodeDataType;
-import com.enderio.enderio.conduits.api.network.node.legacy.ConduitDataType;
+import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
+import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
+import com.enderio.enderio.api.conduits.network.node.NodeDataType;
+import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.enderio.enderio.conduits.common.conduit.legacy.LegacyFluidConduitData;
 import com.enderio.enderio.conduits.common.conduit.legacy.LegacyItemConduitData;
 import com.enderio.enderio.conduits.common.conduit.legacy.LegacyRedstoneConduitData;

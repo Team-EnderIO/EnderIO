@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.enderio.conduits.api.network.IConduitNetwork;
-import com.enderio.enderio.conduits.api.ticker.ConduitTicker;
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
+import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.server.level.ServerLevel;
@@ -18,7 +18,7 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
     }
 
     @Override
-    public void tick(ServerLevel level, EnergyConduit conduit, IConduitNetwork network) {
+    public void tick(ServerLevel level, EnergyConduit conduit, ConduitNetwork network) {
         var insertConnections = network.insertConnections();
         if (insertConnections.isEmpty()) {
             return;

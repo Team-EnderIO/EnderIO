@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.item.tool;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.capability.SideConfig;
-import com.enderio.enderio.common.init.EIOCapabilities;
 import com.mojang.datafixers.util.Either;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
@@ -29,7 +29,7 @@ public class YetaWrenchItem extends Item {
         BlockPos pos = pContext.getClickedPos();
 
         // Check for side config capability
-        SideConfig sideConfig = level.getCapability(EIOCapabilities.SideConfig.BLOCK, pos, pContext.getClickedFace());
+        SideConfig sideConfig = level.getCapability(EnderIOCapabilities.SIDE_CONFIG, pos, pContext.getClickedFace());
         if (sideConfig != null) {
             sideConfig.cycleMode();
             return InteractionResult.sidedSuccess(level.isClientSide());

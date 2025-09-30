@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.modded.common.modules.appeng;
 
 import appeng.api.ids.AEComponents;
-import com.enderio.enderio.conduits.api.facade.ConduitFacadeProvider;
-import com.enderio.enderio.conduits.api.facade.FacadeType;
+import com.enderio.enderio.api.conduits.facade.ConduitFacadeProvider;
+import com.enderio.enderio.api.conduits.facade.FacadeType;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;

@@ -2,9 +2,9 @@ package com.enderio.enderio.conduits.modded.client.modules.mekanism.screens;
 
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.conduits.api.screen.ConduitMenuDataAccess;
-import com.enderio.enderio.conduits.api.screen.ConduitScreenHelper;
-import com.enderio.enderio.conduits.api.screen.IOConduitScreenType;
+import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
+import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
+import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.MekanismModule;

@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.client.model.conduit.modifier;
 
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.model.ConduitModelModifier;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
 import com.enderio.enderio.conduits.common.conduit.type.redstone.RedstoneConduit;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;

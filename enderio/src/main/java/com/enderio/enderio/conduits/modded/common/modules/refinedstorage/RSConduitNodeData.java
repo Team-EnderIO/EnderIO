@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.modded.common.modules.refinedstorage;
 
-import com.enderio.enderio.conduits.api.network.node.IConduitNode;
-import com.enderio.enderio.conduits.api.network.node.NodeData;
-import com.enderio.enderio.conduits.api.network.node.NodeDataType;
+import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.NodeData;
+import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.refinedmods.refinedstorage.api.network.impl.node.grid.GridNetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.common.api.RefinedStorageApi;

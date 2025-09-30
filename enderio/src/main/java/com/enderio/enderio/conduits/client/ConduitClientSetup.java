@@ -2,8 +2,8 @@ package com.enderio.enderio.conduits.client;
 
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.conduits.EnderIOConduits;
-import com.enderio.enderio.conduits.api.model.RegisterConduitModelModifiersEvent;
-import com.enderio.enderio.conduits.api.screen.RegisterConduitScreenTypesEvent;
+import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
+import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.conduits.client.gui.screen.types.ConduitScreenTypes;
 import com.enderio.enderio.conduits.client.gui.screen.types.EnergyConduitScreenType;
 import com.enderio.enderio.conduits.client.gui.screen.types.FluidConduitScreenType;

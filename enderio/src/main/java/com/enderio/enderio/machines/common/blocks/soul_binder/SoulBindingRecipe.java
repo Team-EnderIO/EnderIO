@@ -1,8 +1,8 @@
 package com.enderio.enderio.machines.common.blocks.soul_binder;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.network.MassiveStreamCodec;
 import com.enderio.enderio.api.soul.binding.ingredients.FilledSoulStorageIngredient;
-import com.enderio.enderio.common.init.EIOCapabilities;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.recipe.FluidRecipeInput;
 import com.enderio.enderio.common.util.ExperienceUtil;
@@ -55,8 +55,8 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
             result.applyComponents(input.itemToBind.getComponents());
         }
 
-        var vialSoulBindable = vial.getCapability(EIOCapabilities.SoulBindable.ITEM);
-        var resultSoulBinding = result.getCapability(EIOCapabilities.SoulBindable.ITEM);
+        var vialSoulBindable = vial.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var resultSoulBinding = result.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
 
         if (vialSoulBindable != null && resultSoulBinding != null) {
             resultSoulBinding.bindSoul(vialSoulBindable.getBoundSoul());
@@ -85,7 +85,7 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
             return false;
         }
 
-        var soulBindable = recipeInput.getItem(0).getCapability(EIOCapabilities.SoulBindable.ITEM);
+        var soulBindable = recipeInput.getItem(0).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable == null || !soulBindable.hasSoul()) {
             return false;
         }

@@ -1,13 +1,13 @@
 package com.enderio.enderio.common.compat.vanilla;
 
 import com.enderio.enderio.api.soul.Soul;
-import com.enderio.enderio.api.soul.binding.ISoulBindable;
+import com.enderio.enderio.api.soul.binding.SoulBindable;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.component.CustomData;
 
-public class SpawnEggSoulBindable implements ISoulBindable {
+public class SpawnEggSoulBindable implements SoulBindable {
     private final ItemStack spawnEgg;
 
     public SpawnEggSoulBindable(ItemStack spawnEgg) {

@@ -1,11 +1,11 @@
 package com.enderio.enderio.conduits.common.conduit.network;
 
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfig;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.enderio.conduits.api.network.node.IConduitNode;
-import com.enderio.enderio.conduits.api.network.node.NodeData;
-import com.enderio.enderio.conduits.api.network.node.NodeDataType;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
+import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.NodeData;
+import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.conduits.common.conduit.legacy.ConduitDataContainer;
 import com.enderio.core.common.graph.INetworkNode;
 import com.google.common.base.Preconditions;

@@ -1,9 +1,9 @@
 package com.enderio.enderio.conduits.tests.network;
 
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.connection.ConnectionStatus;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfig;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfigType;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.conduits.common.conduit.network.IConduitNodeAttachment;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;

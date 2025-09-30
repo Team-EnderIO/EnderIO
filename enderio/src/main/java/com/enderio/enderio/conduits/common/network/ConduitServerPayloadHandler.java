@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.common.network;
 
-import com.enderio.enderio.conduits.api.ConduitCapabilities;
-import com.enderio.enderio.conduits.api.bundle.ConduitBundle;
+import com.enderio.enderio.api.conduits.ConduitCapabilities;
+import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.enderio.conduits.common.conduit.type.fluid.FluidConduitNetworkContext;

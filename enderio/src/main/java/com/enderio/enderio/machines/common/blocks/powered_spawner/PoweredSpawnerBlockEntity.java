@@ -1,13 +1,13 @@
 package com.enderio.enderio.machines.common.blocks.powered_spawner;
 
 import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.api.soul.Soul;
-import com.enderio.enderio.api.soul.binding.ISoulBindable;
-import com.enderio.enderio.common.init.EIOCapabilities;
+import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.item.tool.SoulVialItem;
@@ -51,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IOwnedSpawner, ISoulBindable {
+public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IOwnedSpawner, SoulBindable {
     public static final SingleSlotAccess INPUT = new SingleSlotAccess();
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
 
@@ -231,7 +231,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         return MachineInventoryLayout.builder()
                 .capacitor()
                 .inputSlot((i, stack) -> {
-                    var soulHandler = stack.getCapability(EIOCapabilities.SoulHandler.ITEM);
+                    var soulHandler = stack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
                     return soulHandler != null && soulHandler.tryInsertSoul(getSoulForCapture(), true);
                 })
                 .slotAccess(INPUT)

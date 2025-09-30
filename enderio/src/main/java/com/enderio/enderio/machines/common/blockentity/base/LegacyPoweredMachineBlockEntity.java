@@ -67,7 +67,7 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
     private final boolean hasActiveState;
 
     public LegacyPoweredMachineBlockEntity(EnergyIOMode energyIOMode, CapacitorScalable capacity,
-            CapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+                                           CapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
         // Create energy storage

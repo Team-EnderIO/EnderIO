@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.client.model.conduit;
 
-import com.enderio.enderio.conduits.api.Conduit;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.core.client.RenderUtil;
 import java.util.Arrays;

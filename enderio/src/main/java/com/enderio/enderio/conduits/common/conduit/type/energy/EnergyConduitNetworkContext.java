@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.enderio.conduits.api.network.ConduitNetworkContext;
-import com.enderio.enderio.conduits.api.network.ConduitNetworkContextType;
-import com.enderio.enderio.conduits.api.network.IConduitNetwork;
+import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
+import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -43,8 +43,8 @@ public class EnergyConduitNetworkContext implements ConduitNetworkContext<Energy
     }
 
     @Override
-    public EnergyConduitNetworkContext split(IConduitNetwork selfNetwork, Set<? extends IConduitNetwork> allNetworks) {
-        int totalNodes = allNetworks.stream().map(IConduitNetwork::nodeCount).reduce(0, Integer::sum);
+    public EnergyConduitNetworkContext split(ConduitNetwork selfNetwork, Set<? extends ConduitNetwork> allNetworks) {
+        int totalNodes = allNetworks.stream().map(ConduitNetwork::nodeCount).reduce(0, Integer::sum);
 
         // Avoid any divide by zero errors, even though they should never occur.
         if (totalNodes == 0) {

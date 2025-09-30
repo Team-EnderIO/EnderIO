@@ -1,7 +1,7 @@
 package com.enderio.enderio.armory.common.capability;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelCapability;
-import com.enderio.enderio.armory.api.capability.IDarkSteelUpgrade;
+import com.enderio.enderio.api.armory.capability.DarkSteelCapability;
+import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.armory.common.init.ArmoryCapabilities;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
 import java.util.Collection;
@@ -15,38 +15,38 @@ public class DarkSteelHelper {
         return DarkSteelHelper.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class);
     }
 
-    public static void addUpgrade(ItemStack itemStack, IDarkSteelUpgrade upgrade) {
-        IDarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+    public static void addUpgrade(ItemStack itemStack, DarkSteelUpgrade upgrade) {
+        DarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
         if (capability != null) {
             capability.addUpgrade(upgrade);
         }
     }
 
     public static void removeUpgrade(ItemStack itemStack, String upgrade) {
-        IDarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+        DarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
         if (capability != null) {
             capability.removeUpgrade(upgrade);
         }
     }
 
-    public static Collection<IDarkSteelUpgrade> getUpgrades(ItemStack itemStack) {
-        IDarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+    public static Collection<DarkSteelUpgrade> getUpgrades(ItemStack itemStack) {
+        DarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
         return capability != null ? capability.getUpgrades() : Collections.emptyList();
     }
 
     public static boolean hasUpgrade(ItemStack itemStack, String name) {
-        IDarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+        DarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
         return capability != null && capability.hasUpgrade(name);
     }
 
-    public static <T extends IDarkSteelUpgrade> Optional<T> getUpgradeAs(ItemStack itemStack, String upgrade,
+    public static <T extends DarkSteelUpgrade> Optional<T> getUpgradeAs(ItemStack itemStack, String upgrade,
             Class<T> as) {
-        IDarkSteelCapability cap = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+        DarkSteelCapability cap = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
         return cap != null ? cap.getUpgradeAs(upgrade, as) : Optional.empty();
     }
 
-    public static Collection<IDarkSteelUpgrade> getUpgradesApplicable(ItemStack itemStack) {
-        IDarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
+    public static Collection<DarkSteelUpgrade> getUpgradesApplicable(ItemStack itemStack) {
+        DarkSteelCapability capability = itemStack.getCapability(ArmoryCapabilities.DARK_STEEL_CAPABILITY);
         return capability != null ? capability.getUpgradesApplicable() : Collections.emptyList();
     }
 

@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.client.model.conduit.modifier;
 
-import com.enderio.enderio.conduits.api.ConduitType;
-import com.enderio.enderio.conduits.api.model.ConduitModelModifier;
-import com.enderio.enderio.conduits.api.model.RegisterConduitModelModifiersEvent;
+import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
+import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

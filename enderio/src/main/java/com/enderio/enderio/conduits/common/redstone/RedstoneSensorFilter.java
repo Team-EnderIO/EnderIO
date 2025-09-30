@@ -1,5 +1,6 @@
 package com.enderio.enderio.conduits.common.redstone;
 
+import com.enderio.enderio.api.filter.RedstoneExtractFilter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;

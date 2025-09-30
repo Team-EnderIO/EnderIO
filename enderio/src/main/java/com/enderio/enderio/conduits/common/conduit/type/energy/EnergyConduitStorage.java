@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.enderio.conduits.api.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.IConduitNode;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 

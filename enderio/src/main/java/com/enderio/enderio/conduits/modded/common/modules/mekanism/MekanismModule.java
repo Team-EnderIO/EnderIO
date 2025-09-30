@@ -1,17 +1,17 @@
 package com.enderio.enderio.conduits.modded.common.modules.mekanism;
 
 import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.common.filter.AbstractFilterItem;
-import com.enderio.enderio.common.init.EIOCapabilities;
 import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.common.init.EIOItems;
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.ConduitType;
-import com.enderio.enderio.conduits.api.EnderIOConduitsRegistries;
-import com.enderio.enderio.conduits.api.bundle.ConduitBundle;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.enderio.conduits.api.network.ConduitNetworkContextType;
-import com.enderio.enderio.conduits.api.network.node.legacy.ConduitDataType;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
+import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
+import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.enderio.enderio.conduits.common.conduit.ConduitApiImpl;
 import com.enderio.enderio.conduits.common.recipe.ConduitIngredient;
 import com.enderio.enderio.conduits.modded.client.modules.mekanism.screens.EnderChemicalFilterScreen;
@@ -119,7 +119,7 @@ public class MekanismModule implements ConduitCommonModule {
         .registerItem("basic_chemical_filter", props -> new EnderChemicalFilterItem(props, EnderChemicalFilterItem.Type.BASIC))
         .setTab(EIOCreativeTabs.GEAR)
         .addCapability(Capabilities.CHEMICAL_FILTER, EnderChemicalFilterItem.CHEMICAL_FILTER_PROVIDER)
-        .addCapability(EIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
+        .addCapability(EnderIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 
     static {
         ITEM_REGISTRY.addAlias(EnderIO.loc("chemical_filter"), BASIC_CHEMICAL_FILTER.getId());

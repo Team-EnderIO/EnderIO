@@ -1,16 +1,16 @@
 package com.enderio.enderio.conduits.common.conduit.type.fluid;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.misc.RedstoneControl;
-import com.enderio.enderio.common.init.EIOCapabilities;
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.ConduitType;
-import com.enderio.enderio.conduits.api.bundle.ConduitBundle;
-import com.enderio.enderio.conduits.api.bundle.SlotType;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfig;
-import com.enderio.enderio.conduits.api.connection.config.ConnectionConfigType;
-import com.enderio.enderio.conduits.api.network.ConduitBlockConnection;
-import com.enderio.enderio.conduits.api.network.node.IConduitNode;
-import com.enderio.enderio.conduits.api.network.node.legacy.ConduitDataAccessor;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
+import com.enderio.enderio.api.conduits.bundle.SlotType;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
+import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.core.common.util.TooltipUtil;
@@ -167,7 +167,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return stack.getCapability(EIOCapabilities.FLUID_FILTER) != null;
+        return stack.getCapability(EnderIOCapabilities.FLUID_FILTER) != null;
     }
 
     @Override

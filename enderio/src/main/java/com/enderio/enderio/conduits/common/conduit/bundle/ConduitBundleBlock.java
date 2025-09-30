@@ -1,10 +1,10 @@
 package com.enderio.enderio.conduits.common.conduit.bundle;
 
-import com.enderio.enderio.conduits.api.Conduit;
-import com.enderio.enderio.conduits.api.ConduitCapabilities;
-import com.enderio.enderio.conduits.api.ConduitRedstoneSignalAware;
-import com.enderio.enderio.conduits.api.bundle.AddConduitResult;
-import com.enderio.enderio.conduits.api.connection.ConnectionStatus;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitCapabilities;
+import com.enderio.enderio.api.conduits.ConduitRedstoneSignalAware;
+import com.enderio.enderio.api.conduits.bundle.AddConduitResult;
+import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.conduits.client.model.conduit.facades.FacadeUtil;
 import com.enderio.enderio.conduits.client.particle.ConduitBreakParticle;
 import com.enderio.enderio.conduits.common.conduit.ConduitBlockItem;

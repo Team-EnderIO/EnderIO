@@ -1,9 +1,9 @@
 package com.enderio.enderio.conduits.tests.network;
 
-import com.enderio.enderio.common.init.EIOCapabilities;
-import com.enderio.enderio.conduits.api.EnderIOConduitsRegistries;
-import com.enderio.enderio.conduits.api.network.node.NodeData;
-import com.enderio.enderio.conduits.api.network.node.NodeDataType;
+import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.conduits.network.node.NodeData;
+import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.conduits.common.conduit.network.ConduitNode;
 import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduitConnectionConfig;
 import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduitNodeData;
@@ -168,7 +168,7 @@ public class ConduitNodeTests {
         var conduitNode = new ConduitNode(itemConduit, BlockPos.ZERO);
 
         Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.getNeighborSidedCapability(Capabilities.EnergyStorage.BLOCK, Direction.UP));
-        Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.getNeighborVoidCapability(EIOCapabilities.SoulBindable.BLOCK, Direction.UP));
+        Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.getNeighborVoidCapability(EnderIOCapabilities.SOUL_BINDABLE_BLOCK, Direction.UP));
         Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.hasRedstoneSignal(null));
         Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.isConnectedToBlock(Direction.UP));
         Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.isConnectedTo(Direction.UP));

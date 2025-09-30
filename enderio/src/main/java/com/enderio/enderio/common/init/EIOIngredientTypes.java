@@ -15,13 +15,13 @@ public class EIOIngredientTypes {
             .create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, EnderIO.NAMESPACE);
 
     public static final DeferredHolder<IngredientType<?>, IngredientType<EmptySoulBindableIngredient>> EMPTY_SOUL_STORAGE = INGREDIENT_TYPES
-            .register("empty_soul_storage", () -> new IngredientType<>(EmptySoulBindableIngredient.CODEC));
+            .register("empty_soul_storage", () -> EmptySoulBindableIngredient.TYPE);
 
     public static final DeferredHolder<IngredientType<?>, IngredientType<FilledSoulStorageIngredient>> FILLED_SOUL_STORAGE = INGREDIENT_TYPES
-            .register("filled_soul_storage", () -> new IngredientType<>(FilledSoulStorageIngredient.CODEC));
+            .register("filled_soul_storage", () -> FilledSoulStorageIngredient.TYPE);
 
     public static final DeferredHolder<IngredientType<?>, IngredientType<AnySoulBindableIngredient>> ANY_SOUL_STORAGE = INGREDIENT_TYPES
-            .register("any_soul_storage", () -> new IngredientType<>(AnySoulBindableIngredient.CODEC));
+            .register("any_soul_storage", () -> AnySoulBindableIngredient.TYPE);
 
     public static void register(IEventBus bus) {
         INGREDIENT_TYPES.register(bus);

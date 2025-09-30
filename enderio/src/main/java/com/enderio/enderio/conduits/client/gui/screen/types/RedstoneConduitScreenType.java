@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.client.gui.screen.types;
 
-import com.enderio.enderio.conduits.api.screen.ConduitMenuDataAccess;
-import com.enderio.enderio.conduits.api.screen.ConduitScreenHelper;
-import com.enderio.enderio.conduits.api.screen.IOConduitScreenType;
+import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
+import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
+import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
 import com.enderio.enderio.conduits.common.conduit.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import net.minecraft.client.gui.Font;

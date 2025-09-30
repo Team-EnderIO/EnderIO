@@ -1,7 +1,6 @@
 package com.enderio.enderio.armory.common.init;
 
-import com.enderio.enderio.armory.api.capability.IDarkSteelCapability;
-import com.enderio.enderio.armory.common.capability.DarkSteelCapability;
+import com.enderio.enderio.api.armory.capability.DarkSteelCapability;
 import com.enderio.enderio.armory.common.capability.DarkSteelEnergyStorage;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
@@ -14,11 +13,11 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public class ArmoryCapabilities {
 
-    public static final ItemCapability<IDarkSteelCapability, Void> DARK_STEEL_CAPABILITY = ItemCapability
-            .createVoid(EnderIO.loc("dark_steel_capability"), IDarkSteelCapability.class);
+    public static final ItemCapability<DarkSteelCapability, Void> DARK_STEEL_CAPABILITY = ItemCapability
+            .createVoid(EnderIO.loc("dark_steel_capability"), DarkSteelCapability.class);
 
-    public static final ICapabilityProvider<ItemStack, Void, IDarkSteelCapability> DARK_STEEL_PROVIDER = (stack,
-            v) -> new DarkSteelCapability(stack);
+    public static final ICapabilityProvider<ItemStack, Void, DarkSteelCapability> DARK_STEEL_PROVIDER = (stack,
+            v) -> new com.enderio.enderio.armory.common.capability.DarkSteelCapability(stack);
 
     public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> DARK_STEEL_ENERGY_STORAGE_PROVIDER = (stack,
             v) -> new DarkSteelEnergyStorage(stack, EIODataComponents.ENERGY.get(),

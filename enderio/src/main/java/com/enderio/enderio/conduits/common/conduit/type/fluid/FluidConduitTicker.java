@@ -1,9 +1,9 @@
 package com.enderio.enderio.conduits.common.conduit.type.fluid;
 
-import com.enderio.enderio.common.init.EIOCapabilities;
-import com.enderio.enderio.conduits.api.network.ConduitBlockConnection;
-import com.enderio.enderio.conduits.api.network.IConduitNetwork;
-import com.enderio.enderio.conduits.api.ticker.ConduitTicker;
+import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
+import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.server.level.ServerLevel;
@@ -20,7 +20,7 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
     public static final FluidConduitTicker INSTANCE = new FluidConduitTicker();
 
     @Override
-    public void tick(ServerLevel level, FluidConduit conduit, IConduitNetwork network) {
+    public void tick(ServerLevel level, FluidConduit conduit, ConduitNetwork network) {
         final int fluidRate = conduit.transferRatePerTick() * conduit.networkTickRate();
         var context = network.getOrCreateContext(FluidConduitNetworkContext.TYPE);
 
@@ -88,7 +88,7 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
         // Test the extracted fluid against the target
         var extractFilter = extractConnection.inventory()
                 .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
-                .getCapability(EIOCapabilities.FLUID_FILTER);
+                .getCapability(EnderIOCapabilities.FLUID_FILTER);
 
         if (extractFilter != null) {
             extractedFluid = extractFilter.test(extractHandler, extractedFluid);
@@ -109,7 +109,7 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
             // Test fluid against insert filter.
             var insertFilter = insertConnection.inventory()
                     .getStackInSlot(FluidConduit.INSERT_FILTER_SLOT)
-                    .getCapability(EIOCapabilities.FLUID_FILTER);
+                    .getCapability(EnderIOCapabilities.FLUID_FILTER);
 
             if (insertFilter != null) {
                 fluidToInsert = insertFilter.test(insertHandler, fluidToInsert);
