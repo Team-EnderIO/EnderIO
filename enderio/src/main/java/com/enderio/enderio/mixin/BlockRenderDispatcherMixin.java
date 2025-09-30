@@ -1,4 +1,4 @@
-package com.enderio.enderio.conduits.mixin;
+package com.enderio.enderio.mixin;
 
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

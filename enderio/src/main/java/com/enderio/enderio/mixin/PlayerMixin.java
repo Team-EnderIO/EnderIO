@@ -1,4 +1,4 @@
-package com.enderio.enderio.machines.mixin;
+package com.enderio.enderio.mixin;
 
 import com.enderio.enderio.machines.common.blocks.enderface.EnderfaceBlockEntity;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;

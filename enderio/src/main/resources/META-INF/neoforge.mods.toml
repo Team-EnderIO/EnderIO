@@ -14,13 +14,7 @@ logoFile="logo.png"
 featureFlags="META-INF/feature_flags.json"
 
 [[mixins]]
-config="enderio-machines.mixins.json"
-
-[[mixins]]
-config="enderiobase.mixins.json"
-
-[[mixins]]
-config="enderioconduits.mixins.json"
+config="enderio.mixins.json"
 
 [[dependencies.enderio]]
 modId="minecraft"

@@ -1,4 +1,4 @@
-package com.enderio.enderio.machines.mixin;
+package com.enderio.enderio.mixin;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
