@@ -41,7 +41,7 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID)
+@EventBusSubscriber
 public class ConduitNetworkSavedData extends SavedData {
 
     public static final Codec<ConduitNetworkSavedData> CODEC = ConduitNetwork.CODEC.listOf()

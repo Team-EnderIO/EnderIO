@@ -1,5 +1,6 @@
 package com.enderio.enderio.conduits.tests.fluid;
 
+import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.misc.RedstoneControl;
 import com.enderio.enderio.conduits.EnderIOConduits;
 import com.enderio.enderio.conduits.common.conduit.type.fluid.FluidConduit;
@@ -22,7 +23,7 @@ import java.util.function.Supplier;
 @ForEachTest(groups = "conduit.item")
 public class FluidConduitTests {
 
-    private static final String THREE_TANKS = EnderIOConduits.MODULE_MOD_ID + ":fluid_conduit_three_tanks";
+    private static final String THREE_TANKS = EnderIO.MOD_ID + ":fluid_conduit_three_tanks";
 
     // @formatter:off
     @RegisterStructureTemplate(THREE_TANKS)

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public class EIOEntityTagsProvider extends EntityTypeTagsProvider {
     public EIOEntityTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> provider,
             @Nullable ExistingFileHelper existingFileHelper) {
-        super(packOutput, provider, EnderIO.NAMESPACE, existingFileHelper);
+        super(packOutput, provider, EnderIO.MOD_ID, existingFileHelper);
     }
 
     @Override

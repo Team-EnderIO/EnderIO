@@ -14,7 +14,7 @@ public class EIOFluidTagsProvider extends FluidTagsProvider {
 
     public EIOFluidTagsProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider,
             @Nullable ExistingFileHelper existingFileHelper) {
-        super(pOutput, pProvider, EnderIO.NAMESPACE, existingFileHelper);
+        super(pOutput, pProvider, EnderIO.MOD_ID, existingFileHelper);
     }
 
     @Override

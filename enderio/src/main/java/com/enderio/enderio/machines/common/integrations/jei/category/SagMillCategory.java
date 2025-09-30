@@ -37,7 +37,7 @@ import java.util.Locale;
 import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 
 public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMillingRecipe>> {
-    public static final RecipeType<RecipeHolder<SagMillingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.NAMESPACE,
+    public static final RecipeType<RecipeHolder<SagMillingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
             "sagmilling", SagMillingRecipe.class);
 
     private static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/viewer/sag_mill.png");

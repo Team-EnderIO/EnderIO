@@ -11,7 +11,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
-@EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID)
+@EventBusSubscriber
 public class VanillaCompat {
 
     public static final ICapabilityProvider<ItemStack, Void, SoulBindable> SPAWN_EGG_BINDABLE_PROVIDER =

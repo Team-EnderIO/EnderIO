@@ -20,7 +20,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class EIODataComponents {
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister
-            .createDataComponents(EnderIO.NAMESPACE);
+            .createDataComponents(EnderIO.MOD_ID);
 
     public static final Supplier<DataComponentType<SimpleFluidContent>> ITEM_FLUID_CONTENT = DATA_COMPONENT_TYPES
             .registerComponentType("item_fluid_content", builder -> builder.persistent(SimpleFluidContent.CODEC)

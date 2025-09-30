@@ -18,7 +18,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class MachineDataComponents {
     private static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPES = DeferredRegister
-            .create(Registries.DATA_COMPONENT_TYPE, EnderIO.NAMESPACE);
+            .create(Registries.DATA_COMPONENT_TYPE, EnderIO.MOD_ID);
 
     public static final Supplier<DataComponentType<IOConfig>> IO_CONFIG = savedAndSynced("io_config", IOConfig.CODEC,
             IOConfig.STREAM_CODEC);

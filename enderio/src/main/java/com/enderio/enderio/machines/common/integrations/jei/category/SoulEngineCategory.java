@@ -38,7 +38,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> {
 
-    public static final RecipeType<EngineSoul.SoulData> TYPE = RecipeType.create(EnderIO.NAMESPACE, "soul_engine",
+    public static final RecipeType<EngineSoul.SoulData> TYPE = RecipeType.create(EnderIO.MOD_ID, "soul_engine",
             EngineSoul.SoulData.class);
     private final IDrawableStatic background;
     private final IDrawable icon;

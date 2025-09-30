@@ -11,7 +11,7 @@ import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-@EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID)
+@EventBusSubscriber
 public class UseGliderAdvancementBenefit {
 
     public static final ResourceLocation USE_GLIDER_ADVANCEMENT = EnderIO.loc("adventure/use_glider");

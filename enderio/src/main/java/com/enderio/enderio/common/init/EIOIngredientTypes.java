@@ -12,7 +12,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 public class EIOIngredientTypes {
     private static final DeferredRegister<IngredientType<?>> INGREDIENT_TYPES = DeferredRegister
-            .create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, EnderIO.NAMESPACE);
+            .create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, EnderIO.MOD_ID);
 
     public static final DeferredHolder<IngredientType<?>, IngredientType<EmptySoulBindableIngredient>> EMPTY_SOUL_STORAGE = INGREDIENT_TYPES
             .register("empty_soul_storage", () -> EmptySoulBindableIngredient.TYPE);

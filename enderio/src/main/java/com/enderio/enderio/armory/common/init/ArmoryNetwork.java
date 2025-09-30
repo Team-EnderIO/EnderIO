@@ -14,7 +14,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-@EventBusSubscriber(modid = EnderIOArmory.MODULE_MOD_ID)
+@EventBusSubscriber
 public class ArmoryNetwork {
 
     private static final String PROTOCOL_VERSION = "1.0";

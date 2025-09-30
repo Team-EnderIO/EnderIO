@@ -28,7 +28,7 @@ import java.util.List;
 
 public class WeatherChangeCategory extends MachineRecipeCategory<RecipeHolder<WeatherChangeRecipe>> {
 
-    public static final RecipeType<RecipeHolder<WeatherChangeRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.NAMESPACE, "weather_change",
+    public static final RecipeType<RecipeHolder<WeatherChangeRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID, "weather_change",
         WeatherChangeRecipe.class);
 
     private final IDrawable background;

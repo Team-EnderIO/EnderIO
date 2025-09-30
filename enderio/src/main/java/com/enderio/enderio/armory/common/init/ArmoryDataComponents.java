@@ -14,7 +14,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ArmoryDataComponents {
 
     private static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPES = DeferredRegister
-            .create(Registries.DATA_COMPONENT_TYPE, EnderIO.NAMESPACE);
+            .create(Registries.DATA_COMPONENT_TYPE, EnderIO.MOD_ID);
 
     public static final Supplier<DataComponentType<DarkSteelCapability.DarkSteelItemUpgrades>> DARK_STEEL_ITEM_UPGRADES = saved(
             "dark_steel_upgrades", ITEM_UPGRADES_CODEC);

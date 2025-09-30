@@ -10,7 +10,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 public class ConduitIngredientTypes {
     private static final DeferredRegister<IngredientType<?>> INGREDIENT_TYPES = DeferredRegister
-            .create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, EnderIO.NAMESPACE);
+            .create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, EnderIO.MOD_ID);
 
     public static final DeferredHolder<IngredientType<?>, IngredientType<ConduitIngredient>> CONDUIT_INGREDIENT_TYPE = INGREDIENT_TYPES
             .register("conduit", () -> new IngredientType<>(ConduitIngredient.CODEC));

@@ -26,7 +26,7 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 
 public class SlicingRecipeCategory extends MachineRecipeCategory<RecipeHolder<SlicingRecipe>> {
 
-    public static final RecipeType<RecipeHolder<SlicingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.NAMESPACE,
+    public static final RecipeType<RecipeHolder<SlicingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
             "slicing", SlicingRecipe.class);
 
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/viewer/slice_and_splice.png");

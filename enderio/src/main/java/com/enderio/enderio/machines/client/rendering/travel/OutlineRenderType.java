@@ -58,7 +58,7 @@ public class OutlineRenderType extends RenderType {
     }
 
     public static RenderType createLines(String name, int strength) {
-        return RenderType.create(EnderIO.NAMESPACE + "_" + name, DefaultVertexFormat.POSITION_COLOR_NORMAL,
+        return RenderType.create(EnderIO.MOD_ID + "_" + name, DefaultVertexFormat.POSITION_COLOR_NORMAL,
                 VertexFormat.Mode.LINES, 256, false, false,
                 CompositeState.builder()
                         .setShaderState(RenderStateShard.RENDERTYPE_LINES_SHADER)

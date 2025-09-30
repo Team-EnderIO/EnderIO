@@ -1,5 +1,6 @@
 package com.enderio.enderio.armory.common.config;
 
+import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.armory.EnderIOArmory;
 
 public class ArmoryConfigLang {
@@ -96,7 +97,7 @@ public class ArmoryConfigLang {
     }
 
     private static void addTranslation(String key, String translation) {
-        EnderIOArmory.REGILITE.addTranslation(() -> EnderIOArmory.MODULE_MOD_ID + "." + "configuration" + "." + key,
+        EnderIOArmory.REGILITE.addTranslation(() -> EnderIO.MOD_ID + "." + "configuration" + "." + key,
                 translation);
     }
 

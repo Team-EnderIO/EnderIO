@@ -16,9 +16,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class EIORecipes {
     private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister
-            .create(Registries.RECIPE_SERIALIZER, EnderIO.NAMESPACE);
+            .create(Registries.RECIPE_SERIALIZER, EnderIO.MOD_ID);
     private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE,
-            EnderIO.NAMESPACE);
+            EnderIO.MOD_ID);
 
     public static final RecipeTypeSerializerPair<FireCraftingRecipe, FireCraftingRecipe.Serializer> FIRE_CRAFTING = register(
             "fire_crafting", FireCraftingRecipe.Serializer::new);

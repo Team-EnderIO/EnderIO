@@ -31,7 +31,7 @@ public class ArmoryArmorMaterials {
             int enchantmentValue, Holder<SoundEvent> equipSound, float toughness, float knockbackResistance,
             Supplier<Ingredient> repairIngredient) {
         List<ArmorMaterial.Layer> list = List
-                .of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE, name)));
+                .of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, name)));
         return register(name, defense, enchantmentValue, equipSound, toughness, knockbackResistance, repairIngredient,
                 list);
     }

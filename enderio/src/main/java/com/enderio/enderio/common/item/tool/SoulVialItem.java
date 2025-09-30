@@ -47,7 +47,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-@EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID)
+@EventBusSubscriber
 public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     public static final ResourceLocation FILLED_MODEL_PROPERTY = EnderIO.loc("soul_vial_filled");

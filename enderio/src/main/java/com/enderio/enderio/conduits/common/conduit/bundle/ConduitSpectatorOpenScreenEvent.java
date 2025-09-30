@@ -10,7 +10,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID)
+@EventBusSubscriber
 public class ConduitSpectatorOpenScreenEvent {
 
     // Opening the conduit GUI allows spectators to open conduit gui while still

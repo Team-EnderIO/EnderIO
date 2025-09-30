@@ -52,7 +52,7 @@ import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
+@EventBusSubscriber
 public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser, SoulBindable {
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,

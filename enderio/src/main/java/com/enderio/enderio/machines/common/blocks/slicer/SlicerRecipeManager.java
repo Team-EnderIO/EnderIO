@@ -20,7 +20,7 @@ import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
+@EventBusSubscriber
 public class SlicerRecipeManager {
     private static final List<Set<Item>> ITEMS = Util.make(() -> {
         List<Set<Item>> tempList = new ArrayList<>();

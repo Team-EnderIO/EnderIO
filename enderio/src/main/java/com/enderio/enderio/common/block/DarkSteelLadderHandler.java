@@ -12,7 +12,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-@EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID, value = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class DarkSteelLadderHandler {
 
     @SubscribeEvent

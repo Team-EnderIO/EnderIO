@@ -49,7 +49,7 @@ import org.joml.Vector4f;
  */
 public class FireCraftingCategory implements IRecipeCategory<RecipeHolder<FireCraftingRecipe>> {
 
-    public static final RecipeType<RecipeHolder<FireCraftingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.NAMESPACE,
+    public static final RecipeType<RecipeHolder<FireCraftingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
             "fire_crafting", FireCraftingRecipe.class);
 
     private static final ResourceLocation BG_LOCATION = EnderIO.loc("textures/gui/jei_infinity.png");

@@ -17,12 +17,12 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 @SuppressWarnings("unused")
 public class EIOLootModifiers {
     private static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> SERIALIZERS = DeferredRegister
-            .create(NeoForgeRegistries.GLOBAL_LOOT_MODIFIER_SERIALIZERS, EnderIO.NAMESPACE);
+            .create(NeoForgeRegistries.GLOBAL_LOOT_MODIFIER_SERIALIZERS, EnderIO.MOD_ID);
 
     private static final DeferredRegister<LootItemConditionType> CONDITIONS = DeferredRegister
-            .create(Registries.LOOT_CONDITION_TYPE, EnderIO.NAMESPACE);
+            .create(Registries.LOOT_CONDITION_TYPE, EnderIO.MOD_ID);
     private static final DeferredRegister<LootItemFunctionType<?>> FUNCTIONS = DeferredRegister
-            .create(Registries.LOOT_FUNCTION_TYPE, EnderIO.NAMESPACE);
+            .create(Registries.LOOT_FUNCTION_TYPE, EnderIO.MOD_ID);
 
     // public static DeferredHolder<MapCodec<? extends IGlobalLootModifier>,
     // MapCodec<AutoSmeltModifier>> AUTO_SMELT =

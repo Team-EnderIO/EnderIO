@@ -29,7 +29,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class DarkSteelUpgradeRegistry {
 
-    public static final String UPGRADE_PREFIX = EnderIO.NAMESPACE + ".darksteel.upgrade.";
+    public static final String UPGRADE_PREFIX = EnderIO.MOD_ID + ".darksteel.upgrade.";
 
     private static final DarkSteelUpgradeRegistry INST = new DarkSteelUpgradeRegistry();
 

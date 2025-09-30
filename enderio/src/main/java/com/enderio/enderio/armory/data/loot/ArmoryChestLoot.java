@@ -11,7 +11,7 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 
-@EventBusSubscriber(modid = EnderIOArmory.MODULE_MOD_ID)
+@EventBusSubscriber
 public class ArmoryChestLoot {
     @SubscribeEvent
     public static void OnChestLootEvent(EIOChestLootEvent event) {

@@ -13,7 +13,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, value = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class MachinesClientEvents {
     private static boolean LAST_JUMPING = false;
     private static boolean LAST_SNEAKING = false;

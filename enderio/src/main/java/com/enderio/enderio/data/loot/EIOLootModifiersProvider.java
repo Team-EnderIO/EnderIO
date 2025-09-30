@@ -20,7 +20,7 @@ import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
 
     public EIOLootModifiersProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries, EnderIO.NAMESPACE);
+        super(output, registries, EnderIO.MOD_ID);
     }
 
     @Override

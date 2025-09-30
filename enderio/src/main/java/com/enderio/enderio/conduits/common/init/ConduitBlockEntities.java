@@ -11,7 +11,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
-@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID)
+@EventBusSubscriber
 public class ConduitBlockEntities {
     private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIOConduits.REGILITE.blockEntityRegistry();
 

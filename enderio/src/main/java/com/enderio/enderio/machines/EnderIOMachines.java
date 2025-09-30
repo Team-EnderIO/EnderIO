@@ -62,11 +62,9 @@ import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
-@Mod(EnderIOMachines.MODULE_MOD_ID)
+@EventBusSubscriber
+@Mod(EnderIO.MOD_ID)
 public class EnderIOMachines {
-    public static final String MODULE_MOD_ID = EnderIO.NAMESPACE;
-
     public static final Regilite REGILITE = EnderIOBase.REGILITE;
 
     public EnderIOMachines(IEventBus modEventBus, ModContainer modContainer) {
@@ -139,16 +137,16 @@ public class EnderIOMachines {
     @SubscribeEvent
     public static void addBuiltInPacks(final AddPackFindersEvent event) {
         event.addPackFinders(
-                ResourceLocation.fromNamespaceAndPath(MODULE_MOD_ID, "data/enderio/datapacks/farming_station"),
+                ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/farming_station"),
                 PackType.SERVER_DATA, MachineLang.FARMING_STATION_EXPERIMENT, PackSource.FEATURE, false,
                 Pack.Position.TOP);
 
         event.addPackFinders(
-                ResourceLocation.fromNamespaceAndPath(MODULE_MOD_ID, "data/enderio/datapacks/enderface"),
+                ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/enderface"),
                 PackType.SERVER_DATA, MachineLang.ENDERFACE_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
 
         event.addPackFinders(
-                ResourceLocation.fromNamespaceAndPath(MODULE_MOD_ID, "data/enderio/datapacks/niard"),
+                ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/niard"),
                 PackType.SERVER_DATA, MachineLang.NIARD_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
     }
 }

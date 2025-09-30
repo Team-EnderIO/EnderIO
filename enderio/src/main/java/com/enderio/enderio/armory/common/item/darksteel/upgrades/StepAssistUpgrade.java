@@ -21,7 +21,7 @@ public class StepAssistUpgrade implements DarkSteelUpgrade {
     public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "step_assist";
 
     private static final AttributeModifier ATTRIBUTE_MODIFIER = new AttributeModifier(
-            ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE, "step_assist_upgrade"), 1,
+            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "step_assist_upgrade"), 1,
             AttributeModifier.Operation.ADD_VALUE);
 
     @Override

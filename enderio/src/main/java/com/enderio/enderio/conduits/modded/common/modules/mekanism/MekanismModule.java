@@ -77,16 +77,16 @@ public class MekanismModule implements ConduitCommonModule {
     private static final MenuRegistry MENU_REGISTRY = ModdedConduits.REGILITE.menuRegistry();
 
     private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_TYPE, EnderIO.NAMESPACE);
+            .create(EnderIOConduitsRegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, EnderIO.NAMESPACE);
+            .create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<ConnectionConfigType<?>> CONDUIT_CONNECTION_CONFIG_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.NAMESPACE);
+            .create(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<ConduitNetworkContextType<?>> CONDUIT_NETWORK_CONTEXT_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIO.NAMESPACE);
+            .create(EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIO.MOD_ID);
 
     static {
         CONDUIT_CONNECTION_CONFIG_TYPES.register("chemical", () -> ChemicalConduitConnectionConfig.TYPE);
@@ -96,7 +96,7 @@ public class MekanismModule implements ConduitCommonModule {
     }
 
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister
-            .createDataComponents(EnderIO.NAMESPACE);
+            .createDataComponents(EnderIO.MOD_ID);
 
     // endregion
 

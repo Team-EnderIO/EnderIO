@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public class ConduitTagProvider extends BlockTagsProvider {
     public ConduitTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
             @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, EnderIO.NAMESPACE, existingFileHelper);
+        super(output, lookupProvider, EnderIO.MOD_ID, existingFileHelper);
     }
 
     @Override

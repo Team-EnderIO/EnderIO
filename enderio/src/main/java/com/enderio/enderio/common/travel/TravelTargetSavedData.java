@@ -28,7 +28,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-@EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID)
+@EventBusSubscriber
 public class TravelTargetSavedData extends SavedData {
 
     // Even though the client doesn't need to know the data in the old dimensions,

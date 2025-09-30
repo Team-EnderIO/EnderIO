@@ -21,7 +21,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
 import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
 
-@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID, value = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class ConduitFacadeRendering {
 
     private static final ThreadLocal<RandomSource> RANDOM = ThreadLocal

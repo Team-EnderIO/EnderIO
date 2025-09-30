@@ -29,7 +29,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ConduitTypes {
     private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_TYPE, EnderIO.NAMESPACE);
+            .create(EnderIOConduitsRegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
 
     public static final Supplier<ConduitType<EnergyConduit>> ENERGY = CONDUIT_TYPES.register("energy",
             () -> ConduitType.builder(EnergyConduit.CODEC).exposeCapability(Capabilities.EnergyStorage.BLOCK).build());
@@ -45,7 +45,7 @@ public class ConduitTypes {
 
     public static class Data {
         private static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
-                .create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, EnderIO.NAMESPACE);
+                .create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, EnderIO.MOD_ID);
 
         public static final Supplier<ConduitDataType<LegacyItemConduitData>> ITEM = CONDUIT_DATA_TYPES.register("item",
                 () -> new ConduitDataType<>(LegacyItemConduitData.CODEC, LegacyItemConduitData.STREAM_CODEC,
@@ -62,7 +62,7 @@ public class ConduitTypes {
 
     public static class ConnectionTypes {
         private static final DeferredRegister<ConnectionConfigType<?>> CONNECTION_TYPES = DeferredRegister
-                .create(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.NAMESPACE);
+                .create(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.MOD_ID);
 
         public static final Supplier<ConnectionConfigType<ItemConduitConnectionConfig>> ITEM = CONNECTION_TYPES
                 .register("item", () -> ItemConduitConnectionConfig.TYPE);
@@ -79,7 +79,7 @@ public class ConduitTypes {
 
     public static class NodeData {
         private static final DeferredRegister<NodeDataType<?>> NODE_DATA_TYPES = DeferredRegister
-                .create(EnderIOConduitsRegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.NAMESPACE);
+                .create(EnderIOConduitsRegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.MOD_ID);
 
         public static final Supplier<NodeDataType<ItemConduitNodeData>> ITEM = NODE_DATA_TYPES.register("item",
                 () -> ItemConduitNodeData.TYPE);
@@ -87,7 +87,7 @@ public class ConduitTypes {
 
     public static class ContextTypes {
         public static final DeferredRegister<ConduitNetworkContextType<?>> CONDUIT_NETWORK_CONTEXT_TYPES = DeferredRegister
-                .create(EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIO.NAMESPACE);
+                .create(EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIO.MOD_ID);
 
         public static final Supplier<ConduitNetworkContextType<EnergyConduitNetworkContext>> ENERGY = CONDUIT_NETWORK_CONTEXT_TYPES
                 .register("energy", () -> EnergyConduitNetworkContext.TYPE);

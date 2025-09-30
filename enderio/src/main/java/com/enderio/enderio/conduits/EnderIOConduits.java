@@ -35,12 +35,9 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
-@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID)
-@Mod(EnderIOConduits.MODULE_MOD_ID)
+@EventBusSubscriber
+@Mod(EnderIO.MOD_ID)
 public class EnderIOConduits {
-
-    public static final String MODULE_MOD_ID = EnderIO.NAMESPACE;
-
     public static final Regilite REGILITE = EnderIOBase.REGILITE;
 
     public EnderIOConduits(IEventBus modEventBus, ModContainer modContainer) {
@@ -77,7 +74,7 @@ public class EnderIOConduits {
     @SubscribeEvent
     public static void onData(GatherDataEvent event) {
         // Includes ModdedConduits datagen
-        event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), ModdedConduits::buildConduitConditions, Set.of(EnderIO.NAMESPACE));
+        event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), ModdedConduits::buildConduitConditions, Set.of(EnderIO.MOD_ID));
 
         PackOutput packOutput = event.getGenerator().getPackOutput();
         var registries = event.getLookupProvider();

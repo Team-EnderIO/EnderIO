@@ -13,7 +13,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
 
 @OnlyIn(Dist.CLIENT)
-@EventBusSubscriber(modid = EnderIOConduits.MODULE_MOD_ID, value = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class InputEventListener {
     @SubscribeEvent
     public static void onMouseScroll(InputEvent.MouseScrollingEvent event) {

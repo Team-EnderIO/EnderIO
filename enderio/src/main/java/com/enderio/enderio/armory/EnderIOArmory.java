@@ -42,12 +42,9 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
-@EventBusSubscriber(modid = EnderIOArmory.MODULE_MOD_ID)
-@Mod(EnderIOArmory.MODULE_MOD_ID)
+@EventBusSubscriber
+@Mod(EnderIO.MOD_ID)
 public class EnderIOArmory {
-
-    public static final String MODULE_MOD_ID = EnderIO.NAMESPACE;
-
     public static final Regilite REGILITE = EnderIOBase.REGILITE;
 
     public EnderIOArmory(IEventBus modEventBus, ModContainer modContainer) {
@@ -99,7 +96,7 @@ public class EnderIOArmory {
     @SubscribeEvent
     public static void addBuiltInPacks(final AddPackFindersEvent event) {
         event.addPackFinders(
-                ResourceLocation.fromNamespaceAndPath(MODULE_MOD_ID, "data/enderio/datapacks/armory_rewrite"),
+                ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/armory_rewrite"),
                 PackType.SERVER_DATA, ArmoryLang.ARMORY_REWRITE_EXPERIMENT, PackSource.FEATURE, false,
                 Pack.Position.TOP);
     }

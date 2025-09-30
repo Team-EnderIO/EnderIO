@@ -1,5 +1,6 @@
 package com.enderio.enderio.conduits.tests.item;
 
+import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.misc.RedstoneControl;
 import com.enderio.enderio.conduits.EnderIOConduits;
 import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduit;
@@ -22,7 +23,7 @@ import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 @ForEachTest(groups = "conduit.item")
 public class ItemConduitTests {
 
-    private static final String THREE_CHESTS = EnderIOConduits.MODULE_MOD_ID + ":item_conduit_three_chests";
+    private static final String THREE_CHESTS = EnderIO.MOD_ID + ":item_conduit_three_chests";
 
     // @formatter:off
     @RegisterStructureTemplate(THREE_CHESTS)

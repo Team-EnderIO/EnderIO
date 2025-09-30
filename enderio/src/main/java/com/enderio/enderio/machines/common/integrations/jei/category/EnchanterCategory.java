@@ -28,7 +28,7 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class EnchanterCategory extends MachineRecipeCategory<WrappedEnchanterRecipe> {
 
-    public static final RecipeType<WrappedEnchanterRecipe> TYPE = RecipeType.create(EnderIO.NAMESPACE, "enchanter",
+    public static final RecipeType<WrappedEnchanterRecipe> TYPE = RecipeType.create(EnderIO.MOD_ID, "enchanter",
             WrappedEnchanterRecipe.class);
 
     private final IDrawable background;

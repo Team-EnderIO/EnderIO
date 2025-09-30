@@ -18,10 +18,10 @@ public class MachineEnumIcons {
             "machine_state_type_new");
 
     private static <T extends Enum<T>> EnumIconMap<T> createAll(Class<T> enumClass, String iconFolder) {
-        return new EnumIconMap<>(EnderIO.NAMESPACE, enumClass, iconFolder);
+        return new EnumIconMap<>(EnderIO.MOD_ID, enumClass, iconFolder);
     }
 
     private static <T extends Enum<T>> EnumIconMap.Builder<T> builder(Class<T> enumClass, String iconFolder) {
-        return new EnumIconMap.Builder<>(EnderIO.NAMESPACE, enumClass, iconFolder);
+        return new EnumIconMap.Builder<>(EnderIO.MOD_ID, enumClass, iconFolder);
     }
 }

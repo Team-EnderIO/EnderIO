@@ -28,7 +28,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.jetbrains.annotations.Nullable;
 
-@EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID, value = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class TooltipHandler {
 
     @SubscribeEvent

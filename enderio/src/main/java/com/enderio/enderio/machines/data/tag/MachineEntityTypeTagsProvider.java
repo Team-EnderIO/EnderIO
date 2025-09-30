@@ -13,7 +13,7 @@ public class MachineEntityTypeTagsProvider extends EntityTypeTagsProvider {
 
     public MachineEntityTypeTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> provider,
             net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(packOutput, provider, EnderIO.NAMESPACE, existingFileHelper);
+        super(packOutput, provider, EnderIO.MOD_ID, existingFileHelper);
     }
 
     @Override

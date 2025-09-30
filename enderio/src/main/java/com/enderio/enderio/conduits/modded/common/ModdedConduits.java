@@ -21,10 +21,8 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.conditions.ICondition;
 
-@Mod(ModdedConduits.MODULE_MOD_ID)
+@Mod(value = EnderIO.MOD_ID)
 public class ModdedConduits {
-    public static final String MODULE_MOD_ID = EnderIO.NAMESPACE;
-
     public static final Regilite REGILITE = EnderIOBase.REGILITE;
 
     private static final Map<String, Supplier<ConduitCommonModule>> CONDUIT_MODULES = Map.ofEntries(

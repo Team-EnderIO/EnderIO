@@ -10,7 +10,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 
-@EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID)
+@EventBusSubscriber
 public class WrenchCompat {
     @SubscribeEvent
     public static void onRightClickBlock(RightClickBlock event) {

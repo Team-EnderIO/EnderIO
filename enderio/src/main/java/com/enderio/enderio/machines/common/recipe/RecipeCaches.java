@@ -13,7 +13,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
+@EventBusSubscriber
 public class RecipeCaches {
     public static final RecipeInputCache<AlloySmeltingRecipe.Input, AlloySmeltingRecipe> ALLOY_SMELTING_ONLY_ALLOY = new RecipeInputCache<>(
             MachineRecipes.ALLOY_SMELTING.type(), recipe -> !recipe.isSmelting());

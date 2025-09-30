@@ -67,12 +67,10 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
-@EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID)
-@Mod(EnderIOBase.MODULE_MOD_ID)
+@EventBusSubscriber
+@Mod(EnderIO.MOD_ID)
 public class EnderIOBase {
-    public static final String MODULE_MOD_ID = EnderIO.NAMESPACE;
-
-    public static final Regilite REGILITE = new Regilite(EnderIO.NAMESPACE);
+    public static final Regilite REGILITE = new Regilite(EnderIO.MOD_ID);
 
     public static IEventBus modEventBus;
     public static ModContainer modContainer;
@@ -83,7 +81,7 @@ public class EnderIOBase {
 
         // Ensure the enderio config subdirectory is present.
         try {
-            Files.createDirectories(FMLPaths.CONFIGDIR.get().resolve(EnderIO.NAMESPACE));
+            Files.createDirectories(FMLPaths.CONFIGDIR.get().resolve(EnderIO.MOD_ID));
         } catch (IOException e) {
             e.printStackTrace();
         }

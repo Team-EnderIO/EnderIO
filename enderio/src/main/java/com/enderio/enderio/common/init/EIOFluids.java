@@ -27,7 +27,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class EIOFluids {
     private static final FluidRegistry FLUID_TYPE_REGISTRY = EnderIOBase.REGILITE.fluidRegistry();
     private static final DeferredRegister<Fluid> FLUID_REGISTRY = DeferredRegister.create(Registries.FLUID,
-            EnderIO.NAMESPACE);
+            EnderIO.MOD_ID);
     private static final ItemRegistry ITEM_REGISTRY = EnderIOBase.REGILITE.itemRegistry();
     private static final BlockRegistry BLOCK_REGISTRY = EnderIOBase.REGILITE.blockRegistry();
 

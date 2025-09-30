@@ -502,7 +502,7 @@ public class IOConfigOverlay extends BaseOverlay {
         private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
 
         private SolidRenderLayer(RenderType original) {
-            super(String.format("%s_%s_solid", original, EnderIO.NAMESPACE), original.format(), original.mode(),
+            super(String.format("%s_%s_solid", original, EnderIO.MOD_ID), original.format(), original.mode(),
                     original.bufferSize(), original.affectsCrumbling(), true, () -> {
                         original.setupRenderState();
 
@@ -527,7 +527,7 @@ public class IOConfigOverlay extends BaseOverlay {
         private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
 
         private GhostRenderLayer(RenderType original) {
-            super(String.format("%s_%s_ghost", original, EnderIO.NAMESPACE), original.format(), original.mode(),
+            super(String.format("%s_%s_ghost", original, EnderIO.MOD_ID), original.format(), original.mode(),
                     original.bufferSize(), original.affectsCrumbling(), true, () -> {
                         original.setupRenderState();
 

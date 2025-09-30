@@ -26,7 +26,7 @@ public class MachineItemTagsProvider extends ItemTagsProvider {
 
     public MachineItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
             CompletableFuture<TagLookup<Block>> blockTags, ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, blockTags, EnderIO.NAMESPACE, existingFileHelper);
+        super(output, lookupProvider, blockTags, EnderIO.MOD_ID, existingFileHelper);
     }
 
     @Override

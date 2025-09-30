@@ -45,16 +45,16 @@ public class AE2ConduitsModule implements ConduitCommonModule {
     private static final ModLoadedCondition CONDITION = new ModLoadedCondition("ae2");
 
     public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_TYPE, EnderIO.NAMESPACE);
+            .create(EnderIOConduitsRegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<ConnectionConfigType<?>> CONDUIT_CONNECTION_CONFIG_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.NAMESPACE);
+            .create(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, EnderIO.NAMESPACE);
+            .create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<NodeDataType<?>> CONDUIT_NODE_DATA_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.NAMESPACE);
+            .create(EnderIOConduitsRegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredHolder<ConduitType<?>, ConduitType<MEConduit>> AE2_CONDUIT = CONDUIT_TYPES.register(
             "me",

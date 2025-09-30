@@ -30,7 +30,7 @@ import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.Nullable;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
+@EventBusSubscriber
 public class CapacitorBankBlock extends LegacyMachineBlock implements AdvancedTooltipProvider {
 
     public CapacityTier getTier() {

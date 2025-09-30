@@ -22,7 +22,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 
 // TODO: 1.20.1+ Add a custom TankRecipe for JEI to show mending and maybe fill/empty too.
 public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
-    public static final RecipeType<RecipeHolder<TankRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.NAMESPACE, "tank",
+    public static final RecipeType<RecipeHolder<TankRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID, "tank",
             TankRecipe.class);
 
     private final IDrawable background;

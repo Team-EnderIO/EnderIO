@@ -36,7 +36,7 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
     private static final int HEIGHT = 73;
 
     public static final RecipeType<RecipeHolder<AlloySmeltingRecipe>> TYPE = JEIUtils
-            .createRecipeType(EnderIO.NAMESPACE, "alloy_smelting", AlloySmeltingRecipe.class);
+            .createRecipeType(EnderIO.MOD_ID, "alloy_smelting", AlloySmeltingRecipe.class);
 
     private final IDrawable background;
     private final IDrawable icon;

@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 
 public class MachineAttachments {
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister
-            .create(NeoForgeRegistries.ATTACHMENT_TYPES, EnderIO.NAMESPACE);
+            .create(NeoForgeRegistries.ATTACHMENT_TYPES, EnderIO.MOD_ID);
 
     @Deprecated(forRemoval = true, since = "7.1")
     public static final Supplier<AttachmentType<RedstoneControl>> REDSTONE_CONTROL = ATTACHMENT_TYPES.register(

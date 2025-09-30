@@ -11,7 +11,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class EIOCriterions {
     private static final DeferredRegister<CriterionTrigger<?>> TRIGGERS = DeferredRegister
-            .create(Registries.TRIGGER_TYPE, EnderIO.NAMESPACE);
+            .create(Registries.TRIGGER_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredHolder<CriterionTrigger<?>, UseGliderTrigger> USE_GLIDER = TRIGGERS.register("use_glider",
             UseGliderTrigger::new);

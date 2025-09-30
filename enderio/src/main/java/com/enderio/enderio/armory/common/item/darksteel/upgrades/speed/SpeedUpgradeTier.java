@@ -56,7 +56,7 @@ public enum SpeedUpgradeTier implements UpgradeTier {
     public AttributeModifier getAttributeModifier() {
         if (attributeModifier == null) {
             attributeModifier = new AttributeModifier(
-                    ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE, "speed_upgrade_" + ordinal()),
+                    ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "speed_upgrade_" + ordinal()),
                     magnitude.get(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         }
         return attributeModifier;

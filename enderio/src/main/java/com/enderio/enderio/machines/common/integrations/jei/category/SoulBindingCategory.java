@@ -38,7 +38,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<SoulBindingRecipe>> {
-    public static final RecipeType<RecipeHolder<SoulBindingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.NAMESPACE,
+    public static final RecipeType<RecipeHolder<SoulBindingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
             "soul_binding", SoulBindingRecipe.class);
 
     private final IDrawable background;

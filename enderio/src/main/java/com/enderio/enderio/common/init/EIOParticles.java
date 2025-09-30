@@ -11,7 +11,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class EIOParticles {
 
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister
-            .create(Registries.PARTICLE_TYPE, EnderIO.NAMESPACE);
+            .create(Registries.PARTICLE_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredHolder<ParticleType<?>, RangeParticleType> RANGE_PARTICLE = PARTICLE_TYPES
             .register("range_particle", RangeParticleType::new);

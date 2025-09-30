@@ -20,7 +20,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ConduitComponents {
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister
-            .createDataComponents(EnderIO.NAMESPACE);
+            .createDataComponents(EnderIO.MOD_ID);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<Conduit<?, ?>>>> CONDUIT = DATA_COMPONENT_TYPES
             .registerComponentType("conduit",

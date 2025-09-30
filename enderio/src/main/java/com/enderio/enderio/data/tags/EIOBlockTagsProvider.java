@@ -14,7 +14,7 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
 
     public EIOBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
             @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, EnderIO.NAMESPACE, existingFileHelper);
+        super(output, lookupProvider, EnderIO.MOD_ID, existingFileHelper);
     }
 
     @Override

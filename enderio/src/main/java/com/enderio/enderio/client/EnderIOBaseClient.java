@@ -46,8 +46,8 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-@EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID, value = Dist.CLIENT)
-@Mod(value = EnderIOBase.MODULE_MOD_ID, dist = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
+@Mod(value = EnderIO.MOD_ID, dist = Dist.CLIENT)
 public class EnderIOBaseClient {
 
     private static final Map<Item, ModelResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();

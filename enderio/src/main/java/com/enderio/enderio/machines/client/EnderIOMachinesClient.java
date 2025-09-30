@@ -25,8 +25,8 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.util.Lazy;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID, value = Dist.CLIENT)
-@Mod(value = EnderIOMachines.MODULE_MOD_ID, dist = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
+@Mod(value = EnderIO.MOD_ID, dist = Dist.CLIENT)
 public class EnderIOMachinesClient {
 
     public EnderIOMachinesClient(ModContainer modContainer) {

@@ -14,7 +14,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class EIOCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister
-            .create(Registries.CREATIVE_MODE_TAB, EnderIO.NAMESPACE);
+            .create(Registries.CREATIVE_MODE_TAB, EnderIO.MOD_ID);
 
     public static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
             EnderIO.loc("main"));

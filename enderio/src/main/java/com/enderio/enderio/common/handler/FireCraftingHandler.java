@@ -30,7 +30,7 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 @SuppressWarnings("unused")
-@EventBusSubscriber(modid = EnderIOBase.MODULE_MOD_ID)
+@EventBusSubscriber
 public class FireCraftingHandler {
     private static final Random RANDOM = new Random();
     private static final ConcurrentMap<FireIndex, Long> FIRE_TRACKER = new ConcurrentHashMap<>();

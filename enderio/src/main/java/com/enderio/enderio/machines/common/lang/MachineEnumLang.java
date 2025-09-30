@@ -20,7 +20,7 @@ public class MachineEnumLang {
                     .build();
 
     private static <T extends Enum<T>> EnumTranslationMap.Builder<T> builder(Class<T> enumClass, String prefix) {
-        return new EnumTranslationMap.Builder<>(EnderIO.NAMESPACE, MachineEnumLang::addTranslation, enumClass, prefix);
+        return new EnumTranslationMap.Builder<>(EnderIO.MOD_ID, MachineEnumLang::addTranslation, enumClass, prefix);
     }
 
     private static Component addTranslation(String prefix, ResourceLocation key, String english) {

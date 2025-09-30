@@ -16,7 +16,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
 
     public EIOItemTagsProvider(PackOutput pPackOutput, CompletableFuture<HolderLookup.Provider> pProvider,
             CompletableFuture<TagLookup<Block>> pLookup, @Nullable ExistingFileHelper existingFileHelper) {
-        super(pPackOutput, pProvider, pLookup, EnderIO.NAMESPACE, existingFileHelper);
+        super(pPackOutput, pProvider, pLookup, EnderIO.MOD_ID, existingFileHelper);
     }
 
     @Override

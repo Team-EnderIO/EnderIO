@@ -82,13 +82,13 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
             EmpoweredUpgrade empUp = empUpOpt.get();
             e.addModifier(Attributes.ATTACK_DAMAGE,
                     new AttributeModifier(
-                            ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE,
+                            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID,
                                     "the_ender_attack_boost_" + empUp.getLevel()),
                             empUp.getAttackDamageIncrease(), AttributeModifier.Operation.ADD_VALUE),
                     EquipmentSlotGroup.MAINHAND);
             e.addModifier(Attributes.ATTACK_SPEED,
                     new AttributeModifier(
-                            ResourceLocation.fromNamespaceAndPath(EnderIO.NAMESPACE,
+                            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID,
                                     "the_ender_attack_speed_boost_" + empUp.getLevel()),
                             empUp.getAttackSpeedIncrease(), AttributeModifier.Operation.ADD_VALUE),
                     EquipmentSlotGroup.MAINHAND);

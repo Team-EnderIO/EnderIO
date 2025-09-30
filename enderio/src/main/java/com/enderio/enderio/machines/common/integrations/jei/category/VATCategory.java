@@ -28,7 +28,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
 public class VATCategory extends MachineRecipeCategory<RecipeHolder<FermentingRecipe>> {
-    public static final RecipeType<RecipeHolder<FermentingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.NAMESPACE,
+    public static final RecipeType<RecipeHolder<FermentingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
             "vat_fermenting", FermentingRecipe.class);
 
     private final IDrawable background;
