@@ -294,6 +294,7 @@ public class MachineBlocks {
                 .strength(2.5f, 8)
                 .isViewBlocking((pState, pLevel, pPos) -> false)
                 .noOcclusion()
+                .requiredFeatures(MachineFeatureFlags.NIARD)
             )
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setLootTable(MachinesLootTable::copyComponents)

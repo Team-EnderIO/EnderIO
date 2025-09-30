@@ -147,5 +147,9 @@ public class EnderIOMachines {
         event.addPackFinders(
                 ResourceLocation.fromNamespaceAndPath(MODULE_MOD_ID, "data/enderio_machines/datapacks/enderface"),
                 PackType.SERVER_DATA, MachineLang.ENDERFACE_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
+
+        event.addPackFinders(
+                ResourceLocation.fromNamespaceAndPath(MODULE_MOD_ID, "data/enderio_machines/datapacks/niard"),
+                PackType.SERVER_DATA, MachineLang.NIARD_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
     }
 }

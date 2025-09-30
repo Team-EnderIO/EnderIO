@@ -11,4 +11,7 @@ public class MachineFeatureFlags {
 
     public static final FeatureFlag ENDERFACE = FeatureFlags.REGISTRY
             .getFlag(ResourceLocation.fromNamespaceAndPath(EnderIOMachines.MODULE_MOD_ID, "enderface"));
+
+    public static final FeatureFlag NIARD = FeatureFlags.REGISTRY
+            .getFlag(ResourceLocation.fromNamespaceAndPath(EnderIOMachines.MODULE_MOD_ID, "niard"));
 }
