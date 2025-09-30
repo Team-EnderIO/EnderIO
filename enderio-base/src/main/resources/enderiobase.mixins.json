@@ -1,9 +1,0 @@
-{
-    "required" : true,
-    "package" : "com.enderio.base.mixin",
-    "compatibilityLevel" : "JAVA_17",
-    "client" : [
-        "GliderRotationMixin"
-    ],
-    "minVersion" : "0.8"
-}

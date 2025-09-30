@@ -11,6 +11,16 @@ authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rov
 description="Compact conduits, painted things and all sorts of stuff and bling. This is the monolithic jar, containing all core modules."
 displayURL="https://enderio.com/"
 logoFile="logo.png"
+featureFlags="META-INF/feature_flags.json"
+
+[[mixins]]
+config="enderio-machines.mixins.json"
+
+[[mixins]]
+config="enderiobase.mixins.json"
+
+[[mixins]]
+config="enderioconduits.mixins.json"
 
 [[dependencies.enderio]]
 modId="minecraft"
@@ -28,4 +38,30 @@ side="BOTH"
 modId="endercore"
 type="required"
 versionRange="${mod_version}"
+side="BOTH"
+
+# FTB Ultimine Compat
+[[dependencies.enderio]]
+modId="ftbultimine"
+type="optional"
+versionRange="${ftbUltimine_version_range}"
+side="BOTH"
+
+# Modded conduits
+[[dependencies.enderio]]
+modId="mekanism"
+type="optional"
+versionRange="${mekanism_version_range}"
+side="BOTH"
+
+[[dependencies.enderio]]
+modId="ae2"
+type="optional"
+versionRange="${ae2_version_range}"
+side="BOTH"
+
+[[dependencies.enderio]]
+modId="refinedstorage"
+type="optional"
+versionRange="${refinedstorage_version_range}"
 side="BOTH"

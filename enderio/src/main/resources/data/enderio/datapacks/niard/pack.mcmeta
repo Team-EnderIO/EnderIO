@@ -1,0 +1,11 @@
+{
+  "features": {
+    "enabled": [
+      "enderio:niard"
+    ]
+  },
+  "pack": {
+    "description": "Enable the Niard. This is an unfinished feature.",
+    "pack_format": 48
+  }
+}
