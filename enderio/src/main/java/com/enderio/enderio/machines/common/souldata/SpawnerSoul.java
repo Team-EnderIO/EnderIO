@@ -15,7 +15,7 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 /**
  * Class that holds all information related to the mob soul in a spawner
  */
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
+@EventBusSubscriber
 public class SpawnerSoul {
 
     /**

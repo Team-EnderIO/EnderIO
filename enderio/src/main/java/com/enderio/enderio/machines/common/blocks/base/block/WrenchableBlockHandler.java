@@ -8,7 +8,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.UseItemOnBlockEvent;
 
-@EventBusSubscriber(modid = EnderIOMachines.MODULE_MOD_ID)
+@EventBusSubscriber
 public class WrenchableBlockHandler {
     @SubscribeEvent
     public static void onItemUse(UseItemOnBlockEvent event) {
