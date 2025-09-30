@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.common.item.tool.SoulVialItem;
 import com.enderio.enderio.machines.client.gui.screen.SoulEngineScreen;
@@ -39,7 +39,7 @@ import java.util.Optional;
 
 public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> {
 
-    public static final RecipeType<EngineSoul.SoulData> TYPE = RecipeType.create(EnderIOAPI.MOD_ID, "soul_engine",
+    public static final RecipeType<EngineSoul.SoulData> TYPE = RecipeType.create(EnderIO.MOD_ID, "soul_engine",
             EngineSoul.SoulData.class);
     private final IDrawableStatic background;
     private final IDrawable icon;

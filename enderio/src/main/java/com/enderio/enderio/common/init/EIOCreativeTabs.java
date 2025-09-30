@@ -1,7 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.EnderIOBase;
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
@@ -15,20 +14,20 @@ import java.util.function.Consumer;
 
 public class EIOCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister
-            .create(Registries.CREATIVE_MODE_TAB, EnderIOAPI.MOD_ID);
+            .create(Registries.CREATIVE_MODE_TAB, EnderIO.MOD_ID);
 
     public static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIOAPI.loc("main"));
+            EnderIO.rl("main"));
     public static final ResourceKey<CreativeModeTab> GEAR = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIOAPI.loc("gear"));
+            EnderIO.rl("gear"));
     public static final ResourceKey<CreativeModeTab> BLOCKS = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIOAPI.loc("blocks"));
+            EnderIO.rl("blocks"));
     public static final ResourceKey<CreativeModeTab> MACHINES = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIOAPI.loc("machines"));
+            EnderIO.rl("machines"));
     public static final ResourceKey<CreativeModeTab> SOULS = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIOAPI.loc("souls"));
+            EnderIO.rl("souls"));
     public static final ResourceKey<CreativeModeTab> CONDUITS = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIOAPI.loc("conduits"));
+            EnderIO.rl("conduits"));
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB = createTab(MAIN, "main", "Ender IO",
             tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_NONE.get()))
@@ -58,7 +57,7 @@ public class EIOCreativeTabs {
             String name, String translation, Consumer<CreativeModeTab.Builder> builder) {
         return CREATIVE_MODE_TABS.register(name, () -> {
             CreativeModeTab.Builder config = CreativeModeTab.builder()
-                    .title(EnderIOBase.REGILITE.addTranslation("itemGroup", key.location(), translation));
+                    .title(EnderIO.REGILITE.addTranslation("itemGroup", key.location(), translation));
             builder.accept(config);
             return config.build();
         });

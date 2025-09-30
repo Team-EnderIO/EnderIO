@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.data.recipes;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.blocks.enchanter.EnchanterRecipe;
@@ -111,7 +111,7 @@ public class EnchanterRecipeProvider extends RecipeProvider {
 
     protected void build(Holder<Enchantment> enchantment, SizedIngredient input, int levelModifier,
             RecipeOutput recipeOutput) {
-        recipeOutput.accept(EnderIOAPI.loc("enchanting/" + enchantment.getKey().location().getPath()),
+        recipeOutput.accept(EnderIO.rl("enchanting/" + enchantment.getKey().location().getPath()),
                 new EnchanterRecipe(enchantment, levelModifier, input), null);
     }
 

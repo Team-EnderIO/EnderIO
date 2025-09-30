@@ -41,6 +41,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
@@ -65,20 +66,26 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber
-@Mod(EnderIOAPI.MOD_ID)
-public class EnderIOBase {
-    public static final Regilite REGILITE = new Regilite(EnderIOAPI.MOD_ID);
+@Mod(EnderIO.MOD_ID)
+public class EnderIO {
+    public static final String MOD_ID = EnderIOAPI.MOD_ID;
+
+    public static final Regilite REGILITE = new Regilite(EnderIO.MOD_ID);
 
     public static IEventBus modEventBus;
     public static ModContainer modContainer;
 
-    public EnderIOBase(IEventBus modEventBus, ModContainer modContainer) {
-        EnderIOBase.modEventBus = modEventBus;
-        EnderIOBase.modContainer = modContainer;
+    public static ResourceLocation rl(String path) {
+        return EnderIO.rl(path);
+    }
+
+    public EnderIO(IEventBus modEventBus, ModContainer modContainer) {
+        EnderIO.modEventBus = modEventBus;
+        EnderIO.modContainer = modContainer;
 
         // Ensure the enderio config subdirectory is present.
         try {
-            Files.createDirectories(FMLPaths.CONFIGDIR.get().resolve(EnderIOAPI.MOD_ID));
+            Files.createDirectories(FMLPaths.CONFIGDIR.get().resolve(EnderIO.MOD_ID));
         } catch (IOException e) {
             e.printStackTrace();
         }

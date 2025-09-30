@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.data.recipes;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.blocks.vat.FermentingRecipe;
@@ -53,7 +53,7 @@ public class FermentingRecipeProvider extends RecipeProvider {
 
     protected void build(FluidStack output, SizedFluidIngredient input, TagKey<Item> leftReagent,
             TagKey<Item> rightReagent, int ticks, RecipeOutput recipeOutput) {
-        recipeOutput.accept(EnderIOAPI.loc("fermenting/" + BuiltInRegistries.FLUID.getKey(output.getFluid()).getPath()),
+        recipeOutput.accept(EnderIO.rl("fermenting/" + BuiltInRegistries.FLUID.getKey(output.getFluid()).getPath()),
                 new FermentingRecipe(input, leftReagent, rightReagent, output, ticks), null);
     }
 }

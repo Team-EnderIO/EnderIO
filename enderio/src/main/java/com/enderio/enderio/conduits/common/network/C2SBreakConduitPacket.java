@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.network;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import net.minecraft.core.BlockPos;
@@ -12,7 +12,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record C2SBreakConduitPacket(BlockPos pos, Holder<Conduit<? ,?>> conduit) implements CustomPacketPayload {
 
-    public static final Type<C2SBreakConduitPacket> TYPE = new Type<>(EnderIOAPI.loc("break_conduit"));
+    public static final Type<C2SBreakConduitPacket> TYPE = new Type<>(EnderIO.rl("break_conduit"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, C2SBreakConduitPacket> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,

@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.init;
 
+import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.machines.common.blocks.enchanter.EnchanterRecipe;
 import com.enderio.enderio.machines.common.blocks.fluid_tank.TankRecipe;
@@ -24,9 +24,9 @@ import java.util.function.Supplier;
 public class MachineRecipes {
 
     private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE,
-            EnderIOAPI.MOD_ID);
+            EnderIO.MOD_ID);
     private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister
-            .create(Registries.RECIPE_SERIALIZER, EnderIOAPI.MOD_ID);
+            .create(Registries.RECIPE_SERIALIZER, EnderIO.MOD_ID);
 
     public static final RecipeTypeSerializerPair<EnchanterRecipe, EnchanterRecipe.Serializer> ENCHANTING = register(
             "enchanting", EnchanterRecipe.Serializer::new);
@@ -48,12 +48,12 @@ public class MachineRecipes {
             "weather_change", WeatherChangeRecipe.Serializer::new);
 
     private static <I extends Recipe<?>> DeferredHolder<RecipeType<?>, RecipeType<I>> registerType(String name) {
-        return RECIPE_TYPES.register(name, () -> RecipeType.simple(EnderIOAPI.loc(name)));
+        return RECIPE_TYPES.register(name, () -> RecipeType.simple(EnderIO.rl(name)));
     }
 
     private static <R extends Recipe<?>, S extends RecipeSerializer<? extends R>> RecipeTypeSerializerPair<R, S> register(
             String name, Supplier<S> serializerFactory) {
-        var type = RECIPE_TYPES.<RecipeType<R>>register(name, () -> RecipeType.simple(EnderIOAPI.loc(name)));
+        var type = RECIPE_TYPES.<RecipeType<R>>register(name, () -> RecipeType.simple(EnderIO.rl(name)));
         var serializer = RECIPE_SERIALIZERS.register(name, serializerFactory);
         return new RecipeTypeSerializerPair<>(type, serializer);
     }

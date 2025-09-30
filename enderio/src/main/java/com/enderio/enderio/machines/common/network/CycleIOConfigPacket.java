@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.network;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -9,7 +9,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record CycleIOConfigPacket(BlockPos pos, Direction side) implements CustomPacketPayload {
 
-    public static final Type<CycleIOConfigPacket> TYPE = new Type<>(EnderIOAPI.loc("cycle_io_config"));
+    public static final Type<CycleIOConfigPacket> TYPE = new Type<>(EnderIO.rl("cycle_io_config"));
 
     public static final StreamCodec<ByteBuf, CycleIOConfigPacket> STREAM_CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC,
             CycleIOConfigPacket::pos, Direction.STREAM_CODEC, CycleIOConfigPacket::side, CycleIOConfigPacket::new);

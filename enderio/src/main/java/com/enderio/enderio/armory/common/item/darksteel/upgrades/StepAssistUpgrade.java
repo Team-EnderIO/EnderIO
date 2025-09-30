@@ -1,7 +1,7 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades;
 
+import com.enderio.EnderIO;
 import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
@@ -22,7 +22,7 @@ public class StepAssistUpgrade implements DarkSteelUpgrade {
     public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "step_assist";
 
     private static final AttributeModifier ATTRIBUTE_MODIFIER = new AttributeModifier(
-            ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID, "step_assist_upgrade"), 1,
+            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "step_assist_upgrade"), 1,
             AttributeModifier.Operation.ADD_VALUE);
 
     @Override

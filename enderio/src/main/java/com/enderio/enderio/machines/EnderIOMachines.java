@@ -1,8 +1,6 @@
 package com.enderio.enderio.machines;
 
-import com.enderio.EnderIOBase;
-import com.enderio.enderio.api.EnderIOAPI;
-import com.enderio.enderio.api.integration.IntegrationManager;
+import com.enderio.EnderIO;
 import com.enderio.enderio.data.EIODataProvider;
 import com.enderio.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
 import com.enderio.enderio.machines.common.blocks.base.menu.MachineSlot;
@@ -63,9 +61,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber
-@Mod(EnderIOAPI.MOD_ID)
+@Mod(EnderIO.MOD_ID)
 public class EnderIOMachines {
-    public static final Regilite REGILITE = EnderIOBase.REGILITE;
+    public static final Regilite REGILITE = EnderIO.REGILITE;
 
     public EnderIOMachines(IEventBus modEventBus, ModContainer modContainer) {
         // Register machine config
@@ -135,16 +133,16 @@ public class EnderIOMachines {
     @SubscribeEvent
     public static void addBuiltInPacks(final AddPackFindersEvent event) {
         event.addPackFinders(
-                ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID, "data/enderio/datapacks/farming_station"),
+                ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/farming_station"),
                 PackType.SERVER_DATA, MachineLang.FARMING_STATION_EXPERIMENT, PackSource.FEATURE, false,
                 Pack.Position.TOP);
 
         event.addPackFinders(
-                ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID, "data/enderio/datapacks/enderface"),
+                ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/enderface"),
                 PackType.SERVER_DATA, MachineLang.ENDERFACE_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
 
         event.addPackFinders(
-                ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID, "data/enderio/datapacks/niard"),
+                ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/niard"),
                 PackType.SERVER_DATA, MachineLang.NIARD_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
     }
 }

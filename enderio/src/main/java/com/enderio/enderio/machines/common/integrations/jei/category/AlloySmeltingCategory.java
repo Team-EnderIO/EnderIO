@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.common.integrations.jei.JEIUtils;
 import com.enderio.enderio.machines.client.gui.screen.StirlingGeneratorScreen;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
@@ -31,12 +31,12 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 
 public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<AlloySmeltingRecipe>> {
 
-    public static final ResourceLocation BG_TEXTURE = EnderIOAPI.loc("textures/gui/viewer/alloy_smelter.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/viewer/alloy_smelter.png");
     private static final int WIDTH = 67 + 40; // + 40 text space
     private static final int HEIGHT = 73;
 
     public static final RecipeType<RecipeHolder<AlloySmeltingRecipe>> TYPE = JEIUtils
-            .createRecipeType(EnderIOAPI.MOD_ID, "alloy_smelting", AlloySmeltingRecipe.class);
+            .createRecipeType(EnderIO.MOD_ID, "alloy_smelting", AlloySmeltingRecipe.class);
 
     private final IDrawable background;
     private final IDrawable icon;

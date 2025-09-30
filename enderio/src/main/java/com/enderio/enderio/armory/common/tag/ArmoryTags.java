@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.common.tag;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -20,25 +20,25 @@ public class ArmoryTags {
         }
 
         public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_PICKAXE = ItemTags
-                .create(EnderIOAPI.loc("dark_steel_upgradeable_pickaxe"));
+                .create(EnderIO.rl("dark_steel_upgradeable_pickaxe"));
 
         public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_AXE = ItemTags
-                .create(EnderIOAPI.loc("dark_steel_upgradeable_axe"));
+                .create(EnderIO.rl("dark_steel_upgradeable_axe"));
 
         public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_SWORD = ItemTags
-                .create(EnderIOAPI.loc("dark_steel_upgradeable_sword"));
+                .create(EnderIO.rl("dark_steel_upgradeable_sword"));
 
         public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_CHESTPLATE = ItemTags
-                .create(EnderIOAPI.loc("dark_steel_upgradeable_chestplate"));
+                .create(EnderIO.rl("dark_steel_upgradeable_chestplate"));
 
         public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_LEGGINGS = ItemTags
-                .create(EnderIOAPI.loc("dark_steel_upgradeable_leggings"));
+                .create(EnderIO.rl("dark_steel_upgradeable_leggings"));
 
         public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_HELMET = ItemTags
-                .create(EnderIOAPI.loc("dark_steel_upgradeable_helmet"));
+                .create(EnderIO.rl("dark_steel_upgradeable_helmet"));
 
         public static final TagKey<Item> DARK_STEEL_UPGRADEABLE_BOOTS = ItemTags
-                .create(EnderIOAPI.loc("dark_steel_upgradeable_boots"));
+                .create(EnderIO.rl("dark_steel_upgradeable_boots"));
 
     }
 
@@ -48,13 +48,13 @@ public class ArmoryTags {
         }
 
         public static final TagKey<Block> INCORRECT_FOR_DARK_STEEL_TOOL = BlockTags
-                .create(EnderIOAPI.loc("incorrect_for_dark_steel_tool"));
+                .create(EnderIO.rl("incorrect_for_dark_steel_tool"));
 
         public static final TagKey<Block> DARK_STEEL_EXPLODABLE_DENY_LIST = BlockTags
-                .create(EnderIOAPI.loc("dark_steel_explodable_deny_list"));
+                .create(EnderIO.rl("dark_steel_explodable_deny_list"));
 
         public static final TagKey<Block> DARK_STEEL_EXPLODABLE_ALLOW_LIST = BlockTags
-                .create(EnderIOAPI.loc("dark_steel_explodable_allow_list"));
+                .create(EnderIO.rl("dark_steel_explodable_allow_list"));
 
     }
 }

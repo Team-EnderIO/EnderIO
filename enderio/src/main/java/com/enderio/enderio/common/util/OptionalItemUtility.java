@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.util;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.common.compat.almostunified.AlmostUnifiedCompat;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -38,7 +38,7 @@ public class OptionalItemUtility {
             .stream()
             .filter(itemHolder -> BuiltInRegistries.ITEM.getKey(itemHolder.value())
                 .getNamespace()
-                .equals(EnderIOAPI.MOD_ID))
+                .equals(EnderIO.MOD_ID))
             .map(Holder::value)
             .findFirst();
 

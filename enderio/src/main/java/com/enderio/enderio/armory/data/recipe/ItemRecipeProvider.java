@@ -114,7 +114,7 @@ public class ItemRecipeProvider extends RecipeProvider {
 
         ItemStack output = ArmoryItems.DARK_STEEL_UPGRADE_BLANK.toStack();
         ResourceLocation id = EnderIOAPI
-                .loc("alloy_smelting/" + BuiltInRegistries.ITEM.getKey(output.getItem()).getPath());
+                .rl("alloy_smelting/" + BuiltInRegistries.ITEM.getKey(output.getItem()).getPath());
         List<@NotNull SizedIngredient> inputs = List.of(SizedIngredient.of(EIOBlocks.DARK_STEEL_BARS, 1),
                 SizedIngredient.of(Items.CLAY_BALL, 1), SizedIngredient.of(Items.STRING, 4));
         recipeOutput.accept(id, new AlloySmeltingRecipe(inputs, output, 6400, 0.3f), null);

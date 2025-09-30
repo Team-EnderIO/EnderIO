@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.data.recipes;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.machines.common.blocks.painting.PaintingRecipe;
 import com.enderio.enderio.machines.common.init.MachineBlocks;
@@ -62,7 +62,7 @@ public class PaintingRecipeProvider extends RecipeProvider {
 
     protected void build(ItemLike output, Ingredient input, String suffix, RecipeOutput recipeOutput) {
         recipeOutput.accept(
-                EnderIOAPI.loc("painting/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath() + suffix),
+                EnderIO.rl("painting/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath() + suffix),
                 new PaintingRecipe(input, new ItemStack(output)), null);
     }
 

@@ -1,5 +1,6 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
+import com.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.enderio.common.lang.EIOLang;
@@ -18,15 +19,15 @@ import org.apache.commons.lang3.NotImplementedException;
 
 public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
 
-    public static final ResourceLocation BG_TEXTURE_AUTO = EnderIOAPI.loc("textures/gui/screen/alloy_smelter_auto.png");
-    private static final ResourceLocation BG_TEXTURE_ALLOY = EnderIOAPI.loc("textures/gui/screen/alloy_smelter_alloy.png");
+    public static final ResourceLocation BG_TEXTURE_AUTO = EnderIO.rl("textures/gui/screen/alloy_smelter_auto.png");
+    private static final ResourceLocation BG_TEXTURE_ALLOY = EnderIO.rl("textures/gui/screen/alloy_smelter_alloy.png");
     private static final ResourceLocation BG_TEXTURE_FURNACE = EnderIOAPI
-            .loc("textures/gui/screen/alloy_smelter_furnace.png");
+            .rl("textures/gui/screen/alloy_smelter_furnace.png");
 
     private static final int WIDTH = 176;
     private static final int HEIGHT = 208;
 
-    private static final ResourceLocation PROGRESS_SPRITE = EnderIOAPI.loc("screen/alloy_smelter/lit_progress");
+    private static final ResourceLocation PROGRESS_SPRITE = EnderIO.rl("screen/alloy_smelter/lit_progress");
 
     public AlloySmelterScreen(AlloySmelterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

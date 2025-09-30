@@ -1,9 +1,9 @@
 package com.enderio.enderio.client.gui.screen;
 
+import com.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.client.gui.widget.DamageFilterModePickerWidget;
 import com.enderio.enderio.common.filter.AbstractFilterMenu;
 import com.enderio.enderio.common.filter.item.general.EnderItemFilterMenu;
@@ -21,18 +21,18 @@ public class EnderItemFilterScreen extends EnderContainerScreen<EnderItemFilterM
     private static final int WIDTH = 183;
     private static final int HEIGHT = 199;
 
-    private static final ResourceLocation BG_2x9 = EnderIOAPI.loc("textures/gui/screens/filter_2x9.png");
-    private static final ResourceLocation BG_1x9 = EnderIOAPI.loc("textures/gui/screens/filter_1x9.png");
-    private static final ResourceLocation BG_3x9 = EnderIOAPI.loc("textures/gui/screens/filter_3x9.png");
-    private static final ResourceLocation BG_4x9 = EnderIOAPI.loc("textures/gui/screens/filter_4x9.png");
+    private static final ResourceLocation BG_2x9 = EnderIO.rl("textures/gui/screens/filter_2x9.png");
+    private static final ResourceLocation BG_1x9 = EnderIO.rl("textures/gui/screens/filter_1x9.png");
+    private static final ResourceLocation BG_3x9 = EnderIO.rl("textures/gui/screens/filter_3x9.png");
+    private static final ResourceLocation BG_4x9 = EnderIO.rl("textures/gui/screens/filter_4x9.png");
 
-    private static final ResourceLocation BACK_SPRITE = EnderIOAPI.loc("icon/back");
+    private static final ResourceLocation BACK_SPRITE = EnderIO.rl("icon/back");
 
-    private static final ResourceLocation ICON_MATCH_COMPONENTS = EnderIOAPI.loc("icon/match_components");
-    private static final ResourceLocation ICON_IGNORE_COMPONENTS = EnderIOAPI.loc("icon/ignore_components");
+    private static final ResourceLocation ICON_MATCH_COMPONENTS = EnderIO.rl("icon/match_components");
+    private static final ResourceLocation ICON_IGNORE_COMPONENTS = EnderIO.rl("icon/ignore_components");
 
-    private static final ResourceLocation ICON_ALLOW_LIST = EnderIOAPI.loc("icon/allow_list");
-    private static final ResourceLocation ICON_DENY_LIST = EnderIOAPI.loc("icon/deny_list");
+    private static final ResourceLocation ICON_ALLOW_LIST = EnderIO.rl("icon/allow_list");
+    private static final ResourceLocation ICON_DENY_LIST = EnderIO.rl("icon/deny_list");
 
     private final ResourceLocation backgroundTexture;
 

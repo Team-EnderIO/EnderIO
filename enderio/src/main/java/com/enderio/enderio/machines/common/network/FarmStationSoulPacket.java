@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.network;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.machines.common.souldata.FarmSoul;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 public record FarmStationSoulPacket(Map<ResourceLocation, FarmSoul.SoulData> map) implements CustomPacketPayload {
 
-    public static final Type<FarmStationSoulPacket> TYPE = new Type<>(EnderIOAPI.loc("farm_soul"));
+    public static final Type<FarmStationSoulPacket> TYPE = new Type<>(EnderIO.rl("farm_soul"));
 
     public static final StreamCodec<ByteBuf, FarmStationSoulPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, FarmSoul.STREAM_CODEC),

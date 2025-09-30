@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.tag;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -34,7 +34,7 @@ public class MachineTags {
         public static final TagKey<Item> WIND_CHARGES = create("wind_charges");
 
         private static TagKey<Item> create(String pName) {
-            return TagKey.create(Registries.ITEM, EnderIOAPI.loc(pName));
+            return TagKey.create(Registries.ITEM, EnderIO.rl(pName));
         }
     }
 
@@ -46,7 +46,7 @@ public class MachineTags {
         public static final TagKey<EntityType<?>> SPAWNER_BLACKLIST = create("spawner_blacklist");
 
         private static TagKey<EntityType<?>> create(String pName) {
-            return TagKey.create(Registries.ENTITY_TYPE, EnderIOAPI.loc(pName));
+            return TagKey.create(Registries.ENTITY_TYPE, EnderIO.rl(pName));
         }
     }
 
@@ -59,7 +59,7 @@ public class MachineTags {
         public static final TagKey<Block> MIND_KILLER = create("mind_killer");
 
         private static TagKey<Block> create(String pName) {
-            return TagKey.create(Registries.BLOCK, EnderIOAPI.loc(pName));
+            return TagKey.create(Registries.BLOCK, EnderIO.rl(pName));
         }
 
     }

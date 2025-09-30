@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.init;
 
+import com.enderio.EnderIO;
 import com.enderio.core.common.util.NamedFluidContents;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.attachment.CoordinateSelection;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 public class EIODataComponents {
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister
-            .createDataComponents(EnderIOAPI.MOD_ID);
+            .createDataComponents(EnderIO.MOD_ID);
 
     public static final Supplier<DataComponentType<SimpleFluidContent>> ITEM_FLUID_CONTENT = DATA_COMPONENT_TYPES
             .registerComponentType("item_fluid_content", builder -> builder.persistent(SimpleFluidContent.CODEC)
@@ -87,8 +87,8 @@ public class EIODataComponents {
 
     public static void register(IEventBus bus) {
         // Remap entity to soul
-        DATA_COMPONENT_TYPES.addAlias(EnderIOAPI.loc("stored_entity"), EnderIOAPI.loc("soul"));
-        DATA_COMPONENT_TYPES.addAlias(EnderIOAPI.loc("entity_filter"), EnderIOAPI.loc("soul_filter"));
+        DATA_COMPONENT_TYPES.addAlias(EnderIO.rl("stored_entity"), EnderIO.rl("soul"));
+        DATA_COMPONENT_TYPES.addAlias(EnderIO.rl("entity_filter"), EnderIO.rl("soul_filter"));
 
         DATA_COMPONENT_TYPES.register(bus);
     }

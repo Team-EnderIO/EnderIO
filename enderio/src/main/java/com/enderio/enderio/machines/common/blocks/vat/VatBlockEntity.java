@@ -1,8 +1,8 @@
 package com.enderio.enderio.machines.common.blocks.vat;
 
+import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.util.NamedFluidContents;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.machines.common.attachment.FluidTankUser;
@@ -49,7 +49,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     public static final TankAccess OUTPUT_TANK = new TankAccess();
     public static final MultiSlotAccess REAGENTS = new MultiSlotAccess();
 
-    private static final ResourceLocation EMPTY = EnderIOAPI.loc("");
+    private static final ResourceLocation EMPTY = EnderIO.rl("");
 
     private final MachineFluidHandler fluidHandler;
     private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Input> craftingTaskHost;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.client.gui.screen.base.LegacyMachineScreen;
@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class CapacitorBankScreen extends LegacyMachineScreen<CapacitorBankMenu> {
 
-    public static final ResourceLocation BG_TEXTURE = EnderIOAPI.loc("textures/gui/screen/capacitor_bank.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/screen/capacitor_bank.png");
 
     public CapacitorBankScreen(CapacitorBankMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

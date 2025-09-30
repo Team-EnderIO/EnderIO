@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.client.rendering.travel;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
@@ -59,7 +59,7 @@ public class OutlineRenderType extends RenderType {
     }
 
     public static RenderType createLines(String name, int strength) {
-        return RenderType.create(EnderIOAPI.MOD_ID + "_" + name, DefaultVertexFormat.POSITION_COLOR_NORMAL,
+        return RenderType.create(EnderIO.MOD_ID + "_" + name, DefaultVertexFormat.POSITION_COLOR_NORMAL,
                 VertexFormat.Mode.LINES, 256, false, false,
                 CompositeState.builder()
                         .setShaderState(RenderStateShard.RENDERTYPE_LINES_SHADER)

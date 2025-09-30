@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.common.integrations.jei.JEIUtils;
 import com.enderio.enderio.machines.client.gui.screen.WeatherObeliskScreen;
 import com.enderio.enderio.machines.common.blocks.obelisks.weather.WeatherChangeRecipe;
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class WeatherChangeCategory extends MachineRecipeCategory<RecipeHolder<WeatherChangeRecipe>> {
 
-    public static final RecipeType<RecipeHolder<WeatherChangeRecipe>> TYPE = JEIUtils.createRecipeType(EnderIOAPI.MOD_ID, "weather_change",
+    public static final RecipeType<RecipeHolder<WeatherChangeRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID, "weather_change",
         WeatherChangeRecipe.class);
 
     private final IDrawable background;

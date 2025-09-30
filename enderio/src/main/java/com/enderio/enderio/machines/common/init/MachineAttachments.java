@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.init;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.machines.common.attachment.ActionRange;
 import com.enderio.enderio.machines.common.io.IOConfig;
@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 
 public class MachineAttachments {
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister
-            .create(NeoForgeRegistries.ATTACHMENT_TYPES, EnderIOAPI.MOD_ID);
+            .create(NeoForgeRegistries.ATTACHMENT_TYPES, EnderIO.MOD_ID);
 
     @Deprecated(forRemoval = true, since = "7.1")
     public static final Supplier<AttachmentType<RedstoneControl>> REDSTONE_CONTROL = ATTACHMENT_TYPES.register(

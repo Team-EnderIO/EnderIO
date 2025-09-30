@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.client.gui.widget.ioconfig;
 
+import com.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.BaseOverlay;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.client.rendering.model.ModelRenderUtil;
@@ -79,8 +79,8 @@ public class IOConfigOverlay extends BaseOverlay {
     private static final BlockPos POS = new BlockPos(1, 1, 1);
     private static final int Z_OFFSET = 100;
     private static final int OVERLAY_Z_OFFSET = 500;
-    private static final ResourceLocation IO_CONFIG_OVERLAY = EnderIOAPI.loc("buttons/io_config_overlay");
-    private static final ResourceLocation SELECTED_ICON = EnderIOAPI.loc("block/overlay/selected_face");
+    private static final ResourceLocation IO_CONFIG_OVERLAY = EnderIO.rl("buttons/io_config_overlay");
+    private static final ResourceLocation SELECTED_ICON = EnderIO.rl("block/overlay/selected_face");
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
     private static MultiBufferSource.BufferSource ghostBuffers;
     private static MultiBufferSource.BufferSource solidBuffers;
@@ -95,7 +95,7 @@ public class IOConfigOverlay extends BaseOverlay {
     private Optional<SelectedFace> selection = Optional.empty();
 
     // Neighbour Button
-    public static final ResourceLocation NEIGHBOURS_BTN = EnderIOAPI.loc("buttons/neighbour");
+    public static final ResourceLocation NEIGHBOURS_BTN = EnderIO.rl("buttons/neighbour");
     private final Rect2i neighBtnRect;
 
     public IOConfigOverlay(int x, int y, int width, int height, List<BlockPos> _configurable) {
@@ -503,7 +503,7 @@ public class IOConfigOverlay extends BaseOverlay {
         private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
 
         private SolidRenderLayer(RenderType original) {
-            super(String.format("%s_%s_solid", original, EnderIOAPI.MOD_ID), original.format(), original.mode(),
+            super(String.format("%s_%s_solid", original, EnderIO.MOD_ID), original.format(), original.mode(),
                     original.bufferSize(), original.affectsCrumbling(), true, () -> {
                         original.setupRenderState();
 
@@ -528,7 +528,7 @@ public class IOConfigOverlay extends BaseOverlay {
         private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
 
         private GhostRenderLayer(RenderType original) {
-            super(String.format("%s_%s_ghost", original, EnderIOAPI.MOD_ID), original.format(), original.mode(),
+            super(String.format("%s_%s_ghost", original, EnderIO.MOD_ID), original.format(), original.mode(),
                     original.bufferSize(), original.affectsCrumbling(), true, () -> {
                         original.setupRenderState();
 

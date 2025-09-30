@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.init;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.conduits.common.items.ConduitProbeItem;
@@ -20,7 +20,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ConduitComponents {
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister
-            .createDataComponents(EnderIOAPI.MOD_ID);
+            .createDataComponents(EnderIO.MOD_ID);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<Conduit<?, ?>>>> CONDUIT = DATA_COMPONENT_TYPES
             .registerComponentType("conduit",

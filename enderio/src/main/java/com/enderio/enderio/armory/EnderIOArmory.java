@@ -1,7 +1,6 @@
 package com.enderio.enderio.armory;
 
-import com.enderio.EnderIOBase;
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.api.integration.IntegrationManager;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.enderio.armory.common.config.ArmoryConfigLang;
@@ -44,9 +43,9 @@ import net.neoforged.neoforge.event.AddPackFindersEvent;
 import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber
-@Mod(EnderIOAPI.MOD_ID)
+@Mod(EnderIO.MOD_ID)
 public class EnderIOArmory {
-    public static final Regilite REGILITE = EnderIOBase.REGILITE;
+    public static final Regilite REGILITE = EnderIO.REGILITE;
 
     public EnderIOArmory(IEventBus modEventBus, ModContainer modContainer) {
         // Register config files
@@ -97,7 +96,7 @@ public class EnderIOArmory {
     @SubscribeEvent
     public static void addBuiltInPacks(final AddPackFindersEvent event) {
         event.addPackFinders(
-                ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID, "data/enderio/datapacks/armory_rewrite"),
+                ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/armory_rewrite"),
                 PackType.SERVER_DATA, ArmoryLang.ARMORY_REWRITE_EXPERIMENT, PackSource.FEATURE, false,
                 Pack.Position.TOP);
     }

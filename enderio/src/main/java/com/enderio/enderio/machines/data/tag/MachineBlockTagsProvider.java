@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.data.tag;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
@@ -11,7 +11,7 @@ public class MachineBlockTagsProvider extends BlockTagsProvider {
 
     public MachineBlockTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> provider,
             net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(packOutput, provider, EnderIOAPI.MOD_ID, existingFileHelper);
+        super(packOutput, provider, EnderIO.MOD_ID, existingFileHelper);
     }
 
     @Override

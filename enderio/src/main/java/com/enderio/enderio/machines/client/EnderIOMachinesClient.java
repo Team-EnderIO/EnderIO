@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.client;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
 import com.enderio.enderio.machines.client.rendering.item.FluidTankBEWLR;
 import com.enderio.enderio.machines.client.rendering.model.IOOverlayBakedModel;
@@ -25,7 +25,7 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.util.Lazy;
 
 @EventBusSubscriber(value = Dist.CLIENT)
-@Mod(value = EnderIOAPI.MOD_ID, dist = Dist.CLIENT)
+@Mod(value = EnderIO.MOD_ID, dist = Dist.CLIENT)
 public class EnderIOMachinesClient {
 
     public EnderIOMachinesClient(ModContainer modContainer) {
@@ -40,12 +40,12 @@ public class EnderIOMachinesClient {
 
     @SubscribeEvent
     public static void customModelLoaders(ModelEvent.RegisterGeometryLoaders event) {
-        event.register(EnderIOAPI.loc("io_overlay"), new IOOverlayBakedModel.Loader());
+        event.register(EnderIO.rl("io_overlay"), new IOOverlayBakedModel.Loader());
     }
 
     @SubscribeEvent
     public static void registerOverlays(RegisterGuiLayersEvent event) {
-        event.registerAbove(VanillaGuiLayers.CROSSHAIR, EnderIOAPI.loc("anchor_hud"), TravelAnchorHud.INSTANCE);
+        event.registerAbove(VanillaGuiLayers.CROSSHAIR, EnderIO.rl("anchor_hud"), TravelAnchorHud.INSTANCE);
     }
 
     @SubscribeEvent

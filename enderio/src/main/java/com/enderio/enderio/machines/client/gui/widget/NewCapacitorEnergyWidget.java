@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.client.gui.widget;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class NewCapacitorEnergyWidget extends NewEnergyWidget {
-    private static final ResourceLocation ENERGY_BAR_ERROR_SPRITE = EnderIOAPI.loc("widget/energy_bar_error");
+    private static final ResourceLocation ENERGY_BAR_ERROR_SPRITE = EnderIO.rl("widget/energy_bar_error");
 
     private final Supplier<Boolean> cap;
 

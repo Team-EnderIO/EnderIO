@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.client;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.conduits.client.gui.screen.types.ConduitScreenTypes;
@@ -59,7 +59,7 @@ public class ConduitClientSetup {
         
         event.enqueueWork(() -> {
             // Register item property for conduit probe state switching
-            ItemProperties.register(ConduitItems.CONDUIT_PROBE.get(), EnderIOAPI.loc("probe_state"),
+            ItemProperties.register(ConduitItems.CONDUIT_PROBE.get(), EnderIO.rl("probe_state"),
                 (stack, level, player, seed) -> {
                     ConduitProbeItem.State state = ConduitProbeItem.getState(stack);
                     return state == ConduitProbeItem.State.COPY_PASTE ? 1.0f : 0.0f;
@@ -83,9 +83,9 @@ public class ConduitClientSetup {
 
     @SubscribeEvent
     public static void modelLoader(ModelEvent.RegisterGeometryLoaders event) {
-        event.register(EnderIOAPI.loc("conduit"), new ConduitBundleGeometry.Loader());
-        event.register(EnderIOAPI.loc("conduit_item"), new ConduitItemModelLoader());
-        event.register(EnderIOAPI.loc("facades_item"), new FacadeItemGeometry.Loader());
+        event.register(EnderIO.rl("conduit"), new ConduitBundleGeometry.Loader());
+        event.register(EnderIO.rl("conduit_item"), new ConduitItemModelLoader());
+        event.register(EnderIO.rl("facades_item"), new FacadeItemGeometry.Loader());
     }
 
     @SubscribeEvent
@@ -112,7 +112,7 @@ public class ConduitClientSetup {
     }
 
     private static ModelResourceLocation loc(String modelName) {
-        ModelResourceLocation loc = ModelResourceLocation.standalone(EnderIOAPI.loc(modelName));
+        ModelResourceLocation loc = ModelResourceLocation.standalone(EnderIO.rl(modelName));
         MODEL_LOCATIONS.add(loc);
         return loc;
     }

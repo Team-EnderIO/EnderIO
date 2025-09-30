@@ -6,14 +6,12 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
-import com.enderio.enderio.api.farm.FarmTask;
 import com.enderio.enderio.api.travel.TravelTargetSerializer;
 import com.enderio.enderio.api.travel.TravelTargetType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.registries.RegistryBuilder;
-import org.jetbrains.annotations.ApiStatus;
 
 public class EnderIORegistries {
 

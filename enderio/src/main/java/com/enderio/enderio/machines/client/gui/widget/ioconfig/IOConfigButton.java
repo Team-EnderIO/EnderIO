@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.client.gui.widget.ioconfig;
 
+import com.enderio.EnderIO;
 import com.enderio.core.client.gui.widgets.EnderButton;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.lang.EIOLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class IOConfigButton extends EnderButton {
-    public static final ResourceLocation IO_CONFIG = EnderIOAPI.loc("buttons/io_config");
+    public static final ResourceLocation IO_CONFIG = EnderIO.rl("buttons/io_config");
     private final IOConfigOverlay configRenderer;
     @Nullable private final Consumer<Boolean> callback;
 

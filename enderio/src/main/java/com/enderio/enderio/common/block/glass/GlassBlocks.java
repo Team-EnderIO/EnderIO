@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.block.glass;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.regilite.holder.RegiliteBlock;
@@ -50,7 +50,7 @@ public class GlassBlocks {
     }
 
     private ResourceLocation getModelFile() {
-        return glassIdentifier.explosion_resistance() ? EnderIOAPI.loc("block/fused_quartz") : EnderIOAPI.loc("block/clear_glass");
+        return glassIdentifier.explosion_resistance() ? EnderIO.rl("block/fused_quartz") : EnderIO.rl("block/clear_glass");
     }
 
     // Dirty dirty. TODO: Just access transforms for these in Blocks??

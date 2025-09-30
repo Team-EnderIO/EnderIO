@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.config;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.machines.EnderIOMachines;
 
 public class MachinesConfigLang {
@@ -93,7 +93,7 @@ public class MachinesConfigLang {
 
     private static void addTranslation(String key, String translation) {
         // TODO: More translation options in Regilite
-        EnderIOMachines.REGILITE.addTranslation(() -> EnderIOAPI.MOD_ID + "." + "configuration" + "." + key,
+        EnderIOMachines.REGILITE.addTranslation(() -> EnderIO.MOD_ID + "." + "configuration" + "." + key,
                 translation);
     }
 }

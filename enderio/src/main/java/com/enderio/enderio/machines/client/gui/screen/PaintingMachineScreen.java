@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.client.gui.screen.base.MachineScreen;
@@ -15,11 +15,11 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class PaintingMachineScreen extends MachineScreen<PaintingMachineMenu> {
 
-    private static final ResourceLocation PAINTING_MACHINE_BG = EnderIOAPI.loc("textures/gui/screen/painting_machine.png");
+    private static final ResourceLocation PAINTING_MACHINE_BG = EnderIO.rl("textures/gui/screen/painting_machine.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
-    private static final ResourceLocation PROGRESS_SPRITE = EnderIOAPI.loc("screen/painting_machine/progress");
+    private static final ResourceLocation PROGRESS_SPRITE = EnderIO.rl("screen/painting_machine/progress");
 
     public PaintingMachineScreen(PaintingMachineMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

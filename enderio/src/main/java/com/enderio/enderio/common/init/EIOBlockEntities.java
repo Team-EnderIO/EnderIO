@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.EnderIOBase;
+import com.enderio.EnderIO;
 import com.enderio.enderio.common.blockentity.EnderSkullBlockEntity;
 import com.enderio.enderio.common.paint.blockentity.DoublePaintedBlockEntity;
 import com.enderio.enderio.common.paint.blockentity.SinglePaintedBlockEntity;
@@ -9,7 +9,7 @@ import com.enderio.regilite.registry.BlockEntityRegistry;
 import net.neoforged.bus.api.IEventBus;
 
 public class EIOBlockEntities {
-    private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIOBase.REGILITE.blockEntityRegistry();
+    private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIO.REGILITE.blockEntityRegistry();
 
     public static final RegiliteBlockEntity<SinglePaintedBlockEntity> SINGLE_PAINTED = BLOCK_ENTITY_REGISTRY
         .registerBlockEntity("single_painted",

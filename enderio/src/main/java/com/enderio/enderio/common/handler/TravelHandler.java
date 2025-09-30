@@ -1,7 +1,6 @@
 package com.enderio.enderio.common.handler;
 
 import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.enderio.api.integration.IntegrationManager;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.common.config.BaseConfig;

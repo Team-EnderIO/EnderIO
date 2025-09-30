@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.common.init;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.common.init.EIOItems;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
@@ -32,7 +32,7 @@ public class ArmoryArmorMaterials {
             int enchantmentValue, Holder<SoundEvent> equipSound, float toughness, float knockbackResistance,
             Supplier<Ingredient> repairIngredient) {
         List<ArmorMaterial.Layer> list = List
-                .of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID, name)));
+                .of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, name)));
         return register(name, defense, enchantmentValue, equipSound, toughness, knockbackResistance, repairIngredient,
                 list);
     }

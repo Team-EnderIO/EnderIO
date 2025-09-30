@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.client.gui.screen.types;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
@@ -15,8 +15,8 @@ import net.minecraft.resources.ResourceLocation;
 
 public class EnergyConduitScreenType extends IOConduitScreenType<EnergyConduitConnectionConfig> {
 
-    private static final ResourceLocation ICON_INCREASE = EnderIOAPI.loc("icon/increase");
-    private static final ResourceLocation ICON_DECREASE = EnderIOAPI.loc("icon/decrease");
+    private static final ResourceLocation ICON_INCREASE = EnderIO.rl("icon/increase");
+    private static final ResourceLocation ICON_DECREASE = EnderIO.rl("icon/decrease");
 
     @Override
     public void renderLabels(ConduitMenuDataAccess<EnergyConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics,

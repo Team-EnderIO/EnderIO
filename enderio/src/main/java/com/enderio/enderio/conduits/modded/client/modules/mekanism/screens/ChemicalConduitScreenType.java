@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.modded.client.modules.mekanism.screens;
 
+import com.enderio.EnderIO;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
@@ -30,10 +30,10 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.function.Supplier;
 
 public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalConduitConnectionConfig> {
-    private static final ResourceLocation ICON_ROUND_ROBIN_ENABLED = EnderIOAPI.loc("icon/round_robin_enabled");
-    private static final ResourceLocation ICON_ROUND_ROBIN_DISABLED = EnderIOAPI.loc("icon/round_robin_disabled");
-    private static final ResourceLocation ICON_SELF_FEED_ENABLED = EnderIOAPI.loc("icon/self_feed_enabled");
-    private static final ResourceLocation ICON_SELF_FEED_DISABLED = EnderIOAPI.loc("icon/self_feed_disabled");
+    private static final ResourceLocation ICON_ROUND_ROBIN_ENABLED = EnderIO.rl("icon/round_robin_enabled");
+    private static final ResourceLocation ICON_ROUND_ROBIN_DISABLED = EnderIO.rl("icon/round_robin_disabled");
+    private static final ResourceLocation ICON_SELF_FEED_ENABLED = EnderIO.rl("icon/self_feed_enabled");
+    private static final ResourceLocation ICON_SELF_FEED_DISABLED = EnderIO.rl("icon/self_feed_disabled");
 
     @Override
     public void createLeftWidgets(ConduitScreenHelper screen, int startX, int startY,
@@ -126,7 +126,7 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
     }
 
     private static class ChemicalWidget extends AbstractWidget {
-        private static final ResourceLocation WIDGET_TEXTURE = EnderIOAPI.loc("textures/gui/chemicalbackground.png");
+        private static final ResourceLocation WIDGET_TEXTURE = EnderIO.rl("textures/gui/chemicalbackground.png");
 
         private final Runnable onPress;
         private final Supplier<Chemical> currentChemical;

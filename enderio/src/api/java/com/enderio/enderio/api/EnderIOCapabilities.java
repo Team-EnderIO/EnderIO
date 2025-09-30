@@ -17,38 +17,38 @@ import org.jetbrains.annotations.Nullable;
 
 public class EnderIOCapabilities {
     public static final BlockCapability<SideConfig, Direction> SIDE_CONFIG = BlockCapability
-        .createSided(EnderIOAPI.loc("side_config"), SideConfig.class);
+        .createSided(EnderIOAPI.rl("side_config"), SideConfig.class);
 
     public static final ItemCapability<FilterMenuProvider, Void> FILTER_MENU_PROVIDER = ItemCapability
-        .createVoid(EnderIOAPI.loc("filter_menu_provider"), FilterMenuProvider.class);
+        .createVoid(EnderIOAPI.rl("filter_menu_provider"), FilterMenuProvider.class);
 
     public static final ItemCapability<ItemFilter, Void> ITEM_FILTER = ItemCapability
-        .createVoid(EnderIOAPI.loc("item_filter"), ItemFilter.class);
+        .createVoid(EnderIOAPI.rl("item_filter"), ItemFilter.class);
 
     public static final ItemCapability<FluidFilter, Void> FLUID_FILTER = ItemCapability
-        .createVoid(EnderIOAPI.loc("fluid_filter"), FluidFilter.class);
+        .createVoid(EnderIOAPI.rl("fluid_filter"), FluidFilter.class);
 
     public static final ItemCapability<SoulFilter, Void> SOUL_FILTER = ItemCapability
-        .createVoid(EnderIOAPI.loc("soul_filter"), SoulFilter.class);
+        .createVoid(EnderIOAPI.rl("soul_filter"), SoulFilter.class);
 
     public static final ItemCapability<SoulBindable, Void> SOUL_BINDABLE_ITEM = ItemCapability
-        .createVoid(EnderIOAPI.loc("soul_bindable"), SoulBindable.class);
+        .createVoid(EnderIOAPI.rl("soul_bindable"), SoulBindable.class);
 
     public static final BlockCapability<SoulBindable, Void> SOUL_BINDABLE_BLOCK = BlockCapability
-        .createVoid(EnderIOAPI.loc("soul_bindable"), SoulBindable.class);
+        .createVoid(EnderIOAPI.rl("soul_bindable"), SoulBindable.class);
 
     public static final ItemCapability<com.enderio.enderio.api.soul.storage.SoulHandler, Void> SOUL_HANDLER_ITEM = ItemCapability
-        .createVoid(EnderIOAPI.loc("soul_handler"), com.enderio.enderio.api.soul.storage.SoulHandler.class);
+        .createVoid(EnderIOAPI.rl("soul_handler"), com.enderio.enderio.api.soul.storage.SoulHandler.class);
 
     public static final BlockCapability<SoulHandler, @Nullable Direction> SOUL_HANDLER_BLOCK = BlockCapability
-        .createSided(EnderIOAPI.loc("soul_handler"), SoulHandler.class);
+        .createSided(EnderIOAPI.rl("soul_handler"), SoulHandler.class);
 
     public static final ItemCapability<ConduitFacadeProvider, Void> CONDUIT_FACADE_PROVIDER = ItemCapability
-        .createVoid(EnderIOAPI.loc("conduit_facade_provider"), ConduitFacadeProvider.class);
+        .createVoid(EnderIOAPI.rl("conduit_facade_provider"), ConduitFacadeProvider.class);
 
     public static final ItemCapability<RedstoneOutputFilter, Void> REDSTONE_INSERT_FILTER = ItemCapability
-        .createVoid(EnderIOAPI.loc("redstone_insert_filter"), RedstoneOutputFilter.class);
+        .createVoid(EnderIOAPI.rl("redstone_insert_filter"), RedstoneOutputFilter.class);
 
     public static final ItemCapability<RedstoneInputFilter, Void> REDSTONE_EXTRACT_FILTER = ItemCapability
-        .createVoid(EnderIOAPI.loc("redstone_extract_filter"), RedstoneInputFilter.class);
+        .createVoid(EnderIOAPI.rl("redstone_extract_filter"), RedstoneInputFilter.class);
 }

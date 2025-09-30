@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
+import com.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.machines.common.blocks.enchanter.EnchanterMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class EnchanterScreen extends EnderContainerScreen<EnchanterMenu> {
-    public static final ResourceLocation BG_TEXTURE = EnderIOAPI.loc("textures/gui/screen/enchanter.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/screen/enchanter.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

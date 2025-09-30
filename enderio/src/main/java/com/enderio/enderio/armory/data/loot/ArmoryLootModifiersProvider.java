@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.data.loot;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgradeLootCondition;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgradeLootModifier;
 import net.minecraft.core.HolderLookup;
@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ArmoryLootModifiersProvider extends GlobalLootModifierProvider {
     public ArmoryLootModifiersProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries, EnderIOAPI.MOD_ID);
+        super(output, registries, EnderIO.MOD_ID);
     }
 
     @Override

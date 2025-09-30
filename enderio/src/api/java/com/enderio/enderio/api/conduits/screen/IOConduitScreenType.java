@@ -21,7 +21,7 @@ public abstract class IOConduitScreenType<U extends IOConnectionConfig> extends 
     // TODO: Need to reconsider this API.
     private static final Component DEFAULT_LEFT_TITLE = Component.translatable("gui.enderio.conduit.insert");
     private static final Component DEFAULT_RIGHT_TITLE = Component.translatable("gui.enderio.conduit.extract");
-    private static final ResourceLocation BG_TEXTURE = EnderIOAPI.loc("textures/gui/conduit.png");
+    private static final ResourceLocation BG_TEXTURE = EnderIOAPI.rl("textures/gui/conduit.png");
 
     // Rows of 9, counts slot width and it's outline edge.
     // TODO: Better name.

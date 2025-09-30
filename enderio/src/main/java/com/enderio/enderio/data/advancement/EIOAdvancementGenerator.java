@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.advancement;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.common.paint.PaintingTrigger;
 import net.minecraft.advancements.Advancement;
@@ -31,13 +31,13 @@ public class EIOAdvancementGenerator implements AdvancementProvider.AdvancementG
             .display(Items.DIAMOND_BLOCK, EIOLang.RICH_ADVANCEMENT_TITLE, EIOLang.RICH_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
                 true, false)
             .addCriterion("paint", PaintingTrigger.TriggerInstance.painted(Blocks.DIAMOND_BLOCK))
-            .save(consumer, EnderIOAPI.loc("adventure/rich").toString());
+            .save(consumer, EnderIO.rl("adventure/rich").toString());
 
         Advancement.Builder.advancement()
             .parent(rich)
             .display(Items.NETHERITE_BLOCK, EIOLang.RICHER_ADVANCEMENT_TITLE, EIOLang.RICHER_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
                 true, false)
             .addCriterion("paint", PaintingTrigger.TriggerInstance.painted(Blocks.NETHERITE_BLOCK))
-            .save(consumer, EnderIOAPI.loc("adventure/richer").toString());
+            .save(consumer, EnderIO.rl("adventure/richer").toString());
     }
 }

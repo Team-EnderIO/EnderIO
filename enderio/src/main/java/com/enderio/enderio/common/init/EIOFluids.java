@@ -1,7 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.EnderIOBase;
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.regilite.holder.RegiliteFluid;
 import com.enderio.regilite.registry.BlockRegistry;
@@ -25,11 +24,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 @SuppressWarnings("unused")
 public class EIOFluids {
-    private static final FluidRegistry FLUID_TYPE_REGISTRY = EnderIOBase.REGILITE.fluidRegistry();
+    private static final FluidRegistry FLUID_TYPE_REGISTRY = EnderIO.REGILITE.fluidRegistry();
     private static final DeferredRegister<Fluid> FLUID_REGISTRY = DeferredRegister.create(Registries.FLUID,
-            EnderIOAPI.MOD_ID);
-    private static final ItemRegistry ITEM_REGISTRY = EnderIOBase.REGILITE.itemRegistry();
-    private static final BlockRegistry BLOCK_REGISTRY = EnderIOBase.REGILITE.blockRegistry();
+            EnderIO.MOD_ID);
+    private static final ItemRegistry ITEM_REGISTRY = EnderIO.REGILITE.itemRegistry();
+    private static final BlockRegistry BLOCK_REGISTRY = EnderIO.REGILITE.blockRegistry();
 
     public static final RegiliteFluid<FluidType> NUTRIENT_DISTILLATION = fluid("nutrient_distillation",
             "Nutrient Distillation", FluidType.Properties.create().density(1500).viscosity(3000));

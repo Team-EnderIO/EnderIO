@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.model.block;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.google.gson.JsonObject;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,7 +23,7 @@ public class PaintedBlockModelBuilder<T extends ModelBuilder<T>> extends CustomL
     }
 
     protected PaintedBlockModelBuilder(T parent, ExistingFileHelper existingFileHelper) {
-        super(EnderIOAPI.loc("painted_block"), parent, existingFileHelper, false);
+        super(EnderIO.rl("painted_block"), parent, existingFileHelper, false);
     }
 
     public PaintedBlockModelBuilder<T> reference(Block referenceBlock) {

@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.speed;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.api.armory.capability.UpgradeTier;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
@@ -57,7 +57,7 @@ public enum SpeedUpgradeTier implements UpgradeTier {
     public AttributeModifier getAttributeModifier() {
         if (attributeModifier == null) {
             attributeModifier = new AttributeModifier(
-                    ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID, "speed_upgrade_" + ordinal()),
+                    ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "speed_upgrade_" + ordinal()),
                     magnitude.get(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         }
         return attributeModifier;

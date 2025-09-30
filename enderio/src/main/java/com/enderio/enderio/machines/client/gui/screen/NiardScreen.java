@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.client.gui.widget.EIOCommonWidgets;
 import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.enderio.common.lang.EIOLang;
@@ -26,7 +26,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 public class NiardScreen extends MachineScreen<NiardMenu> {
 
 
-    public static final ResourceLocation BG_TEXTURE = EnderIOAPI.loc("textures/gui/screen/niard.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/screen/niard.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

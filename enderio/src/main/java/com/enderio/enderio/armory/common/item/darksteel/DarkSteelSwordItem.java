@@ -1,9 +1,9 @@
 package com.enderio.enderio.armory.common.item.darksteel;
 
+import com.enderio.EnderIO;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.init.ArmoryFeatureFlags;
 import com.enderio.enderio.armory.common.init.ArmoryItems;
@@ -83,13 +83,13 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
             EmpoweredUpgrade empUp = empUpOpt.get();
             e.addModifier(Attributes.ATTACK_DAMAGE,
                     new AttributeModifier(
-                            ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID,
+                            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID,
                                     "the_ender_attack_boost_" + empUp.getLevel()),
                             empUp.getAttackDamageIncrease(), AttributeModifier.Operation.ADD_VALUE),
                     EquipmentSlotGroup.MAINHAND);
             e.addModifier(Attributes.ATTACK_SPEED,
                     new AttributeModifier(
-                            ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID,
+                            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID,
                                     "the_ender_attack_speed_boost_" + empUp.getLevel()),
                             empUp.getAttackSpeedIncrease(), AttributeModifier.Operation.ADD_VALUE),
                     EquipmentSlotGroup.MAINHAND);

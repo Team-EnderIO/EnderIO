@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.network;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -8,7 +8,7 @@ import net.minecraft.world.item.DyeColor;
 
 public record DoubleChannelPacket(DyeColor channel1, DyeColor channel2) implements CustomPacketPayload {
 
-    public static final Type<DoubleChannelPacket> TYPE = new Type<>(EnderIOAPI.loc("double_channel_packet"));
+    public static final Type<DoubleChannelPacket> TYPE = new Type<>(EnderIO.rl("double_channel_packet"));
 
     public static final StreamCodec<ByteBuf, DoubleChannelPacket> STREAM_CODEC = StreamCodec.composite(
         DyeColor.STREAM_CODEC,

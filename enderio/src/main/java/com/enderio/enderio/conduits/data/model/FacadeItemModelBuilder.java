@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.data.model;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.generators.CustomLoaderBuilder;
@@ -17,11 +17,11 @@ public class FacadeItemModelBuilder<T extends ModelBuilder<T>> extends CustomLoa
     }
 
     protected FacadeItemModelBuilder(T parent, ExistingFileHelper existingFileHelper) {
-        super(EnderIOAPI.loc("facades_item"), parent, existingFileHelper, false);
+        super(EnderIO.rl("facades_item"), parent, existingFileHelper, false);
     }
 
     public FacadeItemModelBuilder<T> model(String name) {
-        this.model = EnderIOAPI.loc("block/" + name);
+        this.model = EnderIO.rl("block/" + name);
         return this;
     }
 

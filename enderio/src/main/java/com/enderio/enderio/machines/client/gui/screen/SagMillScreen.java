@@ -1,5 +1,6 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
+import com.enderio.EnderIO;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
@@ -24,13 +25,13 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class SagMillScreen extends MachineScreen<SagMillMenu> {
-    public static final ResourceLocation BG_TEXTURE = EnderIOAPI.loc("textures/gui/screen/sag_mill.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/screen/sag_mill.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 208;
 
-    private static final ResourceLocation PROGRESS_SPRITE = EnderIOAPI.loc("screen/sag_mill/progress");
+    private static final ResourceLocation PROGRESS_SPRITE = EnderIO.rl("screen/sag_mill/progress");
     private static final ResourceLocation BALL_DURABILITY_SPRITE = EnderIOAPI
-            .loc("screen/sag_mill/grinding_ball_durability");
+            .rl("screen/sag_mill/grinding_ball_durability");
 
     public SagMillScreen(SagMillMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

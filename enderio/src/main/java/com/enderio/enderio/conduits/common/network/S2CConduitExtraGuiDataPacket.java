@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.network;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -13,7 +13,7 @@ import java.util.Optional;
 public record S2CConduitExtraGuiDataPacket(int containerId, @Nullable CompoundTag extraGuiData)
         implements CustomPacketPayload {
 
-    public static final Type<S2CConduitExtraGuiDataPacket> TYPE = new Type<>(EnderIOAPI.loc("conduit_extra_gui_data"));
+    public static final Type<S2CConduitExtraGuiDataPacket> TYPE = new Type<>(EnderIO.rl("conduit_extra_gui_data"));
 
     public static final StreamCodec<ByteBuf, S2CConduitExtraGuiDataPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, S2CConduitExtraGuiDataPacket::containerId,

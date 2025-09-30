@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.data;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.HolderLookup;
@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 public class ConduitTagProvider extends BlockTagsProvider {
     public ConduitTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
             @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, EnderIOAPI.MOD_ID, existingFileHelper);
+        super(output, lookupProvider, EnderIO.MOD_ID, existingFileHelper);
     }
 
     @Override

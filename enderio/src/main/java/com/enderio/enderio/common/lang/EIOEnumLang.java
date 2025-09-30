@@ -1,8 +1,7 @@
 package com.enderio.enderio.common.lang;
 
-import com.enderio.EnderIOBase;
+import com.enderio.EnderIO;
 import com.enderio.core.common.lang.EnumTranslationMap;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.common.block.glass.GlassCollisionPredicate;
 import com.enderio.enderio.common.filter.item.general.DamageFilterMode;
@@ -13,7 +12,7 @@ import net.minecraft.world.item.DyeColor;
 
 public class EIOEnumLang {
 
-    private static final Regilite REGILITE = EnderIOBase.REGILITE;
+    private static final Regilite REGILITE = EnderIO.REGILITE;
 
     public static final EnumTranslationMap<RedstoneControl> REDSTONE_CONTROL = builder(RedstoneControl.class,
             "redstone").addTranslation(RedstoneControl.ALWAYS_ACTIVE, "Always Active")
@@ -66,7 +65,7 @@ public class EIOEnumLang {
                     .build();
 
     private static <T extends Enum<T>> EnumTranslationMap.Builder<T> builder(Class<T> enumClass, String prefix) {
-        return new EnumTranslationMap.Builder<>(EnderIOAPI.MOD_ID, EIOEnumLang::addTranslation, enumClass, prefix);
+        return new EnumTranslationMap.Builder<>(EnderIO.MOD_ID, EIOEnumLang::addTranslation, enumClass, prefix);
     }
 
     private static Component addTranslation(String prefix, ResourceLocation key, String english) {

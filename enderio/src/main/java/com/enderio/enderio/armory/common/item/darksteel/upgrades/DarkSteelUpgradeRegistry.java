@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 
 public final class DarkSteelUpgradeRegistry {
 
-    public static final String UPGRADE_PREFIX = EnderIOAPI.MOD_ID + ".darksteel.upgrade.";
+    public static final String UPGRADE_PREFIX = EnderIO.MOD_ID + ".darksteel.upgrade.";
 
     private static final DarkSteelUpgradeRegistry INST = new DarkSteelUpgradeRegistry();
 

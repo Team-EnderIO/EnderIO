@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.client.gui.screen.base.MachineScreen;
@@ -20,16 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
-    private static final ResourceLocation BG = EnderIOAPI.loc("textures/gui/screen/xp_obelisk.png");
+    private static final ResourceLocation BG = EnderIO.rl("textures/gui/screen/xp_obelisk.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 116;
 
-    private static final ResourceLocation XP_ADD_ONE = EnderIOAPI.loc("buttons/xp_add_one");
-    private static final ResourceLocation XP_ADD_ALL = EnderIOAPI.loc("buttons/xp_add_all");
-    private static final ResourceLocation XP_ADD_MULTI = EnderIOAPI.loc("buttons/xp_add_multi");
-    private static final ResourceLocation XP_REMOVE_ONE = EnderIOAPI.loc("buttons/xp_remove_one");
-    private static final ResourceLocation XP_REMOVE_MULTI = EnderIOAPI.loc("buttons/xp_remove_multi");
-    private static final ResourceLocation XP_REMOVE_ALL = EnderIOAPI.loc("buttons/xp_remove_all");
+    private static final ResourceLocation XP_ADD_ONE = EnderIO.rl("buttons/xp_add_one");
+    private static final ResourceLocation XP_ADD_ALL = EnderIO.rl("buttons/xp_add_all");
+    private static final ResourceLocation XP_ADD_MULTI = EnderIO.rl("buttons/xp_add_multi");
+    private static final ResourceLocation XP_REMOVE_ONE = EnderIO.rl("buttons/xp_remove_one");
+    private static final ResourceLocation XP_REMOVE_MULTI = EnderIO.rl("buttons/xp_remove_multi");
+    private static final ResourceLocation XP_REMOVE_ALL = EnderIO.rl("buttons/xp_remove_all");
 
     private final List<ImageButton> xpButtons = new ArrayList<>();
 

@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.client.gui.screen.filter;
 
+import com.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.EIOScreen;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.client.gui.widget.DyeColorPickerWidget;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import com.enderio.enderio.conduits.common.menu.RedstoneDoubleChannelFilterMenu;
@@ -13,7 +13,7 @@ import org.joml.Vector2i;
 public class RedstoneDoubleChannelFilterScreen extends EIOScreen<RedstoneDoubleChannelFilterMenu> {
 
     private static final Vector2i BG_SIZE = new Vector2i(183, 201);
-    private static final ResourceLocation BG_TEXTURE = EnderIOAPI.loc("textures/gui/40/item_filter.png");
+    private static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/40/item_filter.png");
 
     public RedstoneDoubleChannelFilterScreen(RedstoneDoubleChannelFilterMenu pMenu, Inventory pPlayerInventory,
             Component pTitle) {

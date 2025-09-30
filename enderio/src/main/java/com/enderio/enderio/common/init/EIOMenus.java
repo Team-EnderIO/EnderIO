@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.EnderIOBase;
+import com.enderio.EnderIO;
 import com.enderio.enderio.client.gui.screen.CoordinateMenuScreen;
 import com.enderio.enderio.client.gui.screen.EnderFluidFilterScreen;
 import com.enderio.enderio.client.gui.screen.EnderItemFilterScreen;
@@ -17,7 +17,7 @@ import com.enderio.regilite.registry.MenuRegistry;
 import net.neoforged.bus.api.IEventBus;
 
 public class EIOMenus {
-    private static final MenuRegistry MENU_REGISTRY = EnderIOBase.REGILITE.menuRegistry();
+    private static final MenuRegistry MENU_REGISTRY = EnderIO.REGILITE.menuRegistry();
 
     public static final RegiliteMenu<CoordinateMenu> COORDINATE = MENU_REGISTRY.registerMenu("coordinate",
             CoordinateMenu::factory, () -> CoordinateMenuScreen::new);

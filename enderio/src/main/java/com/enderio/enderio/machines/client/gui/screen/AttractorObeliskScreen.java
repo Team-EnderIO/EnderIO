@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.enderio.enderio.machines.common.blocks.obelisks.attractor.AttractorObeliskBlockEntity;
 import com.enderio.enderio.machines.common.blocks.obelisks.attractor.AttractorObeliskMenu;
 import net.minecraft.network.chat.Component;
@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class AttractorObeliskScreen extends ObeliskScreen<AttractorObeliskBlockEntity, AttractorObeliskMenu> {
 
-    public static final ResourceLocation BG_TEXTURE = EnderIOAPI.loc("textures/gui/screen/attractor.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/screen/attractor.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

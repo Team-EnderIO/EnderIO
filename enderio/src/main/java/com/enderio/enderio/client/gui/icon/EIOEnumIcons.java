@@ -1,7 +1,7 @@
 package com.enderio.enderio.client.gui.icon;
 
+import com.enderio.EnderIO;
 import com.enderio.core.client.icon.EnumIconMap;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.common.block.glass.GlassCollisionPredicate;
 import com.enderio.enderio.common.block.glass.GlassLighting;
@@ -27,10 +27,10 @@ public class EIOEnumIcons {
             "damage_filter_mode");
 
     private static <T extends Enum<T>> EnumIconMap<T> createAll(Class<T> enumClass, String iconFolder) {
-        return new EnumIconMap<>(EnderIOAPI.MOD_ID, enumClass, iconFolder);
+        return new EnumIconMap<>(EnderIO.MOD_ID, enumClass, iconFolder);
     }
 
     private static <T extends Enum<T>> EnumIconMap.Builder<T> builder(Class<T> enumClass, String iconFolder) {
-        return new EnumIconMap.Builder<>(EnderIOAPI.MOD_ID, enumClass, iconFolder);
+        return new EnumIconMap.Builder<>(EnderIO.MOD_ID, enumClass, iconFolder);
     }
 }

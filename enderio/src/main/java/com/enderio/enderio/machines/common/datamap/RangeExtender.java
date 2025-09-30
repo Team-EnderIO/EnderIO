@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.datamap;
 
-import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.EnderIO;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
@@ -16,7 +16,7 @@ public class RangeExtender {
             .strictUnboundedMap(TagKey.hashedCodec(Registries.BLOCK), Codec.INT);
 
     public static final AdvancedDataMapType<Block, Map<TagKey<Block>, Integer>, DataMapValueRemover.Default<Map<TagKey<Block>, Integer>, Block>> DATA_MAP = AdvancedDataMapType
-            .builder(EnderIOAPI.loc("range_extender"), Registries.BLOCK, CODEC)
+            .builder(EnderIO.rl("range_extender"), Registries.BLOCK, CODEC)
             .synced(CODEC, true)
             .build();
 }

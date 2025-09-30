@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.EnderIOBase;
+import com.enderio.EnderIO;
 import com.enderio.enderio.client.paint.PaintedSandRenderer;
 import com.enderio.enderio.common.paint.PaintedSandEntity;
 import com.enderio.regilite.holder.RegiliteEntity;
@@ -11,7 +11,7 @@ import net.neoforged.bus.api.IEventBus;
 
 public class EIOEntities {
 
-    private static final EntityRegistry ENTITY_REGISTRY = EnderIOBase.REGILITE.entityRegistry();
+    private static final EntityRegistry ENTITY_REGISTRY = EnderIO.REGILITE.entityRegistry();
 
     public static final RegiliteEntity<PaintedSandEntity> PAINTED_SAND = ENTITY_REGISTRY
         .registerEntity("painted_sand", (EntityType.EntityFactory<PaintedSandEntity>) PaintedSandEntity::new, MobCategory.MISC)
