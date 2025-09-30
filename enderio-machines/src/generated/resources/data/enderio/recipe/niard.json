@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:bucket"
+    },
+    "I": {
+      "tag": "c:ingots/dark_steel"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "R": {
+      "item": "enderio:dark_steel_bars"
+    },
+    "T": {
+      "item": "enderio:fluid_tank"
+    },
+    "V": {
+      "item": "enderio:void_chassis"
+    }
+  },
+  "pattern": [
+    "BTB",
+    "PVP",
+    "IRI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:niard"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:block/cube",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "down": "enderio:block/machine_bottom",
+    "east": "enderio:block/machine_side",
+    "north": "enderio:block/niard_front",
+    "particle": "enderio:block/niard_front",
+    "south": "enderio:block/machine_back",
+    "up": "enderio:block/machine_top",
+    "west": "enderio:block/machine_side"
+  }
+}

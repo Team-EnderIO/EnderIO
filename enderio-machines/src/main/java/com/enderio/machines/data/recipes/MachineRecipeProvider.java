@@ -275,6 +275,21 @@ public class MachineRecipeProvider extends RecipeProvider {
                                 .hasItems(ItemPredicate.Builder.item().of(EIOBlocks.VOID_CHASSIS).build()))
                 .save(recipeOutput);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.NIARD.get())
+            .define('P', Items.PISTON)
+            .define('B', Items.BUCKET)
+            .define('R', EIOBlocks.DARK_STEEL_BARS.get())
+            .define('T', MachineBlocks.FLUID_TANK.get())
+            .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
+            .define('V', EIOBlocks.VOID_CHASSIS)
+            .pattern("BTB")
+            .pattern("PVP")
+            .pattern("IRI")
+            .unlockedBy("has_ingredient",
+                InventoryChangeTrigger.TriggerInstance
+                    .hasItems(ItemPredicate.Builder.item().of(EIOBlocks.VOID_CHASSIS).build()))
+            .save(recipeOutput);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MachineBlocks.XP_VACUUM)
                 .pattern("III")
                 .pattern("IRI")
@@ -535,6 +550,7 @@ public class MachineRecipeProvider extends RecipeProvider {
         list.add(MachineBlocks.POWERED_SPAWNER);
         list.add(MachineBlocks.SOUL_ENGINE);
         list.add(MachineBlocks.DRAIN);
+        list.add(MachineBlocks.NIARD);
         list.add(MachineBlocks.CRAFTER);
         list.addAll(MachineBlocks.SOLAR_PANELS.values());
         list.add(MachineBlocks.PAINTING_MACHINE);

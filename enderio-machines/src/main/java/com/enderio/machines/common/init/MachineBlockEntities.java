@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.machines.EnderIOMachines;
 import com.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
+import com.enderio.machines.client.rendering.blockentity.NiardBER;
 import com.enderio.machines.client.rendering.blockentity.ObeliskBER;
 import com.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
@@ -25,6 +26,7 @@ import com.enderio.machines.common.blocks.enderface.EnderfaceBlockEntity;
 import com.enderio.machines.common.blocks.farming_station.FarmingStationBlockEntity;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
 import com.enderio.machines.common.blocks.impulse_hopper.ImpulseHopperBlockEntity;
+import com.enderio.machines.common.blocks.niard.NiardBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.attractor.AttractorObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlockEntity;
 import com.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
@@ -128,6 +130,12 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<DrainBlockEntity> DRAIN = register("drain", DrainBlockEntity::new,
             MachineBlocks.DRAIN).apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
                     .apply(MachineBlockEntities::fluidHandlerCapability);
+
+    public static final RegiliteBlockEntity<NiardBlockEntity> NIARD = register("niard", NiardBlockEntity::new,
+        MachineBlocks.NIARD)
+            .setRenderer(() -> NiardBER::new)
+            .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+            .apply(MachineBlockEntities::fluidHandlerCapability);
 
     public static final RegiliteBlockEntity<SoulBinderBlockEntity> SOUL_BINDER = register("soul_binder",
             SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER)

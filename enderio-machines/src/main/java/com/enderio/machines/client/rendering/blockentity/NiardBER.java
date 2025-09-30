@@ -1,7 +1,7 @@
 package com.enderio.machines.client.rendering.blockentity;
 
 import com.enderio.core.client.FluidRendererUtil;
-import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
+import com.enderio.machines.common.blocks.niard.NiardBlockEntity;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -11,13 +11,13 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
-    public FluidTankBER(BlockEntityRendererProvider.Context context) {
+public class NiardBER implements BlockEntityRenderer<NiardBlockEntity> {
+    public NiardBER(BlockEntityRendererProvider.Context context) {
 
     }
 
     @Override
-    public void render(FluidTankBlockEntity blockEntity, float partialTick, PoseStack poseStack,
+    public void render(NiardBlockEntity blockEntity, float partialTick, PoseStack poseStack,
             MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
 
         MachineFluidTank tank = blockEntity.getFluidTank();

@@ -1,6 +1,6 @@
 package com.enderio.machines.client.rendering.item;
 
-import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
+import com.enderio.core.client.FluidRendererUtil;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
 import com.enderio.machines.common.blocks.fluid_tank.FluidTankBlockItem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -60,7 +60,7 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
 
                 PoseStack.Pose pose = poseStack.last();
                 IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid.getFluid());
-                FluidTankBER.renderFluid(pose, fluidBuffer, fluid.getFluid(), fluid.getAmount() / (float) capacity,
+                FluidRendererUtil.renderFluid(pose, fluidBuffer, fluid.getFluid(), fluid.getAmount() / (float) capacity,
                         props.getTintColor(), packedLight);
             }
         }

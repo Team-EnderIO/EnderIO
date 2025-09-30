@@ -44,6 +44,7 @@ public class MachinesConfigLang {
         addTranslation("wiredCharger", "Wired Charger");
         addTranslation("soulEngine", "Soul Engine");
         addTranslation("drain", "Drain");
+        addTranslation("niard", "Niard");
         addTranslation("inhibitor", "Inhibitor Obelisk");
         addTranslation("aversion", "Aversion Obelisk");
         addTranslation("relocator", "Relocator Obelisk");
