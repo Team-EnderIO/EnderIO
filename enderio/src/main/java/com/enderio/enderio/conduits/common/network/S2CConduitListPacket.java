@@ -3,12 +3,13 @@ package com.enderio.enderio.conduits.common.network;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
-import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+
+import java.util.List;
 
 public record S2CConduitListPacket(int containerId, List<Holder<Conduit<?, ?>>> conduits)
         implements CustomPacketPayload {

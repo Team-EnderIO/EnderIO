@@ -1,14 +1,13 @@
 package com.enderio.enderio.machines.common.blocks.soul_engine;
 
-import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.FixedScalable;
 import com.enderio.enderio.api.capacitor.LinearScalable;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.machines.common.MachineNBTKeys;
 import com.enderio.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
@@ -22,9 +21,6 @@ import com.enderio.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.enderio.machines.common.souldata.EngineSoul;
-
-import java.util.Optional;
-import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -51,6 +47,9 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
+import java.util.function.Predicate;
 
 @EventBusSubscriber
 public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser, SoulBindable {

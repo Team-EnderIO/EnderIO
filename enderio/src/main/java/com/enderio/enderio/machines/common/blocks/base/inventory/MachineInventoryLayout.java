@@ -1,11 +1,12 @@
 package com.enderio.enderio.machines.common.blocks.base.inventory;
 
 import com.enderio.enderio.common.init.EIODataComponents;
+import net.minecraft.world.item.ItemStack;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.UnaryOperator;
-import net.minecraft.world.item.ItemStack;
 
 /**
  * Describes the slot configuration of an inventory.

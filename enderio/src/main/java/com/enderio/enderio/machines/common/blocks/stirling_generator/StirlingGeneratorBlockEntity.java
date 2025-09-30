@@ -15,7 +15,6 @@ import com.enderio.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.enderio.machines.common.config.MachinesConfig;
 import com.enderio.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.enderio.machines.common.io.energy.MachineEnergyStorage;
-import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +26,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 

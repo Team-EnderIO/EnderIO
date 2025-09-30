@@ -1,21 +1,22 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.enderio.machines.common.blocks.stirling_generator.StirlingGeneratorMenu;
 import com.enderio.enderio.machines.common.lang.MachineLang;
-import java.text.DecimalFormat;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+
+import java.text.DecimalFormat;
 
 public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu> {
     private static final DecimalFormat FORMAT = new DecimalFormat("0.00");

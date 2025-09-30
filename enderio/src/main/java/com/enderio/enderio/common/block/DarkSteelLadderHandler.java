@@ -1,6 +1,5 @@
 package com.enderio.enderio.common.block;
 
-import com.enderio.EnderIOBase;
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.init.EIOBlocks;
 import net.minecraft.client.Minecraft;

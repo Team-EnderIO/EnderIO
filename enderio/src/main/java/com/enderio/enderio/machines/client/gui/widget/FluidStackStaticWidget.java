@@ -3,8 +3,6 @@ package com.enderio.enderio.machines.client.gui.widget;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.enderio.machines.common.blocks.base.fluid.FluidStorageInfo;
 import com.mojang.blaze3d.systems.RenderSystem;
-import java.util.Arrays;
-import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -16,6 +14,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
+
+import java.util.Arrays;
+import java.util.function.Supplier;
 
 public class FluidStackStaticWidget extends EIOWidget {
 

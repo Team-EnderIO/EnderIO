@@ -1,11 +1,9 @@
 package com.enderio.enderio.common.filter.item.general;
 
-import com.enderio.enderio.api.filter.ItemFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
+import com.enderio.enderio.api.filter.ItemFilter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.List;
-import java.util.Objects;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -15,6 +13,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Objects;
 
 public record EnderItemFilter(NonNullList<ItemStack> matches, boolean isDenyList, boolean shouldCompareComponents,
         DamageFilterMode damageFilterMode) implements ItemFilter {

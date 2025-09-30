@@ -1,7 +1,6 @@
 package com.enderio.enderio.api.conduits;
 
 import com.enderio.enderio.api.EnderIORegistries;
-import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
@@ -11,6 +10,7 @@ import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenType;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

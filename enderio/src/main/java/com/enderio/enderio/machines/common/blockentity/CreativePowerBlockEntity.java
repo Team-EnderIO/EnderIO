@@ -5,13 +5,14 @@ import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
 import com.enderio.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.enderio.machines.common.io.energy.MachineEnergyStorage;
-import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 // TODO: This should be replaced with creative power bank and buffer in the future, this is temporary :)
 public class CreativePowerBlockEntity extends LegacyPoweredMachineBlockEntity {

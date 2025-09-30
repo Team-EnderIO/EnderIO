@@ -1,21 +1,14 @@
 package com.enderio.enderio.client.paint.model;
 
+import com.enderio.core.client.RenderUtil;
+import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.client.paint.PaintedBlockColor;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.paint.blockentity.DoublePaintedBlockEntity;
 import com.enderio.enderio.common.paint.blockentity.PaintedBlockEntity;
 import com.enderio.enderio.common.paint.blockentity.SinglePaintedBlockEntity;
-import com.enderio.core.client.RenderUtil;
-import com.enderio.core.data.model.ModelHelper;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.datafixers.util.Pair;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -41,6 +34,14 @@ import net.neoforged.neoforge.client.model.IDynamicBakedModel;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 public class PaintedBlockModel implements IDynamicBakedModel {
 

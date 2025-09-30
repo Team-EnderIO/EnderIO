@@ -18,7 +18,6 @@ import com.enderio.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.enderio.machines.common.init.MachineRecipes;
 import com.enderio.enderio.machines.common.recipe.RecipeCaches;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -31,6 +30,8 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,

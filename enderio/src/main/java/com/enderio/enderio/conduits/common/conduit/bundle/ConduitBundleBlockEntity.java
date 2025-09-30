@@ -1,9 +1,8 @@
 package com.enderio.enderio.conduits.common.conduit.bundle;
 
+import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.UseOnly;
-import com.enderio.enderio.common.blockentity.Wrenchable;
-import com.enderio.enderio.conduits.ConduitNBTKeys;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.ConduitUtility;
@@ -15,6 +14,8 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
+import com.enderio.enderio.common.blockentity.Wrenchable;
+import com.enderio.enderio.conduits.ConduitNBTKeys;
 import com.enderio.enderio.conduits.client.model.conduit.bundle.ConduitBundleRenderState;
 import com.enderio.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.enderio.conduits.common.conduit.ConduitSorter;
@@ -28,26 +29,12 @@ import com.enderio.enderio.conduits.common.conduit.network.ConduitNodeImpl;
 import com.enderio.enderio.conduits.common.conduit.network.IConduitNodeAttachment;
 import com.enderio.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -84,6 +71,20 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public final class ConduitBundleBlockEntity extends EnderBlockEntity
         implements ConduitBundle, Wrenchable, ConduitMenu.ConnectionAccessor, IConduitNodeAttachment {

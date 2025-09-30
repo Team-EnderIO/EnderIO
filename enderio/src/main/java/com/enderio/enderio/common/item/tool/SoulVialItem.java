@@ -1,6 +1,7 @@
 package com.enderio.enderio.common.item.tool;
 
-import com.enderio.EnderIOBase;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
@@ -8,8 +9,6 @@ import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.common.util.EntityCaptureUtils;
-import com.enderio.core.client.item.AdvancedTooltipProvider;
-import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;

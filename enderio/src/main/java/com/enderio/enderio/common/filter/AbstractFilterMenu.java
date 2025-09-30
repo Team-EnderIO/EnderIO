@@ -2,10 +2,6 @@ package com.enderio.enderio.common.filter;
 
 import com.enderio.core.common.menu.BaseEnderMenu;
 import com.enderio.core.common.network.menu.IntSyncSlot;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -17,6 +13,10 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
 

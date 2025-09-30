@@ -1,5 +1,6 @@
 package com.enderio.enderio.machines.common.blocks.painting;
 
+import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -7,7 +8,6 @@ import com.enderio.enderio.common.init.EIOCriterions;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.paint.BlockPaintData;
 import com.enderio.enderio.common.paint.block.PaintedBlock;
-import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
 import com.enderio.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
@@ -18,8 +18,6 @@ import com.enderio.enderio.machines.common.config.MachinesConfig;
 import com.enderio.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.enderio.machines.common.init.MachineRecipes;
 import com.enderio.enderio.machines.common.recipe.RecipeCaches;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -36,6 +34,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 

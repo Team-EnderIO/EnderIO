@@ -3,8 +3,6 @@ package com.enderio.enderio.machines.common.blocks.base.task.host;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.enderio.machines.common.blocks.base.MachineRecipe;
 import com.enderio.enderio.machines.common.blocks.base.task.CraftingMachineTask;
-import java.util.Optional;
-import java.util.function.Supplier;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -12,6 +10,9 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public class CraftingMachineTaskHost<R extends MachineRecipe<T>, T extends RecipeInput> extends MachineTaskHost {
 

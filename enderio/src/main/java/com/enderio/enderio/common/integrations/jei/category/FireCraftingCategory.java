@@ -1,17 +1,13 @@
 package com.enderio.enderio.common.integrations.jei.category;
 
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.integrations.jei.JEIUtils;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.common.recipe.FireCraftingRecipe;
-import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IIngredientAcceptor;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -43,6 +39,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author TagnumElite

@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.lang;
 
-import com.enderio.enderio.api.EnderIO;
 import com.enderio.core.common.lang.EnumTranslationMap;
+import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmelterMode;
 import com.enderio.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerMode;

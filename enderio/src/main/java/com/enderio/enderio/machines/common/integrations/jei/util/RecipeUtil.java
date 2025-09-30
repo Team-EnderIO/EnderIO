@@ -2,11 +2,12 @@ package com.enderio.enderio.machines.common.integrations.jei.util;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.machines.common.blocks.base.MachineRecipe;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.crafting.RecipeHolder;
+
+import java.util.List;
 
 /**
  * From mezz utility library.

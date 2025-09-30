@@ -6,11 +6,11 @@ import com.enderio.enderio.conduits.common.init.ConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Direction;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import net.minecraft.core.Direction;
 
 /**
  * Stores round-robin indexes for this node.

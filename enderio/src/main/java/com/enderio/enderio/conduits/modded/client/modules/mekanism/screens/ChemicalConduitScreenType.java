@@ -1,18 +1,17 @@
 package com.enderio.enderio.conduits.modded.client.modules.mekanism.screens;
 
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
+import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.MekanismModule;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.chemical.C2SClearLockedChemicalPacket;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.chemical.ChemicalConduit;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.chemical.ChemicalConduitConnectionConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
-import java.util.function.Supplier;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.Chemical;
 import net.minecraft.client.Minecraft;
@@ -27,6 +26,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.function.Supplier;
 
 public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalConduitConnectionConfig> {
     private static final ResourceLocation ICON_ROUND_ROBIN_ENABLED = EnderIO.loc("icon/round_robin_enabled");

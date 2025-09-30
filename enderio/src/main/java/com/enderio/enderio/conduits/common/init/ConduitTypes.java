@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.common.init;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
@@ -22,10 +22,11 @@ import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduitNodeData
 import com.enderio.enderio.conduits.common.conduit.type.redstone.RedstoneConduit;
 import com.enderio.enderio.conduits.common.conduit.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkContext;
-import java.util.function.Supplier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public class ConduitTypes {
     private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister

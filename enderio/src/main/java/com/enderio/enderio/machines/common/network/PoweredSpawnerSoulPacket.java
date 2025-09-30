@@ -4,13 +4,14 @@ import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.machines.common.blocks.powered_spawner.MobSpawnMode;
 import com.enderio.enderio.machines.common.souldata.SpawnerSoul;
 import io.netty.buffer.ByteBuf;
-import java.util.HashMap;
-import java.util.Map;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.HashMap;
+import java.util.Map;
 
 // Clientbound
 public record PoweredSpawnerSoulPacket(Map<ResourceLocation, SpawnerSoul.SoulData> map) implements CustomPacketPayload {

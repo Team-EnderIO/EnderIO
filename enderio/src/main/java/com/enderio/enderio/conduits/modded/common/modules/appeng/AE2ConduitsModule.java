@@ -5,18 +5,16 @@ import appeng.api.ids.AEItemIds;
 import appeng.api.util.AEColor;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.common.init.EIOItems;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.conduits.ConduitType;
-import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
+import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.conduits.modded.common.ModdedConduits;
 import com.enderio.enderio.conduits.modded.common.modules.ConduitCommonModule;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -37,6 +35,9 @@ import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class AE2ConduitsModule implements ConduitCommonModule {
 

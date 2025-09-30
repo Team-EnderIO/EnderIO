@@ -1,8 +1,6 @@
 package com.enderio.enderio.api.conduits.screen;
 
 import com.enderio.enderio.api.io.RedstoneControl;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -11,6 +9,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @ApiStatus.Experimental
 public interface ConduitScreenHelper {

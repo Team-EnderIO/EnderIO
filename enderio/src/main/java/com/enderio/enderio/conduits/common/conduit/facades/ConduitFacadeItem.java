@@ -4,8 +4,6 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -19,6 +17,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Map;
 
 public class ConduitFacadeItem extends BlockItem {
     public ConduitFacadeItem(Properties properties) {

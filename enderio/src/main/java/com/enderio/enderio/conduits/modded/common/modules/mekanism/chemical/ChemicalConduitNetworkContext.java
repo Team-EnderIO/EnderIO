@@ -1,13 +1,14 @@
 package com.enderio.enderio.conduits.modded.common.modules.mekanism.chemical;
 
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
-import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Set;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.Chemical;
+
+import java.util.Set;
 
 public class ChemicalConduitNetworkContext implements ConduitNetworkContext<ChemicalConduitNetworkContext> {
 

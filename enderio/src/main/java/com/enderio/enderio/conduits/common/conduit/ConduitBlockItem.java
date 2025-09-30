@@ -1,17 +1,15 @@
 package com.enderio.enderio.conduits.common.conduit;
 
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
-import com.enderio.core.common.util.TooltipUtil;
-import java.util.Comparator;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -30,6 +28,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Comparator;
+import java.util.List;
 
 @EventBusSubscriber
 public class ConduitBlockItem extends BlockItem {

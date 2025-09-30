@@ -1,13 +1,14 @@
 package com.enderio.enderio.conduits.modded.common.modules;
 
 import com.enderio.enderio.api.conduits.Conduit;
-import java.util.function.BiConsumer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.conditions.ICondition;
+
+import java.util.function.BiConsumer;
 
 public interface ConduitCommonModule {
     void initialize(IEventBus modEventBus);

@@ -5,9 +5,6 @@ import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduit;
 import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduitConnectionConfig;
 import com.enderio.enderio.conduits.common.init.Conduits;
-
-import java.util.function.Supplier;
-
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.item.Items;
@@ -18,6 +15,8 @@ import net.neoforged.testframework.annotation.ForEachTest;
 import net.neoforged.testframework.annotation.RegisterStructureTemplate;
 import net.neoforged.testframework.annotation.TestHolder;
 import net.neoforged.testframework.gametest.StructureTemplateBuilder;
+
+import java.util.function.Supplier;
 
 @ForEachTest(groups = "conduit.item")
 public class ItemConduitTests {

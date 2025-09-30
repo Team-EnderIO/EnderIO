@@ -3,12 +3,11 @@ package com.enderio.enderio.common.filter.soul;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.common.filter.FilterSlot;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
-import net.minecraft.world.item.ItemStack;
 
 public class SoulFilterSlot extends FilterSlot<Soul> {
 

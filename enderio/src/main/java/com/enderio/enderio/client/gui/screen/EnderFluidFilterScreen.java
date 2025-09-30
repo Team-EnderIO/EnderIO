@@ -1,14 +1,14 @@
 package com.enderio.enderio.client.gui.screen;
 
-import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.common.filter.AbstractFilterMenu;
-import com.enderio.enderio.common.filter.fluid.EnderFluidFilterMenu;
-import com.enderio.enderio.common.filter.item.general.EnderItemFilterMenu;
-import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
+import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.common.filter.AbstractFilterMenu;
+import com.enderio.enderio.common.filter.fluid.EnderFluidFilterMenu;
+import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
+import com.enderio.enderio.common.filter.item.general.EnderItemFilterMenu;
+import com.enderio.enderio.common.lang.EIOLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.AbstractTexture;

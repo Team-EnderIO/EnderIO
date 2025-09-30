@@ -1,14 +1,15 @@
 package com.enderio.enderio.common.init;
 
 import com.enderio.EnderIOBase;
+import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
 import com.enderio.enderio.common.filter.AbstractFilterItem;
-import com.enderio.enderio.common.filter.soul.EnderSoulFilterItem;
 import com.enderio.enderio.common.filter.fluid.EnderFluidFilterItem;
 import com.enderio.enderio.common.filter.item.general.EnderItemFilterItem;
+import com.enderio.enderio.common.filter.soul.EnderSoulFilterItem;
 import com.enderio.enderio.common.item.capacitors.CapacitorItem;
 import com.enderio.enderio.common.item.capacitors.LootCapacitorItem;
 import com.enderio.enderio.common.item.misc.BrokenSpawnerItem;
@@ -30,10 +31,8 @@ import com.enderio.enderio.common.item.tool.YetaWrenchItem;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.common.soul.SoulCapabilityProviders;
 import com.enderio.enderio.common.tag.EIOTags;
-import com.enderio.core.data.model.ModelHelper;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
-import java.util.function.Function;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
@@ -43,6 +42,8 @@ import net.minecraft.world.item.Rarity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.Tags;
+
+import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class EIOItems {

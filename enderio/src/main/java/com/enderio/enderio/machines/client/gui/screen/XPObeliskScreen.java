@@ -7,8 +7,6 @@ import com.enderio.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.enderio.machines.client.gui.widget.ExperienceWidget;
 import com.enderio.enderio.machines.common.blocks.obelisks.xp.XPObeliskMenu;
 import com.enderio.enderio.machines.common.lang.MachineLang;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -17,6 +15,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.joml.Vector2i;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
     private static final ResourceLocation BG = EnderIO.loc("textures/gui/screen/xp_obelisk.png");

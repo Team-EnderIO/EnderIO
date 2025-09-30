@@ -1,5 +1,8 @@
 package com.enderio.enderio.armory.common.item.darksteel;
 
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.item.CreativeTabVariants;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.enderio.armory.common.init.ArmoryItems;
@@ -13,10 +16,6 @@ import com.enderio.enderio.armory.common.item.darksteel.upgrades.explosive.Explo
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.enderio.armory.common.tag.ArmoryTags;
-import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.core.common.item.CreativeTabVariants;
-import com.enderio.core.common.util.TooltipUtil;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -36,6 +35,8 @@ import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem, CreativeTabVariants {
 

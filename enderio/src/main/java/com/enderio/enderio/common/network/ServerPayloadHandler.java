@@ -2,13 +2,14 @@ package com.enderio.enderio.common.network;
 
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
-import com.enderio.enderio.common.handler.TravelHandler;
 import com.enderio.enderio.common.filter.FilterSlot;
 import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
-import java.util.Optional;
+import com.enderio.enderio.common.handler.TravelHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+import java.util.Optional;
 
 public class ServerPayloadHandler {
     private static final ServerPayloadHandler INSTANCE = new ServerPayloadHandler();

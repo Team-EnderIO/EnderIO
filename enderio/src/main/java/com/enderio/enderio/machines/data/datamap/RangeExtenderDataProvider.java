@@ -3,14 +3,15 @@ package com.enderio.enderio.machines.data.datamap;
 import com.enderio.enderio.machines.common.datamap.RangeExtender;
 import com.enderio.enderio.machines.common.init.MachineBlocks;
 import com.enderio.enderio.machines.common.tag.MachineTags;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.DataMapProvider;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class RangeExtenderDataProvider extends DataMapProvider {
     private final Map<Block, Map<TagKey<Block>, Integer>> data = new HashMap<>();

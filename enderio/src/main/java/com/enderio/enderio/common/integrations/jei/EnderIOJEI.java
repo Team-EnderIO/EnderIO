@@ -1,5 +1,6 @@
 package com.enderio.enderio.common.integrations.jei;
 
+import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.block.glass.GlassBlocks;
 import com.enderio.enderio.common.init.EIOBlocks;
@@ -9,11 +10,6 @@ import com.enderio.enderio.common.integrations.jei.extension.ShapedEntityStorage
 import com.enderio.enderio.common.integrations.jei.subtype.SoulBindableSubtypeInterpreter;
 import com.enderio.enderio.common.item.misc.BrokenSpawnerItem;
 import com.enderio.enderio.common.recipe.ShapedEntityStorageRecipe;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
@@ -29,6 +25,9 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @JeiPlugin
 public class EnderIOJEI implements IModPlugin {

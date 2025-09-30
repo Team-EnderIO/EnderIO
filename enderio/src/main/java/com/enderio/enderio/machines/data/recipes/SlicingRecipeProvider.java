@@ -5,8 +5,6 @@ import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.blocks.slicer.SlicingRecipe;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -17,6 +15,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.Tags;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class SlicingRecipeProvider extends RecipeProvider {
 

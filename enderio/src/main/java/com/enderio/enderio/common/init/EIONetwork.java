@@ -1,6 +1,5 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.EnderIOBase;
 import com.enderio.enderio.common.network.C2SSetFluidFilterSlot;
 import com.enderio.enderio.common.network.C2SSetItemFilterSlot;
 import com.enderio.enderio.common.network.ClientPayloadHandler;

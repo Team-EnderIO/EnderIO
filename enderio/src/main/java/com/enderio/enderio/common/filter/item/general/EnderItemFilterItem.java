@@ -7,8 +7,6 @@ import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.init.EIOMenus;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.regilite.holder.RegiliteMenu;
-import java.util.List;
-import java.util.function.Supplier;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -18,6 +16,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 public class EnderItemFilterItem extends AbstractFilterItem<EnderItemFilter> {
 

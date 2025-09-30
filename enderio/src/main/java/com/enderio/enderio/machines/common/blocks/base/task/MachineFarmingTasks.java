@@ -3,8 +3,6 @@ package com.enderio.enderio.machines.common.blocks.base.task;
 import com.enderio.enderio.api.farm.FarmInteraction;
 import com.enderio.enderio.api.farm.FarmTask;
 import com.enderio.enderio.machines.common.utility.TreeHelper;
-import java.util.Optional;
-import java.util.Set;
 import net.minecraft.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,6 +24,9 @@ import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+
+import java.util.Optional;
+import java.util.Set;
 
 public class MachineFarmingTasks {
 

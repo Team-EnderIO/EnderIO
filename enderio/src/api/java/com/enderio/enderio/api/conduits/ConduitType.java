@@ -4,9 +4,6 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.BiFunction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -14,6 +11,10 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.BiFunction;
 
 // TODO: Change this from an interface to a record + builder?
 //       No point in having an interface imo.

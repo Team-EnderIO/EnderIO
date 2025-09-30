@@ -7,7 +7,6 @@ import com.enderio.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntit
 import com.enderio.enderio.machines.common.blocks.fluid_tank.TankRecipe;
 import com.enderio.enderio.machines.common.init.MachineBlocks;
 import com.enderio.enderio.machines.common.lang.MachineLang;
-import java.util.List;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -19,6 +18,8 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+
+import java.util.List;
 
 // TODO: 1.20.1+ Add a custom TankRecipe for JEI to show mending and maybe fill/empty too.
 public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {

@@ -1,12 +1,11 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.solar;
 
+import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.enderio.api.armory.capability.DarkSteelCapability;
 import com.enderio.enderio.armory.common.init.ArmoryCapabilities;
 import com.enderio.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.enderio.armory.common.tag.ArmoryTags;
-import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,6 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class SolarUpgradeHandler {
 

@@ -1,13 +1,14 @@
 package com.enderio.enderio.machines.common.utility;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class TreeHelper {
 

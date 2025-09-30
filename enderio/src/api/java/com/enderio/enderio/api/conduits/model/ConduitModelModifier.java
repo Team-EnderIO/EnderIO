@@ -1,8 +1,6 @@
 package com.enderio.enderio.api.conduits.model;
 
 import com.enderio.enderio.api.conduits.Conduit;
-import java.util.List;
-
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import net.minecraft.client.renderer.RenderType;
@@ -14,6 +12,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public interface ConduitModelModifier {
 

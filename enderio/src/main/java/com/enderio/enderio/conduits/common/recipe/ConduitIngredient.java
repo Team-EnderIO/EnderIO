@@ -7,12 +7,13 @@ import com.enderio.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.enderio.conduits.common.init.ConduitIngredientTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.stream.Stream;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
+
+import java.util.stream.Stream;
 
 public class ConduitIngredient implements ICustomIngredient {
 

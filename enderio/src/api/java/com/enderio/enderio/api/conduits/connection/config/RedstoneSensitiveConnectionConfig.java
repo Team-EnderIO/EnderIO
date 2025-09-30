@@ -1,8 +1,9 @@
 package com.enderio.enderio.api.conduits.connection.config;
 
-import java.util.List;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
+
+import java.util.List;
 
 /**
  * Get the list of redstone signal colors that this connection is sensitive to.

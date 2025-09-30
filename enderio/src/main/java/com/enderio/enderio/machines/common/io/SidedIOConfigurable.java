@@ -1,8 +1,8 @@
 package com.enderio.enderio.machines.common.io;
 
-import com.enderio.enderio.api.io.SideConfig;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
+import com.enderio.enderio.api.io.SideConfig;
 import net.minecraft.core.Direction;
 
 public record SidedIOConfigurable(

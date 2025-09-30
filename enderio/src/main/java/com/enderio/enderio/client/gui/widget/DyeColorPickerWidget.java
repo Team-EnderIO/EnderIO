@@ -1,14 +1,15 @@
 package com.enderio.enderio.client.gui.widget;
 
+import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import com.enderio.enderio.client.gui.icon.EIOEnumIcons;
 import com.enderio.enderio.common.lang.EIOEnumLang;
-import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class DyeColorPickerWidget extends BaseEnumPickerWidget<DyeColor> {
 

@@ -1,13 +1,13 @@
 package com.enderio.enderio.api;
 
 import com.enderio.enderio.api.conduits.facade.ConduitFacadeProvider;
-import com.enderio.enderio.api.filter.RedstoneInputFilter;
-import com.enderio.enderio.api.filter.RedstoneOutputFilter;
-import com.enderio.enderio.api.io.SideConfig;
 import com.enderio.enderio.api.filter.FilterMenuProvider;
 import com.enderio.enderio.api.filter.FluidFilter;
 import com.enderio.enderio.api.filter.ItemFilter;
+import com.enderio.enderio.api.filter.RedstoneInputFilter;
+import com.enderio.enderio.api.filter.RedstoneOutputFilter;
 import com.enderio.enderio.api.filter.SoulFilter;
+import com.enderio.enderio.api.io.SideConfig;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.api.soul.storage.SoulHandler;
 import net.minecraft.core.Direction;

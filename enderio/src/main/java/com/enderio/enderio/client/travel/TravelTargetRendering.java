@@ -1,6 +1,5 @@
 package com.enderio.enderio.client.travel;
 
-import com.enderio.EnderIOBase;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
 import com.enderio.enderio.api.travel.TravelRenderer;
 import com.enderio.enderio.api.travel.TravelTarget;
@@ -8,8 +7,6 @@ import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.api.travel.TravelTargetType;
 import com.enderio.enderio.common.handler.TravelHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
-import java.util.HashMap;
-import java.util.Map;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -22,6 +19,9 @@ import net.neoforged.fml.ModLoader;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class TravelTargetRendering {

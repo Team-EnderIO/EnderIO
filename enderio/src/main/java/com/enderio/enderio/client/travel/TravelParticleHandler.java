@@ -1,6 +1,5 @@
 package com.enderio.enderio.client.travel;
 
-import com.enderio.EnderIOBase;
 import com.enderio.enderio.common.handler.TravelHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;

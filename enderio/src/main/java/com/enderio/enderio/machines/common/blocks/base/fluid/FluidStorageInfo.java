@@ -1,8 +1,9 @@
 package com.enderio.enderio.machines.common.blocks.base.fluid;
 
-import java.util.Objects;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.IFluidTank;
+
+import java.util.Objects;
 
 public record FluidStorageInfo(FluidStack contents, int capacity) {
     public static FluidStorageInfo of(IFluidTank storage) {

@@ -1,8 +1,8 @@
 package com.enderio.enderio.machines.common.blocks.sag_mill;
 
-import com.enderio.enderio.api.grindingball.GrindingBallData;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.util.TagUtil;
+import com.enderio.enderio.api.grindingball.GrindingBallData;
 import com.enderio.enderio.machines.common.blocks.base.MachineRecipe;
 import com.enderio.enderio.machines.common.init.MachineRecipes;
 import com.mojang.datafixers.util.Either;
@@ -10,11 +10,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.function.IntFunction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -32,6 +27,12 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.function.IntFunction;
 
 public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int energy, BonusType bonusType)
         implements MachineRecipe<SagMillingRecipe.Input> {

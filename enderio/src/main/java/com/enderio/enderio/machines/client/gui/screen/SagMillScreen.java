@@ -1,18 +1,16 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
 import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.enderio.machines.client.gui.widget.NewCapacitorEnergyWidget;
 import com.enderio.enderio.machines.client.gui.widget.NewProgressWidget;
 import com.enderio.enderio.machines.common.blocks.sag_mill.SagMillMenu;
 import com.enderio.enderio.machines.common.lang.MachineLang;
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
@@ -21,6 +19,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class SagMillScreen extends MachineScreen<SagMillMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/screen/sag_mill.png");

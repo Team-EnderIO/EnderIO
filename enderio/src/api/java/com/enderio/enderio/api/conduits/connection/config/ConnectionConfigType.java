@@ -1,10 +1,11 @@
 package com.enderio.enderio.api.conduits.connection.config;
 
 import com.mojang.serialization.MapCodec;
-import java.util.function.Supplier;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.ApiStatus;
+
+import java.util.function.Supplier;
 
 @ApiStatus.Experimental
 public record ConnectionConfigType<T extends ConnectionConfig>(MapCodec<T> codec,

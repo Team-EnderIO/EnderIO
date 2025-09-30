@@ -3,12 +3,13 @@ package com.enderio.enderio.data.tags;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.tag.EIOTags;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.FluidTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 public class EIOFluidTagsProvider extends FluidTagsProvider {
 

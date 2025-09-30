@@ -1,12 +1,12 @@
 package com.enderio.enderio.conduits.common.items;
 
+import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.enderio.conduits.common.init.ConduitItems;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import com.enderio.enderio.conduits.common.network.C2SSyncProbeStatePacket;
-import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
@@ -19,8 +19,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Optional;
+import java.util.Set;
 
 public class ConduitProbeItem extends Item {
 

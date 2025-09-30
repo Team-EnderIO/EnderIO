@@ -2,10 +2,10 @@ package com.enderio.enderio.api.conduits.network;
 
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.MapCodec;
-import java.util.function.Supplier;
-
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 /**
  * A type of conduit network context.

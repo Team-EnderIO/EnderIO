@@ -2,10 +2,11 @@ package com.enderio.enderio.armory.common.item.darksteel.upgrades;
 
 import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.api.armory.capability.UpgradeTier;
-import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+
+import java.util.Optional;
 
 public abstract class TieredUpgrade<T extends UpgradeTier> implements DarkSteelUpgrade {
 

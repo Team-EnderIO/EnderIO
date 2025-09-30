@@ -10,9 +10,6 @@ import com.enderio.enderio.machines.common.blocks.base.inventory.MultiSlotAccess
 import com.enderio.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
 import com.enderio.enderio.machines.common.config.MachinesConfig;
 import com.enderio.enderio.machines.common.init.MachineBlockEntities;
-import java.util.ArrayDeque;
-import java.util.Optional;
-import java.util.Queue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -26,6 +23,10 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayDeque;
+import java.util.Optional;
+import java.util.Queue;
 
 // TODO: Might want to see if we can adapt this into a crafting task.
 public class CrafterBlockEntity extends PoweredMachineBlockEntity {

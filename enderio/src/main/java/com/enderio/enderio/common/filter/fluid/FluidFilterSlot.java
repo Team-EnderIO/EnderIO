@@ -1,14 +1,14 @@
 package com.enderio.enderio.common.filter.fluid;
 
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import com.enderio.enderio.common.filter.FilterSlot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class FluidFilterSlot extends FilterSlot<FluidStack> {
 

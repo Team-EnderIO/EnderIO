@@ -1,9 +1,9 @@
 package com.enderio.enderio.machines.client.gui.widget.ioconfig;
 
+import com.enderio.core.client.gui.screen.BaseOverlay;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.BaseOverlay;
 import com.enderio.enderio.machines.client.rendering.model.ModelRenderUtil;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.enderio.machines.common.config.MachinesConfig;
@@ -19,14 +19,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.SequencedMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -62,6 +54,15 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.SequencedMap;
 
 /**
  * Thanks XFactHD for help and providing a demo for a preview widget and raycast example

@@ -4,13 +4,14 @@ import com.enderio.enderio.api.conduits.network.node.legacy.ConduitData;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.mojang.serialization.Codec;
-import java.util.Objects;
-import java.util.Optional;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A safe way to store conduit data.

@@ -1,10 +1,9 @@
 package com.enderio.enderio.common.filter.item.mod_id;
 
-import com.enderio.enderio.api.filter.ItemFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
+import com.enderio.enderio.api.filter.ItemFilter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.List;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -13,6 +12,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public record ModIdItemFilter(NonNullList<ItemStack> examples, boolean isDenyList) implements ItemFilter {
     public static final Codec<ModIdItemFilter> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance

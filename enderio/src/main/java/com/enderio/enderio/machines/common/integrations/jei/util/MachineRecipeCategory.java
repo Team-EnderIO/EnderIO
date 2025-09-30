@@ -1,15 +1,16 @@
 package com.enderio.enderio.machines.common.integrations.jei.util;
 
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.blocks.base.MachineRecipe;
-import java.text.NumberFormat;
-import java.util.Locale;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
+
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Common machine recipe category utilities.

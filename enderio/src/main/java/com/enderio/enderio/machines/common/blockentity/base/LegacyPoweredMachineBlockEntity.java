@@ -1,13 +1,13 @@
 package com.enderio.enderio.machines.common.blockentity.base;
 
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorScalable;
-import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.common.blockentity.MachineInstallable;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.item.capacitors.CapacitorItem;
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.machines.common.MachineNBTKeys;
 import com.enderio.enderio.machines.common.block.LegacyProgressMachineBlock;
 import com.enderio.enderio.machines.common.blockentity.sync.EnergySyncData;
@@ -19,8 +19,6 @@ import com.enderio.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.enderio.machines.common.io.energy.MachineEnergyStorage;
-import java.util.Objects;
-import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -37,6 +35,9 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * A machine that stores energy.

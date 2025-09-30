@@ -1,7 +1,5 @@
 package com.enderio.enderio.conduits.modded.common;
 
-import static java.util.Map.entry;
-
 import com.enderio.EnderIOBase;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.conduits.modded.common.modules.ConduitCommonModule;
@@ -10,16 +8,18 @@ import com.enderio.enderio.conduits.modded.common.modules.appeng.AE2ConduitsModu
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.MekanismModule;
 import com.enderio.enderio.conduits.modded.common.modules.refinedstorage.RefinedStorageCommonModule;
 import com.enderio.regilite.Regilite;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.conditions.ICondition;
+
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import static java.util.Map.entry;
 
 @Mod(value = EnderIO.MOD_ID)
 public class ModdedConduits {

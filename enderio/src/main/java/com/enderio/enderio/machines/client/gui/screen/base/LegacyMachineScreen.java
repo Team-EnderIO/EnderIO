@@ -7,12 +7,13 @@ import com.enderio.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
 import com.enderio.enderio.machines.common.blocks.base.menu.PreviewMachineSlot;
 import com.enderio.enderio.machines.common.menu.base.LegacyMachineMenu;
-import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+
+import java.util.List;
 
 @Deprecated(forRemoval = true, since = "7.1")
 public abstract class LegacyMachineScreen<T extends LegacyMachineMenu<?>> extends EnderContainerScreen<T> {

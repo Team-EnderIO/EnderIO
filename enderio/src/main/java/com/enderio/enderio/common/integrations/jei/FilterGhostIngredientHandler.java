@@ -1,14 +1,11 @@
 package com.enderio.enderio.common.integrations.jei;
 
-import com.enderio.enderio.common.filter.item.ItemFilterSlot;
+import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.enderio.common.filter.FilterSlot;
 import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
+import com.enderio.enderio.common.filter.item.ItemFilterSlot;
 import com.enderio.enderio.common.network.C2SSetFluidFilterSlot;
 import com.enderio.enderio.common.network.C2SSetItemFilterSlot;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
@@ -17,6 +14,9 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("rawtypes")
 public class FilterGhostIngredientHandler implements IGhostIngredientHandler<EnderContainerScreen> {

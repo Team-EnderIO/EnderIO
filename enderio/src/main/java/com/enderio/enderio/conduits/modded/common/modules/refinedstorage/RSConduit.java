@@ -8,7 +8,6 @@ import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.refinedmods.refinedstorage.neoforge.RefinedStorageNeoForgeApiImpl;
-import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -19,6 +18,8 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 public record RSConduit(ResourceLocation texture, Component description)
         implements Conduit<RSConduit, RSConduitConnectionConfig> {

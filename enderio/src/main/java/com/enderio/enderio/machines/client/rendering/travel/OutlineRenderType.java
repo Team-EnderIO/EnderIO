@@ -3,13 +3,14 @@ package com.enderio.enderio.machines.client.rendering.travel;
 import com.enderio.enderio.api.EnderIO;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.OptionalDouble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.OptionalDouble;
 
 public class OutlineRenderType extends RenderType {
 

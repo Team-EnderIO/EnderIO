@@ -1,13 +1,11 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades;
 
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.enderio.armory.common.tag.ArmoryTags;
-import com.enderio.enderio.api.EnderIO;
-import com.enderio.core.common.energy.ItemStackEnergy;
-import java.util.Collection;
-import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -15,6 +13,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
+
+import java.util.Collection;
+import java.util.List;
 
 public class StepAssistUpgrade implements DarkSteelUpgrade {
 

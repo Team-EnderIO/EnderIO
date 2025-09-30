@@ -1,20 +1,21 @@
 package com.enderio.enderio.conduits.common.conduit.type.fluid;
 
-import com.enderio.enderio.api.io.RedstoneControl;
-import com.enderio.enderio.api.network.MassiveStreamCodec;
 import com.enderio.enderio.api.conduits.ConduitRedstoneSignalAware;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.RedstoneSensitiveConnectionConfig;
+import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.api.network.MassiveStreamCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import java.util.List;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
+
+import java.util.List;
 
 public record FluidConduitConnectionConfig(boolean isInsert, DyeColor insertChannel, boolean isExtract,
         DyeColor extractChannel, RedstoneControl extractRedstoneControl, DyeColor extractRedstoneChannel, int insertPriority)

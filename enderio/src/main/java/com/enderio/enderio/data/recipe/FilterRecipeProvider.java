@@ -1,7 +1,6 @@
 package com.enderio.enderio.data.recipe;
 
 import com.enderio.enderio.common.init.EIOItems;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -12,6 +11,8 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.Tags;
+
+import java.util.concurrent.CompletableFuture;
 
 public class FilterRecipeProvider extends RecipeProvider {
 

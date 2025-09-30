@@ -1,6 +1,5 @@
 package com.enderio.enderio.common.event;
 
-import com.enderio.EnderIOBase;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
 import com.enderio.enderio.common.init.EIODataComponents;
 import net.minecraft.world.item.Items;

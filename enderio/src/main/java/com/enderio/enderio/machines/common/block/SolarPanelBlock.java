@@ -1,13 +1,12 @@
 package com.enderio.enderio.machines.common.block;
 
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.enderio.machines.common.blockentity.solar.ISolarPanelTier;
 import com.enderio.enderio.machines.common.lang.MachineLang;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -22,6 +21,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class SolarPanelBlock extends LegacyMachineBlock implements AdvancedTooltipProvider {
 

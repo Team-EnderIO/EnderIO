@@ -1,5 +1,9 @@
 package com.enderio.enderio.armory.common.item.darksteel;
 
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.item.CreativeTabVariants;
+import com.enderio.core.common.util.BlockUtil;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.enderio.armory.common.init.ArmoryItems;
@@ -9,15 +13,6 @@ import com.enderio.enderio.armory.common.item.darksteel.upgrades.direct.DirectUp
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.enderio.armory.common.tag.ArmoryTags;
-import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.core.common.item.CreativeTabVariants;
-import com.enderio.core.common.util.BlockUtil;
-import com.enderio.core.common.util.TooltipUtil;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
@@ -34,6 +29,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, CreativeTabVariants {
 

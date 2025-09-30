@@ -1,6 +1,5 @@
 package com.enderio.enderio.common.compat.vanilla;
 
-import com.enderio.EnderIOBase;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.api.soul.storage.SoulHandler;

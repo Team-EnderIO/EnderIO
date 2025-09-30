@@ -1,9 +1,10 @@
 package com.enderio.enderio.api.armory.capability;
 
-import java.util.function.Supplier;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.ApiStatus;
+
+import java.util.function.Supplier;
 
 // Not finished.
 @ApiStatus.Internal

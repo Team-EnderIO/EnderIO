@@ -1,9 +1,9 @@
 package com.enderio.enderio.machines.common.blockentity.capacitorbank;
 
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.capacitor.FixedScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.common.tag.EIOTags;
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
 import com.enderio.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.enderio.machines.common.blockentity.multienergy.CapacityTier;
@@ -17,10 +17,6 @@ import com.enderio.enderio.machines.common.menu.CapacitorBankMenu;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,6 +30,11 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity implements MultiConfigurable {
 

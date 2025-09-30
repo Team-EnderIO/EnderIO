@@ -1,12 +1,12 @@
 package com.enderio.enderio.common.item.tool;
 
-import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.common.init.EIODataComponents;
+import com.enderio.enderio.common.lang.EIOLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;

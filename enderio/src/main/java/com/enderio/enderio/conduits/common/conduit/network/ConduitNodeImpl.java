@@ -1,5 +1,6 @@
 package com.enderio.enderio.conduits.common.conduit.network;
 
+import com.enderio.core.common.graph.INetworkNode;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
@@ -7,12 +8,9 @@ import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.conduits.common.conduit.legacy.ConduitDataContainer;
-import com.enderio.core.common.graph.INetworkNode;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Objects;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -20,6 +18,9 @@ import net.minecraft.world.item.DyeColor;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.Optional;
 
 public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, ConduitNodeImpl>, ConduitNode {
 

@@ -14,8 +14,6 @@ import com.enderio.enderio.machines.common.config.MachinesConfig;
 import com.enderio.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.enderio.machines.common.obelisk.ObeliskAreaManager;
 import com.mojang.authlib.GameProfile;
-import java.util.List;
-import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,6 +36,9 @@ import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.UUID;
 
 public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObeliskBlockEntity> {
 

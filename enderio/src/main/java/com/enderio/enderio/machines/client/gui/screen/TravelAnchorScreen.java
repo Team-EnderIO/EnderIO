@@ -1,8 +1,8 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
+import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import com.enderio.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.enderio.machines.common.blocks.travel_anchor.TravelAnchorMenu;
 import net.minecraft.client.gui.GuiGraphics;

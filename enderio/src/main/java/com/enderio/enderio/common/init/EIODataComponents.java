@@ -1,22 +1,23 @@
 package com.enderio.enderio.common.init;
 
+import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.attachment.CoordinateSelection;
-import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
-import com.enderio.enderio.common.filter.soul.EnderSoulFilter;
+import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.common.filter.fluid.EnderFluidFilter;
 import com.enderio.enderio.common.filter.item.general.EnderItemFilter;
+import com.enderio.enderio.common.filter.soul.EnderSoulFilter;
 import com.enderio.enderio.common.paint.BlockPaintData;
-import com.enderio.core.common.util.NamedFluidContents;
 import com.mojang.serialization.Codec;
-import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public class EIODataComponents {
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister

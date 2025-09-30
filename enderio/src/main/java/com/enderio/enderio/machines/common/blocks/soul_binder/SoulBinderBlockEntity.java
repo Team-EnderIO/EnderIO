@@ -1,7 +1,5 @@
 package com.enderio.enderio.machines.common.blocks.soul_binder;
 
-import static com.enderio.enderio.common.util.ExperienceUtil.EXP_TO_FLUID;
-
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
@@ -29,7 +27,6 @@ import com.enderio.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.enderio.machines.common.recipe.RecipeCaches;
-import java.util.List;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -48,6 +45,10 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+
+import static com.enderio.enderio.common.util.ExperienceUtil.EXP_TO_FLUID;
 
 public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser {
 

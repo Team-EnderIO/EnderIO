@@ -1,14 +1,8 @@
 package com.enderio.enderio.conduits.client.model.conduit.facades;
 
-import static com.enderio.enderio.conduits.client.ConduitClientSetup.modelOf;
-
+import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.conduits.client.ConduitClientSetup;
-import com.enderio.core.data.model.ModelHelper;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -24,6 +18,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.IDynamicBakedModel;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.enderio.enderio.conduits.client.ConduitClientSetup.modelOf;
 
 public class FacadeItemModel implements IDynamicBakedModel {
 

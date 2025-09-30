@@ -4,8 +4,6 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
-import java.util.List;
-import java.util.Objects;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
@@ -14,6 +12,9 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+
+import java.util.List;
+import java.util.Objects;
 
 public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
 

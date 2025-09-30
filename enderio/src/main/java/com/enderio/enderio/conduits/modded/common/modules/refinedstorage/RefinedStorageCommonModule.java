@@ -1,21 +1,19 @@
 package com.enderio.enderio.conduits.modded.common.modules.refinedstorage;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.common.init.EIOItems;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.conduits.ConduitType;
-import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
+import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.conduits.modded.common.ModdedConduits;
 import com.enderio.enderio.conduits.modded.common.ModuleModIds;
 import com.enderio.enderio.conduits.modded.common.modules.ConduitCommonModule;
 import com.refinedmods.refinedstorage.common.content.Tags;
 import com.refinedmods.refinedstorage.neoforge.RefinedStorageNeoForgeApiImpl;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -30,6 +28,9 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class RefinedStorageCommonModule implements ConduitCommonModule {
 

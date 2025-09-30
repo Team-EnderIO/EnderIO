@@ -1,14 +1,12 @@
 package com.enderio.enderio.machines.common.blocks.base.menu;
 
-import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.core.common.menu.BaseBlockEntityMenu;
 import com.enderio.core.common.network.menu.EnumSyncSlot;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.enderio.machines.common.blocks.base.inventory.MachineInventory;
 import com.enderio.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.enderio.machines.common.network.menu.MachineStatesSyncSlot;
-import java.util.Objects;
-import java.util.Set;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -18,6 +16,9 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Common machine helpers, such as ghost slots and accessing common properties.

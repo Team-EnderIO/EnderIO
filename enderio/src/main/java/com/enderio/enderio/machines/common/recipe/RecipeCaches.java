@@ -1,6 +1,5 @@
 package com.enderio.enderio.machines.common.recipe;
 
-import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.machines.common.blocks.painting.PaintingRecipe;
 import com.enderio.enderio.machines.common.blocks.sag_mill.SagMillingRecipe;

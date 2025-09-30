@@ -1,10 +1,10 @@
 package com.enderio.enderio.machines.common.blocks.base.blockentity;
 
 import com.enderio.enderio.api.UseOnly;
-import com.enderio.enderio.api.io.SideConfig;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.api.io.SideConfig;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.common.block.EIOBlockEntity;
 import com.enderio.enderio.common.blockentity.Wrenchable;
@@ -21,11 +21,6 @@ import com.enderio.enderio.machines.common.io.IOConfig;
 import com.enderio.enderio.machines.common.io.SidedIOConfigurable;
 import com.enderio.enderio.machines.common.io.TransferUtil;
 import com.enderio.enderio.machines.common.network.CycleIOConfigPacket;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -55,6 +50,12 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Base block entity implementation for machines.

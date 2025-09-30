@@ -1,15 +1,16 @@
 package com.enderio.enderio.armory.common.init;
 
-import static com.enderio.enderio.armory.common.capability.DarkSteelCapability.DarkSteelItemUpgrades.ITEM_UPGRADES_CODEC;
-
-import com.enderio.enderio.armory.common.capability.DarkSteelCapability;
 import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.armory.common.capability.DarkSteelCapability;
 import com.mojang.serialization.Codec;
-import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
+
+import static com.enderio.enderio.armory.common.capability.DarkSteelCapability.DarkSteelItemUpgrades.ITEM_UPGRADES_CODEC;
 
 public class ArmoryDataComponents {
 

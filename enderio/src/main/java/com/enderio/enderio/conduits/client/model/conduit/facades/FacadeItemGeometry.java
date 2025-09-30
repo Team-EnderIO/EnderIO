@@ -3,7 +3,6 @@ package com.enderio.enderio.conduits.client.model.conduit.facades;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import java.util.function.Function;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -16,6 +15,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
 import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
 import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
+
+import java.util.function.Function;
 
 public class FacadeItemGeometry implements IUnbakedGeometry<FacadeItemGeometry> {
 

@@ -3,14 +3,15 @@ package com.enderio.enderio.conduits.client.model.conduit.modifier;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
 import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.neoforged.fml.ModLoader;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ConduitModelModifiers {
     private static Map<ConduitType<?>, ConduitModelModifier> MODIFIERS;

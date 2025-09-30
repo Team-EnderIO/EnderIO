@@ -1,6 +1,5 @@
 package com.enderio.enderio.common.advancement;
 
-import com.enderio.EnderIOBase;
 import com.enderio.enderio.api.EnderIO;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;

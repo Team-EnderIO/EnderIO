@@ -6,7 +6,6 @@ import com.enderio.enderio.machines.common.blocks.base.inventory.MachineInventor
 import com.enderio.enderio.machines.common.blocks.vacuum.VacuumMachineBlockEntity;
 import com.enderio.enderio.machines.common.config.MachinesConfig;
 import com.enderio.enderio.machines.common.init.MachineBlockEntities;
-import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -14,6 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.function.Predicate;
 
 public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity> {
 

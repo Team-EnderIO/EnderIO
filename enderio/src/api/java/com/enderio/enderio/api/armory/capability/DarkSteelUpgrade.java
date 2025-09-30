@@ -1,12 +1,13 @@
 package com.enderio.enderio.api.armory.capability;
 
-import java.util.Collection;
-import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
+
+import java.util.Collection;
+import java.util.Optional;
 
 // Not finished.
 @ApiStatus.Internal

@@ -5,7 +5,6 @@ import com.direwolf20.laserio.common.containers.customhandler.FilterBasicHandler
 import com.direwolf20.laserio.setup.LaserIODataComponents;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.MekanismModule;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.chemical_filter.ChemicalFilter;
-
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
 import net.minecraft.world.item.ItemStack;

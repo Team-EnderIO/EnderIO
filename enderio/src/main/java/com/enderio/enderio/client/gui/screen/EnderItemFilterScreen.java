@@ -1,13 +1,13 @@
 package com.enderio.enderio.client.gui.screen;
 
+import com.enderio.core.client.gui.screen.EnderContainerScreen;
+import com.enderio.core.client.gui.widgets.IconButton;
+import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.client.gui.widget.DamageFilterModePickerWidget;
 import com.enderio.enderio.common.filter.AbstractFilterMenu;
 import com.enderio.enderio.common.filter.item.general.EnderItemFilterMenu;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EnderContainerScreen;
-import com.enderio.core.client.gui.widgets.IconButton;
-import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

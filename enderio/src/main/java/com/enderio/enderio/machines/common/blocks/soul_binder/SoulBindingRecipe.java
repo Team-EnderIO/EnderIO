@@ -1,21 +1,18 @@
 package com.enderio.enderio.machines.common.blocks.soul_binder;
 
+import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.network.MassiveStreamCodec;
 import com.enderio.enderio.api.soul.binding.ingredients.FilledSoulStorageIngredient;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.recipe.FluidRecipeInput;
 import com.enderio.enderio.common.util.ExperienceUtil;
-import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.machines.common.blocks.base.MachineRecipe;
 import com.enderio.enderio.machines.common.init.MachineRecipes;
 import com.enderio.enderio.machines.common.souldata.SoulDataReloadListener;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -30,6 +27,10 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int experience,
         Optional<ResourceLocation> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData,

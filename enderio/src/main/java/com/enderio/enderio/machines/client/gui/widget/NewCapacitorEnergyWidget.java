@@ -4,14 +4,15 @@ import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.mojang.blaze3d.vertex.PoseStack;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class NewCapacitorEnergyWidget extends NewEnergyWidget {
     private static final ResourceLocation ENERGY_BAR_ERROR_SPRITE = EnderIO.loc("widget/energy_bar_error");

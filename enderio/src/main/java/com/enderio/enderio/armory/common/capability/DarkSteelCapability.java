@@ -7,16 +7,17 @@ import com.enderio.enderio.armory.common.item.darksteel.upgrades.empowered.Empow
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgradeTier;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
-import org.jetbrains.annotations.Nullable;
 
 public class DarkSteelCapability implements com.enderio.enderio.api.armory.capability.DarkSteelCapability {
 

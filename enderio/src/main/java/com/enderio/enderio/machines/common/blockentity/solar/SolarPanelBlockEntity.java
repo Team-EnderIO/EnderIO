@@ -1,14 +1,12 @@
 package com.enderio.enderio.machines.common.blockentity.solar;
 
-import static com.enderio.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
-
-import com.enderio.enderio.api.soul.Soul;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.capacitor.FixedScalable;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.tag.EIOTags;
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.machines.common.MachineNBTKeys;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
 import com.enderio.enderio.machines.common.blockentity.multienergy.MultiEnergyNode;
@@ -37,6 +35,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.enderio.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
 
 public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
 

@@ -1,10 +1,10 @@
 package com.enderio.enderio.common.soul;
 
-import com.enderio.enderio.api.soul.Soul;
 import com.enderio.core.common.network.menu.SyncSlot;
 import com.enderio.core.common.network.menu.payload.ListSlotPayload;
 import com.enderio.core.common.network.menu.payload.ResourceLocationSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
+import com.enderio.enderio.api.soul.Soul;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 

@@ -1,9 +1,9 @@
 package com.enderio.enderio.machines.client.gui.widget;
 
-import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.mojang.blaze3d.systems.RenderSystem;

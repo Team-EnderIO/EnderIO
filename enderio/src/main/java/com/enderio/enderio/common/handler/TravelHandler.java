@@ -1,14 +1,12 @@
 package com.enderio.enderio.common.handler;
 
+import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.enderio.api.integration.IntegrationManager;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.network.RequestTravelPacket;
-import com.enderio.core.common.energy.ItemStackEnergy;
-import java.util.Comparator;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,6 +28,9 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * Thanks to the developers of <a href="https://github.com/castcrafter/travel_anchors">https://github.com/castcrafter/travel_anchors</a> for allowing us to use their code with our license.

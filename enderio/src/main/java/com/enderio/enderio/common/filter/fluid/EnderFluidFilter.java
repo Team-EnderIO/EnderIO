@@ -1,10 +1,9 @@
 package com.enderio.enderio.common.filter.fluid;
 
-import com.enderio.enderio.api.filter.FluidFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
+import com.enderio.enderio.api.filter.FluidFilter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.List;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -12,6 +11,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public record EnderFluidFilter(NonNullList<FluidStack> matches, boolean isDenyList, boolean shouldCompareComponents)
         implements FluidFilter {

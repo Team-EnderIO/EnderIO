@@ -1,6 +1,5 @@
 package com.enderio.enderio.common.block;
 
-import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -13,6 +12,8 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 public abstract class EIOEntityBlock<T extends EIOBlockEntity> extends BaseEntityBlock {
 

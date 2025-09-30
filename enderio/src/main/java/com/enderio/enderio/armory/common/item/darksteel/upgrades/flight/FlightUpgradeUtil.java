@@ -3,11 +3,12 @@ package com.enderio.enderio.armory.common.item.darksteel.upgrades.flight;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.enderio.armory.common.tag.ArmoryTags;
-import java.util.Optional;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+import java.util.Optional;
 
 public class FlightUpgradeUtil {
 

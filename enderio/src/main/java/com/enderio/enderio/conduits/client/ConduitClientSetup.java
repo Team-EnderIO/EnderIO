@@ -1,7 +1,6 @@
 package com.enderio.enderio.conduits.client;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.conduits.EnderIOConduits;
 import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.conduits.client.gui.screen.types.ConduitScreenTypes;
@@ -13,16 +12,12 @@ import com.enderio.enderio.conduits.client.model.conduit.ConduitItemModelLoader;
 import com.enderio.enderio.conduits.client.model.conduit.bundle.ConduitBundleGeometry;
 import com.enderio.enderio.conduits.client.model.conduit.facades.FacadeItemGeometry;
 import com.enderio.enderio.conduits.client.model.conduit.modifier.ConduitModelModifiers;
-import com.enderio.enderio.conduits.common.init.ConduitItems;
-import com.enderio.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.enderio.conduits.client.model.conduit.modifier.FluidConduitModelModifier;
 import com.enderio.enderio.conduits.client.model.conduit.modifier.RedstoneConduitModelModifier;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
+import com.enderio.enderio.conduits.common.init.ConduitItems;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.enderio.enderio.conduits.common.items.ConduitProbeItem;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -32,6 +27,11 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ConduitClientSetup {

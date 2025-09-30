@@ -1,16 +1,15 @@
 package com.enderio.enderio.conduits.data.recipe;
 
 import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;
-import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.enderio.conduits.common.init.ConduitItems;
 import com.enderio.enderio.conduits.common.init.Conduits;
 import com.enderio.enderio.conduits.common.recipe.ConduitIngredient;
 import com.enderio.enderio.machines.common.blocks.painting.PaintingRecipe;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
@@ -26,6 +25,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+
+import java.util.concurrent.CompletableFuture;
 
 public class ConduitRecipes extends RecipeProvider {
 

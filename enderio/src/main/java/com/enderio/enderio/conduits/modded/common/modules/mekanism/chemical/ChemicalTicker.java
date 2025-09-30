@@ -4,13 +4,14 @@ import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.MekanismModule;
-import java.util.List;
-import java.util.Objects;
 import mekanism.api.Action;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
 import net.minecraft.server.level.ServerLevel;
+
+import java.util.List;
+import java.util.Objects;
 
 public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
 

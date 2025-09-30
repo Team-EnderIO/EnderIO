@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.item.misc;
 
-import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.core.common.util.TeleportUtils;
+import com.enderio.enderio.common.config.BaseConfig;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;

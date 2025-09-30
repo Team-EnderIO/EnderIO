@@ -1,28 +1,29 @@
 package com.enderio.enderio.conduits.common.init;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.conduits.EnderIOConduits;
-import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.conduits.client.ConduitFacadeColor;
 import com.enderio.enderio.conduits.common.conduit.facades.ComponentBackedConduitFacadeProvider;
 import com.enderio.enderio.conduits.common.conduit.facades.ConduitFacadeItem;
+import com.enderio.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.enderio.conduits.common.redstone.DoubleRedstoneChannel;
 import com.enderio.enderio.conduits.common.redstone.RedstoneCountFilter;
 import com.enderio.enderio.conduits.common.redstone.RedstoneFilterItem;
 import com.enderio.enderio.conduits.common.redstone.RedstoneTLatchFilter;
 import com.enderio.enderio.conduits.common.redstone.RedstoneTimerFilter;
-import com.enderio.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.enderio.conduits.data.model.FacadeItemModelBuilder;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
-import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.util.Unit;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 public class ConduitItems {
     private static final ItemRegistry ITEM_REGISTRY = EnderIOConduits.REGILITE.itemRegistry();

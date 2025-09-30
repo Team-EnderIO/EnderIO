@@ -1,16 +1,9 @@
 package com.enderio.enderio.common.travel;
 
-import com.enderio.EnderIOBase;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.common.network.SyncTravelDataPacket;
 import com.enderio.enderio.common.network.TravelTargetRemovedPacket;
 import com.enderio.enderio.common.network.TravelTargetUpdatedPacket;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +20,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 @EventBusSubscriber
 public class TravelTargetSavedData extends SavedData {

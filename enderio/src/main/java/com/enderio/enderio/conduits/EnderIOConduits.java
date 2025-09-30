@@ -2,11 +2,8 @@ package com.enderio.enderio.conduits;
 
 import com.enderio.EnderIOBase;
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.conduits.modded.common.ModdedConduits;
-import com.enderio.enderio.conduits.modded.data.ModConduitRecipeProvider;
-import com.enderio.enderio.data.EIODataProvider;
-import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
@@ -20,9 +17,10 @@ import com.enderio.enderio.conduits.common.integrations.Integrations;
 import com.enderio.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.enderio.conduits.data.recipe.ConduitRecipes;
 import com.enderio.enderio.conduits.integration.ftb_ultimine.FTBUltimineCompat;
+import com.enderio.enderio.conduits.modded.common.ModdedConduits;
+import com.enderio.enderio.conduits.modded.data.ModConduitRecipeProvider;
+import com.enderio.enderio.data.EIODataProvider;
 import com.enderio.regilite.Regilite;
-import java.util.Set;
-
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.IEventBus;
@@ -34,6 +32,8 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
+
+import java.util.Set;
 
 @EventBusSubscriber
 @Mod(EnderIO.MOD_ID)

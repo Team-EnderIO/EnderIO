@@ -1,9 +1,9 @@
 package com.enderio.enderio.machines.common.blocks.alloy;
 
+import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.enderio.machines.common.MachineNBTKeys;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
@@ -20,9 +20,6 @@ import com.enderio.enderio.machines.common.init.MachineRecipes;
 import com.enderio.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.enderio.machines.common.recipe.RecipeCaches;
 import com.mojang.logging.LogUtils;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -39,6 +36,10 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 // TODO: Award XP
 

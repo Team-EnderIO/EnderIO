@@ -1,16 +1,13 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.travel;
 
 import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
+import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
-import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.handler.TravelHandler;
 import com.enderio.enderio.common.init.EIODataComponents;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -22,6 +19,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 public class TravelUpgrade implements DarkSteelUpgrade {
 

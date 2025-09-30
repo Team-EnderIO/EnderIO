@@ -2,11 +2,12 @@ package com.enderio.enderio.machines.common.blocks.travel_anchor;
 
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.machines.common.blocks.base.block.MachineBlock;
-import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.function.Supplier;
 
 public class TravelAnchorBlock<T extends TravelAnchorBlockEntity> extends MachineBlock<T> {
     public TravelAnchorBlock(Supplier<BlockEntityType<? extends T>> blockEntityType, Properties props) {

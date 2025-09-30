@@ -5,10 +5,11 @@ import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenType;
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
-import java.util.Map;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.neoforged.fml.ModLoader;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 public class ConduitScreenTypes {
     private static Map<ConduitType<?>, ConduitScreenType<?>> SCREEN_TYPES;

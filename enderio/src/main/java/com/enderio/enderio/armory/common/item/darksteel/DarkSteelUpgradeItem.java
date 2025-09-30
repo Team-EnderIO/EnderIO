@@ -1,12 +1,9 @@
 package com.enderio.enderio.armory.common.item.darksteel;
 
-import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
-import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Supplier;
+import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
+import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -14,6 +11,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class DarkSteelUpgradeItem extends Item implements AdvancedTooltipProvider {
 

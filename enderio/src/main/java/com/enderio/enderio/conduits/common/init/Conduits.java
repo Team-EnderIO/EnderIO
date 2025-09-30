@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.common.init;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.common.conduit.type.energy.EnergyConduit;
 import com.enderio.enderio.conduits.common.conduit.type.fluid.FluidConduit;
 import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduit;

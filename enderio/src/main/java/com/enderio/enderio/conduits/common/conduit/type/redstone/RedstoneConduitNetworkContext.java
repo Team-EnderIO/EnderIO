@@ -1,14 +1,14 @@
 package com.enderio.enderio.conduits.common.conduit.type.redstone;
 
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
-import com.enderio.enderio.api.conduits.network.ConduitNetwork;
+import com.enderio.enderio.api.filter.RedstoneOutputFilterContext;
+import net.minecraft.world.item.DyeColor;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import com.enderio.enderio.api.filter.RedstoneOutputFilterContext;
-import net.minecraft.world.item.DyeColor;
 
 public class RedstoneConduitNetworkContext implements ConduitNetworkContext<RedstoneConduitNetworkContext>, RedstoneOutputFilterContext {
 

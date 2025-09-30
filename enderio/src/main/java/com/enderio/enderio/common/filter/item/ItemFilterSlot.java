@@ -1,10 +1,11 @@
 package com.enderio.enderio.common.filter.item;
 
 import com.enderio.enderio.common.filter.FilterSlot;
+import net.minecraft.world.item.ItemStack;
+
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.world.item.ItemStack;
 
 public class ItemFilterSlot extends FilterSlot<ItemStack> {
 

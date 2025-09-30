@@ -1,20 +1,17 @@
 package com.enderio.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
-import java.util.Comparator;
-import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -29,6 +26,9 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Comparator;
+import java.util.function.Consumer;
 
 public record EnergyConduit(ResourceLocation texture, Component description, int transferRatePerTick)
         implements Conduit<EnergyConduit, EnergyConduitConnectionConfig> {

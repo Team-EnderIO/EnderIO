@@ -1,10 +1,10 @@
 package com.enderio.enderio.client.gui.screen;
 
+import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.common.menu.CoordinateMenu;
 import com.enderio.enderio.common.network.UpdateCoordinateSelectionNameMenuPacket;
-import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

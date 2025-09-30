@@ -1,14 +1,12 @@
 package com.enderio.enderio.conduits.common.conduit.legacy;
 
 import com.enderio.enderio.api.UseOnly;
-import com.enderio.enderio.api.io.RedstoneControl;
-import com.enderio.enderio.api.network.MassiveStreamCodec;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
+import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.api.network.MassiveStreamCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.HashMap;
-import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -19,6 +17,9 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.LogicalSide;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Deprecated(since = "8.0.0")
 public record DynamicConnectionState(boolean isInsert, DyeColor insertChannel, boolean isExtract,

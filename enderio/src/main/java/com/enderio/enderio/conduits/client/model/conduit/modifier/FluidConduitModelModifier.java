@@ -1,11 +1,10 @@
 package com.enderio.enderio.conduits.client.model.conduit.modifier;
 
+import com.enderio.core.client.RenderUtil;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
 import com.enderio.enderio.conduits.common.conduit.type.fluid.FluidConduit;
-import com.enderio.core.client.RenderUtil;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -25,6 +24,8 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.client.model.IQuadTransformer;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class FluidConduitModelModifier implements ConduitModelModifier {
 

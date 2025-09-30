@@ -1,5 +1,6 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades;
 
+import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
@@ -12,7 +13,10 @@ import com.enderio.enderio.armory.common.item.darksteel.upgrades.nightvision.Nig
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgrade;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
-import com.enderio.enderio.api.EnderIO;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,9 +27,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 public final class DarkSteelUpgradeRegistry {
 

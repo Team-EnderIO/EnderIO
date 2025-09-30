@@ -6,11 +6,6 @@ import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.function.Function;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -34,6 +29,12 @@ import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
 import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.function.Function;
 
 public class IOOverlayBakedModel implements IDynamicBakedModel {
     public static final ResourceLocation TEX_DISABLED = EnderIO.loc("block/overlay/disabled");

@@ -1,13 +1,12 @@
 package com.enderio.enderio.machines.data.model;
 
-import com.enderio.enderio.api.EnderIO;
 import com.enderio.core.data.model.ModelHelper;
+import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.machines.common.block.SolarPanelBlock;
 import com.enderio.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.enderio.machines.common.blocks.base.block.ProgressMachineBlock;
 import com.enderio.regilite.data.DataGenContext;
 import com.enderio.regilite.data.RegiliteItemModelProvider;
-import java.util.Locale;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -16,6 +15,8 @@ import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
+
+import java.util.Locale;
 
 public class MachineModelUtil {
 

@@ -1,6 +1,5 @@
 package com.enderio.enderio.machines.common.souldata;
 
-import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.machines.common.blocks.powered_spawner.MobSpawnMode;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

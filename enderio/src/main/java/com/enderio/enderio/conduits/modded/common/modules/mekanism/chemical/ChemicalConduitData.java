@@ -7,12 +7,13 @@ import com.enderio.enderio.conduits.modded.common.modules.mekanism.MekanismModul
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Objects;
 import mekanism.api.chemical.ChemicalStack;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class ChemicalConduitData implements ConduitData<ChemicalConduitData> {
 

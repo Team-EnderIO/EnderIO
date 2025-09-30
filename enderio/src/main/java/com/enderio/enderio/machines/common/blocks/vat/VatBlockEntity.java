@@ -1,10 +1,10 @@
 package com.enderio.enderio.machines.common.blocks.vat;
 
+import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.enderio.machines.common.blocks.base.inventory.MachineInventory;
@@ -20,8 +20,6 @@ import com.enderio.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.enderio.machines.common.io.fluid.TankAccess;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -40,6 +38,9 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Map;
 
 public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser, FluidItemInteractive {
 

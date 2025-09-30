@@ -2,13 +2,14 @@ package com.enderio.enderio.machines.common.blocks.powered_spawner;
 
 import com.enderio.enderio.machines.common.blocks.base.task.PoweredMachineTask;
 import com.enderio.enderio.machines.common.io.energy.IMachineEnergyStorage;
-import java.util.Objects;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+
+import java.util.Objects;
 
 public abstract class PoweredSpawnerTask implements PoweredMachineTask {
     // Used to determine if task should cancel

@@ -2,13 +2,14 @@ package com.enderio.enderio.common.filter.item.general;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import java.util.function.Function;
-import java.util.function.IntFunction;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.function.Function;
+import java.util.function.IntFunction;
 
 public enum DamageFilterMode implements StringRepresentable {
     IGNORE(0, "ignore", (stack) -> true),

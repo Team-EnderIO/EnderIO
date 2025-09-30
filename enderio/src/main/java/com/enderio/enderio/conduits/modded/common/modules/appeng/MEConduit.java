@@ -5,18 +5,17 @@ import appeng.api.networking.GridFlags;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.util.AEColor;
-import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
-import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -29,6 +28,8 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 public record MEConduit(ResourceLocation texture, Component description, AEColor color, boolean isDense)
         implements Conduit<MEConduit, MEConduitConnectionConfig> {

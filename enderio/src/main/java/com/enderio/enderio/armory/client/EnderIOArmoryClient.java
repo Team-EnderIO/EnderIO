@@ -1,7 +1,6 @@
 package com.enderio.enderio.armory.client;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.armory.EnderIOArmory;
 import com.enderio.enderio.armory.client.renderer.ElytraUpgradeRenderLayer;
 import com.enderio.enderio.armory.client.renderer.MultiEnergyBarDecorator;
 import com.enderio.enderio.armory.client.renderer.SolarUpgradeRenderLayer;

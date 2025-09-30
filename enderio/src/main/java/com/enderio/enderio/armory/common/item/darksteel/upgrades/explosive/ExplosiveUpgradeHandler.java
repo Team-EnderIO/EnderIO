@@ -1,17 +1,14 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.explosive;
 
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.network.EmitParticlesPacket;
+import com.enderio.core.common.util.BlockUtil;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.SpoonUpgrade;
 import com.enderio.enderio.armory.common.tag.ArmoryTags;
-import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.core.common.network.EmitParticlesPacket;
-import com.enderio.core.common.util.BlockUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -47,6 +44,10 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 import org.joml.Vector4f;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ExplosiveUpgradeHandler {

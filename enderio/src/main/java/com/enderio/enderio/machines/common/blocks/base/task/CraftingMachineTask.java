@@ -8,8 +8,6 @@ import com.enderio.enderio.machines.common.blocks.base.inventory.SingleSlotAcces
 import com.enderio.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.mojang.logging.LogUtils;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -22,6 +20,9 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // TODO: A recipe interface that doesn't require power :)
 public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends RecipeInput> implements MachineTask {

@@ -9,13 +9,14 @@ import com.enderio.core.common.network.menu.payload.SlotPayloadType;
 import com.enderio.core.common.network.menu.payload.StringSlotPayload;
 import com.enderio.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.enderio.machines.common.blocks.base.state.MachineStateType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.Level;
 
 public abstract class MachineStatesSyncSlot implements SyncSlot {
 

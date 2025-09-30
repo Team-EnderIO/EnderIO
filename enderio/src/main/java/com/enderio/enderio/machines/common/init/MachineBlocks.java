@@ -1,5 +1,6 @@
 package com.enderio.enderio.machines.common.init;
 
+import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.Soul;
@@ -10,7 +11,6 @@ import com.enderio.enderio.common.paint.item.PaintedBlockItem;
 import com.enderio.enderio.common.soul.SoulCapabilityProviders;
 import com.enderio.enderio.data.loot.DecorLootTable;
 import com.enderio.enderio.data.model.block.EIOBlockState;
-import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.machines.common.block.CapacitorBankBlock;
 import com.enderio.enderio.machines.common.block.LegacyMachineBlock;

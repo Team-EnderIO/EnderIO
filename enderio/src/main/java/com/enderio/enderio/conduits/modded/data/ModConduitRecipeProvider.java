@@ -1,11 +1,12 @@
 package com.enderio.enderio.conduits.modded.data;
 
 import com.enderio.enderio.conduits.modded.common.ModdedConduits;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
+
+import java.util.concurrent.CompletableFuture;
 
 public class ModConduitRecipeProvider extends RecipeProvider {
     private final CompletableFuture<HolderLookup.Provider> registries;

@@ -1,14 +1,14 @@
 package com.enderio.enderio.machines.common.obelisk;
 
-import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
 import com.enderio.enderio.machines.common.init.MachineAttachments;
-import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
+
+import java.util.Set;
 
 @EventBusSubscriber
 public class InhibitorObeliskManager extends ObeliskAreaManager<InhibitorObeliskBlockEntity> {

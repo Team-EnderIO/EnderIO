@@ -4,7 +4,6 @@ import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.blocks.enchanter.EnchanterRecipe;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
@@ -19,6 +18,8 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
+
+import java.util.concurrent.CompletableFuture;
 
 public class EnchanterRecipeProvider extends RecipeProvider {
 

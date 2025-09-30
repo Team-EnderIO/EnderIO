@@ -1,5 +1,9 @@
 package com.enderio.enderio.armory.common.item.darksteel;
 
+import com.enderio.core.client.item.AdvancedTooltipProvider;
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.init.ArmoryFeatureFlags;
 import com.enderio.enderio.armory.common.init.ArmoryItems;
@@ -9,14 +13,8 @@ import com.enderio.enderio.armory.common.item.darksteel.upgrades.empowered.Empow
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.enderio.armory.common.tag.ArmoryTags;
-import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.core.client.item.AdvancedTooltipProvider;
-import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.core.common.util.TooltipUtil;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -41,6 +39,9 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProvider, IDarkSteelItem {
 

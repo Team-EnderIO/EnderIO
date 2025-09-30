@@ -1,5 +1,6 @@
 package com.enderio.enderio.conduits.common.conduit.menu;
 
+import com.enderio.core.common.menu.BaseEnderMenu;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.conduits.Conduit;
@@ -11,10 +12,6 @@ import com.enderio.enderio.conduits.common.network.C2SOpenConduitFilterMenu;
 import com.enderio.enderio.conduits.common.network.S2CConduitExtraGuiDataPacket;
 import com.enderio.enderio.conduits.common.network.S2CConduitListPacket;
 import com.enderio.enderio.conduits.common.network.SetConduitConnectionConfigPacket;
-import com.enderio.core.common.menu.BaseEnderMenu;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -36,6 +33,10 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class ConduitMenu extends BaseEnderMenu {
 

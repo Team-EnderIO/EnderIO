@@ -3,7 +3,6 @@ package com.enderio.enderio.machines.client.gui.widget;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.machines.common.integrations.IntegrationUtility;
 import com.enderio.enderio.machines.common.lang.MachineLang;
-import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -11,6 +10,8 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.NotImplementedException;
+
+import java.util.function.Supplier;
 
 // TODO: Configurable tooltip text
 public class NewProgressWidget extends AbstractWidget {

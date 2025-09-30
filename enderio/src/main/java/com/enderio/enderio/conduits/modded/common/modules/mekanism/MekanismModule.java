@@ -2,16 +2,16 @@ package com.enderio.enderio.conduits.modded.common.modules.mekanism;
 
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.common.filter.AbstractFilterItem;
-import com.enderio.enderio.common.init.EIOCreativeTabs;
-import com.enderio.enderio.common.init.EIOItems;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
-import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
+import com.enderio.enderio.common.filter.AbstractFilterItem;
+import com.enderio.enderio.common.init.EIOCreativeTabs;
+import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.conduits.common.conduit.ConduitApiImpl;
 import com.enderio.enderio.conduits.common.recipe.ConduitIngredient;
 import com.enderio.enderio.conduits.modded.client.modules.mekanism.screens.EnderChemicalFilterScreen;
@@ -32,8 +32,6 @@ import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.holder.RegiliteMenu;
 import com.enderio.regilite.registry.ItemRegistry;
 import com.enderio.regilite.registry.MenuRegistry;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.heat.IHeatHandler;
@@ -64,6 +62,9 @@ import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class MekanismModule implements ConduitCommonModule {
 

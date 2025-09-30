@@ -1,5 +1,6 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.jump;
 
+import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.enderio.api.armory.capability.DarkSteelCapability;
 import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
@@ -9,10 +10,6 @@ import com.enderio.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgrad
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.TieredUpgrade;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.flight.ElytraUpgrade;
 import com.enderio.enderio.armory.common.tag.ArmoryTags;
-import com.enderio.core.common.energy.ItemStackEnergy;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -20,6 +17,10 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 public class JumpUpgrade extends TieredUpgrade<JumpUpgradeTier> {
 

@@ -1,6 +1,5 @@
 package com.enderio.enderio.armory.data.loot;
 
-import com.enderio.enderio.armory.EnderIOArmory;
 import com.enderio.enderio.armory.common.init.ArmoryItems;
 import com.enderio.enderio.common.event.EIOChestLootEvent;
 import com.enderio.enderio.data.loot.ChestLootProvider;

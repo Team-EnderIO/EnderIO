@@ -6,7 +6,6 @@ import com.enderio.enderio.machines.common.travel.AnchorTravelTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -29,6 +28,8 @@ import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+
+import java.util.Optional;
 
 public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> {
     public static final RenderType BOLD_LINES = OutlineRenderType.createLines("bold_lines", 3);

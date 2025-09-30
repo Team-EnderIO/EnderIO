@@ -3,14 +3,15 @@ package com.enderio.enderio.machines.data.reagentdata;
 import com.enderio.enderio.machines.common.datamap.VatReagent;
 import com.enderio.enderio.machines.common.tag.MachineTags;
 import com.enderio.enderio.machines.data.tag.MachineItemTagsProvider;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.DataMapProvider;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class ReagentProvider extends DataMapProvider {
 

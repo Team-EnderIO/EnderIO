@@ -2,7 +2,6 @@ package com.enderio.enderio.conduits.client.particle;
 
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitShape;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleEngine;
@@ -17,6 +16,8 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.List;
 
 public class ConduitBreakParticle extends TextureSheetParticle {
     private final BlockPos pos;

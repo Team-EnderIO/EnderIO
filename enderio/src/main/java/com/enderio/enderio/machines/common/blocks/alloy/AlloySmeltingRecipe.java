@@ -6,8 +6,6 @@ import com.enderio.enderio.machines.common.init.MachineRecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.List;
-
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -20,6 +18,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
+
+import java.util.List;
 
 public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Input> {
     private final List<SizedIngredient> inputs;

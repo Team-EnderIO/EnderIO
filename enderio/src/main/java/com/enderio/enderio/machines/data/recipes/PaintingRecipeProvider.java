@@ -4,7 +4,6 @@ import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.machines.common.blocks.painting.PaintingRecipe;
 import com.enderio.enderio.machines.common.init.MachineBlocks;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -15,6 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+
+import java.util.concurrent.CompletableFuture;
 
 public class PaintingRecipeProvider extends RecipeProvider {
 

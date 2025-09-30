@@ -7,7 +7,6 @@ import com.enderio.enderio.conduits.common.init.ConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Objects;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -16,6 +15,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 @Deprecated(since = "8.0.0")
 public class LegacyFluidConduitData implements ConduitData<LegacyFluidConduitData> {

@@ -1,26 +1,22 @@
 package com.enderio.enderio.conduits.client.gui.screen;
 
+import com.enderio.core.client.gui.screen.EnderContainerScreen;
+import com.enderio.core.client.gui.widgets.IconButton;
+import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.io.RedstoneControl;
-import com.enderio.enderio.client.gui.widget.DyeColorPickerWidget;
-import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenType;
+import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.client.gui.widget.DyeColorPickerWidget;
+import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.enderio.conduits.client.gui.ConduitSelectionButton;
 import com.enderio.enderio.conduits.client.gui.screen.types.ConduitScreenTypes;
 import com.enderio.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
-import com.enderio.core.client.gui.screen.EnderContainerScreen;
-import com.enderio.core.client.gui.widgets.IconButton;
-import com.enderio.core.client.gui.widgets.ToggleIconButton;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
@@ -33,6 +29,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
     public static final ResourceLocation TEXTURE = EnderIO.loc("textures/gui/conduit.png");

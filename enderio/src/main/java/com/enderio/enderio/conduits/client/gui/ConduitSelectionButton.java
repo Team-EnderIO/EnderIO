@@ -3,9 +3,6 @@ package com.enderio.enderio.conduits.client.gui;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.client.gui.screen.ConduitScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -15,6 +12,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class ConduitSelectionButton extends AbstractButton {
     private final int conduitButtonIndex;

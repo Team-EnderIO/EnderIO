@@ -1,20 +1,12 @@
 package com.enderio.enderio.client.tooltip;
 
-import com.enderio.EnderIOBase;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.core.client.item.AdvancedTooltipProvider;
-import com.enderio.core.common.util.TooltipUtil;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +19,14 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class TooltipHandler {

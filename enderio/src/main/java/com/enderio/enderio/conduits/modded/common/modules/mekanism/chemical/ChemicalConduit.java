@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.modded.common.modules.mekanism.chemical;
 
-import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
@@ -9,15 +9,12 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.MekanismModule;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -32,6 +29,10 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
+
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public record ChemicalConduit(ResourceLocation texture, Component description, long transferRatePerTick,
         boolean isMultiChemical) implements Conduit<ChemicalConduit, ChemicalConduitConnectionConfig> {

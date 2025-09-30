@@ -7,7 +7,6 @@ import com.enderio.enderio.machines.common.utility.ValidatingListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.List;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,6 +18,8 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+
+import java.util.List;
 
 public record SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energy)
         implements MachineRecipe<SlicingRecipe.Input> {

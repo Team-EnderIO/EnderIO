@@ -1,11 +1,10 @@
 package com.enderio.enderio.common.init;
 
+import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
+import com.enderio.core.common.recipes.WrappedShapedRecipe;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.recipe.FireCraftingRecipe;
 import com.enderio.enderio.common.recipe.ShapedEntityStorageRecipe;
-import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
-import com.enderio.core.common.recipes.WrappedShapedRecipe;
-import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -13,6 +12,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public class EIORecipes {
     private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister

@@ -1,10 +1,9 @@
 package com.enderio.enderio.machines.common.blocks.fluid_tank;
 
-import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
-import java.util.List;
+import com.enderio.enderio.common.init.EIODataComponents;
+import com.enderio.enderio.common.lang.EIOLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -14,6 +13,8 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class FluidTankBlockItem extends BlockItem implements AdvancedTooltipProvider {
 

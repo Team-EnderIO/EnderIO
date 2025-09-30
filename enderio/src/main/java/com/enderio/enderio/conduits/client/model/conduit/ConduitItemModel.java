@@ -1,11 +1,8 @@
 package com.enderio.enderio.conduits.client.model.conduit;
 
+import com.enderio.core.client.RenderUtil;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
-import com.enderio.core.client.RenderUtil;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -26,6 +23,10 @@ import net.neoforged.neoforge.client.model.IModelBuilder;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConduitItemModel extends BakedModelWrapper<BakedModel> {
 

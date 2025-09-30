@@ -1,6 +1,8 @@
 package com.enderio.enderio.armory;
 
 import com.enderio.EnderIOBase;
+import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.integration.IntegrationManager;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.enderio.armory.common.config.ArmoryConfigLang;
 import com.enderio.enderio.armory.common.init.ArmoryDataComponents;
@@ -20,11 +22,8 @@ import com.enderio.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.enderio.armory.data.loot.ArmoryLootModifiersProvider;
 import com.enderio.enderio.armory.data.recipe.ItemRecipeProvider;
 import com.enderio.enderio.armory.data.tags.ArmoryBlockTagsProvider;
-import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.api.integration.IntegrationManager;
 import com.enderio.enderio.data.EIODataProvider;
 import com.enderio.regilite.Regilite;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -41,6 +40,8 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
+
+import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber
 @Mod(EnderIO.MOD_ID)

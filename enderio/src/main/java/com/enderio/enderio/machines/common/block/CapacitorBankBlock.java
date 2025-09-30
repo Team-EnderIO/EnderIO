@@ -1,17 +1,15 @@
 package com.enderio.enderio.machines.common.block;
 
-import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.machines.EnderIOMachines;
+import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.enderio.machines.common.blockentity.capacitorbank.DisplayMode;
 import com.enderio.enderio.machines.common.blockentity.multienergy.CapacityTier;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -29,6 +27,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 @EventBusSubscriber
 public class CapacitorBankBlock extends LegacyMachineBlock implements AdvancedTooltipProvider {

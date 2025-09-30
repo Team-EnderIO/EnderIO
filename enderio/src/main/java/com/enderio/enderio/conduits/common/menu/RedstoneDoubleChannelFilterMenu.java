@@ -1,10 +1,10 @@
 package com.enderio.enderio.conduits.common.menu;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.filter.RedstoneOutputFilter;
 import com.enderio.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.enderio.conduits.common.network.DoubleChannelPacket;
 import com.enderio.enderio.conduits.common.redstone.DoubleRedstoneChannel;
-import com.enderio.enderio.api.filter.RedstoneOutputFilter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;

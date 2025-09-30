@@ -1,15 +1,13 @@
 package com.enderio.enderio.armory.data.recipe;
 
+import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.armory.common.init.ArmoryItems;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgradeTier;
-import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.machines.common.init.MachineBlocks;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,6 +25,9 @@ import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class ItemRecipeProvider extends RecipeProvider {
 

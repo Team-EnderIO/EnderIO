@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.common.redstone;
 
-import com.enderio.enderio.api.filter.RedstoneOutputFilterContext;
 import com.enderio.enderio.api.filter.RedstoneInputFilter;
 import com.enderio.enderio.api.filter.RedstoneOutputFilter;
+import com.enderio.enderio.api.filter.RedstoneOutputFilterContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;

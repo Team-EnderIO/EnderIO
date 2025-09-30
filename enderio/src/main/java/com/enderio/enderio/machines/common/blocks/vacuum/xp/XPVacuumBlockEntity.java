@@ -1,7 +1,5 @@
 package com.enderio.enderio.machines.common.blocks.vacuum.xp;
 
-import static com.enderio.enderio.common.util.ExperienceUtil.EXP_TO_FLUID;
-
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.machines.common.attachment.FluidTankUser;
@@ -24,6 +22,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+
+import static com.enderio.enderio.common.util.ExperienceUtil.EXP_TO_FLUID;
 
 public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb> implements FluidTankUser {
 

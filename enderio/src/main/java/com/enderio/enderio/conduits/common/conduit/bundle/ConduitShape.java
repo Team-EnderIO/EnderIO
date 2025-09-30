@@ -6,7 +6,6 @@ import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.conduits.common.Area;
 import com.enderio.enderio.conduits.common.conduit.OffsetHelper;
 import com.mojang.datafixers.util.Pair;
-import java.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -19,6 +18,12 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class ConduitShape {
 

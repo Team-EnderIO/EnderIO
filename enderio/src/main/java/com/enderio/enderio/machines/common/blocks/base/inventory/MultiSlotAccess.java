@@ -1,9 +1,10 @@
 package com.enderio.enderio.machines.common.blocks.base.inventory;
 
+import net.minecraft.world.item.ItemStack;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import net.minecraft.world.item.ItemStack;
 
 public class MultiSlotAccess {
     private List<SingleSlotAccess> accesses = null;

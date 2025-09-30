@@ -1,19 +1,18 @@
 package com.enderio.enderio.common.recipe;
 
+import com.enderio.core.common.recipes.WrappedShapedRecipe;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.common.init.EIORecipes;
-import com.enderio.core.common.recipes.WrappedShapedRecipe;
-
-import java.util.Objects;
-import java.util.Optional;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
+
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Based upon BackpackUpgradeRecipe from Sophisticated Backpacks. Thanks!

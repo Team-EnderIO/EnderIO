@@ -1,10 +1,10 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.client.gui.widget.EIOCommonWidgets;
 import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.enderio.machines.client.gui.widget.CapacitorEnergyWidget;

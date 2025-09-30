@@ -3,7 +3,6 @@ package com.enderio.enderio.common.item.tool;
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.common.util.AttractionUtil;
-import java.util.List;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -11,6 +10,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+
+import java.util.List;
 
 public class ElectromagnetItem extends PoweredToggledItem {
 

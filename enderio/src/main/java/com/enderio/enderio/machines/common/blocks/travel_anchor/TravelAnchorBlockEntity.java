@@ -1,14 +1,13 @@
 package com.enderio.enderio.machines.common.blocks.travel_anchor;
 
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;
 import com.enderio.enderio.machines.common.blocks.base.inventory.SingleSlotAccess;
 import com.enderio.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.enderio.machines.common.travel.AnchorTravelTarget;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -19,6 +18,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 // TODO: Shouldn't be a machine block entity...
 public class TravelAnchorBlockEntity extends MachineBlockEntity {

@@ -1,11 +1,7 @@
 package com.enderio.enderio.machines.common.io.fluid;
 
-import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.core.CoreNBTKeys;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.IntConsumer;
+import com.enderio.enderio.api.io.IOConfigurable;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -16,6 +12,11 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.IntConsumer;
 
 /**
  * MachineFluidStorage takes a list of fluid tanks and handles IO for them all.

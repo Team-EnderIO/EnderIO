@@ -1,16 +1,17 @@
 package com.enderio.enderio.machines.common.blocks.base.state;
 
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.core.common.network.NetworkDataSlot;
+import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.lang.MachineLang;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import java.util.Set;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+
+import java.util.Set;
 
 public record MachineState(MachineStateType type, MutableComponent component) {
 

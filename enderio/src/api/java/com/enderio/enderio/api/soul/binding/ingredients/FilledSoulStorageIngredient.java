@@ -5,10 +5,6 @@ import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.api.soul.SoulCaptureApi;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -19,6 +15,9 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
+
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public class FilledSoulStorageIngredient implements ICustomIngredient {
 

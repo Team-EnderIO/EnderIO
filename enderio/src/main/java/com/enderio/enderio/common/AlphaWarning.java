@@ -1,6 +1,5 @@
 package com.enderio.enderio.common;
 
-import com.enderio.EnderIOBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;

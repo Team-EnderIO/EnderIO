@@ -7,7 +7,6 @@ import com.enderio.enderio.machines.common.attachment.ActionRange;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmelterMode;
 import com.enderio.enderio.machines.common.io.IOConfig;
 import com.mojang.serialization.Codec;
-import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -15,6 +14,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public class MachineDataComponents {
     private static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPES = DeferredRegister

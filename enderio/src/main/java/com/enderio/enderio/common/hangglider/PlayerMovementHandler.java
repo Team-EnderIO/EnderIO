@@ -1,16 +1,10 @@
 package com.enderio.enderio.common.hangglider;
 
-import com.enderio.EnderIOBase;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.glider.GliderMovementInfo;
 import com.enderio.enderio.api.integration.IntegrationManager;
 import com.enderio.enderio.common.init.EIOCriterions;
 import com.enderio.enderio.common.lang.EIOLang;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.WeakHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
@@ -26,6 +20,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.WeakHashMap;
 
 @EventBusSubscriber
 public class PlayerMovementHandler {

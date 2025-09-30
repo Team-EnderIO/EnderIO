@@ -1,19 +1,20 @@
 package com.enderio.enderio.conduits.modded.common.modules.mekanism.heat;
 
-import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.conduits.ConduitRedstoneSignalAware;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.RedstoneSensitiveConnectionConfig;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import java.util.List;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
+
+import java.util.List;
 
 public record HeatConduitConnectionConfig(boolean isInsert, boolean isExtract, RedstoneControl extractRedstoneControl,
         DyeColor extractRedstoneChannel) implements IOConnectionConfig, RedstoneSensitiveConnectionConfig {

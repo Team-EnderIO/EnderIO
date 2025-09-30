@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.common.conduit.type.fluid;
 
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
@@ -11,15 +11,12 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -38,6 +35,10 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
+
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public record FluidConduit(ResourceLocation texture, Component description, int transferRatePerTick,
         boolean isMultiFluid, boolean doesSupportPriority) implements Conduit<FluidConduit, FluidConduitConnectionConfig> {

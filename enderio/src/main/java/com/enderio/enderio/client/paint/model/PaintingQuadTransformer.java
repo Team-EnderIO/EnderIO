@@ -2,7 +2,6 @@ package com.enderio.enderio.client.paint.model;
 
 import com.enderio.core.client.RenderUtil;
 import com.enderio.core.data.model.ModelHelper;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -14,6 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public record PaintingQuadTransformer(BlockState paint, @Nullable RenderType type) implements IQuadTransformer {
 

@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.client.rendering.blockentity;
 
-import com.enderio.enderio.api.EnderIO;
 import com.enderio.core.client.RenderUtil;
+import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.enderio.machines.common.blockentity.capacitorbank.DisplayMode;
 import com.enderio.enderio.machines.common.blockentity.multienergy.CapacityTier;

@@ -7,9 +7,10 @@ import com.enderio.enderio.api.travel.TravelTargetSerializer;
 import com.enderio.enderio.api.travel.TravelTargetType;
 import com.enderio.enderio.machines.common.travel.AnchorTravelTarget;
 import com.enderio.enderio.machines.common.travel.EnderfaceTravelTarget;
-import java.util.function.Supplier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public class MachineTravelTargets {
     public static final DeferredRegister<TravelTargetType<?>> TRAVEL_TARGET_TYPES = DeferredRegister

@@ -1,14 +1,15 @@
 package com.enderio.enderio.client.gui.widget;
 
-import com.enderio.enderio.api.EnderIO;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import com.enderio.enderio.api.EnderIO;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class EIOCommonWidgets {
     private static final ResourceLocation ICON_RANGE_ENABLE = EnderIO.loc("icon/range_enable");

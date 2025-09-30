@@ -2,6 +2,7 @@ package com.enderio.enderio.api.conduits.network;
 
 import com.enderio.enderio.api.EnderIORegistries;
 import com.mojang.serialization.Codec;
+
 import java.util.Set;
 
 /**

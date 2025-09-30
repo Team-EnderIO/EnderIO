@@ -1,13 +1,14 @@
 package com.enderio.enderio.conduits.common.conduit.facades;
 
-import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.api.conduits.facade.ConduitFacadeProvider;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
+import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
-import java.util.Objects;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+
+import java.util.Objects;
 
 public class ComponentBackedConduitFacadeProvider implements ConduitFacadeProvider {
 

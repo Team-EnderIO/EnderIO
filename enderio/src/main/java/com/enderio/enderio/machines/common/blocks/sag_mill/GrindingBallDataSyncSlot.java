@@ -1,17 +1,18 @@
 package com.enderio.enderio.machines.common.blocks.sag_mill;
 
-import com.enderio.enderio.api.grindingball.GrindingBallData;
 import com.enderio.core.common.network.menu.SyncSlot;
 import com.enderio.core.common.network.menu.payload.FloatSlotPayload;
 import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.ListSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayloadType;
+import com.enderio.enderio.api.grindingball.GrindingBallData;
+import net.minecraft.world.level.Level;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.world.level.Level;
 
 public abstract class GrindingBallDataSyncSlot implements SyncSlot {
 

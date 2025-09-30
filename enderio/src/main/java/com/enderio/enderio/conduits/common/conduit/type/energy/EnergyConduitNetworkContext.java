@@ -1,11 +1,12 @@
 package com.enderio.enderio.conduits.common.conduit.type.energy;
 
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
-import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import java.util.Set;
 
 public class EnergyConduitNetworkContext implements ConduitNetworkContext<EnergyConduitNetworkContext> {

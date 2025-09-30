@@ -3,12 +3,13 @@ package com.enderio.enderio.armory.client;
 import com.enderio.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisionEnabledPacket;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisionHandler;
-import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.Optional;
 
 public class NightVisionToggleHandler {
 

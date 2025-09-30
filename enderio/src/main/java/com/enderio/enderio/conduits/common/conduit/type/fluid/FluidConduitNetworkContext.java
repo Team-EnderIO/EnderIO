@@ -1,14 +1,15 @@
 package com.enderio.enderio.conduits.common.conduit.type.fluid;
 
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
-import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Set;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+
+import java.util.Set;
 
 public class FluidConduitNetworkContext implements ConduitNetworkContext<FluidConduitNetworkContext> {
 

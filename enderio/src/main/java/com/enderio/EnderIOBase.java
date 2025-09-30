@@ -4,6 +4,7 @@ import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.config.BaseConfigLang;
+import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
 import com.enderio.enderio.common.filter.item.ItemFilterSlot;
 import com.enderio.enderio.common.hangglider.PlayerMovementHandler;
 import com.enderio.enderio.common.init.EIOAttachments;
@@ -24,7 +25,6 @@ import com.enderio.enderio.common.integrations.Integrations;
 import com.enderio.enderio.common.item.tool.SoulVialItem;
 import com.enderio.enderio.common.lang.EIOEnumLang;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.data.EIODataProvider;
 import com.enderio.enderio.data.advancement.EIOAdvancementGenerator;
@@ -41,11 +41,6 @@ import com.enderio.enderio.data.tags.EIOEntityTagsProvider;
 import com.enderio.enderio.data.tags.EIOFluidTagsProvider;
 import com.enderio.enderio.data.tags.EIOItemTagsProvider;
 import com.enderio.regilite.Regilite;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -66,6 +61,12 @@ import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber
 @Mod(EnderIO.MOD_ID)

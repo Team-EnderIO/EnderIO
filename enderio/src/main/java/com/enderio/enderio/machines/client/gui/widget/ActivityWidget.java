@@ -5,16 +5,17 @@ import com.enderio.enderio.machines.common.blocks.base.state.MachineState;
 import com.enderio.enderio.machines.common.blocks.base.state.MachineStateType;
 import com.enderio.enderio.machines.common.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Supplier;
 
 public class ActivityWidget extends AbstractWidget {
     private final Supplier<Set<MachineState>> state;

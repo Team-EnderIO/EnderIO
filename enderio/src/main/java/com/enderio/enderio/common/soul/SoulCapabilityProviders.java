@@ -1,10 +1,10 @@
 package com.enderio.enderio.common.soul;
 
 import com.enderio.enderio.api.soul.binding.ComponentSoulBindable;
-import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.api.soul.binding.ReadOnlyComponentSoulBindable;
-import com.enderio.enderio.api.soul.storage.SoulHandler;
+import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.api.soul.storage.SingleComponentSoulHandler;
+import com.enderio.enderio.api.soul.storage.SoulHandler;
 import com.enderio.enderio.common.init.EIODataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;

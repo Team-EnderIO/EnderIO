@@ -1,6 +1,5 @@
 package com.enderio.enderio.armory.client;
 
-import com.enderio.enderio.armory.EnderIOArmory;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;

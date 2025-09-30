@@ -8,9 +8,6 @@ import com.enderio.enderio.machines.common.blocks.soul_engine.SoulEngineBlockEnt
 import com.enderio.enderio.machines.common.init.MachineBlocks;
 import com.enderio.enderio.machines.common.lang.MachineLang;
 import com.enderio.enderio.machines.common.souldata.EngineSoul;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -35,6 +32,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> {
 

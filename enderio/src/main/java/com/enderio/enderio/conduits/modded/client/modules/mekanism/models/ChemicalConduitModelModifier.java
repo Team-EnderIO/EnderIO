@@ -1,11 +1,10 @@
 package com.enderio.enderio.conduits.modded.client.modules.mekanism.models;
 
+import com.enderio.core.client.RenderUtil;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
-import com.enderio.core.client.RenderUtil;
 import com.enderio.enderio.conduits.modded.common.modules.mekanism.chemical.ChemicalConduit;
-import java.util.List;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.Chemical;
 import net.minecraft.client.Minecraft;
@@ -23,6 +22,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ChemicalConduitModelModifier implements ConduitModelModifier {
 

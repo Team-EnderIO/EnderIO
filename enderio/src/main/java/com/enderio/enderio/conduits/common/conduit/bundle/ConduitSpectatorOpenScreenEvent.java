@@ -1,6 +1,5 @@
 package com.enderio.enderio.conduits.common.conduit.bundle;
 
-import com.enderio.enderio.conduits.EnderIOConduits;
 import com.enderio.enderio.conduits.common.conduit.menu.ConduitMenu;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import net.minecraft.server.level.ServerPlayer;

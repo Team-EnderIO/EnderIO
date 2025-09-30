@@ -1,10 +1,10 @@
 package com.enderio.enderio.machines.common.travel;
 
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetSerializer;
 import com.enderio.enderio.api.travel.TravelTargetType;
 import com.enderio.enderio.common.config.BaseConfig;
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.machines.common.init.MachineTravelTargets;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;

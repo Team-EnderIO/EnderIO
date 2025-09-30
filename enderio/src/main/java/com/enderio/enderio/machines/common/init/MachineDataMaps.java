@@ -1,6 +1,5 @@
 package com.enderio.enderio.machines.common.init;
 
-import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.machines.common.datamap.RangeExtender;
 import com.enderio.enderio.machines.common.datamap.VatReagent;
 import net.neoforged.bus.api.SubscribeEvent;

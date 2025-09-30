@@ -4,9 +4,6 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.conduits.client.model.conduit.modifier.ConduitModelModifiers;
 import com.enderio.enderio.conduits.common.conduit.OffsetHelper;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -16,6 +13,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ConduitBundleRenderState {
     public static final ModelProperty<ConduitBundleRenderState> PROPERTY = new ModelProperty<>();

@@ -3,7 +3,6 @@ package com.enderio.enderio.common.item.tool;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.io.SideConfig;
 import com.mojang.datafixers.util.Either;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -16,6 +15,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+
+import java.util.Optional;
 
 public class YetaWrenchItem extends Item {
 

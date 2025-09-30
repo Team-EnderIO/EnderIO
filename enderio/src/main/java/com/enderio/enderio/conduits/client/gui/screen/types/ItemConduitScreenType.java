@@ -1,10 +1,10 @@
 package com.enderio.enderio.conduits.client.gui.screen.types;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
+import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduit;
 import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduitConnectionConfig;
 import com.enderio.enderio.conduits.common.init.ConduitLang;

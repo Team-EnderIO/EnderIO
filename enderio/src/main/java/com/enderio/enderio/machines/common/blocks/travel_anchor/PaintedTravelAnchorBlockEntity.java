@@ -5,8 +5,6 @@ import com.enderio.enderio.common.paint.PaintUtils;
 import com.enderio.enderio.common.paint.blockentity.PaintedBlockEntity;
 import com.enderio.enderio.common.paint.blockentity.SinglePaintedBlockEntity;
 import com.enderio.enderio.machines.common.init.MachineBlockEntities;
-import java.util.Objects;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,6 +15,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.Optional;
 
 public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity implements PaintedBlockEntity {
 

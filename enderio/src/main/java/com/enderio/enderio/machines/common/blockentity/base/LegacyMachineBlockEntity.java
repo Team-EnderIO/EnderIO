@@ -1,12 +1,12 @@
 package com.enderio.enderio.machines.common.blockentity.base;
 
-import com.enderio.enderio.api.io.SideConfig;
+import com.enderio.core.common.blockentity.EnderBlockEntity;
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.api.io.SideConfig;
 import com.enderio.enderio.common.blockentity.Wrenchable;
-import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.machines.common.MachineNBTKeys;
 import com.enderio.enderio.machines.common.block.LegacyMachineBlock;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.MachineInventoryHolder;
@@ -18,10 +18,6 @@ import com.enderio.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.enderio.machines.common.io.IOConfig;
 import com.enderio.enderio.machines.common.io.SidedIOConfigurable;
 import com.enderio.enderio.machines.common.io.TransferUtil;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -51,6 +47,11 @@ import net.neoforged.neoforge.client.model.data.ModelProperty;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Deprecated(forRemoval = true, since = "7.1")
 public abstract class LegacyMachineBlockEntity extends EnderBlockEntity

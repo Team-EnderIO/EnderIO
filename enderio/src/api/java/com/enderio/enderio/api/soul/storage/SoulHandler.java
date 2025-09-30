@@ -1,7 +1,7 @@
 package com.enderio.enderio.api.soul.storage;
 
-import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.api.soul.Soul;
+import com.enderio.enderio.api.soul.binding.SoulBindable;
 import org.jetbrains.annotations.ApiStatus;
 
 /**

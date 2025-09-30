@@ -1,15 +1,14 @@
 package com.enderio.enderio.common.item.tool;
 
-import com.enderio.enderio.common.config.BaseConfig;
-import com.enderio.enderio.common.handler.TravelHandler;
-import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
-import java.util.List;
+import com.enderio.enderio.common.config.BaseConfig;
+import com.enderio.enderio.common.handler.TravelHandler;
+import com.enderio.enderio.common.init.EIODataComponents;
+import com.enderio.enderio.common.lang.EIOLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -24,6 +23,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.ComponentEnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+
+import java.util.List;
 
 public class TravelStaffItem extends Item implements AdvancedTooltipProvider, CreativeTabVariants {
 

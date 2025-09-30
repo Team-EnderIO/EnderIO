@@ -1,15 +1,16 @@
 package com.enderio.enderio.machines.common.blocks.base.task.host;
 
-import com.enderio.enderio.api.UseOnly;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;
+import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.machines.common.blocks.base.task.MachineTask;
-import java.util.function.Supplier;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 public abstract class MachineTaskHost {
     @Nullable

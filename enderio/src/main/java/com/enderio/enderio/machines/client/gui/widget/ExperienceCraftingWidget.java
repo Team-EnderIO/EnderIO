@@ -1,15 +1,16 @@
 package com.enderio.enderio.machines.client.gui.widget;
 
-import com.enderio.enderio.common.util.ExperienceUtil;
 import com.enderio.core.client.gui.widgets.EIOWidget;
+import com.enderio.enderio.common.util.ExperienceUtil;
 import com.enderio.enderio.machines.common.blocks.base.fluid.FluidStorageInfo;
 import com.mojang.blaze3d.systems.RenderSystem;
-import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.function.Supplier;
 
 public class ExperienceCraftingWidget extends EIOWidget {
     protected static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation

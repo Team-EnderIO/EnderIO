@@ -1,7 +1,7 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.direct;
 
-import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.enderio.api.integration.IntegrationManager;
+import com.enderio.enderio.armory.common.capability.DarkSteelHelper;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;

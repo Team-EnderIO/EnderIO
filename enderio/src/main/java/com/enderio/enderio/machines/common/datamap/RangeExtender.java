@@ -2,13 +2,14 @@ package com.enderio.enderio.machines.common.datamap;
 
 import com.enderio.enderio.api.EnderIO;
 import com.mojang.serialization.Codec;
-import java.util.Map;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.datamaps.AdvancedDataMapType;
 import net.neoforged.neoforge.registries.datamaps.DataMapValueRemover;
+
+import java.util.Map;
 
 public class RangeExtender {
     public static final ExtraCodecs.StrictUnboundedMapCodec<TagKey<Block>, Integer> CODEC = ExtraCodecs

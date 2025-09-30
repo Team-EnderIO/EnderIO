@@ -2,8 +2,6 @@ package com.enderio.enderio.data.loot;
 
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.loot.BrokenSpawnerLootModifier;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -16,6 +14,9 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 import net.neoforged.neoforge.common.loot.AddTableLootModifier;
 import net.neoforged.neoforge.common.loot.LootTableIdCondition;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
 

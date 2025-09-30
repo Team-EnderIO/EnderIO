@@ -8,8 +8,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.ints.IntList;
-import java.util.List;
-import java.util.function.IntFunction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -25,6 +23,9 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
+
+import java.util.List;
+import java.util.function.IntFunction;
 
 public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode)
         implements MachineRecipe<WeatherChangeRecipe.Input> {

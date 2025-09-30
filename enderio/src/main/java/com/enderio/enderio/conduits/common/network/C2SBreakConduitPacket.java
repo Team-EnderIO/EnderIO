@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.common.network;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.conduits.Conduit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;

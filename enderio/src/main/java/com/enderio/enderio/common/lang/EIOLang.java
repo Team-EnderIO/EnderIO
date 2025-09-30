@@ -1,16 +1,17 @@
 package com.enderio.enderio.common.lang;
 
 import com.enderio.EnderIOBase;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.common.block.glass.GlassLighting;
-import com.enderio.core.common.util.TooltipUtil;
-import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+
+import java.util.Locale;
 
 public class EIOLang {
     public static final Component BLOCK_BLAST_RESISTANT = TooltipUtil

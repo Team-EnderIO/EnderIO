@@ -4,7 +4,6 @@ import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.machines.common.blocks.fluid_tank.TankRecipe;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -16,6 +15,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
+
+import java.util.concurrent.CompletableFuture;
 
 public class TankRecipeProvider extends RecipeProvider {
 

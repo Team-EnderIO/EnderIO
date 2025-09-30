@@ -1,8 +1,8 @@
 package com.enderio.enderio.armory.common.init;
 
+import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgradeLootCondition;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgradeLootModifier;
-import com.enderio.enderio.api.EnderIO;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;

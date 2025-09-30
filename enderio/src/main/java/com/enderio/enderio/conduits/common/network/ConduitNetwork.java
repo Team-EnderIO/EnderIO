@@ -1,6 +1,5 @@
 package com.enderio.enderio.conduits.common.network;
 
-import com.enderio.enderio.conduits.EnderIOConduits;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;

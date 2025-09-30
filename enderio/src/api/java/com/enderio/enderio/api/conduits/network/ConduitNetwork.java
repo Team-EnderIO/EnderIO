@@ -3,14 +3,14 @@ package com.enderio.enderio.api.conduits.network;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Access to a network of conduits.

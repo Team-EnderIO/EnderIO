@@ -3,14 +3,15 @@ package com.enderio.enderio.armory.common.item.darksteel.upgrades;
 import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.armory.common.init.ArmoryItems;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Tool;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class SpoonUpgrade implements DarkSteelUpgrade {
 

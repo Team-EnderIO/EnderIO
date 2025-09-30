@@ -3,9 +3,10 @@ package com.enderio.enderio.armory.common.item.darksteel.upgrades.flight;
 import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
+import net.minecraft.network.chat.Component;
+
 import java.util.Collection;
 import java.util.List;
-import net.minecraft.network.chat.Component;
 
 public class GliderUpgrade implements DarkSteelUpgrade {
 

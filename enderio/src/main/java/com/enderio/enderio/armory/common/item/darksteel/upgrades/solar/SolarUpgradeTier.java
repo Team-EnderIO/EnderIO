@@ -5,9 +5,10 @@ import com.enderio.enderio.api.armory.capability.UpgradeTier;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.enderio.machines.common.blockentity.solar.SolarPanelTier;
-import java.util.function.Supplier;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.common.ModConfigSpec;
+
+import java.util.function.Supplier;
 
 public enum SolarUpgradeTier implements UpgradeTier {
 

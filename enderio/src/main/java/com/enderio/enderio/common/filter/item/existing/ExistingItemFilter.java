@@ -1,10 +1,9 @@
 package com.enderio.enderio.common.filter.item.existing;
 
-import com.enderio.enderio.api.filter.ItemFilter;
 import com.enderio.core.common.serialization.OrderedListCodec;
+import com.enderio.enderio.api.filter.ItemFilter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.List;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -12,6 +11,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 // This is just an example as to why we needed a more extensive filter interface :)
 public record ExistingItemFilter(boolean hasSnapshot, NonNullList<ItemStack> snapshot, boolean shouldCompareComponents,

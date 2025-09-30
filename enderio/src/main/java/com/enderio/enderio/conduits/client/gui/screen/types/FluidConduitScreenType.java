@@ -1,17 +1,16 @@
 package com.enderio.enderio.conduits.client.gui.screen.types;
 
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
+import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.conduits.common.conduit.type.fluid.FluidConduit;
 import com.enderio.enderio.conduits.common.conduit.type.fluid.FluidConduitConnectionConfig;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import com.enderio.enderio.conduits.common.network.C2SClearLockedFluidPacket;
-import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
-import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -31,6 +30,8 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.function.Supplier;
 
 public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConnectionConfig> {
 

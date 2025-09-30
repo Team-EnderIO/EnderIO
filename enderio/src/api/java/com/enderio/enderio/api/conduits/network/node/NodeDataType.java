@@ -3,13 +3,12 @@ package com.enderio.enderio.api.conduits.network.node;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapCodec;
-
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-
 import com.mojang.serialization.MapLike;
 import com.mojang.serialization.RecordBuilder;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public final class NodeDataType<T extends NodeData> {
     private final boolean isPersistent;

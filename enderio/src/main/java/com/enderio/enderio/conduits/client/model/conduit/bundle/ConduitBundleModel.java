@@ -1,7 +1,6 @@
 package com.enderio.enderio.conduits.client.model.conduit.bundle;
 
-import static com.enderio.enderio.conduits.client.ConduitClientSetup.*;
-
+import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
 import com.enderio.enderio.conduits.client.model.BoxTextureQuadTransformer;
@@ -11,10 +10,8 @@ import com.enderio.enderio.conduits.client.model.conduit.facades.ClientFacadeVis
 import com.enderio.enderio.conduits.client.model.conduit.modifier.ConduitModelModifiers;
 import com.enderio.enderio.conduits.common.Area;
 import com.enderio.enderio.conduits.common.conduit.OffsetHelper;
-import com.enderio.core.data.model.ModelHelper;
 import com.mojang.math.Axis;
 import com.mojang.math.Transformation;
-import java.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -41,6 +38,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.enderio.enderio.conduits.client.ConduitClientSetup.*;
 
 public class ConduitBundleModel implements IDynamicBakedModel {
     public static final ModelProperty<ModelData> FACADE_MODEL_DATA = new ModelProperty<>();

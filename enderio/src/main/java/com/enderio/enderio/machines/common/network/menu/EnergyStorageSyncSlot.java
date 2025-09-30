@@ -6,10 +6,11 @@ import com.enderio.core.common.network.menu.payload.PairSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayloadType;
 import com.enderio.enderio.machines.common.blocks.base.energy.EnergyStorageInfo;
+import net.minecraft.world.level.Level;
+
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.world.level.Level;
 
 public abstract class EnergyStorageSyncSlot implements SyncSlot {
 

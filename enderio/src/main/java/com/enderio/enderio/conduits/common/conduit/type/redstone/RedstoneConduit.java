@@ -1,18 +1,17 @@
 package com.enderio.enderio.conduits.common.conduit.type.redstone;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.enderio.conduits.common.tag.ConduitTags;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -25,6 +24,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2i;
+
+import java.util.Set;
 
 public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeTexture, Component description)
         implements Conduit<RedstoneConduit, RedstoneConduitConnectionConfig> {

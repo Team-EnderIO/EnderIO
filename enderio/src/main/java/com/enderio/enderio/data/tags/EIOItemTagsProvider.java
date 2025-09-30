@@ -2,7 +2,6 @@ package com.enderio.enderio.data.tags;
 
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.tag.EIOTags;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
@@ -11,6 +10,8 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 public class EIOItemTagsProvider extends ItemTagsProvider {
 

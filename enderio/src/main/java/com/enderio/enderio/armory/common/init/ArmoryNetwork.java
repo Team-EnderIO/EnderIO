@@ -1,6 +1,5 @@
 package com.enderio.enderio.armory.common.init;
 
-import com.enderio.enderio.armory.EnderIOArmory;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.flight.FlightEnabledPacket;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.flight.FlightUpgradeUtil;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisionEnabledPacket;

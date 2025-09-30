@@ -7,7 +7,6 @@ import com.enderio.enderio.api.soul.storage.SoulHandler;
 import com.enderio.enderio.common.block.EIOEntityBlock;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.mojang.serialization.MapCodec;
-import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,6 +30,8 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 public class MachineBlock<T extends MachineBlockEntity> extends EIOEntityBlock<T> {
 

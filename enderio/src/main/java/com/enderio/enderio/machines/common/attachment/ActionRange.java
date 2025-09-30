@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.attachment;
 
-import com.enderio.enderio.common.particle.RangeParticleData;
 import com.enderio.core.common.network.NetworkDataSlot;
+import com.enderio.enderio.common.particle.RangeParticleData;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;

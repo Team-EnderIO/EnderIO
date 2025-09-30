@@ -1,6 +1,6 @@
 package com.enderio.enderio.client;
 
-import com.enderio.EnderIOBase;
+import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.client.decorator.GlassIconDecorator;
@@ -15,11 +15,6 @@ import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.init.EIOParticles;
 import com.enderio.enderio.common.item.tool.SoulVialItem;
-import com.enderio.core.client.item.FluidBarDecorator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -45,6 +40,11 @@ import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 @Mod(value = EnderIO.MOD_ID, dist = Dist.CLIENT)

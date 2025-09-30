@@ -1,15 +1,16 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.speed;
 
+import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.armory.capability.DarkSteelUpgrade;
 import com.enderio.enderio.api.armory.capability.UpgradeTier;
 import com.enderio.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
-import com.enderio.enderio.api.EnderIO;
-import java.util.function.Supplier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.neoforged.neoforge.common.ModConfigSpec;
+
+import java.util.function.Supplier;
 
 public enum SpeedUpgradeTier implements UpgradeTier {
 

@@ -1,6 +1,5 @@
 package com.enderio.enderio.common.integrations;
 
-import com.enderio.EnderIOBase;
 import com.enderio.enderio.common.blockentity.Wrenchable;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;

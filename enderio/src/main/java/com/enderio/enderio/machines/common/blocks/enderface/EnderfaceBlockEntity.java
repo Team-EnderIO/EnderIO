@@ -1,15 +1,14 @@
 package com.enderio.enderio.machines.common.blocks.enderface;
 
+import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.common.block.EIOBlockEntity;
 import com.enderio.enderio.common.config.BaseConfig;
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.machines.common.config.MachinesConfig;
 import com.enderio.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.enderio.machines.common.init.MachineFeatureFlags;
 import com.enderio.enderio.machines.common.travel.EnderfaceTravelTarget;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.SectionPos;
@@ -19,6 +18,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
+
+import java.util.Optional;
 
 public class EnderfaceBlockEntity extends EIOBlockEntity {
     private float lastUiPitch = -45;

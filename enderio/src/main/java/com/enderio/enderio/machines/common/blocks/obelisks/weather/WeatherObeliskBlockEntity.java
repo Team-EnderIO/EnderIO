@@ -1,8 +1,8 @@
 package com.enderio.enderio.machines.common.blocks.obelisks.weather;
 
+import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;

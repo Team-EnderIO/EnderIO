@@ -2,11 +2,12 @@ package com.enderio.enderio.machines.common.blocks.base.state;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import java.util.function.IntFunction;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
+
+import java.util.function.IntFunction;
 
 public enum MachineStateType implements StringRepresentable {
 

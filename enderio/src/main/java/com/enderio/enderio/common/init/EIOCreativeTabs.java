@@ -2,7 +2,6 @@ package com.enderio.enderio.common.init;
 
 import com.enderio.EnderIOBase;
 import com.enderio.enderio.api.EnderIO;
-import java.util.function.Consumer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
@@ -11,6 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Consumer;
 
 public class EIOCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister

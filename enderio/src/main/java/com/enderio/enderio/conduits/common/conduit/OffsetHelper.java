@@ -1,17 +1,18 @@
 package com.enderio.enderio.conduits.common.conduit;
 
-import com.enderio.enderio.common.util.ThrowableUtil;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
+import com.enderio.enderio.common.util.ThrowableUtil;
 import com.mojang.logging.LogUtils;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import org.joml.Vector2i;
 import org.slf4j.Logger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OffsetHelper {
 

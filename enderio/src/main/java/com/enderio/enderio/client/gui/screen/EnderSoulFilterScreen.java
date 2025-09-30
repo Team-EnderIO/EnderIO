@@ -1,15 +1,15 @@
 package com.enderio.enderio.client.gui.screen;
 
+import com.enderio.core.client.gui.screen.EnderContainerScreen;
+import com.enderio.core.client.gui.widgets.IconButton;
+import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.common.filter.AbstractFilterMenu;
 import com.enderio.enderio.common.filter.soul.EnderSoulFilterMenu;
+import com.enderio.enderio.common.filter.soul.SoulFilterSlot;
 import com.enderio.enderio.common.item.tool.SoulVialItem;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.common.filter.soul.SoulFilterSlot;
-import com.enderio.core.client.gui.screen.EnderContainerScreen;
-import com.enderio.core.client.gui.widgets.IconButton;
-import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

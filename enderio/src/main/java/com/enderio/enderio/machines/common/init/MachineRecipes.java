@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.init;
 
-import com.enderio.enderio.api.EnderIO;
 import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
+import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.machines.common.blocks.enchanter.EnchanterRecipe;
 import com.enderio.enderio.machines.common.blocks.fluid_tank.TankRecipe;
@@ -11,7 +11,6 @@ import com.enderio.enderio.machines.common.blocks.sag_mill.SagMillingRecipe;
 import com.enderio.enderio.machines.common.blocks.slicer.SlicingRecipe;
 import com.enderio.enderio.machines.common.blocks.soul_binder.SoulBindingRecipe;
 import com.enderio.enderio.machines.common.blocks.vat.FermentingRecipe;
-import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -19,6 +18,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public class MachineRecipes {
 

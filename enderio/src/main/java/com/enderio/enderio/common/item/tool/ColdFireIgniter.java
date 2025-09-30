@@ -1,11 +1,11 @@
 package com.enderio.enderio.common.item.tool;
 
+import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
+import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.tag.EIOTags;
-import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
-import com.enderio.core.common.item.CreativeTabVariants;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

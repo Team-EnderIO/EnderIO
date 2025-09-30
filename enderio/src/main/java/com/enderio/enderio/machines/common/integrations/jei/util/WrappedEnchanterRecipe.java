@@ -1,10 +1,6 @@
 package com.enderio.enderio.machines.common.integrations.jei.util;
 
 import com.enderio.enderio.machines.common.blocks.enchanter.EnchanterRecipe;
-
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +13,9 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class WrappedEnchanterRecipe implements Recipe<EnchanterRecipe.Input> {
     private final RecipeHolder<EnchanterRecipe> recipe;

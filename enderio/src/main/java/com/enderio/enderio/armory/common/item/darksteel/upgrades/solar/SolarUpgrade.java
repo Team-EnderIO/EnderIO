@@ -4,10 +4,11 @@ import com.enderio.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgrad
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.TieredUpgrade;
 import com.enderio.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.enderio.machines.common.blockentity.solar.SolarPanelTier;
+import net.minecraft.network.chat.Component;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.network.chat.Component;
 
 public class SolarUpgrade extends TieredUpgrade<SolarUpgradeTier> {
 
