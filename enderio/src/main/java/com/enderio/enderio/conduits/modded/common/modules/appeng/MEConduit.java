@@ -5,12 +5,12 @@ import appeng.api.networking.GridFlags;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.util.AEColor;
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
-import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.enderio.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.mojang.serialization.Codec;
@@ -77,7 +77,7 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
     }
 
     @Override
-    public void onCreated(IConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
+    public void onCreated(ConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
         var data = node.getOrCreateNodeData(MEConduitNodeData.TYPE);
 
         if (data.getMainNode() == null) {
@@ -101,7 +101,7 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
     }
 
     @Override
-    public void onRemoved(IConduitNode node, Level level, BlockPos pos) {
+    public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
         var data = node.getOrCreateNodeData(MEConduitNodeData.TYPE);
         IManagedGridNode mainNode = data.getMainNode();
         if (mainNode != null) {
@@ -117,7 +117,7 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
         }
 
         Holder<Conduit<?, ?>> asHolder = level.registryAccess()
-                .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT)
+                .registryOrThrow(EnderIORegistries.Keys.CONDUIT)
                 .wrapAsHolder(this);
 
         mainNode = GridHelper.createManagedNode(nodeHost, GridNodeListener.INSTANCE)
@@ -139,7 +139,7 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
     }
 
     @Override
-    public void onConnectionsUpdated(IConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
+    public void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
         var data = node.getOrCreateNodeData(MEConduitNodeData.TYPE);
         IManagedGridNode mainNode = data.getMainNode();
         if (mainNode != null) {
@@ -148,7 +148,7 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
     }
 
     @Override
-    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level, @Nullable IConduitNode node,
+    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level, @Nullable ConduitNode node,
             BlockCapability<TCapability, TContext> capability, @Nullable TContext tContext) {
         if (node != null && capability == AECapabilities.IN_WORLD_GRID_NODE_HOST) {
             // noinspection unchecked

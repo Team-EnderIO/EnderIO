@@ -1,8 +1,8 @@
 package com.enderio.enderio.conduits.common.init;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.conduits.EnderIOConduits;
-import com.enderio.enderio.api.conduits.ConduitCapabilities;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.conduits.client.ConduitFacadeColor;
 import com.enderio.enderio.conduits.common.conduit.facades.ComponentBackedConduitFacadeProvider;
@@ -45,54 +45,54 @@ public class ConduitItems {
                         ctx) -> prov.getBuilder(name).customLoader(FacadeItemModelBuilder::begin).model(name).end())
                 .setTab(EIOCreativeTabs.CONDUITS)
                 .setColorSupplier(() -> ConduitFacadeColor::new)
-                .addCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER,
+                .addCapability(EnderIOCapabilities.CONDUIT_FACADE_PROVIDER,
                         ComponentBackedConduitFacadeProvider.PROVIDER);
     }
 
     public static final RegiliteItem<RedstoneFilterItem> NOT_FILTER = createRedstoneFilter("redstone_not_filter",
             ConduitComponents.REDSTONE_NOT_FILTER, Unit.INSTANCE, null)
-        .addCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.NOT_FILTER_PROVIDER_INSERT)
-        .addCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER, RedstoneFilterItem.NOT_FILTER_PROVIDER_EXTRACT);
+        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.NOT_FILTER_PROVIDER_INSERT)
+        .addCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER, RedstoneFilterItem.NOT_FILTER_PROVIDER_EXTRACT);
 
     public static final RegiliteItem<RedstoneFilterItem> OR_FILTER = createRedstoneFilter("redstone_or_filter",
             ConduitComponents.REDSTONE_OR_FILTER, DoubleRedstoneChannel.INSTANCE, ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get)
-        .addCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.OR_FILTER_PROVIDER);
+        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.OR_FILTER_PROVIDER);
 
     public static final RegiliteItem<RedstoneFilterItem> AND_FILTER = createRedstoneFilter("redstone_and_filter",
             ConduitComponents.REDSTONE_AND_FILTER, DoubleRedstoneChannel.INSTANCE, ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get)
-        .addCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.AND_FILTER_PROVIDER);
+        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.AND_FILTER_PROVIDER);
 
     public static final RegiliteItem<RedstoneFilterItem> NOR_FILTER = createRedstoneFilter("redstone_nor_filter",
             ConduitComponents.REDSTONE_NOR_FILTER, DoubleRedstoneChannel.INSTANCE, ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get)
-        .addCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.NOR_FILTER_PROVIDER);
+        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.NOR_FILTER_PROVIDER);
 
     public static final RegiliteItem<RedstoneFilterItem> NAND_FILTER = createRedstoneFilter("redstone_nand_filter",
             ConduitComponents.REDSTONE_NAND_FILTER, DoubleRedstoneChannel.INSTANCE, ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get)
-        .addCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.NAND_FILTER_PROVIDER);
+        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.NAND_FILTER_PROVIDER);
 
     public static final RegiliteItem<RedstoneFilterItem> XOR_FILTER = createRedstoneFilter("redstone_xor_filter",
             ConduitComponents.REDSTONE_XOR_FILTER, DoubleRedstoneChannel.INSTANCE, ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get)
-        .addCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.XOR_FILTER_PROVIDER);
+        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.XOR_FILTER_PROVIDER);
 
     public static final RegiliteItem<RedstoneFilterItem> XNOR_FILTER = createRedstoneFilter("redstone_xnor_filter",
             ConduitComponents.REDSTONE_XNOR_FILTER, DoubleRedstoneChannel.INSTANCE, ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get)
-        .addCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.XNOR_FILTER_PROVIDER);
+        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.XNOR_FILTER_PROVIDER);
 
     public static final RegiliteItem<RedstoneFilterItem> TLATCH_FILTER = createRedstoneFilter("redstone_toggle_filter",
             ConduitComponents.REDSTONE_TLATCH_FILTER, RedstoneTLatchFilter.INSTANCE, null)
-        .addCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.TLATCH_FILTER_PROVIDER);
+        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.TLATCH_FILTER_PROVIDER);
 
     public static final RegiliteItem<RedstoneFilterItem> COUNT_FILTER = createRedstoneFilter("redstone_counting_filter",
             ConduitComponents.REDSTONE_COUNT_FILTER, RedstoneCountFilter.INSTANCE, ConduitMenus.REDSTONE_COUNT_FILTER::get)
-        .addCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.COUNT_FILTER_PROVIDER);
+        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.COUNT_FILTER_PROVIDER);
 
     public static final RegiliteItem<RedstoneFilterItem> SENSOR_FILTER = createRedstoneFilter("redstone_sensor_filter",
             ConduitComponents.REDSTONE_SENSOR_FILTER, Unit.INSTANCE, null)
-        .addCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER, RedstoneFilterItem.SENSOR_FILTER_PROVIDER);
+        .addCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER, RedstoneFilterItem.SENSOR_FILTER_PROVIDER);
 
     public static final RegiliteItem<RedstoneFilterItem> TIMER_FILTER = createRedstoneFilter("redstone_timer_filter",
             ConduitComponents.REDSTONE_TIMER_FILTER, RedstoneTimerFilter.INSTANCE, ConduitMenus.REDSTONE_TIMER_FILTER::get)
-        .addCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER, RedstoneFilterItem.TIMER_FILTER_PROVIDER);
+        .addCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER, RedstoneFilterItem.TIMER_FILTER_PROVIDER);
 
     public static <T> RegiliteItem<RedstoneFilterItem> createRedstoneFilter(String name,
             DeferredHolder<DataComponentType<?>, DataComponentType<T>> type, T defaultValue,

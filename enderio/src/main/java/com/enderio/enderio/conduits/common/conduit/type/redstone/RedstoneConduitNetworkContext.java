@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.enderio.enderio.api.conduits.redstone.RedstoneFilterContext;
+import com.enderio.enderio.api.filter.RedstoneOutputFilterContext;
 import net.minecraft.world.item.DyeColor;
 
-public class RedstoneConduitNetworkContext implements ConduitNetworkContext<RedstoneConduitNetworkContext>, RedstoneFilterContext {
+public class RedstoneConduitNetworkContext implements ConduitNetworkContext<RedstoneConduitNetworkContext>, RedstoneOutputFilterContext {
 
     // Redstone context is not saved as it is recalculated every graph tick if the
     // network is active.

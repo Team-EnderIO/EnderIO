@@ -1,9 +1,11 @@
 package com.enderio.enderio.api.conduits;
 
 import net.minecraft.core.Holder;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.BiPredicate;
 
+@ApiStatus.Experimental
 public class ConduitUtility {
     public static boolean canConnectConduits(Holder<Conduit<?, ?>> conduitA,  Holder<Conduit<?, ?>> conduitB) {
         var type = conduitA.value().type();

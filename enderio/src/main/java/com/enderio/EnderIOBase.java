@@ -1,7 +1,7 @@
 package com.enderio;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.api.registry.EnderIORegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.config.BaseConfigLang;
 import com.enderio.enderio.common.filter.item.ItemFilterSlot;

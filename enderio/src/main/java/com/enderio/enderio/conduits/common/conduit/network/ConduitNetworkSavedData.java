@@ -1,8 +1,7 @@
 package com.enderio.enderio.conduits.common.conduit.network;
 
-import com.enderio.enderio.conduits.EnderIOConduits;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
@@ -54,7 +53,7 @@ public class ConduitNetworkSavedData extends SavedData {
 
     private final Map<Long, Boolean> tickingChunksMap = Maps.newHashMap();
 
-    private final Map<Holder<Conduit<?, ?>>, Map<BlockPos, ConduitNode>> unloadedNodes = Maps.newHashMap();
+    private final Map<Holder<Conduit<?, ?>>, Map<BlockPos, ConduitNodeImpl>> unloadedNodes = Maps.newHashMap();
 
     private static final String KEY_NEW_DATA = "Networks";
 
@@ -101,7 +100,7 @@ public class ConduitNetworkSavedData extends SavedData {
     }
 
     @Nullable
-    public ConduitNode claimNode(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
+    public ConduitNodeImpl claimNode(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
         var conduitMap = unloadedNodes.get(conduit);
         if (conduitMap == null) {
             LOGGER.warn("Conduit data is missing!");
@@ -116,7 +115,7 @@ public class ConduitNetworkSavedData extends SavedData {
         return conduitMap.remove(pos);
     }
 
-    public void returnNode(Holder<Conduit<?, ?>> conduit, BlockPos pos, ConduitNode node) {
+    public void returnNode(Holder<Conduit<?, ?>> conduit, BlockPos pos, ConduitNodeImpl node) {
         unloadedNodes.computeIfAbsent(conduit, c -> Maps.newHashMap()).put(pos, node);
     }
 
@@ -200,7 +199,7 @@ public class ConduitNetworkSavedData extends SavedData {
         }
 
         Registry<Conduit<?, ?>> conduitRegistry = serverLevel.registryAccess()
-                .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT);
+                .registryOrThrow(EnderIORegistries.Keys.CONDUIT);
 
         for (var conduit : networks.keySet()) {
             // Skip non-ticking graphs.
@@ -265,10 +264,10 @@ public class ConduitNetworkSavedData extends SavedData {
         ListTag graphsTag = nbt.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
         for (Tag tag : graphsTag) {
             CompoundTag typedGraphTag = (CompoundTag) tag;
-            ResourceKey<Conduit<?, ?>> conduitKey = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+            ResourceKey<Conduit<?, ?>> conduitKey = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
                     ResourceLocation.parse(typedGraphTag.getString(KEY_TYPE)));
 
-            var registry = lookupProvider.lookupOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT);
+            var registry = lookupProvider.lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
 
             Optional<Holder.Reference<Conduit<?, ?>>> conduit = registry.get(conduitKey);
 
@@ -299,10 +298,10 @@ public class ConduitNetworkSavedData extends SavedData {
             }
 
             // Load all nodes
-            List<ConduitNode> nodes = new ArrayList<>();
+            List<ConduitNodeImpl> nodes = new ArrayList<>();
             for (int i = 0; i < graphObjectsTag.size(); i++) {
                 CompoundTag nodeTag = graphObjectsTag.getCompound(i);
-                var node = ConduitNode.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nodeTag)
+                var node = ConduitNodeImpl.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nodeTag)
                         .getOrThrow()
                         .getFirst();
 
@@ -347,7 +346,7 @@ public class ConduitNetworkSavedData extends SavedData {
             CompoundTag contextTag) {
         ResourceLocation serializerKey = ResourceLocation.parse(contextTag.getString("Type"));
         ConduitNetworkContextType<?> contextType = Objects.requireNonNull(
-                EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE.get(serializerKey),
+                EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE.get(serializerKey),
                 "Unable to find conduit network context type with key " + serializerKey);
 
         if (contextType.codec() == null) {

@@ -8,7 +8,7 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.facade.ConduitFacadeProvider;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -65,7 +65,7 @@ public interface ConduitBundle {
      * @param conduit the conduit to get a node for.
      * @return the conduit node.
      */
-    IConduitNode getConduitNode(Holder<Conduit<?, ?>> conduit);
+    ConduitNode getConduitNode(Holder<Conduit<?, ?>> conduit);
 
     // endregion
 

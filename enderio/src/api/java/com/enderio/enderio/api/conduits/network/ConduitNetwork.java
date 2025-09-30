@@ -2,7 +2,7 @@ package com.enderio.enderio.api.conduits.network;
 
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -39,28 +39,28 @@ public interface ConduitNetwork {
     // TODO: Marked as experimental as idk if this is useful to a ticker, I might
     // remove this method.
     @ApiStatus.Experimental
-    boolean contains(IConduitNode node);
+    boolean contains(ConduitNode node);
 
     /**
      * @return all nodes in this network.
      */
-    Set<? extends IConduitNode> nodes();
+    Set<? extends ConduitNode> nodes();
 
     /**
      * @param node the node to query neighbors for.
      * @return all direct neighbors of the given node.
      */
-    Set<? extends IConduitNode> neighbors(IConduitNode node);
+    Set<? extends ConduitNode> neighbors(ConduitNode node);
 
     /**
      * @return all nodes that are in loaded and ticking chunks.
      */
-    Collection<? extends IConduitNode> tickingNodes();
+    Collection<? extends ConduitNode> tickingNodes();
 
     /**
      * @return all nodes that are loaded, ticking, and are connected to a block.
      */
-    Collection<? extends IConduitNode> blockEndpoints();
+    Collection<? extends ConduitNode> blockEndpoints();
 
     /**
      * @return all connections to blocks that are loaded and ticking.

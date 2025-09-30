@@ -1,6 +1,6 @@
 package com.enderio.enderio.api.conduits.network;
 
-import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.mojang.serialization.Codec;
 import java.util.Set;
 
@@ -10,7 +10,7 @@ import java.util.Set;
  * @param <T>
  */
 public interface ConduitNetworkContext<T extends ConduitNetworkContext<T>> {
-    Codec<ConduitNetworkContext<?>> GENERIC_CODEC = EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE.byNameCodec()
+    Codec<ConduitNetworkContext<?>> GENERIC_CODEC = EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE.byNameCodec()
             .dispatch(ConduitNetworkContext::type, ConduitNetworkContextType::codecOrThrow);
 
     /**

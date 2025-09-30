@@ -3,7 +3,7 @@ package com.enderio.enderio.conduits.modded.common.modules.refinedstorage;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -64,25 +64,25 @@ public record RSConduit(ResourceLocation texture, Component description)
     }
 
     @Override
-    public void onCreated(IConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
+    public void onCreated(ConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
         var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
         data.initialize(node, level, pos);
     }
 
     @Override
-    public void onRemoved(IConduitNode node, Level level, BlockPos pos) {
+    public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
         var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
         data.remove(level);
     }
 
     @Override
-    public void onConnectionsUpdated(IConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
+    public void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
         var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
         data.update(level, connectedSides);
     }
 
     @Override
-    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level, @Nullable IConduitNode node,
+    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level, @Nullable ConduitNode node,
             BlockCapability<TCapability, TContext> capability, @Nullable TContext tContext) {
 
         if (node != null && capability == RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability()) {

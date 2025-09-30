@@ -1,13 +1,13 @@
 package com.enderio.enderio.api.conduits.network.node.legacy;
 
-import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.mojang.serialization.Codec;
 import org.jetbrains.annotations.Nullable;
 
 @Deprecated(since = "8.0.0")
 public interface ConduitData<T extends ConduitData<T>> {
-    Codec<ConduitData<?>> CODEC = EnderIOConduitsRegistries.CONDUIT_DATA_TYPE.byNameCodec()
+    Codec<ConduitData<?>> CODEC = EnderIORegistries.CONDUIT_DATA_TYPE.byNameCodec()
             .dispatch(ConduitData::type, ConduitDataType::codec);
 
     /**

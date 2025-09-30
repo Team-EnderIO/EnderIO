@@ -1,6 +1,4 @@
-package com.enderio.enderio.api.capability;
-
-import com.enderio.enderio.api.io.IOMode;
+package com.enderio.enderio.api.io;
 
 /**
  * Capability for getting the IO mode of the side of a block.

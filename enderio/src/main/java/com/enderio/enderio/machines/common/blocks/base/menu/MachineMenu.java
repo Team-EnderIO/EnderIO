@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.blocks.base.menu;
 
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.core.common.menu.BaseBlockEntityMenu;
 import com.enderio.core.common.network.menu.EnumSyncSlot;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;

@@ -4,12 +4,11 @@ import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.enderio.conduits.common.init.ConduitItems;
 import com.enderio.enderio.conduits.common.init.Conduits;
 import com.enderio.enderio.conduits.common.recipe.ConduitIngredient;
-import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.machines.common.blocks.painting.PaintingRecipe;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -42,7 +41,7 @@ public class ConduitRecipes extends RecipeProvider {
         // We know that the registries are now available.
         HolderLookup.Provider lookupProvider = registries.resultNow();
         HolderGetter<Conduit<?, ?>> conduitRegistry = lookupProvider
-                .lookupOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT);
+                .lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
 
         var itemConduit = conduitRegistry.getOrThrow(Conduits.ITEM);
         var fluidConduit = conduitRegistry.getOrThrow(Conduits.FLUID);

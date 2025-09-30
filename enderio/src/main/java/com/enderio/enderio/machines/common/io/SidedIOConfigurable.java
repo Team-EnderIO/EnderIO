@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.io;
 
-import com.enderio.enderio.api.capability.SideConfig;
+import com.enderio.enderio.api.io.SideConfig;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
 import net.minecraft.core.Direction;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.conduit.type.fluid;
 
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.network.MassiveStreamCodec;
 import com.enderio.enderio.api.conduits.ConduitRedstoneSignalAware;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;

@@ -6,7 +6,7 @@ import com.enderio.enderio.conduits.modded.common.ModdedConduits;
 import com.enderio.enderio.conduits.modded.data.ModConduitRecipeProvider;
 import com.enderio.enderio.data.EIODataProvider;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
@@ -59,16 +59,16 @@ public class EnderIOConduits {
 
     @SubscribeEvent
     public static void onNewRegistries(NewRegistryEvent event) {
-        event.register(EnderIOConduitsRegistries.CONDUIT_TYPE);
-        event.register(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE);
-        event.register(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE);
-        event.register(EnderIOConduitsRegistries.CONDUIT_NODE_DATA_TYPE);
-        event.register(EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE);
+        event.register(EnderIORegistries.CONDUIT_TYPE);
+        event.register(EnderIORegistries.CONDUIT_DATA_TYPE);
+        event.register(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE);
+        event.register(EnderIORegistries.CONDUIT_NODE_DATA_TYPE);
+        event.register(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE);
     }
 
     @SubscribeEvent
     private static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
-        event.dataPackRegistry(EnderIOConduitsRegistries.Keys.CONDUIT, Conduit.DIRECT_CODEC, Conduit.DIRECT_CODEC);
+        event.dataPackRegistry(EnderIORegistries.Keys.CONDUIT, Conduit.DIRECT_CODEC, Conduit.DIRECT_CODEC);
     }
 
     @SubscribeEvent
@@ -94,7 +94,7 @@ public class EnderIOConduits {
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
         return new RegistrySetBuilder()
-            .add(EnderIOConduitsRegistries.Keys.CONDUIT, (context) -> {
+            .add(EnderIORegistries.Keys.CONDUIT, (context) -> {
                 Conduits.bootstrap(context);
                 ModdedConduits.executeOnLoadedModules(module -> module.bootstrapConduits(context));
             });

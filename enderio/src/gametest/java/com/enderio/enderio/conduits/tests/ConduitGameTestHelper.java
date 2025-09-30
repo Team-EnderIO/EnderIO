@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.tests;
 
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
@@ -36,7 +36,7 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
 
     public Holder<Conduit<?, ?>> getConduit(ResourceKey<Conduit<?, ?>> conduitType) {
         return getLevel().registryAccess()
-                .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT)
+                .registryOrThrow(EnderIORegistries.Keys.CONDUIT)
                 .getHolderOrThrow(conduitType);
     }
 

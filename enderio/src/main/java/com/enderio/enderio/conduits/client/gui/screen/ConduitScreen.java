@@ -2,7 +2,7 @@ package com.enderio.enderio.conduits.client.gui.screen;
 
 import com.enderio.enderio.api.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.client.gui.widget.DyeColorPickerWidget;
 import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.enderio.api.conduits.Conduit;

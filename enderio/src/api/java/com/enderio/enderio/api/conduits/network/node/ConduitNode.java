@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
  * Each node represents a single conduit within a bundle, and can have up to six connections in any {@link Direction}.
  */
 @ApiStatus.AvailableSince("8.0.0")
-public interface IConduitNode {
+public interface ConduitNode {
     /**
      * @return the world position of the node.
      */

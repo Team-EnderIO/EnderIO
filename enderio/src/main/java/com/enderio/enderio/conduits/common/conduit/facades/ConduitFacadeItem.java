@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.common.conduit.facades;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.api.conduits.ConduitCapabilities;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import java.util.List;
@@ -48,7 +48,7 @@ public class ConduitFacadeItem extends BlockItem {
     @Override
     protected boolean canPlace(BlockPlaceContext context, BlockState state) {
         // Must have a valid facade
-        var facade = context.getItemInHand().getCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER);
+        var facade = context.getItemInHand().getCapability(EnderIOCapabilities.CONDUIT_FACADE_PROVIDER);
         if (facade == null || !facade.isValid()) {
             return false;
         }
@@ -71,7 +71,7 @@ public class ConduitFacadeItem extends BlockItem {
             TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
 
-        var facade = stack.getCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER);
+        var facade = stack.getCapability(EnderIOCapabilities.CONDUIT_FACADE_PROVIDER);
         boolean hasFacadeTooltip = facade != null
                 && (facade.type().isBlastResistant() || facade.type().doesHideConduits());
 

@@ -1,12 +1,13 @@
 package com.enderio.enderio.api.conduits;
 
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenType;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
@@ -41,13 +42,13 @@ import java.util.function.Consumer;
 public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, TConnectionConfig extends ConnectionConfig>
         extends Comparable<TConduit>, TooltipProvider {
 
-    Codec<Conduit<?, ?>> DIRECT_CODEC = EnderIOConduitsRegistries.CONDUIT_TYPE.byNameCodec()
+    Codec<Conduit<?, ?>> DIRECT_CODEC = EnderIORegistries.CONDUIT_TYPE.byNameCodec()
             .dispatch(Conduit::type, ConduitType::codec);
 
-    Codec<Holder<Conduit<?, ?>>> CODEC = RegistryFixedCodec.create(EnderIOConduitsRegistries.Keys.CONDUIT);
+    Codec<Holder<Conduit<?, ?>>> CODEC = RegistryFixedCodec.create(EnderIORegistries.Keys.CONDUIT);
 
     StreamCodec<RegistryFriendlyByteBuf, Holder<Conduit<?, ?>>> STREAM_CODEC = ByteBufCodecs
-            .holderRegistry(EnderIOConduitsRegistries.Keys.CONDUIT);
+            .holderRegistry(EnderIORegistries.Keys.CONDUIT);
 
     /**
      * Gets the default conduit texture.
@@ -99,7 +100,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @return the capability or null if it is not exposed.
      */
     @Nullable
-    default <TCapability, TContext> TCapability proxyCapability(Level level, @Nullable IConduitNode node,
+    default <TCapability, TContext> TCapability proxyCapability(Level level, @Nullable ConduitNode node,
             BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
         return null;
     }
@@ -124,7 +125,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     }
 
     /**
-     * If this conduit overrides {@link #canConnectConduits(IConduitNode, IConduitNode)}, return true.
+     * If this conduit overrides {@link #canConnectConduits(ConduitNode, ConduitNode)}, return true.
      * This will avoid showing connections between conduits on the client until the server evaluates whether they can connect.
      * @apiNote Failing to override this properly could result in connection desyncs.
      * @return whether this conduit has additional server-side connection checks.
@@ -139,7 +140,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @implNote This method must be symmetrical, it will only be checked once for two pairs of nodes and conduits.
      * @return true if both nodes are compatible.
      */
-    default boolean canConnectConduits(IConduitNode selfNode, IConduitNode otherNode) {
+    default boolean canConnectConduits(ConduitNode selfNode, ConduitNode otherNode) {
         return true;
     }
 
@@ -187,16 +188,16 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     // region Events
 
-    default void onCreated(IConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
+    default void onCreated(ConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
     }
 
-    default void onRemoved(IConduitNode node, Level level, BlockPos pos) {
+    default void onRemoved(ConduitNode node, Level level, BlockPos pos) {
     }
 
-    default void onConnectionsUpdated(IConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
+    default void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
     }
 
-    default void onConnectTo(IConduitNode selfNode, IConduitNode otherNode) {
+    default void onConnectTo(ConduitNode selfNode, ConduitNode otherNode) {
     }
 
     // endregion
@@ -241,7 +242,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @return custom sync data.
      */
     @Nullable
-    default CompoundTag getExtraGuiData(ConduitBundle conduitBundle, IConduitNode node, Direction side) {
+    default CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
         return null;
     }
 
@@ -250,7 +251,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @return custom sync data.
      */
     @Nullable
-    default CompoundTag getExtraWorldData(ConduitBundle conduitBundle, IConduitNode node) {
+    default CompoundTag getExtraWorldData(ConduitBundle conduitBundle, ConduitNode node) {
         return null;
     }
 
@@ -302,7 +303,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * @deprecated Only for conversion of 7.X conduit data. Will be removed in 1.22.
      */
     @Deprecated(since = "8.0.0")
-    default void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor,
+    default void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor,
             BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
     }
 

@@ -1,11 +1,11 @@
 package com.enderio.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.core.common.util.TooltipUtil;
@@ -84,7 +84,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
-    public <TCap, TContext> @Nullable TCap proxyCapability(Level level, @Nullable IConduitNode node,
+    public <TCap, TContext> @Nullable TCap proxyCapability(Level level, @Nullable ConduitNode node,
             BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
 
         if (Capabilities.EnergyStorage.BLOCK == capability && (context == null || context instanceof Direction)) {
@@ -115,7 +115,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
-    public void onRemoved(IConduitNode node, Level level, BlockPos pos) {
+    public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
         level.invalidateCapabilities(pos);
     }
 

@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.init;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.machines.common.attachment.ActionRange;
 import com.enderio.enderio.machines.common.io.IOConfig;
 import com.enderio.enderio.machines.common.obelisk.AversionObeliskManager;

@@ -3,7 +3,7 @@ package com.enderio.enderio.conduits.common.conduit.network;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.conduits.common.conduit.legacy.ConduitDataContainer;
@@ -21,22 +21,22 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
-public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNode>, IConduitNode {
+public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, ConduitNodeImpl>, ConduitNode {
 
     // TODO: 1.22 - Remove legacy codec.
-    private static final Codec<ConduitNode> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
-            .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNode::pos),
+    private static final Codec<ConduitNodeImpl> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos),
                     ConduitDataContainer.CODEC.fieldOf("data").forGetter(i -> i.legacyDataContainer))
-            .apply(instance, ConduitNode::new));
+            .apply(instance, ConduitNodeImpl::new));
 
-    private static final Codec<ConduitNode> NEW_CODEC = RecordCodecBuilder
-            .create(instance -> instance.group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNode::pos),
+    private static final Codec<ConduitNodeImpl> NEW_CODEC = RecordCodecBuilder
+            .create(instance -> instance.group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos),
                     NodeData.GENERIC_CODEC.optionalFieldOf("data")
                             .forGetter(i -> i.nodeData == null || !i.nodeData.type().isPersistent() ? Optional.empty()
                                     : Optional.of(i.nodeData)))
-                    .apply(instance, ConduitNode::new));
+                    .apply(instance, ConduitNodeImpl::new));
 
-    public static final Codec<ConduitNode> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
+    public static final Codec<ConduitNodeImpl> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
 
     private final BlockPos pos;
 
@@ -55,17 +55,17 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
 
     private Holder<Conduit<?, ?>> conduit;
 
-    public ConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
+    public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
         this(conduit, pos, (NodeData) null);
     }
 
-    public ConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos, @Nullable NodeData nodeData) {
+    public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, @Nullable NodeData nodeData) {
         this.pos = pos;
         this.nodeData = nodeData;
         this.network = new ConduitNetwork(conduit, this);
     }
 
-    public ConduitNode(Holder<Conduit<?, ?>> conduit, BlockPos pos, ConduitDataContainer legacyDataContainer) {
+    public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, ConduitDataContainer legacyDataContainer) {
         this(conduit, pos, (NodeData) null);
 
         // Extract node data from legacy data
@@ -78,13 +78,13 @@ public final class ConduitNode implements INetworkNode<ConduitNetwork, ConduitNo
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private ConduitNode(BlockPos pos, Optional<NodeData> nodeData) {
+    private ConduitNodeImpl(BlockPos pos, Optional<NodeData> nodeData) {
         this.pos = pos;
         this.nodeData = nodeData.orElse(null);
         // Does not create a network because we're loading.
     }
 
-    private ConduitNode(BlockPos pos, ConduitDataContainer legacyDataContainer) {
+    private ConduitNodeImpl(BlockPos pos, ConduitDataContainer legacyDataContainer) {
         this(pos, Optional.empty());
 
         // Extract node data from legacy data

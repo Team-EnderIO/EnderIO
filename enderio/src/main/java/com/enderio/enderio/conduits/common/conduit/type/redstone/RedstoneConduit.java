@@ -1,13 +1,13 @@
 package com.enderio.enderio.conduits.common.conduit.type.redstone;
 
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.ConduitCapabilities;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.enderio.conduits.common.tag.ConduitTags;
 import com.mojang.serialization.MapCodec;
@@ -59,7 +59,7 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     }
 
     @Override
-    public void onConnectionsUpdated(IConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
+    public void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
         node.markDirty();
     }
 
@@ -97,9 +97,9 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
         if (slot == EXTRACT_FILTER_SLOT) {
-            return stack.getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER) != null;
+            return stack.getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER) != null;
         } else if (slot == INSERT_FILTER_SLOT) {
-            return stack.getCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER) != null;
+            return stack.getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER) != null;
         }
 
         return false;
@@ -124,7 +124,7 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     }
 
     @Override
-    public CompoundTag getExtraWorldData(ConduitBundle conduitBundle, IConduitNode node) {
+    public CompoundTag getExtraWorldData(ConduitBundle conduitBundle, ConduitNode node) {
         var tag = new CompoundTag();
 
         if (node.getNetwork() == null) {

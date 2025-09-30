@@ -1,6 +1,6 @@
 package com.enderio.enderio.api.conduits.screen;
 
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.client.gui.components.AbstractWidget;

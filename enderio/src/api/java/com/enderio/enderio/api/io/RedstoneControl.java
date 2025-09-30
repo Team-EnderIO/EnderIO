@@ -1,4 +1,4 @@
-package com.enderio.enderio.api.misc;
+package com.enderio.enderio.api.io;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;

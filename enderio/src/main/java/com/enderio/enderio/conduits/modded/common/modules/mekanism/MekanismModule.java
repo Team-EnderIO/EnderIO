@@ -7,7 +7,7 @@ import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
-import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
@@ -77,16 +77,16 @@ public class MekanismModule implements ConduitCommonModule {
     private static final MenuRegistry MENU_REGISTRY = ModdedConduits.REGILITE.menuRegistry();
 
     private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
+            .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, EnderIO.MOD_ID);
+            .create(EnderIORegistries.CONDUIT_DATA_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<ConnectionConfigType<?>> CONDUIT_CONNECTION_CONFIG_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.MOD_ID);
+            .create(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<ConduitNetworkContextType<?>> CONDUIT_NETWORK_CONTEXT_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIO.MOD_ID);
+            .create(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIO.MOD_ID);
 
     static {
         CONDUIT_CONNECTION_CONFIG_TYPES.register("chemical", () -> ChemicalConduitConnectionConfig.TYPE);
@@ -170,13 +170,13 @@ public class MekanismModule implements ConduitCommonModule {
         return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
     }
 
-    public static final ResourceKey<Conduit<?, ?>> CHEMICAL = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+    public static final ResourceKey<Conduit<?, ?>> CHEMICAL = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
             EnderIO.loc("chemical"));
     public static final ResourceKey<Conduit<?, ?>> PRESSURIZED_CHEMICAL = ResourceKey
-            .create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIO.loc("pressurized_chemical"));
+            .create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("pressurized_chemical"));
     public static final ResourceKey<Conduit<?, ?>> ENDER_CHEMICAL = ResourceKey
-            .create(EnderIOConduitsRegistries.Keys.CONDUIT, EnderIO.loc("ender_chemical"));
-    public static final ResourceKey<Conduit<?, ?>> HEAT = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+            .create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("ender_chemical"));
+    public static final ResourceKey<Conduit<?, ?>> HEAT = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
             EnderIO.loc("heat"));
 
     @Override

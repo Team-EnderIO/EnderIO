@@ -4,7 +4,7 @@ import com.enderio.enderio.api.conduits.Conduit;
 import java.util.List;
 
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -27,7 +27,7 @@ public interface ConduitModelModifier {
 
     /**
      * Gets the conduit texture to display, given the data.
-     * @param extraWorldData client data from {@link Conduit#getExtraWorldData(ConduitBundle, IConduitNode)}.
+     * @param extraWorldData client data from {@link Conduit#getExtraWorldData(ConduitBundle, ConduitNode)}.
      */
     default ResourceLocation getTexture(Holder<Conduit<?, ?>> conduit, @Nullable CompoundTag extraWorldData) {
         return conduit.value().texture();

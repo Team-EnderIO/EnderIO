@@ -1,6 +1,9 @@
 package com.enderio.enderio.api;
 
-import com.enderio.enderio.api.capability.SideConfig;
+import com.enderio.enderio.api.conduits.facade.ConduitFacadeProvider;
+import com.enderio.enderio.api.filter.RedstoneInputFilter;
+import com.enderio.enderio.api.filter.RedstoneOutputFilter;
+import com.enderio.enderio.api.io.SideConfig;
 import com.enderio.enderio.api.filter.FilterMenuProvider;
 import com.enderio.enderio.api.filter.FluidFilter;
 import com.enderio.enderio.api.filter.ItemFilter;
@@ -39,4 +42,13 @@ public class EnderIOCapabilities {
 
     public static final BlockCapability<SoulHandler, @Nullable Direction> SOUL_HANDLER_BLOCK = BlockCapability
         .createSided(EnderIO.loc("soul_handler"), SoulHandler.class);
+
+    public static final ItemCapability<ConduitFacadeProvider, Void> CONDUIT_FACADE_PROVIDER = ItemCapability
+        .createVoid(EnderIO.loc("conduit_facade_provider"), ConduitFacadeProvider.class);
+
+    public static final ItemCapability<RedstoneOutputFilter, Void> REDSTONE_INSERT_FILTER = ItemCapability
+        .createVoid(EnderIO.loc("redstone_insert_filter"), RedstoneOutputFilter.class);
+
+    public static final ItemCapability<RedstoneInputFilter, Void> REDSTONE_EXTRACT_FILTER = ItemCapability
+        .createVoid(EnderIO.loc("redstone_extract_filter"), RedstoneInputFilter.class);
 }

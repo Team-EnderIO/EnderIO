@@ -1,9 +1,9 @@
 package com.enderio.enderio.machines.common.blockentity.base;
 
-import com.enderio.enderio.api.capability.SideConfig;
+import com.enderio.enderio.api.io.SideConfig;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.common.blockentity.Wrenchable;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.NetworkDataSlot;

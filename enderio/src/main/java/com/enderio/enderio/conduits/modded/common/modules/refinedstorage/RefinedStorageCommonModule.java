@@ -5,7 +5,7 @@ import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.conduits.ConduitType;
-import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
@@ -37,19 +37,19 @@ public class RefinedStorageCommonModule implements ConduitCommonModule {
     private static final ModLoadedCondition CONDITION = new ModLoadedCondition(ModuleModIds.REFINED_STORAGE);
 
     public static class ConduitKeys {
-        public static final ResourceKey<Conduit<?, ?>> RS = ResourceKey.create(EnderIOConduitsRegistries.Keys.CONDUIT,
+        public static final ResourceKey<Conduit<?, ?>> RS = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
                 EnderIO.loc("rs"));
     }
 
     public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
+            .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
     public static final DeferredRegister<ConnectionConfigType<?>> CONDUIT_CONNECTION_CONFIG_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.MOD_ID);
+            .create(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.MOD_ID);
     public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_DATA_TYPE, EnderIO.MOD_ID);
+            .create(EnderIORegistries.CONDUIT_DATA_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<NodeDataType<?>> CONDUIT_NODE_DATA_TYPES = DeferredRegister
-            .create(EnderIOConduitsRegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.MOD_ID);
+            .create(EnderIORegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.MOD_ID);
 
     public static final Supplier<ConduitType<RSConduit>> RS_CONDUIT = CONDUIT_TYPES.register("rs",
             () -> ConduitType.builder(RSConduit.CODEC)

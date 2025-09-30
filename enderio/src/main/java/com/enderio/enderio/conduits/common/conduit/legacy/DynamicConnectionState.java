@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.common.conduit.legacy;
 
 import com.enderio.enderio.api.UseOnly;
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.network.MassiveStreamCodec;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.bundle.SlotType;

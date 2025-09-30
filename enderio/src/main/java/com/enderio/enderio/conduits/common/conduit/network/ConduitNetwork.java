@@ -5,7 +5,7 @@ import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.core.common.graph.Network;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
@@ -23,14 +23,14 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.Nullable;
 
-public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> implements com.enderio.enderio.api.conduits.network.ConduitNetwork {
+public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> implements com.enderio.enderio.api.conduits.network.ConduitNetwork {
 
     public static final Codec<ConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance
             .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit),
                     ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
                             .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
                                     : Optional.of(i.context)))
-            .and(graphCodec(instance, ConduitNode.CODEC))
+            .and(graphCodec(instance, ConduitNodeImpl.CODEC))
             .apply(instance, com.enderio.enderio.conduits.common.conduit.network.ConduitNetwork::new));
 
     private final Holder<Conduit<?, ?>> conduit;
@@ -43,14 +43,14 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
     private boolean shouldRebuildCache = true;
     private boolean haveConnectionsChanged = true;
-    private final Set<ConduitNode> dirtyNodes = Sets.newHashSet();
+    private final Set<ConduitNodeImpl> dirtyNodes = Sets.newHashSet();
 
-    private final Multimap<Long, ConduitNode> nodesByChunkPos = HashMultimap.create();
+    private final Multimap<Long, ConduitNodeImpl> nodesByChunkPos = HashMultimap.create();
 
-    private final Set<ConduitNode> tickingNodes = Sets.newHashSet();
+    private final Set<ConduitNodeImpl> tickingNodes = Sets.newHashSet();
 
     // TODO: Separate this into a list and a multimap so we can sort all endpointConnections?
-    private final SetMultimap<ConduitNode, ConduitBlockConnection> endpointConnections = HashMultimap.create();
+    private final SetMultimap<ConduitNodeImpl, ConduitBlockConnection> endpointConnections = HashMultimap.create();
     private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> accessibleBlockConnectionsMap = Maps
             .newHashMap();
 
@@ -71,7 +71,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     @Nullable
     private Consumer<ConduitNetwork> onChunkCoverageChanged = null;
 
-    public ConduitNetwork(Holder<Conduit<?, ?>> conduit, ConduitNode initialNode) {
+    public ConduitNetwork(Holder<Conduit<?, ?>> conduit, ConduitNodeImpl initialNode) {
         super(initialNode);
         this.conduit = conduit;
         this.supportsCaching = conduit.value().ticker() != null;
@@ -80,7 +80,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     // TODO: Only public for legacy deserialisation.
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public ConduitNetwork(Holder<Conduit<?, ?>> conduit, Optional<ConduitNetworkContext<?>> context,
-            List<ConduitNode> nodes, IndexedEdgeList edges) {
+                          List<ConduitNodeImpl> nodes, IndexedEdgeList edges) {
         super(nodes, edges);
         this.conduit = conduit;
         this.context = context.orElse(null);
@@ -112,8 +112,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
     // These are unfortunately necessary for the IConduitNetwork interface.
     @Override
-    public boolean contains(IConduitNode node) {
-        if (node instanceof ConduitNode typedNode) {
+    public boolean contains(ConduitNode node) {
+        if (node instanceof ConduitNodeImpl typedNode) {
             return contains(typedNode);
         }
 
@@ -121,21 +121,21 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     }
 
     @Override
-    public Set<? extends IConduitNode> neighbors(IConduitNode node) {
-        if (node instanceof ConduitNode typedNode) {
+    public Set<? extends ConduitNode> neighbors(ConduitNode node) {
+        if (node instanceof ConduitNodeImpl typedNode) {
             return neighbors(typedNode);
         }
 
         return Set.of();
     }
 
-    public Collection<ConduitNode> tickingNodes() {
+    public Collection<ConduitNodeImpl> tickingNodes() {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return Collections.unmodifiableCollection(tickingNodes);
     }
 
-    public Collection<ConduitNode> blockEndpoints() {
+    public Collection<ConduitNodeImpl> blockEndpoints() {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return Collections.unmodifiableCollection(endpointConnections.keySet());
@@ -267,7 +267,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         }
     }
 
-    public void onNodeUpdated(ConduitNode node) {
+    public void onNodeUpdated(ConduitNodeImpl node) {
         if (supportsCaching && !shouldRebuildCache) {
             dirtyNodes.add(node);
         }
@@ -285,7 +285,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
 
     // region Caching Logic
 
-    private void addTickingNode(ConduitNode node) {
+    private void addTickingNode(ConduitNodeImpl node) {
         tickingNodes.add(node);
 
         for (var side : Direction.values()) {
@@ -355,7 +355,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         }
     }
 
-    private void removeTickingNode(ConduitNode node) {
+    private void removeTickingNode(ConduitNodeImpl node) {
         if (!tickingNodes.contains(node)) {
             return;
         }
@@ -476,7 +476,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         connections.sort((a, b) -> conduit.value().compareNodes(ref, a, b));
     }
 
-    private void addNodeToPositionMaps(ConduitNode node, boolean isRebuild) {
+    private void addNodeToPositionMaps(ConduitNodeImpl node, boolean isRebuild) {
         // Put nodes into the position map.
         long chunk = ChunkPos.asLong(node.pos());
         boolean isNewChunk = !nodesByChunkPos.containsKey(chunk);
@@ -487,7 +487,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
         }
     }
 
-    private void removeNodeFromPositionMaps(ConduitNode node) {
+    private void removeNodeFromPositionMaps(ConduitNodeImpl node) {
         // Put nodes into the position map.
         long chunk = ChunkPos.asLong(node.pos());
         nodesByChunkPos.remove(chunk, node);
@@ -508,7 +508,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     }
 
     @Override
-    protected void onNodeAdded(ConduitNode node) {
+    protected void onNodeAdded(ConduitNodeImpl node) {
         // If called during super constructor
         // TODO: Review this behaviour...
         if (nodesByChunkPos == null) {
@@ -524,7 +524,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
     }
 
     @Override
-    protected void onNodeRemoved(ConduitNode node) {
+    protected void onNodeRemoved(ConduitNodeImpl node) {
         if (shouldRebuildCache) {
             return;
         }

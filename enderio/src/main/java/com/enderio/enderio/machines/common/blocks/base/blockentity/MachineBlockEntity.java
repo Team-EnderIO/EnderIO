@@ -1,10 +1,10 @@
 package com.enderio.enderio.machines.common.blocks.base.blockentity;
 
 import com.enderio.enderio.api.UseOnly;
-import com.enderio.enderio.api.capability.SideConfig;
+import com.enderio.enderio.api.io.SideConfig;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.common.block.EIOBlockEntity;
 import com.enderio.enderio.common.blockentity.Wrenchable;

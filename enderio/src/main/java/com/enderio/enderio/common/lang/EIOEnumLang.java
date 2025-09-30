@@ -2,7 +2,7 @@ package com.enderio.enderio.common.lang;
 
 import com.enderio.EnderIOBase;
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.common.block.glass.GlassCollisionPredicate;
 import com.enderio.enderio.common.filter.item.general.DamageFilterMode;
 import com.enderio.core.common.lang.EnumTranslationMap;

@@ -1,11 +1,10 @@
 package com.enderio.enderio.conduits.common.conduit;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.conduits.EnderIOConduits;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.ConduitCapabilities;
-import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
@@ -87,7 +86,7 @@ public class ConduitBlockItem extends BlockItem {
         // Ensure the originalStack being used is valid for placement.
         var stack = context.getItemInHand();
         if (!stack.has(ConduitComponents.CONDUIT)) {
-            var facadeProvider = stack.getCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER);
+            var facadeProvider = stack.getCapability(EnderIOCapabilities.CONDUIT_FACADE_PROVIDER);
             if (facadeProvider == null || !facadeProvider.isValid()) {
                 return false;
             }
@@ -146,7 +145,7 @@ public class ConduitBlockItem extends BlockItem {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() == EIOCreativeTabs.CONDUITS_TAB.get()) {
-            var registry = event.getParameters().holders().lookupOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT);
+            var registry = event.getParameters().holders().lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
             var conduitTypes = registry.listElements().toList();
 
             var conduitClassTypes = conduitTypes.stream()

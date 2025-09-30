@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.menu.base;
 
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.core.common.menu.LegacyBaseBlockEntityMenu;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.enderio.machines.common.blocks.base.inventory.MachineInventory;

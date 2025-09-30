@@ -1,8 +1,7 @@
 package com.enderio.enderio.conduits.common.redstone;
 
-import com.enderio.enderio.api.conduits.redstone.RedstoneFilterContext;
-import com.enderio.enderio.api.filter.RedstoneInsertFilter;
-import com.enderio.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkContext;
+import com.enderio.enderio.api.filter.RedstoneOutputFilterContext;
+import com.enderio.enderio.api.filter.RedstoneOutputFilter;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -12,9 +11,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.function.Function;
-
-public class RedstoneTLatchFilter implements RedstoneInsertFilter {
+public class RedstoneTLatchFilter implements RedstoneOutputFilter {
 
     public static final Component INSTANCE = new Component(false, true);
     private final ItemStack stack;
@@ -24,7 +21,7 @@ public class RedstoneTLatchFilter implements RedstoneInsertFilter {
     }
 
     @Override
-    public int getOutputSignal(RedstoneFilterContext context, DyeColor control) {
+    public int getOutputSignal(RedstoneOutputFilterContext context, DyeColor control) {
         boolean output = isActive();
         if (context.isActive(control) && isDeactivated()) {
             output = !output;

@@ -2,7 +2,7 @@ package com.enderio.enderio.api.conduits.network;
 
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -17,7 +17,8 @@ import org.jetbrains.annotations.Nullable;
  * @param connectionSide The direction of the connection from the node.
  */
 @ApiStatus.AvailableSince("8.0.0")
-public record ConduitBlockConnection(IConduitNode node, Direction connectionSide) {
+@ApiStatus.Experimental
+public record ConduitBlockConnection(ConduitNode node, Direction connectionSide) {
 
     /**
      * @return the position of the connected block.

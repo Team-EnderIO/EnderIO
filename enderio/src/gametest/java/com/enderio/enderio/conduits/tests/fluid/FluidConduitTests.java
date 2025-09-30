@@ -1,8 +1,7 @@
 package com.enderio.enderio.conduits.tests.fluid;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.api.misc.RedstoneControl;
-import com.enderio.enderio.conduits.EnderIOConduits;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.conduits.common.conduit.type.fluid.FluidConduit;
 import com.enderio.enderio.conduits.common.conduit.type.fluid.FluidConduitConnectionConfig;
 import com.enderio.enderio.conduits.common.init.Conduits;

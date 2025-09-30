@@ -2,7 +2,6 @@ package com.enderio.enderio.api.soul;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
-import jdk.jfr.Experimental;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -12,7 +11,7 @@ import java.util.Optional;
  * Some helper methods for interacting with {@link SoulBindable} capabilities.
  */
 @ApiStatus.AvailableSince("8.0")
-@Experimental
+@ApiStatus.Experimental
 public class SoulBoundUtils {
     /**
      * Test whether the {@code itemStack} supports soul binding.

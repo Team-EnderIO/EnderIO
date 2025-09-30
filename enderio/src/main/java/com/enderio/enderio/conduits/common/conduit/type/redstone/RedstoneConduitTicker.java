@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.conduit.type.redstone;
 
-import com.enderio.enderio.api.conduits.ConduitCapabilities;
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
@@ -23,7 +23,7 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
 
                 var redstoneExtractFilter = extractConnection.inventory()
                         .getStackInSlot(RedstoneConduit.EXTRACT_FILTER_SLOT)
-                        .getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
+                        .getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER);
 
                 if (redstoneExtractFilter != null) {
                     signal = redstoneExtractFilter.getInputSignal(level, extractConnection.connectedBlockPos(),

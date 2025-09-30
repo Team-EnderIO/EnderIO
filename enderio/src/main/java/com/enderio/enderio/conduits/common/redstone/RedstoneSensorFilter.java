@@ -1,11 +1,11 @@
 package com.enderio.enderio.conduits.common.redstone;
 
-import com.enderio.enderio.api.filter.RedstoneExtractFilter;
+import com.enderio.enderio.api.filter.RedstoneInputFilter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 
-public class RedstoneSensorFilter implements RedstoneExtractFilter {
+public class RedstoneSensorFilter implements RedstoneInputFilter {
 
     public static final RedstoneSensorFilter INSTANCE = new RedstoneSensorFilter();
 

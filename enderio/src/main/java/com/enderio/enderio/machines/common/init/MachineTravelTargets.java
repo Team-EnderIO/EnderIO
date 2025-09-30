@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.init;
 
 import com.enderio.enderio.api.EnderIO;
-import com.enderio.enderio.api.registry.EnderIORegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetSerializer;
 import com.enderio.enderio.api.travel.TravelTargetType;

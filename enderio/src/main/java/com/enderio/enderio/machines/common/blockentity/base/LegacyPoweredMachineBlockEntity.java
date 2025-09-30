@@ -3,7 +3,7 @@ package com.enderio.enderio.machines.common.blockentity.base;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.common.blockentity.MachineInstallable;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.item.capacitors.CapacitorItem;

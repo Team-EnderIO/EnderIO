@@ -1,15 +1,14 @@
 package com.enderio.enderio.conduits.common.redstone;
 
-import com.enderio.enderio.api.conduits.redstone.RedstoneFilterContext;
-import com.enderio.enderio.api.filter.RedstoneExtractFilter;
-import com.enderio.enderio.api.filter.RedstoneInsertFilter;
-import com.enderio.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkContext;
+import com.enderio.enderio.api.filter.RedstoneOutputFilterContext;
+import com.enderio.enderio.api.filter.RedstoneInputFilter;
+import com.enderio.enderio.api.filter.RedstoneOutputFilter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 
-public class RedstoneNOTFilter implements RedstoneInsertFilter, RedstoneExtractFilter {
+public class RedstoneNOTFilter implements RedstoneOutputFilter, RedstoneInputFilter {
 
     public static final RedstoneNOTFilter INSTANCE = new RedstoneNOTFilter();
 
@@ -17,7 +16,7 @@ public class RedstoneNOTFilter implements RedstoneInsertFilter, RedstoneExtractF
     }
 
     @Override
-    public int getOutputSignal(RedstoneFilterContext context, DyeColor control) {
+    public int getOutputSignal(RedstoneOutputFilterContext context, DyeColor control) {
         return context.isActive(control) ? 0 : 15;
     }
 

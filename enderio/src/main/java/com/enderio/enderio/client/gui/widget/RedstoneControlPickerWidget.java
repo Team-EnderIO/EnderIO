@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.gui.widget;
 
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.client.gui.icon.EIOEnumIcons;
 import com.enderio.enderio.common.lang.EIOEnumLang;
 import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;

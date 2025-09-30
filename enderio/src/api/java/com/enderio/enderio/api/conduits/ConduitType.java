@@ -1,5 +1,6 @@
 package com.enderio.enderio.api.conduits;
 
+import com.enderio.enderio.api.EnderIORegistries;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -17,9 +18,9 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 // TODO: Change this from an interface to a record + builder?
 //       No point in having an interface imo.
 public interface ConduitType<T extends Conduit<T, ?>> {
-    Codec<ConduitType<?>> CODEC = Codec.lazyInitialized(EnderIOConduitsRegistries.CONDUIT_TYPE::byNameCodec);
+    Codec<ConduitType<?>> CODEC = Codec.lazyInitialized(EnderIORegistries.CONDUIT_TYPE::byNameCodec);
     StreamCodec<RegistryFriendlyByteBuf, ConduitType<?>> STREAM_CODEC = StreamCodec
-            .recursive(streamCodec -> ByteBufCodecs.registry(EnderIOConduitsRegistries.Keys.CONDUIT_TYPE));
+            .recursive(streamCodec -> ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_TYPE));
 
     /**
      * @return The codec used for datapack read and sync.

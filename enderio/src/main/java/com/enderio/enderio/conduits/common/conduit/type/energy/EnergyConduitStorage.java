@@ -1,10 +1,10 @@
 package com.enderio.enderio.conduits.common.conduit.type.energy;
 
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-public record EnergyConduitStorage(boolean isMutable, int transferRate, @Nullable IConduitNode node) implements IEnergyStorage {
+public record EnergyConduitStorage(boolean isMutable, int transferRate, @Nullable ConduitNode node) implements IEnergyStorage {
 
     private static final long ENERGY_BUFFER_SCALER = 4;
 

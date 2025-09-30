@@ -1,9 +1,8 @@
 package com.enderio.enderio.conduits.common.conduit;
 
-import com.enderio.enderio.conduits.EnderIOConduits;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
-import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -28,7 +27,7 @@ public class ConduitSorter {
     public static void serverSortTypes(ServerStartedEvent event) {
         var conduitRegistry = event.getServer()
                 .registryAccess()
-                .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT);
+                .registryOrThrow(EnderIORegistries.Keys.CONDUIT);
         sortTypes(conduitRegistry);
     }
 
@@ -36,7 +35,7 @@ public class ConduitSorter {
     public static void clientSortTypes(ClientPlayerNetworkEvent.LoggingIn event) {
         var conduitRegistry = event.getPlayer()
                 .registryAccess()
-                .registryOrThrow(EnderIOConduitsRegistries.Keys.CONDUIT);
+                .registryOrThrow(EnderIORegistries.Keys.CONDUIT);
         sortTypes(conduitRegistry);
     }
 
@@ -44,9 +43,9 @@ public class ConduitSorter {
         SORTED_CONDUITS.clear();
 
         // Group like types together.
-        List<ConduitType<?>> conduitTypes = EnderIOConduitsRegistries.CONDUIT_TYPE.stream()
+        List<ConduitType<?>> conduitTypes = EnderIORegistries.CONDUIT_TYPE.stream()
                 .sorted(Comparator.comparing(
-                        i -> Objects.requireNonNull(EnderIOConduitsRegistries.CONDUIT_TYPE.getKey(i)).toString()))
+                        i -> Objects.requireNonNull(EnderIORegistries.CONDUIT_TYPE.getKey(i)).toString()))
                 .toList();
 
         List<Holder<Conduit<?, ?>>> sortedConduits = new ArrayList<>();

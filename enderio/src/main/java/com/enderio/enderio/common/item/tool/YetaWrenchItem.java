@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.item.tool;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.capability.SideConfig;
+import com.enderio.enderio.api.io.SideConfig;
 import com.mojang.datafixers.util.Either;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;

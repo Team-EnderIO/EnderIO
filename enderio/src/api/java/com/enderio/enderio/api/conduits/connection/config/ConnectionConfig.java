@@ -1,6 +1,6 @@
 package com.enderio.enderio.api.conduits.connection.config;
 
-import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.mojang.serialization.Codec;
@@ -17,11 +17,11 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Experimental
 public interface ConnectionConfig {
 
-    Codec<ConnectionConfig> GENERIC_CODEC = EnderIOConduitsRegistries.CONDUIT_CONNECTION_CONFIG_TYPE.byNameCodec()
+    Codec<ConnectionConfig> GENERIC_CODEC = EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE.byNameCodec()
             .dispatch(ConnectionConfig::type, ConnectionConfigType::codec);
 
     StreamCodec<RegistryFriendlyByteBuf, ConnectionConfig> STREAM_CODEC = ByteBufCodecs
-            .registry(EnderIOConduitsRegistries.Keys.CONDUIT_CONNECTION_CONFIG_TYPE)
+            .registry(EnderIORegistries.Keys.CONDUIT_CONNECTION_CONFIG_TYPE)
             .dispatch(ConnectionConfig::type, ConnectionConfigType::streamCodec);
 
     /**

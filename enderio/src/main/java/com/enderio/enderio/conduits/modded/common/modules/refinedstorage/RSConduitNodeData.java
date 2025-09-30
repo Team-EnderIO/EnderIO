@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.modded.common.modules.refinedstorage;
 
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.refinedmods.refinedstorage.api.network.impl.node.grid.GridNetworkNode;
@@ -34,7 +34,7 @@ public class RSConduitNodeData implements NodeData {
         return containerProvider != null && mainNodeContainer != null && !mainNodeContainer.isRemoved();
     }
 
-    public void initialize(IConduitNode conduitNode, Level level, BlockPos pos) {
+    public void initialize(ConduitNode conduitNode, Level level, BlockPos pos) {
         containerProvider = RefinedStorageApi.INSTANCE.createNetworkNodeContainerProvider();
         mainNodeContainer = new ConduitRSNodeContainer(level, pos);
 

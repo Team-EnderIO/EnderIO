@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.common.init;
 
 import com.enderio.enderio.conduits.EnderIOConduits;
-import com.enderio.enderio.api.conduits.EnderIOConduitsRegistries;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
@@ -20,7 +20,7 @@ public class ConduitBlockEntities {
 
     @SubscribeEvent
     public static void registerConduitCapabilities(RegisterCapabilitiesEvent event) {
-        EnderIOConduitsRegistries.CONDUIT_TYPE.entrySet()
+        EnderIORegistries.CONDUIT_TYPE.entrySet()
                 .stream()
                 .flatMap(e -> e.getValue().exposedCapabilities().stream())
                 .forEach(e -> registerConduitCapability(event, e));

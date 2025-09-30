@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.common.conduit.type.item;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
@@ -9,7 +9,7 @@ import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
@@ -123,7 +123,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
-    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor,
+    public void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor,
             BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
         var legacyData = legacyDataAccessor.getData(ConduitTypes.Data.ITEM.get());
         if (legacyData == null) {
@@ -174,7 +174,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
 
     @Override
     @Nullable
-    public CompoundTag getExtraGuiData(ConduitBundle conduitBundle, IConduitNode node, Direction side) {
+    public CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
         if (!node.isConnectedToBlock(side)) {
             return null;
         }

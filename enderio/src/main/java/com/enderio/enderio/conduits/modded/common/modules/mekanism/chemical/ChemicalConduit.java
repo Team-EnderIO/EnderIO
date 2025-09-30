@@ -1,13 +1,13 @@
 package com.enderio.enderio.conduits.modded.common.modules.mekanism.chemical;
 
-import com.enderio.enderio.api.misc.RedstoneControl;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.node.IConduitNode;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import com.enderio.core.common.util.TooltipUtil;
@@ -82,7 +82,7 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     }
 
     @Override
-    public boolean canConnectConduits(IConduitNode selfNode, IConduitNode otherNode) {
+    public boolean canConnectConduits(ConduitNode selfNode, ConduitNode otherNode) {
         if (isMultiChemical()) {
             return true;
         }
@@ -124,7 +124,7 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     }
 
     @Override
-    public void copyLegacyData(IConduitNode node, ConduitDataAccessor legacyDataAccessor,
+    public void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor,
             BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
         var legacyData = legacyDataAccessor.getData(MekanismModule.CHEMICAL_DATA_TYPE.get());
         if (legacyData == null) {
@@ -170,12 +170,12 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     }
 
     @Override
-    public @Nullable CompoundTag getExtraGuiData(ConduitBundle conduitBundle, IConduitNode node, Direction side) {
+    public @Nullable CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
         return getExtraWorldData(conduitBundle, node);
     }
 
     @Override
-    public @Nullable CompoundTag getExtraWorldData(ConduitBundle conduitBundle, IConduitNode node) {
+    public @Nullable CompoundTag getExtraWorldData(ConduitBundle conduitBundle, ConduitNode node) {
         if (node.getNetwork() == null) {
             return null;
         }

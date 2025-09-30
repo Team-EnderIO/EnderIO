@@ -1,10 +1,10 @@
 package com.enderio.enderio.conduits.common.menu;
 
-import com.enderio.enderio.api.conduits.ConduitCapabilities;
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.enderio.conduits.common.network.DoubleChannelPacket;
 import com.enderio.enderio.conduits.common.redstone.DoubleRedstoneChannel;
-import com.enderio.enderio.api.filter.RedstoneInsertFilter;
+import com.enderio.enderio.api.filter.RedstoneOutputFilter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public class RedstoneDoubleChannelFilterMenu extends AbstractContainerMenu {
 
     private final ItemStack stack;
-    private final RedstoneInsertFilter filter;
+    private final RedstoneOutputFilter filter;
     private final DoubleRedstoneChannel channels;
 
     protected RedstoneDoubleChannelFilterMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ItemStack pStack) {
@@ -28,11 +28,11 @@ public class RedstoneDoubleChannelFilterMenu extends AbstractContainerMenu {
         this.stack = pStack;
 
         // TODO: Gross workaround, I think these menus should be rewritten sometime.
-        Object resourceFilter = pStack.getCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER);
+        Object resourceFilter = pStack.getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER);
         if (resourceFilter == null) {
-            resourceFilter = pStack.getCapability(ConduitCapabilities.REDSTONE_EXTRACT_FILTER);
+            resourceFilter = pStack.getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER);
         }
-        if (!(resourceFilter instanceof RedstoneInsertFilter filter)) {
+        if (!(resourceFilter instanceof RedstoneOutputFilter filter)) {
             throw new IllegalArgumentException();
         }
         this.filter = filter;
@@ -52,7 +52,7 @@ public class RedstoneDoubleChannelFilterMenu extends AbstractContainerMenu {
         return new RedstoneDoubleChannelFilterMenu(i, inventory, inventory.player.getMainHandItem());
     }
 
-    public RedstoneInsertFilter getFilter() {
+    public RedstoneOutputFilter getFilter() {
         return filter;
     }
 

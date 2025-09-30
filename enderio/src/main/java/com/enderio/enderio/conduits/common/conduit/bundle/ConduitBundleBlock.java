@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.common.conduit.bundle;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.ConduitCapabilities;
 import com.enderio.enderio.api.conduits.ConduitRedstoneSignalAware;
 import com.enderio.enderio.api.conduits.bundle.AddConduitResult;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
@@ -252,7 +252,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                 conduitBundle.addConduit(conduit, primaryConnectionSide, player);
             } else {
                 // We might be placed using a facade item. If we are, apply the facade to the
-                var facadeProvider = stack.getCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER);
+                var facadeProvider = stack.getCapability(EnderIOCapabilities.CONDUIT_FACADE_PROVIDER);
                 if (facadeProvider != null && facadeProvider.isValid()) {
                     conduitBundle.setFacadeProvider(stack);
                 }
@@ -416,7 +416,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     private ItemInteractionResult addFacade(ItemStack stack, Level level, BlockPos pos, Player player,
             ConduitBundleBlockEntity conduitBundle) {
-        var facadeProvider = stack.getCapability(ConduitCapabilities.CONDUIT_FACADE_PROVIDER);
+        var facadeProvider = stack.getCapability(EnderIOCapabilities.CONDUIT_FACADE_PROVIDER);
         if (facadeProvider == null || !facadeProvider.isValid()) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
@@ -550,7 +550,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
             var redstoneInsertFilter = node.getInventory(direction)
                     .getStackInSlot(RedstoneConduit.INSERT_FILTER_SLOT)
-                    .getCapability(ConduitCapabilities.REDSTONE_INSERT_FILTER);
+                    .getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER);
 
             if (redstoneInsertFilter != null) {
                 return redstoneInsertFilter.getOutputSignal(context, config.insertChannel());
