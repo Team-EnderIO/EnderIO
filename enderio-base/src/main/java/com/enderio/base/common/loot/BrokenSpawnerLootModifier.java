@@ -9,6 +9,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -41,8 +42,8 @@ public class BrokenSpawnerLootModifier extends LootModifier {
                     CompoundTag entityTag = spawner.nextSpawnData.getEntityToSpawn();
 
                     // TODO: should we be copying the entire entity tag?
-                    if (entityTag.contains(Soul.KEY_ID)) {
-                        ResourceLocation type = ResourceLocation.parse(entityTag.getString(Soul.KEY_ID));
+                    if (entityTag.contains(Entity.ID_TAG)) {
+                        ResourceLocation type = ResourceLocation.parse(entityTag.getString(Entity.ID_TAG));
                         ItemStack brokenSpawner = BrokenSpawnerItem.forSoul(Soul.of(type));
                         generatedLoot.add(brokenSpawner);
                     }

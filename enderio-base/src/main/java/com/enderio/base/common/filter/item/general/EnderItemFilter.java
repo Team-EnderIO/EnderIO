@@ -92,6 +92,17 @@ public record EnderItemFilter(NonNullList<ItemStack> matches, boolean isDenyList
             }
         }
 
+        // Ensure no additional components are present
+        for (var component : stack.getComponents()) {
+            if (IGNORED_COMPONENT_TYPES.contains(component.type())) {
+                continue;
+            }
+
+            if (!Objects.equals(referenceStack.get(component.type()), component.value())) {
+                return false;
+            }
+        }
+
         return true;
     }
 }

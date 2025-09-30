@@ -3,47 +3,105 @@ package com.enderio.base.api.soul;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.common.extensions.IEntityExtension;
+import net.minecraft.world.entity.animal.Bee;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Represents a stored soul, derived from a {@link LivingEntity}.
  * @param entityTag the entity's NBT tag.
  */
-public record Soul(CompoundTag entityTag) {
-    /**
-     * Should match key from {@link IEntityExtension#serializeNBT(HolderLookup.Provider)}.
-     */
-    public static final String KEY_ID = "id";
+public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
+    private static final Codec<Soul> NEW_CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity_type").forGetter(Soul::entityType),
+            CompoundTag.CODEC.fieldOf("entity_tag").forGetter(Soul::entityTag)
+        ).apply(instance, Soul::new));
 
-    public static final Codec<Soul> CODEC = RecordCodecBuilder.create(
+    private static final Codec<Soul> OLD_CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             CompoundTag.CODEC.fieldOf("entityTag").forGetter(Soul::entityTag)
         ).apply(instance, Soul::new));
 
-    public static final StreamCodec<ByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
+    public static final Codec<Soul> CODEC = Codec.withAlternative(NEW_CODEC, OLD_CODEC);
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.registry(Registries.ENTITY_TYPE),
+        Soul::entityType,
         ByteBufCodecs.COMPOUND_TAG,
-        Soul::getEntityTag,
+        Soul::entityTag,
         Soul::new
     );
 
-    public static final StreamCodec<ByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
+    // Keys that should not be compared or saved
+    // Note be careful adding new things to this list - it will affect saves.
+    private static final List<String> IGNORED_KEYS = List.of(
+        Entity.ID_TAG, // We store the entity type separately to the entity data.
+        "Air",
+        "Brain",
+        "DeathTime",
+        "FallDistance",
+        "FallFlying",
+        "HurtByTimestamp",
+        "HurtTime",
+        "Motion",
+        "OnGround",
+        "PortalCooldown",
+        "Pos",
+        "Rotation",
+        "SleepingX",
+        "SleepingY",
+        "SleepingZ",
+        Leashable.LEASH_TAG,
+        Entity.UUID_TAG
+    );
+
+    // Do not compare obviously unreasonable NBT Keys
+    private static final List<String> IGNORED_KEYS_DURING_COMPARISON = List.of(
+        // TODO: need to check for any other tags that should be ignored.
+        // Perhaps make this configurable?
+        Bee.TAG_CANNOT_ENTER_HIVE_TICKS,
+        Bee.TAG_TICKS_SINCE_POLLINATION,
+        Bee.TAG_CROPS_GROWN_SINCE_POLLINATION,
+        Bee.TAG_HIVE_POS,
+        Entity.PASSENGERS_TAG
+    );
+
+    public Soul {
+        // Remove tags we don't want
+        IGNORED_KEYS.forEach(entityTag::remove);
+    }
+
+    // Legacy data support.
+    private Soul(CompoundTag tag) {
+        // Note: doesn't remove ID from the tag to ensure backwards compatibility.
+        // TODO: 1.22 - remove this.
+        this(BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(tag.getString(Entity.ID_TAG))), tag);
+    }
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
         @Override
-        public Soul decode(ByteBuf byteBuf) {
+        public Soul decode(RegistryFriendlyByteBuf byteBuf) {
             boolean hasEntity = byteBuf.readBoolean();
             if (!hasEntity) {
                 return EMPTY;
@@ -53,7 +111,7 @@ public record Soul(CompoundTag entityTag) {
         }
 
         @Override
-        public void encode(ByteBuf o, Soul soul) {
+        public void encode(RegistryFriendlyByteBuf o, Soul soul) {
             o.writeBoolean(soul.hasEntity());
             if (soul.hasEntity()) {
                 STREAM_CODEC.encode(o, soul);
@@ -61,20 +119,20 @@ public record Soul(CompoundTag entityTag) {
         }
     };
 
-    public static final Soul EMPTY = new Soul(new CompoundTag());
+    public static final Soul EMPTY = new Soul(null, new CompoundTag());
 
     public static Soul of(LivingEntity entity) {
-        return new Soul(entity.serializeNBT(entity.level().registryAccess()));
+        var entityTag = new CompoundTag();
+        entity.saveWithoutId(entityTag);
+        return new Soul(entity.getType(), entityTag);
     }
 
     public static Soul of(ResourceLocation entityType) {
-        CompoundTag tag = new CompoundTag();
-        tag.putString(KEY_ID, entityType.toString());
-        return new Soul(tag);
+        return of(BuiltInRegistries.ENTITY_TYPE.get(entityType));
     }
 
     public static Soul of(EntityType<?> entityType) {
-        return of(BuiltInRegistries.ENTITY_TYPE.getKey(entityType));
+        return new Soul(entityType, new CompoundTag());
     }
 
     public static boolean isSameEntity(Soul soul1, Soul soul2) {
@@ -90,34 +148,41 @@ public record Soul(CompoundTag entityTag) {
     }
 
     public static boolean isSameEntitySameTag(Soul soul1, Soul soul2) {
-        return Objects.equals(soul1.getEntityTag(), soul2.getEntityTag());
+        return isSameTag(soul1.entityTag(), soul2.entityTag());
     }
 
-    public static boolean isSameEntitySameTag(Soul soul, LivingEntity livingEntity, HolderLookup.Provider registries) {
+    public static boolean isSameEntitySameTag(Soul soul, LivingEntity livingEntity) {
         if (!isSameEntity(soul, livingEntity)) {
             return false;
         }
 
-        var entityTag = livingEntity.serializeNBT(registries);
-        return Objects.equals(soul.getEntityTag(), entityTag);
+        var entityTagToCompare = new CompoundTag();
+        livingEntity.saveWithoutId(entityTagToCompare);
+        return isSameTag(soul.entityTag(), entityTagToCompare);
+    }
+
+    private static boolean isSameTag(CompoundTag tag1, CompoundTag tag2) {
+        var allKeys = Stream.concat(tag1.getAllKeys().stream(), tag2.getAllKeys().stream()).collect(Collectors.toSet());
+        for (var key : allKeys) {
+            if (IGNORED_KEYS.contains(key) ||
+                IGNORED_KEYS_DURING_COMPARISON.contains(key)) {
+                continue;
+            }
+
+            if (!Objects.equals(tag1.get(key), tag2.get(key))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public boolean hasEntity() {
-        if (!entityTag.contains(KEY_ID)) {
-            return false;
-        }
-
-        var id = ResourceLocation.tryParse(entityTag.getString(KEY_ID));
-        if (id == null) {
-            return false;
-        }
-
-        var entityType = BuiltInRegistries.ENTITY_TYPE.getOptional(id);
-        return entityType.isPresent();
+        return entityType != null;
     }
 
     public boolean isEmpty() {
-        return !hasEntity();
+        return entityType == null;
     }
 
     /**
@@ -129,19 +194,13 @@ public record Soul(CompoundTag entityTag) {
             throw new IllegalStateException("Cannot get Entity Type ID from empty StoredEntityData");
         }
 
-        return ResourceLocation.parse(entityTag.getString(KEY_ID));
+        return BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
     }
 
-    /**
-     * @throws IllegalStateException if the soul is empty.
-     * @return
-     */
-    public EntityType<?> entityType() {
-        return BuiltInRegistries.ENTITY_TYPE.get(entityTypeId());
-    }
-
-    public CompoundTag getEntityTag() {
-        return entityTag;
+    public CompoundTag getEntityTagWithId() {
+        var tag = entityTag.copy();
+        tag.putString(Entity.ID_TAG, entityTypeId().toString());
+        return tag;
     }
 
     public Soul copy() {
@@ -149,7 +208,7 @@ public record Soul(CompoundTag entityTag) {
             return EMPTY;
         }
 
-        return new Soul(entityTag.copy());
+        return new Soul(entityType(), entityTag.copy());
     }
 
     public Soul copyOnlyType() {

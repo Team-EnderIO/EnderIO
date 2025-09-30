@@ -6,7 +6,6 @@ import com.enderio.core.common.serialization.OrderedListCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -59,7 +58,7 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
     public boolean test(LivingEntity entity) {
         for (var match : matches) {
             if (match.hasEntity()) {
-                if (shouldCompareTags ? Soul.isSameEntitySameTag(match, entity, entity.level().registryAccess()) : Soul.isSameEntity(match, entity)) {
+                if (shouldCompareTags ? Soul.isSameEntitySameTag(match, entity) : Soul.isSameEntity(match, entity)) {
                     return !isDenyList;
                 } else {
                     return isDenyList;

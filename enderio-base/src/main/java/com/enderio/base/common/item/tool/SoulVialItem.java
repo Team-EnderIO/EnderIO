@@ -96,7 +96,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             return;
         }
 
-        var entityTag = soul.getEntityTag();
+        var entityTag = soul.entityTag();
         if (entityTag.contains(KEY_HEALTH)) {
             float health = entityTag.getFloat(KEY_HEALTH);
             tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health, maxHealth));
@@ -217,7 +217,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             float rotation = Mth.wrapDegrees(level.getRandom().nextFloat() * 360.0f);
 
             // Try to get the entity NBT from the item.
-            Optional<Entity> entity = EntityType.create(storedSoul.getEntityTag(), level);
+            Optional<Entity> entity = EntityType.create(storedSoul.getEntityTagWithId(), level);
 
             // Position the entity and add it.
             entity.ifPresent(ent -> {
@@ -299,7 +299,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             Direction dispenserDirection = source.state().getValue(DispenserBlock.FACING);
             AtomicReference<ItemStack> resultStack = new AtomicReference<>();
             releaseEntity(source.level(), stack, dispenserDirection, source.pos(),
-                () -> this.consumeWithRemainder(source, stack, EIOItems.SOUL_VIAL.get().getDefaultInstance()));
+                () -> resultStack.set(this.consumeWithRemainder(source, stack, EIOItems.SOUL_VIAL.get().getDefaultInstance())));
 
             if (resultStack.get() != null) {
                 return resultStack.get();
